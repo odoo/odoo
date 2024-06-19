@@ -70,7 +70,7 @@
             <t t-set="display_discount" t-value="any(l.discount for l in lines_to_report)"/>
 
             <div class="oe_structure"></div>
-            <table class="table table-sm o_main_table table-borderless">
+            <table class="table o_main_table table-borderless">
                 <!-- In case we want to repeat the header, remove "display: table-row-group" -->
                 <thead style="display: table-row-group">
                     <tr>
@@ -149,7 +149,7 @@
             <div class="clearfix" name="so_total_summary">
                 <div id="total" class="row mt-n3" name="total">
                     <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
-                        <table class="table table-sm table-borderless">
+                        <table class="table table-borderless">
                             <!-- Tax totals -->
                             <t t-set="tax_totals" t-value="doc.tax_totals"/>
                             <t t-call="sale.document_tax_totals"/>

@@ -152,7 +152,7 @@
                 </div>
 
                 <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
-                <table class="table table-sm o_main_table" name="invoice_line_table">
+                <table class="table table-borderless o_main_table" name="invoice_line_table">
                     <thead>
                         <tr>
                             <t t-set="colspan" t-value="6"/>
@@ -318,7 +318,7 @@
                 <div class="clearfix pt-4 pb-3">
                     <div id="total" class="row mt-n3">
                         <div class="col-6">
-                            <table class="table table-sm" style="page-break-inside: avoid;">
+                            <table class="table table-borderless" style="page-break-inside: avoid;">
                                 <tr class="border-black o_subtotal">
                                     <td class="text-end">
                                         <span t-field="o.amount_untaxed"/>

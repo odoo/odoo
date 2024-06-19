@@ -31,7 +31,7 @@
             <t t-if="o.line_ids">
                 <h3>Products</h3>
                 <div class="oe_structure"></div>
-                <table class="table table-sm">
+                <table class="table table-borderless">
                 <t t-set="has_ordered_quantity" t-value="any(line.qty_ordered != 0 for line in o.line_ids)"/>
                     <thead>
                         <tr>
@@ -73,7 +73,7 @@
             </t>
             <t t-if="o.purchase_ids">
                 <h3>Orders</h3>
-                <table class="table table-sm">
+                <table class="table table-borderless">
                     <thead>
                         <tr>
                             <th class="text-start">Reference</th>
