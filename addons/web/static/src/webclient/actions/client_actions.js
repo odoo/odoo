@@ -5,6 +5,8 @@ import { registry } from "@web/core/registry";
 import { escape, sprintf } from "@web/core/utils/strings";
 
 import { markup } from "@odoo/owl";
+import { objectToUrlEncodedString } from "@web/core/utils/urls";
+import { isIosApp } from "@web/core/browser/feature_detection";
 
 export function displayNotificationAction(env, action) {
     const params = action.params || {};
@@ -41,6 +43,15 @@ function reload(env, action) {
         if (action_id) {
             route.action = action_id;
         }
+    }
+
+    /** APP IOS */
+    // To be removed if the APP is updated to support the route "/odoo"
+    if (isIosApp()) {
+        const hash = objectToUrlEncodedString(route);
+        const url = "/web" + (hash ? "#" + hash : "");
+        browser.history.replaceState({}, "", url);
+        browser.location.reload();
     }
 
     env.bus.trigger("CLEAR-CACHES");
