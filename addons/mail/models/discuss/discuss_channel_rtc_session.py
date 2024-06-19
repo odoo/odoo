@@ -144,30 +144,32 @@ class MailRtcSession(models.Model):
         return self.env['bus.bus']._sendmany([(target, 'discuss.channel.rtc.session/peer_notification', payload) for target, payload in payload_by_target.items()])
 
     def _mail_rtc_session_format(self, extra=False):
-        self.ensure_one()
-        vals = {
-            "id": self.id,
-            "channelMember": self.channel_member_id._discuss_channel_member_format(
-                fields={
-                    "id": True,
-                    "channel": {},
-                    "persona": {"partner": {"id": True, "name": True, "im_status": True}, "guest": {"id": True, "name": True, "im_status": True}},
-                }
-            ).get(self.channel_member_id),
-        }
-        if extra:
-            vals.update({
-                "isCameraOn": self.is_camera_on,
-                "isDeaf": self.is_deaf,
-                "isSelfMuted": self.is_muted,
-                "isScreenSharingOn": self.is_screen_sharing_on,
-            })
-        return vals
+        res = []
+        for rtc_session in self:
+            vals = {
+                "id": rtc_session.id,
+                "channelMember": rtc_session.channel_member_id._discuss_channel_member_format(
+                    fields={
+                        "id": True,
+                        "channel": {},
+                        "persona": {"partner": {"id": True, "name": True, "im_status": True}, "guest": {"id": True, "name": True, "im_status": True}},
+                    }
+                ).get(rtc_session.channel_member_id),
+            }
+            if extra:
+                vals.update({
+                    "isCameraOn": rtc_session.is_camera_on,
+                    "isDeaf": rtc_session.is_deaf,
+                    "isSelfMuted": rtc_session.is_muted,
+                    "isScreenSharingOn": rtc_session.is_screen_sharing_on,
+                })
+            res.append(vals)
+        return res
 
     def _mail_rtc_session_format_by_channel(self, extra=False):
         data = {}
         for rtc_session in self:
-            data.setdefault(rtc_session.channel_id, []).append(rtc_session._mail_rtc_session_format(extra=extra))
+            data.setdefault(rtc_session.channel_id, []).append(rtc_session._mail_rtc_session_format(extra=extra)[0])
         return data
 
     @api.model

@@ -307,10 +307,7 @@ class ChannelMember(models.Model):
                     ],
                 },
             )
-            store.add(
-                "RtcSession",
-                [session._mail_rtc_session_format() for session in current_rtc_sessions],
-            )
+            store.add("RtcSession", current_rtc_sessions._mail_rtc_session_format())
             store.add(
                 "Rtc",
                 {
@@ -427,7 +424,7 @@ class ChannelMember(models.Model):
             channel_data = {
                 "id": self.channel_id.id,
                 "model": "discuss.channel",
-                "rtcInvitingSession": self.rtc_session_ids._mail_rtc_session_format(),
+                "rtcInvitingSession": self.rtc_session_ids._mail_rtc_session_format()[0],
             }
             store = Store("Thread", channel_data)
             invitation_notifications.append((target, "mail.record/insert", store.get_result()))
