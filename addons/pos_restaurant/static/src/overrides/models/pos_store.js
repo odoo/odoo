@@ -278,7 +278,7 @@ patch(PosStore.prototype, {
         }
     },
     getTableOrders(tableId) {
-        return this.get_order_list().filter((order) => order.table_id?.id === tableId);
+        return this.get_open_orders().filter((order) => order.table_id?.id === tableId);
     },
     async unsetTable() {
         try {
