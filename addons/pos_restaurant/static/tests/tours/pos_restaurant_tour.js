@@ -259,3 +259,14 @@ registry.category("web_tour.tours").add("BillScreenTour", {
             billScreenQRCode,
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("CategLabelCheck", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Test Multi Category Product"),
+            ProductScreen.OrderButtonNotContain("Drinks"),
+        ].flat(),
+});
