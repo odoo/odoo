@@ -57,7 +57,6 @@ const { toZone } = helpers;
  *
  */
 
-/** @type FilterPayload */
 const LAST_YEAR_LEGACY_FILTER = {
     id: "41",
     type: "date",
@@ -122,10 +121,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.expect(4);
 
         const { model } = await createSpreadsheetWithPivotAndList();
-        let result = await editGlobalFilter(model, { ...THIS_YEAR_GLOBAL_FILTER, id: 1 });
+        let result = await editGlobalFilter(model, { ...THIS_YEAR_GLOBAL_FILTER, id: "1" });
         assert.deepEqual(result.reasons, [CommandResult.FilterNotFound]);
-        await addGlobalFilter(model, { ...LAST_YEAR_GLOBAL_FILTER, id: 1 });
-        result = await editGlobalFilter(model, { ...THIS_YEAR_GLOBAL_FILTER, id: 1 });
+        await addGlobalFilter(model, { ...LAST_YEAR_GLOBAL_FILTER, id: "1" });
+        result = await editGlobalFilter(model, { ...THIS_YEAR_GLOBAL_FILTER, id: "1" });
         assert.deepEqual(result, DispatchResult.Success);
         assert.equal(model.getters.getGlobalFilters().length, 1);
         assert.deepEqual(model.getters.getGlobalFilters()[0].defaultValue.yearOffset, 0);
@@ -312,7 +311,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
     QUnit.test("Domain of date filter with quarter offset on list field", async function (assert) {
         patchDate(2022, 6, 14, 0, 0, 0);
         const { model } = await createSpreadsheetWithList();
-        /** @type GlobalFilter */
+        /** @type CmdGlobalFilter */
         const filter = {
             ...THIS_YEAR_GLOBAL_FILTER,
             defaultValue: { yearOffset: 0, period: "third_quarter" },
@@ -2429,12 +2428,74 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             id: "42",
             label: "test",
             type: "date",
-            defaultValue: {},
+            defaultValue: "",
             rangeType: "relative",
         };
         const result = await addGlobalFilter(model, filter);
         assert.ok(result.isSuccessful);
     });
+
+    QUnit.test("Cannot create a fixedPeriod date filter with a disabled value", async (assert) => {
+        const model = new Model();
+        let filter = /** @type {FixedPeriodDateGlobalFilter}*/ ({
+            id: "42",
+            label: "test",
+            type: "date",
+            defaultValue: { period: "fourth_quarter", yearOffset: 0 },
+            rangeType: "fixedPeriod",
+            disabledPeriods: ["quarter"],
+        });
+        let result = model.dispatch("ADD_GLOBAL_FILTER", { filter });
+        assert.ok(result.isCancelledBecause(CommandResult.InvalidValueTypeCombination));
+
+        filter = { ...filter, defaultValue: "this_quarter" };
+        result = model.dispatch("ADD_GLOBAL_FILTER", { filter });
+        assert.ok(result.isCancelledBecause(CommandResult.InvalidValueTypeCombination));
+    });
+
+    QUnit.test(
+        "Cannot set the value of a fixedPeriod date filter to a disabled value",
+        async (assert) => {
+            const model = new Model();
+            const filter = /** @type {FixedPeriodDateGlobalFilter}*/ ({
+                id: "42",
+                label: "test",
+                type: "date",
+                rangeType: "fixedPeriod",
+                disabledPeriods: ["month"],
+            });
+            model.dispatch("ADD_GLOBAL_FILTER", { filter });
+            const result = model.dispatch("SET_GLOBAL_FILTER_VALUE", {
+                id: "42",
+                value: { yearOffset: 0, period: "january" },
+            });
+            assert.ok(result.isCancelledBecause(CommandResult.InvalidValueTypeCombination));
+        }
+    );
+
+    QUnit.test(
+        "Modifying fixedPeriod date filter disabled periods remove invalid filter value",
+        async (assert) => {
+            const model = new Model();
+            const filter = /** @type {FixedPeriodDateGlobalFilter}*/ ({
+                id: "42",
+                label: "test",
+                type: "date",
+                rangeType: "fixedPeriod",
+                disabledPeriods: [],
+            });
+            model.dispatch("ADD_GLOBAL_FILTER", { filter });
+            const filterValue = { yearOffset: 0, period: "march" };
+
+            model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: filterValue });
+            assert.deepEqual(model.getters.getGlobalFilterValue("42"), filterValue);
+
+            model.dispatch("EDIT_GLOBAL_FILTER", {
+                filter: { ...filter, disabledPeriods: ["month"] },
+            });
+            assert.equal(model.getters.getGlobalFilterValue("42"), undefined);
+        }
+    );
 
     QUnit.test("allowDispatch of MOVE_GLOBAL_FILTERS", function (assert) {
         const model = new Model();
