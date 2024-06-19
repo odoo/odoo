@@ -541,7 +541,12 @@ class Form:
                 record = record.with_context(**context)
 
         values = self._get_onchange_values()
+        self._env.flush_all()
         result = record.onchange(values, field_names, self._view['fields_spec'])
+        if field_to_recompute := list(self._env.fields_to_compute()):
+            _logger.error('onchange is not readonly, fields to recompute: %r', field_to_recompute)
+        if field_to_write := list(self._env.cache.get_dirty_fields()):
+            _logger.error('onchange is not readonly, fields to write: %r', field_to_write)
         self._env.flush_all()
         self._env.clear()  # discard cache and pending recomputations
 
