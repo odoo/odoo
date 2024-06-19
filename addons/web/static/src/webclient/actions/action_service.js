@@ -133,6 +133,8 @@ export function makeActionManager(env, router = _router) {
     let dialog = null;
     let nextDialog = null;
 
+    router.hideKeyFromUrl("globalState");
+
     env.bus.addEventListener("CLEAR-CACHES", () => {
         actionCache = {};
     });
@@ -488,8 +490,14 @@ export function makeActionManager(env, router = _router) {
                     viewType: state.resId ? "form" : state.view_type,
                 });
             }
-            if (state.resId && state.resId !== "new") {
-                options.props = { resId: state.resId };
+            if ((state.resId && state.resId !== "new") || state.globalState) {
+                options.props = {};
+                if (state.resId && state.resId !== "new") {
+                    options.props.resId = state.resId;
+                }
+                if (state.globalState) {
+                    options.props.globalState = state.globalState;
+                }
             }
         } else if (state.model) {
             if (state.resId || state.view_type === "form") {
@@ -977,11 +985,14 @@ export function makeActionManager(env, router = _router) {
         // if globalState is not useful for client actions --> maybe use that thing in useSetupView instead of useSetupAction?
         // a good thing: the Object.assign seems to reflect the use of "externalState" in legacy Model class --> things should be fine.
         if (currentController && currentController.getGlobalState) {
-            currentController.action.globalState = Object.assign(
+            const globalState = Object.assign(
                 {},
                 currentController.action.globalState,
                 currentController.getGlobalState() // what if this = {}?
             );
+
+            currentController.action.globalState = globalState;
+            router.pushState({ globalState }, { sync: true });
         }
         if (controller.action.globalState) {
             controller.props.globalState = controller.action.globalState;
