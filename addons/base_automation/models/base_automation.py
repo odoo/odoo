@@ -34,7 +34,6 @@ DATE_RANGE_FACTOR = {
 class BaseAutomation(models.Model):
     _name = 'base.automation'
     _description = 'Automated Action'
-    _order = 'sequence'
 
     action_server_id = fields.Many2one(
         'ir.actions.server', 'Server Actions',
