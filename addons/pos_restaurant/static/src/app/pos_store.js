@@ -32,7 +32,8 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
         }
         this.orderToTransfer = null; // table transfer feature
         this.transferredOrdersSet = new Set(); // used to know which orders has been transferred but not sent to the back end yet
-        this.floorPlanStyle = "default";
+        this.floorPlanStyle =
+            localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
         this.isEditMode = false;
     },
     setActivityListeners() {
