@@ -53,41 +53,44 @@ class Store:
     The keys of data are the name of models as defined in mail JS code, and the values are any
     format supported by store.insert() method (single dict or list of dict for each model name)."""
 
-    def __init__(self, data=None, values=None):
+    def __init__(self, data=None, values=None, /, **kwargs):
         self.data = {}
         if data:
-            self.add(data, values)
+            self.add(data, values, **kwargs)
 
-    def add(self, data, values=None):
+    def add(self, data, values=None, /, **kwargs):
         """Adds data to the store.
-        data can be a recordset, in which case the model must have a _to_store() method.
-        Or data can be a model name, in which case values must be a dict or list of dict.
-        Or data can be a dict, in which case it is considered as values for the Store model.
+        - data can be a recordset, in which case the model must have a _to_store() method, with
+          optional kwargs passed to it.
+        - data can be a model name, in which case values must be a dict or list of dict.
+        - data can be a dict, in which case it is considered as values for the Store model.
         """
         if isinstance(data, models.Model):
             assert not values, f"expected empty values with recordset {data}: {values}"
             records = data
             model_name = target_model_by_model.get(records._name, records._name)
-            values = records._to_store(self)
+            values = records._to_store(self, **kwargs)
         elif isinstance(data, dict):
             assert not values, f"expected empty values with dict {data}: {values}"
+            assert not kwargs, f"expected empty kwargs with dict {data}: {kwargs}"
             model_name = "Store"
             values = data
         else:
+            assert not kwargs, f"expected empty kwargs with model name {data}: {kwargs}"
             model_name = data
         assert isinstance(model_name, str), f"expected str for model name: {model_name}: {values}"
         # skip empty values
         if not values:
             return self
         ids = ids_by_model[model_name]
-        # handle singleton: update in place
+        # handle singleton model: update single record in place
         if len(ids) == 0:
             assert isinstance(values, dict), f"expected dict for singleton {model_name}: {values}"
             if not model_name in self.data:
                 self.data[model_name] = {}
             self.data[model_name].update(values)
             return self
-        # handle (multi) id(s): add or update existing
+        # handle model with ids: add or update existing records based on ids
         if not model_name in self.data:
             self.data[model_name] = []
         if isinstance(values, dict):
