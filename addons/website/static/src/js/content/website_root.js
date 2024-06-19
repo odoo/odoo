@@ -64,7 +64,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
     _getExtraContext: function (context) {
         var html = document.documentElement;
         return Object.assign({
-            'editable': !!(html.dataset.editable || document.querySelector("[data-oe-model]")), // temporary hack, this should be done in python
+            'editable': !!(html.dataset.editable || document.querySelectorAll("[data-oe-model]")), // temporary hack, this should be done in python
             'translatable': !!html.dataset.translatable,
             'edit_translations': !!html.dataset.edit_translations,
         }, this._super.apply(this, arguments));

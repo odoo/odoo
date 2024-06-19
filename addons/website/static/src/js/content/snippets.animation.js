@@ -219,12 +219,12 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
              * the startEvents are triggered on the startTarget and pause when
              * the endEvents are triggered on the endTarget.
              */
-            this.startTarget.addEventListener(this.startEvents, (function (e) {
+            this.startTarget.on(this.startEvents, (function (e) {
                 if (this._paused) {
                     setTimeout(() => this.play.bind(this, e));
                 }
             }).bind(this));
-            this.endTarget.addEventListener(this.endEvents, (function () {
+            this.endTarget.on(this.endEvents, (function () {
                 if (!this._paused) {
                     setTimeout(() => this.pause.bind(this));
                 }
@@ -263,13 +263,9 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
      * animation to be played or paused.
      */
     stop: function () {
-        this.startTarget.removeEventListener(this.startEvents, this.throttleOnStartEvents);
+        this.startTarget.off(this.startEvents);
         if (this.endEvents) {
-            this.endTarget.removeEventListener(this.endEvents, (function () {
-                if (!this._paused) {
-                    setTimeout(() => this.pause.bind(this));
-                }
-            }).bind(this));
+            this.endTarget.off(this.endEvents);
         }
         this.pause();
     },
