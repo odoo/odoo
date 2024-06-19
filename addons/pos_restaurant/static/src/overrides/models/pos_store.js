@@ -30,10 +30,11 @@ patch(PosStore.prototype, {
         this.tableNotifications = {};
         this.orderToTransfer = null; // table transfer feature
         this.transferredOrdersSet = new Set(); // used to know which orders has been transferred but not sent to the back end yet
-        this.floorPlanStyle = "default";
         this.isEditMode = false;
         this.isTableToMerge = false;
         await super.setup(...arguments);
+        this.floorPlanStyle =
+            localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
         if (this.config.module_pos_restaurant) {
             this.setActivityListeners();
             this.showScreen("FloorScreen", { floor: this.selectedTable?.floor || null });
