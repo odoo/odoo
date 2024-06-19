@@ -102,7 +102,7 @@ class TestLoyalty(TestSaleCouponCommon):
             0,
             "Can only use a whole number of required points",
         )
-        self.assertEqual(vals[0]['points_cost'], 9, "Use maximum available points for the reward")
+        self.assertEqual(vals[0]['points_cost'], 3, "Use required available points for the reward")
         self.ewallet.points = 50
         order._update_programs_and_rewards()
         claimable_rewards = order._get_claimable_rewards()

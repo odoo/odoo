@@ -1302,10 +1302,12 @@ patch(Order.prototype, {
             return [];
         }
         let maxDiscount = reward.discount_max_amount || Infinity;
+        let is_payement_program=(["ewallet", "gift_card"].includes(reward.program_id.program_type))
         if (reward.discount_mode === "per_point") {
+            let pointUsed=is_payement_program?this._getRealCouponPoints(coupon_id):reward.required_points
             maxDiscount = Math.min(
                 maxDiscount,
-                reward.discount * this._getRealCouponPoints(coupon_id)
+                reward.discount * pointUsed
             );
         } else if (reward.discount_mode === "per_order") {
             maxDiscount = Math.min(maxDiscount, reward.discount);
@@ -1317,11 +1319,11 @@ patch(Order.prototype, {
             ? this._getRealCouponPoints(coupon_id)
             : reward.required_points;
         if (reward.discount_mode === "per_point" && !reward.clear_wallet) {
-            pointCost = Math.min(maxDiscount, discountable) / reward.discount;
+            pointCost = is_payement_program?Math.min(maxDiscount, discountable) / reward.discount:reward.required_points;
         }
         // These are considered payments and do not require to be either taxed or split by tax
         const discountProduct = reward.discount_line_product_id;
-        if (["ewallet", "gift_card"].includes(reward.program_id.program_type)) {
+        if (is_payement_program) {
             return [
                 {
                     product: discountProduct,

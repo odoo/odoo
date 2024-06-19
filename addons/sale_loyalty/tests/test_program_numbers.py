@@ -1803,4 +1803,4 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
         self.assertEqual(order.order_line[0].tax_id, tax_15pc_excl)
         self.assertEqual(order.order_line[1].tax_id, tax_15pc_excl)
-        self.assertEqual(order.amount_total, 156.0, '140$ + 15% - 5$ = 156$')
+        self.assertEqual(order.amount_total, 160.0, '140$ + 15% - 1$ = 160')

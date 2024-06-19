@@ -1058,7 +1058,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             })],
             'reward_ids': [(0, 0, {
                 'reward_type': 'discount',
-                'required_points': 1,
+                'required_points': 120,
                 'discount': 1,
                 'discount_mode': 'per_point',
             })],

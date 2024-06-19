@@ -343,10 +343,7 @@ class SaleOrder(models.Model):
         # discount should never surpass the order's current total amount
         max_discount = min(self.amount_total, max_discount)
         if reward.discount_mode == 'per_point':
-            points = self._get_real_points_for_coupon(coupon)
-            if not reward.program_id.is_payment_program:
-                # Rewards cannot be partially offered to customers
-                points = points // reward.required_points * reward.required_points
+            points = self._get_real_points_for_coupon(coupon) if reward.program_id.is_payment_program else reward.required_points
             max_discount = min(max_discount,
                 reward.currency_id._convert(reward.discount * points,
                     self.currency_id, self.company_id, fields.Date.today()))
@@ -361,7 +358,7 @@ class SaleOrder(models.Model):
         if reward.discount_mode == 'per_point' and not reward.clear_wallet:
             # Calculate the actual point cost if the cost is per point
             converted_discount = self.currency_id._convert(min(max_discount, discountable), reward.currency_id, self.company_id, fields.Date.today())
-            point_cost = converted_discount / reward.discount
+            point_cost = converted_discount / reward.discount if reward.program_id.is_payment_program else reward.required_points
         # Gift cards and eWallets are considered gift cards and should not have any taxes
         if reward.program_id.is_payment_program:
             reward_product = reward.discount_line_product_id
