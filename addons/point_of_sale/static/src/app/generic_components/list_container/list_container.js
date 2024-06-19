@@ -36,7 +36,7 @@ export class ListContainer extends Component {
                     <t t-slot="default" item="item"/>
                 </t>
             </div>
-            <button t-if="isLarger() or ui.isSmall" t-on-click="toggle"
+            <button t-if="(isLarger() or ui.isSmall) and props.items.length" t-on-click="toggle"
                 class="btn btn-secondary ms-2"
                 t-attf-class="fa {{popover.isOpen ? 'fa-caret-up' : 'fa-caret-down'}}"/>
     `;
