@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
-        <function model="purchase.order.line" name="write">
-            <value model="purchase.order.line" search="[('product_id', 'in', [ref('product.product_delivery_01'), ref('product.product_product_27')]), ('order_id', '=', ref('purchase.purchase_order_1'))]"/>
-            <value eval="{'analytic_distribution': {ref('analytic.analytic_our_super_product'): 100}}"/>
-        </function>
-    </data>
-</odoo>
