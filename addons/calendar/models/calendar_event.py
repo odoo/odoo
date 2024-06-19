@@ -598,14 +598,16 @@ class Meeting(models.Model):
             for event in records:
                 if event['id'] in private_events.ids:
                     for field in private_fields:
-                        event[field] = _('Busy') if field in ['name', 'display_name'] else False
+                        if self._fields[field].type in ('one2many', 'many2many'):
+                            event[field] = []
+                        else:
+                            event[field] = _('Busy') if field in ('name', 'display_name') else False
 
             # Update the cache with the new hidden values.
             for field_name in private_fields:
                 field = self._fields[field_name]
-                replacement = field.convert_to_cache(
-                    _('Busy') if field_name in ['name', 'display_name'] else False,
-                    private_events)
+                value = [] if field.type in ('one2many', 'many2many') else _('Busy') if field_name in ('name', 'display_name') else False
+                replacement = field.convert_to_cache(value, private_events)
                 self.env.cache.update(private_events, field, repeat(replacement))
         return records
 
