@@ -553,3 +553,52 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(wave.picking_ids, picking_1)
         self.assertEqual([picking_1.state, picking_1.move_ids.quantity, picking_1.move_ids.picked], ['done', 2.0, True])
         self.assertEqual([picking_2.state, picking_2.move_ids.quantity, picking_2.move_ids.picked], ['assigned', 0.0, True])
+
+    def test_add_partially_assigned_move_to_batch(self):
+        """
+            Checks that a picking is linked to the wave transfer in case all of its
+            moves are to be linked with the wave transfer.
+        """
+        picking = self.picking_internal
+        # update a move for the moved qty to be less than the initial demand
+        picking.move_ids[0].quantity = 10.0
+        self.assertRecordValues(picking.move_ids, [{'product_uom_qty': 15.0, 'quantity': 10.0}, {'product_uom_qty': 5.0, 'quantity': 5.0}])
+        lines = picking.move_ids.move_line_ids
+        res_dict = lines.action_open_add_to_wave()
+        res_dict['context'] = {'active_model': 'stock.move.line', 'active_ids': lines.ids}
+        wizard_form = Form(self.env[res_dict['res_model']].with_context(res_dict['context']))
+        wizard_form.mode = 'new'
+        wizard_form.save().attach_pickings()
+        # check that the picking was added to the wave transfer
+        wave = picking.batch_id.filtered(lambda b: b.is_wave)
+        self.assertTrue(wave)
+        # check that the lines are still linked to the original picking
+        self.assertEqual(lines.move_id.picking_id, picking)
+        # check that no other picking was added to the wave transfer
+        self.assertEqual(wave.move_ids, picking.move_ids)
+
+    def test_dont_add_empty_move_to_batch(self):
+        """
+            Checks that a picking is not linked to the wave transfer in case one
+            of its move is not to be linked with the wave transfer.
+        """
+        picking = self.picking_internal
+        move_1, move_2 = picking.move_ids
+        # update a move for the moved qty to 0
+        move_1.quantity = 0
+        self.assertRecordValues(picking.move_ids, [{'product_uom_qty': 15.0, 'quantity': 0.0}, {'product_uom_qty': 5.0, 'quantity': 5.0}])
+        lines = picking.move_ids.move_line_ids
+        res_dict = lines.action_open_add_to_wave()
+        res_dict['context'] = {'active_model': 'stock.move.line', 'active_ids': lines.ids}
+        wizard_form = Form(self.env[res_dict['res_model']].with_context(res_dict['context']))
+        wizard_form.mode = 'new'
+        wizard_form.save().attach_pickings()
+        # check that a new picking was added to the wave transfer
+        new_picking = move_2.picking_id
+        self.assertIsNot(picking, new_picking)
+        wave = new_picking.batch_id.filtered(lambda b: b.is_wave)
+        self.assertTrue(wave)
+        self.assertEqual(wave.move_ids, move_2)
+        # check that the original picking was not added to a wave transfer
+        self.assertFalse(picking.batch_id.filtered(lambda b: b.is_wave))
+        self.assertEqual(picking.move_ids, move_1)
