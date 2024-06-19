@@ -39,12 +39,17 @@ class MailRtcSession(models.Model):
     def create(self, vals_list):
         rtc_sessions = super().create(vals_list)
         notifications = []
-        for channel, sessions_data in rtc_sessions._mail_rtc_session_format_by_channel().items():
-            store = Store("RtcSession", sessions_data)
+        rtc_sessions_by_channel = defaultdict(lambda: self.env["discuss.channel.rtc.session"])
+        for rtc_session in rtc_sessions:
+            rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
+        for channel, rtc_sessions in rtc_sessions_by_channel.items():
+            store = Store("RtcSession", rtc_sessions._mail_rtc_session_format())
             channel_info = {
                 "id": channel.id,
                 "model": "discuss.channel",
-                "rtcSessions": [("ADD", [{"id": session["id"]} for session in sessions_data])],
+                "rtcSessions": [
+                    ("ADD", [{"id": rtc_session["id"]} for rtc_session in rtc_sessions]),
+                ],
             }
             store.add("Thread", channel_info)
             notifications.append((channel, "mail.record/insert", store.get_result()))
@@ -65,12 +70,15 @@ class MailRtcSession(models.Model):
                 channel.sfu_channel_uuid = False
                 channel.sfu_server_url = False
         notifications = []
-        for channel, sessions_data in self._mail_rtc_session_format_by_channel().items():
+        rtc_sessions_by_channel = defaultdict(lambda: self.env["discuss.channel.rtc.session"])
+        for rtc_session in self:
+            rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
+        for channel, rtc_sessions in rtc_sessions_by_channel.items():
             channel_info = {
                 "id": channel.id,
                 "model": "discuss.channel",
                 "rtcSessions": [
-                    ("DELETE", [{"id": session_data["id"]} for session_data in sessions_data])
+                    ("DELETE", [{"id": rtc_session["id"]} for rtc_session in rtc_sessions]),
                 ],
             }
             store = Store("Thread", channel_info)
@@ -165,12 +173,6 @@ class MailRtcSession(models.Model):
                 })
             res.append(vals)
         return res
-
-    def _mail_rtc_session_format_by_channel(self, extra=False):
-        data = {}
-        for rtc_session in self:
-            data.setdefault(rtc_session.channel_id, []).append(rtc_session._mail_rtc_session_format(extra=extra)[0])
-        return data
 
     @api.model
     def _inactive_rtc_session_domain(self):
