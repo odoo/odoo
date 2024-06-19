@@ -179,10 +179,11 @@ export class Record extends DataPoint {
         });
     }
 
-    discard() {
+    async discard() {
         if (this.model._closeUrgentSaveNotification) {
             this.model._closeUrgentSaveNotification();
         }
+        await this.model._askChanges();
         return this.model.mutex.exec(() => this._discard());
     }
 
@@ -1115,7 +1116,12 @@ export class Record extends DataPoint {
         if (canProceed === false) {
             return;
         }
-        if (this.selected && this.model.multiEdit && !this._invalidFields.has(fieldName)) {
+        if (
+            this.selected &&
+            this.model.multiEdit &&
+            this.model.root._recordToDiscard !== this &&
+            !this._invalidFields.has(fieldName)
+        ) {
             await this.model.dialog.add(AlertDialog, {
                 body: _t("No valid record to save"),
                 confirm: async () => {
