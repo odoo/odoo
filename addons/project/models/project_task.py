@@ -750,6 +750,8 @@ class Task(models.Model):
         for task, vals in zip(self, vals_list):
 
             vals['stage_id'] = task.stage_id.id
+            if not task['active']:
+                vals['active'] = not self.env.context.get('copy_project')
             vals['name'] = task.name if self.env.context.get('copy_project') else _("%s (copy)", task.name)
             if task.recurrence_id:
                 vals['recurrence_id'] = task.recurrence_id.copy().id

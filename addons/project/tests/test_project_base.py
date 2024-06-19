@@ -481,3 +481,20 @@ class TestProjectBase(TestProjectCommon):
         } for x in range(10)])
         projects._create_analytic_account()
         self.assertEqual(projects.mapped("name"), projects.analytic_account_id.mapped("name"), "The analytic accounts names should match with the projects.")
+
+    def test_archived_duplicate_task(self):
+        """ Test to check duplication of an archived task.
+            The duplicate of an archived task should be active.
+        """
+        project = self.env['project.project'].create({
+            'name': 'Project',
+        })
+        task = self.env['project.task'].create({
+            'name': 'Task',
+            'project_id': project.id,
+        })
+        copy_task1 = task.copy()
+        self.assertTrue(copy_task1.active, "Active task should be active when duplicating an active task")
+        task.active = False
+        copy_task2 = task.copy()
+        self.assertTrue(copy_task2.active, "Archived task should be active when duplicating an archived task")
