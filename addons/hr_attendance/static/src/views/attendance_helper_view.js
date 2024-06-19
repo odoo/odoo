@@ -12,7 +12,7 @@ export class AttendanceActionHelper extends Component {
             hasDemoData: false,
         });
         onWillStart(async () => {
-            this.state.hasDemoData = await this.orm.call("hr.attendance", "hasDemoData", []);
+            this.state.hasDemoData = await this.orm.call("hr.attendance", "has_demo_data", []);
         });
     }
 
