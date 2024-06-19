@@ -589,4 +589,8 @@ class HrAttendance(models.Model):
         if not user_domain:
             return self.env['hr.employee'].search([('company_id', 'in', self.env.context.get('allowed_company_ids', []))])
         else:
-            return resources
+            employee_name_domain = []
+            for leaf in user_domain:
+                if len(leaf) == 3 and leaf[0] == 'employee_id':
+                    employee_name_domain.append([('name', leaf[1], leaf[2])])
+            return resources | self.env['hr.employee'].search(OR(employee_name_domain))
