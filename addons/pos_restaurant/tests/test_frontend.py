@@ -15,7 +15,8 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         super().setUpClass()
         archive_products(cls.env)
 
-        drinks_category = cls.env['pos.category'].create({'name': 'Drinks'})
+        food_category = cls.env['pos.category'].create({'name': 'Food', 'sequence': 1})
+        drinks_category = cls.env['pos.category'].create({'name': 'Drinks', 'sequence': 2})
 
         printer = cls.env['pos.printer'].create({
             'name': 'Preparation Printer',
@@ -142,6 +143,17 @@ class TestFrontend(TestPointOfSaleHttpCommon):
             'name': 'Minute Maid',
             'weight': 0.01,
             'pos_categ_ids': [(4, drinks_category.id)],
+            'categ_id': cls.env.ref('point_of_sale.product_category_pos').id,
+            'taxes_id': [(6, 0, [])],
+        })
+
+        # multiple categories product
+        cls.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 2.20,
+            'name': 'Test Multi Category Product',
+            'weight': 0.01,
+            'pos_categ_ids': [(4, drinks_category.id), (4, food_category.id)],
             'categ_id': cls.env.ref('point_of_sale.product_category_pos').id,
             'taxes_id': [(6, 0, [])],
         })
@@ -291,3 +303,7 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         self.start_pos_tour('OrderTrackingTour')
         order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0001')], limit=1, order='id desc')
         self.assertTrue(order1.is_edited)
+
+    def test_13_category_check(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('CategLabelCheck')
