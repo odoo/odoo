@@ -322,7 +322,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             if not line.product_id or line.invoice_lines or not line.company_id:
                 continue
-            params = {'order_id': line.order_id}
+            params = line._get_select_sellers_params()
             seller = line.product_id._select_seller(
                 partner_id=line.partner_id,
                 quantity=line.product_qty,
@@ -669,4 +669,10 @@ class PurchaseOrderLine(models.Model):
             'res_model': 'purchase.order',
             'res_id': self.order_id.id,
             'view_mode': 'form',
+        }
+
+    def _get_select_sellers_params(self):
+        self.ensure_one()
+        return {
+            "order_id": self.order_id,
         }
