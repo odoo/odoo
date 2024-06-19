@@ -34,7 +34,6 @@ import { PaymentScreen } from "../screens/payment_screen/payment_screen";
 const { DateTime } = luxon;
 
 export class PosStore extends Reactive {
-    hasBigScrollBars = false;
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
 
