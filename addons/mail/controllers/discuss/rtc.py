@@ -86,7 +86,7 @@ class RtcController(http.Controller):
         if not member:
             raise NotFound()
         # sudo: discuss.channel.rtc.session - member of current user can leave call
-        return member.sudo()._rtc_leave_call()
+        member.sudo()._rtc_leave_call()
 
     @http.route("/mail/rtc/channel/cancel_call_invitation", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
@@ -99,7 +99,7 @@ class RtcController(http.Controller):
         if not channel:
             raise NotFound()
         # sudo: discuss.channel.rtc.session - can cancel invitations in accessible channel
-        return channel.sudo()._rtc_cancel_invitations(member_ids=member_ids)
+        channel.sudo()._rtc_cancel_invitations(member_ids=member_ids)
 
     @http.route("/mail/rtc/audio_worklet_processor", methods=["GET"], type="http", auth="public")
     def audio_worklet_processor(self):

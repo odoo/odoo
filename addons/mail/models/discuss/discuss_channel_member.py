@@ -383,7 +383,7 @@ class ChannelMember(models.Model):
         if self.rtc_session_ids:
             self.rtc_session_ids.unlink()
         else:
-            return self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
+            self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
 
     def _rtc_sync_sessions(self, check_rtc_session_ids=None):
         """Synchronize the RTC sessions for self channel member.

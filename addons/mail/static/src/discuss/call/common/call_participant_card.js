@@ -141,11 +141,10 @@ export class CallParticipantCard extends Component {
             }
             return;
         }
-        const channelData = await rpc("/mail/rtc/channel/cancel_call_invitation", {
+        await rpc("/mail/rtc/channel/cancel_call_invitation", {
             channel_id: this.props.thread.id,
             member_ids: [this.channelMember.id],
         });
-        this.props.thread.invitedMembers = channelData.invitedMembers;
     }
 
     async onClickReplay() {
