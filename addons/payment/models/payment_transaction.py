@@ -447,12 +447,10 @@ class PaymentTransaction(models.Model):
                 )
                 redirect_form_html = self.env['ir.qweb']._render(redirect_form_view.id, rendering_values)
                 processing_values.update(redirect_form_html=redirect_form_html)
-        processing_values.update(
-            {
+        processing_values.update({
                 'state': self.state,
                 'state_message': self.state_message,
-            }
-        )
+        })
         return processing_values
 
     def _get_specific_processing_values(self, processing_values):
