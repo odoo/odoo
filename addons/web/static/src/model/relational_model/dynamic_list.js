@@ -118,7 +118,9 @@ export class DynamicList extends DataPoint {
         if (this.editedRecord) {
             let canProceed = true;
             if (discard) {
+                this._recordToDiscard = this.editedRecord;
                 await this.editedRecord.discard();
+                this._recordToDiscard = null;
                 if (this.editedRecord && this.editedRecord.isNew) {
                     this._removeRecords([this.editedRecord.id]);
                 }
@@ -261,7 +263,7 @@ export class DynamicList extends DataPoint {
 
     async _multiSave(record) {
         const changes = record._getChanges();
-        if (!Object.keys(changes).length) {
+        if (!Object.keys(changes).length || record === this._recordToDiscard) {
             return;
         }
         const validSelection = this.selection.filter((record) => {
