@@ -65,6 +65,15 @@ export class AutoComplete extends Component {
         });
     }
 
+    get activeSourceOptionId() {
+        if (!this.isOpened || !this.state.activeSourceOption) {
+            return undefined;
+        }
+        const [sourceIndex, optionIndex] = this.state.activeSourceOption;
+        const source = this.sources[sourceIndex];
+        return `${this.props.id || "autocomplete"}_${sourceIndex}_${source.isLoading ? "loading" : optionIndex}`;
+    }
+
     get isOpened() {
         return this.state.open;
     }
