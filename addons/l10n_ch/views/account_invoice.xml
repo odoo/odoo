@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<odoo>
-    <template id="l10n_ch_report_invoice_document" inherit_id="account.report_invoice_document">
-        <xpath expr="//t[@t-set='show_qr']" position="attributes">
-            <attribute name="t-value" add="and o.qr_code_method != 'ch_qr'" separator=" "/>
-        </xpath>
-    </template>
-</odoo>
