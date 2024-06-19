@@ -1857,7 +1857,7 @@ export const rtcService = {
                  * through the peer to peer connection. So we do not use this less accurate broadcast.
                  */
                 if (channelId !== rtc.state.channel?.id) {
-                    rtc.store.RtcSession.insert(data);
+                    rtc.store.insert(data);
                 }
             }
         );

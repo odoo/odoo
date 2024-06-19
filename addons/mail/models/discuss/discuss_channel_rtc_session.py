@@ -87,11 +87,11 @@ class MailRtcSession(models.Model):
         """
         valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf'}
         self.write({key: values[key] for key in valid_values if key in values})
-        session_data = self._mail_rtc_session_format(extra=True)
+        store = Store("RtcSession", self._mail_rtc_session_format(extra=True))
         self.env["bus.bus"]._sendone(
             self.channel_id,
             "discuss.channel.rtc.session/update_and_broadcast",
-            {"data": session_data, "channelId": self.channel_id.id},
+            {"data": store.get_result(), "channelId": self.channel_id.id},
         )
 
     @api.autovacuum
