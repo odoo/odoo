@@ -71,66 +71,93 @@ class AccountBalance(models.Model):
         return partner_data
 
     @api.model
-    def get_balance(self, account_id, end_date):
-        # Define search criteria to filter account move lines
-        domain = [('account_id', '=', account_id),
-                  ('date', '<=', end_date)]
+    def get_balance(self, account_id, end_date, partner_id):
+        """
+        Calculate the total balance for a specific account as of a given date.
 
-        # Retrieve the most recent account move line based on the criteria
-        move_line = self.env['account.move.line'].search(domain, order='date DESC', limit=1)
+        :param account_id: ID of the account for which to calculate the balance
+        :param end_date: The end date up to which the balance is calculated
+        :return: A dictionary containing the balance information
+        """
+        # Create a search domain to filter the account move lines based on the account ID and date
+        domain = [('account_id', '=', account_id), ('date', '<=', end_date)]
 
-        # Prepare ledger data or return an empty list if no move lines are found
-        balance_info = [{
-            'name': move_line.name,
-            'date': move_line.date,
-            'balance': move_line.balance,
-        }] if move_line else []
+        # Retrieve account move lines matching the domain, order by date descending
+        account_move_lines = self.env['account.move.line'].search(domain, order='date DESC')
 
-        # Return the general ledger data
-        return {'balance_info': balance_info}
+        # Compute the total balance from the retrieved account move lines
+        total_balance = sum(line.balance for line in account_move_lines)
+
+        # Prepare balance information as a list of dictionaries
+        balance_info = {
+            'date': end_date,
+            'balance': total_balance,
+        }
+
+        # Return the balance information
+        return {'balance_info': [balance_info]}
 
     @api.model
-    def get_balance_by_customer(self, customer_id, end_date):
-        # Define search criteria to filter account move lines based on the customer
+    def get_balance_by_customer(self, account_id, end_date, partner_id):
+        """
+                Calculate the total balance for a specific account as of a given date.
+
+                :param account_id: ID of the account for which to calculate the balance
+                :param end_date: The end date up to which the balance is calculated
+                :return: A dictionary containing the balance information
+                """
+        # Create a search domain to filter the account move lines based on the account ID and date
+        domain = [('partner_id', '=', partner_id), ('date', '<=', end_date)]
+
+        # Retrieve account move lines matching the domain, order by date descending
+        account_move_lines = self.env['account.move.line'].search(domain, order='date DESC')
+
+        # Compute the total balance from the retrieved account move lines
+        total_balance = sum(line.amount_residual for line in account_move_lines)
+
+        # Prepare balance information as a list of dictionaries
+        balance_info = {
+            'date': end_date,
+            'balance': total_balance,
+        }
+
+        # Return the balance information
+        return {'balance_info': [balance_info]}
+
+    @api.model
+    def get_balance_by_vendor(self, account_id, end_date, partner_id):
+        """
+        Calculate the total balance for a specific account as of a given date.
+
+        Parameters:
+        - account_id: ID of the account for which the balance is to be calculated.
+        - end_date: The end date up to which the balance is calculated.
+        - partner_id: Optional ID of the partner associated with the transactions (defaults to 11).
+
+        Returns:
+        - A dictionary containing the balance information as a list of dictionaries.
+        """
+
+        # Define search criteria to filter account move lines by partner, account ID, and date
         domain = [
-            ('partner_id', '=', customer_id),
+            ('partner_id', '=', partner_id),
             ('date', '<=', end_date)
         ]
 
-        # Retrieve account move lines based on the criteria
-        move_line = self.env['account.move.line'].search(domain, order='date DESC', limit=1)
+        # Retrieve account move lines that match the domain criteria, ordered by date in descending order
+        account_move_lines = self.env['account.move.line'].search(domain, order='date DESC')
 
-        # Prepare balance info
-        balance_info = [{
-            'customer_id': customer_id,
+        # Calculate the total balance by summing up the balance of each account move line
+        total_balance = sum(line.amount_residual for line in account_move_lines)
+
+        # Assemble the balance information in a dictionary format
+        balance_info = {
             'date': end_date,
-            'balance': move_line.balance,
-        }] if move_line else []
+            'balance': total_balance,
+        }
 
-        # Return the balance data
-        return {'balance_info': balance_info}
-
-    @api.model
-    def get_balance_by_vendor(self, vendor_id, end_date):
-        # Define search criteria to filter account move lines based on the vendor
-        domain = [
-            ('partner_id', '=', vendor_id),
-            ('date', '<=', end_date)
-        ]
-
-        # Retrieve account move lines based on the criteria
-        move_line = self.env['account.move.line'].search(domain, order='date DESC', limit=1)
-
-        # Prepare balance info
-        balance_info = [{
-            'vendor_id': vendor_id,
-            'date': end_date,
-            'balance': move_line.balance,
-        }] if move_line else []
-
-        # Return the balance data
-        return {'balance_info': balance_info}
-
+        # Return the compiled balance information
+        return {'balance_info': [balance_info]}
 
 
     @api.model
@@ -162,8 +189,10 @@ class AccountBalance(models.Model):
         # Return the vendor data
         return vendor_data
 
+
+
     @api.model
-    def general_ledger_report(self, account_id, start_date, end_date):
+    def general_ledger_report(self, account_id, start_date, end_date, partner_id):
         domain = [
             ('account_id', '=', account_id),
             ('date', '>=', start_date),
@@ -177,31 +206,28 @@ class AccountBalance(models.Model):
             analytic_info = self.env['account.analytic.line'].search([('move_line_id', '=', line.id)], limit=1)
             analytic_account_id = analytic_info.account_id if analytic_info else ""
             analytic_account_name = analytic_account_id.name if analytic_info else ""
-            analytic_account_amount = analytic_info.amount if analytic_info else "",
-            partner_type = None
-            if line.partner_id:
-                partner = line.partner_id
-                if partner.customer_rank > 0 and partner.supplier_rank > 0:
-                    partner_type = 'Customer/Vendor'
-                elif partner.customer_rank > 0:
-                    partner_type = 'Customer'
-                elif partner.supplier_rank > 0:
-                    partner_type = 'Vendor'
+            analytic_account_amount = analytic_info.amount if analytic_info else ""
 
-            else:
-                partner_type = ""
+            partner_type = ""
+            if line.partner_id:
+                category_names = {category.name for category in line.partner_id.category_id}
+                if 'Customer' in category_names and 'Vendor' in category_names:
+                    partner_type = 'Customer/Vendor'
+                elif 'Customer' in category_names:
+                    partner_type = 'Customer'
+                elif 'Vendor' in category_names:
+                    partner_type = 'Vendor'
 
             ledger_data.append({
                 'date': line.date,
                 'debit': line.debit,
                 'credit': line.credit,
                 'account_root_id': line.account_root_id.id,
-                'analytic_move_id': analytic_info.id,
+                'analytic_move_id': analytic_info.id if analytic_info else None,
                 'analytic_account_amount': analytic_account_amount,
                 'analytic_account_name': analytic_account_name,
-                'partner_id': line.partner_id.name,
+                'partner_id': line.partner_id.id if line.partner_id else "",
                 'partner_type': partner_type,
-
             })
 
         return {
@@ -209,10 +235,11 @@ class AccountBalance(models.Model):
         }
 
     @api.model
-    def general_ledger_report_by_vendor(self, vendor_id, start_date, end_date):
+    def general_ledger_report_by_vendor(self, account_id, start_date, end_date, partner_id):
         # Define the domain to filter move lines based on the partner and date range
         domain = [
-            ('partner_id', '=', vendor_id),
+            ('account_id', '=', account_id),
+            ('partner_id', '=', partner_id),
             ('date', '>=', start_date),
             ('date', '<=', end_date)
         ]
@@ -250,45 +277,30 @@ class AccountBalance(models.Model):
         }
 
     @api.model
-    def general_ledger_report_by_customer(self, customer_id, start_date, end_date):
-        # Define the domain to filter move lines based on the partner and date range
+    def general_ledger_report_by_customer(self, account_id, start_date, end_date, partner_id):
         domain = [
-            ('partner_id', '=', customer_id),
+            ('account_id', '=', account_id),
+            ('partner_id', '=', partner_id),
             ('date', '>=', start_date),
             ('date', '<=', end_date)
         ]
-
-        # Search for account move lines that match the domain
         move_lines = self.env['account.move.line'].search(domain)
-
         ledger_data = []
 
         for line in move_lines:
-            # Get analytic line information related to the move line
             analytic_info = self.env['account.analytic.line'].search([('move_line_id', '=', line.id)], limit=1)
-            analytic_account_id = analytic_info.account_id if analytic_info else ""
-            analytic_account_name = analytic_account_id.name if analytic_info else ""
-            analytic_account_amount = analytic_info.amount if analytic_info else ""
-
-            partner_type = 'Customer' if line.partner_id else ""
-
-            # Append move line data to the ledger data list
             ledger_data.append({
-                'date': line.date,
-                'debit': line.debit,
-                'credit': line.credit,
-                'account_root_id': line.account_root_id.id,
-                'analytic_move_id': analytic_info.id,
-                'analytic_account_amount': analytic_account_amount,
-                'analytic_account_name': analytic_account_name,
-                'partner_id': line.partner_id.name,
-                'partner_type': partner_type,
+                'date': line.date.strftime("%Y-%m-%d") if line.date else "",  # Empty string if None
+                'debit': line.debit or 0.0,
+                'credit': line.credit or 0.0,
+                'account_root_id': line.account_root_id.id if line.account_root_id else 0,
+                'analytic_move_id': analytic_info.id if analytic_info else 0,
+                'analytic_account_amount': analytic_info.amount if analytic_info else 0.0,
+                'analytic_account_name': analytic_info.account_id.name if analytic_info and analytic_info.account_id else "",
+                'partner_id': line.partner_id.name if line.partner_id else "Unknown",
+                'partner_type': 'Customer' if line.partner_id else "None"
             })
-
-        # Return the ledger data
-        return {
-            'ledger_data': ledger_data,
-        }
+        return {'ledger_data': ledger_data}
 
     ##create/get/delete_bills
     @api.model
