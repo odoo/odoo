@@ -238,10 +238,10 @@ class AccountBalance(models.Model):
     def general_ledger_report_by_vendor(self, account_id, start_date, end_date, partner_id):
         # Define the domain to filter move lines based on the partner and date range
         domain = [
-            ('account_id', '=', account_id),
             ('partner_id', '=', partner_id),
             ('date', '>=', start_date),
-            ('date', '<=', end_date)
+            ('date', '<=', end_date),
+            ('amount_residual', '!=', 0)
         ]
 
         # Search for account move lines that match the domain
@@ -279,10 +279,10 @@ class AccountBalance(models.Model):
     @api.model
     def general_ledger_report_by_customer(self, account_id, start_date, end_date, partner_id):
         domain = [
-            ('account_id', '=', account_id),
             ('partner_id', '=', partner_id),
             ('date', '>=', start_date),
-            ('date', '<=', end_date)
+            ('date', '<=', end_date),
+            ('amount_residual', '!=', 0)
         ]
         move_lines = self.env['account.move.line'].search(domain)
         ledger_data = []
