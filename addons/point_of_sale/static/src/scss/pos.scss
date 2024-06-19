@@ -86,6 +86,14 @@ button {
 
 /*  ********* The Webkit Scrollbar  ********* */
 
+// Remove this scrollbar double button
+::-webkit-scrollbar-button:vertical:start:increment,
+::-webkit-scrollbar-button:vertical:end:decrement,
+::-webkit-scrollbar-button:horizontal:start:increment,
+::-webkit-scrollbar-button:horizontal:end:decrement
+{
+    display: none;
+}
 .pos *::-webkit-scrollbar{
     width:  4px;
     height: 4px;
@@ -99,7 +107,6 @@ button {
     background: #393939;
     min-height: 30px;
 }
-
 .pos.big-scrollbars *::-webkit-scrollbar{
     width:  40px;
     height: 40px;

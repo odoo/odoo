@@ -26,6 +26,11 @@ export class Chrome extends Component {
             }
         });
 
+        if (this.pos.config.iface_big_scrollbars) {
+            const body = document.getElementsByTagName("body")[0];
+            body.classList.add("big-scrollbars");
+        }
+
         onWillStart(this.pos._loadFonts);
         onMounted(this.props.disableLoader);
     }
