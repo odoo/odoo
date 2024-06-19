@@ -63,8 +63,6 @@ const hasValidSelection = OdooEditorLib.hasValidSelection;
 const parseHTML = OdooEditorLib.parseHTML;
 const closestBlock = OdooEditorLib.closestBlock;
 const getRangePosition = OdooEditorLib.getRangePosition;
-const getCursorDirection = OdooEditorLib.getCursorDirection;
-const DIRECTIONS = OdooEditorLib.DIRECTIONS;
 const childNodeIndex = OdooEditorLib.childNodeIndex;
 const fillEmpty = OdooEditorLib.fillEmpty;
 const isVisible = OdooEditorLib.isVisible;
@@ -500,7 +498,7 @@ export class Wysiwyg extends Component {
             plugins: options.editorPlugins,
             direction: options.direction || localization.direction || 'ltr',
             collaborationClientAvatarUrl: this._getCollaborationClientAvatarUrl(),
-            renderingClasses: ["o_dirty", "o_transform_removal", "oe_edited_link", "o_menu_loading", "o_draggable"],
+            renderingClasses: ["o_dirty", "o_transform_removal", "oe_edited_link", "o_menu_loading", "o_draggable", "o_link_in_selection"],
             dropImageAsAttachment: options.dropImageAsAttachment,
             foldSnippets: !!options.foldSnippets,
             useResponsiveFontSizes: options.useResponsiveFontSizes,
@@ -1447,7 +1445,9 @@ export class Wysiwyg extends Component {
                 }
                 // update the shouldFocusUrl prop to focus on url when double click and click edit link
                 this.state.linkToolProps.shouldFocusUrl = shouldFocusUrl;
-                const _onClick = ev => {
+                this.odooEditor.document.removeEventListener('click', this._onClick, true);
+                document.removeEventListener('click', this._onClick, true);
+                this._onClick = ev => {
                     if (
                         !ev.target.closest('#create-link') &&
                         (!ev.target.closest('.oe-toolbar') || !ev.target.closest('we-customizeblock-option')) &&
@@ -1457,12 +1457,12 @@ export class Wysiwyg extends Component {
                         // Destroy the link tools on click anywhere outside the
                         // toolbar if the target is the orgiginal target not in the original target.
                         this.destroyLinkTools();
-                        this.odooEditor.document.removeEventListener('click', _onClick, true);
-                        document.removeEventListener('click', _onClick, true);
+                        this.odooEditor.document.removeEventListener('click', this._onClick, true);
+                        document.removeEventListener('click', this._onClick, true);
                     }
                 };
-                this.odooEditor.document.addEventListener('click', _onClick, true);
-                document.addEventListener('click', _onClick, true);
+                this.odooEditor.document.addEventListener('click', this._onClick, true);
+                document.addEventListener('click', this._onClick, true);
             } else {
                 this.destroyLinkTools();
             }
@@ -1599,17 +1599,8 @@ export class Wysiwyg extends Component {
                         anchorOffset = focusOffset = index;
                     }
                 } else {
-                    const isDirectionRight = getCursorDirection(selection.anchorNode, 0, selection.focusNode, 0) === DIRECTIONS.RIGHT;
-                    if (
-                        closestElement(selection.anchorNode, 'a') === link &&
-                        closestElement(selection.focusNode, 'a') === link
-                    ) {
-                        [anchorNode, focusNode] = isDirectionRight
-                            ? [selection.anchorNode, selection.focusNode]
-                            : [selection.focusNode, selection.anchorNode];
-                    } else {
-                        [anchorNode, focusNode] = [link, link];
-                    }
+                    const commonBlock = selection.rangeCount && closestBlock(selection.getRangeAt(0).commonAncestorContainer);
+                    [anchorNode, focusNode] = commonBlock && link.contains(commonBlock) ? [commonBlock, commonBlock] : [link, link];
                 }
                 if (!focusOffset) {
                     focusOffset = focusNode.childNodes.length || focusNode.length;
