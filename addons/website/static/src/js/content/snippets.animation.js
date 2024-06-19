@@ -1031,9 +1031,19 @@ registry.anchorSlide = publicWidget.Widget.extend({
      * @private
      */
     _onAnimateClick: function (ev) {
-        if (this.$target[0].pathname !== window.location.pathname) {
+        let targetPathname = this.$target[0].pathname;
+        if (!targetPathname.endsWith("/")) {
+            targetPathname += "/";
+        }
+        let currentPathname = window.location.pathname;
+        if (!currentPathname.endsWith("/")) {
+            currentPathname += "/";
+        }
+        if (targetPathname !== currentPathname) {
             return;
         }
+        // Avoid flicker at destination in case of ending "/" difference.
+        this.$target[0].pathname = window.location.pathname;
         var hash = this.$target[0].hash;
         if (hash === '#top' || hash === '#bottom') {
             // If the anchor targets #top or #bottom, directly call the
