@@ -41,6 +41,7 @@
         'views/digest_views.xml',
         'wizard/applicant_refuse_reason_views.xml',
         'wizard/applicant_send_mail_views.xml',
+        'wizard/candidate_send_mail_views.xml',
         'views/menuitems.xml',
     ],
     'demo': [

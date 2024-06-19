@@ -6,13 +6,16 @@
             <field name="arch" type="xml">
                 <form string="Refuse Reason">
                     <group col="1">
-                        <field name="refuse_reason_id" widget="selection_badge" options="{'horizontal': true, 'no_create': True, 'no_open': True}"/>
-                        <label for="send_mail" invisible="not refuse_reason_id" colspan="1"/>
-                        <span colspan="1" class="text-nowrap" invisible="not refuse_reason_id">
-                            <field name="send_mail"/>
-                            to
-                            <field name="applicant_emails"/>
-                        </span>
+                        <field name="refuse_reason_id" string="Reason" widget="selection_badge" options="{'horizontal': true, 'no_create': True, 'no_open': True}"/>
+                        <group invisible="not refuse_reason_id">
+                            <label for="send_mail" class="me-2" invisible="not refuse_reason_id"/>
+                            <div class="d-flex">
+                                <field name="send_mail"/>
+                                <span class="mx-2" style="padding-top: 1px; padding-bottom: 1px;">to</span>
+                                <field name="applicant_emails" invisible="applicant_ids.length == 1"/>
+                                <field name="single_applicant_email" placeholder="Provide an email" invisible="applicant_ids.length != 1"/>
+                            </div>
+                        </group>
                         <field name="template_id" invisible="not send_mail" required="send_mail"/>
                         <field name="applicant_ids" invisible="1"/>
                         <label for="duplicates" invisible="duplicates_count == 0"/>

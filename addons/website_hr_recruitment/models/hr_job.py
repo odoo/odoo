@@ -17,16 +17,12 @@ class Job(models.Model):
     ]
 
     @mute_logger('odoo.addons.base.models.ir_qweb')
-    def _get_default_description(self):
-        return self.env['ir.qweb']._render('website_hr_recruitment.default_description', raise_if_not_found=False)
-
-    @mute_logger('odoo.addons.base.models.ir_qweb')
     def _get_default_website_description(self):
         return self.env['ir.qweb']._render("website_hr_recruitment.default_website_description", raise_if_not_found=False)
 
     description = fields.Html(
         'Job Description', translate=html_translate,
-        default=_get_default_description, prefetch=False,
+        prefetch=False,
         sanitize_overridable=True,
         sanitize_attributes=False, sanitize_form=False)
     website_published = fields.Boolean(help='Set if the application is published on the website of the company.', tracking=True)
