@@ -10,10 +10,10 @@ class ProjectUpdate(models.Model):
     _inherit = 'project.update'
 
     @api.model
-    def _get_template_values(self, project):
-        template_values = super(ProjectUpdate, self)._get_template_values(project)
-        services = self._get_services_values(project)
-        profitability_values = self._get_profitability_values(project)
+    def _get_template_values(self, project, start_date, end_date):
+        template_values = super()._get_template_values(project, start_date, end_date)
+        services = self._get_services_values(project, start_date, end_date)
+        profitability_values = self._get_profitability_values(project, start_date, end_date)
         show_profitability = bool(profitability_values and profitability_values.get('analytic_account_id') and (profitability_values.get('costs') or profitability_values.get('revenues')))
         show_sold = template_values['project'].allow_billable and len(services.get('data', [])) > 0
         return {
@@ -27,7 +27,7 @@ class ProjectUpdate(models.Model):
         }
 
     @api.model
-    def _get_services_values(self, project):
+    def _get_services_values(self, project, start_date, end_date):
         if not project.allow_billable:
             return {}
 
@@ -67,11 +67,11 @@ class ProjectUpdate(models.Model):
         }
 
     @api.model
-    def _get_profitability_values(self, project):
+    def _get_profitability_values(self, project, start_date, end_date):
         costs_revenues = project.analytic_account_id and project.allow_billable
         if not (self.env.user.has_group('project.group_project_manager') and costs_revenues):
             return {}
-        profitability_items = project._get_profitability_items(False)
+        profitability_items = project._get_profitability_items(start_date, end_date, with_action=False)
         costs = sum(profitability_items['costs']['total'].values())
         revenues = sum(profitability_items['revenues']['total'].values())
         margin = revenues + costs

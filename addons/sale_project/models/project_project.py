@@ -353,18 +353,18 @@ class ProjectProject(models.Model):
             project_sql, task_sql, milestone_sql, sale_order_line_sql,
         ])))
 
-    def get_panel_data(self):
-        panel_data = super().get_panel_data()
+    def get_panel_data(self, start_date, end_date):
+        panel_data = super().get_panel_data(start_date, end_date)
         return {
             **panel_data,
-            'sale_items': self._get_sale_items() if self.allow_billable else {},
+            'sale_items': self._get_sale_items(start_date, end_date) if self.allow_billable else {},
         }
 
     def get_sale_items_data(self, domain=None, offset=0, limit=None, with_action=True):
         if not self.env.user.has_group('project.group_project_user'):
             return {}
         sols = self.env['sale.order.line'].sudo().search(
-            domain or self._get_sale_items_domain(),
+            domain,
             offset=offset,
             limit=limit,
         )
@@ -398,11 +398,15 @@ class ProjectProject(models.Model):
             domain = expression.AND([domain, additional_domain])
         return domain
 
-    def _get_sale_items(self, with_action=True):
+    def _get_sale_items(self, start_date, end_date, with_action=True):
         domain = self._get_sale_items_domain()
+        if start_date:
+            domain = expression.AND([domain, [('order_date', '>=', start_date)]])
+        if end_date:
+            domain = expression.AND([domain, [('order_date', '<=', end_date)]])
         return {
             'total': self.env['sale.order.line'].sudo().search_count(domain),
-            'data': self.get_sale_items_data(domain, limit=5, with_action=with_action),
+            'data': self._get_sale_items_data(domain, limit=5, with_action=with_action),
         }
 
     def _show_profitability(self):
@@ -643,8 +647,8 @@ class ProjectProject(models.Model):
         profitability_items['revenues']['total']['to_invoice'] += revenue_items_from_invoices['total']['to_invoice']
         profitability_items['revenues']['total']['invoiced'] += revenue_items_from_invoices['total']['invoiced']
 
-    def _get_profitability_items(self, with_action=True):
-        profitability_items = super()._get_profitability_items(with_action)
+    def _get_profitability_items(self, start_date, end_date, with_action=True):
+        profitability_items = super()._get_profitability_items(start_date, end_date, with_action)
         sale_items = self.sudo()._get_sale_order_items()
         domain = [
             ('order_id', 'in', sale_items.order_id.ids),

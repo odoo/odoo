@@ -109,8 +109,9 @@ class Project(models.Model):
         sequence_per_invoice_type['purchase_order'] = 10
         return sequence_per_invoice_type
 
-    def _get_profitability_items(self, with_action=True):
-        profitability_items = super()._get_profitability_items(with_action)
+    def _get_profitability_items(self, start_date, end_date, with_action=True):
+        profitability_items = super()._get_profitability_items(start_date, end_date, with_action)
+        # TODO VILA
         if self.analytic_account_id:
             invoice_lines = self.env['account.move.line'].sudo().search_fetch([
                 ('parent_state', 'in', ['draft', 'posted']),

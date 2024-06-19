@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_encode
@@ -35,7 +36,9 @@ class ProjectUpdate(models.Model):
             if 'progress' in fields and not result.get('progress'):
                 result['progress'] = project.last_update_id.progress
             if 'description' in fields and not result.get('description'):
-                result['description'] = self._build_description(project)
+                start_date = self.env.context.get("start_date")
+                end_date = self.env.context.get("end_date")
+                result['description'] = self._build_description(project, start_date, end_date)
             if 'status' in fields and not result.get('status'):
                 # `to_define` is not an option for self.status, here we actually want to default to `on_track`
                 # the goal of `to_define` is for a project to start without an actual status.
@@ -107,15 +110,17 @@ class ProjectUpdate(models.Model):
     # Build default description
     # ---------------------------------
     @api.model
-    def _build_description(self, project):
-        return self.env['ir.qweb']._render('project.project_update_default_description', self._get_template_values(project))
+    def _build_description(self, project, start_date, end_date):
+        return self.env['ir.qweb']._render('project.project_update_default_description', self._get_template_values(project, start_date, end_date))
 
     @api.model
-    def _get_template_values(self, project):
+    def _get_template_values(self, project, start_date, end_date):
         milestones = self._get_milestone_values(project)
         return {
             'user': self.env.user,
             'project': project,
+            'start_date': start_date,
+            'end_date': end_date,
             'show_activities': milestones['show_section'],
             'milestones': milestones,
             'format_lang': lambda value, digits: formatLang(self.env, value, digits=digits),

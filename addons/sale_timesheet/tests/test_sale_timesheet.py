@@ -860,11 +860,11 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         sale_order.action_confirm()
         project = sale_order.project_ids[0]
 
-        items = project._get_profitability_items(with_action=False)
+        items = project._get_profitability_items(None, None, with_action=False)
         self.assertEqual(items['revenues']['data'][0]['to_invoice'], product_price, "The quantity to_invoice should be equal to the price of the product")
 
         so_line.price_unit = 2*product_price
-        items = project._get_profitability_items(with_action=False)
+        items = project._get_profitability_items(None, None, with_action=False)
         self.assertEqual(items['revenues']['data'][0]['to_invoice'], 2*product_price, "The quantity to_invoice should be equal to twice the price of the product")
 
     def test_sale_order_with_multiple_project_templates(self):

@@ -1,18 +1,24 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 import json
 
 from odoo import models, fields
-from collections import defaultdict
+from odoo.osv import expression
 
 
 class Project(models.Model):
     _inherit = 'project.project'
 
-    def _get_expenses_profitability_items(self, with_action=True):
+    def _get_expenses_profitability_items(self, start_date, end_date, with_action=True):
+        domain = [('sheet_id.state', 'in', ['post', 'done']), ('analytic_distribution', 'in', self.analytic_account_id.ids)]
+        if start_date:
+            domain = expression.AND([domain, [('date', '>=', start_date)]])
+        if end_date:
+            domain = expression.AND([domain, [('date', '<=', end_date)]])
         expenses_read_group = self.env['hr.expense']._read_group(
-            [('sheet_id.state', 'in', ['post', 'done']), ('analytic_distribution', 'in', self.analytic_account_id.ids)],
+            domain,
             groupby=['sale_order_id', 'product_id', 'currency_id'],
             aggregates=['id:array_agg', 'untaxed_amount_currency:sum'],
         )

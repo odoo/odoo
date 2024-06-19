@@ -8,7 +8,7 @@ from odoo.tests.common import tagged
 class TestProjectHrExpenseProfitabilityCommon(TestExpenseCommon):
     def check_project_profitability_before_creating_and_approving_expense_sheet(self, expense, project, project_profitability_items_empty):
         self.assertDictEqual(
-            project._get_profitability_items(False),
+            project._get_profitability_items(None, None, with_action=False),
             project_profitability_items_empty,
             'No data should be found since the expense is not approved yet.',
         )
@@ -21,7 +21,7 @@ class TestProjectHrExpenseProfitabilityCommon(TestExpenseCommon):
         self.assertEqual(expense_sheet.state, 'submit')
 
         self.assertDictEqual(
-            project._get_profitability_items(False),
+            project._get_profitability_items(None, None, with_action=False),
             project_profitability_items_empty,
             'No data should be found since the sheet is not approved yet.',
         )
@@ -65,7 +65,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
         expense_sequence = sequence_per_invoice_type['expenses']
 
         self.assertDictEqual(
-            self.project._get_profitability_items(False),
+            self.project._get_profitability_items(None, None, with_action=False),
             self.project_profitability_items_empty,
             'No data should be found since the sheets are not posted or done.',
         )
@@ -94,7 +94,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
 
         # Both costs should now be computed in the project profitability, since both expense sheets were posted
         self.assertDictEqual(
-            self.project._get_profitability_items(False),
+            self.project._get_profitability_items(None, None, with_action=False),
             {
                 'costs': {
                     'data': [{
@@ -113,7 +113,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
         expense_sheet.action_reset_expense_sheets()
         self.assertEqual(expense_sheet.state, 'draft')
         self.assertDictEqual(
-            self.project._get_profitability_items(False),
+            self.project._get_profitability_items(None, None, with_action=False),
             {
                 'costs': {
                     'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -expense_foreign.untaxed_amount_currency * 0.2}],
@@ -127,7 +127,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
         expense_sheet_foreign.action_reset_expense_sheets()
         self.assertEqual(expense_sheet_foreign.state, 'draft')
         self.assertDictEqual(
-            self.project._get_profitability_items(False),
+            self.project._get_profitability_items(None, None, with_action=False),
             self.project_profitability_items_empty,
             'No data should be found since the sheets are not posted or done.',
         )
@@ -160,7 +160,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
         expense_sheet.action_sheet_move_post()
 
         self.assertDictEqual(
-            self.project._get_profitability_items(False),
+            self.project._get_profitability_items(None, None, with_action=False),
             {
                 'costs': {
                     'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -expense.untaxed_amount_currency}],

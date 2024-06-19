@@ -2,7 +2,9 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
+import { pick } from "@web/core/utils/objects";
 import { formatFloat } from "@web/views/fields/formatters";
+import { useDateTimePicker } from "@web/core/datetime/datetime_hook";
 import { ViewButton } from '@web/views/view_button/view_button';
 import { FormViewDialog } from '@web/views/view_dialogs/form_view_dialog';
 
@@ -41,6 +43,17 @@ export class ProjectRightSidePanel extends Component {
                 user: {},
                 currency_id: false,
             }
+        });
+
+        this.projectUpdateDateFilter = useService("project_update_date_filter");
+        this.projectUpdateDateFilter.initializeDates();
+        this.startDate = this.endDate = false;
+        useDateTimePicker({
+            pickerProps: {
+                type: "date",
+                range: true,
+            },
+            onApply: (args) => this._updateDates(args),
         });
 
         onWillStart(() => this.loadData());
@@ -102,7 +115,7 @@ export class ProjectRightSidePanel extends Component {
         const data = await this.orm.call(
             'project.project',
             'get_panel_data',
-            [[this.projectId]],
+            [[this.projectId], this.startDate, this.endDate],
             { context: this.context },
         );
         this.state.data = data;
@@ -163,5 +176,14 @@ export class ProjectRightSidePanel extends Component {
             context: JSON.stringify(this.context),
             resModel: 'project.project',
         };
+    }
+
+    async _updateDates(dates) {
+        if (!Array.isArray(dates)) {
+            dates = [dates, false];
+        } // temp fix, to update when fixed in framework
+        [this.startDate, this.endDate] = dates;
+        this.projectUpdateDateFilter.dates = pick(this, "startDate", "endDate");
+        await this.loadData();
     }
 }
