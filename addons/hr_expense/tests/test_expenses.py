@@ -1391,3 +1391,28 @@ class TestExpenses(TestExpenseCommon):
             {'name': 'test sheet no update', 'unit_amount': 100.0, 'quantity': 1, 'total_amount': 100.0},
             {'name':    'test sheet update', 'unit_amount': 250.0, 'quantity': 1, 'total_amount': 250.0},  # no update
         ])
+
+    def test_expense_total_amount_change(self):
+        '''
+        Test the behavior of total_amount field when changing the product to one without a cost
+        and manually setting the total_amount.
+        '''
+
+        expense = self.env['hr.expense'].create({
+            'name': 'Expense with cost',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,  # Assuming product_a has a cost
+            'unit_amount': 100.0,
+            'quantity': 1,
+        })
+        self.assertEqual(expense.total_amount, 100.0)
+
+        expense_form = Form(expense)
+        expense_form.product_id = self.product_zero_cost
+        self.assertEqual(expense_form.total_amount, 0.0)
+
+        expense_form.total_amount = 200.0
+        self.assertEqual(expense_form.total_amount, 200.0)
+
+        expense = expense_form.save()
+        self.assertEqual(expense.total_amount, 200.0)

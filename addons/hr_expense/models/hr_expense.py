@@ -170,8 +170,6 @@ class HrExpense(models.Model):
     @api.depends('quantity', 'unit_amount', 'tax_ids', 'currency_id')
     def _compute_amount(self):
         for expense in self:
-            if not expense.product_has_cost:
-                continue
             base_lines = [expense._convert_to_tax_base_line_dict(price_unit=expense.unit_amount, quantity=expense.quantity)]
             taxes_totals = self.env['account.tax']._compute_taxes(base_lines)['totals'][expense.currency_id]
             expense.total_amount = taxes_totals['amount_untaxed'] + taxes_totals['amount_tax']
@@ -195,7 +193,7 @@ class HrExpense(models.Model):
             currency=currency or self.currency_id,
             product=self.product_id,
             taxes=self.tax_ids,
-            price_unit=price_unit or self.total_amount_company,
+            price_unit=price_unit if price_unit is not None else self.total_amount_company,
             quantity=quantity or 1,
             account=self.account_id,
             analytic_distribution=self.analytic_distribution,
@@ -299,7 +297,7 @@ class HrExpense(models.Model):
             if expense.state != 'draft':
                 continue
             product_id = expense.product_id
-            if product_id and expense.product_has_cost and not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
+            if product_id:
                 expense.unit_amount = product_id.price_compute(
                     'standard_price',
                     uom=expense.product_uom_id,
