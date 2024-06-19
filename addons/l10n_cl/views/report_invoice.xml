@@ -201,8 +201,13 @@
 
         <xpath expr="//div[@id='right-elements']" position="after">
             <div name="stamp" class="text-center col-6"/>
-            <div name="transferable-table" class="col-6"/>
-            <div name="transferable-legend" class="col-6"/>
+        </xpath>
+
+        <xpath expr="//div[@id='right-elements']" position="inside">
+            <div class="row">
+                <div name="transferable-table" class="col-7"/>
+                <div name="transferable-legend" class="col-5"/>
+            </div>
         </xpath>
 
     </template>
