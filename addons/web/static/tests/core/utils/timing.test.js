@@ -265,12 +265,12 @@ describe("debounce", () => {
         expect.verifySteps(["resolved 42"]);
     });
 
-    test("debounce with immediate", async () => {
+    test("debounce with immediate shorthand", async () => {
         const myFunc = () => {
             expect.step("myFunc");
             return 42;
         };
-        const myDebouncedFunc = debounce(myFunc, 3000, { immediate: true });
+        const myDebouncedFunc = debounce(myFunc, 3000, true);
         myDebouncedFunc().then((x) => {
             expect.step("resolved " + x);
         });
@@ -289,11 +289,34 @@ describe("debounce", () => {
         myDebouncedFunc().then((x) => {
             expect.step("resolved " + x);
         });
-        expect.verifySteps(["myFunc"]);
+        await microTick(); // wait for promise returned by debounce
+        await microTick(); // wait for promise returned chained onto it (step resolved x)
+        expect.verifySteps(["myFunc", "resolved 42"]);
+    });
 
+    test("debounce with leading and trailing", async () => {
+        const myFunc = (lastValue) => {
+            expect.step("myFunc");
+            return lastValue;
+        };
+        const myDebouncedFunc = debounce(myFunc, 3000, { leading: true, trailing: true });
+        myDebouncedFunc(42).then((x) => {
+            expect.step("resolved " + x);
+        });
+        myDebouncedFunc(43).then((x) => {
+            expect.step("resolved " + x);
+        });
+        myDebouncedFunc(44).then((x) => {
+            expect.step("resolved " + x);
+        });
+        expect.verifySteps(["myFunc"]);
         await microTick(); // wait for promise returned by debounce
         await microTick(); // wait for promise returned chained onto it (step resolved x)
         expect.verifySteps(["resolved 42"]);
+
+        await runAllTimers();
+        await microTick(); // wait for the inner promise
+        expect.verifySteps(["myFunc", "resolved 44"]);
     });
 
     test("debounce with 'animationFrame' delay", async () => {
