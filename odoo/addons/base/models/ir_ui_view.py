@@ -2470,10 +2470,8 @@ class Model(models.AbstractModel):
         """
 
         field = E.field(name=self._rec_name_fallback())
-        content_div = E.div(field, {'class': "o_kanban_card_content"})
-        card_div = E.div(content_div, {'t-attf-class': "oe_kanban_card oe_kanban_global_click"})
-        kanban_box = E.t(card_div, {'t-name': "kanban-box"})
-        templates = E.templates(kanban_box)
+        kanban_card = E.t(field, {'t-name': "kanban-card"})
+        templates = E.templates(kanban_card)
         return E.kanban(templates, string=self._description)
 
     @api.model
