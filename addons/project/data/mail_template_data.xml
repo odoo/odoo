@@ -132,5 +132,16 @@
     <span style="margin-top: 8px;">You have been invited to follow Task Document : <t t-out="object.display_name"/>.</span>
 </div>
         </template>
+
+        <template id="project_tasks_message_user_assigned_batch">
+            <span>Dear <t t-out="assignee_name"/>,</span>
+            <br/><br/>
+            <span style="margin-top: 8px;">You have been assigned to the following tasks:
+                <ul t-foreach="object" t-as="task">
+                    <li><a t-attf-href="{{task._notify_get_action_link('view')}}" t-out="task.display_name"/></li>
+                </ul>
+            </span>
+            <br/>
+        </template>
     </data>
 </odoo>
