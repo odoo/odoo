@@ -843,28 +843,28 @@ class Lead(models.Model):
             order='date_deadline:min ASC, res_id',
         )
         my_lead_mapping = dict(my_lead_activities)
-        my_lead_ids = list(my_lead_mapping.keys())
-        my_lead_domain = expression.AND([[('id', 'in', my_lead_ids)], domain])
+        my_leads = self.env['crm.lead'].concat(*my_lead_mapping.keys())
+        my_lead_domain = expression.AND([[('id', 'in', my_leads.ids)], domain])
         my_lead_order = ', '.join(item for item in order_items if 'my_activity_date_deadline' not in item)
 
         # Search leads linked to those activities and order them. See docstring
         # of this method for more details.
         search_res = super().search_fetch(my_lead_domain, field_names, order=my_lead_order)
-        my_lead_ids_ordered = sorted(search_res.ids, key=lambda lead_id: my_lead_mapping[lead_id], reverse=not activity_asc)
+        my_lead_ordered = search_res.sorted(lambda lead: my_lead_mapping[lead], reverse=not activity_asc)
         # keep only requested window (offset + limit, or offset+)
-        my_lead_ids_keep = my_lead_ids_ordered[offset:(offset + limit)] if limit else my_lead_ids_ordered[offset:]
+        my_lead_keep = my_lead_ordered[offset:(offset + limit)] if limit else my_lead_ordered[offset:]
         # keep list of already skipped lead ids to exclude them from future search
-        my_lead_ids_skip = my_lead_ids_ordered[:(offset + limit)] if limit else my_lead_ids_ordered
+        my_lead_skip = my_lead_ordered[:(offset + limit)] if limit else my_lead_ordered
 
         # do not go further if limit is achieved
-        if limit and len(my_lead_ids_keep) >= limit:
-            return self.browse(my_lead_ids_keep)
+        if limit and len(my_lead_keep) >= limit:
+            return my_lead_keep
 
         # Fill with remaining leads. If a limit is given, simply remove count of
         # already fetched. Otherwise keep none. If an offset is set we have to
         # reduce it by already fetch results hereabove. Order is updated to exclude
         # my_activity_date_deadline when calling super() .
-        lead_limit = (limit - len(my_lead_ids_keep)) if limit else None
+        lead_limit = (limit - len(my_lead_keep)) if limit else None
         if offset:
             lead_offset = max((offset - len(search_res), 0))
         else:
@@ -872,10 +872,10 @@ class Lead(models.Model):
         lead_order = ', '.join(item for item in order_items if 'my_activity_date_deadline' not in item)
 
         other_lead_res = super().search_fetch(
-            expression.AND([[('id', 'not in', my_lead_ids_skip)], domain]),
+            expression.AND([[('id', 'not in', my_lead_skip.ids)], domain]),
             field_names, lead_offset, lead_limit, lead_order,
         )
-        return self.browse(my_lead_ids_keep) + other_lead_res
+        return my_lead_keep + other_lead_res
 
     def _handle_won_lost(self, vals):
         """ This method handle the state changes :

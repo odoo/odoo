@@ -54,8 +54,8 @@ class RatingMixin(models.AbstractModel):
         read_group_res = self.env['rating.rating']._read_group(domain, ['res_id'], aggregates=['__count', 'rating:avg'])  # force average on rating column
         mapping = {res_id: {'rating_count': count, 'rating_avg': rating_avg} for res_id, count, rating_avg in read_group_res}
         for record in self:
-            record.rating_count = mapping.get(record.id, {}).get('rating_count', 0)
-            record.rating_avg = mapping.get(record.id, {}).get('rating_avg', 0)
+            record.rating_count = mapping.get(record, {}).get('rating_count', 0)
+            record.rating_avg = mapping.get(record, {}).get('rating_avg', 0)
 
     def _search_rating_avg(self, operator, value):
         if operator not in rating_data.OPERATOR_MAPPING:
@@ -64,7 +64,7 @@ class RatingMixin(models.AbstractModel):
             [('res_model', '=', self._name), ('consumed', '=', True), ('rating', '>=', rating_data.RATING_LIMIT_MIN)],
             ['res_id'], ['rating:avg'])
         res_ids = [
-            res_id
+            res_id.id
             for res_id, rating_avg in rating_read_group
             if rating_data.OPERATOR_MAPPING[operator](float_compare(rating_avg, value, 2), 0)
         ]
@@ -85,12 +85,12 @@ class RatingMixin(models.AbstractModel):
         default_grades = {'great': 0, 'okay': 0, 'bad': 0}
         grades_per_record = {record_id: default_grades.copy() for record_id in self.ids}
 
-        for record_id, rating, count in read_group_res:
+        for record, rating, count in read_group_res:
             grade = rating_data._rating_to_grade(rating)
-            grades_per_record[record_id][grade] += count
+            grades_per_record[record][grade] += count
 
         for record in self:
-            grade_repartition = grades_per_record.get(record.id, default_grades)
+            grade_repartition = grades_per_record.get(record, default_grades)
             grade_count = sum(grade_repartition.values())
             record.rating_percentage_satisfaction = grade_repartition['great'] * 100 / grade_count if grade_count else -1
 

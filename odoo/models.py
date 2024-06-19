@@ -58,7 +58,7 @@ from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .tools import (
     clean_context, config, CountingStream, date_utils, discardattr,
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, format_list,
-    frozendict, get_lang, LastOrderedSet, lazy_classproperty, OrderedSet,
+    frozendict, get_lang, groupby, LastOrderedSet, lazy_classproperty, OrderedSet,
     ormcache, partition, populate, Query, ReversedIterable, split_every, unique,
     SQL, pycompat,
 )
@@ -1899,7 +1899,7 @@ class BaseModel(metaclass=MetaModel):
         # column_result: [(a1, a2, ...), (b1, b2, ...), (c1, c2, ...)]
         column_result = []
         for spec in groupby:
-            column = self._read_group_postprocess_groupby(spec, next(column_iterator))
+            column = self._read_group_postprocess_groupby(spec, column_iterator)
             column_result.append(column)
         for spec in aggregates:
             column = self._read_group_postprocess_aggregate(spec, next(column_iterator))
@@ -1987,6 +1987,13 @@ class BaseModel(metaclass=MetaModel):
                 )
             query.add_join("LEFT JOIN", rel_alias, field.relation, condition)
             return SQL.identifier(rel_alias, field.column2)
+
+        elif field.type == 'many2one_reference':
+            return SQL(
+                "%s, %s",
+                self._field_to_sql(self._table, fname, query),
+                self._field_to_sql(self._table, field.model_field, query),
+            )
 
         else:
             sql_expr = self._field_to_sql(self._table, fname, query)
@@ -2148,7 +2155,7 @@ class BaseModel(metaclass=MetaModel):
             return self.env[field.comodel_name] if field.relational else self.env[self._name]
         return False
 
-    def _read_group_postprocess_groupby(self, groupby_spec, raw_values):
+    def _read_group_postprocess_groupby(self, groupby_spec, column_iterator):
         """ Convert the given values of ``groupby_spec``
         from PostgreSQL to the format returned by method ``_read_group()``.
 
@@ -2160,6 +2167,14 @@ class BaseModel(metaclass=MetaModel):
 
         fname, *__ = parse_read_group_spec(groupby_spec)
         field = self._fields[fname]
+        raw_values = next(column_iterator)
+        if self._fields[fname].type == 'many2one_reference':
+            res_id_tuple = list(zip(raw_values, next(column_iterator)))
+            all_by_model = {model: tuple(ids) for model, ids in groupby(res_id_tuple, key=itemgetter(1))}
+            return (
+                self.pool[model_value](self.env, (value,), all_by_model[model_value]) if value else empty_value
+                for value, model_value in res_id_tuple
+            )
 
         if field.relational or fname == 'id':
             Model = self.pool[field.comodel_name] if field.relational else self.pool[self._name]
@@ -2476,7 +2491,7 @@ class BaseModel(metaclass=MetaModel):
                 continue
 
             for row in rows_dict:
-                value = row[group]
+                value = raw_value = row[group]
 
                 if isinstance(value, BaseModel):
                     row[group] = (value.id, value.sudo().display_name) if value else False
@@ -2489,6 +2504,9 @@ class BaseModel(metaclass=MetaModel):
                     additional_domain = [(field_name, 'not in', other_values)]
                 else:
                     additional_domain = [(field_name, '=', value)]
+
+                if field.type == 'many2one_reference':
+                    additional_domain += [(field.model_field, '=', raw_value._name)]
 
                 if field.type in ('date', 'datetime'):
                     if value and isinstance(value, (datetime.date, datetime.datetime)):
