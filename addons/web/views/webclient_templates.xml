@@ -155,9 +155,20 @@
 
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" placeholder="Password" name="password" id="password" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
+                    <div class="input-group" data-widget="password-reveal">
+                        <input type="password" placeholder="Password" name="password" id="password"
+                            t-attf-class="form-control #{'form-control-sm' if form_small else ''}"
+                            required="required" autocomplete="current-password"
+                            t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
+                        <button type="button" class="btn btn-secondary show-hide-password">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
 
+                <p class="text-danger d-none mb-0" id="caps_lock_warning">
+                    Caps lock is on!
+                </p>
                 <p class="alert alert-danger" t-if="error" role="alert">
                     <t t-esc="error"/>
                 </p>
