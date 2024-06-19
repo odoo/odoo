@@ -683,6 +683,10 @@ import wUtils from '@website/js/utils';
                     return value.name !== '';
                 case '!fileSet':
                     return value.name === '';
+                case 'in_array':
+                    return JSON.parse(comparable).includes(value);
+                case '!in_array':
+                    return !JSON.parse(comparable).includes(value);
             }
 
             const format = value.includes(':')

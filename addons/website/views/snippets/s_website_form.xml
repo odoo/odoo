@@ -6,7 +6,7 @@
         <div class="container">
             <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                 <div class="s_website_form_rows row s_col_no_bgcolor">
-                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_dnone">
+                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_dnone" data-type="text">
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px">
                                 <span class="s_website_form_label_content"></span>
@@ -291,6 +291,18 @@
                     <we-button data-select-data-attribute="fileSet">Is set</we-button>
                     <we-button data-select-data-attribute="!fileSet">Is not set</we-button>
                 </we-select>
+                <we-select data-name="hidden_condition_many2one_opt" data-attribute-name="visibilityComparator" data-no-preview="true">
+                    <we-button data-select-data-attribute="in_array">In</we-button>
+                    <we-button data-select-data-attribute="!in_array">Not in</we-button>
+                </we-select>
+                <we-select data-name="hidden_condition_many2many_opt" data-attribute-name="visibilityComparator" data-no-preview="true">
+                    <we-button data-select-data-attribute="any_in_array">Any in</we-button>
+                    <we-button data-select-data-attribute="!any_in_array">Not any in</we-button>
+                    <we-button data-select-data-attribute="equal_array">Is exactly</we-button>
+                    <we-button data-select-data-attribute="!equal_array">Is not exactly</we-button>
+                    <we-button data-select-data-attribute="all_in_array">All in</we-button>
+                    <we-button data-select-data-attribute="!all_in_array">Not all in</we-button>
+                </we-select>
             </we-row>
             <we-select class="o_we_large" data-name="hidden_condition_no_text_opt" data-attribute-name="visibilityCondition" data-no-preview="true">
                 <!-- checkbox, select, radio possible values -->
@@ -300,6 +312,8 @@
             <we-datepicker data-name="hidden_condition_additional_date" data-attribute-name="visibilityCondition" data-select-data-attribute=""/>
             <we-datetimepicker data-name="hidden_condition_datetime_between" data-attribute-name="visibilityBetween" data-select-data-attribute=""/>
             <we-datepicker data-name="hidden_condition_date_between" data-attribute-name="visibilityBetween" data-select-data-attribute="" />
+            <we-many2many data-name="hidden_condition_record_opt" data-attribute-name="visibilityCondition" data-select-data-attribute=""
+                 data-lazy-load="true" data-fakem2m="true"/>
         </div>
 
         <div data-js="WebsiteFormSubmit" data-selector=".s_website_form_submit" data-exclude=".s_website_form_no_submit_options">

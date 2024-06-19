@@ -2800,6 +2800,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
         "model", "fields", "limit", "domain",
         "callWith", "createMethod", "filterInModel", "filterInField", "nullText",
         "defaultMessage",
+        "lazyLoad", // TODO remove all of these in favor of showing soft error in record search overlay when no model
     ],
 
     /**
@@ -2881,7 +2882,8 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             });
         }
 
-        return this._search('');
+        console.log('options', this.options)
+        return this.options.lazyLoad ? undefined : this._search('');
     },
     /**
      * @override
@@ -2965,6 +2967,10 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
      * @private
      */
     async _search(needle) {
+        if (!this.options.model) {
+            return Promise.resolve();
+        }
+
         const recTuples = await this.orm.call(this.options.model, "name_search", [], {
             name: needle,
             args: (await this._getSearchDomain()).concat(
@@ -3158,7 +3164,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
 });
 
 const Many2manyUserValueWidget = UserValueWidget.extend({
-    configAttributes: ['model', 'recordId', 'm2oField', 'createMethod', 'fakem2m', 'filterIn'],
+    configAttributes: ['model', 'recordId', 'm2oField', 'createMethod', 'fakem2m', 'filterIn', 'lazyLoad'],
 
     /**
      * @override
@@ -3172,11 +3178,14 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
             }
         });
         this.filterIn = options.filterIn !== undefined;
+
+        // Configure child m2o
         if (this.filterIn) {
-            // Transfer filter-in values to child m2o.
             dataAttributes.filterInModel = options.model;
             dataAttributes.filterInField = options.m2oField;
         }
+        dataAttributes.lazyLoad = !!options.lazyLoad;
+
         this.orm = this.bindService("orm");
         this.fields = this.bindService("field");
         return this._super(...arguments);
@@ -3186,6 +3195,7 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
      */
     async willStart() {
         await this._super(...arguments);
+        console.log(this.options)
         // If the widget does not have a real m2m field in the database
         // We do not need to fetch anything from the DB
         if (this.options.fakem2m) {
