@@ -51,6 +51,15 @@ class AnalyticPlanFields(models.AbstractModel):
         project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
         return [fname for plan in project_plan + other_plans if (fname := plan._column_name()) in self]
 
+    def _get_analytic_account_ids(self):
+        analytic_account_ids = self.account_id.browse()
+        for fname in self._get_plan_fnames():
+            analytic_account_ids |= self[fname]
+        return analytic_account_ids
+
+    def _get_plan_domain(self, plan):
+        return f"('plan_id', 'child_of', {plan.id})"
+
     @api.constrains(lambda self: self._get_plan_fnames())
     def _check_account_id(self):
         fnames = self._get_plan_fnames()
@@ -67,7 +76,8 @@ class AnalyticPlanFields(models.AbstractModel):
                 fname = plan._column_name()
                 if fname in fields:
                     fields[fname]['string'] = plan.name
-                    fields[fname]['domain'] = f"[('plan_id', 'child_of', {plan.id})]"
+                    fields[fname]['domain'] = f'[{self._get_plan_domain(plan)}]'
+                    # fields[fname]['check_company'] = True
         return fields
 
     def _get_view(self, view_id=None, view_type='form', **options):
@@ -84,7 +94,7 @@ class AnalyticPlanFields(models.AbstractModel):
 
             # Force domain on main account node as the fields_get doesn't do the trick
             if account_node is not None and view_type == 'search':
-                account_node.set('domain', repr([('plan_id', 'child_of', project_plan.id)]))
+                account_node.set('domain', repr([f'[{self._get_plan_domain(project_plan)}]']))
 
             # If there is a main node, append the ones for other plans
             if account_node is not None or account_filter_node is not None:
@@ -95,7 +105,7 @@ class AnalyticPlanFields(models.AbstractModel):
                             'optional': 'show',
                             **account_node.attrib,
                             'name': fname,
-                            'domain': f"[('plan_id', 'child_of', {plan.id})]",
+                            'domain': f'[{self._get_plan_domain(plan)}]',
                         }))
                     if account_filter_node is not None:
                         account_filter_node.addnext(E.filter(name=fname, context=f"{{'group_by': '{fname}'}}"))

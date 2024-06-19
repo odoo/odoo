@@ -18,7 +18,7 @@ class Project(models.Model):
             ('partner_id', '=?', partner_id),
         ]"""
     )
-    analytic_account_active = fields.Boolean("Active Account", related="analytic_account_id.active", export_string_translation=False)
+    analytic_accounts_active = fields.Boolean("Active Account", compute="compute_analytic_accounts_active", export_string_translation=False)
 
     timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets', export_string_translation=False)
     timesheet_encode_uom_id = fields.Many2one('uom.uom', compute='_compute_timesheet_encode_uom_id', export_string_translation=False)
@@ -42,10 +42,15 @@ class Project(models.Model):
         for project in self:
             project.timesheet_encode_uom_id = project.company_id.timesheet_encode_uom_id or self.env.company.timesheet_encode_uom_id
 
-    @api.depends('analytic_account_id')
+    @api.depends(lambda self: self._get_plan_fnames())
     def _compute_allow_timesheets(self):
-        without_account = self.filtered(lambda t: not t.analytic_account_id and t._origin)
+        without_account = self.filtered(lambda t: t._origin and not t._get_analytic_account_ids())
         without_account.update({'allow_timesheets': False})
+
+    @api.depends(lambda self: [f'{fname}.active' for fname in self._get_plan_fnames()])
+    def compute_analytic_accounts_active(self):
+        for project in self:
+            project.analytic_accounts_active = any(account.active for account in project._get_analytic_account_ids())
 
     @api.depends('company_id')
     def _compute_is_internal_project(self):
@@ -108,11 +113,11 @@ class Project(models.Model):
             operator_new = 'not inselect'
         return [('id', operator_new, (query, ()))]
 
-    @api.constrains('allow_timesheets', 'analytic_account_id')
+    @api.constrains(lambda self: ['allow_timesheets'] + self._get_plan_fnames())
     def _check_allow_timesheet(self):
         for project in self:
-            if project.allow_timesheets and not project.analytic_account_id:
-                raise ValidationError(_('You cannot use timesheets without an analytic account.'))
+            if project.allow_timesheets and not project._get_analytic_account_ids():
+                raise ValidationError(_('To use the timesheets feature, you need an analytic account. Please set one up for the project or turn off the timesheets feature.'))
 
     @api.depends('timesheet_ids', 'timesheet_encode_uom_id')
     def _compute_total_timesheet_time(self):
@@ -150,12 +155,13 @@ class Project(models.Model):
         analytic_accounts = self.env['account.analytic.account'].create(self._get_values_analytic_account_batch(analytic_accounts_vals))
         for vals, analytic_account in zip(analytic_accounts_vals, analytic_accounts):
             vals['analytic_account_id'] = analytic_account.id
+            vals[analytic_account.root_plan_id._column_name()] = analytic_account.id
         return super().create(vals_list)
 
     def write(self, values):
         # create the AA for project still allowing timesheet
-        if values.get('allow_timesheets') and not values.get('analytic_account_id'):
-            project_new_account = self.filtered(lambda project: not project.analytic_account_id)
+        if values.get('allow_timesheets') and not any(values.get(fname) for fname in self._get_plan_fnames()):
+            project_new_account = self.filtered(lambda project: not project._get_analytic_account_ids())
             project_new_account._create_analytic_account()
         return super(Project, self).write(values)
 

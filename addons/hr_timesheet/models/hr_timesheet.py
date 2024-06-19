@@ -312,57 +312,62 @@ class AccountAnalyticLine(models.Model):
             Overrride this to compute on the fly some field that can not be computed fields.
             :param vals_list: list of dict from `create`or `write`.
         """
-        timesheet_indices = set()
-        task_ids, project_ids, account_ids = set(), set(), set()
-        for index, vals in enumerate(vals_list):
-            if not vals.get('project_id') and not vals.get('task_id'):
-                continue
-            timesheet_indices.add(index)
+        ResCompany = self.env['res.company']
+        ProjectProject = self.env['project.project']
+        ProjectTask = self.env['project.task']
+        company_ids = set()
+
+        for vals in vals_list:
             if vals.get('task_id'):
-                task_ids.add(vals['task_id'])
-            elif vals.get('project_id'):
-                project_ids.add(vals['project_id'])
-            if vals.get('account_id'):
-                account_ids.add(vals['account_id'])
-
-        task_per_id = {}
-        if task_ids:
-            tasks = self.env['project.task'].sudo().browse(task_ids)
-            for task in tasks:
-                task_per_id[task.id] = task
-                if not task.project_id:
+                task = ProjectTask.browse(vals['task_id'])
+                company_ids.add(task.company_id.id)
+                project = task.project_id
+                if not project:
                     raise ValidationError(_('Timesheets cannot be created on a private task.'))
-            account_ids = account_ids.union(tasks.analytic_account_id.ids, tasks.project_id.analytic_account_id.ids)
+                if not vals.get('project_id'):
+                    vals['project_id'] = project.id
+            elif vals.get('project_id'):
+                project = ProjectProject.browse(vals['project_id'])
+                company_ids.add(project.company_id.id)
+            else:
+                continue
 
-        project_per_id = {}
-        if project_ids:
-            projects = self.env['project.project'].sudo().browse(project_ids)
-            account_ids = account_ids.union(projects.analytic_account_id.ids)
-            project_per_id = {p.id: p for p in projects}
-
-        accounts = self.env['account.analytic.account'].sudo().browse(account_ids)
-        account_per_id = {account.id: account for account in accounts}
-
-        uom_id_per_company = {
-            company: company.project_time_mode_id.id
-            for company in accounts.company_id
-        }
-
-        for index in timesheet_indices:
-            vals = vals_list[index]
-            data = task_per_id[vals['task_id']] if vals.get('task_id') else project_per_id[vals['project_id']]
-            if not vals.get('project_id'):
-                vals['project_id'] = data.project_id.id
-            if not vals.get('account_id'):
-                account = data._get_task_analytic_account_id() if vals.get('task_id') else data.analytic_account_id
-                if not account or not account.active:
-                    raise ValidationError(_('Timesheets must be created on a project or a task with an active analytic account.'))
-                vals['account_id'] = account.id
-                vals['company_id'] = account.company_id.id or data.company_id.id or vals.get('company_id')
+            accounts_company_ids, accounts_active = self._timesheet_preprocess_accounts(vals, project)
+            if not accounts_active:
+                raise ValidationError(_('Timesheets must be created with an active analytic account.'))
+            company_ids.update(accounts_company_ids)
+            company_ids -= {False}
+            if len(company_ids) > 1:
+                raise ValidationError(_('The project, task and analytic accounts must have the same company.'))
+            vals['company_id'] = company_ids.pop() if company_ids else vals.get('company_id', self.env.company.id)
+            company = ResCompany.browse(vals['company_id'])
             if not vals.get('product_uom_id'):
-                company = account_per_id[vals['account_id']].company_id or data.company_id
-                vals['product_uom_id'] = uom_id_per_company.get(company.id, company.project_time_mode_id.id) or self.env.company.project_time_mode_id.id
+                vals['product_uom_id'] = company.project_time_mode_id.id
+            # If the accounts were taken from a project, we need to check if the mandatory plans are set on it (and it's company-dependent)
+            self._check_project_mandantory_plans(project, company)
         return vals_list
+
+    def _timesheet_preprocess_accounts(self, vals, project):
+        AccountAnalyticAccount = self.env['account.analytic.account']
+        any_account_active = False
+        company_ids = set()
+        for fname in self._get_plan_fnames():
+            if fname in vals:
+                account = AccountAnalyticAccount.browse(vals[fname])
+            else:
+                account = project[fname]
+                vals[fname] = account.id
+            company_ids.add(account.company_id.id)
+            any_account_active = any_account_active or (account and account.active)
+        return company_ids, any_account_active
+
+    def _check_project_mandantory_plans(self, project, company):
+        mandatory_plans_names = [plan['column_name'] for plan in self.env['account.analytic.plan'].sudo().with_company(company).get_relevant_plans(business_domain='timesheet', company_id=company.id) if plan['applicability'] == 'mandatory']
+        if not mandatory_plans_names:
+            return
+        for plan_name in mandatory_plans_names:
+            if not project[plan_name]:
+                raise ValidationError(_("One or more plans are required on the project linked to the timesheet."))
 
     def _timesheet_postprocess(self, values):
         """ Hook to update record one by one according to the values of a `write` or a `create`. """
@@ -382,16 +387,14 @@ class AccountAnalyticLine(models.Model):
         """
         result = {id_: {} for id_ in self.ids}
         sudo_self = self.sudo()  # this creates only one env for all operation that required sudo()
-        # (re)compute the amount (depending on unit_amount, employee_id for the cost, and account_id for currency)
-        if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'account_id']):
+        # (re)compute the amount (depending on unit_amount, employee_id for the cost, and the analytic accounts for currency)
+        if any(field_name in values for field_name in ['unit_amount', 'employee_id'] + self._get_plan_fnames()):
             for timesheet in sudo_self:
                 cost = timesheet._hourly_cost()
                 amount = -timesheet.unit_amount * cost
                 amount_converted = timesheet.employee_id.currency_id._convert(
-                    amount, timesheet.account_id.currency_id or timesheet.currency_id, self.env.company, timesheet.date)
-                result[timesheet.id].update({
-                    'amount': amount_converted,
-                })
+                    amount, timesheet._get_analytic_account_ids().currency_id or timesheet.currency_id, self.env.company, timesheet.date)
+                result[timesheet.id]['amount'] = amount_converted
         return result
 
     def _is_timesheet_encode_uom_day(self):

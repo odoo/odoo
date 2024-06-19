@@ -27,6 +27,7 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         cls.project_global = cls.env['project.project'].create({
             'name': 'Global Project',
             'analytic_account_id': cls.analytic_account_sale.id,
+            'account_id': cls.analytic_account_sale.id,
             'allow_billable': True,
         })
         cls.project_template = cls.env['project.project'].create({
@@ -706,6 +707,7 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'partner_id': self.partner.id,
             'allow_billable': True,
             'analytic_account_id': analytic_account.id,
+            'account_id': analytic_account.id,
         })
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,

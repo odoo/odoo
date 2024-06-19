@@ -19,6 +19,9 @@ class ResConfigSettings(models.TransientModel):
         comodel_name='account.analytic.plan',
         string="Analytic Plan",
         config_parameter="analytic.analytic_plan_projects",
+        required=True,
+        default=lambda self: self.env.ref("analytic.analytic_plan_projects", False),
+        domain="[('parent_id', '=', False)]",
     )
 
     @api.model

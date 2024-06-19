@@ -21,7 +21,7 @@
             <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
         </record>
         <record id="mrp_production_dinning_table_2" model="mrp.production">
-            <field name="product_id" ref="project_mrp.product_product_dinning_table"/>
+            <field name="product_id" ref="project_mrp_account.product_product_dinning_table"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="product_qty">5</field>
             <field name="location_src_id" ref="stock.stock_location_stock"/>
@@ -32,10 +32,10 @@
 
         <!-- Function confirm MO -->
         <function model="mrp.production" name="action_confirm" eval="[[
-            ref('project_mrp.mrp_production_drawer_1'), ref('project_mrp.mrp_production_dinning_table_2'),
+            ref('project_mrp_account.mrp_production_drawer_1'), ref('project_mrp_account.mrp_production_dinning_table_2'),
         ]]"/>
         <function model="mrp.production" name="button_mark_done" eval="[[
-            ref('project_mrp.mrp_production_dinning_table_2'),
+            ref('project_mrp_account.mrp_production_dinning_table_2'),
         ]]"/>
     </data>
 </odoo>

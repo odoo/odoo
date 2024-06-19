@@ -29,6 +29,9 @@ class ProjectProject(models.Model):
     partner_id = fields.Many2one(compute="_compute_partner_id", store=True, readonly=False)
     display_sales_stat_buttons = fields.Boolean(compute='_compute_display_sales_stat_buttons', export_string_translation=False)
     sale_order_state = fields.Selection(related='sale_order_id.state', export_string_translation=False)
+    analytic_sale_order_id = fields.Many2one('sale.order', string='Sale Order', groups='sales_team.group_sale_salesman', domain="[('partner_id', '=', partner_id)]",
+        help="Products added to stock pickings, whose operation type is configured to generate analytic costs, will be re-invoiced in this sales order if they are set up for it.",
+    )
 
     @api.model
     def _map_tasks_default_values(self, project):
@@ -119,6 +122,16 @@ class ProjectProject(models.Model):
             'target': 'self',
             'url': self.get_portal_url(),
         }
+
+    @api.onchange('analytic_sale_order_id')
+    def on_change_analytic_sale_order_id(self):
+        if not self.sale_line_id and self.analytic_sale_order_id.order_line:
+            self.sale_line_id = self.analytic_sale_order_id.order_line[0]
+
+    @api.onchange('sale_line_id')
+    def on_change_sale_line_id(self):
+        if not self.analytic_sale_order_id and self.sale_line_id:
+            self.analytic_sale_order_id = self.sale_line_id.order_id
 
     def action_view_sols(self):
         self.ensure_one()

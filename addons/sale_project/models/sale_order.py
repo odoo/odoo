@@ -24,6 +24,8 @@ class SaleOrder(models.Model):
     show_create_project_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user', export_string_translation=False)
     show_project_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user', export_string_translation=False)
     show_task_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user', export_string_translation=False)
+    project_id = fields.Many2one('project.project', domain="[('allow_billable', '=', True)]", groups='project.group_project_user', help="A task will be created for the project upon sales order confirmation. The analytic distribution of this project will also serve as a reference for newly created sales order items.")
+    has_line_creating_task = fields.Boolean(compute='_compute_has_line_creating_task')
 
     def _compute_milestone_count(self):
         read_group = self.env['project.milestone']._read_group(
@@ -121,6 +123,13 @@ class SaleOrder(models.Model):
                 projects = projects._filter_access_rules('read')
             order.project_ids = projects
             order.project_count = len(projects)
+
+    @api.depends('order_line.product_id.service_tracking', 'order_line.product_id.project_id')
+    def _compute_has_line_creating_task(self):
+        for order in self:
+            order.has_line_creating_task = order.order_line.product_id.filtered(
+                lambda p: p.service_tracking == 'task_global_project' and not p.project_id
+            )
 
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """

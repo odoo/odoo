@@ -179,7 +179,7 @@
                             <field name="currency_id" invisible="1" readonly="state in ['cancel', 'done', 'purchase']" groups="!base.group_multi_currency"/>
                             <field name="tax_calculation_rounding_method" invisible="1"/>
                         </group>
-                        <group>
+                        <group id="left_group">
                             <field name="date_order" invisible="state in ('purchase', 'done')" readonly="state in ['cancel', 'done', 'purchase']"/>
                             <label for="date_approve" invisible="state not in ('purchase', 'done')"/>
                             <div name="date_approve" invisible="state not in ('purchase', 'done')" class="o_row">
