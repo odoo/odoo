@@ -3315,6 +3315,9 @@ class Json(Field):
     type = 'json'
     column_type = ('jsonb', 'jsonb')
 
+    def _convert_db_column(self, model, column):
+        sql.convert_column_jsonb(model._cr, model._table, self.name, column['udt_name'])
+
     def convert_to_record(self, value, record):
         """ Return a copy of the value """
         return False if value is None else copy.deepcopy(value)
