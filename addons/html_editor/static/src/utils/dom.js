@@ -179,3 +179,26 @@ export function toggleClass(node, className) {
         node.removeAttribute("class");
     }
 }
+
+/** @typedef {import("@html_editor/core/selection_plugin").Cursors} Cursors */
+
+/**
+ * Remove all occurrences of a character from a text node and update cursors for
+ * for later selection restore.
+ *
+ * @param {Node} node text node
+ * @param {String} char character to remove (string of length 1)
+ * @param {Cursors} cursors
+ */
+export function cleanTextNode(node, char, cursors) {
+    const removedIndexes = [];
+    node.textContent = node.textContent.replaceAll(char, (_, offset) => {
+        removedIndexes.push(offset);
+        return "";
+    });
+    cursors.update((cursor) => {
+        if (cursor.node === node) {
+            cursor.offset -= removedIndexes.filter((index) => cursor.offset > index).length;
+        }
+    });
+}
