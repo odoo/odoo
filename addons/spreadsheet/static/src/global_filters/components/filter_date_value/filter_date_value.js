@@ -2,8 +2,8 @@
 
 import { Component, onWillUpdateProps } from "@odoo/owl";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
-import { FILTER_DATE_OPTION, monthsOptions } from "@spreadsheet/assets_backend/constants";
-import { getPeriodOptions } from "@web/search/utils/dates";
+import { monthsOptions } from "@spreadsheet/assets_backend/constants";
+import { QUARTER_OPTIONS } from "@web/search/utils/dates";
 
 const { DateTime } = luxon;
 
@@ -15,11 +15,19 @@ export class DateFilterValue extends Component {
         onTimeRangeChanged: Function,
         yearOffset: { type: Number, optional: true },
         period: { type: String, optional: true },
+<<<<<<< saas-17.1
+||||||| b26129c1ed6eb4806569e05d90c17dd9aa2e4c02
+=======
+        disabledPeriods: { type: Array, optional: true },
+>>>>>>> 8ed4664514ec3f853e57553b112dd59a721a3a8d
     };
     setup() {
         this._setStateFromProps(this.props);
-        onWillUpdateProps(this._setStateFromProps);
-        this.dateOptions = this.getDateOptions();
+        this.dateOptions = this.getDateOptions(this.props);
+        onWillUpdateProps((nextProps) => {
+            this._setStateFromProps(nextProps);
+            this.dateOptions = this.getDateOptions(nextProps);
+        });
     }
     _setStateFromProps(props) {
         this.period = props.period;
@@ -40,12 +48,18 @@ export class DateFilterValue extends Component {
      *
      * @returns {Array<Object>}
      */
-    getDateOptions() {
-        const periodOptions = getPeriodOptions(DateTime.local());
-        const quarters = FILTER_DATE_OPTION["quarter"].map((quarterId) =>
-            periodOptions.find((option) => option.id === quarterId)
-        );
-        return quarters.concat(monthsOptions);
+    getDateOptions(props) {
+        const quarterOptions = Object.values(QUARTER_OPTIONS);
+        const disabledPeriods = props.disabledPeriods || [];
+
+        const dateOptions = [];
+        if (!disabledPeriods.includes("quarter")) {
+            dateOptions.push(...quarterOptions);
+        }
+        if (!disabledPeriods.includes("month")) {
+            dateOptions.push(...monthsOptions);
+        }
+        return dateOptions;
     }
 
     isSelected(periodId) {
