@@ -32,9 +32,6 @@ export class FloorScreen extends Component {
             isColorPicker: false,
         });
         this.floorMapRef = useRef("floor-map-ref");
-        const ui = useState(useService("ui"));
-        const mode = localStorage.getItem("floorPlanStyle");
-        this.pos.floorPlanStyle = ui.isSmall || mode == "kanban" ? "kanban" : "default";
         this.map = useRef("map");
         onMounted(() => this.pos.openCashControl());
         onWillStart(this.onWillStart);
