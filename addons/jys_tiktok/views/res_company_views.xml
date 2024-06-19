@@ -8,10 +8,28 @@
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='branches']" position="after">
                     <page string="Tiktok" name="page_tiktok">
-                        <group col="4" colspan="2">
-                            <field name="tiktok_redirect_url"/>
-                            <field name="tiktok_partner_id"/>\
-                            <field name="tiktok_partner_key"/>
+                        <separator string="API Settings"/>
+                        
+                        <group>
+                            <field name="tiktok_api_domain"/>
+                            <field name="tiktok_client_id"/>
+                            <field name="tiktok_client_secret"/>
+                            <field name="tiktok_access_token"/>
+                            <field name="tiktok_url"/>
+                            <field name="tiktok_state"/>
+                        </group>
+                        
+                        <separator string="URL"/>
+                        
+                        <group>
+                            <field name="tiktok_url"/>
+                        </group>
+                        
+                        <separator string="Other Config"/>
+                        
+                        <group>
+                            <field name="tiktok_logistic_product_id"/>
+                            <field name="tiktok_commission_product_id"/>
                         </group>
                         
                         <separator string="Shops"/>

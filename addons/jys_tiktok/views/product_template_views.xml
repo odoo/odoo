@@ -41,7 +41,7 @@
                                 <field name="price"/>
                             </tree>
                         </field>
-                       
+
                         <!-- <field name="tiktok_product_image_ids" nolabel="1" string="Images">
                             <tree string="Images" editable="bottom">
                                 <field name="image" widget="image" nolabel="1"/>
@@ -72,32 +72,7 @@
                                 </sheet>
                             </form>
                         </field>
-                        <field name="upload_product_image_ids" widget="many2many_binary" string="Images" nolabel="1" context="{'upload_tiktok_image': True}"/>
-                    
-                        <!-- <separator string="Upload Image"/>
-                        <field name="upload_product_image_ids" widget="kanban" string="Images">
-                            <kanban>
-                                <field name="raw"/>
-                                <templates>
-                                    <t t-name="kanban-box">
-                                        <div class="o_kanban_image" style="width: 300px; height: 300px; border: 0px solid white; display: flex; align-items: center; justify-content: center;">
-                                            <img alt="Image" t-att-src="kanban_image('ir.attachment', 'raw', record.id.raw_value)" style="width: 100%; height: 100%"/>
-                                        </div>
-                                        <button name="unlink" type="object" class="fa fa-trash"/>
-                                    </t>
-
-                                </templates>
-                            </kanban>
-                            <form string="Upload Image">
-                                <sheet>
-                                    <group>
-                                        <field name="res_id" invisible="1"/>
-                                        <field name="name"/>
-                                        <field name="datas" widget="image"/>
-                                    </group>
-                                </sheet>
-                            </form>
-                        </field> -->
+                        <field name="upload_product_tt_image_ids" widget="many2many_binary" string="Images" nolabel="1" context="{'upload_tiktok_image': True}"/>
 
                     </page>
                 </xpath>
@@ -110,7 +85,7 @@
             <field name="inherit_id" ref="product.product_template_kanban_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_properties']" position="after">
-                    <field name="is_tiktok" invisible="1"/> 
+                    <field name="is_tiktok" invisible="1"/>
                     <div style="display: inline-block; float:right">
                         <img src="/jys_tiktok/static/img/tiktok_logo.png" alt="Tiktok" style="width: 24px; height: 24px; display:flex; flex-direction: row-reverse" invisible="is_tiktok == False"/>
                     </div>
@@ -124,9 +99,9 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='default_code']" position="after">
+                <!-- <xpath expr="//field[@name='default_code']" position="after">
                     <field name="variation_sku"/>
-                </xpath>
+                </xpath> -->
                 <xpath expr="//div[@name='options']" position="inside">
                     <div>
                         <field name="is_sync_tiktok"/>
@@ -135,6 +110,12 @@
                 </xpath>
                 <xpath expr="//page[@name='sales']" position="after">
                     <page name="tiktok_variations" string="Tiktok" invisible="is_tiktok == False">
+                        <separator string="SKU"/>
+                        <group>
+                            <field name="tiktok_variation_sku" required="is_tiktok == True"/>
+                        </group>
+
+                        <separator string="PRODUCT ID"/>
                         <field name="tiktok_product_variant_ids" nolabel="1">
                             <tree editable="bottom">
                                 <field name="shop_id"/>
@@ -168,8 +149,22 @@
                                 </sheet>
                             </form>
                         </field>
-                        <field name="upload_product_var_image_ids" widget="many2many_binary" string="Images" nolabel="1" context="{'upload_tiktok_image': True}"/>
+                        <field name="upload_product_var_tt_image_ids" widget="many2many_binary" string="Images" nolabel="1" context="{'upload_tiktok_image': True}"/>
                     </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="jys_product_product_kanban_inherit" model="ir.ui.view">
+            <field name="name">jys.tiktok.product.product.kanban</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='tags']" position="after">
+                    <field name="is_sync_tiktok" invisible="1"/>
+                    <div style="display: inline-block; float:right">
+                        <img src="/jys_tiktok/static/img/tiktok_logo.png" alt="Tiktok" style="width: 24px; height: 24px; display:flex; flex-direction: row-reverse" invisible="is_sync_tiktok == False"/>
+                    </div>
                 </xpath>
             </field>
         </record>

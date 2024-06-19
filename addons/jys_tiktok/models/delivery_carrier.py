@@ -6,4 +6,3 @@ class DeliveryCarrier(models.Model):
 
     product_tmpl_id = fields.Many2one('product.template', 'Product Template')
     tiktok_logistic_id = fields.Integer('Tiktok Logistic ID')
-    is_cashless = fields.Boolean('Cashless', default=False)

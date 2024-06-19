@@ -12,7 +12,6 @@ class TiktokProductImage(models.Model):
     def unlink(self):
         for dels in self:
             attachment_id = self.env['ir.attachment'].browse(dels.image_id)
-            print(attachment_id,'attachment_id===')
             if attachment_id.datas:
                 attachment_id.unlink()
         return super(TiktokProductImage, self).unlink()
@@ -29,7 +28,6 @@ class TiktokProductImageVariant(models.Model):
     def unlink(self):
         for dels in self:
             attachment_id = self.env['ir.attachment'].browse(dels.image_id)
-            print(attachment_id,'attachment_id var===')
             if attachment_id.datas:
                 attachment_id.unlink()
         return super(TiktokProductImageVariant, self).unlink()

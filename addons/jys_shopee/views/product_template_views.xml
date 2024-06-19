@@ -173,5 +173,19 @@
                 </xpath>
             </field>
         </record>
+        
+        <record id="jys_product_product_kanban_inherit" model="ir.ui.view">
+            <field name="name">jys.tiktok.product.product.kanban</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='tags']" position="after">
+                    <field name="is_sync_tiktok" invisible="1"/>
+                    <div style="display: inline-block; float:right">
+                        <img src="/jys_tiktok/static/img/tiktok_logo.png" alt="Tiktok" style="width: 24px; height: 24px; display:flex; flex-direction: row-reverse" invisible="is_sync_tiktok == False"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>

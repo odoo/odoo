@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- <record id="view_jys_marketplace_order_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="marketplace_no" optional="show"/>
+                </xpath>
+            </field>
+        </record> -->
         <record id="view_jys_tiktok_order_form_inherit" model="ir.ui.view">
             <field name="name">sale.order.form</field>
             <field name="model">sale.order</field>
@@ -11,11 +21,13 @@
                         <group name="tiktok">
                             <group name="tiktok_order">
                                 <field name="tiktok_shop_id" readonly="1"/>
+                                <field name="marketplace_partner_id" readonly="1"/>
                                 <field name="is_tiktok_order" readonly="1"/>
                                 <field name="is_tiktok_cod" readonly="1"/>
                                 <field name="is_tiktok_return" readonly="1"/>
                                 <field name="tiktok_ordersn" readonly="1"/>
                                 <field name="tracking_no" readonly="1"/>
+                                <field name="buyer_message" readonly="1"/>
                             </group>
                             <group name="tiktok_date">
                                 <field name="tiktok_payment_date" readonly="1"/>
@@ -23,6 +35,7 @@
                                 <field name="tiktok_actual_shipping_cost" readonly="1"/>
                                 <field name="tiktok_shipping_cost_rebate" readonly="1"/>
                                 <field name="tiktok_commission_fee" readonly="1"/>
+                                <field name="slowest_delivery_date" readonly="1"/>
                             </group>
                         </group>
                     </page>

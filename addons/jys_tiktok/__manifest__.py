@@ -32,7 +32,9 @@
         'views/tiktok_item_views.xml',
         'views/tiktok_order_views.xml',
         'views/tiktok_shop_views.xml',
+        'views/tiktok_stock_views.xml',
         'views/res_company_views.xml',
+        'views/tiktok_token_views.xml',
         
         'views/jys_tiktok_menu.xml',
         'views/tiktok_assets.xml'

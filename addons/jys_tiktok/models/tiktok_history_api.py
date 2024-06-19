@@ -29,13 +29,13 @@ class TiktokHistoryApi(models.Model):
     state = fields.Selection(selection=[('draft', 'Draft'), ('failed', 'Failed'), ('skipped', 'Skipped'), ('partial', 'Partial'), ('success', 'Success')], string='Status')
 
     def action_view_form(self):
-        for log in self:
+        for history in self:
             return {
-                'name': 'API Logs',
+                'name': 'History API',
                 'type': 'ir.actions.act_window',
                 'res_model': 'tiktok.history.api',
-                'res_id': log.id,
+                'res_id': history.id,
                 'view_type': 'form',
-                'view_mode': 'tree,form',
+                'view_mode': 'form',
                 'target': 'current'
             }

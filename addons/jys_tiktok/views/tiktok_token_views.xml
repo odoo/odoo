@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tiktok_token_tree" model="ir.ui.view">
+            <field name="name">tiktok.token.tree</field>
+            <field name="model">tiktok.token</field>
+            <field name="arch" type="xml">
+                <tree string="Tiktok Token List" create="false" >
+                    <field name="create_date" string="Generate On"/>
+                    <field name="access_token"/>
+                    <field name="valid"/>
+                    <field name="expires_in"/>
+                    <field name="token_type"/>
+                    
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_tiktok_token_form" model="ir.ui.view">
+            <field name="name">tiktok.token.form</field>
+            <field name="model">tiktok.token</field>
+            <field name="arch" type="xml">
+                <form string="Tiktok Token List" create="false" edit="false">
+                    <sheet>
+                        <group col="4">
+                            <field name="access_token"/>
+                            <field name="expires_in"/>
+                            <field name="token_type"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_tiktok_token" model="ir.actions.act_window">
+            <field name="name">Tiktok Token</field>
+            <field name="res_model">tiktok.token</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+        </record>
+    </data>
+</odoo>

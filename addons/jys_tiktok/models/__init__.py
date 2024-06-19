@@ -3,6 +3,8 @@ from . import delivery_carrier
 from . import res_company
 from . import res_partner
 from . import sale_order
+from . import account_move
+from . import stock_picking
 from . import tiktok_attribute
 from . import tiktok_category
 from . import tiktok_item
@@ -11,3 +13,4 @@ from . import tiktok_order
 from . import tiktok_history_api
 from . import tiktok_product
 from . import tiktok_product_image
+from . import tiktok_token

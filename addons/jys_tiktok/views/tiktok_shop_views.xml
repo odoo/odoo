@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <record id="view_tiktok_shop_tree" model="ir.ui.view">
             <field name="name">tiktok.shop.tree</field>
             <field name="model">tiktok.shop</field>
             <field name="arch" type="xml">
                 <tree string="Tiktok Shop">
                     <header>
-                        <button name="action_authorize_shop_v2" string="Authorize Shop" class="btn-primary ms-1" type="object" display="always"/>
+                        <button name="action_authorize_shop_tiktok" string="Authorize TikTok Shop" class="btn-primary ms-1" type="object" display="always"/>
                     </header>
                     <field name="name"/>
                     <field name="shop_id"/>
@@ -20,10 +19,11 @@
             <field name="name">tiktok.shop.form</field>
             <field name="model">tiktok.shop</field>
             <field name="arch" type="xml">
-                <form string="Tiktok Shop">
+                <form string="TikTok Shop">
                     <header>
-                        <button name="tiktok_generate_new_token" type="object" string="Generate New Token" class="btn-primary"/>
-                        <button name="tiktok_generate_refresh_token" type="object" string="Generate Refresh Token" class="btn-primary"/>
+                        <!-- <button name="action_authorize_shop_tiktok" string="Authorize Shop" type="object" class="btn-primary"/> -->
+                        <button name="action_get_token_tiktok" string="Get Token" type="object" class="btn-primary"/>
+                        <button name="action_get_access_token_tiktok" string="Get Access Token" type="object" class="btn-primary"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -33,42 +33,44 @@
                             </h1>
                         </div>
                         <group>
-                            <field name="shop_id" required="1"/>
-                            <field name="payment_journal_id"/>
-                            <field name="payment_method_id"/>
-                            <field name="commission"/>
-                            <field name="max_commission"/>
-                            <field name="is_star_seller"/>
-                            <field name="star_seller_commission"/>
-                            <field name="is_include_tax"/>	
-                            <field name="duty_import" invisible="is_include_tax == False"/>	
-                            <field name="ppn" invisible="is_include_tax == False"/>
-
-                            <h2>
-                                <separator string="Configuration"/>
-                            </h2>
-
+                            <field name="shop_id" required="0"/>
+                            <!-- <field name="employee_id" required="0"/>  -->
+                            <!-- <field name="time_code" required="0"/> -->
+                            <field name="sales_fee" required="0"/>
+                            <field name="flat_fee" required="0"/>
+                            <field name="partner_id" required="0"/> 
+                            <!-- <field name="partner_invoice_id" required="0"/>  -->
+                            <field name="setting_shop_id" required="0"/>
+                            <field name="fulfillment" required="0"/>  
+                            <field name="tiktok_commission_product_id" required="0"/>
+                            <field name="start_date" required="0"/>     
                         </group>
+                        <separator string="Journal and Payment"/>
                         <group>
-                            <field name="tiktok_code"/>
-                            <field name="tiktok_access_token"/>
-                            <field name="tiktok_refresh_token"/>
+                            <field name="payment_journal_id" required="0"/>
+                            <field name="payment_method_id" required="0"/>
                         </group>
-                        <!-- <h2>
-                            <separator string="Boost Products"/>
-                        </h2>  -->   
-                        <!-- <field name="boost_product_ids" nolabel="1" domain="[('tiktok_product_ids.shop_id', '=', id)]"/> -->
+                        <separator string="TikTok Access"/>
+                        <group>
+                            <field name="tiktok_chiper" required="0" readonly="0"/>                          
+                            <field name="tiktok_token" required="0" readonly="1"/>
+                            <field name="tiktok_refresh" required="0" readonly="1"/>
+                            <field name="tiktok_code" required="0"/>                             
+                        </group>
+
                     </sheet>
                 </form>
             </field>
         </record>
 
+        
         <record id="action_jys_tiktok_shop" model="ir.actions.act_window">
-            <field name="name">Shop</field>
+            <field name="name">Tiktok Shop</field>
             <field name="res_model">tiktok.shop</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{}</field>
         </record>
+        
     </data>
 </odoo>
