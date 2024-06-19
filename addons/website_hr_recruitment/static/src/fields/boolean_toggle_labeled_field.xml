@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_hr_recruitment.BooleanToggleFieldLabeled" t-inherit="web.BooleanToggleField" >
+        <xpath expr="//CheckBox" position="inside">
+            <t t-out="this.state.label"></t>
+        </xpath>
+    </t>
+
+</templates>

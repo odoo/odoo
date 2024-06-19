@@ -26,7 +26,7 @@ class ApplicantSendMail(models.TransientModel):
                 'tag': 'display_notification',
                 'params': {
                     'type': 'danger',
-                    'message': _("The following applicants are missing an email address: %s.", ', '.join(without_emails.mapped(lambda a: a.partner_name or a.name))),
+                    'message': _("The following applicants are missing an email address: %s.", ', '.join(without_emails.mapped(lambda a: a.partner_name or a.display_name))),
                 }
             }
 
@@ -42,7 +42,7 @@ class ApplicantSendMail(models.TransientModel):
                     'name': applicant.partner_name,
                     'email': applicant.email_from,
                     'phone': applicant.partner_phone,
-                    'mobile': applicant.partner_mobile,
+                    'mobile': applicant.partner_phone,
                 })
 
             attachment_ids = []

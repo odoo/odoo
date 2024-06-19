@@ -49,18 +49,6 @@ class HrCandidate(models.Model):
         compute='_compute_partner_phone_sanitized',
         store=True,
         index='btree_not_null')
-    partner_mobile = fields.Char(
-        string="Mobile",
-        size=32,
-        compute='_compute_partner_phone_email',
-        inverse='_inverse_partner_email',
-        store=True,
-        index='btree_not_null')
-    partner_mobile_sanitized = fields.Char(
-        string='Sanitized Mobile Number',
-        compute='_compute_partner_mobile_sanitized',
-        store=True,
-        index='btree_not_null')
     linkedin_profile = fields.Char('LinkedIn Profile')
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
@@ -96,7 +84,7 @@ class HrCandidate(models.Model):
     def init(self):
         self.env.cr.execute("""
             CREATE INDEX IF NOT EXISTS hr_candidate_email_partner_phone_mobile
-            ON hr_candidate(email_normalized, partner_mobile_sanitized, partner_phone_sanitized);
+            ON hr_candidate(email_normalized, partner_phone_sanitized);
         """)
 
     @api.depends('partner_name')
@@ -109,11 +97,6 @@ class HrCandidate(models.Model):
         for candidate in self:
             candidate.partner_phone_sanitized = candidate._phone_format(fname='partner_phone') or candidate.partner_phone
 
-    @api.depends('partner_mobile')
-    def _compute_partner_mobile_sanitized(self):
-        for candidate in self:
-            candidate.partner_mobile_sanitized = candidate._phone_format(fname='partner_mobile') or candidate.partner_mobile
-
     @api.depends('partner_id')
     def _compute_partner_phone_email(self):
         for candidate in self:
@@ -122,8 +105,6 @@ class HrCandidate(models.Model):
             candidate.email_from = candidate.partner_id.email
             if not candidate.partner_phone:
                 candidate.partner_phone = candidate.partner_id.phone
-            if not candidate.partner_mobile:
-                candidate.partner_mobile = candidate.partner_id.mobile
 
     def _inverse_partner_email(self):
         for candidate in self:
@@ -139,12 +120,10 @@ class HrCandidate(models.Model):
                 # change email on a partner will trigger other heavy code, so avoid to change the email when
                 # it is the same. E.g. "email@example.com" vs "My Email" <email@example.com>""
                 candidate.partner_id.email = candidate.email_from
-            if candidate.partner_mobile:
-                candidate.partner_id.mobile = candidate.partner_mobile
             if candidate.partner_phone:
                 candidate.partner_id.phone = candidate.partner_phone
 
-    @api.depends('email_from', 'partner_mobile_sanitized', 'partner_phone_sanitized')
+    @api.depends('email_from', 'partner_phone_sanitized')
     def _compute_similar_candidates_count(self):
         """
             The field similar_candidates_count is only used on the form view.
@@ -159,7 +138,7 @@ class HrCandidate(models.Model):
                 else:
                     candidate.similar_candidates_count = 0
             return
-        self.flush_recordset(['email_normalized', 'partner_phone_sanitized', 'partner_mobile_sanitized'])
+        self.flush_recordset(['email_normalized', 'partner_phone_sanitized'])
         self.env.cr.execute("""
             SELECT
                 id,
@@ -168,9 +147,6 @@ class HrCandidate(models.Model):
                     FROM hr_candidate AS sub
                     WHERE c.id != sub.id
                      AND ((coalesce(c.email_normalized, '') <> '' AND sub.email_normalized = c.email_normalized)
-                       OR (coalesce(c.partner_mobile_sanitized, '') <> '' AND c.partner_mobile_sanitized = sub.partner_mobile_sanitized)
-                       OR (coalesce(c.partner_mobile_sanitized, '') <> '' AND c.partner_mobile_sanitized = sub.partner_phone_sanitized)
-                       OR (coalesce(c.partner_phone_sanitized, '') <> '' AND c.partner_phone_sanitized = sub.partner_mobile_sanitized)
                        OR (coalesce(c.partner_phone_sanitized, '') <> '' AND c.partner_phone_sanitized = sub.partner_phone_sanitized))
                 ) AS similar_candidates
             FROM hr_candidate AS c
@@ -184,7 +160,7 @@ class HrCandidate(models.Model):
     def _get_similar_candidates_domain(self):
         """
             This method returns a domain for the applicants whitch match with the
-            current candidate according to email_from, partner_phone or partner_mobile.
+            current candidate according to email_from, partner_phone.
             Thus, search on the domain will return the current candidate as well if any of
             the following fields are filled.
         """
@@ -195,9 +171,7 @@ class HrCandidate(models.Model):
         if self.email_normalized:
             domain = expression.OR([domain, [('email_normalized', '=', self.email_normalized)]])
         if self.partner_phone_sanitized:
-            domain = expression.OR([domain, ['|', ('partner_phone_sanitized', '=', self.partner_phone_sanitized), ('partner_mobile_sanitized', '=', self.partner_phone_sanitized)]])
-        if self.partner_mobile_sanitized:
-            domain = expression.OR([domain, ['|', ('partner_mobile_sanitized', '=', self.partner_mobile_sanitized), ('partner_phone_sanitized', '=', self.partner_mobile_sanitized)]])
+            domain = expression.OR([domain, [('partner_phone_sanitized', '=', self.partner_phone_sanitized)]])
         return domain
 
     def _compute_attachment_count(self):
@@ -386,7 +360,7 @@ class HrCandidate(models.Model):
             'lang': address_sudo.lang,
             'address_id': self.company_id.partner_id.id,
             'candidate_id': self.ids,
-            'phone': self.partner_phone or self.partner_mobile
+            'phone': self.partner_phone
         }
 
     def _check_interviewer_access(self):
@@ -410,4 +384,16 @@ class HrCandidate(models.Model):
             ],
             'search_view_id': self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').ids,
             'domain': [('res_model', '=', 'hr.candidate'), ('res_id', 'in', self.ids)],
+        }
+
+    def action_send_email(self):
+        return {
+            'name': _('Send Email'),
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'view_mode': 'form',
+            'res_model': 'candidate.send.mail',
+            'context': {
+                'default_candidate_ids': self.ids,
+            }
         }

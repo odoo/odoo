@@ -21,6 +21,9 @@
             'hr_recruitment_skills/static/src/**/*',
         ],
     },
+    'demo': [
+        'data/hr_recruitment_skills_demo.xml',
+    ],
     'installable': True,
     'auto_install': True,
     'license': 'LGPL-3',

@@ -79,7 +79,7 @@
 
     <record id="hr_candidate_salesman0" model="hr.candidate">
         <field name="email_from">enrique.jones152@gmail.example.com</field>
-        <field name="partner_mobile">9963214587</field>
+        <field name="partner_phone">9963214587</field>
         <field name="partner_name">Enrique Jones</field>
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
@@ -100,7 +100,7 @@
     <record id="hr_candidate_salesman1" model="hr.candidate">
         <field name="partner_name">Meldona Thang</field>
         <field name="email_from">thing.thang.thong@gmail.example.com</field>
-        <field name="partner_mobile">998655451</field>
+        <field name="partner_phone">998655451</field>
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
         <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
@@ -117,7 +117,7 @@
     <record id="hr_candidate_dev0" model="hr.candidate">
         <field name="partner_name">Johan Duck</field>
         <field name="email_from">coincoin@gmail.example.com</field>
-        <field name="partner_mobile">8955545</field>
+        <field name="partner_phone">8955545</field>
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
@@ -135,7 +135,7 @@
     <record id="hr_candidate_dev1" model="hr.candidate">
         <field name="partner_name">Kelly Wallant</field>
         <field name="email_from">kelly@wallant.example.com</field>
-        <field name="partner_mobile">879895515</field>
+        <field name="partner_phone">879895515</field>
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
     </record>
@@ -151,7 +151,7 @@
     <record id="hr_candidate_dev2" model="hr.candidate">
         <field name="partner_name">Cécile Donth</field>
         <field name="email_from">c-cile72@msn.example.com</field>
-        <field name="partner_mobile">98765411</field>
+        <field name="partner_phone">98765411</field>
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
     </record>
@@ -168,7 +168,7 @@
     <record id="hr_candidate_dev3" model="hr.candidate">
         <field name="partner_name">Ohen Rizome</field>
         <field name="email_from">0h3n-rijaune@yahoo.example.com</field>
-        <field name="partner_mobile">654687987654</field>
+        <field name="partner_phone">654687987654</field>
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
     </record>
@@ -184,7 +184,7 @@
     <record id="hr_candidate_traineemca0" model="hr.candidate">
         <field name="partner_name">Marie Justine</field>
         <field name="email_from">justinemarie@outlook.example.com</field>
-        <field name="partner_mobile">9988774455</field>
+        <field name="partner_phone">9988774455</field>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
         <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
@@ -319,8 +319,7 @@
     <record id="hr_candidate_traineemca1" model="hr.candidate">
         <field name="partner_name">Tina Augustie</field>
         <field name="email_from">tina.turner@gmail.example.com</field>
-        <field name="partner_mobile">9898745745</field>
-        <field name="partner_phone">6630125</field>
+        <field name="partner_phone">9898745745</field>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
     </record>
@@ -337,8 +336,7 @@
     <record id="hr_candidate_programmer" model="hr.candidate">
         <field name="partner_name">Shane Williams</field>
         <field name="email_from">the.real.shane@gmail.example.com</field>
-        <field name="partner_mobile">9812398524</field>
-        <field name="partner_phone">6630125</field>
+        <field name="partner_phone">9812398524</field>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
@@ -357,7 +355,7 @@
     <record id="hr_candidate_advertisement" model="hr.candidate">
         <field name="partner_name">David Billy</field>
         <field name="email_from">billy.boy12@gmail.example.com</field>
-        <field name="partner_mobile">9988774455</field>
+        <field name="partner_phone">9988774455</field>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>

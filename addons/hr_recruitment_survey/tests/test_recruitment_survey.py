@@ -51,7 +51,6 @@ class TestRecruitmentSurvey(common.TransactionCase):
                 'email_from': 'customer@example.com',
             }).id,
             'department_id': cls.department_admins.id,
-            'description': 'A nice Sys Admin job offer!',
             'job_id': cls.job.id,
         })
 

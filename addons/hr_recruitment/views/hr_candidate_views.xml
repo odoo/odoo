@@ -8,7 +8,6 @@
                 <field name="company_id" invisible="1"/>
                 <field name="email_normalized" invisible="1"/>
                 <field name="partner_phone_sanitized" invisible="1"/>
-                <field name="partner_mobile_sanitized" invisible="1"/>
                 <header>
                     <button string="Create Employee" name="create_employee_from_candidate" type="object" data-hotkey="q" groups="hr_recruitment.group_hr_recruitment_user"
                             class="o_create_employee" invisible="employee_id or not active"/>
@@ -64,10 +63,9 @@
                     <group>
                         <group>
                             <field name="active" invisible="1"/>
-                            <field name="partner_id"/>
+                            <field name="partner_id" groups="base.group_no_one"/>
                             <field name="email_from"/>
                             <field name="partner_phone"/>
-                            <field name="partner_mobile"/>
                             <field name="linkedin_profile"/>
                             <field name="type_id"/>
                         </group>
@@ -98,7 +96,6 @@
                 <field name="partner_name" string="Name"/>
                 <field name="email_from"/>
                 <field name="partner_phone"/>
-                <field name="partner_mobile"/>
                 <field name="user_id" string="Manager" widget="many2one_avatar_user"/>
                 <field name="priority" widget="priority" optional="show"/>
                 <field name="availability" optional="show"/>
@@ -134,10 +131,6 @@
                         <field t-if="record.partner_name.raw_value" class="fw-bold fs-5" name="partner_name"/>
                         <field t-else="" class="fw-bold fs-5" name="partner_id"/>
                         <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                        <div t-if="record.partner_mobile.raw_value" class="d-flex align-items-center">
-                            <i class="fa fa-mobile mr4" role="img" aria-label="Mobile" title="Mobile"/>
-                            <field name="partner_mobile" widget="phone"/>
-                        </div>
                         <field name="candidate_properties" widget="properties"/>
                         <footer class="fs-6">
                             <field name="priority" widget="priority"/>
@@ -160,7 +153,15 @@
         <field name="name">hr.candidate.view.calendar</field>
         <field name="model">hr.candidate</field>
         <field name="arch" type="xml">
-            <calendar string="Candidates" mode="month" date_start="activity_date_deadline" color="user_id" event_limit="5" hide_time="true">
+            <calendar 
+                string="Candidates"
+                mode="month"
+                date_start="activity_date_deadline"
+                color="user_id"
+                event_limit="5"
+                hide_time="true"
+                quick_create="0"
+            >
                 <field name="partner_name"/>
                 <field name="priority" widget="priority"/>
                 <field name="activity_summary"/>
@@ -177,7 +178,6 @@
             <search string="Candidates">
                 <field name="partner_name"/>
                 <field name="email_from"/>
-                <field name="partner_mobile"/>
                 <field name="user_id"/>
                 <field name="linkedin_profile"/>
                 <filter string="My Candidates" name="my_candidates" domain="[('user_id', '=', uid)]"/>
@@ -187,7 +187,24 @@
                 <filter string="Waiting" name="waiting" domain="[('applicant_ids', '=', False)]"/>
                 <filter string="Hired" name="hired" domain="[('applicant_ids.application_status', '=', 'hired')]"/>
                 <separator/>
-                <filter string="Directly Available" name="directly_available" domain="['|', ('availability', '&lt;=', context_today().strftime('%Y-%m-%d')), ('availability', '=', False)]"/>
+                <filter string="Directly Available" name="directly_available"
+                    domain="
+                [
+                    '&amp;',
+                        '|',
+                            ('availability', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                            ('availability', '=', False),
+                        '!',
+                            ('applicant_ids', 'any',
+                                [
+                                    '&amp;',
+                                        ('application_status', '=', 'hired'),
+                                    '|',
+                                        ('availability', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                        ('availability', '=', False),
+                                ]
+                            )
+                ]" />
                 <separator/>
                 <filter string="Creation Date" name="filter_create" date="create_date"/>
                 <separator/>
@@ -198,6 +215,29 @@
                 </group>
             </search>
         </field>
+    </record>
+    
+    <record id="action_hr_candidate_mass_sms" model="ir.actions.act_window">
+        <field name="name">Send SMS</field>
+        <field name="res_model">sms.composer</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_composition_mode': 'mass',
+            'default_mass_keep_log': True,
+            'default_res_ids': active_ids,
+        }</field>
+        <field name="binding_model_id" ref="hr_recruitment.model_hr_candidate"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+    <record id="action_candidate_send_mail" model="ir.actions.server">
+        <field name="name">Send Email</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_candidate"/>
+        <field name="binding_model_id" ref="hr_recruitment.model_hr_candidate"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_send_email()</field>
     </record>
 
     <record id="action_hr_candidate" model="ir.actions.act_window">

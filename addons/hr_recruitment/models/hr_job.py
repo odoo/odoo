@@ -3,8 +3,11 @@
 import ast
 from collections import defaultdict
 
+from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.tools import SQL
+from odoo.tools.convert import convert_file
+
 
 class Job(models.Model):
     _name = "hr.job"
@@ -45,7 +48,7 @@ class Job(models.Model):
         readonly=True, store=True)
     user_id = fields.Many2one('res.users', "Recruiter",
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]", default=lambda self: self.env.user,
-        tracking=True, help="The Recruiter will be the default value for all Applicants Recruiter's field in this job \
+        tracking=True, help="The Recruiter will be the default value for all Applicants in this job \
             position. The Recruiter is automatically added to all meetings with the Applicant.")
     document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents", readonly=True)
     documents_count = fields.Integer(compute='_compute_document_ids', string="Document Count")
@@ -61,6 +64,8 @@ class Job(models.Model):
 
     activities_overdue = fields.Integer(compute='_compute_activities')
     activities_today = fields.Integer(compute='_compute_activities')
+
+    job_properties = fields.Properties('Properties', definition='company_id.job_properties_definition')
 
     applicant_properties_definition = fields.PropertiesDefinition('Applicant Properties')
     no_of_hired_employee = fields.Integer(
@@ -249,7 +254,7 @@ class Job(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            vals['favorite_user_ids'] = vals.get('favorite_user_ids', []) + [(4, self.env.uid)]
+            vals["favorite_user_ids"] = vals.get("favorite_user_ids", [])
         jobs = super().create(vals_list)
         utm_linkedin = self.env.ref("utm.utm_source_linkedin", raise_if_not_found=False)
         if utm_linkedin:
@@ -259,10 +264,21 @@ class Job(models.Model):
             } for job in jobs]
             self.env['hr.recruitment.source'].create(source_vals)
         jobs.sudo().interviewer_ids._create_recruitment_interviewers()
+        # Automatically subscribe the department manager and the recruiter to a job position.
+        for job in jobs:
+            job.message_subscribe(
+                job.manager_id._get_related_partners().ids + job.user_id.partner_id.ids
+            )
+
         return jobs
 
     def write(self, vals):
         old_interviewers = self.interviewer_ids
+        old_managers = {}
+        old_recruiters = {}
+        for job in self:
+            old_managers[job] = job.manager_id
+            old_recruiters[job] = job.user_id
         if 'active' in vals and not vals['active']:
             self.application_ids.active = False
         res = super().write(vals)
@@ -270,6 +286,35 @@ class Job(models.Model):
             interviewers_to_clean = old_interviewers - self.interviewer_ids
             interviewers_to_clean._remove_recruitment_interviewers()
             self.sudo().interviewer_ids._create_recruitment_interviewers()
+
+        # Subscribe the department manager if the department has changed
+        if "department_id" in vals:
+            for job in self:
+                to_unsubscribe = [
+                    partner
+                    for partner in old_managers[job]._get_related_partners().ids
+                    if partner not in job.user_id.partner_id.ids
+                ]
+                job.message_unsubscribe(to_unsubscribe)
+                job.message_subscribe(job.manager_id._get_related_partners().ids)
+
+        # Subscribe the recruiter if it has changed.
+        if "user_id" in vals:
+            for job in self:
+                to_unsubscribe = [
+                    partner
+                    for partner in old_recruiters[job].partner_id.ids
+                    if partner not in job.manager_id._get_related_partners().ids
+                ]
+                job.message_unsubscribe(to_unsubscribe)
+                job.message_subscribe(job.user_id.partner_id.ids)
+
+        # Update the availability on all hired candidates if the mission end date is changed
+        if "date_to" in vals:
+            for job in self:
+                hired_candidates = job.application_ids.filtered(lambda a: a.application_status == 'hired')
+                for candidate in hired_candidates:
+                    candidate.availability = job.date_to + relativedelta(days=1)
 
         # Since the alias is created upon record creation, the default values do not reflect the current values unless
         # specifically rewritten
@@ -350,7 +395,24 @@ class Job(models.Model):
             'name': _('Job'),
             'res_model': 'hr.job',
             'res_id': self.id,
-            'views': [(form_view.id, 'form'),],
+            'views': [(form_view.id, 'form')],
             'type': 'ir.actions.act_window',
             'target': 'inline'
+        }
+
+    @api.model
+    def _action_load_recruitment_scenario(self):
+
+        convert_file(
+            self.env,
+            "hr_recruitment",
+            "data/scenarios/hr_recruitment_scenario.xml",
+            None,
+            mode="init",
+            kind="data",
+        )
+
+        return {
+            "type": "ir.actions.client",
+            "tag": "reload",
         }
