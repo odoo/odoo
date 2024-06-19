@@ -14,7 +14,6 @@ class AccountPaymentMethodLine(models.Model):
         compute='_compute_payment_acquirer_id',
         store=True,
         readonly=False,
-        domain="[('provider', '=', code)]",
     )
     payment_acquirer_state = fields.Selection(
         related='payment_acquirer_id.state'
