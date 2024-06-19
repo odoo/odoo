@@ -4,10 +4,9 @@ import { registry } from "@web/core/registry";
 import { omit } from "@web/core/utils/objects";
 
 import { CopyButton } from "@web/core/copy_button/copy_button";
-import { UrlField } from "../url/url_field";
 import { CharField } from "../char/char_field";
-import { TextField } from "../text/text_field";
 import { standardFieldProps } from "../standard_field_props";
+import { UrlField } from "../url/url_field";
 
 import { Component } from "@odoo/owl";
 
@@ -56,10 +55,6 @@ export class CopyClipboardCharField extends CopyClipboardField {
     static components = { Field: CharField, CopyButton };
 }
 
-export class CopyClipboardTextField extends CopyClipboardField {
-    static components = { Field: TextField, CopyButton };
-}
-
 export class CopyClipboardURLField extends CopyClipboardField {
     static components = { Field: UrlField, CopyButton };
 }
@@ -89,15 +84,6 @@ export const copyClipboardCharField = {
 };
 
 registry.category("fields").add("CopyClipboardChar", copyClipboardCharField);
-
-export const copyClipboardTextField = {
-    component: CopyClipboardTextField,
-    displayName: _t("Copy Multiline Text to Clipboard"),
-    supportedTypes: ["text"],
-    extractProps,
-};
-
-registry.category("fields").add("CopyClipboardText", copyClipboardTextField);
 
 export const copyClipboardURLField = {
     component: CopyClipboardURLField,
