@@ -113,7 +113,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
             ["id", "=", sessionData.channelMember.thread.id],
         ]);
         BusBus._sendone(channel, "discuss.channel.rtc.session/update_and_broadcast", {
-            data: sessionData,
+            data: { RtcSession: [sessionData] },
             channelId: channel.id,
         });
     }
