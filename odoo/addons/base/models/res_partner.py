@@ -846,7 +846,7 @@ class Partner(models.Model):
     @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat', 'lang')
     def _compute_display_name(self):
         for partner in self:
-            name = partner.with_context({'lang': self.env.lang})._get_complete_name()
+            name = partner.with_context(lang=self.env.lang)._get_complete_name()
             if partner._context.get('show_address'):
                 name = name + "\n" + partner._display_address(without_company=True)
             name = re.sub(r'\s+\n', '\n', name)
