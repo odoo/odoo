@@ -73,7 +73,7 @@ export class Activity extends Component {
     }
 
     get onUpdate() {
-        return this.props.onUpdate?.();
+        return this.props.onUpdate;
     }
 
     toggleDetails() {
