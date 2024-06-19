@@ -12,6 +12,8 @@ export class EmbeddedComponentPlugin extends Plugin {
     static resources(p) {
         return {
             filter_descendants_to_serialize: p.filterDescendantsToSerialize.bind(p),
+            is_mutation_record_savable: p.isMutationRecordSavable.bind(p),
+            on_change_attribute: p.onChangeAttribute.bind(p),
         };
     }
 
@@ -21,6 +23,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         this.nodeMap = new WeakMap();
         this.app = this.config.embeddedComponentInfo.app;
         this.env = this.config.embeddedComponentInfo.env;
+        this.hostToStateChangeManagerMap = new WeakMap();
         this.embeddedComponents = memoize((embeddedComponents = []) => {
             const result = {};
             for (const embedding of embeddedComponents) {
@@ -29,6 +32,20 @@ export class EmbeddedComponentPlugin extends Plugin {
             return result;
         });
         // First mount is done during HISTORY_RESET which happens during START_EDITION
+    }
+
+    isMutationRecordSavable(record) {
+        const info = this.nodeMap.get(record.target);
+        if (
+            info &&
+            record.type === "attributes" &&
+            record.attributeName === "data-embedded-props"
+        ) {
+            // This attribute is determined independently for each user
+            // through `data-embedded-state` attribute mutations.
+            return false;
+        }
+        return true;
     }
 
     handleCommand(command, payload) {
@@ -92,12 +109,66 @@ export class EmbeddedComponentPlugin extends Plugin {
         return this.embeddedComponents(this.resources.embeddedComponents)[host.dataset.embedded];
     }
 
-    mountComponent(host, { Component, getProps }) {
+    /**
+     * Apply an embedded state change received from `data-embedded-state`
+     * attribute. In some cases (undo/redo/revertStepsUntil history operations),
+     * the attribute has to be set to a new value, computed by the
+     * stateChangeManager.
+     *
+     * @param {Object} attributeChange @see HistoryPlugin
+     * @param { Object } options
+     * @param { boolean } options.forNewStep whether the mutation is being used
+     *        to create a new step
+     * @returns {string|undefined} new attribute value to set on the node if
+     *          attributeChange.value has to be altered, undefined if
+     *          attributeChange.value is already correct.
+     */
+    onChangeAttribute(attributeChange, { forNewStep = false } = {}) {
+        if (attributeChange.attributeName !== "data-embedded-state") {
+            return;
+        }
+        const attrState = attributeChange.reverse
+            ? attributeChange.oldValue
+            : attributeChange.value;
+        const stateChangeManager = this.getStateChangeManager(attributeChange.target);
+        if (stateChangeManager) {
+            return stateChangeManager.onStateChanged(attrState, {
+                reverse: attributeChange.reverse,
+                forNewStep,
+            });
+        }
+    }
+
+    getStateChangeManager(host) {
+        const embedding = this.getEmbedding(host);
+        if (!("getStateChangeManager" in embedding)) {
+            return null;
+        }
+        if (!this.hostToStateChangeManagerMap.has(host)) {
+            const config = {
+                host,
+                dispatch: this.dispatch.bind(this),
+            };
+            const stateChangeManager = embedding.getStateChangeManager(config);
+            stateChangeManager.setup();
+            this.hostToStateChangeManagerMap.set(host, stateChangeManager);
+        }
+        return this.hostToStateChangeManagerMap.get(host);
+    }
+
+    mountComponent(host, { Component, getEditableDescendants, getProps, getStateChangeManager }) {
         const props = getProps?.(host) || {};
         const { dev, translateFn, getRawTemplate } = this.app;
+        const env = Object.create(this.env);
+        if (getStateChangeManager) {
+            env.getStateChangeManager = this.getStateChangeManager.bind(this);
+        }
+        if (getEditableDescendants) {
+            env.getEditableDescendants = getEditableDescendants;
+        }
         const app = new App(Component, {
             test: dev,
-            env: this.env,
+            env,
             translateFn,
             getTemplate: getRawTemplate,
             props,
@@ -207,6 +278,7 @@ export class EmbeddedComponentPlugin extends Plugin {
                 host.append(editableDescendant);
             }
             delete host.dataset.oeProtected;
+            delete host.dataset.embeddedState;
         });
     }
 }
