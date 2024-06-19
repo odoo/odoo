@@ -255,25 +255,31 @@
                             </div>
 
                             <div class="row" t-if="task.description or task.attachment_ids">
-                                <div t-if="not is_html_empty(task.description)" t-attf-class="col-12 mb-4 mb-md-0 {{'col-lg-6' if task.attachment_ids else 'col-lg-12'}}">
+                                <div t-if="not is_html_empty(task.description)" class="mb-4 mb-md-0">
                                     <h5 class="mb-1">Description</h5>
                                     <hr class="mt-1 mb-2"/>
-                                    <div class="py-1 px-2 bg-100 small overflow-auto table-responsive" t-field="task.description"/>
+                                    <div class="py-1 px-2 bg-100 small overflow-auto table-responsive mb-4" t-field="task.description"/>
                                 </div>
-                                <div t-if="task.attachment_ids" t-attf-class="col-12 o_project_portal_attachments {{'col-lg-6' if task.description else 'col-lg-12'}}">
+                                <div t-if="task.attachment_ids" class="o_project_portal_attachments">
                                     <h5 class="mb-1">Attachments</h5>
                                     <hr class="mt-1 mb-2"/>
                                     <div class="row">
-                                        <div t-attf-class="col {{'col-lg-6' if not task.description else 'col-lg-12'}}">
-                                            <ul class="list-unstyled d-flex flex-column gap-2">
-                                                <li class="oe_attachments" t-foreach='task.attachment_ids' t-as='attachment'>
-                                                    <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank" data-no-post-process="" class="d-flex align-items-center rounded bg-light p-2">
-                                                        <div class='oe_attachment_embedded o_image o_image_small me-2 me-lg-3' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/50x40?access_token=#{attachment.access_token}"/>
-                                                        <div class='oe_attachment_name text-truncate'><t t-esc='attachment.name'/></div>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        <t t-foreach="task.attachment_ids" t-as="attachment">
+                                            <div class="col-md-6">
+                                                <ul class="list-unstyled">
+                                                    <li class="oe_attachments">
+                                                        <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}"
+                                                        target="_blank" data-no-post-process="" class="d-flex align-items-center rounded bg-light p-2">
+                                                            <div class='oe_attachment_embedded o_image o_image_small me-2 me-lg-3'
+                                                                t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype"
+                                                                t-attf-data-src="/web/image/#{attachment.id}/50x40?access_token=#{attachment.access_token}">
+                                                            </div>
+                                                            <div class='oe_attachment_name text-truncate'><t t-esc='attachment.name'/></div>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </t>
                                     </div>
                                 </div>
                             </div>
