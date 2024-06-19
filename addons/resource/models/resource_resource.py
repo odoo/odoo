@@ -45,7 +45,8 @@ class ResourceResource(models.Model):
     calendar_id = fields.Many2one(
         "resource.calendar", string='Working Time',
         default=lambda self: self.env.company.resource_calendar_id,
-        domain="[('company_id', '=', company_id)]")
+        domain="[('company_id', '=', company_id)]",
+        help="Define the working schedule of the resource. If not set, the resource will have a fully flexible working hours.")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
         default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC')
@@ -206,3 +207,19 @@ class ResourceResource(models.Model):
             calendar_work_intervals[calendar.id] = work_intervals_batch[False]
 
         return resource_work_intervals, calendar_work_intervals
+
+    def _is_fully_flexible(self):
+        """ employee has a fully flexible schedule has no working calendar set """
+        if not self:
+            return False
+        self.ensure_one()
+        return not self.calendar_id
+
+    def _is_flexible(self):
+        """ An employee is considered flexible if the field flexible_hours is True on the calendar
+            or the employee is not assigned any calendar, in which case is considered as Fully flexible.
+        """
+        if not self:
+            return False
+        self.ensure_one()
+        return bool((self.calendar_id and self.calendar_id.flexible_hours) or self._is_fully_flexible())
