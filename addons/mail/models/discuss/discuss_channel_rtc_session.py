@@ -43,7 +43,7 @@ class MailRtcSession(models.Model):
         for rtc_session in rtc_sessions:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            store = Store("RtcSession", rtc_sessions._mail_rtc_session_format())
+            store = Store(rtc_sessions)
             channel_info = {
                 "id": channel.id,
                 "model": "discuss.channel",
@@ -95,7 +95,7 @@ class MailRtcSession(models.Model):
         """
         valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf'}
         self.write({key: values[key] for key in valid_values if key in values})
-        store = Store("RtcSession", self._mail_rtc_session_format(extra=True))
+        store = Store(self, extra=True)
         self.env["bus.bus"]._sendone(
             self.channel_id,
             "discuss.channel.rtc.session/update_and_broadcast",
@@ -151,8 +151,7 @@ class MailRtcSession(models.Model):
                 payload_by_target[target]['notifications'].append(content)
         return self.env['bus.bus']._sendmany([(target, 'discuss.channel.rtc.session/peer_notification', payload) for target, payload in payload_by_target.items()])
 
-    def _mail_rtc_session_format(self, extra=False):
-        res = []
+    def _to_store(self, store: Store, extra=False):
         for rtc_session in self:
             vals = {
                 "id": rtc_session.id,
@@ -160,19 +159,23 @@ class MailRtcSession(models.Model):
                     fields={
                         "id": True,
                         "channel": {},
-                        "persona": {"partner": {"id": True, "name": True, "im_status": True}, "guest": {"id": True, "name": True, "im_status": True}},
+                        "persona": {
+                            "partner": {"id": True, "name": True, "im_status": True},
+                            "guest": {"id": True, "name": True, "im_status": True},
+                        },
                     }
                 ).get(rtc_session.channel_member_id),
             }
             if extra:
-                vals.update({
-                    "isCameraOn": rtc_session.is_camera_on,
-                    "isDeaf": rtc_session.is_deaf,
-                    "isSelfMuted": rtc_session.is_muted,
-                    "isScreenSharingOn": rtc_session.is_screen_sharing_on,
-                })
-            res.append(vals)
-        return res
+                vals.update(
+                    {
+                        "isCameraOn": rtc_session.is_camera_on,
+                        "isDeaf": rtc_session.is_deaf,
+                        "isSelfMuted": rtc_session.is_muted,
+                        "isScreenSharingOn": rtc_session.is_screen_sharing_on,
+                    }
+                )
+            store.add("RtcSession", vals)
 
     @api.model
     def _inactive_rtc_session_domain(self):

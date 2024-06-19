@@ -130,7 +130,7 @@ class RtcController(http.Controller):
             ]
             channel_member_sudo.channel_id.rtc_session_ids.filtered_domain(domain).write({})  # update write_date
         current_rtc_sessions, outdated_rtc_sessions = channel_member_sudo._rtc_sync_sessions(check_rtc_session_ids)
-        store = Store("RtcSession", current_rtc_sessions._mail_rtc_session_format())
+        store = Store(current_rtc_sessions)
         channel_info = {
             "id": member.channel_id.id,
             "model": "discuss.channel",
