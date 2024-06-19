@@ -63,7 +63,7 @@
             </div>
             <div t-ref="floor-map-scroll" class="overflow-scroll flex-grow-1 flex-shrink-1 flex-basis-0 w-auto" t-attf-style="background: {{activeFloor?.background_color}}"> 
                 <div t-on-click="onClickFloorMap" t-on-touchstart="_onPinchStart" t-on-touchmove="_onPinchMove" t-on-touchend="_onPinchEnd"
-                    t-attf-class="floor-map position-relative w-100 h-100 overflow-hidden {{ pos.isEditMode ? 'floor-grid' : ''}}"
+                    t-attf-class="floor-map position-relative w-100 h-100 overflow-scroll {{ pos.isEditMode ? 'floor-grid' : ''}}"
                     t-ref="floor-map-ref"
                     t-attf-style="height: {{state.floorHeight}} !important; width: {{state.floorWidth}} !important; {{ activeFloor?.floor_background_image and pos.floorPlanStyle !== 'kanban' &amp;&amp; 'background-image: url(' + floorBackround + '); background-size: auto; background-repeat: no-repeat; background-attachment: local;' }}">
                     <t t-if="pos.config.floor_ids?.length > 0">
