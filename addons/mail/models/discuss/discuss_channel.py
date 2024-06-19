@@ -486,7 +486,6 @@ class Channel(models.Model):
         if members:
             channel_data['invitedMembers'] = [('DELETE', list(members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id': True, 'name': True, 'im_status': True}, 'guest': {'id': True, 'name': True, 'im_status': True}}}).values()))]
             self.env['bus.bus']._sendone(self, 'mail.record/insert', {'Thread': channel_data})
-        return channel_data
 
     # ------------------------------------------------------------
     # MAILING
