@@ -484,7 +484,7 @@ describe("tab", () => {
                     <td>ef</td>
                 </tr>
                 <tr style="height: 20px;">
-                    <td><p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p></td>
+                    <td><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td>
                     <td><p><br></p></td>
                     <td><p><br></p></td>
                 </tr>

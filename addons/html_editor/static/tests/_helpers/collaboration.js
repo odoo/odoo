@@ -66,7 +66,9 @@ export const setupMultiEditor = async (spec) => {
         };
         peerInfos[peerId] = peerInfo;
         let n = 0;
-        HistoryPlugin.prototype.generateId = () => `fake_id_${n++}`;
+        HistoryPlugin.prototype.generateId = () => {
+            return `fake_id_${n++}`;
+        };
         let selection;
         const defaultPlugins = MAIN_PLUGINS;
         const base = await setupEditor(spec.contentBefore, {
@@ -103,6 +105,8 @@ export const setupMultiEditor = async (spec) => {
         } else {
             base.editor.document.getSelection().removeAllRanges();
         }
+        peerInfo.plugins = base.plugins;
+        // TODO @phoenix refactor tests, no need to assign every plugin individually
         const getPlugin = (name) => base.editor.plugins.find((x) => x.constructor.name === name);
         peerInfo.collaborationPlugin = getPlugin("collaboration");
         peerInfo.historyPlugin = getPlugin("history");

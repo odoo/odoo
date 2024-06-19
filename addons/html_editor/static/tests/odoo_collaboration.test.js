@@ -1118,11 +1118,11 @@ describe("History steps Ids", () => {
         await peers.p1.focus();
         editor.dispatch("SPLIT_BLOCK");
         expect(getContent(editor.editable)).toBe(
-            `<p>a</p><p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`
+            `<p>a</p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
         editor.dispatch("SPLIT_BLOCK");
         expect(getContent(editor.editable)).toBe(
-            `<p>a</p><p><br></p><p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`
+            `<p>a</p><p><br></p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
         editor.destroy();
     });

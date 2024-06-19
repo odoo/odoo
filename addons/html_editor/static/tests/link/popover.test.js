@@ -279,7 +279,7 @@ describe("Link creation", () => {
             // press("Enter");
             splitBlock(editor);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                '<p>ab<a href="#">link</a></p><p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>'
+                `<p>ab<a href="#">link</a></p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
             );
         });
         test("should insert a link then create a new <p>, and another character", async () => {

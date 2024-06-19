@@ -8,7 +8,7 @@ describe("Range collapsed", () => {
         test("should turn an empty paragraph into a list", async () => {
             await testEditor({
                 contentBefore: "<p>[]<br></p>",
-                contentBeforeEdit: `<p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`,
+                contentBeforeEdit: `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                 stepFunction: toggleUnorderedList,
                 contentAfterEdit: `<ul><li placeholder="List" class="o-we-hint">[]<br></li></ul>`,
                 contentAfter: "<ul><li>[]<br></li></ul>",
@@ -164,7 +164,7 @@ describe("Range collapsed", () => {
                 contentBefore: "<ul><li>[]<br></li></ul>",
                 contentBeforeEdit: `<ul><li placeholder="List" class="o-we-hint">[]<br></li></ul>`,
                 stepFunction: toggleUnorderedList,
-                contentAfterEdit: `<p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`,
+                contentAfterEdit: `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                 contentAfter: "<p>[]<br></p>",
             });
         });

@@ -72,7 +72,8 @@ function getElemContent(el, selection, options) {
     }
     const attrs = [];
     for (const attr of attributes) {
-        attrs.push(`${attr.name}="${attr.value}"`);
+        const valueLimiter = attr.value.includes('"') ? "'" : '"';
+        attrs.push(`${attr.name}=${valueLimiter}${attr.value}${valueLimiter}`);
     }
     const attrStr = (attrs.length ? " " : "") + attrs.join(" ");
     return VOID_ELEMS.has(el.tagName)

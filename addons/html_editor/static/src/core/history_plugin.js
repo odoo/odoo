@@ -240,17 +240,26 @@ export class HistoryPlugin extends Plugin {
     handleObserverRecords() {
         this.handleNewRecords(this.observer.takeRecords());
     }
+
     /**
      * @param { MutationRecord[] } records
+     * @returns { MutationRecord[] } processed records
      */
-    handleNewRecords(records) {
+    processNewRecords(records) {
         this.setIdOnRecords(records);
         records = this.filterMutationRecords(records);
         if (!records.length) {
-            return;
+            return [];
         }
         this.resources["handleNewRecords"]?.forEach((cb) => cb(records));
         this.stageRecords(records);
+        return records;
+    }
+
+    dispatchContentUpdated() {
+        if (!this.currentStep?.mutations?.length) {
+            return;
+        }
         // @todo @phoenix remove this?
         // @todo @phoenix this includes previous mutations that were already
         // stored in the current step. Ideally, it should only include the new ones.
@@ -261,6 +270,15 @@ export class HistoryPlugin extends Plugin {
         this.dispatch("CONTENT_UPDATED", {
             root,
         });
+    }
+
+    /**
+     * @param { MutationRecord[] } records
+     */
+    handleNewRecords(records) {
+        if (this.processNewRecords(records).length) {
+            this.dispatchContentUpdated();
+        }
     }
 
     /**
@@ -387,6 +405,14 @@ export class HistoryPlugin extends Plugin {
                         value: record.target.getAttribute(record.attributeName),
                         oldValue: record.oldValue,
                     });
+                    for (const cb of this.resources["on_change_attribute"] || []) {
+                        cb({
+                            target: record.target,
+                            attributeName: record.attributeName,
+                            oldValue: record.oldValue,
+                            value: record.target.getAttribute(record.attributeName),
+                        });
+                    }
                     break;
                 }
                 case "childList": {
@@ -528,7 +554,7 @@ export class HistoryPlugin extends Plugin {
         if (pos > 0) {
             // Consider the position consumed.
             this.stepsStates.set(this.steps[pos].id, "consumed");
-            this.revertMutations(this.steps[pos].mutations);
+            this.revertMutations(this.steps[pos].mutations, { forNewStep: true });
             this.setSerializedSelection(this.steps[pos].selection);
             this.addStep({ stepState: "undo" });
             // Consider the last position of the history as an undo.
@@ -548,7 +574,7 @@ export class HistoryPlugin extends Plugin {
         const pos = this.getNextRedoIndex();
         if (pos > 0) {
             this.stepsStates.set(this.steps[pos].id, "consumed");
-            this.revertMutations(this.steps[pos].mutations);
+            this.revertMutations(this.steps[pos].mutations, { forNewStep: true });
             this.setSerializedSelection(this.steps[pos].selection);
             this.addStep({ stepState: "redo" });
         }
@@ -664,8 +690,11 @@ export class HistoryPlugin extends Plugin {
     }
     /**
      * @param { HistoryMutation[] } mutations
+     * @param { Object } options
+     * @param { boolean } options.forNewStep whether the mutations will be used
+     *        to create a new step
      */
-    applyMutations(mutations) {
+    applyMutations(mutations, { forNewStep = false } = {}) {
         for (const mutation of mutations) {
             switch (mutation.type) {
                 case "characterData": {
@@ -678,10 +707,19 @@ export class HistoryPlugin extends Plugin {
                 case "attributes": {
                     const node = this.idToNodeMap.get(mutation.id);
                     if (node) {
-                        const value = this.getAttributeValue(
-                            mutation.attributeName,
-                            mutation.value
-                        );
+                        let value = this.getAttributeValue(mutation.attributeName, mutation.value);
+                        for (const cb of this.resources["on_change_attribute"] || []) {
+                            value =
+                                cb(
+                                    {
+                                        target: node,
+                                        attributeName: mutation.attributeName,
+                                        oldValue: mutation.oldValue,
+                                        value,
+                                    },
+                                    { forNewStep }
+                                ) || value;
+                        }
                         this.setAttribute(node, mutation.attributeName, value);
                     }
                     break;
@@ -718,8 +756,11 @@ export class HistoryPlugin extends Plugin {
     }
     /**
      * @param { HistoryMutation[] } mutations
+     * @param { Object } options
+     * @param { boolean } options.forNewStep whether the mutations will be used
+     *        to create a new step
      */
-    revertMutations(mutations) {
+    revertMutations(mutations, { forNewStep = false } = {}) {
         for (const mutation of mutations.toReversed()) {
             switch (mutation.type) {
                 case "characterData": {
@@ -732,10 +773,23 @@ export class HistoryPlugin extends Plugin {
                 case "attributes": {
                     const node = this.idToNodeMap.get(mutation.id);
                     if (node) {
-                        const value = this.getAttributeValue(
+                        let value = this.getAttributeValue(
                             mutation.attributeName,
                             mutation.oldValue
                         );
+                        for (const cb of this.resources["on_change_attribute"] || []) {
+                            value =
+                                cb(
+                                    {
+                                        target: node,
+                                        attributeName: mutation.attributeName,
+                                        oldValue: mutation.value,
+                                        value,
+                                        reverse: true,
+                                    },
+                                    { forNewStep }
+                                ) || value;
+                        }
                         this.setAttribute(node, mutation.attributeName, value);
                     }
                     break;
@@ -822,7 +876,7 @@ export class HistoryPlugin extends Plugin {
             this.revertStepsUntil(stepIndex);
             // Apply draft mutations to recover the same currentStep state
             // as before.
-            this.applyMutations(draftMutations);
+            this.applyMutations(draftMutations, { forNewStep: true });
             this.handleObserverRecords();
             // TODO ABD TODO @phoenix: evaluate if the selection is not restorable at the desired position
             selectionToRestore.restore();
@@ -872,10 +926,15 @@ export class HistoryPlugin extends Plugin {
             return;
         }
         // Revert all mutations until stepIndex, and consume all reversible
-        // steps in the process (typically current user steps).
+        // steps in the process (typically current peer steps).
         for (let i = this.steps.length - 1; i > stepIndex; i--) {
             const currentStep = this.steps[i];
-            this.revertMutations(currentStep.mutations);
+            this.revertMutations(currentStep.mutations, { forNewStep: true });
+            // Process (filter, handle and stage) mutations so that the
+            // attribute comparison for the state change is done with the
+            // intermediate attribute value and not with the final value in the
+            // DOM after all steps were reverted then applied again.
+            this.processNewRecords(this.observer.takeRecords());
             if (this.isReversibleStep(i)) {
                 this.stepsStates.set(currentStep.id, "consumed");
                 lastRevertedStep = currentStep;
@@ -885,13 +944,15 @@ export class HistoryPlugin extends Plugin {
         for (let i = stepIndex + 1; i < this.steps.length; i++) {
             const currentStep = this.steps[i];
             if (!this.isReversibleStep(i)) {
-                this.applyMutations(currentStep.mutations);
+                this.applyMutations(currentStep.mutations, { forNewStep: true });
+                this.processNewRecords(this.observer.takeRecords());
             }
         }
         // TODO ABD TODO @phoenix: review selections, this selection could be obsolete
         // depending on the non-reversible steps that were applied.
         this.setSerializedSelection(lastRevertedStep.selection);
         // Register resulting mutations as a new consumed step (prevent undo).
+        this.dispatchContentUpdated();
         this.addStep({ stepState: "consumed" });
     }
 
