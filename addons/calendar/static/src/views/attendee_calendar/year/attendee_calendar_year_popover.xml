@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates>
-    <t t-name="calendar.AttendeeCalendarYearPopover.body" t-inherit="web.CalendarYearPopover.body" t-inherit-mode="primary">
-        <!-- Since we duplicate the event this is needed to avoid duplicated key errors -->
-        <xpath expr="//t[@t-foreach='recordGroup.records']" position="attributes">
-            <attribute name="t-key">record._recordId</attribute>
-        </xpath>
-    </t>
-</templates>
