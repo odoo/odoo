@@ -26,11 +26,12 @@ patch(PosStore.prototype, {
      */
     async setup() {
         this.orderToTransferUuid = null; // table transfer feature
-        this.floorPlanStyle = "default";
         this.isEditMode = false;
         this.isTableToMerge = false;
         this.tableSyncing = false;
         await super.setup(...arguments);
+        this.floorPlanStyle =
+            localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
         if (this.config.module_pos_restaurant) {
             this.setActivityListeners();
             this.showScreen("FloorScreen", { floor: this.selectedTable?.floor || null });
