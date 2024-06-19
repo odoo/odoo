@@ -1,13 +1,17 @@
-.o-mail-discussSidebarBgColor {
+.o-discuss-itemName-discrete {
+    opacity: 75%;
+}
+
+.o-mail-inspectorBg {
     background-color: mix($o-gray-100, $o-gray-200);
 }
 
 a.o_mail_redirect, a.o_channel_redirect {
-    @include o-mention-variant(rgba($primary, .2), rgba($primary, .2), lighten($link-color, 5%), rgba($primary, .3), rgba($primary, .3), lighten($link-color, 10%));
+    @include o-mention-variant(rgba($o-gray-300, .5), rgba($o-gray-300, 1), lighten($link-color, 7%), rgba($o-gray-300, .75), rgba($o-gray-300, 1), lighten($link-color, 12%));
 }
 
 a.o-discuss-mention {
-    @include o-mention-variant(rgba($primary, .2), rgba($primary, .2), lighten($link-color, 5%), rgba($primary, .2), rgba($primary, .2), lighten($link-color, 5%));
+    @include o-mention-variant(rgba($o-gray-300, .5), rgba($o-gray-300, 1), lighten($link-color, 7%), rgba($o-gray-300, .5), rgba($o-gray-300, 1), lighten($link-color, 7%));
 }
 
 .o-mail-DiscussSystray-class {

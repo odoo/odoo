@@ -12,18 +12,18 @@
 
     <t t-name="mail.DiscussSidebarCategory">
         <div class="o-mail-DiscussSidebarCategory d-flex align-items-center my-1" t-att-class="category.extraClass">
-            <button class="btn btn-link text-reset flex-grow-1 d-flex align-items-baseline mx-1 p-0 text-start opacity-100-hover opacity-75" t-on-click="() => this.toggleCategory(category)">
-                <span t-if="store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon o-smaller me-1 fa fa-fw fa-circle-o-notch fa-spin opacity-50"/></span>
-                <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-smaller me-1" t-att-class="category.open ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
-                <span class="btn-sm p-0 text-uppercase text-break fw-bolder o-smaller"><t t-esc="category.name"/></span>
+            <button class="btn btn-link text-reset flex-grow-1 d-flex align-items-baseline mx-1 px-2 py-1 text-start" t-att-class="{ 'opacity-75-hover opacity-50': store.theme === 'dark', 'opacity-100-hover opacity-75': store.theme !== 'dark' }" t-on-click="() => this.toggleCategory(category)">
+                <span t-if="store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon smaller fa fa-fw fa-circle-o-notch fa-spin opacity-50"/></span>
+                <i t-else="" class="o-mail-DiscussSidebarCategory-icon smaller" t-att-class="category.open ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
+                <span class="btn-sm p-0 text-uppercase text-break fw-bolder smaller"><t t-esc="category.name"/></span>
             </button>
             <div class="d-flex me-3" t-ref="actions">
                 <div class="btn-group btn-group-sm">
-                    <button t-if="category.canView" class="btn btn-light" t-on-click="() => this.openCategory(category)" title="View or join channels">
-                        <i class="fa fa-cog" role="img"/>
+                    <button t-if="category.canView" class="btn btn-light px-1 bg-inherit border-0" t-on-click="() => this.openCategory(category)" title="View or join channels">
+                        <i class="fa fa-fw fa-cog" role="img"/>
                     </button>
-                    <button t-if="category.canAdd and category.open" class="o-mail-DiscussSidebarCategory-add btn btn-light" t-on-click="() => this.addToCategory(category)" t-att-title="category.addTitle" t-att-data-hotkey="category.addHotkey">
-                        <i class="fa fa-plus" role="img"/>
+                    <button t-if="category.canAdd and category.open" class="o-mail-DiscussSidebarCategory-add btn btn-light px-1 bg-inherit border-0" t-on-click="() => this.addToCategory(category)" t-att-title="category.addTitle" t-att-data-hotkey="category.addHotkey">
+                        <i class="fa fa-fw fa-plus" role="img"/>
                     </button>
                 </div>
             </div>
@@ -45,35 +45,36 @@
     </t>
 
     <t t-name="mail.DiscussSidebarChannel">
-        <div class="o-mail-DiscussSidebarChannel o-mail-DiscussSidebar-item d-flex align-items-center mx-2 cursor-pointer"
+        <div class="o-mail-DiscussSidebarChannel o-mail-DiscussSidebar-item d-flex align-items-center mx-2 cursor-pointer position-relative"
              t-att-class="{
                     'bg-inherit': thread.notEq(store.discuss.thread),
                     'o-active': thread.eq(store.discuss.thread),
-                    'o-unread': thread.selfMember?.message_unread_counter > 0 and !thread.mute_until_dt,
+                    'o-unread': isUnread,
                     'opacity-50': thread.mute_until_dt,
                     }"
              t-on-click="(ev) => this.openThread(ev, thread)"
         >
-            <button class="btn border-0 rounded-0 text-reset overflow-hidden d-flex align-items-center px-0 py-2">
-                <div class="bg-inherit position-relative d-flex ms-3 flex-shrink-0" style="width:26px;height:26px">
+            <i class="position-absolute ms-1 flex-grow-0 flex-shrink-0 fa fa-arrow-right fa-fw" t-att-class="{ 'opacity-100': isUnread, 'opacity-0': !isUnread }" style="left: -22px"/>
+            <button class="o-mail-DiscussSidebar-itemMain btn border-0 rounded-0 text-reset overflow-hidden d-flex align-items-center px-0 py-2 bg-inherit">
+                <div class="o-mail-DiscussSidebar-itemAvatar bg-inherit position-relative d-flex ms-3 flex-shrink-0" style="width:26px;height:26px">
                     <img class="w-100 h-100 rounded" t-att-src="thread.avatarUrl" alt="Thread Image"/>
                     <ThreadIcon t-if="thread.channel_type === 'chat' or (thread.channel_type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
                 </div>
-                <span class="mx-2 text-truncate" t-att-class="thread.selfMember?.message_unread_counter > 0 and !thread.mute_until_dt ? 'o-item-unread fw-bolder' : 'text-muted'">
+                <span class="o-mail-DiscussSidebar-itemName mx-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': isUnread, 'o-discuss-itemName-discrete': !isUnread and thread.notEq(store.discuss.thread) }">
                     <t t-esc="thread.displayName"/>
                 </span>
             </button>
             <div class="flex-grow-1"/>
             <div class="o-mail-DiscussSidebarChannel-commands d-none ms-1 me-2">
                 <div class="btn-group btn-group-sm">
-                    <button t-if="thread.channel_type === 'channel'" class="btn btn-secondary" t-on-click="() => this.openSettings(thread)" title="Channel settings">
-                        <i t-attf-class="fa fa-cog" role="img"/>
+                    <button t-if="thread.channel_type === 'channel'" class="btn btn-secondary px-1 bg-inherit border-0" t-on-click="() => this.openSettings(thread)" title="Channel settings">
+                        <i t-attf-class="fa fa-fw fa-cog" role="img"/>
                     </button>
-                    <button t-if="thread.canLeave" class="btn btn-secondary" t-on-click="() => this.leaveChannel(thread)" title="Leave this channel">
-                        <i t-attf-class="fa fa-times" role="img"/>
+                    <button t-if="thread.canLeave" class="btn btn-secondary px-1 bg-inherit border-0" t-on-click="() => this.leaveChannel(thread)" title="Leave this channel">
+                        <i t-attf-class="fa fa-fw fa-times" role="img"/>
                     </button>
-                    <button t-if="thread.canUnpin" class="btn btn-secondary" t-on-click="() => thread.unpin()" title="Unpin Conversation">
-                        <i t-attf-class="fa fa-times" role="img"/>
+                    <button t-if="thread.canUnpin" class="btn btn-secondary px-1 bg-inherit border-0" t-on-click="() => thread.unpin()" title="Unpin Conversation">
+                        <i t-attf-class="fa fa-fw fa-times" role="img"/>
                     </button>
                 </div>
             </div>

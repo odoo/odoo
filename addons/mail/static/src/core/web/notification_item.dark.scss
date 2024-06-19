@@ -1,9 +1,26 @@
 .o-mail-NotificationItem {
     &.o-important {
-        background-color: mix($o-gray-200, $o-gray-300) !important;
+        background-color: mix($o-gray-200, $o-gray-300, 25%) !important;
     }
-
     &:hover {
-        background-color: $o-gray-300 !important;
+        background-color: mix($o-gray-200, $o-gray-300) !important;
+
+        &.o-important {
+            background-color: mix($o-gray-300, $o-gray-400, 75%) !important;
+        }
+        &:not(&.o-important) .o-mail-NotificationItem-name {
+            opacity: 75% !important;
+        }
     }
+    &:not(:hover):not(.o-important) .o-mail-NotificationItem-name {
+        color: $text-muted;
+    }
+}
+
+.o-mail-NotificationItem-markAsRead:hover {
+    background-color: $o-gray-400 !important;
+}
+
+.o-mail-NotificationItem-text.o-muted {
+    opacity: 50%;
 }

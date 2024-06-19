@@ -70,6 +70,7 @@ messageActionsRegistry
         sequence: 80,
     })
     .add("delete", {
+        class: "text-danger fw-bold",
         condition: (component) => component.deletable,
         icon: "fa-trash",
         title: _t("Delete"),
@@ -103,6 +104,10 @@ function transformAction(component, id, action) {
     return {
         component: action.component,
         id,
+        /** Class on the button of this action. */
+        get class() {
+            return typeof action.class === "function" ? action.class(component) : action.class;
+        },
         /** Condition to display this action. */
         get condition() {
             return action.condition(component);

@@ -2,7 +2,16 @@
     transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
 
     &.o-highlighted {
-        transform: translateY(-#{map-get($spacers, 3)});
+        transform: translateY(-#{map-get($spacers, 2)});
+    }
+}
+
+.o-mail-Message-bubble {
+    --bg-opacity: 0.10;
+    --border-opacity: 0.2;
+
+    &.o-important {
+        --bg-opacity: 0.225;
     }
 }
 

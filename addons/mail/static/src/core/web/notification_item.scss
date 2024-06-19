@@ -1,10 +1,38 @@
 .o-mail-NotificationItem {
+    &.o-mobile {
+        --list-group-item-padding-x: #{map-get($spacers, 2)};
+    }
     &.o-important {
-        background-color: mix($o-gray-100, $o-gray-200) !important;
+        background-color: mix($o-gray-100, $o-gray-200, 75%) !important;
     }
     &:hover {
-        background-color: $o-gray-200 !important;
+        background-color: mix($o-gray-100, $o-gray-200, 100%) !important;
+
+        &.o-important {
+            background-color: mix($o-gray-100, $o-gray-200, 50%) !important;
+
+            .o-mail-NotificationItem-text {
+                opacity: 100% !important;
+            }
+        }
+
+        .o-mail-NotificationItem-name, .o-mail-NotificationItem-content {
+            opacity: 100% !important;
+        }
+        .o-mail-NotificationItem-avatar {
+            box-shadow: $box-shadow-sm;
+        }
     }
+}
+
+.o-mail-NotificationItem-content {
+    &.o-muted {
+        opacity: 75%;
+    }
+}
+
+.o-mail-NotificationItem-name {
+    font-weight: 600 !important;
 }
 
 
@@ -18,12 +46,16 @@
     color: $success !important;
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.075) !important;
+        background-color: $o-gray-300 !important;
+        color: darken($success, 5%) !important;
     }
 }
 
-.o-mail-NotificationItem-text:before {
-    // invisible character so that typing status bar has constant height, regardless of text content.
-    content: "\200b"; /* unicode zero width space character */
-}
+.o-mail-NotificationItem-text {
+    opacity: 75%;
 
+    &::before {
+        // invisible character so that typing status bar has constant height, regardless of text content.
+        content: "\200b"; /* unicode zero width space character */
+    }
+}

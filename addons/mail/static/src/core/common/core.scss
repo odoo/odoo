@@ -1,4 +1,4 @@
-.o-mail-discussSidebarBgColor {
+.o-mail-inspectorBg {
     background-color: mix($white, $o-gray-100);
 }
 
@@ -28,14 +28,6 @@
 
 .o-min-height-0 {
     min-height: 0;
-}
-
-.o-min-width-0 {
-    min-width: 0;
-}
-
-.o-smaller {
-    font-size: smaller;
 }
 
 .o-hover-text-underline:hover {
@@ -95,11 +87,15 @@ a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention {
 }
 
 a.o_mail_redirect, a.o_channel_redirect {
-    @include o-mention-variant(rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%), rgba($primary, .3), rgba($primary, .3), darken($link-color, 10%));
+    border: 1px solid;
+    font-weight: $font-weight-bold;
+    @include o-mention-variant(rgba($o-gray-300, .5), rgba($o-gray-300, 1), darken($link-color, 5%), rgba($o-gray-300, 1), rgba($o-gray-300, 1), darken($link-color, 10%));
 }
 
 a.o-discuss-mention {
-    @include o-mention-variant(rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%), rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%));
+    border: 1px solid;
+    font-weight: $font-weight-bold;
+    @include o-mention-variant(rgba($o-gray-300, .5), rgba($o-gray-300, 1), darken($link-color, 5%), rgba($o-gray-300, .5), rgba($o-gray-300, 1), darken($link-color, 5%));
     cursor: default !important;
 }
 

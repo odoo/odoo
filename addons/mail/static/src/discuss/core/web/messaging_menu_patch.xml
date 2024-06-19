@@ -18,11 +18,11 @@
                     <button t-if="!state.addingChat and !state.addingChannel" class="w-50 m-1 me-0 btn btn-primary" t-on-click.stop="onClickStartMeeting">
                         Start a meeting
                     </button>
-                    <button t-if="store.discuss.activeTab !== 'channel' and !state.addingChat" t-att-class="ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'btn btn-link p-2'" t-on-click.stop="onClickNewMessage">
+                    <button t-if="store.discuss.activeTab !== 'channel' and !state.addingChat" t-att-class="ui.isSmall ? 'w-50 btn btn-secondary m-1' : 'btn btn-link p-2'" t-on-click.stop="onClickNewMessage">
                         Start a conversation
                     </button>
                 </t>
-                <button t-if="store.discuss.activeTab === 'channel' and !state.addingChannel" class="w-50 p-2 btn btn-secondary m-1" t-on-click.stop="() => this.state.addingChannel = true">
+                <button t-if="store.discuss.activeTab === 'channel' and !state.addingChannel" class="w-50 btn btn-secondary m-1" t-on-click.stop="() => this.state.addingChannel = true">
                     New Channel
                 </button>
             </t>

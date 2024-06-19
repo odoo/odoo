@@ -20,6 +20,7 @@ export class AttachmentList extends Component {
 
     setup() {
         super.setup();
+        this.store = useState(useService("mail.store"));
         this.ui = useState(useService("ui"));
         // Arbitrary high value, this is effectively a max-width.
         this.imagesWidth = 1920;
@@ -37,7 +38,7 @@ export class AttachmentList extends Component {
         return url(attachment.urlRoute, {
             ...attachment.urlQueryParams,
             width: this.imagesWidth,
-            height: this.props.imagesHeight,
+            height: this.props.imagesHeight * 2, // not blurry on upscaled monitors
         });
     }
 

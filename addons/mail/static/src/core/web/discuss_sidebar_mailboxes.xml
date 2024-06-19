@@ -17,7 +17,7 @@
 
     <t t-name="mail.Mailbox">
         <button
-            class="o-mail-DiscussSidebar-item btn d-flex align-items-center py-1 px-0 mx-2 border-0 rounded-0 fw-normal text-reset"
+            class="o-mail-DiscussSidebar-item btn d-flex align-items-center py-1 px-0 mx-2 border-0 rounded-0 text-reset"
             t-att-class="{
                 'bg-inherit': mailbox.notEq(store.discuss.thread),
                 'o-active': mailbox.eq(store.discuss.thread),
@@ -25,7 +25,7 @@
             t-on-click="(ev) => this.openThread(ev, mailbox)"
         >
             <ThreadIcon className="'ms-3 me-2 bg-inherit'" thread="mailbox"/>
-            <div class="me-2 text-truncate" t-esc="mailbox.name"/>
+            <div class="o-mail-DiscussSidebar-itemName me-2 text-truncate" t-att-class="{ 'o-discuss-itemName-discrete': mailbox.notEq(store.discuss.thread) }" t-esc="mailbox.name"/>
             <div t-attf-class="flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>
             <span
                 t-if="mailbox.counter > 0"
