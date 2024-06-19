@@ -10,6 +10,7 @@ publicWidget.registry.websiteEventSearchSponsor = publicWidget.Widget.extend({
         'click .o_dropdown_reset_tags': '_onTagReset',
         'change .o_wevent_event_tags_form input': '_onTagAdd',
         'change .o_wevent_event_tags_mobile_form input': '_onTagAddMobile',
+        'search .o_wevent_event_search_box': '_onSearch',
     },
 
     start: function () {
