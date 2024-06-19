@@ -282,7 +282,7 @@
             <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
             <t t-set="website_sale_sortable" t-value="website._get_product_sort_mapping()"/>
 
-            <t t-set="hasLeftColumn" t-value="opt_wsale_categories or opt_wsale_attributes"/>
+            <t t-set="hasLeftColumn" t-value="opt_wsale_categories or opt_wsale_attributes and attributes or opt_wsale_filter_price"/>
 
             <t t-set="isFilteringByPrice" t-if="opt_wsale_filter_price" t-value="float_round(available_min_price, 2) != float_round(min_price, 2) or float_round(available_max_price, 2) != float_round(max_price, 2)"/>
             <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
