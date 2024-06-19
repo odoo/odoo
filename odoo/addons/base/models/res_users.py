@@ -789,6 +789,10 @@ class Users(models.Model):
                         lang = langs[0] if langs else DEFAULT_LANG
         context['lang'] = lang
 
+        # Set fallback value for tz
+        if not context['tz']:
+            context['tz'] = 'UTC'
+
         # ensure uid is set
         context['uid'] = self.env.uid
 
