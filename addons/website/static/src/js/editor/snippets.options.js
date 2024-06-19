@@ -1484,8 +1484,8 @@ options.registry.OptionsTab = options.Class.extend({
      */
     async customizeButtonStyle(previewMode, widgetValue, params) {
         await this._customizeWebsiteVariables({
-            [`btn-${params.button}-outline`]: widgetValue === 'outline',
-            [`btn-${params.button}-flat`]: widgetValue === 'flat',
+            [`btn-${params.button}-outline`]: widgetValue === "outline" ? "true" : "false",
+            [`btn-${params.button}-flat`]: widgetValue === "flat" ? "true" : "false",
         }, params.nullValue);
     },
 
@@ -1569,7 +1569,7 @@ options.registry.OptionsTab = options.Class.extend({
         if (methodName === 'customizeButtonStyle') {
             const isOutline = weUtils.getCSSVariableValue(`btn-${params.button}-outline`);
             const isFlat = weUtils.getCSSVariableValue(`btn-${params.button}-flat`);
-            return isFlat === "'True'" ? 'flat' : isOutline === "'True'" ? 'outline' : 'fill';
+            return isFlat === "true" ? "flat" : isOutline === "true" ? "outline" : "fill";
         }
         return this._super(...arguments);
     },
