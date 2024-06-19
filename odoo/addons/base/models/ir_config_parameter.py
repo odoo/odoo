@@ -142,6 +142,18 @@ class IrConfigParameter(models.Model):
         self.env.registry.clear_cache()
         return super(IrConfigParameter, self).create(vals_list)
 
+    def _load_records_create(self, vals_list):
+        key_to_vals = {vals['key']: vals for vals in vals_list}
+        key_to_id = dict.fromkeys(key_to_vals, False)
+        existing_params = self.search([('key', 'in', list(key_to_vals))])
+        for param in existing_params:
+            param.write(key_to_vals.pop(param.key))
+            key_to_id[param.key] = param.id
+        new_params = self.create(key_to_vals.values())
+        for param in new_params:
+            key_to_id[param.key] = param.id
+        return self.browse(key_to_id.values())
+
     def write(self, vals):
         if 'key' in vals:
             illegal = _default_parameters.keys() & self.mapped('key')
