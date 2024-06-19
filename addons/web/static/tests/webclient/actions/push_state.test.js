@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { queryAllTexts } from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, xml } from "@odoo/owl";
 import {
@@ -6,12 +7,14 @@ import {
     defineActions,
     defineMenus,
     defineModels,
+    editSearch,
     fields,
     getService,
     models,
     mountWithCleanup,
     onRpc,
     patchWithCleanup,
+    validateSearch,
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -576,5 +579,96 @@ test(`switchView pushes the stat but doesn't add to the breadcrumbs`, async () =
                 view_type: "kanban",
             },
         ],
+    });
+});
+
+test(`properly push globalState`, async () => {
+    await mountWithCleanup(WebClient);
+    expect(browser.location.href).toBe("http://example.com/odoo");
+    expect(browser.history.length).toBe(1);
+
+    await getService("action").doAction(4);
+    await animationFrame();
+    expect(browser.location.href).toBe("http://example.com/odoo/action-4");
+    expect(browser.history.length).toBe(2);
+    expect(router.current).toEqual({
+        action: 4,
+        actionStack: [
+            {
+                action: 4,
+                displayName: "Partners Action 4",
+                view_type: "kanban",
+            },
+        ],
+    });
+
+    // add element on the search Model
+    await editSearch("blip");
+    await validateSearch();
+    expect(queryAllTexts(".o_facet_value")).toEqual(["blip"]);
+
+    //open record
+    await contains(".o_kanban_record").click();
+
+    // Add the globalState on the state before leaving the kanban
+    expect(router.current).toEqual({
+        action: 4,
+        actionStack: [
+            {
+                action: 4,
+                displayName: "Partners Action 4",
+                view_type: "kanban",
+            },
+        ],
+        globalState: {
+            resIds: [2],
+            searchModel: `{"nextGroupId":2,"nextGroupNumber":1,"nextId":2,"query":[{"searchItemId":1,"autocompleteValue":{"label":"blip","operator":"ilike","value":"blip"}}],"searchItems":{"1":{"type":"field","fieldName":"foo","fieldType":"char","description":"Foo","groupId":1,"id":1}},"searchPanelInfo":{"className":"","fold":false,"viewTypes":["kanban","list"],"loaded":false,"shouldReload":true},"sections":[]}`,
+        },
+    });
+
+    // pushState is defered
+    await animationFrame();
+    expect(".o_form_view").toHaveCount(1);
+    expect(browser.location.href).toBe("http://example.com/odoo/action-4/2");
+    expect(router.current).toEqual({
+        action: 4,
+        actionStack: [
+            {
+                action: 4,
+                displayName: "Partners Action 4",
+                view_type: "kanban",
+            },
+            {
+                action: 4,
+                displayName: "Second record",
+                resId: 2,
+                view_type: "form",
+            },
+        ],
+        resId: 2,
+    });
+
+    // came back using the browser
+    browser.history.back(); // Click on back button
+    await animationFrame();
+
+    // The search Model should be restored
+    expect(queryAllTexts(".o_facet_value")).toEqual(["blip"]);
+    expect(browser.location.href).toBe("http://example.com/odoo/action-4");
+
+    // The global state is restored on the state
+    expect(router.current).toEqual({
+        action: 4,
+        actionStack: [
+            {
+                action: 4,
+                displayName: "Partners Action 4",
+                view_type: "kanban",
+            },
+        ],
+        globalState: {
+            resIds: [2],
+            searchModel: `{"nextGroupId":2,"nextGroupNumber":1,"nextId":2,"query":[{"searchItemId":1,"autocompleteValue":{"label":"blip","operator":"ilike","value":"blip"}}],"searchItems":{"1":{"type":"field","fieldName":"foo","fieldType":"char","description":"Foo","groupId":1,"id":1}},"searchPanelInfo":{"className":"","fold":false,"viewTypes":["kanban","list"],"loaded":false,"shouldReload":true},"sections":[]}`,
+        },
     });
 });
