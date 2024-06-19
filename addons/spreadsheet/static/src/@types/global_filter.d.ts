@@ -2,6 +2,7 @@ import { Range, RangeData } from "@odoo/o-spreadsheet";
 
 declare module "@spreadsheet" {
     export type RangeType = "fixedPeriod" | "relative" | "from_to";
+    export type FixedPeriods = "quarter" | "month";
     export type RelativePeriod =
         | "last_month"
         | "last_week"
@@ -49,6 +50,7 @@ declare module "@spreadsheet" {
     export interface FixedPeriodDateGlobalFilter extends DateGlobalFilterCommon {
         rangeType: "fixedPeriod";
         defaultValue?: { period?: string; yearOffset?: number };
+        disabledPeriods?: FixedPeriods[];
     }
 
     export type DateGlobalFilter =

@@ -3,13 +3,13 @@ import { generateListDefinition } from "@spreadsheet/../tests/helpers/data";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 
 /**
- * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
+ * @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model
  */
 
 /**
  * Insert a list in a spreadsheet model.
  *
- * @param {OdooSpreadsheetModel} model
+ * @param {Model} model
  * @param {Object} params
  * @param {string} params.model
  * @param {Array<string>} params.columns

@@ -3,7 +3,7 @@
 export const globalFiltersFieldMatchers = {};
 
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import { checkFiltersTypeValueCombination } from "@spreadsheet/global_filters/helpers";
+import { checkFilterValueIsValid } from "@spreadsheet/global_filters/helpers";
 import { _t } from "@web/core/l10n/translation";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
@@ -31,7 +31,7 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
     /**
      * Check if the given command can be dispatched
      *
-     * @param {Object} cmd Command
+     * @param {import("@spreadsheet").AllCoreCommand} cmd Command
      */
     allowDispatch(cmd) {
         switch (cmd.type) {
@@ -41,7 +41,10 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
                 } else if (this._isDuplicatedLabel(cmd.filter.id, cmd.filter.label)) {
                     return CommandResult.DuplicatedFilterLabel;
                 }
-                return checkFiltersTypeValueCombination(cmd.filter.type, cmd.filter.defaultValue);
+                if (!checkFilterValueIsValid(cmd.filter, cmd.filter.defaultValue)) {
+                    return CommandResult.InvalidValueTypeCombination;
+                }
+                break;
             case "REMOVE_GLOBAL_FILTER":
                 if (!this.getGlobalFilter(cmd.id)) {
                     return CommandResult.FilterNotFound;
@@ -51,7 +54,10 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
                 if (this._isDuplicatedLabel(cmd.filter.id, cmd.filter.label)) {
                     return CommandResult.DuplicatedFilterLabel;
                 }
-                return checkFiltersTypeValueCombination(cmd.filter.type, cmd.filter.defaultValue);
+                if (!checkFilterValueIsValid(cmd.filter, cmd.filter.defaultValue)) {
+                    return CommandResult.InvalidValueTypeCombination;
+                }
+                break;
             case "MOVE_GLOBAL_FILTER": {
                 const index = this.globalFilters.findIndex((filter) => filter.id === cmd.id);
                 if (index === -1) {

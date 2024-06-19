@@ -2288,7 +2288,7 @@ test("Can create a relative date filter with an empty default value", async () =
         id: "42",
         label: "test",
         type: "date",
-        defaultValue: {},
+        defaultValue: "",
         rangeType: "relative",
     };
     const result = await addGlobalFilter(model, filter);
@@ -2358,4 +2358,60 @@ test("Spreadsheet pivot are not impacted by global filter", function () {
         ],
     });
     expect(1).toBe(1);
+});
+
+test("Cannot create a fixedPeriod date filter with a disabled value", async () => {
+    const model = new Model();
+    let filter = /** @type {FixedPeriodDateGlobalFilter}*/ ({
+        id: "42",
+        label: "test",
+        type: "date",
+        defaultValue: { period: "fourth_quarter", yearOffset: 0 },
+        rangeType: "fixedPeriod",
+        disabledPeriods: ["quarter"],
+    });
+    let result = model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    expect(result.isCancelledBecause(CommandResult.InvalidValueTypeCombination)).toBe(true);
+
+    filter = { ...filter, defaultValue: "this_quarter" };
+    result = model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    expect(result.isCancelledBecause(CommandResult.InvalidValueTypeCombination)).toBe(true);
+});
+
+test("Cannot set the value of a fixedPeriod date filter to a disabled value", async () => {
+    const model = new Model();
+    const filter = /** @type {FixedPeriodDateGlobalFilter}*/ ({
+        id: "42",
+        label: "test",
+        type: "date",
+        rangeType: "fixedPeriod",
+        disabledPeriods: ["month"],
+    });
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    const result = model.dispatch("SET_GLOBAL_FILTER_VALUE", {
+        id: "42",
+        value: { yearOffset: 0, period: "january" },
+    });
+    expect(result.isCancelledBecause(CommandResult.InvalidValueTypeCombination)).toBe(true);
+});
+
+test("Modifying fixedPeriod date filter disabled periods remove invalid filter value", async () => {
+    const model = new Model();
+    const filter = /** @type {FixedPeriodDateGlobalFilter}*/ ({
+        id: "42",
+        label: "test",
+        type: "date",
+        rangeType: "fixedPeriod",
+        disabledPeriods: [],
+    });
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    const filterValue = { yearOffset: 0, period: "march" };
+
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: filterValue });
+    expect(model.getters.getGlobalFilterValue("42")).toEqual(filterValue);
+
+    model.dispatch("EDIT_GLOBAL_FILTER", {
+        filter: { ...filter, disabledPeriods: ["month"] },
+    });
+    expect(model.getters.getGlobalFilterValue("42")).toBe(undefined);
 });
