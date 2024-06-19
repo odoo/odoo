@@ -4,6 +4,7 @@
 Store database-specific configuration parameters
 """
 
+import json
 import uuid
 import logging
 
@@ -35,11 +36,21 @@ class IrConfigParameter(models.Model):
     _allow_sudo_commands = False
 
     key = fields.Char(required=True)
-    value = fields.Text(required=True)
+    value = fields.Json()
+    value_edit = fields.Text(compute='_compute_value_edit', inverse='_inverse_value_edit')
 
     _sql_constraints = [
         ('key_uniq', 'unique (key)', 'Key must be unique.')
     ]
+
+    @api.depends('value')
+    def _compute_value_edit(self):
+        for param in self:
+            param.value_edit = json.dumps(param.value)
+
+    def _inverse_value_edit(self):
+        for param in self:
+            param.value = json.loads(param.value_edit)
 
     @mute_logger('odoo.addons.base.models.ir_config_parameter')
     def init(self, force=False):
@@ -90,15 +101,17 @@ class IrConfigParameter(models.Model):
         """
         param = self.search([('key', '=', key)])
         if param:
-            old = param.value
+            old = self.get_param(key)
             if value is not False and value is not None:
-                if str(value) != old:
+                value = str(value)
+                if value != old:
                     param.write({'value': value})
             else:
                 param.unlink()
             return old
         else:
             if value is not False and value is not None:
+                value = str(value)
                 self.create({'key': key, 'value': value})
             return False
 
