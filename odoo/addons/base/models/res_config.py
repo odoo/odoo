@@ -177,8 +177,9 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         config_parameters = []
         ICP = self.env['ir.config_parameter']
         config_value_field = ICP._fields['value']
-        for field in self._fields.values():
-            if hasattr(field, 'config_parameter') and field.config_parameter and field.default:
+        new_attributes = set(self.__class__.__bases__[0].__dict__)  # hacky and optional
+        for field_name, field in self._fields.items():
+            if field_name in new_attributes and hasattr(field, 'config_parameter') and field.config_parameter and field.default:
                 default = field.default(self)
                 default = field.convert_to_cache(default, self)
                 default = config_value_field.convert_to_column(default, ICP)
