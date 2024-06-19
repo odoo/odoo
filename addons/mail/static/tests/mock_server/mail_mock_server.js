@@ -238,10 +238,15 @@ async function channel_call_leave(request) {
         });
         notifications.push([
             channel,
-            "discuss.channel/rtc_sessions_update",
+            "mail.record/insert",
             {
-                id: Number(channelId), // JS object keys are strings, but the type from the server is number
-                rtcSessions: [["DELETE", notificationRtcSessions]],
+                Thread: [
+                    {
+                        id: Number(channelId), // JS object keys are strings, but the type from the server is number
+                        model: "discuss.channel",
+                        rtcSessions: [["DELETE", notificationRtcSessions]],
+                    },
+                ],
             },
         ]);
     }

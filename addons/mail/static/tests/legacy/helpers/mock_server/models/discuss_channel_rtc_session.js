@@ -18,10 +18,18 @@ patch(MockServer.prototype, {
             ]);
             notifications.push([
                 channel,
-                "discuss.channel/rtc_sessions_update",
+                "mail.record/insert",
                 {
-                    id: channel.id,
-                    rtcSessions: [["ADD", sessionData]],
+                    RtcSession: [sessionData],
+                    Thread: [
+                        {
+                            id: channel.id,
+                            model: "discuss.channel",
+                            rtcSessions: [
+                                ["ADD", sessionData.map((session) => ({ id: session.id }))],
+                            ],
+                        },
+                    ],
                 },
             ]);
         }
