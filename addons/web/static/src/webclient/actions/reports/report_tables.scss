@@ -21,7 +21,7 @@ div#total {
 // to the .article bloc of the report to change the table style.
 
 .o_table_standard {
-    table {
+    table:not(.o_ignore_layout_styling) {
         thead {
             border-bottom: $border-width solid $o-gray-900;
         }
@@ -35,13 +35,14 @@ div#total {
         }
     }
 
-    .o_total_table, .o_total_table .o_total {
+    .o_total_table:not(.o_ignore_layout_styling),
+    .o_total_table:not(.o_ignore_layout_styling) .o_total {
         border-top: $border-width solid $border-color;
     }
 }
 
 .o_table_bold {
-    table {
+    table:not(.o_ignore_layout_styling) {
         thead th {
             border-top: $border-width * 3 solid $o-default-report-secondary-color;
             text-transform: uppercase;
@@ -58,7 +59,7 @@ div#total {
         }
     }
 
-    .o_total_table {
+    .o_total_table:not(.o_ignore_layout_styling) {
         & .o_total, & .o_price_total {
             border-top: $border-width solid $gray-200;
         }
@@ -66,7 +67,7 @@ div#total {
 }
 
 .o_table_striped {
-    table {
+    table:not(.o_ignore_layout_styling) {
         tr:not(:first-child) {
             // Using border-top not bottom, to manage a different border on line sections
             border-top: $border-width solid $gray-200;
@@ -91,7 +92,7 @@ div#total {
         }
     }
 
-    .o_total_table {
+    .o_total_table:not(.o_ignore_layout_styling) {
         tr:first-child {
             border-top: none;
         }
@@ -103,7 +104,7 @@ div#total {
 }
 
 .o_table_boxed, .o_table_boxed-rounded {
-    table {
+    table:not(.o_ignore_layout_styling) {
         position: relative;
 
         &::before {
@@ -151,7 +152,7 @@ div#total {
         }
     }
 
-    .o_total_table {
+    .o_total_table:not(.o_ignore_layout_styling) {
         td {
             border-right: none;
         }
@@ -163,7 +164,7 @@ div#total {
 }
 
 .o_table_boxed-rounded {
-    table {
+    table:not(.o_ignore_layout_styling) {
         &::before {
             border-radius: $border-radius-lg;
         }
@@ -185,7 +186,7 @@ div#total {
         }
     }
 
-    .o_total_table {
+    .o_total_table:not(.o_ignore_layout_styling) {
         &::before {
             border-radius: 0 0 $border-radius-lg $border-radius-lg;
         }
