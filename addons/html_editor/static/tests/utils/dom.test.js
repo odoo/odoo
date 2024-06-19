@@ -1,5 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor } from "../_helpers/editor";
+import { cleanTextNode } from "@html_editor/utils/dom";
+import { getContent } from "../_helpers/selection";
 
 describe("splitAroundUntil", () => {
     test("should split a slice of text from its inline ancestry (1)", async () => {
@@ -60,5 +62,50 @@ describe("splitAroundUntil", () => {
         const result = editor.shared.splitAroundUntil(bcd, p.childNodes[1]);
         expect(result === p.childNodes[1]).toBe(true);
         expect(p.outerHTML).toBe("<p>a<font><span>bcd</span></font>e</p>");
+    });
+});
+
+describe("cleanTextNode", () => {
+    test("should remove ZWS before cursor and preserve it", async () => {
+        const { editor, el } = await setupEditor("<p>\u200B[]text</p>");
+        const cursors = editor.shared.preserveSelection();
+        cleanTextNode(el.querySelector("p").firstChild, "\u200B", cursors);
+        cursors.restore();
+        expect(getContent(el)).toBe("<p>[]text</p>");
+    });
+    test("should remove ZWS before cursor and preserve it (2)", async () => {
+        const { editor, el } = await setupEditor("<p>\u200Bt[]ext</p>");
+        const cursors = editor.shared.preserveSelection();
+        cleanTextNode(el.querySelector("p").firstChild, "\u200B", cursors);
+        cursors.restore();
+        expect(getContent(el)).toBe("<p>t[]ext</p>");
+    });
+    test("should remove ZWS after cursor and preserve it", async () => {
+        const { editor, el } = await setupEditor("<p>text[]\u200B</p>");
+        const cursors = editor.shared.preserveSelection();
+        cleanTextNode(el.querySelector("p").firstChild, "\u200B", cursors);
+        cursors.restore();
+        expect(getContent(el)).toBe("<p>text[]</p>");
+    });
+    test("should remove ZWS after cursor and preserve it (2)", async () => {
+        const { editor, el } = await setupEditor("<p>t[]ext\u200B</p>");
+        const cursors = editor.shared.preserveSelection();
+        cleanTextNode(el.querySelector("p").firstChild, "\u200B", cursors);
+        cursors.restore();
+        expect(getContent(el)).toBe("<p>t[]ext</p>");
+    });
+    test("should remove multiple ZWS preserving cursor", async () => {
+        const { editor, el } = await setupEditor("<p>\u200Bt\u200Be[]\u200Bxt\u200B</p>");
+        const cursors = editor.shared.preserveSelection();
+        cleanTextNode(el.querySelector("p").firstChild, "\u200B", cursors);
+        cursors.restore();
+        expect(getContent(el)).toBe("<p>te[]xt</p>");
+    });
+    test("should remove multiple ZWNBSP preserving cursor", async () => {
+        const { editor, el } = await setupEditor("<p>\uFEFFt\uFEFFe[]\uFEFFxt\uFEFF</p>");
+        const cursors = editor.shared.preserveSelection();
+        cleanTextNode(el.querySelector("p").firstChild, "\uFEFF", cursors);
+        cursors.restore();
+        expect(getContent(el)).toBe("<p>te[]xt</p>");
     });
 });

@@ -5,6 +5,7 @@ import { nextLeaf, previousLeaf, ZERO_WIDTH_CHARS } from "../utils/dom_info";
 import { prepareUpdate } from "../utils/dom_state";
 import { boundariesOut, leftPos, nodeSize, rightPos } from "../utils/position";
 import { descendants } from "../utils/dom_traversal";
+import { cleanTextNode } from "@html_editor/utils/dom";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
 
@@ -87,16 +88,7 @@ export class ZwsPlugin extends Plugin {
         const textNodes = descendants(element).filter((node) => node.nodeType === Node.TEXT_NODE);
         const cursors = this.shared.preserveSelection();
         for (const node of textNodes) {
-            let zwsIndex = node.textContent.search("\u200B");
-            while (zwsIndex !== -1) {
-                node.deleteData(zwsIndex, 1);
-                cursors.update((cursor) => {
-                    if (cursor.node === node && cursor.offset > zwsIndex) {
-                        cursor.offset -= 1;
-                    }
-                });
-                zwsIndex = node.textContent.search("\u200B");
-            }
+            cleanTextNode(node, "\u200B", cursors);
         }
         cursors.restore();
     }
