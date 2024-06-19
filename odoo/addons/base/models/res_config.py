@@ -10,7 +10,7 @@ from lxml import etree
 
 from odoo import api, models, _
 from odoo.exceptions import AccessError, RedirectWarning, UserError
-from odoo.tools import ustr
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -173,6 +173,24 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
     _name = 'res.config.settings'
     _description = 'Config Settings'
 
+    def init(self):
+        config_parameters = []
+        ICP = self.env['ir.config_parameter']
+        config_value_field = ICP._fields['value']
+        for field in self._fields.values():
+            if hasattr(field, 'config_parameter') and field.config_parameter and field.default:
+                default = field.default(self)
+                default = field.convert_to_cache(default, self)
+                default = config_value_field.convert_to_column(default, ICP)
+                config_parameters.append((field.config_parameter, default))
+        if config_parameters:
+            self.env.cr.execute(SQL("""
+            INSERT INTO ir_config_parameter ("key", "value")
+            VALUES %s
+            ON CONFLICT ("key")
+            DO NOTHING
+            """, SQL(", ").join(config_parameters)))
+
     def _valid_field_parameter(self, field, name):
         return (
             name in ('default_model', 'config_parameter')
@@ -294,7 +312,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         WARNING_MESSAGE = "Error when converting value %r of field %s for ir.config.parameter %r"
         for name, icp in classified['config']:
             field = self._fields[name]
-            value = IrConfigParameter.get_param(icp, field.default(self) if field.default else False)
+            value = IrConfigParameter.get(icp)
             if value is not False:
                 if field.type == 'many2one':
                     try:
@@ -361,21 +379,16 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         for name, icp in classified['config']:
             field = self._fields[name]
             value = self[name]
-            current_value = IrConfigParameter.get_param(icp)
 
             if field.type == 'char':
                 # storing developer keys as ir.config_parameter may lead to nasty
                 # bugs when users leave spaces around them
                 value = (value or "").strip() or False
-            elif field.type in ('integer', 'float'):
-                value = repr(value) if value else False
             elif field.type == 'many2one':
                 # value is a (possibly empty) recordset
                 value = value.id
 
-            if current_value == str(value) or current_value == value:
-                continue
-            IrConfigParameter.set_param(icp, value)
+            IrConfigParameter.set(icp, value)
 
     def execute(self):
         """

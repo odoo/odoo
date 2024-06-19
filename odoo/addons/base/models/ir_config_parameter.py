@@ -68,6 +68,23 @@ class IrConfigParameter(models.Model):
                 params.set_param(key, func())
 
     @api.model
+    def get(self, key):
+        self.check_access_rights('read')
+        return self._get(key)
+
+    @api.model
+    def set(self, key, value):
+        param = self.search([('key', '=', key)])
+        if param:
+            old = self._get(key)
+            if value != old:
+                param.write({'value': value})
+            return old
+        if value is not False and value is not None:
+            self.create({'key': key, 'value': value})
+        return False
+
+    @api.model
     def get_param(self, key, default=False):
         """Retrieve the value for a given key.
 
@@ -77,17 +94,22 @@ class IrConfigParameter(models.Model):
         :rtype: string
         """
         self.check_access_rights('read')
-        return self._get_param(key) or default
+        result = self._get(key)
+        if result is False:
+            return default
+        return str(result) or default
 
     @api.model
     @ormcache('key')
-    def _get_param(self, key):
+    def _get(self, key):
         # we bypass the ORM because get_param() is used in some field's depends,
         # and must therefore work even when the ORM is not ready to work
         self.flush_model(['key', 'value'])
         self.env.cr.execute("SELECT value FROM ir_config_parameter WHERE key = %s", [key])
         result = self.env.cr.fetchone()
-        return result and result[0]
+        if result is None:
+            return False
+        return result[0]
 
     @api.model
     def set_param(self, key, value):
