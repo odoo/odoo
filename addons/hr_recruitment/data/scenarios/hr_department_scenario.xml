@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="dep_management" model="hr.department">
+            <field name="name">Management</field>
+            <field name="color" eval="1" />
+        </record>
+
+        <record id="dep_rd" model="hr.department">
+            <field name="name">Research and development</field>
+            <field name="color" eval="2" />
+        </record>
+        
+        <record id="dep_marketing" model="hr.department">
+            <field name="name">Marketing manager</field>
+            <field name="parent_id" ref="dep_management" />
+            <field name="color" eval="3" />
+        </record>
+    </data>
+</odoo>

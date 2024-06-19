@@ -15,7 +15,7 @@
                 <field name="job_id" optional="show"/>
                 <field name="stage_id" optional="show"/>
                 <field name="name" readonly="1" optional="show"/>
-                <field name="application_status" optional="show" invisible="application_status == 'ongoing'"/>
+                <field name="application_status" optional="hide" invisible="application_status == 'ongoing'"/>
                 <field name="refuse_reason_id" optional='hide'/>
                 <field name="priority" widget="priority" optional="show"/>
                 <field name="email_from" readonly="1" optional="hide"/>
@@ -108,11 +108,12 @@
                 <field name="legend_normal" invisible="1"/>
                 <field name="legend_blocked" invisible="1"/>
                 <field name="legend_done" invisible="1"/>
+                <field name="kanban_state" widget="state_selection" invisible="application_status == 'refused' or application_status == 'archived'"/>
+                <field name="priority" widget="priority"/>
                 <div class="oe_title pe-0">
                     <label for="name" class="oe_edit_only"/>
                     <h1 class="d-flex justify-content-between align-items-center">
                         <field name="name" options="{'line_breaks': False}" widget="text" placeholder="e.g. Sales Manager 2 year experience"/>
-                        <field name="kanban_state" widget="state_selection"/>
                     </h1>
                     <h2 class="o_row">
                         <div>
@@ -121,52 +122,63 @@
                         </div>
                     </h2>
                 </div>
+                <!-- I feel like there should be some spacing here  -->
                 <group>
                     <group>
                         <field name="partner_id" invisible="1" />
                         <field name="refuse_reason_id" invisible="active"/>
-                        <field name="email_from" widget="email"/>
-                        <field name="email_cc" groups="base.group_no_one"/>
+                        <field name="email_from" widget="email" placeholder="e.g. john.doe@example.com"/>
                         <field name="partner_phone" widget="phone"/>
-                        <field name="partner_mobile" widget="phone"/>
-                        <field name="linkedin_profile" widget="url"/>
-                        <field name="type_id" placeholder="Degree"/>
+                        <field name="linkedin_profile" widget="url" placeholder="e.g. https://www.linkedin.com/in/..."/>
 
                     </group>
                     <group>
-                        <field name="interviewer_ids" options="{'no_create': True, 'no_create_edit': True}" widget="many2many_avatar_user" />
-                        <field name="user_id" widget="many2one_avatar_user"/>
-                        <field name="date_closed" invisible="not date_closed" />
-                        <field name="priority" widget="priority"/>
-                        <field name="source_id"/>
-                        <field name="medium_id"/>
-                        <field name="availability" placeholder="Directly Available"/>
-                        <field name="categ_ids" placeholder="Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
-                    </group>
-                    <group string="Job">
                         <field name="job_id"/>
-                        <field name="department_id"/>
-                        <field name="company_id" groups="base.group_multi_company" invisible="1" options='{"no_open":True}' />
-                    </group>
-                    <group string="Contract" name="recruitment_contract" groups="hr_recruitment.group_hr_recruitment_user">
-                        <label for="salary_expected"/>
-                        <div class="o_row">
-                            <field name="salary_expected"/>
-                            <span invisible="not salary_expected_extra"> + </span>
-                            <field name="salary_expected_extra" placeholder="Extra advantages..."/>
-                        </div>
-                        <label for="salary_proposed"/>
-                        <div class="o_row">
-                            <field name="salary_proposed"/>
-                            <span invisible="not salary_proposed_extra"> + </span>
-                            <field name="salary_proposed_extra" placeholder="Extra advantages..."/>
-                        </div>
+                        <field name="user_id" widget="many2one_avatar_user" placeholder="Unassigned"/>
+                        <field name="interviewer_ids" options="{'no_create': True, 'no_create_edit': True}" widget="many2many_avatar_user" placeholder="Who can access candidates" />
+                        <field name="date_closed" invisible="not date_closed" />
+                        <field name="categ_ids" placeholder="e.g. Emergency" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
                 </group>
                 <field name="applicant_properties" columns="2"/>
                 <notebook>
-                    <page string="Application Summary" name="application_summary">
-                        <field name="description" placeholder="Motivations..."/>
+                    <!-- This should be a new field.
+                    When you are in knowledge the template should be copied in 
+                    Note and not in application summary -->
+                    <page string="Note" name="application_note">
+                        <field name="applicant_notes" placeholder="Internal notes..."/>
+                    </page>
+                    <page string="Details" name="application_details">
+                        <group>
+                            <group string="Applicant">
+                                <field name="type_id" placeholder="e.g. Masters"/>
+                                <field name="availability" placeholder="Directly"/>
+                            </group>
+                            <group string="Job">
+                                <field name="department_id"/>
+                                <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}' />
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Salary Package" name="recruitment_contract" groups="hr_recruitment.group_hr_recruitment_user">
+                                <label for="salary_expected"/>
+                                <div class="o_row">
+                                    <field name="salary_expected" placeholder="Expected"/>
+                                    <span invisible="not salary_expected_extra"> + </span>
+                                    <field name="salary_expected_extra" placeholder="Other benefits"/>
+                                </div>
+                                <label for="salary_proposed"/>
+                                <div class="o_row">
+                                    <field name="salary_proposed"/>
+                                    <span invisible="not salary_proposed_extra"> + </span>
+                                    <field name="salary_proposed_extra" placeholder="Other benefits"/>
+                                </div>
+                            </group>
+                            <group string="Sourcing">
+                                <field name="source_id"/>
+                                <field name="medium_id"/>
+                            </group>
+                        </group>
                     </page>
                 </notebook>
             </sheet>
@@ -275,18 +287,53 @@
         </field>
     </record>
 
+ 
+    <record id="calendar_quick_create_applicant_form" model="ir.ui.view">
+        <field name="name">hr.applicant.form.calendar_quick_create</field>
+        <field name="model">hr.applicant</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="partner_name" placeholder="e.g. John Doe" required="true"/>
+                    <field name="email_from" placeholder="e.g. john.doe@example.com"/>
+                    <field name="job_id" options="{'no_open': True}"/>
+                    <field name="priority" widget="priority"/>
+
+                    <field name="applicant_calendar_start_date" string="Start date" widget="daterange" options="{'end_date_field': 'applicant_calendar_stop_date'}" invisible="not allday" required="allday"/>
+                    <field name="applicant_calendar_start" string="Start date" widget="daterange" options="{'end_date_field': 'applicant_calendar_stop'}" invisible="allday" required="not allday"/>
+                    <field name="applicant_calendar_stop_date" invisible="1" />
+                    <field name="applicant_calendar_stop" invisible="1" />
+                    <field name="allday"/>
+                    <field name="activity_type_id" string="Event type"/>
+                    <field name="company_id" invisible="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="hr_applicant_calendar_view">
         <field name="name">Hr Applicants Calendar</field>
         <field name="model">hr.applicant</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <calendar string="Applicants" mode="month" date_start="activity_date_deadline" color="user_id" event_limit="5" hide_time="true">
+            <calendar
+                string="Applicants"
+                mode="month"
+                date_start="applicant_calendar_start"
+                date_stop="applicant_calendar_stop"
+                all_day="allday"
+                create_name_field="applicant_calendar_title"
+                color="user_id"
+                event_limit="5"
+                hide_time="true"
+                quick_create="1"
+                event_open_popup="0"
+                quick_create_view_id="%(hr_recruitment.calendar_quick_create_applicant_form)d">
                 <field name="partner_name"/>
                 <field name="job_id"/>
                 <field name="priority" widget="priority"/>
-                <field name="activity_summary"/>
                 <field name="user_id" filters="1" invisible="1"/>
-                <field name="applicant_properties"/>
             </calendar>
         </field>
     </record>
@@ -300,14 +347,13 @@
                 <group>
                     <field name="name"/>
                     <field name="partner_name" placeholder="e.g. John Doe"/>
-                    <field name="email_from"/>
+                    <field name="email_from" placeholder="e.g. john.doe@example.com"/>
                     <field name="job_id" options="{'no_open': True}"/>
                     <field name="company_id" invisible="1"/>
                 </group>
             </form>
         </field>
-    </record>
-
+    </record>  
     <!-- Hr Applicant Kanban View -->
     <record model="ir.ui.view" id="hr_kanban_view_applicant">
         <field name="name">Hr Applicants kanban</field>
@@ -434,7 +480,7 @@
                 Odoo helps you track applicants in the recruitment
                 process and follow up all operations: meetings, interviews, etc.
             </p><p>
-                Applicants and their attached CV are created automatically when an email is sent.
+                Applicants and their attached résumé are created automatically when an email is sent.
                 If you install the document management modules, all resumes are indexed automatically,
                 so that you can easily search through their content.
             </p>
@@ -477,7 +523,7 @@
                 Odoo helps you track applicants in the recruitment
                 process and follow up all operations: meetings, interviews, etc.
             </p><p>
-                Applicants and their attached CV are created automatically when an email is sent.
+                Applicants and their attached résumé are created automatically when an email is sent.
                 If you install the document management modules, all resumes are indexed automatically,
                 so that you can easily search through their content.
             </p>
@@ -584,14 +630,14 @@
         id="hr_applicant_category_menu"
         parent="menu_hr_recruitment_config_applications"
         action="hr_applicant_category_action"
-        sequence="20" groups="base.group_no_one"/>
+        sequence="20" groups="hr.group_hr_user"/>
 
     <menuitem
         id="menu_hr_recruitment_degree"
         name="Degrees"
         parent="menu_hr_recruitment_config_applications"
         action="hr_recruitment_degree_action"
-        sequence="1" groups="base.group_no_one"/>
+        sequence="1" groups="hr.group_hr_user"/>
 
     <record id="hr_applicant_view_pivot" model="ir.ui.view">
         <field name="name">hr.applicant.pivot</field>

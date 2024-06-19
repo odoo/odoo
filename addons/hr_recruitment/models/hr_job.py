@@ -3,8 +3,9 @@
 import ast
 from collections import defaultdict
 
+from odoo.addons.http_routing.models.ir_http import slugify
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.tools import SQL
+from odoo.tools import convert, SQL
 
 class Job(models.Model):
     _name = "hr.job"
@@ -43,12 +44,13 @@ class Job(models.Model):
     manager_id = fields.Many2one(
         'hr.employee', related='department_id.manager_id', string="Department Manager",
         readonly=True, store=True)
-    user_id = fields.Many2one('res.users', "Recruiter", domain="[('share', '=', False), ('company_ids', 'in', company_id)]", tracking=True, help="The Recruiter will be the default value for all Applicants Recruiter's field in this job position. The Recruiter is automatically added to all meetings with the Applicant.")
+    user_id = fields.Many2one('res.users', "Recruiter", domain="[('share', '=', False), ('company_ids', 'in', company_id)]", tracking=True, default=lambda self: self.env.uid, help="The Recruiter will be the default value for all Applicants in this job position. The Recruiter is automatically added to all meetings with the Applicant.")
     document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents", readonly=True)
     documents_count = fields.Integer(compute='_compute_document_ids', string="Document Count")
     alias_id = fields.Many2one(help="Email alias for this job position. New emails will automatically create new applicants for this job position.")
+    alias_name = fields.Char(compute="_compute_alias_name")
     color = fields.Integer("Color Index")
-    is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite')
+    is_favorite = fields.Boolean(default=False, compute='_compute_is_favorite', inverse='_inverse_is_favorite')
     favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
     interviewer_ids = fields.Many2many('res.users', string='Interviewers', domain="[('share', '=', False), ('company_ids', 'in', company_id)]", help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.")
     extended_interviewer_ids = fields.Many2many('res.users', 'hr_job_extended_interviewer_res_users', compute='_compute_extended_interviewer_ids', store=True)
@@ -240,6 +242,11 @@ class Job(models.Model):
             })
         return values
 
+    @api.onchange('name')
+    def _compute_alias_name(self):
+        for job in self:
+            job.alias_name = slugify(job.name or '')
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -347,4 +354,31 @@ class Job(models.Model):
             'views': [(form_view.id, 'form'),],
             'type': 'ir.actions.act_window',
             'target': 'inline'
+        }
+
+    @api.model
+    def _action_load_recruitment_scenario(self):
+        SCENARIO_FILES = [
+            "hr_department_scenario",
+            "hr_applicant_category_scenario",
+            "hr_job_scenario",
+            "hr_applicant_scenario",
+            "ir_attachment_scenario",
+            "mail_activity_scenario",
+            "mail_message_scenario",
+        ]
+
+        for file in SCENARIO_FILES:
+            convert.convert_file(
+                self.env,
+                "hr_recruitment",
+                "data/scenarios/" + file + ".xml",
+                None,
+                mode="init",
+                kind="data",
+            )
+
+        return {
+            "type": "ir.actions.client",
+            "tag": "reload",
         }

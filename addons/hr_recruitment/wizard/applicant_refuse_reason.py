@@ -23,6 +23,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
     applicant_emails = fields.Text(compute='_compute_applicant_emails')
     duplicates = fields.Boolean('Duplicates')
     duplicates_count = fields.Integer('Duplicates Count', compute='_compute_duplicates_count')
+    single_applicant_email = fields.Char(compute='_compute_single_applicant_email', inverse="_inverse_single_applicant_email")
 
     @api.depends('refuse_reason_id')
     def _compute_send_mail(self):
@@ -31,22 +32,36 @@ class ApplicantGetRefuseReason(models.TransientModel):
             wizard.send_mail = bool(template)
             wizard.template_id = template
 
-    @api.depends('applicant_ids', 'send_mail')
+    @api.depends('applicant_ids', 'send_mail', 'single_applicant_email')
     def _compute_applicant_without_email(self):
         for wizard in self:
             applicants = wizard.applicant_ids.filtered(lambda x: not x.email_from and not x.partner_id.email)
-            if applicants and wizard.send_mail:
+            if applicants and wizard.send_mail and not wizard.single_applicant_email:
                 wizard.applicant_without_email = "%s\n%s" % (
-                    _("The email will not be sent to the following applicant(s) as they don't have email address."),
-                    "\n".join([i.partner_name or i.name for i in applicants])
+                    _("The email will not be sent to the following applicant(s) as they don't have an email address:"),
+                    ",\n".join([i.partner_name or i.name for i in applicants])
                 )
             else:
                 wizard.applicant_without_email = False
 
+    @api.depends("applicant_ids.email_from")
+    def _compute_single_applicant_email(self):
+        for wizard in self:
+            if len(wizard.applicant_ids) == 1:
+                wizard.single_applicant_email = (
+                    wizard.applicant_ids.email_from
+                    or wizard.applicant_ids.partner_id.email
+                )
+
+    def _inverse_single_applicant_email(self):
+        for wizard in self:
+            if len(wizard.applicant_ids) == 1:
+                wizard.applicant_ids.email_from = wizard.single_applicant_email
+
     @api.depends('applicant_ids.email_from')
     def _compute_applicant_emails(self):
         for wizard in self:
-            wizard.applicant_emails = ', '.join(a.email_from for a in wizard.applicant_ids if a.email_from)
+            wizard.applicant_emails = ', '.join(a.email_from or a.partner_id.email for a in wizard.applicant_ids if a.email_from or a.partner_id.email)
 
     def action_refuse_reason_apply(self):
         if self.send_mail:

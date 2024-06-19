@@ -43,6 +43,9 @@
         'web.assets_tests': [
             'website_hr_recruitment/static/tests/**/*',
         ],
+        'web.assets_backend': [
+            'website_hr_recruitment/static/src/fields/**/*',
+        ]
     },
     'license': 'LGPL-3',
 }
