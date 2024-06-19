@@ -1843,16 +1843,6 @@ export const rtcService = {
                 });
             }
         });
-        services["bus_service"].subscribe(
-            "discuss.channel/rtc_sessions_update",
-            ({ id, rtcSessions }) => {
-                env.services["mail.store"].Thread.insert({
-                    model: "discuss.channel",
-                    id,
-                    rtcSessions,
-                });
-            }
-        );
         services["bus_service"].subscribe("res.users.settings.volumes", (payload) => {
             if (payload) {
                 rtc.store.Volume.insert(payload);

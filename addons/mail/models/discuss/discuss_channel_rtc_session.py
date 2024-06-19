@@ -8,6 +8,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.addons.mail.tools import discuss, jwt
+from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
 
@@ -37,10 +38,17 @@ class MailRtcSession(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         rtc_sessions = super().create(vals_list)
-        self.env['bus.bus']._sendmany([(channel, 'discuss.channel/rtc_sessions_update', {
-            'id': channel.id,
-            'rtcSessions': [('ADD', sessions_data)],
-        }) for channel, sessions_data in rtc_sessions._mail_rtc_session_format_by_channel().items()])
+        notifications = []
+        for channel, sessions_data in rtc_sessions._mail_rtc_session_format_by_channel().items():
+            store = Store("RtcSession", sessions_data)
+            channel_info = {
+                "id": channel.id,
+                "model": "discuss.channel",
+                "rtcSessions": [("ADD", [{"id": session["id"]} for session in sessions_data])],
+            }
+            store.add("Thread", channel_info)
+            notifications.append((channel, "mail.record/insert", store.get_result()))
+        self.env["bus.bus"]._sendmany(notifications)
         return rtc_sessions
 
     def unlink(self):
@@ -56,10 +64,17 @@ class MailRtcSession(models.Model):
                 # than to attempt recycling a possibly stale channel uuid.
                 channel.sfu_channel_uuid = False
                 channel.sfu_server_url = False
-        notifications = [(channel, 'discuss.channel/rtc_sessions_update', {
-            'id': channel.id,
-            'rtcSessions': [('DELETE', [{'id': session_data['id']} for session_data in sessions_data])],
-        }) for channel, sessions_data in self._mail_rtc_session_format_by_channel().items()]
+        notifications = []
+        for channel, sessions_data in self._mail_rtc_session_format_by_channel().items():
+            channel_info = {
+                "id": channel.id,
+                "model": "discuss.channel",
+                "rtcSessions": [
+                    ("DELETE", [{"id": session_data["id"]} for session_data in sessions_data])
+                ],
+            }
+            store = Store("Thread", channel_info)
+            notifications.append((channel, "mail.record/insert", store.get_result()))
         for rtc_session in self:
             target = rtc_session.guest_id or rtc_session.partner_id
             notifications.append((target, 'discuss.channel.rtc.session/ended', {'sessionId': rtc_session.id}))
