@@ -7,15 +7,13 @@
             <form string="Payments" create="0" edit="0" delete="0">
                 <sheet>
                     <group>
-                        <field name="currency_id" invisible="1" />
-                        <field name="name" />
-                        <field name="amount" />
-                        <field name="pos_order_id" readonly="1"/>
-                        <field name="payment_method_id" readonly="1"/>
-                        <field name="card_type" readonly="1" invisible="not card_type"/>
-                        <field name="cardholder_name" readonly="1" invisible="not cardholder_name"/>
-                        <field name="transaction_id" readonly="1" invisible="not transaction_id"/>
-                        <field name="session_id" />
+                        <field name="session_id" readonly="0"/>
+                        <field name="pos_order_id"/>
+                        <field name="amount" readonly="0"/>
+                        <field name="payment_method_id"/>
+                        <field name="card_type" invisible="not card_type"/>
+                        <field name="cardholder_name" invisible="not cardholder_name"/>
+                        <field name="transaction_id" invisible="not transaction_id"/>
                     </group>
                 </sheet>
             </form>
