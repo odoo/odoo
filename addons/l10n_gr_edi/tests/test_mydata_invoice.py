@@ -294,62 +294,62 @@ class TestGreeceMyDATA(AccountTestInvoicingCommon):
     # Test: assert built-in constraints
     ####################################################################################################
 
-    def test_l10n_gr_edi_compute_errors_no_credentials_and_vat(self):
+    def test_l10n_gr_edi_get_errors_pre_request_no_credentials_and_vat(self):
         self.company_data['company'].write({
             'l10n_gr_edi_aade_id': False,
             'l10n_gr_edi_aade_key': False,
         })
         invoice = self._create_invoice()
-        invoice.l10n_gr_edi_compute_errors()
+        invoice._l10n_gr_edi_get_errors_pre_request()
         errors = '\n'.join(('Missing VAT on Company My Greece Company',
                             'Missing VAT on Partner Greece Partner A',
                             'You need to set AADE User ID and Subscription Key in the settings.'))
         self.assert_mydata_error(invoice, errors)
 
-    def test_l10n_gr_edi_compute_errors_no_classification(self):
+    def test_l10n_gr_edi_get_errors_pre_request_no_classification(self):
         # No invoice type
         invoice = self._create_invoice(inv_type='')
-        invoice.l10n_gr_edi_compute_errors()
+        invoice._l10n_gr_edi_get_errors_pre_request()
         self.assert_mydata_error(invoice, 'Missing MyDATA Invoice Type')
 
         # No classification category
         invoice = self._create_invoice(cls_category='')
-        invoice.l10n_gr_edi_compute_errors()
+        invoice._l10n_gr_edi_get_errors_pre_request()
         self.assert_mydata_error(invoice, 'Missing MyDATA classification category on line product_a')
 
         # No classification type, and inv_type + cls_category combination doesn't allow empty cls_type
         invoice = self._create_invoice(cls_type='')
-        invoice.l10n_gr_edi_compute_errors()
+        invoice._l10n_gr_edi_get_errors_pre_request()
         self.assert_mydata_error(invoice, 'Missing MyDATA classification type on line product_a')
 
-    def test_l10n_gr_edi_compute_errors_allowed_no_cls_type(self):
+    def test_l10n_gr_edi_get_errors_pre_request_allowed_no_cls_type(self):
         allowed_inv_type_category = (('1.1', 'category1_95'), ('3.2', 'category1_95'), ('5.1', 'category1_95'))
         for inv_type, category in allowed_inv_type_category:
             invoice = self._create_invoice(inv_type=inv_type, cls_category=category, cls_type='')
-            invoice.l10n_gr_edi_compute_errors()
+            invoice._l10n_gr_edi_get_errors_pre_request()
             # Allow no cls_type on some combinations with available cls_type
             self.assertFalse(invoice.l10n_gr_edi_active_document_id.message)
 
-    def test_l10n_gr_edi_compute_errors_invalid_tax(self):
+    def test_l10n_gr_edi_get_errors_pre_request_invalid_tax(self):
         # Invalid tax amount
         self.tax_13.amount = 12.0
         invoice = self._create_invoice(tax_id=self.tax_13.id)
-        invoice.l10n_gr_edi_compute_errors()
+        invoice._l10n_gr_edi_get_errors_pre_request()
         self.assert_mydata_error(invoice, 'Invalid tax amount for line product_a. The valid values are 24, 13, 6, 17, 9, 4, 0')
         invoice.button_draft()  # for easier modification
 
         # Multiple tax
         invoice.invoice_line_ids.tax_ids = [self.tax_24.id, self.tax_0.id]
-        invoice.l10n_gr_edi_compute_errors()
+        invoice._l10n_gr_edi_get_errors_pre_request()
         self.assert_mydata_error(invoice, 'MyDATA does not support multiple taxes on line product_a')
 
         # No tax
         invoice.invoice_line_ids.tax_ids = False
-        invoice.l10n_gr_edi_compute_errors()
+        invoice._l10n_gr_edi_get_errors_pre_request()
         self.assert_mydata_error(invoice, 'Missing tax on line product_a')
 
         # Tax 0% and no tax exemption category
         invoice.invoice_line_ids.tax_ids = [self.tax_0.id]
         invoice.invoice_line_ids.l10n_gr_edi_tax_exemption_category = False
-        invoice.l10n_gr_edi_compute_errors()
+        invoice._l10n_gr_edi_get_errors_pre_request()
         self.assert_mydata_error(invoice, 'MyDATA Tax Exemption Category is missing for line product_a')

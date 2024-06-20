@@ -81,7 +81,7 @@ class AccountMove(models.Model):
     def _compute_l10n_gr_edi_warnings(self):
         for move in self:
             if move.state == 'posted':
-                warnings = move.l10n_gr_edi_compute_errors()
+                warnings = move._l10n_gr_edi_get_errors_pre_request()
                 move.l10n_gr_edi_warnings = '\n'.join(warnings)
             else:
                 move.l10n_gr_edi_warnings = False
@@ -110,7 +110,7 @@ class AccountMove(models.Model):
                 have_payment,
             ))
 
-    def l10n_gr_edi_compute_errors(self):
+    def _l10n_gr_edi_get_errors_pre_request(self):
         """ Tries to catch all possible errors before sending to MyDATA API """
         self.ensure_one()
         errors = []
@@ -349,7 +349,7 @@ class AccountMove(models.Model):
          @param send_expense_classification: False (default, send invoice) | True (send expense classification) """
         moves_to_send = self.env['account.move']
         for move in self:
-            if errors := move.l10n_gr_edi_compute_errors():
+            if errors := move._l10n_gr_edi_get_errors_pre_request():
                 self.env['l10n_gr_edi.document'].create([{
                     'move_id': move.id,
                     'state': 'error',

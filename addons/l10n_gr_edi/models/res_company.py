@@ -7,15 +7,13 @@ from odoo.exceptions import UserError
 
 ACCEPTED_ENDPOINTS = ('sendinvoices', 'sendexpensesclassification', 'requestdocs')
 NAMESPACES = {"ns": "http://www.aade.gr/myDATA/invoice/v1.0"}
-DEFAULT_TEST_ID = 'odoodev'
-DEFAULT_TEST_KEY = '20ea658627fd8c7d90594fe4601d3327'
 
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    l10n_gr_edi_aade_id = fields.Char('AADE User ID', default=DEFAULT_TEST_ID)
-    l10n_gr_edi_aade_key = fields.Char('AADE Subscription Key', default=DEFAULT_TEST_KEY)
+    l10n_gr_edi_aade_id = fields.Char('AADE User ID')
+    l10n_gr_edi_aade_key = fields.Char('AADE Subscription Key')
     l10n_gr_edi_test_env = fields.Boolean('Test Environment', default=True, help="\
         Enable test environments with credentials obtained from https://mydata-dev-register.azurewebsites.net/")
 
@@ -31,7 +29,7 @@ class ResCompany(models.Model):
     def _l10n_gr_edi_get_headers_credentials(self):
         """ Returns required credentials for header of all requests to MyDATA. """
         if not self.l10n_gr_edi_aade_id or not self.l10n_gr_edi_aade_key:
-            # Will not happen as we've checked from l10n_gr_edi_compute_errors check, but just in case
+            # Will not happen as we've checked from _l10n_gr_edi_get_errors_pre_request check, but just in case
             raise UserError(_('MyDATA credentials not found on company %s', self.name))
 
         return {
@@ -39,7 +37,7 @@ class ResCompany(models.Model):
             'ocp-apim-subscription-key': self.l10n_gr_edi_aade_key,
         }
 
-    def cron_l10n_gr_edi_fetch_invoices(self):
+    def _cron_l10n_gr_edi_fetch_invoices(self):
         """ Receive issued MyDATA Invoices and create draft Vendor Bills based on the received XML. """
         gr_companies = self.env['res.company'].search([
             ('country_code', '=', 'GR'),
