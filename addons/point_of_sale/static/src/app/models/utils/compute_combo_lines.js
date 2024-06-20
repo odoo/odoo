@@ -32,7 +32,7 @@ export const computeComboLines = (
         const attributesPriceExtra = (attribute_value_ids ?? [])
             .map((attr) => attr?.price_extra || 0)
             .reduce((acc, price) => acc + price, 0);
-        const totalPriceExtra = priceUnit + attributesPriceExtra + comboLine.combo_price;
+        const totalPriceExtra = priceUnit + attributesPriceExtra + comboLine.extra_price;
         combolines.push({
             combo_line_id: comboLine,
             price_unit: totalPriceExtra,

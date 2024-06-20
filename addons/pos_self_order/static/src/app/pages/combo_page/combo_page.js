@@ -77,7 +77,7 @@ export class ComboPage extends Component {
     next() {
         const combo = this.currentCombo;
         const index = this.state.selectedCombos.findIndex((c) => c.id === combo.id);
-        const comboLine = this.selfOrder.models["pos.combo.line"].get(
+        const comboLine = this.selfOrder.models["product.combo.line"].get(
             this.env.currentComboLineId.value
         );
         const selectedCombo = {
