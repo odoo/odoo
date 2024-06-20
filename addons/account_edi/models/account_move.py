@@ -36,6 +36,7 @@ class AccountMove(models.Model):
         compute='_compute_edi_show_cancel_button')
     edi_show_abandon_cancel_button = fields.Boolean(
         compute='_compute_edi_show_abandon_cancel_button')
+    edi_show_force_cancel = fields.Boolean("Force Cancel", compute='_compute_edi_force_cancel')
 
     @api.depends('edi_document_ids.state')
     def _compute_edi_state(self):
@@ -51,6 +52,12 @@ class AccountMove(models.Model):
                 move.edi_state = 'to_cancel'
             else:
                 move.edi_state = False
+
+    @api.depends('edi_document_ids.state')
+    def _compute_edi_force_cancel(self):
+        for move in self:
+            sending_edi_documents = move.edi_document_ids.filtered(lambda doc: doc.state == 'sent')
+            move.edi_show_force_cancel = any(edi_format_id._allowed_force_cancel() for edi_format_id in sending_edi_documents.edi_format_id)
 
     @api.depends('edi_document_ids.error')
     def _compute_edi_error_count(self):
@@ -267,6 +274,15 @@ class AccountMove(models.Model):
         if not self.env.context.get('skip_account_edi_cron_trigger'):
             self.env.ref('account_edi.ir_cron_edi_network')._trigger()
         return posted
+
+    def force_cancel_edi(self):
+        '''Force the cancellation of the EDI.
+        '''
+        for move in self:
+            send_edi_documents = move.edi_document_ids.filtered(lambda doc: doc.state == 'sent')
+            move.message_post(body=_("A Force cancellation of the EDI %s.", ", ".join(send_edi_documents.mapped('edi_format_id.name'))))
+        self.edi_document_ids.filtered(lambda doc: doc.state == 'sent').write({'state': 'cancelled', 'error': False, 'blocking_level': False})
+        self.button_cancel()
 
     def button_cancel(self):
         # OVERRIDE

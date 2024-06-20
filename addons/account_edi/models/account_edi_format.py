@@ -89,6 +89,11 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return False
 
+    def _allowed_force_cancel(self):
+        """ Mark the edi.document related to this move to be canceled(forcefully). """
+        self.ensure_one()
+        return False
+
     def _is_compatible_with_journal(self, journal):
         """ Indicate if the EDI format should appear on the journal passed as parameter to be selected by the user.
         If True, this EDI format will appear on the journal.

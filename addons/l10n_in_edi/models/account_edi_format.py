@@ -82,6 +82,12 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return self.code == "in_einvoice_1_03" or super()._needs_web_services()
 
+    def _allowed_force_cancel(self):
+        # OVERRIDE
+        """ Mark the edi.document related to this move to be canceled(forcefully). """
+        self.ensure_one()
+        return self.code == "in_einvoice_1_03" or super()._allowed_force_cancel()
+
     def _l10n_in_edi_xml_invoice_content(self, invoice):
         return json.dumps(self._l10n_in_edi_generate_invoice_json(invoice)).encode()
 
