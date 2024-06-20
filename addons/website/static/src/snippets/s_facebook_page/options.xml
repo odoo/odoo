@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website.s_facebook_page_options">
+        <WeInput pageUrl="'https://www.facebook.com/Odoo'" noPreview="'true'">
+            <t t-set-slot="title">Page URL</t>
+        </WeInput>
+        <WeRow>
+            <t t-set-slot="title">Cover Photo</t>
+            <WeCheckbox optionName="'show_cover'" toggleOption="'true'" noPreview="'true'"/>
+        </WeRow>
+        <WeRow>
+            <t t-set-slot="title">Timeline</t>
+            <WeCheckbox optionName="'tab.timeline'" toggleOption="'true'" noPreview="'true'"/>
+        </WeRow>
+        <WeRow>
+            <t t-set-slot="title">Events</t>
+            <WeCheckbox optionName="'tab.events'" toggleOption="'true'" noPreview="'true'"/>
+        </WeRow>
+        <WeRow>
+            <t t-set-slot="title">Messages</t>
+            <WeCheckbox optionName="'tab.messages'" toggleOption="'true'" noPreview="'true'"/>
+        </WeRow>
+        <WeRow>
+            <t t-set-slot="title">Small Header</t>
+            <WeCheckbox optionName="'small_header'" toggleOption="'true'" noPreview="'true'"/>
+        </WeRow>
+    </t>
+
+</templates>
