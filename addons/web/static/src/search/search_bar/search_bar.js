@@ -100,7 +100,7 @@ export class SearchBar extends Component {
             const field = this.fields[searchItem.fieldName];
             const type = field.type === "reference" ? "char" : field.type;
             /** @todo do something with respect to localization (rtl) */
-            const preposition = this.env._t(["date", "datetime"].includes(type) ? "at" : "for");
+            const preposition = ["date", "datetime"].includes(type) ? this.env._t("at") : this.env._t("for");
 
             if (["selection", "boolean"].includes(type)) {
                 const options = field.selection || [
