@@ -923,16 +923,21 @@ class MailCase(MockEmail):
     @contextmanager
     def assertBus(self, channels, message_items=None):
         """ Check content of bus notifications. """
+        def format_notif(notif):
+            if not notif.message:
+                return ""
+            return f"{tuple(json.loads(notif.channel))},  # {json.loads(notif.message).get('type')}"
         try:
             with self.mock_bus():
                 yield
         finally:
             found_bus_notifs = self.assertBusNotifications(channels, message_items=message_items)
+            new_line = "\n"
             self.assertEqual(
                 self._new_bus_notifs,
                 found_bus_notifs,
-                f"\n{self._new_bus_notifs.mapped(lambda bus: (bus.channel, json.loads(bus.message).get('type')) if bus.message else None)}"
-                f"\n{found_bus_notifs.mapped(lambda bus: (bus.channel, json.loads(bus.message).get('type')) if bus.message else None)}"
+                f"\nExpected:\n{new_line.join(found_bus_notifs.mapped(format_notif))}"
+                f"\nResult:\n{new_line.join(self._new_bus_notifs.mapped(format_notif))}"
             )
 
     @contextmanager
@@ -959,7 +964,7 @@ class MailCase(MockEmail):
     # MAIL MODELS ASSERTS
     # ------------------------------------------------------------
 
-    def assertMailNotifications(self, messages, recipients_info):
+    def assertMailNotifications(self, messages, recipients_info, bus_notif_count=1):
         """ Check bus notifications content. Mandatory and basic check is about
         channels being notified. Content check is optional.
 
@@ -1106,7 +1111,7 @@ class MailCase(MockEmail):
             # check bus notifications that should be sent (hint: message author, multiple notifications)
             bus_notifications = message.notification_ids._filtered_for_web_client().filtered(lambda n: n.notification_status == 'exception')
             if bus_notifications:
-                self.assertMessageBusNotifications(message)
+                self.assertMessageBusNotifications(message, bus_notif_count)
 
             # check emails that should be sent (hint: mail.mail per group, email par recipient)
             email_values = {
@@ -1144,10 +1149,10 @@ class MailCase(MockEmail):
 
         return done_msgs, done_notifs
 
-    def assertMessageBusNotifications(self, message):
+    def assertMessageBusNotifications(self, message, count=1):
         """Asserts that the expected notification updates have been sent on the
         bus for the given message."""
-        self.assertBusNotifications([(self.cr.dbname, 'res.partner', message.author_id.id)], [{
+        self.assertBusNotifications([(self.cr.dbname, 'res.partner', message.author_id.id)] * count, [{
             'type': 'mail.message/notification_update',
             'payload': {
                 'elements': message._message_notification_format(),
@@ -1174,7 +1179,13 @@ class MailCase(MockEmail):
             }, {...}]
         """
         bus_notifs = self.env['bus.bus'].sudo().search([('channel', 'in', [json_dump(channel) for channel in channels])])
-        self.assertEqual(set(bus_notifs.mapped('channel')), set([json_dump(channel) for channel in channels]))
+        new_line = "\n"
+        self.assertEqual(
+            bus_notifs.mapped("channel"),
+            [json_dump(channel) for channel in channels],
+            f"\nExpected:\n{new_line.join([json_dump(channel) for channel in channels])}"
+            f"\nReturned:\n{new_line.join(bus_notifs.mapped('channel'))}"
+        )
         notif_messages = [n.message for n in bus_notifs]
         for expected in message_items or []:
             for notification in notif_messages:
@@ -1182,7 +1193,7 @@ class MailCase(MockEmail):
                     break
             else:
                 raise AssertionError('No notification was found with the expected value.\nExpected:\n%s\nReturned:\n%s' %
-                    (json_dump(expected), '\n'.join([n for n in notif_messages])))
+                    (json_dump(expected), ",\n".join(notif_messages)))
         if check_unique:
             self.assertEqual(len(bus_notifs), len(channels))
         return bus_notifs

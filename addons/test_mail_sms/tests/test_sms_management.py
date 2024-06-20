@@ -141,7 +141,7 @@ class TestSMSWizards(TestSMSActionsCommon):
             {'partner': self.partner_1, 'state': 'pending'},
             {'partner': self.partner_2, 'state': 'pending'}
         ], 'TEST BODY', self.msg, check_sms=True)
-        self.assertMessageBusNotifications(self.msg)
+        self.assertMessageBusNotifications(self.msg, count=2)
 
     @mute_logger('odoo.addons.sms.models.sms_sms')
     def test_sms_resend_update_number(self):
@@ -157,7 +157,7 @@ class TestSMSWizards(TestSMSActionsCommon):
             {'partner': self.partner_1, 'state': 'pending', 'number': self.random_numbers_san[0]},
             {'partner': self.partner_2, 'state': 'pending', 'number': self.random_numbers_san[1]}
         ], 'TEST BODY', self.msg, check_sms=True)
-        self.assertMessageBusNotifications(self.msg)
+        self.assertMessageBusNotifications(self.msg, count=2)
 
     def test_sms_resend_cancel(self):
         self._reset_bus()
@@ -201,4 +201,4 @@ class TestSMSWizards(TestSMSActionsCommon):
 
         self.assertSMSNotification([{'partner': self.partner_1, 'state': 'pending'}], 'TEST BODY', self.msg, check_sms=True)
         self.assertSMSNotification([{'partner': self.partner_2, 'state': 'canceled', 'number': self.notif_p2.sms_number, 'failure_type': 'sms_credit'}], 'TEST BODY', self.msg, check_sms=False)
-        self.assertMessageBusNotifications(self.msg)
+        self.assertMessageBusNotifications(self.msg, count=2)

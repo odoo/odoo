@@ -24,8 +24,8 @@ class TestChannelRTC(MailCommon):
         self.env['bus.bus'].sudo().search([]).unlink()
         with self.assertBus(
             [
-                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # end of previous session
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update sessions
+                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # end of previous session
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update sessions
             ],
             [
@@ -686,11 +686,11 @@ class TestChannelRTC(MailCommon):
         self.env['bus.bus'].sudo().search([]).unlink()
         with self.assertBus(
             [
-                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # end session
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # update invitation
                 (self.cr.dbname, 'mail.guest', test_guest.id),  # update invitation
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update list of invitations
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update sessions
+                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # end session
             ],
             [
                 {
@@ -809,19 +809,19 @@ class TestChannelRTC(MailCommon):
         channel_member_test_guest = channel.sudo().channel_member_ids.filtered(lambda member: member.guest_id == test_guest)
         found_bus_notifs = self.assertBusNotifications(
             [
-                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # channel joined  -- last_interest (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # message_post -- new_message (not asserted below)
                 (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update new message separator
                 (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # message_post -- last_interest (not asserted below)
                 (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update new message separator
+                (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # new members (not asserted below)
-                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
+                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # channel joined  -- last_interest (not asserted below)
                 (self.cr.dbname, 'mail.guest', test_guest.id),  # incoming invitation
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update list of invitations
-                (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
-                (self.cr.dbname, 'discuss.channel', channel.id),  # new member (guest) (not asserted below)
+                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
                 (self.cr.dbname, 'mail.guest', test_guest.id),  # channel joined for guest (not asserted below)
+                (self.cr.dbname, 'discuss.channel', channel.id),  # new member (guest) (not asserted below)
             ],
             message_items=[
                 {
@@ -951,8 +951,8 @@ class TestChannelRTC(MailCommon):
         self.env['bus.bus'].sudo().search([]).unlink()
         with self.assertBus(
             [
-                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # end session
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update list of sessions
+                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # end session
             ],
             [
                 {
@@ -993,8 +993,8 @@ class TestChannelRTC(MailCommon):
         self.env['bus.bus'].sudo().search([]).unlink()
         with self.assertBus(
             [
-                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # session ended
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update list of sessions
+                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # session ended
             ],
             [
                 {
@@ -1031,8 +1031,8 @@ class TestChannelRTC(MailCommon):
         self.env['bus.bus'].sudo().search([]).unlink()
         with self.assertBus(
             [
-                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # session ended
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update list of sessions
+                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # session ended
             ],
             [
                 {
@@ -1080,8 +1080,8 @@ class TestChannelRTC(MailCommon):
         self.env['bus.bus'].sudo().search([]).unlink()
         with self.assertBus(
             [
-                (self.cr.dbname, 'mail.guest', test_guest.id),  # session ended
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update list of sessions
+                (self.cr.dbname, 'mail.guest', test_guest.id),  # session ended
             ],
             [
                 {
