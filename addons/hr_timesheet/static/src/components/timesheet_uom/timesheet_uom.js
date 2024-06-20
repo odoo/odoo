@@ -9,6 +9,18 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 import { Component } from "@odoo/owl";
 
+export class FloatTimeHourField extends FloatTimeField {
+    get formattedValue() {
+        const unitAmount = super.formattedValue;
+        const [hours, minutes] = unitAmount.split(':').map(Number);
+        let durationDisplay = `${hours}h`;
+        if (minutes > 0) {
+            durationDisplay += ` ${minutes}m`;
+        }
+        return durationDisplay;
+    }
+}
+
 export class TimesheetUOM extends Component {
     static props = {
         ...standardFieldProps,
@@ -23,6 +35,9 @@ export class TimesheetUOM extends Component {
     }
 
     get timesheetComponent() {
+        if (this.env.config.viewType === "kanban") {
+            return FloatTimeHourField;
+        }
         return this.timesheetUOMService.getTimesheetComponent();
     }
 
