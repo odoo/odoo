@@ -31,14 +31,14 @@ export function loginScreenIsShown() {
 export function cashierNameIs(name) {
     return [
         {
+            isActive: ["desktop"],
             content: `logged cashier is '${name}'`,
             trigger: `.pos .oe_status .username:contains("${name}")`,
-            mobile: false,
         },
         {
+            isActive: ["mobile"],
             content: `logged cashier is '${name}'`,
             trigger: `.pos .oe_status img[alt="${name}"]`,
-            mobile: true,
         },
     ];
 }

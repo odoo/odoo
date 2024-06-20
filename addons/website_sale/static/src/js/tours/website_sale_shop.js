@@ -44,11 +44,11 @@
         position: "top",
         run: "dblclick",
     }, {
+        isActive: ["auto"],
         trigger: ".o_select_media_dialog .o_upload_media_button",
         content: _t("Upload a file from your local library."),
         position: "bottom",
         run: "click .modal-footer .btn-secondary",
-        auto: true,
     },
     wTourUtils.goBackToBlocks(),
     {

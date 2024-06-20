@@ -15,9 +15,9 @@ function addMedia(position = "right") {
 }
 function assertCssVariable(variableName, variableValue, trigger = ':iframe body') {
     return {
+        isActive: ["auto"],
         content: `Check CSS variable ${variableName}=${variableValue}`,
         trigger: trigger,
-        auto: true,
         run: function () {
             const styleValue = getComputedStyle(this.anchor).getPropertyValue(variableName);
             if ((styleValue && styleValue.trim().replace(/["']/g, '')) !== variableValue.trim().replace(/["']/g, '')) {
@@ -189,9 +189,9 @@ function clickOnEditAndWaitEditMode(position = "bottom") {
         position: position,
         run: "click",
     }, {
+        isActive: ["auto"], // Checking step only for automated tests
         content: "Check that we are in edit mode",
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
-        auto: true, // Checking step only for automated tests
     }];
 }
 
@@ -213,9 +213,9 @@ function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") {
         position: position,
         run: "click",
     }, {
+        isActive: ["auto"], // Checking step only for automated tests
         content: "Check that we are in edit mode",
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
-        auto: true, // Checking step only for automated tests
     }];
 }
 
@@ -252,10 +252,9 @@ function clickOnSave(position = "bottom", timeout) {
         timeout: timeout,
         run: "click",
     }, {
+        isActive: ["auto"], // Just making sure save is finished in automatic tests
         trigger: ':iframe body:not(.editor_enable)',
         noPrepend: true,
-        auto: true, // Just making sure save is finished in automatic tests
-        run: () => null,
         timeout: timeout,
     }];
 }
@@ -389,10 +388,10 @@ function registerWebsitePreviewTour(name, options, steps) {
             // of course.
             if (options.edition) {
                 tourSteps.unshift({
+                    isActive: ["auto"],
                     content: "Wait for the edit mode to be started",
                     trigger: ".o_website_preview.editor_enable.editor_has_snippets",
                     timeout: 30000,
-                    auto: true,
                 });
             } else {
                 tourSteps[0].timeout = 20000;

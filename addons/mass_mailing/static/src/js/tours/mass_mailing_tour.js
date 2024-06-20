@@ -13,21 +13,21 @@
         rainbowManMessage: _t('Congratulations, I love your first mailing. :)'),
         sequence: 200,
         steps: () => [stepUtils.showAppsMenuItem(), {
+        isActive: ["enterprise"],
         trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
         content: _t("Let's try the Email Marketing app."),
         width: 225,
         position: 'bottom',
-        edition: 'enterprise',
         run: "click",
     }, {
+        isActive: ["community"],
         trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
         content: _t("Let's try the Email Marketing app."),
-        edition: 'community',
         run: "click",
     },
     {
+        isActive: ["auto"],
         trigger: ".o_mass_mailing_mailing_tree",
-        auto: true,
     },
     {
         trigger: '.o_list_button_add',
@@ -40,36 +40,36 @@
         position: 'bottom',
         run: `edit ${DateTime.now().toFormat("LLLL")} Newsletter`,
     }, {
+        isActive: ["auto"],
         trigger: 'div[name="contact_list_ids"] > .o_input_dropdown > input[type="text"]',
         run: 'click',
-        auto: true,
     }, {
+        isActive: ["auto"],
         trigger: 'li.ui-menu-item',
         run: 'click',
-        auto: true,
     }, {
+        isActive: ["enterprise"],
         trigger: 'div[name="body_arch"] :iframe #newsletter',
         content: markup(_t('Choose this <b>theme</b>.')),
         position: 'left',
-        edition: 'enterprise',
         run: 'click',
     }, {
+        isActive: ["community"],
         trigger: 'div[name="body_arch"] :iframe #default',
         content: markup(_t('Choose this <b>theme</b>.')),
         position: 'right',
-        edition: 'community',
         run: 'click',
     }, {
+        isActive: ["enterprise"],
         trigger: 'div[name="body_arch"] :iframe div.s_text_block',
         content: _t('Click on this paragraph to edit it.'),
         position: 'top',
-        edition: 'enterprise',
         run: 'click',
     }, {
+        isActive: ["community"],
         trigger: 'div[name="body_arch"] :iframe div.o_mail_block_title_text',
         content: _t('Click on this paragraph to edit it.'),
         position: 'top',
-        edition: 'community',
         run: 'click',
     }, {
         trigger: 'button[name="action_set_favorite"]',

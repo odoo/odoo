@@ -7,12 +7,12 @@ export function clickNewTicket() {
 export function clickDiscard() {
     return [
         {
+            isActive: ["desktop"],
             content: "go back",
             trigger: ".ticket-screen button.discard",
-            mobile: false,
             run: "click",
         },
-        { ...ProductScreen.back(), mobile: true },
+        { ...ProductScreen.back(), isActive: ["mobile"] },
     ];
 }
 export function selectOrder(orderName) {
@@ -43,18 +43,18 @@ export function loadSelectedOrder() {
 export function deleteOrder(orderName) {
     return [
         {
+            isActive: ["mobile"],
             trigger: `.ticket-screen .order-row > .col:contains("${orderName}")`,
-            mobile: true,
             run: "click",
         },
         {
+            isActive: ["mobile"],
             trigger: `.ticket-screen .order-row:has(.col:contains("${orderName}")) .delete-button`,
-            mobile: true,
             run: "click",
         },
         {
+            isActive: ["desktop"],
             trigger: `.ticket-screen .orders > .order-row > .col:contains("${orderName}") ~ .col[name="delete"]`,
-            mobile: false,
             run: "click",
         },
     ];
@@ -119,12 +119,12 @@ export function confirmRefund() {
 export function checkStatus(orderName, status) {
     return [
         {
+            isActive: ["desktop"],
             trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col:nth-child(7):contains(${status})`,
-            mobile: false,
         },
         {
+            isActive: ["mobile"],
             trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col:nth-child(2):contains(${status})`,
-            mobile: true,
         },
     ];
 }
@@ -136,8 +136,8 @@ export function checkStatus(orderName, status) {
 export function nthRowContains(n, string, viewMode) {
     return [
         {
+            isActive: [viewMode ? "mobile" : "desktop"],
             trigger: `.ticket-screen .orders > .order-row:nth-child(${n}):contains("${string}")`,
-            mobile: viewMode,
         },
     ];
 }

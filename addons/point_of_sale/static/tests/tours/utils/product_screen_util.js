@@ -19,9 +19,9 @@ export function clickLine(productName, quantity = "1.0") {
 }
 export function clickReview() {
     return {
+        isActive: ["mobile"],
         content: "click review button",
         trigger: ".btn-switchpane.review-button",
-        mobile: true,
         run: "click",
     };
 }
@@ -96,9 +96,9 @@ export function clickSubcategory(name) {
             run: "click",
         },
         {
+            isActive: ["desktop"],
             content: `'${name}' subcategory selected`,
             trigger: `button.category-button:contains("${name}")`,
-            mobile: false,
         },
     ];
 }
@@ -115,15 +115,15 @@ export function clickNumpad(...keys) {
 export function clickPayButton(shouldCheck = true) {
     const steps = [
         {
+            isActive: ["desktop"],
             content: "click pay button",
             trigger: ".product-screen .pay-order-button",
-            mobile: false,
             run: "click",
         },
         {
+            isActive: ["mobile"],
             content: "click pay button",
             trigger: ".btn-switchpane:contains('Pay')",
-            mobile: true,
             run: "click",
         },
     ];
@@ -151,7 +151,7 @@ export function clickPartnerButton() {
     ];
 }
 export function clickCustomer(name) {
-    return [PartnerList.clickPartner(name), { ...back(), mobile: true }];
+    return [PartnerList.clickPartner(name), { ...back(), isActive: ["mobile"] }];
 }
 export function customerIsSelected(name) {
     return [
@@ -179,15 +179,15 @@ export function clickControlButton(name) {
 export function clickControlButtonMore() {
     return [
         {
+            isActive: ["mobile"],
             content: "click more button",
             trigger: ".mobile-more-button",
-            mobile: true,
             run: "click",
         },
         {
+            isActive: ["desktop"],
             content: "click more button",
             trigger: controlButtonTrigger("More..."),
-            mobile: false,
             run: "click",
         },
     ];
@@ -267,10 +267,10 @@ export function clickFiscalPosition(name, checkIsNeeded = false) {
     const step = [
         clickReview(),
         {
+            isActive: ["mobile"],
             content: "click more button",
             trigger: ".mobile-more-button",
             run: "click",
-            mobile: true,
         },
         {
             content: "click fiscal position button",
@@ -287,10 +287,10 @@ export function clickFiscalPosition(name, checkIsNeeded = false) {
     if (checkIsNeeded) {
         step.push(
             {
+                isActive: ["mobile"],
                 content: "click more button",
                 trigger: ".mobile-more-button",
                 run: "click",
-                mobile: true,
             },
             {
                 content: "the fiscal position " + name + " has been set to the order",
@@ -298,13 +298,13 @@ export function clickFiscalPosition(name, checkIsNeeded = false) {
             },
             {
                 ...Dialog.cancel(),
+                isActive: ["mobile"],
                 run: "click",
-                mobile: true,
             }
         );
     }
 
-    return [...step, { ...back(), mobile: true }];
+    return [...step, { ...back(), isActive: ["mobile"] }];
 }
 export function closeWithCashAmount(val) {
     return [
@@ -475,10 +475,10 @@ export function addCustomerNote(note) {
     return inLeftSide(
         [
             {
+                isActive: ["mobile"],
                 content: "click more button",
                 trigger: ".mobile-more-button",
                 run: "click",
-                mobile: true,
             },
             clickControlButton("Customer Note"),
             TextInputPopup.inputText(note),
@@ -491,10 +491,10 @@ export function addInternalNote(note) {
     return inLeftSide(
         [
             {
+                isActive: ["mobile"],
                 content: "click more button",
                 trigger: ".mobile-more-button",
                 run: "click",
-                mobile: true,
             },
             clickControlButton("Internal Note"),
             TextInputPopup.inputText(note),
@@ -533,15 +533,15 @@ export function closePos() {
 export function finishOrder() {
     return [
         {
+            isActive: ["desktop"],
             content: "validate the order",
             trigger: ".payment-screen .button.next.highlight:visible",
-            mobile: false,
             run: "click",
         },
         {
+            isActive: ["mobile"],
             content: "validate the order",
             trigger: ".payment-screen .btn-switchpane:contains('Validate')",
-            mobile: true,
             run: "click",
         },
         {
@@ -549,15 +549,15 @@ export function finishOrder() {
             trigger: ".js_connected:visible",
         },
         {
+            isActive: ["desktop"],
             content: "click Next Order",
             trigger: ".receipt-screen .button.next.highlight:visible",
-            mobile: false,
             run: "click",
         },
         {
+            isActive: ["mobile"],
             content: "Click Next Order",
             trigger: ".receipt-screen .btn-switchpane.validation-button.highlight[name='done']",
-            mobile: true,
             run: "click",
         },
         {
