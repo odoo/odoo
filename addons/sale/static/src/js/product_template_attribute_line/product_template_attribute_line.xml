@@ -35,7 +35,7 @@
                 t-as="ptav"
                 t-key="ptav.id"
                 t-att-value="ptav.id"
-                t-att-selected="this.props.selected_attribute_value_ids.includes(ptav.id)"
+                t-att-selected="selectedPtavIds.has(ptav.id)"
                 t-out="getPTAVSelectName(ptav)"
                 t-att-class="{ 'css_not_available': ptav.excluded }"/>
         </select>
@@ -60,7 +60,7 @@
                         class="form-check-input"
                         t-att-id="ptav.id"
                         t-att-value="ptav.id"
-                        t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
+                        t-att-checked="selectedPtavIds.has(ptav.id)"
                         t-att-name="'ptal-' + this.props.id"
                         t-on-change="updateSelectedPTAV"/>
                 </div>
@@ -70,7 +70,7 @@
     <t t-name="saleProductConfigurator.ptav-pills">
          <ul class="list-inline list-unstyled flex-grow-1 mb-0">
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
-                t-att-class="{'active': this.props.selected_attribute_value_ids.includes(ptav.id)}"
+                t-att-class="{'active': selectedPtavIds.has(ptav.id)}"
                 class="o_sale_product_configurator_ptav_pills list-inline-item">
                 <label
                     class="btn btn-outline-secondary"
@@ -88,7 +88,7 @@
                     t-att-id="ptav.id"
                     t-att-value="ptav.id"
                     t-att-name="'ptal-' + this.props.id"
-                    t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
+                    t-att-checked="selectedPtavIds.has(ptav.id)"
                     t-on-change="updateSelectedPTAV"/>
             </li>
         </ul>
@@ -104,7 +104,7 @@
                     t-att-title="ptav.name"
                     t-attf-style="#{img_style or color_style}"
                     t-att-class="{'o_sale_product_configurator_ptav_color': true,
-                                  'active': this.props.selected_attribute_value_ids.includes(ptav.id),
+                                  'active': selectedPtavIds.has(ptav.id),
                                   'custom_value': ptav.is_custom,
                                   'transparent': !ptav.is_custom and !ptav.html_color,
                                   'css_not_available': ptav.excluded }">
@@ -113,7 +113,7 @@
                         t-att-id="ptav.id"
                         t-att-value="ptav.id"
                         t-att-name="'ptal-' + this.props.id"
-                        t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
+                        t-att-checked="selectedPtavIds.has(ptav.id)"
                         t-on-change="updateSelectedPTAV"/>
                 </label>
             </li>
@@ -130,7 +130,7 @@
                         t-att-id="ptav.id"
                         t-att-value="ptav.id"
                         t-att-name="'ptal-' + this.props.id"
-                        t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
+                        t-att-checked="selectedPtavIds.has(ptav.id)"
                         t-on-change="updateSelectedPTAV"/>
                     <label
                         class="form-check-label"

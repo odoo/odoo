@@ -44,6 +44,10 @@ export class ProductTemplateAttributeLine extends Component {
         customValue: {type: [{value: false}, String], optional: true},
     };
 
+    setup() {
+        this.selectedPtavIds = new Set(this.props.selected_attribute_value_ids);
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -130,7 +134,7 @@ export class ProductTemplateAttributeLine extends Component {
      */
     isSelectedPTAVCustom() {
         return this.props.attribute_values.find(
-            ptav => this.props.selected_attribute_value_ids.includes(ptav.id)
+            ptav => this.selectedPtavIds.has(ptav.id)
         )?.is_custom;
     }
 

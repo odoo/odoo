@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="sale.ComboConfiguratorDialog">
+        <Dialog title="props.name" contentClass="'combo-configurator-dialog'">
+            <div
+                t-foreach="props.combos"
+                t-as="combo"
+                t-key="combo.id"
+                class="d-flex flex-column m-3 mb-4"
+            >
+                <h3 class="me-auto mb-3" t-esc="combo.name"/>
+                <div class="product-list d-grid gap-1">
+                    <div
+                        t-foreach="combo.comboItems"
+                        t-as="comboItem"
+                        t-key="comboItem.id"
+                        class="m-2"
+                    >
+                        <input
+                            type="radio"
+                            t-attf-id="combo-item-{{comboItem.id}}-input"
+                            t-att-value="comboItem.id"
+                            t-model="state.selectedComboItems.get(combo.id).id"
+                            t-att-class="{
+                                'selected':
+                                    state.selectedComboItems.get(combo.id).id === comboItem.id
+                            }"
+                        />
+                        <label
+                            class="h-100 w-100 rounded cursor-pointer transition-base"
+                            t-attf-for="combo-item-{{comboItem.id}}-input"
+                        >
+                            <ProductCard
+                                id="comboItem.product.id"
+                                name="comboItem.product.name"
+                                extraPrice="comboItem.extraPrice"
+                                onClick="() => this.onClickProduct(comboItem)"
+                            />
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <!-- TODO(loti): add combo price somewhere? -->
+                <button
+                    class="btn btn-primary"
+                    t-att-disabled="!areAllCombosSelected()"
+                    t-on-click="confirm"
+                >
+                    Confirm
+                </button>
+                <button
+                    class="btn btn-secondary"
+                    t-att-disabled="!areAllCombosSelected()"
+                    t-on-click="cancel"
+                >
+                    Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

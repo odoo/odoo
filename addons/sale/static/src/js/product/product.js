@@ -64,4 +64,16 @@ export class Product extends Component {
     getFormattedPrice() {
         return formatCurrency(this.props.price, this.env.currencyId);
     }
+
+    /**
+     * Return this product's image URL.
+     *
+     * @return {String} This product's image URL.
+     */
+    get imageUrl() {
+        const modelPath = this.props.id
+            ? `product.product/${ this.props.id }`
+            : `product.template/${ this.props.product_tmpl_id }`;
+        return `/web/image/${ modelPath }/image_128`;
+    }
 }

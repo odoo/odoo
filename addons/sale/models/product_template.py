@@ -87,6 +87,7 @@ class ProductTemplate(models.Model):
                 return _("You can invoice goods before they are delivered.")
             elif self.type == 'service':
                 return _("Invoice ordered quantities as soon as this service is sold.")
+        return ""
 
     def _prepare_service_tracking_tooltip(self):
         return ""
