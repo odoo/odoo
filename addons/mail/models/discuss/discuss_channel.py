@@ -419,26 +419,39 @@ class Channel(models.Model):
                     notifications.append((guest, 'discuss.channel/joined', {
                         'channel': member.channel_id._channel_basic_info(),
                     }))
-            notifications.append((channel, 'mail.record/insert', {
-                'Thread': {
-                    'channelMembers': [('ADD', list(new_members._discuss_channel_member_format().values()))],
-                    'id': channel.id,
-                    'memberCount': channel.member_count,
-                    'model': "discuss.channel",
-                }
-            }))
+            if new_members:
+                store = Store(
+                    "Thread",
+                    {
+                        "channelMembers": [("ADD", [{"id": member.id} for member in new_members])],
+                        "id": channel.id,
+                        "memberCount": channel.member_count,
+                        "model": "discuss.channel",
+                    },
+                )
+                store.add("ChannelMember", list(new_members._discuss_channel_member_format().values()))
+                notifications.append((channel, "mail.record/insert", store.get_result()))
             if existing_members and (current_partner or current_guest):
                 # If the current user invited these members but they are already present, notify the current user about their existence as well.
                 # In particular this fixes issues where the current user is not aware of its own member in the following case:
                 # create channel from form view, and then join from discuss without refreshing the page.
-                notifications.append((current_partner or current_guest, 'mail.record/insert', {
-                    'Thread': {
-                        'channelMembers': [('ADD', list(existing_members._discuss_channel_member_format().values()))],
-                        'id': channel.id,
-                        'memberCount': channel.member_count,
-                        'model': "discuss.channel",
-                    }
-                }))
+                user_store = Store(
+                    "Thread",
+                    {
+                        "channelMembers": [
+                            ("ADD", [{"id": member.id} for member in existing_members])
+                        ],
+                        "id": channel.id,
+                        "memberCount": channel.member_count,
+                        "model": "discuss.channel",
+                    },
+                )
+                user_store.add(
+                    "ChannelMember",
+                    list(existing_members._discuss_channel_member_format().values()),
+                )
+                target = current_partner or current_guest
+                notifications.append((target, "mail.record/insert", user_store.get_result()))
         if invite_to_rtc_call:
             for channel in self:
                 current_channel_member = self.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('is_self', '=', True)])
