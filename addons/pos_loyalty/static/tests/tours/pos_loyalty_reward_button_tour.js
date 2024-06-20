@@ -189,3 +189,36 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardPro
             PosLoyalty.orderTotalIs("40.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.claimReward("Free Product - [Product A, Product B]"),
+            SelectionPopup.has("Product A", { run: "click" }),
+            PosLoyalty.hasRewardLine("Free Product", "-2", "1.00"),
+            PosLoyalty.isRewardButtonHighlighted(false),
+
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.claimReward("Free Product - [Product A, Product B]"),
+            SelectionPopup.has("Product B", { run: "click" }),
+            PosLoyalty.hasRewardLine("Free Product", "-5", "1.00"),
+            PosLoyalty.isRewardButtonHighlighted(false),
+
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.claimReward("Free Product - [Product A, Product B]"),
+            SelectionPopup.has("Product B", { run: "click" }),
+            PosLoyalty.hasRewardLine("Free Product", "-10", "2.00"),
+            PosLoyalty.isRewardButtonHighlighted(false),
+        ].flat(),
+});
