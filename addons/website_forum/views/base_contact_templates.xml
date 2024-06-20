@@ -2,7 +2,7 @@
 <odoo><data>
 
 <template id="contact" inherit_id="base.contact" name="Forum Contact Widget">
-    <xpath expr="//div[@itemprop='address']" position="after">
+    <xpath expr="//div[@itemscope='itemscope']" position="after">
         <div>
              <div t-if="'karma' in fields" class='css_editable_mode_hidden'>
                 <div t-if="options.get('UserBio')" class="mb-2">

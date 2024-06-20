@@ -26,7 +26,7 @@
             <figcaption class="text-center w-100 h-100 px-3 d-flex flex-column flex-grow-1">
                 <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                 <div class="s_events_event_title text-white" t-field="record.name"/>
-                <time itemprop="startDate" t-att-datetime="record.date_begin" class="text-white">
+                <time t-att-datetime="record.date_begin" class="text-white">
                     <span t-out="record.date_begin"
                           t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/>
                     -
@@ -60,7 +60,7 @@
             <div class="card-body p-3">
                 <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                 <h5 class="mb-0 text-truncate" t-field="record.name"/>
-                <time itemprop="startDate" t-att-datetime="record.date_begin">
+                <time t-att-datetime="record.date_begin">
                     <span t-field="record.date_begin"
                           t-options="{'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/>
                     -
@@ -68,7 +68,7 @@
                           t-options="{'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/>
                     (<span t-out="record.date_tz"/>)
                 </time>
-                <div itemprop="location" t-field="record.address_id"
+                <div t-field="record.address_id"
                      t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
             </div>
         </div>
