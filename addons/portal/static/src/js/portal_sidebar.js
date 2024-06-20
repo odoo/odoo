@@ -41,9 +41,9 @@ var PortalSidebar = publicWidget.Widget.extend({
                 } else if (diff > 0) {
                     // Workaround: force uniqueness of these two translations. We use %1d because the string
                     // with %d is already used in mail and mail's translations are not sent to the frontend.
-                    displayStr = sprintf(_t('Due in %s days'), Math.abs(diff).toFixed(1));
+                    displayStr = sprintf(_t('Due in %s days'), Math.abs(diff).toFixed());
                 } else {
-                    displayStr = sprintf(_t('%s days overdue'), Math.abs(diff).toFixed(1));
+                    displayStr = sprintf(_t('%s days overdue'), Math.abs(diff).toFixed());
                 }
                 $(el).text(displayStr);
             });
