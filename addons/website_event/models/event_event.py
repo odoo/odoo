@@ -376,8 +376,9 @@ class Event(models.Model):
             page_result = self.env['website'].sudo().new_page(
                 name=name + ' ' + self.name, template=xml_id,
                 add_menu=False, ispage=False)
-            url = "/event/" + slug(self) + "/page" + page_result['url']  # url contains starting "/"
             view_id = page_result['view_id']
+            view = self.env["ir.ui.view"].browse(view_id)
+            url = "/event/" + slug(self) + "/page/" + view.key.split(".")[-1]
 
         website_menu = self.env['website.menu'].sudo().create({
             'name': name,

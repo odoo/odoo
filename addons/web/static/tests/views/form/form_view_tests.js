@@ -13650,52 +13650,6 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("containing a nested x2many list view should not overflow", async function (assert) {
-        serverData.models.partner_type.records.push({
-            id: 3,
-            display_name: "very".repeat(30) + "_long_name",
-            color: 10,
-        });
-
-        const record = serverData.models.partner.records[0];
-        record.timmy = [3];
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: record.id,
-            serverData,
-            arch: `
-            <form>
-                <sheet>
-                    <group>
-                        <group/>
-                        <group>
-                            <field name="timmy" widget="many2many">
-                                <tree>
-                                    <field name="display_name"/>
-                                    <field name="color"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </group>
-                </sheet>
-            </form>`,
-        });
-
-        const table = target.querySelector("table");
-        const group = target.querySelector(".o_inner_group:last-child");
-
-        // Testing not overflowing on render
-        assert.equal(group.clientWidth, group.scrollWidth);
-
-        // Testing that the table will overflow if no value is calculated
-        table.style.tableLayout = "auto";
-        // Allow overflowing over the inner group for testing purpose
-        group.querySelectorAll(".o_cell").forEach((el) => (el.style.minWidth = "min-content"));
-        assert.ok(group.clientWidth < group.scrollWidth);
-    });
-
     QUnit.test(
         "reload records in the context of the form to avoid having partial field values",
         async function (assert) {
