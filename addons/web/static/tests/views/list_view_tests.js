@@ -779,7 +779,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_list_export_xlsx");
     });
 
-   QUnit.test("hide duplicate action for user without create access rights", async (assert) => {
+    QUnit.test("hide duplicate action for user without create access rights", async (assert) => {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -1634,76 +1634,82 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["onchange", "web_save"]);
     });
 
-    QUnit.test("multi_edit: edit a required field with invalid value and click 'Ok' of alert dialog", async function (assert) {
-        serverData.models.foo.fields.foo.required = true;
+    QUnit.test(
+        "multi_edit: edit a required field with invalid value and click 'Ok' of alert dialog",
+        async function (assert) {
+            serverData.models.foo.fields.foo.required = true;
 
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: `
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
                 <tree multi_edit="1">
                     <field name="foo"/>
                     <field name="int_field"/>
                 </tree>`,
-            mockRPC(route, args) {
-                assert.step(args.method);
-            },
-        });
-        assert.containsN(target, ".o_data_row", 4);
-        assert.verifySteps(["get_views", "web_search_read"]);
+                mockRPC(route, args) {
+                    assert.step(args.method);
+                },
+            });
+            assert.containsN(target, ".o_data_row", 4);
+            assert.verifySteps(["get_views", "web_search_read"]);
 
-        const rows = target.querySelectorAll(".o_data_row");
-        await click(rows[0], ".o_list_record_selector input");
-        await click(rows[0].querySelector(".o_data_cell"));
-        await editInput(target, "[name='foo'] input", "");
-        await click(target, ".o_list_view");
-        assert.containsOnce(target, ".modal");
-        assert.strictEqual(target.querySelector(".modal .btn").textContent, "Ok");
+            const rows = target.querySelectorAll(".o_data_row");
+            await click(rows[0], ".o_list_record_selector input");
+            await click(rows[0].querySelector(".o_data_cell"));
+            await editInput(target, "[name='foo'] input", "");
+            await click(target, ".o_list_view");
+            assert.containsOnce(target, ".modal");
+            assert.strictEqual(target.querySelector(".modal .btn").textContent, "Ok");
 
-        await click(target.querySelector(".modal .btn"));
-        assert.strictEqual(
-            target.querySelector(".o_data_row .o_data_cell[name='foo']").textContent,
-            "yop"
-        );
-        assert.hasClass(target.querySelector(".o_data_row"), "o_data_row_selected");
+            await click(target.querySelector(".modal .btn"));
+            assert.strictEqual(
+                target.querySelector(".o_data_row .o_data_cell[name='foo']").textContent,
+                "yop"
+            );
+            assert.hasClass(target.querySelector(".o_data_row"), "o_data_row_selected");
 
-        assert.verifySteps([]);
-    });
+            assert.verifySteps([]);
+        }
+    );
 
-    QUnit.test("multi_edit: edit a required field with invalid value and dismiss alert dialog", async function (assert) {
-        serverData.models.foo.fields.foo.required = true;
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: `
+    QUnit.test(
+        "multi_edit: edit a required field with invalid value and dismiss alert dialog",
+        async function (assert) {
+            serverData.models.foo.fields.foo.required = true;
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
                 <tree multi_edit="1">
                     <field name="foo"/>
                     <field name="int_field"/>
                 </tree>`,
-            mockRPC(route, args) {
-                assert.step(args.method);
-            },
-        });
-        assert.containsN(target, ".o_data_row", 4);
-        assert.verifySteps(["get_views", "web_search_read"]);
+                mockRPC(route, args) {
+                    assert.step(args.method);
+                },
+            });
+            assert.containsN(target, ".o_data_row", 4);
+            assert.verifySteps(["get_views", "web_search_read"]);
 
-        const rows = target.querySelectorAll(".o_data_row");
-        await click(rows[0], ".o_list_record_selector input");
-        await click(rows[0].querySelector(".o_data_cell"));
-        await editInput(target, "[name='foo'] input", "");
-        await click(target, ".o_list_view");
+            const rows = target.querySelectorAll(".o_data_row");
+            await click(rows[0], ".o_list_record_selector input");
+            await click(rows[0].querySelector(".o_data_cell"));
+            await editInput(target, "[name='foo'] input", "");
+            await click(target, ".o_list_view");
 
-        assert.containsOnce(target, ".modal");
-        await click(target.querySelector(".modal-header .btn-close"));
-        assert.strictEqual(
-            target.querySelector(".o_data_row .o_data_cell[name='foo']").textContent,
-            "yop"
-        );
-        assert.hasClass(target.querySelector(".o_data_row"), "o_data_row_selected");
-        assert.verifySteps([]);
-    });
+            assert.containsOnce(target, ".modal");
+            await click(target.querySelector(".modal-header .btn-close"));
+            assert.strictEqual(
+                target.querySelector(".o_data_row .o_data_cell[name='foo']").textContent,
+                "yop"
+            );
+            assert.hasClass(target.querySelector(".o_data_row"), "o_data_row_selected");
+            assert.verifySteps([]);
+        }
+    );
 
     QUnit.test(
         "multi_edit: clicking on a readonly field switches the focus to the next editable field",
@@ -6879,6 +6885,44 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_group_header"));
         assert.containsN(target, ".o_group_header", 4);
         assert.containsNone(target, ".o_group_header:first-of-type .o_group_name .o_pager");
+    });
+
+    QUnit.test("multi-level grouped list, pager inside a group, reload", async function (assert) {
+        serverData.models.foo.records.forEach((r) => (r.bar = true));
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree groups_limit="2">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                    <field name="bar"/>
+                </tree>`,
+            groupBy: ["bar", "foo"],
+        });
+
+        assert.containsOnce(target, ".o_group_header");
+
+        await click(target.querySelector(".o_group_header"));
+        assert.containsN(target, ".o_group_header", 3);
+        assert.containsOnce(target, ".o_group_header .o_group_name .o_pager");
+        assert.deepEqual(getPagerValue(target.querySelector(".o_group_header")), [1, 2]);
+        assert.strictEqual(getPagerLimit(target.querySelector(".o_group_header")), 3);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll("td.o_list_number")), [
+            "32",
+            "5",
+            "17",
+        ]);
+
+        await click(target.querySelector(".o_list_table thead th[data-name=int_field]"));
+        assert.deepEqual(getPagerValue(target.querySelector(".o_group_header")), [1, 2]);
+        assert.strictEqual(getPagerLimit(target.querySelector(".o_group_header")), 3);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll("td.o_list_number")), [
+            "32",
+            "5",
+            "10",
+        ]);
     });
 
     QUnit.test("count_limit attrs set in arch", async function (assert) {
