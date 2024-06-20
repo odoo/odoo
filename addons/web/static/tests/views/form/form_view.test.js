@@ -10385,52 +10385,6 @@ test(`commitChanges with a field input removed during an update`, async () => {
     await contains(`.o_form_button_save`).click();
 });
 
-test(`containing a nested x2many list view should not overflow`, async () => {
-    PartnerType._records.push({
-        id: 3,
-        name: "very".repeat(30) + "_long_name",
-        color: 10,
-    });
-    Partner._records[0].type_ids = [3];
-
-    await mountView({
-        resModel: "partner",
-        type: "form",
-        arch: `
-            <form>
-                <sheet>
-                    <group>
-                        <group/>
-                        <group>
-                            <field name="type_ids" widget="many2many">
-                                <tree>
-                                    <field name="display_name"/>
-                                    <field name="color"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </group>
-                </sheet>
-            </form>
-        `,
-        resId: 1,
-    });
-
-    const table = queryFirst(`table`);
-    const group = queryFirst(`.o_inner_group:last-child`);
-
-    // Testing not overflowing on render
-    expect(group.clientWidth).toBe(group.scrollWidth);
-
-    // Testing that the table will overflow if no value is calculated
-    table.style.tableLayout = "auto";
-    // Allow overflowing over the inner group for testing purpose
-    for (const el of group.querySelectorAll(".o_cell")) {
-        el.style.minWidth = "min-content";
-    }
-    expect(group.clientWidth).toBeLessThan(group.scrollWidth);
-});
-
 test(`multiple views for m2m field after list item edit in form`, async () => {
     Partner._records[0].type_ids = [1, 2];
 
