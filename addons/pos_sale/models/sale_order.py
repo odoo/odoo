@@ -149,3 +149,13 @@ class SaleOrderLine(models.Model):
         return super()._get_downpayment_line_price_unit(invoices) + sum(
             pol.price_unit for pol in self.sudo().pos_order_line_ids
         )
+
+    @api.depends('product_id', 'pos_order_line_ids')
+    def _compute_name(self):
+        for sol in self:
+            if sol.pos_order_line_ids:
+                downpayment_sols = sol.pos_order_line_ids.mapped('refunded_orderline_id.sale_order_line_id')
+                for downpayment_sol in downpayment_sols:
+                    downpayment_sol.name = _("%(line_description)s (Cancelled)", line_description=downpayment_sol.name)
+            else:
+                super()._compute_name()
