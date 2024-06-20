@@ -52,7 +52,9 @@ class ProductTemplate(models.Model):
              "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note")
     type = fields.Selection(
         string="Product Type",
-        help="Goods are tangible materials and merchandise you provide.\n"
+        help="A storable product is a product for which you manage stock. The Inventory app has to"
+             " be installed.\n"
+             "A consumable product is a product for which stock is not managed.\n"
              "A service is a non-material product you provide.",
         selection=[
             ('consu', "Goods"),
@@ -469,7 +471,6 @@ class ProductTemplate(models.Model):
                 raise UserError(_("Combo products can't have attributes"))
             self.taxes_id = False
             self.supplier_taxes_id = False
-        return {}
 
     def _get_related_fields_variant_template(self):
         """ Return a list of fields present on template and variants models and that are related"""
