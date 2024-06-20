@@ -6,8 +6,8 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="sst_registration_number" invisible="country_code != 'MY'"/>
-                <field name="ttx_registration_number" invisible="country_code != 'MY'"/>
+                <field name="sst_registration_number" invisible="country_code != 'MY'" placeholder="A01-2345-67891012"/>
+                <field name="ttx_registration_number" invisible="country_code != 'MY'" placeholder="123-4567-89012345"/>
             </xpath>
         </field>
     </record>

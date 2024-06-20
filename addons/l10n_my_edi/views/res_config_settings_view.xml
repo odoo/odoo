@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.proxy.user</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='account_vendor_bills']" position="after">
+                <block title="Malaysian Electronic Invoicing" id='malaysian_edi' invisible="country_code != 'MY'">
+                    <setting class="col-lg-12" string="MyInvois mode" company_dependent="1">
+                        <field name="l10n_my_edi_proxy_user_id" invisible="1"/>
+                        <div class="content-group">
+                            <field name="l10n_my_edi_mode" widget="radio"/>
+                        </div>
+                        <!-- we don't import unless in production (sandbox api doesn't have a real test API for the search) -->
+                        <div class="mt8 content-group col-9" invisible="l10n_my_edi_mode != 'prod' or l10n_my_edi_proxy_user_id">
+                            <label for="l10n_my_edi_default_import_journal_id" class="me-1"/>
+                            <field name="l10n_my_edi_default_import_journal_id" required="l10n_my_edi_mode == 'prod'"/>
+                        </div>
+                        <div class="mt8 content-group col-9" invisible="l10n_my_edi_mode == 'prod'">
+                            <span invisible="l10n_my_edi_mode != 'test'">• In Pre-Production mode Odoo will send the invoices to a non-production service.</span>
+                        </div>
+                        <!-- No need to show the button if there is already a user for the selected mode and company. -->
+                        <div class="mt8 content-group" invisible="not l10n_my_edi_mode or l10n_my_edi_proxy_user_id">
+                            <span><field name="l10n_my_accept_processing"/> I accept that Odoo will process my e-invoices.</span>
+                            <div class="text-muted" invisible="not l10n_my_edi_company_vat">
+                                The TIN
+                                <a name="action_open_company_form" type="object" role="button" class="btn-link">
+                                    <field name="l10n_my_edi_company_vat" class="oe_inline"/>
+                                </a>
+                                will be used when sending e-invoices.<br/>
+                            </div>
+                            <button name="action_l10n_my_edi_allow_processing" type="object" string="Register" class="btn btn-secondary mt-1" noSaveDialog="true" invisible="not l10n_my_accept_processing"/>
+                        </div>
+                        <div class="mt8 text-success" invisible="not l10n_my_edi_proxy_user_id">
+                            <div>The electronic invoicing service is in use.</div>
+                            <button name="action_l10n_my_edi_unregister" type="object" string="Unregister" class="btn btn-secondary mt-1" noSaveDialog="true"/>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
