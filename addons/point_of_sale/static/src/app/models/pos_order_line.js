@@ -185,8 +185,13 @@ export class PosOrderline extends Base {
 
         const disc = Math.min(Math.max(parsed_discount || 0, 0), 100);
         this.discount = disc;
+<<<<<<< master
         this.discountStr = "" + disc;
         this.setDirty();
+||||||| 50722858f2f8e2ae9435bb930ed49ed1682eb514
+        this.discountStr = "" + disc;
+=======
+>>>>>>> 58a389538c5ce480a9ea705477938824f942325f
     }
 
     // sets the qty of the product. The qty will be rounded according to the
@@ -673,7 +678,7 @@ export class PosOrderline extends Base {
         this.uiState.hasChange = isChange;
     }
     get_discount_str() {
-        return this.discountStr;
+        return this.discount ? this.discount.toString() : "";
     }
     get_quantity() {
         return this.qty;

@@ -11,6 +11,62 @@ import {
 import { TableSelector } from "./table_selector/table_selector";
 
 patch(Navbar.prototype, {
+<<<<<<< master
+||||||| 50722858f2f8e2ae9435bb930ed49ed1682eb514
+    async onClickBackButton() {
+        if (this.pos.orderToTransferUuid) {
+            const order = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
+            this.pos.set_order(order);
+            if (order.table_id) {
+                this.pos.setTable(order.table_id);
+            }
+            this.pos.orderToTransferUuid = false;
+            this.pos.showScreen("ProductScreen");
+            return;
+        }
+        if (this.pos.mainScreen.component && this.pos.config.module_pos_restaurant) {
+            if (
+                (this.pos.mainScreen.component === ProductScreen &&
+                    this.pos.mobile_pane == "right") ||
+                this.pos.mainScreen.component === TipScreen ||
+                this.pos.mainScreen.component === ActionScreen
+            ) {
+                this.pos.showScreen("FloorScreen", { floor: this.floor });
+            } else {
+                super.onClickBackButton(...arguments);
+            }
+            return;
+        }
+        super.onClickBackButton(...arguments);
+    },
+=======
+    async onClickBackButton() {
+        if (this.pos.orderToTransferUuid) {
+            const order = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
+            this.pos.set_order(order);
+            if (order.table_id) {
+                await this.pos.setTable(order.table_id);
+            }
+            this.pos.orderToTransferUuid = false;
+            this.pos.showScreen("ProductScreen");
+            return;
+        }
+        if (this.pos.mainScreen.component && this.pos.config.module_pos_restaurant) {
+            if (
+                (this.pos.mainScreen.component === ProductScreen &&
+                    this.pos.mobile_pane == "right") ||
+                this.pos.mainScreen.component === TipScreen ||
+                this.pos.mainScreen.component === ActionScreen
+            ) {
+                this.pos.showScreen("FloorScreen", { floor: this.floor });
+            } else {
+                super.onClickBackButton(...arguments);
+            }
+            return;
+        }
+        super.onClickBackButton(...arguments);
+    },
+>>>>>>> 58a389538c5ce480a9ea705477938824f942325f
     /**
      * If no table is set to pos, which means the current main screen
      * is floor screen, then the order count should be based on all the orders.

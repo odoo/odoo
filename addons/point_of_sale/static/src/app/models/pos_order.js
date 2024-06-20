@@ -84,8 +84,14 @@ export class PosOrder extends Base {
         return this.state !== "draft";
     }
 
+<<<<<<< master
     getOrderName() {
         return this.getFloatingOrderName() || "";
+||||||| 50722858f2f8e2ae9435bb930ed49ed1682eb514
+=======
+    get originalSplittedOrder() {
+        return this.models["pos.order"].find((o) => o.uuid === this.uiState.splittedOrderUuid);
+>>>>>>> 58a389538c5ce480a9ea705477938824f942325f
     }
 
     getEmailItems() {
@@ -246,6 +252,7 @@ export class PosOrder extends Base {
                     };
                 }
                 line.setHasChange(false);
+                line.saved_quantity = line.get_quantity();
             }
         });
 
@@ -596,12 +603,20 @@ export class PosOrder extends Base {
     }
 
     get_total_with_tax() {
-        return this.get_total_without_tax() + this.get_total_tax();
+        return this.get_total_with_tax_of_lines(this.lines);
+    }
+
+    get_total_with_tax_of_lines(lines) {
+        return this.get_total_without_tax_of_lines(lines) + this.get_total_tax_of_lines(lines);
     }
 
     get_total_without_tax() {
+        return this.get_total_without_tax_of_lines(this.lines);
+    }
+
+    get_total_without_tax_of_lines(lines) {
         return roundPrecision(
-            this.lines.reduce(function (sum, line) {
+            lines.reduce(function (sum, line) {
                 return sum + line.get_price_without_tax();
             }, 0),
             this.currency.rounding
@@ -629,9 +644,8 @@ export class PosOrder extends Base {
             this.lines.reduce((sum, orderLine) => {
                 if (!ignored_product_ids.includes(orderLine.product_id.id)) {
                     sum +=
-                        orderLine.getUnitDisplayPriceBeforeDiscount() *
-                        (orderLine.get_discount() / 100) *
-                        orderLine.get_quantity();
+                        orderLine.get_all_prices().priceWithTaxBeforeDiscount -
+                        orderLine.get_all_prices().priceWithTax;
                     if (orderLine.display_discount_policy() === "without_discount") {
                         sum +=
                             (orderLine.get_taxed_lst_unit_price() -
@@ -646,13 +660,17 @@ export class PosOrder extends Base {
     }
 
     get_total_tax() {
+        return this.get_total_tax_of_lines(this.lines);
+    }
+
+    get_total_tax_of_lines(lines) {
         if (this.company.tax_calculation_rounding_method === "round_globally") {
             // As always, we need:
             // 1. For each tax, sum their amount across all order lines
             // 2. Round that result
             // 3. Sum all those rounded amounts
             const groupTaxes = {};
-            this.lines.forEach(function (line) {
+            lines.forEach(function (line) {
                 const taxDetails = line.get_tax_details();
                 const taxIds = Object.keys(taxDetails);
                 for (const taxId of taxIds) {
@@ -673,7 +691,7 @@ export class PosOrder extends Base {
             return sum;
         } else {
             return roundPrecision(
-                this.lines.reduce(function (sum, orderLine) {
+                lines.reduce(function (sum, orderLine) {
                     return sum + orderLine.get_tax();
                 }, 0),
                 this.currency.rounding
@@ -698,8 +716,12 @@ export class PosOrder extends Base {
     }
 
     get_tax_details() {
+        return this.get_tax_details_of_lines(this.lines);
+    }
+
+    get_tax_details_of_lines(lines) {
         const taxDetails = {};
-        for (const line of this.lines) {
+        for (const line of lines) {
             for (const taxData of line.get_all_prices().taxesData) {
                 const taxId = taxData.id;
                 if (!taxDetails[taxId]) {
