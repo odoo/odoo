@@ -1444,6 +1444,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                             or move.picking_type_id.reservation_method == 'at_confirm'
                             or (move.reservation_date and move.reservation_date <= fields.Date.today())))\
              ._action_assign()
+        # run scheduler for moves forecasted to not have enough in stock
+        moves.filtered(lambda move: move.state not in ('draft', 'cancel', 'done'))._trigger_scheduler()
         return moves
 
     def _prepare_procurement_origin(self):

@@ -165,11 +165,15 @@ class MrpProduction(models.Model):
         compute='_compute_move_raw_ids', store=True, readonly=False,
         copy=False,
         domain=[('scrapped', '=', False)])
+    move_finished_id = fields.Many2one(
+        'stock.move', 'Finished Product',
+    )
     move_finished_ids = fields.One2many(
-        'stock.move', 'production_id', 'Finished Products', readonly=False,
-        compute='_compute_move_finished_ids', store=True, copy=False,
+        'stock.move', 'production_id', 'Finished Moves', readonly=True, copy=False,
         domain=[('scrapped', '=', False)])
-    move_byproduct_ids = fields.One2many('stock.move', compute='_compute_move_byproduct_ids', inverse='_set_move_byproduct_ids')
+    move_byproduct_ids = fields.One2many(
+        'stock.move', 'production_id', string='byproduct moves', readonly=False,
+        compute='_compute_move_byproduct_ids', store=True)
     finished_move_line_ids = fields.One2many(
         'stock.move.line', compute='_compute_lines', inverse='_inverse_lines', string="Finished Product"
         )
@@ -738,29 +742,24 @@ class MrpProduction(models.Model):
             else:
                 production.move_raw_ids = [Command.delete(move.id) for move in production.move_raw_ids.filtered(lambda m: m.bom_line_id)]
 
-    @api.depends('product_id', 'bom_id', 'product_qty', 'product_uom_id', 'location_dest_id', 'date_finished', 'move_dest_ids')
-    def _compute_move_finished_ids(self):
+    @api.depends('bom_id.byproduct_ids', 'product_qty', 'product_uom_id', 'location_dest_id', 'date_finished', 'move_dest_ids')
+    def _compute_move_byproduct_ids(self):
         for production in self:
-            if production.state != 'draft':
+            if production.state == 'done':
+                continue
+            if production.product_id:
                 updated_values = {}
                 if production.date_finished:
                     updated_values['date'] = production.date_finished
                 if production.date_deadline:
                     updated_values['date_deadline'] = production.date_deadline
                 if 'date' in updated_values or 'date_deadline' in updated_values:
-                    production.move_finished_ids = [
-                        Command.update(m.id, updated_values) for m in production.move_finished_ids
-                    ]
-                continue
-            # delete to remove existing moves from database and clear to remove new records
-            production.move_finished_ids = [Command.delete(m) for m in production.move_finished_ids.ids]
-            production.move_finished_ids = [Command.clear()]
-            if production.product_id:
-                production._create_update_move_finished()
-            else:
-                production.move_finished_ids = [
-                    Command.delete(move.id) for move in production.move_finished_ids if move.bom_line_id
-                ]
+                    production.move_finished_id.update(updated_values)
+            production._create_update_move_finished()
+
+    def _compute_move_finished_ids(self):
+        for production in self:
+            production.move_finished_ids = production.move_finished_id | production.move_bom_finished_id
 
     @api.depends('state', 'product_qty', 'qty_producing')
     def _compute_show_produce(self):
@@ -1110,14 +1109,11 @@ class MrpProduction(models.Model):
             'cost_share': cost_share,
         }
 
-    def _get_moves_finished_values(self):
+    def _get_move_byproduct_values(self):
         moves = []
         for production in self:
-            if production.product_id in production.bom_id.byproduct_ids.mapped('product_id'):
+            if production.product_id in production.bom_id.byproduct_ids.product_id:
                 raise UserError(_("You cannot have %s  as the finished product and in the Byproducts", self.product_id.name))
-            finished_move_values = production._get_move_finished_values(production.product_id.id, production.product_qty, production.product_uom_id.id)
-            finished_move_values['location_final_id'] = self.location_final_id.id
-            moves.append(finished_move_values)
             for byproduct in production.bom_id.byproduct_ids:
                 if byproduct._skip_byproduct_line(production.product_id):
                     continue
@@ -1134,19 +1130,16 @@ class MrpProduction(models.Model):
         is used within onchanges.
         """
         list_move_finished = []
-        moves_finished_values = self._get_moves_finished_values()
-        moves_byproduct_dict = {move.byproduct_id.id: move for move in self.move_finished_ids.filtered(lambda m: m.byproduct_id)}
-        move_finished = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id)
+        moves_finished_values = self._get_move_byproduct_values()
+        moves_byproduct_dict = {move.byproduct_id.id: move for move in self.move_byproduct_ids}
         for move_finished_values in moves_finished_values:
             if move_finished_values.get('byproduct_id') in moves_byproduct_dict:
                 # update existing entries
                 list_move_finished += [Command.update(moves_byproduct_dict[move_finished_values['byproduct_id']].id, move_finished_values)]
-            elif move_finished_values.get('product_id') == self.product_id.id and move_finished:
-                list_move_finished += [Command.update(move_finished.id, move_finished_values)]
-            else:
-                # add new entries
+            elif move_finished_values.get('product_id'):
+                # create new entries
                 list_move_finished += [Command.create(move_finished_values)]
-        self.move_finished_ids = list_move_finished
+        self.move_byproduct_ids = list_move_finished
 
     def _get_moves_raw_values(self):
         moves = []
@@ -1294,8 +1287,6 @@ class MrpProduction(models.Model):
 
         if moves_to_confirm:
             moves_to_confirm = moves_to_confirm._action_confirm()
-            # run scheduler for moves forecasted to not have enough in stock
-            moves_to_confirm._trigger_scheduler()
 
         self.workorder_ids.filtered(lambda w: w.state not in ['done', 'cancel'])._action_confirm()
 
@@ -1406,6 +1397,11 @@ class MrpProduction(models.Model):
                 production_vals.update({'consumption': production.bom_id.consumption})
             # In case of Serial number tracking, force the UoM to the UoM of product
             if production.product_tracking == 'serial' and production.product_uom_id != production.product_id.uom_id:
+
+                production.move_finished_id = self.env['stock.move'].create(
+                    production._get_move_finished_values(production.product_id.id,
+                                                         production.product_qty,
+                                                         production.product_uom_id.id))
                 production_vals.update({
                     'product_qty': production.product_uom_id._compute_quantity(production.product_qty, production.product_id.uom_id),
                     'product_uom_id': production.product_id.uom_id
@@ -1428,9 +1424,6 @@ class MrpProduction(models.Model):
         move_raws_to_adjust._adjust_procure_method()
         moves_to_confirm._action_confirm(merge=False)
         workorder_to_confirm._action_confirm()
-        # run scheduler for moves forecasted to not have enough in stock
-        ignored_mo_ids = self.env.context.get('ignore_mo_ids', [])
-        self.move_raw_ids.with_context(ignore_mo_ids=ignored_mo_ids + self.ids)._trigger_scheduler()
         self.picking_ids.filtered(
             lambda p: p.state not in ['cancel', 'done']).action_confirm()
         # Force confirm state only for draft production not for more advanced state like
