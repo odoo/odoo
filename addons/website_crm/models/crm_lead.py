@@ -47,7 +47,7 @@ class CrmLead(models.Model):
     def website_form_input_filter(self, request, values):
         values['medium_id'] = values.get('medium_id') or \
                               self.sudo().default_get(['medium_id']).get('medium_id') or \
-                              self.env['utm.medium']._fetch_or_create_utm_medium('website').id
+                              self.env['utm.mixin']._utm_ref('utm.utm_medium_website').id
         values['team_id'] = values.get('team_id') or \
                             request.website.crm_default_team_id.id
         values['user_id'] = values.get('user_id') or \

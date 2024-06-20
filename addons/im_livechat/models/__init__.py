@@ -19,3 +19,4 @@ from . import mail_message
 from . import res_users_settings
 from . import rating_rating
 from . import digest
+from . import utm

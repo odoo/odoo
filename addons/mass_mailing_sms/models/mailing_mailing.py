@@ -61,10 +61,10 @@ class MailingMailing(models.Model):
     def _compute_medium_id(self):
         super()._compute_medium_id()
         for mailing in self:
-            if mailing.mailing_type == 'sms' and (not mailing.medium_id or mailing.medium_id == self.env['utm.medium']._fetch_or_create_utm_medium('email')):
-                mailing.medium_id = self.env['utm.medium']._fetch_or_create_utm_medium("sms", module="mass_mailing_sms").id
-            elif mailing.mailing_type == 'mail' and (not mailing.medium_id or mailing.medium_id == self.env['utm.medium']._fetch_or_create_utm_medium("sms", module="mass_mailing_sms")):
-                mailing.medium_id = self.env['utm.medium']._fetch_or_create_utm_medium('email').id
+            if mailing.mailing_type == 'sms' and (not mailing.medium_id or mailing.medium_id == self.env['utm.mixin']._utm_ref('utm.utm_medium_email')):
+                mailing.medium_id = self.env['utm.mixin']._utm_ref('utm.utm_medium_sms').id
+            elif mailing.mailing_type == 'mail' and (not mailing.medium_id or mailing.medium_id == self.env['utm.mixin']._utm_ref('utm.utm_medium_sms')):
+                mailing.medium_id = self.env['utm.mixin']._utm_ref('utm.utm_medium_email').id
 
     @api.depends('sms_template_id', 'mailing_type')
     def _compute_body_plaintext(self):

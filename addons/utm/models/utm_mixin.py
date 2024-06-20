@@ -178,3 +178,49 @@ class UtmMixin(models.AbstractModel):
         if match:
             return match.group(1), int(match.group(2) or '1')
         return name, 1
+
+    def _utm_ref(self, xml_id):
+        """" Special "ref" implementation for utm records (utm.source/utm.medium).
+        For xml_ids in 'SELF_REQUIRED_UTM_REF', we create them if they don't exist.
+
+        This allows functional flows to use static UTM data records and keep clean
+        statistics/reporting. """
+        utm_record = self.env.ref(xml_id, raise_if_not_found=False)
+
+        if not utm_record and xml_id in self.SELF_REQUIRED_UTM_REF:
+            try:
+                module, xml_name = xml_id.split('.')
+            except ValueError:
+                raise ValueError(f'Malformed xml_id: {xml_id}. Should be "module.name".')
+
+            label, model = self.SELF_REQUIRED_UTM_REF[xml_id]
+            utm_record = self.sudo().env[model].create({
+                self.env[model]._rec_name: label
+            })
+
+            # create matching data record
+            self.sudo().env['ir.model.data'].create({
+                'name': xml_name,
+                'module': module,
+                'res_id': utm_record.id,
+                'model': model,
+            })
+
+        return utm_record
+
+    @property
+    def SELF_REQUIRED_UTM_REF(self):
+        return {
+            'utm.utm_medium_direct': ('Direct', 'utm.medium'),
+            'utm.utm_medium_email': ('Email', 'utm.medium'),
+            'utm.utm_medium_social_media': ('Social Media', 'utm.medium'),
+            'utm.utm_medium_website': ('Website', 'utm.medium'),
+            'utm.utm_source_facebook': ('Facebook', 'utm.source'),
+            'utm.utm_source_instagram': ('Instagram', 'utm.source'),
+            'utm.utm_source_linkedin': ('LinkedIn', 'utm.source'),
+            'utm.utm_source_mailing': ('Mass Mailing', 'utm.source'),
+            'utm.utm_source_referral': ('Referral', 'utm.source'),
+            'utm.utm_source_survey': ('Survey', 'utm.source'),
+            'utm.utm_source_twitter': ('X', 'utm.source'),
+            'utm.utm_source_youtube': ('YouTube', 'utm.source'),
+        }

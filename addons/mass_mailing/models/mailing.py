@@ -392,7 +392,7 @@ class MailingMailing(models.Model):
     def _compute_medium_id(self):
         for mailing in self:
             if mailing.mailing_type == 'mail' and not mailing.medium_id:
-                mailing.medium_id = self.env['utm.medium']._fetch_or_create_utm_medium('email').id
+                mailing.medium_id = self.env['utm.mixin']._utm_ref('utm.utm_medium_email').id
 
     @api.depends('mailing_model_id')
     def _compute_reply_to_mode(self):

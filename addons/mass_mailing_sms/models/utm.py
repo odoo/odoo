@@ -77,19 +77,9 @@ class UtmCampaign(models.Model):
         return ab_testing_campaign
 
 
-class UtmMedium(models.Model):
-    _inherit = 'utm.medium'
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_utm_medium_sms(self):
-        utm_medium_sms = self.env.ref('mass_mailing_sms.utm_medium_sms', raise_if_not_found=False)
-        if utm_medium_sms and utm_medium_sms in self:
-            raise UserError(_(
-                "The UTM medium '%s' cannot be deleted as it is used in some main "
-                "functional flows, such as the SMS Marketing.",
-                utm_medium_sms.name
-            ))
+class UtmMixin(models.Model):
+    _inherit = ['utm.mixin']
 
     @property
-    def SELF_REQUIRED_UTM_MEDIUMS_REF(self):
-        return super().SELF_REQUIRED_UTM_MEDIUMS_REF | {"mass_mailing_sms.utm_medium_sms": "SMS"}
+    def SELF_REQUIRED_UTM_REF(self):
+        return super().SELF_REQUIRED_UTM_REF | {'mass_mailing_sms.utm_medium_sms': ('SMS', 'utm.medium')}
