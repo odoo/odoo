@@ -5,15 +5,12 @@
             <field name="model">account.tax</field>
             <field name="inherit_id" ref="account.view_tax_form" />
             <field name="arch" type="xml">
-                 <xpath expr="//field[@name='children_tax_ids']" position="before">
-                    <group attrs="{'invisible': [('amount_type','!=','code')]}">
-                        <group>
-                            <field name="python_compute" attrs="{'required':[('amount_type','=','code')]}" />
-                        </group>
-                        <group>
-                            <field name="python_applicable" attrs="{'required':[('amount_type','=','code')]}" />
-                        </group>
-                    </group>
+                 <xpath expr="//field[@name='active']" position="before">
+                    <field name="python_compute" attrs="{'invisible': [('amount_type','!=','code')], 'required':[('amount_type','=','code')]}" />
+                </xpath>
+
+                <xpath expr="//field[@name='tax_scope']" position="after">
+                    <field name="python_applicable" attrs="{'invisible': [('amount_type','!=','code')], 'required':[('amount_type','=','code')]}" />
                 </xpath>
             </field>
         </record>
