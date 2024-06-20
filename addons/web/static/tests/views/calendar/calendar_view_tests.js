@@ -5440,6 +5440,53 @@ QUnit.module("Views", ({ beforeEach }) => {
     });
 
     QUnit.test(
+        "save selected date during view switching",
+        async function (assert) {
+            serverData.models.event.records = [];
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "Partners",
+                    res_model: "event",
+                    type: "ir.actions.act_window",
+                    views: [
+                        [false, "list"],
+                        [false, "calendar"],
+                    ],
+                },
+            };
+
+            serverData.views = {
+                "event,false,calendar": `<calendar date_start="start" date_stop="stop" mode="week"/>`,
+                "event,false,list": `<tree sample="1">
+                    <field name="start"/>
+                    <field name="stop"/>
+                </tree>`,
+
+                "event,false,search": `<search />`,
+            };
+
+            const webClient = await createWebClient({
+                serverData,
+                async mockRPC(route) {
+                    if (route.endsWith("/has_group")) {
+                        return true;
+                    }
+                },
+            });
+
+            await doAction(webClient, 1);
+
+            await click(target, ".o_cp_switch_buttons .o_calendar");
+            await click(target, ".o_calendar_button_next");
+            const weekNumber = target.querySelector(".fc-week-number").textContent;
+            await click(target, ".o_cp_switch_buttons .o_list");
+            await click(target, ".o_cp_switch_buttons .o_calendar");
+            assert.equal(weekNumber, target.querySelector(".fc-week-number").textContent);
+        }
+    );
+
+    QUnit.test(
         "sample data are not removed when switching back from calendar view",
         async function (assert) {
             serverData.models.event.records = [];
