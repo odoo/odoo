@@ -577,7 +577,7 @@ export class SpreadsheetPivotModel extends PivotModel {
      */
     _getSpreadsheetRows(tree) {
         /**@type {Row[]}*/
-        let rows = [];
+        const rows = [];
         const group = tree.root;
         const indent = group.labels.length;
         const rowGroupBys = this.metaData.fullRowGroupBys;
@@ -588,10 +588,10 @@ export class SpreadsheetPivotModel extends PivotModel {
             indent,
         });
 
-        const subTreeKeys = tree.sortedKeys || [...tree.directSubTrees.keys()];
+        const subTreeKeys = tree.sortedKeys || tree.directSubTrees.keys();
         subTreeKeys.forEach((subTreeKey) => {
             const subTree = tree.directSubTrees.get(subTreeKey);
-            rows = rows.concat(this._getSpreadsheetRows(subTree));
+            rows.push(...this._getSpreadsheetRows(subTree));
         });
         return rows;
     }
