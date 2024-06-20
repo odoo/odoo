@@ -22,14 +22,14 @@ class StockPicking(models.Model):
             raise UserError(_("Please set HSN code in below products: \n%s", '\n'.join(
                 [product.name for product in product_with_no_hsn]
             )))
-        if lines_with_no_tax := self.move_ids.filtered(lambda line: not line.ewaybill_tax_ids):
-            raise UserError(_("Please set Tax on below products: \n%s", '\n'.join(
-                [product.name for product in lines_with_no_tax.mapped('product_id')]
-            )))
         if self.l10n_in_ewaybill_id:
             raise UserError(_("Ewaybill already created for this picking."))
         action = self._get_l10n_in_ewaybill_form_action()
-        action['context'] = {'default_picking_id': self.id}
+        ewaybill = self.env['l10n.in.ewaybill'].create({
+            'picking_id': self.id,
+            'type_id': self.env.ref('l10n_in_ewaybill_stock.type_delivery_challan_sub_others').id,
+        })
+        action['res_id'] = ewaybill.id
         return action
 
     def action_open_l10n_in_ewaybill(self):
