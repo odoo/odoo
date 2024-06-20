@@ -118,7 +118,7 @@
                                             <span t-field="ml.product_id.display_name">Customizable Desk</span><br/>
                                             <span t-if="ml.product_id.description_picking" t-field="ml.product_id.description_picking"></span>
                                         </td>
-                                        <td align="right">
+                                        <td class="text-end">
                                             <span t-field="ml.quantity">3.00</span>
                                             <span t-field="ml.product_uom_id" groups="uom.group_uom">units</span>
                                             <span t-if="ml.move_id.product_packaging_id">
@@ -130,13 +130,13 @@
                                                 </span>
                                             </span>
                                         </td>
-                                        <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
+                                        <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations" class="text-end">
                                             <span t-esc="ml.location_id.display_name">WH/Stock</span>
                                                 <t t-if="ml.package_id">
                                                     <span t-field="ml.package_id">Package A</span>
                                                 </t>
                                         </td>
-                                        <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                        <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations" class="text-end">
                                             <div>
                                                 <span t-field="ml.location_dest_id">WH/Outgoing</span>
                                                 <t t-if="ml.result_package_id">

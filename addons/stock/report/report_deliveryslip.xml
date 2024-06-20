@@ -61,9 +61,9 @@
                     <table class="table table-sm" t-if="o.state!='done'" name="stock_move_table">
                         <thead>
                             <tr>
-                                <th name="th_sm_product"><strong>Product</strong></th>
-                                <th name="th_sm_ordered"><strong>Ordered</strong></th>
-                                <th name="th_sm_quantity"><strong>Delivered</strong></th>
+                                <th name="th_sm_product">Product</th>
+                                <th name="th_sm_ordered" class="text-end">Ordered</th>
+                                <th name="th_sm_quantity" class="text-end">Delivered</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -75,14 +75,14 @@
                                         <span t-field="move.description_picking">Description on transfer</span>
                                     </p>
                                 </td>
-                                <td>
+                                <td class="text-end">
                                     <span t-field="move.product_uom_qty">3.00</span>
                                     <span t-field="move.product_uom" groups="uom.group_uom">units</span>
                                     <span t-if="move.product_packaging_id">
                                         (<span t-field="move.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="move.product_packaging_id"/>)
                                     </span>
                                 </td>
-                                <td>
+                                <td class="text-end">
                                     <span t-field="move.quantity">3.00</span>
                                     <span t-field="move.product_uom" groups="uom.group_uom">units</span>
                                     <span t-if="move.product_packaging_id">
@@ -97,14 +97,10 @@
                         <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" groups="stock.group_lot_on_delivery_slip"/>
                         <thead>
                             <tr>
-                                <th name="th_sml_product"><strong>Product</strong></th>
-                                <th name="th_sml_qty_ordered" class="text-center" t-if="not has_serial_number">
-                                    <strong>Ordered</strong>
-                                </th>
-                                <th name="lot_serial" t-else="">
-                                    Lot/Serial Number
-                                </th>
-                                <th name="th_sml_quantity" class="text-center"><strong>Delivered</strong></th>
+                                <th name="th_sml_product">Product</th>
+                                <th name="th_sml_qty_ordered" class="text-center" t-if="not has_serial_number">Ordered</th>
+                                <th name="lot_serial" t-else="">Lot/Serial Number</th>
+                                <th name="th_sml_quantity" class="text-center">Delivered</th>
                             </tr>
                         </thead>
                         <tbody>
