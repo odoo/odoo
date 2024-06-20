@@ -756,7 +756,7 @@ class PosConfig(models.Model):
         product_ids = [r[0] for r in self.env.execute_query(sql)]
         products = self.env['product.product'].browse(product_ids)
         product_combo = products.filtered(lambda p: p['type'] == 'combo')
-        product_in_combo = product_combo.combo_ids.combo_line_ids.product_id
+        product_in_combo = product_combo.combo_ids.combo_item_ids.product_id
         products_available = products | product_in_combo
         return products_available.read(fields, load=False)
 

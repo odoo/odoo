@@ -14,7 +14,7 @@ import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
 import { getOnNotified, constructFullProductName, deduceUrl } from "@point_of_sale/utils";
-import { computeComboLines } from "@point_of_sale/app/models/utils/compute_combo_lines";
+import { computeComboItems } from "@point_of_sale/app/models/utils/compute_combo_items";
 import {
     getTaxesAfterFiscalPosition,
     getTaxesValues,
@@ -228,7 +228,7 @@ export class SelfOrder extends Reactive {
         }
 
         if (Object.entries(comboValues).length > 0) {
-            const comboPrices = computeComboLines(
+            const comboPrices = computeComboItems(
                 product,
                 comboValues,
                 this.currentOrder.pricelist_id,
@@ -238,24 +238,24 @@ export class SelfOrder extends Reactive {
 
             values.price_unit = 0;
             values.combo_id = ["link", product.combo_id];
-            values.combo_line_ids = comboPrices.map((comboLine) => [
+            values.combo_line_ids = comboPrices.map((comboItem) => [
                 "create",
                 {
-                    product_id: comboLine.combo_line_id.product_id,
-                    tax_ids: comboLine.combo_line_id.product_id.taxes_id.map((tax) => [
+                    product_id: comboItem.combo_item_id.product_id,
+                    tax_ids: comboItem.combo_item_id.product_id.taxes_id.map((tax) => [
                         "link",
                         tax,
                     ]),
-                    combo_line_id: comboLine.combo_line_id,
-                    price_unit: comboLine.price_unit,
+                    combo_item_id: comboItem.combo_item_id,
+                    price_unit: comboItem.price_unit,
                     order_id: this.currentOrder,
                     qty: 1,
-                    attribute_value_ids: comboLine.attribute_value_ids?.map((attr) => [
+                    attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
                         "link",
                         attr,
                     ]),
                     custom_attribute_value_ids: Object.entries(
-                        comboLine.attribute_custom_values
+                        comboItem.attribute_custom_values
                     ).map(([id, cus]) => {
                         return ["create", cus];
                     }),

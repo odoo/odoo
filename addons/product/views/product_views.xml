@@ -81,6 +81,16 @@
                                 <group name="group_general">
                                     <field name="active" invisible="1"/>
                                     <field name="type" widget="radio" options="{'horizontal': True}"/>
+                                    <field
+                                        name="combo_ids"
+                                        widget="many2many_tags"
+                                        placeholder="e.g. Starter - Meal - Desert"
+                                        invisible="type != 'combo'"
+                                        options="{
+                                            'no_quick_create': True,
+                                            'edit_tags': True,
+                                        }"
+                                    />
                                     <field name="service_tracking" invisible="1 or type != 'service'"/>
                                     <field name="product_tooltip"
                                         class="fst-italic text-muted"
@@ -95,19 +105,40 @@
                                             class="oe_inline"
                                             widget="monetary"
                                             options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                                            <span name="uom_span" groups="uom.group_uom">per
-                                                <field name="uom_id"
+                                            <span
+                                                name="uom_span"
+                                                groups="uom.group_uom"
+                                                invisible="type == 'combo'"
+                                            >
+                                                per
+                                                <field
+                                                    name="uom_id"
                                                     class="oe_inline" style="max-width:136px"
-                                                    options="{'no_create': True}"/>
+                                                    options="{'no_create': True}"
+                                                />
                                             </span>
                                     </div>
-                                    <label for="standard_price" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
-                                    <div name="standard_price_uom" invisible="product_variant_count &gt; 1 and not is_product_variant">
-                                        <field name="standard_price" class="oe_inline" widget="monetary" options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
-                                        <span groups="uom.group_uom" >per
-                                            <field name="uom_name" class="oe_inline"/>
-                                        </span>
-                                    </div>
+                                    <t invisible="
+                                        (product_variant_count &gt; 1 and not is_product_variant)
+                                        or type == 'combo'
+                                    ">
+                                        <label for="standard_price"/>
+                                        <div name="standard_price_uom">
+                                            <field
+                                                name="standard_price"
+                                                class="oe_inline"
+                                                widget="monetary"
+                                                options="{
+                                                    'currency_field': 'cost_currency_id',
+                                                    'field_digits': True,
+                                                }"
+                                            />
+                                            <span groups="uom.group_uom">
+                                                per
+                                                <field name="uom_name" class="oe_inline"/>
+                                            </span>
+                                        </div>
+                                    </t>
                                     <field name="categ_id" string="Category"/>
                                     <field name="company_id"
                                         groups="base.group_multi_company"
@@ -135,14 +166,24 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Purchase" name="purchase" invisible="1 or not purchase_ok" groups="uom.group_uom">
+                        <page
+                            string="Purchase"
+                            name="purchase"
+                            invisible="1 or not purchase_ok or type == 'combo'"
+                            groups="uom.group_uom"
+                        >
                             <group name="purchase">
                                 <group string="Vendor Bills" name="bill">
                                     <field name="uom_po_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                 </group>
                             </group>
                         </page>
-                        <page string="Inventory" name="inventory" groups="product.group_stock_packaging" invisible="type == 'service'">
+                        <page
+                            string="Inventory"
+                            name="inventory"
+                            groups="product.group_stock_packaging"
+                            invisible="type in ['service', 'combo']"
+                        >
                             <group name="inventory">
                                 <group name="group_lots_and_weight" string="Logistics" invisible="type != 'consu'">
                                     <label for="weight" invisible="product_variant_count &gt; 1 and not is_product_variant"/>

@@ -12,7 +12,7 @@ import {
 } from "@point_of_sale/utils";
 import { renderToElement } from "@web/core/utils/render";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
-import { computeComboLines } from "./utils/compute_combo_lines";
+import { computeComboItems } from "./utils/compute_combo_items";
 import { changesToOrder } from "./utils/order_change";
 
 const { DateTime } = luxon;
@@ -396,18 +396,18 @@ export class PosOrder extends Base {
             (line) => line.price_type === "original" && line.combo_line_ids?.length
         );
         for (const pLine of combo_parent_lines) {
-            attributes_prices[pLine.id] = computeComboLines(
+            attributes_prices[pLine.id] = computeComboItems(
                 pLine.product_id,
                 pLine.combo_line_ids.map((cLine) => {
                     if (cLine.attribute_value_ids) {
                         return {
-                            combo_line_id: cLine.combo_line_id,
+                            combo_item_id: cLine.combo_item_id,
                             configuration: {
                                 attribute_value_ids: cLine.attribute_value_ids,
                             },
                         };
                     } else {
-                        return { combo_line_id: cLine.combo_line_id };
+                        return { combo_item_id: cLine.combo_item_id };
                     }
                 }),
                 pricelist,
@@ -421,7 +421,7 @@ export class PosOrder extends Base {
         combo_children_lines.forEach((line) => {
             line.set_unit_price(
                 attributes_prices[line.combo_parent_id.id].find(
-                    (item) => item.combo_line_id.id === line.combo_line_id.id
+                    (item) => item.combo_item_id.id === line.combo_item_id.id
                 ).price_unit
             );
         });

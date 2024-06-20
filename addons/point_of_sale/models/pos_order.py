@@ -1235,7 +1235,7 @@ class PosOrderLine(models.Model):
     combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent') # FIXME rename to parent_line_id
     combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines') # FIXME rename to child_line_ids
 
-    combo_line_id = fields.Many2one('pos.combo.line', string='Combo Line')
+    combo_item_id = fields.Many2one('product.combo.item', string='Combo Item')
     is_edited = fields.Boolean('Edited', default=False)
 
     @api.model
@@ -1246,7 +1246,8 @@ class PosOrderLine(models.Model):
     def _load_pos_data_fields(self, config_id):
         return [
             'qty', 'attribute_value_ids', 'custom_attribute_value_ids', 'price_unit', 'skip_change', 'uuid', 'price_subtotal', 'price_subtotal_incl', 'order_id', 'note', 'price_type',
-            'product_id', 'discount', 'tax_ids', 'combo_line_id', 'pack_lot_ids', 'customer_note', 'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id', 'combo_parent_id', 'combo_line_ids', 'combo_line_id', 'refund_orderline_ids']
+            'product_id', 'discount', 'tax_ids', 'pack_lot_ids', 'customer_note', 'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id', 'combo_parent_id', 'combo_line_ids', 'combo_item_id', 'refund_orderline_ids'
+        ]
 
     @api.model
     def _is_field_accepted(self, field):

@@ -82,56 +82,14 @@
                     <label for="available_in_pos" string="Point of Sale"/>
                 </span>
             </div>
-            <field name="type" position="after">
-                <field name="combo_ids"
-                    widget="many2many_tags"
-                    placeholder="e.g. Starter - Meal - Desert"
-                    invisible="type != 'combo'"
-                    options="{
-                        'no_quick_create': true,
-                        'edit_tags': true,
-                    }"
-                    groups="point_of_sale.group_pos_user"/>
-            </field>
-            <span name="uom_span" position="attributes">
-                <attribute name="invisible">type == 'combo'</attribute>
-            </span>
-            <label for="standard_price" position="attributes">
-                <attribute name="invisible" separator="or" add="type == 'combo'"/>
-            </label>
-            <div name="standard_price_uom" position="attributes">
-                <attribute name="invisible" separator="or" add="type == 'combo'"/>
-            </div>
-            <page name="purchase" position="attributes">
-                <attribute name="invisible" separator="or" add="type == 'combo'"/>
-            </page>
-            <xpath expr="//page[@name='inventory']" position="attributes">
-                <attribute name="invisible" separator="or" add="type == 'combo'"/>
-            </xpath>
-            <label for="taxes_id" position="attributes">
-                <attribute name="invisible" separator="or" add="type == 'combo'"/>
-            </label>
-            <div name="taxes_div" position="attributes">
-                <attribute name="invisible" separator="or" add="type == 'combo'"/>
-            </div>
-            <field name="supplier_taxes_id" position="attributes">
-                <attribute name="invisible" separator="or" add="type == 'combo'"/>
-            </field>
         </field>
     </record>
 
-    <!-- Hide variants page -->
     <record id="product_template_only_form_view" model="ir.ui.view">
         <field name="name">product.template.product.form.inherit</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='variants']" position="attributes">
-                <attribute name="invisible">type == "combo"</attribute>
-            </xpath>
-            <field name="barcode" position="attributes">
-                <attribute name="invisible" separator="or" add="type == 'combo'"/>
-            </field>
             <xpath expr="//field[@name='attribute_line_ids']//field[@name='attribute_id']" position="attributes">
                 <attribute name="context">{'default_create_variant': context.get('create_variant_never', 'always')}</attribute>
             </xpath>
@@ -152,11 +110,11 @@
         action="product_product_action"
         groups="product.group_product_variant"
         sequence="10"/>
-    <menuitem id="point_of_sale.menu_pos_combo" 
-        name="Combo Choices" 
-        parent="point_of_sale.pos_config_menu_catalog" 
-        action="point_of_sale.action_pos_combo" 
-        sequence="15" />
+    <menuitem id="point_of_sale.menu_product_combo"
+        name="Combo Choices"
+        parent="point_of_sale.pos_config_menu_catalog"
+        action="product.product_combo_action"
+        sequence="15"/>
     <menuitem id="pos_config_menu_action_product_pricelist"
         parent="point_of_sale.pos_config_menu_catalog"
         action="product.product_pricelist_action2"
