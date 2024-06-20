@@ -51,3 +51,8 @@ class AccountMove(models.Model):
             return json.loads(l10n_in_edi.sudo().attachment_id.raw.decode("utf-8"))
         else:
             return {}
+
+    def _can_force_cancel(self):
+        # OVERRIDE
+        self.ensure_one()
+        return any(document.edi_format_id.code == 'in_einvoice_1_03' and document.state == 'to_cancel' for document in self.edi_document_ids) or super()._can_force_cancel()
