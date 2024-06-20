@@ -18,7 +18,7 @@ class HrRecruitmentSource(models.Model):
                 source.job_id.website_url,
                 url_encode({
                     'utm_campaign': self.env.ref('hr_recruitment.utm_campaign_job').name,
-                    'utm_medium': source.medium_id.name or self.env['utm.medium']._fetch_or_create_utm_medium('website').name,
+                    'utm_medium': source.medium_id.name or self.env['utm.mixin']._utm_ref('utm.utm_medium_website').name,
                     'utm_source': source.source_id.name or None
                 }),
             ))

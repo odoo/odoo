@@ -115,8 +115,8 @@ class TestSurveyCrm(common.TestSurveyCommon, HttpCase):
         # Ensure contact, salesperson, medium, source, email and contact name are rights
         self.assertEqual(lead_created.partner_id, self.survey_user.partner_id) if login else self.assertFalse(lead_created.partner_id.id)
         self.assertEqual(lead_created.user_id.id, False if login else self.survey_crm.user_id.id)  # CRM salesperson if survey responsible is from the assigned survey sales team
-        self.assertEqual(lead_created.medium_id, self.env['utm.medium']._fetch_or_create_utm_medium('survey'))
-        self.assertEqual(lead_created.source_id.name, self.survey_crm.title)
+        self.assertEqual(lead_created.source_id, self.env['utm.mixin']._utm_ref('utm.utm_source_survey'))
+        self.assertEqual(lead_created.utm_reference, self.survey_crm)
         self.assertEqual(lead_created.email_from, answers[2])
         self.assertEqual(lead_created.contact_name, self.survey_user.partner_id.name if answers[3] else '')
 
