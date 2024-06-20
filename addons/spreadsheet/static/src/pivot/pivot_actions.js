@@ -15,8 +15,8 @@ export const SEE_RECORDS_PIVOT = async (position, env) => {
     await pivot.load();
     const { model } = pivot.definition;
     const { actionXmlId } = env.model.getters.getPivotCoreDefinition(pivotId);
-    const argsDomain = env.model.getters.getPivotDomainArgsFromPosition(position)?.domainArgs;
-    const domain = pivot.getPivotCellDomain(argsDomain);
+    const pivotCell = env.model.getters.getPivotCellFromPosition(position);
+    const domain = pivot.getPivotCellDomain(pivotCell.domain);
     const name = await pivot.getModelLabel();
     await navigateTo(
         env,
@@ -45,12 +45,12 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, getters) => {
     const cell = getters.getCorrespondingFormulaCell(position);
     const evaluatedCell = getters.getEvaluatedCell(position);
     const pivotId = getters.getPivotIdFromPosition(position);
-    const argsDomain = getters.getPivotDomainArgsFromPosition(position)?.domainArgs;
+    const pivotCell = getters.getPivotCellFromPosition(position);
     return (
         evaluatedCell.type !== "empty" &&
         evaluatedCell.type !== "error" &&
         evaluatedCell.value !== "" &&
-        argsDomain !== undefined &&
+        pivotCell.type !== "EMPTY" &&
         cell &&
         cell.isFormula &&
         getNumberOfPivotFunctions(cell.compiledFormula.tokens) === 1 &&
@@ -72,17 +72,17 @@ export function SET_FILTER_MATCHING_CONDITION(position, getters) {
     }
 
     const pivotId = getters.getPivotIdFromPosition(position);
-    const pivotInfo = getters.getPivotDomainArgsFromPosition(position);
-    if (pivotInfo === undefined) {
+    const pivotCell = getters.getPivotCellFromPosition(position);
+    if (pivotCell.type === "EMPTY") {
         return false;
     }
-    const matchingFilters = getters.getFiltersMatchingPivotArgs(pivotId, pivotInfo.domainArgs);
-    return pivotInfo?.isHeader && matchingFilters.length > 0;
+    const matchingFilters = getters.getFiltersMatchingPivotArgs(pivotId, pivotCell.domain);
+    return matchingFilters.length > 0 && pivotCell.type === "HEADER";
 }
 
 export function SET_FILTER_MATCHING(position, env) {
     const pivotId = env.model.getters.getPivotIdFromPosition(position);
-    const domainArgs = env.model.getters.getPivotDomainArgsFromPosition(position)?.domainArgs;
-    const filters = env.model.getters.getFiltersMatchingPivotArgs(pivotId, domainArgs);
+    const domain = env.model.getters.getPivotCellFromPosition(position).domain;
+    const filters = env.model.getters.getFiltersMatchingPivotArgs(pivotId, domain);
     env.model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", { filters });
 }
