@@ -112,15 +112,18 @@ class ProductProduct(models.Model):
         ]
 
     def _load_pos_data(self, data):
-        domain = self._load_pos_data_domain(data)
-        fields = self._load_pos_data_fields(data['pos.config']['data'][0]['id'])
         config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
-        products = self.with_context({**self.env.context, 'display_default_code': False}).search_read(
-            domain,
-            fields,
-            limit=config_id.get_limited_product_count(),
-            order='sequence,default_code,name',
-            load=False)
+        limit_count = config_id.get_limited_product_count()
+        fields = self._load_pos_data_fields(data['pos.config']['data'][0]['id'])
+        if limit_count:
+            products = config_id.with_context({**self.env.context, 'display_default_code': False}).get_limited_products_loading(fields)
+        else:
+            domain = self._load_pos_data_domain(data)
+            products = self.with_context({**self.env.context, 'display_default_code': False}).search_read(
+                domain,
+                fields,
+                order='sequence,default_code,name',
+                load=False)
 
         self._process_pos_ui_product_product(products, config_id)
         return {
