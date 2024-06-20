@@ -11,13 +11,16 @@ export class LoginScreen extends Component {
     static storeOnOrder = false;
     setup() {
         this.pos = usePos();
-        this.selectCashier = useCashierSelector({
+        this.cashierSelector = useCashierSelector({
             onCashierChanged: () => {
                 this.pos.showScreen(this.pos.previousScreen || "ProductScreen");
                 this.pos.hasLoggedIn = true;
             },
             exclusive: true, // takes exclusive control on the barcode reader
         });
+    }
+    async selectCashier() {
+        return await this.cashierSelector();
     }
 }
 registry.category("pos_screens").add("LoginScreen", LoginScreen);

@@ -7,17 +7,10 @@ from odoo import models
 class PosSession(models.Model):
     _inherit = 'pos.session'
 
-
     def _domain_hr_employee(self):
-        if len(self.config_id.basic_employee_ids) > 0:
-            domain = [
-                '&', ('company_id', '=', self.config_id.company_id.id),
-                '|', ('user_id', '=', self.user_id.id), ('id', 'in', self.config_id.basic_employee_ids.ids + self.config_id.advanced_employee_ids.ids)]
-        else:
-            domain = [('company_id', '=', self.config_id.company_id.id)]
+        domain = self.config_id._employee_domain(self.user_id.id)
 
         return domain
-
 
     def _load_data_params(self, config_id):
         params = super()._load_data_params(config_id)

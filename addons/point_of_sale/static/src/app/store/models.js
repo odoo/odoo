@@ -1424,6 +1424,7 @@ export class Order extends PosModel {
                     };
                 }
                 line.setHasChange(false);
+                line.saved_quantity = line.get_quantity();
             }
         });
 
@@ -1581,7 +1582,7 @@ export class Order extends PosModel {
         return this.orderlines.length === 0;
     }
     get isBooked() {
-        return this.booked || !this.is_empty() || this.server_id;
+        return Boolean(this.booked || !this.is_empty() || this.server_id);
     }
     generate_unique_id() {
         // Generates a public identification number for the order.
@@ -2151,9 +2152,8 @@ export class Order extends PosModel {
             this.orderlines.reduce((sum, orderLine) => {
                 if (!ignored_product_ids.includes(orderLine.product.id)) {
                     sum +=
-                        orderLine.getUnitDisplayPriceBeforeDiscount() *
-                        (orderLine.get_discount() / 100) *
-                        orderLine.get_quantity();
+                        orderLine.get_all_prices().priceWithTaxBeforeDiscount -
+                        orderLine.get_all_prices().priceWithTax;
                     if (orderLine.display_discount_policy() === "without_discount") {
                         sum +=
                             (orderLine.get_taxed_lst_unit_price() -

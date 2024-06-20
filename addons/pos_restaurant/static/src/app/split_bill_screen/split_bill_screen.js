@@ -12,9 +12,7 @@ import { groupBy } from "@web/core/utils/arrays";
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
     static components = { Orderline, OrderWidget };
-    static props = {
-        disallow: { type: Boolean, optional: true },
-    };
+    static props = {};
 
     setup() {
         this.pos = usePos();
@@ -29,6 +27,9 @@ export class SplitBillScreen extends Component {
                 temporary: true,
             }
         );
+    }
+    disallowLineQuantityChange() {
+        return this.pos.disallowLineQuantityChange();
     }
     get currentOrder() {
         return this.pos.get_order();
@@ -52,7 +53,7 @@ export class SplitBillScreen extends Component {
     back() {
         this.pos.showScreen("ProductScreen");
     }
-    proceed() {
+    async proceed() {
         if (Object.keys(this.splitlines || {})?.length === 0) {
             // Splitlines is empty
             return;
@@ -62,7 +63,7 @@ export class SplitBillScreen extends Component {
         delete this.newOrder.temporary;
 
         if (!this._isFullPayOrder()) {
-            this._setQuantityOnCurrentOrder();
+            await this._setQuantityOnCurrentOrder();
 
             this.newOrder.set_screen_data({ name: "PaymentScreen" });
 
@@ -132,7 +133,7 @@ export class SplitBillScreen extends Component {
             } else {
                 if (split.quantity < totalQuantity) {
                     split.quantity += 1;
-                    // TODO: why do we need this `if`?
+                    // We need this split for decimal quantities (e.g. 0.5 kg)
                     if (split.quantity > line.get_quantity()) {
                         split.quantity = line.get_quantity();
                     }
@@ -181,28 +182,30 @@ export class SplitBillScreen extends Component {
 
         return full;
     }
-    _setQuantityOnCurrentOrder() {
+    async _setQuantityOnCurrentOrder() {
         const order = this.pos.get_order();
         for (var id in this.splitlines) {
             var split = this.splitlines[id];
             var line = this.currentOrder.get_orderline(parseInt(id));
 
-            if (!this.props.disallow) {
-                line.set_quantity(
-                    line.get_quantity() - split.quantity,
-                    "do not recompute unit price"
-                );
-            } else {
-                if (split.quantity) {
-                    const decreaseLine = line.clone();
-                    decreaseLine.order = order;
-                    decreaseLine.noDecrease = true;
-                    decreaseLine.set_quantity(-split.quantity);
-                    order.add_orderline(decreaseLine);
+            if (line) {
+                if (!this.disallowLineQuantityChange()) {
+                    line.set_quantity(
+                        line.get_quantity() - split.quantity,
+                        "do not recompute unit price"
+                    );
+                } else {
+                    if (split.quantity) {
+                        const decreaseLine = line.clone();
+                        decreaseLine.order = order;
+                        decreaseLine.noDecrease = true;
+                        decreaseLine.set_quantity(-split.quantity);
+                        order.add_orderline(decreaseLine);
+                    }
                 }
             }
         }
-        if (!this.props.disallow) {
+        if (!this.disallowLineQuantityChange()) {
             for (id in this.splitlines) {
                 line = this.currentOrder.get_orderline(parseInt(id));
                 if (line && Math.abs(line.get_quantity()) < 0.00001) {
