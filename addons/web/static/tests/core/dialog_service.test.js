@@ -129,7 +129,7 @@ test("a popover with an autofocus child can become the UI active element", async
     expect(queryOne(".o_dialog:not(.o_inactive_modal) .modal")).toBe(
         getService("ui").activeElement
     );
-    expect(".btn.o-default-button").toBeFocused();
+    expect(".btn.test").toBeFocused();
 
     click(".btn.test");
     await animationFrame();
