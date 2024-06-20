@@ -2,14 +2,13 @@ const test = QUnit.test; // QUnit.test()
 
 import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
 import { Command } from "@mail/../tests/helpers/command";
 
-import { cookie } from "@web/core/browser/cookie";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
-import { browser } from "@web/core/browser/browser";
 
 QUnit.module("livechat service");
 
@@ -28,7 +27,7 @@ test("persisted session history", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.adminPartnerId,
     });
-    browser.localStorage.setItem(
+    expirableStorage.setItem(
         "im_livechat.saved_state",
         JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
     );
@@ -52,7 +51,7 @@ test("previous operator prioritized", async () => {
         user_ids: [userId],
     });
     pyEnv["im_livechat.channel"].write([livechatChannelId], { user_ids: [Command.link(userId)] });
-    cookie.set("im_livechat_previous_operator", JSON.stringify(previousOperatorId));
+    expirableStorage.setItem("im_livechat_previous_operator", JSON.stringify(previousOperatorId));
     start();
     click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message-author", { text: "John Doe" });
@@ -79,6 +78,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
         `/im_livechat/get_session - ${JSON.stringify({
             channel_id: livechatChannelId,
             anonymous_name: "Visitor",
+            previous_operator_id: null,
             persisted: false,
         })}`,
     ]);
@@ -91,7 +91,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
         `/im_livechat/get_session - ${JSON.stringify({
             channel_id: livechatChannelId,
             anonymous_name: "Visitor",
-            previous_operator_id: `${pyEnv.adminPartnerId}`,
+            previous_operator_id: pyEnv.adminPartnerId,
             temporary_id: -1,
             persisted: true,
         })}`,
