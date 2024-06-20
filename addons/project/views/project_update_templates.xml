@@ -23,6 +23,87 @@
 <h1 style="font-weight: bolder;">Activities</h1>
 </div>
 
+<div name="profitability" t-if="show_profitability">
+<t t-if="project.account_id" name="costs">
+<h3 style="font-weight: bolder"><u>Profitability</u></h3>
+
+<div name="profitability_detail" class="mt-4">
+<table class="table table-striped" t-if="profitability['revenues']['data']">
+<thead class="border-2 border-start-0 border-end-0">
+<tr>
+<th class="fw-bolder" style="width: 55%">Revenues</th>
+<th class="fw-bolder text-end" style="width: 15%">Expected</th>
+<th class="fw-bolder text-end" style="width: 15%">To Invoice</th>
+<th class="fw-bolder text-end" style="width: 15%">Invoiced</th>
+</tr>
+</thead>
+<tbody>
+<tr t-foreach="profitability['revenues']['data']" t-as="revenue">
+<tr class="revenue_data">
+<td t-out="profitability['labels'][revenue['id']]"/>
+<td class="text-end" t-out="format_monetary(revenue['invoiced'] + revenue['to_invoice'])"/>
+<td class="text-end" t-out="format_monetary(revenue['to_invoice'])"/>
+<td class="text-end" t-out="format_monetary(revenue['invoiced'])"/>
+</tr>
+</tr>
+<tfoot>
+<td class="fw-bolder">Total Revenues</td>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['revenues']['total']['invoiced'] + profitability['revenues']['total']['to_invoice'])"/>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['revenues']['total']['to_invoice'])"/>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['revenues']['total']['invoiced'])"/>
+</tfoot>
+</tbody>
+</table>
+
+<table class="table table-striped mt-4 table-bordered" t-if="profitability['costs']['data']">
+<thead>
+<tr>
+<th class="fw-bolder" style="width: 55%">Costs</th>
+<th class="fw-bolder text-end" style="width: 15%">Expected</th>
+<th class="fw-bolder text-end" style="width: 15%">To Bill</th>
+<th class="fw-bolder text-end" style="width: 15%">Billed</th>
+</tr>
+</thead>
+<tbody>
+<tr t-foreach="profitability['costs']['data']" t-as="cost">
+<td t-out="profitability['labels'][cost['id']]"/>
+<td class="text-end" t-out="format_monetary(cost['billed'] + cost['to_bill'])"/>
+<td class="text-end" t-out="format_monetary(cost['to_bill'])"/>
+<td class="text-end" t-out="format_monetary(cost['billed'])"/>
+</tr>
+</tbody>
+<tr>
+<td class="fw-bolder">Total Costs</td>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['billed'] + profitability['costs']['total']['to_bill'])"/>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['to_bill'])"/>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['billed'])"/>
+</tr>
+<tr t-if="profitability['costs']['data'] and profitability['revenues']['data']">
+<td class="fw-bolder align-middle">Total</td>
+<td t-attf-class="#{'text-danger' if profitability['total']['margin'] &lt; 0 else 'text-success'}" style="text-align: right">
+<t t-out="format_monetary(profitability['total']['margin'])"/><br/>
+<t t-if="profitability['expected_percentage']">
+<t t-out="profitability['expected_percentage']"/><t>%</t>
+</t>
+</td>
+<td t-attf-class="#{'text-danger' if profitability['total']['revenues'] &lt; 0 else 'text-success'}" style="text-align: right">
+<t t-out="format_monetary(profitability['total']['revenues'])"/><br/>
+<t t-if="profitability['to_bill_to_invoice_percentage']">
+<t t-out="profitability['to_bill_to_invoice_percentage']"/><t>%</t>
+</t>
+</td>
+<td t-attf-class="#{'text-danger' if profitability['total']['costs'] &lt; 0 else 'text-success'}" style="text-align: right">
+<t t-out="format_monetary(profitability['total']['costs'])"/><br/>
+<t t-if="profitability['billed_invoiced_percentage']">
+<t t-out="profitability['billed_invoiced_percentage']"/><t>%</t>
+</t>
+</td>
+</tr>
+</table>
+</div>
+</t>
+</div>
+
 <div name="milestone" t-if="milestones['show_section']">
 <br/>
 <h3 style="font-weight: bolder"><u>Milestones</u></h3>
