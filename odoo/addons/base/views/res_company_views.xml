@@ -76,39 +76,34 @@
             <field name="model">res.company</field>
             <field name="arch" type="xml">
                 <kanban>
-                    <field name="name"/>
-                    <field name="email"/>
-                    <field name="phone"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
-                                <div t-attf-class="#{!selection_mode ? 'text-center' : ''}">
-                                    <i class="fa fa-building" role="img" aria-label="Enterprise" title="Enterprise"></i> <strong><field name="name"/></strong>
+                        <t t-name="kanban-card">
+                            <div t-attf-class="#{!selection_mode ? 'text-center' : ''}">
+                                <i class="fa fa-building" role="img" aria-label="Enterprise" title="Enterprise"></i> <field class="fw-bold fs-5" name="name"/>
+                            </div>
+                            <hr class="mt4 mb4"/>
+                            <div class="row" t-if="!selection_mode">
+                                <div t-if="record.email.value" class="col-6 text-center">
+                                    <strong>Email:</strong>
                                 </div>
-                                <hr class="mt4 mb4"/>
-                                <div class="row" t-if="!selection_mode">
-                                    <div t-if="record.email.value" class="col-6 text-center">
-                                        <strong>Email:</strong>
-                                    </div>
-                                    <div t-if="record.phone.value" class="col-6 text-center">
-                                        <strong>Phone</strong>
-                                    </div>
-                                    <div t-if="record.email.value" class="col-6 text-center">
-                                        <field name="email"/>
-                                    </div>
-                                    <div t-if="record.phone.value" class="col-6 text-center o_force_ltr">
-                                        <field name="phone"/>
-                                    </div>
+                                <div t-if="record.phone.value" class="col-6 text-center">
+                                    <strong>Phone</strong>
                                 </div>
-                                <div t-else="">
-                                    <div t-if="record.email.value">
-                                        <strong>Email:</strong>
-                                        <field name="email"/>
-                                    </div>
-                                    <div t-if="record.phone.value" class="o_force_ltr">
-                                        <strong>Phone:</strong>
-                                        <field name="phone"/>
-                                    </div>
+                                <div t-if="record.email.value" class="col-6 text-center">
+                                    <field name="email"/>
+                                </div>
+                                <div t-if="record.phone.value" class="col-6 text-center o_force_ltr">
+                                    <field name="phone"/>
+                                </div>
+                            </div>
+                            <div t-else="">
+                                <div t-if="record.email.value">
+                                    <strong>Email:</strong>
+                                    <field name="email"/>
+                                </div>
+                                <div t-if="record.phone.value" class="o_force_ltr">
+                                    <strong>Phone:</strong>
+                                    <field name="phone"/>
                                 </div>
                             </div>
                         </t>

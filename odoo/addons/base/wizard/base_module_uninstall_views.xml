@@ -16,26 +16,21 @@
                         <div class="me-auto p-2 bd-highlight"><h3>Apps to Uninstall</h3></div>
                         <div class="p-2 bd-highlight"><field name="show_all"/> Show All</div>
                     </div>
-                    <field name="module_ids" mode="kanban" class="o_modules_field">
+                    <field name="module_ids" mode="kanban">
                         <kanban create="false" class="o_modules_kanban">
-                            <field name="icon"/>
                             <field name="state"/>
-                            <field name="summary"/>
                                 <templates>
-                                    <t t-name="kanban-box">
-                                        <div class="oe_module_vignette">
-                                            <t t-set="installed" t-value="record.state.raw_value == 'installed'" />
-                                            <img t-attf-src="#{record.icon.value}" class="oe_module_icon" alt="Icon" />
-                                            <div class="oe_module_desc" t-att-title="record.shortdesc.value">
-                                                <h4 class="o_kanban_record_title">
-                                                    <field name="shortdesc" />&amp;nbsp;
-                                                </h4>
-                                                <p class="oe_module_name">
-                                                    <field groups="!base.group_no_one" name="summary" />
-                                                    <code groups="base.group_no_one">
-                                                        <field name="name" /></code>
-                                                </p>
-                                            </div>
+                                    <t t-name="kanban-card" class="flex-row align-items-center">
+                                        <t t-set="installed" t-value="record.state.raw_value == 'installed'" />
+                                        <field name="icon" widget="image_url" style="width: 50px;" alt="Icon"/>
+                                        <div class="ps-2" t-att-title="record.shortdesc.value">
+                                            <field class="fw-bold fs-5 mb-0" name="shortdesc" />
+                                            <p class="text-muted small my-1" style="min-height: 26px; line-height: 1.1;">
+                                                <field groups="!base.group_no_one" name="summary" />
+                                                <code groups="base.group_no_one">
+                                                    <field name="name" />
+                                                </code>
+                                            </p>
                                         </div>
                                     </t>
                                 </templates>
