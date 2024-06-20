@@ -26,3 +26,9 @@ class TestUi(HttpCaseGamification):
         demo = self.user_demo
         demo.karma = forum.karma_post + 1
         self.start_tour("/", 'forum_question', login="demo")
+
+    def test_03_demo_question_embed(self):
+        forum = self.env.ref('website_forum.forum_help')
+        demo = self.user_demo
+        demo.karma = forum.karma_post + 1
+        self.start_tour("/", 'forum_question_embed', login="demo")

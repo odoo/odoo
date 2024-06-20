@@ -1,8 +1,6 @@
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add('forum_question', {
-    url: '/forum/help-1',
-    steps: () => [
+const getTourForumQuestionSteps = (checkURL) => [
     {
         content: "Ask the question in this forum by clicking on the button.",
         trigger: '.o_wforum_ask_btn',
@@ -12,6 +10,7 @@ registry.category("web_tour.tours").add('forum_question', {
         trigger: 'input[name=post_name]',
         run: "edit First Question Title",
     },
+    checkURL,
     {
         trigger: "#wrap:not(:has(input[name=post_name]:value('')))",
     },
@@ -39,9 +38,6 @@ registry.category("web_tour.tours").add('forum_question', {
         content: "Click to post your question.",
         trigger: 'button:contains("Post")',
         run: "click",
-    }, {
-        content: "This page contain new created question.",
-        trigger: '#wrap:has(.fa-star)',
     },
     {
         trigger: ".o_wforum_question:contains(marc demo)",
@@ -51,6 +47,11 @@ registry.category("web_tour.tours").add('forum_question', {
         trigger: ".modal:contains(thanks for posting!) .modal-header button.btn-close",
         run: "click",
     },
+    {
+        content: "This page contain new created question.",
+        trigger: '.o_wforum_post_content:contains("First Question")',
+    },
+    checkURL,
     {
         content: "Check that the code still exists as it was written.",
         trigger: 'div.o_wforum_post_content:contains("First Question <p>code here</p>")',
@@ -69,6 +70,7 @@ registry.category("web_tour.tours").add('forum_question', {
         content: "Check that the content is the same",
         trigger: 'div.odoo-editor-editable p:contains("First Question <p>code here</p>")',
     },
+    checkURL,
     {
         content: "Save changes",
         trigger: 'button:contains("Save Changes")',
@@ -85,6 +87,7 @@ registry.category("web_tour.tours").add('forum_question', {
         trigger: '.note-editable p',
         run: "editor First Answer",
     },
+    checkURL,
     {
         trigger: ".note-editable:not(:has(br))",
     },
@@ -100,5 +103,34 @@ registry.category("web_tour.tours").add('forum_question', {
     }, {
         content: "Congratulations! You just created and post your first question and answer.",
         trigger: '.o_wforum_validate_toggler',
-    }]
+    },
+    checkURL,
+];
+
+registry.category("web_tour.tours").add("forum_question", {
+    steps: () =>
+        getTourForumQuestionSteps({
+            content: "We are still on the non-embedded forum.",
+            trigger: ".website_forum",
+            run: () => {
+                if (window.location.pathname.startsWith("/forum/embed/")) {
+                    console.error("We have switched to the embedded forum.");
+                }
+            },
+        }),
+    url: "/forum/help-1",
+});
+
+registry.category("web_tour.tours").add("forum_question_embed", {
+    steps: () =>
+        getTourForumQuestionSteps({
+            content: "We are still on the embedded forum.",
+            trigger: ".website_forum",
+            run: () => {
+                if (!window.location.pathname.startsWith("/forum/embed/")) {
+                    console.error("We have left the embedded forum.");
+                }
+            },
+        }),
+    url: "/forum/embed/help-1",
 });
