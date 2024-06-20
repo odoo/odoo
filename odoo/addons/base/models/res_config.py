@@ -9,8 +9,8 @@ from ast import literal_eval
 from lxml import etree
 
 from odoo import api, models, _
-from odoo.exceptions import AccessError, RedirectWarning, UserError
-from odoo.tools import ustr
+from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -173,6 +173,48 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
     _name = 'res.config.settings'
     _description = 'Config Settings'
 
+    def init(self):
+        config_parameters = []
+        for field in self._fields.values():
+            if hasattr(field, 'config_parameter') and field.config_parameter:
+                default = None
+                if field.default:
+                    default = field.default(self)
+                    if field.type == 'boolean':
+                        default = str(bool(default))
+                    elif default is False:
+                        default = None
+                    elif field.type == 'many2one':
+                        if isinstance(default, models.BaseModel):
+                            default = str(default.id) if default else None
+                        else:
+                            default = int(default)
+                            default = str(default) if default else None
+                    else:
+                        default = str(default)
+
+                if field.type == 'boolean':
+                    type_ = 'bool'
+                elif field.type in ('integer', 'many2one'):
+                    type_ = 'int'
+                elif field.type == 'float':
+                    type_ = 'float'
+                else:  # ('char', 'selection', 'datetime') <- TODO: check datetime
+                    type_ = 'text'
+
+                try:
+                    self.env['ir.config_parameter']._convert_value(default, type_)
+                except (ValueError, TypeError):
+                    raise ValidationError(_('default value "%(default)s" and its type "%(type)s" are not consistent for key "%(key)s"', default=default, type=type_, key=field.config_parameter))
+                config_parameters.append((field.config_parameter, None if default is False else default, type_))
+        if config_parameters:
+            self.env.cr.execute(SQL("""
+            INSERT INTO ir_config_parameter ("key", "value", "type")
+            VALUES %s
+            ON CONFLICT ("key")
+            DO NOTHING
+            """, SQL(", ").join(config_parameters)))
+
     def _valid_field_parameter(self, field, name):
         return (
             name in ('default_model', 'config_parameter')
@@ -294,30 +336,12 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         WARNING_MESSAGE = "Error when converting value %r of field %s for ir.config.parameter %r"
         for name, icp in classified['config']:
             field = self._fields[name]
-            value = IrConfigParameter.get_param(icp, field.default(self) if field.default else False)
+            value = IrConfigParameter.get(icp)
             if value is not False:
                 if field.type == 'many2one':
-                    try:
-                        # Special case when value is the id of a deleted record, we do not want to
-                        # block the settings screen
-                        value = self.env[field.comodel_name].browse(int(value)).exists().id
-                    except (ValueError, TypeError):
-                        _logger.warning(WARNING_MESSAGE, value, field, icp)
-                        value = False
-                elif field.type == 'integer':
-                    try:
-                        value = int(value)
-                    except (ValueError, TypeError):
-                        _logger.warning(WARNING_MESSAGE, value, field, icp)
-                        value = 0
-                elif field.type == 'float':
-                    try:
-                        value = float(value)
-                    except (ValueError, TypeError):
-                        _logger.warning(WARNING_MESSAGE, value, field, icp)
-                        value = 0.0
-                elif field.type == 'boolean':
-                    value = bool(value)
+                    # Special case when value is the id of a deleted record, we do not want to
+                    # block the settings screen
+                    value = self.env[field.comodel_name].browse(value).exists().id
             res[name] = value
 
         res.update(self.get_values())
@@ -361,21 +385,16 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         for name, icp in classified['config']:
             field = self._fields[name]
             value = self[name]
-            current_value = IrConfigParameter.get_param(icp)
 
             if field.type == 'char':
                 # storing developer keys as ir.config_parameter may lead to nasty
                 # bugs when users leave spaces around them
-                value = (value or "").strip() or False
-            elif field.type in ('integer', 'float'):
-                value = repr(value) if value else False
+                value = (value or "").strip() or False  # TODO double check since it leads to fallback to default
             elif field.type == 'many2one':
                 # value is a (possibly empty) recordset
                 value = value.id
 
-            if current_value == str(value) or current_value == value:
-                continue
-            IrConfigParameter.set_param(icp, value)
+            IrConfigParameter.set(icp, value)
 
     def execute(self):
         """

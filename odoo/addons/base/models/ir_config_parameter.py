@@ -9,7 +9,7 @@ import logging
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools import config, ormcache, mute_logger
+from odoo.tools import config, ormcache, mute_logger, SQL, str2bool
 
 _logger = logging.getLogger(__name__)
 
@@ -35,11 +35,26 @@ class IrConfigParameter(models.Model):
     _allow_sudo_commands = False
 
     key = fields.Char(required=True)
-    value = fields.Text(required=True)
+    value = fields.Text()
+    type = fields.Selection([
+        ('text', 'Text'),
+        ('bool', 'Boolean'),
+        ('int', 'Integer'),
+        ('float', 'Float'),
+    ], string='Parameter Type', default='text')
 
     _sql_constraints = [
         ('key_uniq', 'unique (key)', 'Key must be unique.')
     ]
+
+    @api.constrains('value', 'type')
+    def _check_type(self):
+        for param in self:
+            if param.value is not False:
+                try:
+                    self._convert_value(param.value, param.type)
+                except (ValueError, TypeError):
+                    raise ValidationError(_('value "%(value)s" and its type "%(type)s" are not consistent key "%(key)s"', value=param.value, type=param.type, key=param.key))
 
     @mute_logger('odoo.addons.base.models.ir_config_parameter')
     def init(self, force=False):
@@ -55,6 +70,52 @@ class IrConfigParameter(models.Model):
             params = self.sudo().search([('key', '=', key)])
             if force or not params:
                 params.set_param(key, func())
+
+    @api.model
+    def get(self, key):
+        self.check_access_rights('read')
+        return self._get(key)
+
+    @ormcache('key')
+    def _get(self, key):
+        # we bypass the ORM because get_param() is used in some field's depends,
+        # and must therefore work even when the ORM is not ready to work
+        self.flush_model()
+        self.env.cr.execute(SQL('SELECT "value", "type" FROM ir_config_parameter WHERE key = %s', key))
+        result = self.env.cr.fetchone()
+        if not result:
+            return False
+        value, type_ = result
+        return self._convert_value(value, type_)
+
+    def _convert_value(self, value, type_):
+        if value is None:
+            return False
+        if type_ == 'bool':
+            return str2bool(value)
+        if type_ == 'int':
+            return int(value)
+        if type_ == 'float':
+            return float(value)
+        return value  # 'text'
+
+    @api.model
+    def set(self, key, value):
+        if value == self._get(key):
+            return
+        param = self.search([('key', '=', key)])
+        type_ = param.type
+        if type_ == 'bool':
+            value = str(bool(value))
+        elif value is False:
+            pass
+        elif type_ == 'int':
+            value = str(int(value))
+        elif type_ == 'float':
+            value = str(float(value))
+        else:
+            value = str(value)
+        param.write({'value': value})
 
     @api.model
     def get_param(self, key, default=False):
@@ -94,8 +155,8 @@ class IrConfigParameter(models.Model):
             if value is not False and value is not None:
                 if str(value) != old:
                     param.write({'value': value})
-            else:
-                param.unlink()
+            elif old is not False:
+                param.write({'value': False})
             return old
         else:
             if value is not False and value is not None:
@@ -106,6 +167,18 @@ class IrConfigParameter(models.Model):
     def create(self, vals_list):
         self.env.registry.clear_cache()
         return super(IrConfigParameter, self).create(vals_list)
+
+    def _load_records_create(self, vals_list):
+        key_to_vals = {vals['key']: vals for vals in vals_list}
+        key_to_id = dict.fromkeys(key_to_vals, False)
+        existing_params = self.search([('key', 'in', list(key_to_vals))])
+        for param in existing_params:
+            param.write(key_to_vals.pop(param.key))
+            key_to_id[param.key] = param.id
+        new_params = self.create(key_to_vals.values())
+        for param in new_params:
+            key_to_id[param.key] = param.id
+        return self.browse(key_to_id.values())
 
     def write(self, vals):
         if 'key' in vals:
