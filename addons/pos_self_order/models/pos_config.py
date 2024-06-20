@@ -431,6 +431,7 @@ class PosConfig(models.Model):
         self.ensure_one()
 
         if not self.current_session_id:
+            self._check_before_creating_new_session()
             self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
             self._notify('STATUS', {'status': 'open'})
 

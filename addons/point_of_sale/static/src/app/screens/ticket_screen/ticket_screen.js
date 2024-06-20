@@ -160,7 +160,7 @@ export class TicketScreen extends Component {
             }
         }
         if (this.pos.isOpenOrderShareable()) {
-            this.pos._removeOrdersFromServer();
+            await this.pos._removeOrdersFromServer();
         }
         return true;
     }
