@@ -5,6 +5,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import options from "@web_editor/js/editor/snippets.options";
 import "@website/js/editor/snippets.options";
+import { useChildSubEnv } from "@odoo/owl";
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
@@ -435,6 +436,10 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
 
 // Small override of the MediaDialog to retrieve the attachment ids instead of img elements
 class AttachmentMediaDialog extends MediaDialog {
+    setup() {
+        super.setup();
+        useChildSubEnv({ addFieldImage: true });
+    }
     /**
      * @override
      */
