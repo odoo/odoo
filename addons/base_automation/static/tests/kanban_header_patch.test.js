@@ -67,10 +67,8 @@ test.tags("desktop")("basic grouped rendering with automations", async () => {
             <kanban class="o_kanban_test">
                 <field name="bar" />
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo" />
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo" />
                     </t>
                 </templates>
             </kanban>`,
