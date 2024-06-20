@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_encode
 
 from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.tools import format_amount, formatLang
+from odoo.tools import format_amount, formatLang, float_utils
 
 STATUS_COLOR = {
     'on_track': 20,  # green / success
@@ -113,13 +110,59 @@ class ProjectUpdate(models.Model):
     @api.model
     def _get_template_values(self, project):
         milestones = self._get_milestone_values(project)
+        profitability_values = self._get_profitability_values(project)
+        show_profitability = (profitability_values
+            and profitability_values.get('analytic_account_id')
+            and (profitability_values.get('costs')
+            or profitability_values.get('revenues'))
+        )
+
         return {
             'user': self.env.user,
             'project': project,
+            'show_profitability': show_profitability,
+            'profitability': profitability_values,
             'show_activities': milestones['show_section'],
             'milestones': milestones,
             'format_lang': lambda value, digits: formatLang(self.env, value, digits=digits),
             'format_monetary': lambda value: format_amount(self.env, value, project.currency_id),
+        }
+
+    @api.model
+    def _get_profitability_values(self, project):
+        if not (self.env.user.has_group('project.group_project_manager') and project.analytic_account_id):
+            return {}
+        profitability_items = project._get_profitability_items(False)
+        costs = sum(profitability_items['costs']['total'].values())
+        revenues = sum(profitability_items['revenues']['total'].values())
+        margin = revenues + costs
+
+        billed_cost = profitability_items['costs']['total']['billed']
+        invoiced_revenue = profitability_items['revenues']['total']['invoiced']
+        to_bill_cost = profitability_items['costs']['total']['to_bill']
+        to_invoice_revenue = profitability_items['revenues']['total']['to_invoice']
+
+        cost_percentage = (billed_cost / (invoiced_revenue - billed_cost) * 100) if (billed_cost + invoiced_revenue) != 0 else 0.0
+        revenue_percentage = (to_bill_cost / (to_invoice_revenue - to_bill_cost) * 100) if (to_bill_cost + to_invoice_revenue) != 0 else 0.0
+        return {
+            'analytic_account_id': project.analytic_account_id,
+            'costs': profitability_items['costs'],
+            'revenues': profitability_items['revenues'],
+            'total': {
+                'costs': costs,
+                'revenues': revenues,
+                'margin': margin,
+                'margin_percentage': formatLang(self.env,
+                                                not float_utils.float_is_zero(costs, precision_digits=2) and (margin / -costs) * 100 or 0.0,
+                                                digits=0),
+                'cost_percentage': formatLang(self.env,
+                                                not float_utils.float_is_zero(costs, precision_digits=2) and cost_percentage or 0.0,
+                                                digits=0),
+                'revenue_percentage': formatLang(self.env,
+                                                not float_utils.float_is_zero(costs, precision_digits=2) and revenue_percentage or 0.0,
+                                                digits=0),
+            },
+            'labels': project._get_profitability_labels(),
         }
 
     @api.model
