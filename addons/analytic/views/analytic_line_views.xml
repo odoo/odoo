@@ -121,32 +121,17 @@
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
-                <field name="date"/>
-                <field name="name"/>
                 <field name="account_id"/>
                 <field name="currency_id"/>
-                <field name="amount"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                            <div class="row">
-                                <div class="col-6">
-                                    <strong><span><t t-out="record.name.value"/></span></strong>
-                                </div>
-                                <div class="col-6 text-end">
-                                    <strong><t t-out="record.date.value"/></strong>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 text-muted">
-                                    <span><t t-out="record.account_id.value"/></span>
-                                </div>
-                                <div class="col-6">
-                                    <span class="float-end text-end">
-                                        <field name="amount" widget="monetary"/>
-                                    </span>
-                                </div>
-                            </div>
+                    <t t-name="kanban-card">
+                        <div class="d-flex justify-content-between" >
+                            <field class="fw-bold fs-5" name="name"/>
+                            <field class="text-end fw-bold fs-5" name="date"/>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <field class="text-muted" name="account_id"/>
+                            <field class="justify-content-end" name="amount" widget="monetary"/>
                         </div>
                     </t>
                 </templates>
