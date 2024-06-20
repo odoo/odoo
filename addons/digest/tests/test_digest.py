@@ -247,8 +247,8 @@ class TestDigest(mail_test.MailCommon):
                 [(self.user_employee, self.reference_datetime - relativedelta(days=4))],  # old logs -> tone down
                 [],  # no logs -> tone down
                 # weekly
-                [(self.user_employee, self.reference_datetime - relativedelta(days=8))],
-                [(self.user_employee, self.reference_datetime - relativedelta(days=15))],  # old logs -> tone down
+                [(self.user_employee, self.reference_datetime - relativedelta(days=6))],
+                [(self.user_employee, self.reference_datetime - relativedelta(days=8))],  # old logs -> tone down
                 [],  # no logs -> tone down
                 # monthly
                 [(self.user_employee, self.reference_datetime - relativedelta(days=25))],
