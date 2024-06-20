@@ -16,12 +16,12 @@
                 <xpath expr="//button[@name='button_immediate_install']" position="attributes">
                     <attribute name="invisible">state != 'uninstalled' or (module_type and module_type != 'official')</attribute>
                 </xpath>
-                <xpath expr="//t[@t-name='kanban-menu']/a[@type='edit']" position="attributes">
+                <xpath expr="//t[@t-name='kanban-menu']/a[@type='open']" position="attributes">
                     <attribute name="context">{'module_type': module_type, 'module_name':name}</attribute>
                     <attribute name="type">object</attribute>
                     <attribute name="name">more_info</attribute>
                 </xpath>
-                <xpath expr="//div[hasclass('oe_module_action')]/a[@type='edit']" position="attributes">
+                <xpath expr="//footer/a[@type='edit']" position="attributes">
                     <attribute name="context">{'module_type': module_type, 'module_name':name}</attribute>
                     <attribute name="type">object</attribute>
                     <attribute name="name">more_info</attribute>

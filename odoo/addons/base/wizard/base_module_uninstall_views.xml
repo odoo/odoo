@@ -18,25 +18,21 @@
                     </div>
                     <field name="module_ids" mode="kanban" class="o_modules_field">
                         <kanban create="false" class="o_modules_kanban">
-                            <field name="icon"/>
                             <field name="state"/>
-                            <field name="summary"/>
                                 <templates>
-                                    <t t-name="kanban-box">
-                                        <div class="oe_module_vignette">
-                                            <t t-set="installed" t-value="record.state.raw_value == 'installed'" />
-                                            <img t-attf-src="#{record.icon.value}" class="oe_module_icon" alt="Icon" />
-                                            <div class="oe_module_desc" t-att-title="record.shortdesc.value">
-                                                <h4 class="o_kanban_record_title">
-                                                    <field name="shortdesc" />&amp;nbsp;
-                                                </h4>
-                                                <p class="oe_module_name">
-                                                    <field groups="!base.group_no_one" name="summary" />
-                                                    <code groups="base.group_no_one">
-                                                        <field name="name" /></code>
-                                                </p>
-                                            </div>
-                                        </div>
+                                    <t t-name="kanban-card" class="flex-row align-items-center">
+                                        <aside>
+                                            <field name="icon" widget="image_url" options="{'size': [50, 50]}" alt="Icon"/>
+                                        </aside>
+                                        <main t-att-title="record.shortdesc.value">
+                                            <field class="fw-bold fs-5 mb-0" name="shortdesc" />
+                                            <p class="text-muted small my-1 lh-1">
+                                                <field groups="!base.group_no_one" name="summary" />
+                                                <code groups="base.group_no_one">
+                                                    <field name="name" />
+                                                </code>
+                                            </p>
+                                        </main>
                                     </t>
                                 </templates>
                         </kanban>
