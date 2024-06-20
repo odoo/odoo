@@ -14,3 +14,4 @@ from . import tiktok_history_api
 from . import tiktok_product
 from . import tiktok_product_image
 from . import tiktok_token
+from . import tiktok_brand

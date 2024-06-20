@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tiktok_get_product_form" model="ir.ui.view">
+            <field name="name">Tiktok Get Products</field>
+            <field name="model">tiktok.get.product</field>
+            <field name="arch" type="xml">
+                <form string="Tiktok Get Products">
+                    <p>
+                        Integration Tiktok to System.
+                    </p>
+                    
+                    <group>
+                        <field name="shop_id" required="1" widget="selection"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_jys_tiktok_get_product" model="ir.actions.act_window">
+            <field name="name">Get Products</field>
+            <field name="res_model">tiktok.get.product</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_tiktok_get_product_form"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

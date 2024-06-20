@@ -7,11 +7,11 @@
             <field name="arch" type="xml">
                 <tree string="Tiktok Attribute" create="0">
                     <field name="name"/>
-                    <field name="category_id"/>
                     <field name="attribute_id"/>
                     <field name="attribute_type"/>
-                    <field name="input_type"/>
-                    <field name="is_mandatory"/>
+                    <field name="is_customizable"/>
+                    <field name="is_multiple_selection"/>
+                    <field name="is_requried"/>
                 </tree>
             </field>
         </record>
@@ -29,14 +29,19 @@
                             </h1>
                         </div>
                         <group col="4" colspan="2">
-                            <field name="category_id" readonly="1"/>
-                            <field name="attribute_type" readonly="1"/>
-                            <field name="input_type" readonly="1"/>
                             <field name="attribute_id" readonly="1"/>
-                            <field name="is_mandatory" readonly="1"/>
+                            <field name="attribute_type" readonly="1"/>
+                            <field name="is_customizable" readonly="1"/>
+                            <field name="is_multiple_selection" readonly="1"/>
+                            <field name="is_requried" readonly="1"/>
                         </group>
                         <separator string="Values"/>
-                        <field name="value_ids" nolabel="1" readonly="1"/>
+                        <field name="value_ids" nolabel="1" readonly="1">
+                            <tree>
+                                <field name="name"/>
+                                <field name="value_id"/>
+                            </tree>
+                        </field>
                     </sheet>
                 </form>
             </field>
@@ -60,7 +65,7 @@
                     <sheet>
                         <group col="4" colspan="2">
                             <field name="name" readonly="1"/>
-                            <field name="attribute_id" readonly="1"/>
+                            <field name="value_id" readonly="1"/>
                         </group>
                     </sheet>
                 </form>

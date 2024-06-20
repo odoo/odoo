@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_upload_image_wizard" model="ir.ui.view">
+            <field name="name">upload.image.wizard.form</field>
+            <field name="model">upload.image.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Upload Image">
+                    <p><b>Are you sure you want to upload all images to TikTok?</b></p>
+                    <group><field name="shop_id" required="1"/></group>
+                    <footer>
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_upload_image_wizard" model="ir.actions.act_window">
+            <field name="name">Upload Image</field>
+            <field name="res_model">upload.image.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

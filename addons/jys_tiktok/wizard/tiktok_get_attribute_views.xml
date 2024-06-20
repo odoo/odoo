@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tiktok_get_attribute_form" model="ir.ui.view">
+            <field name="name">Tiktok Get Attribute</field>
+            <field name="model">tiktok.get.attribute</field>
+            <field name="arch" type="xml">
+                <form string="Tiktok Get Attribute">
+                    <p>
+                        Integration Tiktok to System.
+                    </p>
+                    <separator string="Shops"/>
+                    <field name="shop_id" nolabel="1" required="1"/>
+                    
+                    <group colspan="2" col="6">
+                        <field name="locale"/>
+                        <!-- <field name="keyword" placeholder="e.g. Electronic.."/> -->
+                        <field name="category_version"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_jys_tiktok_get_attribute" model="ir.actions.act_window">
+            <field name="name">Get attribute</field>
+            <field name="res_model">tiktok.get.attribute</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_tiktok_get_attribute_form"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

@@ -17,8 +17,18 @@ class StockPicking(models.Model):
     carrier_tracking_ref = fields.Char('Tracking')
     is_tiktok_printed = fields.Boolean('Tiktok')
     date_print_shipped = fields.Datetime('Print Shipped')
-    tiktok_ordersn = fields.Char('Tiktok Ordersn')
-    
+    tiktok_ordersn = fields.Char('Number', compute='_get_tiktok_ordersn', store=True)
+
+    @api.depends('sale_id')
+    def _get_tiktok_ordersn(self):
+        for stock in self:
+            marketplace_number = ''
+            if stock.sale_id:
+                if stock.sale_id.tiktok_shop_id:
+                    marketplace_number = stock.sale_id.tiktok_ordersn
+
+            stock.tiktok_ordersn = marketplace_number
+
     def print_label(self):
         context = self.env.context
         company = self.env.company

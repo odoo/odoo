@@ -6,18 +6,19 @@ class TiktokAttribute(models.Model):
     _description = 'Tiktok Attribute'
 
     name = fields.Char('Name')
-    input_type = fields.Char('Input Type')
-    attribute_type = fields.Char('Attribute Type')
-    
-    value_ids = fields.One2many('tiktok.attribute.value', 'attribute_id', 'Values')
+    attribute_type = fields.Char('Type')
     category_id = fields.Many2one('tiktok.category', 'Category')
-    is_mandatory = fields.Boolean('Mandatory', default=False)
-    attribute_id = fields.Integer('Attribute ID')
+    is_customizable = fields.Boolean('Customizable')
+    is_multiple_selection = fields.Boolean('Multiple Selection')
+    is_requried = fields.Boolean('Requried')
+    attribute_id = fields.Char('Attribute ID')
+    value_ids = fields.One2many('tiktok.attribute.value', 'attribute_id', 'Values')
 
 class TiktokAttributeValue(models.Model):
     _name = 'tiktok.attribute.value'
     _description = 'Tiktok Attribute Value'
 
     name = fields.Char('Name')
+    value_id = fields.Char('Value ID')
     attribute_id = fields.Many2one('tiktok.attribute', 'Attribute')
     

@@ -15,7 +15,7 @@
                         <field name="is_update_image"/>
                     </group>
                     <separator string="Shops"/>
-                    <field name="name" nolabel="1" required="1"/>
+                    <field name="shop_ids" nolabel="1" required="1" widget="many2many_tags"/>
                     
                     <footer>
                         <button name="update_product" string="Confirm" type="object" class="oe_highlight"/>

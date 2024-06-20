@@ -591,8 +591,8 @@ class TiktokGetOrder(models.TransientModel):
                             cancel_order(sale)
 
                     if sale.picking_ids:
-                        for picking in sale.picking_ids:
-                            picking.write({'carrier_tracking_ref': tracking_no})
+                        for pick in sale.picking_ids:
+                            pick.write({'carrier_tracking_ref': tracking_no})
                             
                     updated_count += 1
 

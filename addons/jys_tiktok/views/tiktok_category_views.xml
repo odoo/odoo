@@ -24,9 +24,22 @@
                                 <field name="name" required="1"/>
                             </h1>
                         </div>
-                        <group>
-                            <field name="parent_id"/>
-                        </group>
+                        <field name="tiktok_category_id" readonly="1"/>
+                        <separator string="Rules"/>
+                        <field name="rules_ids" nolabel="1" readonly="1">
+                            <tree>
+                                <field name="name"/>
+                                <field name="tiktok_category_id"/>
+                                <field name="cod"/>
+                                <field name="epr"/>
+                                <field name="package_dimension"/>
+                                <field name="size_sup"/>
+                                <field name="size_req"/>
+                                <field name="certif_id"/>
+                                <field name="certif_req"/>
+                                <field name="url"/>
+                            </tree>
+                        </field>
                     </sheet>
                 </form>
             </field>

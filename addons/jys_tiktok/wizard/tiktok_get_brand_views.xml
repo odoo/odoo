@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tiktok_get_brand_form" model="ir.ui.view">
+            <field name="name">Tiktok Get Brand</field>
+            <field name="model">tiktok.get.brand</field>
+            <field name="arch" type="xml">
+                <form string="Tiktok Get Brand">
+                    <p>
+                        Integration Tiktok to System.
+                    </p>
+                    <separator string="Shops"/>
+                    <field name="shop_id" nolabel="1" required="1"/>
+
+                    <separator string="Optional"/>
+                    <group>
+                        <field name="category_id" options="{'no_create': True, 'no_open': True, 'no_create_edit': True}"/>
+                        <field name="brand_name"/>
+                        <field name="is_authorized"/>
+                        <field name="category_version"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_jys_tiktok_get_brand" model="ir.actions.act_window">
+            <field name="name">Get Brand</field>
+            <field name="res_model">tiktok.get.brand</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_tiktok_get_brand_form"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

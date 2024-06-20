@@ -19,6 +19,10 @@ class ProductTemplate(models.Model):
     attachment_id = fields.Many2one('ir.attachment', 'Attachments')
     upload_product_tt_image_ids = fields.Many2many('ir.attachment', 'res_tiktok_ir_attachment_relation','res_id', 'attachment_id', string="Upload")
 
+    _sql_constraints = [
+        ('tiktok_sku_uniq', 'unique(tiktok_sku)', 'You cannot have more than one product with the same TikTok SKU!')
+    ]
+
     @api.model
     def create(self, vals):
         context = self.env.context
@@ -77,6 +81,19 @@ class ProductTemplate(models.Model):
             },
         }
 
+    def action_upload_image_wizard(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Upload Image',
+            'res_model': 'upload.image.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'active_id': self.id,
+                'default_name': self.name,
+            },
+        }
+
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
@@ -89,6 +106,10 @@ class ProductProduct(models.Model):
 
     attachment_id = fields.Many2one('ir.attachment', 'Attachments')
     upload_product_var_tt_image_ids = fields.Many2many('ir.attachment', 'res_tiktok_var_ir_attachment_relation','res_id', 'attachment_id', string="Upload")
+
+    _sql_constraints = [
+        ('tiktok_variation_sku_uniq', 'unique(tiktok_variation_sku)', 'You cannot have more than one product with the same TikTok Variant SKU!')
+    ]
 
     @api.model
     def create(self, vals):

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tiktok_brand_tree" model="ir.ui.view">
+            <field name="name">tiktok.brand.tree</field>
+            <field name="model">tiktok.brand</field>
+            <field name="arch" type="xml">
+                <tree string="Tiktok Brands" create="1">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_tiktok_brand_form" model="ir.ui.view">
+            <field name="name">tiktok.brand.form</field>
+            <field name="model">tiktok.brand</field>
+            <field name="arch" type="xml">
+                <form string="Tiktok Brands" create="0" edit="0">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" required="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="authorized_status"/>
+                            <field name="brand_status"/>
+                            <field name="brand_id"/>
+                            <field name="is_t1_brand"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_jys_tiktok_brand" model="ir.actions.act_window">
+            <field name="name">Brands</field>
+            <field name="res_model">tiktok.brand</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+        </record>
+
+    </data>
+</odoo>

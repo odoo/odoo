@@ -6,7 +6,7 @@ import hashlib
 import hmac
 import base64
 from datetime import datetime
-from dateutil.relativedelta import relativedelta # type: ignore
+from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from requests.models import PreparedRequest
