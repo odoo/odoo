@@ -96,6 +96,15 @@ class AccountMoveSend(models.TransientModel):
                         'action': not_configured_partners._get_records_action(name=_("Check Partner(s)"))
                     }
 
+                moves_without_bank = self.move_ids.filtered(lambda m: not m.partner_bank_id)
+                if moves_without_bank:
+                    warnings['account_edi_ubl_cii_configure_bank'] = {
+                        'message': _("Please add a Recipient bank in the 'Other Info' tab to generate a complete file."),
+                        'level': 'info',
+                        'action_text': _("View Invoice(s)"),
+                        'action': moves_without_bank._get_records_action(name=_("Check Invoice(s)")),
+                    }
+
             if warnings:
                 wizard.warnings = {**(wizard.warnings or {}), **warnings}
 
