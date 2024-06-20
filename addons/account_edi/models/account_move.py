@@ -36,6 +36,8 @@ class AccountMove(models.Model):
         compute='_compute_edi_show_cancel_button')
     edi_show_abandon_cancel_button = fields.Boolean(
         compute='_compute_edi_show_abandon_cancel_button')
+    edi_show_force_cancel_button = fields.Boolean(
+        compute='_compute_edi_show_force_cancel_button')
 
     @api.depends('edi_document_ids.state')
     def _compute_edi_state(self):
@@ -51,6 +53,11 @@ class AccountMove(models.Model):
                 move.edi_state = 'to_cancel'
             else:
                 move.edi_state = False
+
+    @api.depends('edi_document_ids.state')
+    def _compute_edi_show_force_cancel_button(self):
+        for move in self:
+            move.edi_show_force_cancel_button = move._can_force_cancel()
 
     @api.depends('edi_document_ids.error')
     def _compute_edi_error_count(self):
@@ -267,6 +274,14 @@ class AccountMove(models.Model):
         if not self.env.context.get('skip_account_edi_cron_trigger'):
             self.env.ref('account_edi.ir_cron_edi_network')._trigger()
         return posted
+
+    def button_force_cancel(self):
+        """ Cancel the invoice without waiting for the cancellation request to succeed.
+        """
+        for move in self:
+            to_cancel_edi_documents = move.edi_document_ids.filtered(lambda doc: doc.state == 'to_cancel')
+            move.message_post(body=_("This invoice was canceled while the EDIs %s still had a pending cancellation request.", ", ".join(to_cancel_edi_documents.mapped('edi_format_id.name'))))
+        self.button_cancel()
 
     def button_cancel(self):
         # OVERRIDE

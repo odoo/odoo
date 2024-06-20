@@ -4872,6 +4872,13 @@ class AccountMove(models.Model):
         self.ensure_one()
         return True
 
+    def _can_force_cancel(self):
+        """ Hook to indicate whether it should be possible to force-cancel this invoice,
+        that is, cancel it without waiting for the cancellation request to succeed.
+        """
+        self.ensure_one()
+        return False
+
     @contextmanager
     def _send_only_when_ready(self):
         moves_not_ready = self.filtered(lambda x: not x._is_ready_to_be_sent())

@@ -71,6 +71,7 @@
                 <xpath expr="//button[@name='button_cancel']" position="after">
                     <field name="edi_show_cancel_button" invisible="1"/>
                     <field name="edi_show_abandon_cancel_button" invisible="1"/>
+                    <field name="edi_show_force_cancel_button" invisible="1"/>
                     <button name="button_cancel_posted_moves"
                             string="Request EDI Cancellation"
                             type="object"
@@ -96,6 +97,12 @@
                         invisible="edi_error_count == 0 or edi_blocking_level != 'error'">
                         <div class="o_row">
                             <field name="edi_error_message" />
+                            <button name="button_force_cancel"
+                                string="Force Cancel"
+                                type="object"
+                                groups="account.group_account_invoice"
+                                confirm="Are you sure you want to cancel this invoice without waiting for the EDI document to be canceled?"
+                                invisible="not edi_show_force_cancel_button" />
                             <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" invisible="edi_error_count == 1" />
                             <button name="action_retry_edi_documents_error" type="object" class="oe_link oe_inline" string="Retry" />
                         </div>
