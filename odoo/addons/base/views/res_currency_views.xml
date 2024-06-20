@@ -100,19 +100,15 @@
             <field name="model">res.currency</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
-                    <field name="name"/>
-                    <field name="symbol"/>
-                    <field name="full_name"/>
                     <field name="active"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
+                        <t t-name="kanban-card">
                                 <div class="row mb4">
-                                    <div class="col-2">
-                                        <h3><t t-esc="record.name.value"/></h3>
+                                    <div class="col-2 text-nowrap">
+                                        <field class="fw-bold fs-3" name="name"/>
                                     </div>
                                     <div class="col-5">
-                                        <span class="badge rounded-pill"><t t-esc="record.symbol.value"/></span>
+                                        <span class="badge rounded-pill"><field name="symbol"/></span>
                                     </div>
                                     <div class="col-5 text-end">
                                         <t t-if="! record.active.raw_value"><span class="badge rounded-pill bg-light border">inactive</span></t>
@@ -124,7 +120,6 @@
                                         <t t-if="record.date.raw_value"><div>Last update: <field name="date"/></div></t>
                                     </div>
                                 </div>
-                            </div>
                         </t>
                     </templates>
                 </kanban>
