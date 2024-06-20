@@ -234,9 +234,7 @@ class AccountMove(models.Model):
             price_before_discount = sum(to_update['price_subtotal'] for _dummy, to_update in tax_before_discount['base_lines_to_update'])
             discount = max(0., (price_before_discount - line.price_subtotal))
             surcharge = abs(min(0., (price_before_discount - line.price_subtotal)))
-            totals['total_gross_amount'] += price_before_discount
-            totals['total_general_discounts'] += discount
-            totals['total_general_surcharges'] += surcharge
+            totals['total_gross_amount'] += line.price_subtotal
             base_line = self.env['account.tax']._convert_to_tax_base_line_dict(
                 line, partner=line.partner_id, currency=line.currency_id, product=line.product_id, taxes=line.tax_ids,
                 price_unit=line.price_unit, quantity=line.quantity, discount=line.discount, account=line.account_id,
@@ -254,7 +252,7 @@ class AccountMove(models.Model):
             totals['total_taxes_withheld'] += sum((abs(tax["tax_amount"]) for tax in taxes_withheld_computed))
 
             invoice_line_values.update({
-                'FileReference': self._l10n_es_edi_facturae_get_filename().split('.')[0][:20],
+                'FileReference': self.ref[:20] if self.ref else False,
                 'FileDate': fields.Date.context_today(self),
                 'ItemDescription': line.name,
                 'Quantity': line.quantity,
@@ -362,6 +360,9 @@ class AccountMove(models.Model):
                     'ExchangeRateDetails': need_conv,
                     'ExchangeRate': f"{round(conversion_rate, 4):.4f}",
                     'LanguageName': self._context.get('lang', 'en_US').split('_')[0],
+                    'ReceiverTransactionReference': self.ref[:20] if self.ref else False,
+                    'FileReference': self.ref[:20] if self.ref else False,
+                    'ReceiverContractReference': self.ref[:20] if self.ref else False,
                 },
                 'TaxOutputs': taxes,
                 'TaxesWithheld': taxes_withheld,
