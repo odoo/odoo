@@ -188,22 +188,30 @@ class TestChannelRTC(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.record/insert',
-                    'payload': {
-                        'Thread': [{
-                            'id': channel.id,
-                            'model': 'discuss.channel',
-                            'invitedMembers': [('ADD', [{
-                                'id': channel_member_test_user.id,
-                                'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
-                                'persona': {
-                                    'id': channel_member_test_user.partner_id.id,
-                                    'name': channel_member_test_user.partner_id.name,
-                                    'im_status': channel_member_test_user.partner_id.im_status,
-                                    'type': "partner",
+                    "type": "mail.record/insert",
+                    "payload": {
+                        "Thread": [
+                            {
+                                "id": channel.id,
+                                "model": "discuss.channel",
+                                "invitedMembers": [("ADD", [{"id": channel_member_test_user.id}])],
+                            }
+                        ],
+                        "ChannelMember": [
+                            {
+                                "id": channel_member_test_user.id,
+                                "thread": {
+                                    "id": channel_member_test_user.channel_id.id,
+                                    "model": "discuss.channel",
                                 },
-                            }])],
-                        }],
+                                "persona": {
+                                    "id": channel_member_test_user.partner_id.id,
+                                    "name": channel_member_test_user.partner_id.name,
+                                    "im_status": channel_member_test_user.partner_id.im_status,
+                                    "type": "partner",
+                                },
+                            },
+                        ],
                     },
                 },
             ],
@@ -306,34 +314,51 @@ class TestChannelRTC(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.record/insert',
-                    'payload': {
-                        'Thread': [{
-                            'id': channel.id,
-                            'model': 'discuss.channel',
-                            'invitedMembers': [('ADD', [
-                                {
-                                    'id': channel_member_test_user.id,
-                                    'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
-                                    'persona': {
-                                        'id': channel_member_test_user.partner_id.id,
-                                        'name': channel_member_test_user.partner_id.name,
-                                        'im_status': channel_member_test_user.partner_id.im_status,
-                                        'type': "partner",
-                                    },
+                    "type": "mail.record/insert",
+                    "payload": {
+                        "Thread": [
+                            {
+                                "id": channel.id,
+                                "model": "discuss.channel",
+                                "invitedMembers": [
+                                    (
+                                        "ADD",
+                                        [
+                                            {"id": channel_member_test_user.id},
+                                            {"id": channel_member_test_guest.id},
+                                        ],
+                                    )
+                                ],
+                            }
+                        ],
+                        "ChannelMember": [
+                            {
+                                "id": channel_member_test_user.id,
+                                "thread": {
+                                    "id": channel_member_test_user.channel_id.id,
+                                    "model": "discuss.channel",
                                 },
-                                {
-                                    'id': channel_member_test_guest.id,
-                                    'thread': {'id': channel_member_test_guest.channel_id.id, 'model': "discuss.channel"},
-                                    'persona': {
-                                        'id': channel_member_test_guest.guest_id.id,
-                                        'name': channel_member_test_guest.guest_id.name,
-                                        'im_status': channel_member_test_guest.guest_id.im_status,
-                                        'type': "guest",
-                                    },
+                                "persona": {
+                                    "id": channel_member_test_user.partner_id.id,
+                                    "name": channel_member_test_user.partner_id.name,
+                                    "im_status": channel_member_test_user.partner_id.im_status,
+                                    "type": "partner",
                                 },
-                            ])],
-                        }],
+                            },
+                            {
+                                "id": channel_member_test_guest.id,
+                                "thread": {
+                                    "id": channel_member_test_guest.channel_id.id,
+                                    "model": "discuss.channel",
+                                },
+                                "persona": {
+                                    "id": channel_member_test_guest.guest_id.id,
+                                    "name": channel_member_test_guest.guest_id.name,
+                                    "im_status": channel_member_test_guest.guest_id.im_status,
+                                    "type": "guest",
+                                },
+                            },
+                        ],
                     },
                 },
             ],
@@ -797,34 +822,51 @@ class TestChannelRTC(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.record/insert',
-                    'payload': {
-                        'Thread': [{
-                            'id': channel.id,
-                            'model': 'discuss.channel',
-                            'invitedMembers': [('ADD', [
-                                {
-                                    'id': channel_member_test_user.id,
-                                    'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
-                                    'persona': {
-                                        'id': channel_member_test_user.partner_id.id,
-                                        'name': channel_member_test_user.partner_id.name,
-                                        'im_status': channel_member_test_user.partner_id.im_status,
-                                        'type': "partner",
-                                    },
+                    "type": "mail.record/insert",
+                    "payload": {
+                        "Thread": [
+                            {
+                                "id": channel.id,
+                                "model": "discuss.channel",
+                                "invitedMembers": [
+                                    (
+                                        "ADD",
+                                        [
+                                            {"id": channel_member_test_user.id},
+                                            {"id": channel_member_test_guest.id},
+                                        ],
+                                    )
+                                ],
+                            }
+                        ],
+                        "ChannelMember": [
+                            {
+                                "id": channel_member_test_user.id,
+                                "thread": {
+                                    "id": channel_member_test_user.channel_id.id,
+                                    "model": "discuss.channel",
                                 },
-                                {
-                                    'id': channel_member_test_guest.id,
-                                    'thread': {'id': channel_member_test_guest.channel_id.id, 'model': "discuss.channel"},
-                                    'persona': {
-                                        'id': channel_member_test_guest.guest_id.id,
-                                        'name': channel_member_test_guest.guest_id.name,
-                                        'im_status': channel_member_test_guest.guest_id.im_status,
-                                        'type': "guest",
-                                    },
+                                "persona": {
+                                    "id": channel_member_test_user.partner_id.id,
+                                    "name": channel_member_test_user.partner_id.name,
+                                    "im_status": channel_member_test_user.partner_id.im_status,
+                                    "type": "partner",
                                 },
-                            ])],
-                        }],
+                            },
+                            {
+                                "id": channel_member_test_guest.id,
+                                "thread": {
+                                    "id": channel_member_test_guest.channel_id.id,
+                                    "model": "discuss.channel",
+                                },
+                                "persona": {
+                                    "id": channel_member_test_guest.guest_id.id,
+                                    "name": channel_member_test_guest.guest_id.name,
+                                    "im_status": channel_member_test_guest.guest_id.im_status,
+                                    "type": "guest",
+                                },
+                            },
+                        ],
                     },
                 },
             ],

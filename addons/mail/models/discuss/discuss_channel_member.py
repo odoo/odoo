@@ -431,9 +431,27 @@ class ChannelMember(models.Model):
             invitation_notifications.append((target, "mail.record/insert", store.get_result()))
         self.env['bus.bus']._sendmany(invitation_notifications)
         if members:
-            channel_data = {'id': self.channel_id.id, 'model': 'discuss.channel'}
-            channel_data['invitedMembers'] = [('ADD', list(members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id': True, 'name': True, 'im_status': True}, 'guest': {'id': True, 'name': True, 'im_status': True}}}).values()))]
+            channel_data = {
+                "id": self.channel_id.id,
+                "model": "discuss.channel",
+                "invitedMembers": [("ADD", [{"id": member.id} for member in members])],
+            }
             store = Store("Thread", channel_data)
+            store.add(
+                "ChannelMember",
+                list(
+                    members._discuss_channel_member_format(
+                        fields={
+                            "id": True,
+                            "channel": {},
+                            "persona": {
+                                "partner": {"id": True, "name": True, "im_status": True},
+                                "guest": {"id": True, "name": True, "im_status": True},
+                            },
+                        }
+                    ).values()
+                ),
+            )
             self.env["bus.bus"]._sendone(self.channel_id, "mail.record/insert", store.get_result())
         return members
 
