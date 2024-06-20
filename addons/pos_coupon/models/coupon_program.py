@@ -82,11 +82,13 @@ class CouponProgram(models.Model):
     def _compute_valid_partner_ids(self):
         domain_partners = {}
         for program in self:
-            partner_ids = domain_partners.get(program.rule_partners_domain)
-            if partner_ids is None:
-                domain = ast.literal_eval(program.rule_partners_domain) if program.rule_partners_domain else []
-                partner_ids = self.env["res.partner"].search(domain, order="id").ids
-                domain_partners[program.rule_partners_domain] = partner_ids
+            partner_ids = []
+            if program.rule_partners_domain and program.rule_partners_domain != "[]":
+                partner_ids = domain_partners.get(program.rule_partners_domain)
+                if partner_ids is None:
+                    domain = ast.literal_eval(program.rule_partners_domain)
+                    partner_ids = self.env["res.partner"].search(domain, order="id").ids
+                    domain_partners[program.rule_partners_domain] = partner_ids
             program.valid_partner_ids = partner_ids
 
     @api.depends('pos_order_ids')
