@@ -697,6 +697,41 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["switch to form - resId: 1 activeIds: 1,2,3,4"]);
     });
 
+    QUnit.test("editable readonly list with open_form_view", async function (assert) {
+        serverData.models.foo.fields.foo_o2m = {
+            string: "Foo O2M",
+            type: "one2many",
+            relation: "foo",
+        };
+        serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
+        serverData.models.foo.records.push({ id: 6, bar: true, foo: "yyy" });
+        serverData.models.foo.records[0].foo_o2m = [5, 6];
+        await makeView({
+            type: "form",
+            resModel: "foo",
+            serverData,
+            resId: 1,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="foo_o2m" readonly="1">
+                            <tree editable="top" open_form_view="1">
+                                <field name="foo"/>
+                                <field name="bar"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            `,
+        });
+        assert.containsN(
+            target,
+            "td.o_list_record_open_form_view",
+            2,
+            "button to open form view should be present on each rows"
+        );
+    });
+
     QUnit.test(
         "export feature in list for users not in base.group_allow_export",
         async function (assert) {
