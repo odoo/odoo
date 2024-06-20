@@ -670,3 +670,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_snippet_carousel(self):
         self.start_tour('/', 'snippet_carousel', login='admin')
+
+    def test_snippet_visibility_option(self):
+        self.start_tour("/", "snippet_visibility_option", login="admin")
