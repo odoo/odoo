@@ -112,9 +112,12 @@ class ProjectUpdate(models.Model):
     @api.model
     def _get_template_values(self, project):
         milestones = self._get_milestone_values(project)
+        profitability_values, show_profitability = project._get_profitability_values()
         return {
             'user': self.env.user,
             'project': project,
+            'profitability': profitability_values,
+            'show_profitability': show_profitability,
             'show_activities': milestones['show_section'],
             'milestones': milestones,
             'format_lang': lambda value, digits: formatLang(self.env, value, digits=digits),

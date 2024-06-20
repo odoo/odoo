@@ -838,6 +838,11 @@ class ProjectProject(models.Model):
             })
         return buttons
 
+    def _get_profitability_values(self):
+        if not self.allow_billable:
+            return {}, False
+        return super()._get_profitability_values()
+
     # ---------------------------------------------------
     # Actions
     # ---------------------------------------------------
