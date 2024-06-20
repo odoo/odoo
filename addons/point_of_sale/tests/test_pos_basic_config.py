@@ -7,6 +7,7 @@ from odoo import fields
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
+from datetime import datetime, timedelta
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -1082,3 +1083,28 @@ class TestPoSBasicConfig(TestPoSCommon):
             {'account_id': self.tax_received_account.id, 'balance': -9.72, 'reconciled': False},
             {'account_id': self.receivable_account.id, 'balance': 117.72, 'reconciled': True},
         ])
+
+    def test_limited_products_loading(self):
+        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', 3)
+
+        # Make the service products that are available in the pos inactive.
+        # We don't need them to test the loading of 'consu' products.
+        self.env['product.template'].search([('available_in_pos', '=', True), ('type', '=', 'service')]).write({'active': False})
+
+        session = self.open_new_session(0)
+
+        def get_top_product_ids(count):
+            data = session.load_data([])
+            return [p['id'] for p in data['product.product']['data'][:count]]
+
+        self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=1))
+        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product1, 1)])])
+        self.assertEqual(get_top_product_ids(1), [self.product1.id])
+
+        self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=2))
+        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product2, 1)])])
+        self.assertEqual(get_top_product_ids(2), [self.product2.id, self.product1.id])
+
+        self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=3))
+        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product3, 1)])])
+        self.assertEqual(get_top_product_ids(3), [self.product3.id, self.product2.id, self.product1.id])

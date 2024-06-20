@@ -731,8 +731,8 @@ class PosConfig(models.Model):
         query = f"""
             WITH pm AS (
                   SELECT product_id,
-                         Max(write_date) date
-                    FROM stock_quant
+                         MAX(write_date) date
+                    FROM stock_move_line
                 GROUP BY product_id
             )
                SELECT product_product.id
@@ -740,17 +740,18 @@ class PosConfig(models.Model):
             LEFT JOIN pm ON product_product.id=pm.product_id
                 WHERE {where_clause}
              ORDER BY product_product__product_tmpl_id.is_favorite DESC,
-                      product_product__product_tmpl_id.type DESC,
-                      COALESCE(pm.date, product_product.write_date) DESC
+                      CASE WHEN product_product__product_tmpl_id.type = 'service' THEN 1 ELSE 0 END DESC,
+                      pm.date DESC NULLS LAST,
+                      product_product.write_date DESC
                 LIMIT %s
         """
         self.env.cr.execute(query, params + [self.get_limited_product_count()])
         product_ids = self.env.cr.fetchall()
-        products = self.env['product.product'].search([('id', 'in', product_ids)])
+        products = self.env['product.product'].browse([p[0] for p in product_ids])
         product_combo = products.filtered(lambda p: p['type'] == 'combo')
         product_in_combo = product_combo.combo_ids.combo_line_ids.product_id
         products_available = products | product_in_combo
-        return products_available.read(fields)
+        return products_available.read(fields, load=False)
 
     def get_limited_product_count(self):
         default_limit = 20000
