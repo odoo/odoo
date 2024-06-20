@@ -134,8 +134,8 @@ QUnit.module("Base Import Tests", (hooks) => {
             arch: `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div><field name="foo"/></div>
+                        <t t-name="kanban-card">
+                            <field name="foo"/>
                         </t>
                     </templates>
                 </kanban>`,
@@ -160,8 +160,8 @@ QUnit.module("Base Import Tests", (hooks) => {
                 arch: `
                     <kanban create="0">
                         <templates>
-                            <t t-name="kanban-box">
-                                <div><field name="foo"/></div>
+                            <t t-name="kanban-card">
+                                <field name="foo"/>
                             </t>
                         </templates>
                     </kanban>`,
@@ -184,8 +184,8 @@ QUnit.module("Base Import Tests", (hooks) => {
                 arch: `
                     <kanban import="0">
                         <templates>
-                            <t t-name="kanban-box">
-                                <div><field name="foo"/></div>
+                            <t t-name="kanban-card">
+                                <field name="foo"/>
                             </t>
                         </templates>
                     </kanban>`,
