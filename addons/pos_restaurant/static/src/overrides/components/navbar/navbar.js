@@ -25,7 +25,7 @@ patch(Navbar.prototype, {
             const order = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
             this.pos.set_order(order);
             if (order.table_id) {
-                this.pos.setTable(order.table_id);
+                await this.pos.setTable(order.table_id);
             }
             this.pos.orderToTransferUuid = false;
             this.pos.showScreen("ProductScreen");

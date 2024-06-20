@@ -341,14 +341,22 @@ export class PaymentScreen extends Component {
                 );
 
                 if (printResult && this.pos.config.iface_print_skip_screen) {
-                    this.currentOrder.set_screen_data({ name: "ReceiptScreen" });
-                    this.pos.add_new_order();
+                    this.pos.get_order().set_screen_data({ name: "" });
+                    this.currentOrder.uiState.locked = true;
+                    this.selectNextOrder();
                     nextScreen = "ProductScreen";
                 }
             }
         }
 
         this.pos.showScreen(nextScreen);
+    }
+    selectNextOrder() {
+        if (this.pos.get_order().originalSplittedOrder) {
+            this.pos.selectedOrderUuid = this.pos.get_order().originalSplittedOrder.uuid;
+        } else {
+            this.pos.add_new_order();
+        }
     }
     /**
      * This method is meant to be overriden by localization that do not want to print the invoice pdf
