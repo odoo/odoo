@@ -1,5 +1,4 @@
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
-import { TourError } from "@web_tour/tour_service/tour_utils";
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
 
@@ -22,7 +21,7 @@ export function mergeTableHelpers(childName, parentName) {
             trigger: `div.table div.label:contains("${parentName}")`,
             run: () => {
                 if ($(`div.table div.label:contains('${parentName}')`).length < 2) {
-                    throw new TourError("Tables aren't merged");
+                    console.error("Tables aren't merged");
                 }
             },
         },
@@ -36,7 +35,7 @@ export function checkMergeTableIsCancelHelpers() {
             trigger: 'div.table div.label:contains("4")',
             run: () => {
                 if ($("div.table div.label:contains('4')").length !== 1) {
-                    throw new TourError("Table is still merge");
+                    console.error("Table is still merge");
                 }
             },
         },
@@ -45,7 +44,7 @@ export function checkMergeTableIsCancelHelpers() {
             trigger: 'div.table div.label:contains("5")',
             run: () => {
                 if ($("div.table div.label:contains('5')").length !== 1) {
-                    throw new TourError("Table is still merge");
+                    console.error("Table is still merge");
                 }
             },
         },

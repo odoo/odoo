@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { stepUtils, TourError } from "@web_tour/tour_service/tour_utils";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 import configuratorTourUtils from "@test_sale_product_configurators/js/tour_utils";
 import { queryFirst } from "@odoo/hoot-dom";
 
@@ -58,7 +58,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour
         );
         let newVariantImage = el?.getAttribute("src");
         if (newVariantImage !== optionVariantImage) {
-            throw new TourError('image variant option src changed');
+            console.error('image variant option src changed');
         }
     }
 }, {
