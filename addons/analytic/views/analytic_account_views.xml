@@ -83,23 +83,15 @@
             <field name="model">account.analytic.account</field>
             <field name="arch" type="xml">
                <kanban class="o_kanban_mobile">
-                   <field name="display_name"/>
-                   <field name="balance"/>
                    <field name="currency_id"/>
                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                                <div t-attf-class="#{!selection_mode ? 'text-center' : ''}">
-                                   <strong><span><field name="display_name"/></span></strong>
-                                </div>
-                                <hr class="mt8 mb8"/>
-                                <div class="row">
-                                    <div t-attf-class="col-12 #{!selection_mode ? 'text-center' : ''}">
-                                        <span>
-                                            Balance: <field name="balance" widget="monetary"/>
-                                        </span>
-                                    </div>
-                                </div>
+                        <t t-name="kanban-card">
+                            <div t-attf-class="#{!selection_mode ? 'text-center' : ''}">
+                                <field class="fw-bold fs-5" name="display_name"/>
+                            </div>
+                            <hr class="mt-2 mb-2"/>
+                            <div t-attf-class="#{!selection_mode ? 'text-center' : ''}">
+                                Balance: <field name="balance" widget="monetary"/>
                             </div>
                         </t>
                     </templates>
