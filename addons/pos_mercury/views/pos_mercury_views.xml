@@ -83,9 +83,9 @@
           <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
           <field name="arch" type="xml">
             <xpath expr="//field[@name='amount']" position="before">
-              <field name="mercury_prefixed_card_number" string="Card Number"/>
-              <field name="mercury_card_brand"/>
-              <field name="mercury_card_owner_name"/>
+              <field name="mercury_prefixed_card_number" string="Card Number" optional="hide"/>
+              <field name="mercury_card_brand" optional="hide"/>
+              <field name="mercury_card_owner_name" optional="hide"/>
             </xpath>
           </field>
         </record>

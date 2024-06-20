@@ -58,9 +58,51 @@
                 </group>
                 <notebook colspan="4">
                     <page string="Products" name="products">
-                        <field name="lines" colspan="4" nolabel="1" readonly="state != 'draft'">
-                            <tree string="Order lines" editable="bottom">
+                      <field name="lines" colspan="4" nolabel="1" readonly="state != 'draft'" mode="tree,kanban">
+                            <kanban class="o_kanban_mobile">
+                                <field name="price_subtotal"/>
+                                <field name="price_unit"/>
+                                <field name="company_id"/>
                                 <field name="full_product_name"/>
+                                <field name="qty"/>
+                                <field name="product_uom_id"/>
+                                <field name="price_subtotal_incl"/>
+                                <field name="refunded_orderline_id"/>
+                                <t t-name="kanban-box">
+                                    <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                            <div class="row g-0">
+                                                <div class="col-2 pe-3">
+                                                    <img t-att-src="kanban_image('product.product', 'image_128', record.product_id.raw_value)" t-att-title="record.product_id.value" t-att-alt="record.product_id.value" style="max-width: 100%;"/>
+                                                </div>
+                                                <div class="col-8">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <strong t-out="record.full_product_name.value" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12 text-muted">
+                                                            Quantity: <t t-out="record.qty.value"/> <t t-out="record.product_uom_id.value"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12 text-muted">
+                                                            Unit price: <field name="price_unit" widget="monetary"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="col">
+                                                        <field name="price_subtotal_incl" widget="monetary" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                            </kanban>
+                            <tree string="Order lines" editable="bottom">
+                                <field name="full_product_name" optional="hide" readonly="1"/>
+                                <field name="product_id" widget="product_label_section_and_note_field" />
                                 <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                 <field name="qty"/>
                                 <field name="customer_note" optional="hide"/>
@@ -80,7 +122,7 @@
                             </tree>
                             <form string="Order lines">
                                 <group col="4">
-                                    <field name="full_product_name"/>
+                                    <field name="product_id" />
                                     <field name="qty"/>
                                     <field name="discount"/>
                                     <field name="price_unit" widget="monetary"/>
@@ -91,6 +133,7 @@
                                     <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                     <field name="notice"/>
                                     <field name="currency_id" invisible="1"/>
+                                    <field name="full_product_name" readonly="1" />
                                 </group>
                             </form>
                         </field>
@@ -98,21 +141,17 @@
                             <field name="amount_tax"
                                    force_save="1"
                                    widget="monetary"/>
-                            <div class="oe_subtotal_footer_separator oe_inline o_td_label">
-                                <label for="amount_total" />
-                            </div>
                             <field name="amount_total"
                                    force_save="1"
-                                   nolabel="1"
-                                   class="oe_subtotal_footer_separator"
+                                   class="h3"
                                    widget="monetary"/>
-                            <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <div class="oe_inline o_td_label">
                                 <label class="o_form_label_readonly" for="amount_paid" string="Total Paid (with rounding)"/>
                             </div>
                             <field name="amount_paid"
                                 nolabel="1"
-                                class="oe_subtotal_footer_separator"
                                 widget="monetary"
+                                class="h3"
                                 invisible="amount_paid == 'amount_total'"
                                 readonly="state != 'draft'"/>
                             <label for="margin"/>
@@ -132,7 +171,7 @@
                         <field name="payment_ids" colspan="4" nolabel="1">
                             <tree string="Payments">
                                 <field name="currency_id" column_invisible="True" />
-                                <field name="payment_date"/>
+                                <field name="payment_date" optional="hide"/>
                                 <field name="payment_method_id"/>
                                 <field name="amount"/>
                             </tree>
