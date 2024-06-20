@@ -66,7 +66,7 @@
                     name="waiting_for_me_manager"
                     groups="hr_holidays.group_hr_holidays_user"/>
                 <separator/>
-                <filter domain="[('state','in',('confirm','validate1'))]" string="First Approval" name="approve"/>
+                <filter domain="[('state', '=', 'confirm')]" string="First Approval" name="approve"/>
                 <filter domain="[('state', '=', 'validate1')]" string="Second Approval" name="second_approval"/>
                 <filter string="Approved" domain="[('state', '=', 'validate')]" name="validated"/>
                 <separator/>
@@ -572,6 +572,9 @@
         <field name="mode">primary</field>
         <field name="priority">33</field>
         <field name="arch" type="xml">
+            <field name='employee_id' position="after">
+                <field name="department_id"/>
+            </field>
             <xpath expr="//filter[@name='my_leaves']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>

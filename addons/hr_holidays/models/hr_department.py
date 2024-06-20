@@ -35,7 +35,7 @@ class Department(models.Model):
              ('state', '=', 'confirm')],
             ['department_id'], ['__count'])
         absence_data = Requests._read_group(
-            [('department_id', 'in', self.ids), ('state', 'not in', ['cancel', 'refuse']),
+            [('department_id', 'in', self.ids), ('state', '=', 'validate'),
              ('date_from', '<=', today_end), ('date_to', '>=', today_start)],
             ['department_id'], ['__count'])
 
