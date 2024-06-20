@@ -336,6 +336,7 @@ export class MockServer {
     constructor() {
         // Set default routes
         this.onRpc("/web/action/load", this.mockActionLoad);
+        this.onRpc("/web/action/load_breadcrumbs", this.mockActionLoadBreadcrumbs);
         this.onRpc("/web/bundle", this.mockBundle, { pure: true });
         this.onRpc("/web/dataset/call_kw", this.mockCallKw, { alwaysReturns: true });
         this.onRpc("/web/dataset/call_button", this.mockCallKw, { alwaysReturns: true });
@@ -513,6 +514,29 @@ export class MockServer {
         }
 
         Object.values(this.models).forEach((model) => model._applyComputesAndValidate());
+    }
+
+    /**
+     * @param {string | number | false} id
+     */
+    getAction(id) {
+        const action =
+            this.actions[id] ||
+            Object.values(this.actions).find((action) => {
+                return action.xml_id === id || action.path === id;
+            });
+        if (!action) {
+            throw makeServerError({
+                errorName: "odoo.addons.web.controllers.action.MissingActionError",
+                message: `The action ${JSON.stringify(id)} does not exist`,
+            });
+        }
+        if (action.type === "ir.actions.act_window") {
+            action["embedded_action_ids"] = this.embedded_actions.filter(
+                (el) => el && el.parent_action_id === id
+            );
+        }
+        return action;
     }
 
     /**
@@ -899,23 +923,29 @@ export class MockServer {
     /** @type {RouteCallback} */
     async mockActionLoad(request) {
         const { params } = await request.json();
-        const action =
-            this.actions[params.action_id] ||
-            Object.values(this.actions).find((action) => {
-                return action.xml_id === params.action_id || action.path === params.action_id;
-            });
-        if (!action) {
-            throw makeServerError({
-                errorName: "odoo.addons.web.controllers.action.MissingActionError",
-                message: `The action ${JSON.stringify(params.action_id)} does not exist`,
-            });
-        }
-        if (action.type === "ir.actions.act_window") {
-            action["embedded_action_ids"] = this.embedded_actions.filter(
-                (el) => el && el.parent_action_id === params.action_id
-            );
-        }
-        return action;
+        return this.getAction(params.action_id);
+    }
+
+    /** @type {RouteCallback} */
+    async mockActionLoadBreadcrumbs(request) {
+        const { params } = await request.json();
+        const { actions } = params;
+        return actions.map(({ action: actionId, model, resId }) => {
+            if (actionId) {
+                const action = this.getAction(actionId);
+                if (resId) {
+                    return this.env[action.res_model].read([resId], ["display_name"])[0]
+                        .display_name;
+                }
+                return action.name;
+            } else if (model) {
+                if (resId) {
+                    return this.models[model].records[resId].display_name;
+                }
+                throw new Error("Actions with a model should also have a resId");
+            }
+            throw new Error("Actions should have either an action (id or path) or a model");
+        });
     }
 
     /** @type {RouteCallback} */
