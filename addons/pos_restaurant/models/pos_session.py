@@ -8,11 +8,57 @@ class PosSession(models.Model):
     _inherit = 'pos.session'
 
     @api.model
+<<<<<<< HEAD
     def _load_pos_data_models(self, config_id):
         data = super()._load_pos_data_models(config_id)
         if self.config_id.module_pos_restaurant:
             data += ['restaurant.floor', 'restaurant.table']
         return data
+||||||| parent of 7b85201f70ec (temp)
+    def _load_onboarding_data(self):
+        super()._load_onboarding_data()
+        convert.convert_file(self.env, 'pos_restaurant', 'data/pos_restaurant_onboarding.xml', None, mode='init', kind='data')
+        restaurant_config = self.env.ref('pos_restaurant.pos_config_main_restaurant', raise_if_not_found=False)
+        if restaurant_config:
+            convert.convert_file(self.env, 'pos_restaurant', 'data/pos_restaurant_onboarding_main_config.xml', None, mode='init', kind='data')
+            if len(restaurant_config.session_ids.filtered(lambda s: s.state == 'opened')) == 0:
+                self.env['pos.session'].create({
+                    'config_id': restaurant_config.id,
+                    'user_id': self.env.ref('base.user_admin').id,
+                })
+            convert.convert_file(self.env, 'pos_restaurant', 'data/pos_restaurant_onboarding_open_session.xml', None, mode='init', kind='data')
+
+    def _after_load_onboarding_data(self):
+        super()._after_load_onboarding_data()
+        configs = self.config_id.filtered('module_pos_restaurant')
+        if configs:
+            configs.with_context(bypass_categories_forbidden_change=True).write({
+                'limit_categories': True,
+                'iface_available_categ_ids': [Command.link(self.env.ref('pos_restaurant.food').id), Command.link(self.env.ref('pos_restaurant.drinks').id)]
+            })
+=======
+    def _load_onboarding_data(self):
+        super()._load_onboarding_data()
+        convert.convert_file(self.env, 'pos_restaurant', 'data/pos_restaurant_onboarding.xml', None, mode='init', noupdate=True, kind='data')
+        restaurant_config = self.env.ref('pos_restaurant.pos_config_main_restaurant', raise_if_not_found=False)
+        if restaurant_config:
+            convert.convert_file(self.env, 'pos_restaurant', 'data/pos_restaurant_onboarding_main_config.xml', None, mode='init', noupdate=True, kind='data')
+            if len(restaurant_config.session_ids.filtered(lambda s: s.state == 'opened')) == 0:
+                self.env['pos.session'].create({
+                    'config_id': restaurant_config.id,
+                    'user_id': self.env.ref('base.user_admin').id,
+                })
+            convert.convert_file(self.env, 'pos_restaurant', 'data/pos_restaurant_onboarding_open_session.xml', None, mode='init', noupdate=True, kind='data')
+
+    def _after_load_onboarding_data(self):
+        super()._after_load_onboarding_data()
+        configs = self.config_id.filtered('module_pos_restaurant')
+        if configs:
+            configs.with_context(bypass_categories_forbidden_change=True).write({
+                'limit_categories': True,
+                'iface_available_categ_ids': [Command.link(self.env.ref('pos_restaurant.food').id), Command.link(self.env.ref('pos_restaurant.drinks').id)]
+            })
+>>>>>>> 7b85201f70ec (temp)
 
     @api.model
     def _set_last_order_preparation_change(self, order_ids):

@@ -1788,6 +1788,84 @@ class PosSession(models.Model):
     def _pos_has_valid_product(self):
         return self.env['product.product'].sudo().search_count([('available_in_pos', '=', True), ('list_price', '>=', 0), ('id', 'not in', self.env['pos.config']._get_special_products().ids), '|', ('active', '=', False), ('active', '=', True)], limit=1) > 0
 
+<<<<<<< HEAD
+||||||| parent of 7b85201f70ec (temp)
+    @api.model
+    def _load_onboarding_data(self):
+        if not self.env.user.has_group("point_of_sale.group_pos_user"):
+            raise AccessDenied()
+        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', kind='data')
+        shop_config = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
+        if shop_config and shop_config.active:
+            self._load_onboarding_main_config_data(shop_config)
+
+    @api.model
+    def _load_onboarding_main_config_data(self, shop_config):
+        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding_main_config.xml', None, mode='init', kind='data')
+        if len(shop_config.session_ids.filtered(lambda s: s.state == 'opened')) == 0:
+            self.env['pos.session'].create({
+                'config_id': shop_config.id,
+                'user_id': self.env.ref('base.user_admin').id,
+            })
+
+    def _after_load_onboarding_data(self):
+        config = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
+        if config:
+            config.with_context(bypass_categories_forbidden_change=True).write({
+                'limit_categories': True,
+                'iface_available_categ_ids': [Command.link(self.env.ref('point_of_sale.pos_category_miscellaneous').id), Command.link(self.env.ref('point_of_sale.pos_category_desks').id), Command.link(self.env.ref('point_of_sale.pos_category_chairs').id)]
+            })
+
+    def load_product_frontend(self):
+        allowed = not self._pos_has_valid_product()
+        if allowed:
+            self.sudo()._load_onboarding_data()
+            self._after_load_onboarding_data()
+
+        return {
+            'models_data': self.get_onboarding_data(),
+            'successful': allowed,
+        }
+
+=======
+    @api.model
+    def _load_onboarding_data(self):
+        if not self.env.user.has_group("point_of_sale.group_pos_user"):
+            raise AccessDenied()
+        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', noupdate=True, kind='data')
+        shop_config = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
+        if shop_config and shop_config.active:
+            self._load_onboarding_main_config_data(shop_config)
+
+    @api.model
+    def _load_onboarding_main_config_data(self, shop_config):
+        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding_main_config.xml', None, mode='init', noupdate=True, kind='data')
+        if len(shop_config.session_ids.filtered(lambda s: s.state == 'opened')) == 0:
+            self.env['pos.session'].create({
+                'config_id': shop_config.id,
+                'user_id': self.env.ref('base.user_admin').id,
+            })
+
+    def _after_load_onboarding_data(self):
+        config = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
+        if config:
+            config.with_context(bypass_categories_forbidden_change=True).write({
+                'limit_categories': True,
+                'iface_available_categ_ids': [Command.link(self.env.ref('point_of_sale.pos_category_miscellaneous').id), Command.link(self.env.ref('point_of_sale.pos_category_desks').id), Command.link(self.env.ref('point_of_sale.pos_category_chairs').id)]
+            })
+
+    def load_product_frontend(self):
+        allowed = not self._pos_has_valid_product()
+        if allowed:
+            self.sudo()._load_onboarding_data()
+            self._after_load_onboarding_data()
+
+        return {
+            'models_data': self.get_onboarding_data(),
+            'successful': allowed,
+        }
+
+>>>>>>> 7b85201f70ec (temp)
     def _get_closed_orders(self):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])
 
