@@ -6,7 +6,7 @@
                 <h2 class="mb-5">Want to add something ?</h2>
                 <div class="upsale-product row justify-content-between justify-content-md-start row-cols-sm-2 row-cols-md-4 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 mb-1">
                     <t t-foreach="optionalProducts" t-as="product" t-key="product.id">
-                        <ProductCard product="product" />
+                        <ProductCard product="product" isAvailable="product.pos_categ_ids.some(categ => selfOrder.isCategoryAvailable(categ.id))"/>
                     </t>
                 </div>
             </div>
