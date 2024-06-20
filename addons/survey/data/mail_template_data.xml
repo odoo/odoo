@@ -32,6 +32,9 @@
         <t t-if="object.deadline">
             Please answer the survey for <t t-out="format_date(object.deadline) or ''">05/05/2021</t>.<br/><br/>
         </t>
+        <t t-if="object.comment">
+            <t t-out="object.comment or ''"></t><br/><br/>
+        </t>
         <t t-if="object.survey_id.certification">
             We wish you good luck!
         </t>

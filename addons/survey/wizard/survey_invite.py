@@ -60,6 +60,8 @@ class SurveyInvite(models.TransientModel):
     deadline = fields.Datetime(string="Answer deadline")
     send_email = fields.Boolean(compute="_compute_send_email",
                                 inverse="_inverse_send_email")
+    comment = fields.Text("Comments")
+    error = fields.Boolean(default=False, store=False)
 
     @api.depends('survey_access_mode')
     def _compute_send_email(self):
@@ -123,8 +125,7 @@ class SurveyInvite(models.TransientModel):
                 error.append(email)
             else:
                 valid.extend(email_check)
-        if error:
-            raise UserError(_("Some emails you just entered are incorrect: %s", ', '.join(error)))
+        self.error = bool(error)
         self.emails = '\n'.join(valid)
 
     @api.onchange('partner_ids')
@@ -225,6 +226,7 @@ class SurveyInvite(models.TransientModel):
     def _get_answers_values(self):
         return {
             'deadline': self.deadline,
+            'comment': self.comment,
         }
 
     def _send_mail(self, answer):
