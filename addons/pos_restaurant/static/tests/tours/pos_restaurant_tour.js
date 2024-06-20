@@ -11,7 +11,6 @@ import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen
 import * as MergeTable from "@pos_restaurant/../tests/tours/utils/merge_table_util";
 import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
-import { TourError } from "@web_tour/tour_service/tour_utils";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -298,7 +297,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
                 trigger: 'div.table div.label:contains("4")',
                 run: () => {
                     if ($("div.table div.label:contains('4')").length < 2) {
-                        throw new TourError("Table isn't merge");
+                        console.error("Table isn't merge");
                     }
                 },
             },
@@ -329,7 +328,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
                 trigger: 'div.table div.label:contains("4")',
                 run: () => {
                     if ($("div.table div.label:contains('4')").length < 2) {
-                        throw new TourError("Table isn't merge");
+                        console.error("Table isn't merge");
                     }
                 },
             },

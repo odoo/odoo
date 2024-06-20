@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { TourError } from "@web_tour/tour_service/tour_utils";
 import wTourUtils from "@website/js/tours/tour_utils";
 
 wTourUtils.registerWebsitePreviewTour(
@@ -16,7 +15,7 @@ wTourUtils.registerWebsitePreviewTour(
             trigger: ".o_snippet_search_filter_input",
             run: function () {
                 if (this.anchor !== this.anchor.ownerDocument.activeElement) {
-                    throw new TourError("The search input is not focused");
+                    console.error("The search input is not focused");
                 }
             },
         },
@@ -43,10 +42,10 @@ wTourUtils.registerWebsitePreviewTour(
                 await new Promise(resolve => requestAnimationFrame(resolve));
 
                 if (this.anchor.value !== "") {
-                    throw new TourError("The search input is not cleared");
+                    console.error("The search input is not cleared");
                 }
                 if (this.anchor !== this.anchor.ownerDocument.activeElement) {
-                    throw new TourError("The search input is not focused");
+                    console.error("The search input is not focused");
                 }
             },
         },

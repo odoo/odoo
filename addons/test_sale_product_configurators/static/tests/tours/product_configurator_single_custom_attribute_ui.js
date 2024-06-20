@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { stepUtils, TourError } from "@web_tour/tour_service/tour_utils";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 import configuratorTourUtils from "@test_sale_product_configurators/js/tour_utils";
 import { queryOne } from "@odoo/hoot-dom";
 
@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_single_custom
                 'table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk (TEST)")) td>div[name="ptal"]:has(div>label:contains("product attribute")) input[type="text"]'
             ).value !== "great single custom value"
         ) {
-            throw new TourError("The value of custom product attribute should be 'great single custom value'.");
+            console.error("The value of custom product attribute should be 'great single custom value'.");
         }
     }
 }, {

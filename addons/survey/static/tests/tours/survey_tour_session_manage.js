@@ -2,7 +2,6 @@
 
 import { registry } from "@web/core/registry";
 import { zip } from "@web/core/utils/arrays";
-import { TourError } from "@web_tour/tour_service/tour_utils";
 import { accessSurveysteps } from "./survey_tour_session_tools";
 
 let rootWidget = null;
@@ -63,15 +62,15 @@ const INDEX_TO_ORDINAL = {
 const checkAnswerAppearance = (answerLabel, shownAnswer, expectedAnswerType) => {
     if (expectedAnswerType === 'correct') {
         if (!shownAnswer.backgroundColor.includes('0.8') || shownAnswer.labelColor !== CORRECT_ANSWER_COLOR) {
-            throw new TourError(`${answerLabel} should be shown as "correct"!`);
+            console.error(`${answerLabel} should be shown as "correct"!`);
         }
     } else if (expectedAnswerType === 'incorrect') {
         if (!shownAnswer.backgroundColor.includes('0.2') || shownAnswer.labelColor !== WRONG_ANSWER_COLOR) {
-            throw new TourError(`${answerLabel} should be shown as "incorrect"!`);
+            console.error(`${answerLabel} should be shown as "incorrect"!`);
         }
     } else if (expectedAnswerType === 'regular') {
         if (!shownAnswer.backgroundColor.includes('0.8') || shownAnswer.labelColor !== REGULAR_ANSWER_COLOR) {
-            throw new TourError(`${answerLabel} should not be shown as "correct" or "incorrect"!`);
+            console.error(`${answerLabel} should not be shown as "correct" or "incorrect"!`);
         }
     } else {
         throw new Error(`Unsupported answer type.`);
@@ -80,7 +79,7 @@ const checkAnswerAppearance = (answerLabel, shownAnswer, expectedAnswerType) => 
 
 const checkAnswerValue = (answerLabel, shownAnswerValue, expectedAnswerValue) => {
     if (shownAnswerValue !== expectedAnswerValue) {
-        throw new TourError(expectedAnswerValue === 0 ?
+        console.error(expectedAnswerValue === 0 ?
             `${answerLabel} should not be picked by any user!` :
             `${answerLabel} should be picked by ${expectedAnswerValue} users!`
         );
@@ -105,13 +104,13 @@ const checkAnswers = (chartData, expectedAnswersData) => {
 
 const checkAnswersAllZeros = (chartData) => {
     if (chartData.find(answerData => answerData !== 0).length) {
-        throw new TourError('Chart data should all be 0!');
+        console.error('Chart data should all be 0!');
     }
 };
 
 const checkAnswersCount = (chartData, expectedCount) => {
     if (chartData.length !== expectedCount) {
-        throw new TourError(`Chart data should contain ${expectedCount} records!`);
+        console.error(`Chart data should contain ${expectedCount} records!`);
     }
 };
 
