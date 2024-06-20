@@ -83,7 +83,7 @@ class TestFrontend(TestPointOfSaleHttpCommon):
             'floor_id': main_floor.id,
             'seats': 4,
             'shape': 'square',
-            'position_h': 150,
+            'position_h': 350,
             'position_v': 100,
         },
         {
@@ -218,9 +218,12 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 2.2), ('state', '=', 'draft')]))
         self.assertEqual(2, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
-    def test_02_others(self):
+    def test_02_split_bill(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour')
+
+    def test_floor_screen(self):
+        self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour('FloorScreenTour', login="pos_admin")
 
     def test_02_others_bis(self):
@@ -278,7 +281,3 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         self.pos_config.company_id.point_of_sale_use_ticket_qr_code = True
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('BillScreenTour')
-
-    def test_12_merge_table(self):
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('MergeTableTour', login="pos_admin")

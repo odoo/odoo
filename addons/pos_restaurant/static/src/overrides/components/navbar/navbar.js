@@ -17,7 +17,9 @@ patch(Navbar.prototype, {
                     this.pos.mobile_pane == "right") ||
                 this.pos.mainScreen.component === TipScreen
             ) {
-                this.pos.showScreen("FloorScreen", { floor: this.floor });
+                this.pos.showScreen("FloorScreen", {
+                    floor: this.pos.get_order().table_id?.floor_id,
+                });
             } else {
                 super.onClickBackButton(...arguments);
             }
@@ -69,8 +71,5 @@ patch(Navbar.prototype, {
                 }
             },
         });
-    },
-    get showEditPlanButton() {
-        return true;
     },
 });

@@ -233,6 +233,20 @@ export class RunningTourActionHelper {
     }
 
     /**
+     * Opens the context menu on the given **{@link Selector}**
+     * @description Let's see more informations about click sequence here: {@link hoot.click}
+     * @param {Selector} selector
+     * @example
+     *  run: "rightclick", // Open the context menu on the action element
+     * @example
+     *  run: "rigthclick .o_rows:first", // Open the context menu on the selector
+     */
+    rightclick(selector) {
+        const element = this._get_action_element(selector);
+        hoot.pointerDown(element, { button: 2 });
+    }
+
+    /**
      * Starts a drag sequence on the active element (anchor) and drop it on the given **{@link Selector}**.
      * @param {Selector} selector
      * @param {hoot.PointerOptions} options

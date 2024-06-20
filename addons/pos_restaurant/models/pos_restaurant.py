@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _, Command
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class RestaurantFloor(models.Model):
@@ -87,6 +87,17 @@ class RestaurantTable(models.Model):
     _description = 'Restaurant Table'
     _inherit = ['pos.load.mixin']
 
+    @api.constrains('parent_id')
+    def _check_category_recursion(self):
+        if self._has_cycle():
+            raise ValidationError(_('Error! You cannot create recursive relations.'))
+
+    @api.constrains('active')
+    def _check_active(self):
+        for table in self:
+            if not table.active and self.env['pos.order'].search_count([('state', '!=', 'done'), ('table_id', '=', table.id)]) > 0:
+                raise UserError(_("You cannot deactivate a table that has orders in progress."))
+
     name = fields.Char('Table Name', required=True, help='An internal identification of a table')
     floor_id = fields.Many2one('restaurant.floor', string='Floor')
     shape = fields.Selection([('square', 'Square'), ('round', 'Round')], string='Shape', required=True, default='square')
@@ -108,14 +119,6 @@ class RestaurantTable(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return ['name', 'width', 'height', 'position_h', 'position_v', 'parent_id', 'shape', 'floor_id', 'color', 'seats', 'active']
-
-    def are_orders_still_in_draft(self):
-        draft_orders_count = self.env['pos.order'].search_count([('table_id', 'in', self.ids), ('state', '=', 'draft')])
-
-        if draft_orders_count > 0:
-            raise UserError(_("You cannot delete a table when orders are still in draft for this table."))
-
-        return True
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):

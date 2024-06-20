@@ -46,6 +46,7 @@ patch(ControlButtons.prototype, {
         this.pos.orderToTransferUuid = this.pos.get_order().uuid;
         this.pos.get_order().setBooked(true);
         this.pos.showScreen("FloorScreen");
+        this.notification.add(_t("Select the table where you want your order to be transferred"));
     },
     clickTakeAway() {
         const isTakeAway = !this.currentOrder.takeaway;
