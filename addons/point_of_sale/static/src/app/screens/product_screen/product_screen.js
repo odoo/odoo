@@ -215,7 +215,7 @@ export class ProductScreen extends Component {
     _barcodeDiscountAction(code) {
         var last_orderline = this.currentOrder.get_last_orderline();
         if (last_orderline) {
-            last_orderline.set_discount(code.value);
+            this.pos.setDiscountFromUI(last_orderline, code.value);
         }
     }
     /**

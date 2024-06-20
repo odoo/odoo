@@ -270,9 +270,10 @@ export class PosStore extends Reactive {
         if (ids.size > 0) {
             this.pendingOrder.delete.clear();
             await this.data.call("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
+            return true;
         }
 
-        return true;
+        return false;
     }
     /**
      * Override to do something before deleting the order.
@@ -457,6 +458,11 @@ export class PosStore extends Reactive {
             searchTerm: "",
         };
     }
+
+    async setDiscountFromUI(line, val) {
+        line.set_discount(val);
+    }
+
     getDefaultPricelist() {
         const current_order = this.get_order();
         if (current_order) {
@@ -492,14 +498,16 @@ export class PosStore extends Reactive {
     // The configure parameter is available if the orderline already contains all
     // the information without having to be calculated. For example, importing a SO.
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
-        let merge = true;
-
         let order = this.get_order();
-        order.assert_editable();
-
         if (!order) {
             order = this.add_new_order();
         }
+        return await this.addLineToOrder(vals, order, opts, configure);
+    }
+
+    async addLineToOrder(vals, order, opts = {}, configure = true) {
+        let merge = true;
+        order.assert_editable();
 
         const options = {
             ...opts,
@@ -719,8 +727,9 @@ export class PosStore extends Reactive {
         const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
         line.setOptions(options);
         this.selectOrderLine(order, line);
-        this.numberBuffer.reset();
-
+        if (configure) {
+            this.numberBuffer.reset();
+        }
         const selectedOrderline = order.get_selected_orderline();
         if (options.draftPackLotLines && configure) {
             selectedOrderline.setPackLotLines({
@@ -746,12 +755,16 @@ export class PosStore extends Reactive {
             this.selectOrderLine(order, order.get_last_orderline());
         }
 
-        this.numberBuffer.reset();
+        if (configure) {
+            this.numberBuffer.reset();
+        }
 
         // FIXME: Put this in an effect so that we don't have to call it manually.
         order.recomputeOrderData();
 
-        this.numberBuffer.reset();
+        if (configure) {
+            this.numberBuffer.reset();
+        }
 
         this.hasJustAddedProduct = true;
         clearTimeout(this.productReminderTimeout);
@@ -954,14 +967,14 @@ export class PosStore extends Reactive {
     }
 
     // There for override
-    preSyncAllOrders(orders) {}
+    async preSyncAllOrders(orders) {}
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         try {
             const { orderToCreate, orderToUpdate, paidOrdersNotSent } = this.getPendingOrder();
             const orders = [...orderToCreate, ...orderToUpdate, ...paidOrdersNotSent];
 
-            this.preSyncAllOrders(orders);
+            await this.preSyncAllOrders(orders);
             const context = this.getSyncAllOrdersContext(orders, options);
 
             // Allow us to force the sync of the orders In the case of
@@ -1246,6 +1259,10 @@ export class PosStore extends Reactive {
     }
 
     disallowLineQuantityChange() {
+        return false;
+    }
+
+    disallowLineDiscountChange() {
         return false;
     }
 

@@ -308,7 +308,7 @@ class ReportSaleDetails(models.AbstractModel):
             'nbr_orders': len(orders),
             'date_start': date_start,
             'date_stop': date_stop,
-            'session_name': session_name if session_name else False,
+            'session_name': session_name or False,
             'config_names': config_names,
             'payments': payments,
             'company_name': self.env.company.name,
@@ -326,13 +326,16 @@ class ReportSaleDetails(models.AbstractModel):
             'invoiceTotal': invoiceTotal,
         }
 
+    def _get_product_total_amount(self, line):
+        return line.currency_id.round(line.price_unit * line.qty * (100 - line.discount) / 100.0)
+
     def _get_products_and_taxes_dict(self, line, products, taxes, currency):
         key2 = (line.product_id, line.price_unit, line.discount)
         key1 = line.product_id.product_tmpl_id.pos_categ_ids[0].name if len(line.product_id.product_tmpl_id.pos_categ_ids) else _('Not Categorized')
         products.setdefault(key1, {})
         products[key1].setdefault(key2, [0.0, 0.0, 0.0])
         products[key1][key2][0] += line.qty
-        products[key1][key2][1] += line.currency_id.round(line.price_unit * line.qty * (100 - line.discount) / 100.0)
+        products[key1][key2][1] += self._get_product_total_amount(line)
         products[key1][key2][2] += line.price_subtotal
 
         if line.tax_ids_after_fiscal_position:

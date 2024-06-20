@@ -378,7 +378,7 @@ patch(PosStore.prototype, {
         this.alert.dismiss();
         if (destinationTable.id === originalTable?.id) {
             this.set_order(order);
-            this.setTable(destinationTable);
+            await this.setTable(destinationTable);
             return;
         }
         if (!this.tableHasOrders(destinationTable)) {

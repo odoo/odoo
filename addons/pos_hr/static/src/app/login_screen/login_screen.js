@@ -17,13 +17,16 @@ export class LoginScreen extends Component {
         this.pos = usePos();
         this.notification = useService("notification");
         this.ui = useState(useService("ui"));
-        this.selectCashier = useCashierSelector({
+        this.cashierSelector = useCashierSelector({
             onCashierChanged: () => {
                 this.cashierLogIn();
             },
             exclusive: true, // takes exclusive control on the barcode reader
         });
         this.time = useTime();
+    }
+    async selectCashier(num = false) {
+        return await this.cashierSelector(num);
     }
 
     async displayEnterPinPopup() {

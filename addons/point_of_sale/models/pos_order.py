@@ -105,6 +105,8 @@ class PosOrder(models.Model):
         combo_child_uuids_by_parent_uuid = self._prepare_combo_line_uuids(order)
 
         if not existing_order:
+            if order.get('state'):
+                order['state'] = 'draft'
             pos_order = self.create(order)
             pos_order = pos_order.with_company(pos_order.company_id)
         else:
@@ -180,7 +182,7 @@ class PosOrder(models.Model):
         prec_acc = order.currency_id.decimal_places
 
         # Recompute amount paid because we don't trust the client
-        order.amount_paid = sum(order.payment_ids.mapped('amount'))
+        order.with_context(backend_recomputation=True).write({'amount_paid': sum(order.payment_ids.mapped('amount'))})
 
         if not draft and not float_is_zero(pos_order['amount_return'], prec_acc):
             cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]

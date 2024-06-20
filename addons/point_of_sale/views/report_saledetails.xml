@@ -7,7 +7,7 @@
     <t t-call="web.html_container">
         <t t-call="web.internal_layout">
             <div class="page">
-                <div class="text-center" style="break-inside: avoid;">
+                <div class="text-center" id="header" style="break-inside: avoid;">
                     <t t-if="state == 'multiple'">
                         <h2>Sales Details</h2>
                         <div class="oe_structure"></div>
@@ -183,22 +183,18 @@
                                     <td/>
                                     <t t-set="internal_reference" t-value="line['code'] and '[%s] ' % line['code'] or ''" />
                                     <td><span t-out="internal_reference">7897</span><span t-out="line['product_name']">Laptop</span></td>
-                                    <td>
-                                        <span t-out="internal_reference">DEMO_REF</span>
-                                        <span t-out="line['product_name']">DEMO_PRODUCT_NAME</span>
-                                    </td>
                                     <td class="text-end">
-                                        <td class="text-end"><span t-out="line['quantity']">0</span></td>
+                                        <span t-out="line['quantity']">0</span>
                                         <t t-if='line["uom"] != "Units"'>
                                             <span t-out='line["uom"]'>Unit</span> 
                                         </t>
                                     </td>
                                     <td class="text-end">
                                         <t t-if="currency['position']">
-                                            <span t-out='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span><span t-out='currency["symbol"]'>$</span>
+                                            <span t-out='line["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span><span t-out='currency["symbol"]'>$</span>
                                         </t>
                                         <t t-else="" >
-                                            <span t-out='currency["symbol"]'>$</span><span t-out='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span>
+                                            <span t-out='currency["symbol"]'>$</span><span t-out='line["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span>
                                         </t>
                                         <t t-if='line["discount"] != 0'>
                                             Disc: <span t-out='line["discount"]'>0</span>%
