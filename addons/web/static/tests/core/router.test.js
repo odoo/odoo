@@ -1358,6 +1358,22 @@ describe("pushState", () => {
         expect(router.current).toEqual({ k1: 3 });
     });
 
+    test("can push state directly", async () => {
+        createRouter();
+
+        expect(router.current).toEqual({});
+
+        router.pushState({ k1: 2 }, { sync: true });
+        expect(router.current).toEqual({ k1: 2 });
+
+        router.pushState({ k1: 3 }, { sync: true });
+        expect(router.current).toEqual({ k1: 3 });
+
+        router.pushState({ k1: 4 });
+        router.pushState({ k2: 1 }, { sync: true });
+        expect(router.current).toEqual({ k1: 4, k2: 1 });
+    });
+
     test("can lock keys", async () => {
         createRouter();
 
