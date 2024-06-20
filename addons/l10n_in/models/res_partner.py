@@ -5,19 +5,23 @@ from odoo import api, fields, models, _
 
 TEST_GST_NUMBER = "36AABCT1332L011"
 
+# GST Treatment Types
+L10N_IN_GST_TREATMENTS_TYPE = [
+    ('regular', 'Registered Business - Regular'),
+    ('composition', 'Registered Business - Composition'),
+    ('unregistered', 'Unregistered Business'),
+    ('consumer', 'Consumer'),
+    ('overseas', 'Overseas'),
+    ('special_economic_zone', 'Special Economic Zone'),
+    ('deemed_export', 'Deemed Export'),
+    ('uin_holders', 'UIN Holders'),
+]
+
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    l10n_in_gst_treatment = fields.Selection([
-            ('regular', 'Registered Business - Regular'),
-            ('composition', 'Registered Business - Composition'),
-            ('unregistered', 'Unregistered Business'),
-            ('consumer', 'Consumer'),
-            ('overseas', 'Overseas'),
-            ('special_economic_zone', 'Special Economic Zone'),
-            ('deemed_export', 'Deemed Export'),
-            ('uin_holders', 'UIN Holders'),
-        ], string="GST Treatment")
+    l10n_in_gst_treatment = fields.Selection(selection=L10N_IN_GST_TREATMENTS_TYPE, string="GST Treatment")
 
     l10n_in_pan = fields.Char(
         string="PAN",
