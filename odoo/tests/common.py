@@ -32,6 +32,7 @@ from collections import defaultdict
 from contextlib import contextmanager, ExitStack
 from datetime import datetime, date
 from itertools import zip_longest as izip_longest
+from passlib.context import CryptContext
 from unittest.mock import patch, Mock
 from xmlrpc import client as xmlrpclib
 
@@ -399,6 +400,24 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
         patcher = patch.object(obj, key, val)   # this is unittest.mock.patch
         patcher.start()
         self.addCleanup(patcher.stop)
+
+    @classmethod
+    def classPatch(cls, obj, key, val):
+        """ Do the patch ``setattr(obj, key, val)``, and prepare cleanup. """
+        patcher = patch.object(obj, key, val)   # this is unittest.mock.patch
+        patcher.start()
+        cls.addClassCleanup(patcher.stop)
+
+    def startPatcher(self, patcher):
+        mock = patcher.start()
+        self.addCleanup(patcher.stop)
+        return mock
+
+    @classmethod
+    def startClassPatcher(cls, patcher):
+        mock = patcher.start()
+        cls.addClassCleanup(patcher.stop)
+        return mock
 
     @contextmanager
     def with_user(self, login):
@@ -830,6 +849,15 @@ class TransactionCase(BaseCase):
         cls.addClassCleanup(cls.cr.close)
 
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
+
+        # speedup CryptContext. Many user an password are done during tests, avoid spending time hasing password with many rounds
+        def _crypt_context(self):  # noqa: ARG001
+            return CryptContext(
+                ['pbkdf2_sha512', 'plaintext'],
+                pbkdf2_sha512__rounds=1,
+            )
+        cls._crypt_context_patcher = patch('odoo.addons.base.models.res_users.Users._crypt_context', _crypt_context)
+        cls.startClassPatcher(cls._crypt_context_patcher)
 
     def setUp(self):
         super().setUp()
@@ -1669,7 +1697,9 @@ class HttpCase(TransactionCase):
             # than this transaction.
             self.cr.flush()
             self.cr.clear()
-            uid = self.registry['res.users'].authenticate(db, user, password, {'interactive': False})
+            with patch('odoo.addons.base.models.res_users.Users._check_credentials', return_value=True):
+                # patching to speedup the check in case the password is hashed with many hashround + avoid to update the password
+                uid = self.registry['res.users'].authenticate(db, user, password, {'interactive': False})
             env = api.Environment(self.cr, uid, {})
             session.uid = uid
             session.login = user
