@@ -11,7 +11,7 @@ class TestSaleMrpAccount(test_multistep_manufacturing.TestMultistepManufacturing
         """ ensure analytic account/distribution is inherited from the SO
             when none is set on the bom
         """
-        analytic_plan = self.env['account.analytic.plan'].create({
+        analytic_plan = self.env['account.analytic.plan'].sudo().create({
             'name': 'Plan',
         })
         self.sale_order.analytic_account_id = self.env['account.analytic.account'].create({
