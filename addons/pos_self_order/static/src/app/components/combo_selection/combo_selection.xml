@@ -5,7 +5,7 @@
             <h2 class="attribute_name mb-5 mb-md-3"><small class="text-muted">Choose your</small> <strong t-esc="props.combo.name" /></h2>
             <div class="combo-list align-items-center justify-content-start">
                 <div class="combo-list-products o-so-products-row">
-                    <t t-foreach="props.combo.combo_line_ids" t-as="line" t-key="line.id">
+                    <t t-foreach="props.combo.combo_item_ids" t-as="line" t-key="line.id">
                         <t t-set="product" t-value="line.product_id"/>
                         <t t-set="isOutOfStock" t-value="!product.self_order_available"/>
                         <article
@@ -27,8 +27,8 @@
                             <div class="product-infos d-flex flex-column justify-content-between text-start flex-grow-1 w-100 lh-1">
                                 <span t-esc="product.display_name" class="fs-4 fw-bold mb-1 mb-sm-2"/>
                                 <div class="d-flex justify-content-between gap-3">
-                                    <span t-if="line.combo_price" class="badge rounded-pill fs-4" t-att-class="isOutOfStock ? 'text-bg-secondary' : 'text-bg-primary'">
-                                        + <t t-out="selfOrder.formatMonetary(line.combo_price)"/>
+                                    <span t-if="line.extra_price" class="badge rounded-pill fs-4" t-att-class="isOutOfStock ? 'text-bg-secondary' : 'text-bg-primary'">
+                                        + <t t-out="selfOrder.formatMonetary(line.extra_price)"/>
                                     </span>
                                     <span t-if="isOutOfStock" class="badge text-bg-danger rounded-pill fs-4">
                                         Out of stock

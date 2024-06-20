@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product.product_combo_view_form" model="ir.ui.view">
+        <field name="name">product.combo.form</field>
+        <field name="model">product.combo</field>
+        <field name="arch" type="xml">
+            <form string="Combo Choice">
+                <div class="oe_title">
+                    <label for="name" string="Combo Choice"/>
+                    <h1>
+                        <field
+                            name="name"
+                            placeholder="e.g. Burger Menu"
+                            widget="text"
+                            options="{'line_breaks': False}"
+                            class="text-break"
+                        />
+                    </h1>
+                </div>
+                <field name="combo_item_ids">
+                    <tree editable="bottom">
+                        <field name="product_id"/>
+                        <field name="lst_price"/>
+                        <field name="extra_price"/>
+                    </tree>
+                </field>
+            </form>
+        </field>
+    </record>
+
+    <record id="product.product_combo_view_tree" model="ir.ui.view">
+        <field name="name">product.combo.tree</field>
+        <field name="model">product.combo</field>
+        <field name="arch" type="xml">
+            <tree string="Combo Choices">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="base_price"/>
+                <field name="combo_item_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product.product_combo_action" model="ir.actions.act_window">
+        <field name="name">Combo Choices</field>
+        <field name="res_model">product.combo</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

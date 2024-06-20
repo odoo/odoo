@@ -16,7 +16,7 @@ export class ComboPage extends Component {
             selectedValues: {},
             customValues: {},
             editable: this.editableProductLine,
-            currentComboLineId: {
+            currentComboItemId: {
                 value: null,
             },
         });
@@ -77,11 +77,11 @@ export class ComboPage extends Component {
     next() {
         const combo = this.currentCombo;
         const index = this.state.selectedCombos.findIndex((c) => c.id === combo.id);
-        const comboLine = this.selfOrder.models["pos.combo.line"].get(
-            this.env.currentComboLineId.value
+        const comboItem = this.selfOrder.models["product.combo.item"].get(
+            this.env.currentComboItemId.value
         );
         const selectedCombo = {
-            combo_line_id: comboLine,
+            combo_item_id: comboItem,
             configuration: {
                 attribute_custom_values: Object.values(this.env.customValues),
                 attribute_value_ids: Object.values(this.env.selectedValues).map((s) => parseInt(s)),
@@ -142,9 +142,9 @@ export class ComboPage extends Component {
         const combo = this.props.product.combo_ids;
         return combo.filter(
             (c) =>
-                c.combo_line_ids.length > 1 ||
-                (c.combo_line_ids.some((c) => c.product_id.attribute_line_ids.length !== 0) &&
-                    !c.combo_line_ids.every((c) => c.product_id.isCombo()))
+                c.combo_item_ids.length > 1 ||
+                (c.combo_item_ids.some((c) => c.product_id.attribute_line_ids.length !== 0) &&
+                    !c.combo_item_ids.every((c) => c.product_id.isCombo()))
         );
     }
 }

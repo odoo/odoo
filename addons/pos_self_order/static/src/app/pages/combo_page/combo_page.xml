@@ -17,8 +17,8 @@
                         <t t-set="isComboCurrent" t-value="currentCombo.id === combo_id.id"/>
                         <t t-set="isComboSelected" t-value="false"/>
                         <t t-set="isNextSelected" t-value="false"/>
-                        <t t-foreach="state.selectedCombos"  t-as="selected"  t-key="selected.combo_line_id.id">
-                            <t t-if="selected.combo_line_id.combo_id.id === combo_id" t-set="isComboSelected" t-value="true"/>
+                        <t t-foreach="state.selectedCombos"  t-as="selected"  t-key="selected.combo_item_id.id">
+                            <t t-if="selected.combo_item_id.combo_id.id === combo_id" t-set="isComboSelected" t-value="true"/>
                         </t>
                         <span t-if="!combo_id_first"
                             class="position-absolute end-0 top-50 border-top border-2"
@@ -69,7 +69,7 @@
                 <h2 class="attribute_name mt-5 mb-3 fw-bold">Your Selection</h2>
 
                 <ul class="list-group">
-                    <li class="list-group-item d-flex flex-wrap align-items-start gap-3" t-foreach="state.selectedCombos" t-as="combo" t-key="combo.combo_line_id.id">
+                    <li class="list-group-item d-flex flex-wrap align-items-start gap-3" t-foreach="state.selectedCombos" t-as="combo" t-key="combo.combo_item_id.id">
                         <t t-set="product" t-value="combo.product"/>
                         <div class="d-flex align-items-start gap-3">
                             <div class="pos_self_order_combo_image ratio ratio-1x1">
@@ -78,13 +78,13 @@
                                 </div>
                                 <img
                                     class="o_self_order_item_card_image w-100 rounded"
-                                    t-attf-src="/web/image/product.product/{{ combo.combo_line_id.product_id.id }}/image_512"
+                                    t-attf-src="/web/image/product.product/{{ combo.combo_item_id.product_id.id }}/image_512"
                                     alt="Product image"
                                     loading="lazy"
                                     onerror="this.remove()"/>
                             </div>
                             <div>
-                                <span class="fs-4" t-esc="combo.combo_line_id.product_id.display_name"/>
+                                <span class="fs-4" t-esc="combo.combo_item_id.product_id.display_name"/>
                                 <ul t-if="combo.configuration.attribute_value_ids.length > 0">
                                     <li t-foreach="this.getSelectedValues(combo.configuration.attribute_value_ids)" t-as="attrVal" t-key="attrVal.attribute_id.id">
                                         <span t-esc="attrVal.attribute_id.name" /> : <span t-esc="attrVal.name" />
@@ -92,7 +92,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <button t-if="comboIds.includes(combo.combo_line_id.combo_id.id)" class="btn btn-secondary ms-auto" t-on-click="() => this.editCombo(combo.combo_line_id.combo_id.id)">Edit</button>
+                        <button t-if="comboIds.includes(combo.combo_item_id.combo_id.id)" class="btn btn-secondary ms-auto" t-on-click="() => this.editCombo(combo.combo_item_id.combo_id.id)">Edit</button>
                     </li>
                 </ul>
             </div>
