@@ -152,10 +152,10 @@ class MailRtcSession(models.Model):
         return self.env['bus.bus']._sendmany([(target, 'discuss.channel.rtc.session/peer_notification', payload) for target, payload in payload_by_target.items()])
 
     def _to_store(self, store: Store, extra=False):
-        for rtc_session in self:
-            vals = {
-                "id": rtc_session.id,
-                "channelMember": rtc_session.channel_member_id._discuss_channel_member_format(
+        store.add(
+            "ChannelMember",
+            list(
+                self.channel_member_id._discuss_channel_member_format(
                     fields={
                         "id": True,
                         "channel": {},
@@ -164,7 +164,13 @@ class MailRtcSession(models.Model):
                             "guest": {"id": True, "name": True, "im_status": True},
                         },
                     }
-                ).get(rtc_session.channel_member_id),
+                ).values()
+            ),
+        )
+        for rtc_session in self:
+            vals = {
+                "id": rtc_session.id,
+                "channelMember": {"id": rtc_session.channel_member_id.id},
             }
             if extra:
                 vals.update(
