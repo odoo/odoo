@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import datetime
 
 from odoo import _, api, Command, fields, models, modules, tools
 from odoo.tools import email_normalize
@@ -24,6 +25,13 @@ class Users(models.Model):
         help="Policy on how to handle Chatter notifications:\n"
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
+    notification_planning = fields.Selection([
+        ('online', 'Only when I\'m online'),
+        ('schedule', 'According to a schedule'),
+        ('always', 'Always'),
+    ], 'Send Notifications', default='always')
+    notification_schedule_start = fields.Float(string='Notification Schedule')
+    notification_schedule_end = fields.Float()
 
     _sql_constraints = [(
         "notification_type",
@@ -63,11 +71,11 @@ class Users(models.Model):
 
     @property
     def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['notification_type']
+        return super().SELF_READABLE_FIELDS + ['notification_type', 'notification_planning', 'notification_schedule_start', 'notification_schedule_end']
 
     @property
     def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + ['notification_type']
+        return super().SELF_WRITEABLE_FIELDS + ['notification_type', 'notification_planning', 'notification_schedule_start', 'notification_schedule_end']
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -152,6 +160,18 @@ class Users(models.Model):
         activities_to_delete = self.env['mail.activity'].search([('user_id', 'in', self.ids)])
         activities_to_delete.unlink()
         return super(Users, self).action_archive()
+
+    def check_push_notification_schedule(self):
+        if (self.notification_planning == 'schedule'):
+            now = datetime.now()
+            time = now.hour + now.minute / 60
+            if (self.notification_schedule_start < self.notification_schedule_end):
+                is_schedule_valid = self.notification_schedule_start <= time <= self.notification_schedule_end
+            else:
+                # time schedule starts a day and ends the next day
+                is_schedule_valid = self.notification_schedule_start <= time or self.notification_schedule_end >= time
+            return is_schedule_valid
+        return self.notification_planning == 'always'
 
     def _notify_security_setting_update(self, subject, content, mail_values=None, **kwargs):
         """ This method is meant to be called whenever a sensitive update is done on the user's account.
