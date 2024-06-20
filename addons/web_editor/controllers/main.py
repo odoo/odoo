@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import contextlib
 import io
 import json
 import logging
@@ -284,38 +283,6 @@ class Web_Editor(http.Controller):
             attachments_to_remove.unlink()
         return removal_blocked_by
 
-    @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
-    def get_image_info(self, src=''):
-        """This route is used to determine the original of an attachment so that
-        it can be used as a base to modify it again (crop/optimization/filters).
-        """
-        attachment = None
-        if src.startswith('/web/image'):
-            with contextlib.suppress(werkzeug.exceptions.NotFound, MissingError):
-                _, args = request.env['ir.http']._match(src)
-                record = request.env['ir.binary']._find_record(
-                    xmlid=args.get('xmlid'),
-                    res_model=args.get('model', 'ir.attachment'),
-                    res_id=args.get('id'),
-                )
-                if record._name == 'ir.attachment':
-                    attachment = record
-        if not attachment:
-            # Find attachment by url. There can be multiple matches because of default
-            # snippet images referencing the same image in /static/, so we limit to 1
-            attachment = request.env['ir.attachment'].search([
-                '|', ('url', '=like', src), ('url', '=like', '%s?%%' % src),
-                ('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
-            ], limit=1)
-        if not attachment:
-            return {
-                'attachment': False,
-                'original': False,
-            }
-        return {
-            'attachment': attachment.read(['id'])[0],
-            'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
-        }
 
     def _clean_context(self):
         # avoid allowed_company_ids which may erroneously restrict based on website

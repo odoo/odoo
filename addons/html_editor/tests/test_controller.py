@@ -54,6 +54,39 @@ class TestController(HttpCase):
         self.assertEqual(200, response.status_code, 'Expect response')
         self.assertEqual(b'Hello world', response.content, 'Expect raw content')
 
+    def test_03_get_image_info(self):
+        gif_base64 = "R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
+        self.authenticate('admin', 'admin')
+        # Upload document.
+        response = self.url_open(
+            '/html_editor/attachment/add_data',
+            headers={'Content-Type': 'application/json'},
+            data=json_safe.dumps({'params': {
+                'name': 'test.gif',
+                'data': gif_base64,
+                'is_image': True,
+            }})
+        )
+        response = response.json()
+        self.assertFalse('error' in response, 'Upload failed: %s' % response.get('error', {}).get('message'))
+        attachment_id = response['result']['id']
+        image_src = response['result']['image_src']
+        mimetype = response['result']['mimetype']
+        self.assertEqual('image/gif', mimetype, "Wrong mimetype")
+        # Ensure image info can be retrieved.
+        response = self.url_open('/html_editor/get_image_info',
+                                 headers={'Content-Type': 'application/json'},
+                                 data=json_safe.dumps({
+                                     "params": {
+                                         "src": image_src,
+                                     }
+                                 }),
+                                 )
+        response = response.json()
+        self.assertEqual(attachment_id, response['result']['original']['id'], "Wrong id")
+        self.assertEqual(image_src, response['result']['original']['image_src'], "Wrong image_src")
+        self.assertEqual(mimetype, response['result']['original']['mimetype'], "Wrong mimetype")
+
     def test_04_admin_attachment(self):
         self.authenticate(self.admin, self.admin)
         payload = self._build_payload({"name": "pixel", "data": self.pixel, "is_image": True})

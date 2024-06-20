@@ -30,6 +30,7 @@ import { LinkSelectionPlugin } from "./main/link/link_selection_plugin";
 import { ListPlugin } from "./main/list/list_plugin";
 import { LocalOverlayPlugin } from "./main/local_overlay_plugin";
 import { ImagePlugin } from "./main/media/image_plugin";
+import { ImageCropPlugin } from "./main/media/image_crop_plugin";
 import { MediaPlugin } from "./main/media/media_plugin";
 import { MoveNodePlugin } from "./main/movenode_plugin";
 import { PositionPlugin } from "./main/position_plugin";
@@ -91,6 +92,7 @@ export const MAIN_PLUGINS = [
     FontPlugin, // note: if before ListPlugin, there are a few split tests that fails
     YoutubePlugin,
     ImagePlugin,
+    ImageCropPlugin,
     LinkPlugin,
     LinkPastePlugin,
     LinkSelectionPlugin,

@@ -1,12 +1,13 @@
-
-
+import contextlib
 import uuid
 from base64 import b64decode
 from datetime import datetime
+import werkzeug.exceptions
+import werkzeug.urls
 
 from odoo import _, http, tools
 from odoo.addons.html_editor.tools import get_video_url_data
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, MissingError
 from odoo.http import request
 from odoo.tools.mimetypes import guess_mimetype
 
@@ -95,6 +96,39 @@ class HTML_Editor(http.Controller):
                 or IrAttachment.create(attachment_data)
 
         return attachment
+
+    @http.route(['/web_editor/get_image_info', '/html_editor/get_image_info'], type='json', auth='user', website=True)
+    def get_image_info(self, src=''):
+        """This route is used to determine the information of an attachment so that
+        it can be used as a base to modify it again (crop/optimization/filters).
+        """
+        attachment = None
+        if src.startswith('/web/image'):
+            with contextlib.suppress(werkzeug.exceptions.NotFound, MissingError):
+                _, args = request.env['ir.http']._match(src)
+                record = request.env['ir.binary']._find_record(
+                    xmlid=args.get('xmlid'),
+                    res_model=args.get('model', 'ir.attachment'),
+                    res_id=args.get('id'),
+                )
+                if record._name == 'ir.attachment':
+                    attachment = record
+        if not attachment:
+            # Find attachment by url. There can be multiple matches because of default
+            # snippet images referencing the same image in /static/, so we limit to 1
+            attachment = request.env['ir.attachment'].search([
+                '|', ('url', '=like', src), ('url', '=like', '%s?%%' % src),
+                ('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
+            ], limit=1)
+        if not attachment:
+            return {
+                'attachment': False,
+                'original': False,
+            }
+        return {
+            'attachment': attachment.read(['id'])[0],
+            'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
+        }
 
     @http.route(['/web_editor/video_url/data', '/html_editor/video_url/data'], type='json', auth='user', website=True)
     def video_url_data(self, video_url, autoplay=False, loop=False,
