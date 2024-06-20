@@ -6,6 +6,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { _t } from "@web/core/l10n/translation";
 import "@website/js/editor/snippets.options";
 import { renderToElement } from "@web/core/utils/render";
+import { useChildSubEnv } from "@odoo/owl";
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
     init() {
@@ -448,6 +449,10 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
 
 // Small override of the MediaDialog to retrieve the attachment ids instead of img elements
 class AttachmentMediaDialog extends MediaDialog {
+    setup() {
+        super.setup();
+        useChildSubEnv({ addFieldImage: true });
+    }
     /**
      * @override
      */

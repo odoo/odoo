@@ -531,6 +531,16 @@ async function _isImageCorsProtected(img) {
     return isCorsProtected;
 }
 
+/**
+ * @param {string} src
+ * @returns {Promise<Boolean>}
+ */
+async function _isSrcCorsProtected(src) {
+    const dummyImg = document.createElement("img");
+    dummyImg.src = src;
+    return _isImageCorsProtected(dummyImg);
+}
+
 export default {
     COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
     CSS_SHORTHANDS: CSS_SHORTHANDS,
@@ -561,4 +571,5 @@ export default {
     getLinkLabel: _getLinkLabel,
     forwardToThumbnail: _forwardToThumbnail,
     isImageCorsProtected: _isImageCorsProtected,
+    isSrcCorsProtected: _isSrcCorsProtected,
 };
