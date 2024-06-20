@@ -6,8 +6,14 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     ubl_cii_format = fields.Selection(selection_add=[('pint_my', "PINT Malaysia")])
-    sst_registration_number = fields.Char(string="SST")
-    ttx_registration_number = fields.Char(string="TTx")
+    sst_registration_number = fields.Char(
+        string="SST",
+        help="Malaysian Sales and Service Tax Number",
+    )
+    ttx_registration_number = fields.Char(
+        string="TTx",
+        help="Malaysian Tourism Tax Number",
+    )
 
     def _get_edi_builder(self):
         # EXTENDS 'account_edi_ubl_cii'

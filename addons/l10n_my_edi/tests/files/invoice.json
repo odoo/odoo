@@ -1,0 +1,635 @@
+{
+  "_D": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2",
+  "_A": "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+  "_B": "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+  "Invoice": [
+    {
+      "ID": [
+        {
+          "_": "INV/2024/0002"
+        }
+      ],
+      "IssueDate": [
+        {
+          "_": "2024-07-22"
+        }
+      ],
+      "IssueTime": [
+        {
+          "_": "03:08:04Z"
+        }
+      ],
+      "InvoiceTypeCode": [
+        {
+          "_": "01",
+          "listVersionID": "1.1"
+        }
+      ],
+      "DocumentCurrencyCode": [
+        {
+          "_": "MYR"
+        }
+      ],
+      "TaxCurrencyCode": [
+        {
+          "_": "MYR"
+        }
+      ],
+      "AdditionalDocumentReference": [
+        {
+          "ID": [
+            {
+              "_": "1356487"
+            }
+          ],
+          "DocumentType": [
+            {
+              "_": "CustomsImportForm"
+            }
+          ]
+        },
+        {
+          "ID": [
+            {
+              "_": "CPT"
+            }
+          ]
+        }
+      ],
+      "AccountingSupplierParty": [
+        {
+          "Party": [
+            {
+              "IndustryClassificationCode": [
+                {
+                  "_": "01111",
+                  "name": "Growing of maize"
+                }
+              ],
+              "PartyIdentification": [
+                {
+                  "ID": [
+                    {
+                      "_": "C58621197045",
+                      "schemeID": "TIN"
+                    }
+                  ]
+                },
+                {
+                  "ID": [
+                    {
+                      "_": "202001234567",
+                      "schemeID": "BRN"
+                    }
+                  ]
+                },
+                {
+                  "ID": [
+                    {
+                      "_": "A01-2345-67891012",
+                      "schemeID": "SST"
+                    }
+                  ]
+                },
+                {
+                  "ID": [
+                    {
+                      "_": "123-4567-89012345",
+                      "schemeID": "TTX"
+                    }
+                  ]
+                }
+              ],
+              "PostalAddress": [
+                {
+                  "CityName": [
+                    {
+                      "_": "Kuala Lumpur"
+                    }
+                  ],
+                  "PostalZone": [
+                    {
+                      "_": "50300"
+                    }
+                  ],
+                  "CountrySubentityCode": [
+                    {
+                      "_": "14"
+                    }
+                  ],
+                  "AddressLine": [
+                    {
+                      "Line": [
+                        {
+                          "_": "1 Wisma Dato Dagang"
+                        }
+                      ]
+                    },
+                    {
+                      "Line": [
+                        {
+                          "_": "Jln Raja Alang Kampung Bahru Mala"
+                        }
+                      ]
+                    }
+                  ],
+                  "Country": [
+                    {
+                      "IdentificationCode": [
+                        {
+                          "_": "MYS",
+                          "listID": "ISO3166-1",
+                          "listAgencyID": "6"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "PartyLegalEntity": [
+                {
+                  "RegistrationName": [
+                    {
+                      "_": "My Test Company"
+                    }
+                  ]
+                }
+              ],
+              "Contact": [
+                {
+                  "Telephone": [
+                    {
+                      "_": "+60123456789"
+                    }
+                  ],
+                  "ElectronicMail": [
+                    {
+                      "_": "info@company.myexample.com"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "AccountingCustomerParty": [
+        {
+          "Party": [
+            {
+              "PostalAddress": [
+                {
+                  "CityName": [
+                    {
+                      "_": "Kuala Lumpur"
+                    }
+                  ],
+                  "PostalZone": [
+                    {
+                      "_": "50480"
+                    }
+                  ],
+                  "CountrySubentityCode": [
+                    {
+                      "_": "10"
+                    }
+                  ],
+                  "AddressLine": [
+                    {
+                      "Line": [
+                        {
+                          "_": "Bangunan Merdeka"
+                        }
+                      ]
+                    },
+                    {
+                      "Line": [
+                        {
+                          "_": "Persiaran Jaya"
+                        }
+                      ]
+                    }
+                  ],
+                  "Country": [
+                    {
+                      "IdentificationCode": [
+                        {
+                          "_": "MYS",
+                          "listID": "ISO3166-1",
+                          "listAgencyID": "6"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "PartyLegalEntity": [
+                {
+                  "RegistrationName": [
+                    {
+                      "_": "Deco Addict"
+                    }
+                  ]
+                }
+              ],
+              "PartyIdentification": [
+                {
+                  "ID": [
+                    {
+                      "_": "C58621197050",
+                      "schemeID": "TIN"
+                    }
+                  ]
+                },
+                {
+                  "ID": [
+                    {
+                      "_": "202001234567",
+                      "schemeID": "BRN"
+                    }
+                  ]
+                }
+              ],
+              "Contact": [
+                {
+                  "Telephone": [
+                    {
+                      "_": "+60123456789"
+                    }
+                  ],
+                  "ElectronicMail": [
+                    {
+                      "_": "deco_addict@yourcompany.example.com"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "TaxTotal": [
+        {
+          "TaxAmount": [
+            {
+              "_": 14.70,
+              "currencyID": "MYR"
+            }
+          ],
+          "TaxSubtotal": [
+            {
+              "TaxableAmount": [
+                {
+                  "_": 147.00,
+                  "currencyID": "MYR"
+                }
+              ],
+              "TaxAmount": [
+                {
+                  "_": 0.00,
+                  "currencyID": "MYR"
+                }
+              ],
+              "Percent": [
+                {
+                  "_": 6.0
+                }
+              ],
+              "TaxCategory": [
+                {
+                  "ID": [
+                    {
+                      "_": "E"
+                    }
+                  ],
+                  "TaxScheme": [
+                    {
+                      "ID": [
+                        {
+                          "_": "OTH",
+                          "schemeID": "UN/ECE 5153",
+                          "schemeAgencyID": "6"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "TaxableAmount": [
+                {
+                  "_": 147.00,
+                  "currencyID": "MYR"
+                }
+              ],
+              "TaxAmount": [
+                {
+                  "_": 14.70,
+                  "currencyID": "MYR"
+                }
+              ],
+              "Percent": [
+                {
+                  "_": 10.0
+                }
+              ],
+              "TaxCategory": [
+                {
+                  "ID": [
+                    {
+                      "_": "01"
+                    }
+                  ],
+                  "TaxScheme": [
+                    {
+                      "ID": [
+                        {
+                          "_": "OTH",
+                          "schemeID": "UN/ECE 5153",
+                          "schemeAgencyID": "6"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "LegalMonetaryTotal": [
+        {
+          "LineExtensionAmount": [
+            {
+              "_": 147.00,
+              "currencyID": "MYR"
+            }
+          ],
+          "TaxExclusiveAmount": [
+            {
+              "_": 147.00,
+              "currencyID": "MYR"
+            }
+          ],
+          "TaxInclusiveAmount": [
+            {
+              "_": 161.70,
+              "currencyID": "MYR"
+            }
+          ],
+          "PayableAmount": [
+            {
+              "_": 161.70,
+              "currencyID": "MYR"
+            }
+          ]
+        }
+      ],
+      "InvoiceLine": [
+        {
+          "ID": [
+            {
+              "_": "1"
+            }
+          ],
+          "InvoicedQuantity": [
+            {
+              "_": 1,
+              "unitCode": "C62"
+            }
+          ],
+          "LineExtensionAmount": [
+            {
+              "_": 147.00,
+              "currencyID": "MYR"
+            }
+          ],
+          "TaxTotal": [
+            {
+              "TaxAmount": [
+                {
+                  "_": 14.70,
+                  "currencyID": "MYR"
+                }
+              ],
+              "TaxSubtotal": [
+                {
+                  "TaxableAmount": [
+                    {
+                      "_": 147.00,
+                      "currencyID": "MYR"
+                    }
+                  ],
+                  "TaxAmount": [
+                    {
+                      "_": 0.00,
+                      "currencyID": "MYR"
+                    }
+                  ],
+                  "Percent": [
+                    {
+                      "_": 0.00
+                    }
+                  ],
+                  "TaxCategory": [
+                    {
+                      "ID": [
+                        {
+                          "_": "E"
+                        }
+                      ],
+                      "Percent": [
+                        {
+                          "_": 6.0
+                        }
+                      ],
+                      "TaxExemptionReason": [
+                        {
+                          "_": "Exempt for reason"
+                        }
+                      ],
+                      "TaxScheme": [
+                        {
+                          "ID": [
+                            {
+                              "_": "OTH",
+                              "schemeID": "UN/ECE 5153",
+                              "schemeAgencyID": "6"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "TaxableAmount": [
+                    {
+                      "_": 147.00,
+                      "currencyID": "MYR"
+                    }
+                  ],
+                  "TaxAmount": [
+                    {
+                      "_": 14.70,
+                      "currencyID": "MYR"
+                    }
+                  ],
+                  "Percent": [
+                    {
+                      "_": 10.00
+                    }
+                  ],
+                  "TaxCategory": [
+                    {
+                      "ID": [
+                        {
+                          "_": "01"
+                        }
+                      ],
+                      "Percent": [
+                        {
+                          "_": 10.0
+                        }
+                      ],
+                      "TaxScheme": [
+                        {
+                          "ID": [
+                            {
+                              "_": "OTH",
+                              "schemeID": "UN/ECE 5153",
+                              "schemeAgencyID": "6"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "Item": [
+            {
+              "CommodityClassification": [
+                {
+                  "ItemClassificationCode": [
+                    {
+                      "_": "012",
+                      "listID": "CLASS"
+                    }
+                  ]
+                },
+                {
+                  "ItemClassificationCode": [
+                    {
+                      "_": "038",
+                      "listID": "CLASS"
+                    }
+                  ]
+                }
+              ],
+              "Description": [
+                {
+                  "_": "[E-COM06] Corner Desk Right Sit"
+                }
+              ],
+              "Name": [
+                {
+                  "_": "Corner Desk Right Sit"
+                }
+              ],
+              "SellersItemIdentification": [
+                {
+                  "ID": [
+                    {
+                      "_": "E-COM06"
+                    }
+                  ]
+                }
+              ],
+              "ClassifiedTaxCategory": [
+                {
+                  "ID": [
+                    {
+                      "_": "E"
+                    }
+                  ],
+                  "Name": [
+                    {
+                      "_": "Exempt for reason"
+                    }
+                  ],
+                  "Percent": [
+                    {
+                      "_": 6.0
+                    }
+                  ],
+                  "TaxExemptionReason": [
+                    {
+                      "_": "Exempt for reason"
+                    }
+                  ],
+                  "TaxScheme": [
+                    {
+                      "ID": [
+                        {
+                          "_": "OTH",
+                          "schemeID": "UN/ECE 5153",
+                          "schemeAgencyID": "6"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "ID": [
+                    {
+                      "_": "01"
+                    }
+                  ],
+                  "Percent": [
+                    {
+                      "_": 10.0
+                    }
+                  ],
+                  "TaxScheme": [
+                    {
+                      "ID": [
+                        {
+                          "_": "OTH",
+                          "schemeID": "UN/ECE 5153",
+                          "schemeAgencyID": "6"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "OriginCountry": [
+                {
+                  "IdentificationCode": [
+                    {
+                      "_": "MYS"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "Price": [
+            {
+              "PriceAmount": [
+                {
+                  "_": 147.00,
+                  "currencyID": "MYR"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
