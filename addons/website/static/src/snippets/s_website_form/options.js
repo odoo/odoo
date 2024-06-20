@@ -1013,6 +1013,32 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         this._replaceFieldElement(fieldEl);
     },
     /**
+     * TODO doc - remove with RecordListUserValueWidget
+     *
+     * @override
+     */
+    cleanForSave: function() {
+        this._super(...arguments);
+
+        // TODO move to Many2manyUserValueWidget ? Or even better, make a new widget (RecordListUserValueWidget)
+        console.log('SAVING')
+        const targetElement = this.$target[0];
+        const dependencyElement = this._getDependencyEl();
+        const dependencyContainerElement = dependencyElement?.closest(".s_website_form_field");
+        if (dependencyContainerElement) {
+            const visibilityCondition = targetElement.dataset.visibilityCondition;
+            const params = dependencyContainerElement.dataset;
+            if (visibilityCondition && ["many2one", "many2many"].includes(params.type) && params.key) {
+                const mappedField = params.key;
+                const records = JSON.parse(visibilityCondition);
+                const ids = records.map(record => {
+                    return record[mappedField] ? record[mappedField] : record;
+                });
+                targetElement.dataset.visibilityCondition = JSON.stringify(ids);
+            }
+        }
+    },
+    /**
      * Removes the visibility conditions concerned by the deleted field
      *
      * @override
@@ -1228,12 +1254,6 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      * @override
      */
     async selectDataAttribute(previewMode, widgetValue, params) {
-        if (params.attributeName === "visibilityCondition" && params.name === "hidden_condition_record_opt") {
-            // TODO _computeWidgetState
-            const mappedField = params.m2ofield;
-            const value = JSON.stringify(JSON.parse(params.activeValue).map(record => record[mappedField].toString()));
-            return await this._super(previewMode, value, params);
-        }
         await this._super(...arguments);
         if (params.attributeName === "maxFilesNumber") {
             const allowMultipleFiles = params.activeValue > 1;
@@ -1484,7 +1504,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                         inputContainerEl.dataset.visibilityCondition = dependencyEl.querySelector('option').value;
                     }
                 } else if (isRelationship) {
-                    // TODO generalize to handle many2many
+                    // TODO RecordListUserValueWidget
                     const relOptEl = uiFragment.querySelectorAll('we-many2many[data-name="hidden_condition_record_opt"]')[0];
                     console.log('relOptEl', relOptEl)
                     if (relOptEl) {

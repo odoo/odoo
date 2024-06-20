@@ -684,9 +684,9 @@ import wUtils from '@website/js/utils';
                 case '!fileSet':
                     return value.name === '';
                 case 'in_array':
-                    return JSON.parse(comparable).includes(value);
+                    return JSON.parse(comparable).map(v => v?.toString()).includes(value);
                 case '!in_array':
-                    return !JSON.parse(comparable).includes(value);
+                    return !JSON.parse(comparable).map(v => v?.toString()).includes(value);
             }
 
             const format = value.includes(':')
