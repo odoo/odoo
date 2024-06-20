@@ -1,5 +1,4 @@
 /** @odoo-module **/
-import { TourError } from "@web_tour/tour_service/tour_utils";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('test_detailed_op_no_save_1', { test: true, steps: () => [
@@ -119,7 +118,7 @@ registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, 
         run: () => {
             const nbLines = document.querySelectorAll(".o_field_cell[name=lot_name]").length;
             if (nbLines !== 5){
-                throw new TourError("wrong number of move lines generated. " + nbLines + " instead of 5");
+                console.error("wrong number of move lines generated. " + nbLines + " instead of 5");
             }
         },
     },
@@ -220,7 +219,7 @@ registry.category("web_tour.tours").add('test_generate_serial_2', { test: true, 
         run: () => {
             const nbLines = document.querySelectorAll(".o_field_cell[name=lot_name]").length;
             if (nbLines !== 7){
-                throw new TourError("wrong number of move lines generated. " + nbLines + " instead of 7");
+                console.error("wrong number of move lines generated. " + nbLines + " instead of 7");
             }
         },
     },
@@ -258,7 +257,7 @@ registry.category("web_tour.tours").add('test_generate_serial_2', { test: true, 
         run: () => {
             const nbLines = document.querySelectorAll(".o_field_cell[name=lot_name]").length;
             if (nbLines !== 11){
-                throw new TourError("wrong number of move lines generated. " + nbLines + " instead of 11");
+                console.error("wrong number of move lines generated. " + nbLines + " instead of 11");
             }
         },
     },
@@ -351,7 +350,7 @@ registry.category('web_tour.tours').add('test_inventory_adjustment_apply_all', {
         run: () => {
             const applyButtons = document.querySelectorAll('button[name=action_apply_inventory]');
             if (applyButtons.length > 0){
-                throw new TourError('Not all quants were applied!');
+                console.error('Not all quants were applied!');
             }
         },
     },

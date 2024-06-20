@@ -8,13 +8,9 @@ import { tourState } from "./tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { session } from "@web/session";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
-import {
-    callWithUnloadCheck,
-    getConsumeEventType,
-    getScrollParent,
-    RunningTourActionHelper,
-} from "./tour_utils";
+import { callWithUnloadCheck, getConsumeEventType, getScrollParent } from "./tour_utils";
 import { utils } from "@web/core/ui/ui_service";
+import { TourHelpers } from "./tour_helpers";
 
 /**
  * @typedef {import("@web/core/macro").MacroDescriptor} MacroDescriptor
@@ -461,7 +457,7 @@ export function compileStepAuto(stepIndex, step, options) {
                 }
 
                 // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
-                const actionHelper = new RunningTourActionHelper(stepEl);
+                const actionHelper = new TourHelpers(stepEl);
 
                 let result;
                 if (typeof step.run === "function") {
