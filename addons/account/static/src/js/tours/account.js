@@ -32,8 +32,8 @@ registry.category("web_tour.tours").add('account_tour', {
     ...accountTourSteps.onboarding(),
     ...accountTourSteps.newInvoice(),
     {
+        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
-        auto: true,
     },
     {
         trigger: "div[name=partner_id] .o_input_dropdown",
@@ -46,8 +46,8 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "edit Test",
     }, 
     {
+        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
-        auto: true,
     },
     {
         isActive: ["auto"],
@@ -56,8 +56,8 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     }, 
     {
+        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
-        auto: true,
     },
     {
         isActive: ["auto"],
@@ -66,8 +66,8 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     }, 
     {
+        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
-        auto: true,
     },
     {
         trigger: "div[name=invoice_line_ids] .o_field_x2many_list_row_add a",
@@ -75,8 +75,8 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
+        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
-        auto: true,
     },
     {
         trigger: "div[name=invoice_line_ids] div[name=product_id] input",
@@ -85,8 +85,8 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "edit Test",
     },
     {
+        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
-        auto: true,
     },
     {
         trigger: "div[name=invoice_line_ids] div[name=price_unit] input",
@@ -96,8 +96,8 @@ registry.category("web_tour.tours").add('account_tour', {
     },
     ...stepUtils.saveForm(),
     {
+        isActive: ["auto"],
         trigger: "button.o_form_button_create",
-        auto: true,
     },
     {
         trigger: "button[name=action_post]",
@@ -105,8 +105,8 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
+        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
-        auto: true,
     },
     {
         trigger: "button[name=action_invoice_sent]",
@@ -115,8 +115,8 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
+        isActive: ["auto"],
         trigger: "div.modal-dialog",
-        auto: true,
     },
     {
         trigger: "button[name=document_layout_save]",
@@ -141,8 +141,8 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     }, 
     {
+        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
-        auto: true,
     },
     {
         trigger: "button[name=action_invoice_sent]",
@@ -150,8 +150,8 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     }, 
     {
+        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
-        auto: true,
     },
     {
         trigger: "button[name=action_send_and_print]",

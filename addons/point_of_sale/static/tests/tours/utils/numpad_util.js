@@ -1,7 +1,7 @@
 import { queryAll } from "@odoo/hoot-dom";
 
 const buttonTriger = (buttonValue) => `div.numpad.row button.col:contains("${buttonValue}")`;
-export const click = (buttonValue, options = {}) => ({
+export const click = (buttonValue) => ({
     content: `click numpad button: ${buttonValue}`,
     trigger: buttonTriger(buttonValue),
     // here we couldn't simply use the jquery `:contains` selector because it
@@ -13,7 +13,6 @@ export const click = (buttonValue, options = {}) => ({
             .at(0)
             ?.click();
     },
-    mobile: options.mobile,
 });
 export const enterValue = (keys) => keys.split("").map((key) => click(key));
 export const isActive = (buttonValue) => ({

@@ -18,15 +18,15 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
+            isActive: ["auto"],
             trigger: ".o-discuss-ChannelSelector input",
             content: markup(_t("<p>Create a channel here.</p>")),
             position: "bottom",
-            auto: true,
             run: `edit SomeChannel_${new Date().getTime()}`,
         },
         {
+            isActive: ["auto"],
             trigger: ".o-discuss-ChannelSelector-suggestion",
-            auto: true,
         },
         {
             trigger: ".o-discuss-ChannelSelector-list",
@@ -92,8 +92,8 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
+            isActive: ["auto"],
             trigger: ".o-discuss-ChannelSelector",
-            auto: true,
         },
     ],
 });

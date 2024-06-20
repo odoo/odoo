@@ -22,9 +22,9 @@ registry.category("web_tour.tours").add("task_create_sol_tour", {
         content: "Add the customer for this task to select an SO and SOL.",
         run: "click",
     }, {
+        isActive: ["auto"],
         trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
         content: "Select the customer in the autocomplete dropdown",
-        auto: true,
         run: "click",
     }, {
         trigger: "div[name='sale_line_id'] input",

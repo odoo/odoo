@@ -11,21 +11,21 @@ registry.category("web_tour.tours").add('crm_tour', {
     rainbowManMessage: _t("Congrats, best of luck catching such big fish! :)"),
     sequence: 10,
     steps: () => [stepUtils.showAppsMenuItem(), {
+    isActive: ["community"],
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
     content: markup(_t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.')),
     position: 'bottom',
-    edition: 'community',
     run: "click",
 }, {
+    isActive: ["enterprise"],
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
     content: markup(_t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.')),
     position: 'bottom',
-    edition: 'enterprise',
     run: "click",
 },
 {
+    isActive: ["auto"],
     trigger: ".o_opportunity_kanban",
-    auto: true,
 },
 {
     trigger: '.o-kanban-button-new',
@@ -38,8 +38,8 @@ registry.category("web_tour.tours").add('crm_tour', {
     position: "top",
     run: "edit Brandon Freeman",
 }, {
+    isActive: ["auto"],
     trigger: ".ui-menu-item > a",
-    auto: true,
     in_modal: false,
     run: "click",
 }, {
@@ -49,8 +49,8 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "click",
 }, 
 {
+    isActive: ["auto"],
     trigger: ".o_opportunity_kanban",
-    auto: true,
 },
 {
     trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-of-type .oe_kanban_content",
@@ -59,8 +59,8 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(2))",
 }, 
 {
+    isActive: ["auto"],
     trigger: ".o_opportunity_kanban",
-    auto: true,
 },
 {
     // Choose the element that is not going to be moved by the previous step.
@@ -70,8 +70,8 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "click",
 },
 {
+    isActive: ["auto"],
     trigger: ".o_opportunity_kanban",
-    auto: true,
 },
 {
     trigger: ".o-mail-ActivityListPopover button:contains(Schedule an activity)",
@@ -92,8 +92,8 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(3))",
 },
 {
+    isActive: ["auto"],
     trigger: ".o_opportunity_kanban",
-    auto: true,
 },
 {
     trigger: ".o_kanban_record",

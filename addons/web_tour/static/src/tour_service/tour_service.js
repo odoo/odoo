@@ -72,21 +72,19 @@ function checkTourStepKeyValues(tourStep) {
         isActive: { type: Array, element: String, optional: true },
         content: { type: [String, Object], optional: true }, //allow object for _t && markup
         position: { type: String, optional: true },
-        edition: { type: String, optional: true },
         run: { type: [String, Function], optional: true },
         allowInvisible: { type: Boolean, optional: true },
         allowDisabled: { type: Boolean, optional: true },
-        auto: { type: Boolean, optional: true },
         in_modal: { type: Boolean, optional: true },
         width: { type: Number, optional: true },
         timeout: { type: Number, optional: true },
         consumeVisibleOnly: { type: Boolean, optional: true },
         consumeEvent: { type: String, optional: true },
-        mobile: { type: Boolean, optional: true },
         title: { type: String, optional: true },
-        shadow_dom: { type: Boolean, optional: true },
         debugHelp: { type: String, optional: true },
         noPrepend: { type: Boolean, optional: true },
+        pause: { type: Boolean, optional: true }, //ONLY IN DEBUG MODE
+        break: { type: Boolean, optional: true }, //ONLY IN DEBUG MODE
     };
 
     try {
@@ -225,26 +223,6 @@ export const tourService = {
         }
 
         /**
-         * @param {TourStep} step
-         * @param {TourMode} mode
-         */
-        function shouldOmit(step, mode) {
-            const isDefined = (key, obj) => key in obj && obj[key] !== undefined;
-            const getEdition = () =>
-                (session.server_version_info || []).at(-1) === "e" ? "enterprise" : "community";
-            const correctEdition = isDefined("edition", step)
-                ? step.edition === getEdition()
-                : true;
-            const correctDevice = isDefined("mobile", step) ? step.mobile === ui.isSmall : true;
-            return (
-                !correctEdition ||
-                !correctDevice ||
-                // `step.auto = true` means omitting a step in a manual tour.
-                (mode === "manual" && step.auto)
-            );
-        }
-
-        /**
          * @param {Tour} tour
          * @param {ReturnType<typeof createPointer>} pointer
          * @param {Object} options
@@ -263,7 +241,7 @@ export const tourService = {
             // IMPROVEMENTS: Custom step compiler. Will probably require decoupling from `mode`.
             const stepCompiler = mode === "auto" ? compileStepAuto : compileStepManual;
             const checkDelay = mode === "auto" ? tour.checkDelay : 100;
-            const filteredSteps = tour.steps.filter((step) => !shouldOmit(step, mode));
+            const filteredSteps = tour.steps;
             return compileTourToMacro(tour, {
                 filteredSteps,
                 stepCompiler,

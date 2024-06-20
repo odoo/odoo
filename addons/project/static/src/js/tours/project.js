@@ -11,16 +11,16 @@ registry.category("web_tour.tours").add('project_tour', {
     url: "/web",
     rainbowManMessage: _t("Congratulations, you are now a master of project management."),
     steps: () => [stepUtils.showAppsMenuItem(), {
+    isActive: ["community"],
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
     content: markup(_t('Want a better way to <b>manage your projects</b>? <i>It starts here.</i>')),
     position: 'right',
-    edition: 'community',
     run: "click",
 }, {
+    isActive: ["enterprise"],
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
     content: markup(_t('Want a better way to <b>manage your projects</b>? <i>It starts here.</i>')),
     position: 'bottom',
-    edition: 'enterprise',
     run: "click",
 }, {
     trigger: '.o-kanban-button-new',
@@ -111,28 +111,30 @@ registry.category("web_tour.tours").add('project_tour', {
     content: markup(_t("Create <b>activities</b> to set yourself to-dos or to schedule meetings.")),
     position: "bottom",
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_form_project_tasks",
+},
+{
     trigger: ".modal-dialog .btn-primary",
-    extra_trigger: '.o_form_project_tasks',
     content: _t("Schedule your activity once it is ready."),
     position: "bottom",
     run: "click",
-}, {
+},
+{
     trigger: ".o_field_widget[name='user_ids'] input",
-    extra_trigger: '.o_form_project_tasks',
     content: _t("Assign a responsible to your task"),
     position: "right",
-    run(helpers) {
-        this.anchor.click();
-    }, 
-}, {
-    trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
-    auto: true,
-    mobile: false,
+    run: "edit Mitch",
+},
+{
+    isActive: ["auto", "desktop"],
+    trigger: ".o_field_widget[name='user_ids'] .o-autocomplete--dropdown-menu li:contains(Mitchell Admin)",
     run: "click",
-}, {
+},
+{
+    isActive: ["mobile"],
     trigger: "div[role='article']",
-    mobile: true,
     run: "click",
 }, {
     trigger: 'a[name="sub_tasks_page"]',
@@ -186,8 +188,8 @@ registry.category("web_tour.tours").add('project_tour', {
     content: _t("Close the sub-tasks list"),
     run: "click",
 }, {
+    isActive: ["auto"],
     trigger: '.o_kanban_renderer',
     // last step to confirm we've come back before considering the tour successful
-    auto: true,
     run: "click",
 }]});

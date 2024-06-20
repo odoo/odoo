@@ -13,15 +13,15 @@ registry.category("web_tour.tours").add('event_tour', {
     rainbowManMessage: _t("Great! Now all you have to do is wait for your attendees to show up!"),
     sequence: 210,
     steps: () => [stepUtils.showAppsMenuItem(), {
+    isActive: ["enterprise"],
     trigger: '.o_app[data-menu-xmlid="event.event_main_menu"]',
     content: markup(_t("Ready to <b>organize events</b> in a few minutes? Let's get started!")),
     position: 'bottom',
-    edition: 'enterprise',
     run: "click",
 }, {
+    isActive: ["community"],
     trigger: '.o_app[data-menu-xmlid="event.event_main_menu"]',
     content: markup(_t("Ready to <b>organize events</b> in a few minutes? Let's get started!")),
-    edition: 'community',
     run: "click",
 },
 {

@@ -11,16 +11,16 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     fadeout: 'very_slow',
     sequence: 230,
     steps: () => [stepUtils.showAppsMenuItem(), {
+    isActive: ["community"],
     trigger: '.o_app[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
     content: markup(_t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>.")),
     position: 'right',
-    edition: 'community',
     run: "click",
 }, {
+    isActive: ["enterprise"],
     trigger: '.o_app[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
     content: markup(_t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>.")),
     position: 'bottom',
-    edition: 'enterprise',
     run: "click",
 }, {
     trigger: ".o-kanban-button-new",

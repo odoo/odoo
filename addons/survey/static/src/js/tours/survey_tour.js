@@ -29,8 +29,8 @@ registry.category("web_tour.tours").add('survey_tour', {
     run: "click",
 }, 
 {
+    isActive: ["auto"],
     trigger: '.js_question-wrapper span:contains("How frequently")',
-    auto: true,
 },
 {
     trigger: 'button[type=submit]',
@@ -39,8 +39,8 @@ registry.category("web_tour.tours").add('survey_tour', {
     run: "click",
 }, 
 {
+    isActive: ["auto"],
     trigger: '.js_question-wrapper span:contains("How many")',
-    auto: true,
 },
 {
     trigger: 'button[type=submit]',
@@ -49,8 +49,8 @@ registry.category("web_tour.tours").add('survey_tour', {
     run: "click",
 }, 
 {
+    isActive: ["auto"],
     trigger: '.js_question-wrapper span:contains("How likely")',
-    auto: true,
 },
 {
     trigger: 'button[value=finish]',

@@ -24,8 +24,8 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
     trigger: '.o_required_modifier[name=partner_id] input',
     run: "edit Tajine Saucisse",
 }, {
+    isActive: ["auto"],
     trigger: '.ui-menu-item > a:contains("Tajine Saucisse")',
-    auto: true,
     run: "click",
 }, {
     trigger: 'a:contains("Add a product")',

@@ -24,6 +24,7 @@
         position: "bottom",
         run: "edit Test",
     }, {
+        isActive: ["auto"],
         trigger: "button.o_form_button_save",
         extra_trigger: 'div.o_field_widget[name="blog_id"]',
         content: _t("Select the blog you want to add the post to."),
@@ -34,7 +35,6 @@
         // the user does not need guidance once that modal is opened. Note: if
         // you run the tour via your console without demo data, the tour will
         // thus fail as this will be considered.
-        auto: true,
         run: "click",
     }, {
         trigger: ":iframe h1[data-oe-expression=\"blog_post.name\"]",
@@ -83,7 +83,7 @@
         content: markup(_t("<b>Publish your blog post</b> to make it visible to your visitors.")),
         run: "click",
     }, {
+        isActive: ["auto"],
         trigger: '.o_menu_systray_item a:contains("Published")',
-        auto: true,
     }
 ]);

@@ -8,13 +8,13 @@ export function back() {
 export function inLeftSide(steps) {
     return [
         {
+            isActive: ["mobile"],
             content: "click review button",
             trigger: ".btn-switchpane.review-button",
-            mobile: true,
             run: "click",
         },
         ...[steps].flat(),
-        { ...back(), mobile: true },
+        { ...back(), isActive: ["mobile"] },
     ];
 }
 

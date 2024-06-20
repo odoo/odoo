@@ -665,7 +665,6 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
         },
         {
             trigger: "body:not(:has(button.o_form_button_cancel)",
-            run() {}
         }
     ],
 });

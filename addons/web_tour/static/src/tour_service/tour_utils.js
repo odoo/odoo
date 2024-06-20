@@ -501,15 +501,14 @@ export const stepUtils = {
     },
 
     mobileModifier(step) {
-        step.mobile = true;
+        step.isActive = ["mobile"];
         return step;
     },
 
     showAppsMenuItem() {
         return {
-            edition: "community",
+            isActive: ["auto", "community"],
             trigger: ".o_navbar_apps_menu button",
-            auto: true,
             position: "bottom",
             run: "click",
         };
@@ -517,7 +516,7 @@ export const stepUtils = {
 
     toggleHomeMenu() {
         return {
-            edition: "enterprise",
+            isActive: ["enterprise"],
             trigger: ".o_main_navbar .o_menu_toggle",
             content: markup(_t("Click on the <i>Home icon</i> to navigate across apps.")),
             position: "bottom",
@@ -527,10 +526,10 @@ export const stepUtils = {
 
     autoExpandMoreButtons(extra_trigger) {
         return {
+            isActive: ["auto"],
             content: `autoExpandMoreButtons`,
             trigger: ".o-form-buttonbox",
             extra_trigger: extra_trigger,
-            auto: true,
             run: (actions) => {
                 const more = hoot.queryFirst(".o-form-buttonbox .o_button_more");
                 if (more) {
@@ -542,7 +541,7 @@ export const stepUtils = {
 
     goBackBreadcrumbsMobile(description, ...extraTrigger) {
         return extraTrigger.map((element) => ({
-            mobile: true,
+            isActive: ["mobile"],
             trigger: ".o_back_button",
             extra_trigger: element,
             content: description,
@@ -560,17 +559,17 @@ export const stepUtils = {
         return [
             this.showAppsMenuItem(),
             {
+                isActive: ["community"],
                 trigger: `.o_app[data-menu-xmlid="${dataMenuXmlid}"]`,
                 content: description,
                 position: "right",
-                edition: "community",
                 run: "click",
             },
             {
+                isActive: ["enterprise"],
                 trigger: `.o_app[data-menu-xmlid="${dataMenuXmlid}"]`,
                 content: description,
                 position: "bottom",
-                edition: "enterprise",
                 run: "click",
             },
         ].map((step) =>
@@ -580,7 +579,7 @@ export const stepUtils = {
 
     openBurgerMenu(extraTrigger) {
         return {
-            mobile: true,
+            isActive: ["mobile"],
             trigger: ".o_mobile_menu_toggle",
             extra_trigger: extraTrigger,
             content: _t("Open bugger menu."),
@@ -593,8 +592,7 @@ export const stepUtils = {
     statusbarButtonsSteps(innerTextButton, description, extraTrigger) {
         return [
             {
-                mobile: true,
-                auto: true,
+                isActive: ["auto", "mobile"],
                 trigger: ".o_statusbar_buttons",
                 extra_trigger: extraTrigger,
                 run: (actions) => {
@@ -627,7 +625,7 @@ export const stepUtils = {
 
     simulateEnterKeyboardInSearchModal() {
         return {
-            mobile: true,
+            isActive: ["mobile"],
             trigger: ".o_searchview_input",
             extra_trigger: ".dropdown-menu.o_searchview_autocomplete",
             position: "bottom",
@@ -639,13 +637,13 @@ export const stepUtils = {
     mobileKanbanSearchMany2X(modalTitle, valueSearched) {
         return [
             {
-                mobile: true,
+                isActive: ["mobile"],
                 trigger: `.o_control_panel_navigation .btn .fa-search`,
                 position: "bottom",
                 run: "click",
             },
             {
-                mobile: true,
+                isActive: ["mobile"],
                 trigger: ".o_searchview_input",
                 extra_trigger: `.modal:not(.o_inactive_modal) .modal-title:contains('${modalTitle}')`,
                 position: "bottom",
@@ -653,7 +651,7 @@ export const stepUtils = {
             },
             this.simulateEnterKeyboardInSearchModal(),
             {
-                mobile: true,
+                isActive: ["mobile"],
                 trigger: `.o_kanban_record:contains('${valueSearched}')`,
                 position: "bottom",
                 run: "click",
@@ -675,16 +673,16 @@ export const stepUtils = {
     saveForm(options = {}) {
         return [
             {
+                isActive: ["auto"],
                 content: options.content || "save form",
                 trigger: ".o_form_button_save",
                 extra_trigger: options.extra_trigger,
                 run: "click",
-                auto: true,
             },
             {
+                isActive: ["auto"],
                 content: "wait for save completion",
                 trigger: ".o_form_readonly, .o_form_saved",
-                auto: true,
             },
         ];
     },
@@ -697,17 +695,17 @@ export const stepUtils = {
     discardForm(options = {}) {
         return [
             {
+                isActive: ["auto"],
                 content: options.content || "exit the form",
                 trigger: ".o_form_button_cancel",
                 extra_trigger: options.extra_trigger,
                 run: "click",
-                auto: true,
             },
             {
+                isActive: ["auto"],
                 content: "wait for cancellation to complete",
                 trigger:
                     ".o_view_controller.o_list_view, .o_form_view > div > div > .o_form_readonly, .o_form_view > div > div > .o_form_saved",
-                auto: true,
             },
         ];
     },

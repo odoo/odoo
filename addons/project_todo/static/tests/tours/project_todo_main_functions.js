@@ -113,12 +113,10 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
 {
     trigger: ".o_field_widget[name='user_ids'] input",
     content: "Assign a responsible to your task",
-    run(helpers) {
-        this.anchor.click();
-    }, 
+    run: "click",
 }, {
+    isActive: ["auto"],
     trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
-    auto: true,
     run: "click",
 }, {
     trigger: '.o_breadcrumb input.o_todo_breadcrumb_name_input',

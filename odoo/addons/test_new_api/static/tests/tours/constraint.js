@@ -30,7 +30,6 @@
     }, { // check popup content
         content: "check notification box",
         trigger: '.o_error_dialog:contains(The color code must be positive!)',
-        run() {}
     }, {
         content: "close notification box",
         trigger: '.modal-footer .btn-primary',

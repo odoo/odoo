@@ -4,7 +4,8 @@ class PurchaseAdditionalTourSteps {
     _get_purchase_stock_steps() {
         return [
             {
-                auto: true, // Useless final step to trigger congratulation message
+                // Useless final step to trigger congratulation message
+                isActive: ["auto"],
                 trigger: ".o_purchase_order",
                 run: "click",
             },
