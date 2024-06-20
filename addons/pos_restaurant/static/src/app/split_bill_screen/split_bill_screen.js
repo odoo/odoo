@@ -7,16 +7,21 @@ import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
     static components = { Orderline, OrderWidget };
-    static props = {
-        disallow: { type: Boolean, optional: true },
-    };
+    static props = {};
 
     setup() {
         this.pos = usePos();
         this.qtyTracker = useState({});
         this.priceTracker = useState({});
     }
+<<<<<<< saas-17.4
 
+||||||| 4dadd6ebc14338231f6ee1e8cb87423a0119e028
+=======
+    disallowLineQuantityChange() {
+        return this.pos.disallowLineQuantityChange();
+    }
+>>>>>>> 966f31cb2cd3407653a2e508c366d2be7c01d559
     get currentOrder() {
         return this.pos.get_order();
     }
@@ -118,6 +123,330 @@ export class SplitBillScreen extends Component {
     back() {
         this.pos.showScreen("ProductScreen");
     }
+<<<<<<< saas-17.4
+||||||| 4dadd6ebc14338231f6ee1e8cb87423a0119e028
+    proceed() {
+        if (Object.keys(this.splitlines || {})?.length === 0) {
+            // Splitlines is empty
+            return;
+        }
+
+        this._isFinal = true;
+        delete this.newOrder.temporary;
+
+        if (!this._isFullPayOrder()) {
+            this._setQuantityOnCurrentOrder();
+
+            this.newOrder.set_screen_data({ name: "PaymentScreen" });
+
+            // for the kitchen printer we assume that everything
+            // has already been sent to the kitchen before splitting
+            // the bill. So we save all changes both for the old
+            // order and for the new one. This is not entirely correct
+            // but avoids flooding the kitchen with unnecessary orders.
+            // Not sure what to do in this case.
+            if (this.pos.orderPreparationCategories.size) {
+                this.currentOrder.updateLastOrderChange();
+                this.newOrder.updateLastOrderChange();
+            }
+
+            this.newOrder.setCustomerCount(1);
+            this.newOrder.originalSplittedOrder = this.currentOrder;
+            const newCustomerCount = this.currentOrder.getCustomerCount() - 1;
+            this.currentOrder.setCustomerCount(newCustomerCount || 1);
+            this.currentOrder.set_screen_data({ name: "ProductScreen" });
+
+            const reactiveNewOrder = this.pos.makeOrderReactive(this.newOrder);
+            this.pos.orders.push(reactiveNewOrder);
+            this.pos.selectedOrder = reactiveNewOrder;
+        }
+        this.pos.showScreen("PaymentScreen");
+    }
+    /**
+     * @param {models.Order} order
+     * @returns {Object<{ quantity: number }>} splitlines
+     */
+    _initSplitLines(order) {
+        const splitlines = {};
+        for (const line of order.get_orderlines()) {
+            splitlines[line.id] = { product: line.get_product().id, quantity: 0 };
+        }
+        return splitlines;
+    }
+    /**
+     * @param {Orderline} line
+     * side effect: update `this.splitlines[line.id].quantity` depending on
+     * - it's current value
+     * - the total quantity of the product in the order
+     * - the value of `line.is_pos_groupable()`
+     */
+    _splitQuantity(line) {
+        const split = this.splitlines[line.id];
+        // total quantity of the product in this line
+        // we add up the quantities of all the lines that have this product
+        let totalQuantity = 0;
+
+        this.pos
+            .get_order()
+            .get_orderlines()
+            .forEach(function (orderLine) {
+                if (orderLine.get_product().id === split.product) {
+                    totalQuantity += orderLine.get_quantity();
+                }
+            });
+
+        if (line.get_quantity() > 0) {
+            if (!line.is_pos_groupable()) {
+                if (split.quantity !== line.get_quantity()) {
+                    split.quantity = line.get_quantity();
+                } else {
+                    split.quantity = 0;
+                }
+            } else {
+                if (split.quantity < totalQuantity) {
+                    split.quantity += 1;
+                    // TODO: why do we need this `if`?
+                    if (split.quantity > line.get_quantity()) {
+                        split.quantity = line.get_quantity();
+                    }
+                } else {
+                    split.quantity = 0;
+                }
+            }
+        }
+    }
+    _updateNewOrder(line) {
+        const split = this.splitlines[line.id];
+        let orderline = this.newOrderLines[line.id];
+        if (split.quantity) {
+            if (!orderline) {
+                orderline = line.clone();
+                this.newOrder.add_orderline(orderline);
+                this.newOrderLines[line.id] = orderline;
+            }
+            orderline.set_quantity(split.quantity, "do not recompute unit price");
+        } else if (orderline) {
+            this.newOrder.removeOrderline(orderline);
+            this.newOrderLines[line.id] = null;
+        }
+    }
+    _isFullPayOrder() {
+        const order = this.pos.get_order();
+        let full = true;
+        const splitlines = this.splitlines;
+        const groupedLines = groupBy(order.get_orderlines(), (line) => line.get_product().id);
+
+        Object.keys(groupedLines).forEach(function (lineId) {
+            var maxQuantity = groupedLines[lineId].reduce(
+                (quantity, line) => quantity + line.get_quantity(),
+                0
+            );
+            Object.keys(splitlines).forEach((id) => {
+                const split = splitlines[id];
+                if (split.product === groupedLines[lineId][0].get_product().id) {
+                    maxQuantity -= split.quantity;
+                }
+            });
+            if (maxQuantity !== 0) {
+                full = false;
+            }
+        });
+
+        return full;
+    }
+    _setQuantityOnCurrentOrder() {
+        const order = this.pos.get_order();
+        for (var id in this.splitlines) {
+            var split = this.splitlines[id];
+            var line = this.currentOrder.get_orderline(parseInt(id));
+
+            if (!this.props.disallow) {
+                line.set_quantity(
+                    line.get_quantity() - split.quantity,
+                    "do not recompute unit price"
+                );
+            } else {
+                if (split.quantity) {
+                    const decreaseLine = line.clone();
+                    decreaseLine.order = order;
+                    decreaseLine.noDecrease = true;
+                    decreaseLine.set_quantity(-split.quantity);
+                    order.add_orderline(decreaseLine);
+                }
+            }
+        }
+        if (!this.props.disallow) {
+            for (id in this.splitlines) {
+                line = this.currentOrder.get_orderline(parseInt(id));
+                if (line && Math.abs(line.get_quantity()) < 0.00001) {
+                    this.currentOrder.removeOrderline(line);
+                }
+            }
+        }
+    }
+=======
+    async proceed() {
+        if (Object.keys(this.splitlines || {})?.length === 0) {
+            // Splitlines is empty
+            return;
+        }
+
+        this._isFinal = true;
+        delete this.newOrder.temporary;
+
+        if (!this._isFullPayOrder()) {
+            await this._setQuantityOnCurrentOrder();
+
+            this.newOrder.set_screen_data({ name: "PaymentScreen" });
+
+            // for the kitchen printer we assume that everything
+            // has already been sent to the kitchen before splitting
+            // the bill. So we save all changes both for the old
+            // order and for the new one. This is not entirely correct
+            // but avoids flooding the kitchen with unnecessary orders.
+            // Not sure what to do in this case.
+            if (this.pos.orderPreparationCategories.size) {
+                this.currentOrder.updateLastOrderChange();
+                this.newOrder.updateLastOrderChange();
+            }
+
+            this.newOrder.setCustomerCount(1);
+            this.newOrder.originalSplittedOrder = this.currentOrder;
+            const newCustomerCount = this.currentOrder.getCustomerCount() - 1;
+            this.currentOrder.setCustomerCount(newCustomerCount || 1);
+            this.currentOrder.set_screen_data({ name: "ProductScreen" });
+
+            const reactiveNewOrder = this.pos.makeOrderReactive(this.newOrder);
+            this.pos.orders.push(reactiveNewOrder);
+            this.pos.selectedOrder = reactiveNewOrder;
+        }
+        this.pos.showScreen("PaymentScreen");
+    }
+    /**
+     * @param {models.Order} order
+     * @returns {Object<{ quantity: number }>} splitlines
+     */
+    _initSplitLines(order) {
+        const splitlines = {};
+        for (const line of order.get_orderlines()) {
+            splitlines[line.id] = { product: line.get_product().id, quantity: 0 };
+        }
+        return splitlines;
+    }
+    /**
+     * @param {Orderline} line
+     * side effect: update `this.splitlines[line.id].quantity` depending on
+     * - it's current value
+     * - the total quantity of the product in the order
+     * - the value of `line.is_pos_groupable()`
+     */
+    _splitQuantity(line) {
+        const split = this.splitlines[line.id];
+        // total quantity of the product in this line
+        // we add up the quantities of all the lines that have this product
+        let totalQuantity = 0;
+
+        this.pos
+            .get_order()
+            .get_orderlines()
+            .forEach(function (orderLine) {
+                if (orderLine.get_product().id === split.product) {
+                    totalQuantity += orderLine.get_quantity();
+                }
+            });
+
+        if (line.get_quantity() > 0) {
+            if (!line.is_pos_groupable()) {
+                if (split.quantity !== line.get_quantity()) {
+                    split.quantity = line.get_quantity();
+                } else {
+                    split.quantity = 0;
+                }
+            } else {
+                if (split.quantity < totalQuantity) {
+                    split.quantity += 1;
+                    // We need this split for decimal quantities (e.g. 0.5 kg)
+                    if (split.quantity > line.get_quantity()) {
+                        split.quantity = line.get_quantity();
+                    }
+                } else {
+                    split.quantity = 0;
+                }
+            }
+        }
+    }
+    _updateNewOrder(line) {
+        const split = this.splitlines[line.id];
+        let orderline = this.newOrderLines[line.id];
+        if (split.quantity) {
+            if (!orderline) {
+                orderline = line.clone();
+                this.newOrder.add_orderline(orderline);
+                this.newOrderLines[line.id] = orderline;
+            }
+            orderline.set_quantity(split.quantity, "do not recompute unit price");
+        } else if (orderline) {
+            this.newOrder.removeOrderline(orderline);
+            this.newOrderLines[line.id] = null;
+        }
+    }
+    _isFullPayOrder() {
+        const order = this.pos.get_order();
+        let full = true;
+        const splitlines = this.splitlines;
+        const groupedLines = groupBy(order.get_orderlines(), (line) => line.get_product().id);
+
+        Object.keys(groupedLines).forEach(function (lineId) {
+            var maxQuantity = groupedLines[lineId].reduce(
+                (quantity, line) => quantity + line.get_quantity(),
+                0
+            );
+            Object.keys(splitlines).forEach((id) => {
+                const split = splitlines[id];
+                if (split.product === groupedLines[lineId][0].get_product().id) {
+                    maxQuantity -= split.quantity;
+                }
+            });
+            if (maxQuantity !== 0) {
+                full = false;
+            }
+        });
+
+        return full;
+    }
+    async _setQuantityOnCurrentOrder() {
+        const order = this.pos.get_order();
+        for (var id in this.splitlines) {
+            var split = this.splitlines[id];
+            var line = this.currentOrder.get_orderline(parseInt(id));
+
+            if (line) {
+                if (!this.disallowLineQuantityChange()) {
+                    line.set_quantity(
+                        line.get_quantity() - split.quantity,
+                        "do not recompute unit price"
+                    );
+                } else {
+                    if (split.quantity) {
+                        const decreaseLine = line.clone();
+                        decreaseLine.order = order;
+                        decreaseLine.noDecrease = true;
+                        decreaseLine.set_quantity(-split.quantity);
+                        order.add_orderline(decreaseLine);
+                    }
+                }
+            }
+        }
+        if (!this.disallowLineQuantityChange()) {
+            for (id in this.splitlines) {
+                line = this.currentOrder.get_orderline(parseInt(id));
+                if (line && Math.abs(line.get_quantity()) < 0.00001) {
+                    this.currentOrder.removeOrderline(line);
+                }
+            }
+        }
+    }
+>>>>>>> 966f31cb2cd3407653a2e508c366d2be7c01d559
 }
 
 registry.category("pos_screens").add("SplitBillScreen", SplitBillScreen);

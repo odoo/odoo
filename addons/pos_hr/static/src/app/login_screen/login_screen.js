@@ -15,9 +15,15 @@ export class LoginScreen extends Component {
     static storeOnOrder = false;
     setup() {
         this.pos = usePos();
+<<<<<<< saas-17.4
         this.notification = useService("notification");
         this.ui = useState(useService("ui"));
         this.selectCashier = useCashierSelector({
+||||||| 4dadd6ebc14338231f6ee1e8cb87423a0119e028
+        this.selectCashier = useCashierSelector({
+=======
+        this.cashierSelector = useCashierSelector({
+>>>>>>> 966f31cb2cd3407653a2e508c366d2be7c01d559
             onCashierChanged: () => {
                 this.cashierLogIn();
             },
@@ -57,6 +63,9 @@ export class LoginScreen extends Component {
     cashierLogIn() {
         this.pos.showScreen(this.pos.previousScreen || "ProductScreen");
         this.pos.hasLoggedIn = true;
+    }
+    async selectCashier() {
+        return await this.cashierSelector();
     }
 }
 

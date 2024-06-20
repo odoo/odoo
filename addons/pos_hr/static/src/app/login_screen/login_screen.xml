@@ -20,6 +20,7 @@
                         <i class="fa fa-barcode" aria-hidden="true" style="font-size: 4em;"></i>
                         <p class="login-barcode-text mt-3">Scan your badge</p>
                     </span>
+<<<<<<< saas-17.4
                     <span class="login-element select-cashier d-flex flex-column justify-content-center align-items-center bg-white rounded-4 gap-0 pt-4" t-on-click="() => this.selectCashier()">
                         <i class="fa fa-user" aria-hidden="true" style="font-size: 4em;"></i>
                         <p class="mt-3">Identify Manually</p>
@@ -27,6 +28,15 @@
                     <span class="login-element d-flex flex-column justify-content-center align-items-center bg-white rounded-4 gap-0 pt-4" t-on-click="displayEnterPinPopup">
                         <i class="fa fa-unlock-alt" aria-hidden="true" style="font-size: 4em;"></i>
                         <p class="mt-3">Enter Pin</p>
+||||||| 4dadd6ebc14338231f6ee1e8cb87423a0119e028
+                    <span class="login-or m-2 fs-2 text-muted">or</span>
+                    <span class="login-element">
+                        <button class="login-button select-cashier btn btn-lg btn-secondary" t-on-click="selectCashier">Select Cashier</button>
+=======
+                    <span class="login-or m-2 fs-2 text-muted">or</span>
+                    <span class="login-element">
+                        <button class="login-button select-cashier btn btn-lg btn-secondary" t-on-click="() => this.selectCashier()">Select Cashier</button>
+>>>>>>> 966f31cb2cd3407653a2e508c366d2be7c01d559
                     </span>
                 </div>
             </div>

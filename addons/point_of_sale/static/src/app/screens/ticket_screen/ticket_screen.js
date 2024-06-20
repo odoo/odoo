@@ -145,10 +145,18 @@ export class TicketScreen extends Component {
                 this.state.selectedOrder = null;
             }
         }
+<<<<<<< saas-17.4
 
         order.uiState.displayed = false;
         if (order.id === this.pos.get_order()?.id) {
             this._selectNextOrder(order);
+||||||| 4dadd6ebc14338231f6ee1e8cb87423a0119e028
+        if (this.pos.isOpenOrderShareable()) {
+            this.pos._removeOrdersFromServer();
+=======
+        if (this.pos.isOpenOrderShareable()) {
+            await this.pos._removeOrdersFromServer();
+>>>>>>> 966f31cb2cd3407653a2e508c366d2be7c01d559
         }
 
         const result = await this.pos.deleteOrders([order]);
