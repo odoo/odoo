@@ -220,6 +220,7 @@ class PosSession(models.Model):
             'res.country': {
                 'domain': [],
                 'fields': ['id', 'name', 'code', 'vat_label'],
+                'context': {**self.env.context},
             },
             'res.lang': {
                 'domain': [],
