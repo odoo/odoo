@@ -3877,3 +3877,39 @@ test(`scroll to current hour when clicking on today`, async () => {
     await contains(".o_calendar_button_today").click();
     expect(queryLast(".fc-scroller").scrollTop).toBeWithin(360, 380);
 });
+
+test("save selected date during view switching", async () => {
+    defineActions([
+        {
+            id: 1,
+            name: "Partners",
+            res_model: "event",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "list"],
+                [false, "calendar"],
+            ],
+        },
+    ])
+
+    Event._views = {
+        calendar: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
+        list: `
+            <tree sample="1">
+                <field name="start"/>
+                <field name="stop"/>
+            </tree>
+        `,
+        search: `<search />`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    await getService("action").switchView("calendar");
+    await navigate("next");
+    const weekNumber = await queryFirst(`th .fc-timegrid-axis-cushion`).textContent
+    await contains(`.o_cp_switch_buttons .o_list`).click();
+    await getService("action").switchView("calendar");
+    expect(`th .fc-timegrid-axis-cushion`).toHaveText(weekNumber);
+});
