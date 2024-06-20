@@ -27,7 +27,9 @@
     <template id="ubl_21_PartyType" inherit_id="account_edi_ubl_cii.ubl_20_PartyType">
         <xpath expr="//*[local-name()='EndpointID']" position="after">
             <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                <cbc:IndustryClassificationCode t-out="vals.get('industry_classification_code')"/>
+                <cbc:IndustryClassificationCode
+                        t-att="vals.get('industry_classification_code_attrs', {})"
+                        t-out="vals.get('industry_classification_code')"/>
             </t>
         </xpath>
     </template>
