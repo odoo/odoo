@@ -15,9 +15,9 @@ class StockMove(models.Model):
 
     # Need to store values because we send it to the ewaybill and we need to keep the same value
     ewaybill_price_unit = fields.Monetary(
-        compute='_compute_l10n_in_ewaybill_price_unit',
         currency_field='company_currency_id',
-        store=True
+        store=True,
+        readonly=True
     )
     ewaybill_tax_ids = fields.Many2many(
         comodel_name='account.tax',
@@ -26,10 +26,12 @@ class StockMove(models.Model):
         store=True
     )
 
-    @api.depends('product_id.uom_id', 'product_id.standard_price', 'l10n_in_ewaybill_id')
-    def _compute_l10n_in_ewaybill_price_unit(self):
-        for line in self.filtered(lambda line: line.l10n_in_ewaybill_id.state not in ['generated', 'cancel']):
-            line.ewaybill_price_unit = line._l10n_in_get_product_price_unit()
+    def write(self, vals):
+        res = super(StockMove, self).write(vals)
+        for move in self.filtered(lambda move: move.l10n_in_ewaybill_id.state == 'pending'):
+            if 'state' in vals and vals['state'] != 'pending':
+                move.ewaybill_price_unit = move._l10n_in_get_product_price_unit()
+        return res
 
     @api.depends('product_id.supplier_taxes_id', 'product_id.taxes_id', 'l10n_in_ewaybill_id.fiscal_position_id')
     def _compute_l10n_in_tax_ids(self):
