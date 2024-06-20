@@ -182,6 +182,9 @@
                     </ExchangeRateDetails>
                     <TaxCurrencyCode t-out="invoice['invoice_currency'].name"/>
                     <LanguageName t-out="invoice['InvoiceIssueData']['LanguageName']"/>
+                    <ReceiverTransactionReference t-out="invoice['InvoiceIssueData']['ReceiverTransactionReference']"/>
+                    <FileReference t-out="invoice['InvoiceIssueData']['FileReference']"/>
+                    <ReceiverContractReference t-out="invoice['InvoiceIssueData']['ReceiverContractReference']"/>
                 </InvoiceIssueData>
                 <TaxesOutputs>
                     <t t-foreach="invoice['TaxOutputs']" t-as="tax"><t t-call="l10n_es_edi_facturae.tax_type"/></t>
