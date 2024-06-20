@@ -26,23 +26,33 @@ var dom = {
      *                                  should be considered in the results
      * @returns {jQuery}
      */
-    cssFind: function ($from, selector, addBack) {
-        var $results;
-
+    cssFind: function (fromEl, selector, addBack) {
+        if (!(fromEl instanceof Element)) {
+            return [];
+        }
+        let resultEls;
         // No way to correctly parse a complex jQuery selector but having no
         // spaces should be a good-enough condition to use a simple find
         var multiParts = selector.indexOf(' ') >= 0;
         if (multiParts) {
-            $results = $from.closest('body').find(selector).filter((i, $el) => $from.has($el).length);
+            /* Nodelist.fliter will not work
+            // this will fail for complex selectors
+            for example :
+            ":not(p).oe_structure:not(.oe_structure_solo),
+            :not(.o_mega_menu):not(p)[data-oe-type=html],
+            :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"
+            */
+            resultEls = [...fromEl.closest("body").querySelectorAll(selector)]
+                .filter((el) =>  fromEl.contains(el));
         } else {
-            $results = $from.find(selector);
+            resultEls = Array.from(fromEl.querySelectorAll(selector));
+            }
+
+        if (addBack && fromEl.matches(selector)) {
+            resultEls = resultEls?.push(fromEl);
         }
 
-        if (addBack && $from.is(selector)) {
-            $results = $results.add($from);
-        }
-
-        return $results;
+        return resultEls;
     },
     /**
      * Renders a button with standard odoo template. This does not use any xml

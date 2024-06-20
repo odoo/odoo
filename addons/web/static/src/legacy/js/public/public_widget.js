@@ -263,8 +263,8 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
     insertAfter: function (targetEl) {
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
-            self.el.insertBefore(self.el, t.nextSibling);
-        }, targetEl);
+            self.el.append(t.nextSibling);
+        }, target);
     },
     /**
      * Renders the current widget and inserts it before to the given jQuery
@@ -381,9 +381,9 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
 
             event += '.widget_events';
             if (!selector) {
-                self.el.on(event, method);
+                self.el?.on(event, method);
             } else {
-                self.el.on(event, selector, method);
+                self.el?.on(event, selector, method);
             }
         };
         Object.entries(this.events || {}).forEach(([event, method]) => {

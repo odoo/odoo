@@ -239,11 +239,11 @@ function getWysiwygIframeContent(params) {
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
         ${assets.cssLibs.join('\n')}
         ${assets.jsLibs.join('\n')}
-
+        {// TODO-SHSA: check do we need this now?}
         <script type="text/javascript">
-            window.odoo?.define('root.widget', ['@web/legacy/js/core/widget'], function (require) {
+            window.odoo?.define('root.widget', ['@web/legacy/js/public/public_widget'], function (require) {
                 'use strict';
-                var Widget = require('@web/legacy/js/core/widget')[Symbol.for("default")];
+                var Widget = require('@web/legacy/js/public/public_widget')[Symbol.for("default")];
                 var widget = new Widget();
                 widget.appendTo(document.body);
                 return widget;

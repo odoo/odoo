@@ -22,7 +22,7 @@ publicWidget.registry.login = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onSubmit(ev) {
-        if (!ev.isDefaultPrevented()) {
+        if (!ev.defaultPrevented) {
             const btnEl = ev.currentTarget.querySelector('button[type="submit"]');
             const removeLoadingEffect = addLoadingEffect(btnEl);
             const oldPreventDefault = ev.preventDefault.bind(ev);

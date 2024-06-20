@@ -137,6 +137,8 @@ Odoo Web Editor widget.
             'web/static/src/legacy/js/core/service_mixins.js',
             'web/static/src/legacy/js/core/widget.js',
             'web/static/src/legacy/utils.js',
+            'web/static/src/legacy/js/public/public_widget.js',
+            'web/static/src/legacy/js/core/minimal_dom.js',
 
             # lib
             'web_editor/static/lib/cropperjs/cropper.css',
@@ -253,6 +255,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/scss/web_editor.frontend.scss',
 
             'web_editor/static/src/js/frontend/loadWysiwygFromTextarea.js',
+            'web/static/src/legacy/js/core/dialog.js',
         ],
         'web.report_assets_common': [
             'web_editor/static/src/scss/bootstrap_overridden.scss',

@@ -6,7 +6,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import dom from "@web/legacy/js/core/dom";
 import { throttleForAnimation, debounce } from "@web/core/utils/timing";
 import { clamp } from "@web/core/utils/numbers";
-import Widget from "@web/legacy/js/core/widget";
+import { PublicWidget } from "@web/legacy/js/public/public_widget";
 import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
@@ -292,7 +292,7 @@ const NULL_ID = '__NULL__';
  * Base class for components to be used in snippet options widgets to retrieve
  * user values.
  */
-const UserValueWidget = Widget.extend({
+const UserValueWidget = PublicWidget.extend({
     className: 'o_we_user_value_widget',
     custom_events: {
         'user_value_update': '_onUserValueNotification',
@@ -328,7 +328,8 @@ const UserValueWidget = Widget.extend({
      * @override
      */
     _makeDescriptive: function () {
-        const $el = this._super(...arguments);
+        //TO-Remove: this publicWidget method will return a normal JS element
+        const $el = $(this._super(...arguments));
         const el = $el[0];
         _addTitleAndAllowedAttributes(el, this.title, this.options);
         this.containerEl = document.createElement('div');
@@ -797,7 +798,7 @@ const ButtonUserValueWidget = UserValueWidget.extend({
      * @override
      */
     _makeDescriptive() {
-        const $el = this._super(...arguments);
+        const $el = $(this._super(...arguments));
         if (this.illustrationEl) {
             $el[0].classList.add('o_we_icon_button');
         }
@@ -2635,6 +2636,9 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
     async setValue(value, methodName) {
         await this._super(...arguments);
         const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
+        if (!possibleValues) {
+            return;
+        }
         const inputValue = possibleValues.length > 1 ? possibleValues.indexOf(value) : this._value;
         this.input.value = inputValue;
         if (this.displayValue) {
@@ -3323,7 +3327,7 @@ const userValueWidgetsRegistry = {
  * module contains the names of the specialized SnippetOptionWidget which can be
  * referenced thanks to the data-js key in the web_editor options template.
  */
-const SnippetOptionWidget = Widget.extend({
+const SnippetOptionWidget = PublicWidget.extend({
     tagName: 'we-customizeblock-option',
     events: {
         'click .o_we_collapse_toggler': '_onCollapseTogglerClick',
@@ -4284,7 +4288,10 @@ const SnippetOptionWidget = Widget.extend({
                 // Remove the original element afterwards as the insertion
                 // operation may move some of its inner content during
                 // widget start.
-                parentEl.removeChild(el);
+                // parentEl.removeChild(el);
+                if (parentEl.contains(el)) {
+                    el.remove();
+                }
 
                 if (widget.isContainer() && !widget.isDestroyed()) {
                     return this._renderXMLWidgets(widget.el, widget);
@@ -4424,7 +4431,7 @@ const SnippetOptionWidget = Widget.extend({
      */
     _toggleCollapseEl(collapseEl, show) {
         collapseEl.classList.toggle('active', show);
-        collapseEl.querySelector('we-toggler.o_we_collapse_toggler').classList.toggle('active', show);
+        collapseEl.querySelector('we-toggler.o_we_collapse_toggler')?.classList.toggle('active', show);
     },
 
     //--------------------------------------------------------------------------
@@ -6789,7 +6796,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         img.classList.add('o_modified_image_to_save');
     },
     /**
-     * Handles color assignment on the shape. Widget is a color picker.
+     * Handles color assignment on the shape. PublicWidget is a color picker.
      * If no value, we reset to the current color palette.
      *
      * @see this.selectClass for parameters

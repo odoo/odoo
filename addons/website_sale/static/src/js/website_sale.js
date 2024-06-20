@@ -494,7 +494,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             return;
         }
         var $aSubmit = $(ev.currentTarget);
-        if (!ev.isDefaultPrevented() && !$aSubmit.is(".disabled")) {
+        if (!ev.defaultPrevented && !$aSubmit.is(".disabled")) {
             ev.preventDefault();
             $aSubmit.closest('form').submit();
         }
@@ -516,7 +516,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @param {Event} ev
      */
     _onChangeAttribute: function (ev) {
-        if (!ev.isDefaultPrevented()) {
+        if (!ev.defaultPrevented) {
             ev.preventDefault();
             const productGrid = this.el.querySelector(".o_wsale_products_grid_table_wrapper");
             if (productGrid) {
@@ -549,7 +549,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             return;
         }
         var $this = $(ev.currentTarget);
-        if (!ev.isDefaultPrevented() && !$this.is(".disabled")) {
+        if (!ev.defaultPrevented && !$this.is(".disabled")) {
             ev.preventDefault();
             var oldurl = $this.attr('action');
             oldurl += (oldurl.indexOf("?")===-1) ? "?" : "";
