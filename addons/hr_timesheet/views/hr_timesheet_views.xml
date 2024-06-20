@@ -291,20 +291,26 @@
                         <t t-name="kanban-card">
                             <div class="d-flex flex-row">
                                 <span t-att-title="record.employee_id.value">
-                                    <field name="employee_id" widget="image" options="{'preview_image': 'avatar_128'}" class="o_image_40_cover me-2 float-start"/>
+                                    <field name="employee_id" widget="image" options="{'preview_image': 'avatar_128'}" class="o_image_64_cover me-2 float-start"/>
                                 </span>
                                 <div class="d-flex flex-column text-truncate lh-sm col-10">
-                                    <span class="text-truncate" t-att-title="record.project_id.value"><field name="project_id" class="p-0 fw-bold fs-5"/></span>
-                                    <span class="text-truncate" t-att-title="record.task_id.value"><field name="task_id" class="fst-italic"/></span>
-                                    <span class="text-truncate" t-att-title="record.name.value"><field name="name"/></span>
+                                    <span class="text-truncate" invisible="context.get('default_project_id')" t-att-title="record.project_id.value">
+                                        <field name="project_id" class="p-0 fw-bold fs-5"/>
+                                    </span>
+                                    <span class="text-truncate" t-att-title="record.task_id.value">
+                                        <field name="task_id" invisible="context.get('default_project_id')"/>
+                                        <field name="task_id" invisible="not context.get('default_project_id')" class="p-0 fw-bold fs-5"/>
+                                    </span>
+                                    <span class="text-truncate">
+                                        <i class="fa fa-calendar me-1" role="img" aria-label="Date" title="Date"></i>
+                                        <field name="date"/><span invisible="context.get('is_my_timesheets')"> - <field name="employee_id"/></span>
+                                    </span>
+                                    <span class="text-truncate" t-att-title="record.name.value"><field name="name" class="fst-italic"/></span>
                                 </div>
                             </div>
-                            <hr class="mt4 mb4"/>
                             <footer class="mt-0 pt-0 fs-6">
-                                <i class="fa fa-calendar me-1" role="img" aria-label="Date" title="Date"></i>
-                                <field name="date"/>
                                 <div class="d-flex ms-auto">
-                                    <strong>Duration:</strong><field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24" decoration-muted="unit_amount == 0" class="ms-1"/>
+                                    <strong><field name="unit_amount" widget="timesheet_duration_uom" decoration-danger="unit_amount &gt; 24" decoration-muted="unit_amount == 0" class="ms-1"/></strong>
                                 </div>
                             </footer>
                         </t>
@@ -335,6 +341,7 @@
             <field name="context">{
                 "search_default_week":1,
                 "is_timesheet": 1,
+                "is_my_timesheets": 1,
             }</field>
             <field name="search_view_id" ref="hr_timesheet_line_my_timesheet_search"/>
             <field name="help" type="html">
