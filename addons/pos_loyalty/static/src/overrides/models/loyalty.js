@@ -1411,8 +1411,17 @@ patch(Order.prototype, {
         let available = 0;
         let shouldCorrectRemainingPoints = false;
         for (const line of this.get_orderlines()) {
-            if (line.get_product().id === product.id) {
-                available += line.get_quantity();
+            if (
+                reward.reward_product_ids.map((reward) => reward.id).includes(product.id) &&
+                reward.reward_product_ids.map((reward) => reward.id).includes(line.product.id)
+            ) {
+                if (this._get_reward_lines() == 0) {
+                    if (line.get_product().id === product.id) {
+                        available += line.get_quantity();
+                    }
+                } else {
+                    available += line.get_quantity();
+                }
             } else if (
                 reward.reward_product_ids
                     .map((reward) => reward.id)
