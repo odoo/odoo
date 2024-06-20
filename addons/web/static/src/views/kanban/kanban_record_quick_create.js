@@ -35,7 +35,7 @@ const ACTION_SELECTORS = [
     ".o-kanban-button-new",
 ];
 
-class KanbanQuickCreateController extends Component {
+export class KanbanQuickCreateController extends Component {
     static props = {
         Model: Function,
         Renderer: Function,
