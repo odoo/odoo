@@ -89,22 +89,24 @@
                         </div>
                         <!-- Date & Time (desktop only) -->
                         <div class="d-none d-lg-block border-bottom pb-2 mb-3">
+                            <meta itemprop="startDate" t-att-content="event.date_begin.isoformat()" />
+                            <meta itemprop="endDate" t-att-content="event.date_end.isoformat()" />
                             <t t-call="website_event.event_description_dates"/>
                         </div>
                         <header class="d-lg-none mt-4 mb-2 py-3 border-top">
                             <h5 class="my-0">Event Info</h5>
+                            <meta itemprop="eventStatus" content="https://schema.org/EventScheduled" />
                         </header>
                         <!-- Location -->
-                        <div t-if="event.address_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-4">
+                        <meta itemprop="eventAttendanceMode" t-attf-content="https://schema.org/{{'Offline' if event.address_id else 'Online'}}EventAttendanceMode"/>
+                        <div t-if="event.address_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-4" itemprop="location" itemscope="itemscope" itemtype="https://schema.org/Place">
                             <h6 class="o_wevent_sidebar_title">Location</h6>
-                            <div class="mb-1" t-field="event.address_id" t-options='{
-                                "widget": "contact",
-                                "fields": ["name"]
-                            }'/>
-                            <small itemprop="location" class="d-block mb-2" t-field="event.address_id" t-options='{
+                            <div itemprop="name" class="mb-1" t-field="event.address_id"/>
+                            <small class="d-block mb-2" t-field="event.address_id" t-options='{
                                 "widget": "contact",
                                 "fields": ["address"],
-                                "no_marker": True
+                                "no_marker": True,
+                                "with_microdata": True,
                             }'/>
                             <small t-field="event.address_id" class="d-block mb-2" t-options='{
                                 "widget": "contact",
@@ -123,10 +125,10 @@
                             <i class="fa fa-map-marker" title="Location"/> Online event
                         </div>
                         <!-- Organizer -->
-                        <div t-if="event.organizer_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-4">
+                        <div t-if="event.organizer_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-4" itemprop="organizer" itemscope="itemscope" itemtype="http://schema.org/Organization">
                             <h6 class="o_wevent_sidebar_title">Organizer</h6>
-                            <div class="mb-1" t-field="event.organizer_id"/>
-                            <small itemprop="location" t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email']}"/>
+                            <div itemprop="name" class="mb-1" t-field="event.organizer_id"/>
+                            <small t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email'], 'with_microdata': True,}"/>
                         </div>
                         <!-- Social -->
                         <div class="o_wevent_sidebar_block">
@@ -353,7 +355,7 @@
                             <b>Start</b>
                         </div>
                         <div class="col ps-0">
-                            <span itemprop="startDate" t-out="event.date_begin_located"/>
+                            <span t-out="event.date_begin_located"/>
                             (<span t-out="event.date_tz"/>)
                         </div>
                     </div>
@@ -362,7 +364,7 @@
                             <b>End</b>
                         </div>
                         <div class="col ps-0">
-                            <span itemprop="endDate" t-out="event.date_end_located"/>
+                            <span t-out="event.date_end_located"/>
                             (<span t-out="event.date_tz"/>)
                         </div>
                     </div>
@@ -371,11 +373,11 @@
                             "widget": "contact",
                             "fields": ["name"]
                             }'/>
-                        <a itemprop="location" t-att-href="event.google_map_link()" target="_BLANK" temprop="location" t-field="event.address_id" t-options='{
+                        <a t-att-href="event.google_map_link()" target="_BLANK" t-field="event.address_id" t-options='{
                             "widget": "contact",
                             "fields": ["address"]
                             }'/>
-                        <div itemprop="contactInfo" t-field="event.organizer_id" t-options='{
+                        <div t-field="event.organizer_id" t-options='{
                             "widget": "contact",
                             "fields": ["phone", "mobile", "email"]
                             }'/>

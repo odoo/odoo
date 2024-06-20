@@ -357,8 +357,7 @@
 </template>
 
 <template id="track_card" name="Track Card">
-    <article t-att-class="'card o_wesession_track_card h-100 %s' % ('o_wesession_track_card_unpublished' if (not track.website_published and is_event_user) else '')"
-        itemscope="itemscope" itemtype="http://schema.org/Event">
+    <article t-att-class="'card o_wesession_track_card h-100 %s' % ('o_wesession_track_card_unpublished' if (not track.website_published and is_event_user) else '')">
         <div class="h-100 row g-0">
             <header class="overflow-hidden bg-secondary col-12">
                 <small t-if="not track.website_published and is_event_user" class="o_wesession_track_card_header_badge bg-danger">
@@ -393,7 +392,7 @@
                     </div>
                     <!-- Title -->
                     <h5 class="card-title mb-0 text-truncate">
-                        <span t-field="track.name" itemprop="name"/>
+                        <span t-field="track.name"/>
                     </h5>
                 </main>
             </div>
@@ -401,15 +400,15 @@
             <footer class="small align-self-end w-100 p-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <!-- Speaker -->
-                    <span class="opacity-75 text-truncate" t-field="track.partner_name" itemprop="performer"/>
+                    <span class="opacity-75 text-truncate" t-field="track.partner_name"/>
                     <!-- Starts -->
                     <span class="opacity-75 ms-auto">
                         <t t-if="track.track_start_remaining &gt;= 60">In
-                            <span class="ms-auto" t-field="track.track_start_remaining" itemprop="duration"
+                            <span class="ms-auto" t-field="track.track_start_remaining"
                                 t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
                         </t>
                         <t t-elif="track.track_start_relative &gt;= 60">
-                            <span class="ms-auto" t-field="track.track_start_relative" itemprop="duration"
+                            <span class="ms-auto" t-field="track.track_start_relative"
                                 t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
                             ago
                         </t>
