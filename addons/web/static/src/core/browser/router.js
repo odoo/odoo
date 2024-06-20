@@ -344,7 +344,7 @@ function makeDebouncedPush(mode) {
         pushArgs.title = document.title;
         Object.assign(pushArgs.state, state);
         browser.clearTimeout(pushTimeout);
-        pushTimeout = browser.setTimeout(() => {
+        const push = () => {
             doPush();
             pushTimeout = null;
             pushArgs = {
@@ -352,7 +352,14 @@ function makeDebouncedPush(mode) {
                 reload: false,
                 state: {},
             };
-        });
+        };
+        if (options.sync) {
+            push();
+        } else {
+            pushTimeout = browser.setTimeout(() => {
+                push();
+            });
+        }
     };
 }
 
