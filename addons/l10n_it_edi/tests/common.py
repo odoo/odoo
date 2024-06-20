@@ -119,19 +119,19 @@ class TestItEdi(AccountTestInvoicingCommon):
         """
         path = f'{self.module}/tests/import_xmls/{filename}'
         with tools.file_open(path, mode='rb') as fd:
-            import_content = fd.read()
+            testfile_content = fd.read()
 
         if xml_to_apply:
             tree = self.with_applied_xpath(
-                etree.fromstring(import_content),
+                etree.fromstring(testfile_content),
                 xml_to_apply
             )
-            import_content = etree.tostring(tree)
+            testfile_content = etree.tostring(tree)
 
         attachment = self.env['ir.attachment'].create({
             'company_id': self.company_data_2['company'].id,
             'name': filename,
-            'raw': import_content,
+            'raw': testfile_content,
         })
         purchase_journal = self.company_data_2['default_journal_purchase'].with_context(default_move_type='in_invoice')
         invoices = purchase_journal._create_document_from_attachment(attachment.ids)
@@ -143,6 +143,7 @@ class TestItEdi(AccountTestInvoicingCommon):
             if 'invoice_line_ids' in invoice_values:
                 expected_invoice_line_ids_values_list += invoice_values.pop('invoice_line_ids')
             expected_invoice_values_list.append(invoice_values)
+
         try:
             self.assertRecordValues(invoices, expected_invoice_values_list)
             if expected_invoice_line_ids_values_list:
