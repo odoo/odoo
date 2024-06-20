@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestRecipients
+from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tests.common import users
 
@@ -30,6 +31,22 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
             'name': cls.partner_1.name,
             'customer_id': cls.partner_1.id,
         })
+
+        # Enable group-based template management
+        cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
+
+        # User without the group "mail.group_mail_template_editor"
+        cls.user_rendering_restricted = mail_new_test_user(
+            cls.env,
+            company_id=cls.company_admin.id,
+            groups='base.group_user',
+            login='user_rendering_restricted',
+            name='Code Template Restricted User',
+            notification_type='inbox',
+            signature='--\nErnest'
+        )
+        cls.user_rendering_restricted.groups_id -= cls.env.ref('mail.group_mail_template_editor')
+        cls.user_employee.groups_id += cls.env.ref('mail.group_mail_template_editor')
 
         cls._activate_multi_lang(
             layout_arch_db='<body><t t-out="message.body"/> English Layout for <t t-esc="model_description"/></body>',
@@ -91,6 +108,32 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
         self.assertFalse(composer.body_has_template_value)
         self.assertFalse(composer.lang)
         self.assertFalse(composer.subject)
+
+    @users("user_rendering_restricted")
+    def test_mail_composer_mixin_render_lang(self):
+        """ Test _render_lang when rendering is involved, depending on template
+        editor rights. """
+        source = self.test_record.with_env(self.env)
+        composer = self.env['mail.test.composer.mixin'].create({
+            'description': '<p>Description for <t t-esc="object.name"/></p>',
+            'name': 'Invite',
+            'template_id': self.mail_template.id,
+            'source_ids': [(4, source.id)],
+        })
+
+        # _render_lang should be ok when content is the same as template
+        rendered = composer._render_lang(source.ids)
+        self.assertEqual(rendered, {source.id: self.partner_1.lang})
+
+        # _render_lang should crash when content is dynamic and not coming from template
+        composer.lang = " {{ 'en_US' }}"
+        with self.assertRaises(AccessError):
+            rendered = composer._render_lang(source.ids)
+
+        # _render_lang should crash when content is not coming from template but not dynamic
+        composer.lang = "fr_FR"
+        rendered = composer._render_lang(source.ids)
+        self.assertEqual(rendered, {source.id: "fr_FR"})
 
     @users("employee")
     def test_rendering_custom(self):

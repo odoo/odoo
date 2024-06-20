@@ -18,6 +18,7 @@
 # Katrin Kampura, 2023
 # Mihkel avalah, 2023
 # Anna, 2024
+# Birgit Vijar, 2024
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anna, 2024\n"
+"Last-Translator: Birgit Vijar, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,7 +77,7 @@ msgstr ""
 msgid ""
 "<div>\n"
 "                <p>Hello <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
-"                <p>Please find below the guidelines of the {{ object.mail_group_id.name }} mailing list.</p>\n"
+"                <p>Please find below the guidelines of the <t t-out=\"object.mail_group_id.name\"></t> mailing list.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
 "            </div>\n"
 "        "
@@ -114,6 +115,8 @@ msgid ""
 "<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
 "title=\"Previous message\"/>"
 msgstr ""
+"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
+"title=\"Previous message\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -121,6 +124,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
 "title=\"Next message\"/>"
 msgstr ""
+"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+"title=\"Next message\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
@@ -128,6 +133,8 @@ msgid ""
 "<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\""
 " title=\"Show attachments\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\""
+" title=\"Show attachments\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -135,6 +142,8 @@ msgid ""
 "<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
 "title=\"Show replies\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
+"title=\"Show replies\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
@@ -142,6 +151,8 @@ msgid ""
 "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
 "attachments\" title=\"Hide attachments\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -149,6 +160,8 @@ msgid ""
 "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
 "title=\"Hide replies\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
+"title=\"Hide replies\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -267,7 +280,7 @@ msgstr "Aliase mudel"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "All messages of this group"
-msgstr ""
+msgstr "Kõik selle grupi sõnumid"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
@@ -369,7 +382,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
 msgid "By date"
-msgstr ""
+msgstr "Kuupäeva järgi"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__can_manage_group
@@ -415,7 +428,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Create a new group"
-msgstr ""
+msgstr "Loo uus grupp"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__create_uid
@@ -545,7 +558,7 @@ msgstr "Rühmitamine"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid "Group Message"
-msgstr ""
+msgstr "Grupisõnum"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -1282,7 +1295,7 @@ msgstr ""
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "The email \"%s\" is not valid."
-msgstr ""
+msgstr "E-mail \"%s\" ei ole korrektne."
 
 #. module: mail_group
 #. odoo-python
@@ -1337,7 +1350,7 @@ msgstr ""
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The partner can not be found."
-msgstr ""
+msgstr "Partnerit ei leitud"
 
 #. module: mail_group
 #. odoo-python
@@ -1382,7 +1395,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "To Review"
-msgstr ""
+msgstr "Ülevaatamiseks"
 
 #. module: mail_group
 #. odoo-javascript
@@ -1420,7 +1433,7 @@ msgstr ""
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "Wrong status (%s)"
-msgstr ""
+msgstr "Vale staatus (%s)"
 
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
@@ -1465,7 +1478,7 @@ msgstr "nt. domain.com"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
 msgid "group"
-msgstr ""
+msgstr "grupp"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
@@ -1489,12 +1502,12 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "more replies"
-msgstr ""
+msgstr "rohkem vastuseid"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "replies"
-msgstr ""
+msgstr "vastused"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription

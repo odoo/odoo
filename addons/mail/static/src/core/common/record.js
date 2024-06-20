@@ -1041,8 +1041,8 @@ export class Record {
     static records;
     /** @type {import("models").Store} */
     static store;
-    /** @type {RecordField[]} */
-    static FC_QUEUE = []; // field-computes
+    /** @type {Set<RecordField>} */
+    static FC_QUEUE = new Set(); // field-computes
     /** @type {RecordField[]} */
     static FS_QUEUE = []; // field-sorts
     /** @type {Array<{field: RecordField, records: Record[]}>} */
@@ -1065,7 +1065,7 @@ export class Record {
             // pretend an increased update cycle so that nothing in queue creates many small update cycles
             Record.UPDATE++;
             while (
-                Record.FC_QUEUE.length > 0 ||
+                Record.FC_QUEUE.size > 0 ||
                 Record.FS_QUEUE.length > 0 ||
                 Record.FA_QUEUE.length > 0 ||
                 Record.FD_QUEUE.length > 0 ||
@@ -1073,22 +1073,24 @@ export class Record {
                 Record.RO_QUEUE.length > 0 ||
                 Record.RD_QUEUE.length > 0
             ) {
-                const FC_QUEUE = [...Record.FC_QUEUE];
+                const FC_QUEUE = new Set([...Record.FC_QUEUE]);
                 const FS_QUEUE = [...Record.FS_QUEUE];
                 const FA_QUEUE = [...Record.FA_QUEUE];
                 const FD_QUEUE = [...Record.FD_QUEUE];
                 const FU_QUEUE = [...Record.FU_QUEUE];
                 const RO_QUEUE = [...Record.RO_QUEUE];
                 const RD_QUEUE = [...Record.RD_QUEUE];
-                Record.FC_QUEUE.length = 0;
+                Record.FC_QUEUE.clear();
                 Record.FS_QUEUE.length = 0;
                 Record.FA_QUEUE.length = 0;
                 Record.FD_QUEUE.length = 0;
                 Record.FU_QUEUE.length = 0;
                 Record.RO_QUEUE.length = 0;
                 Record.RD_QUEUE.length = 0;
-                while (FC_QUEUE.length > 0) {
-                    const field = FC_QUEUE.pop();
+                while (FC_QUEUE.size > 0) {
+                    /** @type {[RecordField]} */
+                    const [field] = FC_QUEUE.entries().next().value;
+                    FC_QUEUE.delete(field);
                     field.requestCompute({ force: true });
                 }
                 while (FS_QUEUE.length > 0) {
@@ -1171,8 +1173,8 @@ export class Record {
             const field = fieldOrRecord;
             const rawField = toRaw(field);
             if (type === "compute") {
-                if (!Record.FC_QUEUE.some((f) => toRaw(f) === rawField)) {
-                    Record.FC_QUEUE.push(field);
+                if (!Record.FC_QUEUE.has(rawField)) {
+                    Record.FC_QUEUE.add(rawField);
                 }
             }
             if (type === "sort") {

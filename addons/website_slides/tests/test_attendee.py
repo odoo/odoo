@@ -518,3 +518,43 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
         self.assertFalse(channel_partner_portal.exists(), 'Expired invitations should be removed, even if archived')
         self.assertTrue(self.channel_partner_emp.exists(), 'Memberships with progress should never be removed, even archived.')
         self.assertFalse(self.channel_partner_no_user.exists(), 'No Last Invitation Date is considered as expired for invited members')
+
+    def test_invite_email_translation(self):
+        "Make sure that invitation emails are translated if unchanged when adding attendees to a course"
+        self.env['res.lang']._activate_lang('fr_FR')
+        jean = self.env['res.partner'].create({'name': 'Jean', 'lang': 'fr_FR'})
+
+        template = self.env['mail.template'].create({
+            'subject': 'Hello',
+            'body_html': 'en',
+        })
+        template.lang = '{{ object.partner_id.lang }}'
+        template.render_model = 'slide.channel.partner'
+
+        template.with_context(lang='fr_FR').subject = 'Bonjour'
+        template.with_context(lang='fr_FR').body_html = 'fr'
+
+        channel = self.env['slide.channel'].create({'name': 'Test Course'})
+        slide_channel_jean = self.env['slide.channel.partner'].create({
+            'channel_id': channel.id,
+            'partner_id': jean.id,
+        })
+
+        wizard = self.env['slide.channel.invite'].create({
+            'send_email': True,
+            'partner_ids': [jean.id],
+            'channel_id': channel.id,
+            'template_id': template.id,
+        })
+
+        mail_vals = wizard._prepare_mail_values(slide_channel_jean)
+        self.assertEqual(
+            mail_vals['body_html'],
+            'fr',
+            "Mail body should have been translated into recipient's language"
+        )
+        self.assertEqual(
+            mail_vals['subject'],
+            'Bonjour',
+            "Mail subject should have been translated into recipient's language"
+        )

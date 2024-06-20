@@ -5,8 +5,9 @@
 # Translators:
 # Iran Villalobos López, 2023
 # Lucia Pacheco, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Wil Odoo, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Martin Trigaux, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -1992,7 +1993,7 @@ msgstr "Muebles"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
-msgstr "Generar la factura en automático al confirmar el pago en línea"
+msgstr "Genere la factura en automático al confirmar el pago en línea."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
@@ -2084,8 +2085,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_template__message_has_error
 #: model:ir.model.fields,help:website_sale.field_product_template__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan un error de envío."
+msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2613,6 +2613,13 @@ msgid ""
 msgstr ""
 "No hay un método de envío disponible para su orden y dirección de envío. "
 "Contáctenos para recibir más información."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "No shipping method is selected."
+msgstr "No se seleccionó ningún método de envío."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
@@ -3817,7 +3824,7 @@ msgstr "Algunos campos requeridos están vacíos."
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Sorry, we are unable to ship your order"
-msgstr "Lo sentimos, no es posible enviar su orden"
+msgstr "Lo sentimos, no podemos enviar su orden"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3998,14 +4005,14 @@ msgstr "La URL completa para acceder al documento a través del sitio web."
 #, python-format
 msgid ""
 "The given combination does not exist therefore it cannot be added to cart."
-msgstr "Esta combinación no existe, por lo que no se puede añadir al carrito."
+msgstr "Esta combinación no existe y no se puede agregar al carrito."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "The given product does not exist therefore it cannot be added to cart."
-msgstr "Esta producto no existe, por lo que no se puede añadir al carrito."
+msgstr "Este producto no existe y no se puede agregar al carrito."
 
 #. module: website_sale
 #. odoo-python

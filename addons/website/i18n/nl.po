@@ -54,6 +54,26 @@ msgstr "\"URL van\" mag niet leeg zijn."
 #. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
+msgid ""
+"\"URL to\" cannot be set to \"/\". To change the homepage content, use the "
+"\"Homepage URL\" field in the website settings or the page properties on any"
+" custom page."
+msgstr ""
+"\"URL naar\" kan niet worden ingesteld op \"/\". Om de inhoud van de "
+"homepage te wijzigen, gebruik je het veld \"Homepage URL\" in de website-"
+"instellingen of de paginagegevens van een aangepaste pagina."
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" cannot be set to an existing page."
+msgstr "\"URL naar\" kan niet worden ingesteld op een bestaande pagina."
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
 msgid "\"URL to\" can not be empty."
 msgstr "\"URL naar\" mag niet leeg zijn."
 
@@ -149,7 +169,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "&amp;lt;head&amp;gt; and &amp;lt;/body&amp;gt;"
-msgstr "&amp;lt;hoofd&amp;gt; en &amp;lt;/lichaam&amp;gt;"
+msgstr "&amp;lt;header&amp;gt; en &amp;lt;/body&amp;gt;"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -866,7 +886,7 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-headphones fa-fw me-2\"/>\n"
 "                            <b>Help center</b>"
 msgstr ""
-"<i class=\"s_mega_menu_little_icons_icon fa fa-hoofdtelefoon fa-fw me-2\"/>\n"
+"<i class=\"s_mega_menu_little_icons_icon fa fa-headphones fa-fw me-2\"/>\n"
 "                            <b>Helpcentrum</b>"
 
 #. module: website
@@ -6054,6 +6074,13 @@ msgid "Hide For"
 msgstr "Verbergen voor"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Hide the cookies bar"
+msgstr "Verberg de cookiesbalk"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
 msgid "Hide this page from search results"
 msgstr "Verberg deze pagina in de zoekresultaten"
@@ -9192,7 +9219,7 @@ msgstr "Plausible auth-sleutel"
 #: code:addons/website/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "Please fill in the form correctly."
-msgstr "Graag het formulier correct in te vullen."
+msgstr "Graag het formulier correct invullen."
 
 #. module: website
 #. odoo-javascript
@@ -9272,7 +9299,7 @@ msgstr "Voorinstellen"
 #: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
 #, python-format
 msgid "Press %(key)s to exit full screen"
-msgstr ""
+msgstr "Druk%(key)s om het volledige scherm te verlaten"
 
 #. module: website
 #. odoo-javascript
@@ -10494,6 +10521,13 @@ msgstr "Laat reCaptcha beleid zien"
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Show site map"
 msgstr "Toon plattegrond"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Show the cookies bar"
+msgstr "Toon de cookiesbalk"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -12513,7 +12547,7 @@ msgstr "Hiërarchie bekijken"
 #. module: website
 #: model:ir.actions.client,name:website.action_website_view_hierarchy
 msgid "View Hierarchy"
-msgstr "Zie hiërarchie"
+msgstr "Bekijk hiërarchie"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__name

@@ -277,14 +277,19 @@ class ProductProduct(models.Model):
 
         # Search for the product with the exact name, then ilike the name
         name_domains = [('name', '=', name)], [('name', 'ilike', name)] if name else []
+        company = company or self.env.company
         for name_domain in name_domains:
-            product = self.env['product.product'].search(
-                expression.AND([
-                    expression.OR(domains + [name_domain]),
-                    self.env['product.product']._check_company_domain(company),
-                ]),
-                limit=1,
-            )
-            if product:
-                return product
+            for extra_domain in (
+                [*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)],
+                [('company_id', '=', False)],
+            ):
+                product = self.env['product.product'].search(
+                    expression.AND([
+                        expression.OR(domains + [name_domain]),
+                        extra_domain,
+                    ]),
+                    limit=1,
+                )
+                if product:
+                    return product
         return self.env['product.product']

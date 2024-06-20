@@ -17,6 +17,7 @@
 # Triine Aavik <triine@avalah.ee>, 2024
 # Mihkel avalah, 2024
 # Anna, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anna, 2024\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +56,11 @@ msgid ""
 "                            </span>\n"
 "                            <br/>"
 msgstr ""
+"<br/>\n"
+"<span>\n"
+"Kui see aadress on lekkinud, siis all saab genereerida uue aadressi.\n"
+"</span>\n"
+"<br/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
@@ -159,7 +165,7 @@ msgstr "Kõik"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Allow Users to Check in/out from Odoo."
-msgstr ""
+msgstr "Luba kasutajatel enda koheloleku staatust muuta Odoos."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -183,7 +189,7 @@ msgstr "Ületundide arv"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "At Work"
-msgstr ""
+msgstr "Tööl"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_attachment_count
@@ -223,7 +229,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_url
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_url
 msgid "Attendance Kiosk Url"
-msgstr ""
+msgstr "Kassa asukoha url"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_manager_id
@@ -265,12 +271,12 @@ msgstr "Kohalolekud"
 #: code:addons/hr_attendance/models/res_users.py:0
 #, python-format
 msgid "Attendances This Month"
-msgstr ""
+msgstr "Kohalolek see kuu"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances from Backend"
-msgstr ""
+msgstr "Kohalolekud Odoo rakenduses"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__back
@@ -592,7 +598,7 @@ msgstr "Töötaja"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_use_pin
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_use_pin
 msgid "Employee PIN Identification"
-msgstr ""
+msgstr "Töötaja PIN identifitseerimine"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -673,12 +679,12 @@ msgstr "Esikaamera"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "GPS Coordinates"
-msgstr ""
+msgstr "GPS koordinaadid"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Generate a new Kiosk Mode URL"
-msgstr ""
+msgstr "Genereeri uus kassa url"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -820,7 +826,7 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Kiosk Settings"
-msgstr ""
+msgstr "Kassarežiimi sätted"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -905,7 +911,7 @@ msgstr "Mudel"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Modes"
-msgstr ""
+msgstr "Režiimid"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -1202,6 +1208,8 @@ msgid ""
 "Use this url to access your kiosk mode from any device. Warning, anybody "
 "with the link can access your kiosk."
 msgstr ""
+"Kasuta seda url et siseneda kassasse ükskõik mis seadest. Hoiatus, seda "
+"linkid saavad kasutada ka kõrvalised isikud."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_users

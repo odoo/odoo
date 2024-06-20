@@ -1,13 +1,18 @@
 import ast
 import os
 import logging
-import num2words
 from odoo import MIN_PY_VERSION
-from .num2words_patch import Num2Word_AR_Fixed
 from shutil import copyfileobj
 from types import CodeType
 
 _logger = logging.getLogger(__name__)
+
+try:
+    import num2words
+    from .num2words_patch import Num2Word_AR_Fixed
+except ImportError:
+    _logger.warning("num2words is not available, Arabic number to words conversion will not work")
+    num2words = None
 
 from werkzeug.datastructures import FileStorage
 from werkzeug.routing import Rule
@@ -72,4 +77,5 @@ ast.literal_eval = literal_eval
 if MIN_PY_VERSION >= (3, 12):
     raise RuntimeError("The num2words monkey patch is obsolete. Bump the version of the library to the latest available in the official package repository, if it hasn't already been done, and remove the patch.")
 
-num2words.CONVERTER_CLASSES["ar"] = Num2Word_AR_Fixed()
+if num2words:
+    num2words.CONVERTER_CLASSES["ar"] = Num2Word_AR_Fixed()

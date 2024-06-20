@@ -762,6 +762,31 @@ msgid "Odoo"
 msgstr "Odoo"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"Peppol EAS code 9901 is deprecated. Please use a different Danish EAS code "
+"instead."
+msgstr ""
+"Peppol EAS-kod 9901 är utfasad. Använd en annan dansk EAS-kod istället."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid "Peppol EAS code 9955 is deprecated. Please use 0007 instead."
+msgstr "Peppol EAS-kod 9955 är utfasad. Använd 0007 istället."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"Peppol EAS codes 0212 and 0213 are deprecated. Please use 0216 instead."
+msgstr "Peppol EAS-koder 0212 och 0213 är utfasade. Använd 0216 istället."
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_endpoint
 msgid "Peppol Endpoint"
@@ -833,6 +858,13 @@ msgstr "Moms för %s bör föregås av dess landskod."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "The country is required for the %s."
+msgstr "Landet krävs för %s."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
@@ -871,6 +903,9 @@ msgid ""
 "Please check those in their Accounting tab. Otherwise, the generated files "
 "will be incomplete."
 msgstr ""
+"Följande partners saknar fält för Peppol EAS eller Peppol Endpoint: %s. "
+"Kontrollera dem i deras flik Redovisning. Annars kommer de genererade "
+"filerna att vara ofullständiga."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -902,6 +937,9 @@ msgid ""
 "This partner is missing Peppol EAS or Peppol Endpoint field. Please check "
 "those in its Accounting tab or the generated file will be incomplete."
 msgstr ""
+"Denna partner saknar fältet Peppol EAS eller Peppol Endpoint. Kontrollera "
+"dessa i fliken Redovisning, annars kommer den genererade filen att vara "
+"ofullständig."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -980,7 +1018,7 @@ msgstr "factur-x.xml"
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_line_facturx_export_22
 msgid "false"
-msgstr "falskt"
+msgstr "falsk"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata

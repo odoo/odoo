@@ -36,6 +36,7 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
         # set country in order to format Belgian numbers
         cls.company_admin.write({
             'country_id': cls.env.ref('base.be').id,
+            'email': 'info@yourcompany.com',
         })
         cls.event_user = mail_new_test_user(
             cls.env,

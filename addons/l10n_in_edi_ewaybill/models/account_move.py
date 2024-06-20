@@ -16,7 +16,7 @@ class AccountMove(models.Model):
     l10n_in_distance = fields.Integer("Distance", tracking=True)
     l10n_in_mode = fields.Selection([
         ("0", "Managed by Transporter"),
-        ("1", "By Road"),
+        ("1", "Road"),
         ("2", "Rail"),
         ("3", "Air"),
         ("4", "Ship")],
@@ -26,7 +26,7 @@ class AccountMove(models.Model):
     l10n_in_vehicle_no = fields.Char("Vehicle Number", copy=False, tracking=True)
     l10n_in_vehicle_type = fields.Selection([
         ("R", "Regular"),
-        ("O", "ODC")],
+        ("O", "Over Dimensional Cargo")],
         string="Vehicle Type", copy=False, tracking=True)
 
     # Document number and date required in case of transportation mode is Rail, Air or Ship.

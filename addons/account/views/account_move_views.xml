@@ -346,7 +346,7 @@
                     <filter string="Non Trade Payable" domain="[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', True)]" help="From Non Trade Receivable accounts" name="non_trade_payable" invisible="1"/>
                     <filter string="Non Trade Receivable" domain="[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', True)]" help="From Non Trade Receivable accounts" name="non_trade_receivable" invisible="1"/>
                     <filter string="P&amp;L Accounts" domain="[('account_id.internal_group', 'in', ('income', 'expense'))]" help="From P&amp;L accounts" name="pl_accounts"/>
-                    <filter string="No Bank Transaction" domain="[('statement_line_id', '=', False)]" name="no_st_line_id" invisible="1"/>
+                    <filter string="No Bank Transaction" domain="[('statement_line_id', '=', False), ('payment_id', '=', False)]" name="no_st_line_id" invisible="1"/>
                     <separator/>
                     <filter string="Date" name="date" date="date"/>
                     <filter string="Invoice Date" name="invoice_date" date="invoice_date"/>
@@ -1490,10 +1490,14 @@
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'invoice_user_id'}"/>
-                        <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                        <filter string="Partner" name="groupy_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Status" name="status" context="{'group_by':'state'}"/>
+                        <filter string="Journal" name="groupy_by_journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                         <separator/>
                         <filter string="Invoice Date" name="invoicedate" context="{'group_by': 'invoice_date'}"/>
                         <filter string="Due Date" name="duedate" context="{'group_by': 'invoice_date_due'}"/>
+                        <filter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
+                        <filter string="Company" name="group_by_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Sequence Prefix" name="group_by_sequence_prefix" context="{'group_by': 'sequence_prefix'}" invisible="1"/>
                     </group>
                </search>
@@ -1719,7 +1723,7 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_move_line_payment_tree"/>
             <field name="search_view_id" ref="view_account_move_line_payment_filter"/>
-            <field name="domain">[('parent_state', '=', 'posted'), ('date_maturity', '!=', False), ('amount_residual', '&gt;', 0), ('account_id.reconcile', '=', True), ('journal_id.type', '=', 'purchase')]</field>
+            <field name="domain">[('parent_state', '=', 'posted'), ('date_maturity', '!=', False), ('amount_residual', '&lt;', 0), ('account_id.reconcile', '=', True), ('journal_id.type', '=', 'purchase')]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Amounts to settle

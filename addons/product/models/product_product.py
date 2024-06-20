@@ -18,6 +18,7 @@ class ProductProduct(models.Model):
     _inherits = {'product.template': 'product_tmpl_id'}
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'priority desc, default_code, name, id'
+    _check_company_domain = models.check_company_domain_parent_of
 
     # price_extra: catalog extra value only, sum of variant extra attributes
     price_extra = fields.Float(

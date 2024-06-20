@@ -3,8 +3,9 @@
 # 	* account
 # 
 # Translators:
-# Tony Ng, 2024
 # Wil Odoo, 2024
+# Pak Wai Ho, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -191,7 +192,7 @@ msgstr "%s 結單 %s"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "%s installment #%s"
-msgstr "%s 分期付款期數 #%s"
+msgstr "%s 分期付款第 %s 期"
 
 #. module: account
 #. odoo-python
@@ -518,15 +519,14 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>已套用預早付款折扣。</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
-msgstr ""
+msgid "<br/> on this account:"
+msgstr "<br/>在此帳戶："
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -1345,7 +1345,7 @@ msgstr "<strong>類型：</strong>"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "@From: %(email)s"
-msgstr "@From: %(email)s"
+msgstr "@由：%(email)s"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -3952,7 +3952,7 @@ msgstr "關閉"
 #: model:ir.model.fields,field_description:account.field_account_report_line__code
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Code"
-msgstr "程式碼"
+msgstr "代碼"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -5953,15 +5953,6 @@ msgid "Duplicated Ref"
 msgstr "重複參考"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr "檢測到重複的供應商參照，您可能對同一個供應商帳單/折讓單輸入了兩次."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "動態報表"
@@ -7612,9 +7603,7 @@ msgstr ""
 msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %s; Day: "
 "%s"
-msgstr ""
-"‎未翻譯的字元\n"
-"‎會計年度日期‎‎不正確: 日超出了月的範圍。月：%s；天：%s"
+msgstr "財政年度日期不正確：日子超出月份範圍。月：%s，日：%s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -7791,8 +7780,10 @@ msgstr "無效的"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "無效的\"郵編範圍\"，請正確的設定."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -10076,13 +10067,6 @@ msgstr "哎呀"
 #, python-format
 msgid "Open"
 msgstr "開啟"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "開啟清單"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -13512,6 +13496,13 @@ msgid "Text Value"
 msgstr "文字值"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+#, python-format
+msgid "Text copied"
+msgstr "文字已複製"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr "這是期初分錄的日期."
@@ -13603,7 +13594,7 @@ msgstr "付款期限必須至少有一行計算百分比的資料行，而所有
 msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
-msgstr ""
+msgstr "不應直接選擇 Syscohada 圖表範本。相反，你應該直接選擇與你適用國家/地區相關的圖表範本。"
 
 #. module: account
 #. odoo-python
@@ -15915,7 +15906,7 @@ msgstr "在此處填寫<b>您的電子郵件地址</b>來測試流程."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
 msgid "Writeoff Is Exchange Account"
-msgstr ""
+msgstr "撇賬是匯兌賬戶"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -16151,7 +16142,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
@@ -16201,7 +16192,7 @@ msgstr "您無法登記付款，因為所選日記帳項目沒有任何餘款要
 msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
-msgstr ""
+msgstr "不可同時登記入賬及支賬分錄的付款。"
 
 #. module: account
 #. odoo-python

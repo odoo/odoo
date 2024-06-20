@@ -3,7 +3,7 @@
 # 	* account_peppol
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Thi Huong Nguyen, 2024
 # 
 msgid ""
@@ -189,6 +189,11 @@ msgstr "Đã huỷ"
 #, python-format
 msgid "Cannot cancel an entry that has already been sent to PEPPOL"
 msgstr "Không thể hủy bút toán đã được gửi tới PEPPOL"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
+msgid "Cannot receive this format"
+msgstr "Không thể nhận định dạng này"
 
 #. module: account_peppol
 #. odoo-python
@@ -708,6 +713,13 @@ msgstr "Số định danh endpoint Peppol không chính xác."
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "The Peppol service that is used is likely to be %s."
+msgstr "Dịch vụ Peppol được sử dụng có thể là %s."
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "The document has been sent to the Peppol Access Point for processing"
@@ -785,7 +797,7 @@ msgstr "ID duy nhất định danh người dùng này, thường là vat"
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "The verification code is not correct"
-msgstr "Mã xác thực không chính xác"
+msgstr "Mã xác minh không chính xác"
 
 #. module: account_peppol
 #. odoo-python
@@ -800,6 +812,22 @@ msgstr "Mã xác minh phải chứa sáu chữ số."
 #, python-format
 msgid "This verification code has expired. Please request a new one."
 msgstr "Mã xác thực này đã hết hạn. Vui lòng yêu cầu một mã mới."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
+msgid ""
+"To generate complete electronic invoices, also set a country for this "
+"partner."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
+msgid ""
+"To generate electronic invoices, also set a country and a bank account for "
+"this partner."
+msgstr ""
+"Để tạo hóa đơn điện tử, hãy thiết lập quốc gia và tài khoản ngân hàng cho "
+"đối tác này."
 
 #. module: account_peppol
 #. odoo-python

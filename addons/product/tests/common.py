@@ -102,6 +102,15 @@ class ProductAttributesCommon(ProductCommon):
             cls.no_variant_attribute_second,
         ) = cls.no_variant_attribute.value_ids
 
+        cls.dynamic_attribute = cls.env['product.attribute'].create({
+            'name': 'Dynamic',
+            'create_variant': 'dynamic',
+            'value_ids': [
+                Command.create({'name': 'dyn1'}),
+                Command.create({'name': 'dyn2'}),
+            ]
+        })
+
 
 class ProductVariantsCommon(ProductAttributesCommon):
 

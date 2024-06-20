@@ -14778,4 +14778,105 @@ QUnit.module("Views", (hooks) => {
             "o_field_invalid"
         );
     });
+
+    QUnit.test(
+        "onchange returns values w.r.t. extended record specs, for not extended one",
+        async function (assert) {
+            serverData.models.product.fields.partner_type_ids = {
+                string: "Partner type",
+                type: "one2many",
+                relation: "partner",
+            };
+            serverData.models.partner.records[1].product_ids = [37, 41];
+            serverData.models.partner.onchanges = {
+                bar() {},
+            };
+            serverData.views = {
+                "product,false,form": `
+                    <form>
+                        <field name="display_name"/>
+                        <field name="partner_type_ids">
+                            <tree>
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </form>`,
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="bar"/>
+                        <field name="product_ids">
+                            <tree>
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                mockRPC: (route, { method, args }) => {
+                    if (method === "onchange") {
+                        return {
+                            value: {
+                                product_ids: [
+                                    [
+                                        1,
+                                        37,
+                                        {
+                                            display_name: "name changed",
+                                            partner_type_ids: [[0, 0, { display_name: "one" }]],
+                                        },
+                                    ],
+                                    [
+                                        1,
+                                        41,
+                                        {
+                                            display_name: "name twisted",
+                                            partner_type_ids: [[0, 0, { display_name: "two" }]],
+                                        },
+                                    ],
+                                ],
+                            },
+                        };
+                    }
+                    if (method === "web_save") {
+                        assert.step("web_save");
+                        assert.deepEqual(args[1], {
+                            bar: false,
+                            product_ids: [
+                                [
+                                    1,
+                                    37,
+                                    {
+                                        display_name: "name changed",
+                                        partner_type_ids: [[0, 0, { display_name: "one" }]],
+                                    },
+                                ],
+                                [
+                                    1,
+                                    41,
+                                    {
+                                        display_name: "name twisted",
+                                        partner_type_ids: [[0, 0, { display_name: "two" }]],
+                                    },
+                                ],
+                            ],
+                        });
+                    }
+                },
+                resId: 2,
+            });
+
+            await click(target.querySelector(".o_data_cell"));
+            await click(target.querySelector(".btn-secondary"));
+            await click(target.querySelector(".o-checkbox"));
+            assert.strictEqual(
+                target.querySelector(".o_data_cell").dataset.tooltip,
+                "name changed"
+            );
+            await clickSave(target);
+            assert.verifySteps(["web_save"]);
+        }
+    );
 });

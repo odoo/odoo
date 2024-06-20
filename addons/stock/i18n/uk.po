@@ -5,8 +5,8 @@
 # Translators:
 # Wil Odoo, 2024
 # Martin Trigaux, 2024
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # Kseina Tyshchenko, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Kseina Tyshchenko, 2024\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1196,6 +1196,11 @@ msgstr "Квітень"
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
 msgstr "Заархівовано"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Are you sure you want to cancel this transfer?"
+msgstr "Ви впевнені, що хочете скасувати це переміщення?"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -4892,7 +4897,7 @@ msgstr "Назва партійного/серійного номеру"
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Lot/Serial Number Relocated"
-msgstr ""
+msgstr "Переміщено партійний/серійний номер"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -5138,7 +5143,7 @@ msgstr "Переміщення"
 #: model:ir.actions.act_window,name:stock.stock_move_action
 #: model:ir.ui.menu,name:stock.stock_move_menu
 msgid "Move Analysis"
-msgstr ""
+msgstr "Аналіз переміщень"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -5250,7 +5255,7 @@ msgstr "Ім'я"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Name Demo"
-msgstr ""
+msgstr "Демо назва"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__nbr_moves_in
@@ -6207,7 +6212,7 @@ msgstr "Комплектування"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quant_id
 msgid "Pick From"
-msgstr ""
+msgstr "Взяти з"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
@@ -6314,7 +6319,7 @@ msgstr "Переважний маршрут"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Presence depends on the type of operation."
-msgstr ""
+msgstr "Наявність залежить від типу операції."
 
 #. module: stock
 #. odoo-python
@@ -6373,12 +6378,12 @@ msgstr "Роздрукувати етикетки як:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Print on \"Put in Pack\""
-msgstr ""
+msgstr "Дрік на \"Запакувати\""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Print on Validation"
-msgstr ""
+msgstr "Друк на підтвердженні"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__printed
@@ -6517,7 +6522,7 @@ msgstr "Категорія товару"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_report_label
 msgid "Product Display Name"
-msgstr ""
+msgstr "Назва відображення товару"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_product
@@ -6583,7 +6588,7 @@ msgstr "Відредагована кількість товару"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
 msgid "Product Relocated"
-msgstr ""
+msgstr "Товар переміщено"
 
 #. module: stock
 #. odoo-javascript
@@ -6894,7 +6899,7 @@ msgstr "Кількості до перевстановлення"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantities unpacked"
-msgstr ""
+msgstr "Кількості розпаковані"
 
 #. module: stock
 #. odoo-javascript
@@ -6942,7 +6947,7 @@ msgstr "Кількість в наявності"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantity Relocated"
-msgstr ""
+msgstr "Кількість переміщена"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
@@ -6971,7 +6976,7 @@ msgstr "Кількості були переміщені з останнього
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quantity_product_uom
 msgid "Quantity in Product UoM"
-msgstr ""
+msgstr "Кількість в од. вим. товару"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__availability
@@ -7254,7 +7259,7 @@ msgstr "Переміщення"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
 msgid "Relocate your stock"
-msgstr ""
+msgstr "Перемістіть ваш склад"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -7331,7 +7336,7 @@ msgstr "Розташування поповнення"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__should_replenish
 msgid "Replenish Quantities"
-msgstr ""
+msgstr "Поповнити запаси"
 
 #. module: stock
 #. odoo-python
@@ -7479,7 +7484,7 @@ msgstr "Зарезервовано"
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_qty
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_packaging_qty
 msgid "Reserved Packaging Quantity"
-msgstr ""
+msgstr "Зарезервована кількість упаковки"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
@@ -7546,7 +7551,7 @@ msgstr "Повернути рядок комплектування"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Return Slip"
-msgstr ""
+msgstr "Накладна на повернення"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_id
@@ -7563,7 +7568,7 @@ msgstr "Повернення %s"
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
 msgid "Return slip"
-msgstr ""
+msgstr "Накладна на повернення"
 
 #. module: stock
 #. odoo-python
@@ -7746,7 +7751,7 @@ msgstr "Помилка доставки SMS"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "SSCC Demo"
-msgstr ""
+msgstr "Демо SSCC"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -8068,7 +8073,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set expiration dates on lots & serial numbers"
-msgstr ""
+msgstr "Встановіть термін придатності партій та серійних номерів"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8089,7 +8094,7 @@ msgstr "Встановити 0"
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 msgid "Set to quantity on hand"
-msgstr ""
+msgstr "Встановити кількість в наявності"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
@@ -8445,7 +8450,7 @@ msgstr "Призначені складські серійні номери"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Stock In Transit"
-msgstr ""
+msgstr "Складські запаси на внутрішніх переміщеннях"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -8516,7 +8521,7 @@ msgstr "Історія складської кількості"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_relocate
 msgid "Stock Quantity Relocation"
-msgstr ""
+msgstr "Переміщення кількості запасів"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_quantity
@@ -8666,7 +8671,7 @@ msgstr "Місце зберігання"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Store To"
-msgstr ""
+msgstr "Зберігати в"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_multi_locations
@@ -8928,6 +8933,8 @@ msgid ""
 "The quantities selected do not all belong to the same location.\n"
 "                    You may not assign them a package without moving them to a common location."
 msgstr ""
+"Вибрані кількості не належать до одного місцезнаходження.\n"
+"Ви не можете призначити їм упаковку, не перемістивши їх у спільне розташування."
 
 #. module: stock
 #. odoo-python
@@ -9043,6 +9050,8 @@ msgid ""
 "There is nothing eligible to put in a pack. Either there are no quantities "
 "to put in a pack or all products are already in a pack."
 msgstr ""
+"Немає нічого, що можна запакувати. Або немає кількості для упаковки, або всі"
+" товари вже запаковані."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -9084,6 +9093,8 @@ msgid ""
 "This checkbox is just indicative, it doesn't validate or generate any "
 "product moves."
 msgstr ""
+"Цей чекбокс є лише орієнтовним, він не перевіряє та не генерує жодних "
+"переміщень товару."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -9111,6 +9122,8 @@ msgid ""
 "This is the default location for returns created from a picking with this "
 "operation type."
 msgstr ""
+"Це місце за замовчуванням для повернень, створених із комплектування з цим "
+"типом операції."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9137,6 +9150,9 @@ msgid ""
 "quantity does not generate a backorder.Changing this quantity on assigned "
 "moves affects the product reservation, and should be done with care."
 msgstr ""
+"Це кількість товару, який планується перемістити. Зменшення цієї кількості "
+"не створює дозамовлення. Зміна цієї кількості під час призначених переміщень"
+" впливає на резервування товару, і це слід робити обережно."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__child_internal_location_ids
@@ -9295,6 +9311,10 @@ msgid ""
 "reference values or assign the existing reference sequence to this operation"
 " type."
 msgstr ""
+"Цей префікс послідовності вже використовується іншим типом операції. "
+"Рекомендується вибрати унікальний префікс, щоб уникнути проблем та/або "
+"повторюваних референсних значень, або призначити існуючу послідовність "
+"референсу цьому типу операції."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10378,6 +10398,8 @@ msgstr "Помічник"
 #, python-format
 msgid "Write one lot/serial name per line, followed by the quantity."
 msgstr ""
+"Напишіть по одній назві партійного/серійного номера в рядку, а потім "
+"кількість."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -10385,6 +10407,8 @@ msgid ""
 "You are about to move quantities in a package without moving the full package.\n"
 "                    Those quantities will be removed from the following package(s):"
 msgstr ""
+"Ви збираєтеся перемістити запаковану кількість, не переміщуючи всю упаковку.\n"
+"Цю кількість буде вилучено з наступних упаковок:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
@@ -10392,6 +10416,8 @@ msgid ""
 "You are going to pick products that are not referenced\n"
 "in this location. That leads to a negative stock."
 msgstr ""
+"Ви збираєтеся вибрати товари, які не згадуються в цьому місці.\n"
+" Це призводить до негативного запасу."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -10526,6 +10552,8 @@ msgid ""
 "You can only move a lot/serial to a new location if it exists in a single "
 "location."
 msgstr ""
+"Ви можете перемістити партію/серійний номер у нове місцезнаходження, лише "
+"якщо він існує в одному місцезнаходженні."
 
 #. module: stock
 #. odoo-python
@@ -10535,6 +10563,9 @@ msgid ""
 "You can only move positive quantities stored in locations used by a single "
 "company per relocation."
 msgstr ""
+"Ви можете переміщувати лише кількості більше нуля, що зберігаються в "
+"місцезнаходженнях, які використовуються однією компанією, за одне "
+"переміщення."
 
 #. module: stock
 #. odoo-python
@@ -10680,6 +10711,8 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types."
 msgstr ""
+"Ви не можете упаковувати товари в одну упаковку, якщо вони з різних "
+"переміщень з різними типами операцій."
 
 #. module: stock
 #. odoo-python
@@ -10781,6 +10814,8 @@ msgid ""
 "You can’t validate an empty transfer. Please add some products to move "
 "before proceeding."
 msgstr ""
+"Ви не можете підтвердити порожнє переміщення. Перш ніж продовжити, додайте "
+"кілька товаарів для переміщення."
 
 #. module: stock
 #. odoo-python

@@ -65,12 +65,16 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     }
 
     _updateQuantityAndGetPrice() {
-        return this.rpc("/product/catalog/update_order_line_info", {
+        return this.rpc("/product/catalog/update_order_line_info", this._getUpdateQuantityAndGetPrice());
+    }
+
+    _getUpdateQuantityAndGetPrice() {
+        return {
             order_id: this.env.orderId,
             product_id: this.env.productId,
             quantity: this.productCatalogData.quantity,
             res_model: this.env.orderResModel,
-        });
+        };
     }
 
     //--------------------------------------------------------------------------

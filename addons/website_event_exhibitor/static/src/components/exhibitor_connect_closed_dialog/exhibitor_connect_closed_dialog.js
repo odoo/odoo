@@ -25,6 +25,8 @@ export class ExhibitorConnectClosedDialog extends Component {
         const sponsorData = await this.rpc(
             `/event_sponsor/${encodeURIComponent(this.props.sponsorId)}/read`
         );
+        // empty string on falsy so markup doesn't create a "false" string
+        sponsorData.website_description = sponsorData.website_description || "";
         sponsorData.website_description = markup(sponsorData.website_description);
         this.formatEventStartRemaining = formatDuration(sponsorData.event_start_remaining, true);
         this.sponsorData = sponsorData;

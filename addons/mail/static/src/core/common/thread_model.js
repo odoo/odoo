@@ -235,6 +235,7 @@ export class Thread extends Record {
     memberCount = 0;
     message_needaction_counter = 0;
     message_unread_counter = 0;
+    message_unread_counter_bus_id = 0;
     /**
      * Contains continuous sequence of messages to show in message list.
      * Messages are ordered from older to most recent.
@@ -282,13 +283,12 @@ export class Thread extends Record {
      * @type {ScrollPosition}
      */
     scrollPosition = new ScrollPosition();
-    /** @type {number|'bottom'} */
-    scrollTop = Record.attr("bottom", {
-        /** @this {import("models").Thread} */
-        compute() {
-            return this.type === "chatter" ? 0 : "bottom";
-        },
-    });
+    /**
+     * Stored scoll position of thread from top in ASC order.
+     *
+     * @type {number|'bottom'}
+     */
+    scrollTop = "bottom";
     showOnlyVideo = false;
     transientMessages = Record.many("Message");
     /** @type {'channel'|'chat'|'chatter'|'livechat'|'group'|'mailbox'} */

@@ -1160,34 +1160,6 @@ QUnit.test("allow attachment delete on authored message", async () => {
     await contains(".o-mail-AttachmentCard", { count: 0 });
 });
 
-QUnit.test("prevent attachment delete on non-authored message in channels", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
-    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    pyEnv["mail.message"].create({
-        attachment_ids: [
-            [
-                0,
-                0,
-                {
-                    mimetype: "image/jpeg",
-                    name: "BLAH",
-                    res_id: channelId,
-                    res_model: "discuss.channel",
-                },
-            ],
-        ],
-        author_id: partnerId,
-        body: "<p>Test</p>",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
-    await contains(".o-mail-AttachmentImage");
-    await contains(".o-mail-AttachmentImage div[title='Remove']", { count: 0 });
-});
-
 QUnit.test("Toggle star should update starred counter on all tabs", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({

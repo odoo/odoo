@@ -209,7 +209,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async (
     await contains(".o-mail-MessageSeenIndicator i");
 });
 
-QUnit.test("'channel_seen' notification received is correctly handled", async () => {
+QUnit.test("mark channel as seen from the bus", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "test" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -220,7 +220,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async ()
         ],
         channel_type: "chat",
     });
-    pyEnv["mail.message"].create({
+    const messageId = pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
         model: "discuss.channel",
@@ -233,16 +233,20 @@ QUnit.test("'channel_seen' notification received is correctly handled", async ()
 
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // Simulate received channel seen notification
-    pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/seen", {
-        channel_id: channelId,
-        last_message_id: 100,
-        partner_id: partnerId,
+    pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
+        ChannelMember: {
+            id: pyEnv["discuss.channel.member"].search([
+                ["channel_id", "=", channelId],
+                ["partner_id", "=", partnerId],
+            ])[0],
+            lastSeenMessage: { id: messageId },
+        },
     });
     await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
 });
 
 QUnit.test(
-    "'channel_fetch' notification then 'channel_seen' received are correctly handled",
+    "should display message indicator when message is fetched/seen",
     async () => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Recipient" });
@@ -254,7 +258,7 @@ QUnit.test(
             ],
             channel_type: "chat",
         });
-        pyEnv["mail.message"].create({
+        const messageId = pyEnv["mail.message"].create({
             author_id: pyEnv.currentPartnerId,
             body: "<p>Test</p>",
             model: "discuss.channel",
@@ -269,16 +273,20 @@ QUnit.test(
         // Simulate received channel fetched notification
         pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
             channel_id: channelId,
-            last_message_id: 100,
+            last_message_id: messageId,
             partner_id: partnerId,
         });
         await contains(".o-mail-MessageSeenIndicator i");
 
         // Simulate received channel seen notification
-        pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/seen", {
-            channel_id: channelId,
-            last_message_id: 100,
-            partner_id: partnerId,
+        pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
+            ChannelMember: {
+                id: pyEnv["discuss.channel.member"].search([
+                    ["channel_id", "=", channelId],
+                    ["partner_id", "=", partnerId],
+                ])[0],
+                lastSeenMessage: { id: messageId },
+            },
         });
         await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
     }

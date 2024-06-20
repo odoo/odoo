@@ -43,7 +43,7 @@ class PurchaseOrderLine(models.Model):
             moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
         return moves
 
-    @api.depends('move_ids.state', 'move_ids.product_uom_qty', 'move_ids.product_uom')
+    @api.depends('move_ids.state', 'move_ids.product_uom', 'move_ids.quantity')
     def _compute_qty_received(self):
         from_stock_lines = self.filtered(lambda order_line: order_line.qty_received_method == 'stock_moves')
         super(PurchaseOrderLine, self - from_stock_lines)._compute_qty_received()
@@ -165,7 +165,7 @@ class PurchaseOrderLine(models.Model):
                     raise UserError(_('You cannot decrease the ordered quantity below the received quantity.\n'
                                       'Create a return first.'))
 
-                if float_compare(line.product_qty, line.qty_invoiced, precision_rounding=rounding) < 0:
+                if float_compare(line.product_qty, line.qty_invoiced, precision_rounding=rounding) < 0 and line.invoice_lines:
                     # If the quantity is now below the invoiced quantity, create an activity on the vendor bill
                     # inviting the user to create a refund.
                     line.invoice_lines[0].move_id.activity_schedule(

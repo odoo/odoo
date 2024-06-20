@@ -22,7 +22,9 @@
                     <t t-call="website_event.navbar"/>
                     <!-- Show the button tickets only on mobile -->
                     <div class="container d-lg-none">
-                        <t t-call="website_event.registration_template"/>
+                        <t t-call="website_event.registration_template">
+                            <t t-set="toast_message" t-value=""/>
+                        </t>
                     </div>
                     <!-- Description -->
                     <div id="o_wevent_event_main_col">
@@ -416,7 +418,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer flex-lg-row-reverse border-top">
+                        <div class="modal-footer flex-lg-row border-top">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary o_wait_lazy_js a-submit" disabled="" t-attf-id="#{event.id}">
                                 Register
@@ -466,7 +468,7 @@
                                 </t>
                             </div>
                         </div>
-                        <div class="modal-footer flex-lg-row-reverse border-top">
+                        <div class="modal-footer flex-lg-row border-top">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary o_wait_lazy_js a-submit" t-attf-id="#{event.id}" disabled="disabled">
                                 Register

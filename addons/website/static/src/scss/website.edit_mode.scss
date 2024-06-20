@@ -282,9 +282,22 @@ body.editor_enable {
     .js_change_lang {
         pointer-events: none;
     }
+
+    // Disable "input group date" calendar icon
+    .input-group.date .input-group-text:has(.fa-calendar) {
+        pointer-events: none;
+    }
 }
 .o_homepage_editor_welcome_message {
     padding-top: 128px;
     padding-bottom: 128px;
     font-family: $o-font-family-sans-serif;
+}
+// offcanvas backdrop
+body.editor_enable {
+    // We prevent selection to avoid the powerbox hint from being added to the
+    // backdrop by clicking on it in edit mode.
+    .offcanvas-backdrop {
+        user-select: none;
+    }
 }

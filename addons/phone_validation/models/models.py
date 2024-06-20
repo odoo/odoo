@@ -64,15 +64,17 @@ class BaseModel(models.AbstractModel):
             country = self[country_fname] if country_fname and country_fname in self else self.env['res.country']
         if not country:
             country = self.env.company.country_id
-        if not country:
-            return number
 
-        return self._phone_format_number(number, country=country, force_format=force_format, raise_exception=raise_exception)
+        return self._phone_format_number(
+            number,
+            country=country, force_format=force_format,
+            raise_exception=raise_exception,
+        )
 
     def _phone_format_number(self, number, country, force_format='E164', raise_exception=False):
         """ Format and return number according to the asked format. This is
         mainly a small helper around 'phone_validation.phone_format'."""
-        if not number or not country:
+        if not number:
             return False
 
         try:

@@ -385,9 +385,9 @@ class HrEmployee(models.Model):
     @api.model
     def _get_contextual_employee(self):
         ctx = self.env.context
-        if 'employee_id' in ctx:
+        if self.env.context.get('employee_id') is not None:
             return self.browse(ctx.get('employee_id'))
-        if 'default_employee_id' in ctx:
+        if self.env.context.get('default_employee_id') is not None:
             return self.browse(ctx.get('default_employee_id'))
         return self.env.user.employee_id
 
@@ -419,7 +419,7 @@ class HrEmployee(models.Model):
         for allocation in allocations:
             allocations_per_employee_type[allocation.employee_id][allocation.holiday_status_id] |= allocation
 
-        # allocation_leaves_consumed is a tuple of two dictionnaries.
+        # _get_consumed_leaves returns a tuple of two dictionnaries.
         # 1) The first is a dictionary to map the number of days/hours of leaves taken per allocation
         # The structure is the following:
         # - KEYS:
@@ -434,9 +434,12 @@ class HrEmployee(models.Model):
         #              |--max_leaves
         #              |--accrual_bonus
         # - VALUES:
-        # Integer representing the number of (virtual) remaining leaves, (virtual) leaves taken or max leaves for each allocation.
+        # Integer representing the number of (virtual) remaining leaves, (virtual) leaves taken or max leaves
+        # for each allocation.
         # leaves_taken and remaining_leaves only take into account validated leaves, while the "virtual" equivalent are
         # also based on leaves in "confirm" or "validate1" state.
+        # Accrual bonus gives the amount of additional leaves that will have been granted at the given
+        # target_date in comparison to today.
         # The unit is in hour or days depending on the leave type request unit
         # 2) The second is a dictionary mapping the remaining days per employee and per leave type that are either
         # not taken into account by the allocations, mainly because accruals don't take future leaves into account.
@@ -460,7 +463,6 @@ class HrEmployee(models.Model):
                     'amount': 0,
                     'is_virtual': True,
                 }),
-                'total_virtual_excess': 0,
                 'exceeding_duration': 0,
                 'to_recheck_leaves': self.env['hr.leave']
             })
@@ -505,15 +507,17 @@ class HrEmployee(models.Model):
                 for leave in leaves_per_employee_type[employee][leave_type].sorted('date_from'):
                     leave_duration = leave[leave_duration_field]
                     skip_excess = False
+
+                    if sorted_leave_allocations.filtered(lambda alloc: alloc.allocation_type == 'accrual') and leave.date_from.date() > target_date:
+                        to_recheck_leaves_per_leave_type[employee][leave_type]['to_recheck_leaves'] |= leave
+                        skip_excess = True
+                        continue
+
                     if leave_type.requires_allocation == 'yes':
                         for allocation in sorted_leave_allocations:
                             # We don't want to include future leaves linked to accruals into the total count of available leaves.
                             # However, we'll need to check if those leaves take more than what will be accrued in total of those days
                             # to give a warning if the total exceeds what will be accrued.
-                            if allocation.allocation_type == 'accrual' and leave.date_from.date() > target_date:
-                                to_recheck_leaves_per_leave_type[employee][leave_type]['to_recheck_leaves'] |= leave
-                                skip_excess = True
-                                continue
                             if allocation.date_from > leave.date_to.date() or (allocation.date_to and allocation.date_to < leave.date_from.date()):
                                 continue
                             interval_start = max(
@@ -575,7 +579,7 @@ class HrEmployee(models.Model):
                     virtual_remaining = 0
                     additional_leaves_duration = 0
                     for allocation in consumed_content:
-                        latest_accrual_bonus += allocation._get_future_leaves_on(date_to_simulate)
+                        latest_accrual_bonus += allocation and allocation._get_future_leaves_on(date_to_simulate)
                         date_accrual_bonus += consumed_content[allocation]['accrual_bonus']
                         virtual_remaining += consumed_content[allocation]['virtual_remaining_leaves']
                     for leave in content['to_recheck_leaves']:

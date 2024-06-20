@@ -553,14 +553,13 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>تخفیف پرداخت زودهنگام اعمال شد.</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
+msgid "<br/> on this account:"
 msgstr ""
 
 #. module: account
@@ -836,7 +835,8 @@ msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Choose or Configure "
 "Email Servers"
 msgstr ""
-"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> میل سرور را تنظیم کنید"
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> میل سرور را تنظیم یا "
+"انتخاب کنید"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
@@ -1754,7 +1754,7 @@ msgstr "حساب دریافتنی"
 #. module: account
 #: model:account.account,name:account.1_pos_receivable
 msgid "Account Receivable (PoS)"
-msgstr "حساب دریافتنی (PoS)"
+msgstr "حساب دریافتنی (پایانه فروش)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
@@ -1782,7 +1782,7 @@ msgstr "برچسب حساب"
 #: model:ir.model.fields,field_description:account.field_product_product__account_tag_ids
 #: model:ir.model.fields,field_description:account.field_product_template__account_tag_ids
 msgid "Account Tags"
-msgstr "کلمات کلیدی حساب"
+msgstr "برچسب‌های حساب"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
@@ -6122,17 +6122,6 @@ msgid "Duplicated Ref"
 msgstr "تکرار شماره‌ی مرجع"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr ""
-"تکرار شماره‌ی مرجع فروشنده. شاید سند بستانکار یا صورت‌حساب یک فروشنده را دو "
-"بار  کدگذاری کرده باشید. "
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "گزارشهای پویا"
@@ -8036,8 +8025,10 @@ msgstr "نامعتبر"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "\"Zip Range\" نامعتبر است، لطفاً آن را به درستی پیکربندی کنید."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -10380,13 +10371,6 @@ msgstr "اوپس"
 #, python-format
 msgid "Open"
 msgstr "باز"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "فهرست را باز کنید"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -13884,6 +13868,13 @@ msgid "Text Value"
 msgstr "مقدار متن "
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+#, python-format
+msgid "Text copied"
+msgstr "مالیات کپی شده"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr "این تاریخ ورودی افتتاحیه است."
@@ -16697,7 +16688,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "

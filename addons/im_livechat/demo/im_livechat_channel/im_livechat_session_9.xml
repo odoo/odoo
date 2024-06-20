@@ -30,6 +30,7 @@
             <field name="write_date" eval="datetime.now() - timedelta(days=1)"/>
             <field name="body">Hi</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="res_id" ref="im_livechat.livechat_channel_session_9"/>
             <field name="model">discuss.channel</field>
         </record>
@@ -40,6 +41,7 @@
             <field name="write_date" eval="datetime.now() - timedelta(days=1, seconds=-15)"/>
             <field name="body">Hello, how may I help you?</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="res_id" ref="im_livechat.livechat_channel_session_9"/>
             <field name="model">discuss.channel</field>
         </record>
@@ -51,6 +53,7 @@
             <field name="write_date" eval="datetime.now() - timedelta(days=1, seconds=-25)"/>
             <field name="body">I would like to know more about the CRM application</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="res_id" ref="im_livechat.livechat_channel_session_9"/>
             <field name="model">discuss.channel</field>
         </record>
@@ -61,6 +64,7 @@
             <field name="write_date" eval="datetime.now() - timedelta(days=1, seconds=-33)"/>
             <field name="body">The CRM application helps you to track leads, close opportunities and get accurate forecasts. You can test it for free on our website.</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="res_id" ref="im_livechat.livechat_channel_session_9"/>
             <field name="model">discuss.channel</field>
         </record>
@@ -72,6 +76,7 @@
             <field name="write_date" eval="datetime.now() - timedelta(days=1, seconds=-42)"/>
             <field name="body">Great, thanks!</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="res_id" ref="im_livechat.livechat_channel_session_9"/>
             <field name="model">discuss.channel</field>
         </record>
@@ -83,6 +88,7 @@
             <field name="write_date" eval="datetime.now() - timedelta(days=1, seconds=-53)"/>
             <field name="body">Rating: :-)</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="res_id" ref="im_livechat.livechat_channel_session_9"/>
             <field name="model">discuss.channel</field>
         </record>

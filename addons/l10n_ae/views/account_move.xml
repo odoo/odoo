@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//tree//field[@name='tax_ids']" position="after">
-                    <field name="l10n_ae_vat_amount" optional="show"/>
+                    <field name="l10n_ae_vat_amount" optional="show" column_invisible="parent.country_code != 'AE'"/>
                 </xpath>
             </field>
         </record>

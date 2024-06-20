@@ -110,7 +110,7 @@ msgstr "%s (mới) %s"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s Child MO's"
-msgstr "%s LSX con"
+msgstr "%s LSX phụ"
 
 #. module: mrp
 #. odoo-python
@@ -289,7 +289,7 @@ msgstr "<span class=\"o_stat_text\">Tổng quan ĐMNL</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Child MO</span>"
-msgstr "<span class=\"o_stat_text\">LSX con</span>"
+msgstr "<span class=\"o_stat_text\">LSX phụ</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -797,6 +797,11 @@ msgstr "Lưu trữ hoạt động"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
 msgstr "Đã lưu trữ"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Are you sure you want to cancel this manufacturing order?"
+msgstr "Bạn có chắc chắn muốn huỷ lệnh sản xuất này không?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1813,9 +1818,9 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "Số lượng hiện tại của sản phẩm.\n"
-"Trong ngữ cảnh với một Vị trí tồn kho, số lượng này bao gồm hàng hoá được lưu trữ tại vị trí này, hoặc bất kỳ vị trí con nào.\n"
-"Trong ngữ cảnh với một Kho hàng, số lượng này bao gồm hàng hoá được lưu trữ trong Vị trí tồn kho của Kho hàng này, hoặc bất kỳ vị trí con nào\n"
-"được lưu trữ tại Vị trí tồn kho trong Kho hàng của Xưởng này, hoặc bất kỳ vị trí con nào.\n"
+"Trong ngữ cảnh với một Vị trí tồn kho, số lượng này bao gồm hàng hoá được lưu trữ tại vị trí này, hoặc bất kỳ vị trí phụ nào.\n"
+"Trong ngữ cảnh với một Kho hàng, số lượng này bao gồm hàng hoá được lưu trữ trong Vị trí tồn kho của Kho hàng này, hoặc bất kỳ vị trí phụ nào\n"
+"được lưu trữ tại Vị trí tồn kho trong Kho hàng của Xưởng này, hoặc bất kỳ vị trí phụ nào.\n"
 "Nếu không, số lượng này bao gồm hàng hoá được lưu trữ trong bất kỳ Vị trí tồn kho nào có loại 'nội bộ'. "
 
 #. module: mrp
@@ -2383,8 +2388,8 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "Số lượng dự kiến (được tính bằng Số lượng hiện có - Số lượng sắp xuất + Số lượng sắp nhập)\n"
-"Đối với một Vị trí tồn kho, số lượng này bao gồm số lượng được lưu trữ trong vị trí này, hoặc các vị trí con của nó.\n"
-"Đối với một Kho hàng, số lượng này bao gồm số lượng được lưu trữ trong Vị trí tồn kho của Kho hàng này, hoặc các vị trí con của nó.\n"
+"Đối với một Vị trí tồn kho, số lượng này bao gồm số lượng được lưu trữ trong vị trí này, hoặc các vị trí phụ của nó.\n"
+"Đối với một Kho hàng, số lượng này bao gồm số lượng được lưu trữ trong Vị trí tồn kho của Kho hàng này, hoặc các vị trí phụ của nó.\n"
 "Nếu không, số lượng này bao gồm số lượng được lữu trữ trong bất kỳ Vị trí tồn kho nào có loại là 'nội bộ'."
 
 #. module: mrp
@@ -3982,17 +3987,17 @@ msgstr "Mã vạch kiện hàng"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
 msgid "Parent BoM"
-msgstr "ĐMNL cha"
+msgstr "ĐMNL chính"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__parent_product_tmpl_id
 msgid "Parent Product Template"
-msgstr "Mẫu sản phẩm cha"
+msgstr "Mẫu sản phẩm chính"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__mrp_consumption_warning_id
 msgid "Parent Wizard"
-msgstr "Công cụ cha"
+msgstr "Tính năng chính"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__worksheet_google_slide
@@ -5184,15 +5189,6 @@ msgid ""
 msgstr ""
 "Một số nguyên liệu được theo dõi, bạn phải chỉ rõ lệnh sản xuất để thu về "
 "đúng nguyên liệu. "
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid ""
-"Some product moves have already been confirmed, this manufacturing order "
-"can't be completely cancelled. Are you still sure you want to process?"
-msgstr ""
-"Một số dịch chuyển sản phẩm đã được xác nhận, lệnh sản xuất này không thể bị"
-" hủy hoàn toàn. Bạn vẫn chắc chắn muốn tiếp tục?"
 
 #. module: mrp
 #. odoo-python

@@ -9,7 +9,7 @@ from odoo.tests import tagged
 from .common import TestEsEdiTbaiCommon
 
 
-@tagged('external_l10n', '-standard', 'external')
+@tagged('external_l10n', 'post_install', '-at_install', '-standard', 'external')
 class TestEdiTbaiWebServices(TestEsEdiTbaiCommon):
 
     @classmethod

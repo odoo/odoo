@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2024
-# Malaz Abuidris <msea@odoo.com>, 2024
 # Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,7 +97,7 @@ msgstr "%(action)s لليومية %(journal)s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
-msgstr "%(amount)s مستحق %(date)s "
+msgstr "%(amount)s مستحق في %(date)s "
 
 #. module: account
 #. odoo-python
@@ -521,15 +521,14 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>تم تطبيق خصم الدفع المبكر.</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
-msgstr ""
+msgid "<br/> on this account:"
+msgstr "<br/> في هذا الحساب: "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -6073,15 +6072,6 @@ msgid "Duplicated Ref"
 msgstr "مرجع مكرر  "
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr "مرجع مورد مكرر. ربما تكون أدخلت نفس الفاتورة أو إشعار الخصم مرتين."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "تقارير ديناميكية"
@@ -7971,8 +7961,10 @@ msgstr "غير صالح "
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "نطاق الرمز البريدي خاطئ. الرجاء تكوينه بشكل صحيح. "
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -8850,7 +8842,7 @@ msgstr "الشهر الماضي"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__last_quarter
 msgid "Last Quarter"
-msgstr "آخر ربع سنة"
+msgstr "ربع السنة الماضي "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__last_statement_id
@@ -10305,13 +10297,6 @@ msgstr "عذراً "
 #, python-format
 msgid "Open"
 msgstr "فتح"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "فتح القائمة "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -13794,6 +13779,13 @@ msgid "Text Value"
 msgstr "قيمة النص"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+#, python-format
+msgid "Text copied"
+msgstr "تم نسخ النص "
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr "هذا هو تاريخ القيد الافتتاحي. "
@@ -13891,6 +13883,8 @@ msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
 msgstr ""
+"The Syscohada chart template shouldn't be selected directly. Instead, you "
+"should directly select the chart template related to your country."
 
 #. module: account
 #. odoo-python
@@ -16581,7 +16575,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
@@ -16634,7 +16628,7 @@ msgstr ""
 msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
-msgstr ""
+msgstr "لا يمكنك تسجيل مدفوعات لحركات صادرة وواردة في آن واحد. "
 
 #. module: account
 #. odoo-python

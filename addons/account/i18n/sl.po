@@ -15,9 +15,10 @@
 # matjaz k <matjaz@mentis.si>, 2023
 # Tomaž Jug <tomaz@editor.si>, 2024
 # Jasmina Macur <jasmina@hbs.si>, 2024
-# Grega Vavtar <grega@hbs.si>, 2024
 # Martin Trigaux, 2024
 # Katja Deržič, 2024
+# Gregor Flajs, 2024
+# Grega Vavtar <grega@hbs.si>, 2024
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Katja Deržič, 2024\n"
+"Last-Translator: Grega Vavtar <grega@hbs.si>, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +69,7 @@ msgstr "# Poravnani računi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr ""
+msgstr "# Usklajeni računi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
@@ -512,14 +513,13 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
 msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
+msgid "<br/> on this account:"
 msgstr ""
 
 #. module: account
@@ -783,6 +783,9 @@ msgid ""
 "                                        Taxes\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                             Davki\n"
+"                                         </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -839,6 +842,9 @@ msgid ""
 "                                    Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.\n"
 "                                </span>"
 msgstr ""
+"<span class=\"text-muted\" colspan=\"2\">\n"
+"                                  Pustite prazno, če želite ustvariti nov dnevnik za ta bančni račun, ali pa izberite dnevnik in ga povežite z bančnim računom.\n"
+"                                          </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -948,7 +954,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span> Bill</span>"
-msgstr ""
+msgstr "<span>Račun</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -1082,7 +1088,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
-msgstr ""
+msgstr "<span>To je predogled vaših pogojev.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1123,7 +1129,7 @@ msgstr "<strong>Datum:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Delivery Date:</strong><br/>"
-msgstr ""
+msgstr "<strong>Datum storitve:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1133,7 +1139,7 @@ msgstr "<strong>Valuta:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date:</strong><br/>"
-msgstr ""
+msgstr "<strong>Valuta:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -1143,7 +1149,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Incoterm:</strong><br/>"
-msgstr ""
+msgstr "<strong>Incoterm:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1159,7 +1165,7 @@ msgstr "<strong>Datum prejema:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference:</strong><br/>"
-msgstr ""
+msgstr "<strong>Sklic:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1169,7 +1175,7 @@ msgstr "<strong>Naslov za dostavo:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Source:</strong><br/>"
-msgstr ""
+msgstr "<strong>Vir:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -1238,6 +1244,9 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodically from your bank."
 msgstr ""
+"Bančni izpisek je povzetek vseh finančnih transakcij,\n"
+"               ki so se v določenem časovnem obdobju zgodile na bančnem računu. Izpisek \n"
+"morate redno prejemati od svoje banke."
 
 #. module: account
 #. odoo-python
@@ -1355,7 +1364,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
-msgstr ""
+msgstr "Davčno območje je mogoče za iste davke opredeliti samo enkrat."
 
 #. module: account
 #. odoo-python
@@ -1707,7 +1716,7 @@ msgstr "Konto uporabiti namesto tega"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "Account to transfer to."
-msgstr ""
+msgstr "To datoteko ste že uvozili"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill
@@ -2965,7 +2974,7 @@ msgstr "Bančni dovodi"
 #. module: account
 #: model:account.account,name:account.1_expense_finance
 msgid "Bank Fees"
-msgstr ""
+msgstr "Bančne preovizije"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -5828,15 +5837,6 @@ msgid "Duplicated Ref"
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "Dinamična poročila"
@@ -7665,7 +7665,9 @@ msgstr "Neveljavno"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
-msgid "Invalid \"Zip Range\", please configure it properly."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
 
 #. module: account
@@ -9460,7 +9462,7 @@ msgstr ""
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "No attachment was provided"
-msgstr ""
+msgstr "Priponka ni priloženo"
 
 #. module: account
 #. odoo-python
@@ -9943,13 +9945,6 @@ msgstr ""
 #, python-format
 msgid "Open"
 msgstr "Odprto"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -10504,7 +10499,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Payment Communication:"
-msgstr ""
+msgstr "Podatki za plačilo:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -13368,6 +13363,13 @@ msgid "Text Value"
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+#, python-format
+msgid "Text copied"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr ""
@@ -15944,7 +15946,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
@@ -16852,7 +16854,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "units"
-msgstr ""
+msgstr "enot"
 
 #. module: account
 #. odoo-javascript

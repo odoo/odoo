@@ -25,3 +25,6 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         self_route = self.pos_config._get_self_order_route()
 
         self.start_tour(self_route, "self_attribute_selector")
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.lines[0].price_extra, 1.0)
+        self.assertEqual(order.lines[1].price_extra, 2.0)

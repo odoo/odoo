@@ -70,7 +70,7 @@ msgstr "% завершено"
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "%(participant)s just participated in \"%(survey_title)s\"."
-msgstr ""
+msgstr "%(participant)s щойно взяв участь в \"%(survey_title)s\"."
 
 #. module: survey
 #. odoo-python
@@ -101,7 +101,7 @@ msgstr "'Сертифікат - %s' % (object.survey_id.display_name)"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "0000000010"
-msgstr ""
+msgstr "0000000010"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q2_sug2
@@ -222,7 +222,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "<br/> <span>by</span>"
-msgstr ""
+msgstr "<br/> <span></span>"
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
@@ -254,6 +254,32 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <!-- Ми використовуємо логотип компанії, яка створила опитування (для обробки випадків кількох компаній) -->\n"
+"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    Сертифікація: <t t-out=\"object.survey_id.display_name or ''\">Форма зворотнього звʼязку</t>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>Шановний <span t-out=\"object.partner_id.name or 'participant'\">учасник</span></p>\n"
+"                <p>\n"
+"                    Знайдіть у прикріпленнях ваш сертифікат\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\">Furniture Creation</strong>\n"
+"                    \n"
+"                </p>\n"
+"                <p>Вітаємо з проходженням тестів з <strong t-out=\"object.scoring_percentage\"></strong>%!</p>\n"
+"            </td></tr> балами\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -376,6 +402,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/> It is currently not possible to "
 "pass this assessment because no question is configured to give any points."
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/> Наразі неможливо пройти це "
+"оцінювання, оскільки жодне запитання не налаштоване для отримання балів."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -454,6 +482,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Avg "
 "</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Сер. "
+"</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -461,6 +491,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Max "
 "</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Макс. "
+"</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -468,26 +500,28 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Min "
 "</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Мін. "
+"</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"d-block text-muted\">Responded</span>"
-msgstr ""
+msgstr "<span class=\"d-block text-muted\">Надано відповіді</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"d-block text-muted\">Skipped</span>"
-msgstr ""
+msgstr "<span class=\"d-block text-muted\">Пропущено</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"d-block text-success\">Correct</span>"
-msgstr ""
+msgstr "<span class=\"d-block text-success\">Вірно</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"d-block text-warning\">Partial</span>"
-msgstr ""
+msgstr "<span class=\"d-block text-warning\">Частково</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -495,6 +529,8 @@ msgid ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\" id=\"enter-"
 "tooltip\"> or press CTRL+Enter</span>"
 msgstr ""
+"<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\" id=\"enter-"
+"tooltip\"> або натисніть CTRL+Enter</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -514,6 +550,9 @@ msgid ""
 "                    <span id=\"enter-tooltip\">or press CTRL+Enter</span>\n"
 "                </span>"
 msgstr ""
+"<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
+"                    <span id=\"enter-tooltip\">або натисніть CTRL+Enter</span>\n"
+"                </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -526,6 +565,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"certifications_company_count &lt; 2\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" invisible=\"certifications_company_count &gt; 1\">Certification</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"certifications_company_count &lt; 2\">Сертифікації</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"certifications_company_count &gt; 1\">Сертифікація</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
@@ -533,6 +574,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">Сертифікації</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"certifications_count &gt; 1\">Сертифікація</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -561,6 +604,9 @@ msgid ""
 "                                <i class=\"fa fa-trash me-1\"/>Remove all filters\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_survey_results_topbar_clear_filters text-primary\">\n"
+"                                <i class=\"fa fa-trash me-1\"/>Вилучити всі фільтри\n"
+"                            </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -577,6 +623,8 @@ msgid ""
 "<span class=\"o_survey_session_navigation_next_label me-2 fw-bold\">Start</span>\n"
 "                        <i class=\"fw-bold oi oi-chevron-right\"/>"
 msgstr ""
+"<span class=\"o_survey_session_navigation_next_label me-2 fw-bold\">Початок</span>\n"
+"                        <i class=\"fw-bold oi oi-chevron-right\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -596,12 +644,12 @@ msgstr "<span class=\"text-muted\">Зареєстровано</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"text-muted\">Responded</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Надано відповіді</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"text-muted\">Skipped</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Пропущено</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -611,22 +659,22 @@ msgstr "<span class=\"text-muted\">Успішно</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"text-success\">Correct</span>"
-msgstr ""
+msgstr "<span class=\"text-success\">Вірно</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"text-warning\">Partial</span>"
-msgstr ""
+msgstr "<span class=\"text-warning\">Частково</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span invisible=\"not is_scored_question\">Points</span>"
-msgstr ""
+msgstr "<span invisible=\"not is_scored_question\">Бали</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span invisible=\"not is_time_limited\"> seconds</span>"
-msgstr ""
+msgstr "<span invisible=\"not is_time_limited\"> секунд</span>"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q1
@@ -711,12 +759,12 @@ msgstr "<span>Кількість спроб, що залишилась</span>:"
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p2_q1
 msgid "<span>Our famous Leader!</span>"
-msgstr ""
+msgstr "<span>Наш відомий лідер!</span>"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q3
 msgid "<span>Our sales people have an advantage, but you can do it!</span>"
-msgstr ""
+msgstr "<span>Наші продавці мають перевагу, але ви можете це зробити!</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -734,6 +782,8 @@ msgid ""
 "<span>This certificate is presented to</span>\n"
 "                                <br/>"
 msgstr ""
+"<span>Цей сертифікат вручається</span>\n"
+"                                <br/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
@@ -741,6 +791,8 @@ msgid ""
 "<span>This is a Test Survey Entry. </span><i class=\"oi oi-fw oi-arrow-"
 "right\"/>Edit Survey"
 msgstr ""
+"<span>Це запис тестового опитування. </span><i class=\"oi oi-fw oi-arrow-"
+"right\"/>Редагувати опитування"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -779,6 +831,8 @@ msgid ""
 "<span>for successfully completing</span>\n"
 "                                <br/>"
 msgstr ""
+"<span>для успішного завершення</span>\n"
+"                                <br/>"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q4
@@ -837,6 +891,8 @@ msgid ""
 "A scored survey needs at least one question that gives points.\n"
 "Please check answers and their scores."
 msgstr ""
+"Опитування з балами потребує принаймні одного запитання, яке дає бали.\n"
+"Перевірте відповіді та їх бали."
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2
@@ -942,6 +998,8 @@ msgid ""
 "After watching this video, will you swear that you are not going to "
 "procrastinate to trim your hedge this year?"
 msgstr ""
+"Переглянувши це відео, ви поклянетеся, що не збираєтеся зволікати з "
+"обрізанням живоплоту цього року?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_col3
@@ -979,12 +1037,12 @@ msgstr "Усі опитування"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Allow Roaming"
-msgstr ""
+msgstr "Дозволити роумінг"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__allowed_triggering_question_ids
 msgid "Allowed Triggering Questions"
-msgstr ""
+msgstr "Дозволений запуск запитань"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug2
@@ -1072,7 +1130,7 @@ msgstr "Заархівовано"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_food_preferences_q1
 msgid "Are you vegetarian?"
-msgstr ""
+msgstr "Ви вегетаріанець?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5
@@ -1176,7 +1234,7 @@ msgstr "Середня тривалість"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
 msgid "Average Score"
-msgstr ""
+msgstr "Середній бал"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__answer_duration_avg
@@ -1223,7 +1281,7 @@ msgstr "Бджоли"
 #. module: survey
 #: model:survey.question,question_placeholder:survey.vendor_certification_page_3_question_3
 msgid "Beware of leap years!"
-msgstr ""
+msgstr "Стережіться високосних років!"
 
 #. module: survey
 #. odoo-python
@@ -1282,7 +1340,7 @@ msgstr "Можна редагувати тіло"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q3
 msgid "Can Humans ever directly see a photon?"
-msgstr ""
+msgstr "Чи можуть люди колись безпосередньо побачити фотон?"
 
 #. module: survey
 #. odoo-python
@@ -1389,17 +1447,17 @@ msgstr "Вибір"
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_burger_quiz
 msgid "Choose your favourite subject and show how good you are. Ready?"
-msgstr ""
+msgstr "Виберіть свій улюблений предмет і покажіть, які ви молодці. Готові?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_food_preferences_q3
 msgid "Choose your green meal"
-msgstr ""
+msgstr "Оберіть вашу зелену їжу"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_food_preferences_q4
 msgid "Choose your meal"
-msgstr ""
+msgstr "Оберіть вашу їжу"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic_blue
@@ -1457,6 +1515,8 @@ msgid ""
 "Combining roaming and \"Scoring with answers after each page\" is not possible; please update the following surveys:\n"
 "- %(survey_names)s"
 msgstr ""
+"Поєднання роумінгу та «Оцінка з відповідями після кожної сторінки» неможливе; оновіть наступні опитування:\n"
+"- %(survey_names)s"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
@@ -1511,7 +1571,7 @@ msgstr "Обчислення балів вимагає питання в арг�
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Conditional display"
-msgstr ""
+msgstr "Умовне відображення"
 
 #. module: survey
 #. odoo-javascript
@@ -1521,6 +1581,7 @@ msgstr ""
 msgid ""
 "Conditional display is not available when questions are randomly picked."
 msgstr ""
+"Умовне відображення недоступне, якщо запитання вибрано випадковим чином."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_3
@@ -1661,7 +1722,7 @@ msgstr "Створити онлайн-сесію"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Create a custom survey from scratch"
-msgstr ""
+msgstr "Створіть індивідуальне опитування з нуля"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__create_uid
@@ -1767,7 +1828,7 @@ msgstr "Налаштовувана лампа"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "DEMO_CERTIFIED_NAME"
-msgstr ""
+msgstr "DEMO_CERTIFIED_NAME"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__date
@@ -1856,12 +1917,12 @@ msgstr "Відображати прогрес як"
 #: code:addons/survey/static/src/views/widgets/survey_question_trigger/survey_question_trigger.js:0
 #, python-format
 msgid "Displayed if \"%s\"."
-msgstr ""
+msgstr "Відображається, якщо \"%s\"."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Displayed when the answer entered is not valid."
-msgstr ""
+msgstr "Відображається, якщо введена відповідь недійсна."
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_1
@@ -1871,7 +1932,7 @@ msgstr "Чи продаємо ми екрани акустичного блок�
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2_q3
 msgid "Do you have any other comments, questions, or concerns?"
-msgstr ""
+msgstr "Чи є у вас інші коментарі, запитання чи проблеми?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_5
@@ -1886,7 +1947,7 @@ msgstr "Собаки"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q1
 msgid "Dogwood is from which family of trees?"
-msgstr ""
+msgstr "З якої родини дерев походить кизил?"
 
 #. module: survey
 #: model:survey.question,question_placeholder:survey.survey_demo_quiz_p1_q2
@@ -1906,7 +1967,7 @@ msgstr "Шухляда"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Duplicate Question"
-msgstr ""
+msgstr "Дублювати запитання"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -1945,7 +2006,7 @@ msgstr "Кінцева дата та час"
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "End of Survey"
-msgstr ""
+msgstr "Кінець опитування"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
@@ -2034,7 +2095,7 @@ msgstr "Фінальна таблиця лідерів"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q4_sug2
 msgid "Fish"
-msgstr ""
+msgstr "Риба"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_follower_ids
@@ -2057,7 +2118,7 @@ msgstr "Іконка з чудовим шрифтом, напр. fa-tasks"
 #. module: survey
 #: model:survey.survey,title:survey.survey_demo_food_preferences
 msgid "Food Preferences"
-msgstr ""
+msgstr "Вподобання у їжі"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__text_box
@@ -2072,7 +2133,7 @@ msgstr "Безкоштовний текст відповіді"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q4
 msgid "From which continent is native the Scots pine (pinus sylvestris)?"
-msgstr ""
+msgstr "З якого континенту походить сосна звичайна (pinus sylvestris)?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q1_sug1
@@ -2087,7 +2148,7 @@ msgstr "Фрукти та овочі"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "Functional Training"
-msgstr ""
+msgstr "Функціональний тренінг"
 
 #. module: survey
 #: model:ir.model,name:survey.model_gamification_badge
@@ -2140,7 +2201,7 @@ msgstr "Хороше співвідношення ціни і якості"
 #. module: survey
 #: model_terms:survey.survey,description_done:survey.survey_demo_food_preferences
 msgid "Got it!"
-msgstr ""
+msgstr "Зрозуміло!"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q4_sug2
@@ -2219,7 +2280,7 @@ msgstr "Історія"
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q3
 msgid "How frequently do you buy products online?"
-msgstr ""
+msgstr "Як часто ви купуєте товари онлайн?"
 
 #. module: survey
 #. odoo-python
@@ -2269,7 +2330,7 @@ msgstr "Скільки замовлень ви пропустили за ост�
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q4
 msgid "How many times did you order products on our website?"
-msgstr ""
+msgstr "Скільки разів ви замовляли товари на нашому сайті?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_4
@@ -2279,7 +2340,7 @@ msgstr "Скільки версій кутового столу ми маємо?
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p3_q3
 msgid "How many years did the 100 years war last?"
-msgstr ""
+msgstr "Скільки років тривала 100-літня війна?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_2_question_1
@@ -2294,7 +2355,7 @@ msgstr "Як часто ви повинні поливати ті квіти"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q4
 msgid "How old are you?"
-msgstr ""
+msgstr "Скільки вам років?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q3_sug4
@@ -2327,7 +2388,7 @@ msgstr "Не маю жодного поняття, я собака!"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q3_sug3
 msgid "I've been noticing gravity since I was very young!"
-msgstr ""
+msgstr "Я помічаю гравітацію з самого дитинства!"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__id
@@ -2504,7 +2565,7 @@ msgstr "Оберіть усі хвойні у списку нижче."
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q2
 msgid "In which country did the bonsai technique develop?"
-msgstr ""
+msgstr "В якій країні розвинулася техніка бонсай?"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_scored_question
@@ -2574,7 +2635,7 @@ msgstr "Є в сесії"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_placed_before_trigger
 msgid "Is misplaced?"
-msgstr ""
+msgstr "Не на місці?"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -2589,12 +2650,13 @@ msgstr "Чи є введена користувачем сесія опитув�
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q3
 msgid "Is the wood of a coniferous hard or soft?"
-msgstr ""
+msgstr "Деревина хвойних дерев тверда чи м'яка?"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_placed_before_trigger
 msgid "Is this question placed before any of its trigger questions?"
 msgstr ""
+"Чи ставиться це питання перед будь-яким із запитань, які його викликають?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q2_sug4
@@ -2604,7 +2666,7 @@ msgstr "Стамбул"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q1_sug3
 msgid "It depends"
-msgstr ""
+msgstr "Це залежить"
 
 #. module: survey
 #. odoo-python
@@ -2849,7 +2911,7 @@ msgstr "Онлайн-сесії"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__survey_type__live_session
 msgid "Live session"
-msgstr ""
+msgstr "Лайв сесія"
 
 #. module: survey
 #. odoo-javascript
@@ -2934,7 +2996,7 @@ msgstr "Максимальна довжина тексту"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__scoring_max_obtainable
 msgid "Maximum obtainable score"
-msgstr ""
+msgstr "Максимальний бал, який можна отримати"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_max_float_value
@@ -2961,7 +3023,7 @@ msgstr "Повідомлення"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Min/Max Limits"
-msgstr ""
+msgstr "Мін./Макс. ліміти"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -3107,7 +3169,7 @@ msgstr "Нове запрошення"
 #. module: survey
 #: model:mail.message.subtype,description:survey.mt_survey_survey_user_input_completed
 msgid "New participation completed."
-msgstr ""
+msgstr "Нову участь завершено."
 
 #. module: survey
 #. odoo-javascript
@@ -3144,7 +3206,7 @@ msgstr "Тип наступної дії"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid "Next Skipped"
-msgstr ""
+msgstr "Пропущено далі"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__nickname
@@ -3205,7 +3267,7 @@ msgstr "Вхідних рядків користувача не знайдено
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q3_sug2
 msgid "No, it's too small for the human eye."
-msgstr ""
+msgstr "Ні, він занадто малий для людського ока."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q5_sug2
@@ -3422,6 +3484,8 @@ msgid ""
 "Oopsie! We could not let you open this survey. Make sure you are using the correct link and are allowed to\n"
 "                        participate or get in touch with its organizer."
 msgstr ""
+"Упс! Ми не дозволили вам відкрити це опитування. Переконайтеся, що ви використовуєте правильне посилання та\n"
+" маєте право брати участь або зв’яжіться з його організатором."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -3438,7 +3502,7 @@ msgstr "Відкрити секцію"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Optional previous answers required"
-msgstr ""
+msgstr "Необов’язкові попередні відповіді"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__lang
@@ -3540,7 +3604,7 @@ msgstr "Учасники"
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "Participate to %(survey_name)s"
-msgstr ""
+msgstr "Взяти участь у %(survey_name)s"
 
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_user_input_invite
@@ -3551,12 +3615,12 @@ msgstr "Участь в опитуванні {{ object.survey_id.display_name }}
 #: model:mail.message.subtype,name:survey.mt_survey_survey_user_input_completed
 #: model:mail.message.subtype,name:survey.mt_survey_user_input_completed
 msgid "Participation completed"
-msgstr ""
+msgstr "Участь завершено"
 
 #. module: survey
 #: model:mail.message.subtype,description:survey.mt_survey_user_input_completed
 msgid "Participation completed."
-msgstr ""
+msgstr "Участь завершено."
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_user_input
@@ -3639,6 +3703,8 @@ msgid ""
 "Picking any of these answers will trigger this question.\n"
 "Leave the field empty if the question should always be displayed."
 msgstr ""
+"Вибір будь-якої з цих відповідей спричинить це запитання.\n"
+"Залиште поле порожнім, якщо питання має відображатися завжди."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
@@ -3676,7 +3742,7 @@ msgstr "Будь ласка, введіть хоча б одного дійсн�
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_food_preferences
 msgid "Please give us your preferences for this event's dinner!"
-msgstr ""
+msgstr "Будь ласка, надайте нам свої переваги щодо вечері на цю подію!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
@@ -3820,6 +3886,8 @@ msgid ""
 "Questions containing the triggering answer(s) to display the current "
 "question."
 msgstr ""
+"Запитання, що містять відповіді, які викликають відображення поточного "
+"запитання."
 
 #. module: survey
 #: model:survey.survey,title:survey.survey_demo_quiz
@@ -3869,7 +3937,7 @@ msgstr "Готові змінити підхід до <b>збору даних</
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Ready to test? Pick a sample or create one from scratch..."
-msgstr ""
+msgstr "Готові тестувати? Виберіть шаблон або створіть його з нуля..."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__partner_ids
@@ -4050,7 +4118,7 @@ msgstr "Тип оцінювання"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers_after_page
 msgid "Scoring with answers after each page"
-msgstr ""
+msgstr "Оцінка з відповідями після кожної сторінки"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers
@@ -4060,7 +4128,7 @@ msgstr "Оцінювання із запитаннями в кінці"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_without_answers
 msgid "Scoring without answers"
-msgstr ""
+msgstr "Оцінка без відповіді"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_answer_view_search
@@ -4102,7 +4170,7 @@ msgstr "Переглянути результати"
 #. module: survey
 #: model_terms:survey.survey,description_done:survey.survey_demo_food_preferences
 msgid "See you soon!"
-msgstr ""
+msgstr "Скоро побачимося!"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_3
@@ -4208,28 +4276,28 @@ msgstr "Показати поле коментарів"
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "Show Correct Answer(s)"
-msgstr ""
+msgstr "Показувати правильну відповідь"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "Show Final Leaderboard"
-msgstr ""
+msgstr "Показати фінальну таблицю лідерів"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "Show Leaderboard"
-msgstr ""
+msgstr "Показати таблицю лідерів"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "Show Results"
-msgstr ""
+msgstr "Показати результати"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_show_leaderboard
@@ -4295,7 +4363,7 @@ msgstr "Деякі питання про нашу компанію. Ви спр�
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "Someone just participated in \"%(survey_title)s\"."
-msgstr ""
+msgstr "Хтось щойно взяв участь в \"%(survey_title)s\"."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
@@ -4391,7 +4459,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q4_sug1
 msgid "Steak with french fries"
-msgstr ""
+msgstr "Стейк із картоплею фрі"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q6_row2
@@ -4426,7 +4494,7 @@ msgstr "Коефіцієнт успіху (%)"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
 msgid "Success rate"
-msgstr ""
+msgstr "Оцінка успіху"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.survey_question_answer_action
@@ -4476,7 +4544,7 @@ msgstr "Опитування"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_access_error
 msgid "Survey Access Error"
-msgstr ""
+msgstr "Помилка доступу до опитування"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_view_tree
@@ -4486,7 +4554,7 @@ msgstr "Рядок відповіді опитування"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__survey_first_submitted
 msgid "Survey First Submitted"
-msgstr ""
+msgstr "Опитування вперше надано"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_gamification_badge__survey_ids
@@ -4507,7 +4575,7 @@ msgstr "Мітка опитування"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Survey Link"
-msgstr ""
+msgstr "Посилання на опитування"
 
 #. module: survey
 #. odoo-python
@@ -4650,7 +4718,7 @@ msgstr "Дякуємо за участь, сподіваємось, вам сп�
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Thank you very much for your feedback. We highly value your opinion!"
-msgstr ""
+msgstr "Дякуюємо за відгук. Ми дуже цінуємо вашу думку!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -4842,7 +4910,7 @@ msgstr "Це технічні параметри, які гарантують о
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "This answer cannot be overwritten."
-msgstr ""
+msgstr "Цю відповідь не можна перезаписати."
 
 #. module: survey
 #. odoo-python
@@ -4926,6 +4994,8 @@ msgstr "У цьому розділі йдеться про наш досвід �
 msgid ""
 "This small quiz will test your knowledge about our Company. Be prepared!"
 msgstr ""
+"Ця невелика вікторина перевірить ваші знання про нашу компанію. Будьте "
+"готові!"
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_feedback
@@ -4950,7 +5020,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
 msgid "This survey is now closed. Thank you for your interest!"
-msgstr ""
+msgstr "Зараз це опитування закрито. Спасибі за ваш інтерес!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
@@ -5035,12 +5105,12 @@ msgstr "Дерева"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_answer_ids
 msgid "Triggering Answers"
-msgstr ""
+msgstr "Запуск відповідей"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_question_ids
 msgid "Triggering Questions"
-msgstr ""
+msgstr "Запуск запитань"
 
 #. module: survey
 #. odoo-javascript
@@ -5050,6 +5120,8 @@ msgid ""
 "Triggers based on the following questions will not work because they are positioned after this question:\n"
 "\"%s\"."
 msgstr ""
+"Тригери на основі наступних запитань не працюватимуть, оскільки вони розташовані після цього запитання:\n"
+"\"%s\"."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
@@ -5234,12 +5306,12 @@ msgstr "Овочі"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q3_sug2
 msgid "Vegetarian burger"
-msgstr ""
+msgstr "Вегетаріанський бургер"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q3_sug1
 msgid "Vegetarian pizza"
-msgstr ""
+msgstr "Вегетаріанська піцца"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_3_choice_1
@@ -5317,7 +5389,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2_q2
 msgid "What do you think about our new eCommerce?"
-msgstr ""
+msgstr "Що ви думаєте про нашу нову електронну комерцію?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_2_question_3
@@ -5327,7 +5399,7 @@ msgstr "Що ви думаєте про наші ціни (не оцінюєть
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p5_q1
 msgid "What do you think about this survey?"
-msgstr ""
+msgstr "Що ви думаєте про це опитування?"
 
 #. module: survey
 #. odoo-python
@@ -5360,32 +5432,32 @@ msgstr "Який найкращий спосіб привернути увагу
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q2
 msgid "What is the biggest city in the world?"
-msgstr ""
+msgstr "Яке найбільше місто у світі?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q1
 msgid "What is your email?"
-msgstr ""
+msgstr "Який у вас email?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q2
 msgid "What is your nickname?"
-msgstr ""
+msgstr "Який ваш нікнейм?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q2
 msgid "What is, approximately, the critical mass of plutonium-239?"
-msgstr ""
+msgstr "Яка приблизно критична маса плутонію-239?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p3_q1
 msgid "When did Genghis Khan die?"
-msgstr ""
+msgstr "Коли помер Чингісхан?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p2_q2
 msgid "When did precisely Marc Demo crop its first apple tree?"
-msgstr ""
+msgstr "Коли саме Marc Demo посадив свою першу яблуню? "
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q6
@@ -5395,12 +5467,12 @@ msgstr "Коли ви збираєте ці фрукти"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p2_q1
 msgid "When is Mitchell Admin born?"
-msgstr ""
+msgstr "Коли народився Mitchell Admin?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q2
 msgid "When is your date of birth?"
-msgstr ""
+msgstr "Ваша дата народження?"
 
 #. module: survey
 #. odoo-javascript
@@ -5412,12 +5484,12 @@ msgstr "Щоразу, коли ви обираєте відповідь, Odoo з
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q3
 msgid "Where are you from?"
-msgstr ""
+msgstr "Звідки ви?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q1
 msgid "Where do you live?"
-msgstr ""
+msgstr "Де ви живете?"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__session_show_leaderboard
@@ -5430,7 +5502,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5_q1
 msgid "Which Musician is not in the 27th Club?"
-msgstr ""
+msgstr "Який музикант не входиь у клуб 27ʼ?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q1
@@ -5440,12 +5512,13 @@ msgstr "До якої категорії відноситься помідор"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q3
 msgid "Which is the highest volcano in Europe?"
-msgstr ""
+msgstr "Який найвищий вулкан Європи?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2_q1
 msgid "Which of the following words would you use to describe our products?"
 msgstr ""
+"Яке з наведених нижче слів ви б використали, щоб описати нашу продукцію?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q2
@@ -5455,7 +5528,7 @@ msgstr "Що з наведеного ви б використали для за�
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5_q2
 msgid "Which painting/drawing was not made by Pablo Picasso?"
-msgstr ""
+msgstr "Яку картину/малюнок не написав Пабло Пікассо?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5_q3
@@ -5470,7 +5543,7 @@ msgstr "Хто ви?"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p3_q2
 msgid "Who is the architect of the Great Pyramid of Giza?"
-msgstr ""
+msgstr "Хто є архітектором Великої піраміди Гізи?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q1
@@ -5478,6 +5551,8 @@ msgid ""
 "Who received a Nobel prize in Physics for the discovery of neutrino "
 "oscillations, which shows that neutrinos have mass?"
 msgstr ""
+"Хто отримав Нобелівську премію з фізики за відкриття осциляцій нейтрино, що "
+"показує, що нейтрино мають масу?"
 
 #. module: survey
 #. odoo-python
@@ -5507,7 +5582,7 @@ msgstr "Зима"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_food_preferences_q2
 msgid "Would you prefer a veggie meal if possible?"
-msgstr ""
+msgstr "Ви би віддали перевагу вегетаріанській їжі, якщо це можливо?"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -5664,7 +5739,7 @@ msgstr "Збільшене зображення"
 #: code:addons/survey/models/survey_question.py:0
 #, python-format
 msgid "[Question Title]"
-msgstr ""
+msgstr "[Заголовок запитання]"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -5693,6 +5768,7 @@ msgstr "закрити"
 msgid ""
 "e.g.  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
 msgstr ""
+"напр.  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -5818,3 +5894,5 @@ msgid ""
 "⚠️ This question is positioned before some or all of its triggers and could "
 "be skipped."
 msgstr ""
+"⚠️ Це запитання розташоване перед деякими або всіма його тригерами, і його "
+"можна пропустити."

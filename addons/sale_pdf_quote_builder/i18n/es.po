@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -50,7 +51,7 @@ msgstr ""
 "Déjelo vacío si no desea compartir este documento con su cliente.\n"
 "Presupuesto: los clientes recibirán el documento y podrán visualizarlo en cualquier momento.\n"
 "Esta opción puede ser útil, por ejemplo, para compartir archivos de descripción del producto.\n"
-"Orden confirmada: los clientes recibirán el documento y podrán visualizarlo.\n"
+"Pedido confirmado: los clientes recibirán el documento y podrán visualizarlo.\n"
 "Esta opción puede ser útil, por ejemplo, para compartir el manual de usuario o algún contenido digital que se haya adquirido mediante comercio electrónico. \n"
 "Dentro del presupuesto: el documento se incluirá en el PDF del presupuesto entre el encabezado y la tabla de presupuesto."
 
@@ -72,6 +73,8 @@ msgid ""
 "It seems that we're not able to process this pdf inside a quotation. It is "
 "either encrypted, or encoded in a format we do not support."
 msgstr ""
+"No fue posible procesar este PDF dentro de un presupuesto. Está encriptado o"
+" codificado en un formato incompatible."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
@@ -112,6 +115,15 @@ msgstr ""
 #, python-format
 msgid "Only PDF documents can be attached inside a quote."
 msgstr "Solo puede adjuntar documentos PDF dentro de un presupuesto."
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "When attached inside a quote, the document must be a file, not a URL."
+msgstr ""
+"Cuando se adjunta dentro de un presupuesto, el documento debe ser un "
+"archivo, no una URL."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -161,7 +173,7 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
 msgid "Quotation / Order"
-msgstr "Presupuesto/Orden"
+msgstr "Presupuesto / Pedido"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
@@ -190,7 +202,7 @@ msgstr "Nombre del encabezado de venta"
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
 msgid "Sales Order"
-msgstr "Orden de venta"
+msgstr "Pedido de venta"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form

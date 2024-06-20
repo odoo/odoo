@@ -203,7 +203,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
             # Create deposit product if necessary
             if not self.product_id:
-                self.company_id.sale_down_payment_product_id = self.env['product.product'].create(
+                self.company_id.sudo().sale_down_payment_product_id = self.env['product.product'].create(
                     self._prepare_down_payment_product_values()
                 )
                 self._compute_product_id()
@@ -313,7 +313,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         else:
             percentage = self.fixed_amount / order.amount_total if order.amount_total else 1
 
-        order_lines = order.order_line.filtered(lambda l: not l.display_type)
+        order_lines = order.order_line.filtered(lambda l: not l.display_type and not l.is_downpayment)
         base_downpayment_lines_values = self._prepare_base_downpayment_line_values(order)
 
         tax_base_line_dicts = [
@@ -339,6 +339,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 # of the tax amount. Therefore fixed taxes are removed and are replace by a new line
                 # with appropriate amount, and non fixed taxes if the fixed tax affected the base of
                 # any other non fixed tax.
+                if fixed_tax.price_include:
+                    continue
+
                 if fixed_tax.include_base_amount:
                     pct_tax = taxes[list(taxes).index(fixed_tax) + 1:]\
                         .filtered(lambda t: t.is_base_affected and t.amount_type != 'fixed')

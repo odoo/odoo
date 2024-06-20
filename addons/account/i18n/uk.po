@@ -525,15 +525,14 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>Знижку раннього платежу застосовано.</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
-msgstr ""
+msgid "<br/> on this account:"
+msgstr "<br/> на цьому рахунку:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -6111,17 +6110,6 @@ msgid "Duplicated Ref"
 msgstr "Продубльований референс"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr ""
-"Виявлено дублювання посилання постачальника. Ви, ймовірно, закодували двічі "
-"той же рахунок постачальника/сторно."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "Динамічні звіти"
@@ -8045,8 +8033,10 @@ msgstr "Недійсний"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "Недійсний \"Zip Range\", будь-ласка, налаштуйте його належним чином."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -10399,13 +10389,6 @@ msgstr "От халепа"
 #, python-format
 msgid "Open"
 msgstr "Відкрито"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "Відкритий список"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -12961,7 +12944,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Set as Checked"
-msgstr "Втсановити як Позначено"
+msgstr "Встановити як Позначено"
 
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_default_taxes
@@ -13921,6 +13904,13 @@ msgstr "Терміни та умови"
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__text_value
 msgid "Text Value"
 msgstr "Значення податку"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+#, python-format
+msgid "Text copied"
+msgstr "Текст скопійовано"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
@@ -16786,7 +16776,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "

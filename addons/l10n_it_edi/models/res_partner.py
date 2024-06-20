@@ -73,20 +73,22 @@ class ResPartner(models.Model):
 
         # VAT number and country code
         normalized_vat = self.vat
-        normalized_country = False
-        if self.vat:
+        normalized_country = self.country_code
+        has_vat = self.vat and not self.vat in ['/', 'NA']
+        if has_vat:
             normalized_vat = self.vat.replace(' ', '')
             if in_eu:
                 # If there is no country-code prefix, it's domestic to Italy
                 if normalized_vat[:2].isdecimal():
-                    normalized_country = 'IT'
+                    if not normalized_country:
+                        normalized_country = 'IT'
                 # If the partner is from the EU, the country-code prefix of the VAT must be taken away
                 else:
-                    normalized_country = normalized_vat[:2].upper()
+                    if not normalized_country:
+                        normalized_country = normalized_vat[:2].upper()
                     normalized_vat = normalized_vat[2:]
             # If customer is from San Marino
             elif is_sm:
-                normalized_country = 'SM'
                 normalized_vat = normalized_vat if normalized_vat[:2].isdecimal() else normalized_vat[2:]
             # The Tax Agency arbitrarily decided that non-EU VAT are not interesting,
             # so this default code is used instead
@@ -94,16 +96,11 @@ class ResPartner(models.Model):
             else:
                 normalized_vat = 'OO99999999999'
 
-        if not normalized_country:
-            if self.country_id:
-                normalized_country = self.country_id.code
-            # If it has a codice fiscale (and no country), it's an Italian partner
-            elif self.l10n_it_codice_fiscale:
-                normalized_country = 'IT'
-
-        elif not self.vat and self.country_id and self.country_id.code != 'IT':
+        # If it has a codice fiscale (and no country), it's an Italian partner
+        if not normalized_country and self.l10n_it_codice_fiscale:
+            normalized_country = 'IT'
+        elif not has_vat and self.country_id and self.country_id.code != 'IT':
             normalized_vat = '0000000'
-            normalized_country = self.country_id.code
 
         if normalized_country == 'IT':
             pa_index = (self.l10n_it_pa_index or '0000000').upper()

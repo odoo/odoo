@@ -16,6 +16,7 @@ import sys
 import threading
 import time
 import unittest
+from io import BytesIO
 from itertools import chain
 
 import psutil
@@ -147,6 +148,16 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
             self.close_connection = True
             return
         super().send_header(keyword, value)
+
+    def end_headers(self, *a, **kw):
+        super().end_headers(*a, **kw)
+        # At this point, Werkzeug assumes the connection is closed and will discard any incoming
+        # data. In the case of WebSocket connections, data should not be discarded. Replace the
+        # rfile/wfile of this handler to prevent any further action (compatibility with werkzeug >= 2.3.x).
+        # See: https://github.com/pallets/werkzeug/blob/2.3.x/src/werkzeug/serving.py#L334
+        if self.headers.get('Upgrade') == 'websocket':
+            self.rfile = BytesIO()
+            self.wfile = BytesIO()
 
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket

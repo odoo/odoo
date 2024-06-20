@@ -304,21 +304,20 @@ export class GraphRenderer extends Component {
         if (mode === "pie") {
             legendOptions.labels = {
                 generateLabels: (chart) => {
-                    const { data } = chart;
-                    const metaData = data.datasets.map(
-                        (_, index) => chart.getDatasetMeta(index).data
-                    );
-                    const labels = data.labels.map((label, index) => {
-                        const hidden = metaData.some((data) => data[index] && data[index].hidden);
+                    return chart.data.labels.map((label, index) => {
+                        const hidden = !chart.getDataVisibility(index);
                         const fullText = label;
                         const text = shortenLabel(fullText);
                         const fillStyle =
                             label === NO_DATA
                                 ? DEFAULT_BG
                                 : getColor(index, cookie.get("color_scheme"));
-                        return { text, fullText, fillStyle, hidden, index };
+                        const fontColor =
+                            cookie.get("color_scheme") === "dark"
+                                ? getColor(15, cookie.get("color_scheme"))
+                                : null;
+                        return { text, fullText, fillStyle, hidden, index, fontColor };
                     });
-                    return labels;
                 },
             };
         } else {
@@ -340,6 +339,10 @@ export class GraphRenderer extends Component {
                             strokeStyle: dataset[referenceColor],
                             pointStyle: dataset.pointStyle,
                             datasetIndex: index,
+                            fontColor:
+                                cookie.get("color_scheme") === "dark"
+                                    ? getColor(15, cookie.get("color_scheme"))
+                                    : null,
                         };
                     });
                     return labels;
@@ -465,21 +468,37 @@ export class GraphRenderer extends Component {
             title: {
                 display: Boolean(groupBy.length),
                 text: groupBy.length ? fields[groupBy[0].fieldName].string : "",
+                color:
+                    cookie.get("color_scheme") === "dark"
+                        ? getColor(15, cookie.get("color_scheme"))
+                        : null,
             },
             ticks: {
                 callback: (val, index) => {
                     const value = labels[index];
                     return shortenLabel(value);
                 },
+                color:
+                    cookie.get("color_scheme") === "dark"
+                        ? getColor(15, cookie.get("color_scheme"))
+                        : null,
             },
         };
         const yAxe = {
             type: "linear",
             title: {
                 text: measures[measure].string,
+                color:
+                    cookie.get("color_scheme") === "dark"
+                        ? getColor(15, cookie.get("color_scheme"))
+                        : null,
             },
             ticks: {
                 callback: (value) => this.formatValue(value, allIntegers),
+                color:
+                    cookie.get("color_scheme") === "dark"
+                        ? getColor(15, cookie.get("color_scheme"))
+                        : null,
             },
             suggestedMax: 0,
             suggestedMin: 0,
@@ -593,6 +612,7 @@ export class GraphRenderer extends Component {
      * @param {Object} legendItem
      */
     onlegendHover(ev, legendItem) {
+        ev = ev.native;
         this.canvasRef.el.style.cursor = "pointer";
         /**
          * The string legendItem.text is an initial segment of legendItem.fullText.
@@ -604,7 +624,7 @@ export class GraphRenderer extends Component {
         if (this.legendTooltip || text === fullText) {
             return;
         }
-        const viewContentTop = this.rootRef.el.getBoundingClientRect().top;
+        const viewContentTop = this.canvasRef.el.getBoundingClientRect().top;
         const legendTooltip = Object.assign(document.createElement("div"), {
             className: "o_tooltip_legend popover p-3 pe-none",
             innerText: fullText,

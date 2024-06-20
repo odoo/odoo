@@ -96,12 +96,21 @@ class Page(models.Model):
         ''' Returns the most specific pages in self. '''
         ids = []
         previous_page = None
+        page_keys = self.sudo().search(
+            self.env['website'].website_domain(website_id=self._context.get('website_id'))
+        ).mapped('key')
         # Iterate a single time on the whole list sorted on specific-website first.
         for page in self.sorted(key=lambda p: (p.url, not p.website_id)):
-            if not previous_page or page.url != previous_page.url:
+            if (
+                (not previous_page or page.url != previous_page.url)
+                # If a generic page (niche case) has been COWed and that COWed
+                # page received a URL change, it should not let you access the
+                # generic page anymore, despite having a different URL.
+                and (page.website_id or page_keys.count(page.key) == 1)
+            ):
                 ids.append(page.id)
             previous_page = page
-        return self.filtered(lambda page: page.id in ids)
+        return self.browse(ids)
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
