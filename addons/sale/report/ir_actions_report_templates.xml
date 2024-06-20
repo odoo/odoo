@@ -36,7 +36,7 @@
         <div class="page">
             <div class="oe_structure"/>
 
-            <h2 class="mt-4">
+            <h2>
                 <span t-if="env.context.get('proforma', False) or is_pro_forma">Pro-Forma Invoice # </span>
                 <span t-elif="doc.state in ['draft','sent']">Quotation # </span>
                 <span t-else="">Order # </span>
@@ -70,7 +70,7 @@
             <t t-set="display_discount" t-value="any(l.discount for l in lines_to_report)"/>
 
             <div class="oe_structure"></div>
-            <table class="table table-sm o_main_table table-borderless mt-4">
+            <table class="table table-sm o_main_table table-borderless">
                 <!-- In case we want to repeat the header, remove "display: table-row-group" -->
                 <thead style="display: table-row-group">
                     <tr>
@@ -147,7 +147,7 @@
                 </tbody>
             </table>
             <div class="clearfix" name="so_total_summary">
-                <div id="total" class="row" name="total">
+                <div id="total" class="row mt-n3" name="total">
                     <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
                         <table class="table table-sm table-borderless">
                             <!-- Tax totals -->
