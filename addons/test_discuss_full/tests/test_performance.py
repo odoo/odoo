@@ -232,6 +232,7 @@ class TestDiscussFullPerformance(HttpCase):
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         return {
             "ChannelMember": [
+                self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_chat_1, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_chat_1, self.users[14].partner_id),
@@ -284,6 +285,7 @@ class TestDiscussFullPerformance(HttpCase):
         """
         return {
             "ChannelMember": [
+                self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._expected_result_for_channel_member(self.channel_general, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_public_1, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_public_2, self.users[0].partner_id),
@@ -869,6 +871,20 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetched_message_id": {"id": last_message.id},
                 "seen_message_id": {"id": last_message.id},
                 "new_message_separator": last_message.id + 1,
+            }
+        if channel == self.channel_channel_group_1 and partner == self.users[2].partner_id:
+            return {
+                "id": member_2.id,
+                "thread": {
+                    "id": channel.id,
+                    "model": "discuss.channel",
+                },
+                "persona": {
+                    "id": self.users[2].partner_id.id,
+                    "im_status": "offline",
+                    "name": "test2",
+                    "type": "partner",
+                },
             }
         if channel == self.channel_channel_group_2 and partner == self.users[0].partner_id:
             return {
@@ -1529,16 +1545,7 @@ class TestDiscussFullPerformance(HttpCase):
             return {
                 # sudo: discuss.channel.rtc.session - reading a session in a test file
                 "id": member_2.sudo().rtc_session_ids.id,
-                "channelMember": {
-                    "id": member_2.id,
-                    "persona": {
-                        "id": member_2.partner_id.id,
-                        "im_status": "offline",
-                        "name": "test2",
-                        "type": "partner",
-                    },
-                    "thread": {"id": channel.id, "model": "discuss.channel"},
-                },
+                "channelMember": {"id": member_2.id},
                 "isCameraOn": False,
                 "isDeaf": False,
                 "isScreenSharingOn": False,
