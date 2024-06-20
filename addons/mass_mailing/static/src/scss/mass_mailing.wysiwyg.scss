@@ -104,3 +104,8 @@
     // view. We reduce the width of the chatter to avoid this.
     width: $o-mail-Chatter-minWidth - $o-we-sidebar-width;
 }
+
+.o_mail_body div.d-flex:has(> iframe) {
+    // Center the content within the parent container of the iframe and snippet
+    justify-content: center;
+}
