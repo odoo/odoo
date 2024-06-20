@@ -137,9 +137,12 @@ class AdyenController(http.Controller):
             "payment request response for transaction with reference %s:\n%s",
             reference, pprint.pformat(response_content)
         )
-        tx_sudo._handle_notification_data(
-            'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
-        )
+
+        if not tx_sudo._set_error_from_response(response_content):
+            tx_sudo._handle_notification_data(
+                'adyen', dict(response_content, merchantReference=reference),
+                # Match the transaction
+            )
         return response_content
 
     @http.route('/payment/adyen/payments/details', type='json', auth='public')
@@ -160,15 +163,16 @@ class AdyenController(http.Controller):
         response_content = provider_sudo._adyen_make_request(
             endpoint='/payments/details', payload=payment_details, method='POST'
         )
-
-        # Handle the payment details request response
-        _logger.info(
-            "payment details request response for transaction with reference %s:\n%s",
-            reference, pprint.pformat(response_content)
-        )
-        request.env['payment.transaction'].sudo()._handle_notification_data(
-            'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
-        )
+        if not payment_utils.get_request_error(response_content):
+            # Handle the payment details request response
+            _logger.info(
+                "payment details request response for transaction with reference %s:\n%s",
+                reference, pprint.pformat(response_content)
+            )
+            request.env['payment.transaction'].sudo()._handle_notification_data(
+                'adyen', dict(response_content, merchantReference=reference),
+                # Match the transaction
+            )
 
         return response_content
 

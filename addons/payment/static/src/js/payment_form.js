@@ -377,6 +377,13 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             this.paymentContext['transactionRoute'],
             this._prepareTransactionRouteParams(),
         ).then(processingValues => {
+            if (processingValues.state === 'error') {
+                this._displayErrorDialog(
+                    _t("Payment processing failed"), processingValues.state_message
+                );
+                this._enableButton();
+                return;
+            }
             if (flow === 'redirect') {
                 this._processRedirectFlow(
                     providerCode, paymentOptionId, paymentMethodCode, processingValues

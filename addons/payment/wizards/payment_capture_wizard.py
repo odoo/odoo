@@ -139,14 +139,22 @@ class PaymentCaptureWizard(models.TransientModel):
                 if remaining_amount_to_capture:
                     amount_to_capture = min(source_tx_remaining_amount, remaining_amount_to_capture)
                     # In sudo mode because we need to be able to read on provider fields.
-                    source_tx.sudo()._send_capture_request(amount_to_capture=amount_to_capture)
+                    capture_tx = source_tx.sudo()._send_capture_request(
+                        amount_to_capture=amount_to_capture
+                    )
+                    if capture_tx.state == 'error':
+                        raise ValidationError(capture_tx.state_message)
                     remaining_amount_to_capture -= amount_to_capture
                     source_tx_remaining_amount -= amount_to_capture
 
                 if source_tx_remaining_amount and wizard.void_remaining_amount:
                     # The source tx isn't fully captured and the user wants to void the remaining.
                     # In sudo mode because we need to be able to read on provider fields.
-                    source_tx.sudo()._send_void_request(amount_to_void=source_tx_remaining_amount)
+                    void_tx = source_tx.sudo()._send_void_request(
+                        amount_to_void=source_tx_remaining_amount
+                    )
+                    if void_tx.state == 'error':
+                        raise ValidationError(void_tx.state_message)
                 elif not remaining_amount_to_capture and not wizard.void_remaining_amount:
                     # The amount to capture has been completely captured.
                     break  # Skip the remaining transactions.

@@ -447,7 +447,10 @@ class PaymentTransaction(models.Model):
                 )
                 redirect_form_html = self.env['ir.qweb']._render(redirect_form_view.id, rendering_values)
                 processing_values.update(redirect_form_html=redirect_form_html)
-
+        processing_values.update({
+                'state': self.state,
+                'state_message': self.state_message,
+        })
         return processing_values
 
     def _get_specific_processing_values(self, processing_values):
@@ -1007,3 +1010,11 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         """
         return self.filtered(lambda t: t.state != 'draft').sorted()[:1]
+
+    def _set_error_from_response(self, response_content):
+        """ TODO: docstring"""
+        if error_msg := payment_utils.get_request_error(response_content):
+            # Log the error message on linked documents' chatter.
+            self._set_error(error_msg)
+            return True
+        return False

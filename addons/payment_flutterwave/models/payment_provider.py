@@ -105,15 +105,15 @@ class PaymentProvider(models.Model):
                 _logger.exception(
                     "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload),
                 )
-                raise ValidationError("Flutterwave: " + _(
-                    "The communication with the API failed. Flutterwave gave us the following "
-                    "information: '%s'", response.json().get('message', '')
-                ))
+                error_msg = "Flutterwave: " + _(
+                    "The communication with the API failed. Flutterwave gave us the following"
+                    " information: '%s'", response.json().get('message', '')
+                )
+                return payment_utils.format_error_response(error_msg)
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError(
-                "Flutterwave: " + _("Could not establish the connection to the API.")
-            )
+            error_msg = "Flutterwave: " + _("Could not establish the connection to the API.")
+            return payment_utils.format_error_response(error_msg)
         return response.json()
 
     def _get_default_payment_method_codes(self):

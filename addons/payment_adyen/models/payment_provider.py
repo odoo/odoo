@@ -126,12 +126,14 @@ class PaymentProvider(models.Model):
                     "invalid API request at %s with data %s: %s", url, payload, response.text
                 )
                 msg = response.json().get('message', '')
-                raise ValidationError(
+                return payment_utils.format_error_response(
                     "Adyen: " + _("The communication with the API failed. Details: %s", msg)
                 )
         except requests.exceptions.ConnectionError:
             _logger.exception("unable to reach endpoint at %s", url)
-            raise ValidationError("Adyen: " + _("Could not establish the connection to the API."))
+            return payment_utils.format_error_response(
+                "Adyen: " + _("Could not establish the connection to the API.")
+            )
         return response.json()
 
     def _adyen_compute_shopper_reference(self, partner_id):
