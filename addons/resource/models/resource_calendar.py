@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
+import traceback
 
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -436,11 +437,19 @@ class ResourceCalendar(models.Model):
             resources_list = list(resources) + [self.env['resource.resource']]
 
         attendance_intervals = self._attendance_intervals_batch(start_dt, end_dt, resources, tz=tz or self.env.context.get("employee_timezone"))
+        print("compute_leaves", compute_leaves)
+        for line in traceback.format_stack():
+            print(line.strip())
         if compute_leaves:
             leave_intervals = self._leave_intervals_batch(start_dt, end_dt, resources, domain, tz=tz)
-            return {
+            a = {
                 r.id: (attendance_intervals[r.id] - leave_intervals[r.id]) for r in resources_list
             }
+            for l, i  in leave_intervals.items():
+                print(l, ':')
+                for  ii in i:
+                    print(ii[0], ii[1])
+            return a
         else:
             return {
                 r.id: attendance_intervals[r.id] for r in resources_list
