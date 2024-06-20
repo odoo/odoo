@@ -292,6 +292,72 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
         self.assertEqual(len(self.gather_relevant(self.product, self.stock_location)), 0.0)
 
+    def test_out_4(self):
+        """ In multi location. One unit in stock. Reserve it for delivery.
+        Then do an internal transfer to move it to another sublocation.
+        Ensure the delivery still reserve with the new source location.
+        """
+        shelf1, shelf2 = self.stock_location.create([{
+            'name': 'Shelf 1',
+            'location_id': self.stock_location.id,
+        }, {
+            'name': 'Shelf 2',
+            'location_id': self.stock_location.id,
+        }])
+        # make some stock
+        self.env['stock.quant']._update_available_quantity(self.product, shelf1, 1)
+
+        # delivery
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        move_out = self.env['stock.move'].create({
+            'name': 'move_out',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_id': delivery.id,
+        })
+        move_out._action_confirm()
+        move_out._action_assign()
+        self.assertEqual(move_out.move_line_ids.location_id, shelf1)
+        # internal transfer
+        internal_transfer = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_internal').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        move_int = self.env['stock.move'].create({
+            'name': 'move_internal',
+            'location_id': shelf1.id,
+            'location_dest_id': shelf2.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_id': internal_transfer.id,
+        })
+        internal_transfer.action_confirm()
+        internal_transfer.action_assign()
+        self.env['stock.move.line'].create({
+            'move_id': move_int.id,
+            'product_id': move_int.product_id.id,
+            'qty_done': 1,
+            'product_uom_id': move_int.product_uom.id,
+            'location_id': shelf1.id,
+            'location_dest_id': shelf2.id,
+        })
+        internal_transfer.button_validate()
+        self.assertEqual(move_out.move_line_ids.location_id, shelf2)
+        self.assertEqual(delivery.state, 'assigned')
+
+        move_int.move_line_ids.location_dest_id = shelf1
+        self.assertEqual(move_out.move_line_ids.location_id, shelf1)
+        self.assertEqual(delivery.state, 'assigned')
+
     def test_mixed_tracking_reservation_1(self):
         """ Send products tracked by lot to a customer. In your stock, there are tracked and
         untracked quants. Two moves lines should be created: one for the tracked ones, another
@@ -3969,10 +4035,11 @@ class StockMove(TransactionCase):
 
         move1.move_line_ids.location_id = shelf2_location.id
 
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, shelf1_location), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, shelf1_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, shelf2_location), 0.0)
-        self.assertEqual(move2.state, 'confirmed')
+        self.assertEqual(move2.state, 'assigned')
+        self.assertEqual(move2.move_line_ids.location_id, shelf1_location)
 
     def test_edit_done_move_line_8(self):
         """ Test that editing a done stock move line linked to an untracked product correctly and
