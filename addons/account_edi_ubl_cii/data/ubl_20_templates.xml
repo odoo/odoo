@@ -335,7 +335,9 @@
                             t-out="standard_item_identification_vals.get('id')"/>
                 </cac:StandardItemIdentification>
                 <cac:CommodityClassification t-foreach="item_vals.get('commodity_classification_vals', [])" t-as="foreach_vals">
-                    <cbc:ItemClassificationCode t-out="foreach_vals.get('item_classification_code')"/>
+                    <cbc:ItemClassificationCode
+                            t-att="foreach_vals.get('item_classification_attrs', {})"
+                            t-out="foreach_vals.get('item_classification_code')"/>
                 </cac:CommodityClassification>
                 <cac:ClassifiedTaxCategory t-foreach="item_vals.get('classified_tax_category_vals', [])" t-as="foreach_vals">
                     <t t-call="{{TaxCategoryType_template}}">
