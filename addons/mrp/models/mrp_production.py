@@ -1157,7 +1157,7 @@ class MrpProduction(models.Model):
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             for bom_line, line_data in lines:
                 if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom' or\
-                        bom_line.product_id.type != 'consu':
+                        (bom_line.product_id and bom_line.product_id.type != 'consu' or bom_line.product_tmpl_id.type != 'consu'):
                     continue
                 operation = bom_line.operation_id.id or line_data['parent_line'] and line_data['parent_line'].operation_id.id
                 moves.append(production._get_move_raw_values(
@@ -1182,7 +1182,7 @@ class MrpProduction(models.Model):
             'date_deadline': self.date_start,
             'bom_line_id': bom_line.id if bom_line else False,
             'picking_type_id': self.picking_type_id.id,
-            'product_id': product.id,
+            'product_id': product.id if product else bom_line.get_product_variant(self.product_id).id,
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,
             'location_id': source_location.id,
