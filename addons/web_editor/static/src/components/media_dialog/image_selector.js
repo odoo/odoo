@@ -71,6 +71,7 @@ export class ImageSelector extends FileSelector {
         this.MIN_ROW_HEIGHT = 128;
 
         this.fileMimetypes = IMAGE_MIMETYPES.join(',');
+        this.isImageField = !!this.props.media && !!this.props.media.closest("[data-oe-type=image]");
     }
 
     get canLoadMore() {
@@ -105,6 +106,10 @@ export class ImageSelector extends FileSelector {
     get attachmentsDomain() {
         const domain = super.attachmentsDomain;
         domain.push(['mimetype', 'in', IMAGE_MIMETYPES]);
+        if (this.isImageField) {
+            // The image is a field; do not propose webp CORS protected images
+            domain.push('!', '&', '&', ['type', '=', 'url'], '!', ['url', '=like', '/%'], ['mimetype', '=', 'image/webp']);
+        }
         if (!this.props.useMediaLibrary) {
             domain.push('|', ['url', '=', false], '!', ['url', '=ilike', '/web_editor/shape/%']);
         }
@@ -161,7 +166,23 @@ export class ImageSelector extends FileSelector {
                     });
                     resolve();
                 };
-                imageEl.onload = () => {
+                imageEl.onload = async () => {
+                    const imageExtension = IMAGE_EXTENSIONS.find(format => url.split("?")[0].endsWith(format));
+                    if (this.isImageField && imageExtension === ".webp") {
+                        // Do not allow the user to replace an image field by a
+                        // webp CORS protected image as we are not currently
+                        // able to manage the report creation if such images are
+                        // in there (as the equivalent jpeg can not be
+                        // generated). It also causes a problem for resize
+                        // operations as 'libwep' can not be used.
+                        this.notificationService.add(_t(
+                            "You can not replace a field by this image. If you want to use this image, first save it on your computer and then upload it here."
+                        ), {
+                            title: _t("Error"),
+                            sticky: true,
+                        });
+                        return resolve();
+                    }
                     super.uploadUrl(url).then(resolve);
                 };
                 imageEl.src = url;
