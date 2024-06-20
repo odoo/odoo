@@ -260,6 +260,7 @@
             'website/static/src/snippets/s_instagram_page/options.xml',
             'website/static/src/snippets/s_countdown/options.js',
             'website/static/src/snippets/s_countdown/options.xml',
+            'website/static/src/snippets/s_embed_code/options.xml',
             'website/static/src/snippets/s_masonry_block/options.js',
             'website/static/src/snippets/s_popup/options.js',
             'website/static/src/snippets/s_product_catalog/options.js',
