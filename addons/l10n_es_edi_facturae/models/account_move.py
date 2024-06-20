@@ -465,7 +465,10 @@ class AccountMove(models.Model):
 
     def _get_edi_decoder(self, file_data, new=False):
         def is_facturae(tree):
-            return tree.tag == '{http://www.facturae.es/Facturae/2014/v3.2.1/Facturae}Facturae'
+            return tree.tag in [
+                '{http://www.facturae.es/Facturae/2014/v3.2.1/Facturae}Facturae',
+                '{http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml}Facturae',
+            ]
 
         if file_data['type'] == 'xml' and is_facturae(file_data['xml_tree']):
             return self._import_invoice_facturae
@@ -510,7 +513,8 @@ class AccountMove(models.Model):
 
         if not partner and name:
             partner_vals = {'name': name, 'email': mail, 'phone': phone}
-            country = self.env['res.country'].search([('code', '=', country_code.lower())]) if country_code else False
+            country_code = REVERSED_COUNTRY_CODE.get(country_code)
+            country = self.env['res.country'].search([('code', '=', country_code)]) if country_code else False
             if country:
                 partner_vals['country_id'] = country.id
             partner = self.env['res.partner'].create(partner_vals)
