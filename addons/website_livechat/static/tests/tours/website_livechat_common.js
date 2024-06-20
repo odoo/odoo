@@ -47,6 +47,11 @@ export const endDiscussion = [
         trigger: ".o-livechat-root:shadow .o-mail-ChatWindow-command[title*=Close]",
         run: "click",
     },
+    {
+        content: "Close confirmation",
+        trigger: ".o-livechat-root:shadow .o-livechat-closeConfirmation-leave",
+        run: "click",
+    },
 ];
 
 export const feedback = [

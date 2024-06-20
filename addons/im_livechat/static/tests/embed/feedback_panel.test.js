@@ -51,6 +51,8 @@ test("Close without feedback", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     await click("[title='Close Chat Window']");
+    await contains(".o-livechat-closeConfirmation-overlay");
+    await click(".o-livechat-closeConfirmation-leave");
     await click("button", { text: "Close conversation" });
     await contains(".o-livechat-LivechatButton");
     await assertSteps(["/im_livechat/visitor_leave_session"]);
@@ -77,6 +79,8 @@ test("Feedback with rating and comment", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     await click("[title='Close Chat Window']");
+    await contains(".o-livechat-closeConfirmation-overlay");
+    await click(".o-livechat-closeConfirmation-leave");
     await assertSteps(["/im_livechat/visitor_leave_session"]);
     await click(`img[data-alt="${RATING.GOOD}"]`);
     await insertText("textarea[placeholder='Explain your note']", "Good job!");
@@ -98,6 +102,8 @@ test("Closing folded chat window should open it with feedback", async () => {
     await waitNotifications([env, "discuss.Thread/fold_state"]);
     await contains(".o-mail-ChatWindow.o-folded");
     await click("[title='Close Chat Window']");
+    await contains(".o-livechat-closeConfirmation-overlay");
+    await click(".o-livechat-closeConfirmation-leave");
     await contains(".o-mail-ChatWindow.o-folded", { count: 0 });
     await contains(".o-mail-ChatWindow p", { text: "Did we correctly answer your question?" });
 });

@@ -29,6 +29,8 @@ test("open/close temporary channel", async () => {
     await contains(".o-mail-ChatWindow");
     await contains(".o-livechat-LivechatButton", { count: 0 });
     await click("[title='Close Chat Window']");
+    await contains(".o-livechat-closeConfirmation-overlay");
+    await click(".o-livechat-closeConfirmation-leave");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await contains(".o-livechat-LivechatButton", { count: 1 });
 });
@@ -50,6 +52,8 @@ test("open/close persisted channel", async () => {
     await contains(".o-mail-Message-content", { text: "How can I help?" });
     await waitNotifications([env, "discuss.channel/new_message"]);
     await click("[title='Close Chat Window']");
+    await contains(".o-livechat-closeConfirmation-overlay");
+    await click(".o-livechat-closeConfirmation-leave");
     await contains(".o-mail-ChatWindow", { text: "Did we correctly answer your question?" });
     await click("[title='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
