@@ -17,7 +17,7 @@ export class ComboConfiguratorPopup extends Component {
         this.pos = usePos();
         this.state = useState({
             combo: Object.fromEntries(this.props.product.combo_ids.map((combo) => [combo.id, 0])),
-            // configuration: id of combo_line -> ProductConfiguratorPopup payload
+            // configuration: id of combo_item -> ProductConfiguratorPopup payload
             configuration: {},
         });
 
@@ -31,18 +31,18 @@ export class ComboConfiguratorPopup extends Component {
 
     shouldShowCombo(combo) {
         return (
-            combo.combo_line_ids.length > 0 &&
-            (combo.combo_line_ids.length > 1 || combo.combo_line_ids[0].product_id.isConfigurable())
+            combo.combo_item_ids.length > 0 &&
+            (combo.combo_item_ids.length > 1 || combo.combo_item_ids[0].product_id.isConfigurable())
         );
     }
 
     autoSelectSingleChoices() {
         this.props.product.combo_ids.forEach((combo) => {
             if (
-                combo.combo_line_ids.length === 1 &&
-                !combo.combo_line_ids[0].product_id.isConfigurable()
+                combo.combo_item_ids.length === 1 &&
+                !combo.combo_item_ids[0].product_id.isConfigurable()
             ) {
-                this.state.combo[combo.id] = combo.combo_line_ids[0].id;
+                this.state.combo[combo.id] = combo.combo_item_ids[0].id;
             }
         });
     }
@@ -55,43 +55,43 @@ export class ComboConfiguratorPopup extends Component {
         return Object.values(this.state.combo).every((x) => Boolean(x));
     }
 
-    formattedComboPrice(comboLine) {
-        const combo_price = comboLine.combo_price;
-        if (floatIsZero(combo_price)) {
+    formattedComboPrice(comboItem) {
+        const extra_price = comboItem.extra_price;
+        if (floatIsZero(extra_price)) {
             return "";
         } else {
-            const product = comboLine.product_id;
-            const price = this.pos.getProductPrice(product, combo_price);
+            const product = comboItem.product_id;
+            const price = this.pos.getProductPrice(product, extra_price);
             return this.env.utils.formatCurrency(price);
         }
     }
 
-    getSelectedComboLines() {
+    getSelectedComboItems() {
         return Object.values(this.state.combo)
             .filter((x) => x) // we only keep the non-zero values
             .map((x) => {
-                const combo_line_id = this.pos.models["pos.combo.line"].get(x);
+                const combo_item_id = this.pos.models["product.combo.item"].get(x);
                 return {
-                    combo_line_id: combo_line_id,
-                    configuration: this.state.configuration[combo_line_id.id],
+                    combo_item_id: combo_item_id,
+                    configuration: this.state.configuration[combo_item_id.id],
                 };
             });
     }
 
-    async onClickProduct({ product, combo_line }, ev) {
+    async onClickProduct({ product, combo_item }, ev) {
         if (product.isConfigurable() && product.product_template_variant_value_ids.length === 0) {
             const payload = await this.pos.openConfigurator(product);
             if (payload) {
-                this.state.configuration[combo_line.id] = payload;
+                this.state.configuration[combo_item.id] = payload;
             } else {
                 // Do not select the product if configuration popup is cancelled.
-                this.state.combo[combo_line.id] = 0;
+                this.state.combo[combo_item.id] = 0;
             }
         }
     }
 
     confirm() {
-        this.props.getPayload(this.getSelectedComboLines());
+        this.props.getPayload(this.getSelectedComboItems());
         this.props.close();
     }
 }

@@ -6,22 +6,22 @@
                 <t t-if="shouldShowCombo(combo)">
                     <h3 class="me-auto mb-3" t-esc="combo.name"/>
                     <div class="product-list d-grid gap-1">
-                        <div t-foreach="combo.combo_line_ids" t-as="combo_line" t-key="combo_line.id" class="m-2">
-                            <t t-set="product" t-value="combo_line.product_id"/>
+                        <div t-foreach="combo.combo_item_ids" t-as="combo_item" t-key="combo_item.id" class="m-2">
+                            <t t-set="product" t-value="combo_item.product_id"/>
                             <input type="radio"
                                 t-attf-name="combo-{{combo.id}}"
-                                t-attf-id="combo-{{combo.id}}-combo_line-{{combo_line.id}}"
-                                t-attf-value="{{combo_line.id}}"
+                                t-attf-id="combo-{{combo.id}}-combo_item-{{combo_item.id}}"
+                                t-attf-value="{{combo_item.id}}"
                                 t-model="state.combo[combo.id]"
-                                t-att-class="{ 'selected': state.combo[combo.id] == combo_line.id }" />
-                            <label t-attf-for="combo-{{combo.id}}-combo_line-{{combo_line.id}}" class="combo-line h-100 w-100 rounded cursor-pointer transition-base">
+                                t-att-class="{ 'selected': state.combo[combo.id] == combo_item.id }" />
+                            <label t-attf-for="combo-{{combo.id}}-combo_item-{{combo_item.id}}" class="combo-item h-100 w-100 rounded cursor-pointer transition-base">
                                 <ProductCard name="product.display_name"
                                     class="'flex-column h-100 border'"
                                     productId="product.id"
                                     product="product"
-                                    price="formattedComboPrice(combo_line)"
+                                    price="formattedComboPrice(combo_item)"
                                     imageUrl="product.getImageUrl()"
-                                    onClick="(ev) => this.onClickProduct({ product, combo_line }, ev)" />
+                                    onClick="(ev) => this.onClickProduct({ product, combo_item }, ev)" />
                             </label>
                         </div>
                     </div>

@@ -16,10 +16,6 @@ class ProductTemplate(models.Model):
     pos_categ_ids = fields.Many2many(
         'pos.category', string='Point of Sale Category',
         help="Category used in the Point of Sale.")
-    combo_ids = fields.Many2many('pos.combo', string='Combo Choices')
-    type = fields.Selection(selection_add=[
-        ('combo', 'Combo')
-    ], ondelete={'combo': 'set consu'})
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_open_session(self):
@@ -29,14 +25,6 @@ class ProductTemplate(models.Model):
                 raise UserError(_("To delete a product, make sure all point of sale sessions are closed.\n\n"
                     "Deleting a product available in a session would be like attempting to snatch a"
                     "hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"))
-
-    def _prepare_tooltip(self):
-        tooltip = super()._prepare_tooltip()
-        if self.type == 'combo':
-            tooltip = _(
-                "Combos allows to choose one product amongst a selection of choices per category."
-            )
-        return tooltip
 
     @api.onchange('sale_ok')
     def _onchange_sale_ok(self):
@@ -48,19 +36,11 @@ class ProductTemplate(models.Model):
         if self.available_in_pos and not self.sale_ok:
             self.sale_ok = True
 
-    @api.onchange('type')
-    def _onchange_type(self):
-        res = super()._onchange_type()
-        if self.type == 'combo':
-            self.taxes_id = False
-            self.supplier_taxes_id = False
-        return res
-
     @api.constrains('available_in_pos')
     def _check_combo_inclusions(self):
         for product in self:
             if not product.available_in_pos:
-                combo_name = self.env['pos.combo.line'].sudo().search([('product_id', 'in', product.product_variant_ids.ids)], limit=1).combo_id.name
+                combo_name = self.env['product.combo.item'].sudo().search([('product_id', 'in', product.product_variant_ids.ids)], limit=1).combo_id.name
                 if combo_name:
                     raise UserError(_('You must first remove this product from the %s combo', combo_name))
 
@@ -69,16 +49,16 @@ class ProductTemplate(models.Model):
         for template in self:
             archived_product = self.env['product.product'].search([('product_tmpl_id', '=', template.id), ('active', '=', False)], limit=1)
             if archived_product:
-                combo_choices_to_delete = self.env['pos.combo.line'].search([
+                combo_items_to_delete = self.env['product.combo.item'].search([
                     ('product_id', '=', archived_product.id)
                 ])
-                if combo_choices_to_delete:
-                    # Delete old combo line
-                    combo_ids = combo_choices_to_delete.mapped('combo_id')
-                    combo_choices_to_delete.unlink()
-                    # Create new combo line (one for each new variant) in each combo
+                if combo_items_to_delete:
+                    # Delete old combo item
+                    combo_ids = combo_items_to_delete.mapped('combo_id')
+                    combo_items_to_delete.unlink()
+                    # Create new combo item (one for each new variant) in each combo
                     new_variants = template.product_variant_ids.filtered(lambda v: v.active)
-                    self.env['pos.combo.line'].create([
+                    self.env['product.combo.item'].create([
                         {
                             'product_id': variant.id,
                             'combo_id': combo_id.id,
@@ -86,12 +66,6 @@ class ProductTemplate(models.Model):
                         for variant in new_variants for combo_id in combo_ids
                     ])
         return res
-
-    @api.onchange('type')
-    def _onchange_type(self):
-        if self.type == "combo" and self.attribute_line_ids:
-            raise UserError(_("Combo products cannot contains variants or attributes"))
-        return super()._onchange_type()
 
 
 class ProductProduct(models.Model):

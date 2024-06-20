@@ -17,9 +17,9 @@ from . import pos_category
 from . import pos_config
 from . import pos_order
 from . import pos_session
-from . import pos_combo
-from . import pos_combo_line
 from . import product
+from . import product_combo
+from . import product_combo_item
 from . import res_partner
 from . import res_company
 from . import res_config_settings

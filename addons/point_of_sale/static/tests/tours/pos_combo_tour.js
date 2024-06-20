@@ -7,7 +7,7 @@ import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/o
 import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
+registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
     test: true,
     steps: () =>
         [
@@ -80,7 +80,7 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("PosComboPriceCheckTour", {
+registry.category("web_tour.tours").add("ProductComboPriceCheckTour", {
     test: true,
     url: "/pos/ui",
     steps: () =>
@@ -99,7 +99,7 @@ registry.category("web_tour.tours").add("PosComboPriceCheckTour", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("PosComboChangeFP", {
+registry.category("web_tour.tours").add("ProductComboChangeFP", {
     test: true,
     steps: () =>
         [

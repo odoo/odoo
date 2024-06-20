@@ -530,38 +530,38 @@
         </record>
 
         <!-- Combo -->
-        <record id="cheeseburger_combo_line" model="pos.combo.line">
+        <record id="cheeseburger_combo_item" model="product.combo.item">
             <field name="product_id" ref="pos_food_cheeseburger"/>
-            <field name="combo_price">0</field>
+            <field name="extra_price">0</field>
         </record>
-        <record id="bacon_burger_combo_line" model="pos.combo.line">
+        <record id="bacon_burger_combo_item" model="product.combo.item">
             <field name="product_id" ref="pos_food_bacon"/>
-            <field name="combo_price">0</field>
+            <field name="extra_price">0</field>
         </record>
-        <record id="burger_combo" model="pos.combo">
+        <record id="burger_combo" model="product.combo">
             <field name="name">Burgers Choice</field>
-            <field name="combo_line_ids" eval="[(6, 0, [ref('cheeseburger_combo_line'), ref('bacon_burger_combo_line')])]"/>
+            <field name="combo_item_ids" eval="[(6, 0, [ref('cheeseburger_combo_item'), ref('bacon_burger_combo_item')])]"/>
         </record>
 
-        <record id="coke_combo_line" model="pos.combo.line">
+        <record id="coke_combo_item" model="product.combo.item">
             <field name="product_id" ref="coke"/>
-            <field name="combo_price">0</field>
+            <field name="extra_price">0</field>
         </record>
-        <record id="water_combo_line" model="pos.combo.line">
+        <record id="water_combo_item" model="product.combo.item">
             <field name="product_id" ref="water"/>
-            <field name="combo_price">0</field>
+            <field name="extra_price">0</field>
         </record>
-        <record id="maid_combo_line" model="pos.combo.line">
+        <record id="maid_combo_item" model="product.combo.item">
             <field name="product_id" ref="minute_maid"/>
-            <field name="combo_price">0</field>
+            <field name="extra_price">0</field>
         </record>
-        <record id="milkshake_combo_line" model="pos.combo.line">
+        <record id="milkshake_combo_item" model="product.combo.item">
             <field name="product_id" ref="milkshake_banana"/>
-            <field name="combo_price">2</field>
+            <field name="extra_price">2</field>
         </record>
-        <record id="drink_combo" model="pos.combo">
+        <record id="drink_combo" model="product.combo">
             <field name="name">Drinks choice</field>
-            <field name="combo_line_ids" eval="[(6, 0, [ref('coke_combo_line'), ref('water_combo_line'), ref('maid_combo_line'), ref('milkshake_combo_line')])]"/>
+            <field name="combo_item_ids" eval="[(6, 0, [ref('coke_combo_item'), ref('water_combo_item'), ref('maid_combo_item'), ref('milkshake_combo_item')])]"/>
         </record>
 
         <record id="burger_drink_combo" model="product.product">
@@ -575,6 +575,7 @@
             <field name="combo_ids" eval="[(6, 0, [ref('drink_combo'), ref('burger_combo')])]"/>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="taxes_id" eval="[(5,)]"/>  <!-- no taxes -->
+            <field name="supplier_taxes_id" eval="[(5,)]"/>
         </record>
     </data>
 </odoo>
