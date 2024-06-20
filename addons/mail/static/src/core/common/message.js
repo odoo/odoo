@@ -454,10 +454,6 @@ export class Message extends Component {
         }
     }
 
-    onClickEdit() {
-        this.enterEditMode();
-    }
-
     /**
      * @param {HTMLElement} element
      */
