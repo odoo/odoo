@@ -6,17 +6,8 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.vpicktree"/>
             <field name="arch" type="xml">
-
-                <!-- <tree string="Tiktok Shop">
-                    <header>
-                        <button name="action_authorize_shop_tiktok" string="Authorize TikTok Shop" class="btn-primary ms-1" type="object" display="always"/>
-                    </header>
-                    <field name="name"/>
-                    <field name="shop_id"/>
-                </tree> -->
-
                 <xpath expr="//header" position="inside">
-                    <button name="print_label" type="object" string="TikTok Picking Slip"/>
+                    <button name="print_label" type="object" class="oe_highlight" string="TikTok Picking Slip"/>
                 </xpath>
                 <xpath expr="//header/button[@name='do_unreserve']" position="attributes">
                     <attribute name="invisible">1</attribute>

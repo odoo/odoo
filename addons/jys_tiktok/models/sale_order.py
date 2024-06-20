@@ -22,6 +22,7 @@ class SaleOrder(models.Model):
     tiktok_shop_id = fields.Many2one('tiktok.shop', 'Tiktok Shop', copy=False)
     buyer_message = fields.Text('Buyer Message')
     marketplace_partner_id = fields.Many2one('res.partner','Marketplace')
+    tiktok_package_id = fields.Char('TikTok Package ID')
 
     _sql_constraints = [
         ('tiktok_ordersn_uniq', 'unique(tiktok_ordersn)', 'You cannot have more than one order with the same Tiktok Serial Number!')

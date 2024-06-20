@@ -15,46 +15,51 @@ class StockPicking(models.Model):
     _inherit = "stock.picking"
 
     carrier_tracking_ref = fields.Char('Tracking')
+    is_tiktok_printed = fields.Boolean('Tiktok')
+    date_print_shipped = fields.Datetime('Print Shipped')
+    tiktok_ordersn = fields.Char('Tiktok Ordersn')
     
     def print_label(self):
         context = self.env.context
         company = self.env.company
         picking_obj = self.env['stock.picking']
+        company_obj = self.env['res.company']
         app = company.tiktok_client_id
+        domain = company.tiktok_api_domain
         key = company.tiktok_client_secret
+        data = self
+        
+        if not data.sale_id.tiktok_shop_id:
+            raise UserError(_('Please select your shop!'))
+        shop = data.sale_id.tiktok_shop_id
+        chiper = str(shop.tiktok_chiper)
         timest = int(time.time())
-        label_url = []
+        label_url = [] 
+               
         alr_print = ''
+        sign = ''
         for pick in picking_obj.browse(context.get('active_ids')):
             sale_id = pick.sale_id
             access_token = sale_id.tiktok_shop_id.tiktok_token
+            headers = {
+                'x-tts-access-token': str(access_token), 
+                "Content-type": "application/json"
+            }
             tiktok_id = sale_id.tiktok_shop_id.shop_id
             if sale_id.tiktok_package_id:
                 package_id = sale_id.tiktok_package_id
-                doc_type = 3
-                doc_size = 0
-
-                path = '/api/fulfillment/shipping_document'
-                strings = f'{key}{path}app_key{app}document_size{doc_size}document_type{doc_type}package_id{package_id}shop_id{tiktok_id}timestamp{timest}{key}'
-                #base_string = bytes("%s%sapp_key%stimestamp%s%s"%(key,path,app,timest,key),'utf-8')
-                base_string = bytes(strings,'utf-8')
-                sign = hmac.new(bytes(key,'utf-8'),base_string, hashlib.sha256).hexdigest()
-                url = "https://open-api.tiktokglobalshop.com/api/fulfillment/shipping_document?app_key=%s&access_token=%s&sign=%s&timestamp=%s"%(app,access_token,sign,timest)
-                url2 = f'&shop_id={tiktok_id}&package_id={package_id}&document_type={doc_type}&document_size={doc_size}'
-
-                url = url + url2
-                data = {'shop_id': tiktok_id,
-                        'package_id': package_id,
-                        'document_type': 3,
-                        'document_size': 0}
-                res = requests.get(url)
+                doc_type = 'SHIPPING_LABEL'
+                url =  domain+f"/fulfillment/202309/packages/{package_id}/shipping_documents"+"?app_key=%s&access_token=%s&sign=%s&shop_cipher=%s&timestamp=%s&document_type=%s"%(app,access_token,sign,chiper,timest,doc_type)
+                sign = company_obj.cal_sign(url, key, headers)
+                url =  domain+f"/fulfillment/202309/packages/{package_id}/shipping_documents"+"?app_key=%s&access_token=%s&sign=%s&shop_cipher=%s&timestamp=%s&document_type=%s"%(app,access_token,sign,chiper,timest,doc_type)
+                res = requests.get(url, headers=headers)
                 values = res.json()
                 if values.get('message',False) == 'Package shipped, no need to print.':
-                    alr_print += (pick.marketplace_number+' pesanan sudah dikirim.\n')
+                    alr_print += (sale_id.tiktok_ordersn+' pesanan sudah dikirim.\n')
                     pick.write({'is_tiktok_printed': True,'date_print_shipped': fields.Datetime.now()})
                     continue
                 else:
-                    alr_print += (pick.marketplace_number+' '+values.get('message','-')+'\n')
+                    alr_print += (sale_id.tiktok_ordersn+' '+values.get('message','-')+'\n')
                 
                 if values.get('data'):
                     if values.get('data').get('doc_url'):
@@ -62,19 +67,17 @@ class StockPicking(models.Model):
                         pick.write({'is_tiktok_printed': True,'date_print_shipped': fields.Datetime.now()})
 
             else:
-                path_det = '/api/orders/detail/query'
-                base_string_det = bytes("%s%sapp_key%sshop_id%stimestamp%s%s"%(key,path_det,app,tiktok_id,timest,key),'utf-8')
-                sign_det = hmac.new(bytes(key,'utf-8'),base_string_det, hashlib.sha256).hexdigest()
-                url = "https://open-api.tiktokglobalshop.com/api/orders/detail/query?app_key=%s&access_token=%s&timestamp=%s&shop_id=%s&sign=%s"%(app,access_token,timest,tiktok_id,sign_det)
-
-                order_ids = [pick.marketplace_number]
-                data_det = {"order_id_list": order_ids}
-                res_det = requests.post(url, json=data_det)
-                values_det = res_det.json()
+                order_ids = [sale_id.tiktok_ordersn]
+                url = domain+"/order/202309/orders?app_key=%s&access_token=%s&timestamp=%s&sign=%s&shop_cipher=%s&ids=%s"%(app,access_token,timest,sign,chiper,','.join(order_ids))
+                sign = company_obj.cal_sign(url, key, headers)
+                url = domain+"/order/202309/orders?app_key=%s&access_token=%s&timestamp=%s&sign=%s&shop_cipher=%s&ids=%s"%(app,access_token,timest,sign,chiper,','.join(order_ids))
+        
+                res = requests.get(url, headers=headers)
+                values_det = res.json()
                 package_id = False
-                for order in values_det.get('data').get('order_list'):
+                for order in values_det.get('data').get('orders'):
                     try:
-                        package_id = order.get('package_list')[0].get('package_id',False)
+                        package_id = order.get('packages')[0].get('id',False)
                     except:
                         package_id = False
 
@@ -98,11 +101,11 @@ class StockPicking(models.Model):
                     res = requests.get(url)
                     values = res.json()
                     if values.get('message',False) == 'Package shipped, no need to print.':
-                        alr_print += (pick.marketplace_number+' pesanan sudah dikirim.\n')
+                        alr_print += (str(pick.tiktok_ordersn)+' pesanan sudah dikirim.\n')
                         pick.write({'is_tiktok_printed': True,'date_print_shipped': fields.Datetime.now()})
                         continue
                     else:
-                        alr_print += (pick.marketplace_number+' '+values.get('message','-')+'\n')
+                        alr_print += (str(pick.tiktok_ordersn)+' '+values.get('message','-')+'\n')
                     
                     if values.get('data'):
                         if values.get('data').get('doc_url'):
@@ -112,7 +115,6 @@ class StockPicking(models.Model):
                     continue
 
         pdf_writer = PyPDF2.PdfFileWriter()
-        print(label_url)
         if label_url:
             for url in label_url:
               response = requests.get(url)
@@ -128,12 +130,12 @@ class StockPicking(models.Model):
             pdf_binary = pdf_bytes.getvalue()
             pdf_base64 = base64.b64encode(pdf_binary).decode('utf-8')
             file_name = 'TikTok-'+(datetime.now()+timedelta(hours=7)).strftime('%Y-%m-%d %H_%M_%S')+'.pdf'
-            module_rec = self.env['sgeede.tiktok.shipping.label.pdf'].create(
+            module_rec = self.env['tiktok.shipping.label.pdf'].create(
                 {'name': file_name, 'pdf_file': pdf_base64})
             return {'name': _('PDF File'),
                 'res_id': module_rec.id,
                 "view_mode": 'form',
-                'res_model': 'sgeede.tiktok.shipping.label.pdf',
+                'res_model': 'tiktok.shipping.label.pdf',
                 'type': 'ir.actions.act_window',
                 'target': 'new'}
         else:

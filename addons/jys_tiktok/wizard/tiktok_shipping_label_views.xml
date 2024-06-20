@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_tiktok_shipping_label_pdf" model="ir.ui.view">
+            <field name="name">tiktok.shipping.label.pdf</field>
+            <field name="model">tiktok.shipping.label.pdf</field>
+            <field name="arch" type="xml">
+                <form string="Download File">
+                    <field name="name" invisible="1"/>
+                    <br/>
+                    <h4>Click On Link To Download File:&#160;
+                        <field name="pdf_file" filename="name" nolabel="1"/>
+                    </h4>
+                    <footer>
+                        <button name="action_back" string="Back" type="object" class="btn-primary"/>
+                         or
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+</odoo>

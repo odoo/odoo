@@ -96,11 +96,11 @@ class TiktokGetOrder(models.TransientModel):
                 if inv.state not in ['cancel'] and inv.pament_state not in ['paid']:
                     inv.button_cancel()
 
-            for pick in sale.picking_ids:
-                if pick.picking_type_id.code == 'outgoing':
-                    if pick.state == 'done':
+            for picking in sale.picking_ids:
+                if picking.picking_type_id.code == 'outgoing':
+                    if picking.state == 'done':
                         is_cancel = True
-                        if not pick.is_returned:
+                        if not picking.is_returned:
                             if not picking.is_returned:
                                 default_data = return_obj.with_context(active_ids=[picking.id], active_id=picking.id).default_get(['move_dest_exists', 'original_location_id', 'product_return_moves', 'parent_location_id', 'location_id'])
                                 return_wiz = return_obj.with_context(active_ids=[picking.id], active_id=picking.id).create(default_data)
@@ -125,7 +125,7 @@ class TiktokGetOrder(models.TransientModel):
                             if picking.state != 'cancel':
                                 picking.action_cancel()
 
-            if is_query:
+            if is_cancel:
                 cr.execute("""
                     UPDATE sale_order SET state = 'cancel' WHERE id = %s
                 """ % sale.id)
@@ -465,12 +465,12 @@ class TiktokGetOrder(models.TransientModel):
                 SELECT name FROM (
                     SELECT DISTINCT ON (name) name, update_time
                     FROM tiktok_order
-                    WHERE shop_id = %s AND ((is_updated IS NULL OR is_updated = false) OR is_job = false)
+                    WHERE shop_id = %s AND ((is_updated IS NULL OR is_updated = false) OR (is_job IS NULL OR is_job = false))
                     ORDER BY name, update_time DESC LIMIT 30
                 ) sub ORDER BY update_time ASC
             ), ',') """ % (shop.id))
         order_ids = list(cr.fetchone()[0].split(','))
-        order_ids = ['578945001992194058']
+        # order_ids = ['578945001992194058']
 
         sale_ids = []
         updated_order_ids = []
@@ -527,14 +527,14 @@ class TiktokGetOrder(models.TransientModel):
                     sale = sale_id
 
                     shipping_fee = order.get('payment').get('shipping_fee',0)
-                    # tiktok_package_id = order.get('package_list')[0].get('package_id','0')
+                    tiktok_package_id = order.get('packages')[0].get('id','0')
 
                     name  = order.get('recipient_address').get('name',False)
                     phone = order.get('recipient_address').get('phone_number',False)
                     street = order.get('recipient_address').get('full_address',False)
                     date_order = datetime.fromtimestamp(int(order['create_time'])).strftime('%Y-%m-%d %H:%M:%S')
                     # sale.write({'tiktok_actual_shipping_cost': shipping_fee,'tiktok_package_id': tiktok_package_id})
-                    sale.write({'tiktok_actual_shipping_cost': shipping_fee,'date_order':date_order})
+                    sale.write({'tiktok_actual_shipping_cost': shipping_fee,'date_order':date_order, 'tiktok_package_id':tiktok_package_id})
                     if name != sale.partner_shipping_id.name:
                         sale.partner_shipping_id.write({'name': name})
 
@@ -591,8 +591,8 @@ class TiktokGetOrder(models.TransientModel):
                             cancel_order(sale)
 
                     if sale.picking_ids:
-                        for pick in sale.picking_ids:
-                            pick.write({'carrier_tracking_ref': tracking_no})
+                        for picking in sale.picking_ids:
+                            picking.write({'carrier_tracking_ref': tracking_no})
                             
                     updated_count += 1
 
@@ -834,12 +834,12 @@ class TiktokGetOrder(models.TransientModel):
 
                     shipping_cost = order.get('payment').get('shipping_fee',0)
                     # Hide tiktok_package_id
-                    # tiktok_package_id = order.get('package_list')[0].get('package_id','0')
+                    tiktok_package_id = order.get('packages')[0].get('id','0')
 
                     sale_id.write({
                         'delivery_rating_success': True,
                         'tiktok_actual_shipping_cost': shipping_cost,
-                        # 'tiktok_package_id': tiktok_package_id
+                        'tiktok_package_id': tiktok_package_id
                     })
                     sale_id.set_delivery_line(carrier_id, 0)
                     carrier_line_id = line_obj.search([('order_id', '=', sale_id.id), ('is_delivery', '=', True)], limit=1)

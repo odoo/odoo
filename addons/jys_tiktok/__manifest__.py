@@ -20,6 +20,7 @@
         'wizard/tiktok_get_order_views.xml',
         'wizard/tiktok_get_item_views.xml',
         'wizard/delete_confirmation_wizard_views.xml',
+        'wizard/tiktok_shipping_label_views.xml',
 
 
         'views/product_template_views.xml',
