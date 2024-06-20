@@ -66,7 +66,7 @@ messageActionsRegistry
         condition: (component) => component.editable,
         icon: "fa-pencil",
         title: _t("Edit"),
-        onClick: (component) => component.onClickEdit(),
+        onClick: (component) => component.enterEditMode(),
         sequence: 80,
     })
     .add("delete", {
