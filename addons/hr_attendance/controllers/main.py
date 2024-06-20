@@ -21,7 +21,7 @@ class HrAttendance(http.Controller):
             response = {
                 'id': employee.id,
                 'employee_name': employee.name,
-                'employee_avatar': employee.image_1920,
+                'employee_avatar': employee.image_256,
                 'hours_today': float_round(employee.hours_today, precision_digits=2),
                 'total_overtime': float_round(employee.total_overtime, precision_digits=2),
                 'last_attendance_worked_hours': float_round(employee.last_attendance_worked_hours, precision_digits=2),
@@ -82,7 +82,7 @@ class HrAttendance(http.Controller):
         else:
             employee_list = [{"id": e["id"],
                               "name": e["name"],
-                              "avatar": image_data_uri(e["avatar_1024"]),
+                              "avatar": image_data_uri(e["avatar_256"]),
                               "job": e["job_id"][1] if e["job_id"] else False,
                               "department": {"id": e["department_id"][0] if e["department_id"] else False,
                                              "name": e["department_id"][1] if e["department_id"] else False
@@ -90,7 +90,7 @@ class HrAttendance(http.Controller):
                               } for e in request.env['hr.employee'].sudo().search_read(domain=[('company_id', '=', company.id)],
                                                                                        fields=["id",
                                                                                                "name",
-                                                                                               "avatar_1024",
+                                                                                               "avatar_256",
                                                                                                "job_id",
                                                                                                "department_id"])]
             departement_list = [{'id': dep["id"],
