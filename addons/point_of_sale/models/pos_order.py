@@ -1193,7 +1193,7 @@ class PosOrderLine(models.Model):
     combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent') # FIXME rename to parent_line_id
     combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines') # FIXME rename to child_line_ids
 
-    combo_line_id = fields.Many2one('pos.combo.line', string='Combo Line')
+    combo_line_id = fields.Many2one('product.combo.line', string='Combo Line')
 
     @api.model
     def _load_pos_data_domain(self, data):

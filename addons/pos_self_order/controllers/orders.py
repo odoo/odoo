@@ -88,7 +88,7 @@ class PosSelfOrderController(http.Controller):
 
                     selected_attributes = pos_order_line.attribute_value_ids
                     price_extra_child = sum(attr.price_extra for attr in selected_attributes)
-                    price_unit += pos_order_line.combo_line_id.combo_price + price_extra_child
+                    price_unit += pos_order_line.combo_line_id.extra_price + price_extra_child
 
                     price_unit_fp = child_product._get_price_unit_after_fp(price_unit, pos_config.currency_id, fiscal_pos)
                     taxes = fiscal_pos.map_tax(child_product.taxes_id) if fiscal_pos else child_product.taxes_id

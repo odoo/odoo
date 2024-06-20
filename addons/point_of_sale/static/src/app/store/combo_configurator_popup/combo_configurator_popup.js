@@ -56,12 +56,12 @@ export class ComboConfiguratorPopup extends Component {
     }
 
     formattedComboPrice(comboLine) {
-        const combo_price = comboLine.combo_price;
-        if (floatIsZero(combo_price)) {
+        const extra_price = comboLine.extra_price;
+        if (floatIsZero(extra_price)) {
             return "";
         } else {
             const product = comboLine.product_id;
-            const price = this.pos.getProductPrice(product, combo_price);
+            const price = this.pos.getProductPrice(product, extra_price);
             return this.env.utils.formatCurrency(price);
         }
     }
@@ -70,7 +70,7 @@ export class ComboConfiguratorPopup extends Component {
         return Object.values(this.state.combo)
             .filter((x) => x) // we only keep the non-zero values
             .map((x) => {
-                const combo_line_id = this.pos.models["pos.combo.line"].get(x);
+                const combo_line_id = this.pos.models["product.combo.line"].get(x);
                 return {
                     combo_line_id: combo_line_id,
                     configuration: this.state.configuration[combo_line_id.id],
