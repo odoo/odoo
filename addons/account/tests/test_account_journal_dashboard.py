@@ -301,3 +301,51 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         }).action_post()
         dashboard_data = bank_journal._get_journal_dashboard_data_batched()[bank_journal.id]
         self.assertEqual(0, dashboard_data['nb_misc_operations'])
+
+    def test_bank_journal_different_currency(self):
+        """Test that the misc operations amount on the dashboard is correct
+        for a bank account in another currency."""
+        foreign_currency = self.currency_data['currency']
+        bank_journal = self.company_data['default_journal_bank'].copy({'currency_id': foreign_currency.id})
+
+        self.assertNotEqual(bank_journal.currency_id, bank_journal.company_id.currency_id)
+
+        move = self.env['account.move'].create({
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'line_ids': [
+                Command.create({
+                    'account_id': bank_journal.default_account_id.id,
+                    'currency_id': foreign_currency.id,
+                    'amount_currency': 100,
+                }),
+                Command.create({
+                    'account_id': self.company_data['default_account_assets'].id,
+                    'currency_id': foreign_currency.id,
+                    'amount_currency': -100,
+                })
+            ]
+        })
+        move.action_post()
+
+        dashboard_data = bank_journal._get_journal_dashboard_data_batched()[bank_journal.id]
+        self.assertEqual(dashboard_data.get('misc_operations_balance', 0), foreign_currency.format(100))
+
+        bank_journal.default_account_id.currency_id = False  # not a normal case
+        company_currency_move = self.env['account.move'].create({
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'line_ids': [
+                Command.create({
+                    'account_id': bank_journal.default_account_id.id,
+                    'debit': 100,
+                }),
+                Command.create({
+                    'account_id': self.company_data['default_account_assets'].id,
+                    'credit': 100,
+                })
+            ]
+        })
+        company_currency_move.action_post()
+        dashboard_data = bank_journal._get_journal_dashboard_data_batched()[bank_journal.id]
+
+        self.assertEqual(dashboard_data.get('misc_operations_balance', 0), None)
+        self.assertEqual(dashboard_data.get('misc_class', ''), 'text-warning')

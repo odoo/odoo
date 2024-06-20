@@ -114,7 +114,7 @@ class TestLoyalty(TransactionCase):
         self.assertTrue(all(r.reward_type == 'product' for r in self.program.reward_ids))
 
     def test_loyalty_program_preserve_reward_with_always_edit(self):
-        with Form(self.env['loyalty.program']) as program_form:
+        with Form(self.env['loyalty.program'], 'loyalty.loyalty_program_view_form') as program_form:
             program_form.name = 'Test'
             program_form.program_type = 'buy_x_get_y'
             program_form.reward_ids.remove(0)
@@ -157,3 +157,30 @@ class TestLoyalty(TransactionCase):
             product.action_archive()
         self.program.action_archive()
         product.action_archive()
+
+    def test_prevent_archiving_product_when_archiving_program(self):
+        """
+        Test prevent archiving a product when archiving a "Buy X Get Y" program.
+        We just have to archive the free product that has been created while creating
+        the program itself not the product we already had before.
+        """
+        product = self.env['product.product'].with_context(default_taxes_id=False).create({
+            'name': 'Test Product',
+            'detailed_type': 'consu',
+            'list_price': 20.0,
+        })
+
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Test Program',
+            'program_type': 'buy_x_get_y',
+            'reward_ids': [
+                Command.create({
+                    'description': 'Test Product',
+                    'reward_product_id': product.id,
+                    'reward_type': 'product'
+                }),
+            ],
+        })
+        loyalty_program.action_archive()
+        # Make sure that the main product didn't get archived
+        self.assertTrue(product.active)

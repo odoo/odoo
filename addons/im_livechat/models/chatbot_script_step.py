@@ -330,7 +330,7 @@ class ChatbotScriptStep(models.Model):
 
         if discuss_channel.livechat_channel_id:
             human_operator = discuss_channel.livechat_channel_id._get_operator(
-                lang=discuss_channel.livechat_visitor_id.lang_id.code,
+                lang=discuss_channel.livechat_visitor_id.lang_id.code if hasattr(discuss_channel, "livechat_visitor_id") else None,
                 country_id=discuss_channel.country_id.id
             )
 

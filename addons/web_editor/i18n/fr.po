@@ -6,6 +6,7 @@
 # Wil Odoo, 2023
 # Jolien De Paepe, 2024
 # Asia Ba, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:46+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Asia Ba, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -882,7 +883,11 @@ msgid "Could not install module %s"
 msgstr "Impossible d'installer le module %s"
 
 #. module: web_editor
+#. odoo-javascript
+#. module: web_editor
+#: code:addons/web_editor/static/src/components/upload_progress_toast/upload_service.js:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+#, python-format
 msgid "Cover"
 msgstr "Couverture"
 
@@ -3634,6 +3639,17 @@ msgid ""
 msgstr ""
 "Vous pouvez télécharger des documents avec le bouton situé en haut à gauche "
 "de l'écran."
+
+#. module: web_editor
+#. odoo-python
+#: code:addons/web_editor/controllers/main.py:0
+#, python-format
+msgid ""
+"You have reached the maximum number of requests for this service. Try again "
+"later."
+msgstr ""
+"Vous avez atteint le nombre maximum de requêtes pour ce service. Veuillez "
+"réessayer plus tard."
 
 #. module: web_editor
 #. odoo-javascript

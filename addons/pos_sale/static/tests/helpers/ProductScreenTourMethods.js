@@ -8,6 +8,14 @@ export function clickQuotationButton() {
         },
     ];
 }
+export function clickSave() {
+    return [
+        {
+            content: 'Click on Save button',
+            trigger: '.control-button:contains("Save")',
+        },
+    ];
+}
 export function selectFirstOrder() {
     return [
         {

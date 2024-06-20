@@ -6,8 +6,9 @@
 # Iran Villalobos López, 2023
 # Lucia Pacheco, 2024
 # Wil Odoo, 2024
-# Fernanda Alvarez, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Martin Trigaux, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +59,7 @@ msgstr "\" no se sigue más."
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "\"%(activity_name)s: %(summary)s\" assigned to you"
-msgstr "le asignaron \"%(activity_name)s:%(summary)s\""
+msgstr "Le asignaron \"%(activity_name)s:%(summary)s\""
 
 #. module: mail
 #. odoo-javascript
@@ -577,8 +578,8 @@ msgid ""
 "A valid Google API key is required to enable message translation. "
 "https://cloud.google.com/translate/docs/setup"
 msgstr ""
-"Se requiere una clave API de Google válida para habilitar la traducción de "
-"mensajes. https://cloud.google.com/translate/docs/setup"
+"Necesita una clave API de Google válida para habilitar la traducción de "
+"mensajes. https://cloud.google.com/translate/docs/setup?hl=es-419"
 
 #. module: mail
 #. odoo-javascript
@@ -809,7 +810,7 @@ msgstr "Actividad: %s"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Add Context Action"
-msgstr "Añadir acción de contexto"
+msgstr "Agregar acción de contexto"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -864,7 +865,7 @@ msgstr "Agregar una descripción"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Add a description to your activity..."
-msgstr "Añadir una descripción a su actividad..."
+msgstr "Agregue una descripción a su actividad..."
 
 #. module: mail
 #. odoo-python
@@ -932,7 +933,7 @@ msgid ""
 "Adding more members to this chat isn't possible; it's designed for just two "
 "people."
 msgstr ""
-"No es posible añadir más miembros a este chat; está diseñado para solo dos "
+"No puede agregar más miembros a este chat. Está diseñado solo para dos "
 "personas."
 
 #. module: mail
@@ -1958,7 +1959,7 @@ msgstr "Chats"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_exclusion_list
 msgid "Check Exclusion List"
-msgstr "Verificar lista de ejecución"
+msgstr "Verificar lista de exclusión"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
@@ -2133,7 +2134,7 @@ msgstr "Empresa"
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Compose Email"
-msgstr "Redactar un correo electrónico"
+msgstr "Redactar correo electrónico"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_mode
@@ -3675,11 +3676,11 @@ msgstr "Campo"
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 #, python-format
 msgid ""
-"Field \"(field)r on model %(model)r must be of type Many2one and have "
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
-"El campo \"(field)r en el modelo %(model)r debe ser del tipo Many2one y "
-"tener tracking=True para el cálculo de la duración."
+"El campo “%(field)s” en el modelo “%(model)s” debe ser del tipo many2one y "
+"contar con tracking=True para calcular la duración."
 
 #. module: mail
 #. odoo-python
@@ -3693,7 +3694,7 @@ msgstr "El campo \"Actividad de correo\" no se puede cambiar a \"Falso\"."
 #: code:addons/mail/models/ir_model.py:0
 #, python-format
 msgid "Field \"Mail Blacklist\" cannot be changed to \"False\"."
-msgstr "El campo \"Lista negra del correo\" no se puede cambiar a \"Falso\"."
+msgstr "El campo \"Lista de exclusión del correo\" no se puede cambiar a \"Falso\"."
 
 #. module: mail
 #. odoo-python
@@ -3824,7 +3825,7 @@ msgstr "Solo seguidores"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Followers to add"
-msgstr "Seguidores a añadir"
+msgstr "Seguidores a agregar"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4416,8 +4417,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error
 #: model:ir.model.fields,help:mail.field_res_users__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan error de entrega."
+msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -4470,8 +4470,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
-"Si se establece, este contenido se enviará automáticamente a usuarios no "
-"autorizados en lugar del mensaje predeterminado."
+"Si se establece, este contenido se enviará en automático a los usuarios no "
+"autorizados en vez del mensaje predeterminado."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -5758,8 +5758,8 @@ msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
 msgstr ""
-"Los miembros de estos grupos se añadirán automáticamente como seguidores. "
-"Tenga en cuenta que podrán administrar su suscripción manualmente si es "
+"Los miembros de estos grupos se agregarán como seguidores en automático. "
+"Tenga en cuenta que podrán gestionar su suscripción de forma manual si es "
 "necesario."
 
 #. module: mail
@@ -5864,7 +5864,7 @@ msgstr "Nombre de registro del mensaje"
 #: model:ir.model,name:mail.model_mail_message_translation
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Message Translation"
-msgstr "Traducción del mensaje"
+msgstr "Traducción de mensajes"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__google_translate_api_key
@@ -6809,7 +6809,7 @@ msgstr "Abrir en Conversaciones"
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr "Operación no compatible"
+msgstr "Operación incompatible"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_optout
@@ -9368,7 +9368,7 @@ msgid ""
 msgstr ""
 "Este campo se utiliza para buscar en la dirección de correo electrónico, ya "
 "que el campo de correo electrónico principal puede contener más de una "
-"dirección de correo electrónico."
+"dirección."
 
 #. module: mail
 #. odoo-python
@@ -10073,7 +10073,7 @@ msgstr "Notificación específica del usuario"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_type
 msgid "User Type"
-msgstr "Tipo de Usuario"
+msgstr "Tipo de usuario"
 
 #. module: mail
 #. odoo-javascript
@@ -10327,7 +10327,7 @@ msgstr "Semanas"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Welcome to MyCompany!"
-msgstr "¡Bienvenido a MiEmpresa!"
+msgstr "¡Le damos la bienvenida a MiEmpresa!"
 
 #. module: mail
 #. odoo-javascript
@@ -10630,6 +10630,17 @@ msgstr ""
 #, python-format
 msgid "You may not define a template on an abstract model: %s"
 msgstr "No puede definir una plantilla en un modelo abstracto: %s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"You may not unlink or modify the content of attachments from other people's "
+"messages"
+msgstr ""
+"No puede desvincular o modificar el contenido de los archivos adjuntos de "
+"los mensajes de otras personas"
 
 #. module: mail
 #. odoo-javascript
@@ -10938,7 +10949,7 @@ msgstr "Por ejemplo, \"Revisar la oferta y hablar sobre los detalles\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "e.g. \"Welcome email\""
-msgstr "por ejemplo: \"Correo de bienvenida\""
+msgstr "Por ejemplo, \"Correo de bienvenida\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -11025,7 +11036,7 @@ msgstr "Por ejemplo, user_id"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g: \"info@mycompany.odoo.com\""
-msgstr "por ejemplo: \"info@miempresa.odoo.com\""
+msgstr "Por ejemplo, \"info@miempresa.odoo.com\""
 
 #. module: mail
 #. odoo-javascript
@@ -11075,7 +11086,7 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "invited %s to the channel"
-msgstr "invitó %s  al canal"
+msgstr "invitó a %s al canal"
 
 #. module: mail
 #. odoo-python

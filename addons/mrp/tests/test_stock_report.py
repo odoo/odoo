@@ -23,6 +23,10 @@ class TestMrpStockReports(TestReportsCommon):
             'name': 'Double Choco Cake',
             'type': 'product',
         })
+        byproduct = self.env['product.product'].create({
+            'name': 'by-product',
+            'type': 'product',
+        })
 
         # Creates two BOM: one creating a regular slime, one using regular slimes.
         bom_chococake = self.env['mrp.bom'].create({
@@ -34,6 +38,8 @@ class TestMrpStockReports(TestReportsCommon):
             'bom_line_ids': [
                 (0, 0, {'product_id': product_chocolate.id, 'product_qty': 4}),
             ],
+            'byproduct_ids':
+                [(0, 0, {'product_id': byproduct.id, 'product_qty': 2})],
         })
         bom_double_chococake = self.env['mrp.bom'].create({
             'product_id': product_double_chococake.id,
@@ -86,6 +92,17 @@ class TestMrpStockReports(TestReportsCommon):
         self.assertEqual(draft_picking_qty['out'], 0)
         self.assertEqual(draft_production_qty['in'], 0)
         self.assertEqual(draft_production_qty['out'], 0)
+
+        mo_form = Form(mo_1)
+        mo_form.qty_producing = 10
+        mo_form.save()
+        mo_1.move_byproduct_ids.quantity = 18
+        mo_1.button_mark_done()
+
+        self.env.flush_all()  # flush to correctly build report
+        report_values = self.env['report.mrp.report_mo_overview']._get_report_data(mo_1.id)['byproducts']['details'][0]
+        self.assertEqual(report_values['name'], byproduct.name)
+        self.assertEqual(report_values['quantity'], 18)
 
     def test_report_forecast_2_production_backorder(self):
         """ Creates a manufacturing order and produces half the quantity.
@@ -186,6 +203,57 @@ class TestMrpStockReports(TestReportsCommon):
                     self.assertTrue(line['is_matched'], "The corresponding MO line should be matched in the forecast report.")
                 else:
                     self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the MO shoud not be matched.")
+
+    def test_kit_packaging_delivery_slip(self):
+        superkit = self.env['product.product'].create({
+            'name': 'Super Kit',
+            'type': 'consu',
+            'packaging_ids': [(0, 0, {
+                'name': '6-pack',
+                'qty': 6,
+            })],
+        })
+
+        compo01, compo02 = self.env['product.product'].create([{
+            'name': n,
+            'type': 'product',
+            'uom_id': self.env.ref('uom.product_uom_meter').id,
+            'uom_po_id': self.env.ref('uom.product_uom_meter').id,
+        } for n in ['Compo 01', 'Compo 02']])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': superkit.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo01.id, 'product_qty': 1}),
+                (0, 0, {'product_id': compo02.id, 'product_qty': 1}),
+            ],
+        })
+
+        for back_order, expected_vals in [('never', [12, 12, 2, 2]), ('always', [24, 12, 4, 2])]:
+            picking_form = Form(self.env['stock.picking'])
+            picking_form.picking_type_id = self.picking_type_in
+            picking_form.partner_id = self.partner
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = superkit
+                move.product_uom = self.env.ref('uom.product_uom_dozen')
+                move.product_uom_qty = 2
+            picking = picking_form.save()
+            picking.move_ids.product_packaging_id = superkit.packaging_ids
+            picking.action_confirm()
+
+            picking.move_ids.write({'quantity': 12, 'picked': True})
+            picking.picking_type_id.create_backorder = back_order
+            picking.button_validate()
+            non_kit_aggregate_values = picking.move_line_ids._get_aggregated_product_quantities()
+            self.assertFalse(non_kit_aggregate_values)
+            aggregate_values = picking.move_line_ids._get_aggregated_product_quantities(kit_name=superkit.display_name)
+            for line in aggregate_values.values():
+                self.assertItemsEqual([line[val] for val in ['qty_ordered', 'quantity', 'packaging_qty', 'packaging_quantity']], expected_vals)
+
+            html_report = self.env['ir.actions.report']._render_qweb_html('stock.report_deliveryslip', picking.ids)[0]
+            self.assertTrue(html_report, "report generated successfully")
 
     def test_subkit_in_delivery_slip(self):
         """

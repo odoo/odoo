@@ -3,11 +3,9 @@
 # 	* barcodes_gs1_nomenclature
 # 
 # Translators:
-# Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
 # Chloe Wang, 2023
-# 湘子 南 <1360857908@qq.com>, 2024
-# Jeffery CHEN <jeffery9@gmail.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -214,7 +212,9 @@ msgid ""
 "If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
 "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
 msgstr ""
-"条码规则\"%s\"模式有问题。如果该规则使用十进制，请检查应用程序标识符的最后一个字符是否为数字。还要检查可能匹配的值只能是数字，否则该值不能被转换为度量值。"
+"条码规则\"%s\"模式有问题。\n"
+"如果该规则使用十进制，请检查应用程序标识符的最后一个字符是否为数字。\n"
+"还要检查可能匹配的值只能是数字，否则该值不能被转换为度量值。"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -222,7 +222,7 @@ msgstr ""
 msgid ""
 "This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
 "accepted is this kind of nomenclature."
-msgstr "此命名规范使用 GS1 规范，只接受 GS1-128 编码规则."
+msgstr "此命名规范采用 GS1 规范，只接受 GS1-128 编码规则。"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
@@ -243,7 +243,7 @@ msgstr "这个条形码不能被部分或完全解析。"
 msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
-msgstr "这条规则只应用于特殊编码的条码"
+msgstr "这条规则只应用于特殊编码的条形码"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__type

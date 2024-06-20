@@ -5,8 +5,9 @@
 # Translators:
 # Wil Odoo, 2024
 # Lucia Pacheco, 2024
-# Fernanda Alvarez, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Martin Trigaux, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -369,12 +370,12 @@ msgstr "4 x 12"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_lots
 msgid "4 x 12 - One per lot/SN"
-msgstr "4 x 12 - uno por número de lote o serie"
+msgstr "4 x 12 - una por número de serie o lote"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_units
 msgid "4 x 12 - One per unit"
-msgstr "4 x 12 - uno por unidad"
+msgstr "4 x 12 - una por unidad"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x12xprice
@@ -855,9 +856,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona las existencias, por lo que debe instalar la aplicación Inventario.\n"
-"Un producto consumible es un producto para el que no gestiona las existencias.\n"
-"Un servicio es un producto no material."
+"Un producto almacenable es un producto del que gestiona las existencias. Debe tener instalada la aplicación Inventario.\n"
+"Un producto consumible es un producto del que no gestiona las existencias.\n"
+"Un servicio es el producto no material que proporciona."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -1201,6 +1202,11 @@ msgstr "Abril"
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
 msgstr "Archivado"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Are you sure you want to cancel this transfer?"
+msgstr "¿Está seguro de que desea cancelar este traslado?"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -2486,7 +2492,8 @@ msgstr "Ubicación de devoluciones predeterminada"
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_uom
 msgid "Default unit of measure used for all stock operations."
 msgstr ""
-"Unidad de medida predeterminada para todas las operaciones de existencias."
+"Unidad de medida de uso predeterminado para todas las operaciones de "
+"existencias."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_stock
@@ -3442,12 +3449,12 @@ msgstr "Existencias libres en tránsito "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
 msgid "Free To Use Quantity "
-msgstr "Cantidad de uso libre"
+msgstr "Cantidad disponible para uso"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Free to Use"
-msgstr "Libre de usar"
+msgstr "Disponible para uso"
 
 #. module: stock
 #. odoo-javascript
@@ -3529,7 +3536,7 @@ msgstr "Generar números de serie"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Generate Serials/Lots"
-msgstr "Generar lotes/números de serie"
+msgstr "Generar números de serie o lote"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3547,8 +3554,8 @@ msgid ""
 "Give to the more specialized category, a higher priority to have them in top"
 " of the list."
 msgstr ""
-"Dele a la categoría más especializada una prioridad más alta para tenerla en"
-" lo alto de la lista."
+"Proporciónele mayor prioridad a la categoría más especializada para que "
+"aparezca en la parte superior de la lista."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__sequence
@@ -3773,8 +3780,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_has_error
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan error de entrega."
+msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__propagate_cancel
@@ -3846,8 +3852,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the delivery slip "
 "of a picking when it is validated."
 msgstr ""
-"Si esta casilla está marcada, Odoo imprimirá automáticamente el recibo de "
-"entrega de una recolección cuando se valide."
+"Si selecciona esta casilla, Odoo imprimirá en automático el recibo de "
+"entrega de una recolección al validarla."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_lot_labels
@@ -3855,8 +3861,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN labels "
 "of a picking when it is validated."
 msgstr ""
-"Si esta casilla está marcada, Odoo imprimirá automáticamente el recibo de "
-"número de lote o serie de una recolección cuando se valide."
+"Si selecciona esta casilla, Odoo imprimirá en automático las etiquetas de "
+"número de lote o serie de una recolección al validarla."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_package_label
@@ -3864,8 +3870,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the package label "
 "when \"Put in Pack\" button is used."
 msgstr ""
-"Si esta casilla está marcada, Odoo imprimirá automáticamente la etiqueta del"
-" paquete cuando se use el botón \"Incluir en el paquete\""
+"Si selecciona esta casilla, Odoo imprimirá la etiqueta del paquete en "
+"automático cuando se use el botón \"Incluir en el paquete\"."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_packages
@@ -3873,8 +3879,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the packages and "
 "their contents of a picking when it is validated."
 msgstr ""
-"Si esta casilla está marcada, Odoo imprimirá automáticamente los paquetes y "
-"contenido de una recolección cuando se valide."
+"Si selecciona esta casilla, Odoo imprimirá en automático los paquetes y el "
+"contenido de una recolección al validarla."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
@@ -3882,8 +3888,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels"
 " of a picking when it is validated."
 msgstr ""
-"Si esta casilla está marcada, Odoo imprimirá automáticamente las etiquetas "
-"del producto de una recolección cuando se valide."
+"Si selecciona esta casilla, Odoo imprimirá en automático las etiquetas del "
+"producto de una recolección al validarla."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report_labels
@@ -3891,8 +3897,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report labels of a picking when it is validated."
 msgstr ""
-"Si esta casilla está marcada, Odoo imprimirá automáticamente las etiquetas "
-"de reporte de una recolección cuando se valide."
+"Si selecciona esta casilla, Odoo imprimirá en automático las etiquetas de "
+"reporte de una recepción al validarla."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report
@@ -3909,8 +3915,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the return slip of"
 " a picking when it is validated."
 msgstr ""
-"Si esta casilla está marcada, Odoo imprimirá automáticamente el recibo de "
-"devolución de una recolección cuando se valide."
+"Si selecciona esta casilla, Odoo imprimirá en automático el recibo de "
+"devolución de una recolección al validarla."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_show_reception_report
@@ -4024,7 +4030,7 @@ msgstr "Importar lotes"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Import Serials/Lots"
-msgstr "Importar números de serie/lotes"
+msgstr "Importar números de serie o lote"
 
 #. module: stock
 #. odoo-python
@@ -4074,7 +4080,7 @@ msgstr "Línea de movimientos entrantes"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_steps
 msgid "Incoming Shipments"
-msgstr "Envíos a recibir"
+msgstr "Envíos entrantes"
 
 #. module: stock
 #. odoo-javascript
@@ -4917,7 +4923,7 @@ msgstr "Número de serie/lote (ZPL)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lot_name
 msgid "Lot/Serial Number Name"
-msgstr "Nombre del número de serie/lote"
+msgstr "Nombre del número de serie o lote"
 
 #. module: stock
 #. odoo-python
@@ -4960,14 +4966,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Lots/Serial Numbers"
-msgstr "Números de lote/serie"
+msgstr "Números de serie/lote"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Lots/Serial numbers"
-msgstr "Números de lote/serie"
+msgstr "Números de serie/lote"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
@@ -5576,7 +5582,7 @@ msgstr "Número de acciones"
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
 #, python-format
 msgid "Number of SN"
-msgstr "Cantidad de NS"
+msgstr "Cantidad de números de serie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_error_counter
@@ -5680,7 +5686,7 @@ msgstr "Disponible:"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
 msgid "One per lot/SN"
-msgstr "Uno por número de lote o de serie"
+msgstr "Una por número de serie o lote"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__units
@@ -5731,7 +5737,7 @@ msgstr "Tipos de operación"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr "Operación no compatible"
+msgstr "Operación incompatible"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_id
@@ -5880,7 +5886,7 @@ msgstr "Regla de reordenamiento original"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Other Information"
-msgstr "Más información"
+msgstr "Otra información"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
@@ -7560,7 +7566,7 @@ msgstr "Usuario responsable"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Resupply"
-msgstr "Reabastecer"
+msgstr "Reabastecimiento"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_wh_ids
@@ -9439,7 +9445,7 @@ msgstr "Consejo: acelere las operaciones de inventario con códigos de barras"
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 #, python-format
 msgid "To"
-msgstr "Para"
+msgstr "A"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -9516,7 +9522,7 @@ msgstr "Total pronosticado"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Total Free to Use"
-msgstr "Total libre de usar"
+msgstr "Total disponible para uso"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -9913,7 +9919,7 @@ msgstr "Actualizar cantidades"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #, python-format
 msgid "Update Quantity"
-msgstr "Actualizar la cantidad "
+msgstr "Actualizar cantidad "
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__1
@@ -10875,8 +10881,8 @@ msgid ""
 "You can’t validate an empty transfer. Please add some products to move "
 "before proceeding."
 msgstr ""
-"No se puede validar un traslado vacío. Añada algunos productos para "
-"trasladar antes de continuar."
+"No es posible validar un traslado vacío. Agregue los productos a trasladar "
+"antes de continuar."
 
 #. module: stock
 #. odoo-python
@@ -11144,7 +11150,7 @@ msgstr "Por ejemplo, recepciones"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "e.g. SN000001"
-msgstr "por ejemplo, SN000001"
+msgstr "Por ejemplo, SN000001"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form

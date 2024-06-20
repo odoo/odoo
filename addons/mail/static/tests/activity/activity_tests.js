@@ -22,7 +22,7 @@ const views = {
                 <field name="message_ids"/>
             </div>
         </form>`,
-        "mail.compose.message,false,form": `
+    "mail.compose.message,false,form": `
         <form>
             <field name="partner_ids"/>
         </form>`,
@@ -409,6 +409,41 @@ QUnit.test("activity click on edit", async (assert) => {
             assert.strictEqual(action.type, "ir.actions.act_window");
             assert.strictEqual(action.res_model, "mail.activity");
             assert.strictEqual(action.res_id, activityId);
+            return super.doAction(...arguments);
+        },
+    });
+    await click(".o-mail-Activity .btn", { text: "Edit" });
+    assert.verifySteps(["do_action"]);
+});
+
+QUnit.test("activity click on edit should pass correct context", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
+    const [activityTypeId] = pyEnv["mail.activity.type"].search([["name", "=", "Email"]]);
+    const activityId = pyEnv["mail.activity"].create({
+        activity_type_id: activityTypeId,
+        can_write: true,
+        mail_template_ids: [mailTemplateId],
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    const { env, openFormView } = await start();
+    await openFormView("res.partner", partnerId);
+    patchWithCleanup(env.services.action, {
+        async doAction(action) {
+            assert.step("do_action");
+            assert.strictEqual(action.type, "ir.actions.act_window");
+            assert.strictEqual(action.res_model, "mail.activity");
+            assert.strictEqual(action.res_id, activityId);
+            assert.deepEqual(
+                action.context,
+                {
+                    default_res_model: "res.partner",
+                    default_res_id: partnerId,
+                },
+                "should pass correct context with default_res_model and default_res_id"
+            );
             return super.doAction(...arguments);
         },
     });

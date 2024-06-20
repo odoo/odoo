@@ -125,7 +125,7 @@ class PaymentTransaction(models.Model):
         # Create and post missing payments for transactions requiring reconciliation
         for tx in self.filtered(lambda t: t.operation != 'validation' and not t.payment_id):
             if not any(child.state in ['done', 'cancel'] for child in tx.child_transaction_ids):
-                tx._create_payment()
+                tx.with_company(tx.company_id)._create_payment()
 
     def _create_payment(self, **extra_create_values):
         """Create an `account.payment` record for the current transaction.
@@ -146,7 +146,7 @@ class PaymentTransaction(models.Model):
                     )
 
         payment_method_line = self.provider_id.journal_id.inbound_payment_method_line_ids\
-            .filtered(lambda l: l.code == self.provider_id._get_code())
+            .filtered(lambda l: l.payment_provider_id == self.provider_id)
         payment_values = {
             'amount': abs(self.amount),  # A tx may have a negative amount, but a payment must >= 0
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',

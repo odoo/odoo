@@ -232,6 +232,20 @@ class Location(models.Model):
         self.invalidate_model(['warehouse_id'])
         return res
 
+    @api.model
+    def name_create(self, name):
+        if name:
+            name_split = name.split('/')
+            parent_location = self.env['stock.location'].search([
+                ('complete_name', '=', '/'.join(name_split[:-1])),
+            ], limit=1)
+            new_location = self.create({
+                'name': name.split('/')[-1],
+                'location_id': parent_location.id if parent_location else False,
+            })
+            return new_location.id, new_location.display_name
+        return super().name_create(name)
+
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)

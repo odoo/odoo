@@ -142,11 +142,12 @@ class StockMoveLine(models.Model):
         for record in self:
             if not record.quant_id or record.quantity:
                 continue
-            origin_move = record.move_id._origin
-            if float_compare(record.move_id.product_qty, origin_move.quantity, precision_rounding=record.move_id.product_uom.rounding) > 0:
-                record.quantity = max(0, min(record.quant_id.available_quantity, record.move_id.product_qty - origin_move.quantity))
+            if float_compare(record.move_id.product_qty, record.quantity, precision_rounding=record.move_id.product_uom.rounding) > 0:
+                qty = max(0, min(record.quant_id.available_quantity, record.move_id.product_qty - record.move_id.quantity))
+                record.quantity = record.product_id.uom_id._compute_quantity(qty, record.product_uom_id)
             else:
-                record.quantity = max(0, record.quant_id.available_quantity)
+                qty = max(0, record.quant_id.available_quantity)
+                record.quantity = record.product_id.uom_id._compute_quantity(qty, record.product_uom_id)
 
     @api.depends('quantity', 'product_uom_id')
     def _compute_quantity_product_uom(self):
@@ -274,7 +275,7 @@ class StockMoveLine(models.Model):
             return self.location_dest_id[:1]
         if self.env.context.get('default_location_dest_id'):
             return self.env['stock.location'].browse([self.env.context.get('default_location_dest_id')])
-        return (self.move_id.location_dest_id or self.picking_id.location_dest_id or self.location_dest_id)[0]
+        return (self.move_id.location_dest_id or self.picking_id.location_dest_id or self.location_dest_id)[:1]
 
     def _get_putaway_additional_qty(self):
         addtional_qty = {}
@@ -616,7 +617,7 @@ class StockMoveLine(models.Model):
             return 0, False
         if action == "available":
             available_qty, in_date = self.env['stock.quant']._update_available_quantity(self.product_id, location, quantity, lot_id=lot, package_id=package, owner_id=owner, in_date=in_date)
-        elif action == "reserved" and not self.move_id._should_bypass_reservation():
+        elif action == "reserved" and not self.move_id._should_bypass_reservation(location):
             self.env['stock.quant']._update_reserved_quantity(self.product_id, location, quantity, lot_id=lot, package_id=package, owner_id=owner)
         if available_qty < 0 and lot:
             # see if we can compensate the negative quants with some untracked quants
@@ -778,6 +779,15 @@ class StockMoveLine(models.Model):
             'packaging': move.product_packaging_id,
         }
 
+    @api.model
+    def _compute_packaging_qtys(self, aggregated_move_lines):
+        # Needs to be computed after aggregation of line qtys
+        for line in aggregated_move_lines.values():
+            if line['packaging']:
+                line['packaging_qty'] = line['packaging']._compute_qty(line['qty_ordered'], line['product_uom'])
+                line['packaging_quantity'] = line['packaging']._compute_qty(line['quantity'], line['product_uom'])
+        return aggregated_move_lines
+
     def _get_aggregated_product_quantities(self, **kwargs):
         """ Returns a dictionary of products (key = id+name+description+uom+packaging) and corresponding values of interest.
 
@@ -790,13 +800,6 @@ class StockMoveLine(models.Model):
         """
         aggregated_move_lines = {}
 
-        def _compute_packaging_qtys(aggregated_move_lines):
-            # Needs to be computed after aggregation of line qtys
-            for line in aggregated_move_lines.values():
-                if line['packaging']:
-                    line['packaging_qty'] = line['packaging']._compute_qty(line['qty_ordered'], line['product_uom'])
-                    line['packaging_quantity'] = line['packaging']._compute_qty(line['quantity'], line['product_uom'])
-            return aggregated_move_lines
 
         # Loops to get backorders, backorders' backorders, and so and so...
         backorders = self.env['stock.picking']
@@ -839,7 +842,7 @@ class StockMoveLine(models.Model):
         # Does the same for empty move line to retrieve the ordered qty. for partially done moves
         # (as they are splitted when the transfer is done and empty moves don't have move lines).
         if kwargs.get('strict'):
-            return _compute_packaging_qtys(aggregated_move_lines)
+            return self._compute_packaging_qtys(aggregated_move_lines)
         pickings = (self.picking_id | backorders)
         for empty_move in pickings.move_ids:
             if not (empty_move.state == "cancel" and empty_move.product_uom_qty
@@ -859,7 +862,7 @@ class StockMoveLine(models.Model):
             else:
                 aggregated_move_lines[line_key]['qty_ordered'] += empty_move.product_uom_qty
 
-        return _compute_packaging_qtys(aggregated_move_lines)
+        return self._compute_packaging_qtys(aggregated_move_lines)
 
     def _compute_sale_price(self):
         # To Override

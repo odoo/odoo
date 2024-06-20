@@ -288,7 +288,12 @@ class Meeting(models.Model):
     @api.depends_context('uid')
     def _compute_user_can_edit(self):
         for event in self:
-            event.user_can_edit = self.env.user in event.partner_ids.user_ids + event.user_id
+            # By default, only current attendees and the organizer can edit the event.
+            editor_candidates = event.partner_ids.user_ids + event.user_id
+            # Right before saving the event, old partners must be able to save changes.
+            if event._origin:
+                editor_candidates += event._origin.partner_ids.user_ids
+            event.user_can_edit = self.env.user in editor_candidates
 
     @api.depends('attendee_ids')
     def _compute_invalid_email_partner_ids(self):
@@ -593,7 +598,7 @@ class Meeting(models.Model):
         return super()._compute_field_value(field)
 
     def _fetch_query(self, query, fields):
-        if self.env.is_system():
+        if self.env.su:
             return super()._fetch_query(query, fields)
 
         public_fnames = self._get_public_fields()
@@ -605,12 +610,7 @@ class Meeting(models.Model):
         events = super()._fetch_query(query, fields_to_fetch)
 
         # determine private events to which the user does not participate
-        current_partner_id = self.env.user.partner_id
-        others_private_events = events.filtered(
-            lambda e: e.privacy == 'private' \
-                  and e.user_id != self.env.user \
-                  and current_partner_id not in e.partner_ids
-        )
+        others_private_events = events.filtered(lambda ev: ev._check_private_event_conditions())
         if not others_private_events:
             return events
 
@@ -661,12 +661,12 @@ class Meeting(models.Model):
         previous_attendees = self.attendee_ids
 
         recurrence_values = {field: values.pop(field) for field in self._get_recurrent_fields() if field in values}
+        future_edge_case = recurrence_update_setting == 'future_events' and self == self.recurrence_id.base_event_id
         if update_recurrence:
             if break_recurrence:
                 # Update this event
                 detached_events |= self._break_recurrence(future=recurrence_update_setting == 'future_events')
             else:
-                future_edge_case = recurrence_update_setting == 'future_events' and self == self.recurrence_id.base_event_id
                 time_values = {field: values.pop(field) for field in time_fields if field in values}
                 if 'access_token' in values:
                     values.pop('access_token')  # prevents copying access_token to other events in recurrency
@@ -682,7 +682,7 @@ class Meeting(models.Model):
             self._sync_activities(fields=values.keys())
 
         # We reapply recurrence for future events and when we add a rrule and 'recurrency' == True on the event
-        if recurrence_update_setting not in ['self_only', 'all_events'] and not break_recurrence:
+        if recurrence_update_setting not in ['self_only', 'all_events'] and not future_edge_case and not break_recurrence:
             detached_events |= self._apply_recurrence_values(recurrence_values, future=recurrence_update_setting == 'future_events')
 
         (detached_events & self).active = False
@@ -717,18 +717,31 @@ class Meeting(models.Model):
                     self.env.ref('calendar.calendar_template_meeting_changedate', raise_if_not_found=False)
                 )
 
+        # Change base event when the main base event is archived. If it isn't done when trying to modify
+        # all events of the recurrence an error can be thrown or all the recurrence can be deleted.
+        if values.get("active") is False:
+            recurrences = self.env["calendar.recurrence"].search([
+                ('base_event_id', 'in', self.ids)
+            ])
+            recurrences._select_new_base_event()
+
         return True
+
+    def _check_private_event_conditions(self):
+        """
+        Checks if the event is private, returning True if the conditions match and False otherwise.
+        The event is private if it is explicetely defined and the user is neither the organizer or a partner of it.
+        """
+        self.ensure_one()
+        event_is_private = self.privacy == 'private'
+        user_is_not_partner = self.user_id.id != self.env.uid and self.env.user.partner_id not in self.partner_ids
+        return event_is_private and user_is_not_partner
 
     @api.depends('privacy', 'user_id')
     def _compute_display_name(self):
         """ Hide private events' name for events which don't belong to the current user
         """
-        hidden = self.filtered(
-            lambda evt:
-                evt.privacy == 'private' and
-                evt.user_id.id != self.env.uid and
-                self.env.user.partner_id not in evt.partner_ids
-        )
+        hidden = self.filtered(lambda event: event._check_private_event_conditions())
         hidden.display_name = _('Busy')
         super(Meeting, self - hidden)._compute_display_name()
 

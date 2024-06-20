@@ -102,6 +102,11 @@ export class Message extends Record {
     is_discussion;
     /** @type {boolean} */
     is_note;
+    isSeenBySelf = Record.attr(false, {
+        compute() {
+            return this.originThread?.selfMember?.lastSeenMessage?.id >= this.id;
+        },
+    });
     /** @type {boolean} */
     isStarred;
     /** @type {boolean} */
@@ -170,10 +175,18 @@ export class Message extends Record {
     now = DateTime.now().set({ milliseconds: 0 });
 
     /**
+     * True if the backend would technically allow edition
+     * @returns {boolean}
+     */
+    get allowsEdition() {
+        return this._store.user?.isAdmin || this.isSelfAuthored;
+    }
+
+    /**
      * @returns {boolean}
      */
     get editable() {
-        if (!this._store.user?.isAdmin && !this.isSelfAuthored) {
+        if (!this.allowsEdition) {
             return false;
         }
         return this.type === "comment";

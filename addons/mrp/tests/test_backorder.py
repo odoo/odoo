@@ -627,6 +627,27 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo.product_qty, 1)
         self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [0.5, 1])
 
+    def test_auto_generate_backorder(self):
+        mo = self.env['mrp.production'].create({
+            'product_qty': 10,
+            'bom_id': self.bom_1.id,
+        })
+        mo.picking_type_id.create_backorder = "always"
+        mo.action_confirm()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 3.0
+        mo = mo_form.save()
+        mo.button_mark_done()
+        self.assertRecordValues(mo, [{'state': 'done', 'qty_produced': 3.0, 'mrp_production_backorder_count': 2}])
+        backorder = mo.procurement_group_id.mrp_production_ids - mo
+        self.assertEqual(backorder.product_qty, 7.0)
+
+        with Form(backorder) as backorder_form:
+            backorder_form.qty_producing = 7.0
+        backorder = backorder_form.save()
+        backorder.button_mark_done()
+        self.assertRecordValues(backorder, [{'state': 'done', 'qty_produced': 7.0, 'mrp_production_backorder_count': 2}])
+
 
 class TestMrpWorkorderBackorder(TransactionCase):
     @classmethod
@@ -673,3 +694,54 @@ class TestMrpWorkorderBackorder(TransactionCase):
         })
         cls.bom_finished1.bom_line_ids[0].operation_id = cls.bom_finished1.operation_ids[0].id
         cls.bom_finished1.bom_line_ids[1].operation_id = cls.bom_finished1.operation_ids[1].id
+
+    def test_mrp_backorder_operations(self):
+        """
+        Checks that the operations'data are correclty set on a backorder:
+            - Create a MO for 10 units, validate the op 1 completely and op 2 partially
+            - Create a backorder and validate op 2 partially
+            - Create a backorder and validate it completely
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_finished1
+        mo_form.product_qty = 10
+        mo = mo_form.save()
+        mo.action_confirm()
+        op_1, op_2 = mo.workorder_ids
+        with Form(mo) as fmo:
+            fmo.qty_producing = 10
+        op_1.button_start()
+        op_1.button_finish()
+        with Form(mo) as fmo:
+            fmo.qty_producing = 4
+        op_2.button_start()
+        op_2.button_finish()
+        action = mo.button_mark_done()
+        backorder_1 = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder_1.save().action_backorder()
+        bo_1 = mo.procurement_group_id.mrp_production_ids - mo
+        self.assertRecordValues(bo_1.workorder_ids, [
+            {'state': 'cancel', 'qty_remaining': 0.0, 'workcenter_id': op_1.workcenter_id.id},
+            {'state': 'waiting', 'qty_remaining': 6.0, 'workcenter_id': op_2.workcenter_id.id},
+        ])
+        with Form(bo_1) as form_bo_1:
+            form_bo_1.qty_producing = 2
+        op_4 = bo_1.workorder_ids.filtered(lambda wo: wo.state != 'cancel')
+        op_4.button_start()
+        op_4.button_finish()
+        action = bo_1.button_mark_done()
+        self.assertRecordValues(op_4, [{'state': 'done', 'qty_remaining': 4.0}])
+        backorder_2 = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder_2.save().action_backorder()
+        bo_2 = mo.procurement_group_id.mrp_production_ids - mo - bo_1
+        self.assertRecordValues(bo_2.workorder_ids, [
+            {'state': 'cancel', 'qty_remaining': 0.0, 'workcenter_id': op_1.workcenter_id.id},
+            {'state': 'waiting', 'qty_remaining': 4.0, 'workcenter_id': op_2.workcenter_id.id},
+        ])
+        op_6 = bo_2.workorder_ids.filtered(lambda wo: wo.state != 'cancel')
+        with Form(bo_2) as form_bo_2:
+            form_bo_2.qty_producing = 4
+        op_6.button_start()
+        op_6.button_finish()
+        bo_2.button_mark_done()
+        self.assertRecordValues(op_6, [{'state': 'done', 'qty_remaining': 0.0}])

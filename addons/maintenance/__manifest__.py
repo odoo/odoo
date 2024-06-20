@@ -27,6 +27,9 @@ Track equipment and maintenance requests""",
         'web.assets_backend': [
             'maintenance/static/src/**/*',
         ],
+        'web.assets_tests': [
+            'maintenance/static/tests/tours/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }

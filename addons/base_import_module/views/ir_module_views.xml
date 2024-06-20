@@ -35,7 +35,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='category_id']" position="after">
                     <field name="module_type" column_invisible="1"/>
+                    <field name="name" column_invisible="1"/>
                 </xpath>
+                <tree position="attributes">
+                    <attribute name="js_class">ir_module_module_tree_view</attribute>
+                </tree>
             </field>
         </record>
         <record model="ir.ui.view" id="module_form_apps_inherit">

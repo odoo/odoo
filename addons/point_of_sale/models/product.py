@@ -68,6 +68,11 @@ class ProductTemplate(models.Model):
                     ])
         return res
 
+    @api.onchange('type')
+    def _onchange_type(self):
+        if self.type == "combo" and self.attribute_line_ids:
+            raise UserError(_("Combo products cannot contains variants or attributes"))
+        return super()._onchange_type()
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'

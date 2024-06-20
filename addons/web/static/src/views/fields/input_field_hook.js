@@ -71,12 +71,15 @@ export function useInputField(params) {
             }
 
             if (!isInvalid) {
-                pendingUpdate = true;
-                lastSetValue = inputRef.el.value;
-
-                await component.props.record.update({ [component.props.name]: val });
-                pendingUpdate = false;
-                component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
+                if (val !== component.props.record.data[component.props.name]) {
+                    lastSetValue = inputRef.el.value;
+                    pendingUpdate = true;
+                    await component.props.record.update({ [component.props.name]: val });
+                    pendingUpdate = false;
+                    component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
+                } else {
+                    inputRef.el.value = params.getValue();
+                }
             }
         }
     }
@@ -165,6 +168,8 @@ export function useInputField(params) {
                 lastSetValue = inputRef.el.value;
                 await component.props.record.update({ [component.props.name]: val });
                 component.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
+            } else {
+                inputRef.el.value = params.getValue();
             }
         }
     }

@@ -391,7 +391,7 @@ export class Message extends Component {
     /**
      * @param {MouseEvent} ev
      */
-    onClick(ev) {
+    async onClick(ev) {
         const model = ev.target.dataset.oeModel;
         const id = Number(ev.target.dataset.oeId);
         if (ev.target.closest(".o_channel_redirect")) {
@@ -411,12 +411,17 @@ export class Message extends Component {
         if (ev.target.tagName === "A") {
             if (model && id) {
                 ev.preventDefault();
-                this.env.services.action.doAction({
+                await this.env.services.action.doAction({
                     type: "ir.actions.act_window",
                     res_model: model,
                     views: [[false, "form"]],
                     res_id: id,
                 });
+                if (!this.env.isSmall) {
+                    this.threadService.open(this.props.thread, true, {
+                        autofocus: false
+                    });
+                }
             }
             return;
         }

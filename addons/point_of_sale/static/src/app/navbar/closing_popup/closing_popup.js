@@ -26,9 +26,8 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         "amount_authorized_diff",
         // TODO: set the props for all popups
         "id",
-        "keepBehind",
         "resolve",
-        "isActive",
+        "zIndex",
         "close",
         "confirmKey",
         "cancelKey",
@@ -118,9 +117,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         }
     }
     async downloadSalesReport() {
-        return this.report.doAction("point_of_sale.sale_details_report", [
-            this.pos.pos_session.id,
-        ]);
+        return this.report.doAction("point_of_sale.sale_details_report", [this.pos.pos_session.id]);
     }
     setManualCashInput(amount) {
         if (this.env.utils.isValidFloat(amount) && this.moneyDetails) {

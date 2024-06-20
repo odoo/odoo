@@ -79,6 +79,11 @@ class ProductProduct(models.Model):
             # Needs to be deep-copied because attributes is potentially mutated
             attributes = deepcopy(self._filter_applicable_attributes(attributes))
 
+        # The image is not JSON serializable
+        for attribute in attributes:
+            for value in attribute["values"]:
+                del value["image"]
+
         return self._add_price_info_to_attributes(
             attributes,
             pos_config_sudo,

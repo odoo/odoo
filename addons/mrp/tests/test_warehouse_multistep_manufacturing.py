@@ -810,3 +810,25 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         mo_P2 = self.env['mrp.production'].search([('product_id', '=', products[2].id)])
         self.assertEqual(mo_P1.product_uom_qty, 5.0)
         self.assertEqual(mo_P2.product_uom_qty, 5.0)
+
+    def test_update_component_qty(self):
+        self.warehouse.manufacture_steps = "pbm"
+        component = self.bom.bom_line_ids.product_id
+        mo = self.env['mrp.production'].create({
+            'product_id': self.bom.product_id.id,
+            'bom_id': self.bom.id,
+            'product_qty': 1,
+            'location_src_id': self.warehouse.pbm_loc_id.id,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.move_raw_ids.product_uom_qty, 2.0)
+        self.assertEqual(mo.picking_ids.move_ids.product_uom_qty, 2.0)
+        # we require a more components to complete the MO
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.new() as raw_move:
+            raw_move.product_id = component
+            raw_move.product_uom_qty = 1.0
+        mo = mo_form.save()
+        # check that the related moves qty is correctly updated
+        self.assertEqual(mo.move_raw_ids.product_uom_qty, 3.0)
+        self.assertEqual(mo.picking_ids.move_ids.product_uom_qty, 3.0)

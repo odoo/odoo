@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Iran Villalobos López, 2023
-# Wil Odoo, 2024
 # Lucia Pacheco, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Wil Odoo, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -804,6 +804,11 @@ msgstr "Archivar operación"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
 msgstr "Archivado"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Are you sure you want to cancel this manufacturing order?"
+msgstr "¿Está seguro de que quiere cancelar esta orden de fabricación? "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1946,7 +1951,8 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__product_uom_id
 msgid "Default unit of measure used for all stock operations."
 msgstr ""
-"Unidad de medida predeterminada para todas las operaciones de existencias."
+"Unidad de medida de uso predeterminado para todas las operaciones de "
+"existencias."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
@@ -2426,7 +2432,7 @@ msgstr "Emisión pronosticada"
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Free to Use"
-msgstr "Libre de usar"
+msgstr "Disponible para uso"
 
 #. module: mrp
 #. odoo-javascript
@@ -2434,7 +2440,7 @@ msgstr "Libre de usar"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Free to Use / On Hand"
-msgstr "Libre de usar/disponible"
+msgstr "Disponible para uso/disponible"
 
 #. module: mrp
 #. odoo-javascript
@@ -2442,7 +2448,7 @@ msgstr "Libre de usar/disponible"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Free to use / On Hand"
-msgstr "Libre de usar/disponible"
+msgstr "Disponible para uso/disponible"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2661,8 +2667,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_has_error
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan un error de envío."
+msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate_cancel
@@ -3290,7 +3295,7 @@ msgstr "Regla de fabricación"
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "Manufacture Security Lead Time"
-msgstr "Plazo de entrega seguro de fabricación"
+msgstr "Plazo de seguridad para fabricación"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__normal
@@ -3658,7 +3663,7 @@ msgstr "No hay pérdida de productividad para este equipo"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "No unbuild order found"
-msgstr "No se encontró ninguna orden de desmantelamiento"
+msgstr "No se encontró ninguna orden de desmontaje"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -3893,7 +3898,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr "Operación no compatible"
+msgstr "Operación incompatible"
 
 #. module: mrp
 #. odoo-javascript
@@ -4417,8 +4422,7 @@ msgstr "Etiquetas de producto"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_plm
 msgid "Product Lifecycle Management (PLM)"
-msgstr ""
-"Gestión del ciclo de vida del producto (PLM, por sus siglas en inglés)"
+msgstr "Gestión del ciclo de vida del producto (PLM)"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_line
@@ -4752,7 +4756,7 @@ msgstr "Recibido"
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 #, python-format
 msgid "Receipts"
-msgstr "Recibidos"
+msgstr "Recepciones"
 
 #. module: mrp
 #. odoo-javascript
@@ -5045,7 +5049,7 @@ msgstr "Seleccione operaciones para copiar"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Selection not supported."
-msgstr "Selección no compatible."
+msgstr "Selección incompatible."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__sequence
@@ -5230,16 +5234,6 @@ msgid ""
 msgstr ""
 "Algunos de sus componentes están rastreados, debe especificar una orden de "
 "fabricación para recuperar los componentes correctos."
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid ""
-"Some product moves have already been confirmed, this manufacturing order "
-"can't be completely cancelled. Are you still sure you want to process?"
-msgstr ""
-"Algunos movimientos de productos ya se confirmaron. Esta orden de "
-"fabricación no se puede cancelar por completo. ¿Está seguro de que quiere "
-"continuar? "
 
 #. module: mrp
 #. odoo-python
@@ -5473,7 +5467,7 @@ msgstr "Lista de materiales secundaria"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Subcontract the production of some products"
-msgstr "Subcontratar la producción de algunos productos"
+msgstr "Subcontrate la producción de algunos productos."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
@@ -6153,7 +6147,7 @@ msgstr "Desbloquear"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 msgid "Unbuild"
-msgstr "Desmontar"
+msgstr "Desmantelar"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
@@ -6174,7 +6168,7 @@ msgstr "Órdenes de desmontaje"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Unbuild: %s"
-msgstr "Desmontar: %s"
+msgstr "Desmantelar: %s"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unbuild_ids

@@ -656,7 +656,7 @@ msgstr ""
 "            über den Betrag von<span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 10,00 €</span> ist verfügbar.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">Ihr Angebot</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
+"            Ihr <t t-out=\"doc_name or ''\">Angebot</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (mit der Referenz: S00052 )\n"
 "            </t>\n"
@@ -1434,7 +1434,7 @@ msgstr "Kann Produkt bearbeiten"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Cancel"
-msgstr "Stornieren"
+msgstr "Abbrechen"
 
 #. module: sale
 #. odoo-python

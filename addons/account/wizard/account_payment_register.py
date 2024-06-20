@@ -115,9 +115,6 @@ class AccountPaymentRegister(models.TransientModel):
         copy=False,
         domain="[('deprecated', '=', False)]",
         check_company=True,
-        compute='_compute_writeoff_account_id',
-        store=True,
-        readonly=False,
     )
     writeoff_label = fields.Char(string='Journal Item Label', default='Write-Off',
         help='Change label of the counterpart that will hold the payment difference')
@@ -501,7 +498,7 @@ class AccountPaymentRegister(models.TransientModel):
         moves = batch_result['lines'].mapped('move_id')
         for move in moves:
             if early_payment_discount and move._is_eligible_for_early_payment_discount(move.currency_id, self.payment_date):
-                amount += move.invoice_payment_term_id._get_amount_due_after_discount(move.amount_total, move.amount_tax)#todo currencies
+                amount -= move.direction_sign * move.invoice_payment_term_id._get_amount_due_after_discount(move.amount_total, move.amount_tax)
                 mode = 'early_payment'
             else:
                 for aml in batch_result['lines'].filtered(lambda l: l.move_id.id == move.id):

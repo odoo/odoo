@@ -475,6 +475,7 @@ class MrpProduction(models.Model):
     def _compute_confirm_cancel(self):
         """ If the manufacturing order contains some done move (via an intermediate
         post inventory), the user has to confirm the cancellation.
+        TODO remove in master: field still computed for poeple with the template not updated
         """
         domain = [
             ('state', '=', 'done'),
@@ -885,7 +886,7 @@ class MrpProduction(models.Model):
             if vals.get('date_finished'):
                 production.move_finished_ids.write({'date': production.date_finished})
             if any(field in ['move_raw_ids', 'move_finished_ids', 'workorder_ids'] for field in vals) and production.state != 'draft':
-                production._autoconfirm_production()
+                production.with_context(no_procurement=True)._autoconfirm_production()
                 if production in production_to_replan:
                     production._plan_workorders()
             if production.state == 'done' and ('lot_producing_id' in vals or 'qty_producing' in vals):
@@ -1969,7 +1970,7 @@ class MrpProduction(models.Model):
                 workorder.duration_expected = workorder._get_duration_expected()
 
             # Adapt quantities produced
-            for workorder in production.workorder_ids:
+            for workorder in production.workorder_ids.sorted('id'):
                 initial_workorder_remaining_qty.append(max(initial_qty - workorder.qty_reported_from_previous_wo - workorder.qty_produced, 0))
                 workorder.qty_produced = min(workorder.qty_produced, workorder.qty_production)
             workorders_len = len(production.workorder_ids)
@@ -2117,7 +2118,21 @@ class MrpProduction(models.Model):
 
         quantity_issues = self._get_quantity_produced_issues()
         if quantity_issues:
-            return self._action_generate_backorder_wizard(quantity_issues)
+            prods_auto_backorder = [prod for prod in quantity_issues if prod.picking_type_id.create_backorder == "always"]
+            if prods_auto_backorder:
+                auto_backorders = self.env['mrp.production.backorder'].create({
+                    "mrp_production_backorder_line_ids": [Command.create({
+                            'mrp_production_id': prod.id,
+                            'to_backorder': True,
+                        }) for prod in prods_auto_backorder
+                    ],
+                })
+                return auto_backorders.action_backorder()
+            ask_backorder = [prod for prod in quantity_issues if prod.picking_type_id.create_backorder == "ask"]
+            if ask_backorder:
+                return self._action_generate_backorder_wizard(ask_backorder)
+            else:
+                return True
         return True
 
     def _button_mark_done_sanity_checks(self):

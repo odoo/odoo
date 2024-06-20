@@ -73,7 +73,7 @@ class AccountMove(models.Model):
             Make sure credit/debit notes have a valid reason and reversal reference
         """
         self.ensure_one()
-        return self.reversed_entry_id and self.ref
+        return self.reversed_entry_id or self.ref
 
     @api.model
     def _l10n_sa_get_qr_code(self, journal_id, unsigned_xml, x509_cert, signature, is_b2c=False):

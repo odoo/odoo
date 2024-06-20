@@ -6,7 +6,7 @@
                 <div>
                     <t t-if="message.subtype_description">
                         <p class="mb-0">
-                            <t t-out="messageSearch?.highlight(message.subtype_description) ?? message.subtype_description"/>
+                            <t t-out="props.messageSearch?.highlight(message.subtype_description) ?? message.subtype_description"/>
                         </p>
                     </t>
                     <t t-if="message.trackingValues.length">
@@ -22,7 +22,7 @@
                         </ul>
                     </t>
                     <div t-if="message.body" class="o-mail-Message-body text-break mb-0 w-100" t-ref="body">
-                        <t t-out="messageSearch?.highlight(message.body) ?? message.body"/>
+                        <t t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
                     </div>
                 </div>
             </t>

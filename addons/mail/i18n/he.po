@@ -7,7 +7,6 @@
 # Lilach Gilliam <lilach@apprcase.com>, 2023
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2023
 # Mor Kir <morki@013.net.il>, 2023
-# hed shefer <hed@laylinetech.com>, 2023
 # Ofir Blum <ofir.blum@gmail.com>, 2023
 # david danilov, 2023
 # שהאב חוסיין <shhab89@gmail.com>, 2023
@@ -25,6 +24,7 @@
 # דודי מלכה <Dudimalka6@gmail.com>, 2024
 # Martin Trigaux, 2024
 # MichaelHadar, 2024
+# hed shefer <hed@laylinetech.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: MichaelHadar, 2024\n"
+"Last-Translator: hed shefer <hed@laylinetech.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -229,7 +229,7 @@ msgstr "%s ו-%s מקלידים..."
 #: code:addons/mail/static/src/core/common/message_reactions.js:0
 #, python-format
 msgid "%s and %s have reacted with %s"
-msgstr "%s ו-%s התרועעו עם %s"
+msgstr "%s ו-%s הגיב עם %s"
 
 #. module: mail
 #. odoo-python
@@ -264,7 +264,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/message_reactions.js:0
 #, python-format
 msgid "%s has reacted with %s"
-msgstr "%s התרועע עם %s"
+msgstr "%s הגיב עם %s"
 
 #. module: mail
 #. odoo-javascript
@@ -320,14 +320,14 @@ msgstr "%s, %s ועוד מקלידים..."
 #: code:addons/mail/static/src/core/common/message_reactions.js:0
 #, python-format
 msgid "%s, %s, %s and %s other persons have reacted with %s"
-msgstr "%s, %s, %s ו-%s ואנשים נוספים התרועעו עם %s"
+msgstr "%s, %s, %s ו-%s ואנשים נוספים הגיבו עם %s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reactions.js:0
 #, python-format
 msgid "%s, %s, %s and 1 other person have reacted with %s"
-msgstr "%s, %s, %s ו-עוד אדם 1 התרועעו עם %s"
+msgstr "%s, %s, %s ו-עוד אדם 1 הגיבו עם %s"
 
 #. module: mail
 #. odoo-javascript
@@ -3553,7 +3553,7 @@ msgstr "שדה"
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 #, python-format
 msgid ""
-"Field \"(field)r on model %(model)r must be of type Many2one and have "
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
 
@@ -10241,6 +10241,15 @@ msgstr "אפשר להוסיף קבצים לתבנית זו, שיצורפו לכ�
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "You may not define a template on an abstract model: %s"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"You may not unlink or modify the content of attachments from other people's "
+"messages"
 msgstr ""
 
 #. module: mail

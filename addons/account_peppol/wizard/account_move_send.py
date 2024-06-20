@@ -47,6 +47,12 @@ class AccountMoveSend(models.TransientModel):
         for wizard in self:
             wizard.checkbox_send_peppol = wizard.enable_peppol and not wizard.peppol_warning
 
+    def _compute_checkbox_send_mail(self):
+        super()._compute_checkbox_send_mail()
+        for wizard in self:
+            if wizard.checkbox_send_mail and wizard.checkbox_send_peppol:
+                wizard.checkbox_send_mail = False
+
     @api.depends('checkbox_send_peppol')
     def _compute_checkbox_ubl_cii_xml(self):
         # extends 'account_edi_ubl_cii'
@@ -79,9 +85,10 @@ class AccountMoveSend(models.TransientModel):
             # show peppol option if either the ubl option is available or any move already has a ubl file generated
             # and moves are not processing/done and if partners have an edi format set to one that works for peppol
             invalid_partners = wizard.move_ids.partner_id.commercial_partner_id.filtered(
-                lambda partner: partner.ubl_cii_format in {False, 'facturx', 'oioubl_201'})
+                lambda partner: not partner.is_peppol_edi_format
+            )
             wizard.enable_peppol = (
-                wizard.company_id.account_peppol_proxy_state == 'active' \
+                wizard.company_id.account_peppol_proxy_state == 'active'
                 and (
                     wizard.enable_ubl_cii_xml
                     or any(m.ubl_cii_xml_id and m.peppol_move_state not in ('processing', 'done') for m in wizard.move_ids)

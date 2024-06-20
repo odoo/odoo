@@ -160,6 +160,7 @@ functionRegistry.add("ODOO.CREDIT", {
             .sort();
         offset = toNumber(offset.value, this.locale);
         if (dateRange?.format) {
+            dateRange = { ...dateRange };
             dateRange.value = formatValue(dateRange.value, {
                 format: dateRange.format,
                 locale: this.locale,
@@ -197,6 +198,7 @@ functionRegistry.add("ODOO.DEBIT", {
             .sort();
         offset = toNumber(offset.value, this.locale);
         if (dateRange?.format) {
+            dateRange = { ...dateRange };
             dateRange.value = formatValue(dateRange.value, {
                 format: dateRange.format,
                 locale: this.locale,
@@ -234,6 +236,7 @@ functionRegistry.add("ODOO.BALANCE", {
             .sort();
         offset = toNumber(offset.value, this.locale);
         if (dateRange?.format) {
+            dateRange = { ...dateRange };
             dateRange.value = formatValue(dateRange.value, {
                 format: dateRange.format,
                 locale: this.locale,

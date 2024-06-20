@@ -477,6 +477,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'city': 'Aeroparque',
                 'state_id': 'base.state_uy_02',
                 'country_id': 'base.uy',
+                'email': 'rut@example.com',
             },
             'demo_partner_5': {
                 'name': 'MELI URUGUAY S.R.L.',
@@ -486,6 +487,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'city': 'Zona Franca Aguada Park',
                 'state_id': 'base.state_uy_10',
                 'country_id': 'base.uy',
+                'email': 'meli@example.com',
             },
             'demo_partner_6': {
                 'name': 'CORREO URUGUAYO',
@@ -495,13 +497,14 @@ class AccountChartTemplate(models.AbstractModel):
                 'city': 'Montevideo',
                 'state_id': 'base.state_uy_10',
                 'country_id': 'base.uy',
+                'email': 'correo@example.com',
             },
-            # Foreign Partner
+            # Foreign Company
             'res_partner_foreign': {
                 'name': 'Foreign Inc',
-                'l10n_latam_identification_type_id': 'l10n_uy.it_nie',
+                'l10n_latam_identification_type_id': 'l10n_latam_base.it_vat',
                 'is_company': True,
-                'vat': '93:402.010-1',
+                'vat': '17-2038053',
                 'zip': '95380',
                 'street': '7841 Red Road',
                 'city': 'San Francisco',
@@ -510,5 +513,17 @@ class AccountChartTemplate(models.AbstractModel):
                 'email': 'foreing@example.com',
                 'phone': '(123)-456-7890',
                 'website': 'http://www.foreign-inc.com',
+            },
+            # Resident Alien (Foreign living at Uruguay)
+            'res_partner_resident_alien': {
+                'name': 'Resident Alien',
+                'l10n_latam_identification_type_id': 'l10n_uy.it_nie',
+                'vat': '93:402.010-1',
+                'zip': '2343',
+                'street': 'Calle False 1234',
+                'city': 'Montevideo',
+                'state_id': 'base.state_uy_10',
+                'country_id': 'base.uy',
+                'email': 'nie@example.com',
             },
         }

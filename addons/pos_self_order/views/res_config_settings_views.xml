@@ -44,11 +44,11 @@
                         <div class="content-group mt-3">
                             <div class="row">
                                 <label for="pos_self_ordering_default_language_id" class="col-lg-3" string="Default"/>
-                                <field name="pos_self_ordering_default_language_id" />
+                                <field name="pos_self_ordering_default_language_id" options="{'no_create': True}"/>
                             </div>
                             <div class="row">
                                 <label for="pos_self_ordering_available_language_ids" class="col-lg-3" string="Available"/>
-                                <field name="pos_self_ordering_available_language_ids" widget="many2many_tags"/>
+                                <field name="pos_self_ordering_available_language_ids" widget="many2many_tags" options="{'no_create': True}"/>
                             </div>
                         </div>
                         <div>
@@ -88,9 +88,13 @@
                 <attribute name="invisible">is_kiosk_mode</attribute>
             </setting>
 
-            <setting id="multiple_prices_setting" position="attributes">
+            <field name="pos_available_pricelist_ids" position="attributes">
                 <attribute name="invisible">is_kiosk_mode</attribute>
-            </setting>
+            </field>
+
+            <xpath expr="//label[@for='pos_available_pricelist_ids']" position="attributes">
+                <attribute name="invisible">is_kiosk_mode</attribute>
+            </xpath>
 
             <setting id="multiple_employee_session" position="attributes">
                 <attribute name="invisible">is_kiosk_mode</attribute>

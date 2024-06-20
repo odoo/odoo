@@ -72,6 +72,8 @@ msgid ""
 "It seems that we're not able to process this pdf inside a quotation. It is "
 "either encrypted, or encoded in a format we do not support."
 msgstr ""
+"Có vẻ như chúng tôi không thể xử lý bản pdf này bên trong báo giá. Nó đã "
+"được mã hóa hoặc được nhập theo định dạng mà chúng tôi không hỗ trợ."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
@@ -112,6 +114,13 @@ msgstr ""
 #, python-format
 msgid "Only PDF documents can be attached inside a quote."
 msgstr "Chỉ có thể đính kèm tài liệu PDF bên trong báo giá."
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "When attached inside a quote, the document must be a file, not a URL."
+msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form

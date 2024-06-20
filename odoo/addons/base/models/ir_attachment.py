@@ -319,7 +319,7 @@ class IrAttachment(models.Model):
                 raw = base64.b64decode(values['datas'])
             if raw:
                 mimetype = guess_mimetype(raw)
-        return mimetype or 'application/octet-stream'
+        return mimetype and mimetype.lower() or 'application/octet-stream'
 
     def _postprocess_contents(self, values):
         ICP = self.env['ir.config_parameter'].sudo().get_param
@@ -365,7 +365,7 @@ class IrAttachment(models.Model):
         mimetype = values['mimetype'] = self._compute_mimetype(values)
         xml_like = 'ht' in mimetype or ( # hta, html, xhtml, etc.
                 'xml' in mimetype and    # other xml (svg, text/xml, etc)
-                not 'openxmlformats' in mimetype)  # exception for Office formats
+                not mimetype.startswith('application/vnd.openxmlformats'))  # exception for Office formats
         force_text = xml_like and (
             self.env.context.get('attachments_mime_plainxml') or
             not self.env['ir.ui.view'].sudo(False).check_access_rights('write', False))
