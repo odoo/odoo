@@ -13,7 +13,7 @@
                 <span t-out="label"/>
             </button>
             <t t-set-slot="content">
-                <DropdownItem onSelected="() => this.startTranslate()" class="'o_translate_website_dropdown_item'">
+                <DropdownItem onSelected="() => this.attemptStartTranslate()" class="'o_translate_website_dropdown_item'">
                     Translate - <span class="text-muted" t-out="this.websiteService.currentWebsite.metadata.langName"/>
                 </DropdownItem>
                 <DropdownItem onSelected="() => this.startEdit()" class="'o_edit_website_dropdown_item'">

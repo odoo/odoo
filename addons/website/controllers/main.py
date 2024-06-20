@@ -783,6 +783,22 @@ class Website(Home):
 
         return res
 
+    @http.route(['/website/check_can_modify_any'], type='json', auth="user", website=True)
+    def check_can_modify_any(self, records):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.Forbidden()
+        first_error = None
+        for rec in records:
+            try:
+                record = request.env[rec['res_model']].browse(rec['res_id'])
+                request.website._check_user_can_modify(record)
+                return True
+            except AccessError as e:
+                if not first_error:
+                    first_error = e
+                continue
+        raise first_error
+
     @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False)
     def google_console_search(self, key, **kwargs):
         if not request.website.google_search_console:
