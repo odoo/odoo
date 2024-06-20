@@ -27,6 +27,10 @@ This addon provides an extensible, maintainable editor.
         'web_editor.assets_media_dialog': [
             'html_editor/static/src/main/media/upload_progress_toast/**/*',
         ],
+        'html_editor.assets_image_cropper': [
+            'html_editor/static/lib/cropperjs/cropper.css',
+            'html_editor/static/lib/cropperjs/cropper.js',
+        ],
     },
     'license': 'LGPL-3'
 }
