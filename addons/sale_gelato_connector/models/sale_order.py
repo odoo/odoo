@@ -8,9 +8,10 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     def send_gelato_order_request(self):
+        api_key = self.company_id.gelato_api_key
         headers = {
             'Content-Type': 'application/json',
-            'X-API-KEY': 'db055505-93f4-452e-9084-c2b821391010-76bf5a2e-0f03-4079-87c0-0bf46a7dfedb:eb8d6639-126c-44af-8452-157dc3497196'
+            'X-API-KEY': api_key
         }
 
         order_url = "https://order.gelatoapis.com/v4/orders"
@@ -24,11 +25,6 @@ class SaleOrder(models.Model):
             "shippingAddress": self.get_gelato_shipping_address(),
         }
         )
-
-        headers = {
-            'Content-Type': 'application/json',
-            'X-API-KEY': 'db055505-93f4-452e-9084-c2b821391010-76bf5a2e-0f03-4079-87c0-0bf46a7dfedb:eb8d6639-126c-44af-8452-157dc3497196'
-        }
 
         requests.request("POST", order_url, data=order_json, headers=headers)
 
@@ -71,3 +67,6 @@ class SaleOrder(models.Model):
             gelato_items.append(gelato_item)
 
         return gelato_items
+
+    def gelato_cancel(self):
+        self.with_context({'disable_cancel_warning': True}).action_cancel()

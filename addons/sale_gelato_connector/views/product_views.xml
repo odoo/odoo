@@ -10,7 +10,7 @@
 
                         <field name="gelato_template_id" invisible="is_product_variant"/>
                         <field name="gelato_reference"  invisible="(product_variant_count &gt; 1) and not is_product_variant"/>
-                        <field name="gelato_photo_url"/>
+                        <field name="gelato_photo_url" required="gelato_reference"/>
                         <button type="object" name="create_product_variants_from_gelato_template" class="btn btn-secondary" string="Generate variants"  invisible="is_product_variant" />
                     </group>
                 </group>

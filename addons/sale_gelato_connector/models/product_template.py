@@ -8,9 +8,9 @@ from odoo import models, fields, api, Command
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    gelato_reference = fields.Char(string="Gelato reference", compute='_compute_gelato_reference', inverse='_set_gelato_reference')
+    gelato_reference = fields.Char(string="Gelato Reference", compute='_compute_gelato_reference', inverse='_set_gelato_reference')
     gelato_template_id = fields.Char(string="Gelato TemplateID")
-    gelato_photo_url = fields.Char(string="Gelato Image")
+    gelato_photo_url = fields.Char(string="Gelato Image", required=True)
 
     @api.depends('product_variant_ids.gelato_reference')
     def _compute_gelato_reference(self):
@@ -26,7 +26,7 @@ class ProductTemplate(models.Model):
 
     def create_product_variants_from_gelato_template(self):
 
-        api_key = self.company_id.gelato_webhook_secret
+        api_key = self.env.company.gelato_api_key
 
         headers = {
             'Content-Type': 'application/json',
@@ -79,3 +79,4 @@ class ProductTemplate(models.Model):
 
                 gelato_ref = variant['productUid']
                 current_product[0].gelato_reference = gelato_ref
+
