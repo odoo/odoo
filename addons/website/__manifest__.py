@@ -250,6 +250,7 @@
             'website/static/src/js/editor/snippets.options.xml',
             'website/static/src/js/editor/snippets.options.legacy.js',
             'website/static/src/snippets/s_facebook_page/options.js',
+            'website/static/src/snippets/s_facebook_page/options.xml',
             'website/static/src/snippets/s_image/options.js',
             'website/static/src/snippets/s_image_gallery/options.js',
             'website/static/src/snippets/s_image_gallery/000.xml',
