@@ -1,19 +1,19 @@
 /** @odoo-module **/
 
 import {_t} from "@web/core/l10n/translation";
-import options from "@web_editor/js/editor/snippets.options.legacy";
+import { registry } from "@web/core/registry";
+import { SnippetOption } from "@web_editor/js/editor/snippets.options";
 import SocialMediaOption from "@website/snippets/s_social_media/options";
 
-options.registry.InstagramPage = options.Class.extend({
-    /**
-     * @override
-     */
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-        this.notification = this.bindService("notification");
+export class InstagramPage extends SnippetOption {
+
+    constructor() {
+        super(...arguments);
+        this.orm = this.env.services.orm;
+        this.notification = this.env.services.notification;
+        this.website = this.env.services.website;
         this.instagramUrlStr = "instagram.com/";
-    },
+    }
     /**
      * @override
      */
@@ -24,13 +24,7 @@ options.registry.InstagramPage = options.Class.extend({
         let socialInstagram = dbSocialValuesCache && dbSocialValuesCache["social_instagram"];
         // If not, we check the value in the DB.
         if (!socialInstagram) {
-            let websiteId;
-            this.trigger_up("context_get", {
-                callback: function (ctx) {
-                    websiteId = ctx["website_id"];
-                },
-            });
-            const values = await this.orm.read("website", [websiteId], ["social_instagram"]);
+            const values = await this.orm.read("website", [this.website.currentWebsite.id], ["social_instagram"]);
             socialInstagram = values[0]["social_instagram"];
         }
         if (socialInstagram) {
@@ -39,7 +33,7 @@ options.registry.InstagramPage = options.Class.extend({
                 this.$target[0].dataset.instagramPage = pageName;
             }
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -62,11 +56,15 @@ options.registry.InstagramPage = options.Class.extend({
         this.$target[0].dataset.instagramPage = widgetValue || "";
         // As the public widget restart is disabled for instagram, we have to
         // manually restart the widget.
-        await this.trigger_up("widgets_start_request", {
-            $target: this.$target,
-            editableMode: true,
+        await new Promise((resolve, reject) => {
+            this.website.websiteRootInstance.trigger_up("widgets_start_request", {
+                $target: this.$target,
+                editableMode: true,
+                onSuccess: () => resolve(),
+                onFailure: () => reject(),
+            });
         });
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -79,8 +77,8 @@ options.registry.InstagramPage = options.Class.extend({
         if (widgetName === "setInstagramPage") {
             return this.$target[0].dataset.instagramPage;
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * Returns the instagram page name from the given url.
      *
@@ -95,9 +93,11 @@ options.registry.InstagramPage = options.Class.extend({
             return;
         }
         return pageName.split("/")[0];
-    },
-});
+    }
+}
 
-export default {
-    InstagramPage: options.registry.InstagramPage,
-};
+registry.category("snippet_options").add("InstagramPage", {
+    Class: InstagramPage,
+    template: "website.s_instagram_page_options",
+    selector: ".s_instagram_page",
+});
