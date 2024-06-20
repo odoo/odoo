@@ -10,33 +10,29 @@ class GreeceEDIDocument(models.Model):
     _description = "Greece document object for tracking all sent XML to MyDATA"
     _order = 'datetime DESC, id DESC'
 
+    move_id = fields.Many2one(comodel_name='account.move', required=True)
     state = fields.Selection(
-        selection=[('sent', 'Sent'), ('error', 'Error')],
+        selection=[('move_sent', 'Sent'), ('move_error', 'Error')],
         string='MyDATA Status',
+        required=True,
     )
-    attachment_id = fields.Binary(string='XML file')
     datetime = fields.Datetime()
-    move_id = fields.Many2one('account.move', required=True)
+    attachment_id = fields.Many2one(comodel_name='ir.attachment', string='XML file')
     message = fields.Char()
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        documents = super().create(vals_list)
-
-        for document in documents:
-            # Automatically link document to move after creation
-            document.move_id.l10n_gr_edi_document_ids |= document
-            document.move_id.l10n_gr_edi_active_document_id = document
-
-        return documents
+    def unlink(self):
+        """ Make sure any created attachments are also deleted """
+        self.attachment_id.unlink()
+        return super().unlink()
 
     def _get_attachment_file_name(self):
         self.ensure_one()
         return f"{self.move_id.name.replace('/', '_')}_xml_{self.id}.xml"
 
+    @api.model
     def _generate_xml_content(self, xml_vals, send_classification=False):
-        xml_template = 'l10n_gr_edi.l10n_gr_edi_send_invoices' if not send_classification else \
-            'l10n_gr_edi.l10n_gr_edi_send_expense_classification'
+        xml_template = 'l10n_gr_edi.send_invoice' if not send_classification else \
+            'l10n_gr_edi.send_expense_classification'
         xml_content = self.env['ir.qweb']._render(xml_template, xml_vals)
         xml_content = etree.tostring(cleanup_xml_node(xml_content), encoding='ISO-8859-7', standalone='yes')
         xml_content = xml_content.decode('iso8859_7')
@@ -76,7 +72,7 @@ class GreeceEDIDocument(models.Model):
                 headers=self.move_id.company_id._l10n_gr_edi_get_headers_credentials())
         except ConnectionError as err:
             # Handle any connection errors
-            self.state = 'error'
+            self.state = 'move_error'
             self.message = str(err)
             return
 
@@ -86,7 +82,7 @@ class GreeceEDIDocument(models.Model):
         """ Handle XML response and update document's state accordingly """
         if not response:
             # In case of status 500 (problem from the server)
-            self.state = 'error'
+            self.state = 'move_error'
             self.message = _('No response from MyDATA, please try again later.')
             return
 
@@ -101,13 +97,13 @@ class GreeceEDIDocument(models.Model):
             status_code = response_element.findtext('statusCode')
 
             if status_code == 'Success':
-                document_id.state = 'sent'
+                document_id.state = 'move_sent'
                 document_id.message = False
                 document_id.move_id.l10n_gr_edi_mark = response_element.findtext('invoiceMark')
                 # Delete all previous error documents and keep the latest successfully sent document
-                document_id.move_id.l10n_gr_edi_document_ids.filtered(lambda d: d.state != 'sent').unlink()
+                document_id.move_id.l10n_gr_edi_document_ids.filtered(lambda d: d.state != 'move_sent').unlink()
             else:
-                document_id.state = 'error'
+                document_id.state = 'move_error'
                 error_elements = response_element.xpath('./errors/error')
                 errors = (f"[{element.findtext('code')}] {element.findtext('message')}." for element in error_elements)
                 document_id.message = '\n'.join(errors)

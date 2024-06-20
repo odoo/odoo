@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="l10n_gr_edi_send_invoices">
+    <template id="send_invoice">
         <InvoicesDoc xmlns="http://www.aade.gr/myDATA/invoice/v1.0"
                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                      xmlns:icls="https://www.aade.gr/myDATA/incomeClassificaton/v1.0"
@@ -85,7 +85,7 @@
         </InvoicesDoc>
     </template>
 
-    <template id="l10n_gr_edi_send_expense_classification">
+    <template id="send_expense_classification">
         <ecls:ExpensesClassificationsDoc xmlns:ecls="https://www.aade.gr/myDATA/expensesClassificaton/v1.0">
             <ecls:expensesInvoiceClassification t-foreach="invoices" t-as="invoice">
                 <ecls:invoiceMark t-out="invoice.get('mark')"/>

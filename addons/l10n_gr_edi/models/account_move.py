@@ -10,42 +10,70 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     l10n_gr_edi_mark = fields.Char(string='MyDATA Mark')
-    l10n_gr_edi_state = fields.Selection(related='l10n_gr_edi_active_document_id.state', store=True)
-    l10n_gr_edi_message = fields.Char(related='l10n_gr_edi_active_document_id.message')
-    l10n_gr_edi_warnings = fields.Char(compute='_compute_l10n_gr_edi_warnings')
-    l10n_gr_edi_inv_type = fields.Selection(
-        selection=INVOICE_TYPES_SELECTION,
-        string='MyDATA Invoice Type',
-        compute='_compute_l10n_gr_edi_inv_type',
-        store=True,
-    )
-    l10n_gr_edi_available_inv_type = fields.Char(compute='_compute_l10n_gr_edi_available_inv_type')
-    l10n_gr_edi_correlation_id = fields.Many2one(
-        comodel_name='account.move',
-        string='MyDATA Correlated Invoice',
-        domain="[('l10n_gr_edi_mark', '!=', False), ('move_type', '=', move_type)]",
-    )
-    l10n_gr_edi_need_correlated = fields.Boolean(compute='_compute_l10n_gr_edi_need_correlated')
     l10n_gr_edi_document_ids = fields.One2many(
         comodel_name='l10n_gr_edi.document',
         inverse_name='move_id',
         copy=False,
         readonly=True,
     )
-    l10n_gr_edi_active_document_id = fields.Many2one(comodel_name='l10n_gr_edi.document')
+    l10n_gr_edi_state = fields.Selection(
+        selection=[('move_sent', 'Sent'), ('move_error', 'Error')],
+        compute='_compute_l10n_gr_edi_state',
+        store=True,
+    )
+    l10n_gr_edi_available_inv_type = fields.Char(compute='_compute_l10n_gr_edi_available_inv_type')
+    l10n_gr_edi_inv_type = fields.Selection(
+        selection=INVOICE_TYPES_SELECTION,
+        string='MyDATA Invoice Type',
+        compute='_compute_l10n_gr_edi_inv_type',
+        store=True,
+    )
+    l10n_gr_edi_correlation_id = fields.Many2one(
+        comodel_name='account.move',
+        string='MyDATA Correlated Invoice',
+        domain="[('l10n_gr_edi_mark', '!=', False), ('move_type', '=', move_type)]",
+    )
+    l10n_gr_edi_warnings = fields.Char(compute='_compute_l10n_gr_edi_warnings')
+    l10n_gr_edi_need_correlated = fields.Boolean(compute='_compute_l10n_gr_edi_need_correlated')
     l10n_gr_edi_enable_send_invoices = fields.Boolean(compute='_compute_l10n_gr_edi_enable_send')
     l10n_gr_edi_enable_send_expense_classification = fields.Boolean(compute='_compute_l10n_gr_edi_enable_send')
 
-    @api.onchange('l10n_gr_edi_inv_type')
-    def _onchange_l10n_gr_edi_inv_type(self):
+    ################################################################################
+    # Greece Document Handler
+    ################################################################################
+
+    @api.model
+    def _l10n_gr_edi_create_document_move_error(self, move, message):
+        self.env['l10n_gr_edi.document'].create({
+            'move_id': move.id,
+            'state': 'move_error',
+            'message': message,
+        })
+
+    @api.model
+    def _l10n_gr_edi_create_document_move_sent(self, move, result: dict):
+        document = self.env['l10n_gr_edi.document'].create({
+            'move_id': move.id,
+            'state': 'move_sent',
+        })
+        document.attachment_id = self.env['ir.attachment'].create({
+            'name': move._l10n_ro_edi_get_attachment_file_name(),
+            'raw': result['attachment_raw'],
+            'res_model': self._name,
+            'res_id': document.id,
+            'type': 'binary',
+            'mimetype': 'application/xml',
+        })
+
+    ################################################################################
+    # Standard Field Computes
+    ################################################################################
+
+    @api.depends('l10n_gr_edi_document_ids')
+    def _compute_l10n_gr_edi_state(self):
         for move in self:
-            move.l10n_gr_edi_correlation_id = False
-            move.invoice_line_ids.l10n_gr_edi_detail_type = False
-            move.invoice_line_ids.l10n_gr_edi_cls_vat = False
-            for line in move.invoice_line_ids:
-                preferred_classification = line._l10n_gr_edi_get_preferred_classification()
-                line.l10n_gr_edi_cls_category = preferred_classification.l10n_gr_edi_cls_category
-                line.l10n_gr_edi_cls_type = preferred_classification.l10n_gr_edi_cls_type
+            active_document = move.l10n_gr_edi_document_ids.sorted()[0]
+            move.l10n_gr_edi_state = active_document.state
 
     @api.depends('l10n_gr_edi_state')
     def _compute_show_reset_to_draft_button(self):
@@ -53,24 +81,8 @@ class AccountMove(models.Model):
         """ Prevent user from resetting the move to draft if it's already sent to MyDATA """
         super()._compute_show_reset_to_draft_button()
         for move in self:
-            if move.l10n_gr_edi_state == 'sent':
+            if move.l10n_gr_edi_state == 'move_sent':
                 move.show_reset_to_draft_button = False
-
-    @api.depends('move_type')
-    def _compute_l10n_gr_edi_inv_type(self):
-        for move in self:
-            if move.move_type in ('out_invoice', 'out_refund'):
-                move.l10n_gr_edi_inv_type = '1.1'
-            else:
-                move.l10n_gr_edi_inv_type = '13.1'
-
-    @api.depends('move_type')
-    def _compute_l10n_gr_edi_available_inv_type(self):
-        for move in self:
-            if move.move_type in ('out_invoice', 'out_refund'):
-                move.l10n_gr_edi_available_inv_type = ','.join(INVOICE_TYPES_HAVE_INCOME)
-            else:
-                move.l10n_gr_edi_available_inv_type = ','.join(INVOICE_TYPES_HAVE_EXPENSE)
 
     @api.depends('l10n_gr_edi_inv_type')
     def _compute_l10n_gr_edi_need_correlated(self):
@@ -99,50 +111,59 @@ class AccountMove(models.Model):
                 move.country_code == 'GR',
                 move.move_type in ('out_invoice', 'out_refund'),
                 move.state == 'posted',
-                move.l10n_gr_edi_state != 'sent',
+                move.l10n_gr_edi_state != 'move_sent',
                 have_payment,
             ))
             move.l10n_gr_edi_enable_send_expense_classification = all((
                 move.country_code == 'GR',
                 move.move_type in ('in_invoice', 'in_refund'),
                 move.state == 'posted',
-                move.l10n_gr_edi_state != 'sent',
+                move.l10n_gr_edi_state != 'move_sent',
                 have_payment,
             ))
 
-    def _l10n_gr_edi_get_errors_pre_request(self):
-        """ Tries to catch all possible errors before sending to MyDATA API """
+    ################################################################################
+    # Dynamic Selection Field Computes
+    ################################################################################
+
+    @api.onchange('l10n_gr_edi_inv_type')
+    def _onchange_l10n_gr_edi_inv_type(self):
+        for move in self:
+            move.l10n_gr_edi_correlation_id = False
+            move.invoice_line_ids.l10n_gr_edi_detail_type = False
+            move.invoice_line_ids.l10n_gr_edi_cls_vat = False
+            for line in move.invoice_line_ids:
+                preferred_classification = line._l10n_gr_edi_get_preferred_classification()
+                line.l10n_gr_edi_cls_category = preferred_classification.l10n_gr_edi_cls_category
+                line.l10n_gr_edi_cls_type = preferred_classification.l10n_gr_edi_cls_type
+
+    @api.depends('move_type')
+    def _compute_l10n_gr_edi_inv_type(self):
+        for move in self:
+            if move.move_type in ('out_invoice', 'out_refund'):
+                move.l10n_gr_edi_inv_type = '1.1'
+            else:
+                move.l10n_gr_edi_inv_type = '13.1'
+
+    @api.depends('move_type')
+    def _compute_l10n_gr_edi_available_inv_type(self):
+        for move in self:
+            if move.move_type in ('out_invoice', 'out_refund'):
+                move.l10n_gr_edi_available_inv_type = ','.join(INVOICE_TYPES_HAVE_INCOME)
+            else:
+                move.l10n_gr_edi_available_inv_type = ','.join(INVOICE_TYPES_HAVE_EXPENSE)
+
+    ################################################################################
+    # Helpers
+    ################################################################################
+
+    def _l10n_gr_edi_get_attachment_file_name(self):
         self.ensure_one()
-        errors = []
+        return f"mydata_{self.name.replace('/', '_')}.xml"
 
-        if not self.company_id.l10n_gr_edi_aade_id or not self.company_id.l10n_gr_edi_aade_key:
-            errors.append(_('You need to set AADE ID and Key in the company settings.'))
-        if not self.l10n_gr_edi_inv_type:
-            errors.append(_('Missing MyDATA Invoice Type'))
-        if not self.partner_id.vat:
-            errors.append(_('Missing VAT on partner %s', self.partner_id.name))
-        if not self.company_id.vat:
-            errors.append(_('Missing VAT on company %s', self.company_id.name))
-
-        for line in self.invoice_line_ids:
-            line_name = line.name or line.id
-            if not line.l10n_gr_edi_cls_category and line.l10n_gr_edi_available_cls_category:
-                errors.append(_('Missing MyDATA classification category on line %s', line_name))
-            if not line.l10n_gr_edi_cls_type \
-                    and line.l10n_gr_edi_available_cls_type \
-                    and (line.move_id.l10n_gr_edi_inv_type, line.l10n_gr_edi_cls_category) \
-                    not in COMBINATIONS_WITH_POSSIBLE_EMPTY_TYPE:
-                errors.append(_('Missing MyDATA classification type on line %s', line_name))
-            if len(line.tax_ids) > 1:
-                errors.append(_('MyDATA does not support multiple taxes on line %s', line_name))
-            if not line.tax_ids and self.l10n_gr_edi_inv_type not in TYPES_WITH_VAT_CATEGORY_8:
-                errors.append(_('Missing tax on line %s', line_name))
-            if len(line.tax_ids) == 1 and line.tax_ids.amount == 0 and not line.l10n_gr_edi_tax_exemption_category:
-                errors.append(_('Missing MyDATA Tax Exemption Category for line %s', line_name))
-            if len(line.tax_ids) == 1 and line.tax_ids.amount not in VALID_TAX_AMOUNTS:
-                errors.append(_('Invalid tax amount for line %s. The valid values are %s',
-                                line.name, ', '.join(str(tax) for tax in VALID_TAX_AMOUNTS)))
-        return errors
+    ################################################################################
+    # Prepare XML Values
+    ################################################################################
 
     @staticmethod
     def _l10n_gr_edi_get_issuer_counterpart_vals(move):
@@ -330,13 +351,51 @@ class AccountMove(models.Model):
         xml_vals = self._l10n_gr_edi_cleanup_xml_vals(xml_vals)
         return xml_vals
 
-    def l10n_gr_edi_send_invoices(self):
+    ################################################################################
+    # Send Logics
+    ################################################################################
+
+    def _l10n_gr_edi_get_errors_pre_request(self):
+        """ Tries to catch all possible errors before sending to MyDATA API """
+        self.ensure_one()
+        errors = []
+
+        if not self.company_id.l10n_gr_edi_aade_id or not self.company_id.l10n_gr_edi_aade_key:
+            errors.append(_('You need to set AADE ID and Key in the company settings.'))
+        if not self.l10n_gr_edi_inv_type:
+            errors.append(_('Missing MyDATA Invoice Type'))
+        if not self.partner_id.vat:
+            errors.append(_('Missing VAT on partner %s', self.partner_id.name))
+        if not self.company_id.vat:
+            errors.append(_('Missing VAT on company %s', self.company_id.name))
+
+        for line in self.invoice_line_ids:
+            line_name = line.name or line.id
+            if not line.l10n_gr_edi_cls_category and line.l10n_gr_edi_available_cls_category:
+                errors.append(_('Missing MyDATA classification category on line %s', line_name))
+            if not line.l10n_gr_edi_cls_type \
+                    and line.l10n_gr_edi_available_cls_type \
+                    and (line.move_id.l10n_gr_edi_inv_type, line.l10n_gr_edi_cls_category) \
+                    not in COMBINATIONS_WITH_POSSIBLE_EMPTY_TYPE:
+                errors.append(_('Missing MyDATA classification type on line %s', line_name))
+            if len(line.tax_ids) > 1:
+                errors.append(_('MyDATA does not support multiple taxes on line %s', line_name))
+            if not line.tax_ids and self.l10n_gr_edi_inv_type not in TYPES_WITH_VAT_CATEGORY_8:
+                errors.append(_('Missing tax on line %s', line_name))
+            if len(line.tax_ids) == 1 and line.tax_ids.amount == 0 and not line.l10n_gr_edi_tax_exemption_category:
+                errors.append(_('Missing MyDATA Tax Exemption Category for line %s', line_name))
+            if len(line.tax_ids) == 1 and line.tax_ids.amount not in VALID_TAX_AMOUNTS:
+                errors.append(_('Invalid tax amount for line %s. The valid values are %s',
+                                line.name, ', '.join(str(tax) for tax in VALID_TAX_AMOUNTS)))
+        return errors
+
+    def _l10n_gr_edi_send_invoices(self):
         """ Create Document(s) of XML values from selected invoice(s) and send them to MyDATA """
         xml_vals = self._l10n_gr_edi_prepare_invoice_xml_vals()
         document_ids = self.env['l10n_gr_edi.document'].create([{'move_id': move.id} for move in self])
         document_ids._send_mydata_invoices_xml(xml_vals)
 
-    def l10n_gr_edi_send_expense_classification(self):
+    def _l10n_gr_edi_send_expense_classification(self):
         """ Create XML documents for Expense Classifications and send them to MyDATA """
         xml_vals = self._l10n_gr_edi_prepare_expense_classification_xml_vals()
         document_ids = self.env['l10n_gr_edi.document'].create([{'move_id': move.id} for move in self])
@@ -352,7 +411,7 @@ class AccountMove(models.Model):
             if errors := move._l10n_gr_edi_get_errors_pre_request():
                 self.env['l10n_gr_edi.document'].create([{
                     'move_id': move.id,
-                    'state': 'error',
+                    'state': 'move_error',
                     'message': '\n'.join(errors),
                     'datetime': fields.Datetime.now(),
                 }])
@@ -361,9 +420,9 @@ class AccountMove(models.Model):
 
         if moves_to_send:
             if send_expense_classification:
-                moves_to_send.l10n_gr_edi_send_expense_classification()
+                moves_to_send._l10n_gr_edi_send_expense_classification()
             else:
-                moves_to_send.l10n_gr_edi_send_invoices()
+                moves_to_send._l10n_gr_edi_send_invoices()
 
     def l10n_gr_edi_try_send_invoices(self):
         self._l10n_gr_edi_try_send()
