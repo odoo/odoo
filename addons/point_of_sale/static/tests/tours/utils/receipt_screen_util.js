@@ -1,15 +1,15 @@
 export function clickNextOrder() {
     return [
         {
+            isActive: ["desktop"],
             content: "go to next screen",
             trigger: ".receipt-screen .button.next.highlight[name='done']",
-            mobile: false,
             run: "click",
         },
         {
+            isActive: ["mobile"],
             content: "go to next screen",
             trigger: ".receipt-screen .btn-switchpane.validation-button.highlight[name='done']",
-            mobile: true,
             run: "click",
         },
     ];
@@ -67,12 +67,12 @@ export function receiptIsThere() {
 export function totalAmountContains(value) {
     return [
         {
+            isActive: ["desktop"], // not rendered on mobile
             trigger: `.receipt-screen .top-content h1:contains("${value}")`,
-            mobile: false, // not rendered on mobile
         },
         {
+            isActive: ["mobile"], // On mobile, at least wait for the receipt screen to show
             trigger: `.receipt-screen`,
-            mobile: true, // On mobile, at least wait for the receipt screen to show
         },
     ];
 }

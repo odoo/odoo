@@ -13,26 +13,26 @@ registry.category("web_tour.tours").add("purchase_tour", {
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
+            isActive: ["community"],
             trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
             content: _t(
                 "Let's try the Purchase app to manage the flow from purchase to reception and invoice control."
             ),
             position: "right",
-            edition: "community",
             run: "click",
         },
         {
+            isActive: ["enterprise"],
             trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
             content: _t(
                 "Let's try the Purchase app to manage the flow from purchase to reception and invoice control."
             ),
             position: "bottom",
-            edition: "enterprise",
             run: "click",
         },
         {
+            isActive: ["auto"],
             trigger: ".o_purchase_order",
-            auto: true,
         },
         {
             trigger: ".o_list_button_add",
@@ -41,8 +41,8 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
+            isActive: ["auto"],
             trigger: ".o_purchase_order",
-            auto: true,
         },
         {
             trigger: ".o_form_editable .o_field_many2one[name='partner_id'] input",
@@ -51,14 +51,14 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "edit Agrolait",
         },
         {
+            isActive: ["auto"],
             trigger: ".ui-menu-item > a",
-            auto: true,
             in_modal: false,
             run: "click",
         },
         {
+            isActive: ["auto"],
             trigger: ".o_field_many2one[name='partner_id'] .o_external_button",
-            auto: true,
         },
         {
             trigger: ".o_field_x2many_list_row_add > a",
@@ -67,8 +67,8 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
+            isActive: ["auto"],
             trigger: ".o_purchase_order",
-            auto: true,
         },
         {
             trigger: ".o_field_widget[name=product_id], .o_field_widget[name=product_template_id]",
@@ -85,17 +85,17 @@ registry.category("web_tour.tours").add("purchase_tour", {
             },
         },
         {
+            isActive: ["auto"],
             trigger: '.ui-menu.ui-widget .ui-menu-item a:contains("DESK0001")',
-            auto: true,
             run: "click",
         },
         {
+            isActive: ["auto"],
             trigger: '.o_form_editable textarea[name="name"].product_creation_success',
-            auto: true,
         },
         {
+            isActive: ["auto"],
             trigger: ".o_purchase_order",
-            auto: true,
         },
         {
             trigger: ".o_form_editable input[name='product_qty'] ",
@@ -113,8 +113,8 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "edit agrolait@example.com",
         },
         {
+            isActive: ["auto"],
             trigger: ".modal-footer button[name='action_send_mail']",
-            auto: true,
         },
         {
             trigger: ".modal-footer button[name='action_send_mail']",
@@ -123,8 +123,8 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
+            isActive: ["auto"],
             trigger: ".o_purchase_order",
-            auto: true,
         },
         {
             trigger: ".o_field_widget [name=price_unit]",
@@ -135,7 +135,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "edit 200.00",
         },
         {
-            auto: true,
+            isActive: ["auto"],
             trigger: ".o_purchase_order",
             run: "click",
         },

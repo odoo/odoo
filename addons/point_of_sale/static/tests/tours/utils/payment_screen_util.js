@@ -90,15 +90,15 @@ export function clickInvoiceButton() {
 export function clickValidate() {
     return [
         {
+            isActive: ["desktop"],
             content: "validate payment",
             trigger: `.payment-screen .button.next.highlight`,
-            mobile: false,
             run: "click",
         },
         {
+            isActive: ["mobile"],
             content: "validate payment",
             trigger: `.payment-screen .btn-switchpane:contains('Validate')`,
-            mobile: true,
             run: "click",
         },
     ];
@@ -121,17 +121,17 @@ export function clickValidate() {
  * @param {String} keys space-separated numpad keys
  */
 export function clickNumpad(keys) {
-    return keys.split(" ").map((key) => Numpad.click(key, { mobile: false }));
+    return keys.split(" ").map((key) => ({ ...Numpad.click(key), isActive: ["desktop"] }));
 }
 export function clickBack() {
     return [
         {
+            isActive: ["desktop"],
             content: "click back button",
             trigger: ".back-button",
-            mobile: false,
             run: "click",
         },
-        { ...back(), mobile: true, run: "click" },
+        { ...back(), isActive: ["mobile"], run: "click" },
     ];
 }
 export function clickTipButton() {
@@ -187,19 +187,19 @@ export function enterPaymentLineAmount(lineName, keys, isCheckNeeded = false, op
 export function fillPaymentLineAmountMobile(lineName, keys) {
     return [
         {
+            isActive: ["mobile"],
             content: "click payment line",
             trigger: `.paymentlines .paymentline .payment-infos:contains("${lineName}")`,
-            mobile: true,
             run: "click",
         },
         ...NumberPopup.enterValue(keys).map((step) => ({
             ...step,
-            mobile: true,
+            isActive: ["mobile"],
             run: "click",
         })),
         {
             ...Dialog.confirm(),
-            mobile: true,
+            isActive: ["mobile"],
             run: "click",
         },
     ];
@@ -252,18 +252,18 @@ export function remainingIs(amount) {
 export function validateButtonIsHighlighted(isHighlighted = true) {
     return [
         {
+            isActive: ["desktop"],
             content: `validate button is ${isHighlighted ? "highlighted" : "not highligted"}`,
             trigger: isHighlighted
                 ? `.payment-screen .button.next.highlight`
                 : `.payment-screen .button.next:not(:has(.highlight))`,
-            mobile: false,
         },
         {
+            isActive: ["mobile"],
             content: `validate button is ${isHighlighted ? "highlighted" : "not highligted"}`,
             trigger: isHighlighted
                 ? `.payment-screen .btn-switchpane:not(.secondary):contains('Validate')`
                 : `.payment-screen .btn-switchpane.secondary:contains('Validate')`,
-            mobile: true,
         },
     ];
 }

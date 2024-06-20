@@ -33,8 +33,8 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             run: `edit ${leaveType.slice(0, leaveType.length - 1)}`,
         },
         {
+            isActive: ["auto"],
             trigger: `.ui-autocomplete .ui-menu-item a:contains("${leaveType}")`,
-            auto: true,
             in_modal: false,
             run: "click",
         },
@@ -94,9 +94,9 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             run: "click",
         },
         {
+            isActive: ["auto"],
             trigger: `tr.o_data_row:first:not(:has(button[name="action_approve"])),table tbody:not(tr.o_data_row)`,
             content: "Verify leave is approved",
-            auto: true,
         },
     ],
 });

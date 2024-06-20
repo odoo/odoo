@@ -13,12 +13,13 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', 
         run: "click",
     },
     {
+        isActive: ["mobile"],
         content: "Click on the create button to create a new mailing.",
         trigger: 'button.o_list_button_add',
-        mobile: true,
         run: "click",
     },
     {
+        isActive: ["mobile"],
         content: "Check templates available in theme selector",
         trigger: ':iframe .o_mail_theme_selector_new',
         run: function () {
@@ -26,9 +27,9 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', 
                 console.error('The empty template should not be visible on mobile.');
             }
         },
-        mobile: true,
     },
     {
+        isActive: ["mobile"],
         content: "Make sure the toolbar isn't floating",
         trigger: ':iframe',
         run: function () {
@@ -37,21 +38,21 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', 
                 console.error('There should not be a floating toolbar in the iframe');
             }
         },
-        mobile: true,
     },
     {
+        isActive: ["mobile"],
         content: "Click on the 'Start From Scratch' template.",
         trigger: ':iframe #default',
-        mobile: true,
         run: "click",
     },
     {
+        isActive: ["mobile"],
         content: "Select an editable element",
         trigger: ':iframe .s_text_block',
-        mobile: true,
         run: "click",
     },
     {
+        isActive: ["mobile"],
         content: "Make sure the snippets menu is hidden",
         trigger: ':iframe',
         run: function () {
@@ -60,14 +61,12 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', 
                 console.error('The snippet menu should be hidden');
             }
         },
-        mobile: true,
     },
     {
+        isActive: ["mobile"],
         content: "Make sure the toolbar is there",
         trigger: ':iframe #toolbar.oe-floating',
-        run: () => null, // it's a check
-        mobile: true,
     },
-    ...stepUtils.discardForm().map(command => ({...command, mobile: true})),
+    ...stepUtils.discardForm().map(command => ({...command, isActive: ["mobile"]})),
     ]
 });

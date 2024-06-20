@@ -13,22 +13,22 @@ registry.category("web_tour.tours").add("sale_tour", {
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
+            isActive: ["community"],
             trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
             content: _t("Let’s create a beautiful quotation in a few clicks ."),
             position: "right",
-            edition: "community",
             run: "click",
         },
         {
+            isActive: ["enterprise"],
             trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
             content: _t("Let’s create a beautiful quotation in a few clicks ."),
             position: "bottom",
-            edition: "enterprise",
             run: "click",
         },
         {
+            isActive: ["auto"],
             trigger: ".o_sale_order",
-            auto: true,
         },
         {
             trigger: "button.o_list_button_add",
@@ -37,8 +37,8 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
+            isActive: ["auto"],
             trigger: ".o_sale_order",
-            auto: true,
         },
         {
             trigger: ".o_field_res_partner_many2one[name='partner_id'] input",
@@ -47,8 +47,8 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "edit Agrolait",
         },
         {
+            isActive: ["auto"],
             trigger: ".ui-menu-item > a:contains('Agrolait')",
-            auto: true,
             in_modal: false,
             run: "click",
         },
@@ -59,8 +59,8 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
+            isActive: ["auto"],
             trigger: ".o_sale_order",
-            auto: true,
         },
         {
             trigger:
@@ -83,17 +83,17 @@ registry.category("web_tour.tours").add("sale_tour", {
             id: "product_selection_step",
         },
         {
+            isActive: ["auto"],
             trigger: "a:contains('DESK0001')",
-            auto: true,
             run: "click",
         },
         {
+            isActive: ["auto"],
             trigger: ".o_field_text[name='name'] textarea:value(DESK0001)",
-            auto: true,
         },
         {
+            isActive: ["auto"],
             trigger: ".oi-arrow-right", // Wait for product creation
-            auto: true,
         },
         {
             trigger: ".o_field_widget[name='price_unit'] input",
@@ -102,8 +102,8 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "edit 10.0 && click .o_selected_row",
         },
         {
+            isActive: ["auto"],
             trigger: ".o_field_monetary[name='price_subtotal']:contains(10.00)",
-            auto: true,
             run: "click",
         },
         ...stepUtils.statusbarButtonsSteps(
@@ -125,8 +125,8 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
+            isActive: ["auto"],
             trigger: "body:not(.modal-open)",
-            auto: true,
             run: "click",
         },
     ],
