@@ -67,3 +67,44 @@ class TestEventMenus(OnlineEventCase):
         # re-created from backend
         event.introduction_menu = True
         self._assert_website_menus(event, ['Introduction', 'Location', 'Register'], menus_out=['Community'])
+
+    def test_submenu_url_uniqueness(self):
+        """Ensure that the last part of the menus URL (used to retrieve the right view)
+        are unique when creating two events with same name."""
+        event_1, event_2 = self.env["event.event"].create(
+            [
+                {
+                    "name": "Test Event",
+                    "date_begin": fields.Datetime.to_string(
+                        datetime.today() + timedelta(days=1)
+                    ),
+                    "date_end": fields.Datetime.to_string(
+                        datetime.today() + timedelta(days=15)
+                    ),
+                    "website_menu": True,
+                    "community_menu": False,
+                }
+                for _ in range(2)
+            ]
+        )
+
+        # Skip the register and community menus since they already have a unique URL
+        event_1_menus = event_1.menu_id.child_id.filtered(
+            lambda menu: menu.name in ["Introduction", "Location"]
+        )
+        event_2_menus = event_2.menu_id.child_id.filtered(
+            lambda menu: menu.name in ["Introduction", "Location"]
+        )
+        for event_1_menu, event_2_menu in zip(event_1_menus, event_2_menus):
+            end_url_1 = event_1_menu.url.split("/")[-1]
+            end_url_2 = event_2_menu.url.split("/")[-1]
+            self.assertNotEqual(end_url_1, end_url_2)
+            IrUiView = self.env["ir.ui.view"]
+            self.assertEqual(
+                IrUiView.search_count([("key", "=", "website_event.%s" % end_url_1)]),
+                1,
+            )
+            self.assertEqual(
+                IrUiView.search_count([("key", "=", "website_event.%s" % end_url_2)]),
+                1,
+            )
