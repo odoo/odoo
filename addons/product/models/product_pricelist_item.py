@@ -536,16 +536,24 @@ class PricelistItem(models.Model):
         :rtype: float
         """
         pricelist_rule = self
-        if pricelist_rule and pricelist_rule.compute_price == 'percentage':
+        if pricelist_rule and pricelist_rule._is_percentage():
             pricelist_item = pricelist_rule
             # Find the lowest pricelist rule whose pricelist is configured to show the discount
             # to the customer.
             while pricelist_item.base == 'pricelist':
                 rule_id = pricelist_item.base_pricelist_id._get_product_rule(*args, **kwargs)
                 rule_pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
-                if rule_pricelist_item and rule_pricelist_item.compute_price == 'percentage':
+                if rule_pricelist_item and rule_pricelist_item._is_percentage():
                     pricelist_item = pricelist_rule
 
             pricelist_rule = pricelist_item
 
         return pricelist_rule._compute_base_price(*args, **kwargs)
+
+    def _is_percentage(self):
+        self.ensure_one()
+        return self.compute_price == 'percentage' or (
+            self.compute_price == 'formula'
+            and not self.price_surcharge
+            and not True # TODO
+        )

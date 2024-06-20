@@ -376,7 +376,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # Try to fetch geoip based fpos or fallback on partner one
         fiscal_position_sudo = website.fiscal_position_id.sudo()
-        products_prices = lazy(lambda: products._get_sales_prices(pricelist, fiscal_position_sudo))
+        products_prices = lazy(lambda: products._get_sales_prices(website))
 
         attributes_values = request.env['product.attribute.value'].browse(attrib_set)
         sorted_attributes_values = attributes_values.sorted('sequence')
