@@ -10,9 +10,9 @@ export class PickingTypeDashboardGraphField extends JournalDashboardGraphField {
         const labels = [];
         const backgroundColor = [];
 
-        const colorPast = getColor(13, cookie.get("color_scheme"));
-        const colorPresent = getColor(19, cookie.get("color_scheme"));
-        const colorFuture = getColor(5, cookie.get("color_scheme"));
+        const colorPast = getColor(8, cookie.get("color_scheme"));
+        const colorPresent = getColor(16, cookie.get("color_scheme"));
+        const colorFuture = getColor(12, cookie.get("color_scheme"));
         this.data[0].values.forEach((pt) => {
             data.push(pt.value);
             labels.push(pt.label);

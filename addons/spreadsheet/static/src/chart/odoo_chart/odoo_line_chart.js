@@ -3,7 +3,6 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
 import { OdooChart } from "./odoo_chart";
-import { LINE_FILL_TRANSPARENCY } from "@web/views/graph/graph_renderer";
 
 const { chartRegistry } = spreadsheet.registries;
 
@@ -16,6 +15,8 @@ const {
     colorToRGBA,
     rgbaToHex,
 } = spreadsheet.helpers;
+
+const LINE_FILL_TRANSPARENCY = 0.4;
 
 export class OdooLineChart extends OdooChart {
     constructor(definition, sheetId, getters) {
@@ -109,6 +110,8 @@ function getLineConfiguration(chart, labels, locale) {
     config.options.layout = {
         padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
     };
+    config.options.plugins.gridOnTop = false;
+    config.options.plugins.customHtmlLegend = false;
     config.options.scales = {
         x: {
             ticks: {

@@ -1,13 +1,15 @@
 import { _t } from "@web/core/l10n/translation";
-import { getBorderWhite, DEFAULT_BG, getColor, hexToRGBA } from "@web/core/colors/colors";
+import { getBorderWhite, DEFAULT_BG, getColor, getCustomColor, lightenColor, darkenColor } from "@web/core/colors/colors";
 import { formatFloat } from "@web/views/fields/formatters";
 import { SEP } from "./graph_model";
 import { sortBy } from "@web/core/utils/arrays";
 import { loadBundle } from "@web/core/assets";
 import { renderToString } from "@web/core/utils/render";
 import { useService } from "@web/core/utils/hooks";
+import { browser } from "@web/core/browser/browser";
+import { useDebounced } from "@web/core/utils/timing";
 
-import { Component, onWillUnmount, useEffect, useRef, onWillStart } from "@odoo/owl";
+import { Component, onWillUnmount, useEffect, useRef, onWillStart, useState, onMounted } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cookie } from "@web/core/browser/cookie";
@@ -15,7 +17,167 @@ import { ReportViewMeasures } from "@web/views/view_components/report_view_measu
 
 const NO_DATA = _t("No data");
 
-export const LINE_FILL_TRANSPARENCY = 0.4;
+const colorScheme = cookie.get("color_scheme");
+const GRAPH_GRID_COLOR = getCustomColor(colorScheme, "rgba(0,0,0,.1)", "rgba(255,255,255,.15");
+const GRAPH_LABEL_COLOR = getCustomColor(colorScheme, "#111827", "#E4E4E4");
+
+/**
+ * Custom Chart.js for Line chart:
+ * Draw the scale grid on top of the chart to
+ * see this last one correctly.
+ */
+const gridOnTop = {
+    id: 'gridOnTop',
+    afterDraw: (chart, args, options) => {
+        if(chart.config.options.plugins.gridOnTop) {
+            const elements = chart.getDatasetMeta(0).data || [];
+            const ctx = chart.ctx;
+            const chartArea = chart.chartArea;
+            const yAxis = chart.scales.y;
+            const xAxis = chart.scales.x;
+
+            ctx.lineWidth = options.gridLineWidth;
+            ctx.strokeStyle = options.gridColor;
+
+            // Draw Y axis scale
+            yAxis.ticks.forEach((value, index) => {
+                const y = yAxis.getPixelForTick(index);
+                ctx.beginPath();
+                // Draw the line scale
+                ctx.moveTo(chartArea.left, y);
+                ctx.lineTo(chartArea.right, y);
+                // Draw the tick mark
+                ctx.moveTo(chartArea.left - options.tickLength, y);
+                ctx.lineTo(chartArea.left, y);
+                ctx.setLineDash([]);
+                ctx.stroke();
+            });
+
+            // Draw X axis tick marks
+            xAxis.ticks.forEach((value, tickIndex) => {
+                const x = xAxis.getPixelForTick(tickIndex);
+                ctx.beginPath();
+                ctx.moveTo(x, chartArea.bottom);
+                ctx.lineTo(x, chartArea.bottom + options.tickLength);
+                ctx.stroke();
+            });
+
+            // Draw the X axis dashed line
+            elements.forEach((point, eltIndex) => {
+                xAxis.ticks.forEach((value, tickIndex) => {
+                    if(point.active && eltIndex === tickIndex) {
+                        const x = xAxis.getPixelForTick(tickIndex);
+                        ctx.beginPath();
+                        ctx.moveTo(x, chartArea.top,);
+                        ctx.lineTo(x, chartArea.bottom);
+                        ctx.strokeStyle = options.highlightedGridColor;
+                        ctx.stroke();
+                    }
+                });
+            });
+        }
+    }
+};
+
+/**
+ * Custom Chart.js plugin:
+ * Create custom legends and push them
+ * in o_graph_legend_container
+ */
+const customHtmlLegend = {
+    id: 'customHtmlLegend',
+    afterUpdate(chart, args, options) {
+        if(chart.config.options.plugins.customHtmlLegend) {
+            const list = document.querySelector(options.containerName);
+
+            // Remove old legend items
+            while (list.firstChild) {
+                list.firstChild.remove();
+            }
+
+            // Reuse the built-in legendItems generator
+            const items = chart.options.plugins.legend.labels.generateLabels(chart);
+            options.labels = items;
+
+            items.forEach(item => {
+                const btnWrap = document.createElement('div');
+                btnWrap.className = "col m-0 p-0";
+
+                // Button
+                const btn = document.createElement('button');
+                btn.type = "button";
+                btn.className = item.hidden ? 'opacity-50 text-decoration-line-through ' : ' ';
+                btn.className += "btn btn-light d-flex gap-2 align-items-center w-100 h-100 cursor-pointer text-start lh-sm text-break";
+
+                btn.onclick = () => {
+                    const {type} = chart.config;
+                    if (type === 'pie') {
+                        chart.toggleDataVisibility(item.index);
+                    } else {
+                        chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex));
+                    }
+                    chart.update();
+                };
+
+                // Color box
+                const boxColor = document.createElement('span');
+                boxColor.style.background = item.fillStyle;
+                boxColor.style.border= item.lineWidth + "px solid" + item.strokeStyle;
+                boxColor.className = "o_graph_legend_item_box flex-shrink-0 rounded-pill";
+
+                // Label
+                const label = document.createElement('small');
+                const text = document.createTextNode(item.text);
+                label.appendChild(text);
+
+                // Push elements in the DOM
+                btn.appendChild(boxColor);
+                btn.appendChild(label);
+                btnWrap.appendChild(btn);
+                list.appendChild(btnWrap);
+            });
+        }
+    }
+};
+
+/**
+ * Used to generate the max value of the grid (line & bar charts).
+ * The purpose is to keep a bit of space between the highest data
+ * and the top of the grid.
+ * @param {Array} data
+ * @param {Boolean} isStacked
+ * @returns {Number}
+ */
+function getMaxValue(data, isStacked) {
+    let max = 0;
+    // If there is data
+    if(data.datasets.length) {
+        if(isStacked) {
+            // Initialize an array to define the addition of values according to their index
+            let maxValues = [];
+            data.datasets[0].data.forEach((_, index) => {
+                maxValues[index] = 0;
+            });
+            // Add values for each index
+            data.datasets.forEach(dataset => {
+                dataset.data.forEach((value, index) => {
+                    maxValues[index] += value;
+                });
+            });
+            // Get the highest value
+            max = Math.max(...maxValues);
+        } else {
+            data.datasets.forEach(dataset => {
+                const datasetMax = Math.max(...dataset.data);
+                if (datasetMax > max) {
+                    max = datasetMax;
+                }
+            });
+        }
+        // Return the max value and increase it a bit
+        return max + (max * .1);
+    }
+}
 
 /**
  * @param {Object} chartArea
@@ -60,18 +222,38 @@ export class GraphRenderer extends Component {
         this.tooltip = null;
         this.legendTooltip = null;
 
+        this.state = useState({
+            isSmall: this.env.isSmall
+        });
+        this.debouncedOnResize = useDebounced(this.updateSize, 300);
+
         onWillStart(async () => {
             await loadBundle("web.chartjs_lib");
         });
 
         useEffect(() => this.renderChart());
-        onWillUnmount(this.onWillUnmount);
+        onWillUnmount(() => {
+            this.onWillUnmount;
+            browser.removeEventListener("resize", this.debouncedOnResize);
+        });
+        onMounted(() => {
+            browser.addEventListener("resize", this.debouncedOnResize);
+            this.updateSize();
+        });
     }
 
     onWillUnmount() {
         if (this.chart) {
             this.chart.destroy();
         }
+    }
+
+    /**
+     *
+     * @return {void}
+     */
+    updateSize() {
+        this.state.isSmall = this.env.isSmall;
     }
 
     /**
@@ -215,18 +397,20 @@ export class GraphRenderer extends Component {
         // style data
         const { domains, stacked } = this.model.metaData;
         const { data, lineOverlayDataset } = this.model;
+        const dashedLineColor = getCustomColor(colorScheme, "#111827", "#ffffff");
         for (let index = 0; index < data.datasets.length; ++index) {
             const dataset = data.datasets[index];
+            const itemColor = getColor(index, colorScheme, data.datasets.length);
             // used when stacked
             if (stacked) {
                 dataset.stack = domains[dataset.originIndex].description || "";
             }
             // set dataset color
-            dataset.backgroundColor = getColor(index, cookie.get("color_scheme"));
+            dataset.backgroundColor = itemColor;
+            dataset.borderRadius = 4;
         }
         if (lineOverlayDataset) {
             // Mutate the lineOverlayDataset to include the config on how it will be displayed.
-            const color = cookie.get("color_scheme") === "dark" ? "ffffff" : "000000";
             Object.assign(lineOverlayDataset, {
                 type: "line",
                 order: -1,
@@ -234,11 +418,12 @@ export class GraphRenderer extends Component {
                 fill: false,
                 borderWidth: 2,
                 borderDash: [5, 4],
-                borderColor: hexToRGBA(color, LINE_FILL_TRANSPARENCY),
-                pointHitRadius: 5,
+                borderColor: dashedLineColor,
+                pointStyle: 'rectRot',
+                pointHitRadius: 20,
                 pointRadius: 5,
                 pointHoverRadius: 10,
-                backgroundColor: hexToRGBA(color, LINE_FILL_TRANSPARENCY),
+                backgroundColor: dashedLineColor,
             });
             // We're not mutating the original datasets (`this.model.data.datasets`)
             // because some part of the code depends on it.
@@ -273,6 +458,33 @@ export class GraphRenderer extends Component {
     }
 
     /**
+     * Returns the animation options.
+     * 1. This adds progressive animation for Bar & Line charts.
+     * 2. Reduce animation duration for Pie chart.
+     * @returns {Object}
+     */
+    getAnimationOptions() {
+        let delayed;
+        const { mode } = this.model.metaData;
+        const animationOptions = {};
+        if(mode != 'pie') {
+            animationOptions.onComplete = () => {
+                delayed = true;
+            }
+            animationOptions.delay = (context) => {
+                let delay = 0;
+                if ((mode === 'bar' || mode === 'line') && !delayed) {
+                delay = context.dataIndex * 75;
+                }
+                return delay;
+            }
+        } else {
+            animationOptions.offset = { duration: 200 }
+        }
+        return animationOptions;
+    }
+
+    /**
      * Returns an object used to style chart elements independently from
      * the datasets.
      * @returns {Object}
@@ -293,13 +505,8 @@ export class GraphRenderer extends Component {
      */
     getLegendOptions() {
         const { mode } = this.model.metaData;
-        const data = this.model.data;
-        const refLength = mode === "pie" ? data.labels.length : data.datasets.length;
         const legendOptions = {
-            display: refLength <= 20,
-            position: "top",
-            onHover: this.onlegendHover.bind(this),
-            onLeave: this.onLegendLeave.bind(this),
+            display: false,
         };
         if (mode === "line") {
             legendOptions.onClick = this.onLegendClick.bind(this);
@@ -309,29 +516,25 @@ export class GraphRenderer extends Component {
                 generateLabels: (chart) => {
                     return chart.data.labels.map((label, index) => {
                         const hidden = !chart.getDataVisibility(index);
-                        const fullText = label;
-                        const text = shortenLabel(fullText);
+                        const text = label;
                         const fillStyle =
                             label === NO_DATA
                                 ? DEFAULT_BG
-                                : getColor(index, cookie.get("color_scheme"));
-                        const fontColor =
-                            cookie.get("color_scheme") === "dark"
-                                ? getColor(15, cookie.get("color_scheme"))
-                                : null;
-                        return { text, fullText, fillStyle, hidden, index, fontColor };
+                                : getColor(index, colorScheme, chart.data.labels.length);
+                        return { text, fillStyle, hidden, index };
                     });
                 },
             };
         } else {
+            legendOptions.position = "top";
+            legendOptions.align = "end";
             const referenceColor = mode === "bar" ? "backgroundColor" : "borderColor";
             legendOptions.labels = {
                 generateLabels: (chart) => {
                     const { data } = chart;
                     const labels = data.datasets.map((dataset, index) => {
                         return {
-                            text: shortenLabel(dataset.label),
-                            fullText: dataset.label,
+                            text: dataset.label,
                             fillStyle: dataset[referenceColor],
                             hidden: !chart.isDatasetVisible(index),
                             lineCap: dataset.borderCapStyle,
@@ -342,10 +545,6 @@ export class GraphRenderer extends Component {
                             strokeStyle: dataset[referenceColor],
                             pointStyle: dataset.pointStyle,
                             datasetIndex: index,
-                            fontColor:
-                                cookie.get("color_scheme") === "dark"
-                                    ? getColor(15, cookie.get("color_scheme"))
-                                    : null,
                         };
                     });
                     return labels;
@@ -360,24 +559,21 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getLineChartData() {
-        const { groupBy, domains, stacked, cumulated } = this.model.metaData;
+        const { cumulated, groupBy, domains } = this.model.metaData;
         const data = this.model.data;
-        const color0 = getColor(0, cookie.get("color_scheme"));
-        const color1 = getColor(1, cookie.get("color_scheme"));
         for (let index = 0; index < data.datasets.length; ++index) {
             const dataset = data.datasets[index];
+            const itemColor =  getColor(index, colorScheme, data.datasets.length);
+            dataset.backgroundColor = getCustomColor(colorScheme, lightenColor(itemColor, .5), darkenColor(itemColor, .5));
+            dataset.cubicInterpolationMode = 'monotone';
+            dataset.borderColor = itemColor;
+            dataset.borderWidth = 2;
+            dataset.hoverBackgroundColor = dataset.borderColor;
+            dataset.pointRadius = 3;
+            dataset.pointHoverRadius = 6;
+
             if (groupBy.length <= 1 && domains.length > 1) {
-                if (dataset.originIndex === 0) {
                     dataset.fill = "origin";
-                    dataset.backgroundColor = hexToRGBA(color0, LINE_FILL_TRANSPARENCY);
-                    dataset.borderColor = color0;
-                } else if (dataset.originIndex === 1) {
-                    dataset.borderColor = color1;
-                } else {
-                    dataset.borderColor = getColor(index, cookie.get("color_scheme"));
-                }
-            } else {
-                dataset.borderColor = getColor(index, cookie.get("color_scheme"));
             }
             if (cumulated) {
                 let accumulator = dataset.cumulatedStart;
@@ -395,20 +591,10 @@ export class GraphRenderer extends Component {
                 dataset.domains.unshift(undefined);
             }
             dataset.pointBackgroundColor = dataset.borderColor;
-            dataset.pointBorderColor = "rgba(0,0,0,0.2)";
-            if (stacked) {
-                dataset.backgroundColor = hexToRGBA(dataset.borderColor, LINE_FILL_TRANSPARENCY);
-            }
-        }
-        if (data.datasets.length === 1 && data.datasets[0].originIndex === 0) {
-            const dataset = data.datasets[0];
-            dataset.fill = "origin";
-            dataset.backgroundColor = hexToRGBA(color0, LINE_FILL_TRANSPARENCY);
         }
         // center the points in the chart (without that code they are put
         // on the left and the graph seems empty)
         data.labels = data.labels.length > 1 ? data.labels : ["", ...data.labels, ""];
-
         return data;
     }
 
@@ -421,11 +607,13 @@ export class GraphRenderer extends Component {
         const data = this.model.data;
         // style/complete data
         // give same color to same groups from different origins
-        const colors = data.labels.map((_, index) => getColor(index, cookie.get("color_scheme")));
-        const borderColor = getBorderWhite(cookie.get("color_scheme"));
+        const colors = data.labels.map((_, index) => getColor(index, colorScheme, data.labels.length));
+        const borderColor = getBorderWhite(colorScheme);
         for (const dataset of data.datasets) {
             dataset.backgroundColor = colors;
+            dataset.hoverBackgroundColor = colors;
             dataset.borderColor = borderColor;
+            dataset.hoverOffset = 60;
         }
         // make sure there is a zone associated with every origin
         const representedOriginIndexes = new Set(
@@ -460,34 +648,30 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getScaleOptions() {
-        const labels = this.model.data.labels;
-        const { allIntegers, fields, groupBy, measure, measures, mode, stacked } =
+        const { labels } = this.model.data;
+        const { allIntegers, measure, measures, mode, stacked } =
             this.model.metaData;
         if (mode === "pie") {
             return {};
         }
         const xAxe = {
             type: "category",
-            title: {
-                display: Boolean(groupBy.length),
-                text: groupBy.length ? fields[groupBy[0].fieldName].string : "",
-                color:
-                    cookie.get("color_scheme") === "dark"
-                        ? getColor(15, cookie.get("color_scheme"))
-                        : null,
-            },
             ticks: {
                 callback: (val, index) => {
                     const value = labels[index];
                     return shortenLabel(value);
                 },
-                color:
-                    cookie.get("color_scheme") === "dark"
-                        ? getColor(15, cookie.get("color_scheme"))
-                        : null,
+                color: GRAPH_LABEL_COLOR,
             },
+            grid: {
+                color: 'transparent',
+            },
+            border: {
+                display: false,
+            }
         };
         const yAxe = {
+            beginAtZero: true,
             type: "linear",
             title: {
                 text: measures[measure].string,
@@ -498,14 +682,17 @@ export class GraphRenderer extends Component {
             },
             ticks: {
                 callback: (value) => this.formatValue(value, allIntegers),
-                color:
-                    cookie.get("color_scheme") === "dark"
-                        ? getColor(15, cookie.get("color_scheme"))
-                        : null,
+                color: GRAPH_LABEL_COLOR,
             },
-            suggestedMax: 0,
-            suggestedMin: 0,
             stacked: mode === "line" && stacked ? stacked : undefined,
+            grid: {
+                display: mode === 'line' ? false : true,
+                color: GRAPH_GRID_COLOR,
+            },
+            border: {
+                display: false,
+            },
+            suggestedMax: getMaxValue(this.model.data, stacked),
         };
         return { x: xAxe, y: yAxe };
     }
@@ -562,11 +749,20 @@ export class GraphRenderer extends Component {
         const { mode } = metaData;
         const tooltipOptions = {
             enabled: false,
-            external: this.customTooltip.bind(this, data, metaData),
         };
+        tooltipOptions.external = this.customTooltip.bind(this, data, metaData);
         if (mode === "line") {
             tooltipOptions.mode = "index";
             tooltipOptions.intersect = false;
+            tooltipOptions.position = "average";
+        }
+        if(mode === "bar") {
+            tooltipOptions.xAlign = "center";
+            tooltipOptions.yAlign = "bottom";
+        }
+        if(mode === "pie") {
+            tooltipOptions.xAlign = "center";
+            tooltipOptions.yAlign = "center";
         }
         return tooltipOptions;
     }
@@ -608,47 +804,6 @@ export class GraphRenderer extends Component {
     }
 
     /**
-     * If the text of a legend item has been shortened and the user mouse
-     * hovers that item (actually the event type is mousemove), a tooltip
-     * with the item full text is displayed.
-     * @param {Event} ev
-     * @param {Object} legendItem
-     */
-    onlegendHover(ev, legendItem) {
-        ev = ev.native;
-        this.canvasRef.el.style.cursor = "pointer";
-        /**
-         * The string legendItem.text is an initial segment of legendItem.fullText.
-         * If the two coincide, no need to generate a tooltip. If a tooltip
-         * for the legend already exists, it is already good and does not
-         * need to be recreated.
-         */
-        const { fullText, text } = legendItem;
-        if (this.legendTooltip || text === fullText) {
-            return;
-        }
-        const viewContentTop = this.canvasRef.el.getBoundingClientRect().top;
-        const legendTooltip = Object.assign(document.createElement("div"), {
-            className: "o_tooltip_legend popover p-3 pe-none position-absolute",
-            innerText: fullText,
-        });
-        legendTooltip.style.top = `${ev.clientY - viewContentTop}px`;
-        legendTooltip.style.maxWidth = getMaxWidth(this.chart.chartArea);
-        this.containerRef.el.appendChild(legendTooltip);
-        this.fixTooltipLeftPosition(legendTooltip, ev.clientX);
-        this.legendTooltip = legendTooltip;
-    }
-
-    /**
-     * If there's a legend tooltip and the user mouse out of the
-     * corresponding legend item, the tooltip is removed.
-     */
-    onLegendLeave() {
-        this.canvasRef.el.style.cursor = "";
-        this.removeLegendTooltip();
-    }
-
-    /**
      * Prepares options for the chart according to the current mode
      * (= chart type). This function returns the parameter options used to
      * instantiate the chart.
@@ -661,13 +816,53 @@ export class GraphRenderer extends Component {
             plugins: {
                 legend: this.getLegendOptions(),
                 tooltip: this.getTooltipOptions(),
+                customHtmlLegend: {
+                    containerName: '.o_graph_legend_container',
+                    model: this.model,
+                },
+                gridOnTop: mode != "line" ? false : true
             },
             elements: this.getElementOptions(),
-        };
+            onResize: () => {this.resizeChart(options)},
+            animation: this.getAnimationOptions(),
+        }
         if (!disableLinking && mode !== "line") {
             options.onClick = this.onGraphClicked.bind(this);
         }
+        if(mode === "line") {
+            options.interaction = {
+                mode: 'index',
+                intersect: false,
+            }
+            options.plugins.gridOnTop = {
+                gridLineWidth: 1,
+                tickLength: 8,
+                gridColor: GRAPH_GRID_COLOR,
+                highlightedGridColor: GRAPH_GRID_COLOR,
+                highlightedLineDash: [5,5],
+            }
+        }
+        if(mode === "pie") {
+            options.radius = "90%";
+        }
         return options;
+    }
+
+    /**
+     * Adapt Pie chart layout on mobile
+     * @param {Object} context
+     */
+    resizeChart(context) {
+        const { mode } = this.model.metaData;
+        if(mode === "pie") {
+            if(this.env.isSmall) {
+                context.plugins.legend.position = "bottom";
+                context.plugins.legend.align = "center";
+            } else {
+                context.plugins.legend.position = "right";
+                context.plugins.legend.align = "start";
+            }
+        }
     }
 
     /**
@@ -696,6 +891,9 @@ export class GraphRenderer extends Component {
      * the current config.
      */
     renderChart() {
+        Chart.register(customHtmlLegend);
+        Chart.register(gridOnTop);
+
         if (this.chart) {
             this.chart.destroy();
         }
@@ -763,7 +961,9 @@ export class GraphRenderer extends Component {
      * @param {"bar"|"line"|"pie"} mode
      */
     onModeSelected(mode) {
-        this.model.updateMetaData({ mode });
+        if(this.model.metaData.mode != mode) {
+            this.model.updateMetaData({ mode });
+        }
     }
 
     /**

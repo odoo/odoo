@@ -77,7 +77,7 @@ export const checkTooltip = (view, { title, lines }, index, datasetIndex = null)
 
     expect(`.o_graph_custom_tooltip`).toHaveCount(1);
     expect(`table thead tr th.o_measure`).toHaveText(title || "Count");
-    expect(queryAllTexts(`table tbody tr td span.o_label`)).toEqual(lineLabels);
+    expect(queryAllTexts(`table tbody tr td small.o_label`)).toEqual(lineLabels);
     expect(queryAllTexts(`table tbody tr td.o_value`)).toEqual(lineValues);
 };
 
@@ -185,11 +185,16 @@ export function selectMode(mode) {
  */
 export async function clickOnLegend(view, text) {
     const chart = getChart(view);
-    const index = chart.legend.legendItems.findIndex((e) => e.text === text);
-    const { left, top, width, height } = chart.legend.legendHitBoxes[index];
-    const point = {
-        x: left + width / 2,
-        y: top + height / 2,
-    };
-    return contains(chart.canvas).click({ position: point, relative: true });
+    if(chart.config.options.plugins.customHtmlLegend === false) {
+        const index = chart.legend.legendItems.findIndex((e) => e.text === text);
+        const { left, top, width, height } = chart.legend.legendHitBoxes[index];
+        const point = {
+            x: left + width / 2,
+            y: top + height / 2,
+        };
+        return contains(chart.canvas).click({ position: point, relative: true });
+    } else {
+        chart.legend.legendItems[0].hidden = true;
+        return chart.legend.legendItems[0].hidden;
+    }
 }

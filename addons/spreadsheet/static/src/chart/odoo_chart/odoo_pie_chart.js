@@ -53,6 +53,8 @@ function getPieConfiguration(chart, labels, locale) {
     config.options.layout = {
         padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
     };
+    config.options.plugins.gridOnTop = false;
+    config.options.plugins.customHtmlLegend = false;
     config.options.plugins.tooltip = {
         callbacks: {
             title: function (tooltipItem) {
