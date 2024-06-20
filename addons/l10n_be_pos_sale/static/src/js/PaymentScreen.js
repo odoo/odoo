@@ -7,7 +7,9 @@ export const PoSSaleBePaymentScreen = (PaymentScreen) =>
     class extends PaymentScreen {
         toggleIsToInvoice() {
             const has_origin_order = this.currentOrder.get_orderlines().some(line => line.sale_order_origin_id);
-            if(this.currentOrder.is_to_invoice() && this.env.pos.company.country && this.env.pos.company.country.code === "BE" && has_origin_order){
+            if(this.currentOrder.is_to_invoice() && this.env.pos.company.country && this.env.pos.company.country.code === "BE" && has_origin_order
+                && (!this.currentOrder.partner?.country_id || this.currentOrder.partner.country_id[0] !== this.env.pos.company.country.id))
+            {
                 this.showPopup('ErrorPopup', {
                     title: this.env._t('This order needs to be invoiced'),
                     body: this.env._t('If you do not invoice imported orders you will encounter issues in your accounting. Especially in the EC Sale List report'),
