@@ -371,8 +371,8 @@ class Digest(models.Model):
         for digest in self:
             if digest.periodicity == 'daily':  # 3 days ago
                 limit_dt = today - relativedelta(days=3)
-            elif digest.periodicity == 'weekly':  # 2 weeks ago
-                limit_dt = today - relativedelta(days=14)
+            elif digest.periodicity == 'weekly':  # 1 week ago
+                limit_dt = today - relativedelta(days=7)
             elif digest.periodicity == 'monthly':  # 1 month ago
                 limit_dt = today - relativedelta(months=1)
             elif digest.periodicity == 'quarterly':  # 3 month ago
