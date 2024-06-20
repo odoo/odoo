@@ -337,6 +337,11 @@ class StockMove(models.Model):
             mo_to_cancel._action_cancel()
         return res
 
+    def _get_action_done_moves_to_cancel(self):
+        '''Do not trigger cancel of MO moves'''
+        res = super()._get_action_done_moves_to_cancel()
+        return res.filtered(lambda m: not m.production_id)
+
     def _prepare_move_split_vals(self, qty):
         defaults = super()._prepare_move_split_vals(qty)
         defaults['workorder_id'] = False
