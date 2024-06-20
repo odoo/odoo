@@ -82,6 +82,10 @@ class AccountMove(models.Model):
         compute=lambda self: self._compute_linked_attachment_id('l10n_it_edi_attachment_id', 'l10n_it_edi_attachment_file'),
         depends=['l10n_it_edi_attachment_file'],
     )
+    l10n_it_edi_attachment_preview_link = fields.Char(
+        string="Preview link",
+        compute="_compute_l10n_it_edi_attachment_preview_link",
+    )
     l10n_it_edi_is_self_invoice = fields.Boolean(compute="_compute_l10n_it_edi_is_self_invoice")
     l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo")
     l10n_it_ddt_id = fields.Many2one('l10n_it.ddt', string='DDT', copy=False)
@@ -152,6 +156,16 @@ class AccountMove(models.Model):
             "N6.7": "VJ16",
             "N6.8": "VJ17",
         }
+
+    def _compute_l10n_it_edi_attachment_preview_link(self):
+        for move in self:
+            if move.l10n_it_edi_attachment_id:
+                move.l10n_it_edi_attachment_preview_link = (
+                    move.get_base_url()
+                    + f"/fatturapa/preview/{move.l10n_it_edi_attachment_id.id}"
+                )
+            else:
+                move.l10n_it_edi_attachment_preview_link = ""
 
     # -------------------------------------------------------------------------
     # Overrides
@@ -240,6 +254,16 @@ class AccountMove(models.Model):
         if self.l10n_it_edi_state == 'being_sent':
             return {'type': 'ir.actions.client', 'tag': 'reload'}
         self._l10n_it_edi_update_send_state()
+
+    def action_l10n_it_edi_attachment_preview(self):
+        self.ensure_one()
+
+        return {
+            "type": "ir.actions.act_url",
+            "name": "Show preview",
+            "url": self.l10n_it_edi_attachment_preview_link,
+            "target": "new",
+        }
 
     def button_draft(self):
         # EXTENDS 'account'
