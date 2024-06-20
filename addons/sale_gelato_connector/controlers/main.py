@@ -31,6 +31,8 @@ class GelatoController(http.Controller):
                 )
             if event['event'] == 'order_status_updated':
                 if event.get('fulfillmentStatus') == 'canceled':
+                    sale_order.with_user(SUPERUSER_ID).sudo().with_context(
+                        {'disable_cancel_warning': True}).action_cancel()
                     sale_order.message_post(
                         email_from=sale_order.user_id.email_formatted,
                         body=self.construck_message(sale_order),
@@ -39,7 +41,7 @@ class GelatoController(http.Controller):
                         partner_ids=[sale_order.partner_id.id, ],
                     ).with_user(sale_order.user_id)
 
-                    sale_order.with_user(SUPERUSER_ID).sudo().with_context({'disable_cancel_warning': True}).action_cancel()
+
 
                 elif event.get('fulfillmentStatus') == 'failed':
                     sale_order.message_post(body=event['comment'],)
