@@ -1,4 +1,5 @@
 import { browser } from "@web/core/browser/browser";
+import { pyToJsLocale } from "@web/core/l10n/utils/locales";
 import { rpc } from "@web/core/network/rpc";
 import { Cache } from "@web/core/utils/cache";
 import { session } from "@web/session";
@@ -73,6 +74,7 @@ export function _makeUser(session) {
     };
     const getAccessRightCacheKey = (model, operation) => `${model}/${operation}`;
     const accessRightCache = new Cache(getAccessRightCacheValue, getAccessRightCacheKey);
+    const lang = pyToJsLocale(context?.lang);
 
     const user = {
         name,
@@ -88,7 +90,7 @@ export function _makeUser(session) {
             return Object.assign({}, context, { uid: this.userId });
         },
         get lang() {
-            return this.context.lang;
+            return lang;
         },
         get tz() {
             return this.context.tz;

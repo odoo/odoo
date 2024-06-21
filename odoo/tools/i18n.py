@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING, Literal, Optional, Sequence
 
 from babel import lists
@@ -9,7 +10,15 @@ from odoo.tools.misc import babel_locale_parse, get_lang
 if TYPE_CHECKING:
     import odoo.api
 
-__all__ = ["format_list"]
+XPG_LOCALE_RE = re.compile(
+    r"""^
+    ([a-z]+)      # language
+    (_[A-Z\d]+)?  # maybe _territory
+    # no support for .codeset (we don't use that in Odoo)
+    (@.+)?        # maybe @modifier
+    $""",
+    re.VERBOSE,
+)
 
 
 def format_list(
@@ -57,3 +66,39 @@ def format_list(
     if style not in locale.list_patterns:
         style = "standard"
     return lists.format_list(lst, style, locale)
+
+
+def py_to_js_locale(locale: str) -> str:
+    """
+    Converts a locale from Python to JavaScript format.
+
+    Most of the time the conversion is simply to replace _ with -.
+    Example: fr_BE → fr-BE
+
+    Exception: Serbian can be written in both Latin and Cyrillic scripts
+    interchangeably, therefore its locale includes a special modifier
+    to indicate which script to use.
+    Example: sr@latin → sr-Latn
+
+    BCP 47 (JS):
+        language[-extlang][-script][-region][-variant][-extension][-privateuse]
+        https://www.ietf.org/rfc/rfc5646.txt
+    XPG syntax (Python):
+        language[_territory][.codeset][@modifier]
+        https://www.gnu.org/software/libc/manual/html_node/Locale-Names.html
+
+    :param locale: The locale formatted for use on the Python-side.
+    :return: The locale formatted for use on the JavaScript-side.
+    """
+    match_ = XPG_LOCALE_RE.match(locale)
+    if not match_:
+        return locale
+    language, territory, modifier = match_.groups()
+    subtags = [language]
+    if modifier == "@Cyrl":
+        subtags.append("Cyrl")
+    elif modifier == "@latin":
+        subtags.append("Latn")
+    if territory:
+        subtags.append(territory.removeprefix("_"))
+    return "-".join(subtags)

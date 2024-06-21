@@ -1,6 +1,5 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
+import { pyToJsLocale } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
 import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
@@ -229,7 +228,9 @@ class MetaKeywords extends Component {
     }
 
     getLanguage() {
-        return (this.website.pageDocument.documentElement.getAttribute('lang') || 'en_US').replace('-', '_');
+        return (
+            pyToJsLocale(this.website.pageDocument.documentElement.getAttribute("lang")) || "en-US"
+        );
     }
 
     get isFull() {

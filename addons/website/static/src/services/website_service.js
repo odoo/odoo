@@ -1,5 +1,4 @@
-/** @odoo-module **/
-
+import { jsToPyLocale } from "@web/core/l10n/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
 import { user } from "@web/core/user";
@@ -153,7 +152,7 @@ export const websiteService = {
                         // denominator of editable pages.
                         editable: !!document.getElementById('wrapwrap'),
                         viewXmlid: viewXmlid,
-                        lang: document.documentElement.getAttribute('lang').replace('-', '_'),
+                        lang: jsToPyLocale(document.documentElement.getAttribute("lang")),
                         defaultLangName: defaultLangName,
                         langName: langName,
                         direction: document.documentElement.querySelector('#wrapwrap.o_rtl') ? 'rtl' : 'ltr',
