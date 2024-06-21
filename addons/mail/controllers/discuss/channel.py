@@ -31,7 +31,7 @@ class ChannelController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
-        return channel.load_more_members(known_member_ids)
+        return channel._load_more_members(known_member_ids)
 
     @http.route("/discuss/channel/update_avatar", methods=["POST"], type="json")
     def discuss_channel_avatar_update(self, channel_id, data):

@@ -777,7 +777,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {number[]} ids
      * @param {number[]} known_member_ids
      */
-    load_more_members(ids, known_member_ids) {
+    _load_more_members(ids, known_member_ids) {
         const kwargs = getKwArgs(arguments, "ids", "known_member_ids");
         ids = kwargs.ids;
         delete kwargs.ids;
@@ -795,13 +795,17 @@ export class DiscussChannel extends models.ServerModel {
         );
         const memberCount = DiscussChannelMember.search_count([["channel_id", "in", ids]]);
         return {
-            channelMembers: [
-                [
-                    "ADD",
-                    DiscussChannelMember._discuss_channel_member_format(members.map((m) => m.id)),
-                ],
+            ChannelMember: DiscussChannelMember._discuss_channel_member_format(
+                members.map((member) => member.id)
+            ),
+            Thread: [
+                {
+                    channelMembers: [["ADD", members.map((member) => ({ id: member.id }))]],
+                    id: ids[0],
+                    memberCount,
+                    model: "discuss.channel",
+                },
             ],
-            memberCount,
         };
     }
 
