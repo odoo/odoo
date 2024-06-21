@@ -784,203 +784,203 @@ class TestDiscussFullPerformance(HttpCase):
         if channel == self.channel_general and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
-                "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "fetched_message_id": False,
-                "seen_message_id": False,
                 "new_message_separator": 0,
+                "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
+                "seen_message_id": False,
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_channel_public_1 and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": {"id": last_message.id},
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
-                "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "fetched_message_id": {"id": last_message.id},
-                "seen_message_id": {"id": last_message.id},
                 "new_message_separator": last_message.id + 1,
+                "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
+                "seen_message_id": {"id": last_message.id},
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_channel_public_2 and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": {"id": last_message.id},
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
-                "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "fetched_message_id": {"id": last_message.id},
-                "seen_message_id": {"id": last_message.id},
                 "new_message_separator": last_message.id + 1,
+                "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
+                "seen_message_id": {"id": last_message.id},
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_channel_group_1 and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": {"id": last_message.id},
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
-                "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "fetched_message_id": {"id": last_message.id},
-                "seen_message_id": {"id": last_message.id},
                 "new_message_separator": last_message.id + 1,
+                "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
+                "seen_message_id": {"id": last_message.id},
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_channel_group_1 and partner == self.users[2].partner_id:
             return {
                 "id": member_2.id,
-                "thread": {"id": channel.id, "model": "discuss.channel"},
                 "persona": {"id": self.users[2].partner_id.id, "type": "partner"},
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_channel_group_2 and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": {"id": last_message.id},
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
-                "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "fetched_message_id": {"id": last_message.id},
-                "seen_message_id": {"id": last_message.id},
                 "new_message_separator": last_message.id + 1,
+                "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
+                "seen_message_id": {"id": last_message.id},
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_group_1 and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
                 "new_message_separator": 0,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "fetched_message_id": False,
                 "seen_message_id": False,
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_group_1 and partner == self.users[12].partner_id:
             return {
                 "create_date": fields.Datetime.to_string(member_12.create_date),
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": False,
                 "id": member_12.id,
                 "persona": {"id": self.users[12].partner_id.id, "type": "partner"},
-                "fetched_message_id": False,
                 "seen_message_id": False,
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_chat_1 and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
                 "new_message_separator": 0,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "fetched_message_id": False,
                 "seen_message_id": False,
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_chat_1 and partner == self.users[14].partner_id:
             return {
                 "create_date": fields.Datetime.to_string(member_14.create_date),
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": False,
                 "id": member_14.id,
                 "persona": {"id": self.users[14].partner_id.id, "type": "partner"},
-                "fetched_message_id": False,
                 "seen_message_id": False,
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_chat_2 and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
                 "new_message_separator": 0,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "fetched_message_id": False,
                 "seen_message_id": False,
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_chat_2 and partner == self.users[15].partner_id:
             return {
                 "create_date": fields.Datetime.to_string(member_15.create_date),
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": False,
                 "id": member_15.id,
                 "persona": {"id": self.users[15].partner_id.id, "type": "partner"},
-                "fetched_message_id": False,
                 "seen_message_id": False,
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_chat_3 and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
                 "new_message_separator": 0,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "fetched_message_id": False,
                 "seen_message_id": False,
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_chat_3 and partner == self.users[2].partner_id:
             return {
                 "create_date": fields.Datetime.to_string(member_2.create_date),
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": False,
                 "id": member_2.id,
                 "persona": {"id": self.users[2].partner_id.id, "type": "partner"},
-                "fetched_message_id": False,
                 "seen_message_id": False,
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_chat_4 and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
                 "new_message_separator": 0,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "fetched_message_id": False,
                 "seen_message_id": False,
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_chat_4 and partner == self.users[3].partner_id:
             return {
                 "create_date": fields.Datetime.to_string(member_3.create_date),
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": False,
                 "id": member_3.id,
                 "persona": {"id": self.users[3].partner_id.id, "type": "partner"},
-                "fetched_message_id": False,
                 "seen_message_id": False,
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_livechat_1 and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
                 "new_message_separator": 0,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "fetched_message_id": False,
                 "seen_message_id": False,
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_livechat_1 and partner == self.users[1].partner_id:
             return {
                 "create_date": fields.Datetime.to_string(member_1.create_date),
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": {"id": last_message.id},
                 "id": member_1.id,
                 "persona": {"id": self.users[1].partner_id.id, "type": "partner"},
-                "fetched_message_id": {"id": last_message.id},
                 "seen_message_id": {"id": last_message.id},
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_livechat_2 and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
                 "new_message_separator": 0,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "fetched_message_id": False,
                 "seen_message_id": False,
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_livechat_2 and guest:
             return {
                 "create_date": fields.Datetime.to_string(member_g.create_date),
-                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "fetched_message_id": {"id": last_message.id},
                 "id": member_g.id,
                 "persona": {"id": guest.id, "type": "guest"},
-                "fetched_message_id": {"id": last_message.id},
                 "seen_message_id": {"id": last_message.id},
+                "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         return {}
 
@@ -1280,11 +1280,11 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": user.partner_id.id,
                 "im_status": "online",
                 "is_company": False,
+                "isInternalUser": True,
                 "name": "Ernest Employee",
                 "out_of_office_date_end": False,
                 "type": "partner",
                 "userId": user.id,
-                "isInternalUser": True,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
             if also_livechat:
@@ -1324,11 +1324,11 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "is_company": False,
+                "isInternalUser": True,
                 "name": "test2",
                 "out_of_office_date_end": False,
                 "type": "partner",
                 "userId": user.id,
-                "isInternalUser": True,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[3]:
@@ -1338,11 +1338,11 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "is_company": False,
+                "isInternalUser": True,
                 "name": "test3",
                 "out_of_office_date_end": False,
                 "type": "partner",
                 "userId": user.id,
-                "isInternalUser": True,
                 "write_date": fields.Datetime.to_string(self.users[3].partner_id.write_date),
             }
         if user == self.users[12]:
@@ -1352,11 +1352,11 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "is_company": False,
+                "isInternalUser": True,
                 "name": "test12",
                 "out_of_office_date_end": False,
                 "type": "partner",
                 "userId": user.id,
-                "isInternalUser": True,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[14]:
@@ -1366,11 +1366,11 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "is_company": False,
+                "isInternalUser": True,
                 "name": "test14",
                 "out_of_office_date_end": False,
                 "type": "partner",
                 "userId": user.id,
-                "isInternalUser": True,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[15]:
@@ -1380,11 +1380,11 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "is_company": False,
+                "isInternalUser": True,
                 "name": "test15",
                 "out_of_office_date_end": False,
                 "type": "partner",
                 "userId": user.id,
-                "isInternalUser": True,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if guest:
@@ -1403,8 +1403,8 @@ class TestDiscussFullPerformance(HttpCase):
         if channel == self.channel_channel_group_1 and user == self.users[2]:
             return {
                 # sudo: discuss.channel.rtc.session - reading a session in a test file
-                "id": member_2.sudo().rtc_session_ids.id,
                 "channelMember": {"id": member_2.id},
+                "id": member_2.sudo().rtc_session_ids.id,
                 "isCameraOn": False,
                 "isDeaf": False,
                 "isScreenSharingOn": False,
