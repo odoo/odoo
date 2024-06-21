@@ -2,6 +2,7 @@ import { convertBrToLineBreak, prettifyMessageContent } from "@mail/utils/common
 import { rpc } from "@web/core/network/rpc";
 
 import { _t } from "@web/core/l10n/translation";
+import { pyToJsLocale } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 
@@ -153,13 +154,13 @@ export class MessageService {
 
     scheduledDateSimple(message) {
         return message.scheduledDatetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
-            locale: user.lang?.replace("_", "-"),
+            locale: pyToJsLocale(user.lang),
         });
     }
 
     dateSimple(message) {
         return message.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
-            locale: user.lang?.replace("_", "-"),
+            locale: pyToJsLocale(user.lang),
         });
     }
 }
