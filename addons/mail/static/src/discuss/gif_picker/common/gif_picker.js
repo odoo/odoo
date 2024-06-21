@@ -142,11 +142,15 @@ export class GifPicker extends Component {
 
     async loadCategories() {
         try {
+            let { language, region } = new Intl.Locale(user.lang);
+            if (!region && language === "sr") {
+                region = "RS";
+            }
             const { tags } = await rpc(
                 "/discuss/gif/categories",
                 {
-                    country: user.lang.slice(3, 5),
-                    locale: user.lang,
+                    country: region,
+                    locale: `${language}_${region}`,
                 },
                 { silent: true }
             );
@@ -174,9 +178,13 @@ export class GifPicker extends Component {
             return;
         }
         try {
+            let { language, region } = new Intl.Locale(user.lang);
+            if (!region && language === "sr") {
+                region = "RS";
+            }
             const params = {
-                country: user.lang.slice(3, 5),
-                locale: user.lang,
+                country: region,
+                locale: `${language}_${region}`,
                 search_term: this.searchTerm,
             };
             if (this.next) {

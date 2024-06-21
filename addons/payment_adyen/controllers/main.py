@@ -13,6 +13,7 @@ from werkzeug.exceptions import Forbidden
 from odoo import _, http
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.tools import py_to_js_locale
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_adyen import utils as adyen_utils
@@ -41,13 +42,13 @@ class AdyenController(http.Controller):
         # Adyen only supports a limited set of languages but, instead of looking for the closest
         # match in https://docs.adyen.com/checkout/components-web/localization-components, we simply
         # provide the lang string as is (after adapting the format) and let Adyen find the best fit.
-        lang_code = (request.context.get('lang') or 'en-US').replace('_', '-')
+        lang_code = py_to_js_locale(request.context.get('lang')) or 'en-US'
         shopper_reference = partner_sudo and f'ODOO_PARTNER_{partner_sudo.id}'
         data = {
             'merchantAccount': provider_sudo.adyen_merchant_account,
             'amount': formatted_amount,
             'countryCode': partner_sudo.country_id.code or None,  # ISO 3166-1 alpha-2 (e.g.: 'BE')
-            'shopperLocale': lang_code,  # IETF language tag (e.g.: 'fr-BE')
+            'shopperLocale': lang_code,  # IETF BCP 47 language tag (e.g.: 'fr-BE')
             'shopperReference': shopper_reference,
             'channel': 'Web',
         }

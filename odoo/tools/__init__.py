@@ -16,7 +16,7 @@ from .config import config
 from .date_utils import *
 from .float_utils import *
 from .func import *
-from .i18n import format_list
+from .i18n import format_list, py_to_js_locale
 from .image import image_process
 from .json import json_default
 from .mail import *

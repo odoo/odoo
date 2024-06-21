@@ -1,4 +1,5 @@
 import { session } from "@web/session";
+import { jsToPyLocale } from "@web/core/l10n/utils";
 import { user } from "@web/core/user";
 import { browser } from "../browser/browser";
 import { registry } from "../registry";
@@ -25,7 +26,7 @@ export const localizationService = {
     start: async () => {
         const cacheHashes = session.cache_hashes || {};
         const translationsHash = cacheHashes.translations || new Date().getTime().toString();
-        const lang = user.lang || document.documentElement.getAttribute("lang")?.replace(/-/g, "_");
+        const lang = jsToPyLocale(user.lang || document.documentElement.getAttribute("lang"));
         const translationURL = session.translationURL || "/web/webclient/translations";
         let url = `${translationURL}/${translationsHash}`;
         if (lang) {
@@ -56,21 +57,7 @@ export const localizationService = {
         translatedTerms[translationLoaded] = true;
         translationIsReady.resolve(true);
 
-        // Setup lang inside luxon. The locale codes received from the server
-        // contain "_", whereas the Intl codes use "-" (Unicode BCP 47). There
-        // is one exception, Serbian, which contains a modifier (@) to specify
-        // the script to use (either @latin or @Cyrl).
-        const language = lang || browser.navigator.language;
-        const locale = (() => {
-            switch (language) {
-                case "sr@latin":
-                    return "sr-Latn";
-                case "sr@Cyrl":
-                    return "sr-Cyrl";
-                default:
-                    return language.replaceAll("_", "-");
-            }
-        })();
+        const locale = user.lang || browser.navigator.language;
         Settings.defaultLocale = locale;
         for (const [re, numberingSystem] of NUMBERING_SYSTEMS) {
             if (re.test(locale)) {
@@ -96,7 +83,7 @@ export const localizationService = {
             multiLang,
             thousandsSep: userLocalization.thousands_sep,
             weekStart: userLocalization.week_start,
-            code: language,
+            code: jsToPyLocale(locale),
         });
         return localization;
     },

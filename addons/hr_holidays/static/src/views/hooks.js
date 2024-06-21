@@ -6,8 +6,7 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useComponent } from "@odoo/owl";
 
 export function formatNumber(lang, number, maxDecimals = 2) {
-    const userLang = lang.split("_").join("-");
-    const numberFormat = new Intl.NumberFormat(userLang, { maximumFractionDigits: maxDecimals });
+    const numberFormat = new Intl.NumberFormat(lang, { maximumFractionDigits: maxDecimals });
     return numberFormat.format(number);
 }
 

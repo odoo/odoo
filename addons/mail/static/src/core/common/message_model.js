@@ -211,7 +211,7 @@ export class Message extends Record {
 
     get dateSimple() {
         return this.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
-            locale: user.lang?.replace("_", "-"),
+            locale: user.lang,
         });
     }
 
@@ -355,7 +355,7 @@ export class Message extends Record {
 
     get scheduledDateSimple() {
         return this.scheduledDatetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
-            locale: user.lang?.replace("_", "-"),
+            locale: user.lang,
         });
     }
 

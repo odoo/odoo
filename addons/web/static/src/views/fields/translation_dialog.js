@@ -2,6 +2,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { loadLanguages, _t } from "@web/core/l10n/translation";
+import { jsToPyLocale } from "@web/core/l10n/utils";
 
 import { Component, onWillStart } from "@odoo/owl";
 
@@ -48,7 +49,7 @@ export class TranslationDialog extends Component {
                 // the user is currently utilizing. Then we set the translation value coming
                 // from the value of the field in the form
                 if (
-                    term.lang === user.lang &&
+                    term.lang === jsToPyLocale(user.lang) &&
                     !this.props.showSource &&
                     !this.props.isComingFromTranslationAlert
                 ) {
