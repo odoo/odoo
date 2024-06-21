@@ -439,7 +439,7 @@
          * @private
          */
         _checkLocationHref: function () {
-            if (window.location.href.includes('quiz_quick_create')) {
+            if (window.location.href.includes('quiz_quick_create') && this.quiz.questionsCount === 0) {
                 this._onCreateQuizClick();
             }
         },
