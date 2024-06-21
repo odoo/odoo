@@ -26,9 +26,16 @@ class UseSuggestion {
                     ) {
                         return; // no need to fetch since this is more specific than last and last had no result
                     }
-                    await this.suggestionService.fetchSuggestions(this.search, {
-                        thread: this.thread,
-                    });
+                    this.state.isFetching = true;
+                    try {
+                        await this.suggestionService.fetchSuggestions(this.search, {
+                            thread: this.thread,
+                        });
+                    } catch {
+                        this.lastFetchedSearch = null;
+                    } finally {
+                        this.state.isFetching = false;
+                    }
                     if (status(comp) === "destroyed") {
                         return;
                     }
@@ -68,6 +75,7 @@ class UseSuggestion {
     state = useState({
         count: 0,
         items: undefined,
+        isFetching: false,
     });
     search = {
         delimiter: undefined,
