@@ -9,19 +9,18 @@ export const getTaxesValues = (
     company,
     currency
 ) => {
-    const evalContext = accountTaxHelpers.eval_taxes_computation_prepare_context(
-        priceUnit,
-        quantity,
-        accountTaxHelpers.eval_taxes_computation_prepare_product_values(
+    const results = accountTaxHelpers.evaluate_taxes_computation(taxes, priceUnit, quantity, {
+        precision_rounding: currency.rounding,
+        rounding_method: company.tax_calculation_rounding_method,
+        product: accountTaxHelpers.eval_taxes_computation_prepare_product_values(
             productDefaultValues,
             product
         ),
-        {
-            rounding_method: company.tax_calculation_rounding_method,
-            precision_rounding: currency.rounding,
-        }
-    );
-    return accountTaxHelpers.computeSingleLineTaxes(taxes, evalContext);
+    });
+    for (const taxData of results.taxes_data) {
+        Object.assign(taxData, taxData.tax);
+    }
+    return results;
 };
 
 export const getTaxesAfterFiscalPosition = (taxes, fiscalPosition, models) => {

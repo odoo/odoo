@@ -6,6 +6,7 @@ from . import pos_load_mixin
 from . import account_payment
 from . import account_journal
 from . import account_tax
+from . import account_tax_group
 from . import account_move
 from . import pos_bus_mixin
 from . import barcode_rule

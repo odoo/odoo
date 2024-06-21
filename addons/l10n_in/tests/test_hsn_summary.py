@@ -34,61 +34,73 @@ class TestHSNsummary(TestTaxCommon):
         cls.cess_5_plus_1591 = cls.env['account.chart.template'].ref('cess_5_plus_1591_sale')
         cls.exempt_0 = cls.env['account.chart.template'].ref('exempt_sale')
 
-    def _add_test_py_results(self, test):
-        params = test['params']
-        if params['test'] == 'l10n_in_hsn_summary':
-            test['py_results'] = self.env['account.tax']._l10n_in_get_hsn_summary_table(params['base_lines'], params['display_uom'])
-        else:
-            super()._add_test_py_results(test)
+    def _jsonify_tax(self, tax):
+        values = super()._jsonify_tax(tax)
+        values['l10n_in_tax_type'] = tax.l10n_in_tax_type
+        return values
 
-    def _assert_sub_test_l10n_in_hsn_summary(self, test, results):
-        expected_values = test['expected_values']
+    def _jsonify_uom(self, uom):
+        return {
+            'id': uom.id,
+            'name': uom.name,
+        }
+
+    def _assert_sub_test_l10n_in_hsn_summary(self, results, expected_values):
         self.assertEqual(
-            {k: len(v) if k == 'items' else v for k, v in results.items()},
+            {k: len(v) if k == 'items' else v for k, v in results['hsn'].items()},
             {k: len(v) if k == 'items' else v for k, v in expected_values.items()},
         )
-        self.assertEqual(len(results['items']), len(expected_values['items']))
-        for item, expected_item in zip(results['items'], expected_values['items']):
+        self.assertEqual(len(results['hsn']['items']), len(expected_values['items']))
+        for item, expected_item in zip(results['hsn']['items'], expected_values['items']):
             self.assertDictEqual(item, expected_item)
 
-    def _assert_sub_test(self, test, results):
-        params = test['params']
-        if params['test'] == 'l10n_in_hsn_summary':
-            self._assert_sub_test_l10n_in_hsn_summary(test, results)
-        else:
-            super()._assert_sub_test(test, results)
+    def _create_py_sub_test_l10n_in_hsn_summary(self, base_lines, display_uom):
+        return {
+            'hsn': self.env['account.tax']._l10n_in_get_hsn_summary_table(base_lines, display_uom),
+        }
+
+    def _create_js_sub_test_l10n_in_hsn_summary(self, base_lines, display_uom):
+        new_base_lines = []
+        for base_line in base_lines:
+            base_line = dict(base_line)
+            taxes = base_line['taxes']
+            base_line['taxes'] = [self._jsonify_tax(tax) for tax in taxes]
+            base_line['product'] = self._jsonify_product(base_line['product'], taxes)
+            base_line['uom'] = self._jsonify_uom(base_line['uom'])
+            new_base_lines.append(base_line)
+        return {
+            'test': 'l10n_in_hsn_summary',
+            'display_uom': display_uom,
+            'base_lines': new_base_lines,
+        }
+
+    def assert_l10n_in_hsn_summary(
+        self,
+        base_lines,
+        expected_values,
+        display_uom=False,
+    ):
+        self._create_assert_test(
+            expected_values,
+            self._create_py_sub_test_l10n_in_hsn_summary,
+            self._create_js_sub_test_l10n_in_hsn_summary,
+            self._assert_sub_test_l10n_in_hsn_summary,
+            base_lines,
+            display_uom,
+        )
 
     def create_base_line_dict(self, l10n_in_hsn_code, quantity, price_unit, uom, taxes=None, product=None):
-        AccountTax = self.env['account.tax']
-        taxes_data = (taxes or AccountTax)._convert_to_dict_for_taxes_computation()
-        product_fields = AccountTax._eval_taxes_computation_prepare_product_fields(taxes_data)
-        default_product_values = AccountTax._eval_taxes_computation_prepare_product_default_values(product_fields)
-        product_values = AccountTax._eval_taxes_computation_prepare_product_values(
-            default_product_values=default_product_values,
-            product=product,
-        )
         return {
             'l10n_in_hsn_code': l10n_in_hsn_code,
             'quantity': quantity,
             'price_unit': price_unit,
-            'product_values': product_values,
-            'uom': {'id': uom.id, 'name': uom.name},
-            'taxes_data': taxes_data,
-        }
-
-    def _prepare_l10n_in_hsn_summary_test(self, base_lines, display_uom, expected_values):
-        return {
-            'expected_values': expected_values,
-            'params': {
-                'test': 'l10n_in_hsn_summary',
-                'base_lines': base_lines,
-                'display_uom': display_uom,
-            },
+            'product': product,
+            'uom': uom,
+            'taxes': taxes or self.env['account.tax'],
         }
 
     def test_l10n_in_hsn_summary_1(self):
         """ Test GST/IGST taxes. """
-        tests = []
         base_lines1 = [
             self.create_base_line_dict(self.test_hsn_code_1, 2.0, 100.0, self.uom_unit, self.gst_5),
             self.create_base_line_dict(self.test_hsn_code_1, 1.0, 600.0, self.uom_unit, self.gst_5),
@@ -97,9 +109,8 @@ class TestHSNsummary(TestTaxCommon):
             self.create_base_line_dict(self.test_hsn_code_1, 1.0, 600.0, self.uom_unit, self.gst_18),
             self.create_base_line_dict(self.test_hsn_code_1, 5.0, 300.0, self.uom_unit, self.gst_18),
         ]
-        tests.append(self._prepare_l10n_in_hsn_summary_test(
+        self.assert_l10n_in_hsn_summary(
             base_lines1,
-            False,
             {
                 'has_igst': False,
                 'has_gst': True,
@@ -131,16 +142,15 @@ class TestHSNsummary(TestTaxCommon):
                     },
                 ],
             },
-        ))
+        )
 
         # Change the UOM of the second line.
         base_lines2 = [
             base_lines1[0],
             self.create_base_line_dict(self.test_hsn_code_1, 1.0, 12000.0, self.uom_dozen, self.gst_5),
         ] + base_lines1[2:]
-        tests.append(self._prepare_l10n_in_hsn_summary_test(
+        self.assert_l10n_in_hsn_summary(
             base_lines2,
-            False,
             {
                 'has_igst': False,
                 'has_gst': True,
@@ -183,7 +193,7 @@ class TestHSNsummary(TestTaxCommon):
                     }
                 ]
             },
-        ))
+        )
 
         # Change GST 5% taxes to IGST.
         base_lines3 = [
@@ -191,9 +201,8 @@ class TestHSNsummary(TestTaxCommon):
             self.create_base_line_dict(self.test_hsn_code_1, 1.0, 12000.0, self.uom_dozen, self.igst_5),
             self.create_base_line_dict(self.test_hsn_code_1, 5.0, 300.0, self.uom_unit, self.igst_5),
         ] + base_lines1[3:]
-        tests.append(self._prepare_l10n_in_hsn_summary_test(
+        self.assert_l10n_in_hsn_summary(
             base_lines3,
-            False,
             {
                 'has_igst': True,
                 'has_gst': True,
@@ -236,16 +245,15 @@ class TestHSNsummary(TestTaxCommon):
                     },
                 ],
             },
-        ))
+        )
 
         # Put back the UOM of the second line to unit.
         base_lines4 = [
             base_lines3[0],
             self.create_base_line_dict(self.test_hsn_code_1, 1.0, 600.0, self.uom_unit, self.igst_5),
         ] + base_lines3[2:]
-        tests.append(self._prepare_l10n_in_hsn_summary_test(
+        self.assert_l10n_in_hsn_summary(
             base_lines4,
-            False,
             {
                 'has_igst': True,
                 'has_gst': True,
@@ -277,7 +285,7 @@ class TestHSNsummary(TestTaxCommon):
                     },
                 ],
             },
-        ))
+        )
 
         # Change GST 18% taxes to IGST.
         base_lines5 = base_lines4[:3] + [
@@ -285,9 +293,8 @@ class TestHSNsummary(TestTaxCommon):
             self.create_base_line_dict(self.test_hsn_code_1, 1.0, 600.0, self.uom_unit, self.igst_18),
             self.create_base_line_dict(self.test_hsn_code_1, 5.0, 300.0, self.uom_unit, self.igst_18),
         ]
-        tests.append(self._prepare_l10n_in_hsn_summary_test(
+        self.assert_l10n_in_hsn_summary(
             base_lines5,
-            False,
             {
                 'has_igst': True,
                 'has_gst': False,
@@ -319,22 +326,19 @@ class TestHSNsummary(TestTaxCommon):
                     },
                 ],
             },
-        ))
-        self._assert_tests(tests)
+        )
+        self._run_js_tests()
 
     def test_l10n_in_hsn_summary_2(self):
         """ Test CESS taxes in combination with GST/IGST. """
-        tests = []
-
         # Need the tax to be evaluated at the end.
         self.cess_5_plus_1591.sequence = 100
 
         base_lines1 = [
             self.create_base_line_dict(self.test_hsn_code_1, 1.0, 15.80, self.uom_unit, self.gst_18 + self.cess_5_plus_1591),
         ]
-        tests.append(self._prepare_l10n_in_hsn_summary_test(
+        self.assert_l10n_in_hsn_summary(
             base_lines1,
-            False,
             {
                 'has_igst': False,
                 'has_gst': True,
@@ -355,15 +359,14 @@ class TestHSNsummary(TestTaxCommon):
                     },
                 ],
             },
-        ))
+        )
 
         # Change GST 18% taxes to IGST.
         base_lines2 = [
             self.create_base_line_dict(self.test_hsn_code_1, 1.0, 15.80, self.uom_unit, self.igst_18 + self.cess_5_plus_1591),
         ]
-        tests.append(self._prepare_l10n_in_hsn_summary_test(
+        self.assert_l10n_in_hsn_summary(
             base_lines2,
-            False,
             {
                 'has_igst': True,
                 'has_gst': False,
@@ -384,21 +387,19 @@ class TestHSNsummary(TestTaxCommon):
                     },
                 ],
             },
-        ))
-        self._assert_tests(tests)
+        )
+        self._run_js_tests()
 
     def test_l10n_in_hsn_summary_3(self):
         """ Test with mixed HSN codes. """
-        tests = []
         base_lines1 = [
             self.create_base_line_dict(self.test_hsn_code_1, 1.0, 100.0, self.uom_unit, self.gst_18),
             self.create_base_line_dict(self.test_hsn_code_1, 2.0, 50.0, self.uom_unit, self.gst_18),
             self.create_base_line_dict(self.test_hsn_code_2, 1.0, 100.0, self.uom_unit, self.gst_18),
             self.create_base_line_dict(self.test_hsn_code_2, 2.0, 50.0, self.uom_unit, self.gst_18),
         ]
-        tests.append(self._prepare_l10n_in_hsn_summary_test(
+        self.assert_l10n_in_hsn_summary(
             base_lines1,
-            False,
             {
                 'has_igst': False,
                 'has_gst': True,
@@ -430,7 +431,7 @@ class TestHSNsummary(TestTaxCommon):
                     },
                 ],
             },
-        ))
+        )
 
         # Change GST 18% taxes to IGST.
         base_lines2 = [
@@ -439,9 +440,8 @@ class TestHSNsummary(TestTaxCommon):
             self.create_base_line_dict(self.test_hsn_code_2, 1.0, 100.0, self.uom_unit, self.igst_18),
             self.create_base_line_dict(self.test_hsn_code_2, 2.0, 50.0, self.uom_unit, self.igst_18),
         ]
-        tests.append(self._prepare_l10n_in_hsn_summary_test(
+        self.assert_l10n_in_hsn_summary(
             base_lines2,
-            False,
             {
                 'has_igst': True,
                 'has_gst': False,
@@ -473,19 +473,17 @@ class TestHSNsummary(TestTaxCommon):
                     },
                 ],
             },
-        ))
-        self._assert_tests(tests)
+        )
+        self._run_js_tests()
 
     def test_l10n_in_hsn_summary_4(self):
         """ Zero rated GST or no taxes at all."""
-        tests = []
         base_lines1 = [
             self.create_base_line_dict(self.test_hsn_code_1, 1.0, 350.0, self.uom_unit),
             self.create_base_line_dict(self.test_hsn_code_1, 1.0, 350.0, self.uom_unit),
         ]
-        tests.append(self._prepare_l10n_in_hsn_summary_test(
+        self.assert_l10n_in_hsn_summary(
             base_lines1,
-            False,
             {
                 'has_igst': False,
                 'has_gst': False,
@@ -506,16 +504,15 @@ class TestHSNsummary(TestTaxCommon):
                     },
                 ],
             },
-        ))
+        )
 
         # No tax to IGST 0%/exempt.
         base_lines2 = [
             self.create_base_line_dict(self.test_hsn_code_1, 1.0, 350.0, self.uom_unit, self.igst_0),
             self.create_base_line_dict(self.test_hsn_code_1, 1.0, 350.0, self.uom_unit, self.exempt_0),
         ]
-        tests.append(self._prepare_l10n_in_hsn_summary_test(
+        self.assert_l10n_in_hsn_summary(
             base_lines2,
-            False,
             {
                 'has_igst': False,
                 'has_gst': False,
@@ -536,16 +533,15 @@ class TestHSNsummary(TestTaxCommon):
                     },
                 ],
             },
-        ))
+        )
 
         # Put one IGST 18% to get a value on the IGST column.
         base_lines3 = [
             self.create_base_line_dict(self.test_hsn_code_1, 1.0, 350.0, self.uom_unit, self.igst_18),
             base_lines2[1],
         ]
-        tests.append(self._prepare_l10n_in_hsn_summary_test(
+        self.assert_l10n_in_hsn_summary(
             base_lines3,
-            False,
             {
                 'has_igst': True,
                 'has_gst': False,
@@ -577,5 +573,5 @@ class TestHSNsummary(TestTaxCommon):
                     },
                 ],
             },
-        ))
-        self._assert_tests(tests)
+        )
+        self._run_js_tests()

@@ -186,7 +186,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
 
     def _apply_invoice_tax_filter(self, base_line, tax_values):
         """ Override to filter out withholding tax """
-        tax_id = self.env['account.tax'].browse(tax_values['id'])
+        tax_id = tax_values['tax']
         res = not tax_id.l10n_sa_is_retention
         # If the move that is being sent is not a down payment invoice, and the sale module is installed
         # we need to make sure the line is neither retention, nor a down payment line

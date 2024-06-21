@@ -24,7 +24,7 @@
 
                 <div t-foreach="props.data.tax_details" t-as="tax" t-key="tax.id" class="d-flex">
                     <t t-if="showTaxGroupLabels">
-                        <span t-if="tax._pos_receipt_label" t-esc="tax._pos_receipt_label" class="me-2"/>
+                        <span t-if="tax.tax_group_id.pos_receipt_label" t-esc="tax.tax_group_id.pos_receipt_label" class="me-2"/>
                         <span t-else="" class="me-2" style="visibility: hidden;">A</span>
                     </t>
                     <span>
