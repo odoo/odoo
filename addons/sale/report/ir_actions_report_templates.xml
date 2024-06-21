@@ -67,6 +67,7 @@
 
             <!-- Is there a discount on at least one line? -->
             <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
+            <t t-set="show_tax" t-value="doc.company_id.show_invoice_tax"/>
             <t t-set="display_discount" t-value="any(l.discount for l in lines_to_report)"/>
 
             <div class="oe_structure"></div>
@@ -80,7 +81,7 @@
                         <th name="th_discount" t-if="display_discount" class="text-end">
                             <span>Disc.%</span>
                         </th>
-                        <th name="th_taxes" class="text-end">Taxes</th>
+                        <th t-if="show_tax" name="th_taxes" class="text-end">Taxes</th>
                         <th name="th_subtotal" class="text-end">
                             <span>Amount</span>
                         </th>
@@ -110,10 +111,12 @@
                                 <td t-if="display_discount" class="text-end">
                                     <span t-field="line.discount">-</span>
                                 </td>
-                                <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_id])"/>
-                                <td name="td_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
-                                    <span t-out="taxes">Tax 15%</span>
-                                </td>
+                                <t t-if="show_tax">
+                                    <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_id])"/>
+                                    <td name="td_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                        <span t-out="taxes">Tax 15%</span>
+                                    </td>
+                                </t>
                                 <td t-if="not line.is_downpayment" name="td_subtotal" class="text-end o_price_total">
                                     <span t-field="line.price_subtotal">27.00</span>
                                 </td>
