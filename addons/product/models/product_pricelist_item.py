@@ -122,14 +122,14 @@ class PricelistItem(models.Model):
         digits='Product Price',
         help="Sets the price so that it is a multiple of this value.\n"
              "Rounding is applied after the discount and before the surcharge.\n"
-             "To have prices that end in 9.99, set rounding 10, surcharge -0.01")
+             "To have prices that end in 9.99, round off to 10.00 and set an extra at -0.01")
     price_surcharge = fields.Float(
         string="Extra Fee",
         digits='Product Price',
         help="Specify the fixed amount to add or subtract (if negative) to the amount calculated with the discount.")
 
-    price_discount_surcharge = fields.Float(
-        string="Surcharge",
+    price_markup = fields.Float(
+        string="Markup",
         default=0,
         digits=(16, 2),
         help="You can apply a mark-up on the cost")
@@ -172,13 +172,24 @@ class PricelistItem(models.Model):
             if item.compute_price == 'fixed':
                 item.price = formatLang(
                     item.env, item.fixed_price, monetary=True, dp="Product Price", currency_obj=item.currency_id)
-            elif item.compute_price == 'percentage' or not (surcharge := item.price_surcharge):
-                percent_price = item.price_discount if item.compute_price == 'formula' else item.percent_price
-                percentage = int(percent_price) if percent_price.is_integer() else percent_price
+            elif item.compute_price == 'percentage':
+                percentage = self._get_integer(item.percent_price)
                 item.price = _("%s %% discount", percentage)
             else:
-                percentage = int(item.price_discount) if item.price_discount.is_integer() else item.price_discount
-                item.price = _("%(percentage)s %% discount and %(price)s surcharge", percentage=percentage, price=surcharge)
+                discount_type, percentage = self._get_displayed_discount(item)
+                if not (surcharge := item.price_surcharge):
+                    item.price = _(
+                        "%(percentage)s %% %(discount_type)s",
+                        percentage=percentage,
+                        discount_type=discount_type,
+                    )
+                else:
+                    item.price = _(
+                        "%(percentage)s %% %(discount_type)s and %(price)s surcharge",
+                        percentage=percentage,
+                        price=surcharge,
+                        discount_type=discount_type,
+                    )
 
     @api.depends_context('lang')
     @api.depends('compute_price', 'price_discount', 'price_surcharge', 'base', 'price_round')
@@ -194,11 +205,14 @@ class PricelistItem(models.Model):
             if item.price_round:
                 discounted_price = tools.float_round(discounted_price, precision_rounding=item.price_round)
             surcharge = tools.format_amount(item.env, item.price_surcharge, item.currency_id)
+            discount_type, discount = self._get_displayed_discount(item)
+
             item.rule_tip = _(
-                "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
+                "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra fee\n"
                 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s",
                 base=base_selection_vals[item.base],
-                discount=item.price_discount,
+                discount=discount,
+                discount_type=discount_type,
                 surcharge=surcharge,
                 amount=tools.format_amount(item.env, 100, item.currency_id),
                 discount_charge=discount_factor,
@@ -206,6 +220,14 @@ class PricelistItem(models.Model):
                 total_amount=tools.format_amount(
                     item.env, discounted_price + item.price_surcharge, item.currency_id),
             )
+
+    def _get_integer(self, percentage):
+        return int(percentage) if percentage.is_integer() else percentage
+
+    def _get_displayed_discount(self, item):
+        if item.base == 'standard_price':
+            return "markup", self._get_integer(item.price_markup)
+        return "discount", self._get_integer(item.price_discount)
 
     #=== CONSTRAINT METHODS ===#
 
@@ -247,7 +269,7 @@ class PricelistItem(models.Model):
         for item in self:
             item.update({
                 'price_discount': 0.0,
-                'price_discount_surcharge': 0.0,
+                'price_markup': 0.0,
             })
 
     @api.onchange('compute_price')
@@ -261,7 +283,7 @@ class PricelistItem(models.Model):
                 'base': 'list_price',
                 'price_discount': 0.0,
                 'price_surcharge': 0.0,
-                'price_discount_surcharge': 0.0,
+                'price_markup': 0.0,
                 'price_round': 0.0,
                 'price_min_margin': 0.0,
                 'price_max_margin': 0.0,
@@ -270,26 +292,30 @@ class PricelistItem(models.Model):
     @api.onchange('display_applied_on')
     def _onchange_display_applied_on(self):
         for item in self:
-            if item.display_applied_on == '1_product':
+            if not (item.product_tmpl_id or item.categ_id):
                 item.update(dict(
-                    applied_on='1_product',
-                    compute_price='fixed',
+                    applied_on='3_global',
+                    display_applied_on = '1_product',
                     categ_id=None,
                 ))
-            if item.display_applied_on == '2_product_category':
+            elif item.display_applied_on == '1_product':
+                item.update(dict(
+                    applied_on='1_product',
+                    categ_id=None,
+                ))
+            elif item.display_applied_on == '2_product_category':
                 item.update(dict(
                     product_id=None,
                     product_tmpl_id=None,
                     applied_on='2_product_category',
-                    compute_price='percentage',
                     product_uom=None,
                 ))
 
-    @api.onchange('price_discount_surcharge')
-    def _onchange_price_discount_surcharge(self):
+    @api.onchange('price_markup')
+    def _onchange_price_markup(self):
         for item in self:
-            if item.price_discount_surcharge:
-                item.price_discount = -item.price_discount_surcharge
+            if item.price_markup:
+                item.price_discount = -item.price_markup
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -326,6 +352,10 @@ class PricelistItem(models.Model):
     def _onchange_price_round(self):
         if any(item.price_round and item.price_round < 0.0 for item in self):
             raise ValidationError(_("The rounding method must be strictly positive."))
+
+    @api.onchange('date_start','date_end')
+    def _onchange_validity_period(self):
+        self._check_date_range()
 
     #=== CRUD METHODS ===#
 

@@ -79,6 +79,7 @@
                         <field name="group_product_pricelist"/>
                         <div class="content-group o_row gap-2 mt16" invisible="not group_product_pricelist">
                             <label for="selectable_pricelist_ids"/>
+                            <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
                             <field name="selectable_pricelist_ids" widget="many2many_tags"/>
                         </div>
                         <div invisible="not group_product_pricelist">

@@ -106,16 +106,12 @@ class ProductPricelist(models.Model):
         ''' Check above `_is_available_on_website` for explanation.
         Change in this method should be reflected in `_is_available_on_website`.
         '''
-        if website.company_id:
-            default_pricelist = website.company_id._get_default_pricelist_vals()
         return [
             ('active', '=', True),
             ('company_id', 'in', [False, website.company_id.id]),
-            '|', '|', ('website_ids', 'any', [('id', '=', website.id)]),
+            '|', ('website_ids', 'any', [('id', '=', website.id)]),
             '&', ('website_ids', '=', False),
             ('code', '!=', False),
-            # If default pricelist
-            ('name', '=', default_pricelist['name']),
         ]
 
     def _is_selectable(self):
