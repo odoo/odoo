@@ -78,7 +78,8 @@ class AccountMove(models.Model):
         if enasarco_taxes:
             enasarco_values = {}
             enasarco_details = self._prepare_invoice_aggregated_taxes(
-                    filter_tax_values_to_apply=lambda line, tax_values: self.env['account.tax'].browse([tax_values['id']]).l10n_it_pension_fund_type == 'TC07')
+                    filter_tax_values_to_apply=lambda line, tax_values: tax_values['tax'].l10n_it_pension_fund_type == 'TC07'
+            )
             for detail in enasarco_details['tax_details_per_record'].values():
                 for subdetail in detail['tax_details'].values():
                     # Withholdings are removed from the total, we have to re-add them

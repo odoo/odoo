@@ -18,29 +18,21 @@ patch(accountTaxHelpers, {
 
             const price_unit = base_line.price_unit;
             const quantity = base_line.quantity;
-            const product_values = base_line.product_values;
+            const product = base_line.product;
             const uom = base_line.uom || {};
-            const taxes_data = base_line.taxes_data;
+            const taxes = base_line.taxes;
 
             // Compute the taxes.
-            const evaluation_context = this.eval_taxes_computation_prepare_context(
-                price_unit,
-                quantity,
-                product_values,
-                {
-                    rounding_method: "round_per_line",
-                    precision_rounding: 0.01,
-                }
-            );
-            const taxes_computation = this.eval_taxes_computation(
-                this.prepare_taxes_computation(taxes_data, evaluation_context),
-                evaluation_context
-            );
+            const taxes_computation = this.evaluate_taxes_computation(taxes, price_unit, quantity, {
+                precision_rounding: 0.01,
+                rounding_method: "round_per_line",
+                product: product,
+            });
 
             // Rate.
             const gst_tax_amounts = taxes_computation.taxes_data
-                .filter((x) => ["igst", "cgst", "sgst"].includes(x._l10n_in_tax_type))
-                .map((x) => [x.id, x.amount]);
+                .filter((x) => ["igst", "cgst", "sgst"].includes(x.tax.l10n_in_tax_type))
+                .map((x) => [x.tax.id, x.tax.amount]);
             let rate = 0;
             for (const [, tax_amount] of gst_tax_amounts) {
                 rate += tax_amount;
@@ -71,10 +63,9 @@ patch(accountTaxHelpers, {
             }
 
             for (const tax_data of taxes_computation.taxes_data) {
-                if (tax_data._l10n_in_tax_type) {
-                    results_map[keyStr].tax_amounts[tax_data._l10n_in_tax_type] +=
-                        tax_data.tax_amount_factorized;
-                    l10n_in_tax_types.add(tax_data._l10n_in_tax_type);
+                if (tax_data.tax.l10n_in_tax_type) {
+                    results_map[keyStr].tax_amounts[tax_data.tax.l10n_in_tax_type] += tax_data.tax_amount;
+                    l10n_in_tax_types.add(tax_data.tax.l10n_in_tax_type);
                 }
             }
         }

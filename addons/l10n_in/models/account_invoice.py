@@ -179,18 +179,12 @@ class AccountMove(models.Model):
 
         base_lines = []
         for line in self.invoice_line_ids.filtered(lambda x: x.display_type == 'product'):
-            taxes_data = line.tax_ids._convert_to_dict_for_taxes_computation()
-            product_values = self.env['account.tax']._eval_taxes_computation_turn_to_product_values(
-                taxes_data,
-                product=line.product_id,
-            )
-
             base_lines.append({
                 'l10n_in_hsn_code': line.l10n_in_hsn_code,
                 'quantity': line.quantity,
                 'price_unit': line.price_unit,
-                'product_values': product_values,
-                'uom': {'id': line.product_uom_id.id, 'name': line.product_uom_id.name},
-                'taxes_data': taxes_data,
+                'product': line.product_id,
+                'uom': line.product_uom_id,
+                'taxes': line.tax_ids,
             })
         return self.env['account.tax']._l10n_in_get_hsn_summary_table(base_lines, display_uom)
