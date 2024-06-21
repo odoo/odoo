@@ -1,62 +1,68 @@
-/** @odoo-module */
-import { click } from "@web/../tests/helpers/utils";
-import { mountPublicSpreadsheet } from "@spreadsheet/../tests/legacy/utils/ui";
-import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/legacy/utils/global_filter";
-import { addGlobalFilter } from "@spreadsheet/../tests/legacy/utils/commands";
+import { contains, mockService } from "@web/../tests/web_test_helpers";
+import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
+import { describe, expect, test } from "@odoo/hoot";
+
+import { mountPublicSpreadsheet } from "@spreadsheet/../tests/helpers/ui";
+import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
+import { addGlobalFilter } from "@spreadsheet/../tests/helpers/commands";
 import { freezeOdooData } from "@spreadsheet/helpers/model";
-import { createModelWithDataSource } from "@spreadsheet/../tests/legacy/utils/model";
+import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 
-QUnit.module("Public spreadsheet", {}, function () {
-    QUnit.test("show spreadsheet in readonly mode", async function (assert) {
-        const model = await createModelWithDataSource();
-        await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
-        const data = await freezeOdooData(model);
-        const fixture = await mountPublicSpreadsheet(data, "dashboardDataUrl", "spreadsheet");
-        const filterButton = fixture.querySelector(".o-public-spreadsheet-filter-button");
-        assert.equal(filterButton, null);
-    });
+describe.current.tags("headless");
+defineSpreadsheetModels();
 
-    QUnit.test(
-        "show dashboard in dashboard mode when there are global filters",
-        async function (assert) {
-            const model = await createModelWithDataSource();
-            await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
-            const data = await freezeOdooData(model);
-            const fixture = await mountPublicSpreadsheet(data, "dashboardDataUrl", "dashboard");
-            const filterButton = fixture.querySelector(".o-public-spreadsheet-filter-button");
-            assert.isVisible(filterButton);
+let data;
+mockService("http", {
+    get: (route, params) => {
+        if (route === "dashboardDataUrl") {
+            return data;
         }
-    );
+    },
+});
 
-    QUnit.test(
-        "show dashboard in dashboard mode when there are no global filters",
-        async function (assert) {
-            const model = await createModelWithDataSource();
-            const data = await freezeOdooData(model);
-            const fixture = await mountPublicSpreadsheet(data, "dashboardDataUrl", "dashboard");
-            const filterButton = fixture.querySelector(".o-public-spreadsheet-filter-button");
-            assert.equal(filterButton, null);
-        }
-    );
+test("show spreadsheet in readonly mode", async function () {
+    const model = await createModelWithDataSource();
+    await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
+    data = await freezeOdooData(model);
+    const fixture = await mountPublicSpreadsheet("dashboardDataUrl", "spreadsheet");
+    const filterButton = fixture.querySelector(".o-public-spreadsheet-filter-button");
+    expect(filterButton).toBe(null);
+});
 
-    QUnit.test("click filter button can show all filters", async function (assert) {
-        const model = await createModelWithDataSource();
-        await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
-        const data = await freezeOdooData(model);
-        const fixture = await mountPublicSpreadsheet(data, "dashboardDataUrl", "dashboard");
-        await click(fixture, ".o-public-spreadsheet-filter-button");
-        assert.isVisible(fixture.querySelector(".o-public-spreadsheet-filters"));
-        assert.equal(fixture.querySelector(".o-public-spreadsheet-filter-button"), null);
-    });
+test("show dashboard in dashboard mode when there are global filters", async function () {
+    const model = await createModelWithDataSource();
+    await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
+    data = await freezeOdooData(model);
+    const fixture = await mountPublicSpreadsheet("dashboardDataUrl", "dashboard");
+    const filterButton = fixture.querySelector(".o-public-spreadsheet-filter-button");
+    expect(filterButton).toBeVisible();
+});
 
-    QUnit.test("click close button in filter panel will close the panel", async function (assert) {
-        const model = await createModelWithDataSource();
-        await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
-        const data = await freezeOdooData(model);
-        const fixture = await mountPublicSpreadsheet(data, "dashboardDataUrl", "dashboard");
-        await click(fixture, ".o-public-spreadsheet-filter-button");
-        await click(fixture, ".o-public-spreadsheet-filters-close-button");
-        assert.isVisible(fixture.querySelector(".o-public-spreadsheet-filter-button"));
-        assert.equal(fixture.querySelector(".o-public-spreadsheet-filters"), null);
-    });
+test("show dashboard in dashboard mode when there are no global filters", async function () {
+    const model = await createModelWithDataSource();
+    data = await freezeOdooData(model);
+    const fixture = await mountPublicSpreadsheet("dashboardDataUrl", "dashboard");
+    const filterButton = fixture.querySelector(".o-public-spreadsheet-filter-button");
+    expect(filterButton).toBe(null);
+});
+
+test("click filter button can show all filters", async function () {
+    const model = await createModelWithDataSource();
+    await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
+    data = await freezeOdooData(model);
+    const fixture = await mountPublicSpreadsheet("dashboardDataUrl", "dashboard");
+    await contains(".o-public-spreadsheet-filter-button").click();
+    expect(fixture.querySelector(".o-public-spreadsheet-filters")).toBeVisible();
+    expect(fixture.querySelector(".o-public-spreadsheet-filter-button")).toBe(null);
+});
+
+test("click close button in filter panel will close the panel", async function () {
+    const model = await createModelWithDataSource();
+    await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
+    data = await freezeOdooData(model);
+    const fixture = await mountPublicSpreadsheet("dashboardDataUrl", "dashboard");
+    await contains(".o-public-spreadsheet-filter-button").click();
+    await contains(".o-public-spreadsheet-filters-close-button").click();
+    expect(fixture.querySelector(".o-public-spreadsheet-filter-button")).toBeVisible();
+    expect(fixture.querySelector(".o-public-spreadsheet-filters")).toBe(null);
 });
