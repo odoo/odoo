@@ -113,16 +113,26 @@ class ProductProduct(models.Model):
 
     def _load_pos_data(self, data):
         domain = self._load_pos_data_domain(data)
-        fields = self._load_pos_data_fields(data['pos.config']['data'][0]['id'])
-        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+
+        # Add custom fields for 'formula' taxes.
+        fields = set(self._load_pos_data_fields(data['pos.config']['data'][0]['id']))
+        taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain(data))
+        product_fields = taxes._eval_taxes_computation_prepare_product_fields()
+        fields = list(fields.union(product_fields))
+
+        config = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
         products = self.with_context({**self.env.context, 'display_default_code': False}).search_read(
             domain,
             fields,
-            limit=config_id.get_limited_product_count(),
+            limit=config.get_limited_product_count(),
             order='sequence,default_code,name',
             load=False)
 
-        self._process_pos_ui_product_product(products, config_id)
+        if '_product_default_values' not in data['pos.config']['data'][0]:
+            data['pos.config']['data'][0]['_product_default_values'] = \
+                self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
+
+        self._process_pos_ui_product_product(products, config)
         return {
             'data': products,
             'fields': fields,
