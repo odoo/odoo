@@ -42,6 +42,10 @@ class HrAttendance(models.Model):
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
     color = fields.Integer(compute='_compute_color')
     overtime_hours = fields.Float(string="Over Time", compute='_compute_overtime_hours', store=True)
+    overtime_status = fields.Selection(selection=[('to_approve', "To Approve"),
+                                                  ('approved', "Approved"),
+                                                  ('refused', "Refused")], compute="_compute_overtime_status", store=True, tracking=True)
+    validated_overtime_hours = fields.Float(string="Extra Hours", compute='_compute_validated_overtime_hours', store=True, readonly=False, tracking=True)
     in_latitude = fields.Float(string="Latitude", digits=(10, 7), readonly=True, aggregator=None)
     in_longitude = fields.Float(string="Longitude", digits=(10, 7), readonly=True, aggregator=None)
     in_country_name = fields.Char(string="Country", help="Based on IP Address", readonly=True)
@@ -76,6 +80,7 @@ class HrAttendance(models.Model):
     @api.depends('worked_hours')
     def _compute_overtime_hours(self):
         att_progress_values = dict()
+        negative_overtime_attendances = defaultdict(lambda: False)
         if self.employee_id:
             self.env['hr.attendance'].flush_model(['worked_hours'])
             self.env['hr.attendance.overtime'].flush_model(['duration'])
@@ -115,21 +120,47 @@ class HrAttendance(models.Model):
                     else:
                         grouped_dict[row['ot_id']]['attendances'].append((row['att_id'], row['att_wh']))
 
-            for ot in grouped_dict:
-                ot_bucket = grouped_dict[ot]['overtime_duration']
-                for att in grouped_dict[ot]['attendances']:
-                    if ot_bucket > 0:
-                        sub_time = att[1] - ot_bucket
-                        if sub_time < 0:
-                            att_progress_values[att[0]] = 0
-                            ot_bucket -= att[1]
+            for overtime in grouped_dict:
+                overtime_reservoir = grouped_dict[overtime]['overtime_duration']
+                if overtime_reservoir > 0:
+                    for attendance in grouped_dict[overtime]['attendances']:
+                        if overtime_reservoir > 0:
+                            sub_time = attendance[1] - overtime_reservoir
+                            if sub_time < 0:
+                                att_progress_values[attendance[0]] = 0
+                                overtime_reservoir -= attendance[1]
+                            else:
+                                att_progress_values[attendance[0]] = float(((attendance[1] - overtime_reservoir) / attendance[1]) * 100)
+                                overtime_reservoir = 0
                         else:
-                            att_progress_values[att[0]] = float(((att[1] - ot_bucket) / att[1])*100)
-                            ot_bucket = 0
-                    else:
-                        att_progress_values[att[0]] = 100
+                            att_progress_values[attendance[0]] = 100
+                elif overtime_reservoir < 0 and grouped_dict[overtime]['attendances']:
+                    att_id = grouped_dict[overtime]['attendances'][0][0]
+                    att_progress_values[att_id] = overtime_reservoir
+                    negative_overtime_attendances[att_id] = True
         for attendance in self:
-            attendance.overtime_hours = attendance.worked_hours * ((100 - att_progress_values.get(attendance.id, 100))/100)
+            if negative_overtime_attendances[attendance.id]:
+                attendance.overtime_hours = att_progress_values.get(attendance.id, 0)
+            else:
+                attendance.overtime_hours = attendance.worked_hours * ((100 - att_progress_values.get(attendance.id, 100)) / 100)
+
+    @api.depends('employee_id', 'overtime_status', 'overtime_hours')
+    def _compute_validated_overtime_hours(self):
+        no_validation = self.filtered(lambda a: a.employee_id.company_id.attendance_overtime_validation == 'no_validation')
+        with_validation = self - no_validation
+
+        for attendance in with_validation:
+            if attendance.overtime_status not in ['approved', 'refused']:
+                attendance.validated_overtime_hours = attendance.overtime_hours
+
+        for attendance in no_validation:
+            attendance.validated_overtime_hours = attendance.overtime_hours
+
+    @api.depends('employee_id')
+    def _compute_overtime_status(self):
+        for attendance in self:
+            if not attendance.overtime_status:
+                attendance.overtime_status = "to_approve" if attendance.employee_id.company_id.attendance_overtime_validation == 'by_manager' else "approved"
 
     @api.depends('employee_id', 'check_in', 'check_out')
     def _compute_display_name(self):
@@ -232,10 +263,8 @@ class HrAttendance(models.Model):
     def _get_attendances_dates(self):
         # Returns a dictionnary {employee_id: set((datetimes, dates))}
         attendances_emp = defaultdict(set)
-        for attendance in self.filtered(lambda a: a.employee_id.company_id.hr_attendance_overtime and a.check_in):
+        for attendance in self.filtered(lambda a: a.check_in):
             check_in_day_start = attendance._get_day_start_and_day(attendance.employee_id, attendance.check_in)
-            if check_in_day_start[0] < datetime.combine(attendance.employee_id.company_id.overtime_start_date, datetime.min.time()):
-                continue
             attendances_emp[attendance.employee_id].add(check_in_day_start)
             if attendance.check_out:
                 check_out_day_start = attendance._get_day_start_and_day(attendance.employee_id, attendance.check_out)
@@ -391,8 +420,11 @@ class HrAttendance(models.Model):
                                              created_overtimes.employee_id.ids +
                                              overtime_to_unlink.employee_id.ids)
         overtime_to_unlink.sudo().unlink()
+        to_recompute = self.search([('employee_id', 'in', employees_worked_hours_to_compute)])
         self.env.add_to_compute(self._fields['overtime_hours'],
-                                self.search([('employee_id', 'in', employees_worked_hours_to_compute)]))
+                                to_recompute)
+        self.env.add_to_compute(self._fields['validated_overtime_hours'],
+                                to_recompute)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -610,3 +642,13 @@ class HrAttendance(models.Model):
                 if len(leaf) == 3 and leaf[0] == 'employee_id':
                     employee_name_domain.append([('name', leaf[1], leaf[2])])
             return resources | self.env['hr.employee'].search(OR(employee_name_domain))
+
+    def action_approve_overtime(self):
+        self.write({
+            'overtime_status': 'approved'
+        })
+
+    def action_refuse_overtime(self):
+        self.write({
+            'overtime_status': 'refused'
+        })

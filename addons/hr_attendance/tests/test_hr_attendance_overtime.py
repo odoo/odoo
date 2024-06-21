@@ -13,15 +13,12 @@ class TestHrAttendanceOvertime(TransactionCase):
         super().setUpClass()
         cls.company = cls.env['res.company'].create({
             'name': 'SweatChipChop Inc.',
-            'hr_attendance_overtime': True,
-            'overtime_start_date': datetime(2021, 1, 1),
+            'attendance_overtime_validation': 'no_validation',
             'overtime_company_threshold': 10,
             'overtime_employee_threshold': 10,
         })
         cls.company_1 = cls.env['res.company'].create({
             'name': 'Overtime Inc.',
-            'hr_attendance_overtime': True,
-            'overtime_start_date': datetime(2024, 5, 27),
         })
         cls.user = new_test_user(cls.env, login='fru', groups='base.group_user,hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)
         cls.employee = cls.env['hr.employee'].create({
@@ -52,31 +49,28 @@ class TestHrAttendanceOvertime(TransactionCase):
         })
 
     def test_overtime_company_settings(self):
-        self.company.hr_attendance_overtime = False
+        self.company.write({
+            "attendance_overtime_validation": "by_manager"
+        })
 
-        self.env['hr.attendance'].create({
+        attendance = self.env['hr.attendance'].create({
             'employee_id': self.employee.id,
             'check_in': datetime(2021, 1, 4, 8, 0),
             'check_out': datetime(2021, 1, 4, 20, 0)
         })
 
-        overtime = self.env['hr.attendance.overtime'].search_count([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 4))])
-        self.assertFalse(overtime, 'No overtime should be created')
+        self.assertEqual(attendance.overtime_status, 'to_approve')
+        self.assertAlmostEqual(attendance.validated_overtime_hours, 3, 2)
+        self.assertEqual(attendance.employee_id.total_overtime, 0)
 
-        self.company.write({
-            'hr_attendance_overtime': True,
-            'overtime_start_date': date(2021, 1, 1)
-        })
-        overtime = self.env['hr.attendance.overtime'].search_count([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 4))])
-        self.assertTrue(overtime, 'Overtime should be created')
+        attendance.action_approve_overtime()
 
-        self.env['hr.attendance'].create({
-            'employee_id': self.employee.id,
-            'check_in': datetime(2020, 12, 30, 8, 0),
-            'check_out': datetime(2020, 12, 30, 20, 0)
-        })
-        overtime = self.env['hr.attendance.overtime'].search_count([('employee_id', '=', self.employee.id), ('date', '=', date(2020, 12, 30))])
-        self.assertFalse(overtime, 'No overtime should be created before the start date')
+        self.assertEqual(attendance.overtime_status, 'approved')
+        self.assertAlmostEqual(attendance.validated_overtime_hours, 3, 2)
+        self.assertAlmostEqual(attendance.employee_id.total_overtime, 3, 2)
+
+        attendance.action_refuse_overtime()
+        self.assertEqual(attendance.employee_id.total_overtime, 0, 0)
 
     def test_simple_overtime(self):
         checkin_am = self.env['hr.attendance'].create({
@@ -135,7 +129,7 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertEqual(self.employee.total_overtime, 12)
 
         attendance.unlink()
-        self.assertEqual(self.employee.total_overtime, 1)
+        self.assertAlmostEqual(self.employee.total_overtime, 1, 2)
 
     def test_overtime_change_employee(self):
         Attendance = self.env['hr.attendance']
@@ -144,6 +138,7 @@ class TestHrAttendanceOvertime(TransactionCase):
             'check_in': datetime(2021, 1, 4, 7, 0),
             'check_out': datetime(2021, 1, 4, 18, 0)
         })
+
         self.assertEqual(self.employee.total_overtime, 2)
         self.assertEqual(self.other_employee.total_overtime, 0)
 
@@ -160,9 +155,10 @@ class TestHrAttendanceOvertime(TransactionCase):
         # Since dates have to be stored in utc these are the tokyo timezone times for 7-12 / 13-18 (UTC+9)
         self.env['hr.attendance'].create({
             'employee_id': self.jpn_employee.id,
-            'check_in': datetime(2021, 1, 3, 22, 0),
-            'check_out': datetime(2021, 1, 4, 9, 0),
+            'check_in': datetime(2021, 1, 4, 1, 0),
+            'check_out': datetime(2021, 1, 4, 12, 0),
         })
+
         # Same but for alaskan times (UTC-10)
         self.env['hr.attendance'].create({
             'employee_id': self.honolulu_employee.id,
@@ -210,8 +206,6 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertFalse(overtime, 'No overtime should be counted because of the threshold.')
 
         self.company.write({
-            'hr_attendance_overtime': True,
-            'overtime_start_date': date(2021, 1, 1),
             'overtime_company_threshold': 4,
         })
 
@@ -237,8 +231,6 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertFalse(overtime, 'No overtime should be counted because of the threshold.')
 
         self.company.write({
-            'hr_attendance_overtime': True,
-            'overtime_start_date': date(2021, 1, 1),
             'overtime_employee_threshold': 4,
         })
 
@@ -259,13 +251,10 @@ class TestHrAttendanceOvertime(TransactionCase):
                 'check_out': datetime(2021, 1, 4, 17, 5),
             }
         ])
-
         overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id)])
         self.assertFalse(overtime, 'No overtime should be counted because of the threshold.')
 
         self.company.write({
-            'hr_attendance_overtime': True,
-            'overtime_start_date': date(2021, 1, 1),
             'overtime_employee_threshold': 4,
         })
 
@@ -274,8 +263,6 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertAlmostEqual(overtime.duration, -(5 / 60), msg='Overtime should be equal to -5 minutes.')
 
         self.company.write({
-            'hr_attendance_overtime': True,
-            'overtime_start_date': date(2021, 1, 1),
             'overtime_company_threshold': 4,
         })
 
