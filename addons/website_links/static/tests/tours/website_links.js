@@ -67,8 +67,10 @@ registry.category("web_tour.tours").add('website_links_tour', {
         },
         // 2. Visit it
         {
+            trigger: '#o_website_links_recent_links .truncate_text:first():contains("Contact Us")',
+        },
+        {
             content: "check that link was created and visit it",
-            extra_trigger: '#o_website_links_recent_links .truncate_text:first():contains("Contact Us")',
             trigger: '#o_website_links_link_tracker_form #generated_tracked_link:contains("/r/")',
             run: function () {
                 window.location.href = $('#generated_tracked_link').text();
@@ -98,8 +100,10 @@ registry.category("web_tour.tours").add('website_links_tour', {
             run: "click",
         },
         {
+            trigger: '.website_links_click_chart .title:contains("1 clicks")',
+        },
+        {
             content: "check click number and ensure graphs are initialized",
-            extra_trigger: '.website_links_click_chart .title:contains("1 clicks")',
             trigger: 'canvas',
         },
         {

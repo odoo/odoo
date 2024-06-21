@@ -24,9 +24,12 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_sale_order",
+},
+{
     trigger: '.o_list_button_add',
-    extra_trigger: '.o_sale_order',
     run: "click",
 }, {
     trigger: '.o_required_modifier[name=partner_id] input',
@@ -53,14 +56,20 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
 }, {
     trigger: 'button:contains("Confirm")',
     run: "click",
-}, {
+}, 
+{
+    trigger: '.oe_subtotal_footer_separator:contains("248.40")',
+},
+{
     trigger: '.o_sale_order',
     // wait for qty to be 1 => check the total to be sure all qties are set to 1
-    extra_trigger: '.oe_subtotal_footer_separator:contains("248.40")',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_form_editable",
+},
+{
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
-    extra_trigger: '.o_form_editable',
     run: "click",
 }, {
     trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
@@ -85,14 +94,20 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
 }, {
     trigger: 'button:contains("Confirm")',  // apply the matrix
     run: "click",
-}, {
+}, 
+{
+    trigger: '.oe_subtotal_footer_separator:contains("745.20")',
+},
+{
     trigger: '.o_sale_order',
     // wait for qty to be 3 => check the total to be sure all qties are set to 3
-    extra_trigger: '.oe_subtotal_footer_separator:contains("745.20")',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_form_editable",
+},
+{
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
-    extra_trigger: '.o_form_editable',
     run: "click",
 }, {
     trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
@@ -106,10 +121,13 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
 }, {
     trigger: 'button:contains("Confirm")',  // apply the matrix
     run: "click",
-}, {
+}, 
+{
+    trigger: '.oe_subtotal_footer_separator:contains("248.40")',
+},
+{
     trigger: '.o_sale_order',
     // wait for qty to be 1 => check the total to be sure all qties are set to 1
-    extra_trigger: '.oe_subtotal_footer_separator:contains("248.40")',
     run: "click",
 }, {
     trigger: '.o_form_button_save',  // SAVE Sales Order.
@@ -117,10 +135,13 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
 },
 // Open the matrix through the pencil button next to the product in line edit mode.
 {
+    trigger: ".o_form_status_indicator_buttons.invisible", // wait for save to be finished
+},
+{
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
-    extra_trigger: '.o_form_status_indicator_buttons.invisible', // wait for save to be finished
     run: "click",
-}, {
+}, 
+{
     trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
     run: "click",
 }, {
@@ -134,15 +155,20 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
 }, {
     trigger: 'button:contains("Confirm")',  // apply the matrix
     run: "click",
-}, {
+}, 
+{
+    trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
+},
+{
     trigger: '.o_form_button_save',
-    extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
-    run: 'click', // SAVE Sales Order, after matrix has been applied (extra_trigger).
+    run: 'click', // SAVE Sales Order, after matrix has been applied.
 },
 // Ensures the matrix is opened with the values, when adding the same product.
 {
+    trigger: ".o_form_status_indicator_buttons.invisible",
+},
+{
     trigger: 'a:contains("Add a product")',
-    extra_trigger: '.o_form_status_indicator_buttons.invisible',
     run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',

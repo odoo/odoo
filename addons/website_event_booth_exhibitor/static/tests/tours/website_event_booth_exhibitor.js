@@ -40,9 +40,12 @@
             document.querySelector("input[name='sponsor_slogan']").value = "Patrick is Your Sponsor";
             document.querySelector("textarea[name='sponsor_description']").textContent = "Really eager to meet you !";
         },
-    }, {
+    }, 
+    {
+        trigger: "input[name='sponsor_name'], input[name='sponsor_email'], input[name='sponsor_phone']",
+    },
+    {
         content: "Validate booth details",
-        extra_trigger: "input[name='sponsor_name'], input[name='sponsor_email'], input[name='sponsor_phone']",
         trigger: 'button.o_wbooth_registration_confirm',
         run: 'click',
     }, ...new FinalSteps()._getSteps()].filter(Boolean)});

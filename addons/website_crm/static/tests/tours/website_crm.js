@@ -11,10 +11,13 @@
         content: "Select contact form",
         trigger: ":iframe #wrap.o_editable section.s_website_form",
         run: "click",
-    }, {
+    },
+    {
+        trigger: "#oe_snippets .o_we_customize_snippet_btn.active",
+    },
+    {
         content: "Open action select",
         trigger: "we-select:has(we-button:contains('Create an Opportunity')) we-toggler",
-        extra_trigger: "#oe_snippets .o_we_customize_snippet_btn.active",
         run: "click",
     }, {
         content: "Select 'Create an Opportunity' as form action",

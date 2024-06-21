@@ -12,14 +12,20 @@ registry.category("web_tour.tours").add("blog_autocomplete_with_date", {
     content: "Select first month",
     trigger: 'select[name=archive]',
     run: "selectByIndex 1",
-}, {
+}, 
+{
+    trigger: '#o_wblog_posts_loop span:has(i.fa-calendar-o):has(a[href="/blog"])',
+},
+{
     content: "Enter search term",
     trigger: '.o_searchbar_form input',
-    extra_trigger: '#o_wblog_posts_loop span:has(i.fa-calendar-o):has(a[href="/blog"])',
     run: "edit a",
-}, {
+}, 
+{
+    trigger: ".o_searchbar_form .o_dropdown_menu .o_search_result_item",
+},
+{
     content: "Wait for suggestions then click on search icon",
-    extra_trigger: '.o_searchbar_form .o_dropdown_menu .o_search_result_item',
     trigger: '.o_searchbar_form button:has(i.oi-search)',
     run: "click",
 }, {

@@ -69,8 +69,10 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
         },
     },
     {
+        trigger: 'p:contains("This is your current cart")',
+    },
+    {
         content: "check the page is working, click on restore",
-        extra_trigger: 'p:contains("This is your current cart")',
         trigger: 'p:contains("restore") a:contains("Click here")',
         run: "click",
     },

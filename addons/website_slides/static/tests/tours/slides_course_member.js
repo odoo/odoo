@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { queryAll } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 /**
@@ -55,73 +54,31 @@ registry.category("web_tour.tours").add('course_member', {
 // eLeaning: course completion
 {
     trigger: '.o_wslides_fs_sidebar_header',
-    run(helpers) {
-        // check navigation with arrow keys
-        // go back once
-        helpers.press("ArrowLeft");
-        // check that it selected the previous tab
-        if (
-            queryAll(
-                '.o_wslides_fs_sidebar_list_item.active:contains("Gardening: The Know-How")'
-            ).length === 0
-        ) {
-            return;
-        }
-        // getting here means that navigation worked
-        document
-            .querySelector(".o_wslides_fs_sidebar_header")
-            .classList.add("navigation-success-1");
-    }
-}, {
-    trigger: '.o_wslides_fs_sidebar_header.navigation-success-1',
-    extra_trigger: '.o_wslides_progress_percentage:contains("40")',
-    run(helpers) {
-        // check navigation with arrow keys
-        helpers.press("ArrowRight");
-        // check that it selected the next/next tab
-        if (
-            queryAll('.o_wslides_fs_sidebar_list_item.active:contains("Home Gardening")')
-                .length === 0
-        ) {
-            return;
-        }
-        // getting here means that navigation worked
-        document
-            .querySelector(".o_wslides_fs_sidebar_header")
-            .classList.add("navigation-success-2");
-    }
-}, {
+    run: "press ArrowLeft",
+}, 
+{
+    trigger: ".o_wslides_fs_sidebar_list_item.active:contains(Gardening: The Know-How)",
+},
+{
+    trigger: '.o_wslides_progress_percentage:contains("40")',
+    run: "press ArrowRight",
+},
+{
+    trigger: ".o_wslides_fs_sidebar_list_item.active:contains(Home Gardening)",
+},
+{
     // check progression
     trigger: '.o_wslides_progress_percentage:contains("40")',
-}, {
-    trigger: '.o_wslides_fs_sidebar_header.navigation-success-2',
-    extra_trigger: '.o_wslides_progress_percentage:contains("40")',
-    run(helpers) {
-        // check navigation with arrow keys
-        setTimeout(function () {
-            helpers.press("ArrowRight");
-            // check that it selected the next/next tab
-            if (
-                queryAll(
-                    '.o_wslides_fs_sidebar_list_item.active:contains("Mighty Carrots")'
-                ).length === 0
-            ) {
-                return;
-            }
-            // getting here means that navigation worked
-            document
-                .querySelector(".o_wslides_fs_sidebar_header")
-                .classList.add("navigation-success-3");
-        }, 300);
-    }
-}, {
+    run: "press ArrowRight",
+},
+{
+    trigger: ".o_wslides_fs_sidebar_list_item.active:contains(Mighty Carrots)",
+},
+{
     // check progression
     trigger: '.o_wslides_progress_percentage:contains("60")',
-}, {
-    // check that previous step succeeded
-    trigger: '.o_wslides_fs_sidebar_header.navigation-success-3',
-    extra_trigger: '.o_wslides_progress_percentage:contains("60")',
-}, {
+}, 
+{
     trigger: '.o_wslides_fs_slide_name:contains("How to Grow and Harvest The Best Strawberries | Basics")',
     run: 'click',
 }, {
@@ -161,26 +118,31 @@ registry.category("web_tour.tours").add('course_member', {
 {
     trigger: 'a:contains("Basics of Gardening")',
     run: "click",
-}, {
+},
+{
     trigger: 'button[data-bs-target="#ratingpopupcomposer"]',
     run: "click",
-}, {
-    trigger: 'div.o_portal_chatter_composer_input i.fa:eq(2)',
-    extra_trigger: 'div.modal_shown',
+},
+{
+    in_modal: false,
+    trigger: ".modal .modal-body i.fa.fa-star:eq(2)",
     run: 'click',
+},
+{
     in_modal: false,
-}, {
-    trigger: 'div.o_portal_chatter_composer_input textarea',
+    trigger: ".modal .modal-body textarea",
     run: "edit This is a great course. Top !",
+},
+{
     in_modal: false,
-}, {
-    trigger: 'button.o_portal_chatter_composer_btn',
-    in_modal: false,
+    trigger: ".modal button:contains(review)",
     run: "click",
-}, {
+},
+{
     trigger: 'a[id="review-tab"]',
     run: "click",
-}, {
+},
+{
     // check review is correctly added
     trigger: '.o_portal_chatter_message:contains("This is a great course. Top !")',
 }

@@ -48,9 +48,12 @@ var registerSteps = [{
             document.querySelector("textarea[name*='question_answer']").textContent =
                 "Random answer from random guy";
     },
-}, {
+}, 
+{
+    trigger: "input[name*='1-name'], input[name*='2-name'], input[name*='3-name']",
+},
+{
     content: "Validate attendees details",
-    extra_trigger: "input[name*='1-name'], input[name*='2-name'], input[name*='3-name']",
     trigger: 'button[type=submit]',
     run: 'click',
 },

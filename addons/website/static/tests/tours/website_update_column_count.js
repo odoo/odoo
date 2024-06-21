@@ -113,11 +113,14 @@ wTourUtils.clickOnSnippet({
     content: "Change the orders of the 2nd and 3rd items",
     trigger: ":iframe .o_overlay_move_options [data-name='move_right_opt']",
     run: "click",
-}, {
+}, 
+{
+    trigger: `${columnsSnippetRow}:has([style*='order: 2;'].order-lg-0:nth-child(2) + [style*='order: 1;'].order-lg-0:nth-child(3))`,
+},
+{
     content: "Check that the 1st item now has order: 0 and a class .order-lg-0 " +
              "and that order: 1, .order-lg-0 is set on the 3rd item, and order: 2, .order-lg-0 on the 2nd",
     trigger: `${columnsSnippetRow}:has([style*='order: 0;'].order-lg-0:first-child)`,
-    extra_trigger: `${columnsSnippetRow}:has([style*='order: 2;'].order-lg-0:nth-child(2) + [style*='order: 1;'].order-lg-0:nth-child(3))`,
 }, {
     content: "Toggle desktop view",
     trigger: ".o_we_website_top_actions [data-action='mobile']",

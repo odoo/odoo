@@ -33,8 +33,10 @@
             },
         },
         {
+            trigger: "input[name*='1-name'], input[name*='2-name']",
+        },
+        {
             content: "Validate attendees details",
-            extra_trigger: "input[name*='1-name'], input[name*='2-name']",
             trigger: 'button[type=submit]',
             run: "click",
         },

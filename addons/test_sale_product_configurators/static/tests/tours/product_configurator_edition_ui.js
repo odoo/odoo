@@ -11,9 +11,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_sale_order",
+},
+{
     trigger: '.o_list_button_add',
-    extra_trigger: '.o_sale_order',
     run: "click",
 }, {
     trigger: '.o_required_modifier[name=partner_id] input',
@@ -39,10 +42,13 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
 }, {
     trigger: 'button:contains(Confirm)',
     run: "click",
-}, {
+}, 
+{
+    trigger: 'div[name="order_line"]',
+},
+{
     // check added product
     trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Aluminium, White)")',
-    extra_trigger: 'div[name="order_line"]',
 }, {
     trigger: 'div[name="product_template_id"]',
     run: "click",
@@ -70,14 +76,20 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
 }, {
     trigger: 'button:contains(Confirm)',
     run: "click",
-}, {
+}, 
+{
+    trigger: 'div[name="order_line"]',
+},
+{
     // check updated product
     trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Custom, Black)")',
-    extra_trigger: 'div[name="order_line"]',
-}, {
+}, 
+{
+    trigger: 'div[name="order_line"]',
+},
+{
     // check custom value
     trigger: 'td.o_data_cell:contains("Custom: nice custom value")',
-    extra_trigger: 'div[name="order_line"]',
 }, {
     trigger: 'div[name="product_template_id"]',
     run: "click",
@@ -89,10 +101,13 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
 {
     trigger: 'button:contains(Confirm)',
     run: "click",
-}, {
+}, 
+{
+    trigger: 'div[name="order_line"]',
+},
+{
     // check custom value
     trigger: 'td.o_data_cell:contains("Custom: another nice custom value")',
-    extra_trigger: 'div[name="order_line"]',
 }, {
     trigger: 'div[name="product_template_id"]',
     run: "click",
@@ -124,9 +139,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
             el.textContent = "tour success";
         }
     }
-}, {
+}, 
+{
+    trigger: 'div[name="order_line"]',
+},
+{
     trigger: 'td.o_data_cell:contains("tour success")',
-    extra_trigger: 'div[name="order_line"]',
 },
     ...stepUtils.saveForm(),
 ]});

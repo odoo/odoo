@@ -49,9 +49,12 @@ configuratorTourUtils.assertProductNameContains("Customizable Desk (TEST) (Custo
 {
     trigger: 'div[name="product_template_id"]',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_external_button",
+},
+{
     trigger: '.fa-pencil',
-    extra_trigger: '.o_external_button',
     run: "click",
 },
 configuratorTourUtils.setCustomAttribute("Customizable Desk (TEST)", "Legs", "123456"),

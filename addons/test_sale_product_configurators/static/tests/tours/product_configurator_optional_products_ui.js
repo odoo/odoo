@@ -9,9 +9,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_optional_prod
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_sale_order",
+},
+{
     trigger: '.o_list_button_add',
-    extra_trigger: '.o_sale_order',
     run: "click",
 }, {
     trigger: '.o_required_modifier[name=partner_id] input',
@@ -50,9 +53,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_optional_prod
 }, {
     trigger: 'button:contains(Confirm)',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".modal-title:contains(Warning for Conference Chair (TEST))",
+},
+{
     trigger: '.o-default-button',
-    extra_trigger: '.modal-title:contains(Warning for Conference Chair (TEST))',
     run: "click",
 }, {
     trigger: 'tr:has(td.o_data_cell:contains("Customizable Desk")) td.o_data_cell:contains("2.0")',

@@ -41,10 +41,13 @@ const makeSteps = (steps = []) => [
                 }, 999);
             });
         },
-    }, {
+    }, 
+    {
+        trigger: "body.o_test_delay",
+    },
+    {
         content: "Click on Discard",
         trigger: '.o_we_website_top_actions [data-action="cancel"]',
-        extra_trigger: 'body.o_test_delay',
         run: "click",
     }, {
         content: "Confirm we are not in edit mode anymore",
@@ -102,21 +105,30 @@ wTourUtils.registerWebsitePreviewTour('website_no_dirty_lazy_image', {
     wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
-    }), {
-        content: "Replace first paragraph, to insert a new link",
+    }), 
+    {
         // Ensure the test keeps testing what it should test (eg if we ever
+        trigger: ':iframe img.o_lang_flag[loading="lazy"]',
+    },
+    {
+        content: "Replace first paragraph, to insert a new link",
         // remove the lazy loading on those language img))
-        extra_trigger: ':iframe img.o_lang_flag[loading="lazy"]',
         trigger: ':iframe #wrap .s_text_image p',
         run: 'editor SomeTestText',
-    }, {
+    }, 
+    {
+        trigger: ':iframe #wrap .s_text_image p:contains("SomeTestText")',
+    },
+    {
         content: "Click elsewhere to be sure the editor fully process the new content",
-        extra_trigger: ':iframe #wrap .s_text_image p:contains("SomeTestText")',
         trigger: ':iframe #wrap .s_text_image img',
         run: "click",
-    }, {
+    }, 
+    {
+        trigger: '.o_we_user_value_widget[data-replace-media="true"]',
+    },
+    {
         content: "Check that there is no more than one dirty flag",
-        extra_trigger: '.o_we_user_value_widget[data-replace-media="true"]',
         trigger: ':iframe body',
         run: function () {
             const dirtyCount = this.anchor.querySelectorAll('.o_dirty').length;

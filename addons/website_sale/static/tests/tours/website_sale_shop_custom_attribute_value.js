@@ -9,9 +9,12 @@
         content: "click on Customizable Desk",
         trigger: '.oe_product_cart a:contains("Customizable Desk (TEST)")',
         run: "click",
-    }, {
+    }, 
+    {
+        trigger: "li.js_attribute_value",
+    },
+    {
         trigger: 'li.js_attribute_value span:contains(Custom)',
-        extra_trigger: 'li.js_attribute_value',
         run: 'click',
     }, {
         trigger: 'input.variant_custom_value',
@@ -26,7 +29,9 @@
         run: 'click',
     },
     {
+        trigger: "#cart_products",
+    },
+    {
         trigger: 'span:contains(Custom: Wood)',
-        extra_trigger: '#cart_products',
         run: function (){}, // check
     }]});

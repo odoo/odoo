@@ -20,9 +20,11 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     ...wTourUtils.clickOnSave(),
     // Subscribe to the newsletter.
     {
+        trigger: ':iframe .s_newsletter_block input:value("admin@yourcompany.example.com")',
+    },
+    {
         content: 'Wait for the email to be loaded in the newsletter input',
         trigger: ':iframe .s_newsletter_block .js_subscribe_btn',
-        extra_trigger: ':iframe .s_newsletter_block input:value("admin@yourcompany.example.com")',
         run: "click",
     },
     // Change the link style.
@@ -53,9 +55,11 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
         run: "click",
     },
     {
+        trigger: 'we-customizeblock-option:has([name="link_style_size"])',
+    },
+    {
         content: 'Verify that the shape option is not available for primary while the size option appeared',
         trigger: 'we-customizeblock-option:not(:has([name="link_style_shape"]))',
-        extra_trigger: 'we-customizeblock-option:has([name="link_style_size"])',
     },
     {
         content: 'Click on the link style button',

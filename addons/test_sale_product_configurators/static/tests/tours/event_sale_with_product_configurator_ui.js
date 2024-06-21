@@ -10,9 +10,12 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_sale_order",
+},
+{
     trigger: '.o_list_button_add',
-    extra_trigger: ".o_sale_order",
     run: "click",
 }, {
     trigger: '.o_required_modifier[name=partner_id] input',
@@ -36,34 +39,38 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 }, {
     trigger: 'button:contains(Confirm)',
     run: "click",
-}, {
-    trigger: '.o_input_dropdown input',
-    extra_trigger: '.o_technical_modal',  // to be in the event wizard
+}, 
+{
+    trigger: ".modal .o_input_dropdown input",
     run: "edit Test",
 }, {
-    trigger: 'div[name="event_id"] input',
+    trigger: '.modal div[name="event_id"] input',
     run: "click",
 }, {
-    trigger: 'ul.ui-autocomplete a:contains("TestEvent")',
-    in_modal: false,
+    trigger: "ul.ui-autocomplete a:contains(TestEvent)",
     run: "click",
 }, {
-    trigger: 'div[name="event_ticket_id"] input',
+    trigger: '.modal div[name="event_ticket_id"] input',
     run: 'click',
 }, {
-    trigger: 'ul.ui-autocomplete a:contains("Kid + meal")',
-    in_modal: false,
+    trigger: "ul.ui-autocomplete a:contains(Kid + meal)",
     run: "click",
 }, {
-    trigger: '.o_event_sale_js_event_configurator_ok',
+    trigger: ".modal .o_event_sale_js_event_configurator_ok",
     run: "click",
-}, {
+}, 
+{
+    trigger: 'td[name="price_subtotal"]:contains("16.50")', // wait for the optional product line
+},
+{
     trigger: 'a:contains("Add a product")',
-    extra_trigger: 'td[name="price_subtotal"]:contains("16.50")',  // wait for the optional product line
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_data_row:nth-child(3)", // wait for the new row to be created
+},
+{
     trigger: 'div[name="product_template_id"] input',
-    extra_trigger: '.o_data_row:nth-child(3)',  // wait for the new row to be created
     run: "edit event (",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
@@ -79,34 +86,38 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 {
     trigger: 'button:contains(Confirm)',
     run: "click",
-}, {
-    trigger: '.o_input_dropdown input',
-    extra_trigger: '.o_technical_modal',
+}, 
+{
+    trigger: ".modal .o_input_dropdown input",
     run: "edit Test",
 }, {
-    trigger: 'div[name="event_id"] input',
+    trigger: '.modal div[name="event_id"] input',
     run: "click",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("TestEvent")',
-    in_modal: false,
     run: "click",
 }, {
-    trigger: 'div[name="event_ticket_id"] input',
+    trigger: '.modal div[name="event_ticket_id"] input',
     run: 'click',
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Adult")',
-    in_modal: false,
     run: "click",
 }, {
-    trigger: '.o_event_sale_js_event_configurator_ok',
+    trigger: ".modal .o_event_sale_js_event_configurator_ok",
     run: "click",
-}, {
+}, 
+{
+    trigger: 'td[name="price_subtotal"]:contains("150.00")', // wait for the adult tickets line
+},
+{
     trigger: 'a:contains("Add a product")',
-    extra_trigger: 'td[name="price_subtotal"]:contains("150.00")',  // wait for the adult tickets line
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_data_row:nth-child(4)", // wait for the new row to be created
+},
+{
     trigger: 'div[name="product_template_id"] input',
-    extra_trigger: '.o_data_row:nth-child(4)',  // wait for the new row to be created
     run: "edit event (",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
@@ -119,26 +130,28 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 {
     trigger: 'button:contains(Confirm)',
     run: "click",
-}, {
-    trigger: '.o_input_dropdown input',
-    extra_trigger: '.o_technical_modal',
+}, 
+{
+    trigger: ".modal .o_input_dropdown input",
     run: "edit Test",
 }, {
     trigger: 'div[name="event_id"] input',
     run: "click",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("TestEvent")',
-    in_modal: false,
     run: "click",
 }, {
-    trigger: 'div[name="event_ticket_id"] input',
+    trigger: '.modal div[name="event_ticket_id"] input',
     run: 'click',
 }, {
     trigger: 'ul.ui-autocomplete a:contains("VIP")',
-    in_modal: false,
     run: "click",
 }, {
-    trigger: '.o_event_sale_js_event_configurator_ok',
+    trigger: ".modal .o_event_sale_js_event_configurator_ok",
     run: "click",
-}, ...stepUtils.saveForm({ extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("60.00")' }),
+},
+{
+    trigger: '.o_field_cell.o_data_cell.o_list_number:contains("60.00")',
+},
+...stepUtils.saveForm(),
 ]});

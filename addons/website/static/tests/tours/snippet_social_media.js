@@ -8,10 +8,13 @@ import wTourUtils from '@website/js/tours/tour_utils';
 // would actually "ignore" the result of the click on the toggle and would just
 // consider the action of focusing out the input.
 const socialRaceConditionClass = 'social_media_race_condition';
-const preventRaceConditionStep = [{
+const preventRaceConditionStep = [
+    {
+        trigger: `body:not(.${socialRaceConditionClass})`,
+    },
+    {
     content: "Wait a few ms to avoid race condition",
     // Ensure the class is remove from previous call of those steps
-    extra_trigger: `body:not(.${socialRaceConditionClass})`,
     trigger: ':iframe .s_social_media',
     run() {
         setTimeout(() => {

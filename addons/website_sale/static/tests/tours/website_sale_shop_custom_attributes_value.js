@@ -41,20 +41,31 @@ registry.category("web_tour.tours").add("a_shop_custom_attribute_value", {
             $('<p>').text('image variant option src changed').insertAfter('.oe_advanced_configurator_modal .js_product:eq(1) .product-name');
         }
     }
-}, {
-    extra_trigger: '.oe_advanced_configurator_modal .js_product:eq(1) div:contains("image variant option src changed")',
+}, 
+{
+    trigger: '.oe_advanced_configurator_modal .js_product:eq(1) div:contains("image variant option src changed")',
+},
+{
     trigger: '.oe_advanced_configurator_modal .js_product:eq(1) input[data-value_name="Steel"]',
     run: "click",
 }, {
     trigger: '.oe_price span:contains(22.90)',
     run: function (){}, // check
-}, {
+}, 
+{
+    trigger:
+        ".oe_advanced_configurator_modal .js_product:has(strong:contains(Conference Chair))",
+},
+{
     trigger: '.oe_advanced_configurator_modal .js_product:has(strong:contains(Conference Chair)) .js_add',
-    extra_trigger: '.oe_advanced_configurator_modal .js_product:has(strong:contains(Conference Chair))',
     run: 'click'
-}, {
+},
+{
+    trigger:
+        ".oe_advanced_configurator_modal .js_product:has(strong:contains(Chair floor protection))",
+},
+{
     trigger: '.oe_advanced_configurator_modal .js_product:has(strong:contains(Chair floor protection)) .js_add',
-    extra_trigger: '.oe_advanced_configurator_modal .js_product:has(strong:contains(Chair floor protection))',
     run: 'click'
 }, {
     trigger: 'span:contains(1,557.00)',

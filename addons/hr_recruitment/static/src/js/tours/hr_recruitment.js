@@ -28,15 +28,23 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     position: "bottom",
     width: 195,
     run: "click",
-}, {
+}, 
+{
+    isActive: ["auto"],
+    trigger: ".o_hr_job_simple_form",
+},
+{
     trigger: ".o_job_name",
-    extra_trigger: '.o_hr_job_simple_form',
     content: _t("What do you want to recruit today? Choose a job title..."),
     position: "right",
     run: "click",
-}, {
+}, 
+{
+    isActive: ["auto"],
+    trigger: '.o_hr_job_simple_form',
+},
+{
     trigger: ".o_job_alias",
-    extra_trigger: '.o_hr_job_simple_form',
     content: _t("Choose an application email."),
     position: "right",
     width: 195,
@@ -51,60 +59,96 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     content: _t("Copy this email address, to paste it in your email composer, to apply."),
     position: "bottom",
     run: "click",
-}, {
+}, 
+{
+    isActive: ["auto"],
+    trigger: ".o_kanban_applicant",
+},
+{
     trigger: ".breadcrumb-item:not(.active):last",
-    extra_trigger: '.o_kanban_applicant',
     content: _t("Let’s go back to the dashboard."),
     position: "bottom",
     width: 195,
     run: "click",
-}, {
+}, 
+{
+    isActive: ["auto"],
+    trigger: ".o_hr_recruitment_kanban",
+},
+{
     trigger: ".oe_kanban_action_button",
-    extra_trigger: '.o_hr_recruitment_kanban',
     content: markup(_t("<b>Did you apply by sending an email?</b> Check incoming applications.")),
     position: "bottom",
     run: "click",
-}, {
+}, 
+{
+    isActive: ["auto"],
+    trigger: ".o_kanban_applicant",
+},
+{
     trigger: ".oe_kanban_card",
-    extra_trigger: '.o_kanban_applicant',
     content: markup(_t("<b>Drag this card</b>, to qualify him for a first interview.")),
     position: "bottom",
     run: "drag_and_drop(.o_kanban_group:eq(1))",
-}, {
+}, 
+{
+    isActive: ["auto"],
+    trigger: ".o_kanban_applicant",
+},
+{
     trigger: ".oe_kanban_card",
-    extra_trigger: '.o_kanban_applicant',
     content: markup(_t("<b>Click to view</b> the application.")),
     position: "bottom",
     width: 195,
     run: "click",
-}, {
+}, 
+{
+    isActive: ["auto"],
+    trigger: ".o_applicant_form",
+},
+{
     trigger: "button:contains(Send message)",
-    extra_trigger: '.o_applicant_form',
     content: markup(_t("<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All emails sent or received are saved in the history here</i>")),
     position: "bottom",
     run: "click",
-}, {
+}, 
+{
+    isActive: ["auto"],
+    trigger: ".o_applicant_form",
+},
+{
     trigger: ".o-mail-Chatter .o-mail-Composer button[aria-label='Send']",
-    extra_trigger: '.o_applicant_form',
     content: _t("Send your email. Followers will get a copy of the communication."),
     position: "bottom",
     run: "click",
-}, {
+}, 
+{
+    isActive: ["auto"],
+    trigger: ".o_applicant_form",
+},
+{
     trigger: "button:contains(Log note)",
-    extra_trigger: '.o_applicant_form',
     content: _t("Or talk about this applicant privately with your colleagues."),
     position: "bottom",
     run: "click",
-}, {
+}, 
+{
+    isActive: ["auto"],
+    trigger: ".o_applicant_form",
+},
+{
     trigger: ".o_create_employee",
-    extra_trigger: '.o_applicant_form',
     content: _t("Let’s create this new employee now."),
     position: "bottom",
     width: 225,
     run: "click",
-}, {
+}, 
+{
+    isActive: ["auto"],
+    trigger: ".o_hr_employee_form_view",
+},
+{
     trigger: ".o_form_button_save",
-    extra_trigger: ".o_hr_employee_form_view",
     content: _t("Save it!"),
     position: "bottom",
     width: 80,

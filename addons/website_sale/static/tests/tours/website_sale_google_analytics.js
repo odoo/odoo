@@ -40,8 +40,10 @@ registry.category("web_tour.tours").add('google_analytics_view_item', {
         }
     },
     {
+        trigger: 'body:not([view-event-id])',
+    },
+    {
         content: 'select another variant',
-        extra_trigger: 'body:not([view-event-id])',
         trigger: 'ul.js_add_cart_variants ul.list-inline li:has(label.active) + li:has(label) input',
         run: "click",
     },
@@ -59,8 +61,10 @@ registry.category("web_tour.tours").add('google_analytics_add_to_cart', {
     steps: () => [
     ...tourUtils.addToCart({productName: 'Acoustic Bloc Screens', search: false}),
     {
+        trigger: "body[cart-event-id]",
+    },
+    {
         content: 'check add to cart event',
-        extra_trigger: 'body[cart-event-id]',
         trigger: "a:has(.my_cart_quantity:contains(/^1$/))",
         timeout: 25000,
     },
