@@ -40,7 +40,7 @@ class ProductTemplate(models.Model):
     def _check_combo_inclusions(self):
         for product in self:
             if not product.available_in_pos:
-                combo_name = self.env['product.combo.line'].sudo().search([('product_id', 'in', product.product_variant_ids.ids)], limit=1).combo_id.name
+                combo_name = self.env['product.combo.item'].sudo().search([('product_id', 'in', product.product_variant_ids.ids)], limit=1).combo_id.name
                 if combo_name:
                     raise UserError(_('You must first remove this product from the %s combo', combo_name))
 
@@ -50,16 +50,16 @@ class ProductTemplate(models.Model):
         for template in self:
             archived_product = self.env['product.product'].search([('product_tmpl_id', '=', template.id), ('active', '=', False)], limit=1)
             if archived_product:
-                combo_choices_to_delete = self.env['product.combo.line'].search([
+                combo_items_to_delete = self.env['product.combo.item'].search([
                     ('product_id', '=', archived_product.id)
                 ])
-                if combo_choices_to_delete:
-                    # Delete old combo line
-                    combo_ids = combo_choices_to_delete.mapped('combo_id')
-                    combo_choices_to_delete.unlink()
-                    # Create new combo line (one for each new variant) in each combo
+                if combo_items_to_delete:
+                    # Delete old combo item
+                    combo_ids = combo_items_to_delete.mapped('combo_id')
+                    combo_items_to_delete.unlink()
+                    # Create new combo item (one for each new variant) in each combo
                     new_variants = template.product_variant_ids.filtered(lambda v: v.active)
-                    self.env['product.combo.line'].create([
+                    self.env['product.combo.item'].create([
                         {
                             'product_id': variant.id,
                             'combo_id': combo_id.id,
