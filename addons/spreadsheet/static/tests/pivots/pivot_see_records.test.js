@@ -1,28 +1,34 @@
-/** @odoo-module */
-import { nextTick } from "@web/../tests/helpers/utils";
+import { animationFrame } from "@odoo/hoot-mock";
+import { describe, expect, test } from "@odoo/hoot";
+import {
+    defineSpreadsheetActions,
+    defineSpreadsheetModels,
+    getPyEnv,
+} from "@spreadsheet/../tests/helpers/data";
 
-import { selectCell, setCellContent } from "@spreadsheet/../tests/legacy/utils/commands";
-import { doMenuAction, getActionMenu } from "@spreadsheet/../tests/legacy/utils/ui";
-import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/legacy/utils/pivot";
+import { selectCell, setCellContent } from "@spreadsheet/../tests/helpers/commands";
+import { doMenuAction, getActionMenu } from "@spreadsheet/../tests/helpers/ui";
+import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { registry } from "@web/core/registry";
-import { getCell, getCellFormula, getCellValue } from "@spreadsheet/../tests/legacy/utils/getters";
+import { getCell, getCellFormula, getCellValue } from "@spreadsheet/../tests/helpers/getters";
+import { mockService, onRpc } from "@web/../tests/web_test_helpers";
 
 const { cellMenuRegistry } = spreadsheet.registries;
 
-registry.category("mock_server").add("ir.model/display_name_for", function (route, args) {
+onRpc("ir.model", "display_name_for", (args) => {
     const models = args.args[0];
-    const records = this.models["ir.model"].records.filter((record) =>
-        models.includes(record.model)
-    );
+    const pyEnv = getPyEnv();
+    const records = pyEnv["ir.model"]._records.filter((record) => models.includes(record.model));
     return records.map((record) => ({
         model: record.model,
         display_name: record.name,
     }));
 });
 
-QUnit.module("spreadsheet > see pivot records");
+describe.current.tags("headless");
+defineSpreadsheetModels();
+defineSpreadsheetActions();
 
 const basicListAction = {
     type: "ir.actions.act_window",
@@ -36,104 +42,90 @@ const basicListAction = {
     domain: [],
 };
 
-QUnit.test("Can open see records on headers col", async function (assert) {
+test("Can open see records on headers col", async function () {
     const fakeActionService = {
-        dependencies: [],
-        start: (env) => ({
-            doAction: (actionRequest, options = {}) => {
-                assert.step("doAction");
-                assert.deepEqual(actionRequest, {
-                    ...basicListAction,
-                    domain: [["foo", "=", 1]],
-                });
-                assert.strictEqual(options.viewType, "list");
-            },
-        }),
+        doAction: (actionRequest, options = {}) => {
+            expect.step("doAction");
+            expect(actionRequest).toEqual({
+                ...basicListAction,
+                domain: [["foo", "=", 1]],
+            });
+            expect(options.viewType).toBe("list");
+        },
     };
-    registry.category("services").add("action", fakeActionService);
+    mockService("action", fakeActionService);
     const { env, model } = await createSpreadsheetWithPivot();
     selectCell(model, "B1");
-    await nextTick();
+    await animationFrame();
     await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
-    assert.verifySteps(["doAction"]);
+    expect(["doAction"]).toVerifySteps();
 });
 
-QUnit.test("Can open see records on headers row", async function (assert) {
+test("Can open see records on headers row", async function () {
     const fakeActionService = {
-        dependencies: [],
-        start: (env) => ({
-            doAction: (actionRequest, options = {}) => {
-                assert.step("doAction");
-                assert.deepEqual(actionRequest, {
-                    ...basicListAction,
-                    domain: [["bar", "=", false]],
-                });
-                assert.strictEqual(options.viewType, "list");
-            },
-        }),
+        doAction: (actionRequest, options = {}) => {
+            expect.step("doAction");
+            expect(actionRequest).toEqual({
+                ...basicListAction,
+                domain: [["bar", "=", false]],
+            });
+            expect(options.viewType).toBe("list");
+        },
     };
-    registry.category("services").add("action", fakeActionService);
+    mockService("action", fakeActionService);
     const { env, model } = await createSpreadsheetWithPivot();
     selectCell(model, "A3");
-    await nextTick();
+    await animationFrame();
     await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
-    assert.verifySteps(["doAction"]);
+    expect(["doAction"]).toVerifySteps();
 });
 
-QUnit.test("Can open see records on measure headers", async function (assert) {
+test("Can open see records on measure headers", async function () {
     const fakeActionService = {
-        dependencies: [],
-        start: (env) => ({
-            doAction: (actionRequest, options = {}) => {
-                assert.step("doAction");
-                assert.deepEqual(actionRequest, {
-                    ...basicListAction,
-                    domain: [["foo", "=", 1]],
-                });
-                assert.strictEqual(options.viewType, "list");
-            },
-        }),
+        doAction: (actionRequest, options = {}) => {
+            expect.step("doAction");
+            expect(actionRequest).toEqual({
+                ...basicListAction,
+                domain: [["foo", "=", 1]],
+            });
+            expect(options.viewType).toBe("list");
+        },
     };
-    registry.category("services").add("action", fakeActionService);
+    mockService("action", fakeActionService);
     const { env, model } = await createSpreadsheetWithPivot();
     selectCell(model, "B2");
-    await nextTick();
+    await animationFrame();
     await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
-    assert.verifySteps(["doAction"]);
+    expect(["doAction"]).toVerifySteps();
 });
 
-QUnit.test("Cannot open see records on the main PIVOT cell", async function (assert) {
+test("Cannot open see records on the main PIVOT cell", async function () {
     const { env, model } = await createSpreadsheetWithPivot();
     model.dispatch("CREATE_SHEET", { sheetId: "42" });
     setCellContent(model, "A1", `=PIVOT("1")`, "42");
     selectCell(model, "A1", "42");
     const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
-    assert.strictEqual(action.isVisible(env), false);
+    expect(action.isVisible(env)).toBe(false);
 });
 
-QUnit.test(
-    "Cannot open see records on the empty PIVOT cell below the main cell",
-    async function (assert) {
-        const { env, model } = await createSpreadsheetWithPivot();
-        model.dispatch("CREATE_SHEET", { sheetId: "42" });
-        setCellContent(model, "A1", `=PIVOT("1")`, "42");
-        selectCell(model, "A2", "42"); // A2 is always empty. It's the cell next to measure headers.
-        const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
-        assert.strictEqual(action.isVisible(env), false);
-    }
-);
+test("Cannot open see records on the empty PIVOT cell below the main cell", async function () {
+    const { env, model } = await createSpreadsheetWithPivot();
+    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    setCellContent(model, "A1", `=PIVOT("1")`, "42");
+    selectCell(model, "A2", "42"); // A2 is always empty. It's the cell next to measure headers.
+    const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
+    expect(action.isVisible(env)).toBe(false);
+});
 
-QUnit.test("Can see records on PIVOT cells", async function (assert) {
+test("Can see records on PIVOT cells", async function () {
     const actions = [];
     const fakeActionService = {
-        start: (env) => ({
-            doAction: (actionRequest, options = {}) => {
-                assert.step("doAction");
-                actions.push(actionRequest);
-            },
-        }),
+        doAction: (actionRequest, options = {}) => {
+            expect.step("doAction");
+            actions.push(actionRequest);
+        },
     };
-    registry.category("services").add("action", fakeActionService);
+    mockService("action", fakeActionService);
     const { env, model } = await createSpreadsheetWithPivot();
     const firstSheetId = model.getters.getActiveSheetId();
 
@@ -143,11 +135,9 @@ QUnit.test("Can see records on PIVOT cells", async function (assert) {
         // sheet where the pivot is made of a single PIVOT formula.
         for (const [xc, formula] of Object.entries(cells)) {
             // let's check the cell formula is what we expect
-            assert.strictEqual(
-                getCell(model, xc, firstSheetId)?.content,
-                formula,
-                `${xc} on the first sheet is ${formula}`
-            );
+            expect(getCell(model, xc, firstSheetId)?.content).toBe(formula, {
+                message: `${xc} on the first sheet is ${formula}`,
+            });
 
             // action on the first sheet, on regular pivot formula
             selectCell(model, xc, firstSheetId);
@@ -157,8 +147,8 @@ QUnit.test("Can see records on PIVOT cells", async function (assert) {
             selectCell(model, xc, "42");
             await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
 
-            assert.deepEqual(actions[0], actions[1], "both actions are the same");
-            assert.verifySteps(["doAction", "doAction"]);
+            expect(actions[0]).toEqual(actions[1], { message: "both actions are the same" });
+            expect(["doAction", "doAction"]).toVerifySteps();
             actions.length = 0;
         }
     }
@@ -196,19 +186,16 @@ QUnit.test("Can see records on PIVOT cells", async function (assert) {
     await checkCells(data_cells);
 });
 
-QUnit.test("Cannot see records of pivot formula without value", async function (assert) {
+test("Cannot see records of pivot formula without value", async function () {
     const { env, model } = await createSpreadsheetWithPivot();
-    assert.strictEqual(
-        getCellFormula(model, "B3"),
-        `=PIVOT.VALUE(1,"probability","bar","false","foo",1)`
-    );
-    assert.strictEqual(getCellValue(model, "B3"), "", "B3 is empty");
+    expect(getCellFormula(model, "B3")).toBe(`=PIVOT.VALUE(1,"probability","bar","false","foo",1)`);
+    expect(getCellValue(model, "B3")).toBe("", { message: "B3 is empty" });
     selectCell(model, "B3");
     const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
-    assert.notOk(action.isVisible(env));
+    expect(action.isVisible(env)).toBe(false);
 });
 
-QUnit.test("Cannot see records of spreadsheet pivot", async function (assert) {
+test("Cannot see records of spreadsheet pivot", async function () {
     const { model, env } = await createSpreadsheetWithPivot();
     setCellContent(model, "A11", "A");
     setCellContent(model, "A12", "1");
@@ -230,16 +217,16 @@ QUnit.test("Cannot see records of spreadsheet pivot", async function (assert) {
         },
     });
     setCellContent(model, "A13", `=PIVOT("2")`);
-    assert.strictEqual(getCellValue(model, "B15"), 2);
+    expect(getCellValue(model, "B15")).toBe(2);
     selectCell(model, "B15");
     const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
-    assert.notOk(action.isVisible(env));
+    expect(action.isVisible(env)).toBe(false);
 });
 
-QUnit.test("See records is not visible on an empty cell", async function (assert) {
+test("See records is not visible on an empty cell", async function () {
     const { env, model } = await createSpreadsheetWithPivot();
-    assert.strictEqual(getCell(model, "A21"), undefined);
+    expect(getCell(model, "A21")).toBe(undefined);
     selectCell(model, "A21");
     const action = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
-    assert.strictEqual(action.isVisible(env), false);
+    expect(action.isVisible(env)).toBe(false);
 });

@@ -1,36 +1,31 @@
-/** @odoo-module */
-
+import { makeMockEnv, contains } from "@web/../tests/web_test_helpers";
+import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
+import { describe, expect, test, getFixture, mountOnFixture } from "@odoo/hoot";
 import { Model } from "@odoo/o-spreadsheet";
 import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
 import {
     addGlobalFilter,
     setCellContent,
     setCellFormat,
-} from "@spreadsheet/../tests/legacy/utils/commands";
-import { toRangeData } from "@spreadsheet/../tests/legacy/utils/zones";
-import { editInput, editSelect, getFixture, mount } from "@web/../tests/helpers/utils";
-import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { registry } from "@web/core/registry";
-import { nameService } from "@web/core/name_service";
+} from "@spreadsheet/../tests/helpers/commands";
+import { toRangeData } from "@spreadsheet/../tests/helpers/zones";
+import { getTemplate } from "@web/core/templates";
+
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 
-function beforeEach() {
-    registry.category("services").add("name", nameService);
-}
-
-QUnit.module("FilterValue component", { beforeEach });
+describe.current.tags("headless");
+defineSpreadsheetModels();
 
 /**
  *
  * @param {{ model: Model, filter: object}} props
  */
 async function mountFilterValueComponent(env, props) {
-    const fixture = getFixture();
-    await mount(FilterValue, fixture, { props, env });
+    await mountOnFixture(FilterValue, { props, env, getTemplate });
 }
 
-QUnit.test("basic text filter", async function (assert) {
-    const env = await makeTestEnv();
+test("basic text filter", async function () {
+    const env = await makeMockEnv();
     const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
@@ -38,13 +33,12 @@ QUnit.test("basic text filter", async function (assert) {
         label: "Text Filter",
     });
     await mountFilterValueComponent(env, { model, filter: model.getters.getGlobalFilter("42") });
-    const fixture = getFixture();
-    await editInput(fixture, "input", "foo");
-    assert.strictEqual(model.getters.getGlobalFilterValue("42"), "foo", "value is set");
+    await contains("input").edit("foo");
+    expect(model.getters.getGlobalFilterValue("42")).toBe("foo", { message: "value is set" });
 });
 
-QUnit.test("text filter with range", async function (assert) {
-    const env = await makeTestEnv();
+test("text filter with range", async function () {
+    const env = await makeMockEnv();
     const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     const sheetId = model.getters.getActiveSheetId();
     await addGlobalFilter(model, {
@@ -62,10 +56,12 @@ QUnit.test("text filter with range", async function (assert) {
     const options = [...fixture.querySelectorAll("option")];
     const optionsLabels = options.map((el) => el.textContent);
     const optionsValues = options.map((el) => el.value);
-    assert.strictEqual(select.value, "", "no value is selected");
-    assert.deepEqual(optionsLabels, ["Choose a value...", "foo", "0.00"], "values are formatted");
-    assert.deepEqual(optionsValues, ["", "foo", "0"]);
-    await editSelect(fixture, "select", "0");
-    assert.strictEqual(select.value, "0", "value is selected");
-    assert.strictEqual(model.getters.getGlobalFilterValue("42"), "0", "value is set");
+    expect(select.value).toBe("", { message: "no value is selected" });
+    expect(optionsLabels).toEqual(["Choose a value...", "foo", "0.00"], {
+        message: "values are formatted",
+    });
+    expect(optionsValues).toEqual(["", "foo", "0"]);
+    await contains("select").select("0");
+    expect(select.value).toBe("0", { message: "value is selected" });
+    expect(model.getters.getGlobalFilterValue("42")).toBe("0", { message: "value is set" });
 });

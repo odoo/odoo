@@ -1,36 +1,28 @@
-/** @odoo-module */
-
+import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { registry } from "@web/core/registry";
-import { actionService } from "@web/webclient/actions/action_service";
-import { menuService } from "@web/webclient/menus/menu_service";
-import { spreadsheetLinkMenuCellService } from "@spreadsheet/ir_ui_menu/index";
-import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { getMenuServerData } from "@spreadsheet/../tests/legacy/links/menu_data_utils";
-import { patchWithCleanup, nextTick } from "@web/../tests/helpers/utils";
-import { getEvaluatedCell } from "@spreadsheet/../tests/legacy/utils/getters";
-import { setCellContent } from "@spreadsheet/../tests/legacy/utils/commands";
+import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
+import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
+import { makeMockEnv, mockService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+
+import { getMenuServerData } from "@spreadsheet/../tests/links/menu_data_utils";
+
+import { setCellContent } from "@spreadsheet/../tests/helpers/commands";
+import { getEvaluatedCell } from "@spreadsheet/../tests/helpers/getters";
+
+describe.current.tags("headless");
+defineSpreadsheetModels();
 
 const { Model } = spreadsheet;
 const { urlRepresentation, openLink } = spreadsheet.links;
 
-function beforeEach() {
-    registry
-        .category("services")
-        .add("menu", menuService)
-        .add("action", actionService)
-        .add("spreadsheetLinkMenuCell", spreadsheetLinkMenuCellService);
-}
-
-QUnit.module("spreadsheet > link", { beforeEach });
-
-QUnit.test("click a web link", async (assert) => {
+test("click a web link", async () => {
     patchWithCleanup(window, {
         open: (href) => {
-            assert.step(href.toString());
+            expect.step(href.toString());
         },
     });
-    const env = await makeTestEnv();
+    const env = await makeMockEnv();
     const data = {
         sheets: [
             {
@@ -40,24 +32,22 @@ QUnit.test("click a web link", async (assert) => {
     };
     const model = new Model(data, { custom: { env } });
     const cell = getEvaluatedCell(model, "A1");
-    assert.strictEqual(urlRepresentation(cell.link, model.getters), "https://odoo.com");
+    expect(urlRepresentation(cell.link, model.getters)).toBe("https://odoo.com");
     openLink(cell.link, env);
-    assert.verifySteps(["https://odoo.com"]);
+    expect(["https://odoo.com"]).toVerifySteps();
 });
 
-QUnit.test("click a menu link", async (assert) => {
+test("click a menu link", async () => {
     const fakeActionService = {
-        name: "action",
-        start() {
-            return {
-                doAction(action) {
-                    assert.step(action);
-                },
-            };
+        doAction(action) {
+            expect.step(action);
         },
+        // TODO: this is the conversion 1/1 of the old test, where the mock action service didn't contain a loadAction
+        // method, but that's not something that happens in the real world, so we should probably refactor this test
+        loadAction: undefined,
     };
-    registry.category("services").add("action", fakeActionService, { force: true });
-    const env = await makeTestEnv({ serverData: getMenuServerData() });
+    mockService("action", fakeActionService);
+    const env = await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
     const data = {
         sheets: [
             {
@@ -67,31 +57,28 @@ QUnit.test("click a menu link", async (assert) => {
     };
     const model = new Model(data, { custom: { env } });
     const cell = getEvaluatedCell(model, "A1");
-    assert.strictEqual(urlRepresentation(cell.link, model.getters), "menu with xmlid");
+    expect(urlRepresentation(cell.link, model.getters)).toBe("menu with xmlid");
     openLink(cell.link, env);
-    assert.verifySteps(["action1"]);
+    expect(["action1"]).toVerifySteps();
 });
 
-QUnit.test("click a menu link", async (assert) => {
+test("click a menu link [2]", async () => {
     const fakeActionService = {
-        name: "action",
-        start() {
-            return {
-                doAction(action) {
-                    assert.step("do-action");
-                    assert.deepEqual(action, {
-                        name: "an odoo view",
-                        res_model: "partner",
-                        target: "current",
-                        type: "ir.actions.act_window",
-                        views: [[false, "list"]],
-                    });
-                },
-            };
+        doAction(action) {
+            expect.step("do-action");
+            expect(action).toEqual({
+                name: "an odoo view",
+                res_model: "partner",
+                target: "current",
+                type: "ir.actions.act_window",
+                views: [[false, "list"]],
+            });
         },
+        // TODO: same as the above test
+        loadAction: undefined,
     };
-    registry.category("services").add("action", fakeActionService, { force: true });
-    const env = await makeTestEnv({ serverData: getMenuServerData() });
+    mockService("action", fakeActionService);
+    const env = await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
     const view = {
         name: "an odoo view",
         viewType: "list",
@@ -104,25 +91,24 @@ QUnit.test("click a menu link", async (assert) => {
     const model = new Model({}, { custom: { env } });
     setCellContent(model, "A1", `[a view](odoo://view/${JSON.stringify(view)})`);
     const cell = getEvaluatedCell(model, "A1");
-    assert.strictEqual(urlRepresentation(cell.link, model.getters), "an odoo view");
+    expect(urlRepresentation(cell.link, model.getters)).toBe("an odoo view");
     openLink(cell.link, env);
-    assert.verifySteps(["do-action"]);
+    expect(["do-action"]).toVerifySteps();
 });
 
-QUnit.test("Click a link containing an action xml id", async (assert) => {
-    const env = await makeTestEnv({ serverData: getMenuServerData() });
-    env.services.action = {
-        ...env.services.action,
-        doAction(action) {
-            assert.step("do-action");
-            assert.equal(action.name, "My Action Name");
-            assert.equal(action.res_model, "ir.ui.menu");
-            assert.equal(action.target, "current");
-            assert.equal(action.type, "ir.actions.act_window");
-            assert.deepEqual(action.views, [[1, "list"]]);
-            assert.deepEqual(action.domain, [(1, "=", 1)]);
+test("Click a link containing an action xml id", async () => {
+    mockService("action", {
+        doAction: (action) => {
+            expect.step("do-action");
+            expect(action.name).toBe("My Action Name");
+            expect(action.res_model).toBe("ir.ui.menu");
+            expect(action.target).toBe("current");
+            expect(action.type).toBe("ir.actions.act_window");
+            expect(action.views).toEqual([[1, "list"]]);
+            expect(action.domain).toEqual([(1, "=", 1)]);
         },
-    };
+    });
+    const env = await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
 
     const view = {
         name: "My Action Name",
@@ -138,27 +124,27 @@ QUnit.test("Click a link containing an action xml id", async (assert) => {
     const model = new Model({}, { custom: { env } });
     setCellContent(model, "A1", `[an action link](odoo://view/${JSON.stringify(view)})`);
     const cell = getEvaluatedCell(model, "A1");
-    assert.strictEqual(urlRepresentation(cell.link, model.getters), "My Action Name");
+    expect(urlRepresentation(cell.link, model.getters)).toBe("My Action Name");
     await openLink(cell.link, env);
-    await nextTick();
-    assert.verifySteps(["do-action"]);
+    await animationFrame();
+    expect(["do-action"]).toVerifySteps();
 });
 
-QUnit.test("Can open link when some views are absent from the referred action", async (assert) => {
-    const env = await makeTestEnv({ serverData: getMenuServerData() });
+test("Can open link when some views are absent from the referred action", async () => {
+    const env = await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
     env.services.action = {
         ...env.services.action,
         doAction(action) {
-            assert.step("do-action");
-            assert.equal(action.name, "My Action Name");
-            assert.equal(action.res_model, "ir.ui.menu");
-            assert.equal(action.target, "current");
-            assert.equal(action.type, "ir.actions.act_window");
-            assert.deepEqual(action.views, [
+            expect.step("do-action");
+            expect(action.name).toBe("My Action Name");
+            expect(action.res_model).toBe("ir.ui.menu");
+            expect(action.target).toBe("current");
+            expect(action.type).toBe("ir.actions.act_window");
+            expect(action.views).toEqual([
                 [false, "list"],
                 [false, "form"],
             ]);
-            assert.deepEqual(action.domain, [(1, "=", 1)]);
+            expect(action.domain).toEqual([(1, "=", 1)]);
         },
     };
 
@@ -179,8 +165,8 @@ QUnit.test("Can open link when some views are absent from the referred action", 
     const model = new Model({}, { custom: { env } });
     setCellContent(model, "A1", `[an action link](odoo://view/${JSON.stringify(view)})`);
     const cell = getEvaluatedCell(model, "A1");
-    assert.strictEqual(urlRepresentation(cell.link, model.getters), "My Action Name");
+    expect(urlRepresentation(cell.link, model.getters)).toBe("My Action Name");
     await openLink(cell.link, env);
-    await nextTick();
-    assert.verifySteps(["do-action"]);
+    await animationFrame();
+    expect(["do-action"]).toVerifySteps();
 });

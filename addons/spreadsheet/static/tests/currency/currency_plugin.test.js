@@ -1,11 +1,14 @@
-/** @odoo-module */
+import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
+import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
+import { defineSpreadsheetModels } from "../helpers/data";
+import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 
-import { nextTick } from "@web/../tests/helpers/utils";
-import { createModelWithDataSource } from "@spreadsheet/../tests/legacy/utils/model";
+describe.current.tags("headless");
 
-QUnit.module("spreadsheet currency plugin");
+defineSpreadsheetModels();
 
-QUnit.test("get default currency format when it's in the config", async (assert) => {
+test("get default currency format when it's in the config", async () => {
     const model = await createModelWithDataSource({
         modelConfig: {
             defaultCurrencyFormat: "#,##0.00[$θ]",
@@ -14,10 +17,10 @@ QUnit.test("get default currency format when it's in the config", async (assert)
             throw new Error("Should not make any RPC");
         },
     });
-    assert.strictEqual(model.getters.getCompanyCurrencyFormat(), "#,##0.00[$θ]");
+    expect(model.getters.getCompanyCurrencyFormat()).toBe("#,##0.00[$θ]");
 });
 
-QUnit.test("get default currency format when it's not in the config", async (assert) => {
+test("get default currency format when it's not in the config", async () => {
     const model = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_company_currency_for_spreadsheet") {
@@ -30,13 +33,14 @@ QUnit.test("get default currency format when it's not in the config", async (ass
             }
         },
     });
-    assert.throws(() => model.getters.getCompanyCurrencyFormat(), "Data is loading");
-    await nextTick();
-    assert.strictEqual(model.getters.getCompanyCurrencyFormat(), "#,##0.00[$θ]");
-    assert.verifySteps([]);
+
+    expect(() => model.getters.getCompanyCurrencyFormat()).toThrow(LoadingDataError);
+    await animationFrame();
+    expect(model.getters.getCompanyCurrencyFormat()).toBe("#,##0.00[$θ]");
+    expect([]).toVerifySteps();
 });
 
-QUnit.test("get specific currency format", async (assert) => {
+test("get specific currency format", async () => {
     const model = await createModelWithDataSource({
         modelConfig: {
             defaultCurrencyFormat: "#,##0.00[$θ]",
@@ -52,7 +56,7 @@ QUnit.test("get specific currency format", async (assert) => {
             }
         },
     });
-    assert.throws(() => model.getters.getCompanyCurrencyFormat(42), "Data is loading");
-    await nextTick();
-    assert.strictEqual(model.getters.getCompanyCurrencyFormat(42), "#,##0.00[$O]");
+    expect(() => model.getters.getCompanyCurrencyFormat(42)).toThrow(LoadingDataError);
+    await animationFrame();
+    expect(model.getters.getCompanyCurrencyFormat(42)).toBe("#,##0.00[$O]");
 });

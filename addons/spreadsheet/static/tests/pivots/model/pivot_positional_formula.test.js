@@ -1,347 +1,344 @@
-/** @odoo-module */
+import { describe, expect, test } from "@odoo/hoot";
+import {
+    defineSpreadsheetActions,
+    defineSpreadsheetModels,
+} from "@spreadsheet/../tests/helpers/data";
 
-import { setCellContent } from "@spreadsheet/../tests/legacy/utils/commands";
-import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/legacy/utils/getters";
-import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/legacy/utils/pivot";
-import { createModelWithDataSource } from "@spreadsheet/../tests/legacy/utils/model";
+import { setCellContent } from "@spreadsheet/../tests/helpers/commands";
+import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/helpers/getters";
+import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
+import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
-QUnit.module("spreadsheet > positional pivot formula", {}, () => {
-    QUnit.test("Can have positional args in pivot formula", async function (assert) {
-        const { model } = await createSpreadsheetWithPivot();
+describe.current.tags("headless");
+defineSpreadsheetModels();
+defineSpreadsheetActions();
 
-        // Columns
-        setCellContent(model, "H1", `=PIVOT.VALUE(1,"probability","#foo", 1)`);
-        setCellContent(model, "H2", `=PIVOT.VALUE(1,"probability","#foo", 2)`);
-        setCellContent(model, "H3", `=PIVOT.VALUE(1,"probability","#foo", 3)`);
-        setCellContent(model, "H4", `=PIVOT.VALUE(1,"probability","#foo", 4)`);
-        setCellContent(model, "H5", `=PIVOT.VALUE(1,"probability","#foo", 5)`);
-        assert.strictEqual(getCellValue(model, "H1"), 11);
-        assert.strictEqual(getCellValue(model, "H2"), 15);
-        assert.strictEqual(getCellValue(model, "H3"), 10);
-        assert.strictEqual(getCellValue(model, "H4"), 95);
-        assert.strictEqual(getCellValue(model, "H5"), "");
+test("Can have positional args in pivot formula", async function () {
+    const { model } = await createSpreadsheetWithPivot();
 
-        // Rows
-        setCellContent(model, "I1", `=PIVOT.VALUE(1,"probability","#bar", 1)`);
-        setCellContent(model, "I2", `=PIVOT.VALUE(1,"probability","#bar", 2)`);
-        setCellContent(model, "I3", `=PIVOT.VALUE(1,"probability","#bar", 3)`);
-        assert.strictEqual(getCellValue(model, "I1"), 15);
-        assert.strictEqual(getCellValue(model, "I2"), 116);
-        assert.strictEqual(getCellValue(model, "I3"), "");
-    });
+    // Columns
+    setCellContent(model, "H1", `=PIVOT.VALUE(1,"probability","#foo", 1)`);
+    setCellContent(model, "H2", `=PIVOT.VALUE(1,"probability","#foo", 2)`);
+    setCellContent(model, "H3", `=PIVOT.VALUE(1,"probability","#foo", 3)`);
+    setCellContent(model, "H4", `=PIVOT.VALUE(1,"probability","#foo", 4)`);
+    setCellContent(model, "H5", `=PIVOT.VALUE(1,"probability","#foo", 5)`);
+    expect(getCellValue(model, "H1")).toBe(11);
+    expect(getCellValue(model, "H2")).toBe(15);
+    expect(getCellValue(model, "H3")).toBe(10);
+    expect(getCellValue(model, "H4")).toBe(95);
+    expect(getCellValue(model, "H5")).toBe("");
 
-    QUnit.test("Can have positional args in pivot headers formula", async function (assert) {
-        const { model } = await createSpreadsheetWithPivot();
-        // Columns
-        setCellContent(model, "H1", `=PIVOT.HEADER(1,"#foo",1)`);
-        setCellContent(model, "H2", `=PIVOT.HEADER(1,"#foo",2)`);
-        setCellContent(model, "H3", `=PIVOT.HEADER(1,"#foo",3)`);
-        setCellContent(model, "H4", `=PIVOT.HEADER(1,"#foo",4)`);
-        setCellContent(model, "H5", `=PIVOT.HEADER(1,"#foo",5)`);
-        setCellContent(model, "H6", `=PIVOT.HEADER(1,"#foo",5, "measure", "probability")`);
-        assert.strictEqual(getCellValue(model, "H1"), 1);
-        assert.strictEqual(getCellValue(model, "H2"), 2);
-        assert.strictEqual(getCellValue(model, "H3"), 12);
-        assert.strictEqual(getCellValue(model, "H4"), 17);
-        assert.strictEqual(getCellValue(model, "H5"), "");
-        assert.strictEqual(getCellValue(model, "H6"), "Probability");
+    // Rows
+    setCellContent(model, "I1", `=PIVOT.VALUE(1,"probability","#bar", 1)`);
+    setCellContent(model, "I2", `=PIVOT.VALUE(1,"probability","#bar", 2)`);
+    setCellContent(model, "I3", `=PIVOT.VALUE(1,"probability","#bar", 3)`);
+    expect(getCellValue(model, "I1")).toBe(15);
+    expect(getCellValue(model, "I2")).toBe(116);
+    expect(getCellValue(model, "I3")).toBe("");
+});
 
-        // Rows
-        setCellContent(model, "I1", `=PIVOT.HEADER(1,"#bar",1)`);
-        setCellContent(model, "I2", `=PIVOT.HEADER(1,"#bar",2)`);
-        setCellContent(model, "I3", `=PIVOT.HEADER(1,"#bar",3)`);
-        setCellContent(model, "I4", `=PIVOT.HEADER(1,"#bar",3, "measure", "probability")`);
-        assert.strictEqual(getCellValue(model, "I1"), "No");
-        assert.strictEqual(getCellValue(model, "I2"), "Yes");
-        assert.strictEqual(getCellValue(model, "I3"), "");
-        assert.strictEqual(getCellValue(model, "I4"), "Probability");
-    });
+test("Can have positional args in pivot headers formula", async function () {
+    const { model } = await createSpreadsheetWithPivot();
+    // Columns
+    setCellContent(model, "H1", `=PIVOT.HEADER(1,"#foo",1)`);
+    setCellContent(model, "H2", `=PIVOT.HEADER(1,"#foo",2)`);
+    setCellContent(model, "H3", `=PIVOT.HEADER(1,"#foo",3)`);
+    setCellContent(model, "H4", `=PIVOT.HEADER(1,"#foo",4)`);
+    setCellContent(model, "H5", `=PIVOT.HEADER(1,"#foo",5)`);
+    setCellContent(model, "H6", `=PIVOT.HEADER(1,"#foo",5, "measure", "probability")`);
+    expect(getCellValue(model, "H1")).toBe(1);
+    expect(getCellValue(model, "H2")).toBe(2);
+    expect(getCellValue(model, "H3")).toBe(12);
+    expect(getCellValue(model, "H4")).toBe(17);
+    expect(getCellValue(model, "H5")).toBe("");
+    expect(getCellValue(model, "H6")).toBe("Probability");
 
-    QUnit.test("pivot positional with two levels of group bys in rows", async (assert) => {
-        const { model } = await createSpreadsheetWithPivot({
-            arch: /*xml*/ `
+    // Rows
+    setCellContent(model, "I1", `=PIVOT.HEADER(1,"#bar",1)`);
+    setCellContent(model, "I2", `=PIVOT.HEADER(1,"#bar",2)`);
+    setCellContent(model, "I3", `=PIVOT.HEADER(1,"#bar",3)`);
+    setCellContent(model, "I4", `=PIVOT.HEADER(1,"#bar",3, "measure", "probability")`);
+    expect(getCellValue(model, "I1")).toBe("No");
+    expect(getCellValue(model, "I2")).toBe("Yes");
+    expect(getCellValue(model, "I3")).toBe("");
+    expect(getCellValue(model, "I4")).toBe("Probability");
+});
+
+test("pivot positional with two levels of group bys in rows", async () => {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /*xml*/ `
                 <pivot>
                     <field name="bar" type="row"/>
                     <field name="product_id" type="row"/>
                     <field name="foo" type="col"/>
                     <field name="probability" type="measure"/>
                 </pivot>`,
-        });
-        // Rows Headers
-        setCellContent(model, "H1", `=PIVOT.HEADER(1,"bar","false","#product_id",1)`);
-        setCellContent(model, "H2", `=PIVOT.HEADER(1,"bar","true","#product_id",1)`);
-        setCellContent(model, "H3", `=PIVOT.HEADER(1,"#bar",1,"#product_id",1)`);
-        setCellContent(model, "H4", `=PIVOT.HEADER(1,"#bar",2,"#product_id",1)`);
-        setCellContent(model, "H5", `=PIVOT.HEADER(1,"#bar",3,"#product_id",1)`);
-        assert.strictEqual(getCellValue(model, "H1"), "xpad");
-        assert.strictEqual(getCellValue(model, "H2"), "xphone");
-        assert.strictEqual(getCellValue(model, "H3"), "xpad");
-        assert.strictEqual(getCellValue(model, "H4"), "xphone");
-        assert.strictEqual(getCellValue(model, "H5"), "");
-
-        // Cells
-        setCellContent(
-            model,
-            "H1",
-            `=PIVOT.VALUE(1,"probability","#bar",1,"#product_id",1,"#foo",2)`
-        );
-        setCellContent(
-            model,
-            "H2",
-            `=PIVOT.VALUE(1,"probability","#bar",1,"#product_id",2,"#foo",2)`
-        );
-        assert.strictEqual(getCellValue(model, "H1"), 15);
-        assert.strictEqual(getCellValue(model, "H2"), "");
     });
+    // Rows Headers
+    setCellContent(model, "H1", `=PIVOT.HEADER(1,"bar","false","#product_id",1)`);
+    setCellContent(model, "H2", `=PIVOT.HEADER(1,"bar","true","#product_id",1)`);
+    setCellContent(model, "H3", `=PIVOT.HEADER(1,"#bar",1,"#product_id",1)`);
+    setCellContent(model, "H4", `=PIVOT.HEADER(1,"#bar",2,"#product_id",1)`);
+    setCellContent(model, "H5", `=PIVOT.HEADER(1,"#bar",3,"#product_id",1)`);
+    expect(getCellValue(model, "H1")).toBe("xpad");
+    expect(getCellValue(model, "H2")).toBe("xphone");
+    expect(getCellValue(model, "H3")).toBe("xpad");
+    expect(getCellValue(model, "H4")).toBe("xphone");
+    expect(getCellValue(model, "H5")).toBe("");
 
-    QUnit.test("Positional argument without a number should crash", async (assert) => {
-        const { model } = await createSpreadsheetWithPivot();
-        setCellContent(model, "A10", `=PIVOT.HEADER(1,"#bar","this is not a number")`);
-        assert.strictEqual(getCellValue(model, "A10"), "#ERROR");
-        assert.strictEqual(
-            getEvaluatedCell(model, "A10").message,
-            "The function PIVOT.HEADER expects a number value, but 'this is not a number' is a string, and cannot be coerced to a number."
-        );
-    });
+    // Cells
+    setCellContent(model, "H1", `=PIVOT.VALUE(1,"probability","#bar",1,"#product_id",1,"#foo",2)`);
+    setCellContent(model, "H2", `=PIVOT.VALUE(1,"probability","#bar",1,"#product_id",2,"#foo",2)`);
+    expect(getCellValue(model, "H1")).toBe(15);
+    expect(getCellValue(model, "H2")).toBe("");
+});
 
-    QUnit.test("sort first pivot column (ascending)", async (assert) => {
-        const spreadsheetData = {
-            pivots: {
-                1: {
-                    type: "ODOO",
-                    columns: [{ name: "foo" }],
-                    rows: [{ name: "bar" }],
-                    domain: [],
-                    measures: [{ name: "probability", aggregator: "sum" }],
-                    model: "partner",
-                    sortedColumn: {
-                        groupId: [[], [1]],
-                        measure: "probability",
-                        order: "asc",
-                    },
+test("Positional argument without a number should crash", async () => {
+    const { model } = await createSpreadsheetWithPivot();
+    setCellContent(model, "A10", `=PIVOT.HEADER(1,"#bar","this is not a number")`);
+    expect(getCellValue(model, "A10")).toBe("#ERROR");
+    expect(getEvaluatedCell(model, "A10").message).toBe(
+        "The function PIVOT.HEADER expects a number value, but 'this is not a number' is a string, and cannot be coerced to a number."
+    );
+});
+
+test("sort first pivot column (ascending)", async () => {
+    const spreadsheetData = {
+        pivots: {
+            1: {
+                type: "ODOO",
+                columns: [{ name: "foo" }],
+                rows: [{ name: "bar" }],
+                domain: [],
+                measures: [{ name: "probability", aggregator: "sum" }],
+                model: "partner",
+                sortedColumn: {
+                    groupId: [[], [1]],
+                    measure: "probability",
+                    order: "asc",
                 },
             },
-        };
-        const model = await createModelWithDataSource({ spreadsheetData });
-        setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
-        setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
-        setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",1)`);
-        setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",1)`);
-        setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",2)`);
-        setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",2)`);
-        setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability","#bar",1)`);
-        setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability","#bar",2)`);
-        await waitForDataLoaded(model);
-        assert.strictEqual(getCellValue(model, "A1"), "No");
-        assert.strictEqual(getCellValue(model, "A2"), "Yes");
-        assert.strictEqual(getCellValue(model, "B1"), "");
-        assert.strictEqual(getCellValue(model, "B2"), 11);
-        assert.strictEqual(getCellValue(model, "C1"), 15);
-        assert.strictEqual(getCellValue(model, "C2"), "");
-        assert.strictEqual(getCellValue(model, "D1"), 15);
-        assert.strictEqual(getCellValue(model, "D2"), 116);
-    });
+        },
+    };
+    const model = await createModelWithDataSource({ spreadsheetData });
+    setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
+    setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
+    setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",1)`);
+    setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",1)`);
+    setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",2)`);
+    setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",2)`);
+    setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability","#bar",1)`);
+    setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability","#bar",2)`);
+    await waitForDataLoaded(model);
+    expect(getCellValue(model, "A1")).toBe("No");
+    expect(getCellValue(model, "A2")).toBe("Yes");
+    expect(getCellValue(model, "B1")).toBe("");
+    expect(getCellValue(model, "B2")).toBe(11);
+    expect(getCellValue(model, "C1")).toBe(15);
+    expect(getCellValue(model, "C2")).toBe("");
+    expect(getCellValue(model, "D1")).toBe(15);
+    expect(getCellValue(model, "D2")).toBe(116);
+});
 
-    QUnit.test("sort first pivot column (descending)", async (assert) => {
-        const spreadsheetData = {
-            pivots: {
-                1: {
-                    type: "ODOO",
-                    columns: [{ name: "foo" }],
-                    rows: [{ name: "bar" }],
-                    domain: [],
-                    measures: [{ name: "probability", aggregator: "sum" }],
-                    model: "partner",
-                    sortedColumn: {
-                        groupId: [[], [1]],
-                        measure: "probability",
-                        order: "desc",
-                    },
+test("sort first pivot column (descending)", async () => {
+    const spreadsheetData = {
+        pivots: {
+            1: {
+                type: "ODOO",
+                columns: [{ name: "foo" }],
+                rows: [{ name: "bar" }],
+                domain: [],
+                measures: [{ name: "probability", aggregator: "sum" }],
+                model: "partner",
+                sortedColumn: {
+                    groupId: [[], [1]],
+                    measure: "probability",
+                    order: "desc",
                 },
             },
-        };
-        const model = await createModelWithDataSource({ spreadsheetData });
-        setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
-        setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
-        setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",1)`);
-        setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",1)`);
-        setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",2)`);
-        setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",2)`);
-        setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability","#bar",1)`);
-        setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability","#bar",2)`);
-        await waitForDataLoaded(model);
-        assert.strictEqual(getCellValue(model, "A1"), "Yes");
-        assert.strictEqual(getCellValue(model, "A2"), "No");
-        assert.strictEqual(getCellValue(model, "B1"), 11);
-        assert.strictEqual(getCellValue(model, "B2"), "");
-        assert.strictEqual(getCellValue(model, "C1"), "");
-        assert.strictEqual(getCellValue(model, "C2"), 15);
-        assert.strictEqual(getCellValue(model, "D1"), 116);
-        assert.strictEqual(getCellValue(model, "D2"), 15);
-    });
+        },
+    };
+    const model = await createModelWithDataSource({ spreadsheetData });
+    setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
+    setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
+    setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",1)`);
+    setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",1)`);
+    setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",2)`);
+    setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",2)`);
+    setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability","#bar",1)`);
+    setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability","#bar",2)`);
+    await waitForDataLoaded(model);
+    expect(getCellValue(model, "A1")).toBe("Yes");
+    expect(getCellValue(model, "A2")).toBe("No");
+    expect(getCellValue(model, "B1")).toBe(11);
+    expect(getCellValue(model, "B2")).toBe("");
+    expect(getCellValue(model, "C1")).toBe("");
+    expect(getCellValue(model, "C2")).toBe(15);
+    expect(getCellValue(model, "D1")).toBe(116);
+    expect(getCellValue(model, "D2")).toBe(15);
+});
 
-    QUnit.test("sort second pivot column (ascending)", async (assert) => {
-        const spreadsheetData = {
-            pivots: {
-                1: {
-                    type: "ODOO",
-                    columns: [{ name: "foo" }],
-                    domain: [],
-                    measures: [{ name: "probability", aggregator: "sum" }],
-                    model: "partner",
-                    rows: [{ name: "bar" }],
-                    name: "Partners by Foo",
-                    sortedColumn: {
-                        groupId: [[], [2]],
-                        measure: "probability",
-                        order: "asc",
-                    },
+test("sort second pivot column (ascending)", async () => {
+    const spreadsheetData = {
+        pivots: {
+            1: {
+                type: "ODOO",
+                columns: [{ name: "foo" }],
+                domain: [],
+                measures: [{ name: "probability", aggregator: "sum" }],
+                model: "partner",
+                rows: [{ name: "bar" }],
+                name: "Partners by Foo",
+                sortedColumn: {
+                    groupId: [[], [2]],
+                    measure: "probability",
+                    order: "asc",
                 },
             },
-        };
-        const model = await createModelWithDataSource({ spreadsheetData });
-        setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
-        setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
-        setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",1)`);
-        setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",1)`);
-        setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",2)`);
-        setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",2)`);
-        setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability","#bar",1)`);
-        setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability","#bar",2)`);
-        await waitForDataLoaded(model);
-        assert.strictEqual(getCellValue(model, "A1"), "Yes");
-        assert.strictEqual(getCellValue(model, "A2"), "No");
-        assert.strictEqual(getCellValue(model, "B1"), 11);
-        assert.strictEqual(getCellValue(model, "B2"), "");
-        assert.strictEqual(getCellValue(model, "C1"), "");
-        assert.strictEqual(getCellValue(model, "C2"), 15);
-        assert.strictEqual(getCellValue(model, "D1"), 116);
-        assert.strictEqual(getCellValue(model, "D2"), 15);
-    });
+        },
+    };
+    const model = await createModelWithDataSource({ spreadsheetData });
+    setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
+    setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
+    setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",1)`);
+    setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",1)`);
+    setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",2)`);
+    setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",2)`);
+    setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability","#bar",1)`);
+    setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability","#bar",2)`);
+    await waitForDataLoaded(model);
+    expect(getCellValue(model, "A1")).toBe("Yes");
+    expect(getCellValue(model, "A2")).toBe("No");
+    expect(getCellValue(model, "B1")).toBe(11);
+    expect(getCellValue(model, "B2")).toBe("");
+    expect(getCellValue(model, "C1")).toBe("");
+    expect(getCellValue(model, "C2")).toBe(15);
+    expect(getCellValue(model, "D1")).toBe(116);
+    expect(getCellValue(model, "D2")).toBe(15);
+});
 
-    QUnit.test("sort second pivot column (descending)", async (assert) => {
-        const spreadsheetData = {
-            pivots: {
-                1: {
-                    type: "ODOO",
-                    columns: [{ name: "foo" }],
-                    domain: [],
-                    measures: [{ name: "probability", aggregator: "sum" }],
-                    model: "partner",
-                    rows: [{ name: "bar" }],
-                    name: "Partners by Foo",
-                    sortedColumn: {
-                        groupId: [[], [2]],
-                        measure: "probability",
-                        order: "desc",
-                    },
+test("sort second pivot column (descending)", async () => {
+    const spreadsheetData = {
+        pivots: {
+            1: {
+                type: "ODOO",
+                columns: [{ name: "foo" }],
+                domain: [],
+                measures: [{ name: "probability", aggregator: "sum" }],
+                model: "partner",
+                rows: [{ name: "bar" }],
+                name: "Partners by Foo",
+                sortedColumn: {
+                    groupId: [[], [2]],
+                    measure: "probability",
+                    order: "desc",
                 },
             },
-        };
-        const model = await createModelWithDataSource({ spreadsheetData });
-        setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
-        setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
-        setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",1)`);
-        setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",1)`);
-        setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",2)`);
-        setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",2)`);
-        setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability","#bar",1)`);
-        setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability","#bar",2)`);
-        await waitForDataLoaded(model);
-        assert.strictEqual(getCellValue(model, "A1"), "No");
-        assert.strictEqual(getCellValue(model, "A2"), "Yes");
-        assert.strictEqual(getCellValue(model, "B1"), "");
-        assert.strictEqual(getCellValue(model, "B2"), 11);
-        assert.strictEqual(getCellValue(model, "C1"), 15);
-        assert.strictEqual(getCellValue(model, "C2"), "");
-        assert.strictEqual(getCellValue(model, "D1"), 15);
-        assert.strictEqual(getCellValue(model, "D2"), 116);
-    });
+        },
+    };
+    const model = await createModelWithDataSource({ spreadsheetData });
+    setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
+    setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
+    setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",1)`);
+    setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",1)`);
+    setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",2)`);
+    setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",2)`);
+    setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability","#bar",1)`);
+    setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability","#bar",2)`);
+    await waitForDataLoaded(model);
+    expect(getCellValue(model, "A1")).toBe("No");
+    expect(getCellValue(model, "A2")).toBe("Yes");
+    expect(getCellValue(model, "B1")).toBe("");
+    expect(getCellValue(model, "B2")).toBe(11);
+    expect(getCellValue(model, "C1")).toBe(15);
+    expect(getCellValue(model, "C2")).toBe("");
+    expect(getCellValue(model, "D1")).toBe(15);
+    expect(getCellValue(model, "D2")).toBe(116);
+});
 
-    QUnit.test("sort second pivot measure (ascending)", async (assert) => {
-        const spreadsheetData = {
-            pivots: {
-                1: {
-                    type: "ODOO",
-                    rows: [{ name: "product_id" }],
-                    columns: [],
-                    domain: [],
-                    measures: [
-                        { name: "probability", aggregator: "sum" },
-                        { name: "foo", aggregator: "sum" },
-                    ],
-                    model: "partner",
-                    sortedColumn: {
-                        groupId: [[], []],
-                        measure: "foo",
-                        order: "asc",
-                    },
+test("sort second pivot measure (ascending)", async () => {
+    const spreadsheetData = {
+        pivots: {
+            1: {
+                type: "ODOO",
+                rows: [{ name: "product_id" }],
+                columns: [],
+                domain: [],
+                measures: [
+                    { name: "probability", aggregator: "sum" },
+                    { name: "foo", aggregator: "sum" },
+                ],
+                model: "partner",
+                sortedColumn: {
+                    groupId: [[], []],
+                    measure: "foo",
+                    order: "asc",
                 },
             },
-        };
-        const model = await createModelWithDataSource({ spreadsheetData });
-        setCellContent(model, "A10", `=PIVOT.HEADER(1,"#product_id",1)`);
-        setCellContent(model, "A11", `=PIVOT.HEADER(1,"#product_id",2)`);
-        setCellContent(model, "B10", `=PIVOT.VALUE(1,"probability","#product_id",1)`);
-        setCellContent(model, "B11", `=PIVOT.VALUE(1,"probability","#product_id",2)`);
-        setCellContent(model, "C10", `=PIVOT.VALUE(1,"foo","#product_id",1)`);
-        setCellContent(model, "C11", `=PIVOT.VALUE(1,"foo","#product_id",2)`);
-        await waitForDataLoaded(model);
-        assert.strictEqual(getCellValue(model, "A10"), "xphone");
-        assert.strictEqual(getCellValue(model, "A11"), "xpad");
-        assert.strictEqual(getCellValue(model, "B10"), 10);
-        assert.strictEqual(getCellValue(model, "B11"), 121);
-        assert.strictEqual(getCellValue(model, "C10"), 12);
-        assert.strictEqual(getCellValue(model, "C11"), 20);
-    });
+        },
+    };
+    const model = await createModelWithDataSource({ spreadsheetData });
+    setCellContent(model, "A10", `=PIVOT.HEADER(1,"#product_id",1)`);
+    setCellContent(model, "A11", `=PIVOT.HEADER(1,"#product_id",2)`);
+    setCellContent(model, "B10", `=PIVOT.VALUE(1,"probability","#product_id",1)`);
+    setCellContent(model, "B11", `=PIVOT.VALUE(1,"probability","#product_id",2)`);
+    setCellContent(model, "C10", `=PIVOT.VALUE(1,"foo","#product_id",1)`);
+    setCellContent(model, "C11", `=PIVOT.VALUE(1,"foo","#product_id",2)`);
+    await waitForDataLoaded(model);
+    expect(getCellValue(model, "A10")).toBe("xphone");
+    expect(getCellValue(model, "A11")).toBe("xpad");
+    expect(getCellValue(model, "B10")).toBe(10);
+    expect(getCellValue(model, "B11")).toBe(121);
+    expect(getCellValue(model, "C10")).toBe(12);
+    expect(getCellValue(model, "C11")).toBe(20);
+});
 
-    QUnit.test("sort second pivot measure (descending)", async (assert) => {
-        const spreadsheetData = {
-            pivots: {
-                1: {
-                    type: "ODOO",
-                    columns: [],
-                    domain: [],
-                    measures: [
-                        { name: "probability", aggregator: "sum" },
-                        { name: "foo", aggregator: "sum" },
-                    ],
-                    model: "partner",
-                    rows: [{ name: "product_id" }],
-                    sortedColumn: {
-                        groupId: [[], []],
-                        measure: "foo",
-                        order: "desc",
-                    },
+test("sort second pivot measure (descending)", async () => {
+    const spreadsheetData = {
+        pivots: {
+            1: {
+                type: "ODOO",
+                columns: [],
+                domain: [],
+                measures: [
+                    { name: "probability", aggregator: "sum" },
+                    { name: "foo", aggregator: "sum" },
+                ],
+                model: "partner",
+                rows: [{ name: "product_id" }],
+                sortedColumn: {
+                    groupId: [[], []],
+                    measure: "foo",
+                    order: "desc",
                 },
             },
-        };
-        const model = await createModelWithDataSource({ spreadsheetData });
-        setCellContent(model, "A10", `=PIVOT.HEADER(1,"#product_id",1)`);
-        setCellContent(model, "A11", `=PIVOT.HEADER(1,"#product_id",2)`);
-        setCellContent(model, "B10", `=PIVOT.VALUE(1,"probability","#product_id",1)`);
-        setCellContent(model, "B11", `=PIVOT.VALUE(1,"probability","#product_id",2)`);
-        setCellContent(model, "C10", `=PIVOT.VALUE(1,"foo","#product_id",1)`);
-        setCellContent(model, "C11", `=PIVOT.VALUE(1,"foo","#product_id",2)`);
-        await waitForDataLoaded(model);
-        assert.strictEqual(getCellValue(model, "A10"), "xpad");
-        assert.strictEqual(getCellValue(model, "A11"), "xphone");
-        assert.strictEqual(getCellValue(model, "B10"), 121);
-        assert.strictEqual(getCellValue(model, "B11"), 10);
-        assert.strictEqual(getCellValue(model, "C10"), 20);
-        assert.strictEqual(getCellValue(model, "C11"), 12);
-    });
+        },
+    };
+    const model = await createModelWithDataSource({ spreadsheetData });
+    setCellContent(model, "A10", `=PIVOT.HEADER(1,"#product_id",1)`);
+    setCellContent(model, "A11", `=PIVOT.HEADER(1,"#product_id",2)`);
+    setCellContent(model, "B10", `=PIVOT.VALUE(1,"probability","#product_id",1)`);
+    setCellContent(model, "B11", `=PIVOT.VALUE(1,"probability","#product_id",2)`);
+    setCellContent(model, "C10", `=PIVOT.VALUE(1,"foo","#product_id",1)`);
+    setCellContent(model, "C11", `=PIVOT.VALUE(1,"foo","#product_id",2)`);
+    await waitForDataLoaded(model);
+    expect(getCellValue(model, "A10")).toBe("xpad");
+    expect(getCellValue(model, "A11")).toBe("xphone");
+    expect(getCellValue(model, "B10")).toBe(121);
+    expect(getCellValue(model, "B11")).toBe(10);
+    expect(getCellValue(model, "C10")).toBe(20);
+    expect(getCellValue(model, "C11")).toBe(12);
+});
 
-    QUnit.test("Formatting a pivot positional preserves the interval", async (assert) => {
-        const { model } = await createSpreadsheetWithPivot({
-            arch: /*xml*/ `
+test("Formatting a pivot positional preserves the interval", async () => {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /*xml*/ `
                 <pivot>
                     <field name="date:day" type="row"/>
                     <field name="probability" type="measure"/>
                 </pivot>`,
-        });
-        setCellContent(model, "A1", `=PIVOT.HEADER(1,"#date:day",1)`);
-        assert.strictEqual(getEvaluatedCell(model, "A1").formattedValue, "4/14/2016");
     });
+    setCellContent(model, "A1", `=PIVOT.HEADER(1,"#date:day",1)`);
+    expect(getEvaluatedCell(model, "A1").formattedValue).toBe("4/14/2016");
 });
