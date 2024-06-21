@@ -146,10 +146,10 @@ class HolidaysType(models.Model):
         date_from = self._context.get('default_date_from', fields.Datetime.today())
         date_to = self._context.get('default_date_to', fields.Datetime.today())
         employee_id = self._context.get('default_employee_id', self._context.get('employee_id', self.env.user.employee_id.id))
-        for holiday_type in self:
-            if holiday_type.requires_allocation == 'yes':
+        for leave_type in self:
+            if leave_type.requires_allocation == 'yes':
                 allocations = self.env['hr.leave.allocation'].search([
-                    ('holiday_status_id', '=', holiday_type.id),
+                    ('holiday_status_id', '=', leave_type.id),
                     ('allocation_type', '=', 'accrual'),
                     ('employee_id', '=', employee_id),
                     ('date_from', '<=', date_from),
@@ -157,14 +157,14 @@ class HolidaysType(models.Model):
                     ('date_to', '>=', date_to),
                     ('date_to', '=', False),
                 ])
-                allowed_excess = holiday_type.max_allowed_negative if holiday_type.allows_negative else 0
+                allowed_excess = leave_type.max_allowed_negative if leave_type.allows_negative else 0
                 allocations = allocations.filtered(lambda alloc:
                     alloc.allocation_type == 'accrual'
                     or (alloc.max_leaves > 0 and alloc.virtual_remaining_leaves > -allowed_excess)
                 )
-                holiday_type.has_valid_allocation = bool(allocations)
+                leave_type.has_valid_allocation = bool(allocations)
             else:
-                holiday_type.has_valid_allocation = True
+                leave_type.has_valid_allocation = True
 
     def _search_max_leaves(self, operator, value):
         value = float(value)
@@ -340,7 +340,6 @@ class HolidaysType(models.Model):
             ('holiday_status_id', 'in', self.ids),
         ]
         action['context'] = {
-            'default_holiday_type': 'department',
             'default_holiday_status_id': self.ids[0],
             'search_default_approved_state': 1,
             'search_default_year': 1,

@@ -405,18 +405,6 @@ class TestAccessRightsCreate(TestHrHolidaysAccessRightsCommon):
             self.request_leave(self.user_employee_id, date.today() + relativedelta(days=5), 1, values)
 
 
-    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
-    def test_base_user_create_batch(self):
-        """ A simple user cannot create a leave in bacth mode (by company, by department, by tag)"""
-        values = {
-            'name': 'Hol10',
-            'holiday_status_id': self.leave_type.id,
-            'holiday_type': 'company',
-            'mode_company_id': 1,
-        }
-        with self.assertRaises(AccessError):
-            self.request_leave(self.user_employee_id, date.today() + relativedelta(days=5), 1, values)
-
     # hr_holidays.group_hr_holidays_user
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -458,17 +446,6 @@ class TestAccessRightsCreate(TestHrHolidaysAccessRightsCommon):
             'name': 'Hol10',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.leave_type.id,
-        }
-        self.request_leave(self.user_hrmanager_id, date.today() + relativedelta(days=5), 1, values)
-
-    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
-    def test_holidays_manager_create_batch(self):
-        """ A holidays manager can create a leave in bacth mode (by company, by department, by tag)"""
-        values = {
-            'name': 'Hol10',
-            'holiday_status_id': self.leave_type.id,
-            'holiday_type': 'company',
-            'mode_company_id': self.company.id,
         }
         self.request_leave(self.user_hrmanager_id, date.today() + relativedelta(days=5), 1, values)
 
