@@ -2032,6 +2032,74 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
         self.assertEqual(loyalty_card.points, 100)
 
+    def test_archived_reward_products(self):
+        """
+        Check that a loyalty_reward with no active reward product is not loaded.
+        In the case where the reward is based on reward_product_tag_id we also check
+        the case where at least one reward is  active.
+        """
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
+
+        self.env['loyalty.program'].search([]).write({'active': False})
+        free_product_tag = self.env['product.tag'].create({'name': 'Free Product'})
+        self.env['res.partner'].create({'name': 'AAAA'})
+
+        self.product_a.write({
+            'name': 'Test Product A',
+            'type': 'product',
+            'list_price': 100,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+
+        self.product_b.write({'product_tag_ids': [(4, free_product_tag.id)]})
+        product_c = self.env['product.product'].create(
+            {
+                'name': 'Free Product C',
+                'list_price': 1,
+                'available_in_pos': True,
+                'taxes_id': False,
+                'product_tag_ids': [(4, free_product_tag.id)],
+            }
+        )
+
+        LoyaltyProgram = self.env['loyalty.program']
+        loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+        loyalty_program_tag = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+
+        loyalty_program.reward_ids.write({
+            'reward_type': 'product',
+            'required_points': 1,
+            'reward_product_id': self.product_b,
+        })
+
+        loyalty_program_tag.reward_ids.write({
+            'reward_type': 'product',
+            'required_points': 1,
+            'reward_product_tag_id': free_product_tag.id,
+        })
+
+        self.product_b.active = False
+        product_c.active = False
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyArchivedRewardProductsInactive",
+            login="pos_user"
+        )
+
+        product_c.active = True
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyArchivedRewardProductsActive",
+            login="pos_user"
+        )
+
     def test_gift_card_rewards_using_taxes(self):
         """
         Check the gift card value when the reward has taxes
