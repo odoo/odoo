@@ -7,6 +7,7 @@ import pytz
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
+from werkzeug.urls import url_encode, url_join
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
@@ -114,6 +115,7 @@ class Digest(models.Model):
 
     def action_send(self):
         to_slowdown = self._check_daily_logs()
+
         for digest in self:
             for user in digest.user_ids:
                 digest.with_context(
@@ -121,10 +123,12 @@ class Digest(models.Model):
                     lang=user.lang
                 )._action_send_to_user(user, tips_count=1)
             if digest in to_slowdown:
-                digest.write({'periodicity': self._get_next_periodicity()[0]})
+                digest.write({'periodicity': digest._get_next_periodicity()[0]})
             digest.next_run_date = digest._get_next_run_date()
 
     def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
+        unsubscribe_token = self._get_unsubscribe_token(user.id)
+
         rendered_body = self.env['mail.render.mixin'].with_context(preserve_comments=True)._render_template(
             'digest.digest_mail_main',
             'digest.digest',
@@ -136,7 +140,7 @@ class Digest(models.Model):
                 'top_button_url': self.get_base_url(),
                 'company': user.company_id,
                 'user': user,
-                'unsubscribe_token': self._get_unsubscribe_token(user.id),
+                'unsubscribe_token': unsubscribe_token,
                 'tips_count': tips_count,
                 'formatted_date': datetime.today().strftime('%B %d, %Y'),
                 'display_mobile_banner': True,
@@ -155,16 +159,30 @@ class Digest(models.Model):
             },
         )
         # create a mail_mail based on values, without attachments
+        unsub_params = url_encode({
+            "token": unsubscribe_token,
+            "user_id": user.id,
+        })
+        unsub_url = url_join(
+            self.get_base_url(),
+            f'/digest/{self.id}/unsubscribe_oneclik?{unsub_params}'
+        )
         mail_values = {
             'auto_delete': True,
             'author_id': self.env.user.partner_id.id,
+            'body_html': full_mail,
             'email_from': (
                 self.company_id.partner_id.email_formatted
                 or self.env.user.email_formatted
                 or self.env.ref('base.user_root').email_formatted
             ),
             'email_to': user.email_formatted,
-            'body_html': full_mail,
+            # Add headers that allow the MUA to offer a one click button to unsubscribe (requires DKIM to work)
+            'headers': {
+                'List-Unsubscribe': f'<{unsub_url}>',
+                'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+                'X-Auto-Response-Suppress': 'OOF',  # avoid out-of-office replies from MS Exchange
+            },
             'state': 'outgoing',
             'subject': '%s: %s' % (user.company_id.name, self.name),
         }
@@ -304,11 +322,11 @@ class Digest(models.Model):
         self.ensure_one()
         if self.periodicity == 'daily':
             delta = relativedelta(days=1)
-        if self.periodicity == 'weekly':
+        elif self.periodicity == 'weekly':
             delta = relativedelta(weeks=1)
         elif self.periodicity == 'monthly':
             delta = relativedelta(months=1)
-        elif self.periodicity == 'quarterly':
+        else:
             delta = relativedelta(months=3)
         return date.today() + delta
 
@@ -353,8 +371,8 @@ class Digest(models.Model):
         for digest in self:
             if digest.periodicity == 'daily':  # 3 days ago
                 limit_dt = today - relativedelta(days=3)
-            elif digest.periodicity == 'weekly':  # 2 weeks ago
-                limit_dt = today - relativedelta(days=14)
+            elif digest.periodicity == 'weekly':  # 1 week ago
+                limit_dt = today - relativedelta(days=7)
             elif digest.periodicity == 'monthly':  # 1 month ago
                 limit_dt = today - relativedelta(months=1)
             elif digest.periodicity == 'quarterly':  # 3 month ago
@@ -368,11 +386,11 @@ class Digest(models.Model):
         return to_slowdown
 
     def _get_next_periodicity(self):
+        if self.periodicity == 'daily':
+            return 'weekly', _('weekly')
         if self.periodicity == 'weekly':
             return 'monthly', _('monthly')
-        if self.periodicity == 'monthly':
-            return 'quarterly', _('quarterly')
-        return 'weekly', _('weekly')
+        return 'quarterly', _('quarterly')
 
     def _format_currency_amount(self, amount, currency_id):
         pre = currency_id.position == 'before'

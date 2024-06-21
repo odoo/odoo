@@ -4,11 +4,13 @@
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail_group.tests.common import TestMailListCommon
 from odoo.exceptions import ValidationError, AccessError
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger, append_content_to_html
 
 
+@tagged("mail_group")
 class TestMailGroup(TestMailListCommon):
+
     def test_clean_email_body(self):
         template = self.env.ref('mail_group.mail_group_footer')
         footer = template._render({'group_url': 'Test remove footer'}, engine='ir.qweb', minimal_qcontext=True)
