@@ -130,6 +130,16 @@ export class PosStore extends Reactive {
         if (this.useProxy()) {
             await this.connectToProxy();
         }
+        this.onNotified("DATA_CHANGED", ({ model, ids, fields }) => {
+            // FIXME BUG in data service; `fields` param is messed up
+            this.data.read(model, ids);
+        });
+        this.onNotified("DATA_UNLINKED", ({ model, ids }) => {
+            this.data.read(model, ids);
+            for (const id of ids) {
+                this.models[model].get(id).delete();
+            }
+        });
         this.closeOtherTabs();
         this.showScreen("ProductScreen");
     }
@@ -1363,12 +1373,6 @@ export class PosStore extends Reactive {
         this.action.doAction("point_of_sale.res_partner_action_edit_pos", {
             props: {
                 resId: partner?.id,
-                onSave: (record) => {
-                    this.data.read("res.partner", record.config.resIds);
-                    this.action.doAction({
-                        type: "ir.actions.act_window_close",
-                    });
-                },
             },
         });
     }
@@ -1383,12 +1387,6 @@ export class PosStore extends Reactive {
             {
                 props: {
                     resId: product?.id,
-                    onSave: (record) => {
-                        this.data.read("product.product", [record.evalContext.id]);
-                        this.action.doAction({
-                            type: "ir.actions.act_window_close",
-                        });
-                    },
                 },
             }
         );

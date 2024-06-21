@@ -91,6 +91,8 @@ class PosSession(models.Model):
     is_in_company_currency = fields.Boolean('Is Using Company Currency', compute='_compute_is_in_company_currency')
     update_stock_at_closing = fields.Boolean('Stock should be updated at closing')
     bank_payment_ids = fields.One2many('account.payment', 'pos_session_id', 'Bank Payments', help='Account payments representing aggregated and bank split payments.')
+    # FIXME: there is no need to store this in the db. we only want to cache it in the session
+    loaded_data = fields.Json(string='Loaded Data')
 
     _sql_constraints = [('uniq_name', 'unique(name)', "The name of this POS Session must be unique!")]
 
@@ -181,6 +183,7 @@ class PosSession(models.Model):
             if not only_data:
                 self._load_pos_data_relations(model, response)
 
+        self.loaded_data = response
         return response
 
     def _prepare_pricelist_domain(self, data):
