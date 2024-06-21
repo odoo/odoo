@@ -37,6 +37,7 @@ class HrWorkEntry(models.Model):
         default=lambda self: self.env.company)
     conflict = fields.Boolean('Conflicts', compute='_compute_conflict', store=True)  # Used to show conflicting work entries first
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', store=True)
+    is_missing_work_entry_hours = fields.Boolean(compute="_compute_is_missing_work_entry_hours", search="_search_is_missing_work_entry_hours")
 
     # There is no way for _error_checking() to detect conflicts in work
     # entries that have been introduced in concurrent transactions, because of the transaction
@@ -66,6 +67,65 @@ class HrWorkEntry(models.Model):
 
     def init(self):
         tools.create_index(self._cr, "hr_work_entry_date_start_date_stop_index", self._table, ["date_start", "date_stop"])
+
+    def _get_duration_on_the_day(self):
+        return sum(work_entry.duration for work_entry in self)
+
+    def _get_calendar(self):
+        return self.employee_id.resource_calendar_id or self.company_id.resource_calendar_id
+
+    def _get_work_entries_data(self, work_entries_dict):
+        data = self.env['hr.work.entry']
+        duration_per_week_day = defaultdict(float)
+        all_work_entry_calendar = self._get_calendar()
+        for calendar in all_work_entry_calendar:
+            # we have 7 days in weeks and week_day referes to number of day in week(Like: Monday - 0)
+            for week_day in range(7):
+                filter_condition = lambda x: int(x.dayofweek) == week_day and x.day_period != 'lunch'
+                attendance_ids = calendar.attendance_ids.filtered(filter_condition)
+                if not attendance_ids:
+                    continue
+                if calendar.two_weeks_calendar:
+                    for week_type in set(attendance_ids.mapped('week_type')):
+                        duration_per_week_day[(calendar, week_day, week_type)] += sum(
+                            attendance_ids.filtered(lambda x: x.week_type == week_type).mapped('duration_hours')
+                        )
+                else:
+                    duration_per_week_day[(calendar, week_day)] = sum(attendance_ids.mapped('duration_hours'))
+
+        for key, work_entries in work_entries_dict.items():
+            duration_on_the_day = work_entries._get_duration_on_the_day()
+            week_type = str(key[0].isocalendar()[1] % 2)
+            work_entry_calendar = work_entries._get_calendar()
+            if work_entry_calendar.two_weeks_calendar and duration_on_the_day < duration_per_week_day[(work_entry_calendar, key[0].weekday(), week_type)]:
+                data |= work_entries
+            elif not work_entry_calendar.two_weeks_calendar and duration_on_the_day < duration_per_week_day[(work_entry_calendar, key[0].weekday())]:
+                data |= work_entries
+        return data
+
+    def _get_missing_work_entries(self):
+        work_entries_dict = defaultdict(lambda: self.env['hr.work.entry'])
+        for work_entry in self:
+            key = (work_entry.date_start.date(), work_entry.employee_id)
+            work_entries_dict[key] |= work_entry
+        return self._get_work_entries_data(work_entries_dict)
+
+    @api.model
+    def _search_is_missing_work_entry_hours(self, operator, value):
+        if not isinstance(value, bool):
+            raise TypeError(_('Invalid value: %s') % value)
+        if operator not in ['=', '!=']:
+            raise TypeError(_('Invalid operator: %s') % operator)
+
+        work_entries = self.search([])
+        new_operator = 'not in' if (operator == '=') ^ value else 'in'
+
+        return [('id', new_operator, work_entries._get_missing_work_entries().ids)]
+
+    def _compute_is_missing_work_entry_hours(self):
+        self.is_missing_hours = False
+        work_entries = self._get_missing_work_entries()
+        work_entries.is_missing_hours = True
 
     @api.depends('work_entry_type_id', 'employee_id')
     def _compute_name(self):
