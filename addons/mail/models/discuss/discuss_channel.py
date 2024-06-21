@@ -429,7 +429,7 @@ class Channel(models.Model):
                         "model": "discuss.channel",
                     },
                 )
-                store.add("ChannelMember", list(new_members._discuss_channel_member_format().values()))
+                store.add(new_members)
                 notifications.append((channel, "mail.record/insert", store.get_result()))
             if existing_members and (current_partner or current_guest):
                 # If the current user invited these members but they are already present, notify the current user about their existence as well.
@@ -446,10 +446,7 @@ class Channel(models.Model):
                         "model": "discuss.channel",
                     },
                 )
-                user_store.add(
-                    "ChannelMember",
-                    list(existing_members._discuss_channel_member_format().values()),
-                )
+                user_store.add(existing_members)
                 target = current_partner or current_guest
                 notifications.append((target, "mail.record/insert", user_store.get_result()))
         if invite_to_rtc_call:
@@ -503,19 +500,15 @@ class Channel(models.Model):
                 },
             )
             store.add(
-                "ChannelMember",
-                list(
-                    members._discuss_channel_member_format(
-                        fields={
-                            "id": True,
-                            "channel": {},
-                            "persona": {
-                                "partner": {"id": True, "name": True, "im_status": True},
-                                "guest": {"id": True, "name": True, "im_status": True},
-                            },
-                        }
-                    ).values()
-                ),
+                members,
+                fields={
+                    "id": True,
+                    "channel": {},
+                    "persona": {
+                        "partner": {"id": True, "name": True, "im_status": True},
+                        "guest": {"id": True, "name": True, "im_status": True},
+                    },
+                },
             )
             notifications.append((self, "mail.record/insert", store.get_result()))
         self.env["bus.bus"]._sendmany(notifications)
@@ -924,7 +917,7 @@ class Channel(models.Model):
                ORDER BY discuss_channel_member.id ASC
         """, {'channel_ids': tuple(self.ids), 'current_partner_id': current_partner.id or None, 'current_guest_id': current_guest.id or None})
         all_needed_members = self.env['discuss.channel.member'].browse([m['id'] for m in self.env.cr.dictfetchall()])
-        all_needed_members._discuss_channel_member_format()  # prefetch in batch
+        all_needed_members._to_store(Store())  # prefetch in batch
         members_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])
         invited_members_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])
         member_of_current_user_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])
@@ -944,12 +937,10 @@ class Channel(models.Model):
                 info['message_needaction_counter'] = channel.message_needaction_counter
                 info["message_needaction_counter_bus_id"] = bus_last_id
                 if member:
-                    member_data = list(
-                        member._discuss_channel_member_format(
-                            extra_fields={"last_interest_dt": True, "new_message_separator": True}
-                        ).values()
+                    store.add(
+                        member,
+                        extra_fields={"last_interest_dt": True, "new_message_separator": True},
                     )
-                    store.add("ChannelMember", member_data)
                     info['state'] = member.fold_state or 'closed'
                     info['message_unread_counter'] = member.message_unread_counter
                     info["message_unread_counter_bus_id"] = bus_last_id
@@ -964,27 +955,21 @@ class Channel(models.Model):
                 # avoid sending potentially a lot of members for big channels
                 # exclude chat and other small channels from this optimization because they are
                 # assumed to be smaller and it's important to know the member list for them
-                member_data = list(
-                    member._discuss_channel_member_format(
-                        extra_fields={"new_message_separator": True}
-                    ).values()
-                )
-                store.add("ChannelMember", member_data)
-                other_members = members_by_channel[channel] - member
-                other_members_data = list(other_members._discuss_channel_member_format().values())
-                store.add("ChannelMember", other_members_data)
+                store.add(member, extra_fields={"new_message_separator": True})
+                store.add(members_by_channel[channel] - member)
             # add RTC sessions info
             invited_members = invited_members_by_channel[channel]
-            m_fields = {
-                "id": True,
-                "channel": {},
-                "persona": {
-                    "partner": {"id": True, "name": True, "im_status": True},
-                    "guest": {"id": True, "name": True, "im_status": True},
+            store.add(
+                invited_members,
+                fields={
+                    "id": True,
+                    "channel": {},
+                    "persona": {
+                        "partner": {"id": True, "name": True, "im_status": True},
+                        "guest": {"id": True, "name": True, "im_status": True},
+                    },
                 },
-            }
-            members_data = list(invited_members._discuss_channel_member_format(m_fields).values())
-            store.add("ChannelMember", members_data)
+            )
             info["invitedMembers"] = [("ADD", [{"id": member.id} for member in invited_members])]
             info["rtcSessions"] = [
                 # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
@@ -1257,9 +1242,7 @@ class Channel(models.Model):
         count = self.env['discuss.channel.member'].search_count(
             domain=[('channel_id', '=', self.id)],
         )
-        store = Store(
-            "ChannelMember", list(unknown_members._discuss_channel_member_format().values())
-        )
+        store = Store(unknown_members)
         store.add(
             "Thread",
             {
