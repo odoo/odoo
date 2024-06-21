@@ -87,7 +87,7 @@ export class ResPartner extends webModels.ResPartner {
             ]);
             extraMatchingPartners = mentionSuggestionsFilter(partners, search, remainingLimit);
         }
-        return mainMatchingPartners.concat(extraMatchingPartners);
+        return { Persona: mainMatchingPartners.concat(extraMatchingPartners) };
     }
 
     /**
@@ -174,7 +174,7 @@ export class ResPartner extends webModels.ResPartner {
             ]);
             extraMatchingPartners = mentionSuggestionsFilter(partners, search, remainingLimit);
         }
-        return mainMatchingPartners.concat(extraMatchingPartners);
+        return { Persona: mainMatchingPartners.concat(extraMatchingPartners) };
     }
 
     /**

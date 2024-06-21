@@ -43,7 +43,7 @@ export class SuggestionService {
         if (thread?.model === "discuss.channel") {
             kwargs.channel_id = thread.id;
         }
-        const suggestedPartners = await this.orm.silent.call(
+        const data = await this.orm.silent.call(
             "res.partner",
             thread?.model === "discuss.channel"
                 ? "get_mention_suggestions_from_channel"
@@ -51,7 +51,7 @@ export class SuggestionService {
             [],
             kwargs
         );
-        this.store.Persona.insert(suggestedPartners);
+        this.store.insert(data);
     }
 
     /**
