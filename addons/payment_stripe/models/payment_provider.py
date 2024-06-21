@@ -10,6 +10,7 @@ from werkzeug.urls import url_encode, url_join, url_parse
 from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_stripe import const, utils as stripe_utils
 from odoo.addons.payment_stripe.controllers.main import StripeController
@@ -199,6 +200,8 @@ class PaymentProvider(models.Model):
                     'api_version': const.API_VERSION,
                 }
             )
+            if error_msg := payment_utils.get_request_error(webhook):
+                raise ValidationError(error_msg)
             self.stripe_webhook_secret = webhook.get('secret')
             message = _("You Stripe Webhook was successfully set up!")
             notification_type = 'info'
@@ -231,6 +234,8 @@ class PaymentProvider(models.Model):
         response_content = self._stripe_make_request('apple_pay/domains', payload={
             'domain_name': web_domain
         })
+        if error_msg := payment_utils.get_request_error(response_content):
+            raise ValidationError(error_msg)
         if not response_content['livemode']:
             # If test keys are used to make the request, Stripe will respond with an HTTP 200 but
             # will not register the domain. Ask the user to use live credentials.
@@ -251,7 +256,7 @@ class PaymentProvider(models.Model):
     # === BUSINESS METHODS - PAYMENT FLOW === #
 
     def _stripe_make_request(
-        self, endpoint, payload=None, method='POST', offline=False, idempotency_key=None
+        self, endpoint, payload=None, method='POST', intent=False, idempotency_key=None
     ):
         """ Make a request to Stripe API at the specified endpoint.
 
@@ -283,24 +288,29 @@ class PaymentProvider(models.Model):
             # See https://stripe.com/docs/error-codes.
             # If the request originates from an offline operation, don't raise to avoid a cursor
             # rollback and return the response as-is for flow-specific handling.
-            if not response.ok \
-                    and not offline \
-                    and 400 <= response.status_code < 500 \
-                    and response.json().get('error'):  # The 'code' entry is sometimes missing
+            if (
+                not response.ok
+                and 400 <= response.status_code < 500
+                and response.json().get('error')
+            ):  # The 'code' entry is sometimes missing
                 try:
                     response.raise_for_status()
                 except requests.exceptions.HTTPError:
                     _logger.exception("invalid API request at %s with data %s", url, payload)
-                    error_msg = response.json().get('error', {}).get('message', '')
-                    raise ValidationError(
-                        "Stripe: " + _(
-                            "The communication with the API failed.\n"
-                            "Stripe gave us the following info about the problem:\n'%s'", error_msg
-                        )
+                    error_content = response.json().get('error', {})
+                    error_response = payment_utils.format_error_response(
+                        f'{payment_const.ERRORS_MAPPING["api_communication_error"]}'
+                        f' {error_content.get("message", "")}'
                     )
+                    if intent:
+                        error_response[intent] = error_content.get('payment_intent') \
+                          or error_content.get('setup_intent')  # Get the intent from the error.
+                    return error_response
         except requests.exceptions.ConnectionError:
             _logger.exception("unable to reach endpoint at %s", url)
-            raise ValidationError("Stripe: " + _("Could not establish the connection to the API."))
+            return payment_utils.format_error_response(
+                payment_const.ERRORS_MAPPING['api_connection_error']
+            )
         return response.json()
 
     def _get_stripe_extra_request_headers(self):

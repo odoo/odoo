@@ -7,8 +7,9 @@ import requests
 from werkzeug import urls
 
 from odoo import _, fields, models, service
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_mollie import const
 
 _logger = logging.getLogger(__name__)
@@ -71,15 +72,15 @@ class PaymentProvider(models.Model):
                 _logger.exception(
                     "Invalid API request at %s with data:\n%s", url, pprint.pformat(data)
                 )
-                raise ValidationError(
-                    "Mollie: " + _(
-                        "The communication with the API failed. Mollie gave us the following "
-                        "information: %s", response.json().get('detail', '')
-                    ))
+                msg = response.json().get('detail', '')
+                return payment_utils.format_error_response(
+                    f'{payment_const.ERRORS_MAPPING["api_communication_error"]} {msg}'
+                )
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError(
-                "Mollie: " + _("Could not establish the connection to the API.")
+
+            return payment_utils.format_error_response(
+                payment_const.ERRORS_MAPPING['api_connection_error']
             )
         return response.json()
 

@@ -241,3 +241,13 @@ def get_request_error(response_content):
 
 def format_error_response(error_message):
     return {'error': error_message}
+
+
+def set_tx_error_from_response(tx, response_content):
+    """ TODO: docstring"""
+    if tx.state == 'error':
+        return True
+    if error_msg := get_request_error(response_content):
+        tx._set_error(error_msg)   # Log the error message on linked documents' chatter.
+        return True
+    return False

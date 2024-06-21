@@ -8,6 +8,7 @@ from werkzeug import urls
 from odoo import _, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_mollie import const
 from odoo.addons.payment_mollie.controllers.main import MollieController
 
@@ -35,6 +36,8 @@ class PaymentTransaction(models.Model):
         _logger.info("sending '/payments' request for link creation:\n%s", pprint.pformat(payload))
         payment_data = self.provider_id._mollie_make_request('/payments', data=payload)
 
+        if payment_utils.set_tx_error_from_response(self, payment_data):
+            return payment_data
         # The provider reference is set now to allow fetching the payment status after redirection
         self.provider_reference = payment_data.get('id')
 
@@ -112,6 +115,8 @@ class PaymentTransaction(models.Model):
             f'/payments/{self.provider_reference}', method="GET"
         )
 
+        if payment_utils.set_tx_error_from_response(self, payment_data):
+            return
         # Update the payment method.
         payment_method_type = payment_data.get('method', '')
         if payment_method_type == 'creditcard':

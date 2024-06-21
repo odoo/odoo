@@ -138,7 +138,7 @@ class AdyenController(http.Controller):
             reference, pprint.pformat(response_content)
         )
 
-        if not tx_sudo._set_error_from_response(response_content):
+        if not payment_utils.set_tx_error_from_response(tx_sudo, response_content):
             tx_sudo._handle_notification_data(
                 'adyen', dict(response_content, merchantReference=reference),
                 # Match the transaction

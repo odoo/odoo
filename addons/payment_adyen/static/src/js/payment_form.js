@@ -56,7 +56,7 @@ paymentForm.include({
                 'provider_id': providerId,
                 'partner_id': parseInt(this.paymentContext['partnerId']),
                 'formatted_amount': formattedAmount,
-            })
+            });
             if (response.error) {
                 this._displayErrorDialog(_t("Cannot display the payment form"), response.error);
                 this._enableButton();

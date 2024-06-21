@@ -6,8 +6,8 @@ import re
 import requests
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_adyen import const
 
@@ -127,12 +127,12 @@ class PaymentProvider(models.Model):
                 )
                 msg = response.json().get('message', '')
                 return payment_utils.format_error_response(
-                    "Adyen: " + _("The communication with the API failed. Details: %s", msg)
+                    f'{ payment_const.ERRORS_MAPPING["api_communication_error"]} {msg}'
                 )
         except requests.exceptions.ConnectionError:
             _logger.exception("unable to reach endpoint at %s", url)
             return payment_utils.format_error_response(
-                "Adyen: " + _("Could not establish the connection to the API.")
+                payment_const.ERRORS_MAPPING['api_connection_error']
             )
         return response.json()
 

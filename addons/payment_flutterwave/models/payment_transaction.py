@@ -54,7 +54,7 @@ class PaymentTransaction(models.Model):
         }
         payment_link_data = self.provider_id._flutterwave_make_request('payments', payload=payload)
 
-        if self._set_error_from_response(payment_link_data):
+        if payment_utils.set_tx_error_from_response(self, payment_link_data):
             return payment_link_data
 
         # Extract the payment link URL and embed it in the redirect form.
@@ -97,7 +97,7 @@ class PaymentTransaction(models.Model):
             'tokenized-charges', payload=data
         )
 
-        if self._set_error_from_response(response_content):
+        if payment_utils.set_tx_error_from_response(self, response_content):
             return
 
         # Handle the payment request response.
@@ -150,7 +150,7 @@ class PaymentTransaction(models.Model):
             'transactions/verify_by_reference', payload={'tx_ref': self.reference}, method='GET'
         )
 
-        if self._set_error_from_response(verification_response_content):
+        if payment_utils.set_tx_error_from_response(self, verification_response_content):
             return
 
         verified_data = verification_response_content['data']

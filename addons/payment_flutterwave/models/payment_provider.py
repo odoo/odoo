@@ -7,10 +7,9 @@ import requests
 from werkzeug.urls import url_join
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 from odoo.addons.payment_flutterwave import const
 
 
@@ -64,7 +63,7 @@ class PaymentProvider(models.Model):
                 report,
                 unfiltered_providers - providers,
                 available=False,
-                reason=REPORT_REASONS_MAPPING['validation_not_supported'],
+                reason=payment_const.REPORT_REASONS_MAPPING['validation_not_supported'],
             )
 
         return providers
@@ -105,15 +104,15 @@ class PaymentProvider(models.Model):
                 _logger.exception(
                     "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload),
                 )
-                error_msg = "Flutterwave: " + _(
-                    "The communication with the API failed. Flutterwave gave us the following"
-                    " information: '%s'", response.json().get('message', '')
+                msg = response.json().get('message', '')
+                return payment_utils.format_error_response(
+                    f'{payment_const.ERRORS_MAPPING["api_communication_error"]} {msg}'
                 )
-                return payment_utils.format_error_response(error_msg)
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             _logger.exception("Unable to reach endpoint at %s", url)
-            error_msg = "Flutterwave: " + _("Could not establish the connection to the API.")
-            return payment_utils.format_error_response(error_msg)
+            return payment_utils.format_error_response(
+                payment_const.ERRORS_MAPPING['api_connection_error']
+            )
         return response.json()
 
     def _get_default_payment_method_codes(self):

@@ -6,6 +6,8 @@ import pprint
 from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import utils as payment_utils
+
 _logger = logging.getLogger(__name__)
 
 
@@ -40,6 +42,8 @@ class PaymentToken(models.Model):
             },
             method='GET'
         )
+        if error_msg := payment_utils.get_request_error(response_content):
+            raise ValidationError(error_msg)
         _logger.info("received payment_methods response:\n%s", pprint.pformat(response_content))
 
         # Store the payment method ID on the token

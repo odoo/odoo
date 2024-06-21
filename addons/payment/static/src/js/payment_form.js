@@ -373,16 +373,13 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         // Create a transaction and retrieve its processing values.
-        rpc(
-            this.paymentContext['transactionRoute'],
-            this._prepareTransactionRouteParams(),
-        ).then(processingValues => {
+        try {
+            const processingValues = await rpc(
+                this.paymentContext['transactionRoute'],
+                this._prepareTransactionRouteParams(),
+            )
             if (processingValues.state === 'error') {
-                this._displayErrorDialog(
-                    _t("Payment processing failed"), processingValues.state_message
-                );
-                this._enableButton();
-                return;
+                throw new Error(processingValues.state_message);
             }
             if (flow === 'redirect') {
                 this._processRedirectFlow(
@@ -397,14 +394,16 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                     providerCode, paymentOptionId, paymentMethodCode, processingValues
                 );
             }
-        }).catch(error => {
-            if (error instanceof RPCError) {
-                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+        }
+        catch (error) {
+            if (error instanceof RPCError || error instanceof Error) {
+                const errorMsg = error.data?.message || error.message;
+                this._displayErrorDialog(_t("Payment processing failed"), errorMsg);
                 this._enableButton(); // The button has been disabled before initiating the flow.
             } else {
                 return Promise.reject(error);
             }
-        });
+        }
     },
 
     /**

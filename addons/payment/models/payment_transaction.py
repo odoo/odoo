@@ -268,7 +268,9 @@ class PaymentTransaction(models.Model):
         else:
             for tx in self.filtered(lambda tx: tx.state == 'authorized'):
                 # In sudo mode because we need to be able to read on provider fields.
-                tx.sudo()._send_capture_request()
+                child_tx = tx.sudo()._send_capture_request()
+                if child_tx.state == 'error':
+                    raise ValidationError(child_tx.state_message)
 
     def action_void(self):
         """ Check the state of the transaction and request to have them voided. """
@@ -284,6 +286,8 @@ class PaymentTransaction(models.Model):
             ))
             # In sudo mode because we need to be able to read on provider fields.
             tx.sudo()._send_void_request(amount_to_void=tx.amount - captured_amount)
+            if tx.state == 'error':
+                raise ValidationError(tx.state_message)
 
     def action_refund(self, amount_to_refund=None):
         """ Check the state of the transactions and request their refund.
@@ -296,6 +300,8 @@ class PaymentTransaction(models.Model):
 
         for tx in self:
             tx._send_refund_request(amount_to_refund=amount_to_refund)
+            if tx.state == 'error':
+                raise ValidationError(tx.state_message)
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
@@ -447,9 +453,12 @@ class PaymentTransaction(models.Model):
                 )
                 redirect_form_html = self.env['ir.qweb']._render(redirect_form_view.id, rendering_values)
                 processing_values.update(redirect_form_html=redirect_form_html)
+
+        # Include `state` and `state_message` after fetching all specific data
+        # if API call fails the tx state is 'error'
         processing_values.update({
-                'state': self.state,
-                'state_message': self.state_message,
+            'state': self.state,
+            'state_message': self.state_message,
         })
         return processing_values
 
@@ -549,7 +558,7 @@ class PaymentTransaction(models.Model):
 
         if amount_to_capture and amount_to_capture != self.amount:
             return self._create_child_transaction(amount_to_capture)
-        return self.env['payment.transaction']
+        return self
 
     def _send_void_request(self, amount_to_void=None):
         """ Request the provider handling the transaction to void the payment.
@@ -571,7 +580,7 @@ class PaymentTransaction(models.Model):
         if amount_to_void and amount_to_void != self.amount:
             return self._create_child_transaction(amount_to_void)
 
-        return self.env['payment.transaction']
+        return self
 
     def _ensure_provider_is_not_disabled(self):
         """ Ensure that the provider's state is not `disabled` before sending a request to its
@@ -630,6 +639,8 @@ class PaymentTransaction(models.Model):
         :return: The transaction.
         :rtype: recordset of `payment.transaction`
         """
+        if payment_utils.set_tx_error_from_response(self, notification_data):
+            return self
         tx = self._get_tx_from_notification_data(provider_code, notification_data)
         tx._process_notification_data(notification_data)
         return tx
@@ -1010,11 +1021,3 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         """
         return self.filtered(lambda t: t.state != 'draft').sorted()[:1]
-
-    def _set_error_from_response(self, response_content):
-        """ TODO: docstring"""
-        if error_msg := payment_utils.get_request_error(response_content):
-            # Log the error message on linked documents' chatter.
-            self._set_error(error_msg)
-            return True
-        return False

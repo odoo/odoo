@@ -103,8 +103,6 @@ class PaymentTransaction(models.Model):
                 self, scope='payment_request_token'
             )
         )
-        if self._is_response_error(response_content):
-            return  # There is nothing to process.
 
         # Handle the payment request response
         _logger.info(
@@ -146,7 +144,7 @@ class PaymentTransaction(models.Model):
             payload=data,
             method='POST'
         )
-        if refund_tx._is_response_error(response_content):
+        if payment_utils.set_tx_error_from_response(refund_tx, response_content):
             return refund_tx
 
         _logger.info(
@@ -188,7 +186,7 @@ class PaymentTransaction(models.Model):
             payload=data,
             method='POST',
         )
-        if capture_child_tx._is_response_error(response_content):
+        if payment_utils.set_tx_error_from_response(capture_child_tx, response_content):
             return capture_child_tx
 
         _logger.info("capture request response:\n%s", pprint.pformat(response_content))
@@ -227,7 +225,7 @@ class PaymentTransaction(models.Model):
             method='POST',
         )
 
-        if child_void_tx._is_response_error(response_content):
+        if payment_utils.set_tx_error_from_response(child_void_tx, response_content):
             return child_void_tx
 
         _logger.info("void request response:\n%s", pprint.pformat(response_content))

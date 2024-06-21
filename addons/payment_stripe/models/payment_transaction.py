@@ -34,6 +34,8 @@ class PaymentTransaction(models.Model):
             return res
 
         intent = self._stripe_create_intent()
+        if not intent:
+            return {}
         base_url = self.provider_id.get_base_url()
         return {
             'client_secret': intent['client_secret'],
@@ -82,36 +84,24 @@ class PaymentTransaction(models.Model):
         """
         if self.operation == 'validation':
             response = self.provider_id._stripe_make_request(
-                'setup_intents', payload=self._stripe_prepare_setup_intent_payload()
+                'setup_intents',
+                payload=self._stripe_prepare_setup_intent_payload(),
+                intent=True,
             )
         else:  # 'online_direct', 'online_token', 'offline'.
             response = self.provider_id._stripe_make_request(
                 'payment_intents',
                 payload=self._stripe_prepare_payment_intent_payload(),
-                offline=self.operation == 'offline',
+                intent=True,
                 # Prevent multiple offline payments by token (e.g., due to a cursor rollback).
                 idempotency_key=payment_utils.generate_idempotency_key(
                     self, scope='payment_intents_token'
                 ) if self.operation == 'offline' else None,
             )
 
-        if 'error' not in response:
-            intent = response
-        else:  # A processing error was returned in place of the intent.
-            # The request failed and no error was raised because we are in an offline payment flow.
-            # Extract the error from the response, log it, and set the transaction in error to let
-            # the calling module handle the issue without rolling back the cursor.
-            error_msg = response['error'].get('message')
-            _logger.warning(
-                "The creation of the intent failed.\n"
-                "Stripe gave us the following info about the problem:\n'%s'", error_msg
-            )
-            self._set_error("Stripe: " + _(
-                "The communication with the API failed.\n"
-                "Stripe gave us the following info about the problem:\n'%s'", error_msg
-            ))  # Flag transaction as in error now, as the intent status might have a valid value.
-            intent = response['error'].get('payment_intent') \
-                     or response['error'].get('setup_intent')  # Get the intent from the error.
+        intent = response
+        if payment_utils.set_tx_error_from_response(self, response):
+            intent = response.get('intent')
 
         return intent
 
@@ -124,6 +114,8 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         customer = self._stripe_create_customer()
+        if payment_utils.set_tx_error_from_response(self, customer):
+            return {}
         return {
             'customer': customer['id'],
             'description': self.reference,
@@ -167,6 +159,8 @@ class PaymentTransaction(models.Model):
             })
         else:
             customer = self._stripe_create_customer()
+            if payment_utils.set_tx_error_from_response(self, customer):
+                return {}
             payment_intent_payload['customer'] = customer['id']
             if self.tokenize:
                 payment_intent_payload.update(
@@ -257,6 +251,8 @@ class PaymentTransaction(models.Model):
                 ),
             }
         )
+        if payment_utils.set_tx_error_from_response(refund_tx, data):
+            return refund_tx
         _logger.info(
             "Refund request response for transaction wih reference %s:\n%s",
             self.reference, pprint.pformat(data)
@@ -278,6 +274,8 @@ class PaymentTransaction(models.Model):
         payment_intent = self.provider_id._stripe_make_request(
             f'payment_intents/{self.provider_reference}/capture'
         )
+        if payment_utils.set_tx_error_from_response(child_capture_tx, payment_intent):
+            return child_capture_tx
         _logger.info(
             "capture request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(payment_intent)
@@ -302,6 +300,8 @@ class PaymentTransaction(models.Model):
         payment_intent = self.provider_id._stripe_make_request(
             f'payment_intents/{self.provider_reference}/cancel'
         )
+        if payment_utils.set_tx_error_from_response(child_void_tx, payment_intent):
+            return child_void_tx
         _logger.info(
             "void request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(payment_intent)
