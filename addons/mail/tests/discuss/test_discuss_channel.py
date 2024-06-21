@@ -133,11 +133,14 @@ class TestChannelInternals(MailCommon, HttpCase):
                     {
                         "type": "mail.record/insert",
                         "payload": {
-                            "Thread": [
+                            "ChannelMember": [
                                 {
-                                    "id": channel.id,
-                                    "memberCount": 2,
-                                    "model": "discuss.channel",
+                                    "id": member.id,
+                                    "thread": {"id": channel.id, "model": "discuss.channel"},
+                                    "create_date": fields.Datetime.to_string(member.create_date),
+                                    "persona": {"id": self.test_partner.id, "type": "partner"},
+                                    "fetched_message_id": False,
+                                    "seen_message_id": False,
                                 },
                             ],
                             "Persona": [
@@ -155,14 +158,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "out_of_office_date_end": False,
                                 },
                             ],
-                            "ChannelMember": [
+                            "Thread": [
                                 {
-                                    "id": member.id,
-                                    "thread": {"id": channel.id, "model": "discuss.channel"},
-                                    "create_date": fields.Datetime.to_string(member.create_date),
-                                    "persona": {"id": self.test_partner.id, "type": "partner"},
-                                    "fetched_message_id": False,
-                                    "seen_message_id": False,
+                                    "id": channel.id,
+                                    "memberCount": 2,
+                                    "model": "discuss.channel",
                                 },
                             ],
                         },
@@ -183,11 +183,14 @@ class TestChannelInternals(MailCommon, HttpCase):
                     {
                         "type": "mail.record/insert",
                         "payload": {
-                            "Thread": [
+                            "ChannelMember": [
                                 {
-                                    "id": channel.id,
-                                    "memberCount": 2,
-                                    "model": "discuss.channel",
+                                    "id": member.id,
+                                    "thread": {"id": channel.id, "model": "discuss.channel"},
+                                    "create_date": fields.Datetime.to_string(member.create_date),
+                                    "persona": {"id": self.test_partner.id, "type": "partner"},
+                                    "fetched_message_id": False,
+                                    "seen_message_id": False,
                                 }
                             ],
                             "Persona": [
@@ -205,14 +208,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "out_of_office_date_end": False,
                                 },
                             ],
-                            "ChannelMember": [
+                            "Thread": [
                                 {
-                                    "id": member.id,
-                                    "thread": {"id": channel.id, "model": "discuss.channel"},
-                                    "create_date": fields.Datetime.to_string(member.create_date),
-                                    "persona": {"id": self.test_partner.id, "type": "partner"},
-                                    "fetched_message_id": False,
-                                    "seen_message_id": False,
+                                    "id": channel.id,
+                                    "memberCount": 2,
+                                    "model": "discuss.channel",
                                 }
                             ],
                         },
@@ -406,13 +406,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                 {
                     "type": "mail.record/insert",
                     "payload": {
-                        "Persona": [
-                            {
-                                "id": self.user_admin.partner_id.id,
-                                "name": self.user_admin.partner_id.name,
-                                "type": "partner",
-                            },
-                        ],
                         "ChannelMember": {
                             "id": member.id,
                             "thread": {
@@ -425,11 +418,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "new_message_separator": msg_1.id + 1,
                             "syncUnread": False,
                         },
-                    },
-                },
-                {
-                    "type": "mail.record/insert",
-                    "payload": {
                         "Persona": [
                             {
                                 "id": self.user_admin.partner_id.id,
@@ -437,12 +425,24 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "type": "partner",
                             },
                         ],
+                    },
+                },
+                {
+                    "type": "mail.record/insert",
+                    "payload": {
                         "ChannelMember": {
                             "id": member.id,
                             "thread": {"id": chat.id, "model": "discuss.channel"},
                             "persona": {"id": self.user_admin.partner_id.id, "type": "partner"},
                             "seen_message_id": {"id": msg_1.id},
                         },
+                        "Persona": [
+                            {
+                                "id": self.user_admin.partner_id.id,
+                                "name": self.user_admin.partner_id.name,
+                                "type": "partner",
+                            },
+                        ],
                     },
                 },
             ],
