@@ -59,16 +59,22 @@ registry.category("web_tour.tours").add('configurator_flow', {
         content: "select Pricing",
         trigger: '.card:contains("Pricing")',
         run: "click",
-    }, {
+    }, 
+    {
+        trigger: '.card.border-success:contains("Pricing")',
+    },
+    {
         content: "Events should be selected (module already installed)",
-        extra_trigger: '.card.border-success:contains("Pricing")',
         trigger: '.card.card_installed:contains("Events")',
     }, {
         content: "Slides should be selected (module already installed)",
         trigger: '.card.card_installed:contains("eLearning")',
-    }, {
+    }, 
+    {
+        trigger: '.card.card_installed:contains("Success Stories")',
+    },
+    {
         content: "Success Stories (Blog) and News (Blog) should be selected (module already installed)",
-        extra_trigger: '.card.card_installed:contains("Success Stories")',
         trigger: '.card.card_installed:contains("News")',
     }, {
         content: "Click on build my website",

@@ -13,9 +13,11 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
             run: "click",
         },
         {
+            trigger: ":iframe #product_details",
+        },
+        {
             content: "check list view of variants is disabled initially (when on /product page)",
             trigger: ':iframe body:not(:has(.js_product_change))',
-            extra_trigger: ':iframe #product_details',
             run: "click",
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
@@ -25,8 +27,10 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
             run: "click",
         },
         {
+            trigger: "#oe_snippets .o_we_customize_panel",
+        },
+        {
             content: "open 'Variants' selector",
-            extra_trigger: '#oe_snippets .o_we_customize_panel',
             trigger: '[data-name="variants_opt"] we-toggler',
             run: "click",
         },
@@ -83,8 +87,10 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
             }
         },
         {
+            trigger: ':iframe #o_comparelist_table tr:contains("red")',
+        },
+        {
             content: "Check wishlist contains both variants",
-            extra_trigger: ':iframe #o_comparelist_table tr:contains("red")',
             trigger: ':iframe #o_comparelist_table tr:contains("black")',
         },
     ]

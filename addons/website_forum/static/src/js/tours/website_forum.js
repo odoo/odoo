@@ -39,8 +39,7 @@
         run: "click",
     }, {
         isActive: ["auto"],
-        extra_trigger: 'div.modal.modal_shown',
-        trigger: ".modal-header button.btn-close",
+        trigger: ".modal .modal-header button.btn-close",
         run: "click",
     },
     {
@@ -62,8 +61,7 @@
         run: "click",
     }, {
         isActive: ["auto"],
-        extra_trigger: 'div.modal.modal_shown',
-        trigger: ".modal-header button.btn-close",
+        trigger: ".modal .modal-header button.btn-close",
         run: "click",
     }, {
         trigger: ".o_wforum_validate_toggler[data-karma]:first",

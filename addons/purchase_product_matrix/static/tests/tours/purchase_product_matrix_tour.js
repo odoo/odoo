@@ -9,9 +9,12 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_purchase_order",
+},
+{
     trigger: ".o_list_button_add",
-    extra_trigger: ".o_purchase_order",
     run: "click",
 }, {
     trigger: '.o_required_modifier[name=partner_id] input',
@@ -44,8 +47,10 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
 },
 // Open the matrix through the pencil button next to the product in line edit mode.
 {
+    trigger: ".o_form_status_indicator_buttons.invisible", // wait for save to be finished
+},
+{
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\nPA4: PAV41")',
-    extra_trigger: '.o_form_status_indicator_buttons.invisible', // wait for save to be finished
     run: "click",
 }, {
     trigger: '[name=product_template_id] button.fa-pencil', // edit the matrix
@@ -61,15 +66,20 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
 }, {
     trigger: 'button:contains("Confirm")',
     run: 'click' // apply the matrix
-}, {
+}, 
+{
+    trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
+},
+{
     trigger: '.o_form_button_save',
-    extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
     run: 'click' // SAVE Sales Order, after matrix has been applied (extra_trigger).
 },
 // Ensures the matrix is opened with the values, when adding the same product.
 {
+    trigger: '.o_form_status_indicator_buttons.invisible',
+},
+{
     trigger: 'a:contains("Add a product")',
-    extra_trigger: '.o_form_status_indicator_buttons.invisible',
     run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',

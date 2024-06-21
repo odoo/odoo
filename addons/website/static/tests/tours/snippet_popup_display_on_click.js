@@ -88,9 +88,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     ...wTourUtils.clickOnSave(),
     wTourUtils.clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
+        trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
+    },
+    {
         content: "Verify that the popup opens when the homepage page loads.",
         in_modal: false,
-        extra_trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
         trigger: ":iframe .s_popup .modal[id='Win-%2420'].show",
     },
 ]);

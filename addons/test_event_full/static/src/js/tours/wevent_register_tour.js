@@ -103,9 +103,12 @@ var registerSteps = [{
             document.querySelector("textarea[name*='text_box']").textContent =
                 "An unicorn told me about you. I ate it afterwards.";
     },
-}, {
+}, 
+{
+    trigger: "input[name*='1-name'], input[name*='2-name'], input[name*='3-name']",
+},
+{
     content: "Validate attendees details",
-    extra_trigger: "input[name*='1-name'], input[name*='2-name'], input[name*='3-name']",
     trigger: 'button[type=submit]',
     run: 'click',
 }, {

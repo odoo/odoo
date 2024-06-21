@@ -13,9 +13,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     run: "click",
-},  {
+},  
+{
+    trigger: ".o_sale_order",
+},
+{
     trigger: '.o_list_button_add',
-    extra_trigger: '.o_sale_order',
     run: "click",
 }, {
     trigger: '.o_required_modifier[name=partner_id] input',
@@ -24,9 +27,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour
     isActive: ["auto"],
     trigger: '.ui-menu-item > a:contains("Tajine Saucisse")',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_field_widget[name=partner_shipping_id] .o_external_button", // Wait for onchange_partner_id
+},
+{
     trigger: 'a:contains("Add a product")',
-    extra_trigger: '.o_field_widget[name=partner_shipping_id] .o_external_button', // Wait for onchange_partner_id
     run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',

@@ -18,20 +18,26 @@ registry.category("web_tour.tours").add('event_buy_tickets', {
             run: "click",
         },
         {
+            trigger: '#wrap:not(:has(a[href*="/event"]:contains("Conference for Architects")))',
+        },
+        {
             content: "Select 1 unit of `Standard` ticket type",
-            extra_trigger: '#wrap:not(:has(a[href*="/event"]:contains("Conference for Architects")))',
             trigger: 'select:eq(0)',
             run: "select 1",
         },
         {
+            trigger: "select:eq(0):has(option:contains(1):selected)",
+        },
+        {
             content: "Select 2 units of `VIP` ticket type",
-            extra_trigger: 'select:eq(0):has(option:contains(1):selected)',
             trigger: 'select:eq(1)',
             run: "select 2",
         },
         {
+            trigger: "select:eq(1):has(option:contains(2):selected)",
+        },
+        {
             content: "Click on `Order Now` button",
-            extra_trigger: 'select:eq(1):has(option:contains(2):selected)',
             trigger: '.btn-primary:contains("Register")',
             run: "click",
         },
@@ -51,8 +57,10 @@ registry.category("web_tour.tours").add('event_buy_tickets', {
             },
         },
         {
+            trigger: "input[name*='1-name'], input[name*='2-name'], input[name*='3-name']",
+        },
+        {
             content: "Validate attendees details",
-            extra_trigger: "input[name*='1-name'], input[name*='2-name'], input[name*='3-name']",
             trigger: 'button[type=submit]',
             run: "click",
         },

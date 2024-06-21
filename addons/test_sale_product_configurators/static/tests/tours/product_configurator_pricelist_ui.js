@@ -13,10 +13,13 @@ stepUtils.showAppsMenuItem(),
     content: "navigate to the sale app",
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_sale_order",
+},
+{
     content: "create a new order",
     trigger: '.o_list_button_add',
-    extra_trigger: ".o_sale_order",
     run: "click",
 }, {
     content: "search the partner",
@@ -26,11 +29,14 @@ stepUtils.showAppsMenuItem(),
     content: "select the partner",
     trigger: 'ul.ui-autocomplete > li > a:contains(Azure)',
     run: "click",
-}, {
+}, 
+{
+    trigger: "[name=partner_id]:contains(Fremont)",
+},
+{
     content: "search the pricelist",
     trigger: 'input[id="pricelist_id_0"]',
     // Wait for onchange to come back
-    extra_trigger: "[name=partner_id]:contains(Fremont)",
     run: "edit Test",
 }, {
     content: "search the pricelist",
