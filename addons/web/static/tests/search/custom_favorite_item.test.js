@@ -1,5 +1,5 @@
 import { after, expect, test } from "@odoo/hoot";
-import { queryAll, queryAllTexts } from "@odoo/hoot-dom";
+import { press, queryAll, queryAllTexts } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import {
     contains,
@@ -265,5 +265,36 @@ test("undefined name for filter shows notification and not error", async () => {
     await toggleSearchBarMenu();
     await toggleSaveFavorite();
     await saveFavorite();
+    expect(["notification"]).toVerifySteps();
+});
+
+test("add favorite with enter which already exists", async () => {
+    mockService("notification", {
+        add(message, options) {
+            expect.step("notification");
+            expect(message).toBe("A name for your favorite filter is required.");
+            expect(options).toEqual({ type: "danger" });
+        },
+    });
+    await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchViewId: false,
+        irFilters: [
+            {
+                context: "{}",
+                domain: "[]",
+                id: 1,
+                is_default: false,
+                name: "My favorite",
+                sort: "[]",
+                user_id: [2, "Mitchell Admin"],
+            },
+        ],
+    });
+
+    await toggleSearchBarMenu();
+    await toggleSaveFavorite();
+    await editFavoriteName("My favorite");
+    press("Enter");
     expect(["notification"]).toVerifySteps();
 });
