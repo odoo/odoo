@@ -84,6 +84,13 @@ const defineModuleSet = async (entryPoints, additionalAddons) => {
             additionalAddons.add(getAddonName(entryPoint));
         }
         const addons = await fetchDependencies(additionalAddons);
+        if (addons.has("spreadsheet")) {
+            /**
+             * spreadsheet addons defines a module that does not starts with `@spreadsheet` but `@odoo` (`@odoo/o-spreadsheet)
+             * To ensure that this module is loaded, we have to include `odoo` in the dependencies
+             */
+            addons.add("odoo");
+        }
         const joinedAddons = [...addons].sort().join(",");
         const filter = (path) => joinedAddons.includes(getAddonName(path));
         // Module names are cached for each configuration of addons
