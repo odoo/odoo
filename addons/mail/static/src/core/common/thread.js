@@ -454,7 +454,7 @@ export class Thread extends Component {
 
     getMessageClassName(message) {
         return this.messageHighlight?.highlightedMessageId === message.id
-            ? "o-highlighted bg-view shadow-lg"
+            ? "o-highlighted bg-view shadow-lg pb-1"
             : "";
     }
 
