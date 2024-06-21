@@ -1948,7 +1948,7 @@ test("Chats input should wait until the previous RPC is done before starting a n
     await openDiscuss();
     await click(".o-mail-DiscussSidebarCategory-add[title='Start a conversation']");
     await insertText(".o-discuss-ChannelSelector input", "m");
-    await contains(".o-mail-NavigableList-item", { text: "Loading" });
+    await contains(".o-mail-NavigableList-item", { text: "Loading…" });
     await insertText(".o-discuss-ChannelSelector input", "a");
     await insertText(".o-discuss-ChannelSelector input", "r");
     deferred1.resolve();

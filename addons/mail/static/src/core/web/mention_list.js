@@ -19,6 +19,7 @@ export class MentionList extends Component {
         this.state = useState({
             searchTerm: "",
             options: [],
+            isFetching: false,
         });
         this.orm = useService("orm");
         this.store = useState(useService("mail.store"));
@@ -33,10 +34,15 @@ export class MentionList extends Component {
                     return;
                 }
                 this.sequential(async () => {
-                    await this.suggestionService.fetchSuggestions({
-                        delimiter: this.props.type === "partner" ? "@" : "#",
-                        term: this.state.searchTerm,
-                    });
+                    this.state.isFetching = true;
+                    try {
+                        await this.suggestionService.fetchSuggestions({
+                            delimiter: this.props.type === "partner" ? "@" : "#",
+                            term: this.state.searchTerm,
+                        });
+                    } finally {
+                        this.state.isFetching = false;
+                    }
                     const { suggestions } = this.suggestionService.searchSuggestions(
                         {
                             delimiter: this.props.type === "partner" ? "@" : "#",
@@ -66,7 +72,7 @@ export class MentionList extends Component {
         const props = {
             anchorRef: this.ref.el,
             position: "bottom-fit",
-            placeholder: _t("Loading"),
+            isLoading: !!this.state.searchTerm && this.state.isFetching,
             onSelect: this.props.onSelect,
             options: [],
         };

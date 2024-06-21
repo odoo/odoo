@@ -30,7 +30,6 @@ export class ChannelSelector extends Component {
                 anchorRef: undefined,
                 position: "bottom-fit",
                 onSelect: (ev, option) => this.onSelect(option),
-                placeholder: _t("Loading"),
                 optionTemplate:
                     this.props.category.id === "channels"
                         ? "discuss.ChannelSelector.channel"

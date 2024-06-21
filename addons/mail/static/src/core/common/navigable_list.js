@@ -19,7 +19,6 @@ export class NavigableList extends Component {
         onSelect: { type: Function },
         options: { type: Array },
         optionTemplate: { type: String, optional: true },
-        placeholder: { type: String, optional: true },
         position: { type: String, optional: true },
         isLoading: { type: Boolean, optional: true },
     };
@@ -31,6 +30,7 @@ export class NavigableList extends Component {
         this.state = useState({
             activeIndex: null,
             open: false,
+            showLoading: false,
         });
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
@@ -54,6 +54,17 @@ export class NavigableList extends Component {
                 this.open();
             },
             () => [this.props]
+        );
+        useEffect(
+            () => {
+                if (!this.props.isLoading) {
+                    clearTimeout(this.loadingTimeoutId);
+                    this.state.showLoading = false;
+                } else if (!this.loadingTimeoutId) {
+                    this.loadingTimeoutId = setTimeout(() => (this.state.showLoading = true), 2000);
+                }
+            },
+            () => [this.props.isLoading]
         );
     }
 
