@@ -6,13 +6,14 @@ from werkzeug.urls import url_encode
 
 from odoo import http, _
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.osv.expression import AND
 from odoo.http import request
 from odoo.tools import email_normalize
 from odoo.tools.misc import groupby
 
 
-class WebsiteHrRecruitment(http.Controller):
+class WebsiteHrRecruitment(WebsiteForm):
     _jobs_per_page = 12
 
     def sitemap_jobs(env, rule, qs):
@@ -353,3 +354,13 @@ class WebsiteHrRecruitment(http.Controller):
             'applied_other_job': False,
             'message': '',
         }
+
+    def insert_record(self, request, model, values, custom, meta=None):
+        record_id = super().insert_record(request, model, values, custom, meta=meta)
+        model_name = model.sudo().model
+        default_field = model.website_form_default_field_id
+        if model_name == 'hr.applicant' and default_field:
+            # remove custom and authenticate message (warnings) from the description
+            applicant = request.env[model_name].sudo().browse(record_id)
+            applicant[default_field.name] = values.get(default_field.name, '')
+        return record_id
