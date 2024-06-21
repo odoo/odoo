@@ -110,7 +110,7 @@ class Store:
     def get_result(self):
         """Gets resulting data built from adding all data together."""
         res = {}
-        for model_name, records in self.data.items():
+        for model_name, records in sorted(self.data.items()):
             if not ids_by_model[model_name]:  # singleton
                 res[model_name] = records
             else:
