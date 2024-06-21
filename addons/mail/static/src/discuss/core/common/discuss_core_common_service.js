@@ -187,9 +187,7 @@ export class DiscussCoreCommon {
                 channel.pendingNewMessages.push(message);
             }
             if (message.isSelfAuthored && channel.selfMember) {
-                channel.selfMember.syncUnread = true;
                 channel.selfMember.seen_message_id = message;
-                channel.selfMember.new_message_separator = message.id + 1;
             } else {
                 if (!channel.isDisplayed && channel.selfMember) {
                     channel.selfMember.syncUnread = true;
