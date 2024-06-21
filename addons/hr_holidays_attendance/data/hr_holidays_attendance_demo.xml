@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
-        <record id="base.main_company" model="res.company">
-            <field name="hr_attendance_overtime" eval="True" />
-            <field name="overtime_start_date" eval="(DateTime.today() + relativedelta(months=-1)).date()" />
-        </record>
-    </data>
-</odoo>

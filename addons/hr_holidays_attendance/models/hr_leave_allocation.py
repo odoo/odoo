@@ -25,12 +25,11 @@ class HolidaysAllocation(models.Model):
     overtime_deductible = fields.Boolean(compute='_compute_overtime_deductible')
     overtime_id = fields.Many2one('hr.attendance.overtime', string='Extra Hours', groups='hr_holidays.group_hr_holidays_user')
     employee_overtime = fields.Float(related='employee_id.total_overtime', groups='base.group_user')
-    hr_attendance_overtime = fields.Boolean(related='employee_company_id.hr_attendance_overtime')
 
     @api.depends('holiday_status_id')
     def _compute_overtime_deductible(self):
         for allocation in self:
-            allocation.overtime_deductible = allocation.hr_attendance_overtime and allocation.holiday_status_id.overtime_deductible
+            allocation.overtime_deductible = allocation.holiday_status_id.overtime_deductible
 
     @api.model_create_multi
     def create(self, vals_list):
