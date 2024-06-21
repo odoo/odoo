@@ -112,21 +112,12 @@
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
-                <field name="name"/>
-                <field name="seats_max"/>
-                <field name="seats_reserved"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                            <div class="row">
-                                <div class="col-8">
-                                    <strong><t t-out="record.name.value"/></strong>
-                                </div>
-                            </div>
-                            <div><i>
-                            <t t-out="record.seats_reserved.value"/> reserved
-                            </i></div>
+                    <t t-name="kanban-card">
+                        <div class="d-flex">
+                            <field class="fw-bolder" name="name"/>
                         </div>
+                        <i><field name="seats_reserved"/> reserved</i>
                     </t>
                 </templates>
             </kanban>
