@@ -72,7 +72,7 @@ export class ImageSelector extends FileSelector {
 
         this.fileMimetypes = IMAGE_MIMETYPES.join(',');
         const imageType = this.props.media && this.props.media.parentElement?.dataset["oeType"];
-        this.isImageField = imageType === "image";
+        this.isImageField = imageType === "image" || this.env.addImageFields;
     }
 
     get canLoadMore() {
