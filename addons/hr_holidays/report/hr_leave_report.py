@@ -22,7 +22,6 @@ class LeaveReport(models.Model):
         ('request', 'Time Off')
         ], string='Request Type', readonly=True)
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
-    category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True)
     holiday_status_id = fields.Many2one("hr.leave.type", string="Time Off Type", readonly=True)
     state = fields.Selection([
         ('draft', 'To Submit'),
@@ -32,10 +31,6 @@ class LeaveReport(models.Model):
         ('validate1', 'Second Approval'),
         ('validate', 'Approved')
         ], string='Status', readonly=True)
-    holiday_type = fields.Selection([
-        ('employee', 'By Employee'),
-        ('category', 'By Employee Tag')
-    ], string='Allocation Mode', readonly=True)
     date_from = fields.Datetime('Start Date', readonly=True)
     date_to = fields.Datetime('End Date', readonly=True)
     company_id = fields.Many2one('res.company', string="Company", readonly=True)
@@ -51,9 +46,9 @@ class LeaveReport(models.Model):
                 leaves.employee_id as employee_id, leaves.name as name,
                 leaves.number_of_days as number_of_days, leaves.leave_type as leave_type,
                 leaves.number_of_hours as number_of_hours,
-                leaves.category_id as category_id, leaves.department_id as department_id,
+                leaves.department_id as department_id,
                 leaves.holiday_status_id as holiday_status_id, leaves.state as state,
-                leaves.holiday_type as holiday_type, leaves.date_from as date_from,
+                leaves.date_from as date_from,
                 leaves.date_to as date_to, leaves.company_id
                 from (select
                     allocation.id as allocation_id,
@@ -62,11 +57,9 @@ class LeaveReport(models.Model):
                     allocation.name as name,
                     allocation.number_of_days as number_of_days,
                     allocation.number_of_hours_display as number_of_hours,
-                    allocation.category_id as category_id,
                     allocation.department_id as department_id,
                     allocation.holiday_status_id as holiday_status_id,
                     allocation.state as state,
-                    allocation.holiday_type,
                     allocation.date_from as date_from,
                     allocation.date_to as date_to,
                     'allocation' as leave_type,
@@ -81,11 +74,9 @@ class LeaveReport(models.Model):
                     request.private_name as name,
                     (request.number_of_days * -1) as number_of_days,
                     (request.number_of_hours * -1) as number_of_hours,
-                    request.category_id as category_id,
                     request.department_id as department_id,
                     request.holiday_status_id as holiday_status_id,
                     request.state as state,
-                    request.holiday_type,
                     request.date_from as date_from,
                     request.date_to as date_to,
                     'request' as leave_type,

@@ -108,8 +108,6 @@ class HrLeave(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        if any(vals.get('holiday_type', 'employee') == 'employee' and not vals.get('multi_employee', False) and not vals.get('employee_id', False) for vals in vals_list):
-            raise ValidationError(_("There is no employee set on the time off. Please make sure you're logged in the correct company."))
         employee_ids = {v['employee_id'] for v in vals_list if v.get('employee_id')}
         # We check a whole day before and after the interval of the earliest
         # request_date_from and latest request_date_end because date_{from,to}

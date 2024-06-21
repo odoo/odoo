@@ -20,7 +20,6 @@ export class LeaveStatsComponent extends Component {
         this.state = useState({
             leaves: [],
             departmentLeaves: [],
-            multi_employee: false,
             date: DateTime,
             department: null,
             employee: null,
@@ -30,7 +29,6 @@ export class LeaveStatsComponent extends Component {
         this.state.date = this.props.record.data.date_from || DateTime.now();
         this.state.department = this.props.record.data.department_id;
         this.state.employee = this.props.record.data.employee_id;
-        this.state.holiday_type = this.props.record.data.holiday_type;
 
         onWillStart(async () => {
             await this.loadLeaves(this.state.date, this.state.employee);
@@ -46,25 +44,20 @@ export class LeaveStatsComponent extends Component {
             const dateChanged = !this.state.date.equals(dateFrom);
             const employee = record.data.employee_id;
             const department = record.data.department_id;
-            const multi_employee = record.data.multi_employee;
             const proms = [];
             if (
-                multi_employee ||
                 dateChanged ||
                 (employee && (this.state.employee && this.state.employee[0]) !== employee[0])
             ) {
                 proms.push(this.loadLeaves(dateFrom, employee));
             }
             if (
-                multi_employee ||
                 dateChanged ||
                 (department &&
                     (this.state.department && this.state.department[0]) !== department[0])
             ) {
                 proms.push(this.loadDepartmentLeaves(dateFrom, department, employee));
             }
-            this.state.multi_employee = multi_employee;
-            this.state.holiday_type = record.data.holiday_type;
             await Promise.all(proms);
             this.state.date = dateFrom;
             this.state.employee = employee;
@@ -90,7 +83,6 @@ export class LeaveStatsComponent extends Component {
             [
                 ["department_id", "=", department[0]],
                 ["state", "=", "validate"],
-                ["holiday_type", "=", "employee"],
                 ["date_from", "<=", dateTo],
                 ["date_to", ">=", dateFrom],
             ],

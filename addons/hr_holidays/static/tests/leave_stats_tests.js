@@ -66,7 +66,6 @@ QUnit.module("leave stats", {
                             relation: "hr.leave.type",
                         },
                         state: { string: "State", type: "char" },
-                        holiday_type: { string: "Holiday Type", type: "char" },
                         number_of_days: { string: "State", type: "integer" },
                     },
                     records: [
@@ -79,7 +78,6 @@ QUnit.module("leave stats", {
                             holiday_status_id: 55,
                             state: "validate",
                             number_of_days: 5,
-                            holiday_type: "employee",
                         },
                         {
                             id: 13,
@@ -90,7 +88,6 @@ QUnit.module("leave stats", {
                             holiday_status_id: 55,
                             state: "validate",
                             number_of_days: 1,
-                            holiday_type: "employee",
                         },
                         {
                             id: 14,
@@ -101,7 +98,6 @@ QUnit.module("leave stats", {
                             holiday_status_id: 55,
                             state: "validate",
                             number_of_days: 8,
-                            holiday_type: "employee",
                         },
                     ],
                 },

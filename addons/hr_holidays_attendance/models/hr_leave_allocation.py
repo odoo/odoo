@@ -36,7 +36,7 @@ class HolidaysAllocation(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         for allocation in res:
-            if allocation.overtime_deductible and allocation.holiday_type == 'employee':
+            if allocation.overtime_deductible:
                 duration = allocation.number_of_hours_display
                 if duration > allocation.employee_id.total_overtime:
                     raise ValidationError(_('The employee does not have enough overtime hours to request this leave.'))
