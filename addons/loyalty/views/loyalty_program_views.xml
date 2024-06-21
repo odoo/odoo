@@ -116,13 +116,21 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Rules &amp; Rewards" name="rules_rewards">
+                        <page string="Rules &amp; Rewards" name="rules_rewards" invisible="program_type in ('gift_card', 'ewallet')">
                             <group>
                                 <group>
                                     <field name="rule_ids" colspan="2" mode="kanban" nolabel="1" add-label="Add a rule"
                                         class="o_loyalty_kanban_inline" widget="loyalty_one2many" context="{'currency_symbol': currency_symbol, 'program_type': program_type}"/>
                                 </group>
                                 <group>
+                                    <field name="reward_ids" colspan="2" mode="kanban" nolabel="1" add-label="Add a reward"
+                                      class="o_loyalty_kanban_inline" widget="loyalty_one2many" context="{'currency_symbol': currency_symbol, 'program_type': program_type}"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Rewards" name="rewards" groups="base.group_no_one" invisible="program_type not in ('gift_card', 'ewallet')">
+                            <group>
+                                <group groups="base.group_no_one">
                                     <field name="reward_ids" colspan="2" mode="kanban" nolabel="1" add-label="Add a reward"
                                       class="o_loyalty_kanban_inline" widget="loyalty_one2many" context="{'currency_symbol': currency_symbol, 'program_type': program_type}"/>
                                 </group>
@@ -197,12 +205,6 @@
         <field name="inherit_id" ref="loyalty_program_view_form"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <notebook position="attributes">
-                <attribute name="groups">base.group_no_one</attribute>
-            </notebook>
-            <xpath expr="//field[@name='rule_ids']/.." position="attributes">
-                <attribute name="invisible">program_type in ('gift_card', 'ewallet')</attribute>
-            </xpath>
             <form position="attributes">
                 <attribute name="string">Gift &amp; Ewallet</attribute>
             </form>
