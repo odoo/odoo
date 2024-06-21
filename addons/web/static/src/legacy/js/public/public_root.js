@@ -145,7 +145,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
                 // TODO Remove this once all frontend layouts possess a
                 // #wrapwrap element (which is necessary for those pages to be
                 // adapted correctly if the user installs website).
-                fromEl = [this.el];
+                fromEl = this.el;
             }
         }
         options = Object.assign({}, options, {
@@ -153,7 +153,6 @@ export const PublicRoot = publicWidget.RootWidget.extend({
             // it's set by jquery data() method.
             wysiwyg: $('#wrapwrap').data('wysiwyg'),
         });
-
         this._stopWidgets(fromEl);
         var defs = Object.values(this._getPublicWidgetsRegistry(options)).map((PublicWidget) => {
             var selector = PublicWidget.prototype.selector || '';
@@ -172,15 +171,21 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * saving while in edition mode for example.
      *
      * @private
-     * @param {HTMLElement} [fromEl]
+     * @param {Array|NodeList|Element} [fromEl]
      *        only stop the public widgets linked to the given element(s) or one
      *        of its descendants
      */
     _stopWidgets: function (fromEl) {
+        // Normalize fromEl to always be an array
+        if (!(fromEl instanceof NodeList || Array.isArray(fromEl))) {
+            fromEl = fromEl && [fromEl];
+        } else {
+            fromEl = Array.from(fromEl);
+        }
         var removedWidgets = this.publicWidgets.map((widget) => {
             if (!fromEl
-                || [...fromEl].filter((el) => el === widget.el).length
-                || [...fromEl].some((el)=> el.contains(widget.el))) {
+                || fromEl.filter((el) => el === widget.el).length
+                || fromEl.some((el)=> el.contains(widget.el))) {
                 widget.destroy();
                 return widget;
             }
@@ -261,7 +266,8 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @param {OdooEvent} ev
      */
     _onWidgetsStopRequest: function (ev) {
-        this._stopWidgets(ev.data.target);
+        // Divy: Need to update the data target to HTML
+        this._stopWidgets(ev.data.$target && ev.data.$target[0]);
     },
     /**
      * @todo review

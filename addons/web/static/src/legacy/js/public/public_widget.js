@@ -264,7 +264,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
             self.el.append(t.nextSibling);
-        }, target);
+        }, targetEl);
     },
     /**
      * Renders the current widget and inserts it before to the given jQuery

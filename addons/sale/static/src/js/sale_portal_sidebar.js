@@ -91,7 +91,7 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
             }
             el.setAttribute('data-anchor', true);
         });
-        this.trigger_up('widgets_start_request', {$target: $bsSidenav});
+        this.trigger_up('widgets_start_request', {target: $bsSidenav[0]});
     },
     /**
      * extract text of menu title for sidebar

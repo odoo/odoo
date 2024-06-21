@@ -168,7 +168,7 @@ const DynamicSnippetProductsCard = WebsiteSale.extend({
         }
         if (this.add2cartRerender) {
             this.trigger_up('widgets_start_request', {
-                $target: this.$el.closest('.s_dynamic'),
+                target: this.el.closest('.s_dynamic'),
             });
         }
     },
@@ -187,7 +187,7 @@ const DynamicSnippetProductsCard = WebsiteSale.extend({
         }
         await rpc("/shop/products/recently_viewed_delete", rpcParams);
         this.trigger_up('widgets_start_request', {
-            $target: this.$el.closest('.s_dynamic'),
+            target: this.el.closest('.s_dynamic'),
         });
     },
 });

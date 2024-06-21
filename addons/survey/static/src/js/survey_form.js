@@ -502,7 +502,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             }
 
             // Start datetime pickers
-            self.trigger_up("widgets_start_request", { $target: this.$el.find('.o_survey_form_date') });
+            self.trigger_up("widgets_start_request", { target: this.el.querySelector('.o_survey_form_date') });
             if (this.options.isStartScreen || (options && options.initTimer)) {
                 this._initTimer();
                 this.options.isStartScreen = false;

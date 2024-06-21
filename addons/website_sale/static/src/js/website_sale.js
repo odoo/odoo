@@ -359,7 +359,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             }
             this._startZoom();
             // fix issue with carousel height
-            this.trigger_up('widgets_start_request', {$target: $images});
+            this.trigger_up('widgets_start_request', {target: $images[0]});
         }
         $images.toggleClass('css_not_available', !isCombinationPossible);
     },
