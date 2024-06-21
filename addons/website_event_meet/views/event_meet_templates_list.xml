@@ -37,9 +37,9 @@
                     aria-label="Dropdown menu" data-bs-display="static" data-bs-toggle="dropdown" href="#" role="button">
                     <span t-out="current_lang.name if current_lang else 'All Languages'"/></a>
                 <div class="dropdown-menu" role="menu">
-                    <a class="dropdown-item" role="menuitem" t-attf-href="/event/#{slug(event)}/community">All Languages
+                    <a class="dropdown-item" role="menuitem" t-attf-href="/event/#{slug(event)}/community/#{page}">All Languages
                        </a>
-                    <a class="dropdown-item" role="menuitem" t-as="language" t-attf-href="/event/#{slug(event)}/community?lang=#{language.id}" t-out="language.name" t-foreach="available_languages"/>
+                    <a class="dropdown-item" role="menuitem" t-as="language" t-attf-href="/event/#{slug(event)}/community/#{page}?lang=#{language.id}" t-out="language.name" t-foreach="available_languages"/>
                 </div>
             </div>
         </div>

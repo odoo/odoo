@@ -56,10 +56,10 @@ class EventTrackController(http.Controller):
     # ------------------------------------------------------------
 
     @http.route([
-        '''/event/<model("event.event"):event>/track''',
-        '''/event/<model("event.event"):event>/track/tag/<model("event.track.tag"):tag>'''
+        '''/event/<model("event.event"):event>/track/<path:page>''',
+        '''/event/<model("event.event"):event>/track/<path:page>/tag/<model("event.track.tag"):tag>'''
     ], type='http', auth="public", website=True, sitemap=False)
-    def event_tracks(self, event, tag=None, **searches):
+    def event_tracks(self, event, page, tag=None, **searches):
         """ Main route
 
         :param event: event whose tracks are about to be displayed;
@@ -69,12 +69,13 @@ class EventTrackController(http.Controller):
           * 'search': search string;
           * 'tags': list of tag IDs for filtering;
         """
+        seo_object = request.website.get_template('website_event_track.' + page)
         return request.render(
             "website_event_track.tracks_session",
-            self._event_tracks_get_values(event, tag=tag, **searches)
+            self._event_tracks_get_values(event, seo_object, tag=tag, **searches)
         )
 
-    def _event_tracks_get_values(self, event, tag=None, **searches):
+    def _event_tracks_get_values(self, event, seo_object, tag=None, **searches):
         # init and process search terms
         searches.setdefault('search', '')
         searches.setdefault('search_wishlist', '')
@@ -150,6 +151,7 @@ class EventTrackController(http.Controller):
             # event information
             'event': event,
             'main_object': event,
+            'seo_object': seo_object,
             # tracks display information
             'tracks': tracks_sudo,
             'tracks_by_day': tracks_by_day,
@@ -173,12 +175,14 @@ class EventTrackController(http.Controller):
     # AGENDA VIEW
     # ------------------------------------------------------------
 
-    @http.route(['''/event/<model("event.event"):event>/agenda'''], type='http', auth="public", website=True, sitemap=False)
-    def event_agenda(self, event, tag=None, **post):
+    @http.route(['''/event/<model("event.event"):event>/agenda/<path:page>'''], type='http', auth="public", website=True, sitemap=False)
+    def event_agenda(self, event, page, tag=None, **post):
         event = event.with_context(tz=event.date_tz or 'UTC')
+        seo_object = request.website.get_template('website_event_track.' + page)
         vals = {
             'event': event,
             'main_object': event,
+            'seo_object': seo_object,
             'tag': tag,
             'is_event_user': request.env.user.has_group('event.group_event_user'),
         }
@@ -412,9 +416,12 @@ class EventTrackController(http.Controller):
     # TRACK PROPOSAL
     # ------------------------------------------------------------
 
-    @http.route(['''/event/<model("event.event"):event>/track_proposal'''], type='http', auth="public", website=True, sitemap=False)
-    def event_track_proposal(self, event, **post):
-        return request.render("website_event_track.event_track_proposal", {'event': event, 'main_object': event})
+    @http.route(['''/event/<model("event.event"):event>/track_proposal/<path:page>'''], type='http', auth="public", website=True, sitemap=False)
+    def event_track_proposal(self, event, page, **post):
+
+        seo_object = request.website.get_template('website_event_track.' + page)
+
+        return request.render("website_event_track.event_track_proposal", {'event': event, 'main_object': event, 'seo_object': seo_object})
 
     @http.route(['''/event/<model("event.event"):event>/track_proposal/post'''], type='http', auth="public", methods=['POST'], website=True)
     def event_track_proposal_post(self, event, **post):
