@@ -144,6 +144,11 @@ class StockWarehouseOrderpoint(models.Model):
         if any(orderpoint.product_id.uom_id.category_id != orderpoint.product_uom.category_id for orderpoint in self):
             raise ValidationError(_('You have to select a product unit of measure that is in the same category as the default unit of measure of the product'))
 
+    @api.constrains('product_min_qty', 'product_max_qty')
+    def _check_min_max_qty(self):
+        if any(orderpoint.product_min_qty > orderpoint.product_max_qty for orderpoint in self):
+            raise ValidationError(_('The minimum quantity must be less than or equal to the maximum quantity.'))
+
     @api.depends('location_id', 'company_id')
     def _compute_warehouse_id(self):
         for orderpoint in self:
@@ -183,6 +188,16 @@ class StockWarehouseOrderpoint(models.Model):
     def _onchange_route_id(self):
         if self.route_id:
             self.qty_multiple = self._get_qty_multiple_to_order()
+
+    @api.onchange('product_min_qty')
+    def _onchange_min_qty(self):
+        if self.product_min_qty > self.product_max_qty:
+            self.product_max_qty = self.product_min_qty
+
+    @api.onchange('product_max_qty')
+    def _onchange_max_qty(self):
+        if self.product_max_qty < self.product_min_qty:
+            self.product_min_qty = self.product_max_qty
 
     def write(self, vals):
         if 'company_id' in vals:
