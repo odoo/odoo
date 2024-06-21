@@ -4,8 +4,9 @@ import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 import { clamp } from "@web/core/utils/numbers";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { ObservingCookieWidgetMixin } from "@website/snippets/observing_cookie_mixin";
 
-const FacebookPageWidget = publicWidget.Widget.extend({
+const FacebookPageWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin, {
     selector: '.o_facebook_page',
     disabledInEditableMode: false,
 
@@ -31,7 +32,6 @@ const FacebookPageWidget = publicWidget.Widget.extend({
         const src = "https://www.facebook.com/plugins/page.php?" + searchParams;
 
         this.$iframe = $('<iframe/>', {
-            src: src,
             width: params.width,
             height: params.height,
             css: {
@@ -44,6 +44,7 @@ const FacebookPageWidget = publicWidget.Widget.extend({
             "aria-label": _t("Facebook"),
         });
         this.$el.append(this.$iframe);
+        this._manageIframeSrc(this.el, src);
 
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
         return def;
