@@ -45,7 +45,6 @@ class PurchaseOrder(models.Model):
             order.amount_untaxed = amount_untaxed
             order.amount_tax = amount_tax
             order.amount_total = order.amount_untaxed + order.amount_tax
-            order.amount_total_cc = order.amount_total / order.currency_rate
 
     @api.depends('state', 'order_line.qty_to_invoice')
     def _get_invoiced(self):
@@ -125,7 +124,7 @@ class PurchaseOrder(models.Model):
     tax_totals = fields.Binary(compute='_compute_tax_totals', exportable=False)
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
-    amount_total_cc = fields.Monetary(string="Company Total", store=True, readonly=True, compute="_amount_all", currency_field="company_currency_id")
+    amount_total_cc = fields.Monetary(string="Company Total", store=True, readonly=True, compute="_compute_amount_total_cc", currency_field="company_currency_id")
 
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tax_country_id = fields.Many2one(
@@ -186,6 +185,11 @@ class PurchaseOrder(models.Model):
     def _compute_currency_rate(self):
         for order in self:
             order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
+
+    @api.depends('amount_total', 'currency_rate')
+    def _compute_amount_total_cc(self):
+        for order in self:
+            order.amount_total_cc = order.amount_total / order.currency_rate
 
     @api.depends('order_line.date_planned')
     def _compute_date_planned(self):
