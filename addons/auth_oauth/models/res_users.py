@@ -7,7 +7,7 @@ import requests
 import werkzeug.http
 
 from odoo import api, fields, models
-from odoo.exceptions import AccessDenied, UserError
+from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.addons.auth_signup.models.res_users import SignupError
 
 from odoo.addons import base
@@ -25,10 +25,13 @@ class ResUsers(models.Model):
     ]
 
     def _auth_oauth_rpc(self, endpoint, access_token):
-        if self.env['ir.config_parameter'].sudo().get_param('auth_oauth.authorization_header'):
-            response = requests.get(endpoint, headers={'Authorization': 'Bearer %s' % access_token}, timeout=10)
-        else:
-            response = requests.get(endpoint, params={'access_token': access_token}, timeout=10)
+        try:
+            if self.env['ir.config_parameter'].sudo().get_param('auth_oauth.authorization_header'):
+                response = requests.get(endpoint, headers={'Authorization': 'Bearer %s' % access_token}, timeout=10)
+            else:
+                response = requests.get(endpoint, params={'access_token': access_token}, timeout=10)
+        except requests.exceptions.RequestException:
+            return {'error': 'invalid_request'}
 
         if response.ok: # nb: could be a successful failure
             return response.json()
@@ -46,7 +49,7 @@ class ResUsers(models.Model):
         oauth_provider = self.env['auth.oauth.provider'].browse(provider)
         validation = self._auth_oauth_rpc(oauth_provider.validation_endpoint, access_token)
         if validation.get("error"):
-            raise Exception(validation['error'])
+            raise ValidationError(validation['error'])
         if oauth_provider.data_endpoint:
             data = self._auth_oauth_rpc(oauth_provider.data_endpoint, access_token)
             validation.update(data)
