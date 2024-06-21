@@ -84,13 +84,13 @@
 <td t-out="profitability['labels'][cost['id']]"/>
 <td class="text-end" t-out="format_monetary(cost['billed'])"/>
 <td class="text-end" t-out="format_monetary(cost['to_bill'])"/>
-<td class="text-end" t-out="format_monetary(cost['billed'] - cost['to_bill'])"/>
+<td class="text-end" t-out="format_monetary(cost['billed'] + cost['to_bill'])"/>
 </tr>
 <tfoot>
 <td class="fw-bolder text-end">Total</td>
 <td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['billed'])"/>
 <td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['to_bill'])"/>
-<td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['billed'] - profitability['costs']['total']['to_bill'])"/>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['billed'] + profitability['costs']['total']['to_bill'])"/>
 </tfoot>
 </tbody>
 </table>
