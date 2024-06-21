@@ -525,10 +525,19 @@ class ChannelMember(models.Model):
         if message_id == self.new_message_separator:
             return
         self.new_message_separator = message_id
-        persona_fields = {"partner": {"id": True, "name": True}, "guest": {"id": True, "name": True}}
         member_data = self._discuss_channel_member_format(
-            fields={"id": True, "channel": {}, "message_unread_counter": True, "new_message_separator": True, "persona": persona_fields},
+            fields={
+                "id": True,
+                "channel": {},
+                "message_unread_counter": True,
+                "new_message_separator": True,
+                "persona": {
+                    "partner": {"id": True, "name": True},
+                    "guest": {"id": True, "name": True},
+                },
+            },
         )[self]
         member_data.update(syncUnread=sync)
         target = self.partner_id or self.guest_id
-        self.env["bus.bus"]._sendone(target, "mail.record/insert", {"ChannelMember": member_data})
+        store = Store("ChannelMember", member_data)
+        self.env["bus.bus"]._sendone(target, "mail.record/insert", store.get_result())
