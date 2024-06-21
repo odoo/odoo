@@ -615,6 +615,10 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         // Upon change, make sure to verify whether the same change needs
         // to be applied on both sides.
         // Generate alternate sizes and format for reports.
+        if (/\/web\/image\/\d+-redirect/.test(imageEl.getAttribute("src"))) {
+            // The image is CORS protected; do not transform it into webp
+            return;
+        }
         const imgEl = document.createElement("img");
         imgEl.src = imageEl.src;
         await new Promise(resolve => imgEl.addEventListener("load", resolve));
