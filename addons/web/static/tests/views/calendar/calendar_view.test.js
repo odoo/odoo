@@ -1874,6 +1874,7 @@ test(`Add filters and specific color`, async () => {
     expect([
         "get_views (event)",
         "check_access_rights (event)",
+        "check_access_rights (event)",
         "search_read (filter.partner) [partner_id]",
         "search_read (event) [display_name, start, stop, is_all_day, color, attendee_ids, type_id]",
     ]).toVerifySteps();
@@ -3860,4 +3861,20 @@ test(`Retaining the 'all' filter value on re-rendering`, async () => {
     await getService("action").switchView("list");
     await getService("action").switchView("calendar");
     expect(`.o_calendar_filter_item[data-value='all'] input`).toBeChecked();
+});
+
+test(`disable editing without write access rights`, async () => {
+    onRpc("check_access_rights", ({ args: [operation] }) => operation !== 'write');
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop">
+                <field name="name"/>
+            </calendar>
+        `,
+    });
+
+    expect(`.fc-event-draggable`).toHaveCount(0);
 });

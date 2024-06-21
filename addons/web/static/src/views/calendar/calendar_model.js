@@ -34,6 +34,7 @@ export class CalendarModel extends Model {
             filters: {},
             filterSections: {},
             hasCreateRight: null,
+            hasEditRight: null,
             range: null,
             records: {},
             unusualDays: [],
@@ -72,7 +73,7 @@ export class CalendarModel extends Model {
         return this.meta.canDelete;
     }
     get canEdit() {
-        return !this.meta.fields[this.meta.fieldMapping.date_start].readonly;
+        return !this.meta.fields[this.meta.fieldMapping.date_start].readonly && this.data.hasEditRight;
     }
     get eventLimit() {
         return this.meta.eventLimit;
@@ -314,6 +315,12 @@ export class CalendarModel extends Model {
         if (data.hasCreateRight === null) {
             data.hasCreateRight = await this.orm.call(this.meta.resModel, "check_access_rights", [
                 "create",
+                false,
+            ]);
+        }
+        if (data.hasEditRight === null) {
+            data.hasEditRight = await this.orm.call(this.meta.resModel, "check_access_rights", [
+                "write",
                 false,
             ]);
         }

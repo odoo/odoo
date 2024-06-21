@@ -5,10 +5,27 @@ export class ProjectProject extends models.Model {
     _name = "project.project";
 
     name = fields.Char();
+    active = fields.Boolean({ default: true });
+    stage_id = fields.Many2one({ relation: "project.project.stage" });
 
     _records = [
-        { id: 1, name: "Project 1" },
-        { id: 2, name: "Project 2" },
+        { id: 1, name: "Project 1", stage_id: 1 },
+        { id: 2, name: "Project 2", stage_id: 2 },
+    ];
+
+    check_access_rights() {
+        return Promise.resolve(true);
+    };
+}
+
+export class ProjectProjectStage extends models.Model {
+    _name = "project.project.stage";
+
+    name = fields.Char();
+
+    _records = [
+        { id: 1, name: "Stage 1" },
+        { id: 2, name: "Stage 2" },
     ];
 }
 
@@ -103,6 +120,7 @@ export function defineProjectModels() {
 
 export const projectModels = {
     ProjectProject,
+    ProjectProjectStage,
     ProjectTask,
     ProjectTaskType,
     ProjectMilestone,
