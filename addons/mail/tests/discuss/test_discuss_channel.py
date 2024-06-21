@@ -141,24 +141,27 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "model": "discuss.channel",
                                 },
                             ],
+                            "Persona": [
+                                {
+                                    "id": self.test_partner.id,
+                                    "name": "Test Partner",
+                                    "email": "test_customer@example.com",
+                                    "active": True,
+                                    "im_status": "im_partner",
+                                    "is_company": False,
+                                    "write_date": test_partner_write_date,
+                                    "userId": False,
+                                    "isInternalUser": False,
+                                    "type": "partner",
+                                    "out_of_office_date_end": False,
+                                },
+                            ],
                             "ChannelMember": [
                                 {
                                     "id": member.id,
                                     "thread": {"id": channel.id, "model": "discuss.channel"},
                                     "create_date": fields.Datetime.to_string(member.create_date),
-                                    "persona": {
-                                        "id": self.test_partner.id,
-                                        "name": "Test Partner",
-                                        "email": "test_customer@example.com",
-                                        "active": True,
-                                        "im_status": "im_partner",
-                                        "is_company": False,
-                                        "write_date": test_partner_write_date,
-                                        "userId": False,
-                                        "isInternalUser": False,
-                                        "type": "partner",
-                                        "out_of_office_date_end": False,
-                                    },
+                                    "persona": {"id": self.test_partner.id, "type": "partner"},
                                     "fetched_message_id": False,
                                     "seen_message_id": False,
                                 },
@@ -189,24 +192,27 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "model": "discuss.channel",
                                 }
                             ],
+                            "Persona": [
+                                {
+                                    "id": self.test_partner.id,
+                                    "name": "Test Partner",
+                                    "email": "test_customer@example.com",
+                                    "active": True,
+                                    "im_status": "im_partner",
+                                    "is_company": False,
+                                    "write_date": test_partner_write_date,
+                                    "userId": False,
+                                    "isInternalUser": False,
+                                    "type": "partner",
+                                    "out_of_office_date_end": False,
+                                },
+                            ],
                             "ChannelMember": [
                                 {
                                     "id": member.id,
                                     "thread": {"id": channel.id, "model": "discuss.channel"},
                                     "create_date": fields.Datetime.to_string(member.create_date),
-                                    "persona": {
-                                        "id": self.test_partner.id,
-                                        "name": "Test Partner",
-                                        "email": "test_customer@example.com",
-                                        "active": True,
-                                        "im_status": "im_partner",
-                                        "is_company": False,
-                                        "write_date": test_partner_write_date,
-                                        "userId": False,
-                                        "isInternalUser": False,
-                                        "type": "partner",
-                                        "out_of_office_date_end": False,
-                                    },
+                                    "persona": {"id": self.test_partner.id, "type": "partner"},
                                     "fetched_message_id": False,
                                     "seen_message_id": False,
                                 }
@@ -305,7 +311,10 @@ class TestChannelInternals(MailCommon, HttpCase):
         channel = self.env["discuss.channel"].channel_get(partners_to=self.test_partner.ids)
         init_data = Store(channel).get_result()
         initial_channel_info = init_data["Thread"][0]
-        self.assertEqual({m["persona"]["id"] for m in init_data["ChannelMember"]}, {self.partner_employee_nomail.id, self.test_partner.id})
+        self.assertEqual(
+            {persona["id"] for persona in init_data["Persona"]},
+            {self.partner_employee_nomail.id, self.test_partner.id}
+        )
 
         # `channel_get` should return the existing channel every time the same partner is given
         same_channel = self.env['discuss.channel'].channel_get(partners_to=self.test_partner.ids)
@@ -325,7 +334,10 @@ class TestChannelInternals(MailCommon, HttpCase):
         solo_channel_data = Store(solo_channel).get_result()
         solo_channel_info = solo_channel_data["Thread"][0]
         self.assertNotEqual(solo_channel_info['id'], initial_channel_info['id'])
-        self.assertEqual({m["persona"]["id"] for m in solo_channel_data["ChannelMember"]}, {self.partner_employee_nomail.id})
+        self.assertEqual(
+            {persona["id"] for persona in solo_channel_data["Persona"]},
+            {self.partner_employee_nomail.id},
+        )
 
         # `channel_get` should return the existing channel every time the current partner is given
         same_solo_pids = self.partner_employee_nomail.ids
@@ -390,12 +402,19 @@ class TestChannelInternals(MailCommon, HttpCase):
         with self.assertBus(
             [
                 (self.env.cr.dbname, "discuss.channel", chat.id),
-                (self.env.cr.dbname, "res.partner", self.user_admin.partner_id.id)
+                (self.env.cr.dbname, "res.partner", self.user_admin.partner_id.id),
             ],
             [
-                   {
+                {
                     "type": "mail.record/insert",
                     "payload": {
+                        "Persona": [
+                            {
+                                "id": self.user_admin.partner_id.id,
+                                "name": self.user_admin.partner_id.name,
+                                "type": "partner",
+                            },
+                        ],
                         "ChannelMember": {
                             "id": member.id,
                             "thread": {
@@ -404,11 +423,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "message_unread_counter": 0,
                                 "message_unread_counter_bus_id": last_bus_id + 1,
                             },
-                            "persona": {
-                                "id": self.user_admin.partner_id.id,
-                                "name": self.user_admin.partner_id.name,
-                                "type": "partner",
-                            },
+                            "persona": {"id": self.user_admin.partner_id.id, "type": "partner"},
                             "new_message_separator": msg_1.id + 1,
                             "syncUnread": False,
                         },
@@ -417,17 +432,17 @@ class TestChannelInternals(MailCommon, HttpCase):
                 {
                     "type": "mail.record/insert",
                     "payload": {
-                        "ChannelMember": {
-                            "id": member.id,
-                            "thread": {
-                                "id": chat.id,
-                                "model": "discuss.channel",
-                            },
-                            "persona": {
+                        "Persona": [
+                            {
                                 "id": self.user_admin.partner_id.id,
                                 "name": self.user_admin.partner_id.name,
                                 "type": "partner",
                             },
+                        ],
+                        "ChannelMember": {
+                            "id": member.id,
+                            "thread": {"id": chat.id, "model": "discuss.channel"},
+                            "persona": {"id": self.user_admin.partner_id.id, "type": "partner"},
                             "seen_message_id": {"id": msg_1.id},
                         },
                     },
