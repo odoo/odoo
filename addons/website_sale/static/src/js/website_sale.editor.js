@@ -6,6 +6,7 @@ import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import options from "@web_editor/js/editor/snippets.options";
 import "@website/js/editor/snippets.options";
 import { useChildSubEnv } from "@odoo/owl";
+import weUtils from '@web_editor/js/common/utils';
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
@@ -609,6 +610,10 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         // This method is widely adapted from onFileUploaded in ImageField.
         // Upon change, make sure to verify whether the same change needs
         // to be applied on both sides.
+        if (await weUtils.isImageCorsProtected(imageEl)) {
+            // The image is CORS protected; do not transform it into webp
+            return;
+        }
         // Generate alternate sizes and format for reports.
         const imgEl = document.createElement("img");
         imgEl.src = imageEl.src;
