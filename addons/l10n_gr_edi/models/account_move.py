@@ -388,7 +388,7 @@ class AccountMove(models.Model):
     ################################################################################
 
     def _l10n_gr_edi_get_errors_pre_request(self):
-        """ Tries to catch all possible errors before sending to MyDATA API """
+        """ Try to catch all possible errors before sending to MyDATA. """
         self.ensure_one()
         errors = []
 
@@ -424,7 +424,7 @@ class AccountMove(models.Model):
     @api.model
     def _l10n_gr_edi_handle_send_result(self, result, xml_vals):
         """ Handle the result object received from sending xml to myDATA.
-            Create the related error/sent document with necessary values. """
+            Create the related error/sent document with the necessary values. """
         move_xml_map = self._l10n_gr_edi_create_move_xml_map(xml_vals)
         move_ids = list(move_xml_map.keys())
 
@@ -444,7 +444,7 @@ class AccountMove(models.Model):
                 self._l10n_gr_edi_create_document_move_sent(move_id, xml_content)
 
     def _l10n_gr_edi_send_invoices(self):
-        """ Send batch of invoices values in one xml and send them to MyDATA. """
+        """ Send batch of invoices SendInvoice XML to MyDATA. """
         xml_vals = self._l10n_gr_edi_get_invoices_xml_vals()
         xml_content = self._l10n_gr_edi_generate_xml_content(xml_vals)
         result = self.env['l10n_gr_edi.document']._make_mydata_request(
@@ -455,7 +455,7 @@ class AccountMove(models.Model):
         self._l10n_gr_edi_handle_send_result(result, xml_vals)
 
     def _l10n_gr_edi_send_expense_classification(self):
-        """ Send batch of invoices Expense Classifications XML to MyDATA. """
+        """ Send batch of invoices SendExpensesClassification XML to MyDATA. """
         xml_vals = self._l10n_gr_edi_get_expense_classification_xml_vals()
         xml_content = self._l10n_gr_edi_generate_xml_content(xml_vals)
         result = self.env['l10n_gr_edi.document']._make_mydata_request(
@@ -474,12 +474,7 @@ class AccountMove(models.Model):
             if errors := move._l10n_gr_edi_get_errors_pre_request():
                 if len(self) == 1:
                     raise UserError('\n'.join(errors))
-
-                self.env['l10n_gr_edi.document'].create([{
-                    'move_id': move.id,
-                    'state': 'move_error',
-                    'message': '\n'.join(errors),
-                }])
+                self._l10n_gr_edi_create_document_move_error(move.id, '\n'.join(errors))
             else:
                 moves_to_send |= move
         return moves_to_send
