@@ -3,6 +3,7 @@ import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
 import { reactive } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 
+import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
@@ -34,6 +35,7 @@ export const ODOO_VERSION_KEY = `${location.origin.replace(
 const OPERATOR_STORAGE_KEY = "im_livechat_previous_operator";
 const GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
 const SAVED_STATE_STORAGE_KEY = "im_livechat.saved_state";
+const LIVECHAT_UUID_COOKIE = "im_livechat_uuid";
 
 export function getGuestToken() {
     return expirableStorage.getItem(GUEST_TOKEN_STORAGE_KEY);
@@ -145,6 +147,7 @@ export class LivechatService {
             }
         } finally {
             expirableStorage.removeItem(SAVED_STATE_STORAGE_KEY);
+            cookie.delete(LIVECHAT_UUID_COOKIE);
             this.state = SESSION_STATE.NONE;
             await Promise.all(this._onStateChangeCallbacks[SESSION_STATE.NONE].map((fn) => fn()));
         }
@@ -173,6 +176,10 @@ export class LivechatService {
         if (guest_token) {
             expirableStorage.setItem(GUEST_TOKEN_STORAGE_KEY, guest_token);
         }
+        const ONE_DAY_TTL = 60 * 60 * 24;
+        if (threadData.uuid) {
+            cookie.set(LIVECHAT_UUID_COOKIE, threadData.uuid, ONE_DAY_TTL);
+        }
         expirableStorage.setItem(
             SAVED_STATE_STORAGE_KEY,
             JSON.stringify({
@@ -180,14 +187,10 @@ export class LivechatService {
                 persisted,
                 livechatUserId: this.savedState?.livechatUserId ?? session.user_id,
             }),
-            60 * 60 * 24 // kept for 1 day.
+            ONE_DAY_TTL
         );
         if (threadData.operator) {
-            expirableStorage.setItem(
-                OPERATOR_STORAGE_KEY,
-                threadData.operator.id,
-                7 * 24 * 60 * 60 // kept for 7 days.
-            );
+            expirableStorage.setItem(OPERATOR_STORAGE_KEY, threadData.operator.id, ONE_DAY_TTL * 7);
         }
     }
 
