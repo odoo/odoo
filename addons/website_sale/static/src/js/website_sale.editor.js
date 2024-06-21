@@ -7,6 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import "@website/js/editor/snippets.options";
 import { renderToElement } from "@web/core/utils/render";
 import { useChildSubEnv } from "@odoo/owl";
+import weUtils from '@web_editor/js/common/utils';
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
     init() {
@@ -614,6 +615,10 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         // This method is widely adapted from onFileUploaded in ImageField.
         // Upon change, make sure to verify whether the same change needs
         // to be applied on both sides.
+        if (await weUtils.isImageCorsProtected(imageEl)) {
+            // The image is CORS protected; do not transform it into webp
+            return;
+        }
         // Generate alternate sizes and format for reports.
         const imgEl = document.createElement("img");
         imgEl.src = imageEl.src;
