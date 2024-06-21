@@ -2,17 +2,18 @@ import { busModels } from "@bus/../tests/bus_test_helpers";
 import { mailGlobal } from "@mail/utils/common/misc";
 import { after, before, getFixture } from "@odoo/hoot";
 import { resize } from "@odoo/hoot-dom";
-import { getMockEnv, restoreRegistry } from "@web/../tests/_framework/env_test_helpers";
-import { parseViewProps } from "@web/../tests/_framework/view_test_helpers";
 import {
     MockServer,
     authenticate,
     defineModels,
+    getMockEnv,
     getService,
     makeMockEnv,
     makeMockServer,
     mountWithCleanup,
+    parseViewProps,
     patchWithCleanup,
+    restoreRegistry,
     serverState,
     webModels,
 } from "@web/../tests/web_test_helpers";

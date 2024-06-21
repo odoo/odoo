@@ -37,10 +37,12 @@ export {
 export { contains, editAce } from "./_framework/dom_test_helpers";
 export {
     clearRegistry,
+    getMockEnv,
     getService,
     makeDialogMockEnv,
     makeMockEnv,
     mockService,
+    restoreRegistry,
 } from "./_framework/env_test_helpers";
 export { Command } from "./_framework/mock_server/mock_model";
 export {
@@ -57,6 +59,7 @@ export {
     withUser,
 } from "./_framework/mock_server/mock_server";
 export {
+    MockServerError,
     getKwArgs,
     makeKwArgs,
     makeServerError,
@@ -112,6 +115,7 @@ export {
     kanbanCard,
     mountView,
     mountViewInDialog,
+    parseViewProps,
 } from "./_framework/view_test_helpers";
 export { useTestClientAction } from "./_framework/webclient_test_helpers";
 
