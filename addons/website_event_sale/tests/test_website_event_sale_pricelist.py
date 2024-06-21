@@ -27,6 +27,7 @@ class TestWebsiteEventPriceList(TestWebsiteEventSaleCommon):
             'product_uom_qty': 1,
         })
         # set pricelist to 0 - currency: company
+        # TODO LINA with_discount
         self.pricelist.write({
             'currency_id': self.env.company.currency_id.id,
             'item_ids': [(5, 0, 0), (0, 0, {

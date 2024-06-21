@@ -528,7 +528,7 @@ class ProductTemplate(models.Model):
         })
 
         pricelist_item_id = self.env['product.pricelist.item'].browse(pricelist_rule_id)
-        if pricelist_item_id.compute_price != 'percentage':
+        if pricelist_item_id._is_percentage():
             # Leftover from before cleanup, different behavior between ecommerce & backend configurator
             # probably to keep product sales price hidden from customers ?
             combination_info['list_price'] = combination_info['price']

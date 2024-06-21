@@ -38,6 +38,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
             'product_id': self.event_booth_product.id,
         })
         # set pricelist to 0 - currency: company
+        # TODO LINA with_discount
         self.pricelist.write({
             'currency_id': self.env.company.currency_id.id,
             'item_ids': [(5, 0, 0), (0, 0, {
@@ -70,6 +71,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
         self.assertEqual(so_line.price_reduce_taxexcl, 360, 'Incorrect amount based on the pricelist "Without Discount" and its currency.')
 
         # set pricelist to 10% - with discount
+        # TODO LINA with_discount
         self.pricelist.write({
             'item_ids': [(5, 0, 0), (0, 0, {
                 'applied_on': '3_global',

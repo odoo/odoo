@@ -204,6 +204,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             'list_price': 100,
             'taxes_id': False,
         })
+        # TODO LINA with_discount
         self.website.pricelist_id.write({
             'item_ids': [Command.clear(), Command.create({
                 'applied_on': '1_product',

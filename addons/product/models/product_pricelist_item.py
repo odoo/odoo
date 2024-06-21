@@ -554,6 +554,9 @@ class PricelistItem(models.Model):
         self.ensure_one()
         return self.compute_price == 'percentage' or (
             self.compute_price == 'formula'
+            and self.price_discount
             and not self.price_surcharge
-            and not True # TODO
+            and not self.price_round
+            and not self.price_min_margin
+            and not self.price_max_margin
         )

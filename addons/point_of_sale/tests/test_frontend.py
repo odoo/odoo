@@ -973,9 +973,9 @@ class TestUi(TestPointOfSaleHttpCommon):
             'pricelist_id': special_pricelist.id,
             'base': 'pricelist',
             'base_pricelist_id': base_pricelist.id,
-            'compute_price': 'percentage',
+            'compute_price': 'formula',
             'applied_on': '3_global',
-            'percent_price': 10,
+            'price_discount': 10,
         })
 
         self.main_pos_config.write({

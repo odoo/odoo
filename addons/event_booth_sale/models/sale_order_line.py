@@ -109,7 +109,7 @@ class SaleOrderLine(models.Model):
     def _get_display_price(self):
         if self.event_booth_pending_ids and self.event_id:
             company = self.event_id.company_id or self.env.company
-            if self.pricelist_item_id.compute_price != 'percentage':
+            if self.pricelist_item_id._is_percentage():
                 event_booths = self.event_booth_pending_ids.with_context(**self._get_pricelist_price_context())
                 total_price = sum(booth.booth_category_id.price_reduce for booth in event_booths)
             else:
