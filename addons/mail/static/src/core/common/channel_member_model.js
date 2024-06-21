@@ -105,7 +105,7 @@ export class ChannelMember extends Record {
     get lastSeenDt() {
         return this.last_seen_dt
             ? this.last_seen_dt.toLocaleString(DateTime.TIME_24_SIMPLE, {
-                  locale: user.lang?.replace("_", "-"),
+                  locale: user.lang,
               })
             : undefined;
     }

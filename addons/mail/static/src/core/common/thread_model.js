@@ -4,6 +4,7 @@ import { assignDefined, compareDatetime, nearestGreaterThanOrEqual } from "@mail
 import { rpc } from "@web/core/network/rpc";
 
 import { _t } from "@web/core/l10n/translation";
+import { formatList } from "@web/core/l10n/utils";
 import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -381,11 +382,7 @@ export class Thread extends Record {
             return this.custom_channel_name || this.correspondent.persona.nameOrDisplayName;
         }
         if (this.channel_type === "group" && !this.name) {
-            const listFormatter = new Intl.ListFormat(user.lang?.replace("_", "-"), {
-                type: "conjunction",
-                style: "long",
-            });
-            return listFormatter.format(
+            return formatList(
                 this.channelMembers.map((channelMember) => channelMember.persona.name)
             );
         }

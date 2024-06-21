@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { formatList } from "@web/core/l10n/utils";
 import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 
@@ -61,10 +61,6 @@ class ResConfigInviteUsers extends Component {
         }
         if (invalidEmails.length) {
             const errorMessage = (() => {
-                const listFormatter = new Intl.ListFormat(user.lang.replace("_", "-"), {
-                    type: "conjunction",
-                    style: "long",
-                });
                 switch (invalidEmails.length) {
                     case 1:
                         return _t("Invalid email address: %(address)s", {
@@ -72,11 +68,11 @@ class ResConfigInviteUsers extends Component {
                         });
                     case 2:
                         return _t("Invalid email addresses: %(2 addresses)s", {
-                            "2 addresses": listFormatter.format(invalidEmails),
+                            "2 addresses": formatList(invalidEmails),
                         });
                     default:
                         return _t("Invalid email addresses: %(addresses)s", {
-                            addresses: listFormatter.format(invalidEmails),
+                            addresses: formatList(invalidEmails),
                         });
                 }
             })();

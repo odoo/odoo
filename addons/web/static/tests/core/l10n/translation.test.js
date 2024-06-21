@@ -134,7 +134,7 @@ test("bengalese has the correct numbering system", async () => {
 });
 
 test("punjabi (gurmukhi) has the correct numbering system", async () => {
-    await mockLang("pa_in");
+    await mockLang("pa_IN");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("੧੦/੧੨/੨੦੨੧ ੧੨:੦੦:੦੦");
 });
 

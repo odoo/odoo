@@ -8,6 +8,7 @@ import { getTemplate } from '@web/core/templates';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
 import { _t } from "@web/core/l10n/translation";
+import { jsToPyLocale, pyToJsLocale } from "@web/core/l10n/utils";
 import { App, Component, whenReady } from "@odoo/owl";
 import { RPCError } from '@web/core/network/rpc';
 
@@ -17,7 +18,7 @@ const { Settings } = luxon;
 // wait for them in PublicRoot)
 function getLang() {
     var html = document.documentElement;
-    return (html.getAttribute('lang') || 'en_US').replace('-', '_');
+    return jsToPyLocale(html.getAttribute('lang')) || 'en_US';
 }
 const lang = cookie.get('frontend_lang') || getLang(); // FIXME the cookie value should maybe be in the ctx?
 
@@ -324,8 +325,7 @@ export async function createPublicRoot(RootWidget) {
         translateFn: _t,
         translatableAttributes: ["data-tooltip"],
     });
-    const language = lang || browser.navigator.language;
-    const locale = language === "sr@latin" ? "sr-Latn-RS" : language.replace(/_/g, "-");
+    const locale = pyToJsLocale(lang) || browser.navigator.language;
     Settings.defaultLocale = locale;
     const [root] = await Promise.all([
         app.mount(document.body),
