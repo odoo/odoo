@@ -3,6 +3,7 @@ import { Record } from "@mail/core/common/record";
 
 import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { pyToJsLocale } from "@web/core/l10n/utils";
 import { user } from "@web/core/user";
 
 const { DateTime } = luxon;
@@ -105,7 +106,7 @@ export class ChannelMember extends Record {
     get lastSeenDt() {
         return this.last_seen_dt
             ? this.last_seen_dt.toLocaleString(DateTime.TIME_24_SIMPLE, {
-                  locale: user.lang?.replace("_", "-"),
+                  locale: pyToJsLocale(user.lang),
               })
             : undefined;
     }
