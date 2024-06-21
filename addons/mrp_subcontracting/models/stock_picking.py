@@ -71,11 +71,12 @@ class StockPicking(models.Model):
             # Create backorder MO for each move lines
             amounts = [move_line.qty_done for move_line in move.move_line_ids]
             len_amounts = len(amounts)
-            productions = production._split_productions({production: amounts}, set_consumed_qty=True)
+            productions = production._split_productions({production: amounts})
             for production, move_line in zip(productions, move.move_line_ids):
                 if move_line.lot_id:
                     production.lot_producing_id = move_line.lot_id
                 production.qty_producing = production.product_qty
+                production._set_qty_producing()
             productions[:len_amounts].subcontracting_has_been_recorded = True
 
         for picking in self:
