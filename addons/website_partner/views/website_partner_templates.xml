@@ -16,13 +16,14 @@
 </template>
 
 <template id="partner_detail" name="Partner Details">
-    <div class="row">
+    <div class="row" itemscope="itemscope" itemtype="http://schema.org/Organization">
         <div class="col-lg-3 col-md-4">
-            <div t-field="partner.avatar_1920" t-options='{"widget": "image", "preview_image": "avatar_1920", "style": "object-fit: cover", "class": "w-100 mb-2 rounded-3 border"}'/>
+            <div t-field="partner.avatar_1920" t-options='{"widget": "image", "preview_image": "avatar_1920", "style": "object-fit: cover", "class": "w-100 mb-2 rounded-3 border", "itemprop": "image"}'/>
             <div class="o_wcrm_contact_details">
                 <div t-field="partner.self" t-options='{
                     "widget": "contact",
-                    "fields": ["address", "website", "phone", "email"]
+                    "fields": ["address", "website", "phone", "email"],
+                    "with_microdata": True,
                 }'/>
                 <t t-out="left_column or ''"/>
             </div>
@@ -30,7 +31,7 @@
         <div class="col-lg-9 col-md-8">
             <div class="d-flex align-items-center flex-wrap mb-4">
                 <div class="flex-grow-1">
-                    <h1 id="partner_name" t-field="partner.display_name"/>
+                    <h1 id="partner_name" t-field="partner.display_name" itemprop="name"/>
                 </div>
             </div>
             <t t-if="partner">
