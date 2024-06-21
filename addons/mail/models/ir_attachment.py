@@ -85,8 +85,8 @@ class IrAttachment(models.Model):
             "size": attachment.file_size,
             'res_name': attachment.res_name,
             'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
-            'thread': [('ADD', {
+            'thread': {
                 'id': attachment.res_id,
                 'model': attachment.res_model,
-            })],
+            },
         } for attachment in self]

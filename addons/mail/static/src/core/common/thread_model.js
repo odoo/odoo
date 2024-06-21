@@ -85,6 +85,7 @@ export class Thread extends Record {
         return this.channel_type === "chat" && this.importantCounter === 0;
     }
     channelMembers = Record.many("ChannelMember", {
+        inverse: "thread",
         onDelete: (r) => r.delete(),
         sort: (m1, m2) => m1.id - m2.id,
     });

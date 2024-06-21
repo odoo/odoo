@@ -161,16 +161,10 @@ export class DiscussChannel extends models.ServerModel {
             ]) > 0;
         if (isSelfMember) {
             BusBus._sendone(channel, "mail.record/insert", {
+                ChannelMember:
+                    DiscussChannelMember._discuss_channel_member_format(insertedChannelMembers),
                 Thread: {
                     id: channel.id,
-                    channelMembers: [
-                        [
-                            "ADD",
-                            DiscussChannelMember._discuss_channel_member_format(
-                                insertedChannelMembers
-                            ),
-                        ],
-                    ],
                     memberCount: DiscussChannelMember.search_count([
                         ["channel_id", "=", channel.id],
                     ]),
@@ -800,7 +794,6 @@ export class DiscussChannel extends models.ServerModel {
             ),
             Thread: [
                 {
-                    channelMembers: [["ADD", members.map((member) => ({ id: member.id }))]],
                     id: ids[0],
                     memberCount,
                     model: "discuss.channel",
