@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.osv.expression import OR
+from odoo.osv.expression import AND
 import ast
 import json
 
@@ -39,9 +39,10 @@ class PosSession(models.Model):
         }
 
     def _loader_params_loyalty_reward(self):
+        domain_products = self.env['loyalty.reward']._get_active_products_domain()
         return {
             'search_params': {
-                'domain': [('program_id', 'in', self.config_id._get_program_ids().ids)],
+                'domain': AND([[('program_id', 'in', self.config_id._get_program_ids().ids)], domain_products]),
                 'fields': ['description', 'program_id', 'reward_type', 'required_points', 'clear_wallet', 'currency_id',
                     'discount', 'discount_mode', 'discount_applicability', 'all_discount_product_ids', 'is_global_discount',
                     'discount_max_amount', 'discount_line_product_id',
