@@ -121,7 +121,7 @@ class TestPartner(MailCommon):
         for i in range(0, 2):
             mail_new_test_user(self.env, login=f'{name}-{i}-portal-user', groups='base.group_portal')
             mail_new_test_user(self.env, login=f'{name}-{i}-internal-user', groups='base.group_user')
-        partners_format = self.env['res.partner'].get_mention_suggestions(name, limit=5)
+        partners_format = self.env['res.partner'].get_mention_suggestions(name, limit=5)["Persona"]
         self.assertEqual(len(partners_format), 5, "should have found limit (5) partners")
         # return format for user is either a dict (there is a user and the dict is data) or a list of command (clear)
         self.assertEqual(list(map(lambda p: p['isInternalUser'], partners_format)), [True, True, False, False, False], "should return internal users in priority")

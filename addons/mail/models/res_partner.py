@@ -6,6 +6,7 @@ import re
 import odoo
 from odoo import _, api, fields, models, tools
 from odoo.osv import expression
+from odoo.addons.mail.tools.discuss import Store
 
 class Partner(models.Model):
     """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
@@ -215,9 +216,7 @@ class Partner(models.Model):
         if not fields:
             fields = {'id': True, 'name': True, 'email': True, 'active': True, 'im_status': True, 'is_company': True, 'user': {}, "write_date": True}
         for partner in self:
-            data = {}
-            if 'id' in fields:
-                data['id'] = partner.id
+            data = {"id": partner.id}
             if 'name' in fields:
                 data['name'] = partner.name
             if 'email' in fields:
@@ -250,7 +249,7 @@ class Partner(models.Model):
         """
         domain = self._get_mention_suggestions_domain(search)
         partners = self._search_mention_suggestions(domain, limit)
-        return list(partners.mail_partner_format().values())
+        return Store("Persona", list(partners.mail_partner_format().values())).get_result()
 
     @api.model
     def _get_mention_suggestions_domain(self, search):
