@@ -1,7 +1,7 @@
-/** @odoo-module */
-
-import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
-import { getDashboardServerData } from "@spreadsheet_dashboard/../tests/legacy/utils/data";
+import { WebClient } from "@web/webclient/webclient";
+import { mountWithCleanup, getService } from "@web/../tests/web_test_helpers";
+import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
+import { loadBundle } from "@web/core/assets";
 
 /**
  * @param {object} params
@@ -11,11 +11,10 @@ import { getDashboardServerData } from "@spreadsheet_dashboard/../tests/legacy/u
  * @returns {Promise}
  */
 export async function createSpreadsheetDashboard(params = {}) {
-    const webClient = await createWebClient({
-        serverData: params.serverData || getDashboardServerData(),
-        mockRPC: params.mockRPC,
-    });
-    return await doAction(webClient, {
+    await makeSpreadsheetMockEnv(params);
+    await loadBundle("web.chartjs_lib");
+    await mountWithCleanup(WebClient);
+    return await getService("action").doAction({
         type: "ir.actions.client",
         tag: "action_spreadsheet_dashboard",
         params: {

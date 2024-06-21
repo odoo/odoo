@@ -1,18 +1,22 @@
-/** @odoo-module */
-
-import { ormService } from "@web/core/orm_service";
-import { registry } from "@web/core/registry";
-import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
+import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
+import { getCellValue } from "@spreadsheet/../tests/helpers/getters";
+import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
+import {
+    defineSpreadsheetDashboardModels,
+    getDashboardServerData,
+} from "@spreadsheet_dashboard/../tests/helpers/data";
 import {
     DashboardLoader,
     Status,
 } from "@spreadsheet_dashboard/bundle/dashboard_action/dashboard_loader";
-import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { getDashboardServerData } from "@spreadsheet_dashboard/../tests/legacy/utils/data";
-
-import { waitForDataLoaded } from "@spreadsheet/helpers/model";
-import { getCellValue } from "@spreadsheet/../tests/legacy/utils/getters";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { RPCError } from "@web/core/network/rpc";
+
+defineSpreadsheetModels();
+defineSpreadsheetDashboardModels();
 
 /**
  * @param {object} [params]
@@ -21,8 +25,7 @@ import { RPCError } from "@web/core/network/rpc";
  * @returns {Promise<DashboardLoader>}
  */
 async function createDashboardLoader(params = {}) {
-    registry.category("services").add("orm", ormService);
-    const env = await makeTestEnv({
+    const env = await makeSpreadsheetMockEnv({
         serverData: params.serverData || getDashboardServerData(),
         mockRPC: params.mockRPC,
     });
@@ -36,14 +39,12 @@ async function createDashboardLoader(params = {}) {
     });
 }
 
-QUnit.module("spreadsheet_dashboard > Dashboard loader");
-
-QUnit.test("load all dashboards of all containers", async (assert) => {
+test("load all dashboards of all containers", async () => {
     const loader = await createDashboardLoader();
     loader.load();
-    assert.deepEqual(loader.getDashboardGroups(), []);
-    await nextTick();
-    assert.deepEqual(loader.getDashboardGroups(), [
+    expect(loader.getDashboardGroups()).toEqual([]);
+    await animationFrame();
+    expect(loader.getDashboardGroups()).toEqual([
         {
             id: 1,
             name: "Container 1",
@@ -74,55 +75,55 @@ QUnit.test("load all dashboards of all containers", async (assert) => {
     ]);
 });
 
-QUnit.test("load twice does not duplicate spreadsheets", async (assert) => {
+test("load twice does not duplicate spreadsheets", async () => {
     const loader = await createDashboardLoader();
     await loader.load();
-    assert.deepEqual(loader.getDashboardGroups()[1].dashboards, [
+    expect(loader.getDashboardGroups()[1].dashboards).toEqual([
         { id: 3, displayName: "Dashboard Accounting 1", status: Status.NotLoaded },
     ]);
     await loader.load();
-    assert.deepEqual(loader.getDashboardGroups()[1].dashboards, [
+    expect(loader.getDashboardGroups()[1].dashboards).toEqual([
         { id: 3, displayName: "Dashboard Accounting 1", status: Status.NotLoaded },
     ]);
 });
 
-QUnit.test("load spreadsheet data", async (assert) => {
+test("load spreadsheet data", async () => {
     const loader = await createDashboardLoader();
     await loader.load();
     const result = loader.getDashboard(3);
-    assert.strictEqual(result.status, Status.Loading);
-    await nextTick();
-    assert.strictEqual(result.status, Status.Loaded);
-    assert.ok(result.model);
+    expect(result.status).toBe(Status.Loading);
+    await animationFrame();
+    expect(result.status).toBe(Status.Loaded);
+    expect(result.model).not.toBe(undefined);
 });
 
-QUnit.test("load spreadsheet data only once", async (assert) => {
+test("load spreadsheet data only once", async () => {
     const loader = await createDashboardLoader({
         mockRPC: function (route, args) {
             if (args.model === "spreadsheet.dashboard" && args.method === "read") {
                 // read names
-                assert.step(`spreadsheet ${args.args[0]} loaded`);
+                expect.step(`spreadsheet ${args.args[0]} loaded`);
             }
             if (
                 args.model === "spreadsheet.dashboard" &&
                 args.method === "get_readonly_dashboard"
             ) {
-                assert.step(`spreadsheet ${args.args[0]} loaded`);
+                expect.step(`spreadsheet ${args.args[0]} loaded`);
             }
         },
     });
     await loader.load();
     let result = loader.getDashboard(3);
-    await nextTick();
-    assert.strictEqual(result.status, Status.Loaded);
-    assert.verifySteps(["spreadsheet 3 loaded"]);
+    await animationFrame();
+    expect(result.status).toBe(Status.Loaded);
+    expect(["spreadsheet 3 loaded"]).toVerifySteps();
     result = loader.getDashboard(3);
-    await nextTick();
-    assert.strictEqual(result.status, Status.Loaded);
-    assert.verifySteps([]);
+    await animationFrame();
+    expect(result.status).toBe(Status.Loaded);
+    expect([]).toVerifySteps();
 });
 
-QUnit.test("don't return empty dashboard group", async (assert) => {
+test("don't return empty dashboard group", async () => {
     const loader = await createDashboardLoader({
         mockRPC: async function (route, args) {
             if (args.method === "web_search_read" && args.model === "spreadsheet.dashboard.group") {
@@ -145,7 +146,7 @@ QUnit.test("don't return empty dashboard group", async (assert) => {
         },
     });
     await loader.load();
-    assert.deepEqual(loader.getDashboardGroups(), [
+    expect(loader.getDashboardGroups()).toEqual([
         {
             id: 45,
             name: "Group A",
@@ -160,38 +161,38 @@ QUnit.test("don't return empty dashboard group", async (assert) => {
     ]);
 });
 
-QUnit.test("load multiple spreadsheets", async (assert) => {
+test("load multiple spreadsheets", async () => {
     const loader = await createDashboardLoader({
         mockRPC: function (route, args) {
             if (args.method === "web_search_read" && args.model === "spreadsheet.dashboard.group") {
-                assert.step("load groups");
+                expect.step("load groups");
             }
             if (args.method === "read" && args.model === "spreadsheet.dashboard") {
                 // read names
-                assert.step(`spreadsheet ${args.args[0]} loaded`);
+                expect.step(`spreadsheet ${args.args[0]} loaded`);
             }
             if (
                 args.model === "spreadsheet.dashboard" &&
                 args.method === "get_readonly_dashboard"
             ) {
-                assert.step(`spreadsheet ${args.args[0]} loaded`);
+                expect.step(`spreadsheet ${args.args[0]} loaded`);
             }
         },
     });
     await loader.load();
-    assert.verifySteps(["load groups"]);
+    expect(["load groups"]).toVerifySteps();
     loader.getDashboard(1);
-    await nextTick();
-    assert.verifySteps(["spreadsheet 1 loaded"]);
+    await animationFrame();
+    expect(["spreadsheet 1 loaded"]).toVerifySteps();
     loader.getDashboard(2);
-    await nextTick();
-    assert.verifySteps(["spreadsheet 2 loaded"]);
+    await animationFrame();
+    expect(["spreadsheet 2 loaded"]).toVerifySteps();
     loader.getDashboard(1);
-    await nextTick();
-    assert.verifySteps([]);
+    await animationFrame();
+    expect([]).toVerifySteps();
 });
 
-QUnit.test("load spreadsheet data with error", async (assert) => {
+test("load spreadsheet data with error", async () => {
     const loader = await createDashboardLoader({
         mockRPC: function (route, args) {
             if (
@@ -206,14 +207,14 @@ QUnit.test("load spreadsheet data with error", async (assert) => {
     });
     await loader.load();
     const result = loader.getDashboard(3);
-    assert.strictEqual(result.status, Status.Loading);
-    await result.promise.catch(() => assert.step("error"));
-    assert.strictEqual(result.status, Status.Error);
-    assert.strictEqual(result.error.data.message, "Bip");
-    assert.verifySteps(["error"], "error is thrown");
+    expect(result.status).toBe(Status.Loading);
+    await result.promise.catch(() => expect.step("error"));
+    expect(result.status).toBe(Status.Error);
+    expect(result.error.data.message).toBe("Bip");
+    expect(["error"]).toVerifySteps({ message: "error is thrown" });
 });
 
-QUnit.test("async formulas are correctly evaluated", async (assert) => {
+test("async formulas are correctly evaluated", async () => {
     const spreadsheetData = {
         sheets: [
             {
@@ -226,17 +227,17 @@ QUnit.test("async formulas are correctly evaluated", async (assert) => {
     };
     const serverData = getDashboardServerData();
     const dashboardId = 15;
+    serverData.models["spreadsheet.dashboard.group"].records = [
+        { id: 1, name: "Container 1", published_dashboard_ids: [dashboardId] },
+    ];
     serverData.models["spreadsheet.dashboard"].records = [
         {
             id: dashboardId,
             spreadsheet_data: JSON.stringify(spreadsheetData),
             json_data: JSON.stringify(spreadsheetData),
             name: "Dashboard Accounting 1",
-            dashboard_group_id: 2,
+            dashboard_group_id: 1,
         },
-    ];
-    serverData.models["spreadsheet.dashboard.group"].records = [
-        { id: 1, name: "Container 1", published_dashboard_ids: [dashboardId] },
     ];
     const loader = await createDashboardLoader({
         serverData,
@@ -249,35 +250,35 @@ QUnit.test("async formulas are correctly evaluated", async (assert) => {
     });
     await loader.load();
     loader.getDashboard(dashboardId);
-    await nextTick();
+    await animationFrame();
     const { model } = loader.getDashboard(dashboardId);
     await waitForDataLoaded(model);
-    assert.strictEqual(await getCellValue(model, "A1"), 0.9);
+    expect(await getCellValue(model, "A1")).toBe(0.9);
 });
 
-QUnit.test("Model is in dashboard mode", async (assert) => {
+test("Model is in dashboard mode", async () => {
     const loader = await createDashboardLoader();
     await loader.load();
     loader.getDashboard(3);
-    await nextTick();
+    await animationFrame();
     const { model } = loader.getDashboard(3);
-    assert.strictEqual(model.config.mode, "dashboard");
+    expect(model.config.mode).toBe("dashboard");
 });
 
-QUnit.test("Model is in dashboard mode", async (assert) => {
+test("Model is in dashboard mode [2]", async () => {
     patchWithCleanup(DashboardLoader.prototype, {
         _activateFirstSheet: () => {
-            assert.step("activate sheet");
+            expect.step("activate sheet");
         },
     });
     const loader = await createDashboardLoader();
     await loader.load();
     loader.getDashboard(3);
-    await nextTick();
-    assert.verifySteps(["activate sheet"]);
+    await animationFrame();
+    expect(["activate sheet"]).toVerifySteps();
 });
 
-QUnit.test("default currency format", async (assert) => {
+test("default currency format", async () => {
     const loader = await createDashboardLoader({
         mockRPC: function (route, args) {
             if (
@@ -302,8 +303,8 @@ QUnit.test("default currency format", async (assert) => {
     });
     await loader.load();
     const result = loader.getDashboard(3);
-    assert.strictEqual(result.status, Status.Loading);
-    await nextTick();
+    expect(result.status).toBe(Status.Loading);
+    await animationFrame();
     const { model } = loader.getDashboard(3);
-    assert.strictEqual(model.getters.getCompanyCurrencyFormat(), "#,##0.00[$θ]");
+    expect(model.getters.getCompanyCurrencyFormat()).toBe("#,##0.00[$θ]");
 });

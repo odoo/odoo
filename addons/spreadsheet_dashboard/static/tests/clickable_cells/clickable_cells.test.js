@@ -1,28 +1,28 @@
-/** @odoo-module */
+import { describe, expect, getFixture, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 
-import { getFixture, nextTick } from "@web/../tests/helpers/utils";
-import { getDashboardServerData } from "@spreadsheet_dashboard/../tests/legacy/utils/data";
-import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/legacy/utils/dashboard_action";
-import { getBasicData } from "@spreadsheet/../tests/legacy/utils/data";
+import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
+import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
+import {
+    SpreadsheetDashboard,
+    defineSpreadsheetDashboardModels,
+} from "@spreadsheet_dashboard/../tests/helpers/data";
+
+describe.current.tags("desktop");
+defineSpreadsheetModels();
+defineSpreadsheetDashboardModels();
 
 async function createDashboardActionWithData(data) {
-    const serverData = getDashboardServerData();
     const json = JSON.stringify(data);
-    const dashboard = serverData.models["spreadsheet.dashboard"].records[0];
+    const dashboard = SpreadsheetDashboard._records[0];
     dashboard.spreadsheet_data = json;
     dashboard.json_data = json;
-    serverData.models = {
-        ...serverData.models,
-        ...getBasicData(),
-    };
-    await createSpreadsheetDashboard({ serverData, spreadsheetId: dashboard.id });
-    await nextTick();
+    await createSpreadsheetDashboard({ spreadsheetId: dashboard.id });
+    await animationFrame();
     return getFixture();
 }
 
-QUnit.module("spreadsheet_dashboard > clickable cells");
-
-QUnit.test("A link in a dashboard should be clickable", async (assert) => {
+test("A link in a dashboard should be clickable", async () => {
     const data = {
         sheets: [
             {
@@ -30,11 +30,11 @@ QUnit.test("A link in a dashboard should be clickable", async (assert) => {
             },
         ],
     };
-    const target = await createDashboardActionWithData(data);
-    assert.containsOnce(target, ".o-dashboard-clickable-cell");
+    await createDashboardActionWithData(data);
+    expect(".o-dashboard-clickable-cell").toHaveCount(1);
 });
 
-QUnit.test("Invalid pivot/list formulas should not be clickable", async (assert) => {
+test("Invalid pivot/list formulas should not be clickable", async () => {
     const data = {
         sheets: [
             {
@@ -45,11 +45,11 @@ QUnit.test("Invalid pivot/list formulas should not be clickable", async (assert)
             },
         ],
     };
-    const target = await createDashboardActionWithData(data);
-    assert.containsNone(target, ".o-dashboard-clickable-cell");
+    await createDashboardActionWithData(data);
+    expect(".o-dashboard-clickable-cell").toHaveCount(0);
 });
 
-QUnit.test("pivot/list formulas should be clickable", async (assert) => {
+test("pivot/list formulas should be clickable", async () => {
     const data = {
         sheets: [
             {
@@ -80,6 +80,6 @@ QUnit.test("pivot/list formulas should be clickable", async (assert) => {
             },
         },
     };
-    const target = await createDashboardActionWithData(data);
-    assert.containsN(target, ".o-dashboard-clickable-cell", 2);
+    await createDashboardActionWithData(data);
+    expect(".o-dashboard-clickable-cell").toHaveCount(2);
 });
