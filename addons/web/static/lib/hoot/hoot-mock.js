@@ -15,6 +15,7 @@ export {
     animationFrame,
     cancelAllTimers,
     delay,
+    freezeTime,
     microTick,
     mockDate,
     mockTimeZone,
