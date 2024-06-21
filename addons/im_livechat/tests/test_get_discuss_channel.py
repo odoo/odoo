@@ -51,8 +51,8 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             [
                 {
                     "id": guest.id,
-                    "name": "Visitor",
                     "im_status": "offline",
+                    "name": "Visitor",
                     "type": "guest",
                     "write_date": fields.Datetime.to_string(guest.write_date),
                 },
@@ -120,22 +120,22 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             data["ChannelMember"],
             [
                 {
-                    "thread": {"id": channel_info["id"], "model": "discuss.channel"},
                     "create_date": fields.Datetime.to_string(visitor_member.create_date),
+                    "fetched_message_id": False,
                     "id": visitor_member.id,
                     "last_interest_dt": fields.Datetime.to_string(visitor_member.last_interest_dt),
                     "new_message_separator": 0,
                     "persona": {"id": test_user.partner_id.id, "type": "partner"},
-                    "fetched_message_id": False,
                     "seen_message_id": False,
+                    "thread": {"id": channel_info["id"], "model": "discuss.channel"},
                 },
                 {
-                    "thread": {"id": channel_info["id"], "model": "discuss.channel"},
                     "create_date": fields.Datetime.to_string(operator_member.create_date),
+                    "fetched_message_id": False,
                     "id": operator_member.id,
                     "persona": {"id": operator.partner_id.id, "type": "partner"},
-                    "fetched_message_id": False,
                     "seen_message_id": False,
+                    "thread": {"id": channel_info["id"], "model": "discuss.channel"},
                 },
             ],
         )
@@ -181,14 +181,14 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             data["ChannelMember"],
             [
                 {
-                    "thread": {"id": channel_info["id"], "model": "discuss.channel"},
                     "create_date": fields.Datetime.to_string(operator_member.create_date),
+                    "fetched_message_id": False,
                     "id": operator_member.id,
                     "last_interest_dt": fields.Datetime.to_string(operator_member.last_interest_dt),
                     "new_message_separator": 0,
                     "persona": {"id": operator.partner_id.id, "type": "partner"},
-                    "fetched_message_id": False,
                     "seen_message_id": False,
+                    "thread": {"id": channel_info["id"], "model": "discuss.channel"},
                 },
             ],
         )

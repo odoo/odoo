@@ -112,7 +112,7 @@ class Store:
         res = {}
         for model_name, records in sorted(self.data.items()):
             if not ids_by_model[model_name]:  # singleton
-                res[model_name] = records
+                res[model_name] = dict(sorted(records.items()))
             else:
-                res[model_name] = list(records.values())
+                res[model_name] = [dict(sorted(record.items())) for record in records.values()]
         return res
