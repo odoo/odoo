@@ -847,19 +847,18 @@ class MrpProduction(models.Model):
             del vals['move_byproduct_ids']
         if 'workorder_ids' in self:
             production_to_replan = self.filtered(lambda p: p.is_planned)
-        if 'move_raw_ids' in vals and self.state not in ['draft', 'cancel', 'done']:
-            # When adding a move raw, it should have the source location's `warehouse_id`.
+        for move_str in ('move_raw_ids', 'move_finished_ids'):
+            if move_str not in vals or self.state in ['draft', 'cancel', 'done']:
+                continue
+            # When adding a move raw/finished, it should have the source location's `warehouse_id`.
             # Before, it was handle by an onchange, now it's forced if not already in vals.
             warehouse_id = self.location_src_id.warehouse_id.id
             if vals.get('location_src_id'):
                 location_source = self.env['stock.location'].browse(vals.get('location_src_id'))
                 warehouse_id = location_source.warehouse_id.id
-            for move_vals in vals['move_raw_ids']:
-                command = move_vals[0]
-                if command != Command.CREATE:
-                    continue
-                field_values = move_vals[2]
-                if not field_values.get('warehouse_id', False):
+            for move_vals in vals[move_str]:
+                command, _id, field_values = move_vals
+                if command == Command.CREATE and not field_values.get('warehouse_id', False):
                     field_values['warehouse_id'] = warehouse_id
 
         if vals.get('picking_type_id'):
