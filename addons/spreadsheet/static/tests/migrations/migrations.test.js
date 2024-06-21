@@ -1,11 +1,14 @@
-/** @odoo-module */
-
+import { describe, expect, test } from "@odoo/hoot";
 import { migrate, ODOO_VERSION } from "@spreadsheet/o_spreadsheet/migration";
 import { Model } from "@odoo/o-spreadsheet";
+import { defineSpreadsheetActions, defineSpreadsheetModels } from "../helpers/data";
 
-QUnit.module("spreadsheet > migrations");
+defineSpreadsheetModels();
+defineSpreadsheetActions();
 
-QUnit.test("Odoo formulas are migrated", (assert) => {
+describe.current.tags("headless");
+
+test("Odoo formulas are migrated", () => {
     const data = {
         sheets: [
             {
@@ -22,16 +25,16 @@ QUnit.test("Odoo formulas are migrated", (assert) => {
         ],
     };
     const migratedData = migrate(data);
-    assert.strictEqual(migratedData.sheets[0].cells.A1.content, `=PIVOT.VALUE("1")`);
-    assert.strictEqual(migratedData.sheets[0].cells.A2.content, `=PIVOT.HEADER("1")`);
-    assert.strictEqual(migratedData.sheets[0].cells.A3.content, `=ODOO.FILTER.VALUE("1")`);
-    assert.strictEqual(migratedData.sheets[0].cells.A4.content, `=ODOO.LIST("1")`);
-    assert.strictEqual(migratedData.sheets[0].cells.A5.content, `=ODOO.LIST.HEADER("1")`);
-    assert.strictEqual(migratedData.sheets[0].cells.A6.content, `=ODOO.PIVOT.POSITION("1")`);
-    assert.strictEqual(migratedData.sheets[0].cells.A7.content, `=PIVOT.VALUE("1")`);
+    expect(migratedData.sheets[0].cells.A1.content).toBe(`=PIVOT.VALUE("1")`);
+    expect(migratedData.sheets[0].cells.A2.content).toBe(`=PIVOT.HEADER("1")`);
+    expect(migratedData.sheets[0].cells.A3.content).toBe(`=ODOO.FILTER.VALUE("1")`);
+    expect(migratedData.sheets[0].cells.A4.content).toBe(`=ODOO.LIST("1")`);
+    expect(migratedData.sheets[0].cells.A5.content).toBe(`=ODOO.LIST.HEADER("1")`);
+    expect(migratedData.sheets[0].cells.A6.content).toBe(`=ODOO.PIVOT.POSITION("1")`);
+    expect(migratedData.sheets[0].cells.A7.content).toBe(`=PIVOT.VALUE("1")`);
 });
 
-QUnit.test("Pivot 'day' arguments are migrated", (assert) => {
+test("Pivot 'day' arguments are migrated", () => {
     const data = {
         odooVersion: 1,
         sheets: [
@@ -48,18 +51,17 @@ QUnit.test("Pivot 'day' arguments are migrated", (assert) => {
         ],
     };
     const migratedData = migrate(data);
-    assert.strictEqual(migratedData.sheets[0].cells.A1.content, `=PIVOT.VALUE("1","07/21/2022")`);
-    assert.strictEqual(migratedData.sheets[0].cells.A2.content, `=PIVOT.HEADER("1","12/11/2022")`);
-    assert.strictEqual(migratedData.sheets[0].cells.A3.content, `=PIVOT.VALUE("1","07/21/2021")`);
-    assert.strictEqual(migratedData.sheets[0].cells.A4.content, `=PIVOT.VALUE("1","test")`);
-    assert.strictEqual(
-        migratedData.sheets[0].cells.A5.content,
+    expect(migratedData.sheets[0].cells.A1.content).toBe(`=PIVOT.VALUE("1","07/21/2022")`);
+    expect(migratedData.sheets[0].cells.A2.content).toBe(`=PIVOT.HEADER("1","12/11/2022")`);
+    expect(migratedData.sheets[0].cells.A3.content).toBe(`=PIVOT.VALUE("1","07/21/2021")`);
+    expect(migratedData.sheets[0].cells.A4.content).toBe(`=PIVOT.VALUE("1","test")`);
+    expect(migratedData.sheets[0].cells.A5.content).toBe(
         `=PIVOT.VALUE("1","07/21/2021")+"21/07/2021"`
     );
-    assert.strictEqual(migratedData.sheets[0].cells.A6.content, `=BAD_FORMULA(`);
+    expect(migratedData.sheets[0].cells.A6.content).toBe(`=BAD_FORMULA(`);
 });
 
-QUnit.test("Global filters: pivot fields is correctly added", (assert) => {
+test("Global filters: pivot fields is correctly added", () => {
     const data = {
         globalFilters: [
             {
@@ -86,16 +88,16 @@ QUnit.test("Global filters: pivot fields is correctly added", (assert) => {
     const migratedData = migrate(data);
     const filter = migratedData.globalFilters[0];
     const pivot = migratedData.pivots["1"];
-    assert.deepEqual(pivot.fieldMatching, {
+    expect(pivot.fieldMatching).toEqual({
         Filter1: {
             chain: "foo",
             type: "char",
         },
     });
-    assert.strictEqual(filter.fields, undefined);
+    expect(filter.fields).toBe(undefined);
 });
 
-QUnit.test("Global filters: date is correctly migrated", (assert) => {
+test("Global filters: date is correctly migrated", () => {
     const data = {
         globalFilters: [
             {
@@ -120,12 +122,12 @@ QUnit.test("Global filters: date is correctly migrated", (assert) => {
     };
     const migratedData = migrate(data);
     const [f1, f2, f3] = migratedData.globalFilters;
-    assert.deepEqual(f1.defaultValue, { yearOffset: -1 });
-    assert.deepEqual(f2.defaultValue, { yearOffset: -2 });
-    assert.deepEqual(f3.defaultValue, { yearOffset: 0 });
+    expect(f1.defaultValue).toEqual({ yearOffset: -1 });
+    expect(f2.defaultValue).toEqual({ yearOffset: -2 });
+    expect(f3.defaultValue).toEqual({ yearOffset: 0 });
 });
 
-QUnit.test("List name default is model name", (assert) => {
+test("List name default is model name", () => {
     const data = {
         lists: {
             1: {
@@ -138,12 +140,12 @@ QUnit.test("List name default is model name", (assert) => {
         },
     };
     const migratedData = migrate(data);
-    assert.strictEqual(Object.values(migratedData.lists).length, 2);
-    assert.strictEqual(migratedData.lists["1"].name, "Name");
-    assert.strictEqual(migratedData.lists["2"].name, "Model");
+    expect(Object.values(migratedData.lists).length).toBe(2);
+    expect(migratedData.lists["1"].name).toBe("Name");
+    expect(migratedData.lists["2"].name).toBe("Model");
 });
 
-QUnit.test("Pivot name default is model name", (assert) => {
+test("Pivot name default is model name", () => {
     const data = {
         pivots: {
             1: {
@@ -162,12 +164,12 @@ QUnit.test("Pivot name default is model name", (assert) => {
         },
     };
     const migratedData = migrate(data);
-    assert.strictEqual(Object.values(migratedData.pivots).length, 2);
-    assert.strictEqual(migratedData.pivots["1"].name, "Name");
-    assert.strictEqual(migratedData.pivots["2"].name, "Model");
+    expect(Object.values(migratedData.pivots).length).toBe(2);
+    expect(migratedData.pivots["1"].name).toBe("Name");
+    expect(migratedData.pivots["2"].name).toBe("Model");
 });
 
-QUnit.test("fieldMatchings are moved from filters to their respective datasources", (assert) => {
+test("fieldMatchings are moved from filters to their respective datasources", () => {
     const data = {
         globalFilters: [
             {
@@ -222,18 +224,18 @@ QUnit.test("fieldMatchings are moved from filters to their respective datasource
         ],
     };
     const migratedData = migrate(data);
-    assert.deepEqual(migratedData.pivots["1"].fieldMatching, {
+    expect(migratedData.pivots["1"].fieldMatching).toEqual({
         Filter: { chain: "parent_id", type: "many2one" },
     });
-    assert.deepEqual(migratedData.lists["1"].fieldMatching, {
+    expect(migratedData.lists["1"].fieldMatching).toEqual({
         Filter: { chain: "parent_id", type: "many2one" },
     });
-    assert.deepEqual(migratedData.sheets[0].figures[0].data.fieldMatching, {
+    expect(migratedData.sheets[0].figures[0].data.fieldMatching).toEqual({
         Filter: { chain: "parent_id", type: "many2one" },
     });
 });
 
-QUnit.test("fieldMatchings offsets are correctly preserved after migration", (assert) => {
+test("fieldMatchings offsets are correctly preserved after migration", () => {
     const data = {
         globalFilters: [
             {
@@ -291,18 +293,18 @@ QUnit.test("fieldMatchings offsets are correctly preserved after migration", (as
         ],
     };
     const migratedData = migrate(data);
-    assert.deepEqual(migratedData.pivots["1"].fieldMatching, {
+    expect(migratedData.pivots["1"].fieldMatching).toEqual({
         Filter: { chain: "parent_id", type: "date", offset: "-1" },
     });
-    assert.deepEqual(migratedData.lists["1"].fieldMatching, {
+    expect(migratedData.lists["1"].fieldMatching).toEqual({
         Filter: { chain: "parent_id", type: "date", offset: "-1" },
     });
-    assert.deepEqual(migratedData.sheets[0].figures[0].data.fieldMatching, {
+    expect(migratedData.sheets[0].figures[0].data.fieldMatching).toEqual({
         Filter: { chain: "parent_id", type: "date", offset: "-1" },
     });
 });
 
-QUnit.test("group year/quarter/month filters to a single filter type", (assert) => {
+test("group year/quarter/month filters to a single filter type", () => {
     const data = {
         version: 14,
         odooVersion: 5,
@@ -348,7 +350,7 @@ QUnit.test("group year/quarter/month filters to a single filter type", (assert) 
     };
     const migratedData = migrate(data);
     const filters = migratedData.globalFilters;
-    assert.deepEqual(filters, [
+    expect(filters).toEqual([
         {
             id: "1",
             type: "relation",
@@ -388,7 +390,7 @@ QUnit.test("group year/quarter/month filters to a single filter type", (assert) 
     ]);
 });
 
-QUnit.test("Pivot are migrated from 6 to 9", (assert) => {
+test("Pivot are migrated from 6 to 9", () => {
     const data = {
         pivots: {
             1: {
@@ -402,8 +404,8 @@ QUnit.test("Pivot are migrated from 6 to 9", (assert) => {
         },
     };
     const migratedData = migrate(data);
-    assert.strictEqual(Object.values(migratedData.pivots).length, 1);
-    assert.deepEqual(migratedData.pivots["1"], {
+    expect(Object.values(migratedData.pivots).length).toBe(1);
+    expect(migratedData.pivots["1"]).toEqual({
         type: "ODOO",
         fieldMatching: { 1: { chain: "foo", type: "char" } },
         name: "Name",
@@ -415,7 +417,7 @@ QUnit.test("Pivot are migrated from 6 to 9", (assert) => {
     });
 });
 
-QUnit.test("Pivot are migrated from 9 to 10", (assert) => {
+test("Pivot are migrated from 9 to 10", () => {
     const data = {
         odooVersion: 9,
         pivots: {
@@ -431,8 +433,8 @@ QUnit.test("Pivot are migrated from 9 to 10", (assert) => {
         },
     };
     const migratedData = migrate(data);
-    assert.strictEqual(Object.values(migratedData.pivots).length, 1);
-    assert.deepEqual(migratedData.pivots["1"], {
+    expect(Object.values(migratedData.pivots).length).toBe(1);
+    expect(migratedData.pivots["1"]).toEqual({
         type: "ODOO",
         name: "Name",
         model: "res.model",
@@ -443,7 +445,7 @@ QUnit.test("Pivot are migrated from 9 to 10", (assert) => {
     });
 });
 
-QUnit.test("Pivot formulas are migrated from 9 to 10", (assert) => {
+test("Pivot formulas are migrated from 9 to 10", () => {
     const data = {
         odooVersion: 9,
         sheets: [
@@ -459,14 +461,14 @@ QUnit.test("Pivot formulas are migrated from 9 to 10", (assert) => {
         ],
     };
     const migratedData = migrate(data);
-    assert.strictEqual(migratedData.sheets[0].cells.A1.content, `=PIVOT.VALUE("1")`);
-    assert.strictEqual(migratedData.sheets[0].cells.A2.content, `=PIVOT.HEADER("1")`);
-    assert.strictEqual(migratedData.sheets[0].cells.A3.content, `=ODOO.PIVOT.POSITION("1")`);
-    assert.strictEqual(migratedData.sheets[0].cells.A4.content, `=PIVOT("1")`);
-    assert.strictEqual(migratedData.sheets[0].cells.A5.content, `=PIVOT.VALUE("1")`);
+    expect(migratedData.sheets[0].cells.A1.content).toBe(`=PIVOT.VALUE("1")`);
+    expect(migratedData.sheets[0].cells.A2.content).toBe(`=PIVOT.HEADER("1")`);
+    expect(migratedData.sheets[0].cells.A3.content).toBe(`=ODOO.PIVOT.POSITION("1")`);
+    expect(migratedData.sheets[0].cells.A4.content).toBe(`=PIVOT("1")`);
+    expect(migratedData.sheets[0].cells.A5.content).toBe(`=PIVOT.VALUE("1")`);
 });
 
-QUnit.test("Pivot formulas using pivot positions are migrated (11 to 12)", (assert) => {
+test("Pivot formulas using pivot positions are migrated (11 to 12)", () => {
     const data = {
         odooVersion: 9,
         sheets: [
@@ -485,22 +487,17 @@ QUnit.test("Pivot formulas using pivot positions are migrated (11 to 12)", (asse
         ],
     };
     const migratedData = migrate(data);
-    assert.strictEqual(
-        migratedData.sheets[0].cells.A1.content,
+    expect(migratedData.sheets[0].cells.A1.content).toBe(
         `=-PIVOT.VALUE("1","balance","#account_id",12,"date:quarter","4/"&ODOO.FILTER.VALUE("Year"))`
     );
-    assert.strictEqual(
-        migratedData.sheets[0].cells.A2.content,
-        `=PIVOT.HEADER("1","#account_id",14)`
-    );
-    assert.strictEqual(
-        migratedData.sheets[0].cells.A3.content,
+    expect(migratedData.sheets[0].cells.A2.content).toBe(`=PIVOT.HEADER("1","#account_id",14)`);
+    expect(migratedData.sheets[0].cells.A3.content).toBe(
         `=ODOO.PIVOT.POSITION("1","account_id",14)`
     );
-    assert.strictEqual(migratedData.sheets[0].cells.A4.content, `=ODOO.PIVOT.POSITION("1",14)`);
+    expect(migratedData.sheets[0].cells.A4.content).toBe(`=ODOO.PIVOT.POSITION("1",14)`);
 });
 
-QUnit.test("Odoo version is exported", (assert) => {
+test("Odoo version is exported", () => {
     const model = new Model();
-    assert.strictEqual(model.exportData().odooVersion, ODOO_VERSION);
+    expect(model.exportData().odooVersion).toBe(ODOO_VERSION);
 });

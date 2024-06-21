@@ -1,40 +1,43 @@
-/** @odoo-module */
-
-import { setCellContent } from "@spreadsheet/../tests/legacy/utils/commands";
-import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/legacy/utils/getters";
-import { createModelWithDataSource } from "@spreadsheet/../tests/legacy/utils/model";
+import { describe, expect, test } from "@odoo/hoot";
+import { setCellContent } from "@spreadsheet/../tests/helpers/commands";
+import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/helpers/getters";
+import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
+import { defineSpreadsheetActions, defineSpreadsheetModels } from "../helpers/data";
 
-QUnit.module("spreadsheet > ODOO.CURRENCY.RATE function");
+describe.current.tags("headless");
 
-QUnit.test("Basic exchange formula", async (assert) => {
+defineSpreadsheetModels();
+defineSpreadsheetActions();
+
+test("Basic exchange formula", async () => {
     const model = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
                 const info = args.args[0][0];
-                assert.equal(info.from, "EUR");
-                assert.equal(info.to, "USD");
-                assert.equal(info.date, undefined);
-                assert.step("rate fetched");
+                expect(info.from).toBe("EUR");
+                expect(info.to).toBe("USD");
+                expect(info.date).toBe(undefined);
+                expect.step("rate fetched");
                 return [{ ...info, rate: 0.9 }];
             }
         },
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD")`);
-    assert.strictEqual(getCellValue(model, "A1"), "Loading...");
+    expect(getCellValue(model, "A1")).toBe("Loading...");
     await waitForDataLoaded(model);
-    assert.strictEqual(getCellValue(model, "A1"), 0.9);
-    assert.verifySteps(["rate fetched"]);
+    expect(getCellValue(model, "A1")).toBe(0.9);
+    expect(["rate fetched"]).toVerifySteps();
 });
 
-QUnit.test("rate formula at a given date(time)", async (assert) => {
+test("rate formula at a given date(time)", async () => {
     const model = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
                 const [A1, A2] = args.args[0];
-                assert.equal(A1.date, "2020-12-31");
-                assert.equal(A2.date, "2020-11-30");
-                assert.step("rate fetched");
+                expect(A1.date).toBe("2020-12-31");
+                expect(A2.date).toBe("2020-11-30");
+                expect.step("rate fetched");
                 return [
                     { ...A1, rate: 0.9 },
                     { ...A2, rate: 0.9 },
@@ -45,10 +48,10 @@ QUnit.test("rate formula at a given date(time)", async (assert) => {
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD", "12-31-2020")`);
     setCellContent(model, "A2", `=ODOO.CURRENCY.RATE("EUR","USD", "11-30-2020 00:00:00")`);
     await waitForDataLoaded(model);
-    assert.verifySteps(["rate fetched"]);
+    expect(["rate fetched"]).toVerifySteps();
 });
 
-QUnit.test("invalid date", async (assert) => {
+test("invalid date", async () => {
     const model = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
@@ -58,14 +61,13 @@ QUnit.test("invalid date", async (assert) => {
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD", "hello")`);
     await waitForDataLoaded(model);
-    assert.strictEqual(getCellValue(model, "A1"), "#ERROR");
-    assert.strictEqual(
-        getEvaluatedCell(model, "A1").message,
+    expect(getCellValue(model, "A1")).toBe("#ERROR");
+    expect(getEvaluatedCell(model, "A1").message).toBe(
         "The function ODOO.CURRENCY.RATE expects a number value, but 'hello' is a string, and cannot be coerced to a number."
     );
 });
 
-QUnit.test("Currency rate throw with unknown currency", async (assert) => {
+test("Currency rate throw with unknown currency", async () => {
     const model = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
@@ -76,14 +78,14 @@ QUnit.test("Currency rate throw with unknown currency", async (assert) => {
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("INVALID","USD")`);
     await waitForDataLoaded(model);
-    assert.strictEqual(getEvaluatedCell(model, "A1").message, "Currency rate unavailable.");
+    expect(getEvaluatedCell(model, "A1").message).toBe("Currency rate unavailable.");
 });
 
-QUnit.test("Currency rates are only loaded once", async (assert) => {
+test("Currency rates are only loaded once", async () => {
     const model = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
-                assert.step("FETCH");
+                expect.step("FETCH");
                 const info = args.args[0][0];
                 return [{ ...info, rate: 0.9 }];
             }
@@ -91,17 +93,17 @@ QUnit.test("Currency rates are only loaded once", async (assert) => {
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD")`);
     await waitForDataLoaded(model);
-    assert.verifySteps(["FETCH"]);
+    expect(["FETCH"]).toVerifySteps();
     setCellContent(model, "A2", `=ODOO.CURRENCY.RATE("EUR","USD")`);
     await waitForDataLoaded(model);
-    assert.verifySteps([]);
+    expect([]).toVerifySteps();
 });
 
-QUnit.test("Currency rates are loaded once by clock", async (assert) => {
+test("Currency rates are loaded once by clock", async () => {
     const model = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
-                assert.step("FETCH:" + args.args[0].length);
+                expect.step("FETCH:" + args.args[0].length);
                 const info1 = args.args[0][0];
                 const info2 = args.args[0][1];
                 return [
@@ -114,5 +116,5 @@ QUnit.test("Currency rates are loaded once by clock", async (assert) => {
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD")`);
     setCellContent(model, "A2", `=ODOO.CURRENCY.RATE("EUR","SEK")`);
     await waitForDataLoaded(model);
-    assert.verifySteps(["FETCH:2"]);
+    expect(["FETCH:2"]).toVerifySteps();
 });

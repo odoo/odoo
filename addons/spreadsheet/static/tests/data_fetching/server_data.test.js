@@ -1,311 +1,308 @@
-/** @odoo-module */
-
-import { nextTick } from "@web/../tests/helpers/utils";
+import { animationFrame } from "@odoo/hoot-mock";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { BatchEndpoint, Request, ServerData } from "@spreadsheet/data_sources/server_data";
 import { Deferred } from "@web/core/utils/concurrency";
+import { describe, expect, test } from "@odoo/hoot";
+import { defineSpreadsheetActions, defineSpreadsheetModels } from "../helpers/data";
 
-QUnit.module("spreadsheet server data", {}, () => {
-    QUnit.test("simple synchronous get", async (assert) => {
-        const orm = {
-            call: async (model, method, args) => {
-                assert.step(`${model}/${method}`);
-                return args[0];
-            },
-        };
-        const serverData = new ServerData(orm, {
-            whenDataStartLoading: () => assert.step("data-fetching-notification"),
-        });
-        assert.throws(
-            () => serverData.get("partner", "get_something", [5]),
-            LoadingDataError,
-            "it should throw when it's not loaded"
-        );
-        assert.verifySteps(["partner/get_something", "data-fetching-notification"]);
-        await nextTick();
-        assert.deepEqual(serverData.get("partner", "get_something", [5]), 5);
-        assert.verifySteps([]);
+describe.current.tags("headless");
+
+defineSpreadsheetModels();
+defineSpreadsheetActions();
+
+test("simple synchronous get", async () => {
+    const orm = {
+        call: async (model, method, args) => {
+            expect.step(`${model}/${method}`);
+            return args[0];
+        },
+    };
+    const serverData = new ServerData(orm, {
+        whenDataStartLoading: () => expect.step("data-fetching-notification"),
     });
+    expect(() => serverData.get("partner", "get_something", [5])).toThrow(LoadingDataError, {
+        message: "it should throw when it's not loaded",
+    });
+    expect(["partner/get_something", "data-fetching-notification"]).toVerifySteps();
+    await animationFrame();
+    expect(serverData.get("partner", "get_something", [5])).toEqual(5);
+    expect([]).toVerifySteps();
+});
 
-    QUnit.test("synchronous get which returns an error", async (assert) => {
-        const orm = {
-            call: async (model, method, args) => {
-                assert.step(`${model}/${method}`);
+test("synchronous get which returns an error", async () => {
+    const orm = {
+        call: async (model, method, args) => {
+            expect.step(`${model}/${method}`);
+            throw new Error("error while fetching data");
+        },
+    };
+    const serverData = new ServerData(orm, {
+        whenDataStartLoading: () => expect.step("data-fetching-notification"),
+    });
+    expect(() => serverData.get("partner", "get_something", [5])).toThrow(LoadingDataError, {
+        message: "it should throw when it's not loaded",
+    });
+    expect(["partner/get_something", "data-fetching-notification"]).toVerifySteps();
+    await animationFrame();
+    expect(() => serverData.get("partner", "get_something", [5])).toThrow(Error);
+    expect([]).toVerifySteps();
+});
+
+test("simple async fetch", async () => {
+    const orm = {
+        call: async (model, method, args) => {
+            expect.step(`${model}/${method}`);
+            return args[0];
+        },
+    };
+    const serverData = new ServerData(orm, {
+        whenDataStartLoading: () => expect.step("data-fetching-notification"),
+    });
+    const result = await serverData.fetch("partner", "get_something", [5]);
+    expect(result).toEqual(5);
+    expect(["partner/get_something"]).toVerifySteps();
+    expect(await serverData.fetch("partner", "get_something", [5])).toEqual(5);
+    expect([]).toVerifySteps();
+});
+
+test("async fetch which throws an error", async () => {
+    const orm = {
+        call: async (model, method, args) => {
+            expect.step(`${model}/${method}`);
+            throw new Error("error while fetching data");
+        },
+    };
+    const serverData = new ServerData(orm, {
+        whenDataStartLoading: () => expect.step("data-fetching-notification"),
+    });
+    expect(serverData.fetch("partner", "get_something", [5])).rejects.toThrow();
+    expect(["partner/get_something"]).toVerifySteps();
+    expect(serverData.fetch("partner", "get_something", [5])).rejects.toThrow();
+    expect([]).toVerifySteps();
+});
+
+test("two identical concurrent async fetch", async () => {
+    const orm = {
+        call: async (model, method, args) => {
+            expect.step(`${model}/${method}`);
+            return args[0];
+        },
+    };
+    const serverData = new ServerData(orm, {
+        whenDataStartLoading: () => expect.step("data-fetching-notification"),
+    });
+    const [result1, result2] = await Promise.all([
+        serverData.fetch("partner", "get_something", [5]),
+        serverData.fetch("partner", "get_something", [5]),
+    ]);
+    expect(["partner/get_something"]).toVerifySteps({
+        message: "it should have fetch the data once",
+    });
+    expect(result1).toEqual(5);
+    expect(result2).toEqual(5);
+    expect([]).toVerifySteps();
+});
+
+test("batch get with a single item", async () => {
+    const deferred = new Deferred();
+    const orm = {
+        call: async (model, method, args) => {
+            await deferred;
+            expect.step(`${model}/${method}`);
+            return args[0];
+        },
+    };
+    const serverData = new ServerData(orm, {
+        whenDataStartLoading: () => expect.step("data-fetching-notification"),
+    });
+    expect(() => serverData.batch.get("partner", "get_something_in_batch", 5)).toThrow(
+        LoadingDataError,
+        { message: "it should throw when it's not loaded" }
+    );
+    await animationFrame(); // wait for the next tick for the batch to be called
+    expect(["data-fetching-notification"]).toVerifySteps();
+    deferred.resolve();
+    await animationFrame();
+    expect(["partner/get_something_in_batch"]).toVerifySteps();
+    expect(serverData.batch.get("partner", "get_something_in_batch", 5)).toEqual(5);
+    expect([]).toVerifySteps();
+});
+
+test("batch get with multiple items", async () => {
+    const orm = {
+        call: async (model, method, args) => {
+            expect.step(`${model}/${method}`);
+            return args[0];
+        },
+    };
+    const serverData = new ServerData(orm, {
+        whenDataStartLoading: () => expect.step("data-fetching-notification"),
+    });
+    expect(() => serverData.batch.get("partner", "get_something_in_batch", 5)).toThrow(
+        LoadingDataError,
+        { message: "it should throw when it's not loaded" }
+    );
+    expect(() => serverData.batch.get("partner", "get_something_in_batch", 6)).toThrow(
+        LoadingDataError,
+        { message: "it should throw when it's not loaded" }
+    );
+    await animationFrame();
+    expect(["partner/get_something_in_batch", "data-fetching-notification"]).toVerifySteps();
+    expect(serverData.batch.get("partner", "get_something_in_batch", 5)).toEqual(5);
+    expect(serverData.batch.get("partner", "get_something_in_batch", 6)).toEqual(6);
+    expect([]).toVerifySteps();
+});
+
+test("batch get with one error", async () => {
+    const orm = {
+        call: async (model, method, args) => {
+            expect.step(`${model}/${method}`);
+            if (args[0].includes(5)) {
                 throw new Error("error while fetching data");
-            },
-        };
-        const serverData = new ServerData(orm, {
-            whenDataStartLoading: () => assert.step("data-fetching-notification"),
-        });
-        assert.throws(
-            () => serverData.get("partner", "get_something", [5]),
-            LoadingDataError,
-            "it should throw when it's not loaded"
-        );
-        assert.verifySteps(["partner/get_something", "data-fetching-notification"]);
-        await nextTick();
-        assert.throws(() => serverData.get("partner", "get_something", [5]), Error);
-        assert.verifySteps([]);
+            }
+            return args[0];
+        },
+    };
+    const serverData = new ServerData(orm, {
+        whenDataStartLoading: () => expect.step("data-fetching-notification"),
     });
+    expect(() => serverData.batch.get("partner", "get_something_in_batch", 4)).toThrow(
+        LoadingDataError,
+        { message: "it should throw when it's not loaded" }
+    );
+    expect(() => serverData.batch.get("partner", "get_something_in_batch", 5)).toThrow(
+        LoadingDataError,
+        { message: "it should throw when it's not loaded" }
+    );
+    expect(() => serverData.batch.get("partner", "get_something_in_batch", 6)).toThrow(
+        LoadingDataError,
+        { message: "it should throw when it's not loaded" }
+    );
+    await animationFrame();
+    expect([
+        // one call for the batch
+        "partner/get_something_in_batch",
+        "data-fetching-notification",
+        // retries one by one
+        "partner/get_something_in_batch",
+        "partner/get_something_in_batch",
+        "partner/get_something_in_batch",
+    ]).toVerifySteps();
+    expect(serverData.batch.get("partner", "get_something_in_batch", 4)).toEqual(4);
+    expect(() => serverData.batch.get("partner", "get_something_in_batch", 5)).toThrow(Error);
+    expect(serverData.batch.get("partner", "get_something_in_batch", 6)).toEqual(6);
+    expect([]).toVerifySteps();
+});
 
-    QUnit.test("simple async fetch", async (assert) => {
-        const orm = {
-            call: async (model, method, args) => {
-                assert.step(`${model}/${method}`);
-                return args[0];
-            },
-        };
-        const serverData = new ServerData(orm, {
-            whenDataStartLoading: () => assert.step("data-fetching-notification"),
-        });
-        const result = await serverData.fetch("partner", "get_something", [5]);
-        assert.deepEqual(result, 5);
-        assert.verifySteps(["partner/get_something"]);
-        assert.deepEqual(await serverData.fetch("partner", "get_something", [5]), 5);
-        assert.verifySteps([]);
+test("concurrently fetch then get the same request", async () => {
+    const orm = {
+        call: async (model, method, args) => {
+            expect.step(`${model}/${method}`);
+            return args[0];
+        },
+    };
+    const serverData = new ServerData(orm, {
+        whenDataStartLoading: () => expect.step("data-fetching-notification"),
     });
+    const promise = serverData.fetch("partner", "get_something", [5]);
+    expect(() => serverData.get("partner", "get_something", [5])).toThrow(LoadingDataError);
+    expect([
+        "partner/get_something",
+        "partner/get_something",
+        "data-fetching-notification",
+    ]).toVerifySteps({ message: "it loads the data independently" });
+    const result = await promise;
+    await animationFrame();
+    expect(result).toEqual(5);
+    expect(serverData.get("partner", "get_something", [5])).toEqual(5);
+    expect([]).toVerifySteps();
+});
 
-    QUnit.test("async fetch which throws an error", async (assert) => {
-        const orm = {
-            call: async (model, method, args) => {
-                assert.step(`${model}/${method}`);
+test("concurrently get then fetch the same request", async () => {
+    const orm = {
+        call: async (model, method, args) => {
+            expect.step(`${model}/${method}`);
+            return args[0];
+        },
+    };
+    const serverData = new ServerData(orm, {
+        whenDataStartLoading: () => expect.step("data-fetching-notification"),
+    });
+    expect(() => serverData.get("partner", "get_something", [5])).toThrow(LoadingDataError);
+    const result = await serverData.fetch("partner", "get_something", [5]);
+    expect([
+        "partner/get_something",
+        "data-fetching-notification",
+        "partner/get_something",
+    ]).toVerifySteps({ message: "it should have fetch the data once" });
+    expect(result).toEqual(5);
+    expect(serverData.get("partner", "get_something", [5])).toEqual(5);
+    expect([]).toVerifySteps();
+});
+
+test("concurrently batch get then fetch the same request", async () => {
+    const orm = {
+        call: async (model, method, args) => {
+            expect.step(`${model}/${method}`);
+            return args[0];
+        },
+    };
+    const serverData = new ServerData(orm, {
+        whenDataStartLoading: () => expect.step("data-fetching-notification"),
+    });
+    expect(() => serverData.batch.get("partner", "get_something", 5)).toThrow(LoadingDataError);
+    const result = await serverData.fetch("partner", "get_something", [5]);
+    await animationFrame();
+    expect([
+        "partner/get_something",
+        "partner/get_something",
+        "data-fetching-notification",
+    ]).toVerifySteps({ message: "it should have fetch the data once" });
+    expect(result).toEqual(5);
+    expect(serverData.batch.get("partner", "get_something", 5)).toEqual(5);
+    expect([]).toVerifySteps();
+});
+
+test("concurrently get and batch get the same request", async () => {
+    const orm = {
+        call: async (model, method, args) => {
+            expect.step(`${model}/${method}`);
+            return args[0];
+        },
+    };
+    const serverData = new ServerData(orm, {
+        whenDataStartLoading: () => expect.step("data-fetching-notification"),
+    });
+    expect(() => serverData.batch.get("partner", "get_something", 5)).toThrow(LoadingDataError);
+    expect(() => serverData.get("partner", "get_something", [5])).toThrow(LoadingDataError);
+    await animationFrame();
+    expect(["partner/get_something", "data-fetching-notification"]).toVerifySteps({
+        message: "it should have fetch the data once",
+    });
+    expect(serverData.get("partner", "get_something", [5])).toEqual(5);
+    expect(serverData.batch.get("partner", "get_something", 5)).toEqual(5);
+    expect([]).toVerifySteps();
+});
+
+test("Call the correct callback after a batch result", async () => {
+    const orm = {
+        call: async (model, method, args) => {
+            if (args[0].includes(5)) {
                 throw new Error("error while fetching data");
-            },
-        };
-        const serverData = new ServerData(orm, {
-            whenDataStartLoading: () => assert.step("data-fetching-notification"),
-        });
-        assert.rejects(serverData.fetch("partner", "get_something", [5]));
-        assert.verifySteps(["partner/get_something"]);
-        assert.rejects(serverData.fetch("partner", "get_something", [5]));
-        assert.verifySteps([]);
+            }
+            return args[0];
+        },
+    };
+    const batchEndpoint = new BatchEndpoint(orm, "partner", "get_something", {
+        whenDataStartLoading: () => {},
+        successCallback: () => expect.step("success-callback"),
+        failureCallback: () => expect.step("failure-callback"),
     });
-
-    QUnit.test("two identical concurrent async fetch", async (assert) => {
-        const orm = {
-            call: async (model, method, args) => {
-                assert.step(`${model}/${method}`);
-                return args[0];
-            },
-        };
-        const serverData = new ServerData(orm, {
-            whenDataStartLoading: () => assert.step("data-fetching-notification"),
-        });
-        const [result1, result2] = await Promise.all([
-            serverData.fetch("partner", "get_something", [5]),
-            serverData.fetch("partner", "get_something", [5]),
-        ]);
-        assert.verifySteps(["partner/get_something"], "it should have fetch the data once");
-        assert.deepEqual(result1, 5);
-        assert.deepEqual(result2, 5);
-        assert.verifySteps([]);
-    });
-
-    QUnit.test("batch get with a single item", async (assert) => {
-        const deferred = new Deferred();
-        const orm = {
-            call: async (model, method, args) => {
-                await deferred;
-                assert.step(`${model}/${method}`);
-                return args[0];
-            },
-        };
-        const serverData = new ServerData(orm, {
-            whenDataStartLoading: () => assert.step("data-fetching-notification"),
-        });
-        assert.throws(
-            () => serverData.batch.get("partner", "get_something_in_batch", 5),
-            LoadingDataError,
-            "it should throw when it's not loaded"
-        );
-        await nextTick(); // wait for the next tick for the batch to be called
-        assert.verifySteps(["data-fetching-notification"]);
-        deferred.resolve();
-        await nextTick();
-        assert.verifySteps(["partner/get_something_in_batch"]);
-        assert.deepEqual(serverData.batch.get("partner", "get_something_in_batch", 5), 5);
-        assert.verifySteps([]);
-    });
-
-    QUnit.test("batch get with multiple items", async (assert) => {
-        const orm = {
-            call: async (model, method, args) => {
-                assert.step(`${model}/${method}`);
-                return args[0];
-            },
-        };
-        const serverData = new ServerData(orm, {
-            whenDataStartLoading: () => assert.step("data-fetching-notification"),
-        });
-        assert.throws(
-            () => serverData.batch.get("partner", "get_something_in_batch", 5),
-            LoadingDataError,
-            "it should throw when it's not loaded"
-        );
-        assert.throws(
-            () => serverData.batch.get("partner", "get_something_in_batch", 6),
-            LoadingDataError,
-            "it should throw when it's not loaded"
-        );
-        await nextTick();
-        assert.verifySteps(["partner/get_something_in_batch", "data-fetching-notification"]);
-        assert.deepEqual(serverData.batch.get("partner", "get_something_in_batch", 5), 5);
-        assert.deepEqual(serverData.batch.get("partner", "get_something_in_batch", 6), 6);
-        assert.verifySteps([]);
-    });
-
-    QUnit.test("batch get with one error", async (assert) => {
-        const orm = {
-            call: async (model, method, args) => {
-                assert.step(`${model}/${method}`);
-                if (args[0].includes(5)) {
-                    throw new Error("error while fetching data");
-                }
-                return args[0];
-            },
-        };
-        const serverData = new ServerData(orm, {
-            whenDataStartLoading: () => assert.step("data-fetching-notification"),
-        });
-        assert.throws(
-            () => serverData.batch.get("partner", "get_something_in_batch", 4),
-            LoadingDataError,
-            "it should throw when it's not loaded"
-        );
-        assert.throws(
-            () => serverData.batch.get("partner", "get_something_in_batch", 5),
-            LoadingDataError,
-            "it should throw when it's not loaded"
-        );
-        assert.throws(
-            () => serverData.batch.get("partner", "get_something_in_batch", 6),
-            LoadingDataError,
-            "it should throw when it's not loaded"
-        );
-        await nextTick();
-        assert.verifySteps([
-            // one call for the batch
-            "partner/get_something_in_batch",
-            "data-fetching-notification",
-            // retries one by one
-            "partner/get_something_in_batch",
-            "partner/get_something_in_batch",
-            "partner/get_something_in_batch",
-        ]);
-        assert.deepEqual(serverData.batch.get("partner", "get_something_in_batch", 4), 4);
-        assert.throws(() => serverData.batch.get("partner", "get_something_in_batch", 5), Error);
-        assert.deepEqual(serverData.batch.get("partner", "get_something_in_batch", 6), 6);
-        assert.verifySteps([]);
-    });
-
-    QUnit.test("concurrently fetch then get the same request", async (assert) => {
-        const orm = {
-            call: async (model, method, args) => {
-                assert.step(`${model}/${method}`);
-                return args[0];
-            },
-        };
-        const serverData = new ServerData(orm, {
-            whenDataStartLoading: () => assert.step("data-fetching-notification"),
-        });
-        const promise = serverData.fetch("partner", "get_something", [5]);
-        assert.throws(() => serverData.get("partner", "get_something", [5]), LoadingDataError);
-        assert.verifySteps(
-            ["partner/get_something", "partner/get_something", "data-fetching-notification"],
-            "it loads the data independently"
-        );
-        const result = await promise;
-        await nextTick();
-        assert.deepEqual(result, 5);
-        assert.deepEqual(serverData.get("partner", "get_something", [5]), 5);
-        assert.verifySteps([]);
-    });
-
-    QUnit.test("concurrently get then fetch the same request", async (assert) => {
-        const orm = {
-            call: async (model, method, args) => {
-                assert.step(`${model}/${method}`);
-                return args[0];
-            },
-        };
-        const serverData = new ServerData(orm, {
-            whenDataStartLoading: () => assert.step("data-fetching-notification"),
-        });
-        assert.throws(() => serverData.get("partner", "get_something", [5]), LoadingDataError);
-        const result = await serverData.fetch("partner", "get_something", [5]);
-        assert.verifySteps(
-            ["partner/get_something", "data-fetching-notification", "partner/get_something"],
-            "it should have fetch the data once"
-        );
-        assert.deepEqual(result, 5);
-        assert.deepEqual(serverData.get("partner", "get_something", [5]), 5);
-        assert.verifySteps([]);
-    });
-
-    QUnit.test("concurrently batch get then fetch the same request", async (assert) => {
-        const orm = {
-            call: async (model, method, args) => {
-                assert.step(`${model}/${method}`);
-                return args[0];
-            },
-        };
-        const serverData = new ServerData(orm, {
-            whenDataStartLoading: () => assert.step("data-fetching-notification"),
-        });
-        assert.throws(() => serverData.batch.get("partner", "get_something", 5), LoadingDataError);
-        const result = await serverData.fetch("partner", "get_something", [5]);
-        await nextTick();
-        assert.verifySteps(
-            ["partner/get_something", "partner/get_something", "data-fetching-notification"],
-            "it should have fetch the data once"
-        );
-        assert.deepEqual(result, 5);
-        assert.deepEqual(serverData.batch.get("partner", "get_something", 5), 5);
-        assert.verifySteps([]);
-    });
-
-    QUnit.test("concurrently get and batch get the same request", async (assert) => {
-        const orm = {
-            call: async (model, method, args) => {
-                assert.step(`${model}/${method}`);
-                return args[0];
-            },
-        };
-        const serverData = new ServerData(orm, {
-            whenDataStartLoading: () => assert.step("data-fetching-notification"),
-        });
-        assert.throws(() => serverData.batch.get("partner", "get_something", 5), LoadingDataError);
-        assert.throws(() => serverData.get("partner", "get_something", [5]), LoadingDataError);
-        await nextTick();
-        assert.verifySteps(
-            ["partner/get_something", "data-fetching-notification"],
-            "it should have fetch the data once"
-        );
-        assert.deepEqual(serverData.get("partner", "get_something", [5]), 5);
-        assert.deepEqual(serverData.batch.get("partner", "get_something", 5), 5);
-        assert.verifySteps([]);
-    });
-
-    QUnit.test("Call the correct callback after a batch result", async (assert) => {
-        const orm = {
-            call: async (model, method, args) => {
-                if (args[0].includes(5)) {
-                    throw new Error("error while fetching data");
-                }
-                return args[0];
-            },
-        };
-        const batchEndpoint = new BatchEndpoint(orm, "partner", "get_something", {
-            whenDataStartLoading: () => {},
-            successCallback: () => assert.step("success-callback"),
-            failureCallback: () => assert.step("failure-callback"),
-        });
-        const request = new Request("partner", "get_something", [4]);
-        const request2 = new Request("partner", "get_something", [5]);
-        batchEndpoint.call(request);
-        batchEndpoint.call(request2);
-        assert.verifySteps([]);
-        await nextTick();
-        assert.verifySteps(["success-callback", "failure-callback"]);
-    });
+    const request = new Request("partner", "get_something", [4]);
+    const request2 = new Request("partner", "get_something", [5]);
+    batchEndpoint.call(request);
+    batchEndpoint.call(request2);
+    expect([]).toVerifySteps();
+    await animationFrame();
+    expect(["success-callback", "failure-callback"]).toVerifySteps();
 });
