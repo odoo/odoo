@@ -210,12 +210,8 @@ class PurchaseOrder(models.Model):
         product_to_best_price_unit = defaultdict(lambda: self.env['purchase.order.line'])
         po_alternatives = self | self.alternative_po_ids
 
-        multiple_currencies = False
-        if len(po_alternatives.currency_id) > 1:
-            multiple_currencies = True
-
         for line in po_alternatives.order_line:
-            if not line.product_qty or not line.price_subtotal or line.state in ['cancel', 'purchase', 'done']:
+            if not line.product_qty or not line.price_total_cc or line.state in ['cancel', 'purchase', 'done']:
                 continue
 
             # if no best price line => no best price unit line either
@@ -223,15 +219,10 @@ class PurchaseOrder(models.Model):
                 product_to_best_price_line[line.product_id] = line
                 product_to_best_price_unit[line.product_id] = line
             else:
-                price_subtotal = line.price_subtotal
-                price_unit = line.price_unit
-                current_price_subtotal = product_to_best_price_line[line.product_id][0].price_subtotal
-                current_price_unit = product_to_best_price_unit[line.product_id][0].price_unit
-                if multiple_currencies:
-                    price_subtotal /= line.order_id.currency_rate
-                    price_unit /= line.order_id.currency_rate
-                    current_price_subtotal /= product_to_best_price_line[line.product_id][0].order_id.currency_rate
-                    current_price_unit /= product_to_best_price_unit[line.product_id][0].order_id.currency_rate
+                price_subtotal = line.price_total_cc
+                price_unit = line.price_total_cc / line.product_qty
+                current_price_subtotal = product_to_best_price_line[line.product_id][0].price_total_cc
+                current_price_unit = product_to_best_price_unit[line.product_id][0].price_total_cc / product_to_best_price_unit[line.product_id][0].product_qty
 
                 if current_price_subtotal > price_subtotal:
                     product_to_best_price_line[line.product_id] = line
@@ -262,12 +253,11 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    price_total_cc = fields.Monetary(compute='_compute_amount', string="Company Total", currency_field="company_currency_id", store=True)
+    price_total_cc = fields.Monetary(compute='_compute_price_total_cc', string="Company Subtotal", currency_field="company_currency_id", store=True)
     company_currency_id = fields.Many2one(related="company_id.currency_id", string="Company Currency")
 
-    @api.depends('price_subtotal', 'currency_id')
-    def _compute_amount(self):
-        super()._compute_amount()
+    @api.depends('price_subtotal', 'order_id.currency_rate')
+    def _compute_price_total_cc(self):
         for line in self:
             line.price_total_cc = line.price_subtotal / line.order_id.currency_rate
 
