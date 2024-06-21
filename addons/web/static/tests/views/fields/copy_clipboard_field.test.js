@@ -82,7 +82,6 @@ test("Show copy button even on readonly empty field", async () => {
 test("Display a tooltip on click", async () => {
     mockService("popover", {
         add(el, comp, params) {
-            expect(el).toHaveText("Copy");
             expect(params).toEqual({ tooltip: "Copied" });
             expect.step("copied tooltip");
             return () => {};
@@ -102,7 +101,7 @@ test("Display a tooltip on click", async () => {
     });
 
     await expect(".o_clipboard_button.o_btn_char_copy").toHaveCount(1);
-    await contains(".o_clipboard_button").click();
+    await contains(".o_clipboard_button", { visible: false }).click();
     expect.verifySteps(["char value", "copied tooltip"]);
 });
 

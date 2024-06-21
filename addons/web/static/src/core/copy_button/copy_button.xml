@@ -6,11 +6,11 @@
             class="text-nowrap"
             t-ref="button"
             t-att-disabled="props.disabled"
-            t-attf-class="btn btn-primary o_clipboard_button {{ props.className || '' }}"
+            t-attf-class="btn o_clipboard_button {{ props.className || '' }}"
             t-on-click.stop="onClick"
         >
-            <span class="fa fa-clipboard mx-1"/>
-            <span t-esc="props.copyText"/>
+            <span class="mx-1" t-attf-class="fa {{ props.icon || 'fa-clipboard' }}"/>
+            <span t-if="props.copyText" t-esc="props.copyText"/>
         </button>
     </t>
 

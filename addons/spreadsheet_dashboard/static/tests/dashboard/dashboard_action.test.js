@@ -269,7 +269,7 @@ test("share dashboard from dashboard view", async function () {
     expect(target.querySelector(".o_field_CopyClipboardChar").innerText).toBe(
         "localhost:8069/share/url/132465"
     );
-    await contains(".fa-clipboard").click();
+    await contains(".fa-clone").click();
     expect.verifySteps(["share url copied"]);
 });
 
