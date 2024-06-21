@@ -259,7 +259,7 @@ class ResCompany(models.Model):
             if html:
                 company.invoice_terms_html = html
 
-    @api.depends('parent_id.max_tax_lock_date')
+    @api.depends('tax_lock_date', 'parent_id.max_tax_lock_date')
     def _compute_max_tax_lock_date(self):
         for company in self:
             company.max_tax_lock_date = max(company.tax_lock_date or date.min, company.parent_id.sudo().max_tax_lock_date or date.min)
