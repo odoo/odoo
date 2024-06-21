@@ -109,3 +109,22 @@ HTMLElement.prototype.off = function (eventName = "", selector, handler, options
 Window.prototype.off = function (eventName, selector, handler, options = {}) {
     HTMLElement.prototype.off.call(this, eventName, selector, handler, (options = {}));
 };
+
+/**
+ * Event delegation for Document
+ * Since Document is not a HTMLElement, we need to extend it to support on/off events.
+ * @see HTMLElement.prototype.on
+ * @private
+ * @param {string} eventName Name of the events E.g. 'click', 'click.MyClick'.
+ * @param {String || Element} selector Element/selector to apply event delegation.
+ * @param {Function} handler Callback to delegate.
+ * @param {Object} options Extra paramete e.g. capture.
+ */
+
+Document.prototype.on = function (eventName, selector, handler, options = {}) {
+    HTMLElement.prototype.on.call(this, eventName, selector, handler, options);
+};
+
+Document.prototype.off = function (eventName, selector, handler, options = {}) {
+    HTMLElement.prototype.off.call(this, eventName, selector, handler, options);
+};
