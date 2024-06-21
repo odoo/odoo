@@ -1401,3 +1401,13 @@ class TestResource(TestResourceCommon):
         })
         resource_hour = resource._get_hours_per_day(resource_attendance)
         self.assertEqual(resource_hour, 0.0)
+
+    def test_resource_without_calendar(self):
+        resource = self.env['resource.resource'].create({
+            'name': 'resource',
+            'calendar_id': False,
+        })
+
+        resource.company_id.resource_calendar_id = False
+        unavailabilities = resource._get_unavailable_intervals(datetime(2024, 7, 11), datetime(2024, 7, 12))
+        self.assertFalse(unavailabilities)
