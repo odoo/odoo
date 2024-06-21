@@ -5,6 +5,7 @@ import { rpc } from "@web/core/network/rpc";
 import { router } from "@web/core/browser/router";
 
 import { _t } from "@web/core/l10n/translation";
+import { pyToJsLocale } from "@web/core/l10n/utils";
 import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
 
@@ -400,7 +401,7 @@ export class Thread extends Record {
             return this.custom_channel_name || this.correspondent.persona.nameOrDisplayName;
         }
         if (this.channel_type === "group" && !this.name) {
-            const listFormatter = new Intl.ListFormat(user.lang?.replace("_", "-"), {
+            const listFormatter = new Intl.ListFormat(user.lang && pyToJsLocale(user.lang), {
                 type: "conjunction",
                 style: "long",
             });
