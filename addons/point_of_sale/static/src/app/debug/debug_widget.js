@@ -52,6 +52,7 @@ export class DebugWidget extends Component {
         useDialogDraggable({
             ref: this.root,
             elements: ".debug-widget",
+            handle: ".drag-handle",
             onDrop: ({ left, top }) => {
                 this.position.left = left;
                 this.position.top = top;
