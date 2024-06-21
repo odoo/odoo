@@ -17,6 +17,7 @@ class TestTodoUi(HttpCase):
                 - activities linked to records with either project_id set or
                   linked to a parent task are listed in the 'Task' category
         """
+        self.env.user.tz = "UTC"
         project = self.env['project.project'].create([{'name': 'Test project'}])
         stage = self.env['project.task.type'].create([{
             'name': 'Test Stage',
