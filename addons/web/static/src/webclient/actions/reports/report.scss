@@ -2,6 +2,7 @@ $o-default-report-font: 'Lato' !default;
 $o-default-report-primary-color: $o-gray-900 !default;
 $o-default-report-secondary-color: $o-default-report-primary-color !default;
 $o-default-report-margins:  11mm !default; // 7mm + container padding
+$o-snailmail-address-padding-top: 38px;
 
 
 html, body {
@@ -127,4 +128,8 @@ div[name=comment] p, div[name=address] p {
     // wkhtmltopdf trims margin top/bottom which would extend a flex
     // container's height. This rule cut the address block's p margins to replicate in html.
     margin-bottom: 0;
+}
+
+.o_snail_mail {
+    padding-top: $o-snailmail-address-padding-top;
 }
