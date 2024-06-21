@@ -1,12 +1,12 @@
-@keyframes bounce {
+@keyframes drag_initiated {
     0% {
-        transform: scale(1);
+        filter: none;
     }
     60% {
-        transform: scale(.95);
+        filter: brightness(0.5) opacity(0.5);
     }
     100% {
-        transform: scale(1);
+        filter: none;
     }
 }
 
@@ -19,7 +19,8 @@
     pointer-events: none;
 }
 
-.o_touch_bounce {
-    animation: bounce .4s forwards;
+.o_touch_drag_initiated {
+    // animation to indicate the touch can start dragging the element
+    animation: drag_initiated .5s forwards;
     user-select: none;
 }
