@@ -47,16 +47,24 @@ export class CopyClipboardButtonField extends CopyClipboardField {
     static components = { CopyButton };
 
     get copyButtonClassName() {
-        return `o_btn_${this.type}_copy rounded-2`;
+        return `o_btn_${this.type}_copy btn-primary rounded-2`;
     }
 }
 
 export class CopyClipboardCharField extends CopyClipboardField {
     static components = { Field: CharField, CopyButton };
+
+    get copyButtonIcon() {
+        return "fa-clone";
+    }
 }
 
 export class CopyClipboardURLField extends CopyClipboardField {
     static components = { Field: UrlField, CopyButton };
+
+    get copyButtonIcon() {
+        return "fa-link";
+    }
 }
 
 // ----------------------------------------------------------------------------

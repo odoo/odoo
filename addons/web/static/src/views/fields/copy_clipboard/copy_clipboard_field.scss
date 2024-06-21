@@ -1,20 +1,9 @@
 .o_field_CopyClipboardURL, .o_field_CopyClipboardChar {
     > div {
         grid-template-columns: auto min-content;
-        border: 1px solid $primary;
-        font-size: $font-size-sm;
-        color: o-text-color('primary');
-        font-weight: $badge-font-weight;
-
-        .o_input {
-            border: none;
-            padding-left: 4px;
-        }
         .o_clipboard_button {
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
+            border: none;
         }
-
         > span:first-child, a {
             margin-left: 4px;
             margin-right: 4px;
@@ -23,6 +12,23 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+    }
+}
+
+.o_field_CopyClipboardURL, .o_field_CopyClipboardChar {
+    &.o_readonly_modifier > div {
+        border: 1px solid #e6e6e6;
+        > span {
+            padding-left: 4px;
+        }
+    }
+}
+
+body:not(.o_touch_device) .o_field_CopyClipboardURL, .o_field_CopyClipboardChar {
+    &:not(.o_readonly_modifier) {
+        &:not(:hover):not(:focus-within) button {
+            opacity: 0 !important;
         }
     }
 }
