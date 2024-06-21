@@ -18,6 +18,7 @@ class TiktokAddProduct(models.TransientModel):
 
 	def add_product(self):
 		print('TEST OKE MASUK = = = = = = = =')
+		context = self.env.context
 		company_obj = self.env['res.company']
 		company = self.env.company
 		shop = self.shop_id
@@ -29,20 +30,6 @@ class TiktokAddProduct(models.TransientModel):
 		key = company.tiktok_client_secret
 		timest = int(time.time())
 		sign = ''
-		locale = 'id-ID'
-		category_version = 'v2'
-		path = "/product/202309/categories"
-
-		headers = {
-			'x-tts-access-token': str(access_token), 
-			"Content-type": "application/json"
-		}
-
-		url = domain+path+f"?app_key={app}&access_token={access_token}&sign={sign}&timestamp={timest}&shop_cipher={chiper}&locale={locale}&category_version={category_version}"
-		sign = company_obj.cal_sign(ur, key, headers)
-		url = domain+path+f"?app_key={app}&access_token={access_token}&sign={sign}&timestamp={timest}&shop_cipher={chiper}&locale={locale}&category_version={category_version}"
-
-		res = requests.get(url, headers=headers)
-		values = res.json()
-
-		print(values,'VALUES===')
+	
+		description = self.name
+	

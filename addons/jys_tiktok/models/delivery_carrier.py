@@ -5,4 +5,4 @@ class DeliveryCarrier(models.Model):
     _inherit = "delivery.carrier"
 
     product_tmpl_id = fields.Many2one('product.template', 'Product Template')
-    tiktok_logistic_id = fields.Integer('Tiktok Logistic ID')
+    tiktok_logistic_id = fields.Char('Tiktok Logistic ID')

@@ -1,4 +1,4 @@
-import odoo.addons.decimal_precision as dp
+import odoo.addons.decimal_precision as dp # type: ignore
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 

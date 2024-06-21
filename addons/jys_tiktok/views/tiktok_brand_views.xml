@@ -6,6 +6,9 @@
             <field name="model">tiktok.brand</field>
             <field name="arch" type="xml">
                 <tree string="Tiktok Brands" create="1">
+                    <header>
+                        <button name="create_brand" string="Add Brand In Tiktok" class="btn-primary ms-1" type="object"/>
+                    </header>
                     <field name="name"/>
                 </tree>
             </field>
@@ -15,7 +18,7 @@
             <field name="name">tiktok.brand.form</field>
             <field name="model">tiktok.brand</field>
             <field name="arch" type="xml">
-                <form string="Tiktok Brands" create="0" edit="0">
+                <form string="Tiktok Brands" create="1" edit="1">
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -41,6 +44,6 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{}</field>
         </record>
-
+        
     </data>
 </odoo>

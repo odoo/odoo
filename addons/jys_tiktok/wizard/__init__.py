@@ -9,3 +9,4 @@ from . import tiktok_get_product
 from . import delete_confirmation_wizard
 from . import upload_image_wizard
 from . import tiktok_shipping_label
+from . import tiktok_get_logistic

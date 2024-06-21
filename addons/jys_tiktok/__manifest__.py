@@ -26,6 +26,7 @@
         'wizard/delete_confirmation_wizard_views.xml',
         'wizard/upload_image_wizard_views.xml',
         'wizard/tiktok_shipping_label_views.xml',
+        'wizard/tiktok_get_logistic_views.xml',
 
         'views/product_template_views.xml',
         'views/delivery_carrier_views.xml',
