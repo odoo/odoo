@@ -11,6 +11,7 @@ from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools import sql
+from odoo.tools.json import scriptsafe as json_safe
 
 _logger = logging.getLogger(__name__)
 
@@ -788,6 +789,66 @@ class Post(models.Model):
     # ----------------------------------------------------------------------
     # WEBSITE
     # ----------------------------------------------------------------------
+
+    def _get_microdata(self):
+        """
+        Generate structured data (microdata) for the post.
+
+        Returns:
+            str or None: Microdata in JSON format representing the post, or None
+            if not applicable.
+        """
+        self.ensure_one()
+        # Return if it's not a question.
+        if self.parent_id:
+            return None
+        correct_posts = self.child_ids.filtered(lambda post: post.is_correct)
+        suggested_posts = self.child_ids.filtered(lambda post: not post.is_correct)[:5]
+        # A QAPage schema must have one accepted answer or at least one suggested answer
+        if not suggested_posts and not correct_posts:
+            return None
+
+        structured_data = {
+            "@context": "https://schema.org",
+            "@type": "QAPage",
+            "mainEntity": self._get_structured_data(post_type="question"),
+        }
+        if correct_posts:
+            structured_data["mainEntity"]["acceptedAnswer"] = correct_posts[0]._get_structured_data()
+        if suggested_posts:
+            structured_data["mainEntity"]["suggestedAnswer"] = [
+                suggested_post._get_structured_data()
+                for suggested_post in suggested_posts
+            ]
+        return json_safe.dumps(structured_data, indent=2)
+
+    def _get_structured_data(self, post_type="answer"):
+        """
+        Generate structured data (microdata) for an answer or a question.
+
+        Returns:
+            dict: microdata.
+        """
+        res = {
+            "upvoteCount": self.vote_count,
+            "datePublished": self.create_date.isoformat() + 'Z',
+            "url": self.website_url,
+            "author": {
+                "@type": "Person",
+                "name": self.create_uid.sudo().name,
+            },
+        }
+        if post_type == "answer":
+            res["@type"] = "Answer"
+            res["text"] = self.plain_content
+        else:
+            res["@type"] = "Question"
+            res["name"] = self.name
+            res["text"] = self.plain_content or self.name
+            res["answerCount"] = self.child_count
+        if self.create_uid.sudo().website_published:
+            res["author"]["url"] = f"/forum/user/{ self.create_uid.sudo().id }"
+        return res
 
     def go_to_website(self):
         self.ensure_one()
