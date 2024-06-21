@@ -81,7 +81,7 @@ export class CustomFavoriteItem extends Component {
         switch (ev.key) {
             case "Enter":
                 ev.preventDefault();
-                this.saveFavorite();
+                this.saveFavorite(ev);
                 break;
             case "Escape":
                 // Gives the focus back to the component.
