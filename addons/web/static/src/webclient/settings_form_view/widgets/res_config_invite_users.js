@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
+import { pyToJsLocale } from "@web/core/l10n/utils";
 import { user } from "@web/core/user";
 import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
@@ -63,7 +64,7 @@ class ResConfigInviteUsers extends Component {
         }
         if (invalidEmails.length) {
             const errorMessage = (() => {
-                const listFormatter = new Intl.ListFormat(user.lang.replace("_", "-"), {
+                const listFormatter = new Intl.ListFormat(user.lang && pyToJsLocale(user.lang), {
                     type: "conjunction",
                     style: "long",
                 });

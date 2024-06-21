@@ -27,6 +27,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
+import { pyToJsLocale } from "@web/core/l10n/utils";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
@@ -242,7 +243,9 @@ export class Chatter extends Component {
                     partner.email || _t("no email address")
                 )}">${escape(text)}</span>`;
             });
-        const formatter = new Intl.ListFormat(user.lang?.replace("_", "-"), { type: "unit" });
+        const formatter = new Intl.ListFormat(user.lang && pyToJsLocale(user.lang), {
+            type: "unit",
+        });
         if (this.state.thread && this.state.thread.recipients.length > 5) {
             recipients.push("…");
         }

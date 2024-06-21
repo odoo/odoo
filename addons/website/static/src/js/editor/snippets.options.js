@@ -19,6 +19,7 @@ import {
 import "@website/snippets/s_popup/options";
 import { range } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
+import { pyToJsLocale } from "@web/core/l10n/utils";
 import {Domain} from "@web/core/domain";
 import {
     isCSSColor,
@@ -3395,7 +3396,7 @@ options.registry.ConditionalVisibility = options.registry.DeviceVisibility.exten
                 });
                 if (attribute.saveAttribute === 'visibilityValueLang') {
                     records = records.map(lang => {
-                        lang.value = lang.value.replace(/_/g, '-');
+                        lang.value = pyToJsLocale(lang.value);
                         return lang;
                     });
                 }
