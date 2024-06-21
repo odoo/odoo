@@ -2226,7 +2226,10 @@ Please change the quantity done or the rounding precision of your unit of measur
             domains.append([('product_id', '=', move.product_id.id), ('location_id', '=', move.location_dest_id.id)])
         static_domain = [('state', 'in', ['confirmed', 'partially_available']),
                          ('procure_method', '=', 'make_to_stock'),
-                         ('reservation_date', '<=', fields.Date.today())]
+                         '|',
+                            ('reservation_date', '<=', fields.Date.today()),
+                            ('picking_type_id.reservation_method', '=', 'at_confirm')
+                        ]
         moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains)]),
                                                          order='priority desc, date asc, id asc')
         moves_to_reserve._action_assign()
