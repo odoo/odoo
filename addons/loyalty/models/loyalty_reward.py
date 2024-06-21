@@ -83,6 +83,7 @@ class LoyaltyReward(models.Model):
     multi_product = fields.Boolean(compute='_compute_multi_product')
     reward_product_ids = fields.Many2many(
         'product.product', string="Reward Products", compute='_compute_multi_product',
+        search='_search_reward_product_ids',
         help="These are the products that can be claimed with this rule.")
     reward_product_qty = fields.Integer(default=1)
     reward_product_uom_id = fields.Many2one('uom.uom', compute='_compute_reward_product_uom_id')
@@ -105,6 +106,15 @@ class LoyaltyReward(models.Model):
         for reward in self:
             reward.reward_product_uom_id = reward.reward_product_ids.product_tmpl_id.uom_id[:1]
 
+    def _search_reward_product_ids(self, operator, value):
+        if operator not in ('=', '!=', 'in'):
+            raise NotImplementedError("Unsupported search operator")
+        return [
+            '&', ('reward_type', '=', 'product'),
+            '|', ('reward_product_id', operator, value),
+            ('reward_product_tag_id.product_ids', operator, value)
+        ]
+
     def _find_all_category_children(self, category_id, child_ids):
         if len(category_id.child_id) > 0:
             for child_id in category_id.child_id:
@@ -126,6 +136,21 @@ class LoyaltyReward(models.Model):
         if self.discount_product_domain and self.discount_product_domain != '[]':
             domain = expression.AND([domain, ast.literal_eval(self.discount_product_domain)])
         return domain
+
+    def _get_active_products_domain(self):
+        return [
+            '|',
+                ('reward_type', '!=', 'product'),
+                '&',
+                    ('reward_type', '=', 'product'),
+                    '|',
+                        '&',
+                            ('reward_product_tag_id', '=', False),
+                            ('reward_product_id.active', '=', True),
+                        '&',
+                            ('reward_product_tag_id', '!=', False),
+                            ('reward_product_ids.active', '=', True)
+        ]
 
     @api.depends('discount_product_domain')
     def _compute_reward_product_domain(self):

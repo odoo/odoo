@@ -785,3 +785,31 @@ class TestLoyalty(TestSaleCouponCommon):
         order.action_confirm()
 
         self.assertEqual(self.ewallet.points, 50)
+
+    def test_archived_reward_products(self):
+        """
+        Check that a we do not use loyalty rawrds that have no active reward product
+        """
+
+        LoyaltyProgram = self.env['loyalty.program']
+        loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+
+        loyalty_program.reward_ids[0].write({
+            'reward_type': 'product',
+            'required_points': 1,
+            'reward_product_id': self.product_b,
+        })
+        self.product_b.active = False
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                }),
+            ]
+        })
+
+        order._update_programs_and_rewards()
+        for value in order._get_claimable_rewards().values():
+            self.assertTrue(loyalty_program.reward_ids[0].id not in value.ids)

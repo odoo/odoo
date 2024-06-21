@@ -1915,3 +1915,34 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="accountman",
         )
         self.assertEqual(loyalty_card.points, 100)
+
+    def test_archived_reward_products(self):
+        """
+        Check that a loyalty_reward with no active reward product is not loaded.
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        self.product_a.write({
+            'name': 'Test Product A',
+            'type': 'product',
+            'list_price': 100,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+
+        LoyaltyProgram = self.env['loyalty.program']
+        loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+
+        loyalty_program.reward_ids.write({
+            'reward_type': 'product',
+            'required_points': 1,
+            'reward_product_id': self.product_b,
+        })
+        self.product_b.active = False
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyArchivedRewardProducts",
+            login="accountman",
+        )
