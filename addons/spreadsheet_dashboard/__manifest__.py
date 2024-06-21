@@ -28,14 +28,8 @@
             "spreadsheet_dashboard/static/src/assets/**/*.js",
             "spreadsheet_dashboard/static/src/**/*.scss",
         ],
-        "web.qunit_suite_tests": [
+        'web.assets_unit_tests': [
             "spreadsheet_dashboard/static/tests/**/*",
-            ("remove", "spreadsheet_dashboard/static/tests/legacy/mobile/**/*.js"),
-        ],
-        "web.qunit_mobile_suite_tests": [
-            "spreadsheet_dashboard/static/tests/legacy/mobile/**/*.js",
-            "spreadsheet_dashboard/static/tests/legacy/utils/**/*.js",
-            ("include", "spreadsheet.o_spreadsheet"),
         ],
     },
 }

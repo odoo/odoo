@@ -1,23 +1,20 @@
-/** @odoo-module */
-
+import { describe, expect, getFixture, onError as onErrorHoot, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+import { defineSpreadsheetModels, getBasicData } from "@spreadsheet/../tests/helpers/data";
+import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
 import {
-    getFixture,
-    click,
-    nextTick,
-    editInput,
-    makeDeferred,
-    patchWithCleanup,
-} from "@web/../tests/helpers/utils";
+    defineSpreadsheetDashboardModels,
+    getDashboardServerData,
+} from "@spreadsheet_dashboard/../tests/helpers/data";
+import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
-import { getDashboardServerData } from "@spreadsheet_dashboard/../tests/legacy/utils/data";
-import { getBasicData, getBasicListArchs } from "@spreadsheet/../tests/legacy/utils/data";
-import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/legacy/utils/dashboard_action";
-import { keyDown } from "@spreadsheet/../tests/legacy/utils/ui";
 import { RPCError } from "@web/core/network/rpc";
-import { errorService } from "@web/core/errors/error_service";
-import { registry } from "@web/core/registry";
+import { Deferred } from "@web/core/utils/concurrency";
 
-QUnit.module("spreadsheet_dashboard > Dashboard > Dashboard action");
+describe.current.tags("desktop");
+defineSpreadsheetModels();
+defineSpreadsheetDashboardModels();
 
 function getServerData(spreadsheetData) {
     const serverData = getDashboardServerData();
@@ -25,7 +22,6 @@ function getServerData(spreadsheetData) {
         ...serverData.models,
         ...getBasicData(),
     };
-    serverData.views = getBasicListArchs();
     serverData.models["spreadsheet.dashboard.group"].records = [
         {
             published_dashboard_ids: [789],
@@ -45,68 +41,61 @@ function getServerData(spreadsheetData) {
     return serverData;
 }
 
-QUnit.test("display available spreadsheets", async (assert) => {
+test("display available spreadsheets", async () => {
     await createSpreadsheetDashboard();
-    assert.containsN(getFixture(), ".o_search_panel section", 2);
-    assert.containsN(getFixture(), ".o_search_panel li", 3);
+    expect(".o_search_panel section").toHaveCount(2);
+    expect(".o_search_panel li").toHaveCount(3);
 });
 
-QUnit.test("display the active spreadsheet", async (assert) => {
+test("display the active spreadsheet", async () => {
     await createSpreadsheetDashboard();
-    assert.containsOnce(
-        getFixture(),
-        ".o_search_panel li.active",
-        "It should have one active element"
-    );
-    assert.containsOnce(getFixture(), ".o-spreadsheet", "It should display the spreadsheet");
+    expect(".o_search_panel li.active").toHaveCount(1, {
+        message: "It should have one active element",
+    });
+    expect(".o-spreadsheet").toHaveCount(1, { message: "It should display the spreadsheet" });
 });
 
-QUnit.test("Fold/unfold the search panel", async function (assert) {
+test("Fold/unfold the search panel", async function () {
     await createSpreadsheetDashboard();
     const fixture = getFixture();
-    await click(fixture.querySelector(".o_spreadsheet_dashboard_search_panel button"));
-    assert.containsNone(fixture, ".o_spreadsheet_dashboard_search_panel");
-    assert.strictEqual(
-        fixture.querySelector(".o_search_panel_sidebar").textContent,
+    await contains(fixture.querySelector(".o_spreadsheet_dashboard_search_panel button")).click();
+    expect(".o_spreadsheet_dashboard_search_panel").toHaveCount(0);
+    expect(fixture.querySelector(".o_search_panel_sidebar").textContent).toBe(
         "Container 1 / Dashboard CRM 1"
     );
-    await click(fixture.querySelector(".o_search_panel_sidebar button"));
-    assert.containsNone(fixture, ".o_search_panel_sidebar");
-    assert.containsOnce(fixture, ".o_spreadsheet_dashboard_search_panel");
+    await contains(fixture.querySelector(".o_search_panel_sidebar button")).click();
+    expect(".o_search_panel_sidebar").toHaveCount(0);
+    expect(".o_spreadsheet_dashboard_search_panel").toHaveCount(1);
 });
 
-QUnit.test(
-    "Fold button invisible in the search panel without any dashboard",
-    async function (assert) {
-        const serverData = getDashboardServerData();
-        serverData.models["spreadsheet.dashboard"].records = [];
-        serverData.models["spreadsheet.dashboard.group"].records = [];
-        await createSpreadsheetDashboard({ serverData });
-        const fixture = getFixture();
-        assert.containsNone(fixture, ".o_spreadsheet_dashboard_search_panel button");
-    }
-);
+test("Fold button invisible in the search panel without any dashboard", async function () {
+    const serverData = getDashboardServerData();
+    serverData.models["spreadsheet.dashboard"].records = [];
+    serverData.models["spreadsheet.dashboard.group"].records = [];
+    await createSpreadsheetDashboard({ serverData });
+    expect(".o_spreadsheet_dashboard_search_panel button").toHaveCount(0);
+});
 
-QUnit.test("load action with specific dashboard", async (assert) => {
+test("load action with specific dashboard", async () => {
     await createSpreadsheetDashboard({ spreadsheetId: 3 });
     const active = getFixture().querySelector(".o_search_panel li.active");
-    assert.strictEqual(active.innerText, "Dashboard Accounting 1");
+    expect(active.innerText).toBe("Dashboard Accounting 1");
 });
 
-QUnit.test("can switch spreadsheet", async (assert) => {
+test("can switch spreadsheet", async () => {
     await createSpreadsheetDashboard();
     const fixture = getFixture();
     const spreadsheets = fixture.querySelectorAll(".o_search_panel li");
-    assert.ok(spreadsheets[0].className.includes("active"));
-    assert.notOk(spreadsheets[1].className.includes("active"));
-    assert.notOk(spreadsheets[2].className.includes("active"));
-    await click(spreadsheets[1]);
-    assert.notOk(spreadsheets[0].className.includes("active"));
-    assert.ok(spreadsheets[1].className.includes("active"));
-    assert.notOk(spreadsheets[2].className.includes("active"));
+    expect(spreadsheets[0].className.includes("active")).toBe(true);
+    expect(spreadsheets[1].className.includes("active")).toBe(false);
+    expect(spreadsheets[2].className.includes("active")).toBe(false);
+    await contains(spreadsheets[1]).click();
+    expect(spreadsheets[0].className.includes("active")).toBe(false);
+    expect(spreadsheets[1].className.includes("active")).toBe(true);
+    expect(spreadsheets[2].className.includes("active")).toBe(false);
 });
 
-QUnit.test("display no dashboard message", async (assert) => {
+test("display no dashboard message", async () => {
     await createSpreadsheetDashboard({
         mockRPC: function (route, { model, method, args }) {
             if (method === "web_search_read" && model === "spreadsheet.dashboard.group") {
@@ -118,16 +107,17 @@ QUnit.test("display no dashboard message", async (assert) => {
         },
     });
     const fixture = getFixture();
-    assert.containsNone(fixture, ".o_search_panel li", "It should not display any spreadsheet");
-    assert.strictEqual(
-        fixture.querySelector(".dashboard-loading-status").innerText,
+    expect(".o_search_panel li").toHaveCount(0, {
+        message: "It should not display any spreadsheet",
+    });
+    expect(fixture.querySelector(".dashboard-loading-status").innerText).toBe(
         "No available dashboard",
-        "It should display no dashboard message"
+        { message: "It should display no dashboard message" }
     );
 });
 
-QUnit.test("display error message", async (assert) => {
-    registry.category("services").add("error", errorService);
+test("display error message", async () => {
+    onErrorHoot((ev) => ev.preventDefault());
     await createSpreadsheetDashboard({
         mockRPC: function (route, args) {
             if (
@@ -143,98 +133,87 @@ QUnit.test("display error message", async (assert) => {
     });
     const fixture = getFixture();
     const spreadsheets = fixture.querySelectorAll(".o_search_panel li");
-    assert.containsOnce(fixture, ".o-spreadsheet", "It should display the spreadsheet");
-    await click(spreadsheets[1]);
-    assert.containsOnce(
-        fixture,
-        ".o_spreadsheet_dashboard_action .dashboard-loading-status.error",
-        "It should display an error"
-    );
-    await click(spreadsheets[0]);
-    assert.containsOnce(fixture, ".o-spreadsheet", "It should display the spreadsheet");
-    assert.containsNone(fixture, ".o_renderer .error", "It should not display an error");
+    expect(".o-spreadsheet").toHaveCount(1, { message: "It should display the spreadsheet" });
+    await contains(spreadsheets[1]).click();
+    expect(".o_spreadsheet_dashboard_action .dashboard-loading-status.error").toHaveCount(1, {
+        message: "It should display an error",
+    });
+    await contains(spreadsheets[0]).click();
+    expect(".o-spreadsheet").toHaveCount(1, { message: "It should display the spreadsheet" });
+    expect(".o_renderer .error").toHaveCount(0, { message: "It should not display an error" });
 });
 
-QUnit.test("load dashboard that doesn't exist", async (assert) => {
-    registry.category("services").add("error", errorService);
+test("load dashboard that doesn't exist", async () => {
+    onErrorHoot((ev) => ev.preventDefault());
     await createSpreadsheetDashboard({
         spreadsheetId: 999,
     });
-    const fixture = getFixture();
-    assert.containsOnce(
-        fixture,
-        ".o_spreadsheet_dashboard_action .dashboard-loading-status.error",
-        "It should display an error"
-    );
+    expect(".o_spreadsheet_dashboard_action .dashboard-loading-status.error").toHaveCount(1, {
+        message: "It should display an error",
+    });
 });
 
-QUnit.test(
-    "Last selected spreadsheet is kept when go back from breadcrumb",
-    async function (assert) {
-        const spreadsheetData = {
-            sheets: [
-                {
-                    id: "sheet1",
-                    cells: { A1: { content: `=PIVOT.VALUE("1", "probability")` } },
-                },
-            ],
-            pivots: {
-                1: {
-                    id: 1,
-                    colGroupBys: ["foo"],
-                    domain: [],
-                    measures: [{ field: "probability", operator: "avg" }],
-                    model: "partner",
-                    rowGroupBys: ["bar"],
-                },
+test("Last selected spreadsheet is kept when go back from breadcrumb", async function () {
+    const spreadsheetData = {
+        sheets: [
+            {
+                id: "sheet1",
+                cells: { A1: { content: `=PIVOT.VALUE("1", "probability")` } },
             },
-        };
-        const serverData = getServerData(spreadsheetData);
-        const fixture = getFixture();
-        await createSpreadsheetDashboard({ serverData });
-        await click(fixture, ".o_search_panel li:last-child");
-        await click(fixture, ".o-dashboard-clickable-cell");
-        assert.containsOnce(fixture, ".o_list_view");
-        await click(document.body.querySelector(".o_back_button"));
-        assert.hasClass(fixture.querySelector(".o_search_panel li:last-child"), "active");
-    }
-);
+        ],
+        pivots: {
+            1: {
+                id: 1,
+                colGroupBys: ["foo"],
+                domain: [],
+                measures: [{ field: "probability", operator: "avg" }],
+                model: "partner",
+                rowGroupBys: ["bar"],
+            },
+        },
+    };
+    const serverData = getServerData(spreadsheetData);
+    const fixture = getFixture();
+    await createSpreadsheetDashboard({ serverData });
+    await contains(".o_search_panel li:last-child").click();
+    await contains(".o-dashboard-clickable-cell").click();
+    expect(".o_list_view").toHaveCount(1);
+    await contains(document.body.querySelector(".o_back_button")).click();
+    expect(fixture.querySelector(".o_search_panel li:last-child")).toHaveClass("active");
+});
 
-QUnit.test(
-    "Can clear filter date filter value that defaults to current period",
-    async function (assert) {
-        const spreadsheetData = {
-            globalFilters: [
-                {
-                    id: "1",
-                    type: "date",
-                    label: "Date Filter",
-                    rangeType: "fixedPeriod",
-                    defaultValue: "this_year",
-                },
-            ],
-        };
-        const serverData = getServerData(spreadsheetData);
-        const fixture = getFixture();
-        await createSpreadsheetDashboard({ serverData });
-        const year = fixture.querySelector(".o_control_panel_actions input.o_datetime_input");
-        const this_year = luxon.DateTime.local().year;
-        assert.equal(year.value, String(this_year));
-        const input = fixture.querySelector("input.o_datetime_input");
-        await click(input);
-        await editInput(input, null, String(this_year - 1));
-        await nextTick();
+test("Can clear filter date filter value that defaults to current period", async function () {
+    const spreadsheetData = {
+        globalFilters: [
+            {
+                id: "1",
+                type: "date",
+                label: "Date Filter",
+                rangeType: "fixedPeriod",
+                defaultValue: "this_year",
+            },
+        ],
+    };
+    const serverData = getServerData(spreadsheetData);
+    const fixture = getFixture();
+    await createSpreadsheetDashboard({ serverData });
+    const year = fixture.querySelector(".o_control_panel_actions input.o_datetime_input");
+    const this_year = luxon.DateTime.local().year;
+    expect(year.value).toBe(String(this_year));
+    const input = fixture.querySelector("input.o_datetime_input");
+    await contains(input).click();
+    await contains(input).edit(String(this_year - 1));
+    await animationFrame();
 
-        assert.equal(year.value, String(this_year - 1));
-        assert.containsOnce(fixture, ".o_control_panel_actions .fa-times");
-        await click(fixture.querySelector(".o_control_panel_actions .fa-times"));
+    expect(year.value).toBe(String(this_year - 1));
+    expect(".o_control_panel_actions .fa-times").toHaveCount(1);
+    await contains(fixture.querySelector(".o_control_panel_actions .fa-times")).click();
 
-        assert.containsNone(fixture, ".o_control_panel_actions .fa-times");
-        assert.equal(year.placeholder, "Select year...");
-    }
-);
+    expect(".o_control_panel_actions .fa-times").toHaveCount(0);
+    expect(year.placeholder).toBe("Select year...");
+});
 
-QUnit.test("Can delete record tag in the filter by hitting Backspace", async function (assert) {
+test("Can delete record tag in the filter by hitting Backspace", async function () {
     const spreadsheetData = {
         globalFilters: [
             {
@@ -251,55 +230,50 @@ QUnit.test("Can delete record tag in the filter by hitting Backspace", async fun
     await createSpreadsheetDashboard({ serverData });
     const filter = fixture.querySelector(".o_control_panel_actions div.o_multi_record_selector");
     const autoCompleteInput = filter.querySelector(".o-autocomplete--input.o_input");
-    assert.equal(filter.querySelectorAll(".o_tag").length, 1);
+    expect(filter.querySelectorAll(".o_tag").length).toBe(1);
 
     autoCompleteInput.focus();
-    await keyDown({ key: "Backspace" });
-    assert.equal(filter.querySelectorAll(".o_tag").length, 0);
+    press("Backspace");
+    await animationFrame();
+    expect(filter.querySelectorAll(".o_tag").length).toBe(0);
 });
 
-QUnit.test("share dashboard from dashboard view", async function (assert) {
+test("share dashboard from dashboard view", async function () {
     const target = getFixture();
-    patchWithCleanup(browser, {
-        navigator: {
-            clipboard: {
-                writeText: (url) => {
-                    assert.step("share url copied");
-                    assert.strictEqual(url, "localhost:8069/share/url/132465");
-                },
-            },
+    patchWithCleanup(browser.navigator.clipboard, {
+        writeText: (url) => {
+            expect.step("share url copied");
+            expect(url).toBe("localhost:8069/share/url/132465");
         },
     });
-    const def = makeDeferred();
+    const def = new Deferred();
     await createSpreadsheetDashboard({
         mockRPC: async function (route, args) {
             if (args.method === "action_get_share_url") {
                 await def;
-                assert.step("dashboard_shared");
-                assert.strictEqual(args.model, "spreadsheet.dashboard.share");
+                expect.step("dashboard_shared");
+                expect(args.model).toBe("spreadsheet.dashboard.share");
                 return "localhost:8069/share/url/132465";
             }
         },
     });
-    assert.containsNone(target, ".spreadsheet_share_dropdown");
-    await click(target, "i.fa-share-alt");
-    await nextTick();
-    assert.equal(
-        target.querySelector(".spreadsheet_share_dropdown")?.innerText,
+    expect(".spreadsheet_share_dropdown").toHaveCount(0);
+    await contains("i.fa-share-alt").click();
+    await animationFrame();
+    expect(target.querySelector(".spreadsheet_share_dropdown")?.innerText).toBe(
         "Generating sharing link"
     );
     def.resolve();
-    await nextTick();
-    assert.verifySteps(["dashboard_shared", "share url copied"]);
-    assert.strictEqual(
-        target.querySelector(".o_field_CopyClipboardChar").innerText,
+    await animationFrame();
+    expect(["dashboard_shared", "share url copied"]).toVerifySteps();
+    expect(target.querySelector(".o_field_CopyClipboardChar").innerText).toBe(
         "localhost:8069/share/url/132465"
     );
-    await click(target, ".fa-clipboard");
-    assert.verifySteps(["share url copied"]);
+    await contains(".fa-clipboard").click();
+    expect(["share url copied"]).toVerifySteps();
 });
 
-QUnit.test("Changing filter values will create a new share", async function (assert) {
+test("Changing filter values will create a new share", async function () {
     const spreadsheetData = {
         globalFilters: [
             {
@@ -314,12 +288,8 @@ QUnit.test("Changing filter values will create a new share", async function (ass
     const serverData = getServerData(spreadsheetData);
     const target = getFixture();
     let counter = 0;
-    patchWithCleanup(browser, {
-        navigator: {
-            clipboard: {
-                writeText: (url) => {},
-            },
-        },
+    patchWithCleanup(browser.navigator.clipboard, {
+        writeText: (url) => {},
     });
     await createSpreadsheetDashboard({
         serverData,
@@ -329,35 +299,32 @@ QUnit.test("Changing filter values will create a new share", async function (ass
             }
         },
     });
-    await click(target, "i.fa-share-alt");
-    await nextTick();
-    assert.strictEqual(
-        target.querySelector(".o_field_CopyClipboardChar").innerText,
+    await contains("i.fa-share-alt").click();
+    await animationFrame();
+    expect(target.querySelector(".o_field_CopyClipboardChar").innerText).toBe(
         `localhost:8069/share/url/1`
     );
 
-    await click(target, "i.fa-share-alt"); // close share dropdown
+    await contains("i.fa-share-alt").click(); // close share dropdown
 
-    await click(target, "i.fa-share-alt");
-    await nextTick();
-    assert.strictEqual(
-        target.querySelector(".o_field_CopyClipboardChar").innerText,
+    await contains("i.fa-share-alt").click();
+    await animationFrame();
+    expect(target.querySelector(".o_field_CopyClipboardChar").innerText).toBe(
         `localhost:8069/share/url/1`
     );
 
-    await click(target, "i.fa-share-alt");
+    await contains("i.fa-share-alt").click();
     const year = target.querySelector(".o_control_panel_actions input.o_datetime_input");
     const this_year = luxon.DateTime.local().year;
-    assert.equal(year.value, String(this_year));
+    expect(year.value).toBe(String(this_year));
     const input = target.querySelector("input.o_datetime_input");
-    await click(input);
-    await editInput(input, null, String(this_year - 1));
-    await nextTick();
+    await contains(input).click();
+    await contains(input).edit(String(this_year - 1));
+    await animationFrame();
 
-    await click(target, "i.fa-share-alt");
-    await nextTick();
-    assert.strictEqual(
-        target.querySelector(".o_field_CopyClipboardChar")?.innerText,
+    await contains("i.fa-share-alt").click();
+    await animationFrame();
+    expect(target.querySelector(".o_field_CopyClipboardChar")?.innerText).toBe(
         `localhost:8069/share/url/2`
     );
 });
