@@ -6,6 +6,7 @@ import { assignDefined, assignIn } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+import { pyToJsLocale } from "@web/core/l10n/utils";
 import { Deferred } from "@web/core/utils/concurrency";
 
 /**
@@ -383,7 +384,7 @@ export class Thread extends Record {
         }
         if (this.type === "group" && !this.name) {
             const listFormatter = new Intl.ListFormat(
-                this._store.env.services["user"].lang?.replace("_", "-"),
+                pyToJsLocale(this._store.env.services["user"].lang),
                 { type: "conjunction", style: "long" }
             );
             return listFormatter.format(
