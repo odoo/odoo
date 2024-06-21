@@ -1248,7 +1248,7 @@ class Channel(models.Model):
         )
         return self.env["mail.message"].browse([mid for (mid,) in self.env.cr.fetchall() if mid])
 
-    def load_more_members(self, known_member_ids):
+    def _load_more_members(self, known_member_ids):
         self.ensure_one()
         unknown_members = self.env['discuss.channel.member'].search(
             domain=[('id', 'not in', known_member_ids), ('channel_id', '=', self.id)],
@@ -1257,10 +1257,19 @@ class Channel(models.Model):
         count = self.env['discuss.channel.member'].search_count(
             domain=[('channel_id', '=', self.id)],
         )
-        return {
-            'channelMembers': [('ADD', list(unknown_members._discuss_channel_member_format().values()))],
-            'memberCount': count,
-        }
+        store = Store(
+            "ChannelMember", list(unknown_members._discuss_channel_member_format().values())
+        )
+        store.add(
+            "Thread",
+            {
+                "id": self.id,
+                "model": "discuss.channel",
+                "channelMembers": [("ADD", [{"id": member.id} for member in unknown_members])],
+                "memberCount": count,
+            },
+        )
+        return store.get_result()
 
     # ------------------------------------------------------------
     # COMMANDS

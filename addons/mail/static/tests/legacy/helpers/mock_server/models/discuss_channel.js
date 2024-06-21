@@ -143,7 +143,7 @@ patch(MockServer.prototype, {
             const ids = args.args[0];
             return this._mockDiscussChannelWriteImage128(ids[0]);
         }
-        if (args.model === "discuss.channel" && args.method === "load_more_members") {
+        if (args.model === "discuss.channel" && args.method === "_load_more_members") {
             const [channel_ids] = args.args;
             const { known_member_ids } = args.kwargs;
             return this._mockDiscussChannelloadOlderMembers(channel_ids, known_member_ids);
@@ -908,7 +908,7 @@ patch(MockServer.prototype, {
         });
     },
     /**
-     * Simulates `load_more_members` on `discuss.channel`.
+     * Simulates `_load_more_members` on `discuss.channel`.
      *
      * @private
      * @param {integer[]} channel_ids

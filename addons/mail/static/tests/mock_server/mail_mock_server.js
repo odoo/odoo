@@ -299,7 +299,7 @@ async function discuss_channel_members(request) {
     const DiscussChannel = this.env["discuss.channel"];
 
     const { channel_id, known_member_ids } = await parseRequestParams(request);
-    return DiscussChannel.load_more_members([channel_id], known_member_ids);
+    return DiscussChannel._load_more_members([channel_id], known_member_ids);
 }
 
 registerRoute("/discuss/channel/messages", discuss_channel_messages);
