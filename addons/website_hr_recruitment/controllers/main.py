@@ -355,6 +355,11 @@ class WebsiteHrRecruitment(WebsiteForm):
             'message': '',
         }
 
+    def _should_log_authenticate_message(self, record):
+        if record._name == "hr.applicant" and not request.session.uid:
+            return False
+        return super()._should_log_authenticate_message(record)
+
     def insert_record(self, request, model, values, custom, meta=None):
         record_id = super().insert_record(request, model, values, custom, meta=meta)
         model_name = model.sudo().model
