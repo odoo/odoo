@@ -19,4 +19,14 @@ registry
             position: "after",
             decimalPlaces: 2,
         };
+    })
+    .add("ir.model/display_name_for", function (route, args) {
+        const models = args.args[0];
+        const records = this.models["ir.model"].records.filter((record) =>
+            models.includes(record.model)
+        );
+        return records.map((record) => ({
+            model: record.model,
+            display_name: record.name,
+        }));
     });
