@@ -495,12 +495,23 @@ class ChannelMember(models.Model):
         target = self.partner_id or self.guest_id
         if self.channel_id.channel_type in self.channel_id._types_allowing_seen_infos():
             target = self.channel_id
-        persona_fields = {"partner": {"id": True, "name": True}, "guest": {"id": True, "name": True}}
-        self.env["bus.bus"]._sendone(target, "mail.record/insert", {
-            "ChannelMember": self._discuss_channel_member_format(fields={
-                "id": True, "channel": {}, "persona": persona_fields, "seen_message_id": True
-            })[self]
-        })
+        store = Store(
+            "ChannelMember",
+            list(
+                self._discuss_channel_member_format(
+                    fields={
+                        "id": True,
+                        "channel": {},
+                        "persona": {
+                            "partner": {"id": True, "name": True},
+                            "guest": {"id": True, "name": True},
+                        },
+                        "seen_message_id": True,
+                    }
+                ).values()
+            ),
+        )
+        self.env["bus.bus"]._sendone(target, "mail.record/insert", store.get_result())
 
     def _set_new_message_separator(self, message_id, sync=False):
         """
