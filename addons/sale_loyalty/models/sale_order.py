@@ -772,6 +772,7 @@ class SaleOrder(models.Model):
         all_coupons = forced_coupons or (self.coupon_point_ids.coupon_id | self.order_line.coupon_id | self.applied_coupon_ids)
         has_payment_reward = any(line.reward_id.program_id.is_payment_program for line in self.order_line)
         global_discount_reward = self._get_applied_global_discount()
+        active_products_domain = self.env['loyalty.reward']._get_active_products_domain()
         discountable = lazy(lambda: self._discountable_amount(global_discount_reward))
 
         total_is_zero = self.currency_id.is_zero(discountable)
@@ -790,6 +791,10 @@ class SaleOrder(models.Model):
                 # Discounts are not allowed if the total is zero unless there is a payment reward, in which case we allow discounts.
                 # If the total is 0 again without the payment reward it will be removed.
                 if reward.reward_type == 'discount' and total_is_zero and (not has_payment_reward or reward.program_id.is_payment_program):
+                    continue
+                if reward.reward_type == 'product' and not reward.filtered_domain(
+                    active_products_domain
+                ):
                     continue
                 if points >= reward.required_points:
                     result[coupon] |= reward
