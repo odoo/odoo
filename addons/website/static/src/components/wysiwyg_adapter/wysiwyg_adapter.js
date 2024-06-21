@@ -9,7 +9,7 @@ import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 import weUtils from '@web_editor/js/common/utils';
 import { isMediaElement } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
-import { cloneContentEls } from "@website/js/utils";
+import { cloneContentEls, checkAndNotifySEO } from "@website/js/utils";
 
 import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
 import { WebsiteDialog } from '../dialog/dialog';
@@ -1138,43 +1138,14 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                             res_id: id,
                             res_model: model,
                         }).then(
-                            (seo_data) => {
-                                if (record[0].is_published && seo_data) {
-                                    let message;
-                                    if (
-                                        !seo_data.website_meta_title ||
-                                        seo_data.website_meta_title === ""
-                                    ) {
-                                        message = _t("Page title not set.");
-                                    } else if (
-                                        !seo_data.website_meta_description ||
-                                        seo_data.website_meta_description === ""
-                                    ) {
-                                        message = _t("Page description not set.");
-                                    }
-                                    if (
-                                        !seo_data.website_meta_title ||
-                                        seo_data.website_meta_title === "" ||
-                                        !seo_data.website_meta_description ||
-                                        seo_data.website_meta_description === ""
-                                    ) {
-                                        this.notificationService.add(message, {
-                                            type: "warning",
-                                            sticky: false,
-                                            buttons: [
-                                                {
-                                                    name: _t("Optimize SEO"),
-                                                    onClick: () => {
-                                                        this.dialogs.add(OptimizeSEODialog);
-                                                    },
-                                                },
-                                            ],
-                                        });
-                                    }
-                                }
-                            },
-                            (err) => {
-                                throw err;
+                            (seo_data) => checkAndNotifySEO(
+                                seo_data,
+                                this.notificationService,
+                                this.dialogService,
+                                OptimizeSEODialog
+                            ),
+                            (error) => {
+                                throw error;
                             }
                         );
                     },

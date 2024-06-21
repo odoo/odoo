@@ -7,6 +7,7 @@ import { CheckBox } from '@web/core/checkbox/checkbox';
 import { useService, useBus } from '@web/core/utils/hooks';
 import { Component, xml, useState } from "@odoo/owl";
 import { OptimizeSEODialog } from '@website/components/dialog/seo';
+import { checkAndNotifySEO } from "@website/js/utils"
 
 const websiteSystrayRegistry = registry.category('website_systray');
 
@@ -65,43 +66,14 @@ class PublishSystray extends Component {
                         res_id: mainObject.id,
                         res_model: mainObject.model,
                     }).then(
-                        (seo_data) => {
-                            if (seo_data) {
-                                let message;
-                                if (
-                                    !seo_data.website_meta_title ||
-                                    seo_data.website_meta_title === ""
-                                ) {
-                                    message = _t("Page title not set.");
-                                } else if (
-                                    !seo_data.website_meta_description ||
-                                    seo_data.website_meta_description === ""
-                                ) {
-                                    message = _t("Page description not set.");
-                                }
-                                if (
-                                    !seo_data.website_meta_title ||
-                                    seo_data.website_meta_title === "" ||
-                                    !seo_data.website_meta_description ||
-                                    seo_data.website_meta_description === ""
-                                ) {
-                                    this.notificationService.add(message, {
-                                        type: "warning",
-                                        sticky: false,
-                                        buttons: [
-                                            {
-                                                name: _t("Optimize SEO"),
-                                                onClick: () => {
-                                                    this.dialogService.add(OptimizeSEODialog);
-                                                },
-                                            },
-                                        ],
-                                    });
-                                }
-                            }
-                        },
-                        (err) => {
-                            throw err;
+                        (seo_data) => checkAndNotifySEO(
+                            seo_data,
+                            this.notificationService,
+                            this.dialogService,
+                            OptimizeSEODialog
+                        ),
+                        (error) => {
+                            throw error;
                         }
                     );
                 }
