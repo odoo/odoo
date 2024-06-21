@@ -97,9 +97,6 @@ beforeEach(async () => {
             views: [[false, "list"]],
         },
     };
-    serverData.views = {};
-    serverData.views["ir.ui.menu,false,list"] = `<tree></tree>`;
-    serverData.views["ir.ui.menu,false,search"] = `<search></search>`;
     serverData.models = {
         ...getBasicData(),
         "ir.ui.menu": {

@@ -1,12 +1,7 @@
 import { animationFrame } from "@odoo/hoot-mock";
 import { PivotArchParser } from "@web/views/pivot/pivot_arch_parser";
-
 import { OdooPivot } from "@spreadsheet/pivot/odoo_pivot";
-import {
-    getBasicServerData,
-    getBasicPivotArch,
-    getPyEnv,
-} from "@spreadsheet/../tests/helpers/data";
+import { getBasicPivotArch, getPyEnv } from "@spreadsheet/../tests/helpers/data";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { helpers } from "@odoo/o-spreadsheet";
@@ -81,12 +76,11 @@ export async function insertPivotInSpreadsheet(model, pivotId, params) {
  * @returns {Promise<{ model: OdooSpreadsheetModel, env: object, pivotId: string}>}
  */
 export async function createSpreadsheetWithPivot(params = {}) {
-    const serverData = params.serverData || getBasicServerData();
     const model = await createModelWithDataSource({
         mockRPC: params.mockRPC,
         serverData: params.serverData,
     });
-    const arch = params.arch || serverData.views["partner,false,pivot"];
+    const arch = params.arch || getBasicPivotArch();
     const pivotId = "PIVOT#1";
     await insertPivotInSpreadsheet(model, pivotId, { arch });
     const env = model.config.custom.env;

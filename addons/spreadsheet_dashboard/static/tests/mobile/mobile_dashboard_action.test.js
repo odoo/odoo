@@ -1,33 +1,40 @@
-/** @odoo-module */
+import { describe, expect, getFixture, test } from "@odoo/hoot";
+import { dblclick } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
+import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
+import {
+    defineSpreadsheetDashboardModels,
+    getDashboardServerData,
+} from "@spreadsheet_dashboard/../tests/helpers/data";
+import { contains } from "@web/../tests/web_test_helpers";
 
-import { click, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
-import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/legacy/utils/dashboard_action";
-import { getDashboardServerData } from "@spreadsheet_dashboard/../tests/legacy/utils/data";
+describe.current.tags("mobile");
+defineSpreadsheetModels();
+defineSpreadsheetDashboardModels();
 
-QUnit.module("spreadsheet_dashboard > Mobile Dashboard action");
-
-QUnit.test("is empty with no figures", async (assert) => {
+test("is empty with no figures", async () => {
     await createSpreadsheetDashboard();
     const fixture = getFixture();
-    assert.containsOnce(fixture, ".o_mobile_dashboard");
+    expect(".o_mobile_dashboard").toHaveCount(1);
     const content = fixture.querySelector(".o_mobile_dashboard");
-    assert.deepEqual(content.innerText.split("\n"), [
+    expect(content.innerText.split("\n")).toEqual([
         "Dashboard CRM 1",
         "Only chart figures are displayed in small screens but this dashboard doesn't contain any",
     ]);
 });
 
-QUnit.test("with no available dashboard", async (assert) => {
+test("with no available dashboard", async () => {
     const serverData = getDashboardServerData();
     serverData.models["spreadsheet.dashboard"].records = [];
     serverData.models["spreadsheet.dashboard.group"].records = [];
     await createSpreadsheetDashboard({ serverData });
     const fixture = getFixture();
     const content = fixture.querySelector(".o_mobile_dashboard");
-    assert.deepEqual(content.innerText, "No available dashboard");
+    expect(content.innerText).toBe("No available dashboard");
 });
 
-QUnit.test("displays figures in first sheet", async (assert) => {
+test("displays figures in first sheet", async () => {
     const figure = {
         tag: "chart",
         height: 500,
@@ -72,12 +79,11 @@ QUnit.test("displays figures in first sheet", async (assert) => {
             dashboard_group_id: 1,
         },
     ];
-    const fixture = getFixture();
     await createSpreadsheetDashboard({ serverData });
-    assert.containsOnce(fixture, ".o-chart-container");
+    expect(".o-chart-container").toHaveCount(1);
 });
 
-QUnit.test("double clicking on a figure doesn't open the side panel", async (assert) => {
+test("double clicking on a figure doesn't open the side panel", async () => {
     const figure = {
         tag: "chart",
         height: 500,
@@ -118,47 +124,36 @@ QUnit.test("double clicking on a figure doesn't open the side panel", async (ass
             dashboard_group_id: 1,
         },
     ];
-    const fixture = getFixture();
     await createSpreadsheetDashboard({ serverData });
-    await triggerEvent(fixture, ".o-chart-container", "focus");
-    await triggerEvent(fixture, ".o-chart-container", "dblclick");
-    assert.containsOnce(fixture, ".o-chart-container");
-    assert.containsNone(fixture, ".o-sidePanel");
+    await contains(".o-chart-container").focus();
+    dblclick(".o-chart-container");
+    await animationFrame();
+    expect(".o-chart-container").toHaveCount(1);
+    expect(".o-sidePanel").toHaveCount(0);
 });
 
-QUnit.test("can switch dashboard", async (assert) => {
+test("can switch dashboard", async () => {
     await createSpreadsheetDashboard();
     const fixture = getFixture();
-    assert.strictEqual(
-        fixture.querySelector(".o_search_panel_summary").innerText,
-        "Dashboard CRM 1"
-    );
-    await click(fixture, ".o_search_panel_current_selection");
+    expect(fixture.querySelector(".o_search_panel_summary").innerText).toBe("Dashboard CRM 1");
+    await contains(".o_search_panel_current_selection").click();
     const dashboardElements = [...document.querySelectorAll("section header.list-group-item")];
-    assert.strictEqual(dashboardElements[0].classList.contains("active"), true);
-    assert.deepEqual(
-        dashboardElements.map((el) => el.innerText),
-        ["Dashboard CRM 1", "Dashboard CRM 2", "Dashboard Accounting 1"]
-    );
-    await click(dashboardElements[1]);
-    assert.strictEqual(
-        fixture.querySelector(".o_search_panel_summary").innerText,
-        "Dashboard CRM 2"
-    );
+    expect(dashboardElements[0].classList.contains("active")).toBe(true);
+    expect(dashboardElements.map((el) => el.innerText)).toEqual([
+        "Dashboard CRM 1",
+        "Dashboard CRM 2",
+        "Dashboard Accounting 1",
+    ]);
+    await contains(dashboardElements[1]).click();
+    expect(fixture.querySelector(".o_search_panel_summary").innerText).toBe("Dashboard CRM 2");
 });
 
-QUnit.test("can go back from dashboard selection", async (assert) => {
+test("can go back from dashboard selection", async () => {
     await createSpreadsheetDashboard();
     const fixture = getFixture();
-    assert.containsOnce(fixture, ".o_mobile_dashboard");
-    assert.strictEqual(
-        fixture.querySelector(".o_search_panel_summary").innerText,
-        "Dashboard CRM 1"
-    );
-    await click(fixture, ".o_search_panel_current_selection");
-    await click(document, ".o_mobile_search_button");
-    assert.strictEqual(
-        fixture.querySelector(".o_search_panel_summary").innerText,
-        "Dashboard CRM 1"
-    );
+    expect(".o_mobile_dashboard").toHaveCount(1);
+    expect(fixture.querySelector(".o_search_panel_summary").innerText).toBe("Dashboard CRM 1");
+    await contains(".o_search_panel_current_selection").click();
+    await contains(document.querySelector(".o_mobile_search_button")).click();
+    expect(fixture.querySelector(".o_search_panel_summary").innerText).toBe("Dashboard CRM 1");
 });

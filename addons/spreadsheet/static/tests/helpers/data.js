@@ -12,7 +12,6 @@ import { mailModels } from "@mail/../tests/mail_test_helpers";
 /**
  * @typedef {object} ServerData
  * @property {object} models
- * @property {object} views
  */
 
 /**
@@ -73,13 +72,6 @@ export function getBasicGraphArch() {
 export function getBasicServerData() {
     return {
         models: getBasicData(),
-        views: {
-            "partner,false,list": getBasicListArch(),
-            "partner,false,pivot": getBasicPivotArch(),
-            "partner,false,graph": getBasicGraphArch(),
-            "partner,false,form": /* xml */ `<Form/>`,
-            "partner,false,search": /* xml */ `<search/>`,
-        },
     };
 }
 
@@ -196,6 +188,14 @@ export class DocumentsDocument extends models.Model {
 }
 
 export class IrModel extends webModels.IrModel {
+    display_name_for(models) {
+        const records = this.env["ir.model"].search_read([["model", "in", models]]);
+        return records.map((record) => ({
+            model: record.model,
+            display_name: record.name,
+        }));
+    }
+
     _records = [
         {
             id: 37,
@@ -504,6 +504,15 @@ export class Partner extends models.Model {
             pognon: 1000,
         },
     ];
+
+    // TODO: check which views are actually needed in the tests
+    _views = {
+        list: getBasicListArch(),
+        pivot: getBasicPivotArch(),
+        graph: getBasicGraphArch(),
+        form: /* xml */ `<Form/>`,
+        search: /* xml */ `<search/>`,
+    };
 }
 
 export class Product extends models.Model {
@@ -547,18 +556,18 @@ export class Tag extends models.Model {
 
 export function getBasicData() {
     return {
-        "documents.document": { records: [] },
-        "ir.model": { records: [] },
-        "documents.folder": { records: [] },
+        "documents.document": {},
+        "ir.model": {},
+        "documents.folder": {},
         "documents.tag": {},
-        "documents.workflow.rule": { records: [] },
-        "documents.share": { records: [] },
-        "spreadsheet.template": { records: [] },
-        "res.currency": { records: [] },
-        "res.users": { records: [] },
-        partner: { records: [] },
-        product: { records: [] },
-        tag: { records: [] },
+        "documents.workflow.rule": {},
+        "documents.share": {},
+        "spreadsheet.template": {},
+        "res.currency": {},
+        "res.users": {},
+        partner: {},
+        product: {},
+        tag: {},
     };
 }
 
@@ -590,8 +599,8 @@ export const SpreadsheetModels = {
  */
 export function addRecordsFromServerData(serverData) {
     for (const modelName of Object.keys(serverData.models)) {
-        const records = serverData.models[modelName].records || [];
-        if (!records.length) {
+        const records = serverData.models[modelName].records;
+        if (!records) {
             continue;
         }
         const PyModel = Object.values(SpreadsheetModels).find((model) => model._name === modelName);
