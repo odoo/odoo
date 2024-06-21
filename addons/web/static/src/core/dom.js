@@ -46,13 +46,10 @@ var dom = {
             fromEl.forEach((el) => {
                 // Note: Why we targeted body in closest, we can make this more
                 // faster & clear by targeting parentNode?
-                const closestBody = el.closest("body");
-                if (closestBody) {
-                    const children = [...closestBody.querySelectorAll(selector)].filter((e) =>
-                        el.contains(e)
-                    );
-                    resultEls.push(...children);
-                }
+                const children = Array.from(el.closest("body")?.querySelectorAll(selector)).filter(
+                    (e) => el.contains(e)
+                );
+                resultEls.push(...children);
             });
         } else {
             for (const el of fromEl) {

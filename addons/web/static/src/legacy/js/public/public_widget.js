@@ -500,7 +500,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @private
      */
     _undelegateEvents: function () {
-        this.el.off(".widget_events");
+        this.el?.off(".widget_events");
     },
     /**
      * Render the widget.  This is a private method, and should really never be

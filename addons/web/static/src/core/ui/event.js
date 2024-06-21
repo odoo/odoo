@@ -4,8 +4,9 @@ const delegateEvent = function (ev) {
         while (!target?.matches(this.selector) && target !== this.element) {
             target = target.parentElement;
         }
-        if (target?.matches(this.selector)) {
+        if (target && target.matches(this.selector)) {
             // Create a new event and set its currentTarget
+            // const newEvent = new ev.constructor(ev.type, ev);
             Object.defineProperty(ev, "currentTarget", {
                 get: () => target,
                 configurable: true,
@@ -15,7 +16,13 @@ const delegateEvent = function (ev) {
     } else {
         // Selector is not provided, directly use this.element as the context
         this.handler = this.selector;
-        this.handler.call(this.element, ev);
+        // Create a new event and set its currentTarget
+        const newEvent = new ev.constructor(ev.type, ev);
+        Object.defineProperty(newEvent, "currentTarget", {
+            get: () => target,
+            configurable: true,
+        });
+        this.handler.call(this.element, newEvent);
     }
 };
 
