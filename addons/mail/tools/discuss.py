@@ -84,15 +84,15 @@ class Store:
             return self
         ids = ids_by_model[model_name]
         # handle singleton model: update single record in place
-        if len(ids) == 0:
+        if not ids:
             assert isinstance(values, dict), f"expected dict for singleton {model_name}: {values}"
-            if not model_name in self.data:
+            if model_name not in self.data:
                 self.data[model_name] = {}
             self.data[model_name].update(values)
             return self
         # handle model with ids: add or update existing records based on ids
-        if not model_name in self.data:
-            self.data[model_name] = []
+        if model_name not in self.data:
+            self.data[model_name] = {}
         if isinstance(values, dict):
             values = [values]
         assert isinstance(values, list), f"expected list for {model_name}: {values}"
@@ -100,13 +100,19 @@ class Store:
             assert isinstance(vals, dict), f"expected dict for {model_name}: {vals}"
             for i in ids:
                 assert vals.get(i), f"missing id {i} in {model_name}: {vals}"
-            match = filter(lambda record: all(record[i] == vals[i] for i in ids), self.data[model_name])
-            if record := next(match, None):
+            index = tuple(vals[i] for i in ids)
+            if record := self.data[model_name].get(index):
                 record.update(vals)
             else:
-                self.data[model_name].append(vals)
+                self.data[model_name][index] = vals
         return self
 
     def get_result(self):
         """Gets resulting data built from adding all data together."""
-        return self.data
+        res = {}
+        for model_name, records in self.data.items():
+            if not ids_by_model[model_name]:  # singleton
+                res[model_name] = records
+            else:
+                res[model_name] = list(records.values())
+        return res
