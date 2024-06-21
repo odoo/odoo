@@ -3,31 +3,57 @@
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { attachComponent } from "@web/legacy/utils";
+import { SelectMenu } from "@web/core/select_menu/select_menu";
 
 publicWidget.registry.websiteEventTrackProposalFormTags = publicWidget.Widget.extend({
     selector: '.o_website_event_track_proposal_form_tags',
 
     start: function () {
         var self = this;
+        this.selectMenus = {};
         return this._super.apply(this, arguments).then(function () {
             self._bindSelect2Dropdown();
         });
     },
 
     /**
-     * Handler for select2 on tags added to the proposal track form.
+     * Handler for Select Menu on tags added to the proposal track form.
      *
      * @private
      */
-    _bindSelect2Dropdown: function () {
-        this.$('.o_wetrack_select2_tags').select2(this._select2Wrapper(_t('Select categories'),
-            function () {
-                return rpc("/event/track_tag/search_read", {
-                    fields: ['name', 'category_id'],
-                    domain: [],
-                });
-            })
+    _bindSelect2Dropdown: async function () {
+        const choices = await rpc("/event/track_tag/search_read", {
+            fields: ["name", "category_id"],
+            domain: [],
+        });
+
+        choices.forEach((choice) => {
+            choice.value = `${choice.category_id[1]} : ${choice.name}`;
+            choice.label = `${choice.category_id[1]} : ${choice.name}`;
+        });
+        const trackProposalEl = this.el.querySelector(".o_wetrack_select2_tags");
+        const name = trackProposalEl.getAttribute("name");
+
+        this.selectMenus[name] = await attachComponent(
+            this,
+            trackProposalEl.parentNode,
+            SelectMenu,
+            {
+                choices: choices,
+                required: true,
+                multiSelect: true,
+                onSelect: (value) => {
+                    const selectMenuInst = this.selectMenus[name];
+                    selectMenuInst?.update({
+                        value: value,
+                    });
+                },
+                value: "",
+            }
         );
+
+        trackProposalEl.remove();
     },
 
     /**
