@@ -9,6 +9,7 @@ import { rpc } from "@web/core/network/rpc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+import { pyToJsLocale } from "@web/core/l10n/utils";
 import { user } from "@web/core/user";
 import { omit } from "@web/core/utils/objects";
 import { url } from "@web/core/utils/urls";
@@ -210,7 +211,7 @@ export class Message extends Record {
 
     get dateSimple() {
         return this.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
-            locale: user.lang?.replace("_", "-"),
+            locale: pyToJsLocale(user.lang),
         });
     }
 
@@ -349,7 +350,7 @@ export class Message extends Record {
 
     get scheduledDateSimple() {
         return this.scheduledDatetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
-            locale: user.lang?.replace("_", "-"),
+            locale: pyToJsLocale(user.lang),
         });
     }
 
