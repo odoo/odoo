@@ -251,6 +251,9 @@ class WebsiteForm(http.Controller):
 
         return data
 
+    def _should_log_authenticate_message(self, record):
+        return True
+
     def insert_record(self, request, model, values, custom, meta=None):
         model_name = model.sudo().model
         if model_name == 'mail.mail':
@@ -273,7 +276,7 @@ class WebsiteForm(http.Controller):
             else:
                 warning_icon = "/!\\ "
                 authenticate_message = _("EXTERNAL SUBMISSION - Customer not verified")
-            if authenticate_message:
+            if authenticate_message and self._should_log_authenticate_message(record):
                 record._message_log(
                     body=Markup('<div class="alert alert-info" role="alert">{warning_icon}{message}</div>').format(warning_icon=warning_icon, message=authenticate_message),
                 )
