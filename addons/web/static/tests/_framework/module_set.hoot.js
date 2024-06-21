@@ -455,14 +455,14 @@ class ModuleSetLoader extends loader.constructor {
      */
     startModule(name) {
         const { filter } = this.moduleSet;
-        if (!filter || filter(name)) {
+        if (!filter || filter(name) || R_DEFAULT_MODULE.test(name)) {
             super.startModule(name);
         }
     }
 }
 
 const CSRF_TOKEN = odoo.csrf_token;
-const DEFAULT_ADDONS = ["base", "odoo", "web"];
+const DEFAULT_ADDONS = ["base", "web"];
 const MODULE_MOCKS_BY_NAME = new Map([
     // Fixed modules
     ["@web/core/template_inheritance", makeFixedFactory],
@@ -477,6 +477,7 @@ const MODULE_MOCKS_BY_REGEX = new Map([
     // Fixed modules
     [/\.bundle\.xml$/, makeFixedFactory],
 ]);
+const R_DEFAULT_MODULE = /^@odoo\/(owl|hoot)/;
 const R_PATH_ADDON = /^[@/]?(\w+)/;
 const WHITE_LISTED_KEYS = [
     "ace", // Ace editor
