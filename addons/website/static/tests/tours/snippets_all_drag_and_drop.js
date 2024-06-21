@@ -52,9 +52,12 @@ for (const snippet of snippetsNames) {
         content: `Remove the ${snippet} snippet`, // Avoid bad perf if many snippets
         trigger: "we-button.oe_snippet_remove:last",
         run: "click",
-    }, {
+    }, 
+    {
+        trigger: "body[test-dd-snippet-removed]",
+    },
+    {
         content: `click on 'BLOCKS' tab (${snippet})`,
-        extra_trigger: 'body[test-dd-snippet-removed]',
         trigger: ".o_we_add_snippet_btn",
         run: function (actions) {
             document.body.removeAttribute("test-dd-snippet-removed");

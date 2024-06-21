@@ -9,9 +9,12 @@ registry.category("web_tour.tours").add('project_update_tour', {
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_project_kanban",
+},
+{
     trigger: '.o-kanban-button-new',
-    extra_trigger: '.o_project_kanban',
     width: 200,
     run: "click",
 }, {
@@ -27,37 +30,58 @@ registry.category("web_tour.tours").add('project_update_tour', {
     isActive: ["auto"],
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_kanban_group",
+},
+{
     trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group input",
-    extra_trigger: '.o_kanban_group',
     run: "edit Done",
 }, {
     isActive: ["auto"],
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_kanban_group:eq(0)",
+},
+{
     trigger: '.o-kanban-button-new',
-    extra_trigger: '.o_kanban_group:eq(0)',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_kanban_project_tasks",
+},
+{
     trigger: '.o_kanban_quick_create div.o_field_char[name=display_name] input',
-    extra_trigger: '.o_kanban_project_tasks',
     run: "edit New task",
-}, {
+}, 
+{
+    trigger: ".o_kanban_project_tasks",
+},
+{
     trigger: '.o_kanban_quick_create .o_kanban_add',
-    extra_trigger: '.o_kanban_project_tasks',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_kanban_group:eq(0)",
+},
+{
     trigger: '.o-kanban-button-new',
-    extra_trigger: '.o_kanban_group:eq(0)',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_kanban_project_tasks",
+},
+{
     trigger: '.o_kanban_quick_create div.o_field_char[name=display_name] input',
-    extra_trigger: '.o_kanban_project_tasks',
     run: "edit Second task",
-}, {
+}, 
+{
+    trigger: ".o_kanban_project_tasks",
+},
+{
     trigger: '.o_kanban_quick_create .o_kanban_add',
-    extra_trigger: '.o_kanban_project_tasks',
     run: "click",
 }, {
     trigger: '.o_kanban_group:nth-child(2) .o_kanban_header .o_kanban_config .dropdown-toggle',
@@ -71,9 +95,12 @@ registry.category("web_tour.tours").add('project_update_tour', {
 }, {
     trigger: ".modal-footer button",
     run: "click",
-}, {
+}, 
+{
+    trigger: '.o_kanban_project_tasks',
+},
+{
     trigger: ".o_kanban_record .oe_kanban_content",
-    extra_trigger: '.o_kanban_project_tasks',
     run: "drag_and_drop(.o_kanban_group:eq(1))",
 }, {
     trigger: ".o_control_panel_navigation button i.fa-sliders",
@@ -153,10 +180,13 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: '.o_switch_view.o_list',
     content: 'Open List View of Project Updates',
     run: "click",
-}, {
+}, 
+{
+    trigger: '.o_list_view',
+},
+{
     trigger: '.o_back_button',
     content: 'Go back to the kanban view the project',
-    extra_trigger: '.o_list_view',
     run: "click",
 },
 ]});

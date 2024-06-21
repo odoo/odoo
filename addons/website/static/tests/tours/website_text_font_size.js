@@ -80,11 +80,14 @@ function getFontSizeTestSteps(fontSizeClass) {
             content: `Check that the setting of ${fontSizeClass} has been updated`,
             trigger: `we-input[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"]`
                 + ` input:value("${classNameInfo.get(fontSizeClass).end}")`,
-        }, {
+        }, 
+        {
+            trigger: `body:not(:has(.o_we_ui_loading))`,
+        },
+        {
             content: `Close the collapse to hide the font size of ${fontSizeClass}`,
             trigger: `we-collapse:has(we-input[data-variable=` +
                 `"${classNameInfo.get(fontSizeClass).scssVariableName}"]) we-toggler`,
-            extra_trigger: `body:not(:has(.o_we_ui_loading))`,
             run: "click",
         },
         checkComputedFontSize(fontSizeClass, "end"),

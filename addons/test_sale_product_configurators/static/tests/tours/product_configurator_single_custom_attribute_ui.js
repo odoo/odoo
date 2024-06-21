@@ -11,9 +11,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_single_custom
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_sale_order",
+},
+{
     trigger: '.o_list_button_add',
-    extra_trigger: '.o_sale_order',
     run: "click",
 }, {
     trigger: 'a:contains("Add a product")',
@@ -29,9 +32,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_single_custom
 {
     trigger: 'button:contains(Confirm)',
     run: "click",
-}, {
+}, 
+{
+    trigger: 'div[name="order_line"]',
+},
+{
     trigger: 'td.o_data_cell:contains("single product attribute value: great single custom value")',
-    extra_trigger: 'div[name="order_line"]',
 }, {
     trigger: 'div[name="product_template_id"]',
     run: "click",

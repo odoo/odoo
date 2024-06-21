@@ -10,14 +10,20 @@ wTourUtils.registerWebsitePreviewTour("shop_editor", {
     content: "Click on pricelist dropdown",
     trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
     run: "click",
-}, {
+}, 
+{
+    trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown][aria-expanded=true]",
+},
+{
     trigger: ":iframe input[name=search]",
-    extra_trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown][aria-expanded=true]",
     content: "Click somewhere else in the shop.",
     run: "click",
-}, {
+}, 
+{
+    trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown][aria-expanded=false]",
+},
+{
     trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
-    extra_trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown][aria-expanded=false]",
     content: "Click on the pricelist again.",
     run: "click",
 }, {

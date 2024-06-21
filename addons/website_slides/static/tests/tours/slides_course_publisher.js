@@ -64,10 +64,13 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
     content: 'eLearning: add a bioutifoul URL',
     trigger: 'input.o_we_url_input',
     run: "edit https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg/800px-ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg",
-}, {
+}, 
+{
+    trigger: ".o_we_url_success",
+},
+{
     content: 'eLearning: click "Add URL" really adding image',
     trigger: '.o_upload_media_url_button',
-    extra_trigger: '.o_we_url_success',
     run: "click",
 }, {
     content: 'eLearning: is the Corgi set ?',
@@ -77,10 +80,13 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
     content: 'eLearning: save course edition',
     trigger: 'button[data-action="save"]',
     run: "click",
-}, {
+},
+{
+    trigger: ":iframe body:not(.editor_enable)", // wait for editor to close
+},
+{
     // check membership
     content: 'eLearning: course create with current member',
-    extra_trigger: ':iframe body:not(.editor_enable)',  // wait for editor to close
     trigger: ':iframe .o_wslides_js_course_join:contains("You\'re enrolled")',
 }
 ].concat(

@@ -18,9 +18,12 @@ registry.category("web_tour.tours").add('website_sale_stock_message_after_close_
         content: "Add to cart",
         trigger: '#add_to_cart',
         run: "click",
-    }, {
+    }, 
+    {
+        trigger: ".oe_advanced_configurator_modal",
+    },
+    {
         content: "Continue shoppping",
-        extra_trigger: '.oe_advanced_configurator_modal',
         trigger: 'button span:contains(Continue Shopping)',
         run: 'click'
     }, {
