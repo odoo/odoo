@@ -13,4 +13,4 @@ class ProductCombo(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'name', 'combo_line_ids', 'base_price']
+        return ['id', 'name', 'combo_item_ids', 'base_price']

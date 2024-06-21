@@ -3,9 +3,9 @@
 from odoo import fields, models
 
 
-class ProductComboLine(models.Model):
-    _name = 'product.combo.line'
-    _description = "Product Combo Line"
+class ProductComboItem(models.Model):
+    _name = 'product.combo.item'
+    _description = "Product Combo Item"
 
     combo_id = fields.Many2one(comodel_name='product.combo')
     product_id = fields.Many2one(string="Product", comodel_name='product.product', required=True)

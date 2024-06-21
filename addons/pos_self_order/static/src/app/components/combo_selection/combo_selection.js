@@ -12,10 +12,10 @@ export class ComboSelection extends Component {
     }
 
     productClicked(line) {
-        // Keep track of the current combo line id.
+        // Keep track of the current combo item id.
         // It servers as additional info for each line so that when calculating prices,
-        // no need to look for the specific combo line the product belongs to.
-        this.env.currentComboLineId.value = line.id;
+        // no need to look for the specific combo item the product belongs to.
+        this.env.currentComboItemId.value = line.id;
         const productSelected = line.product_id;
         if (!productSelected.self_order_available) {
             return;
