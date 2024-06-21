@@ -18,8 +18,8 @@
                 'spreadsheet_account/static/src/**/*.js'
             ),
         ],
-        'web.qunit_suite_tests': [
-            'spreadsheet_account/static/tests/**/*.js',
+        'web.assets_unit_tests': [
+            'spreadsheet_account/static/tests/**/*',
         ],
     }
 }

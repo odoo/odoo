@@ -1,133 +1,122 @@
-/** @odoo-module */
-
-import { selectCell, setCellContent } from "@spreadsheet/../tests/legacy/utils/commands";
+import { mockService } from "@web/../tests/web_test_helpers";
+import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
+import { describe, expect, test } from "@odoo/hoot";
+import { selectCell, setCellContent } from "@spreadsheet/../tests/helpers/commands";
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { getAccountingData } from "@spreadsheet_account/../tests/legacy/accounting_test_data";
-import { createModelWithDataSource } from "@spreadsheet/../tests/legacy/utils/model";
-import { registry } from "@web/core/registry";
+import {
+    defineSpreadsheetAccountModels,
+    getAccountingData,
+} from "@spreadsheet_account/../tests/accounting_test_data";
+import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
-import { doMenuAction } from "@spreadsheet/../tests/legacy/utils/ui";
+import { doMenuAction } from "@spreadsheet/../tests/helpers/ui";
+
+describe.current.tags("headless");
+defineSpreadsheetModels();
+defineSpreadsheetAccountModels();
 
 const { cellMenuRegistry } = spreadsheet.registries;
 
-let serverData;
+const serverData = getAccountingData();
 
-function beforeEach() {
-    serverData = getAccountingData();
-}
+test("Create drill down domain", async () => {
+    const drillDownAction = {
+        type: "ir.actions.act_window",
+        res_model: "account.move.line",
+        view_mode: "list",
+        views: [[false, "list"]],
+        target: "current",
+        domain: [["account_id", "in", [1, 2]]],
+        name: "my awesome action",
+    };
+    const fakeActionService = {
+        doAction: async (action, options) => {
+            expect.step("drill down action");
+            expect(action).toEqual(drillDownAction);
+            expect(options).toBe(undefined);
+            return true;
+        },
+    };
+    mockService("action", fakeActionService);
 
-QUnit.module("spreadsheet_account > Accounting Drill down", { beforeEach }, () => {
-    QUnit.test("Create drill down domain", async (assert) => {
-        const drillDownAction = {
-            type: "ir.actions.act_window",
-            res_model: "account.move.line",
-            view_mode: "list",
-            views: [[false, "list"]],
-            target: "current",
-            domain: [["account_id", "in", [1, 2]]],
-            name: "my awesome action",
-        };
-        const fakeActionService = {
-            name: "action",
-            start() {
-                return {
-                    async doAction(action, options) {
-                        assert.step("drill down action");
-                        assert.deepEqual(action, drillDownAction);
-                        assert.equal(options, undefined);
-                        return true;
+    const model = await createModelWithDataSource({
+        serverData,
+        mockRPC: async function (route, args) {
+            if (args.method === "spreadsheet_move_line_action") {
+                expect(args.args).toEqual([
+                    {
+                        codes: ["100"],
+                        company_id: null,
+                        include_unposted: false,
+                        date_range: {
+                            range_type: "year",
+                            year: 2020,
+                        },
                     },
-                };
-            },
-        };
-        registry.category("services").add("action", fakeActionService, { force: true });
-
-        const model = await createModelWithDataSource({
-            serverData,
-            mockRPC: async function (route, args) {
-                if (args.method === "spreadsheet_move_line_action") {
-                    assert.deepEqual(args.args, [
-                        {
-                            codes: ["100"],
-                            company_id: null,
-                            include_unposted: false,
-                            date_range: {
-                                range_type: "year",
-                                year: 2020,
-                            },
-                        },
-                    ]);
-                    return drillDownAction;
-                }
-            },
-        });
-        const env = model.config.custom.env;
-        env.model = model;
-        setCellContent(model, "A1", `=ODOO.BALANCE("100", 2020)`);
-        setCellContent(model, "A2", `=ODOO.BALANCE("100", 0)`);
-        setCellContent(model, "A3", `=ODOO.BALANCE("100", 2020, , , FALSE)`);
-        setCellContent(model, "A4", `=ODOO.BALANCE("100", 2020, , , )`);
-        // Does not affect non formula cells
-        setCellContent(model, "A5", `5`);
-        await waitForDataLoaded(model);
-        selectCell(model, "A1");
-        const root = cellMenuRegistry
-            .getMenuItems()
-            .find((item) => item.id === "move_lines_see_records");
-        assert.equal(root.isVisible(env), true);
-        await root.execute(env);
-        assert.verifySteps(["drill down action"]);
-        selectCell(model, "A2");
-        assert.equal(root.isVisible(env), false);
-        selectCell(model, "A3");
-        assert.equal(root.isVisible(env), true);
-        await root.execute(env);
-        assert.verifySteps(["drill down action"]);
-        selectCell(model, "A4");
-        assert.equal(root.isVisible(env), true);
-        await root.execute(env);
-        assert.verifySteps(["drill down action"]);
-        selectCell(model, "A5");
-        assert.equal(root.isVisible(env), false);
+                ]);
+                return drillDownAction;
+            }
+        },
     });
+    const env = model.config.custom.env;
+    env.model = model;
+    setCellContent(model, "A1", `=ODOO.BALANCE("100", 2020)`);
+    setCellContent(model, "A2", `=ODOO.BALANCE("100", 0)`);
+    setCellContent(model, "A3", `=ODOO.BALANCE("100", 2020, , , FALSE)`);
+    setCellContent(model, "A4", `=ODOO.BALANCE("100", 2020, , , )`);
+    // Does not affect non formula cells
+    setCellContent(model, "A5", `5`);
+    await waitForDataLoaded(model);
+    selectCell(model, "A1");
+    const root = cellMenuRegistry
+        .getMenuItems()
+        .find((item) => item.id === "move_lines_see_records");
+    expect(root.isVisible(env)).toBe(true);
+    await root.execute(env);
+    expect(["drill down action"]).toVerifySteps();
+    selectCell(model, "A2");
+    expect(root.isVisible(env)).toBe(false);
+    selectCell(model, "A3");
+    expect(root.isVisible(env)).toBe(true);
+    await root.execute(env);
+    expect(["drill down action"]).toVerifySteps();
+    selectCell(model, "A4");
+    expect(root.isVisible(env)).toBe(true);
+    await root.execute(env);
+    expect(["drill down action"]).toVerifySteps();
+    selectCell(model, "A5");
+    expect(root.isVisible(env)).toBe(false);
+});
 
-    QUnit.test("Create drill down domain when month date is a reference", async (assert) => {
-        const actionService = {
-            start() {
-                return {
-                    doAction(args) {},
-                };
-            },
-        };
-        registry.category("services").add("action", actionService, { force: true });
-        const model = await createModelWithDataSource({
-            serverData,
-            mockRPC: async function (route, args) {
-                if (args.method === "spreadsheet_move_line_action") {
-                    assert.step("spreadsheet_move_line_action");
-                    assert.deepEqual(args.args, [
-                        {
-                            codes: ["100"],
-                            company_id: null,
-                            include_unposted: false,
-                            date_range: {
-                                month: 2,
-                                range_type: "month",
-                                year: 2024,
-                            },
+test("Create drill down domain when month date is a reference", async () => {
+    mockService("action", { doAction: () => {} });
+    const model = await createModelWithDataSource({
+        serverData,
+        mockRPC: async function (route, args) {
+            if (args.method === "spreadsheet_move_line_action") {
+                expect.step("spreadsheet_move_line_action");
+                expect(args.args).toEqual([
+                    {
+                        codes: ["100"],
+                        company_id: null,
+                        include_unposted: false,
+                        date_range: {
+                            month: 2,
+                            range_type: "month",
+                            year: 2024,
                         },
-                    ]);
-                    return {};
-                }
-            },
-        });
-        const env = model.config.custom.env;
-        env.model = model;
-        setCellContent(model, "A1", "02/2024");
-        setCellContent(model, "A2", '=ODOO.BALANCE("100", A1)');
-        await waitForDataLoaded(model);
-        selectCell(model, "A2");
-        await doMenuAction(cellMenuRegistry, ["move_lines_see_records"], env);
-        assert.verifySteps(["spreadsheet_move_line_action"]);
+                    },
+                ]);
+                return {};
+            }
+        },
     });
+    const env = model.config.custom.env;
+    env.model = model;
+    setCellContent(model, "A1", "02/2024");
+    setCellContent(model, "A2", '=ODOO.BALANCE("100", A1)');
+    await waitForDataLoaded(model);
+    selectCell(model, "A2");
+    await doMenuAction(cellMenuRegistry, ["move_lines_see_records"], env);
+    expect(["spreadsheet_move_line_action"]).toVerifySteps();
 });
