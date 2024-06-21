@@ -890,6 +890,14 @@ export class PosStore extends Reactive {
             const { orderToCreate, orderToUpdate, paidOrdersNotSent } = this.getPendingOrder();
             const orders = [...orderToCreate, ...orderToUpdate, ...paidOrdersNotSent];
 
+            for (const order of orders) {
+                if (typeof order.id === "string" || order.state === "paid") {
+                    order.date_order = DateTime.fromFormat(order.date_order, "yyyy-MM-dd HH:mm:ss")
+                        .toUTC()
+                        .toFormat("yyyy-MM-dd HH:mm:ss");
+                }
+            }
+
             this.preSyncAllOrders(orders);
             const context = this.getSyncAllOrdersContext(orders);
 

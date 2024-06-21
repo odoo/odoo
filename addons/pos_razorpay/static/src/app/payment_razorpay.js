@@ -3,6 +3,7 @@ import { PaymentInterface } from "@point_of_sale/app/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const REQUEST_TIMEOUT = 10000;
+const { DateTime } = luxon;
 
 export class PaymentRazorpay extends PaymentInterface {
     setup() {
@@ -161,7 +162,9 @@ export class PaymentRazorpay extends PaymentInterface {
                 paymentLine.razorpay_reference_no = response?.externalRefNumber;
                 paymentLine.razorpay_reverse_ref_no = response?.reverseReferenceNumber;
                 paymentLine.transactionId = response?.txnId;
-                paymentLine.payment_date = response?.createdTime;
+                paymentLine.payment_date = DateTime.fromMillis(response?.createdTime, {
+                    zone: "utc",
+                }).toFormat("yyyy-MM-dd HH:mm:ss");
                 this._removePaymentHandler(["p2pRequestId", "referenceId"]);
                 return resolve(response);
             } else {
