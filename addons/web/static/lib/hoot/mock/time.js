@@ -45,7 +45,7 @@ const animationToId = (id) => ID_PREFIX.animation + String(id);
 
 const getDateParams = () => [
     ...dateParams.slice(0, -1),
-    dateParams.at(-1) + ($now() - dateTimeStamp) + timeOffset,
+    dateParams.at(-1) + getTimeStampDiff() + timeOffset,
 ];
 
 const getNextTimerValues = () => {
@@ -74,6 +74,8 @@ const getOffsetFromTimeZone = (timeZone, baseDate) => {
     const tzDate = new Date(baseDate.toLocaleString("en-US", { timeZone }));
     return (utcDate.getTime() - tzDate.getTime()) / 60_000; // in minutes
 };
+
+const getTimeStampDiff = () => (freezed ? 0 : $now() - dateTimeStamp);
 
 /**
  * @param {string} id
@@ -145,7 +147,9 @@ const timers = new Map();
 let allowTimers = true;
 let dateParams = DEFAULT_DATE;
 let dateTimeStamp = $now();
+let freezed = false;
 let frameDelay = 1000 / 60;
+let nextDummyId = 1;
 /** @type {string | number} */
 let timeZone = DEFAULT_TIMEZONE;
 let timeOffset = 0;
@@ -232,6 +236,7 @@ export function cleanupTime() {
     cancelAllTimers();
 
     setDateParams(DEFAULT_DATE);
+    freezed = false;
     timeZone = DEFAULT_TIMEZONE;
 }
 
@@ -245,6 +250,13 @@ export function cleanupTime() {
  */
 export async function delay(duration) {
     await new Promise((resolve) => setTimeout(resolve, duration));
+}
+
+/**
+ * @param {boolean} setFreeze
+ */
+export function freezeTime(setFreeze) {
+    freezed = setFreeze ?? !freezed;
 }
 
 /**
@@ -281,19 +293,25 @@ export function mockDate(date, tz) {
 
 /** @type {typeof cancelAnimationFrame} */
 export function mockedCancelAnimationFrame(handle) {
-    cancelAnimationFrame(handle);
+    if (!freezed) {
+        cancelAnimationFrame(handle);
+    }
     timers.delete(animationToId(handle));
 }
 
 /** @type {typeof clearInterval} */
 export function mockedClearInterval(intervalId) {
-    clearInterval(intervalId);
+    if (!freezed) {
+        clearInterval(intervalId);
+    }
     timers.delete(intervalToId(intervalId));
 }
 
 /** @type {typeof clearTimeout} */
 export function mockedClearTimeout(timeoutId) {
-    clearTimeout(timeoutId);
+    if (!freezed) {
+        clearTimeout(timeoutId);
+    }
     timers.delete(timeoutToId(timeoutId));
 }
 
@@ -312,7 +330,7 @@ export function mockedRequestAnimationFrame(callback) {
     };
 
     const animationValues = [handler, now(), frameDelay];
-    const handle = requestAnimationFrame(handler);
+    const handle = freezed ? nextDummyId++ : requestAnimationFrame(handler);
     const internalId = animationToId(handle);
     timers.set(internalId, animationValues);
 
@@ -339,7 +357,7 @@ export function mockedSetInterval(callback, ms, ...args) {
     };
 
     const intervalValues = [handler, now(), ms];
-    const intervalId = setInterval(handler, ms);
+    const intervalId = freezed ? nextDummyId++ : setInterval(handler, ms);
     const internalId = intervalToId(intervalId);
     timers.set(internalId, intervalValues);
 
@@ -362,7 +380,7 @@ export function mockedSetTimeout(callback, ms, ...args) {
     };
 
     const timeoutValues = [handler, now(), ms];
-    const timeoutId = setTimeout(handler, ms);
+    const timeoutId = freezed ? nextDummyId++ : setTimeout(handler, ms);
     const internalId = timeoutToId(timeoutId);
     timers.set(internalId, timeoutValues);
 
