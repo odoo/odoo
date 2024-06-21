@@ -231,16 +231,19 @@ class TestDiscussFullPerformance(HttpCase):
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         return {
-            "Persona": [
-                self._expected_result_for_persona(self.users[2], only_inviting=True),
-                self._expected_result_for_persona(self.users[0]),
-                self._expected_result_for_persona(self.users[14]),
-            ],
             "ChannelMember": [
                 self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_chat_1, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_chat_1, self.users[14].partner_id),
+            ],
+            "Persona": [
+                self._expected_result_for_persona(self.users[2], only_inviting=True),
+                self._expected_result_for_persona(self.users[0]),
+                self._expected_result_for_persona(self.users[14]),
+            ],
+            "RtcSession": [
+                self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
             ],
             "Store": {
                 "discuss": {
@@ -261,9 +264,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "initChannelsUnreadCounter": 1,
                 "odoobotOnboarding": False,
             },
-            "RtcSession": [
-                self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
-            ],
             "Thread": [
                 self._expected_result_for_channel(self.channel_channel_group_1),
                 self._expected_result_for_channel(self.channel_chat_1),
@@ -289,16 +289,6 @@ class TestDiscussFullPerformance(HttpCase):
         The point of having a separate getter is to allow it to be overriden.
         """
         return {
-            "Persona": [
-                self._expected_result_for_persona(self.users[2]),
-                self._expected_result_for_persona(self.users[0], also_livechat=True),
-                self._expected_result_for_persona(self.users[12]),
-                self._expected_result_for_persona(self.users[14]),
-                self._expected_result_for_persona(self.users[15]),
-                self._expected_result_for_persona(self.users[3]),
-                self._expected_result_for_persona(self.users[1]),
-                self._expected_result_for_persona(guest=True),
-            ],
             "ChannelMember": [
                 self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._expected_result_for_channel_member(self.channel_general, self.users[0].partner_id),
@@ -328,6 +318,16 @@ class TestDiscussFullPerformance(HttpCase):
                 self._expected_result_for_message(self.channel_channel_group_2),
                 self._expected_result_for_message(self.channel_livechat_1),
                 self._expected_result_for_message(self.channel_livechat_2),
+            ],
+            "Persona": [
+                self._expected_result_for_persona(self.users[2]),
+                self._expected_result_for_persona(self.users[0], also_livechat=True),
+                self._expected_result_for_persona(self.users[12]),
+                self._expected_result_for_persona(self.users[14]),
+                self._expected_result_for_persona(self.users[15]),
+                self._expected_result_for_persona(self.users[3]),
+                self._expected_result_for_persona(self.users[1]),
+                self._expected_result_for_persona(guest=True),
             ],
             "RtcSession": [
                 self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
