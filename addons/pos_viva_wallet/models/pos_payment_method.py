@@ -132,6 +132,11 @@ class PosPaymentMethod(models.Model):
         if pos_session_sudo:
             self.env['bus.bus']._sendone(pos_session_sudo._get_bus_channel_name(), 'VIVA_WALLET_LATEST_RESPONSE', pos_session_sudo.config_id.id)
 
+    def _load_pos_data_fields(self, config_id):
+        data = super()._load_pos_data_fields(config_id)
+        data += ['viva_wallet_terminal_id']
+        return data
+
     def viva_wallet_send_payment_request(self, data):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
             raise AccessError(_("Only 'group_pos_user' are allowed to fetch token from Viva Wallet"))
