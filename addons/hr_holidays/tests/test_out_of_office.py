@@ -48,13 +48,17 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'channel_type': 'chat',
             'name': 'test'
         })
-        all_members_data = Store(channel).get_result()["ChannelMember"]
-        members_data = [member for member in all_members_data if member["thread"]["id"] == channel.id]
-        self.assertEqual(len(members_data), 2, "Channel info should get info for the 2 members")
-        partner_info = next(member for member in members_data if member['persona']['email'] == partner.email)
-        partner2_info = next(member for member in members_data if member['persona']['email'] == partner2.email)
-        self.assertFalse(partner2_info['persona']['out_of_office_date_end'], "current user should not be out of office")
-        self.assertEqual(partner_info['persona']['out_of_office_date_end'], fields.Date.to_string(leave_date_end), "correspondent should be out of office")
+        data = Store(channel).get_result()
+        partner_info = next(p for p in data["Persona"] if p["id"] == partner.id)
+        partner2_info = next(p for p in data["Persona"] if p["id"] == partner2.id)
+        self.assertFalse(
+            partner2_info["out_of_office_date_end"], "current user should not be out of office"
+        )
+        self.assertEqual(
+            partner_info["out_of_office_date_end"],
+            fields.Date.to_string(leave_date_end),
+            "correspondent should be out of office",
+        )
 
 
 @tagged('out_of_office')

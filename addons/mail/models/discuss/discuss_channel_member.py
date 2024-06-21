@@ -243,7 +243,8 @@ class ChannelMember(models.Model):
                 if member.guest_id:
                     # sudo: mail.guest - reading _guest_format related to a member is considered acceptable
                     persona = member.guest_id.sudo()._guest_format(fields=fields.get('persona', {}).get('guest')).get(member.guest_id)
-                data['persona'] = persona
+                store.add("Persona", persona)
+                data['persona'] = {"id": persona["id"], "type": persona["type"]}
             if 'custom_notifications' in fields:
                 data['custom_notifications'] = member.custom_notifications
             if 'mute_until_dt' in fields:
