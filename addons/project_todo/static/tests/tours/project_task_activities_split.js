@@ -18,6 +18,7 @@ registry.category("web_tour.tours").add('project_task_activities_split', {
             content: 'Task "New Task!" is listed in the activity view',
             trigger: '.o_activity_record .d-block:contains("New Task!")',
             run: "click",
+            isCheck: true,
         }, {
             content: 'Task "New Sub-Task!" is listed in the activity view',
             trigger: '.o_activity_record .d-block:contains("New Sub-Task!")',
