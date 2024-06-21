@@ -153,19 +153,15 @@ class MailRtcSession(models.Model):
 
     def _to_store(self, store: Store, extra=False):
         store.add(
-            "ChannelMember",
-            list(
-                self.channel_member_id._discuss_channel_member_format(
-                    fields={
-                        "id": True,
-                        "channel": {},
-                        "persona": {
-                            "partner": {"id": True, "name": True, "im_status": True},
-                            "guest": {"id": True, "name": True, "im_status": True},
-                        },
-                    }
-                ).values()
-            ),
+            self.channel_member_id,
+            fields={
+                "id": True,
+                "channel": {},
+                "persona": {
+                    "partner": {"id": True, "name": True, "im_status": True},
+                    "guest": {"id": True, "name": True, "im_status": True},
+                },
+            },
         )
         for rtc_session in self:
             vals = {
