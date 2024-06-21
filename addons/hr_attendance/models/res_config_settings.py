@@ -21,6 +21,7 @@ class ResConfigSettings(models.TransientModel):
     attendance_kiosk_url = fields.Char(related='company_id.attendance_kiosk_url')
     attendance_kiosk_use_pin = fields.Boolean(related='company_id.attendance_kiosk_use_pin', readonly=False)
     attendance_from_systray = fields.Boolean(related="company_id.attendance_from_systray", readonly=False)
+    attendance_overtime_validation = fields.Selection(related="company_id.attendance_overtime_validation", readonly=False)
 
     @api.model
     def get_values(self):

@@ -64,6 +64,9 @@
                                     required="hr_attendance_overtime" style="width: 10%; min-width: 4rem;"/><span> Minutes</span>
                             </div>
                         </setting>
+                        <setting title="Extra Hours Validation" string="Extra Hours Validation" invisible="not hr_attendance_overtime" company_dependent="1">
+                            <field name="attendance_overtime_validation" widget="radio"/>
+                        </setting>
                         <setting title="Display Extra Hours." string="Display Extra Hours" invisible="not hr_attendance_overtime" company_dependent="1" help="Display Extra Hours in Kiosk mode and on User profile.">
                             <field name="hr_attendance_display_overtime"/>
                         </setting>
