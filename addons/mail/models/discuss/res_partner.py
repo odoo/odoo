@@ -76,16 +76,12 @@ class ResPartner(models.Model):
             ]
         )
         store = Store(
-            "ChannelMember",
-            list(
-                members._discuss_channel_member_format(
-                    fields={
-                        "id": True,
-                        "channel": {"id": True},
-                        "persona": {"partner": {"id": True}},
-                    }
-                ).values()
-            ),
+            members,
+            fields={
+                "id": True,
+                "channel": {"id": True},
+                "persona": {"partner": {"id": True}},
+            },
         )
         store.add("Persona", list(partners.mail_partner_format().values()))
         return store.get_result()
