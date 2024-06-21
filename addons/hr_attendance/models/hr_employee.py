@@ -76,13 +76,22 @@ class HrEmployee(models.Model):
 
         return res
 
-    @api.depends('overtime_ids.duration', 'attendance_ids')
+    @api.depends('overtime_ids.duration', 'attendance_ids', 'attendance_ids.overtime_status')
     def _compute_total_overtime(self):
+        mapped_validated_overtimes = dict(self.env['hr.attendance']._read_group(
+            domain=[('overtime_status', '=', 'approved')],
+            groupby=['employee_id'],
+            aggregates=['validated_overtime_hours:sum']
+        ))
+
+        mapped_overtime_adjustments = dict(self.env['hr.attendance.overtime']._read_group(
+            domain=[('adjustment', '=', True)],
+            groupby=['employee_id'],
+            aggregates=['duration:sum']
+        ))
+
         for employee in self:
-            if employee.company_id.hr_attendance_overtime:
-                employee.total_overtime = float_round(sum(employee.overtime_ids.mapped('duration')), 2)
-            else:
-                employee.total_overtime = 0
+            employee.total_overtime = mapped_validated_overtimes.get(employee, 0) + mapped_overtime_adjustments.get(employee, 0)
 
     def _compute_hours_last_month(self):
         """
@@ -206,11 +215,11 @@ class HrEmployee(models.Model):
         self.ensure_one()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Overtime"),
-            "res_model": "hr.attendance.overtime",
-            "views": [[False, "tree"]],
+            "name": _("Attendances This Month"),
+            "res_model": "hr.attendance",
+            "views": [[self.env.ref('hr_attendance.hr_attendance_validated_hours_employee_simple_tree_view').id, "tree"]],
             "context": {
                 "create": 0
             },
-            "domain": [('employee_id', '=', self.id)]
+            "domain": [('employee_id', '=', self.id), ('overtime_status', '=', 'approved')]
         }

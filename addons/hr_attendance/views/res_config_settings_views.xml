@@ -36,22 +36,15 @@
                         </setting>
                     </block>
                     <block title="Extra Hours" name="overtime_settings">
-                        <setting title="Activate the count of employees' extra hours." string="Count of Extra Hours" company_dependent="1" help="Compare attendance with working hours set on employee.">
-                            <field name="hr_attendance_overtime"/>
-                            <div class="mt16" invisible="not hr_attendance_overtime" required="hr_attendance_overtime">
-                                <div class="mt16 row" title="Count of extra hours is considered from this date. Potential extra hours prior to this date are not considered.">
-                                    <label for="overtime_start_date" string="Start from" class="o_light_label col-lg-3"/>
-                                    <field name="overtime_start_date" class="col-lg-3 w-75" required="hr_attendance_overtime" />
-                                </div>
-                                <br/>
+                        <setting company_dependent="1">
+                            <div class="mt16">
                                 <label for="overtime_company_threshold" class="o_form_label">
                                     Tolerance Time In Favor Of Company
                                 </label>
                                 <div class="text-muted">
                                     Allow a period of time (around working hours) where extra time will not be counted, in benefit of the company
                                 </div>
-                                <span>Time Period </span><field name="overtime_company_threshold" class="text-center"
-                                    required="hr_attendance_overtime" style="width: 10%; min-width: 4rem;"/><span> Minutes</span>
+                                <span class="me-2">Time Period</span><field name="overtime_company_threshold" class="text-center" style="width: 5ch;"/><span class="ms-2">Minutes</span>
                                 <br/>
                                 <br/>
                                 <label for="overtime_employee_threshold" class="o_form_label">
@@ -60,12 +53,14 @@
                                 <div class="text-muted">
                                     Allow a period of time (around working hours) where extra time will not be deducted, in benefit of the employee
                                 </div>
-                                <span>Time Period </span><field name="overtime_employee_threshold" class="text-center"
-                                    required="hr_attendance_overtime" style="width: 10%; min-width: 4rem;"/><span> Minutes</span>
+                                <span class="me-2">Time Period </span><field name="overtime_employee_threshold" class="text-center" style="width: 5ch;"/><span> Minutes</span>
                             </div>
                         </setting>
-                        <setting title="Display Extra Hours." string="Display Extra Hours" invisible="not hr_attendance_overtime" company_dependent="1" help="Display Extra Hours in Kiosk mode and on User profile.">
+                        <setting title="Display Extra Hours." string="Display Extra Hours" company_dependent="1" help="Display Extra Hours in Kiosk mode and on User profile.">
                             <field name="hr_attendance_display_overtime"/>
+                        </setting>
+                        <setting title="Extra Hours Validation" string="Extra Hours Validation" company_dependent="1" help="Can be converted as Time Off (cfr Time Off configuration).">
+                            <field name="attendance_overtime_validation" widget="radio"/>
                         </setting>
                     </block>
                 </app>

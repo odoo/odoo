@@ -7,9 +7,6 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    hr_attendance_overtime = fields.Boolean(
-        string="Count Extra Hours", readonly=False)
-    overtime_start_date = fields.Date(string="Extra Hours Starting Date", readonly=False)
     overtime_company_threshold = fields.Integer(
         string="Tolerance Time In Favor Of Company", readonly=False)
     overtime_employee_threshold = fields.Integer(
@@ -21,14 +18,13 @@ class ResConfigSettings(models.TransientModel):
     attendance_kiosk_url = fields.Char(related='company_id.attendance_kiosk_url')
     attendance_kiosk_use_pin = fields.Boolean(related='company_id.attendance_kiosk_use_pin', readonly=False)
     attendance_from_systray = fields.Boolean(related="company_id.attendance_from_systray", readonly=False)
+    attendance_overtime_validation = fields.Selection(related="company_id.attendance_overtime_validation", readonly=False)
 
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         company = self.env.company
         res.update({
-            'hr_attendance_overtime': company.hr_attendance_overtime,
-            'overtime_start_date': company.overtime_start_date,
             'overtime_company_threshold': company.overtime_company_threshold,
             'overtime_employee_threshold': company.overtime_employee_threshold,
         })
@@ -41,8 +37,6 @@ class ResConfigSettings(models.TransientModel):
         # to avoid recomputing the overtimes several times with
         # invalid company configurations
         fields_to_check = [
-            'hr_attendance_overtime',
-            'overtime_start_date',
             'overtime_company_threshold',
             'overtime_employee_threshold',
         ]

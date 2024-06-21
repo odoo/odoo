@@ -18,8 +18,6 @@ class TestHolidaysOvertime(TransactionCase):
         super().setUpClass()
         cls.company = cls.env['res.company'].create({
             'name': 'SweatChipChop Inc.',
-            'hr_attendance_overtime': True,
-            'overtime_start_date': datetime(2021, 1, 1),
         })
         cls.user = new_test_user(cls.env, login='user', groups='base.group_user', company_id=cls.company.id).with_company(cls.company)
         cls.user_manager = new_test_user(cls.env, login='manager', groups='base.group_user,hr_holidays.group_hr_holidays_user,hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)
@@ -253,8 +251,7 @@ class TestHolidaysOvertime(TransactionCase):
         }])
 
         leave.company_id.write({
-            'hr_attendance_overtime': True,
-            'overtime_start_date': datetime(2021, 1, 1),
+            'attendance_overtime_validation': 'no_validation',
         })
         self.assertNotEqual(leave.company_id, self.employee.company_id)
         self.manager.company_id = leave.company_id.id

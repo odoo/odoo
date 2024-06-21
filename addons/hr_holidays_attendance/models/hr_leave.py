@@ -103,7 +103,7 @@ class HRLeave(models.Model):
     def _update_leaves_overtime(self):
         employee_dates = defaultdict(set)
         for leave in self:
-            if leave.employee_id and leave.employee_company_id.hr_attendance_overtime:
+            if leave.employee_id:
                 for d in range((leave.date_to - leave.date_from).days + 1):
                     employee_dates[leave.employee_id].add(self.env['hr.attendance']._get_day_start_and_day(leave.employee_id, leave.date_from + timedelta(days=d)))
         if employee_dates:
