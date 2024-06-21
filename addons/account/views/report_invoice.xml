@@ -102,6 +102,7 @@
                             </div>
                         </div>
 
+                        <t t-set="show_tax" t-value="o.company_id.show_invoice_tax"/>
                         <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
                         <div class="oe_structure"></div>
                         <table class="table table-sm o_main_table table-borderless" name="invoice_line_table">
@@ -113,7 +114,7 @@
                                     <th name="th_discount" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                         <span>Disc.%</span>
                                     </th>
-                                    <th name="th_taxes" t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Taxes</span></th>
+                                    <th t-if="show_tax" name="th_taxes" t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Taxes</span></th>
                                     <th name="th_subtotal" class="text-end">
                                         <span>Amount</span>
                                     </th>
@@ -143,10 +144,12 @@
                                             <td name="td_discount" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                                 <span class="text-nowrap" t-field="line.discount">0</span>
                                             </td>
-                                            <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_ids])"/>
-                                            <td name="td_taxes" t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
-                                                <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
-                                            </td>
+                                            <t t-if="show_tax">
+                                                <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_ids])"/>
+                                                <td name="td_taxes" t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                                    <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
+                                                </td>
+                                            </t>
                                             <td name="td_subtotal" class="text-end o_price_total">
                                                 <span class="text-nowrap" t-field="line.price_subtotal">27.00</span>
                                             </td>

@@ -190,6 +190,11 @@ class ResCompany(models.Model):
             ('out_and_in_invoices', 'Customer Invoices and Vendor Bills')],
         string="Quick encoding")
 
+    show_invoice_tax = fields.Boolean(
+        compute='_compute_show_invoice_tax',
+        export_string_translation=False,
+    )
+
     # Separate account for allocation of discounts
     account_discount_income_allocation_id = fields.Many2one(comodel_name='account.account', string='Separate account for income discount')
     account_discount_expense_allocation_id = fields.Many2one(comodel_name='account.account', string='Separate account for expense discount')
@@ -210,6 +215,12 @@ class ResCompany(models.Model):
         invalidation_fields = super().cache_invalidation_fields()
         invalidation_fields.add('check_account_audit_trail')
         return invalidation_fields
+
+    @api.depends('account_fiscal_country_id')
+    def _compute_show_invoice_tax(self):
+        """To override in order to make 'show_invoice_tax' used by different localization package e.g,. USA and Brazil"""
+        for record in self:
+            record.show_invoice_tax = True
 
     @api.constrains('account_opening_move_id', 'fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear_last_day(self):
