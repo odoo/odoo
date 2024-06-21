@@ -322,7 +322,12 @@ function _getCSSVariableValue(key, htmlStyle) {
     // quoted for strings or non quoted for colors, numbers, etc. However,
     // Chrome has the annoying behavior of changing the single-quotes to
     // double-quotes when reading them through getPropertyValue...
-    return value.replace(/"/g, "'");
+    value = value.replace(/"/g, "'");
+    // Prevent Python boolean style and keep safe retro-compatibility
+    if (["'True'", "'False'"].includes(value)) {
+        value = value.replace(/'/g, "").toLowerCase();
+    }
+    return value;
 }
 /**
  * Normalize a color in case it is a variable name so it can be used outside of

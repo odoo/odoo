@@ -130,6 +130,11 @@ class Assets(models.AbstractModel):
                     r"var\(--([0-9]+)\)",
                     lambda matchobj: "var(--#{" + matchobj.group(1) + "})",
                     value)
+            # Prevent stringed python boolean values in CSS
+            if value is True:
+                value = 'true'
+            elif value is False:
+                value = 'false'
             pattern = "'%s': %%s,\n" % name
             regex = re.compile(pattern % ".+")
             replacement = pattern % value

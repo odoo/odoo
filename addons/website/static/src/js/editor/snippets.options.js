@@ -1569,7 +1569,7 @@ options.registry.OptionsTab = options.Class.extend({
         if (methodName === 'customizeButtonStyle') {
             const isOutline = weUtils.getCSSVariableValue(`btn-${params.button}-outline`);
             const isFlat = weUtils.getCSSVariableValue(`btn-${params.button}-flat`);
-            return isFlat === "'True'" ? 'flat' : isOutline === "'True'" ? 'outline' : 'fill';
+            return isFlat === "true" ? 'flat' : isOutline === "true" ? 'outline' : 'fill';
         }
         return this._super(...arguments);
     },
