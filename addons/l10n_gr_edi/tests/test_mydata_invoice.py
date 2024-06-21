@@ -127,8 +127,8 @@ class TestGreeceMyDATA(AccountTestInvoicingCommon):
         partner.write({'zip': '10431', 'city': 'Athens'})
 
     def assert_mydata_xml_tree(self, invoice, expected_file_path, send_classification=False):
-        xml_vals = invoice._l10n_gr_edi_prepare_invoice_xml_vals() if not send_classification else \
-            invoice._l10n_gr_edi_prepare_expense_classification_xml_vals()
+        xml_vals = invoice._l10n_gr_edi_get_invoices_xml_vals() if not send_classification else \
+            invoice._l10n_gr_edi_get_expense_classification_xml_vals()
         xml_content = self.env['l10n_gr_edi.document']._generate_xml_content(xml_vals, send_classification)
         xml_etree = self.get_xml_tree_from_string(xml_content.encode('utf-8'))
 
@@ -191,7 +191,7 @@ class TestGreeceMyDATA(AccountTestInvoicingCommon):
 
     def test_mydata_xml_vals_invoice(self):
         invoice = self._create_invoice(invoice_line_ids=self._create_multi_invoice_line_ids())
-        xml_vals = invoice._l10n_gr_edi_prepare_invoice_xml_vals()
+        xml_vals = invoice._l10n_gr_edi_get_invoices_xml_vals()
         self.assertDictEqual(xml_vals, {'invoices': [{
             'header_series': 'INV_2024', 'header_aa': '00001', 'header_issue_date': '2024-01-01',
             'header_invoice_type': '1.1', 'header_currency': 'EUR',
@@ -216,7 +216,7 @@ class TestGreeceMyDATA(AccountTestInvoicingCommon):
     def test_mydata_xml_vals_multi_invoices(self):
         invoice = self._create_invoice(inv_type='2.1', cls_category='category1_3', cls_type='E3_561_002')
         invoice |= self._create_invoice(inv_type='11.1', cls_category='category1_95', cls_type='')
-        xml_vals = invoice._l10n_gr_edi_prepare_invoice_xml_vals()
+        xml_vals = invoice._l10n_gr_edi_get_invoices_xml_vals()
 
         self.assertDictEqual(xml_vals, {'invoices': [
             {'header_series': 'INV_2024', 'header_aa': '00001', 'header_issue_date': '2024-01-01',
@@ -246,7 +246,7 @@ class TestGreeceMyDATA(AccountTestInvoicingCommon):
 
     def test_mydata_xml_vals_invoice_no_counterpart(self):
         invoice = self._create_invoice(inv_type='11.1', cls_category='category1_8', cls_type='E3_562')
-        xml_vals = invoice._l10n_gr_edi_prepare_invoice_xml_vals()
+        xml_vals = invoice._l10n_gr_edi_get_invoices_xml_vals()
 
         self.assertDictEqual(xml_vals, {'invoices': [
             {'header_series': 'INV_2024', 'header_aa': '00001', 'header_issue_date': '2024-01-01',
@@ -262,7 +262,7 @@ class TestGreeceMyDATA(AccountTestInvoicingCommon):
 
     def test_mydata_xml_vals_cls_expense(self):
         bill = self._create_bill()
-        xml_vals = bill._l10n_gr_edi_prepare_expense_classification_xml_vals()
+        xml_vals = bill._l10n_gr_edi_get_expense_classification_xml_vals()
 
         self.assertDictEqual(xml_vals, {'invoices': [{'mark': '400001924190891', 'details': [
             {'line_number': 1, 'ecls': [{'category': 'category2_1', 'type': 'E3_102_001', 'amount': 800.0}]},
@@ -270,7 +270,7 @@ class TestGreeceMyDATA(AccountTestInvoicingCommon):
 
     def test_mydata_xml_vals_cls_expense_details_xor_transaction(self):
         bill = self._create_bill()
-        xml_vals = bill._l10n_gr_edi_prepare_expense_classification_xml_vals()
+        xml_vals = bill._l10n_gr_edi_get_expense_classification_xml_vals()
         have_transaction_mode = 'transaction_mode' in xml_vals['invoices'][0]
         have_details = 'details' in xml_vals['invoices'][0]
         self.assertTrue(have_transaction_mode ^ have_details,
@@ -284,7 +284,7 @@ class TestGreeceMyDATA(AccountTestInvoicingCommon):
             'l10n_gr_edi_cls_type': 'E3_585_016',
             'l10n_gr_edi_cls_vat': 'VAT_361',
         })])
-        xml_vals = bill._l10n_gr_edi_prepare_expense_classification_xml_vals()
+        xml_vals = bill._l10n_gr_edi_get_expense_classification_xml_vals()
 
         self.assertDictEqual(xml_vals, {'invoices': [{'mark': '400001924190891', 'details': [
             {'line_number': 1, 'ecls': [{'category': 'category2_4', 'type': 'E3_585_016', 'amount': 800.0},

@@ -16,7 +16,7 @@ class GreeceEDIDocument(models.Model):
         string='MyDATA Status',
         required=True,
     )
-    datetime = fields.Datetime()
+    datetime = fields.Datetime(default=fields.Datetime.now)
     attachment_id = fields.Many2one(comodel_name='ir.attachment', string='XML file')
     message = fields.Char()
 
@@ -25,110 +25,47 @@ class GreeceEDIDocument(models.Model):
         self.attachment_id.unlink()
         return super().unlink()
 
-    def _get_attachment_file_name(self):
-        self.ensure_one()
-        return f"{self.move_id.name.replace('/', '_')}_xml_{self.id}.xml"
-
     @api.model
-    def _generate_xml_content(self, xml_vals, send_classification=False):
-        xml_template = 'l10n_gr_edi.send_invoice' if not send_classification else \
-            'l10n_gr_edi.send_expense_classification'
-        xml_content = self.env['ir.qweb']._render(xml_template, xml_vals)
-        xml_content = etree.tostring(cleanup_xml_node(xml_content), encoding='ISO-8859-7', standalone='yes')
-        xml_content = xml_content.decode('iso8859_7')
-        return xml_content
-
-    def _generate_attachments_per_document(self, xml_vals, send_classification=False):
-        """ Isolate xml_vals to each individual invoices and generate attachment file for each document """
-        for document_index, invoice_vals in enumerate(xml_vals['invoices']):
-            single_xml_vals = {'invoices': [invoice_vals]}
-            xml_content = self._generate_xml_content(single_xml_vals, send_classification)
-
-            # Generate attachment file per document
-            document_id = self[document_index]
-            document_id.env['ir.attachment'].create({
-                'name': document_id._get_attachment_file_name(),
-                'raw': xml_content,
-                'mimetype': 'application/xml',
-                'res_model': document_id._name,
-                'res_id': document_id.id,
-                'res_field': 'attachment_id',
-            })
-            document_id.invalidate_recordset(fnames=['attachment_id'])
-
-    def _request_to_mydata(self, xml_content, send_classification=False):
-        """ Make a POST request to MyDATA API """
-        endpoint = 'sendexpensesclassification' if send_classification else 'sendinvoices'
-
-        # Record the request time in the datetime field
-        self.datetime = fields.Datetime.now()
+    def _make_mydata_request(self, company, endpoint, xml_content):
+        """ Make an API request to myDATA and handle the response and return a `result` dictionary
+            :param company: `res.company` object containing `l10n_gr_edi_{test_env|aade_id|aade_key}`
+            :param endpoint: 'SendInvoices' (for sending invoice) |
+                             'SendExpensesClassification' (for sending vendor bill's expense classification) |
+                             'RequestDocs' (for fetching third-party-issued invoices (for creating vendor bills))
+            :param xml_content: xml content to send to myDATA
+            :return: dict[str, str]            error_message   {'error': <str>} |
+                     dict[int, dict[str, str]] response_object {idx<int>: {'l10n_gr_edi_mark': <str>} |
+                                                                          {'error': <str>}} """
+        url = f"https://mydataapidev.aade.gr/{endpoint}" if company.l10n_gr_edi_test_env else \
+              f"https://mydatapi.aade.gr/myDATA/{endpoint}"
 
         try:
-            # Send XML to MyDATA API
             response = requests.post(
-                url=self.move_id.company_id._l10n_gr_edi_get_mydata_url(endpoint),
+                url=url,
                 data=xml_content,
                 timeout=5,
-                headers=self.move_id.company_id._l10n_gr_edi_get_headers_credentials())
+                headers={'aade-user-id': company.l10n_gr_edi_aade_id,
+                         'ocp-apim-subscription-key': company.l10n_gr_edi_aade_key})
         except ConnectionError as err:
-            # Handle any connection errors
-            self.state = 'move_error'
-            self.message = str(err)
-            return
+            return {'error': str(err)}
+        if not response:  # in case of status 500 (problem from myDATA's server)
+            return {'error': _('No response from MyDATA, please try again later.')}
 
-        return response
-
-    def _handle_response_xml(self, response):
-        """ Handle XML response and update document's state accordingly """
-        if not response:
-            # In case of status 500 (problem from the server)
-            self.state = 'move_error'
-            self.message = _('No response from MyDATA, please try again later.')
-            return
-
+        result = {}
         root = etree.fromstring(response.content)
-        pretty_xml = etree.tostring(root, encoding='unicode', pretty_print=True)
-        print(pretty_xml)  # todo remove - monkey testing
-
-        # Handle success/error response per document
+        print(etree.tostring(root, encoding='unicode', pretty_print=True))
         for response_element in root.xpath('//response'):
-            response_index = int(response_element.findtext('index'))
-            document_id = self[response_index - 1]
+            response_index = int(response_element.findtext('index')) - 1
             status_code = response_element.findtext('statusCode')
-
             if status_code == 'Success':
-                document_id.state = 'move_sent'
-                document_id.message = False
-                document_id.move_id.l10n_gr_edi_mark = response_element.findtext('invoiceMark')
-                # Delete all previous error documents and keep the latest successfully sent document
-                document_id.move_id.l10n_gr_edi_document_ids.filtered(lambda d: d.state != 'move_sent').unlink()
+                result[response_index] = {'l10n_gr_edi_mark': str(response_element.findtext('invoiceMark'))}
             else:
-                document_id.state = 'move_error'
                 error_elements = response_element.xpath('./errors/error')
                 errors = (f"[{element.findtext('code')}] {element.findtext('message')}." for element in error_elements)
-                document_id.message = '\n'.join(errors)
+                error_message = '\n'.join(errors)
+                result[response_index] = {'error': error_message}
 
-    def _send_mydata_invoices_xml(self, xml_vals):
-        """ Send Customer Invoice XML batches to MyDATA. """
-        self._generate_attachments_per_document(xml_vals)
-
-        xml_content = self._generate_xml_content(xml_vals)
-        print(xml_content)
-
-        response = self._request_to_mydata(xml_content)
-
-        self._handle_response_xml(response)
-
-    def _send_mydata_expense_classifications_xml(self, xml_vals):
-        """ Send Vendor Bill Expense Classification XML batches to MyDATA. """
-        self._generate_attachments_per_document(xml_vals, send_classification=True)
-
-        xml_content = self._generate_xml_content(xml_vals, send_classification=True)
-        print(xml_content)
-
-        response = self._request_to_mydata(xml_content, send_classification=True)
-
-        self._handle_response_xml(response)
+        return result
 
     def action_download(self):
         self.ensure_one()
