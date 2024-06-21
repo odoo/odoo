@@ -500,8 +500,8 @@ export class PosOrderline extends Base {
         const taxDetails = {};
         for (const taxData of taxesData.taxes_data) {
             taxDetails[taxData.id] = {
-                amount: taxData.tax_amount_factorized,
-                base: taxData.display_base,
+                amount: taxData.tax_amount,
+                base: taxData.base,
             };
         }
 
@@ -630,7 +630,7 @@ export class PosOrderline extends Base {
             taxGroupLabels: [
                 ...new Set(
                     this.product_id.taxes_id
-                        ?.map((tax) => tax._pos_receipt_label)
+                        ?.map((tax) => tax.tax_group_id.pos_receipt_label)
                         .filter((label) => label)
                 ),
             ].join(" "),

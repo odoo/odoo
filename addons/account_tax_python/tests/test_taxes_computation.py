@@ -16,103 +16,112 @@ class TestTaxesComputation(TestTaxCommon):
             'formula': formula,
         })
 
-    def _prepare_test(self, formula, *args, **kwargs):
-        tax = self.python_tax(formula, **kwargs.pop('tax_data', {}))
-        product_values = kwargs.pop('product_values', None)
+    def _jsonify_tax(self, tax):
+        values = super()._jsonify_tax(tax)
+        values['formula_decoded_info'] = tax.formula_decoded_info
+        return values
+
+    def assert_python_taxes_computation(
+        self,
+        formula,
+        price_unit,
+        expected_values,
+        product_values=None,
+        price_include=False,
+    ):
+        tax = self.python_tax(formula, price_include=price_include)
         if product_values:
             product = self.env['product.product'].create({
-                'name': "_prepare_test",
+                'name': "assert_python_taxes_computation",
                 **product_values,
             })
-            kwargs.setdefault('evaluation_context_kwargs', {})['product'] = product
-
-        return self._prepare_taxes_computation_test(tax, *args, **kwargs)
+        else:
+            product = None
+        return self.assert_taxes_computation(tax, price_unit, expected_values, product=product)
 
     def test_formula(self):
-        tests = [
-            self._prepare_test(
-                "max(quantity * price_unit * 0.21, quantity * 4.17)",
-                130.0,
-                {
-                    'total_included': 157.3,
-                    'total_excluded': 130.0,
-                    'taxes_data': (
-                        (130.0, 27.3),
-                    ),
-                },
-            ),
-            self._prepare_test(
-                "max(quantity * price_unit * 0.21, quantity * 4.17)",
-                130.0,
-                {
-                    'total_included': 130.0,
-                    'total_excluded': 102.7,
-                    'taxes_data': (
-                        (102.7, 27.3),
-                    ),
-                },
-                tax_data={'price_include': True},
-            ),
-            self._prepare_test(
-                "product.volume * quantity * 0.35",
-                100.0,
-                {
-                    'total_included': 135.0,
-                    'total_excluded': 100.0,
-                    'taxes_data': (
-                        (100.0, 35.0),
-                    ),
-                },
-                product_values={'volume': 100.0},
-            ),
-            self._prepare_test(
-                "product.volume > 100 and 10 or 5",
-                100.0,
-                {
-                    'total_included': 110.0,
-                    'total_excluded': 100.0,
-                    'taxes_data': (
-                        (100.0, 10.0),
-                    ),
-                },
-                product_values={'volume': 105.0},
-            ),
-            self._prepare_test(
-                "product.volume > 100 and 10 or 5",
-                100.0,
-                {
-                    'total_included': 105.0,
-                    'total_excluded': 100.0,
-                    'taxes_data': (
-                        (100.0, 5.0),
-                    ),
-                },
-                product_values={'volume': 50.0},
-            ),
-            self._prepare_test(
-                "product.volume > 100 and 5 or None",
-                100.0,
-                {
-                    'total_included': 100.0,
-                    'total_excluded': 100.0,
-                    'taxes_data': [],
-                },
-                product_values={'volume': 50.0},
-            ),
-            self._prepare_test(
-                "(product.volume or 5.0) and 0.0 or 10.0",
-                100.0,
-                {
-                    'total_included': 110.0,
-                    'total_excluded': 100.0,
-                    'taxes_data': (
-                        (100.0, 10.0),
-                    ),
-                },
-                product_values={'volume': 0.0},
-            ),
-        ]
-        self._assert_tests(tests)
+        self.assert_python_taxes_computation(
+            "max(quantity * price_unit * 0.21, quantity * 4.17)",
+            130.0,
+            {
+                'total_included': 157.3,
+                'total_excluded': 130.0,
+                'taxes_data': (
+                    (130.0, 27.3),
+                ),
+            },
+        )
+        self.assert_python_taxes_computation(
+            "max(quantity * price_unit * 0.21, quantity * 4.17)",
+            130.0,
+            {
+                'total_included': 130.0,
+                'total_excluded': 102.7,
+                'taxes_data': (
+                    (102.7, 27.3),
+                ),
+            },
+            price_include=True,
+        )
+        self.assert_python_taxes_computation(
+            "product.volume * quantity * 0.35",
+            100.0,
+            {
+                'total_included': 135.0,
+                'total_excluded': 100.0,
+                'taxes_data': (
+                    (100.0, 35.0),
+                ),
+            },
+            product_values={'volume': 100.0},
+        )
+        self.assert_python_taxes_computation(
+            "product.volume > 100 and 10 or 5",
+            100.0,
+            {
+                'total_included': 110.0,
+                'total_excluded': 100.0,
+                'taxes_data': (
+                    (100.0, 10.0),
+                ),
+            },
+            product_values={'volume': 105.0},
+        )
+        self.assert_python_taxes_computation(
+            "product.volume > 100 and 10 or 5",
+            100.0,
+            {
+                'total_included': 105.0,
+                'total_excluded': 100.0,
+                'taxes_data': (
+                    (100.0, 5.0),
+                ),
+            },
+            product_values={'volume': 50.0},
+        )
+        self.assert_python_taxes_computation(
+            "product.volume > 100 and 5 or None",
+            100.0,
+            {
+                'total_included': 100.0,
+                'total_excluded': 100.0,
+                'taxes_data': [],
+            },
+            product_values={'volume': 50.0},
+        )
+        self.assert_python_taxes_computation(
+            "(product.volume or 5.0) and 0.0 or 10.0",
+            100.0,
+            {
+                'total_included': 110.0,
+                'total_excluded': 100.0,
+                'taxes_data': (
+                    (100.0, 10.0),
+                ),
+            },
+            product_values={'volume': 0.0},
+        )
+        self._run_js_tests()
 
     def test_invalid_formula(self):
         # You have no access to relational field.

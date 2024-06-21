@@ -713,8 +713,8 @@ export class PosOrder extends Base {
                         tax_percentage: taxData.amount,
                     });
                 }
-                taxDetails[taxId].base += taxData.display_base;
-                taxDetails[taxId].amount += taxData.tax_amount_factorized;
+                taxDetails[taxId].base += taxData.base;
+                taxDetails[taxId].amount += taxData.tax_amount;
             }
         }
         return Object.values(taxDetails);

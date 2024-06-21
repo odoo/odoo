@@ -3638,11 +3638,7 @@ class AccountMove(models.Model):
         to_process = []
         for invoice_line in invoice_lines:
             base_line = invoice_line._convert_to_tax_base_line_dict()
-            tax_details_results = self.env['account.tax']._prepare_base_line_tax_details(
-                base_line,
-                company,
-                split_repartition_lines=True,
-            )
+            tax_details_results = self.env['account.tax']._prepare_base_line_tax_details(base_line, company)
             to_process.append((base_line, tax_details_results))
 
         # Handle manually changed tax amounts (via quick-edit or journal entry manipulation):
@@ -3780,11 +3776,7 @@ class AccountMove(models.Model):
         # Prepare the tax details for each line.
         to_process = []
         for base_line in base_lines:
-            tax_details_results = self.env['account.tax']._prepare_base_line_tax_details(
-                base_line,
-                company,
-                split_repartition_lines=True,
-            )
+            tax_details_results = self.env['account.tax']._prepare_base_line_tax_details(base_line, company)
             to_process.append((base_line, tax_details_results))
 
         # Aggregate taxes.

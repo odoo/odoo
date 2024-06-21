@@ -197,8 +197,13 @@ class PurchaseOrderLine(models.Model):
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         if self.taxes_id:
             qty = self.product_qty or 1
-            price_unit = self.taxes_id.with_context(round=False).compute_all(
-                price_unit, currency=self.order_id.currency_id, quantity=qty, product=self.product_id, partner=self.order_id.partner_id
+            price_unit = self.taxes_id.compute_all(
+                price_unit,
+                currency=self.order_id.currency_id,
+                quantity=qty,
+                product=self.product_id,
+                partner=self.order_id.partner_id,
+                rounding_method="round_globally",
             )['total_void']
             price_unit = price_unit / qty
         if self.product_uom.id != self.product_id.uom_id.id:
