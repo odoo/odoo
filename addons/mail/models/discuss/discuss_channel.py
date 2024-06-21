@@ -423,7 +423,6 @@ class Channel(models.Model):
                 store = Store(
                     "Thread",
                     {
-                        "channelMembers": [("ADD", [{"id": member.id} for member in new_members])],
                         "id": channel.id,
                         "memberCount": channel.member_count,
                         "model": "discuss.channel",
@@ -438,9 +437,6 @@ class Channel(models.Model):
                 user_store = Store(
                     "Thread",
                     {
-                        "channelMembers": [
-                            ("ADD", [{"id": member.id} for member in existing_members])
-                        ],
                         "id": channel.id,
                         "memberCount": channel.member_count,
                         "model": "discuss.channel",
@@ -1248,7 +1244,6 @@ class Channel(models.Model):
             {
                 "id": self.id,
                 "model": "discuss.channel",
-                "channelMembers": [("ADD", [{"id": member.id} for member in unknown_members])],
                 "memberCount": count,
             },
         )

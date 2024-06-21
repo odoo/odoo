@@ -44,7 +44,7 @@ export class IrAttachment extends webModels.IrAttachment {
                 name: attachment.name,
                 size: attachment.file_size,
             };
-            res["thread"] = [["ADD", { id: attachment.res_id, model: attachment.res_model }]];
+            res["thread"] = { id: attachment.res_id, model: attachment.res_model };
             const voice = DiscussVoiceMetadata._filter([["attachment_id", "=", attachment.id]])[0];
             if (voice) {
                 res.voice = true;

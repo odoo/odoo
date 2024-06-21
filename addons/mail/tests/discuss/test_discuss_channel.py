@@ -135,7 +135,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "payload": {
                             "Thread": [
                                 {
-                                    "channelMembers": [["ADD", [{"id": member.id}]]],
                                     "id": channel.id,
                                     "memberCount": 2,
                                     "model": "discuss.channel",
@@ -186,7 +185,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "payload": {
                             "Thread": [
                                 {
-                                    "channelMembers": [["ADD", [{"id": member.id}]]],
                                     "id": channel.id,
                                     "memberCount": 2,
                                     "model": "discuss.channel",
