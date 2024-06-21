@@ -711,7 +711,7 @@ class Channel(models.Model):
             ("channel_id", "=", self.id), ("is_self", "=", True)
         ]):
             current_channel_member._set_last_seen_message(message, notify=False)
-            current_channel_member._set_new_message_separator(message.id + 1)
+            current_channel_member._set_new_message_separator(message.id + 1, sync=True)
         return super()._message_post_after_hook(message, msg_vals)
 
     def _check_can_update_message_content(self, message):
