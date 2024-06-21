@@ -734,3 +734,17 @@ class IrAttachment(models.Model):
             ('create_uid', '=', SUPERUSER_ID),
         ]).unlink()
         self.env.registry.clear_cache('assets')
+
+    def x509_public_key_from_certificate(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_model': 'base.x509.wizard',
+            'views': [(False, 'form')],
+            'name': _("Security Exception - Add a trusted public key"),
+            'context': {'mail_server_id': self.env.context['mail_server_id']},
+        }
+
+    def x509_public_key_from_mail_server(self):
+        mail_server = self.env['ir.mail_server'].browse(self.env.context['mail_server_id'])
+        return mail_server.download_remote_certificate()
