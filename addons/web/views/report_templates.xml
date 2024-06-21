@@ -259,7 +259,7 @@
 
     <template id="address_layout">
         <t t-set="colclass" t-value="('col-sm-5' if report_type == 'html' else 'col-5') + ' ms-auto'"/>
-        <div t-if="address" class="address row mb-4" title="This block is not always present depending on the printed document.">
+        <div t-if="address" t-attf-class="address row mb-4 {{snail_mail_compatibility and 'o_snail_mail'}}" title="This block is not always present depending on the printed document.">
             <t t-if="information_block">
                 <t t-set="colclass" t-value="'col-5 offset-1'"/>
                 <div name="information_block" class="col-6">
@@ -325,7 +325,9 @@
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout"/>
+            <t t-call="web.address_layout">
+                <t t-set="snail_mail_compatibility" t-value="true"/>
+            </t>
             <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
@@ -379,7 +381,9 @@
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout"/>
+            <t t-call="web.address_layout">
+                <t t-set="snail_mail_compatibility" t-value="true"/>
+            </t>
             <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
@@ -436,7 +440,9 @@
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout"/>
+            <t t-call="web.address_layout">
+                <t t-set="snail_mail_compatibility" t-value="true"/>
+            </t>
             <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
@@ -494,7 +500,9 @@
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout"/>
+            <t t-call="web.address_layout">
+                <t t-set="snail_mail_compatibility" t-value="true"/>
+            </t>
             <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
