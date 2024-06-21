@@ -47,7 +47,7 @@ var dom = {
             fromEl.forEach((el) => {
                 // Note: Why we targeted body in closest, we can make this more
                 // faster & clear by targeting parentNode?
-                const children = Array.from(el.closest("body").querySelectorAll(selector)).filter(
+                const children = Array.from(el.closest("body")?.querySelectorAll(selector)).filter(
                     (e) => el.contains(e)
                 );
                 resultEls.push(...children);
