@@ -14,9 +14,8 @@ class StockPickingBatch(models.Model):
     _description = "Batch Transfer"
     _order = "name desc"
 
-    name = fields.Char(
-        string='Batch Transfer', default='New',
-        copy=False, required=True, readonly=True)
+    name = fields.Char(string='Batch Transfer', copy=False)
+    description = fields.Char("Description", size=35)
     user_id = fields.Many2one(
         'res.users', string='Responsible', tracking=True, check_company=True)
     company_id = fields.Many2one(
@@ -58,6 +57,14 @@ class StockPickingBatch(models.Model):
                 but this scheduled date will not be set for all transfers in batch.""")
     is_wave = fields.Boolean('This batch is a wave')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
+
+    @api.depends('description')
+    @api.depends_context('add_to_existing_batch')
+    def _compute_display_name(self):
+        if not self.env.context.get('add_to_existing_batch'):
+            return super()._compute_display_name()
+        for batch in self:
+            batch.display_name = f"{batch.name}: {batch.description}" if batch.description else batch.name
 
     @api.depends('picking_type_id')
     def _compute_show_lots_text(self):
@@ -134,7 +141,7 @@ class StockPickingBatch(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('name', '/') == '/':
+            if not vals.get('name'):
                 company_id = vals.get('company_id', self.env.company.id)
                 if vals.get('is_wave'):
                     vals['name'] = self.env['ir.sequence'].with_company(company_id).next_by_code('picking.wave') or '/'
@@ -298,4 +305,26 @@ class StockPickingBatch(models.Model):
             res = res and (len(self.move_ids) + len(picking.move_ids) <= self.picking_type_id.batch_max_lines)
         if self.picking_type_id.batch_max_pickings:
             res = res and (len(self.picking_ids) + 1 <= self.picking_type_id.batch_max_pickings)
+        return res
+
+    def _is_line_auto_mergeable(self, num_of_moves=False, num_of_pickings=False, weight=False):
+        """ Verifies if a line can be safely inserted into the wave without violating auto_batch_constrains.
+        """
+        res = True
+        if num_of_moves:
+            res = res and self._are_moves_auto_mergeable(num_of_moves)
+        if num_of_pickings:
+            res = res and self._are_pickings_auto_mergeable(num_of_pickings)
+        return res
+
+    def _are_moves_auto_mergeable(self, num_of_moves):
+        res = True
+        if self.picking_type_id.batch_max_lines:
+            res = res and (len(self.move_ids) + num_of_moves <= self.picking_type_id.batch_max_lines)
+        return res
+
+    def _are_pickings_auto_mergeable(self, num_of_pickings):
+        res = True
+        if self.picking_type_id.batch_max_pickings:
+            res = res and (len(self.picking_ids) + num_of_pickings <= self.picking_type_id.batch_max_pickings)
         return res

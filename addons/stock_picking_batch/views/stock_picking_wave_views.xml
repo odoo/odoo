@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="action_prepare_wave" model="ir.actions.act_window">
+        <field name="name">Prepare Wave</field>
+        <field name="res_model">stock.move.line</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_move_line_tree_detailed_wave"/>
+        <field name="target">new</field>
+        <field name="domain">[('state', '!=', 'done')]</field>
+        <field name="context">{'active_wave_id': False, 'search_default_by_location': True}</field>
+    </record>
     <record id="stock_picking_wave_tree" model="ir.ui.view">
         <field name="name">stock.picking.wave.tree</field>
         <field name="model">stock.picking.batch</field>
@@ -9,6 +18,12 @@
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
                 <attribute name="create">0</attribute>
+            </xpath>
+            <xpath expr="//tree" position="inside">
+                <header>
+                    <button string="Prepare Wave" class="btn btn-primary" type="action" display="always"
+                     name="stock_picking_batch.action_prepare_wave"/>
+                </header>
             </xpath>
         </field>
     </record>
@@ -21,6 +36,12 @@
         <field name="arch" type="xml">
             <xpath expr="//kanban" position="attributes">
                 <attribute name="create">0</attribute>
+            </xpath>
+            <xpath expr="//kanban" position="inside">
+                <header>
+                    <button string="Prepare Wave" class="btn btn-primary" type="action" display="always"
+                     name="stock_picking_batch.action_prepare_wave"/>
+                </header>
             </xpath>
         </field>
     </record>
@@ -35,14 +56,25 @@
         <field name="domain">[('is_wave', '=', True)]</field>
         <field name="search_view_id" ref="stock_picking_batch_filter"/>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a new wave transfer
-                </p><p>
-                    The goal of the wave transfer is to group operations from different transfer
-                    together in order to increase their efficiency.
-                    It may also be useful to assign jobs (one person = one batch) or
-                    help the timing management of operations (tasks to be done at 1pm).
-            </p>
+            <div class="container mt-5">
+                <div class="row g-5">
+                    <div class="col-lg-4">
+                        <img src="/stock_picking_batch/static/shapes/wave-picking.svg" class="shadow rounded-3 w-100 mb-4"/>
+                        <h5>Wave transfers</h5>
+                        <p class="small">Launch picking orders by aisle or by area, and regroup at packing zone. Ideal for large warehouses.</p>
+                    </div>
+                    <div class="col-lg-4" style="opacity: 0.5;">
+                        <img src="/stock_picking_batch/static/shapes/batch-picking.svg" class="shadow rounded-3 w-100 mb-4"/>
+                        <h5>Batch transfers</h5>
+                        <p class="small">Regroup multiple orders into one picking and consolidate at the packing zone.</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <img src="/stock_picking_batch/static/shapes/cluster-picking.svg" class="shadow rounded-3 w-100 mb-4"/>
+                        <h5>Cluster transfers</h5>
+                        <p class="small">Pick multiple orders in one trip and prepare orders as you pick, reduces packing time. Ideal for small products.</p>
+                    </div>
+                </div>
+            </div>
         </field>
     </record>
 
@@ -80,8 +112,7 @@
     <menuitem
         action="action_picking_tree_wave"
         id="stock_picking_wave_menu"
-        parent="stock.menu_stock_transfers"
-        groups="stock.group_stock_picking_wave"
+        parent="menu_stock_jobs"
         sequence="31"/>
 
 </odoo>
