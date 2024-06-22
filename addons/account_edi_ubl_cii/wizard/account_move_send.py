@@ -225,6 +225,7 @@ class AccountMoveSend(models.TransientModel):
         if not anchor_elements:
             return
 
+        xmlns_move_type = 'Invoice' if invoice.move_type == 'out_invoice' else 'CreditNote'
         pdf_values = invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
         filename = pdf_values['name']
         content = pdf_values['raw']
@@ -237,7 +238,7 @@ class AccountMoveSend(models.TransientModel):
             doc_type_node = f"<cbc:DocumentTypeCode {doc_type_code_attrs}>{doc_type_code_vals['value']}</cbc:DocumentTypeCode>"
         to_inject = f'''
             <cac:AdditionalDocumentReference
-                xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                xmlns="urn:oasis:names:specification:ubl:schema:xsd:{xmlns_move_type}-2"
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
                 <cbc:ID>{escape(filename)}</cbc:ID>
