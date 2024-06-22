@@ -1,5 +1,6 @@
-import { getBasicData } from "@spreadsheet/../tests/helpers/data";
-import { serverState } from "@web/../tests/web_test_helpers";
+/** @odoo-module */
+
+import { getBasicData } from "@spreadsheet/../tests/legacy/utils/data";
 
 export function getMenuServerData() {
     const serverData = {};
@@ -69,13 +70,7 @@ export function getMenuServerData() {
                 groups_id: { string: "Groups", type: "many2many", relation: "res.group" },
             },
             records: [
-                {
-                    id: 1,
-                    name: "Raoul",
-                    active: true,
-                    partner_id: serverState.partnerId,
-                    groups_id: [10],
-                },
+                { id: 1, name: "Raoul", groups_id: [10] },
                 { id: 2, name: "Joseph", groups_id: [] },
             ],
         },
@@ -84,6 +79,5 @@ export function getMenuServerData() {
             records: [{ id: 10, name: "test group" }],
         },
     };
-    serverState.userId = 1;
     return serverData;
 }

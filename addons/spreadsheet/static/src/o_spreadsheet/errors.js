@@ -1,9 +1,8 @@
 /** @odoo-module */
 
-import { _t } from "@web/core/l10n/translation";
 import { registries, EvaluationError } from "@odoo/o-spreadsheet";
 
-const LOADING_ERROR = _t("Loading...");
+const LOADING_ERROR = "Loading...";
 
 registries.errorTypes.add(LOADING_ERROR);
 

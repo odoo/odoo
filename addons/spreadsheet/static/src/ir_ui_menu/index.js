@@ -22,7 +22,7 @@ const { EvaluationError } = spreadsheet;
 
 corePluginRegistry.add("ir_ui_menu_plugin", IrMenuPlugin);
 
-const LINK_ERROR = _t("#LINK");
+const LINK_ERROR = "#LINK";
 errorTypes.add(LINK_ERROR);
 
 class BadOdooLinkError extends EvaluationError {

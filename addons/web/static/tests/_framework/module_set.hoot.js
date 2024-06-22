@@ -84,6 +84,13 @@ const defineModuleSet = async (entryPoints, additionalAddons) => {
             additionalAddons.add(getAddonName(entryPoint));
         }
         const addons = await fetchDependencies(additionalAddons);
+        if (addons.has("spreadsheet")) {
+            /**
+             * spreadsheet addons defines a module that does not starts with `@spreadsheet` but `@odoo` (`@odoo/o-spreadsheet)
+             * To ensure that this module is loaded, we have to include `odoo` in the dependencies
+             */
+            addons.add("odoo");
+        }
         const joinedAddons = [...addons].sort().join(",");
         const filter = (path) => joinedAddons.includes(getAddonName(path));
         // Module names are cached for each configuration of addons
@@ -455,14 +462,14 @@ class ModuleSetLoader extends loader.constructor {
      */
     startModule(name) {
         const { filter } = this.moduleSet;
-        if (!filter || filter(name)) {
+        if (!filter || filter(name) || R_DEFAULT_MODULE.test(name)) {
             super.startModule(name);
         }
     }
 }
 
 const CSRF_TOKEN = odoo.csrf_token;
-const DEFAULT_ADDONS = ["base", "odoo", "web"];
+const DEFAULT_ADDONS = ["base", "web"];
 const MODULE_MOCKS_BY_NAME = new Map([
     // Fixed modules
     ["@web/core/template_inheritance", makeFixedFactory],
@@ -477,6 +484,7 @@ const MODULE_MOCKS_BY_REGEX = new Map([
     // Fixed modules
     [/\.bundle\.xml$/, makeFixedFactory],
 ]);
+const R_DEFAULT_MODULE = /^@odoo\/(owl|hoot)/;
 const R_PATH_ADDON = /^[@/]?(\w+)/;
 const WHITE_LISTED_KEYS = [
     "ace", // Ace editor
