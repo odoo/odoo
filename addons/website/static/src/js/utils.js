@@ -461,6 +461,44 @@ export function cloneContentEls(content, keepScripts = false) {
     return copyFragment;
 }
 
+    /**
+     * Checks SEO data and notifies if either the page title or description is not set.
+     * @param {Object} seo_data - The SEO data to check.
+     * @param {Function} _t - Translation function to localize messages.
+     * @param {Object} notificationService - Service used to display notifications.
+     * @param {Object} dialogService - Service used to display dialogs.
+     * @param {Function} OptimizeSEODialog - Dialog to be displayed for SEO optimization.
+     */
+    export function checkAndNotifySEO(seo_data, notificationService, dialogService, OptimizeSEODialog) {
+        if (seo_data) {
+            let message;
+            if (!seo_data.website_meta_title ||
+                seo_data.website_meta_title === "") {
+                message = _t("Page title not set.");
+            } else if (!seo_data.website_meta_description ||
+                seo_data.website_meta_description === "") {
+                message = _t("Page description not set.");
+            }
+            if (!seo_data.website_meta_title ||
+                seo_data.website_meta_title === "" ||
+                !seo_data.website_meta_description ||
+                seo_data.website_meta_description === "") {
+                notificationService.add(message, {
+                    type: "warning",
+                    sticky: false,
+                    buttons: [
+                        {
+                            name: _t("Optimize SEO"),
+                            onClick: () => {
+                                dialogService.add(OptimizeSEODialog);
+                            },
+                        },
+                    ],
+                });
+            }
+        }
+    }
+
 export default {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,

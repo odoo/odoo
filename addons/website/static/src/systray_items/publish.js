@@ -1,10 +1,13 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { CheckBox } from '@web/core/checkbox/checkbox';
 import { useService, useBus } from '@web/core/utils/hooks';
 import { Component, xml, useState } from "@odoo/owl";
+import { OptimizeSEODialog } from '@website/components/dialog/seo';
+import { checkAndNotifySEO } from "@website/js/utils"
 
 const websiteSystrayRegistry = registry.category('website_systray');
 
@@ -24,6 +27,8 @@ class PublishSystray extends Component {
     setup() {
         this.website = useService('website');
         this.orm = useService('orm');
+        this.dialogService = useService('dialog');
+        this.notificationService = useService('notification');
 
         this.state = useState({
             published: this.website.currentWebsite.metadata.isPublished,
@@ -56,6 +61,22 @@ class PublishSystray extends Component {
             published => {
                 this.state.published = published;
                 this.state.processing = false;
+                if (published) {
+                    rpc("/website/get_seo_data", {
+                        res_id: mainObject.id,
+                        res_model: mainObject.model,
+                    }).then(
+                        (seo_data) => checkAndNotifySEO(
+                            seo_data,
+                            this.notificationService,
+                            this.dialogService,
+                            OptimizeSEODialog
+                        ),
+                        (error) => {
+                            throw error;
+                        }
+                    );
+                }
                 return published;
             },
             err => {

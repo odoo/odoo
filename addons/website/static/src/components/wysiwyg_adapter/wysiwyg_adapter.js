@@ -9,7 +9,7 @@ import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 import weUtils from '@web_editor/js/common/utils';
 import { isMediaElement } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
-import { cloneContentEls } from "@website/js/utils";
+import { cloneContentEls, checkAndNotifySEO } from "@website/js/utils";
 
 import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
 import { WebsiteDialog } from '../dialog/dialog';
@@ -17,6 +17,7 @@ import { PageOption } from "./page_options";
 import { Component, onWillStart, useEffect, onWillUnmount } from "@odoo/owl";
 import { EditHeadBodyDialog } from "../edit_head_body_dialog/edit_head_body_dialog";
 import { router } from "@web/core/browser/router";
+import { OptimizeSEODialog } from '@website/components/dialog/seo';
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait
@@ -98,6 +99,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         this.orm = useService('orm');
         this.dialogs = useService('dialog');
         this.action = useService('action');
+        this.notificationService = useService("notification");
 
         useBus(this.websiteService.bus, 'LEAVE-EDIT-MODE', (ev) => this.leaveEditMode(ev.detail));
 
@@ -1124,7 +1126,35 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      * @private
      */
     async _onSaveRequest(event) {
-        let callback = () => this.leaveEditMode({ forceLeave: true });
+        let callback = () => {
+            this.leaveEditMode({ forceLeave: true });
+            if (this.websiteService.currentWebsite.metadata.canPublish) {
+                const {
+                    mainObject: { id, model },
+                } = this.websiteService.currentWebsite.metadata;
+                this.orm.read(model, [id], ["is_published"]).then(
+                    (record) => {
+                        rpc("/website/get_seo_data", {
+                            res_id: id,
+                            res_model: model,
+                        }).then(
+                            (seo_data) => checkAndNotifySEO(
+                                seo_data,
+                                this.notificationService,
+                                this.dialogService,
+                                OptimizeSEODialog
+                            ),
+                            (error) => {
+                                throw error;
+                            }
+                        );
+                    },
+                    (err) => {
+                        throw err;
+                    }
+                );
+            }
+        };
         if (event.data.reload || event.data.reloadEditor) {
             this.props.willReload(this._getDummmySnippetsEl());
             callback = async () => {
