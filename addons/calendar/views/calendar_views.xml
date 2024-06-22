@@ -257,23 +257,17 @@
                                     <button name="do_decline" string="Decline" invisible="state not in ('needsAction', 'tentative', 'accepted')" type="object" icon="fa-times-circle text-danger"/>
                                 </tree>
                                 <kanban class="o_kanban_mobile" create="false" delete="false">
-                                    <field name="partner_id" />
-                                    <field name="state" />
-                                    <field name="email" widget="email"/>
 
                                     <templates>
-                                        <t t-name="kanban-box">
-                                            <div class="d-flex flex-column justify-content-between">
-                                                <field name="partner_id"/>
-                                                <field name="email" widget="email"/>
-                                                <span>Status: <field name="state" /></span>
-
-                                                <div class="text-end">
-                                                    <button name="do_tentative" invisible="state not in ('needsAction', 'declined', 'accepted')" string="Uncertain" type="object" class="btn fa fa-asterisk"/>
-                                                    <button name="do_accept" invisible="state not in ('needsAction', 'tentative', 'declined')" string="Accept" type="object" class="btn fa fa-check text-success"/>
-                                                    <button name="do_decline" invisible="state not in ('needsAction', 'tentative', 'accepted')" string="Decline" type="object" class="btn fa fa-times-circle text-danger"/>
-                                                </div>
-                                            </div>
+                                        <t t-name="kanban-card">
+                                            <field name="partner_id"/>
+                                            <field name="email" widget="email"/>
+                                            <span>Status: <field name="state" /></span>
+                                            <footer class="justify-content-end">
+                                                <button name="do_tentative" invisible="state not in ('needsAction', 'declined', 'accepted')" string="Uncertain" type="object" class="btn fa fa-asterisk"/>
+                                                <button name="do_accept" invisible="state not in ('needsAction', 'tentative', 'declined')" string="Accept" type="object" class="btn fa fa-check text-success"/>
+                                                <button name="do_decline" invisible="state not in ('needsAction', 'tentative', 'accepted')" string="Decline" type="object" class="btn fa fa-times-circle text-danger"/>
+                                            </footer>
                                         </t>
                                     </templates>
                                 </kanban>
