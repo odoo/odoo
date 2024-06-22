@@ -101,8 +101,8 @@ QUnit.module('Crm Rainbowman Triggers', {
             arch: `
                 <kanban js_class="crm_kanban">
                     <templates>
-                        <t t-name="kanban-box">
-                            <div><field name="name"/></div>
+                        <t t-name="kanban-card">
+                            <field name="name"/>
                         </t>
                     </templates>
                 </kanban>`,
