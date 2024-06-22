@@ -257,13 +257,10 @@
                                     <button name="do_decline" string="Decline" invisible="state not in ('needsAction', 'tentative', 'accepted')" type="object" icon="fa-times-circle text-danger"/>
                                 </tree>
                                 <kanban class="o_kanban_mobile" create="false" delete="false">
-                                    <field name="partner_id" />
-                                    <field name="state" />
-                                    <field name="email" widget="email"/>
 
                                     <templates>
-                                        <t t-name="kanban-box">
-                                            <div class="d-flex flex-column justify-content-between">
+                                        <t t-name="kanban-card">
+                                            <div class="justify-content-between">
                                                 <field name="partner_id"/>
                                                 <field name="email" widget="email"/>
                                                 <span>Status: <field name="state" /></span>

@@ -20,11 +20,9 @@ QUnit.module('Crm Forecast Model Extension', {
         this.testKanbanView = {
             arch: `
                 <kanban js_class="forecast_kanban">
-                    <field name="date_deadline"/>
-                    <field name="date_closed"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div><field name="name"/></div>
+                        <t t-name="kanban-card">
+                            <field name="name"/>
                         </t>
                     </templates>
                 </kanban>`,
@@ -140,10 +138,9 @@ QUnit.module('Crm Fill Temporal Service', {
         this.testKanbanView = {
             arch: `
                 <kanban js_class="forecast_kanban">
-                    <field name="date_deadline"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div><field name="name"/></div>
+                        <t t-name="kanban-card">
+                            <field name="name"/>
                         </t>
                     </templates>
                 </kanban>`,
@@ -286,12 +283,9 @@ QUnit.module('Crm Forecast main flow with progressBars', (hooks) => {
             arch: `
                 <kanban js_class="forecast_kanban">
                     <progressbar field="color" colors='{"s": "success", "w": "warning", "d": "danger"}'  sum_field="int_field"/>
-                    <field name="date_deadline"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="name"/>
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="name"/>
                         </t>
                     </templates>
                 </kanban>`,

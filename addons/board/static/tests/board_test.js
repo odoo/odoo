@@ -459,8 +459,8 @@ QUnit.module("Board", (hooks) => {
         serverData.views["partner,5,kanban"] = `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`;
@@ -539,9 +539,9 @@ QUnit.module("Board", (hooks) => {
         serverData.views["partner,false,kanban"] = `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <div>
-                            <div><field name="foo"/></div>
+                            <field name="foo"/>
                             <button name="sitting_on_a_park_bench" type="object">Eying little girls with bad intent</button>
                         </div>
                     </t>
