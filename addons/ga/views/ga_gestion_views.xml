@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<odoo>
+  <data>
+    <record id="ga_gestion_view_search" model="ir.ui.view">
+    <field name="name">ga.gestion.view.search</field>
+    <field name="model">ga.gestion</field>
+    <field name="arch" type="xml">
+      <search string="Buscar gestion">
+        <field name="codigo"/>
+        <field name="descripcion"/>
+        <field name="fecha_inicio"/>
+        <field name="fecha_fin"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="ga_gestion_view_tree" model="ir.ui.view">
+    <field name="name">ga.gestion.tree</field>
+    <field name="model">ga.gestion</field>
+    <field name="arch" type="xml">
+      <tree string="Gestion escolar" create="true" edit="true">
+          <field name="id"/>
+          <field name="codigo"/>
+          <field name="descripcion"/>
+          <field name="fecha_inicio"/>
+          <field name="fecha_fin"/>
+      </tree>
+  </field>
+  </record>
+
+  <record id="ga_gestion_view_form" model="ir.ui.view">
+    <field name="name">ga.gestion.form</field>
+    <field name="model">ga.gestion</field>
+    <field name="arch" type="xml">
+      <form string="Gestion escolar">
+        <sheet>
+          <group>
+            <field name="codigo"/>
+          </group>
+          <group>
+            <field name="descripcion"/>
+          </group>
+          <group>
+            <field name="fecha_inicio"/>
+            <field name="fecha_fin" />
+          </group>
+          <notebook>
+            <page string="Ciclos academicos">
+              <field name="ciclo_adacemico_ids">
+                <tree editable="buttom">
+                  <field name="codigo"/>
+                  <field name="descripcion"/>
+                  <field name="fecha_inicio"/>
+                  <field name="fecha_fin"/>
+                </tree>
+              </field>
+            </page>
+            <page string="Plan de Estudio">
+              <field name="plan_estudio_ids">
+                <tree editable="bottom">
+                  <field name="materia_id" widget="selection" value="plan_estudio_ids.codigo"/>
+                  <field name="grado_id"/>
+                  <field name="horas"/>
+                </tree>
+              </field>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="ga_gestion_action" model="ir.actions.act_window">
+    <field name="name">Gestion escolar</field>
+    <field name="res_model">ga.gestion</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+  </data>
+</odoo>
