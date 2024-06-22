@@ -1831,7 +1831,7 @@ msgstr "Tipo de cambio"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion rate from company currency to order currency."
-msgstr "Tasa de conversión de la moneda de la empresa a la moneda del pedido."
+msgstr "Tipo de cambio de moneda de la compañía a la moneda del pedido."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2713,7 +2713,7 @@ msgstr "Información adicional"
 #. module: point_of_sale
 #: model:product.attribute,name:point_of_sale.fabric_attribute
 msgid "Fabric"
-msgstr "Fabric"
+msgstr "Tela"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__failed_pickings
@@ -2836,7 +2836,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/generic_components/orderline/orderline.xml:0
+#: code:addons/point_of_sale/static/src/app/store/models.js:0
 #, python-format
 msgid "Free"
 msgstr "Gratuito"
@@ -3527,7 +3527,7 @@ msgid ""
 "Only cash and bank journals are allowed."
 msgstr ""
 "Deje vacío para utilizar la cuenta por cobrar del cliente.\n"
-"Define el diario en el que se anotan los pagos acumulados (o el pago individual si Identificar cliente es verdadero) después de cerrar la sesión.\n"
+"Define el diario en el que se anotan los pagos acumulados (o el pago individual si Identificar cliente es True) después de cerrar la sesión.\n"
 "Para el diario de efectivo, escribimos directamente en la cuenta por defecto del diario a través de las líneas de extracto bancario.\n"
 "Para el diario de bancos, escribimos en la cuenta pendiente especificada en este método de pago.\n"
 "Solo se permiten los diarios de caja y de bancos."
@@ -3755,12 +3755,12 @@ msgstr "Móvil"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Module Pos Hr"
-msgstr "Módulo Punto de venta para Recursos humanos"
+msgstr "Módulo TPV y RR. HH."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.monitor_stand_product_template
 msgid "Monitor Stand"
-msgstr "Soporte de Monitor"
+msgstr "Soporte de monitor"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4146,7 +4146,7 @@ msgstr "Set para oficina"
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 #, python-format
 msgid "Offline Orders"
-msgstr "Pedidos fuera de línea"
+msgstr "Pedidos sin conexión"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7023,7 +7023,7 @@ msgstr "Debe completar %s en sus detalles."
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__proxy_ip
 msgid "The IP Address or hostname of the Printer's hardware proxy"
 msgstr ""
-"La dirección IP o el nombre de host del proxy hardware de la impresora"
+"La dirección IP o el nombre de host del proxy del hardware de la impresora"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__country_code
@@ -7159,8 +7159,8 @@ msgid ""
 "The hostname or ip address of the hardware proxy, Will be autodetected if "
 "left empty."
 msgstr ""
-"El nombre del equipo o la dirección IP del proxy del hardware se detectarán "
-"automáticamente si estos se dejan vacíos."
+"El nombre de host o la dirección IP del proxy de hardware. Se detectarán "
+"automáticamente si los campos están vacíos."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7572,9 +7572,9 @@ msgid ""
 msgstr ""
 "Este campo representa la diferencia máxima permitida entre el saldo final y "
 "el efectivo teórico al cerrar una sesión, para usuarios no administradores "
-"TPV . Si se alcanza este máximo, el usuario tendrá un mensaje de error en el"
-" cierre de su sesión diciendo que él tiene que ponerse en contacto con su "
-"manager ."
+"de TPV. Si se alcanza este máximo, el usuario tendrá un mensaje de error en "
+"el cierre de su sesión diciendo que él tiene que ponerse en contacto con su "
+"gerente."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id
@@ -7855,7 +7855,7 @@ msgstr "Descuento total"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 #, python-format
 msgid "Total Due"
-msgstr "Adeudo Total"
+msgstr "Total adeudado"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8300,7 +8300,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #, python-format
 msgid "You can go to"
-msgstr "Puede dirigirse a"
+msgstr "Puede ir a "
 
 #. module: point_of_sale
 #. odoo-python

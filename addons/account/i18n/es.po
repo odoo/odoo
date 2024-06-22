@@ -535,6 +535,8 @@ msgstr ""
 msgid ""
 "<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
 msgstr ""
+"<b>Se ha aplicado un descuento por pago anticipado del "
+"%(referencia_pago).</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -6012,7 +6014,7 @@ msgid ""
 "Downpayments posted on this account will be considered by the Tax Closing "
 "Entry."
 msgstr ""
-"El asiento de cierre de impuestos considerará los anticipos publicados en "
+"El asiento de cierre de impuestos considerará los anticipos registrados en "
 "esta cuenta."
 
 #. module: account
@@ -6625,7 +6627,7 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "False"
-msgstr "Falso"
+msgstr "False"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_aml_ir_filters
@@ -7622,7 +7624,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "terms without removing it."
 msgstr ""
-"Si el campo activo se configura como falso, le permitirá ocultar las "
+"Si el campo activo se configura como False, le permitirá ocultar las "
 "condiciones de pago sin eliminarlas."
 
 #. module: account
@@ -8079,6 +8081,8 @@ msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
 " for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
+"El \"rango postal\" no es válido. Configure los valores \"De\" y \"A\" para "
+"el rango postal, \"A\" debe ser mayor que \"De\"."
 
 #. module: account
 #. odoo-python
@@ -8820,7 +8824,7 @@ msgid ""
 "Journal where the opening entry of this company's accounting has been "
 "posted."
 msgstr ""
-"Diario en el que se ha publicado el asiento de apertura de la contabilidad "
+"Diario en el que se ha registrado el asiento de apertura de la contabilidad "
 "de esta empresa."
 
 #. module: account
@@ -9260,7 +9264,7 @@ msgstr "Mensaje de fecha de bloqueo"
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_payment__restrict_mode_hash_table
 msgid "Lock Posted Entries with Hash"
-msgstr "Bloquear los asientos publicados con un hash"
+msgstr "Bloquear los asientos registrados con un hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
@@ -10410,7 +10414,8 @@ msgstr ""
 #, python-format
 msgid "Only posted/cancelled journal entries can be reset to draft."
 msgstr ""
-"Solo se pueden reestablecer a borrador los asientos publicados o cancelados."
+"Solo se pueden reestablecer a borrador los asientos registrados o "
+"cancelados."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -10485,7 +10490,7 @@ msgstr "Asiento contable de apertura"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_move_posted
 msgid "Opening Move Posted"
-msgstr "Movimiento de apertura publicado"
+msgstr "Movimiento de apertura registrado"
 
 #. module: account
 #. odoo-python
@@ -10638,7 +10643,7 @@ msgid ""
 "Outgoing Payments are posted on an Outstanding Payments Account. In the bank reconciliation widget, they appear as blue lines.\n"
 "Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account."
 msgstr ""
-"Los pagos salientes se publican en una cuenta de pagos pendientes. Aparecen como líneas azules en el widget de conciliación bancaria.\n"
+"Los pagos salientes se registran en una cuenta de pagos pendientes. Aparecen como líneas azules en el widget de conciliación bancaria.\n"
 "Las transacciones bancarias se concilian en la cuenta de pagos pendientes en lugar de la cuenta por pagar."
 
 #. module: account
@@ -11397,12 +11402,12 @@ msgstr "URL de acceso al portal"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Post"
-msgstr "Publicar"
+msgstr "Registrar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Post All Entries"
-msgstr "Publicar todos los asientos"
+msgstr "Registrar todos los asientos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -11417,17 +11422,17 @@ msgstr "Contabilizar los asientos de diferencia de cambio en:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr "Publicar asientos contables"
+msgstr "Registrar asientos contables"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
 msgid "Post Payments"
-msgstr "Publicar pagos"
+msgstr "Registrar pagos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Post bank transactions and payments in:"
-msgstr "Publicar transacciones bancarias y pagos en:"
+msgstr "Registrar transacciones bancarias y pagos en:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11437,7 +11442,7 @@ msgstr "Contabilizar descuentos en:"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 msgid "Post entries"
-msgstr "Publicar asientos"
+msgstr "Registrar asientos"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
@@ -11447,25 +11452,25 @@ msgstr "Publicar asientos"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
-msgstr "Publicado"
+msgstr "Registrado"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__posted_before
 #: model:ir.model.fields,field_description:account.field_account_move__posted_before
 #: model:ir.model.fields,field_description:account.field_account_payment__posted_before
 msgid "Posted Before"
-msgstr "Publicado antes"
+msgstr "Registrado antes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "Asientos contables publicados"
+msgstr "Asientos contables registrados"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Posted Journal Items"
-msgstr "Apuntes contables publicados"
+msgstr "Apuntes contables registrados"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__preceding_subtotal
@@ -12364,7 +12369,7 @@ msgstr "Gastos salariales"
 #. module: account
 #: model:account.account,name:account.1_salary_payable
 msgid "Salary Payable"
-msgstr "Sueldo por pagar"
+msgstr "Salario por pagar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -12982,21 +12987,21 @@ msgstr "Fijar un precio"
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
-"Establezca el activo como falso para ocultar la etiqueta de cuenta sin "
+"Establezca el activo como False para ocultar la etiqueta de cuenta sin "
 "eliminarla."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__active
 msgid "Set active to false to hide the Journal without removing it."
 msgstr ""
-"Establezca el activo como falso para ocultar el diario sin eliminarlo."
+"Establezca el activo como False para ocultar el diario sin eliminarlo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 msgid "Set active to false to hide the tax without removing it."
 msgstr ""
-"Establezca el activo como falso para ocultar el impuesto sin eliminarlo."
+"Establezca el activo como False para ocultar el impuesto sin eliminarlo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13175,7 +13180,7 @@ msgstr "Mostrar diario en el tablero"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Show unposted entries"
-msgstr "Mostrar asientos no publicados"
+msgstr "Mostrar asientos no registrados"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
@@ -14307,7 +14312,7 @@ msgid ""
 "invoice/bill, you can adjust its lines or the expected Total (tax inc.)."
 msgstr ""
 "El total actual de impuestos es %s pero el total esperado es %s. Para "
-"publicar la factura, puede ajustar sus líneas o el total esperado (con "
+"registrar la factura, puede ajustar sus líneas o el total esperado (con "
 "impuestos incluidos)."
 
 #. module: account
@@ -14320,7 +14325,7 @@ msgid ""
 msgstr ""
 "La fecha se establece antes de la fecha de bloqueo %(lock_type)s "
 "%(lock_date)s. El asiento se contabilizará en %(invoice_date)s tras su "
-"publicación."
+"registro."
 
 #. module: account
 #. odoo-python
@@ -14569,7 +14574,7 @@ msgstr ""
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
 msgstr ""
-"El asiento no se puede publicar debido al siguiente motivo: "
+"El asiento no se puede registrar debido al siguiente motivo: "
 "%(error_message)s"
 
 #. module: account
@@ -15062,7 +15067,7 @@ msgstr "Actualmente no hay facturas ni pagos para su cuenta."
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "There are no journal items in the draft state to post."
-msgstr "No hay apuntes contables en estado de borrador a publicar."
+msgstr "No hay apuntes contables en estado de borrador a registrar."
 
 #. module: account
 #. odoo-python
@@ -15377,7 +15382,7 @@ msgstr ""
 #, python-format
 msgid "This move is configured to be auto-posted on %s"
 msgstr ""
-"Este movimiento está configurado para publicarse automáticamente en %s"
+"Este movimiento está configurado para registrarse automáticamente en %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15392,7 +15397,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
-msgstr "Este movimiento se publicará en la fecha contable: %(date)s"
+msgstr "Este movimiento se registrará en la fecha contable: %(date)s"
 
 #. module: account
 #. odoo-javascript
@@ -15436,7 +15441,7 @@ msgid ""
 "This product is already being used in posted Journal Entries.\n"
 "If you want to change its Unit of Measure, please archive this product and create a new one."
 msgstr ""
-"Este producto ya está siendo utilizado en asientos contables publicados.\n"
+"Este producto ya está siendo utilizado en asientos contables registrados.\n"
 "Si desea cambiar su unidad de medida, archívelo y cree uno nuevo en su lugar."
 
 #. module: account
@@ -15458,7 +15463,7 @@ msgstr "Este asiento recurrente se originó de %s"
 #: model:ir.model.fields,help:account.field_account_move__auto_post_until
 #: model:ir.model.fields,help:account.field_account_payment__auto_post_until
 msgid "This recurring move will be posted up to and including this date."
-msgstr "Este movimiento recurrente se publicará hasta e incluida esta fecha."
+msgstr "Este movimiento recurrente se registrará hasta e incluida esta fecha."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -15793,7 +15798,7 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "True"
-msgstr "Verdadero"
+msgstr "True"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -15931,24 +15936,24 @@ msgstr "Facturas no pagadas"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
-msgstr "No publicado"
+msgstr "No registrado"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unposted Entries"
-msgstr "Asientos no publicados"
+msgstr "Asientos no registrados"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "Asientos contables no publicados"
+msgstr "Asientos contables no registrados"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "Apuntes contables no publicados"
+msgstr "Apuntes contables no registrados"
 
 #. module: account
 #. odoo-javascript
@@ -16516,7 +16521,7 @@ msgid ""
 "When an internal transfer is posted, a paired payment is created. They are "
 "cross referenced through this field"
 msgstr ""
-"Se crea un pago emparejado cuando se publica una transferencia interna. Se "
+"Se crea un pago emparejado cuando se registra una transferencia interna. Se "
 "referencian de forma cruzada en este campo"
 
 #. module: account
@@ -16662,7 +16667,7 @@ msgstr ""
 "Para continuar:\n"
 "1. Haga clic en el botón \"asientos contables\" en la parte superior derecha en el formulario del diario.\n"
 "2. Filtre los asientos en estado de borrador.\n"
-"3. Seleccione todos y publique o elimínelos a través del menú de acción."
+"3. Seleccione todos y registre o elimínelos a través del menú de acción."
 
 #. module: account
 #. odoo-python
@@ -16702,21 +16707,21 @@ msgstr ""
 msgid "You can only change the period/account for posted journal items."
 msgstr ""
 "Solo puede cambiar el periodo o la cuenta para los apuntes contables "
-"publicados."
+"registrados."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
-msgstr "Solo puede conciliar los asientos publicados."
+msgstr "Solo puede conciliar los asientos registrados."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can only register payment for posted journal entries."
-msgstr "Solo puede registrar el pago de los asientos publicados."
+msgstr "Solo puede registrar el pago de los asientos registrados."
 
 #. module: account
 #. odoo-python
@@ -16740,7 +16745,7 @@ msgstr "Solo puede volver a secuenciar apuntes del mismo diario"
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "You can only reverse posted moves."
-msgstr "Solo puede revertir movimientos publicados."
+msgstr "Solo puede revertir movimientos registrados."
 
 #. module: account
 #. odoo-python
@@ -16848,7 +16853,7 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
-"No puede eliminar un apunte contable publicado. No tome a la ligera sus "
+"No puede eliminar un apunte contable registrado. No tome a la ligera sus "
 "registros contables; reestablezca el apunte contable a borrador antes de "
 "eliminarlo."
 
@@ -16902,7 +16907,7 @@ msgid ""
 "You can't provide a foreign currency without specifying an amount in 'Amount"
 " in Currency' field."
 msgstr ""
-"No puede proporcionar una divisa extranjera sin especificar un importe en el"
+"No puede proporcionar una moneda extranjera sin especificar un importe en el"
 " campo de \"Importe en moneda\"."
 
 #. module: account
@@ -17023,7 +17028,7 @@ msgid ""
 "You cannot create a move already in the posted state. Please create a draft "
 "move and post it after."
 msgstr ""
-"No puede crear un asiento directamente en estado publicado. Cree por favor "
+"No puede crear un asiento directamente en estado registrado. Cree por favor "
 "un asiento borrador, y publíquelo después."
 
 #. module: account
@@ -17151,7 +17156,8 @@ msgstr ""
 msgid ""
 "You cannot edit the journal of an account move if it has been posted once."
 msgstr ""
-"No puede editar el diario de un asiento si se ha publicado al menos una vez."
+"No puede editar el diario de un asiento si se ha registrado al menos una "
+"vez."
 
 #. module: account
 #. odoo-python
@@ -17204,7 +17210,7 @@ msgid ""
 "You cannot modify a posted entry of this journal because it is in strict "
 "mode."
 msgstr ""
-"No puede modificar un asiento publicado de este diario porque está en modo "
+"No puede modificar un asiento registrado de este diario porque está en modo "
 "estricto."
 
 #. module: account
@@ -17236,8 +17242,8 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
-"No puede modificar los impuestos relacionados con un asiento publicado. Debe"
-" restablecer el asiento a borrador para hacerlo."
+"No puede modificar los impuestos relacionados con un asiento registrado. "
+"Debe restablecer el asiento a borrador para hacerlo."
 
 #. module: account
 #. odoo-python
@@ -17264,7 +17270,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
-msgstr "No puede publicar un asiento en un diario archivado (%(journal)s)"
+msgstr "No puede registrar un asiento en un diario archivado (%(journal)s)"
 
 #. module: account
 #. odoo-python
@@ -17342,7 +17348,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot switch the type of a posted document."
-msgstr "No puede cambiar el tipo de un documento publicado."
+msgstr "No puede cambiar el tipo de un documento registrado."
 
 #. module: account
 #. odoo-python
@@ -17431,7 +17437,7 @@ msgstr "No tiene permisos para indicar si las cuentas son confiables o no."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
-msgstr "No tiene los permisos de acceso para publicar facturas."
+msgstr "No tiene los permisos de acceso para registrar facturas."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17574,7 +17580,7 @@ msgstr "asignar a la factura"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "auto-posting enabled. Next accounting date:"
-msgstr "publicación automática habilitada. Próxima fecha contable:"
+msgstr "registro automático habilitado. Próxima fecha contable:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

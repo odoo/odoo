@@ -2332,9 +2332,9 @@ msgid ""
 "Additional information is displayed in the name of the SOL when it is used in services apps (project and planning). \n"
 msgstr ""
 "\n"
-"Permite mostrar información de venta en las aplicaciones de servicios de la línea de orden de venta\n"
+"Permite mostrar información de venta en las aplicaciones de servicios de la línea de pedido de venta\n"
 "===========================================================\n"
-"Se muestra información adicional en el nombre de la línea de orden de venta cuando se utiliza en las aplicaciones de servicios (Proyecto y Planificación).\n"
+"Se muestra información adicional en el nombre de la línea de pedido de venta cuando se utiliza en las aplicaciones de servicios (Proyecto y Planificación).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet
@@ -4116,8 +4116,8 @@ msgstr ""
 "También usamos una secuencia separada para el DDT, ya que el número\n"
 "no puede tener separaciones y solo se debe aplicar cuando se envíen los bienes.\n"
 "\n"
-"Cuando las facturas están relacionadas a su orden de venta y la orden de venta está relacionada \n"
-"a la entrega, el sistema calculará los DDT de forma automática para cada \n"
+"Cuando las facturas están relacionadas a su pedido de venta y la pedido de venta está relacionado \n"
+"a la entrega, el sistema calculará los DDT automáticamente para cada \n"
 "línea de factura para exportarlo al XML de FatturaPA.\n"
 
 #. module: base
@@ -5082,7 +5082,7 @@ msgstr ""
 "* Tipos de documentos legales en Argentina\n"
 "* Tipos de identificación válidos en Argentina.\n"
 "* Códigos de país AFIP y códigos de IVA del país para entidades leales, personas naturales y otros\n"
-"* Códigos de divisa AFIP\n"
+"* Códigos de moneda AFIP\n"
 "* Código de unidades de medidas AFIP\n"
 "* Contactos: consumidor final y AFIP\n"
 
@@ -5427,10 +5427,10 @@ msgid ""
 "So this module is to get the warehouse address if the invoice is created from Sale Order\n"
 msgstr ""
 "\n"
-"Obtenga la dirección del almacén si la factura se crea a partir de la orden de compra.\n"
+"Obtenga la dirección del almacén si la factura se crea a partir del pedido de compra.\n"
 "En el intercambio electrónico de datos de India, enviamos la dirección de envío en caso de que esté disponible.\n"
 "\n"
-"Este módulo es para obtener la dirección del almacén si la factura se crea a partir de la orden de venta.\n"
+"Este módulo es para obtener la dirección del almacén si la factura se crea a partir del pedido de venta.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_drivers
@@ -5574,7 +5574,7 @@ msgstr ""
 "* Importar pedidos de múltiples cuentas y mercados.\n"
 "* Los pedidos se emparejan con los productos Odoo según su referencia interna (SKU en Amazon).\n"
 "* Las entregas confirmadas en Odoo se sincronizan en Amazon.\n"
-"* Soporte para Fulfillment by Amazon (FBA) y Fulfillment by Merchant (FBM):\n"
+"* Soporte para Logística de Amazon (Fulfillment by Amazon, FBA) y Logística de Comerciante (Fulfillment by Merchant, FBM):\n"
 "    * Logística de Amazon: una ubicación de stock y los movimientos de stock permiten supervisar su stock en los centros logísticos de Amazon.\n"
 "    * FBM: las notificaciones de entrega se envían a Amazon para cada picking confirmado (entrega parcial amigable).\n"
 
@@ -6815,11 +6815,11 @@ msgstr ""
 "\n"
 "Puede definir los diferentes niveles de recordatorio a través del menú:\n"
 "---------------------------------------------------------------\n"
-"    Configuración / Recordatorio / Niveles de recordatorio\n"
+"    Configuración / Seguimiento / Niveles de seguimiento\n"
 "\n"
 "Una vez que se haya definido, puede imprimir recordatorios automáticamente cada día. Solo tiene que hacer clic en el menú:\n"
 "------------------------------------------------------------------------------------------------------\n"
-"    Recordatorio del pago / Enviar correo y cartas\n"
+"    Seguimiento del pago / Enviar correo y cartas\n"
 "\n"
 "Generará un PDF, enviará un correo o puede configurar las actividades según los diferentes niveles\n"
 "de recordatorio que defina. Puede definir diferentes políticas para diferentes empresas.\n"
@@ -6980,7 +6980,7 @@ msgstr ""
 "===============================================\n"
 "\n"
 "Este módulo le permite importar archivos OFX legibles por máquina en Odoo: se analizan y almacenan en formato legible en\n"
-"Contabilidad \\ Bancos y efectivo \\ Extractos bancarios\n"
+"Contabilidad \\ Bancos y caja \\ Extractos bancarios\n"
 "\n"
 "Se pueden generar extractos bancarios que contengan un subconjunto de la información OFX (sólo las líneas de transacción necesarias para la\n"
 "creación de registros contables).\n"
@@ -7005,7 +7005,7 @@ msgstr ""
 "==========================================\n"
 "\n"
 "Este módulo le permite importar los archivos QIF legibles por máquina en Odoo: se analizan y se almacenan en formato legible por humanos en\n"
-"Contabilidad \\ Banco y efectivo \\ Extractos bancarios.\n"
+"Contabilidad \\ Banco y caja \\ Extractos bancarios.\n"
 "\n"
 "Nota importante\n"
 "---------------------\n"
@@ -7160,7 +7160,7 @@ msgid ""
 "Notify that a matching sale order exists in the reconciliation widget.\n"
 msgstr ""
 "\n"
-"Notifique que existe una orden de venta que coincide en el widget de conciliación.\n"
+"Notifique que existe un pedido de venta que coincide en el widget de conciliación.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa
@@ -8290,7 +8290,7 @@ msgid ""
 msgstr ""
 "\n"
 "Módulo técnico:\n"
-"el propósito principal es sobrescribir la vista sale_order para permitir la configuración de productos en el formulario de la orden de venta.\n"
+"el propósito principal es sobrescribir la vista sale_order para permitir la configuración de productos en el formulario del pedido de venta.\n"
 "\n"
 "También habilita la función \"productos opcionales\".\n"
 
@@ -8424,7 +8424,7 @@ msgstr ""
 "    de que está enviando bienes entre A y B.\n"
 "    \n"
 "    Se puede configurar en el contacto si se necesitan los precios\n"
-"    en la guía de entrega y si necesitan provenir de la orden de venta\n"
+"    en la guía de entrega y si necesitan provenir del pedido de venta\n"
 "    o del producto en sí.\n"
 "    \n"
 "    Podrá crear la guía de entrega solo cuando valide la orden \n"
@@ -9788,8 +9788,8 @@ msgstr ""
 "Este módulo permite gestionar los acuerdos de compra.\n"
 "===========================================================\n"
 "\n"
-"Gestione las licitaciones y acuerdos marco. Las licitaciones se utilizan para obtener\n"
-"ofertas competentes de varios proveedores y seleccionar las mejores. Los acuerdos marco\n"
+"Gestione las licitaciones y pedidos abiertos. Las licitaciones se utilizan para obtener\n"
+"ofertas competentes de varios proveedores y seleccionar las mejores. Los pedido abiertos\n"
 "son contratos que se celebran con los proveedores para beneficiarse de un precio predeterminado.\n"
 
 #. module: base
@@ -10008,11 +10008,11 @@ msgid ""
 "This module follows the implementation guidelines issued by the Bacs Payment Schemes Limited (BPSL). For more information about the BACS standards: https://www.bacs.co.uk/\n"
 msgstr ""
 "\n"
-"Este módulo permite generar órdenes de pago tal y como exigen las normas de débito directo y crédito directo de BACS. Los ficheros de texto sin formato generados pueden cargarse en su banco para su procesamiento.\n"
+"Este módulo permite generar órdenes de pago tal y como exigen las normas de domiciliación bancaria y crédito directo de BACS. Puede subir los archivos de texto plano generados a su banco para su procesamiento.\n"
 "\n"
-"El débito directo permite que los negocios recolecten pagos directamente desde las cuentas bancarias de los clientes, mientras que el crédito directo permite que los negocios hagan pagos a cuentas bancarias de personas o de otros negocios.\n"
+"La domiciliación bancaria permite que los negocios cobren directamente a las cuentas bancarias de los clientes, mientras que el crédito directo permite que los negocios hagan pagos a cuentas bancarias de personas o de otros negocios.\n"
 "\n"
-"Este módulo sigue las reglas de implementación de Esquemas de Pago Limitados Bacs (BPSL, por su sigla en inglés). Para más información sobre los estándares BACS, visite: https://www.bacs.co.uk/\n"
+"Este módulo sigue las reglas de implementación de Bacs Payment Schemes Limited. Para obtener más información sobre los estándares BACS, visite: https://www.bacs.co.uk/\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_saft
@@ -11096,7 +11096,7 @@ msgid ""
 msgstr ""
 "\n"
 " Al facturar hojas de asistencia, permite la facturación de todas las hojas de asistencia\n"
-"vinculadas a una orden de ventas o solo las hojas de asistencia validadas\n"
+"vinculadas a un pedido de venta o solo las hojas de asistencia validadas\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_documents
@@ -11156,7 +11156,7 @@ msgstr "El valor \"group_by\" debe ser una cadena %(attribute)s = %(value)r"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__accesses_count
 msgid "# Access Rights"
-msgstr "# Derechos de acceso"
+msgstr "# Permisos de acceso"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_aps
@@ -11536,7 +11536,7 @@ msgstr ""
 "## Instrucciones de prueba\n"
 "\n"
 "- El número de teléfono del contacto debe ser un número de teléfono válido de la India, por ejemplo: +911234567890\n"
-"- El país del contacto debe ser India y la divisa de pago INR para habilitar los \n"
+"- El país del contacto debe ser India y la moneda de pago INR para habilitar los \n"
 "métodos de pago de India.\n"
 "\n"
 "Consulte https://razorpay.com/docs/payments/payments/test-card-upi-details/ y \n"
@@ -13132,12 +13132,12 @@ msgstr "Menú de acceso"
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
 #, python-format
 msgid "Access Rights"
-msgstr "Derechos de acceso"
+msgstr "Permisos de acceso"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Access Rights Mismatch"
-msgstr "Discrepancia en los derechos de acceso"
+msgstr "Discrepancia en los permisos de acceso"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__access_token
@@ -13666,7 +13666,7 @@ msgid ""
 "Add information of sale order linked to the registration for the creation of"
 " the lead."
 msgstr ""
-"Agregue información de la orden de venta vinculada al registro para la "
+"Agregue información del pedido de venta vinculada al registro para la "
 "creación del lead"
 
 #. module: base
@@ -16695,12 +16695,11 @@ msgid ""
 "Modules time, datetime, dateutil are available."
 msgstr ""
 "Código para calcular el valor del campo.\n"
-"Iterar en el registro 'self' y asignar el valor del campo:\n"
+"Itera sobre el conjunto de registros 'self' y asigna el valor del campo:\n"
 "\n"
-"for record in self:\n"
-"record['size'] = len(record.name)\n"
-"\n"
-"Los módulos time, datetime, dateutils están disponibles."
+"    for record in self:\n"
+"        record['size'] = len(record.name)\n"
+"Los módulos time, datetime y dateutil están disponibles."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_cohort
@@ -18352,7 +18351,7 @@ msgstr "Días"
 #: model:ir.module.module,shortdesc:base.module_account_debit_note
 #: model:ir.module.module,summary:base.module_account_debit_note
 msgid "Debit Notes"
-msgstr "Notas débito"
+msgstr "Notas de débito"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
@@ -18961,7 +18960,7 @@ msgstr "Mostrar la imagen del país si el campo se encuentra en el registro"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display the phone icons even if no_marker is True"
-msgstr "Mostrar los iconos de teléfono incluso si no_marker es Verdadero"
+msgstr "Mostrar los iconos de teléfono incluso si no_marker es True"
 
 #. module: base
 #. odoo-python
@@ -21414,7 +21413,7 @@ msgid ""
 "    This module creates a social 'sandbox' where you can play around with the social app without publishing anything on actual social media."
 msgstr ""
 "Obtenga datos de demostración para el módulo social.\n"
-"Este módulo crea una \"sandbox\" social en la que puede descubrir la aplicación social sin publicar nada en las redes sociales."
+"Este módulo crea un entorno de pruebas social (\"sandbox\", modeo aislado) en la que puede descubrir la aplicación social sin publicar nada en las redes sociales."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_fleet
@@ -21601,7 +21600,7 @@ msgstr "Nombre del grupo"
 #: model:ir.model.fields,help:base.field_res_groups__share
 msgid "Group created to set access rights for sharing data with some users."
 msgstr ""
-"Grupo creado para establecer derechos de acceso para compartir información "
+"Grupo creado para establecer permisos de acceso para compartir información "
 "con algunos usuarios."
 
 #. module: base
@@ -22387,8 +22386,8 @@ msgid ""
 "If set to true, the action will not be displayed on the right toolbar of a "
 "form view."
 msgstr ""
-"Si se marca como verdadero, la acción no se mostrará en la barra de "
-"herramientas de la derecha en una vista formulario."
+"Si se marca como True, la acción no se mostrará en la barra de herramientas "
+"de la derecha en una vista formulario."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_default__company_id
@@ -22442,7 +22441,7 @@ msgid ""
 msgstr ""
 "Si se hereda esta vista, \n"
 "* Si es cierto, la vista siempre extiende a su padre \n"
-"* Si es falso, la vista actual no extiende a su padre, pero se puede habilitar\n"
+"* Si es False, la vista actual no extiende a su padre, pero se puede habilitar\n"
 "             "
 
 #. module: base
@@ -23441,12 +23440,12 @@ msgstr "Inventario, logística, valoración, contabilidad"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__inverse_company_rate
 msgid "Inverse Company Rate"
-msgstr "Tasa inversa de la empresa"
+msgstr "Tipo de cambio inverso de la compañía"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__inverse_rate
 msgid "Inverse Rate"
-msgstr "Tasa inversa"
+msgstr "Tipo de cambio inverso"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__invoice
@@ -24490,7 +24489,7 @@ msgstr "Detalles de registro"
 #: model:ir.model.fields,field_description:base.field_res_users__login
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "Login"
-msgstr "Usuario"
+msgstr "Inicio de sesión"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo_web
@@ -24986,8 +24985,8 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_hr_payroll_planning
 msgid "Manage extra hours for your hourly paid employees using planning"
 msgstr ""
-"Gestione las horas adicionales de sus empleados con sueldos por hora desde "
-"la aplicación Planificación"
+"Gestiona las horas extras de sus empleados que tienen salarios por hora con "
+"la aplicación de Planificación"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant
@@ -26375,7 +26374,7 @@ msgstr "Niue"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_boolean_value__false
 msgid "No (False)"
-msgstr "No (falso)"
+msgstr "No (False)"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country
@@ -26392,7 +26391,7 @@ msgstr "¡No se pudo encontrar una vista por defecto de tipo '%s'!"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_sequence__implementation__no_gap
 msgid "No gap"
-msgstr "Sin hueco"
+msgstr "Sin espacio"
 
 #. module: base
 #. odoo-python
@@ -26565,7 +26564,7 @@ msgstr "No instalado"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Not enough access rights on the external ID %r"
-msgstr "No hay suficientes derechos de acceso en el ID externo %r"
+msgstr "No hay suficientes permisos de acceso en el ID externo %r"
 
 #. module: base
 #. odoo-python
@@ -26604,7 +26603,7 @@ msgstr "Número de compañías"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__accesses_count
 msgid "Number of access rights that apply to the current user"
-msgstr "Número de derechos de acceso que se aplican al usuario actual"
+msgstr "Número de permisos de acceso que se aplican al usuario actual"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__groups_count
@@ -26852,7 +26851,7 @@ msgstr ""
 "Tener diferentes tipos de acceso le permite organizar su proceso de publicación de acuerdo a sus necesidades.\n"
 "\n"
 "Contamos con otros permisos de acceso relacionados a la empresa (productos, personas, eventos,\n"
-"etc.), estos siguen la gestión de derechos de acceso estándar de Odoo, por lo que\n"
+"etc.), estos siguen la gestión de permisos de acceso estándar de Odoo, por lo que\n"
 "no tiene que configurar las cosas dos veces.\n"
 
 #. module: base
@@ -27588,7 +27587,7 @@ msgstr "Exportación en XML de pólizas mexicanas de Odoo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_landing
 msgid "Odoo Mexico Localization for Stock/Landing"
-msgstr "México - Números de Pedimento/Almacén"
+msgstr "Localización mexicana de Odoo para el stock y el embarque"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
@@ -28610,8 +28609,8 @@ msgid ""
 "Once the delivery is validated, update the cost on the SO to have an exact "
 "margin computation."
 msgstr ""
-"Una vez validada la entrega, actualiza el coste en la orden de ventas para "
-"tener un margen exacto en la computación."
+"Una vez que se valide la entrega, actualice el coste en el pedido de venta "
+"para calcular el margen exacto."
 
 #. module: base
 #. odoo-python
@@ -28621,8 +28620,8 @@ msgid ""
 "One of the documents you are trying to access has been deleted, please try "
 "again after refreshing."
 msgstr ""
-"Uno de los documentos al que está intentado acceder ha sido eliminado, por "
-"favor inténtelo de nuevo tras actualizar."
+"Uno de los documentos al que está intentado acceder ha sido eliminado, "
+"inténtelo de nuevo después de actualizar la página."
 
 #. module: base
 #. odoo-python
@@ -28725,10 +28724,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
-"Sólo aplica si esta vista hereda de otra (inherit_id no es False/Null).\n"
+"Solo aplica si esta vista hereda de otra (inherit_id no es False/Null).\n"
 "\n"
-"* Si tiene extensión (predeterminado), cuando esta vista es solicitada, se busca hacia arriba la vista primaria más cercana (vía inherit_id), entonces todas las vistas heredando de ellas con el modelo de esta vista, aplicarán estos cambios.\n"
-"* Si la vista primaria más cercana es totalmente resuelta (incluso si usa un modelo diferente al de ésta), entonces se aplican las especificaciones de herencia (<xpath/>), y el resultado se usa como si fuera de la vista actual.\n"
+"* Si tiene extensión (por defecto), cuando se solicita esta vista, se busca\n"
+"la vista primaria más cercana (via inherit_id), y luego se aplica a todas las vistas\n"
+"que hereden de ella\n"
+"* Si es primaria, la vista primaria más cercana se resuelve completamente (incluso si utiliza un\n"
+"modelo diferente a este), las especificaciones de herencia se aplican después \n"
+"(<xpath/>) y el resultado se utiliza como si fuera la arquitectura real\n"
+"de esta vista.\n"
 
 #. module: base
 #. odoo-python
@@ -28740,7 +28744,7 @@ msgstr "Solo usuarios internos pueden crear claves API"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_unique_name_per_day
 msgid "Only one currency rate per day allowed!"
-msgstr "¡Solo se permite un tipo de tasa monetaria al día!"
+msgstr "¡Solo se permite un tipo de cambio al día!"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_decimal_precision_name_uniq
@@ -28924,13 +28928,13 @@ msgstr ""
 "Organice las sesiones\n"
 "--------------------\n"
 "\n"
-"### Desde la propuesta de la charla hasta la publicación\n"
+"### Desde la propuesta de la presentación hasta la publicación\n"
 "\n"
 "Incluya en sus eventos un formulario para proponer charlas que permita a sus visitas enviar conferencias y ponentes. Organice el proceso de validación de cada charla y planifíquelas de una manera fácil.\n"
 "\n"
-"La integración única del frontend y el backend de Odoo facilita la organización y la publicación. Elabore de forma sencilla las biografías de los ponentes y las descripciones de las charlas de una manera profesional.\n"
+"La integración única del frontend y el backend de Odoo facilita la organización y la publicación. Elabore de forma sencilla las biografías de los ponentes y las descripciones de las presentaciones de una manera profesional.\n"
 "\n"
-"Programa y lista de charlas\n"
+"Programa y lista de presentaciones\n"
 "------------------------\n"
 "\n"
 "### Una interfaz muy eficaz\n"
@@ -29086,7 +29090,7 @@ msgstr ""
 "\n"
 "Cree páginas de eventos profesionales seleccionando y arrastrando unos *\"bloques de creación\"* bien diseñados. Publique fotos de los eventos, los ponentes, el programa, etc.\n"
 "\n"
-"El enfoque único de Odoo para *\"editar en línea\"* hace que crear sitios web sea sorprendentemente fácil. \"¿Quiere agregar un ponente? ¿Cambiar el precio de una entrada? ¿Actualizar un banner? ¿Promocionar a un patrocinador?\", cámbielo solo con un clic.\n"
+"El enfoque único de Odoo para *\"editar inline\"* hace que crear sitios web sea sorprendentemente fácil. \"¿Quiere agregar un ponente? ¿Cambiar el precio de una entrada? ¿Actualizar un banner? ¿Promocionar a un patrocinador?\", cámbielo solo con un clic.\n"
 "\n"
 "Venda entradas en línea\n"
 "-------------------\n"
@@ -29186,7 +29190,7 @@ msgstr ""
 "\n"
 "### Nuestro equipo\n"
 "\n"
-"Cree una buena página de \"Quiénes somos\" para presentar a su equipo con profesionalidad.\n"
+"Cree una buena página de \"Sobre nosotros\" para presentar a su equipo con profesionalidad.\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project
@@ -30577,7 +30581,7 @@ msgstr "Proyecto Servicio de asistencia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_mail_plugin
 msgid "Project Mail Plugin"
-msgstr "Plugin del correo del proyecto"
+msgstr "Complemento del correo del proyecto"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project
@@ -31872,7 +31876,7 @@ msgstr "Definición de regla (filtro de dominio)"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_rule_no_access_rights
 msgid "Rule must have at least one checked access right!"
-msgstr "La regla debe tener por lo menos un derecho de acceso marcado."
+msgstr "La regla debe tener por lo menos un permiso de acceso marcado."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__rule_groups
@@ -32011,7 +32015,7 @@ msgstr "Servidor SMTP"
 #: model:ir.module.module,summary:base.module_sale_purchase_stock
 msgid "SO/PO relation in case of MTO"
 msgstr ""
-"Relación de orden de ventas/compra en caso de fabricación sobre pedido."
+"Relación de pedido de venta/compra en caso de fabricación sobre pedido."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__order
@@ -32226,7 +32230,7 @@ msgstr ""
 "\n"
 "Venta de suscripción en stock es un módulo de enlace entre sale_subscription y\n"
 "sale_stock. El propósito de este módulo es permitir\n"
-"que el usuario cree una orden de venta de suscripción con un producto almacenable que resultará en\n"
+"que el usuario cree un pedido de venta de suscripción con un producto almacenable que resultará en\n"
 "una orden de entrega recurrente y la facturación de esos productos.\n"
 "Características:\n"
 "- Permite la creación de productos almacenables recurrentes\n"
@@ -32762,8 +32766,7 @@ msgstr "Enviar notificación webhook"
 #: model:ir.module.module,summary:base.module_sign
 msgid "Send documents to sign online and handle filled copies"
 msgstr ""
-"Envíe documentos para firmar en línea, recibir y archivar las copias "
-"llenadas "
+"Envíe documentos a firmar en línea, recibir y archivar las copias llenadas "
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_push_notifications
@@ -34726,7 +34729,8 @@ msgstr "La acción \"App Switcher\" no se puede seleccionar como acción de inic
 #: code:addons/base/models/res_company.py:0
 #, python-format
 msgid "The %s of a subsidiary must be the same as it's root company."
-msgstr "El %s de una subsidiaria debe ser el mismo que el de la empresa raíz."
+msgstr ""
+"El %s de una subsidiaria debe ser el mismo que el de la compañía raíz."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__code
@@ -34870,7 +34874,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_unique_name
 msgid "The currency code must be unique!"
-msgstr "El código de divisa debe ser único"
+msgstr "El código de moneda debe ser único"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
@@ -36456,7 +36460,7 @@ msgstr "Transitorio: False"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Transient: True"
-msgstr "Transitorio: Verdadero"
+msgstr "Transitorio: True"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_transifex
@@ -36605,7 +36609,8 @@ msgstr "Muro de Twitter"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_twitter
 msgid "Twitter scroller snippet in website"
-msgstr "Fragmento de código para panel de Twitter en sitio web"
+msgstr ""
+"Fragmento de código para barra de desplazamiento de Twitter en sitio web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_totp
@@ -38260,7 +38265,7 @@ msgid ""
 "When re-invoicing the expense on the SO, set the cost to the total untaxed "
 "amount of the expense."
 msgstr ""
-"Al volver a facturar el gasto en la orden de ventas, configure el coste al "
+"Al volver a facturar el gasto en el pedido de venta, configure el coste al "
 "base imponible del gasto."
 
 #. module: base
@@ -38306,10 +38311,10 @@ msgid ""
 "are deleted. The 'no gap' implementation is slower than the standard one."
 msgstr ""
 "Al asignar un número de secuencia a un registro, la implementación de "
-"secuencias 'no gap' asegura que cada número de secuencia anterior ya se haya"
-" asignado. Aunque esta implementación no se omitirá ningún número de "
-"secuencia al asignarse, pueden crearse huecos si se borran registros. La "
-"implementación 'no gap' es más lenta que la estándar."
+"secuencia \"sin espacios\" garantiza que cada número anterior ya haya sido "
+"asignado. Aunque esta implementación no omitirá ningún número de secuencia "
+"al asignarlo, aún puede haber espacios en la secuencia si elimina registros."
+" La implementación \"sin espacio\" es más lenta que la estándar."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_G
@@ -38467,7 +38472,7 @@ msgstr "Yemen"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_boolean_value__true
 msgid "Yes (True)"
-msgstr "Sí (verdadero)"
+msgstr "Sí (True)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -38811,7 +38816,7 @@ msgstr ""
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "You don't have enough access rights to run this action."
-msgstr "No tiene suficientes derechos de acceso para ejecutar esta acción."
+msgstr "No tiene suficientes permisos de acceso para ejecutar esta acción."
 
 #. module: base
 #. odoo-python
@@ -39214,7 +39219,7 @@ msgstr "id externo"
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "false"
-msgstr "falso"
+msgstr "False"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__float
@@ -39380,7 +39385,7 @@ msgstr "no"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "on"
-msgstr "de"
+msgstr "el"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__one2many
@@ -39598,7 +39603,7 @@ msgstr "título"
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "true"
-msgstr "verdadero"
+msgstr "True"
 
 #. module: base
 #. odoo-python

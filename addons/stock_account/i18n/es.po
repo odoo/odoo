@@ -1094,7 +1094,7 @@ msgid ""
 msgstr ""
 "No puede actualizar el coste de un producto en la valoración automatizada, "
 "ya que conduce a la creación de un asiento contable, para el cual no tiene "
-"los derechos de acceso."
+"los permisos de acceso."
 
 #. module: stock_account
 #. odoo-python
@@ -1117,6 +1117,15 @@ msgid ""
 msgstr ""
 "No tiene ninguna cuenta de entrada de stock definida en su categoría de "
 "producto. Debe definir una antes de procesar esta operación."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
+msgstr ""
 
 #. module: stock_account
 #. odoo-python

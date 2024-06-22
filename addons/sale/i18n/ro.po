@@ -1291,17 +1291,17 @@ msgid ""
 msgstr ""
 "Aplicați reduceri manuale pe liniile de comandă de vânzări sau afișați "
 "reduceri calculate de la lista de preturi (opțiune de activare în "
-"configurația listei de prețuri)."
+"configurarea listei de prețuri)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the"
-msgstr ""
+msgstr "Sunteți sigur că doriți să anulați"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the selected quotation?"
-msgstr ""
+msgstr "Sunteți sigur că doriți să anulați oferta selectată?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1355,27 +1355,27 @@ msgstr "Tranzacții Autorizate"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__automatic_invoice
 msgid "Automatic Invoice"
-msgstr "Factură client Automată"
+msgstr "Factură Automată"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Bacon Burger"
-msgstr "Burger Bacon"
+msgstr "Burger cu bacon"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
-msgstr "Numele Bancii"
+msgstr "Numele Băncii"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__partner
 msgid "Based on Customer ID"
-msgstr "Bazat pe ID-ul clientului"
+msgstr "Pe baza ID-ul de client"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__so_name
 msgid "Based on Document Reference"
-msgstr "Pe baza Referinței Documentelor"
+msgstr "Pe baza referinței documentului"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
@@ -1386,7 +1386,7 @@ msgstr "Mesaj de blocare"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "Conținutul mesajului este același cu template-ul"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1397,19 +1397,19 @@ msgid ""
 "products."
 msgstr ""
 "Îmbunătățiți-vă vânzările cu mai multe tipuri de programe: Cupoane, "
-"Promoții, Card cadou, Fidelitate. Condiții specifice pot fi stabilite "
+"Promoții, Card cadou, Fidelitate. Pot fi stabilite condiții specifice "
 "(produse, clienți, valoare minimă de achiziție, perioadă). Recompensele pot "
 "fi reduceri (% sau valoare) sau produse gratuite."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying this <u>down payment</u> of"
-msgstr ""
+msgstr "Prin plata acestui <u>avans</u> de"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying this proposal, I agree to the following terms:"
-msgstr ""
+msgstr "Prin plata acestei propuneri, sunt de acord cu urmatorii termeni:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1423,7 +1423,7 @@ msgstr "Campanie"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__can_edit_body
 msgid "Can Edit Body"
-msgstr "Poate edita corpul"
+msgstr "Poate edita mesajul"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_updatable
@@ -1443,18 +1443,18 @@ msgstr "Anulează"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Cancel %s"
-msgstr ""
+msgstr "Anulează %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
 msgid "Cancel multiple quotations"
-msgstr ""
+msgstr "Anulați mai multe oferte"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_mass_cancel_orders
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Cancel quotations"
-msgstr ""
+msgstr "Anulați ofertele"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1477,11 +1477,20 @@ msgid ""
 "   • For consumable or storable products, open the product, go to the 'General Information' tab and change the 'Invoicing Policy' from 'Delivered Quantities' to 'Ordered Quantities'.\n"
 "   • For services (and other products), change the 'Invoicing Policy' to 'Prepaid/Fixed Price'.\n"
 msgstr ""
+"Nu se poate crea o factură. Nu sunt articole disponibile pentru facturare..\n"
+"\n"
+"Pentru a rezolva această problemă, asigurați-vă că:\n"
+"  • Produsele au fost livrate înainte de facturarea acestora.\n"
+"  • Politica de facturare a produsului este configurată corect.\n"
+"\n"
+"În schimb, dacă doriți să facturați pe baza cantităților comandate:\n"
+"  • Pentru produsele consumabile sau stocabile, deschideți fereastra produsului, accesați fila „Informații generale” și modificați „Politica de facturare” din „Cantități livrate” în „Cantități comandate”.\n"
+"  • Pentru servicii (și alte produse), modificați „Politica de facturare” în „Plătit anticipat/Preț fix”.\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Capture Transaction"
-msgstr "Captați Tranzacție"
+msgstr "Captură tranzacție"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1502,6 +1511,9 @@ msgid ""
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
 msgstr ""
+"Schimbarea companiei pentru o ofertă existentă poate necesita unele ajustări"
+" manuale în detaliile liniilor. Luați în considerare actualizarea "
+"prețurilor."
 
 #. module: sale
 #: model:onboarding.onboarding.step,description:sale.onboarding_onboarding_step_sale_order_confirmation
@@ -1527,7 +1539,7 @@ msgstr "Click aici pentru a adăuga unele produse sau servicii la oferta dvs."
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
 #, python-format
 msgid "Click to define an invoicing target"
-msgstr "Click aici pentru a defini o țintă de facturare"
+msgstr "Click aici pentru a defini un obiectiv de facturare"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1565,7 +1577,7 @@ msgstr "Companie"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Complete your company's data"
-msgstr ""
+msgstr "Completați datele companiei dvs."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1635,7 +1647,7 @@ msgstr "Mesaj de confiirmare"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on__sale_order
 msgid "Confirmed order"
-msgstr ""
+msgstr "Comandă confirmată"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1645,7 +1657,7 @@ msgstr "Conectori"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__consolidated_billing
 msgid "Consolidated Billing"
-msgstr ""
+msgstr "Facturare consolidată"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -1656,7 +1668,7 @@ msgstr "Contact"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body
 msgid "Contents"
-msgstr "Conținut"
+msgstr "Conținuturi"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_uom_category_id
@@ -1664,18 +1676,18 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Conversia între Unitățile de Măsura pot avea loc numai dacă ele aparțin "
-"aceleiași categorii. Conversia va fi făcută pe baza proporțiilor."
+"Conversia între Unitățile de Măsură poate fi efectuată numai dacă acestea "
+"aparțin aceleiași categorii. Conversia va fi făcută pe baza indicilor."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__country_code
 msgid "Country code"
-msgstr "Codul tarii"
+msgstr "Codul țării"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_loyalty
 msgid "Coupons & Loyalty"
-msgstr "Cupoane și loialitate"
+msgstr "Cupoane și Fidelizare"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -1685,23 +1697,23 @@ msgstr "Data creării"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Draft Invoice"
-msgstr ""
+msgstr "Creați o factură în ciornă"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Create Invoice"
-msgstr "Crează factura"
+msgstr "Creați o factură"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Create Invoices"
-msgstr ""
+msgstr "Creați facturi"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
 msgid "Create a customer invoice"
-msgstr "Adaugă o factură client"
+msgstr "Creați o factură de client"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -1721,7 +1733,7 @@ msgstr "Creați o ofertă nouă, primul pas al unei vânzări noi!"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Create invoices"
-msgstr "Creează facturi"
+msgstr "Creați facturi"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -1737,6 +1749,8 @@ msgid ""
 "Create one invoice for all orders related to same customer and same "
 "invoicing address"
 msgstr ""
+"Creați o singură factură pentru toate comenzile care au același client și "
+"aceeași adresă de facturare"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -1772,12 +1786,12 @@ msgid ""
 "Confirmation date of confirmed orders."
 msgstr ""
 "Data creării ofertelor/comenzilor trimise,\n"
-"Data confirmării comenzilor confirmate."
+"Data confirmării a comenzilor confirmate."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
-msgstr "Card de credit și debit (prin Stripe)"
+msgstr "Card de credit și de Debit (prin Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1792,7 +1806,7 @@ msgstr "Monedă"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__currency_rate
 msgid "Currency Rate"
-msgstr "Cursul Valutar"
+msgstr "Curs Valutar"
 
 #. module: sale
 #: model:product.attribute.value,name:sale.product_attribute_value_7
@@ -1838,7 +1852,7 @@ msgstr "Industrie Client"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
 msgid "Customer Portal URL"
-msgstr "URL Portal Clienți"
+msgstr "Adresa URL a Portalului Clientului"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__client_order_ref
@@ -1853,7 +1867,7 @@ msgstr "Semnătură client"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__state_id
 msgid "Customer State"
-msgstr ""
+msgstr "Stat clientului"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_taxes_id
@@ -1863,7 +1877,7 @@ msgstr "Taxe Client"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_zip
 msgid "Customer ZIP"
-msgstr ""
+msgstr "ZIP Client"
 
 #. module: sale
 #. odoo-python
@@ -1871,6 +1885,7 @@ msgstr ""
 #, python-format
 msgid "Customer needs to pay at least %(amount)s to confirm the order."
 msgstr ""
+"Clientul trebuie să plătească cel puțin %(amount)spentru a confirma comanda."
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_customer
@@ -1898,7 +1913,7 @@ msgstr "Dată"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Date:"
-msgstr "Data:"
+msgstr "Dată:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__quotation_validity_days
@@ -1908,11 +1923,13 @@ msgid ""
 "Days between quotation proposal and expiration. 0 days means automatic "
 "expiration is disabled"
 msgstr ""
+"Zile între propunerea de ofertă și expirare. 0 zile înseamnă că expirarea "
+"automată este dezactivată"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr "Deducere avans"
+msgstr "Deducere plăți în avans"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
@@ -1923,18 +1940,18 @@ msgstr "Valabilitatea Implicită a Ofertei"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
 msgid "Default product used for discounts"
-msgstr ""
+msgstr "Produs implicit folosit pentru reduceri"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_down_payment_product_id
 #: model:ir.model.fields,help:sale.field_res_config_settings__deposit_default_product_id
 msgid "Default product used for down payments"
-msgstr ""
+msgstr "Produs implicit utilizat pentru plățile în avans"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Default values"
-msgstr ""
+msgstr "Valori implicite"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1942,11 +1959,13 @@ msgid ""
 "Default values used when creating new quotations. Those can still be changed"
 " on each quotation."
 msgstr ""
+"Valori implicite utilizate la crearea de cotații noi. Acestea pot fi în "
+"continuare modificate pentru fiecare cotație."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Deliver Content by Email"
-msgstr "Livrare conținut prin e-mail"
+msgstr "Transmiteți conținut prin e-mail"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1984,7 +2003,7 @@ msgstr "Metode de livrare"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Cantitate de livrare"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -1995,9 +2014,9 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "Data de livrare pe care o puteți promite clientului, calculată din termenul "
-"minim de livrare a liniilor de comandă în cazul produselor Service. În cazul"
-" transportului, politica de expediere a comenzii va fi luată în considerare "
-"pentru a utiliza termenul de plată minim sau maxim al liniilor de comandă."
+"minim de livrare a liniilor de comandă în cazul produselor de tip service. "
+"În cazul expedierii, se va ține cont de politica de expediere a comenzii "
+"pentru a folosi fie timpul minim, fie cel maxim al liniilor de comandă."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2067,7 +2086,7 @@ msgstr "Tip discount"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_discount
 msgid "Discount Wizard"
-msgstr ""
+msgstr "Expert Reduceri"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2079,7 +2098,7 @@ msgstr "Reducere:"
 #: code:addons/sale/wizard/sale_order_discount.py:0
 #, python-format
 msgid "Discount: %(percent)s%%"
-msgstr ""
+msgstr "Reducere: %(percent)s%%"
 
 #. module: sale
 #. odoo-python
@@ -2087,22 +2106,22 @@ msgstr ""
 #, python-format
 msgid ""
 "Discount: %(percent)s%%- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr "Reducere: %(percent)s%%- La produsele cu următoarele taxe%(taxes)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr "Reduceri, loialitate și card cadou"
+msgstr "Reduceri, fidelitate și card cadou"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
 msgid "Display Draft Invoice Warning"
-msgstr ""
+msgstr "Avertisment afișare facturi în ciornă"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_invoice_amount_warning
 msgid "Display Invoice Amount Warning"
-msgstr ""
+msgstr "Avertisment afișare sumă factură"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_name
@@ -2141,29 +2160,29 @@ msgstr "Domeniu"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment"
-msgstr "Avans"
+msgstr "Plată în avans"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount
 msgid "Down Payment Amount"
-msgstr "Valoare avans"
+msgstr "Valoare plată în avans"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr "Suma avansului (fix)"
+msgstr "Valoare plată în avans (fixă)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
 msgid "Down Payment Product"
-msgstr "Produs cu plata în avans"
+msgstr "Produs cu plată în avans"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %(date)s (Draft)"
-msgstr ""
+msgstr "Plată în avans: %(date)s (Ciornă)"
 
 #. module: sale
 #. odoo-python
@@ -2172,14 +2191,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #, python-format
 msgid "Down Payments"
-msgstr "Avansuri"
+msgstr "Plăți în avans"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
-msgstr "Avans"
+msgstr "Plată în avans"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -2194,14 +2213,14 @@ msgstr "Plată în avans (procentual)"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Down payment <br/>"
-msgstr ""
+msgstr "Plată în avans <br/>"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment invoice"
-msgstr ""
+msgstr "Factură cu plată în avans"
 
 #. module: sale
 #. odoo-python
@@ -2216,8 +2235,8 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
-"Avansurile sunt efectuate la crearea facturilor dintr-o comandă de vânzare. "
-"Nu sunt copiate la duplicarea unei comenzi de vânzare."
+"Plățile în avans sunt efectuate la crearea facturilor dintr-o comandă de "
+"vânzare. Nu sunt copiate la duplicarea unei comenzi de vânzare."
 
 #. module: sale
 #. odoo-python
@@ -2225,7 +2244,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 #, python-format
 msgid "Draft Invoices"
-msgstr "Facturi ciornă"
+msgstr "Facturi în ciornă"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -2252,7 +2271,7 @@ msgstr "Email"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
-msgstr "Email trimis clienților odată ce factura este disponibilă."
+msgstr "E-mail trimis clienților odată ce factura este disponibilă."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2272,14 +2291,14 @@ msgstr "Expirare"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Expiration Date:"
-msgstr ""
+msgstr "Data expirării:"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Expires on %(date)s"
-msgstr ""
+msgstr "Expiră la %(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2327,12 +2346,12 @@ msgstr "Valoare fixă"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Follow, view or pay your orders"
-msgstr ""
+msgstr "Urmăriți, vizualizați sau plătiți comenzile dvs"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
 msgid "Followers"
-msgstr "Persoane interesate"
+msgstr "Urmăritori"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_partner_ids
@@ -2347,8 +2366,7 @@ msgstr "Pictogramă minunată pentru font, de ex. fa-sarcini"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
-msgstr ""
-"Valori interzise pe linia de comandă de vânzare care nu este responsabilă"
+msgstr "Valori interzise pe linia de comandă de vânzare necontabilizată"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -2365,7 +2383,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Full amount <br/>"
-msgstr ""
+msgstr "Suma totală<br/>"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -2373,7 +2391,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__invoice_status__invoiced
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Fully Invoiced"
-msgstr "Facturat"
+msgstr "Facturat integral"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2383,7 +2401,7 @@ msgstr "Activități viitoare"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr "Generați linkul de plată a vânzărilor"
+msgstr "Generați link de plată a vânzărilor"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
@@ -2404,14 +2422,14 @@ msgstr "Obțineți avertismente la comenzi pentru produse sau clienți"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__so_discount
 msgid "Global Discount"
-msgstr ""
+msgstr "Discount Global"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Good job, let's continue."
-msgstr "Bună treabă, să continuăm."
+msgstr "Bine lucrat, să continuăm."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2421,7 +2439,7 @@ msgstr "Acordă reduceri la liniile de comandă de vânzare"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__weight
 msgid "Gross Weight"
-msgstr "Masa brută"
+msgstr "Greutate brută"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2433,17 +2451,17 @@ msgstr "Grupează după"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_active_pricelist
 msgid "Has Active Pricelist"
-msgstr ""
+msgstr "Are o listă de prețuri activă"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
 msgid "Has Confirmed Order"
-msgstr ""
+msgstr "Are comanda confirmată"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr "Poziția fiscală a fost modificată"
+msgstr "Are poziția fiscală schimbată"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2453,12 +2471,12 @@ msgstr "Are mesaj"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
 msgid "Has Pricelist Changed"
-msgstr "Are lista de prețuri modificată"
+msgstr "Are lista de prețuri schimbată"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
-msgstr "Are avansuri"
+msgstr "Are plăți în avans"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__id
@@ -2480,7 +2498,7 @@ msgstr "Pictogramă"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Pictograma pentru a indica o activitate de excepție."
+msgstr "Pictogramă pentru a indica o activitate de excepție."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
@@ -2499,6 +2517,8 @@ msgid ""
 "If set, the SO will invoice in this journal; otherwise the sales journal "
 "with the lowest sequence is used."
 msgstr ""
+"Dacă este setat, comada de vânzare (SO) va factura în acest jurnal; în caz "
+"contrar, se utilizează jurnalul de vânzări cu cea mai mică secvență."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2519,8 +2539,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
 msgstr ""
-"Dacă modificați lista de prețuri, vor fi afectate doar liniile recent "
-"adăugate."
+"Dacă modificați lista de prețuri, vor fi afectate doar liniile adăugate "
+"recent."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2532,12 +2552,12 @@ msgstr "Importare comenzi Amazon și sincronizare livrări"
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "Importare Modele pentru Produse"
+msgstr "Importa Template pentru Produse"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
 msgid "In the Order"
-msgstr ""
+msgstr "În Comanda"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2554,7 +2574,7 @@ msgstr "Cont de venituri"
 #: code:addons/sale/wizard/sale_order_discount.py:0
 #, python-format
 msgid "Invalid discount amount"
-msgstr ""
+msgstr "Sumă de discount invalidă"
 
 #. module: sale
 #. odoo-python
@@ -2568,14 +2588,14 @@ msgstr "Comandă nevalidă."
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Invalid signature data."
-msgstr "Date de semnătură nevalide."
+msgstr "Date de semnătură învalide."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/account_move.py:0
 #, python-format
 msgid "Invoice %s paid"
-msgstr "Factura %s plătită"
+msgstr "Factură %s plătită"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_invoice_id
@@ -2585,7 +2605,7 @@ msgstr "Adresă de facturare:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__display_invoice_alert
 msgid "Invoice Alert"
-msgstr "Alertă factură client"
+msgstr "Alertă factură"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
@@ -2605,7 +2625,7 @@ msgstr "Factură creată"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Invoice Email Template"
-msgstr "Șablon E-mail factură client"
+msgstr "Template e-mail de factură client"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_lines
@@ -2627,7 +2647,7 @@ msgstr "Stare factură"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
-msgstr "Factură după livrare, pe baza cantităților livrate, comandate sau nu."
+msgstr "Facturare după livrare, pe baza cantităților livrate, nu comandate."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced

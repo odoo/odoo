@@ -976,8 +976,8 @@ msgid ""
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
 "Agregue y personalice las operaciones de ruta para procesar movimientos de "
-"productos en su(s) almacén(es): p. descarga > control de calidad > stock "
-"para productos entrantes, selección > paquete > envío para productos "
+"productos en su(s) almacén(es): p. ej. descarga > control de calidad > stock"
+" para productos entrantes, selección > paquete > envío para productos "
 "salientes. También puede establecer estrategias de almacenamiento en "
 "ubicaciones de depósito para enviar productos entrantes a ubicaciones de "
 "niños específicas de inmediato (por ejemplo, contenedores específicos, "
@@ -1014,7 +1014,7 @@ msgstr "Dirección"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__partner_address_id
 msgid "Address where goods should be delivered. Optional."
-msgstr "Dirección donde los productos deberían ser entregados. Opcional."
+msgstr "Dirección a la que se deben entregar los productos. Opcional."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_adjustments
@@ -1056,7 +1056,7 @@ msgstr "Todos los almacenes"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__procurement_group__move_type__one
 msgid "All at once"
-msgstr "Todo junto"
+msgstr "Todo a la vez"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
@@ -1491,19 +1491,19 @@ msgid ""
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
 msgstr ""
-"Por defecto, el sistema cogerá las unidades desde las existencias en la "
-"ubicación fuente (o hijas) y  esperará pasivamente a su disponibilidad. La "
-"otra posibilidad le permite crear un abastecimiento en la ubicación fuente "
-"(y por tanto, ignorar las existencias actuales) para obtener productos. Si "
-"quiere encadenar movimientos y tener éste para esperar al anterior, esta "
-"segunda opción es la que debe escogerse."
+"Por defecto, el sistema cogerá las unidades desde el stock en la ubicación "
+"de origen (o hijas) y esperará pasivamente a su disponibilidad. La otra "
+"posibilidad le permite crear un abastecimiento en la ubicación de origen (y "
+"por tanto, ignorar el stock actual) para obtener productos. Si quiere "
+"encadenar movimientos y tener éste para esperar al anterior, esta segunda "
+"opción es la que debe seleccionar."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__active
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
 msgstr ""
-"Si el campo activo se desmarca, permite ocultar la ubicación sin eliminarla."
+"Si desmarca el campo activo, permitirá ocultar la ubicación sin eliminarla."
 
 #. module: stock
 #. odoo-python
@@ -1515,7 +1515,7 @@ msgstr "COPIA"
 #. module: stock
 #: model:product.template,name:stock.product_cable_management_box_product_template
 msgid "Cable Management Box"
-msgstr "Caja de Administración de Cable"
+msgstr "Caja de administración de cables"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -2176,7 +2176,7 @@ msgid ""
 "setting"
 msgstr ""
 "Crear un nuevo almacén activará automáticamente los ajustes de ubicación de "
-"almacén"
+"almacenamiento"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date
@@ -2332,7 +2332,8 @@ msgstr "Procesamiento de fecha"
 #: model:ir.model.fields,help:stock.field_stock_picking__date_deadline
 msgid "Date Promise to the customer on the top level document (SO/PO)"
 msgstr ""
-"Promesa de fecha al cliente en el documento de nivel superior (SO / PO)"
+"Promesa de fecha al cliente en el documento de nivel superior (pedido de "
+"venta o de compra)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__date
@@ -2353,7 +2354,8 @@ msgstr "Fecha en la que el traslado ha sido procesado o cancelado"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
 msgid "Date for next planned inventory based on cyclic schedule."
-msgstr "Fecha para el próximo inventario planeado según un programa cíclico."
+msgstr ""
+"Fecha para el próximo inventario planificado según un programa cíclico."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_done
@@ -2373,7 +2375,7 @@ msgstr "Fecha para reservar"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Day and month that annual inventory counts should occur."
-msgstr "Día y mes en que el conteo de inventario anual debe ocurrir."
+msgstr "Día y mes en que el recuento de inventario anual debe ocurrir."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_day
@@ -3795,7 +3797,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
-"Si el campo activo se establece a Falso, permite ocultar la regla de stock "
+"Si el campo activo se establece a False, permite ocultar la regla de stock "
 "mínimo sin eliminarla."
 
 #. module: stock
@@ -3804,7 +3806,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
 msgstr ""
-"Si el campo activo se establece a Falso, permitirá ocultar la ruta sin "
+"Si el campo activo se establece a False, permitirá ocultar la ruta sin "
 "eliminarla."
 
 #. module: stock
@@ -4394,8 +4396,8 @@ msgstr "¿Se puede editar la cantidad hecha?"
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
 msgstr ""
-"No es posible deshacer la reserva de más productos que los %s que tiene en "
-"existencias."
+"No es posible anular la reserva de más productos de los que %s tiene en "
+"stock."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -4772,7 +4774,7 @@ msgstr "Nombre de ubicación"
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__lot_stock_id
 msgid "Location Stock"
-msgstr "Ubicación de stock"
+msgstr "Stock en la ubicación"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__usage
@@ -9419,7 +9421,7 @@ msgstr "Consejo: acelere las operaciones de inventario con códigos de barras"
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 #, python-format
 msgid "To"
-msgstr "Hasta"
+msgstr "A"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view

@@ -5,6 +5,7 @@
 # Translators:
 # Lucia Pacheco, 2023
 # Wil Odoo, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -1013,8 +1014,8 @@ msgid ""
 "All \"Is a scored question = True\" and \"Question Type: Date\" questions "
 "need an answer"
 msgstr ""
-"Todas las preguntas \"Es una pregunta con puntuación = Verdadero\" y \"Tipo "
-"de pregunta: Fecha\" necesitan una respuesta"
+"Todas las preguntas \"Es una pregunta con puntuación = True\" y \"Tipo de "
+"pregunta: Fecha\" necesitan una respuesta"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_scored_datetime_have_answers
@@ -1022,8 +1023,8 @@ msgid ""
 "All \"Is a scored question = True\" and \"Question Type: Datetime\" "
 "questions need an answer"
 msgstr ""
-"Todas las preguntas \"Es una pregunta con puntuación = Verdadero\" y \"Tipo "
-"de pregunta: Fecha y hora\" necesitan una respuesta"
+"Todas las preguntas \"Es una pregunta con puntuación = True\" y \"Tipo de "
+"pregunta: Fecha y hora\" necesitan una respuesta"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__all
@@ -1374,7 +1375,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "Certification Failed"
-msgstr "Certificación fallida"
+msgstr "Certificación no aprobada"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -2061,7 +2062,7 @@ msgstr "Eyjafjallajökull (Islandia)"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Failed"
-msgstr "Fallido"
+msgstr "No aprobada"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -2337,7 +2338,7 @@ msgstr "¿Cuántos días tiene nuestra garantía de devolución de dinero?"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "How many orders did you pass during the last 6 months?"
-msgstr "¿Cuántas pedidos aprobó en los últimos 6 meses?"
+msgstr "¿Cuántos pedidos aprobó en los últimos 6 meses?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q4
@@ -2357,7 +2358,7 @@ msgstr "¿Cuántos años duró la guerra de los 100 años?"
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_2_question_1
 msgid "How much do we sell our Cable Management Box?"
-msgstr "¿Cuánto vendemos nuestra Caja de administración de cables?"
+msgstr "¿Cuánto vendemos nuestra caja de administración de cables?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q5
@@ -2511,8 +2512,8 @@ msgid ""
 "If randomized is selected, add the number of random questions next to the "
 "section."
 msgstr ""
-"Si se selecciona aleatorizado, agregue el número de preguntas aleatorias "
-"junto a la sección."
+"Si selecciona aleatorio, agregue el número de preguntas aleatorias junto a "
+"la sección."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__questions_selection
@@ -2520,14 +2521,13 @@ msgid ""
 "If randomized is selected, you can configure the number of random questions "
 "by section. This mode is ignored in live session."
 msgstr ""
-"Si se selecciona Aleatorizado, puede configurar el número de preguntas "
-"aleatorias por sección. Este modo se ignora en la sesión en vivo."
+"Si se selecciona aleatorio, puede configurar el número de preguntas "
+"aleatorias por sección. Este modo se ignora en sesiones en vivo."
 
 #. module: survey
 #: model:survey.question,question_placeholder:survey.vendor_certification_page_1_question_5
 msgid "If yes, explain what you think is missing, give examples."
-msgstr ""
-"Si es verdadero, explique lo que cree que falta y proporcione ejemplos."
+msgstr "En caso afirmativo, explique qué cree que falta, dé ejemplos."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -4044,7 +4044,7 @@ msgstr "Recompensas para desafíos"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__matrix_row_id
 msgid "Row answer"
-msgstr "Fila de la respuesta"
+msgstr "Respuesta en fila"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -4573,7 +4573,7 @@ msgstr "Línea de respuesta de encuesta"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__survey_first_submitted
 msgid "Survey First Submitted"
-msgstr "Primera encuesta presentada"
+msgstr "Primera encuesta enviada"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_gamification_badge__survey_ids
@@ -5053,7 +5053,7 @@ msgstr "Esta encuesta se ha cerrado. ¡Gracias por su interés!"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
 msgid "This survey is open only to registered people. Please"
-msgstr "Esta encuesta está abierta sólo para gente registrada. Por favor"
+msgstr "Solo las personas registradas pueden participar en esta encuesta."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -5742,7 +5742,7 @@ msgid ""
 "better."
 msgstr ""
 "Sus respuestas nos ayudarán a mejorar nuestra gama de productos para "
-"brindarle un mejor servicio."
+"proporcionarle un mejor servicio."
 
 #. module: survey
 #. odoo-javascript

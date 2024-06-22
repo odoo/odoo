@@ -106,7 +106,7 @@ msgstr ""
 "  - Manual: la cantidad se establece manualmente en la línea\n"
 "  - Analítica de gastos: la cantidad equivale a la suma de los gastos registrados\n"
 "  - Hojas de asistencia: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
-"  - Movimientos del inventario: la cantidad viene de las recolecciones confirmadas\n"
+"  - Movimientos del stock: la cantidad viene de las recolecciones confirmadas\n"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -149,8 +149,7 @@ msgstr "Unidades disponibles"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
-msgstr ""
-"Elija para aplicar líneas con rutas específicas en el pedido de venta."
+msgstr "Elija aplicar rutas específicas para líneas del pedido de venta."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -210,11 +209,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"Fecha de entrega que puede prometer al cliente, calculada a partir del plazo"
-" mínimo de entrega de las líneas de pedido en el caso de los productos de "
-"Servicio. En caso de envío, se tendrá en cuenta la política de envío del "
-"pedido para utilizar el plazo de entrega mínimo o máximo de las líneas de "
-"pedido."
+"Fecha de entrega que puede prometer al cliente, en el caso de los productos "
+"de servicio, se calcula a partir del plazo mínimo de las líneas del pedido. "
+"En el caso de los envíos, se tendrá en cuenta la política de envíos del "
+"pedido para utilizar el plazo mínimo o máximo de las líneas del mismo."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -243,7 +241,7 @@ msgstr "Excepción(es) ocurridas en el picking:"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr "Excepción(es) ocurrida(s) en el pedido de venta(s):"
+msgstr "Excepción(es) ocurrida(s) en pedidos de venta:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking

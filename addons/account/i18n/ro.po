@@ -5,9 +5,7 @@
 # Translators:
 # Sorin Trifu <sorin.trifu@bizconsulting.ro>, 2024
 # sharkutz <sharkutz4life@yahoo.com>, 2024
-# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2024
 # Fenyedi Levente, 2024
-# Cozmin Candea <office@terrabit.ro>, 2024
 # Marian Heiner <heinermarian@gmail.com>, 2024
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2024
 # Emanuel Bruda, 2024
@@ -18,6 +16,9 @@
 # Dorin Hongu <dhongu@gmail.com>, 2024
 # Larisa_nexterp, 2024
 # Corina Calin, 2024
+# Maria Muntean, 2024
+# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2024
+# Cozmin Candea <office@terrabit.ro>, 2024
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Corina Calin, 2024\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,7 +68,7 @@ msgstr ""
 "\n"
 "    - Grup de taxe: Taxa este un set de sub-taxe.\n"
 "    - Fix: Suma taxei rămâne aceeași indiferent de preț.\n"
-"    - Procent din preț: Valoare taxei este de% din preț:\n"
+"    - Procent din preț: Valoare taxei este de % din preț:\n"
 "        e.g 100 * (1 + 10%) = 110 (prețul nu este inclus)\n"
 "        e.g 110 / (1 + 10%) = 100 (preț inclus)\n"
 "    - Procent inclus în preț: Valoare taxei este o împărțire a prețului:\n"
@@ -405,7 +406,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "2023-08-11"
-msgstr ""
+msgstr "2023-08-11"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -981,9 +982,9 @@ msgid ""
 "                                        A second payment will be created in the destination journal.\n"
 "                                    </span>"
 msgstr ""
-"<span invisible=\"paired_internal_transfer_payment_id sau nu is_internal_transfer sau state != 'draft'\" class=\"fst-italic\">\n"
+"<span invisible=\"paired_internal_transfer_payment_id or not is_internal_transfer or state != 'draft'\" class=\"fst-italic\">\n"
 "                                        O a doua plată va fi creată în jurnalul de destinație.\n"
-"                                    </span>"
+"                                    </span><span invisible=\"paired_internal_transfer_payment_id or not is_internal_transfer or state != 'draft'\" class=\"fst-italic\">"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
