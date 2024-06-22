@@ -77,15 +77,12 @@ QUnit.module('Crm Kanban Progressbar', {
             groupBy: ['stage_id'],
             arch: `
                 <kanban js_class="crm_kanban">
-                    <field name="stage_id"/>
-                    <field name="expected_revenue"/>
-                    <field name="recurring_revenue_monthly"/>
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="expected_revenue" recurring_revenue_sum_field="recurring_revenue_monthly"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div><field name="name"/></div>
-                            <div><field name="recurring_revenue_monthly"/></div>
+                        <t t-name="kanban-card" class="flex-row justify-content-between">
+                            <field name="name" class="p-2"/>
+                            <field name="recurring_revenue_monthly" class="p-2"/>
                         </t>
                     </templates>
                 </kanban>`,
@@ -106,15 +103,12 @@ QUnit.module('Crm Kanban Progressbar', {
             groupBy: ['stage_id'],
             arch: `
                 <kanban js_class="crm_kanban">
-                    <field name="stage_id"/>
-                    <field name="expected_revenue"/>
-                    <field name="recurring_revenue_monthly"/>
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="expected_revenue" recurring_revenue_sum_field="recurring_revenue_monthly"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div><field name="name"/></div>
-                            <div><field name="recurring_revenue_monthly"/></div>
+                        <t t-name="kanban-card" class="flex-row justify-content-between">
+                            <field name="name" class="p-2"/>
+                            <field name="recurring_revenue_monthly" class="p-2"/>
                         </t>
                     </templates>
                 </kanban>`,
@@ -137,16 +131,13 @@ QUnit.module('Crm Kanban Progressbar', {
             groupBy: ['bar'],
             arch: `
                 <kanban js_class="crm_kanban">
-                    <field name="stage_id"/>
-                    <field name="expected_revenue"/>
-                    <field name="recurring_revenue_monthly"/>
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="expected_revenue" recurring_revenue_sum_field="recurring_revenue_monthly"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div><field name="name"/></div>
-                            <div><field name="expected_revenue"/></div>
-                            <div><field name="recurring_revenue_monthly"/></div>
+                        <t t-name="kanban-card" class="flex-row justify-content-between">
+                            <field name="name" class="p-2"/>
+                            <field name="expected_revenue" class="p-2"/>
+                            <field name="recurring_revenue_monthly" class="p-2"/>
                         </t>
                     </templates>
                 </kanban>`,
@@ -188,16 +179,13 @@ QUnit.module('Crm Kanban Progressbar', {
             groupBy: ['stage_id'],
             arch: `
                 <kanban js_class="crm_kanban">
-                    <field name="stage_id"/>
-                    <field name="expected_revenue"/>
-                    <field name="recurring_revenue_monthly"/>
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="expected_revenue" recurring_revenue_sum_field="recurring_revenue_monthly"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div><field name="name"/></div>
-                            <div><field name="expected_revenue"/></div>
-                            <div><field name="recurring_revenue_monthly"/></div>
+                        <t t-name="kanban-card" class="flex-row justify-content-between">
+                            <field name="name" class="p-2"/>
+                            <field name="expected_revenue" class="p-2"/>
+                            <field name="recurring_revenue_monthly" class="p-2"/>
                         </t>
                     </templates>
                 </kanban>`,
