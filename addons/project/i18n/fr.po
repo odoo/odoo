@@ -131,7 +131,7 @@ msgstr "Mises à jour de %(name)s"
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "%(partner_name)s's Tasks"
-msgstr ""
+msgstr "Tâches de %(partner_name)s"
 
 #. module: project
 #. odoo-python
@@ -405,6 +405,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Cher/chère <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br><br>\n"
+"    Merci de nous avoir contacté. Nous apprécions l'intérêt que vous portez à nos produits/services.<br>\n"
+"    Notre équipe examine actuellement votre demande et répondra à votre e-mail dans les plus brefs délais.<br>\n"
+"    N'hésitez pas à nous faire part de toute autre question ou réserve que vous pourriez avoir entre-temps. Nous restons à votre disposition pour vous aider.<br><br>\n"
+"    Merci pour votre patience.<br>\n"
+"    Cordialement,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -777,6 +790,7 @@ msgstr "Ajouter du contenu supplémentaire à afficher dans l'email"
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add the contacts you would like to share the project with..."
 msgstr ""
+"Ajouter les contacts avec lesquels vous souhaitez partager le projet..."
 
 #. module: project
 #. odoo-javascript
@@ -1115,6 +1129,8 @@ msgid ""
 "Automatically send an email to customers when a task reaches a specific "
 "stage in a project by setting this template on that stage"
 msgstr ""
+"Envoyer automatiquement un e-mail aux clients lorsqu'une tâche arrive à une "
+"étape spécifique d'un projet, en paramétrant ce modèle sur cette étape."
 
 #. module: project
 #. odoo-javascript
@@ -1138,7 +1154,7 @@ msgstr "Évaluation moyenne (%)"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating (1-5)"
-msgstr ""
+msgstr "Note moyenne (1-5)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1327,7 +1343,7 @@ msgstr "Tâches clôturées"
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__is_closed
 msgid "Closed state"
-msgstr ""
+msgstr "Terminé"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__closed
@@ -1510,7 +1526,7 @@ msgstr "Créer un projet"
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_task_plan
 msgid "Create a Task Activity Plan"
-msgstr ""
+msgstr "Créer un plan d'activité pour les tâches"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -1608,7 +1624,7 @@ msgstr "Devise"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__current_user_same_company_partner
 msgid "Current User Same Company Partner"
-msgstr ""
+msgstr "Partenaire de la même entreprise de l'utilisateur actuel"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -2150,6 +2166,9 @@ msgid ""
 "project with them. Collaborators will have the ability to edit tasks, send "
 "messages, and access the Kanban view of tasks."
 msgstr ""
+"Facilitez la collaboration avec des acteurs clés en partageant le projet "
+"avec eux. Les collaborateurs auront la possibilité de modifier les tâches, "
+"d'envoyer des messages et d'accéder à la vue Kanban des tâches."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project
@@ -2285,6 +2304,10 @@ msgid ""
 "tasks of the project are not included). To grant access to tasks to a portal"
 " user, add them as followers for these tasks."
 msgstr ""
+"Accordez aux utilisateurs du portail l'accès à votre projet en les ajoutant "
+"comme suiveurs (les tâches du projet ne sont pas incluses). Pour accorder "
+"l'accès aux tâches à un utilisateur du portail, ajoutez-le en tant que "
+"suiveur de ces tâches."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2692,7 +2715,7 @@ msgstr "Le mois dernier"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 msgid "Last Rating (1-5)"
-msgstr ""
+msgstr "Dernière notation (1-5)"
 
 #. module: project
 #. odoo-python
@@ -2900,19 +2923,19 @@ msgstr "Marquer comme fait"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as incomplete"
-msgstr ""
+msgstr "Marquer comme inachevé"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as reached"
-msgstr ""
+msgstr "Marquer comme achevé"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Mark the task as <b>Cancelled</b>"
-msgstr ""
+msgstr "Marquer la tâche comme <b>Annulée</b>"
 
 #. module: project
 #. odoo-javascript
@@ -3229,7 +3252,7 @@ msgstr "Aucun type d'activité trouvé. Créons-en un !"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
 msgid "No collaborators found. Let's invite them!"
-msgstr ""
+msgstr "Aucun collaborateur n'a été trouvé. Invitons-les !"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -3515,7 +3538,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 msgid "Partner's Tasks"
-msgstr ""
+msgstr "Tâches des partenaires"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -3544,6 +3567,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Personnes pour lesquelles ce projet et ses tâches seront visibles.\n"
+"\n"
+"- Utilisateurs internes invités : lorsqu'ils sont abonnés à un projet, les utilisateurs internes auront accès à toutes les tâches sans distinction. Autrement, ils auront uniquement accès aux tâches spécifiques auxquelles ils sont abonnés.\n"
+"Un utilisateur avec le niveau de droits d'accès projet > administrateur peut toujours accéder au projet et aux tâches, même s'il ne fait pas explicitement partie des abonnés.\n"
+"\n"
+"- Tous les utilisateurs internes : tous les utilisateurs internes peuvent accéder au projet et à toutes les tâches sans distinction.\n"
+"\n"
+"- Utilisateurs portail invités et tous les utilisateurs internes : tous les utilisateurs internes peuvent accéder au projet et à toutes les tâches sans distinction.\n"
+"Lorsqu'ils sont abonnés à un projet, les utilisateurs portail auront uniquement accès aux tâches spécifiques auxquelles ils sont abonnés.\n"
+"\n"
+"Lorsqu'un projet est partagé en lecture seule, l'utilisateur portail est redirigé vers son portail. Il peut voir les tâches auxquelles il est abonné, mais pas les modifier.\n"
+"Lorsqu'un projet est partagé en édition, l'utilisateur portail est redirigé vers les vues kanban et la liste des tâches. Ils peut modifier un certain nombre de champs sur les tâches.\n"
+"\n"
+"Dans tous les cas, un utilisateur interne qui n'a pas de droits d'accès à un projet peut toujours accéder à une tâche, à condition qu'il ait l'URL correspondant (et qu'il fasse partie des abonnés si le projet est privé)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3791,7 +3828,7 @@ msgstr "Partage de projet"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
 msgid "Project Sharing Recurrence"
-msgstr ""
+msgstr "Partage de projet récurent"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -4106,7 +4143,7 @@ msgstr "Récurrent"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 msgid "Recurrent tasks"
-msgstr ""
+msgstr "Tâches récurrentes"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
@@ -4365,7 +4402,7 @@ msgstr "Envoyer par email"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Send invitation"
-msgstr ""
+msgstr "Envoyer une invitation"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__sequence
@@ -4450,7 +4487,7 @@ msgstr "Partager la tâche"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
 msgid "Share a Project"
-msgstr ""
+msgstr "Partager un projet"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -4490,6 +4527,10 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"Triez vos tâches par sprint à l'aide de jalons, d'étiquettes ou d'une "
+"propriété dédiée. À la fin de chaque sprint, il vous suffit de sélectionner "
+"les tâches restantes de votre liste et de les déplacer en une seule fois "
+"vers le sprint suivant en modifiant le jalon, l'étiquette ou la propriété."
 
 #. module: project
 #. odoo-javascript
@@ -4721,13 +4762,13 @@ msgstr "Tâche annulée"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Cancelled"
-msgstr ""
+msgstr "Tâche annulée"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Converted from To-Do"
-msgstr ""
+msgstr "Tâche convertie en To-Do"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
@@ -4753,7 +4794,7 @@ msgstr "Dépendances de tâches"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "Task Description History"
-msgstr ""
+msgstr "Historique de description de la tâche"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_done
@@ -4829,7 +4870,7 @@ msgstr "Titre de la tâche..."
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Transferred from Project %s"
-msgstr ""
+msgstr "Tâche transferée du projet %s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4846,7 +4887,7 @@ msgstr "Tâche approuvée"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
 msgid "Task cancelled"
-msgstr ""
+msgstr "Tâche annulée"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -5064,6 +5105,8 @@ msgid ""
 "The task description lacks any past content that could be restored at the "
 "moment."
 msgstr ""
+"La description de la tâche ne contient aucun ancien contenu qui pourrait "
+"être restauré actuellement."
 
 #. module: project
 #. odoo-python
@@ -6131,6 +6174,8 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: Enquête de"
+" satisfaction"
 
 #. module: project
 #. odoo-javascript

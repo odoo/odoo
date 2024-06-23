@@ -663,7 +663,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
+"        <t t-set=\"doc_name\" t-value=\"'devis' if object.state in ('draft', 'sent') else 'commande'\"></t>\n"
 "        Bonjour,\n"
 "        <br><br>\n"
 "        Votre\n"
@@ -880,6 +880,9 @@ msgid ""
 "                                                By paying,\n"
 "                                            </span>"
 msgstr ""
+"<span id=\"o_sale_portal_use_amount_total\">\n"
+"                                                En payant,\n"
+"                                            </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1073,6 +1076,8 @@ msgid ""
 "The company is required, please select one before making any other changes "
 "to the sale order."
 msgstr ""
+"Veuillez sélectionner une société avant d'apporter d'autres modifications au"
+" bon de commande."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1199,6 +1204,11 @@ msgid ""
 "On order confirmation: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
 msgstr ""
+"Vous permet de partager le document avec vos clients dans le cadre d'une vente.\n"
+"Devis : le document sera envoyé aux clients et leur est accessible à tout moment.\n"
+"Par exemple, cette option peut être utile pour partager des fichiers de description de produits.\n"
+"Commande confirmée : le document sera envoyé aux clients et leur est accessible.\n"
+"Par exemple, cette option peut être utile pour partager des manuels d'utilisation ou des contenus numériques achetés dans le cadre d'un eCommerce."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1414,17 +1424,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying a <u>down payment</u> of"
-msgstr ""
+msgstr "En payant un <u>acompte</u> de"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying,"
-msgstr ""
+msgstr "En payant,"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By signing, you confirm acceptance on behalf of"
-msgstr ""
+msgstr "En signant, vous confirmez l'acceptation au nom de"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1615,7 +1625,7 @@ msgstr "Calculer les frais d'expédition et expédier avec Shiprocket"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Starshipit"
-msgstr ""
+msgstr "Calculer les frais d'expédition et expédier avec Starshipit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1722,7 +1732,7 @@ msgstr "Créer des factures"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
 msgid "Create a Sale Order Activity Plan"
-msgstr ""
+msgstr "Créer un plan d'activité pour les bons de commande"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -3149,12 +3159,12 @@ msgstr "Sur toutes les lignes de commande"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on__sale_order
 msgid "On confirmed order"
-msgstr ""
+msgstr "Sur la commande confirmée"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on__quotation
 msgid "On quote"
-msgstr ""
+msgstr "Sur le devis"
 
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding
@@ -3980,6 +3990,8 @@ msgstr "Utilisateur responsable"
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
 msgid "Revenue Target for the current month (untaxed total of paid invoices)."
 msgstr ""
+"Objectif de revenus pour le mois en cours (total hors taxes des factures "
+"payées)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -4573,7 +4585,7 @@ msgstr "Étape"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr ""
+msgstr "Connecteur Starshipit"
 
 #. module: sale
 #. odoo-javascript
@@ -5584,7 +5596,7 @@ msgstr "pour ce bon de commande."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "quote."
-msgstr ""
+msgstr "devis."
 
 #. module: sale
 #. odoo-python
@@ -5609,7 +5621,7 @@ msgstr "unités"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "you confirm acceptance on the behalf of"
-msgstr ""
+msgstr "vous confirmez l'acceptation au nom de"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation

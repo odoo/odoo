@@ -39,13 +39,13 @@ msgstr "#LINK"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(matches)s in range %(range)s of sheet %(sheetName)s"
-msgstr ""
+msgstr "%(matches)s개의 일치하는 내용이 %(range)s %(sheetName)s내에 있습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(matches)s in sheet %(sheetName)s"
-msgstr ""
+msgstr "%(matches)s개의 일치하는 항목이 %(sheetName)s 내에 있습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -103,7 +103,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%s in all sheets"
-msgstr ""
+msgstr "모든 시트의 %s "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -114,6 +114,10 @@ msgid ""
 "        (1) Return next greater item if no match. \n"
 "        (2) Wildcard match."
 msgstr ""
+"(0)  정확히 일치. \n"
+"        (-1)  일치하는 항목이 없으면 그 다음으로 작은 항목으로 반환  \n"
+"        (1)  일치하는 항목이 없으면 다음으로 큰 항목으로 반환\n"
+"        (2) 와일드카드 일치."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -660,7 +664,7 @@ msgstr "전체"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "All sheets"
-msgstr ""
+msgstr "모든 시트"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -830,7 +834,7 @@ msgstr "이미지 전송 중 예기치 않은 오류가 발생했습니다."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "An unexpected error occurred. Submit a support ticket at odoo.com/help."
-msgstr ""
+msgstr "예상하지 못한 오류가 발생했습니다. odoo.com/help에서 도움을 요청하세요."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1890,7 +1894,7 @@ msgstr "현재 날짜를 날짜 값으로 입력합니다."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Current sheet"
-msgstr ""
+msgstr "현재 시트"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1983,7 +1987,7 @@ msgstr "날짜 범위"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Data series"
-msgstr ""
+msgstr "데이터 수열"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2376,7 +2380,7 @@ msgstr "다운로드"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Dropdown list"
-msgstr ""
+msgstr "드롭다운 목록"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2894,7 +2898,7 @@ msgstr ""
 msgid ""
 "Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
 "invertible"
-msgstr ""
+msgstr "함수 [[FUNCTION_NAME]] 반전 행렬 오류, 정사각형 행렬만 반전 가능"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2986,7 +2990,7 @@ msgstr "숫자와 연관된 문자 가져오기."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Gets information about a cell."
-msgstr ""
+msgstr "셀에 대한 정보를 가져옵니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4568,7 +4572,7 @@ msgstr "붙여넣기"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Paste as value"
-msgstr ""
+msgstr "값으로 붙여넣기"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5452,7 +5456,7 @@ msgstr "스페이스"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Specific range"
-msgstr ""
+msgstr "특정 범위"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5884,7 +5888,7 @@ msgstr "인수 square_matrix는 열과 행의 개수가 같아야 합니다."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "The arguments array_x and array_y must contain at least one pair of numbers."
-msgstr ""
+msgstr "array_x와 array_y 모두 숫자 쌍을 하나 이상 포함해야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6917,7 +6921,7 @@ msgstr "지정된 셀 범위에서 검색할 행을 지정하는 인덱스입니
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The info_type should be one of %s."
-msgstr ""
+msgstr "info_type은 %s 중 하나여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6987,7 +6991,7 @@ msgstr "투자하고자 하는 미래 가치."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The issue (%s) must be positive or null."
-msgstr ""
+msgstr "문제 (%s)는 양수이거나 null이어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7675,7 +7679,7 @@ msgstr "이자 지급액을 확인할 기간."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The period must be between 1 and number_of_periods (%s)"
-msgstr ""
+msgstr "기간은 1에서 number_of_periods(%s) 사이여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7756,7 +7760,7 @@ msgstr "purchase_date (%s) 는 first_period_end (%s) 보다 이전이여야 합�
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The purchase_date (%s) must be positive or null."
-msgstr ""
+msgstr "purchase_date (%s)는 양수이거나 null이어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8061,7 +8065,7 @@ msgstr "액면가 100달러당 상환 금액, 또는 par입니다."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The reference to the cell."
-msgstr ""
+msgstr "셀에 대한 참조입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8531,7 +8535,7 @@ msgstr "유형 (%s) 은 1, 2 또는 3이어야 합니다."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The type of information requested. Can be one of %s"
-msgstr ""
+msgstr "요청된 정보 유형입니다. %s 중 하나 일 수 있습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8884,7 +8888,7 @@ msgstr "구분 기호를 사용하여 값을 추가할 수 있습니다."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value should be a scalar or a 1x1 matrix"
-msgstr ""
+msgstr "값은 스칼라 또는 1x1 행렬이어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9139,7 +9143,7 @@ msgstr "weekend 는 숫자 또는 문자열이어야 합니다."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The weekend must be different from '1111111'."
-msgstr ""
+msgstr "weekend는 '1111111' 과 다른 값이여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9483,7 +9487,7 @@ msgstr "제공된 소스 범위 내 고유 행입니다."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Unknown function"
-msgstr ""
+msgstr " 알 수 없는 함수"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9513,7 +9517,7 @@ msgstr "현재 행까지"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Use row %s as headers"
-msgstr ""
+msgstr "%s 행을 머리글로 사용"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10130,7 +10134,7 @@ msgstr "[[FUNCTION_NAME]] 에 올바른 입력 데이터가 없습니다."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
-msgstr ""
+msgstr "[[FUNCTION_NAME]] 은 두 매개변수에 대해 최소 두 개의 값을 필요로 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10188,7 +10192,7 @@ msgstr "lookup_range 는 단일 행 또는 단일 열이어야 합니다."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "match_mode should be a value in [-1, 0, 1, 2]."
-msgstr ""
+msgstr "match_mode는 [-1, 0, 1, 2] 범위의 값이어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10236,7 +10240,7 @@ msgstr "return_range는 lookup_range과 동일한 dimension이어야 합니다."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "search_mode should be a value in [-1, 1, -2, 2]."
-msgstr ""
+msgstr " search_mode는 [-1, 1, -2, 2] 범위의 값이어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10250,7 +10254,7 @@ msgstr "start_date (%s) 는 end_date (%s) 과 같거나 이전 날짜여야 합�
 msgid ""
 "the search and match mode combination is not supported for XLOOKUP "
 "evaluation."
-msgstr ""
+msgstr "검색 및 일치 모드 조합은 XLOOKUP 평가에 지원되지 않습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
