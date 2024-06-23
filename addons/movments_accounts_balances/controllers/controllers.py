@@ -866,3 +866,108 @@ class ResPartner(models.Model):
         except Exception as e:
             return "Failed to delete partner: {}".format(e)
 
+class AnalyticAccount(models.Model):
+    _inherit = 'account.analytic.account'  # Inherit the existing model
+
+    @api.model
+    def create_analytic_account(self, name, code, company_id, plan_id):
+        """
+        Create an analytic account within Odoo's accounting module.
+
+        Args:
+        - name (str): The name of the analytic account.
+        - code (str): Unique identifier code for the analytic account.
+        - company_id (int): ID of the company this analytic account belongs to.
+        - plan_id (int): ID of the plan associated with this analytic account.
+
+        Returns:
+        dict: Dictionary containing a key 'account_info' with details of the created analytic account.
+
+        Raises:
+        ValidationError: If any validation fails.
+        """
+        # Check if an analytic account with the same code already exists for the given company
+        if self.search([('code', '=', code), ('company_id', '=', company_id)], limit=1):
+            raise ValidationError("An analytic account with this code already exists in the selected company.")
+
+        # Prepare values for the new analytic account
+        analytic_account_vals = {
+            'name': name,
+            'code': code,
+            'company_id': company_id,
+            'plan_id': plan_id
+        }
+
+        # Create the new analytic account
+        new_analytic_account = self.create(analytic_account_vals)
+
+        # Prepare the response data
+        account_data = {
+            'id': new_analytic_account.id,
+            'account_name': new_analytic_account.name,
+            'account_code': new_analytic_account.code,
+            'company_id': new_analytic_account.company_id.id,
+            'plan_id': new_analytic_account.plan_id.id
+        }
+
+        response = {'account_info': account_data}
+        return response
+
+    @api.model
+    def get_analytic_account(self, account_id):
+        """
+        Retrieves an analytic account by ID within Odoo's accounting module.
+
+        Args:
+        - account_id (int): The ID of the analytic account to retrieve.
+
+        Returns:
+        dict: Dictionary containing a key 'account_info' with details of the retrieved analytic account.
+
+        Raises:
+        ValidationError: If the analytic account does not exist.
+        """
+        # Attempt to retrieve the analytic account using the provided ID
+        account = self.browse(account_id)
+
+        # Check if the analytic account actually exists
+        if not account.exists():
+            raise ValidationError("Analytic account with ID {} does not exist.".format(account_id))
+
+        # Gather data from the retrieved analytic account object
+        account_data = {
+            'id': account.id,
+            'account_name': account.name,
+            'account_code': account.code,
+            'currency_id': account.currency_id.id if account.currency_id else 'None',
+            'company_id': account.company_id.id,
+        }
+
+        # Package the analytic account data in a response dictionary
+        response = {'account_info': account_data}
+        return response
+
+    @api.model
+    def delete_analytic_account(self, account_id):
+        """
+        Deletes an analytic account from Odoo's accounting module.
+
+        Args:
+        - account_id (int): The ID of the analytic account to be deleted.
+
+        Returns:
+        str: Success or error message.
+        """
+        AnalyticAccount = self.env['account.analytic.account']
+        account = AnalyticAccount.search([('id', '=', account_id)])
+
+        if not account:
+            return "Analytic account not found."
+
+        # Proceed to delete the analytic account
+        try:
+            account.unlink()  # Delete the analytic account
+            return "Analytic account deleted successfully."
+        except Exception as e:
+            return "Failed to delete analytic account: {}".format(e)
+
