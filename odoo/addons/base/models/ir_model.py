@@ -183,6 +183,85 @@ class IrModel(models.Model):
     _order = 'model'
     _rec_names_search = ['name', 'model']
     _allow_sudo_commands = False
+    def __init__(self, *args, **kwargs):
+        super(IrModel, self).__init__(*args, **kwargs)
+        self._abstract = False
+    
+        #Hack to fix ir_model table missing
+        """
+        SQL query to create ir_model table
+
+        CREATE TABLE IF NOT EXISTS public.ir_model
+        (
+            id integer NOT NULL DEFAULT nextval('ir_model_id_seq'::regclass),
+            create_uid integer,
+            write_uid integer,
+            model character varying COLLATE pg_catalog."default" NOT NULL,
+            "order" character varying COLLATE pg_catalog."default" NOT NULL,
+            state character varying COLLATE pg_catalog."default",
+            name jsonb NOT NULL,
+            info text COLLATE pg_catalog."default",
+            transient boolean,
+            create_date timestamp without time zone,
+            write_date timestamp without time zone,
+            CONSTRAINT ir_model_pkey PRIMARY KEY (id),
+            CONSTRAINT ir_model_obj_name_uniq UNIQUE (model),
+            CONSTRAINT ir_model_create_uid_fkey FOREIGN KEY (create_uid)
+                REFERENCES public.res_users (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE SET NULL,
+            CONSTRAINT ir_model_write_uid_fkey FOREIGN KEY (write_uid)
+                REFERENCES public.res_users (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE SET NULL
+        )
+
+        TABLESPACE pg_default;
+
+        ALTER TABLE IF EXISTS public.ir_model
+            OWNER to odoo;
+
+        COMMENT ON TABLE public.ir_model
+            IS 'Models';
+
+        COMMENT ON COLUMN public.ir_model.create_uid
+            IS 'Created by';
+
+        COMMENT ON COLUMN public.ir_model.write_uid
+            IS 'Last Updated by';
+
+        COMMENT ON COLUMN public.ir_model.model
+            IS 'Model';
+
+        COMMENT ON COLUMN public.ir_model."order"
+            IS 'Order';
+
+        COMMENT ON COLUMN public.ir_model.state
+            IS 'Type';
+
+        COMMENT ON COLUMN public.ir_model.name
+            IS 'Model Description';
+
+        COMMENT ON COLUMN public.ir_model.info
+            IS 'Information';
+
+        COMMENT ON COLUMN public.ir_model.transient
+            IS 'Transient Model';
+
+        COMMENT ON COLUMN public.ir_model.create_date
+            IS 'Created on';
+
+        COMMENT ON COLUMN public.ir_model.write_date
+            IS 'Last Updated on';
+
+        COMMENT ON CONSTRAINT ir_model_obj_name_uniq ON public.ir_model
+            IS 'unique (model)';
+        """
+        try:
+            self._auto_init()
+        except psycopg2.ProgrammingError:
+            pass
+        
 
     def _default_field_id(self):
         if self.env.context.get('install_mode'):
