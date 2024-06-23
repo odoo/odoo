@@ -878,9 +878,7 @@ class AnalyticAccount(models.Model):
         - name (str): The name of the analytic account.
         - code (str): Unique identifier code for the analytic account.
         - company_id (int): ID of the company this analytic account belongs to.
-        - currency_id (int, optional): The currency this analytic account operates in.
-        - tag_ids (list, optional): List of tag IDs for reporting purposes.
-        - partner_id (int, optional): The ID of the partner associated with this analytic account.
+        - plan_id (int): ID of the plan associated with this analytic account.
 
         Returns:
         dict: Dictionary containing a key 'account_info' with details of the created analytic account.
@@ -898,7 +896,6 @@ class AnalyticAccount(models.Model):
             'code': code,
             'company_id': company_id,
             'plan_id': plan_id
-
         }
 
         # Create the new analytic account
@@ -913,7 +910,7 @@ class AnalyticAccount(models.Model):
             'plan_id': new_analytic_account.plan_id.id
         }
 
-        response = {'account_info': [account_data]}
+        response = {'account_info': account_data}
         return response
 
     @api.model
