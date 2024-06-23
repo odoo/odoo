@@ -6,9 +6,9 @@
 # Linkup <link-up@naver.com>, 2022
 # JH CHOI <hwangtog@gmail.com>, 2022
 # Martin Trigaux, 2023
-# Daye Jeong, 2023
 # Sarah Park, 2023
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3820,7 +3820,7 @@ msgstr "해당 도메인으로 사용자가 방문할 때만 이 웹사이트 �
 msgid ""
 "Do not copy/paste code you do not understand, this could put your data at "
 "risk."
-msgstr ""
+msgstr "이해하지 못하는 코드를 복사하거나 붙여넣으면 데이터가 위험해질 수 있으므로 주의하세요."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -5147,6 +5147,13 @@ msgstr "숨기기"
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Hide For"
 msgstr "숨기기"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Hide the cookies bar"
+msgstr "쿠키 바 숨기기"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
@@ -7768,8 +7775,8 @@ msgstr "사전 설정"
 #. odoo-javascript
 #: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
 #, python-format
-msgid "Press %(key)s to exit full string"
-msgstr ""
+msgid "Press %(key)s to exit full screen"
+msgstr "%(key)s를 눌러 전체 화면을 종료합니다. "
 
 #. module: website
 #. odoo-javascript
@@ -8812,6 +8819,13 @@ msgid "Show site map"
 msgstr "사이트맵 보기"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Show the cookies bar"
+msgstr "쿠키 바 표시하기"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/Hide on Desktop"
 msgstr "데스크톱에서 표시/숨기기"
@@ -9421,6 +9435,8 @@ msgid ""
 "The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
 "Change that website's company first."
 msgstr ""
+"회사 %(company_name)r에 연결된 웹사이트 %(website_name)r이 있으므로 회사를 보관할 수 없습니다.\n"
+"먼저 해당 웹사이트와 연결된 회사를 변경하세요."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -11185,6 +11201,7 @@ msgid ""
 "You cannot delete this website menu as this serves as the default parent "
 "menu for new websites (e.g., /shop, /event, ...)."
 msgstr ""
+"이 웹사이트 메뉴는 새 웹사이트의 기본 상위 메뉴 (예: /shop, /event, ...)로 사용되므로 삭제할 수 없습니다."
 
 #. module: website
 #. odoo-python
@@ -11264,7 +11281,7 @@ msgstr "이메일"
 msgid ""
 "Your Embed Code snippet doesn't have anything to display. Click on Edit to "
 "modify it."
-msgstr ""
+msgstr "코드 삽입을 위한 스니펫에 아무것도 표시되지 않습니다. 변경하려면 수정을 클릭합니다."
 
 #. module: website
 #. odoo-javascript

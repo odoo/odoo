@@ -64,7 +64,9 @@ class IrUiMenu(models.Model):
         icon_path = get_module_resource(path_info[0], path_info[1])
         icon_image = False
         if icon_path:
-            with tools.file_open(icon_path, 'rb') as icon_file:
+            with tools.file_open(icon_path, 'rb', filter_ext=(
+                '.gif', '.ico', '.jfif', '.jpeg', '.jpg', '.png', '.svg', '.webp',
+            )) as icon_file:
                 icon_image = base64.encodebytes(icon_file.read())
         return icon_image
 
