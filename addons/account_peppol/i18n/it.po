@@ -584,7 +584,7 @@ msgstr "Errore Peppol: %s"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol participant status:"
-msgstr ""
+msgstr "Stato partecipante Peppol:"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_journal_dashboard_kanban_view
@@ -715,19 +715,19 @@ msgstr "Pronta all'invio"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 msgid "Register"
-msgstr ""
+msgstr "Registra"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 msgid "Register (Demo)"
-msgstr ""
+msgstr "Registra (demo)"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 msgid "Register (Test)"
-msgstr ""
+msgstr "Registra (test)"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -804,17 +804,17 @@ msgstr "Invia tramite Peppol"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__service_ids
 msgid "Service"
-msgstr ""
+msgstr "Servizio"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__service_info
 msgid "Service Info"
-msgstr ""
+msgstr "Info servizio"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__service_json
 msgid "Service Json"
-msgstr ""
+msgstr "Json servizio"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__skipped
@@ -824,7 +824,7 @@ msgstr "Saltata"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Start sending via Peppol"
-msgstr ""
+msgstr "Inizia a inviare tramite Peppol"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -846,6 +846,8 @@ msgid ""
 "Test mode allows sending e-invoices through the test Peppol network.\n"
 "                                By clicking the button below I accept that Odoo may process my e-invoices."
 msgstr ""
+"La modalità di test consente l'invio di fatture elettroniche nella rete Peppol di prova.\n"
+"                                Facendo clic sul pulsante in basso accetto che Odoo potrebbe elaborare le mie fatture elettroniche."
 
 #. module: account_peppol
 #. odoo-python
@@ -884,6 +886,9 @@ msgid ""
 "documents. Please check their Peppol endpoint and the Electronic Invoicing "
 "format"
 msgstr ""
+"I seguenti partner non sono configurati correttamente per la ricezione di "
+"documenti Peppol. Controlla e verifica i loro endpoint Peppol e il formato "
+"di fatturazione elettronica"
 
 #. module: account_peppol
 #. odoo-python
@@ -961,6 +966,8 @@ msgid ""
 "To generate complete electronic invoices, also set a country for this "
 "partner."
 msgstr ""
+"Per generare fatture elettroniche complete, imposta anche un Paese per il "
+"partner."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -968,6 +975,8 @@ msgid ""
 "To generate electronic invoices, also set a country and a bank account for "
 "this partner."
 msgstr ""
+"Per generare fatture elettroniche, imposta anche un Paese e un conto "
+"bancario per il partner."
 
 #. module: account_peppol
 #. odoo-python
@@ -1026,7 +1035,7 @@ msgstr "Verifica l'endpoint PEPPOL del partner"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 msgid "View Partner(s)"
-msgstr ""
+msgstr "Mostra partner"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__wizard_id
@@ -1043,13 +1052,13 @@ msgstr "Ora puoi ricevere fatture fornitore demo."
 #. odoo-python
 #: code:addons/account_peppol/tools/demo_utils.py:0
 msgid "You can now send invoices in demo mode."
-msgstr ""
+msgstr "Ora puoi inviare fatture in modalità demo."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "You can now send invoices via Peppol."
-msgstr ""
+msgstr "Ora puoi inviare fatture tramite Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1057,6 +1066,7 @@ msgid ""
 "You need to register in order to Send Customer Invoices on the Peppol "
 "network."
 msgstr ""
+"È necessario registrarsi per inviare fatture cliente nella rete Peppol."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1099,6 +1109,8 @@ msgid ""
 "Your registration on Peppol network should be activated within a day. The "
 "updated status will be visible in Settings."
 msgstr ""
+"La registrazione nella rete Peppol può essere effettuata in un giorno. Gli "
+"aggiornamenti di stato saranno visibili nelle impostazioni."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1108,4 +1120,4 @@ msgstr "La registrazione sarà attivata in un giorno."
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "for validation purposes"
-msgstr ""
+msgstr "per la convalida"

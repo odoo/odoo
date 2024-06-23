@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-03 08:43+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,7 +112,7 @@ msgstr "<span class=\"o_stat_text\">工时表</span>"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "<span class=\"text-nowrap\">Time Spent on Sub-tasks:</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">子任务所用时间：</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -170,7 +171,7 @@ msgstr "<span>员工</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span>Time Spent</span>"
-msgstr ""
+msgstr "<span>花费时间</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -185,27 +186,27 @@ msgstr "<strong>进程:</strong>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Time Remaining: </strong>"
-msgstr ""
+msgstr "<strong>剩余时间：</strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Time recorded on sub-tasks: </strong>"
-msgstr ""
+msgstr "<strong>子任务的记录时间：</strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Total Days: </strong>"
-msgstr ""
+msgstr "<strong>总日数：</strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Total Hours: </strong>"
-msgstr ""
+msgstr "<strong>总时数：</strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Total Time Spent: </strong>"
-msgstr ""
+msgstr "<strong>已花费时数：</strong>"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_timesheet_manager
@@ -382,12 +383,12 @@ msgstr "天/半天"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 msgid "Days Remaining"
-msgstr ""
+msgstr "剩余天数"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__analytic_account_active
 msgid "Deactivate the account."
-msgstr ""
+msgstr "禁用账户。"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
@@ -558,13 +559,13 @@ msgstr "无效值：%s"
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Last Month"
-msgstr ""
+msgstr "上个月"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Last Quarter"
-msgstr ""
+msgstr "上季度"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__write_uid
@@ -581,13 +582,13 @@ msgstr "上次更新日期"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Last Week"
-msgstr ""
+msgstr "上周"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Last Year"
-msgstr ""
+msgstr "去年"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
@@ -646,12 +647,12 @@ msgstr "最新"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "No Parent Task"
-msgstr ""
+msgstr "无上级任务"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "No Task"
-msgstr ""
+msgstr "没有任务"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -788,7 +789,7 @@ msgstr "在员工中搜索"
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Search in Parent Task"
-msgstr ""
+msgstr "在上级任务中搜索"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -836,13 +837,13 @@ msgstr "设置"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
 msgid "Sub-Task:"
-msgstr ""
+msgstr "子任务："
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Sub-tasks Time Spent"
-msgstr ""
+msgstr "子任务耗时"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -896,7 +897,7 @@ msgstr "这些任务有一些工时表条目引用它们。在删除这些任务
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "This Month"
-msgstr ""
+msgstr "本月"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -909,13 +910,13 @@ msgstr "本季度"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "This Week"
-msgstr ""
+msgstr "本周"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "This Year"
-msgstr ""
+msgstr "本年"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -974,17 +975,17 @@ msgstr "休假"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Time Remaining"
-msgstr ""
+msgstr "剩余时间"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__remaining_hours_percentage
 msgid "Time Remaining Percentage"
-msgstr ""
+msgstr "剩余时间百分比"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Time Remaining on SO"
-msgstr ""
+msgstr "销售订单上的剩余时数"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -999,18 +1000,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Time Spent"
-msgstr ""
+msgstr "已花费时间"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__subtask_effective_hours
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Time Spent on Sub-Tasks"
-msgstr ""
+msgstr "子任务所用时间"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Time Spent on Sub-tasks"
-msgstr ""
+msgstr "子任务所用时间"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
@@ -1218,7 +1219,7 @@ msgstr "分配时间总计"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 msgid "Total Days Spent"
-msgstr ""
+msgstr "花费总天数"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -1227,7 +1228,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Time Spent"
-msgstr ""
+msgstr "花费总时数"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1298,6 +1299,9 @@ msgid ""
 "                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
 "                    customers if required."
 msgstr ""
+"你可按不同项目，登记并追踪每天的工作时间。\n"
+"                    所有花费在项目上的工作时间，都会成为成本，\n"
+"                    如有需要，可向客户重新开立发票以收费。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1317,6 +1321,8 @@ msgid ""
 "You cannot log timesheets on this project since it is linked to an inactive analytic account.<br/>\n"
 "                            Please switch to another account, or reactivate the current one to timesheet on the project."
 msgstr ""
+"你不可为此项目记录工时表，因为它连结至非运作的分析帐户。<br/>\n"
+"                            请切换至另一帐户，或重新启动此帐户，以在项目中记录工时表。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -1324,7 +1330,7 @@ msgid ""
 "You cannot log timesheets on this project since it is linked to an inactive "
 "analytic account.<br/> Please change this account, or reactivate the current"
 " one to timesheet on the project."
-msgstr ""
+msgstr "您不可为此专桉记录工时表，因为它连结至非运作的分析帐户。<br/>请更改此帐户设定，或重新启动此帐户，以在项目中记录工时表。"
 
 #. module: hr_timesheet
 #. odoo-python

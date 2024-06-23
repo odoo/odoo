@@ -5788,6 +5788,10 @@ msgid ""
 "                                        barcode operator and configure the routing of the reports.\n"
 "                                        <br/>"
 msgstr ""
+"Odoo abre una vista previa en PDF por defecto. Si usted (usuario Enterprise) desea imprimir al instante,\n"
+"                                        instale la aplicación IoT en un ordenador que esté conectado a la misma red local que\n"
+"                                        el operador del código de barras y configure el enrutamiento de los informes.\n"
+"                                        <br/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -7408,6 +7412,8 @@ msgid ""
 "Reduce stockouts with alerts, barcode app, replenishment propositions,\n"
 "                        locations management traceability, quality control, etc."
 msgstr ""
+"Reduzca la rotura de stock con alertas, la aplicación Código de barras, propuestas de reposición, \n"
+"                        gestión de ubicaciones, trazabilidad, control de calidad y mucho más"
 
 #. module: stock
 #. odoo-javascript
@@ -7491,6 +7497,8 @@ msgid ""
 "Remove manually entered value and replace by the quantity to order based on "
 "the forecasted quantities"
 msgstr ""
+"Elimine el valor ingresado manualmente y reemplácelo por la cantidad a pedir"
+" basada en las cantidades pronosticadas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__reordering_max_qty
@@ -8122,7 +8130,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "Selection not supported."
-msgstr ""
+msgstr "Selección no admitida."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8202,7 +8210,7 @@ msgstr "Prefijo de secuencia"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Sequence cross dock"
-msgstr ""
+msgstr "Secuencia de almacenamiento intermedio"
 
 #. module: stock
 #. odoo-python
@@ -8244,7 +8252,7 @@ msgstr "Control de calidad de la secuencia"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Sequence storage"
-msgstr ""
+msgstr "Secuencias de almacenamiento"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -9028,6 +9036,9 @@ msgid ""
 "\n"
 "Is this expected? For example, this can occur if a delivery operation is validated before its corresponding receipt operation is validated. In this case the issue will be solved automatically once all steps are completed. Otherwise, the serial number should be corrected to prevent inconsistent data."
 msgstr ""
+"El número de serie (%(serial_number)s) ya se usa en estas ubicaciones: %(location_list)s.\n"
+"\n"
+"¿Se esperaba que ocurriera esto? Puede suceder, por ejemplo, si valida una operación antes de validar su operación de recepción correspondiente. En este caso, el problema se resolverá automáticamente al completar todos los pasos. De lo contrario, debe corregir el número de serie para prevenir datos inconsistentes."
 
 #. module: stock
 #. odoo-python
@@ -9061,6 +9072,8 @@ msgid ""
 "The combination of lot/serial number and product must be unique within a company including when no company is defined.\n"
 "The following combinations contain duplicates:\n"
 msgstr ""
+"La combinación de número de serie o lote y producto debe ser única dentro de una compañía, incluso cuando no hay ninguna definida.\n"
+"Las siguientes combinaciones contienen duplicados:\n"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -9073,7 +9086,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "The day after tomorrow"
-msgstr ""
+msgstr "Pasado mañana"
 
 #. module: stock
 #. odoo-python
@@ -9148,11 +9161,14 @@ msgid ""
 "operation is part of a chain of operations targeting the destination "
 "location."
 msgstr ""
+"La operación trae los productos a una ubicación intermedia. Esta operación "
+"forma parte de una cadena de operaciones cuyo objetivo es la ubicación de "
+"destino."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
-msgstr ""
+msgstr "La operación toma y sugiere productos de esta ubicación."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -9170,7 +9186,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "The operations brings product to this location"
-msgstr ""
+msgstr "La operación trae el producto a esta ubicación"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__package_id
@@ -9192,6 +9208,8 @@ msgid ""
 "The procurement quantity will be rounded up to a multiple of this field "
 "quantity. If it is 0, it is not rounded."
 msgstr ""
+"La cantidad del abastecimiento se redondeará hacia arriba a un múltiplo de "
+"la cantidad en este campo. Si es 0, no se redondeará."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -9220,12 +9238,15 @@ msgid ""
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"La cantidad hecha para el producto \"%(product)s\" no respeta la precisión "
+"de redondeo definida en la unidad de medida \"%(unit)s\". Por favor, cambie "
+"la cantidad hecha o la precisión de redondeo de su unidad de medida."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "The quantity per lot should always be a positive value."
-msgstr ""
+msgstr "La cantidad por lote siempre debe ser un valor positivo."
 
 #. module: stock
 #. odoo-python
@@ -9244,6 +9265,8 @@ msgstr ""
 msgid ""
 "The search does not support the %(operator)s operator or %(value)s value."
 msgstr ""
+"La búsqueda no es compatible con el operador %(operator)s o el valor "
+"%(value)s."
 
 #. module: stock
 #. odoo-python
@@ -9262,6 +9285,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %(product)s, Serial Number: %(serial_number)s"
 msgstr ""
+"Este número de serie ya había sido asignado: \n"
+" Producto: %(product)s, número de serie: %(serial_number)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -9683,12 +9708,12 @@ msgstr "A pedir"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order_computed
 msgid "To Order Computed"
-msgstr ""
+msgstr "Cantidad a pedir calculada"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order_manual
 msgid "To Order Manual"
-msgstr ""
+msgstr "A pedir manualmente"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -9800,7 +9825,7 @@ msgstr "Informe de trazabilidad"
 #: model:ir.model.fields,field_description:stock.field_product_template__is_storable
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "Rastrear inventario"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_product_expiry
@@ -11000,6 +11025,8 @@ msgid ""
 "You cannot perform moves because their unit of measure has a different "
 "category from their product unit of measure."
 msgstr ""
+"No puede realizar movimientos porque la unidad de medida de los productos "
+"tiene una categoría diferente a la unidad de medida de los productos."
 
 #. module: stock
 #. odoo-python
@@ -11181,6 +11208,8 @@ msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
 msgstr ""
+"Todavía tiene operaciones en curso para los tipos de operación "
+"%(operations)s en el almacén %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -11470,7 +11499,7 @@ msgstr "stock.putaway.rule"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "the barcode app"
-msgstr ""
+msgstr "la aplicación Código de barras"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__warehouse_id

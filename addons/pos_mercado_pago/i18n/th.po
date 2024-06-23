@@ -33,7 +33,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
 msgid "Do not have access to fetch token from Mercado Pago"
-msgstr ""
+msgstr "ไม่มีสิทธิ์เข้าถึงโทเค็นการดึงข้อมูลจาก Mercado Pago"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_id_point_smart
@@ -41,6 +41,8 @@ msgid ""
 "Enter your Point Smart terminal serial number written on the back of your "
 "terminal (after the S/N:)"
 msgstr ""
+"ป้อนหมายเลขประจำเครื่องเทอร์มินัล Point Smart "
+"ของคุณซึ่งเขียนไว้ที่ด้านหลังของเครื่องเทอร์มินัล (หลัง S/N:)"
 
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
@@ -53,6 +55,8 @@ msgid ""
 "Mercado Pago customer production user token: "
 "https://www.mercadopago.com.mx/developers/en/reference"
 msgstr ""
+"โทเค็นผู้ใช้การผลิตของลูกค้า Mercado Pago: "
+"https://www.mercadopago.com.mx/developers/en/reference"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_webhook_secret_key
@@ -60,47 +64,49 @@ msgid ""
 "Mercado Pago production secret key from integration application: "
 "https://www.mercadopago.com.mx/developers/panel/app"
 msgstr ""
+"รหัสลับการผลิต Mercado Pago จากแอปพลิเคชันการรวม: "
+"https://www.mercadopago.com.mx/developers/panel/app"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_id_point_smart_complet
 msgid "Mp Id Point Smart Complet"
-msgstr ""
+msgstr "Mp Id Point Smart Complet"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 msgid "Payment has been canceled"
-msgstr ""
+msgstr "การชำระเงินถูกยกเลิก"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 msgid "Payment has been finished"
-msgstr ""
+msgstr "การชำระเงินเสร็จสิ้นแล้ว"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 msgid "Payment has to be canceled on terminal"
-msgstr ""
+msgstr "การชำระเงินจะต้องถูกยกเลิกที่เครื่องเทอร์มินัล"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 msgid "Payment not found (canceled/finished on terminal)"
-msgstr ""
+msgstr "ไม่พบการชำระเงิน (ยกเลิก/เสร็จสิ้นบนเครื่องเทอร์มินัล)"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 msgid "Payment status could not be confirmed"
-msgstr ""
+msgstr "ไม่สามารถยืนยันสถานะการชำระเงินได้"
 
 #. module: pos_mercado_pago
 #. odoo-python
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
 msgid "Please verify your production user token as it was rejected"
-msgstr ""
+msgstr "โปรดตรวจสอบโทเค็นผู้ใช้ที่ใช้งานจริงของคุณว่าถูกปฏิเสธ"
 
 #. module: pos_mercado_pago
 #: model:ir.model,name:pos_mercado_pago.model_pos_payment_method
@@ -110,17 +116,17 @@ msgstr "วิธีการชำระเงินการขายหน้
 #. module: pos_mercado_pago
 #: model:ir.model,name:pos_mercado_pago.model_pos_session
 msgid "Point of Sale Session"
-msgstr ""
+msgstr "เซสชั่นระบบขายหน้าร้าน"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_webhook_secret_key
 msgid "Production secret key"
-msgstr ""
+msgstr "รหัสการผลิต"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_bearer_token
 msgid "Production user token"
-msgstr ""
+msgstr "โทเค็นผู้ใช้ที่ใช้งานจริง"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_id_point_smart
@@ -131,19 +137,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
 msgid "The terminal serial number is not registered on Mercado Pago"
-msgstr ""
+msgstr "หมายเลขซีเรียลของเครื่องไม่ได้ลงทะเบียนบน Mercado Pago"
 
 #. module: pos_mercado_pago
 #. odoo-python
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
 msgid "Unexpected Mercado Pago response: %s"
-msgstr ""
+msgstr "การตอบสนองของ Mercado Pago ที่ไม่คาดคิด: %s"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 msgid "Unknown payment status"
-msgstr ""
+msgstr "สถานะการชำระเงินที่ไม่รู้จัก"
 
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago

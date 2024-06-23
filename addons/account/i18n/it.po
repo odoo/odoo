@@ -123,6 +123,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, "
 "%(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_invoiced)s Fatturati, "
+"%(quantity_delivered)s Consegnati a %(unit_price)s ognuno"
 
 #. module: account
 #. odoo-python
@@ -516,6 +518,8 @@ msgstr ""
 msgid ""
 "<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
 msgstr ""
+"<b>Lo sconto per pagamento anticipato del %(payment_reference) è stato "
+"applicato.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -880,6 +884,8 @@ msgid ""
 "<span class=\"o_form_label\" groups=\"account.group_account_readonly\" "
 "invisible=\"move_type == 'entry'\">in </span>"
 msgstr ""
+"<span class=\"o_form_label\" groups=\"account.group_account_readonly\" "
+"invisible=\"move_type == 'entry'\">in </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -3674,7 +3680,7 @@ msgstr "Perdite differenza di cassa"
 #: model:account.account,name:account.1_cash_discount_gain
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid "Early Discount Gain"
-msgstr ""
+msgstr "Guadagno sconto anticipato"
 
 #. module: account
 #. odoo-python
@@ -3682,7 +3688,7 @@ msgstr ""
 #: model:account.account,name:account.1_cash_discount_loss
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid "Early Discount Loss"
-msgstr ""
+msgstr "Perdita sconto anticipato"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__early_pay_discount_computation
@@ -4275,12 +4281,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:account.action_amounts_to_settle
 msgid "Cool, it looks like you don't have any amount to settle."
 msgstr ""
+"Fantastico, sembra che tu non abbia nessun importo fornitore da saldare."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %(id)s (%(name)s)."
-msgstr ""
+msgstr "Dati corrotti nella registrazione contabile con id %(id)s (%(name)s)."
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -7119,7 +7126,7 @@ msgstr "Contiene registrazioni contabili"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_entries
 msgid "Has Entries"
-msgstr ""
+msgstr "Ha registrazioni"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_iban_warning
@@ -7150,7 +7157,7 @@ msgstr "Avviso trasferimento denaro"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
 msgid "Has Posted Entries"
-msgstr ""
+msgstr "Ha registrazioni confermate"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_reconciled_entries
@@ -7950,6 +7957,9 @@ msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
 " for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
+"\"Intervallo CAP\" non valido. È necessario configurare sia il valore \"Da\""
+" che il valore \"A\" per l'intervallo CAP e \"A\" deve essere maggiore di "
+"\"Da\"."
 
 #. module: account
 #. odoo-python
@@ -8987,7 +8997,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Late"
-msgstr ""
+msgstr "In ritardo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9042,6 +9052,8 @@ msgstr "- pagamenti"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Let artificial intelligence scan your bill. Pay easily."
 msgstr ""
+"Lascia che l'intelligenza artificiale scansioni la tua fattura e paga "
+"facilmente."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13703,7 +13715,7 @@ msgstr "Imposte applicate"
 #: model:ir.model.fields,field_description:account.field_account_move__taxes_legal_notes
 #: model:ir.model.fields,field_description:account.field_account_payment__taxes_legal_notes
 msgid "Taxes Legal Notes"
-msgstr ""
+msgstr "Note legali imposte"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13724,7 +13736,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_tax_company_currency
 #: model:ir.model.fields,field_description:account.field_res_config_settings__display_invoice_tax_company_currency
 msgid "Taxes in company currency"
-msgstr ""
+msgstr "Imposte in valuta aziendale"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13943,6 +13955,9 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Il numero di partita IVA. I valori saranno convalidati in base al formato "
+"del Paese. Puoi usare '/' per indicare che il partner non è soggetto a "
+"tassazione."
 
 #. module: account
 #. odoo-python
@@ -13951,12 +13966,14 @@ msgid ""
 "The Unit of Measure (UoM) '%(uom)s' you have selected for product "
 "'%(product)s', is incompatible with its category : %(category)s."
 msgstr ""
+"L'unità di misura (UdM) \"%(uom)s\" selezionata per il prodotto "
+"\"%(product)s\" è incompatibile con la sua categoria: %(category)s."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is deprecated."
-msgstr ""
+msgstr "Il conto %s (%s) non è attivo."
 
 #. module: account
 #. odoo-python
@@ -15365,12 +15382,12 @@ msgstr "Da fatturare"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "To Pay"
-msgstr ""
+msgstr "Da pagare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "To Validate"
-msgstr ""
+msgstr "Da convalidare"
 
 #. module: account
 #. odoo-python
@@ -15585,7 +15602,7 @@ msgstr "Parametro Tipo di transazione"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Transactions"
-msgstr ""
+msgstr "Transazioni"
 
 #. module: account
 #. odoo-python
@@ -16619,6 +16636,9 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
+"Nn è possibile creare un nuovo pagamento senza aver configurato per "
+"l'azienda un conto per i pagamenti in sospeso/ricevuti o il "
+"%(payment_method)s metodo di pagamento nel %(journal)s registro."
 
 #. module: account
 #. odoo-python
@@ -16675,6 +16695,9 @@ msgid ""
 "You can't have two payment method lines of the same payment type "
 "(%(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
+"Non è possibile avere due righe relative al metodo di pagamento per lo "
+"stesso tipo di pagamento (%(payment_type)s) e con lo stesso nome (%(name)s) "
+"in un singolo registro."
 
 #. module: account
 #. odoo-python
@@ -16877,6 +16900,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %(entry)s (%(id)s)"
 msgstr ""
+"Impossibile effettuare questa modifica su una registrazione riconciliata, sono modificabili solo alcuni campi non legali. Annullare prima la riconciliazione.\n"
+"Registrazione contabile (ID): %(entry)s (%(id)s)"
 
 #. module: account
 #. odoo-python

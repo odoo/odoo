@@ -1,31 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_hr
-#
-# Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2022
-# Foldi Robert <foldirobert@nexterp.ro>, 2022
-# Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Martin Trigaux, 2022
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"PO-Revision-Date: 2024-06-03 14:46+0000\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
-"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "Allowed Employees"
+msgid "Advanced rights"
+msgstr ""
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "All employees"
+msgstr ""
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Basic rights"
 msgstr ""
 
 #. module: pos_hr
@@ -33,18 +37,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_form_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
 msgid "Cashier"
-msgstr "Casier"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 msgid "Change Cashier"
-msgstr "Schimbare casier"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_res_config_settings
 msgid "Config Settings"
-msgstr "Setări de configurare"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
@@ -52,7 +56,7 @@ msgstr "Setări de configurare"
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__employee_id
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_report_pos_order_search_inherit
 msgid "Employee"
-msgstr "Angajat"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-python
@@ -61,86 +65,113 @@ msgid "Employee: %s - PoS Config(s): %s \n"
 msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_employee_ids
-msgid "Employees with access"
-msgstr "Angajați cu acces"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
+msgid "Employees with basic access"
+msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_employee_ids
-msgid "If left empty, all employees can log in to the PoS session"
-msgstr "Dacă este lăsat gol, toți angajații se pot conecta la sesiunea PoS"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__advanced_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_advanced_employee_ids
+msgid "Employees with manager access"
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
+msgid "If left empty, all employees can log in to PoS"
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
+msgid "If left empty, only Odoo users have extended rights in PoS"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 msgid "Incorrect Password"
-msgstr "Parolă incorectă"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/HeaderLockButton.xml:0
+#: code:addons/pos_hr/static/src/overrides/components/navbar/navbar.xml:0
 msgid "Lock"
 msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
 msgid "Log in to"
-msgstr "Autentificare "
+msgstr ""
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "No employee"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 msgid "Password?"
 msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
-msgid "Person who uses the cash register. It can be a reliever, a student or an interim employee."
-msgstr "Persoană care folosește casa de marcat. Poate fi un înlocuitor, un student sau un angajat temporar."
+msgid ""
+"Person who uses the cash register. It can be a reliever, a student or an "
+"interim employee."
+msgstr ""
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+msgid "Please try again."
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Configurarea Punctului de Vânzare"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Comenzile Punctului de vânzare"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_order
 msgid "Point of Sale Orders Report"
-msgstr "Raport Comenzi Punct de Vânzare"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_session
 msgid "Point of Sale Session"
-msgstr "Sesiune Punct de vânzare"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
 msgid "Scan your badge"
-msgstr "Scanați ecusonul dvs."
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
 msgid "Select Cashier"
-msgstr "Selectați Casier"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
-msgid "You cannot delete an employee that may be used in an active PoS session, close the session(s) first: \n"
-msgstr "Nu puteți șterge un angajat care poate fi utilizat într-o sesiune PoS activă, închideți mai întâi sesiunea (le):\n"
+msgid ""
+"You cannot delete an employee that may be used in an active PoS session, "
+"close the session(s) first: \n"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
 msgid "or"
-msgstr "sau"
+msgstr ""

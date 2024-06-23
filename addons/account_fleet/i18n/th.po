@@ -26,6 +26,8 @@ msgid ""
 "<span class=\"o_stat_text text-success\" invisible=\"account_move_state != 'posted'\" title=\"Service's Bill\">Service's Bill</span>\n"
 "                            <span class=\"o_stat_text text-warning\" invisible=\"account_move_state == 'posted'\" title=\"Service's Bill\">Service's Bill</span>"
 msgstr ""
+"<span class=\"o_stat_text text-success\" invisible=\"account_move_state != 'posted'\" title=\"Service's Bill\">ใบเรียกเก็บเงินการบริการ</span>\n"
+"                            <span class=\"o_stat_text text-warning\" invisible=\"account_move_state == 'posted'\" title=\"Service's Bill\">ใบเรียกเก็บเงินการบริการ</span>"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
@@ -35,7 +37,7 @@ msgstr "ย้ายบัญชี"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_line_id
 msgid "Account Move Line"
-msgstr ""
+msgstr "บรรทัดการย้ายบัญชี"
 
 #. module: account_fleet
 #. odoo-python
@@ -118,6 +120,7 @@ msgid ""
 "You cannot delete log services records because one or more of them were bill"
 " created."
 msgstr ""
+"คุณไม่สามารถลบบันทึกบริการบันทึกได้เนื่องจากมีการสร้างใบเรียกเก็บเงินอย่างน้อยหนึ่งรายการ"
 
 #. module: account_fleet
 #. odoo-python
@@ -126,6 +129,8 @@ msgid ""
 "You cannot modify amount of services linked to an account move line. Do it "
 "on the related accounting entry instead."
 msgstr ""
+"คุณไม่สามารถแก้ไขจำนวนบริการที่เชื่อมโยงกับบรรทัดการย้ายบัญชีได้ "
+"ให้ทำในรายการบัญชีที่เกี่ยวข้องแทน"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form

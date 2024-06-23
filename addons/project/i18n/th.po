@@ -185,7 +185,7 @@ msgstr "#{task.stage_id.name}"
 #. odoo-javascript
 #: code:addons/project/static/src/views/widget/subtask_counter.js:0
 msgid "%(closedCount)s sub-tasks closed out of %(totalCount)s"
-msgstr ""
+msgstr "%(closedCount)s งานย่อยถูกปิดจาก %(totalCount)s"
 
 #. module: project
 #. odoo-python
@@ -705,13 +705,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created and is not part of any project."
-msgstr ""
+msgstr "มีการสร้างงานใหม่และไม่ได้เป็นส่วนหนึ่งของโครงการใดๆ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created in the \"%(project_name)s\" project."
-msgstr ""
+msgstr "มีการสร้างงานใหม่ในโครงการ \"%(project_name)s\""
 
 #. module: project
 #. odoo-python
@@ -1013,7 +1013,7 @@ msgstr "วิเคราะห์ความคืบหน้าของโ
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
 msgid "Anyone with this link can access the project in read-only mode."
-msgstr ""
+msgstr "ทุกคนที่มีลิงก์นี้สามารถเข้าถึงโครงการได้ในโหมดอ่านอย่างเดียว"
 
 #. module: project
 #. odoo-javascript
@@ -1177,7 +1177,7 @@ msgstr "จำนวนสิ่งที่แนบมา"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Attachments"
-msgstr ""
+msgstr "เอกสารแนบ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__user_id
@@ -1371,6 +1371,7 @@ msgstr "เลือก <b>ชื่อ</b> งาน <i>(เช่น ออก
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Choose one of the following access modes for your collaborators:"
 msgstr ""
+"เลือกโหมดการเข้าถึงอย่างใดอย่างหนึ่งต่อไปนี้สำหรับผู้ทำงานร่วมกันของคุณ:"
 
 #. module: project
 #. odoo-javascript
@@ -2049,7 +2050,7 @@ msgstr "แก้ไข"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit_limited
 msgid "Edit with limited access"
-msgstr ""
+msgstr "แก้ไขโดยจำกัดการเข้าถึง"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2057,6 +2058,8 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow "
 "in the Kanban view."
 msgstr ""
+"แก้ไขด้วยการเข้าถึงที่จำกัด: "
+"ผู้ทำงานร่วมกันสามารถดูและแก้ไขงานที่พวกเขาติดตามได้ในมุมมองคัมบัง"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2064,6 +2067,8 @@ msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"แก้ไข: ผู้ทำงานร่วมกันสามารถดูและแก้ไขงานทั้งหมดในมุมมองคัมบังได้ นอกจากนี้ "
+"พวกเขาสามารถเลือกงานที่ต้องการติดตามได้"
 
 #. module: project
 #. odoo-javascript
@@ -2197,7 +2202,7 @@ msgstr "พับในคัมบัง"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_container.xml:0
 msgid "Follow"
-msgstr ""
+msgstr "ติดตาม"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
@@ -2256,7 +2261,7 @@ msgstr "ความถี่"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Future"
-msgstr ""
+msgstr "อนาคต"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2656,18 +2661,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Last 30 Days"
-msgstr ""
+msgstr "30 วันที่ผ่านมา"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Last 365 Days"
-msgstr ""
+msgstr "365 วันที่ผ่านมา"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Last 7 Days"
-msgstr ""
+msgstr "7 วันที่ผ่านมา"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -3355,7 +3360,7 @@ msgstr "อื่น ๆ "
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Overdue"
-msgstr ""
+msgstr "เกินกำหนด"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -3653,7 +3658,7 @@ msgstr "โปรเจ็กต์ที่ใช้ร่วมกัน"
 #. module: project
 #: model:ir.model,name:project.model_project_share_collaborator_wizard
 msgid "Project Sharing Collaborator Wizard"
-msgstr ""
+msgstr "ตัวช่วยสร้างการแชร์โครงการร่วมกัน"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
@@ -3734,7 +3739,7 @@ msgstr "รายละเอียดโปรเจ็กต์..."
 #. odoo-python
 #: code:addons/project/wizard/project_share_wizard.py:0
 msgid "Project shared with your collaborators."
-msgstr ""
+msgstr "โครงการที่แชร์กับผู้ทำงานร่วมกันของคุณ"
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
@@ -3935,7 +3940,7 @@ msgstr "อ่านเท่านั้น"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Read-only: collaborators can view tasks but cannot edit them."
-msgstr ""
+msgstr "อ่านอย่างเดียว: ผู้ทำงานร่วมกันสามารถดูงานได้ แต่ไม่สามารถแก้ไขได้"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
@@ -4869,7 +4874,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "The task description was empty at the time."
-msgstr ""
+msgstr "คำอธิบายงานว่างเปล่าในขณะนั้น"
 
 #. module: project
 #. odoo-python
@@ -5243,7 +5248,7 @@ msgstr "ไม่ได้มอบหมาย"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_container.xml:0
 msgid "Unfollow"
-msgstr ""
+msgstr "เลิกติดตาม"
 
 #. module: project
 #. odoo-python

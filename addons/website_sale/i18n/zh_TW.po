@@ -308,12 +308,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
 msgid "<span class=\"label\">Price</span>"
-msgstr ""
+msgstr "<span class=\"label\">價錢</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
 msgid "<span class=\"label\">Product</span>"
-msgstr ""
+msgstr "<span class=\"label\">產品</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -327,6 +327,9 @@ msgid ""
 "                    Select to compute delivery rate\n"
 "                </span>"
 msgstr ""
+"<span class=\"o_wsale_delivery_price_badge float-end fw-bold\" name=\"price\">\n"
+"                    選取以計算送貨費用率\n"
+"                </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -402,7 +405,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span>Already have an account?</span>"
-msgstr ""
+msgstr "<span>已有帳戶？</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -859,7 +862,7 @@ msgstr "返回購物車"
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "Back to delivery"
-msgstr ""
+msgstr "返回送貨"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -869,7 +872,7 @@ msgstr "背景"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
 msgid "Background Color"
-msgstr ""
+msgstr "背景顏色"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_count
@@ -1544,7 +1547,7 @@ msgstr "定義新類別"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_ribbon_action
 msgid "Define a new ribbon"
-msgstr ""
+msgstr "定義新絲帶"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2019,7 +2022,7 @@ msgstr "我同意"
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__id
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__id
 msgid "ID"
-msgstr "識別號"
+msgstr "識別碼"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_tag_form_view_inherit_website_sale
@@ -2189,7 +2192,7 @@ msgstr "運送方式似乎與您的地址不相符。請更新網頁並重試。
 msgid ""
 "It seems that there is already a transaction for your order; you can't "
 "change the delivery method anymore."
-msgstr ""
+msgstr "你的訂單似乎已進行交易，不可再更改送貨方式。"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2259,7 +2262,7 @@ msgstr "最後更新於"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Last Week"
-msgstr "上周"
+msgstr "上週"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -3028,13 +3031,13 @@ msgstr "產品參考價格"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
 msgid "Product Ribbon"
-msgstr ""
+msgstr "產品絲帶"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_ribbon_action
 #: model:ir.ui.menu,name:website_sale.product_catalog_product_ribbons
 msgid "Product Ribbons"
-msgstr ""
+msgstr "產品絲帶"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_tag
@@ -3103,7 +3106,7 @@ msgstr "找不到相關產品"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_ribbon
 msgid "Product ribbon"
-msgstr "產品緞帶"
+msgstr "產品絲帶"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
@@ -3347,14 +3350,14 @@ msgstr "訂購商品"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_ribbon_id
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Ribbon"
-msgstr "緞帶"
+msgstr "絲帶"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__name
 msgid "Ribbon Name"
-msgstr ""
+msgstr "絲帶名稱"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__position__right
@@ -3789,7 +3792,7 @@ msgstr "文字"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
 msgid "Text Color"
-msgstr ""
+msgstr "文字顏色"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale_text

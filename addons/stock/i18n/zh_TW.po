@@ -117,7 +117,7 @@ msgstr "%(name)s（副本）(%(id)s)"
 msgid ""
 "%(operations)s have default source or destination locations within warehouse"
 " %(warehouse)s, therefore you cannot archive it."
-msgstr ""
+msgstr "操作 %(operations)s 在倉庫 %(warehouse)s 內設有預設來源位置或目標位置，因此不可封存。"
 
 #. module: stock
 #. odoo-python
@@ -127,6 +127,8 @@ msgid ""
 "(%(product_uom_category)s) - Move UoM is %(move_uom)s "
 "(%(move_uom_category)s)"
 msgstr ""
+"%(product_name)s --> 產品計量單位：%(product_uom)s "
+"(%(product_uom_category)s)，移動計量單位：%(move_uom)s (%(move_uom_category)s)"
 
 #. module: stock
 #. odoo-python
@@ -164,7 +166,7 @@ msgstr "%s [撤銷]"
 #. odoo-python
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 msgid "%s days"
-msgstr ""
+msgstr "%s 天"
 
 #. module: stock
 #. odoo-python
@@ -544,22 +546,22 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Back Orders</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">缺貨訂單</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Late</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">遲到</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Operations</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">操作</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Waiting</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">等待中</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1700,7 +1702,7 @@ msgstr "僅允許在“草稿”狀態下更改產品."
 msgid ""
 "Character(s) used to separate data contained within an aggregate barcode "
 "(i.e. a barcode containing multiple barcode encodings)"
-msgstr ""
+msgstr "用於分開聚合條碼（即包含多組條碼編碼的條碼）內含的資料的分隔字符"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1722,7 +1724,7 @@ msgstr "檢查在揀貨上的包裝操作"
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
 msgid ""
 "Check this box if you want to generate shipping label in this operation."
-msgstr ""
+msgstr "若想在此操作中產生貨運標籤，請勾選此方格。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
@@ -5454,6 +5456,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
+"找不到產品 %(product)s 在位置 %(location)s 的補貨規則。\n"
+"請檢查產品的途程配置。"
 
 #. module: stock
 #. odoo-python
@@ -6823,7 +6827,7 @@ msgstr "品質管理位置"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__qc_type_id
 msgid "Quality Control Type"
-msgstr ""
+msgstr "品質控制類型"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_quality_control_worksheet
@@ -7184,6 +7188,8 @@ msgid ""
 "Reduce stockouts with alerts, barcode app, replenishment propositions,\n"
 "                        locations management traceability, quality control, etc."
 msgstr ""
+"透過警報、條碼應用程式、補貨建議、\n"
+"                        位置管理可追蹤性、品質控制等，減少缺貨情況。"
 
 #. module: stock
 #. odoo-javascript
@@ -7266,7 +7272,7 @@ msgstr "下架策略 %s 沒有實現."
 msgid ""
 "Remove manually entered value and replace by the quantity to order based on "
 "the forecasted quantities"
-msgstr ""
+msgstr "移除手動輸入的值，改為基於預測數量的待訂購數量"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__reordering_max_qty
@@ -7866,7 +7872,7 @@ msgstr "選擇這條路線可以被選擇的地方"
 msgid ""
 "Selected storage category does not exist in the 'store to' location or any "
 "of its sublocations"
-msgstr ""
+msgstr "選取的儲存類別，在「儲存至」位置或其任何子位置中，都不存在"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__picking_warn
@@ -7991,7 +7997,7 @@ msgstr "揀貨序列"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Sequence quality control"
-msgstr ""
+msgstr "序列品質控制"
 
 #. module: stock
 #. odoo-python
@@ -8010,7 +8016,7 @@ msgstr "序號"
 msgid ""
 "Serial number (%(serial_number)s) already exists in location(s): "
 "%(location_list)s. Please correct the serial number encoded."
-msgstr ""
+msgstr "序號（%(serial_number)s）已存在於以下位置：%(location_list)s。請更正編碼的序號。"
 
 #. module: stock
 #. odoo-python
@@ -8799,7 +8805,7 @@ msgstr "該公司是從您的使用者喜好自動設定."
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "The day after tomorrow"
-msgstr ""
+msgstr "後天"
 
 #. module: stock
 #. odoo-python
@@ -8977,6 +8983,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %(product)s, Serial Number: %(serial_number)s"
 msgstr ""
+"序號已經分配：\n"
+" 產品：%(product)s，序號：%(serial_number)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -10201,6 +10209,8 @@ msgid ""
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
 "the need."
 msgstr ""
+"當 <b>%(destination)s</b> 需要產品時，<br/>會自動建立 <b>%(operation)s</b> 操作，由 "
+"<b>%(source_location)s</b> 調配產品，以滿足需求。"
 
 #. module: stock
 #. odoo-python
@@ -10209,6 +10219,8 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br/> "
 "<b>%(operation)s</b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
+"產品到達 <b>%(source_location)s</b> 時，<br/>會自動建立 <b>%(operation)s</b> 操作，將產品運往 "
+"<b>%(destination)s</b>。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
@@ -10297,7 +10309,7 @@ msgstr "寬度必須是正數"
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__wizard_id
 #: model:ir.model.fields,field_description:stock.field_stock_track_line__wizard_id
 msgid "Wizard"
-msgstr "視窗"
+msgstr "精靈"
 
 #. module: stock
 #. odoo-javascript
@@ -10309,7 +10321,7 @@ msgstr "每行寫一個批次/序列名稱，然後寫數量。"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Yesterday"
-msgstr ""
+msgstr "昨天"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -10405,7 +10417,7 @@ msgstr "你不可更改目前在庫存移動中保留的產品的庫存追蹤。
 msgid ""
 "You can not change the inventory tracking of a product that was already "
 "used."
-msgstr ""
+msgstr "你不可變更已被使用產品的庫存追蹤。"
 
 #. module: stock
 #. odoo-python
@@ -10563,7 +10575,7 @@ msgstr "若產品來自不同操作類型的不同轉移，便不可包裝至同
 msgid ""
 "You cannot perform moves because their unit of measure has a different "
 "category from their product unit of measure."
-msgstr ""
+msgstr "你不可執行移動，因為它們的計量單位與其產品的計量單位並非同一類別。"
 
 #. module: stock
 #. odoo-python

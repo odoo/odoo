@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-12 10:37+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +37,7 @@ msgstr "%s 항목은 더 이상 사용할 수 없습니다 주문에서 삭제�
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
 msgid "/ Tracker number:"
-msgstr ""
+msgstr "/  배송 조회 번호:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -126,7 +127,7 @@ msgstr "오류가 발생했습니다"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 msgid "Any items already sent will not be cancelled"
-msgstr ""
+msgstr "이미 발송된 품목은 취소되지 않습니다."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -137,12 +138,12 @@ msgstr "이 주문을 취소하시겠습니까?"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_category__hour_after
 msgid "Availability After"
-msgstr ""
+msgstr "사용 시작 시간:"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_category__hour_until
 msgid "Availability Until"
-msgstr ""
+msgstr "사용 마감 시간:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -160,7 +161,7 @@ msgstr "사용 가능한 언어"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_product_pos_category_form_view
 msgid "Available between"
-msgstr ""
+msgstr "사용 가능 기간:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
@@ -390,7 +391,7 @@ msgstr "QR 코드 다운로드"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Download your receipt here"
-msgstr ""
+msgstr "여기에서 영수증 다운로드하기"
 
 #. module: pos_self_order
 #. odoo-python
@@ -914,7 +915,7 @@ msgstr "품목 이미지"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 msgid "Product is not available"
-msgstr ""
+msgstr "사용할 수 없는 품목"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1168,19 +1169,19 @@ msgstr "감사합니다!"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability After must be set between 00:00 and 24:00"
-msgstr ""
+msgstr "사용 가능 시간은 00:00~24:00 사이로 설정해야 합니다."
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability Until must be greater than Availability After."
-msgstr ""
+msgstr "사용 마감 시간은 시작 시간보다 커야 합니다."
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability Until must be set between 00:00 and 24:00"
-msgstr ""
+msgstr "사용 가능 기한은 00:00에서 24:00 사이로 설정해야 합니다."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1191,12 +1192,12 @@ msgstr "셀프 주문의 사용자 기본값은 POS 사용자여야 합니다."
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_category__hour_after
 msgid "The product will be available after this hour."
-msgstr ""
+msgstr "이 시간 이후에는 제품을 사용할 수 있습니다."
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_category__hour_until
 msgid "The product will be available until this hour."
-msgstr ""
+msgstr "해당 제품은 이 시간까지만 사용할 수 있습니다."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1239,7 +1240,7 @@ msgstr "사용 불가"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 msgid "Unavailable at this time of the day"
-msgstr ""
+msgstr "이 시간대에는 사용할 수 없습니다."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1256,7 +1257,7 @@ msgstr "경고"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 msgid "We're currently closed"
-msgstr ""
+msgstr "지금은 영업 시간이 아닙니다."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1304,7 +1305,7 @@ msgstr "내 선택"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 msgid "Your order has been cancelled"
-msgstr ""
+msgstr "주문이 취소되었습니다."
 
 #. module: pos_self_order
 #. odoo-javascript

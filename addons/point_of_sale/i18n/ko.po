@@ -6894,7 +6894,7 @@ msgstr "세금 포함."
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr ""
+msgstr "재정 상태의 세금 일치 작업"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -7073,6 +7073,8 @@ msgid ""
 "The existing serial/lot numbers could not be retrieved. \n"
 "Continue without checking the validity of serial/lot numbers ?"
 msgstr ""
+"기존 일련번호/로트 번호를 검색할 수 없습니다.\n"
+"일련번호/로트 번호를 확인하지 않고 계속 진행하시겠습니까?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7114,7 +7116,7 @@ msgstr ""
 msgid ""
 "The money counted doesn't match what we expected. Want to log the difference"
 " for the books?"
-msgstr ""
+msgstr "계산된 금액이 예상과 일치하지 않습니다. 장부에 차액을 기록하시겠습니까?"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7184,13 +7186,13 @@ msgstr ""
 msgid ""
 "The pos order that was reverted after closing the session to create an "
 "invoice for it."
-msgstr ""
+msgstr "세션을 닫은 후 인보이스를 생성하기 위해 되돌린 주문 내역입니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__note_ids
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_note_ids
 msgid "The predefined notes of this point of sale."
-msgstr ""
+msgstr "해당 POS에 대한 사전 정의된 노트입니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
@@ -7234,7 +7236,7 @@ msgstr "환불 요청한 수량이 주문 수량보다 큽니다. 요청 수량�
 msgid ""
 "The requested quantity to be refunded is higher than the refundable "
 "quantity."
-msgstr ""
+msgstr " 환불 요청 수량이 환불 가능 수량보다 큽니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_combo_line__lst_price
@@ -7292,14 +7294,14 @@ msgstr "거래는 Adyen에서 처리합니다. 관련 결제 수단에서 Adyen 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "The transactions are processed by Mercado Pago on terminal"
-msgstr ""
+msgstr "거래는 Mercado Pago 단말기에 의해 처리됩니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercado_pago
 msgid ""
 "The transactions are processed by Mercado Pago. Set your Mercado Pago "
 "credentials on the related payment method."
-msgstr ""
+msgstr "Mercado Pago에서 거래를 처리합니다. 해당 결제 방법에서 Mercado Pago 자격 증명을 설정하세요."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_paytm
@@ -7315,7 +7317,7 @@ msgstr "거래는 PayTM에서 처리합니다. 관련 결제 수단에서 PayTM 
 msgid ""
 "The transactions are processed by Razorpay. Set your Razorpay credentials on"
 " the related payment method."
-msgstr ""
+msgstr "Razorpay에서 거래를 처리합니다. 해당 결제 방법에서 Razorpay 자격 증명을 설정하세요."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_six
@@ -7346,7 +7348,7 @@ msgstr "거래는 Vantiv에서 처리합니다. 관련 결제 수단에서 Vanti
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "The transactions are processed by Viva Wallet on terminal or tap on phone."
-msgstr ""
+msgstr "거래는 Viva 월렛 단말기 또는 휴대폰 탭으로 처리됩니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_combo__base_price
@@ -7431,7 +7433,7 @@ msgstr "이 세션에는 금전등록기가 없습니다."
 msgid ""
 "There is no serial/lot number for the selected product, and their creation "
 "is not allowed from the Point of Sale app."
-msgstr ""
+msgstr "선택한 제품에 사용할 수 있는 일련/로트 번호가 없으며, POS 앱에서 해당 번호를 생성할 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7505,6 +7507,9 @@ msgid ""
 "                    paid ? \"paid\" : \"unpaid\"\n"
 "                } orders in the browser. You will lose all the data. This operation cannot be undone."
 msgstr ""
+"이 작업은 브라우저의 모든 ${\n"
+"                    paid ? \"paid\" : \"unpaid\"\n"
+"                } 주문을 삭제합니다. 모든 데이터는 손실되며, 이 작업은 되돌릴 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7533,7 +7538,7 @@ msgstr "이 주문은 아직 서버와 동기화되지 않았습니다. 동기�
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "This payment method is not configured to generate QR codes."
-msgstr ""
+msgstr "이 결제 방법은 QR 코드를 생성하도록 설정되어 있지 않습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
@@ -7587,12 +7592,12 @@ msgstr "티켓 번호"
 msgid ""
 "Tiger bloomer. Baked for a soft inside, with its distinctive savoury "
 "crackled crust."
-msgstr ""
+msgstr "타이거 블루머. 부드러운 빵 안의 식감과 고소하고 바삭한 겉 크러스트가 특징입니다."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_tiger_white_loaf_product_template
 msgid "Tiger white loaf"
-msgstr ""
+msgstr "타이거 화이트 로프"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7690,7 +7695,7 @@ msgstr "총계"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Total (Tax excluded)"
-msgstr ""
+msgstr "합계 (세금 별도)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7719,7 +7724,7 @@ msgstr "총 마진:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 msgid "Total Moves"
-msgstr ""
+msgstr "총 이동 수"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -7740,7 +7745,7 @@ msgstr "총금액"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_info_popup/product_info_popup.xml:0
 msgid "Total Price excl. Tax:"
-msgstr ""
+msgstr "세금 제외 가격:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__amount
@@ -7770,14 +7775,14 @@ msgstr "합계 :"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/money_details_popup/money_details_popup.js:0
 msgid "Total: %s"
-msgstr ""
+msgstr "합계: %s"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_odoo_sneakers_product_template
 msgid ""
 "Trainers in cotton canvas with a padded top edge, tongue and lacing at the "
 "front."
-msgstr ""
+msgstr "상단 가장자리, 텅, 앞쪽 끈 부분을 패딩 처리한 면 캔버스 소재의 트레이닝화입니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_transaction
@@ -7815,7 +7820,7 @@ msgstr "유형"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__qr_code_method
 msgid "Type of QR-code to be generated for this payment method."
-msgstr ""
+msgstr "이 결제 방법에 대해 생성할 QR 코드 유형입니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_type
@@ -7935,7 +7940,7 @@ msgstr "동기화되지 않은 주문"
 msgid ""
 "Until the connection is reestablished, Odoo Point of Sale will operate with "
 "limited functionality."
-msgstr ""
+msgstr "연결이 복구될 때까지 Odoo POS는 제한된 기능으로 작동합니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -7952,7 +7957,7 @@ msgstr "재고 수량 업데이트"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_upper
 msgid "Upper body"
-msgstr ""
+msgstr "상체"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
@@ -8035,17 +8040,17 @@ msgstr "보기"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.jean_jacket_product_template
 msgid "Vintage jean jacket, a timeless piece for any casual outfit."
-msgstr ""
+msgstr "유행에 구애받지 않고 어떤 캐주얼 아이템에도 잘 어울리는 빈티지 진 재킷입니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Viva Wallet"
-msgstr ""
+msgstr "Viva Wallet"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_viva_wallet
 msgid "Viva Wallet Payment Terminal"
-msgstr ""
+msgstr "Viva Wallet 결제 단말기"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8062,7 +8067,7 @@ msgstr "벽 선반 부품"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "Want to try with sample products?"
-msgstr ""
+msgstr "샘플 제품을 사용해 보고 싶으신가요?"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse
@@ -8082,7 +8087,7 @@ msgstr "창고 (POS)"
 msgid ""
 "Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
 "Please use a modern browser."
-msgstr ""
+msgstr "경고: 브라우저가 인덱싱된DB를 지원하지 않아 데이터가 저장되지 않습니다. 최신 브라우저로 전환하세요."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__website_message_ids
@@ -8145,7 +8150,7 @@ msgstr "화이트보드 마커"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_wholemeal_loaf_product_template
 msgid "Wholemeal loaf"
-msgstr ""
+msgstr "통밀 빵"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8170,7 +8175,7 @@ msgstr "예"
 msgid ""
 "You are currently offline. Reloading the page may cause you to lose unsaved "
 "data."
-msgstr ""
+msgstr "현재 인터넷에 연결되어 있지 않습니다. 페이지를 새로고침하면 저장되지 않은 데이터가 손실될 수 있습니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8204,7 +8209,7 @@ msgstr "다음으로 이동할 수 있습니다."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You can only refund products from the same order."
-msgstr ""
+msgstr "동일한 주문의 제품에 대해서만 환불할 수 있습니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8231,7 +8236,7 @@ msgstr ""
 msgid ""
 "You cannot archive '%(picking_type)s' as it is used by POS configuration "
 "'%(config)s'."
-msgstr ""
+msgstr "'%(picking_type)s'는 POS 설정 '%(config)s'에서 사용되므로 보관할 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8303,6 +8308,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
+"%(payment_method)s 결제 방법에 대해 \"고객 확인\" 옵션을 사용하도록 설정했지만 %(order)s 주문 내용에 고객 "
+"정보가 포함되어 있지 않습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8336,7 +8343,7 @@ msgstr "세션을 시작하려면 결제 방법이 하나 이상은 구성되어
 msgid ""
 "You must select a QR-code method to generate QR-codes for this payment "
 "method."
-msgstr ""
+msgstr "이 결제 방법에 대한 QR 코드를 생성하려면 QR코드 방법을 선택해야 합니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8444,13 +8451,13 @@ msgstr "ePOS 프린터"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "eg.: john.doe@mail.com"
-msgstr ""
+msgstr "예: john.doe@mail.com"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "failed. Please try again"
-msgstr ""
+msgstr "실패했습니다. 다시 시도해 주세요."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -8484,7 +8491,7 @@ msgstr "분류"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "in progress"
-msgstr ""
+msgstr "진행 중"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8496,13 +8503,13 @@ msgstr "이 카테고리에 해당합니다."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "install a chart of accounts"
-msgstr ""
+msgstr "계정과목표 설치하기"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "is sent successfully"
-msgstr ""
+msgstr "성공적으로 전송되었습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8559,7 +8566,7 @@ msgstr "영수증"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "to activate the buttons."
-msgstr ""
+msgstr "버튼을 눌러 활성화합니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document

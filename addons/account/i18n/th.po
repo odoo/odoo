@@ -516,7 +516,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid ""
 "<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
-msgstr ""
+msgstr "<b>มีการใช้ส่วนลดการชำระเงินก่อนกำหนด %(Payment_reference) แล้ว</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3629,7 +3629,7 @@ msgstr "ยอดขาดทุนส่วนต่างเงินสด"
 #: model:account.account,name:account.1_cash_discount_gain
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid "Early Discount Gain"
-msgstr ""
+msgstr "กำไรจากส่วนลดก่อนกำหนด"
 
 #. module: account
 #. odoo-python
@@ -3637,7 +3637,7 @@ msgstr ""
 #: model:account.account,name:account.1_cash_discount_loss
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid "Early Discount Loss"
-msgstr ""
+msgstr "ขาดทุนจากส่วนลดก่อนกำหนด"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__early_pay_discount_computation
@@ -7837,6 +7837,8 @@ msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
 " for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
+"\"ช่วงรหัสไปรษณีย์\" ไม่ถูกต้อง คุณต้องกำหนดค่าทั้ง \"จาก\" และ \"ถึง\" "
+"สำหรับช่วงรหัสไปรษณีย์ และ \"ถึง\" ควรมากกว่า \"จาก\""
 
 #. module: account
 #. odoo-python
@@ -8854,7 +8856,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Late"
-msgstr ""
+msgstr "ล่าช้า"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8908,7 +8910,7 @@ msgstr "การชำระเงินบางส่วน"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Let artificial intelligence scan your bill. Pay easily."
-msgstr ""
+msgstr "ให้ปัญญาประดิษฐ์สแกนใบเรียกเก็บเงินของคุณ ชำระเงินได้อย่างง่ายดาย"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11108,7 +11110,7 @@ msgstr "ความแตกต่าง"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Exchange difference entries:"
-msgstr ""
+msgstr "รายการส่วนต่างของการแลกเปลี่ยน:"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
@@ -11118,12 +11120,12 @@ msgstr "ยืนยันการชำระเงิน"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank transactions and payments:"
-msgstr ""
+msgstr "ธุรกรรมธนาคารและการชำระเงิน:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Early payment discounts:"
-msgstr ""
+msgstr "ส่วนลดการชำระเงินล่วงหน้า:"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
@@ -12154,7 +12156,7 @@ msgstr "พนักงานขาย"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Same Account as product"
-msgstr ""
+msgstr "บัญชีเดียวกับผลิตภัณฑ์"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_same_currency
@@ -12585,7 +12587,7 @@ msgstr "แยกบัญชีส่วนลดรายได้"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Invoice line discounts:"
-msgstr ""
+msgstr "ส่วนลดรายการใบแจ้งหนี้:"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__9
@@ -12653,12 +12655,12 @@ msgstr "บริการ"
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_company_data
 msgid "Set Company Data"
-msgstr ""
+msgstr "ตั้งค่าข้อมูลบริษัท"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_fiscal_year
 msgid "Set Periods"
-msgstr ""
+msgstr "กำหนดระยะเวลา"
 
 #. module: account
 #. odoo-javascript
@@ -13345,7 +13347,7 @@ msgstr "ข้อความวันที่ล็อคภาษี"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_map
 msgid "Tax Map"
-msgstr ""
+msgstr "แผนที่ภาษี"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
@@ -13521,12 +13523,12 @@ msgstr "ภาษีนำไปใช้"
 #: model:ir.model.fields,field_description:account.field_account_move__taxes_legal_notes
 #: model:ir.model.fields,field_description:account.field_account_payment__taxes_legal_notes
 msgid "Taxes Legal Notes"
-msgstr ""
+msgstr "หมายเหตุทางกฎหมายด้านภาษี"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Taxes are also displayed in local currency on invoices"
-msgstr ""
+msgstr "ภาษีจะแสดงเป็นสกุลเงินท้องถิ่นในใบแจ้งหนี้ด้วย"
 
 #. module: account
 #. odoo-python
@@ -13542,7 +13544,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_tax_company_currency
 #: model:ir.model.fields,field_description:account.field_res_config_settings__display_invoice_tax_company_currency
 msgid "Taxes in company currency"
-msgstr ""
+msgstr "ภาษีเป็นสกุลเงินของบริษัท"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13764,12 +13766,14 @@ msgid ""
 "The Unit of Measure (UoM) '%(uom)s' you have selected for product "
 "'%(product)s', is incompatible with its category : %(category)s."
 msgstr ""
+"หน่วยวัด (UoM) '%(uom)s' ​​ที่คุณเลือกสำหรับผลิตภัณฑ์ '%(product)s' "
+"ไม่สามารถใช้ร่วมกับหมวดหมู่ : %(category)s ได้"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is deprecated."
-msgstr ""
+msgstr "บัญชี %(name)s (%(code)s) เลิกใช้แล้ว"
 
 #. module: account
 #. odoo-python
@@ -14031,7 +14035,7 @@ msgstr "เอกสาร(ทั้งหมด)ที่สร้างใบ�
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The entry %(name)s (id %(id)s) must be in draft."
-msgstr ""
+msgstr "รายการ %(name)s (id %(id)s) จะต้องเป็นแบบร่าง"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -15111,12 +15115,12 @@ msgstr "ออกใบแจ้งหนี้"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "To Pay"
-msgstr ""
+msgstr "เพื่อชำระ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "To Validate"
-msgstr ""
+msgstr "เพื่อตรวจสอบ"
 
 #. module: account
 #. odoo-python
@@ -15330,7 +15334,7 @@ msgstr "พารามิเตอร์ของประเภทธุรก
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Transactions"
-msgstr ""
+msgstr "ธุรกรรม"
 
 #. module: account
 #. odoo-python
@@ -15662,7 +15666,7 @@ msgstr "การอัปโหลดไฟล์ล้มเหลว"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Use Bill Reference"
-msgstr ""
+msgstr "ใช้การอ้างอิงใบเรียกเก็บเงิน"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
@@ -16400,6 +16404,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type "
 "(%(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
+"คุณไม่สามารถมีสองบรรทัดวิธีการชำระเงินของชนิดการชำระเงินเดียวกัน "
+"(%(payment_type)s) และมีชื่อเดียวกัน (%(name)s) ในสมุดรายวันเดียว"
 
 #. module: account
 #. odoo-python
@@ -16604,6 +16610,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%(entries)s"
 msgstr ""
+"คุณไม่สามารถแก้ไขฟิลด์ต่อไปนี้: %(fields)s\n"
+"รายการต่อไปนี้ถูกแฮชแล้ว:\n"
+"%(entries)s"
 
 #. module: account
 #. odoo-python
@@ -16690,7 +16699,7 @@ msgstr "คุณไม่สามารถแก้ไขข้อมูล %s
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot modify the following readonly fields on a posted move: %s"
-msgstr ""
+msgstr "คุณไม่สามารถแก้ไขฟิลด์แบบอ่านอย่างเดียวต่อไปนี้ในการย้ายที่โพสต์: %s"
 
 #. module: account
 #. odoo-python
@@ -17314,7 +17323,7 @@ msgstr "เชื่อถือได้"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
 msgid "try our sample"
-msgstr ""
+msgstr "ลองตัวอย่างของเรา"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

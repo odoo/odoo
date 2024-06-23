@@ -14208,7 +14208,7 @@ msgstr "Tất cả"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__all_child_ids
 msgid "All Child"
-msgstr "Tất cả phần tử con"
+msgstr "Tất cả phần tử phụ"
 
 #. module: base
 #. odoo-python
@@ -14224,6 +14224,8 @@ msgstr ""
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "All our contractual relations will be governed exclusively by  law."
 msgstr ""
+"Tất cả các quan hệ hợp đồng của chúng tôi sẽ được điều chỉnh độc quyền bởi "
+"pháp luật."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__lang
@@ -16381,6 +16383,12 @@ msgid ""
 "and does not include any costs relating to the legislation of the country in"
 " which the client is located."
 msgstr ""
+"Một số quốc gia áp dụng khấu lưu tại nguồn đối với số tiền hóa đơn, theo "
+"luật nội bộ của họ. Mọi khoản khấu trừ tại nguồn sẽ được khách hàng thanh "
+"toán cho cơ quan thuế. Trong mọi trường hợp, Công ty của tôi không được tạo "
+"ra các chi phí liên quan đến luật pháp của một quốc gia. Do đó, toàn bộ số "
+"tiền của hóa đơn sẽ do Công ty của tôi thanh toán hết và không bao gồm bất "
+"kỳ chi phí nào liên quan đến luật pháp của quốc gia nơi khách hàng cư trú."
 
 #. module: base
 #: model:res.country,name:base.td
@@ -16506,22 +16514,22 @@ msgstr "Checksum/SHA1"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__child_ids
 #: model:ir.model.fields,field_description:base.field_ir_cron__child_ids
 msgid "Child Actions"
-msgstr "Hành động Con"
+msgstr "Hành động phụ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__child_ids
 msgid "Child Applications"
-msgstr "Ứng dụng Con"
+msgstr "Ứng dụng phụ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__child_id
 msgid "Child IDs"
-msgstr "ID Con"
+msgstr "ID phụ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__child_ids
 msgid "Child Tags"
-msgstr "Thẻ Con"
+msgstr "Thẻ phụ"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__child_ids
@@ -16530,7 +16538,7 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
-"Các hành động của máy chủ con sẽ được thực thi. Lưu ý rằng giá trị hành động"
+"Các hành động của máy chủ phụ sẽ được thực thi. Lưu ý rằng giá trị hành động"
 " được trả về cuối cùng sẽ được sử dụng làm giá trị trả về chung."
 
 #. module: base
@@ -16694,7 +16702,7 @@ msgstr "CodaBox"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_codabox
 msgid "CodaBox integration to retrieve your CODA and SODA files."
-msgstr ""
+msgstr "Tích hợp CodaBox để truy xuất các tệp CODA và SODA của bạn."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -19347,13 +19355,13 @@ msgstr "Hóa đơn Điện tử cho Colombia với Carvajal"
 #. odoo-python
 #: code:addons/template_inheritance.py:0
 msgid "Element %r cannot be located in parent view"
-msgstr "Không thể định vị phần tử %r trong chế độ xem mẹ"
+msgstr "Không thể định vị phần tử %r trong chế độ xem chính"
 
 #. module: base
 #. odoo-python
 #: code:addons/template_inheritance.py:0
 msgid "Element '%s' cannot be located in parent view"
-msgstr "Không thể định vị phần tử '%s' trong chế độ xem mẹ"
+msgstr "Không thể định vị phần tử '%s' trong chế độ xem chính"
 
 #. module: base
 #. odoo-python
@@ -22240,6 +22248,9 @@ msgid ""
 "payment date, My Company reserves the right to call on the services of a "
 "debt recovery company. All legal expenses will be payable by the client."
 msgstr ""
+"Nếu khoản thanh toán vẫn chưa được thanh toán quá sáu mươi (60) ngày sau "
+"ngày đến hạn, Công ty của Tôi có quyền sử dụng dịch vụ của một công ty thu "
+"hồi nợ. Mọi chi phí pháp lý sẽ được thanh toán bởi khách hàng."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__group_expand
@@ -22320,7 +22331,7 @@ msgid ""
 "If several child actions return an action, only the last one will be executed.\n"
 "                            This may happen when having server actions executing code that returns an action, or server actions returning a client action."
 msgstr ""
-"Nếu nhiều hành động con trả về một hành động, thì chỉ hành động cuối cùng sẽ được thực thi.\n"
+"Nếu nhiều hành động phụ trả về một hành động, thì chỉ hành động cuối cùng sẽ được thực thi.\n"
 "                            Điều này có thể xảy ra khi các hành động máy chủ thực thi mã trả về một hành động hoặc các hành động máy chủ trả về một hành động máy khách."
 
 #. module: base
@@ -22349,9 +22360,9 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
-"If this view is inherited,\n"
-"* if True, the view always extends its parent\n"
-"* if False, the view currently does not extend its parent but can be enabled\n"
+"Nếu chế độ xem này được kế thừa,\n"
+"* nếu Đúng, chế độ xem luôn mở rộng chế độ xem chính của nó\n"
+"* nếu Sai, chế độ xem hiện không mở rộng chế độ xem chính của nó nhưng có thể được bật\n"
 "         "
 
 #. module: base
@@ -22643,6 +22654,10 @@ msgid ""
 "by means of a letter sent by recorded delivery to its registered office "
 "within 8 days of the delivery of the goods or the provision of the services."
 msgstr ""
+"Để được chấp nhận, Công ty của Tôi phải được thông báo về mọi khiếu nại nào "
+"bằng thư, được gửi theo phương thức chuyển phát cụ thể đến văn phòng đã đăng"
+" ký của công ty trong vòng 8 ngày kể từ ngày giao hàng hoặc cung cấp dịch "
+"vụ."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
@@ -25418,6 +25433,74 @@ msgid ""
 "perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
 "como una guía con propósitos distintos del contable.\n"
 msgstr ""
+"Bộ tài khoản tối thiểu để bắt đầu hoạt động ở Peru.\n"
+"=================================================\n"
+"\n"
+"Khi sử dụng sơ đồ tài khoản này phải tham khảo tài liệu chính thức của MEF.\n"
+"\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/VERSION_MODIFICADA_PCG_EMPRESARIAL.pdf\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/PCGE_2019.pdf\n"
+"\n"
+"Bạn có thể tìm tất cả tài liệu tham khảo pháp lý ở đây.\n"
+"\n"
+"http://www.sunat.gob.pe/legislacion/general/index.html\n"
+"\n"
+"Lưu ý.\n"
+"===============\n"
+"\n"
+"Sơ đồ tài khoản:\n"
+"-----------------\n"
+"\n"
+"Sơ đồ tài khoản được thực hiện bằng cách sử dụng các nhóm tài khoản, tất cả tài khoản có di chuyển\n"
+"đều có sẵn dưới dạng nhóm nhưng chỉ những tài khoản phổ biến hơn mới có dưới dạng\n"
+"tài khoản thực, nếu bạn muốn tạo một tài khoản mới, hãy tham khảo nhóm\n"
+"tài khoản.\n"
+"\n"
+"# TODO: Hình ảnh minh họa.\n"
+"\n"
+"Thuế:\n"
+"------\n"
+"\n"
+"'IGV': {'name': 'VAT', 'code': 'S'},\n"
+"'IVAP': {'name': 'VAT', 'code': ''},\n"
+"'ISC': {'name': 'EXC', 'code': 'S'},\n"
+"'ICBPER': {'name': 'OTH', 'code': ''},\n"
+"'EXP': {'name': 'FRE', 'code': 'G'},\n"
+"'GRA': {'name': 'FRE', 'code': 'Z'},\n"
+"'EXO': {'name': 'VAT', 'code': 'E'},\n"
+"'INA': {'name': 'FRE', 'code': 'O'},\n"
+"'OTHERS': {'name': 'OTH', 'code': 'S'},\n"
+"\n"
+"Chúng tôi đã thêm vào mô-đun này 3 khái niệm về thuế (cần thiết cho chữ ký\n"
+"EDI)\n"
+"\n"
+"# TODO: Mô tả các trường mới.\n"
+"\n"
+"Sản phẩm:\n"
+"---------\n"
+"\n"
+"Mã sản phẩm được sử dụng trong EDI có sẵn tại đây, để quyết định\n"
+"việc sử dụng thuế nào do mã nào tuân thủ tham chiếu này và mã python:\n"
+"\n"
+"https://docs.google.com/spreadsheets/d/1f1fxV8uGhA-Qz9-R1L1-dJirZ8xi3Wfg/edit#gid=662652969\n"
+"\n"
+"**Nota:**\n"
+"---------\n"
+"\n"
+"**RELACIÓN ENTRE EL PCGE Y LA LEGISLACIÓN TRIBUTARIA:**\n"
+"\n"
+"Este PCGE ha sido preparado como una herramienta de carácter contable, para acumular información que\n"
+"requiere ser expuesta en el cuerpo de los estados financieros o en las notas a dichos estados. Esa acumulación se\n"
+"efectúa en los libros o registros contables, cuya denominación y naturaleza depende de las actividades que se\n"
+"efectúen, y que permiten acciones de verificación, control y seguimiento. Las NIIF completas y la NIIF PYMES no\n"
+"contienen prescripciones sobre teneduría de libros, y consecuentemente, sobre los libros y otros registros\n"
+"de naturaleza contable. Por otro lado, si bien es cierto la contabilidad es también un insumo, dentro de otros, para\n"
+"labores de cumplimiento tributario, este PCGE no ha sido elaborado para satisfacer prescripciones tributarias ni su\n"
+"verificación. No obstante ello, donde no hubo oposición entre la contabilidad financiera prescrita por las NIIF y\n"
+"la legislación tributaria, este PCGE ha incluido subcuentas, divisionarias y sub divisionarias, para\n"
+"distinguir componentes con validez tributaria, dentro del conjunto de componentes que corresponden a una\n"
+"perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
+"como una guía con propósitos distintos del contable.\n"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
@@ -25894,6 +25977,12 @@ msgid ""
 "as a third party in the context of any claim for damages filed against the "
 "client by an end consumer."
 msgstr ""
+"Công ty của tôi cam kết sẽ cố gắng hết sức để cung cấp các dịch vụ hiệu quả "
+"trong thời gian thích hợp theo khung thời gian đã thỏa thuận. Tuy nhiên, "
+"không có nghĩa vụ nào của nó có thể được coi là nghĩa vụ phải đạt được kết "
+"quả. Trong bất kỳ trường hợp nào, Công ty của tôi không được khách hàng yêu "
+"cầu xuất hiện với tư cách là bên thứ ba trong bối cảnh người tiêu dùng cuối "
+"cùng có khiếu nại về những thiệt hại mà khách hàng đã nộp cho khách hàng."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -29042,6 +29131,12 @@ msgid ""
 " will be authorized to suspend any provision of services without prior "
 "warning in the event of late payment."
 msgstr ""
+"Hóa đơn của chúng tôi được thanh toán trong vòng 21 ngày làm việc, trừ khi "
+"khung thời gian thanh toán khác được ghi trên hóa đơn hoặc đơn đặt hàng. "
+"Trong trường hợp không thanh toán trước hạn, Công ty của Tôi có quyền yêu "
+"cầu thanh toán lãi suất cố định lên tới 10% số tiền còn lại chưa thanh toán."
+" Công ty của Tôi sẽ được ủy quyền để đình chỉ bất kỳ hoạt động cung cấp dịch"
+" vụ nào mà không cần cảnh báo trước trong trường hợp thanh toán chậm."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
@@ -29354,17 +29449,17 @@ msgstr "Lưu trữ thông số"
 #: model:ir.model.fields,field_description:base.field_ir_model_inherit__parent_id
 #: model:ir.model.fields,field_description:base.field_res_company__parent_ids
 msgid "Parent"
-msgstr "Cha"
+msgstr "Chính"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__parent_id
 msgid "Parent Application"
-msgstr "Ứng dụng cha"
+msgstr "Ứng dụng chính"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_id
 msgid "Parent Category"
-msgstr "Danh mục cha"
+msgstr "Danh mục chính"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_parent_id
@@ -29375,20 +29470,20 @@ msgstr "Công ty mẹ"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_inherit__parent_field_id
 msgid "Parent Field"
-msgstr "Trường cha"
+msgstr "Trường chính"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_id
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__menu_id
 msgid "Parent Menu"
-msgstr "Menu cha"
+msgstr "Menu chính"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_path
 #: model:ir.model.fields,field_description:base.field_res_company__parent_path
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_path
 msgid "Parent Path"
-msgstr "Tuyến cha"
+msgstr "Tuyến chính"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_name
@@ -31154,7 +31249,7 @@ msgstr "Lỗi đệ quy trong các phụ thuộc phân hệ!"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Recursion found in child server actions"
-msgstr "Đã tìm thấy đệ quy trong các hành động của máy chủ con"
+msgstr "Đã tìm thấy đệ quy trong các hành động của máy chủ phụ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__reference
@@ -36098,7 +36193,8 @@ msgstr "Cấu trúc cây"
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
 msgstr ""
-"Cây con chỉ có thể có một trong số %(tags)s từ khóa (not %(wrong_tag)s)"
+"Phần phụ của cây chỉ có thể có một trong số %(tags)s thẻ (không phải "
+"%(wrong_tag)s)"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_cron_trigger
@@ -38309,7 +38405,7 @@ msgstr "Bạn không thể xóa ngôn ngữ mà người dùng đang sử dụng
 #. odoo-python
 #: code:addons/base/wizard/base_partner_merge.py:0
 msgid "You cannot merge a contact with one of his parent."
-msgstr "Bạn không thể trộn một liên hệ với hồ sơ cha của liên hệ này."
+msgstr "Bạn không thể gộp một liên hệ với liên hệ chính của liên hệ này."
 
 #. module: base
 #. odoo-python

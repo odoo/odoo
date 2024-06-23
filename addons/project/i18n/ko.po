@@ -185,7 +185,7 @@ msgstr "#{task.stage_id.name}"
 #. odoo-javascript
 #: code:addons/project/static/src/views/widget/subtask_counter.js:0
 msgid "%(closedCount)s sub-tasks closed out of %(totalCount)s"
-msgstr ""
+msgstr "%(closedCount)s의 하위 작업 중 %(totalCount)s의 작업이 종료되었습니다."
 
 #. module: project
 #. odoo-python
@@ -239,7 +239,7 @@ msgstr "%(name)s 업데이트"
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "%(partner_name)s's Tasks"
-msgstr ""
+msgstr "%(partner_name)s의 작업"
 
 #. module: project
 #. odoo-python
@@ -264,7 +264,7 @@ msgstr "(최근 프로젝트 업데이트),"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/depend_on_ids_one2many/depend_on_ids_list_renderer.xml:0
 msgid "(other) tasks to which you do not have access."
-msgstr ""
+msgstr "(기타) 작업에 액세스할 수 없습니다."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
@@ -611,7 +611,7 @@ msgstr "<span class=\"o_stat_text order-2\">하위 작업</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<span class=\"o_stat_text\">Blocking Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">차단 작업</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -697,13 +697,13 @@ msgstr "프로젝트 공유 액세스에서 공동 작업자를 두 번 이상 �
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created and is not part of any project."
-msgstr ""
+msgstr "새 작업이 생성되었으나 아직 프로젝트에 속하지 않습니다."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created in the \"%(project_name)s\" project."
-msgstr ""
+msgstr "\"%(project_name)s\" 프로젝트에 새 작업이 만들어졌습니다."
 
 #. module: project
 #. odoo-python
@@ -811,6 +811,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Progress Report\", \"Stand-up Meeting\", ...)"
 msgstr ""
+"작업 계획은 몇 번의 클릭으로 작업 목록을 배정하는 데 사용됩니다.\n"
+"                    (예: \"진행 보고서\", \"짧은 업무 회의\", ...)"
 
 #. module: project
 #. odoo-javascript
@@ -822,13 +824,13 @@ msgstr "마일스톤 추가"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.js:0
 msgid "Add Sub-tasks"
-msgstr ""
+msgstr "하위 작업 추가"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Add a sub-task"
-msgstr ""
+msgstr "하위 작업 추가"
 
 #. module: project
 #. odoo-javascript
@@ -997,7 +999,7 @@ msgstr "프로젝트의 진행 상황과 직원들의 실적을 분석합니다.
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
 msgid "Anyone with this link can access the project in read-only mode."
-msgstr ""
+msgstr "이 링크를 가진 사람은 누구나 읽기 전용 모드로 프로젝트에 액세스할 수 있습니다."
 
 #. module: project
 #. odoo-javascript
@@ -1017,13 +1019,13 @@ msgstr "구조"
 #. odoo-javascript
 #: code:addons/project/static/src/views/analytic_account_form/analytic_account_form_controller.js:0
 msgid "Archive Account"
-msgstr ""
+msgstr "보관 계정"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/analytic_account_list/analytic_account_list_controller.js:0
 msgid "Archive Accounts"
-msgstr ""
+msgstr "보관 계정"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -1066,7 +1068,7 @@ msgstr "이 내용을 삭제하시겠습니까?"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "Are you sure you want to restore this version ?"
-msgstr ""
+msgstr "이 버전을 복원하시겠습니까?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1192,7 +1194,7 @@ msgstr ""
 msgid ""
 "Automatically send an email to customers when a task reaches a specific "
 "stage in a project by setting this template on that stage"
-msgstr ""
+msgstr "이 템플릿을 해당 단계에 할당하여 작업이 프로젝트의 특정 단계에 도달하면 고객에게 자동으로 이메일을 보내세요."
 
 #. module: project
 #. odoo-javascript
@@ -1216,7 +1218,7 @@ msgstr "평균 점수 (%)"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating (1-5)"
-msgstr ""
+msgstr "평균 점수 (1-5)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1350,7 +1352,7 @@ msgstr " <b>이름</b>을 선택하세요 <i>(예. 웹사이트 디자인, 물�
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Choose one of the following access modes for your collaborators:"
-msgstr ""
+msgstr "공동 작업자를 위해 다음 액세스 모드 중 하나를 선택합니다:"
 
 #. module: project
 #. odoo-javascript
@@ -1362,7 +1364,7 @@ msgstr "고객 평가"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Close the sub-tasks list"
-msgstr ""
+msgstr "하위 작업 목록 닫기"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -1379,12 +1381,12 @@ msgstr "마감된 작업"
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__is_closed
 msgid "Closed state"
-msgstr ""
+msgstr "마감 상태"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__closed
 msgid "Closed tasks"
-msgstr ""
+msgstr "마감된 작업"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_closed
@@ -1552,7 +1554,7 @@ msgstr "프로젝트 생성"
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_task_plan
 msgid "Create a Task Activity Plan"
-msgstr ""
+msgstr "작업 활동 계획 만들기"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -1563,7 +1565,7 @@ msgstr "파이프라인 활동 안에 새로운 단계 만들기"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Create a new sub-task"
-msgstr ""
+msgstr "새 하위 작업 만들기"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
@@ -1884,7 +1886,7 @@ msgstr "종속 작업"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__depend_on_count
 msgid "Depending on Tasks"
-msgstr ""
+msgstr "작업에 따라"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
@@ -2017,21 +2019,21 @@ msgstr "편집"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit_limited
 msgid "Edit with limited access"
-msgstr ""
+msgstr "제한된 액세스 권한으로 편집"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow "
 "in the Kanban view."
-msgstr ""
+msgstr "제한된 액세스 권한으로 편집: 공동 작업자는 칸반 보기에서 자신이 팔로우하는 작업을 보고 편집할 수 있습니다."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
-msgstr ""
+msgstr "편집: 공동 작업자는 칸반 보기에서 모든 작업을 보고 편집할 수 있습니다. 또한 팔로우할 작업을 선택할 수도 있습니다."
 
 #. module: project
 #. odoo-javascript
@@ -2245,7 +2247,7 @@ msgstr "고객 피드백을 받고 직원의 성과를 평가하세요."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Give the sub-task a <b>name</b>"
-msgstr ""
+msgstr "하위 작업에 <b>이름</b>을 지정합니다."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -2270,6 +2272,8 @@ msgid ""
 "tasks of the project are not included). To grant access to tasks to a portal"
 " user, add them as followers for these tasks."
 msgstr ""
+"포털 사용자를 팔로워로 추가하여 프로젝트에 대한 액세스 권한을 부여합니다 (프로젝트의 작업은 포함되지 않음). 포털 사용자에게 특정 "
+"작업에 대한 액세스 권한을 부여하려면 해당 사용자를 해당 작업의 팔로워로 추가하세요."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -2341,7 +2345,7 @@ msgstr "홈"
 #: model:account.analytic.account,name:project.analytic_construction
 #: model:project.project,name:project.project_home_construction
 msgid "Home Construction"
-msgstr ""
+msgstr "주택 건설"
 
 #. module: project
 #: model:project.project,name:project.project_project_4
@@ -2554,7 +2558,7 @@ msgstr "발행 완료된 청구서"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Is Closed (Burn-up Chart)"
-msgstr ""
+msgstr "마감됨 (번업 차트)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
@@ -2608,18 +2612,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Last 30 Days"
-msgstr ""
+msgstr "최근 30일"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Last 365 Days"
-msgstr ""
+msgstr "최근 365일"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Last 7 Days"
-msgstr ""
+msgstr "최근 7일"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -2629,7 +2633,7 @@ msgstr "전 월"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 msgid "Last Rating (1-5)"
-msgstr ""
+msgstr "최근 점수 (1-5)"
 
 #. module: project
 #. odoo-python
@@ -2810,19 +2814,19 @@ msgstr "완료"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as incomplete"
-msgstr ""
+msgstr "완료되지 않음으로 표시"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as reached"
-msgstr ""
+msgstr "도착으로 표시"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Mark the task as <b>Cancelled</b>"
-msgstr ""
+msgstr "작업을 <b>취소됨</b>으로 표시"
 
 #. module: project
 #. odoo-javascript
@@ -3349,18 +3353,18 @@ msgstr ""
 #: code:addons/project/models/res_partner.py:0
 msgid ""
 "Partner company cannot be different from its assigned projects' company"
-msgstr ""
+msgstr "협력사는 프로젝트에 배정된 회사와 다를 수 없습니다."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "Partner company cannot be different from its assigned tasks' company"
-msgstr ""
+msgstr "협력사는 해당 업무에 배정된 회사와 다를 수 없습니다."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 msgid "Partner's Tasks"
-msgstr ""
+msgstr "협력사의 업무"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -3597,12 +3601,12 @@ msgstr "공유 프로젝트"
 #. module: project
 #: model:ir.model,name:project.model_project_share_collaborator_wizard
 msgid "Project Sharing Collaborator Wizard"
-msgstr ""
+msgstr "프로젝트 공유 공동 작업자 마법사"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
 msgid "Project Sharing Recurrence"
-msgstr ""
+msgstr "프로젝트 공유 반복"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -3678,7 +3682,7 @@ msgstr "프로젝트 설명"
 #. odoo-python
 #: code:addons/project/wizard/project_share_wizard.py:0
 msgid "Project shared with your collaborators."
-msgstr ""
+msgstr "프로젝트를 공동 작업자와 공유합니다."
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
@@ -3758,7 +3762,7 @@ msgstr "속성"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
 msgid "Public Link"
-msgstr ""
+msgstr "공개 링크"
 
 #. module: project
 #. odoo-javascript
@@ -3875,7 +3879,7 @@ msgstr "읽기 전용"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Read-only: collaborators can view tasks but cannot edit them."
-msgstr ""
+msgstr "읽기 전용: 공동 작업자는 작업을 볼 수는 있지만 편집할 수는 없습니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
@@ -3922,7 +3926,7 @@ msgstr "반복"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 msgid "Recurrent tasks"
-msgstr ""
+msgstr "반복 작업"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
@@ -3956,7 +3960,7 @@ msgstr "관련 문서 모델"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_chatter/project_follower_list.js:0
 msgid "Remove Collaborator"
-msgstr ""
+msgstr "공동 작업자 삭제"
 
 #. module: project
 #. odoo-javascript
@@ -4131,7 +4135,7 @@ msgstr "상태 검색"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Search%(left)s Tasks%(right)s"
-msgstr ""
+msgstr "검색%(left)s의 작업 %(right)s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -4154,7 +4158,7 @@ msgstr "이메일 보내기"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__send_invitation
 msgid "Send Invitation"
-msgstr ""
+msgstr "초대장 전송"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
@@ -4226,12 +4230,12 @@ msgstr "프로젝트 공유"
 #: model:ir.actions.act_window,name:project.portal_share_action
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Share Task"
-msgstr ""
+msgstr "작업 공유"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
 msgid "Share a Project"
-msgstr ""
+msgstr "프로젝트 공유"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4266,6 +4270,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"선택한 분석 계정 중 일부가 프로젝트에 연결되어 있습니다:\n"
+"%(accountList)s\n"
+"\n"
+"이 계정을 보관하면 해당 프로젝트에 대한 작업표 기록 옵션이 제거됩니다.\n"
+"\n"
+"계속 진행하시겠습니까?"
 
 #. module: project
 #. odoo-javascript
@@ -4276,6 +4286,8 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"마일스톤, 태그 또는 특정 속성을 사용하여 스프린트별로 작업을 정리하세요. 각 스프린트가 끝나면 마일스톤, 태그 또는 속성을 업데이트하여"
+" 남은 작업을 한 번에 모두 다음 스프린트로 옮깁니다."
 
 #. module: project
 #. odoo-javascript
@@ -4317,7 +4329,7 @@ msgstr "단계"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Stage (Burndown Chart)"
-msgstr ""
+msgstr "단계 (번다운 차트)"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
@@ -4479,13 +4491,13 @@ msgstr "작업 취소됨"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Cancelled"
-msgstr ""
+msgstr "작업 취소됨"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Converted from To-Do"
-msgstr ""
+msgstr "할 일에서 전환된 작업"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -4574,7 +4586,7 @@ msgstr "작업명..."
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Transferred from Project %s"
-msgstr ""
+msgstr "프로젝트 %s에서 전송된 작업"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4591,7 +4603,7 @@ msgstr "승인된 작업"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
 msgid "Task cancelled"
-msgstr ""
+msgstr "작업 취소됨"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -4676,7 +4688,7 @@ msgstr "테스트"
 #. odoo-javascript
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 msgid "The Burndown Chart must be grouped by Date"
-msgstr ""
+msgstr "번다운 차트는 날짜별로 그룹화해야 합니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
@@ -4763,7 +4775,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "The search does not support operator %(operator)s or value %(value)s."
-msgstr ""
+msgstr "검색에서는 %(operator)s 연산자나 %(value)s 값이 지원되지 않습니다."
 
 #. module: project
 #. odoo-python
@@ -4787,7 +4799,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "The task description was empty at the time."
-msgstr ""
+msgstr "당시 작업 설명은 공백이었습니다."
 
 #. module: project
 #. odoo-python
@@ -4863,6 +4875,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"이 분석 계정은 다음 프로젝트와 연결되어 있습니다:\n"
+"%(projectList)s\n"
+"\n"
+"계정을 보관하면 이러한 프로젝트의 작업표를 기록하는 옵션이 제거됩니다.\n"
+"\n"
+"계속 진행하시겠습니까?"
 
 #. module: project
 #. odoo-javascript
@@ -4871,6 +4889,8 @@ msgid ""
 "This follower is currently a project collaborator. Removing them will revoke"
 " their portal access to the project. Are you sure you want to proceed?"
 msgstr ""
+"이 팔로워는 현재 프로젝트에 공동 작업자로 참여하고 있습니다. 이 팔로워를 제거하면 프로젝트에 대한 포털 액세스 권한이 사라집니다. 계속"
+" 진행하시겠습니까?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -4926,7 +4946,7 @@ msgstr "다른 미완료 작업으로 인해 이 작업이 차단되었습니다
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/depend_on_ids_one2many/depend_on_ids_list_renderer.xml:0
 msgid "This task is currently blocked by"
-msgstr ""
+msgstr "이 작업은 현재 다음 사용자에 의해 차단되었습니다."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -5420,7 +5440,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "You can change the sub-task state here!"
-msgstr ""
+msgstr "여기에서 하위 작업 상태를 변경할 수 있습니다!"
 
 #. module: project
 #. odoo-python
@@ -5432,7 +5452,7 @@ msgstr "비공개 작업에서만 개인 단계를 설정할 수 있습니다."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "You can open sub-tasks from the kanban card!"
-msgstr ""
+msgstr "칸반 카드에서 하위 작업을 열 수 있습니다!"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5467,19 +5487,19 @@ msgstr "단계에 작업이 포함되어 있는 경우에는 삭제할 수 없�
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You cannot read the following fields on tasks: %(field_list)s"
-msgstr ""
+msgstr "작업에서 다음 필드를 읽을 수 없습니다: %(field_list)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You cannot set a task as its parent task."
-msgstr ""
+msgstr "작업을 상위 작업으로 설정할 수 없습니다."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You cannot write on the following fields on tasks: %(field_list)s"
-msgstr ""
+msgstr "작업의 다음 필드에는 쓸 수 없습니다: %(field_list)s"
 
 #. module: project
 #. odoo-python
@@ -5496,12 +5516,12 @@ msgstr "다음에 할당되었습니다"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You have been invited to follow %s"
-msgstr ""
+msgstr "%s를 팔로우하도록 초대되었습니다."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
 msgid "You have been invited to follow Task Document :"
-msgstr ""
+msgstr "작업 문서를 팔로우하도록 초대되었습니다 :"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -5696,7 +5716,7 @@ msgstr "동료에게 작업이 다음 단계로 진행할 준비가 되었음을
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as cancelled."
-msgstr ""
+msgstr "상태를 설정하여 작업을 취소됨으로 표시합니다."
 
 #. module: project
 #. odoo-javascript

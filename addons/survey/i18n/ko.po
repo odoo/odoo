@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-03 08:43+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +69,7 @@ msgstr "% 완료"
 #. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 msgid "%(participant)s just participated in \"%(survey_title)s\"."
-msgstr ""
+msgstr "%(participant)s님이 \"%(survey_title)s\"에 참여했습니다."
 
 #. module: survey
 #. odoo-python
@@ -417,7 +418,7 @@ msgstr "<i class=\"fa fa-square-o fa-lg me-2\"/>답변"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Survey"
-msgstr ""
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>설문조사로 이동"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -425,6 +426,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 "
 "pt-1\">Avg</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">평균 "
+"</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -432,6 +435,7 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 "
 "pt-1\">Max</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">최대</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -439,6 +443,7 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 "
 "pt-1\">Min</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">최소</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -446,6 +451,8 @@ msgid ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\" id=\"enter-"
 "tooltip\"> or press CTRL+Enter</span>"
 msgstr ""
+"<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\" id=\"enter-"
+"tooltip\"> 또는 CTRL+Enter 키를 누르세요</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -465,6 +472,9 @@ msgid ""
 "                    <span id=\"enter-tooltip\">or press CTRL+Enter</span>\n"
 "                </span>"
 msgstr ""
+"<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
+"                    <span id=\"enter-tooltip\">또는 CTRL+Enter 키를 누르세요</span>\n"
+"                </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -535,6 +545,8 @@ msgid ""
 "<span class=\"o_survey_session_navigation_next_label\">Start</span>\n"
 "                        <i class=\"oi oi-chevron-right\"/>"
 msgstr ""
+"<span class=\"o_survey_session_navigation_next_label\">시작</span>\n"
+"                        <i class=\"oi oi-chevron-right\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -554,7 +566,7 @@ msgstr "<span class=\"text-muted\">등록됨</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"text-muted\">Responded</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">응답</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -564,12 +576,12 @@ msgstr "<span class=\"text-muted\">성공</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"text-success\">Correct</span>"
-msgstr ""
+msgstr "<span class=\"text-success\">정답</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"text-warning\">Partial</span>"
-msgstr ""
+msgstr "<span class=\"text-warning\">부분</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -610,7 +622,7 @@ msgstr "<span>날짜</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span>Do you like it?</span><br/>"
-msgstr ""
+msgstr "<span>좋아하시나요?</span><br/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -758,7 +770,7 @@ msgstr "너무 비싼"
 msgid ""
 "A positive default time limit is required when the session rewards quick "
 "answers."
-msgstr ""
+msgstr "세션에서 빠른 답변에 대한 보상을 제공하는 경우 기본 시간 제한은 양수로 설정해야 합니다."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_answer__answer_score
@@ -925,7 +937,7 @@ msgstr "모든 설문조사"
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_is_time_limited_have_time_limit
 msgid "All time-limited questions need a positive time limit"
-msgstr ""
+msgstr "모든 시간 제한 질문에는 양수로 설정된 시간 제한 설정이 필요합니다."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -940,7 +952,7 @@ msgstr "사용할 수 있는 트리거된 질문"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__allowed_survey_types
 msgid "Allowed survey types"
-msgstr ""
+msgstr "허용된 설문조사 유형"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug2
@@ -989,7 +1001,7 @@ msgstr "설문 마감시한"
 msgid ""
 "Answer label as either the value itself if not empty or a letter "
 "representing the index of the answer otherwise."
-msgstr ""
+msgstr "비어 있지 않으면 값 자체로, 비어 있으면 인덱스를 나타내는 문자로 답에 레이블을 지정합니다."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__user_input_line_ids
@@ -1332,7 +1344,7 @@ msgstr "사용자당 시도할 수 있는 횟수를 제한하려면 이 옵션�
 #. odoo-javascript
 #: code:addons/survey/static/src/views/widgets/boolean_update_flag_field/boolean_update_flag_fields.js:0
 msgid "Checkbox updating comparison flag"
-msgstr ""
+msgstr "체크박스 업데이트 비교 플래그"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q2_sug2
@@ -1711,7 +1723,7 @@ msgstr "맞춤형 램프"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_time_customized
 msgid "Customized speed rewards"
-msgstr ""
+msgstr "맞춤형 스피드 보상"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -1753,7 +1765,7 @@ msgstr "마감일 "
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__session_speed_rating_time_limit
 msgid "Default time given to receive additional points for right answers"
-msgstr ""
+msgstr "정답을 맞히면 추가 포인트를 받는 기본 시간"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_gamification_challenge__challenge_category
@@ -1936,7 +1948,7 @@ msgstr "기존 이메일"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Extremely likely"
-msgstr ""
+msgstr "매우 그렇다"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q3_sug2
@@ -2134,7 +2146,7 @@ msgstr "메시지 있음"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__has_image_only_suggested_answer
 msgid "Has image only suggested answer"
-msgstr ""
+msgstr "이미지로만 답변이 제안됨"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_3_choice_2
@@ -2457,7 +2469,7 @@ msgstr "이메일 필수 입력"
 #. odoo-javascript
 #: code:addons/survey/static/src/views/widgets/integer_update_flag_field/integer_update_flag_fields.js:0
 msgid "Integer updating comparison flag"
-msgstr ""
+msgstr "정수 업데이트 비교 플래그"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__invite_token
@@ -2757,7 +2769,7 @@ msgstr "실시간 세션"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__session_available
 msgid "Live Session available"
-msgstr ""
+msgstr "실시간 세션 가능"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2772,7 +2784,7 @@ msgstr "실시간 세션"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_available
 msgid "Live session available"
-msgstr ""
+msgstr "실시간 세션 가능"
 
 #. module: survey
 #. odoo-javascript
@@ -3139,7 +3151,7 @@ msgstr "나쁘지 않아요"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Not likely at all"
-msgstr ""
+msgstr "전혀 그렇지 않다"
 
 #. module: survey
 #. odoo-javascript
@@ -3625,12 +3637,12 @@ msgstr "인쇄"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_print
 msgid "Print Results"
-msgstr ""
+msgstr "결과 인쇄"
 
 #. module: survey
 #: model:ir.actions.server,name:survey.action_survey_print
 msgid "Print Survey"
-msgstr ""
+msgstr "설문조사 인쇄"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1
@@ -3640,7 +3652,7 @@ msgstr "품목"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "Progress bar"
-msgstr ""
+msgstr "진행 표시줄"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id
@@ -3734,7 +3746,7 @@ msgstr "통과한 퀴즈"
 #. odoo-javascript
 #: code:addons/survey/static/src/views/widgets/radio_selection_with_filter/radio_selection_field_with_filter.js:0
 msgid "Radio for Selection With Filter"
-msgstr ""
+msgstr "필터가 있는 라디오 선택 옵션"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__random
@@ -3838,7 +3850,7 @@ msgstr "담당 사용자"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__restrict_user_ids
 msgid "Restricted to"
-msgstr ""
+msgstr "제한 대상"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
@@ -3848,7 +3860,7 @@ msgstr "재시도"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid "Review your answers"
-msgstr ""
+msgstr "답안 검토하기"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_speed_rating
@@ -3915,42 +3927,42 @@ msgstr "크기"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_max_label
 msgid "Scale Maximum Label"
-msgstr ""
+msgstr "눈금의 최대값 라벨"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_max
 msgid "Scale Maximum Value"
-msgstr ""
+msgstr "눈금의 최대값"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Scale Maximum Value (0 to 10)"
-msgstr ""
+msgstr "눈금의 최대값 (0~10)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_mid_label
 msgid "Scale Middle Label"
-msgstr ""
+msgstr "눈금의 중간값 라벨"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_min_label
 msgid "Scale Minimum Label"
-msgstr ""
+msgstr "눈금의 최소값 라벨"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_min
 msgid "Scale Minimum Value"
-msgstr ""
+msgstr "눈금의 최소값"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Scale Minimum Value (0 to 10)"
-msgstr ""
+msgstr "눈금의 최소값 (0~10)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_scale
 msgid "Scale value"
-msgstr ""
+msgstr "눈금 값"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4
@@ -4376,7 +4388,7 @@ msgstr "권장 답변"
 msgid ""
 "Suggested answer value must not be empty (a text and/or an image must be "
 "provided)."
-msgstr ""
+msgstr "제시된 답안 값은 비어 있으면 안 됩니다. (텍스트 및/또는 이미지를 입력해야 함)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__value
@@ -4607,6 +4619,8 @@ msgid ""
 "The access of the following surveys is restricted. Make sure their responsible still has access to it: \n"
 "%(survey_names)s\n"
 msgstr ""
+"다음 설문조사에 대한 접근이 제한됩니다. 담당자가 해당 설문조사에 권한이 있는지 확인하세요. \n"
+"%(survey_names)s\n"
 
 #. module: survey
 #. odoo-python
@@ -4703,7 +4717,7 @@ msgstr "설문 시간 제한됨"
 #: model:ir.model.constraint,message:survey.constraint_survey_question_scale
 msgid ""
 "The scale must be a growing non-empty range between 0 and 10 (inclusive)"
-msgstr ""
+msgstr "척도는 0에서 10을 포함한 숫자 사이의 비어있지 않은 오름차순 범위여야 합니다."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
@@ -4797,7 +4811,7 @@ msgstr "참가자가 세션에 접속하는 데 사용되는 코드입니다. �
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 msgid "This is a Test Survey Entry."
-msgstr ""
+msgstr "테스트 설문조사 항목입니다."
 
 #. module: survey
 #. odoo-javascript
@@ -4887,12 +4901,12 @@ msgstr "시간 & 점수"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Time Limit"
-msgstr ""
+msgstr "시간 제한"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Time Limit (seconds)"
-msgstr ""
+msgstr "시간 제한 (초)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__time_limit
@@ -4918,7 +4932,7 @@ msgstr "이 설문조사에 대한 시간 제한:"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Time limits are only available for Live Sessions."
-msgstr ""
+msgstr "시간 제한은 실시간 세션에만 적용됩니다."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__title
@@ -4950,7 +4964,7 @@ msgstr "도쿄"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid "Top User Responses"
-msgstr ""
+msgstr "상위 사용자 응답"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__scoring_total
@@ -5074,7 +5088,7 @@ msgstr "유머와 농담을 사용하세요"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Use template"
-msgstr ""
+msgstr "서식 사용"
 
 #. module: survey
 #. odoo-javascript
@@ -5159,7 +5173,7 @@ msgstr "유효성 검사 오류"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__value_label
 msgid "Value Label"
-msgstr ""
+msgstr "값 라벨"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q1_sug2
@@ -5189,7 +5203,7 @@ msgstr "베트남"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_open
 msgid "Waiting for attendees..."
-msgstr ""
+msgstr "참가자 기다리는 중..."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress

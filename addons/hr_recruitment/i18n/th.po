@@ -908,6 +908,8 @@ msgid ""
 "Applications received from this Email won't be linked to a contact.There "
 "will be no email address set on the Applicant either."
 msgstr ""
+"ใบสมัครที่ได้รับจากอีเมลนี้จะไม่เชื่อมโยงกับผู้ติดต่อ "
+"ผู้สมัครจะไม่มีการตั้งค่าที่อยู่อีเมลเช่นกัน"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
@@ -1181,7 +1183,7 @@ msgstr "สร้างแผนกิจกรรมการสรรหาบ
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "Create a new rule to process emails from specific job boards."
-msgstr ""
+msgstr "สร้างกฎใหม่เพื่อประมวลผลอีเมลจากกระดานงานเฉพาะ"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1251,7 +1253,7 @@ msgstr "ค่าเริ่มต้น"
 msgid ""
 "Define a regex: Extract the applicant's name from the email's subject or "
 "body."
-msgstr ""
+msgstr "กำหนด regex: แยกชื่อของผู้สมัครออกจากหัวเรื่องหรือเนื้อหาของอีเมล"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1682,6 +1684,7 @@ msgid ""
 "Have you tried to <a>add skills to your job position</a> and search into the"
 " Reserve ?"
 msgstr ""
+"คุณได้พยายาม<a>เพิ่มทักษะให้กับตำแหน่งงานของคุณ</a>และค้นหาลงในการสำรองแล้วหรือยัง?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_closed
@@ -1908,7 +1911,7 @@ msgstr "การสมัครงาน"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_boards
 msgid "Job Boards"
-msgstr ""
+msgstr "บอร์ดงาน"
 
 #. module: hr_recruitment
 #: model:utm.campaign,title:hr_recruitment.utm_campaign_job
@@ -1923,7 +1926,7 @@ msgstr "สถานที่ทำงาน"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job_platform
 msgid "Job Platforms"
-msgstr ""
+msgstr "แพลตฟอร์มงาน"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
@@ -2314,7 +2317,7 @@ msgstr "ยังไม่มีข้อมูล!"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "No rules have been defined."
-msgstr ""
+msgstr "ไม่มีการกำหนดกฎเกณฑ์"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0
@@ -2708,7 +2711,7 @@ msgstr "ผู้สมัครปฏิเสธ: เงินเดือน"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__regex
 msgid "Regex"
-msgstr ""
+msgstr "Regex"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -3056,7 +3059,7 @@ msgstr "แท็ก"
 msgid ""
 "The Email must be unique, this one already corresponds to another Job "
 "Platform."
-msgstr ""
+msgstr "อีเมลจะต้องไม่ซ้ำกัน ซึ่งอีเมลนี้สอดคล้องกับแพลตฟอร์มงานอื่นอยู่แล้ว"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__interviewer_ids
@@ -3148,6 +3151,8 @@ msgid ""
 "The regex facilitates to extract information from the subject or body of the"
 " received email to autopopulate the Applicant's name field"
 msgstr ""
+"regex "
+"อำนวยความสะดวกในการดึงข้อมูลจากหัวเรื่องหรือเนื้อหาของอีเมลที่ได้รับเพื่อเติมฟิลด์ชื่อของผู้สมัครโดยอัตโนมัติ"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_normalized
@@ -3329,7 +3334,7 @@ msgstr "เมื่อคุณปฏิเสธการสมัคร ค�
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "Without a regex: The applicant's name will be the email's subject."
-msgstr ""
+msgstr "หากไม่มี regex: ชื่อของผู้สมัครจะเป็นหัวเรื่องของอีเมล"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -3396,7 +3401,7 @@ msgstr "เช่น LinkedIn"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
 msgid "e.g. Linkedin"
-msgstr ""
+msgstr "เช่น Linkedin"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -3411,7 +3416,7 @@ msgstr "เช่น ผู้จัดการฝ่ายขาย ประ�
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
 msgid "e.g. ^New application:.*from (.*)"
-msgstr ""
+msgstr "เช่น ^New application:.*from (.*)"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -3421,7 +3426,7 @@ msgstr "เช่น domain.com"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
 msgid "e.g. jobs-listings@linkedin.com"
-msgstr ""
+msgstr "เช่น jobs-listings@linkedin.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form

@@ -1815,7 +1815,7 @@ msgid ""
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
 "\n"
-"取引先のVATフィールド機能を拡張し、ユーザーが財政税ID (VAT) だけでなく、国民ドキュメント、パスポート、外国人登録証など他のタイプの身分証明書で連絡先を識別(最終的には請求)するための\"識別タイプ\"という名前の新しいモデルを追加します。このモジュールをインストールすると、取引先フォームのビューに2つのフィールドが表示されます:\n"
+"取引先のVATフィールド機能を拡張し、ユーザーが会計税ID (VAT) だけでなく、国民ドキュメント、パスポート、外国人登録証など他のタイプの身分証明書で連絡先を識別(最終的には請求)するための\"識別タイプ\"という名前の新しいモデルを追加します。このモジュールをインストールすると、取引先フォームのビューに2つのフィールドが表示されます:\n"
 "\n"
 "* 識別タイプ\n"
 "* 識別番号\n"
@@ -5509,7 +5509,7 @@ msgid ""
 "The wizard used is similar as the one for the credit note.\n"
 msgstr ""
 "\n"
-"多くの国では、借方票は既存の請求書の金額の増加として、または特定の場合には貸方票をキャンセルするために使用されます。\n"
+"多くの国では、デビットノートは既存の請求書の金額の増加として、または特定の場合にはクレジットノートを取消するために使用されます。\n"
 "通常の請求書と似ていますが、元の請求書とのリンクを追跡する必要があります。\n"
 "使用されるウィザードは、クレジットノートのウィザードと似ています。\n"
 
@@ -10240,7 +10240,7 @@ msgid ""
 "to support In-App purchases inside Odoo. "
 msgstr ""
 "\n"
-"このモジュールは、Odoo内でのアプリ内購入をサポートするための標準ツール(アカウントモデル、コンテキストマネージャ、ヘルパー)\n"
+"このモジュールは、Odoo内でのアプリ内課金をサポートするための標準ツール(アカウントモデル、コンテキストマネージャ、ヘルパー)\n"
 "を提供します。"
 
 #. module: base
@@ -15189,7 +15189,7 @@ msgstr "品質の基本機能"
 #. module: base
 #: model:ir.module.module,summary:base.module_iap
 msgid "Basic models and helpers to support In-App purchases."
-msgstr "アプリ内購入をサポートするための基本的なモデルとヘルパー。"
+msgstr "アプリ内課金をサポートするための基本的なモデルとヘルパー。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_iot
@@ -16987,7 +16987,7 @@ msgstr "連絡先には名前が必要です"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Contains In-App Purchases"
-msgstr "アプリ内購入が含まれています"
+msgstr "アプリ内課金が含まれています"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__context
@@ -28879,12 +28879,12 @@ msgstr "同じ会社登記所と提携"
 #: model:ir.model.fields,field_description:base.field_res_partner__same_vat_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_vat_partner_id
 msgid "Partner with same Tax ID"
-msgstr "同じ適格請求書発行事業者番号の取引先"
+msgstr "同じ税IDの取引先"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__partner_id
 msgid "Partner-related data of the user"
-msgstr "ユーザのパートナー関連データ"
+msgstr "ユーザの取引先関連データ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__partner_ids
@@ -33451,7 +33451,7 @@ msgstr "タスクログ"
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr "納税者番号"
+msgstr "税ID"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden

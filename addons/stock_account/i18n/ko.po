@@ -272,6 +272,7 @@ msgid ""
 "Costing method change for product category %(category)s: from %(old_method)s"
 " to %(new_method)s."
 msgstr ""
+"품목 카테고리 %(category)s의 원가 계산 방법이 %(old_method)s에서 %(new_method)s로 변경되었습니다."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -370,6 +371,8 @@ msgid ""
 "%(new_category)s), the costing method has changed for product %(product)s: "
 "from %(old_method)s to %(new_method)s."
 msgstr ""
+"품목 카테고리가 %(old_category)s에서 %(new_category)s으로 변경됨에 따라 %(product)s에 대한 원가 계산"
+" 방법도 %(old_method)s에서 %(new_method)s으로 변경되었습니다."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -559,7 +562,7 @@ msgstr "품목 세부선택"
 #: code:addons/stock_account/models/product.py:0
 msgid ""
 "Product value manually modified (from %(original_price)s to %(new_price)s)"
-msgstr ""
+msgstr "수동으로 수정된 품목 가격 (%(original_price)s에서 %(new_price)s으로 변경)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -590,7 +593,7 @@ msgstr "재평가 사유"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__warehouse_id
 msgid "Receipt WH"
-msgstr ""
+msgstr "창고 입고"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
@@ -933,6 +936,7 @@ msgid ""
 "Valuation method change for product category %(category)s: from "
 "%(old_method)s to %(new_method)s."
 msgstr ""
+"품목 카테고리 %(category)s에 대한 평가 방법이 %(old_method)s에서 %(new_method)s로 변경되었습니다."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -1069,4 +1073,4 @@ msgstr "기준"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
-msgstr ""
+msgstr "평가 그래프"

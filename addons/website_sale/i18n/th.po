@@ -53,7 +53,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "&amp;nbsp;(<i>Your delivery address will be requested later)</i>"
-msgstr ""
+msgstr "&amp;nbsp;(<i>ที่อยู่จัดส่งของคุณจะถูกขอในภายหลัง)</i>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
@@ -114,7 +114,7 @@ msgstr "<b>การสื่อสาร: </b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 msgid "<b>Deliver to pickup point: </b>"
-msgstr ""
+msgstr "<b>ส่งไปที่จุดรับสินค้า:</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
@@ -223,7 +223,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.optional_product_items
 msgid "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Add to cart"
-msgstr ""
+msgstr "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> เพิ่มลงในรถเข็น"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -330,6 +330,9 @@ msgid ""
 "                    Select to compute delivery rate\n"
 "                </span>"
 msgstr ""
+"<span class=\"o_wsale_delivery_price_badge float-end fw-bold\" name=\"price\">\n"
+"                    เลือกเพื่อคำนวณอัตราการจัดส่ง\n"
+"                </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -397,11 +400,17 @@ msgid ""
 "                </span>\n"
 "                <span name=\"o_remove_pickup_location\" class=\"fa fa-times ms-2\" title=\"Remove this location\" aria-label=\"Remove this location\"/>"
 msgstr ""
+"<span>\n"
+"                    <b name=\"o_pickup_location_name\"/>\n"
+"                    <br/>\n"
+"                    <i name=\"o_pickup_location_address\"/>\n"
+"                </span>\n"
+"                <span name=\"o_remove_pickup_location\" class=\"fa fa-times ms-2\" title=\"ลบสถานที่นี้\" aria-label=\"ลบสถานที่นี้\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span>Already have an account?</span>"
-msgstr ""
+msgstr "<span>มีบัญชีอยู่แล้ว?</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -430,7 +439,7 @@ msgstr "<span>ดูตัวอย่างวิดีโอ</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
 msgid "<strong>No suitable delivery method could be found.</strong>"
-msgstr ""
+msgstr "<strong>ไม่พบวิธีการจัดส่งที่เหมาะสม</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
@@ -731,7 +740,7 @@ msgstr "ปุ่มเพิ่มลงตะกร้า"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_product_configurator.js:0
 msgid "Add to cart"
-msgstr ""
+msgstr "เพิ่มในรถเข็น"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_autocomplete
@@ -759,7 +768,7 @@ msgstr "รายการราคาทั้งหมด"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__everyone
 msgid "All users"
-msgstr ""
+msgstr "ผู้ใช้ทั้งหมด"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -820,7 +829,7 @@ msgstr "นำไปใช้"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
 msgid "Are you sure you want to delete this ribbon?"
-msgstr ""
+msgstr "คุณแน่ใจหรือไม่ว่าต้องการลบ Ribbon นี้"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -879,7 +888,7 @@ msgstr "พื้นหลัง"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
 msgid "Background Color"
-msgstr ""
+msgstr "สีพื้นหลัง"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_count
@@ -1565,7 +1574,7 @@ msgstr "กำหนดหมวดหมู่ใหม่"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_ribbon_action
 msgid "Define a new ribbon"
-msgstr ""
+msgstr "กำหนดริบบิ้นใหม่"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1575,7 +1584,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Deliver to the same address"
-msgstr ""
+msgstr "จัดส่งไปยังที่อยู่เดียวกัน"
 
 #. module: website_sale
 #. odoo-python
@@ -1592,7 +1601,7 @@ msgstr "จำนวนการจัดส่ง"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
 msgid "Delivery Methods"
-msgstr ""
+msgstr "วิธีจัดส่ง"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__access_point_address
@@ -1840,7 +1849,7 @@ msgstr "ฝังโค้ด"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Enforce a customer to be logged in to access 'Shop'"
-msgstr ""
+msgstr "บังคับให้ลูกค้าเข้าสู่ระบบเพื่อเข้าถึง 'ร้านค้า'"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2224,6 +2233,8 @@ msgid ""
 "It seems that there is already a transaction for your order; you can't "
 "change the delivery method anymore."
 msgstr ""
+"ดูเหมือนว่ามีธุรกรรมสำหรับการสั่งซื้อของคุณอยู่แล้ว "
+"คุณไม่สามารถเปลี่ยนวิธีการจัดส่งได้อีกต่อไป"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2326,7 +2337,7 @@ msgstr "ให้ลูกค้าเลือกจุดจัดส่งข
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__force_dialog
 msgid "Let the user decide (dialog)"
-msgstr ""
+msgstr "ให้ผู้ใช้ตัดสินใจ (โต้ตอบ)"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2851,7 +2862,7 @@ msgstr "กรุณาดำเนินการรถเข็นปัจจ
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/checkout.js:0
 msgid "Please select a pick-up point"
-msgstr ""
+msgstr "กรุณาเลือกจุดรับ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3368,7 +3379,7 @@ msgstr "แทนที่"
 #: model:ir.model.fields,help:website_sale.field_product_tag__website_id
 #: model:ir.model.fields,help:website_sale.field_product_template__website_id
 msgid "Restrict to a specific website."
-msgstr ""
+msgstr "จำกัดเฉพาะเว็บไซต์เฉพาะ"
 
 #. module: website_sale
 #. odoo-python
@@ -3627,7 +3638,7 @@ msgstr "การเรียงลำดับร้านค้าเริ่
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shop, products, cart and wishlist visibility"
-msgstr ""
+msgstr "การมองเห็นร้านค้า ผลิตภัณฑ์ ตะกร้าสินค้า และสิ่งที่อยากได้"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_add_to_cart
@@ -3723,7 +3734,7 @@ msgstr "ช่องที่ต้องกรอกบางช่องว่
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
-msgstr ""
+msgstr "ขออภัย เราไม่สามารถจัดส่งคำสั่งซื้อของคุณได้"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3832,7 +3843,7 @@ msgstr "ข้อความ"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
 msgid "Text Color"
-msgstr ""
+msgstr "สีข้อความ"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale_text
@@ -3875,6 +3886,8 @@ msgid ""
 "The company of the website you are trying to sell from (%(website_company)s)"
 " is different than the one you want to use (%(company)s)"
 msgstr ""
+"บริษัทของเว็บไซต์ที่คุณพยายามขาย (%(website_company)s) "
+"แตกต่างจากบริษัทที่คุณต้องการใช้ (%(company)s)"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_url
@@ -4262,7 +4275,7 @@ msgstr "เว็บไซต์"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_menu
 msgid "Website Menu"
-msgstr ""
+msgstr "เมนูเว็บไซต์"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_message_ids
@@ -4404,6 +4417,8 @@ msgid ""
 "You are editing your <b>billing and delivery</b> addresses at the same time!<br/>\n"
 "                                            If you want to modify your delivery address, create a"
 msgstr ""
+"คุณกำลังแก้ไขที่อยู่สำหรับ <b>การเรียกเก็บเงินและที่อยู่จัดส่ง</b> ของคุณพร้อมกัน!<br/>\n"
+"                                            หากคุณต้องการแก้ไขที่อยู่จัดส่งของคุณ ให้สร้าง"
 
 #. module: website_sale
 #. odoo-python
@@ -4467,7 +4482,7 @@ msgstr "รถเข็นของคุณว่างเปล่า!"
 #. odoo-python
 #: code:addons/website_sale/controllers/delivery.py:0
 msgid "Your cart is empty."
-msgstr ""
+msgstr "รถเข็นของคุณว่างเปล่า"
 
 #. module: website_sale
 #. odoo-python

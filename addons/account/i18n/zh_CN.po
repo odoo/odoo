@@ -109,6 +109,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, "
 "%(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_billed)s "
+"已记入账单，%(quantity_received)s已收到，每件单价为 %(unit_price)s"
 
 #. module: account
 #. odoo-python
@@ -117,6 +119,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, "
 "%(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s；%(quantity_invoiced)s "
+"已开立发票，%(quantity_delivered)s已送货，%(unit_price)s 每件单价为"
 
 #. module: account
 #. odoo-python
@@ -134,7 +138,7 @@ msgstr "%(ref)s（%(currency_amount)s）"
 #. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
-msgstr ""
+msgstr "%(tag)s（%(country_code)s）"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -485,7 +489,7 @@ msgstr "9.00"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_90days_on_the_10th
 msgid "90 days, on the 10th"
-msgstr ""
+msgstr "90 天，在 10 日"
 
 #. module: account
 #. odoo-python
@@ -501,12 +505,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid ""
 "<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
-msgstr ""
+msgstr "<b>已套用 %(payment_reference) 提前付款折扣。</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<br/> on this account:"
-msgstr ""
+msgstr "<br/>在此账户："
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -827,7 +831,7 @@ msgstr ""
 msgid ""
 "<span class=\"figure-caption\">Never miss a deadline, with automated "
 "statements and alerts.</span>"
-msgstr ""
+msgstr "<span class=\"figure-caption\">通过自动报表和警报，绝不会错过最后期限。</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -862,6 +866,8 @@ msgid ""
 "<span class=\"o_form_label\" groups=\"account.group_account_readonly\" "
 "invisible=\"move_type == 'entry'\">in </span>"
 msgstr ""
+"<span class=\"o_form_label\" groups=\"account.group_account_readonly\" "
+"invisible=\"move_type == 'entry'\">在 </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1602,7 +1608,7 @@ msgstr "会计日记账组"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_map
 msgid "Account Map"
-msgstr ""
+msgstr "账户配对"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_ids
@@ -1962,7 +1968,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Accrued %(entry_type)s entry as of %(date)s"
-msgstr ""
+msgstr "截至%(date)s的应计%(entry_type)s条目"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2170,7 +2176,7 @@ msgstr "在发票/订单/报价单底部添加您的条款和条件"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "Address"
-msgstr ""
+msgstr "地址"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2866,7 +2872,7 @@ msgstr "平均价格"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "BE71096123456769"
-msgstr ""
+msgstr "BE71096123456769"
 
 #. module: account
 #. odoo-python
@@ -2940,7 +2946,7 @@ msgstr "银行账户"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s deleted"
-msgstr ""
+msgstr "已删除号码为 %(number)s的银行帐户%(link)s"
 
 #. module: account
 #. odoo-python
@@ -3166,7 +3172,7 @@ msgstr "基于付款"
 #. module: account
 #: model:res.groups,name:account.group_account_basic
 msgid "Basic"
-msgstr ""
+msgstr "基础的"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3462,7 +3468,7 @@ msgstr "资本"
 msgid ""
 "Capture invoices, register payments and keep track of the discussions with "
 "your vendors."
-msgstr ""
+msgstr "捕捉发票、登记付款，并追踪与供应商的沟通。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__carryover_target
@@ -3804,7 +3810,7 @@ msgstr "为产品选择认销售税。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "City"
-msgstr ""
+msgstr "城市"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -3815,7 +3821,7 @@ msgstr "点击"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Click or press enter to add a description"
-msgstr ""
+msgstr "单击或按回车键添加说明"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -4060,7 +4066,7 @@ msgstr "配置"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Configure document layout."
-msgstr ""
+msgstr "配置文档布局。"
 
 #. module: account
 #. odoo-python
@@ -4094,7 +4100,7 @@ msgstr "立即确认"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Connect your bank. Match invoices automatically."
-msgstr ""
+msgstr "连接银行。自动匹配发票。"
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner
@@ -5749,7 +5755,7 @@ msgstr "供应商贷项凭单草稿"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
 msgid "Drag & drop"
-msgstr ""
+msgstr "拖放"
 
 #. module: account
 #. odoo-python
@@ -6002,7 +6008,7 @@ msgstr "期末余额"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Enter a description"
-msgstr ""
+msgstr "输入描述"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -6781,7 +6787,7 @@ msgstr "一般税务报告"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Get Paid online. Send electronic invoices."
-msgstr ""
+msgstr "线上收款，发送电子发票。"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
@@ -6889,7 +6895,7 @@ msgstr "HTTP 路由"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__half-up
 msgid "Half-up (away from 0)"
-msgstr ""
+msgstr "四舍五入（背离零）"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
@@ -6899,7 +6905,7 @@ msgstr "有会计分录"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_entries
 msgid "Has Entries"
-msgstr ""
+msgstr "有记项"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_iban_warning
@@ -6930,7 +6936,7 @@ msgstr "有资金转账警告消息"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
 msgid "Has Posted Entries"
-msgstr ""
+msgstr "有已过账记项"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_reconciled_entries
@@ -7007,7 +7013,7 @@ msgstr "订单和发票中计算总税额的方式"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "IBAN"
-msgstr ""
+msgstr "IBAN"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
@@ -7237,7 +7243,7 @@ msgstr "如果勾选该复选框，则表示用户在创建分录时不确定所
 msgid ""
 "If ticked, the hash chain will be computed from the last move hashed to the "
 "new move to be hashed. The hash is performed on demand."
-msgstr ""
+msgstr "如果勾选，杂凑链会从最后的已杂凑分录计算，供需要杂凑的新分录使用。杂凑功能是按要求而执行。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -7248,7 +7254,7 @@ msgid ""
 "If ticked, when the invoice is sent, the hash chain will be computed from "
 "the last move hashed to the new move to be hashed. The hash can also be "
 "performed on demand."
-msgstr ""
+msgstr "如果勾选，发送发票时，杂凑链会从最后的已杂凑分录计算，供需要杂凑的新分录使用。您还可以根据需要，自行执行杂凑功能。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7415,7 +7421,7 @@ msgstr "不变性散列"
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
 #: model:ir.model.fields,field_description:account.field_account_payment__secure_sequence_number
 msgid "Inalterability No Gap Sequence #"
-msgstr ""
+msgstr "不可更改性无间隙序列 #"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -7478,7 +7484,7 @@ msgstr ""
 msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %(month)s;"
 " Day: %(day)s"
-msgstr ""
+msgstr "财政年度日期不正确：日子超出月份范围。月：%(month)s，日：%(day)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -7637,7 +7643,7 @@ msgstr "内部字段，用于缩短外部引擎创建 expression_ids 的时间"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Internal link"
-msgstr ""
+msgstr "内部链接"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -7666,14 +7672,14 @@ msgstr "无效"
 msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
 " for the zip range and \"To\" should be greater than \"From\"."
-msgstr ""
+msgstr "“邮政编码范围”无效，您必须为邮政编码范围设置 “从” 和 “到” 数值，并且 “到” 应大于 “从” 。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid ""
 "Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s"
-msgstr ""
+msgstr "表达式域无效 '%(label)s' 行 '%(line)s': %(formula)s"
 
 #. module: account
 #. odoo-python
@@ -7684,7 +7690,7 @@ msgstr "无效的会计年度最后一天"
 #. module: account
 #: model:account.journal,name:account.1_inventory_valuation
 msgid "Inventory Valuation"
-msgstr ""
+msgstr "库存计价"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
@@ -8033,7 +8039,7 @@ msgstr "旧版发票应用程序"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_with_gaps_in_sequence_filter
 msgid "Irregular Sequences"
-msgstr ""
+msgstr "不规则序列"
 
 #. module: account
 #. odoo-python
@@ -8041,7 +8047,7 @@ msgstr ""
 msgid ""
 "Irregularities due to draft, cancelled or deleted bills with a sequence "
 "number since last lock date."
-msgstr ""
+msgstr "由于有草稿、已取消或已删除的账单，而账单包括上次锁定日期之后的序列号码，导致出现不一致。"
 
 #. module: account
 #. odoo-python
@@ -8049,7 +8055,7 @@ msgstr ""
 msgid ""
 "Irregularities due to draft, cancelled or deleted invoices with a sequence "
 "number since last lock date."
-msgstr ""
+msgstr "由于有草稿、已取消或已删除的发票，而发票包括上次锁定日期之后的序列号码，导致出现不一致。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
@@ -8221,7 +8227,7 @@ msgstr "按日期划分的日记账分录"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/company.py:0
 msgid "Journal Entries to Hash"
-msgstr ""
+msgstr "待杂凑处理的日记账记项"
 
 #. module: account
 #. odoo-javascript
@@ -8660,7 +8666,7 @@ msgstr "上次这个合作伙伴的应收结算单和付款是匹配的. 设置�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Late"
-msgstr ""
+msgstr "延迟"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8677,7 +8683,7 @@ msgstr "最近发票和付款匹配日期"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "Leave empty to create new"
-msgstr ""
+msgstr "留空以建立新一项"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -8692,7 +8698,7 @@ msgstr "左"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_legal_notes
 msgid "Legal Notes"
-msgstr ""
+msgstr "法律声明"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -8714,7 +8720,7 @@ msgstr "非足额付款"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Let artificial intelligence scan your bill. Pay easily."
-msgstr ""
+msgstr "让人工智能扫描您的账单，轻松支付。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8760,7 +8766,7 @@ msgstr "行"
 msgid ""
 "Line \"%(line)s\" defines line \"%(parent_line)s\" as its parent, but "
 "appears before it in the report. The parent must always come first."
-msgstr ""
+msgstr "资料行“%(line)s”将另一行“%(parent_line)s”设为其母项，但在报表上出现的位置较前。母项必须先行。"
 
 #. module: account
 #. odoo-python
@@ -9452,7 +9458,7 @@ msgstr "下一活动类型"
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_date
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Next Payment Date"
-msgstr ""
+msgstr "下一次付款日期"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__no
@@ -9598,13 +9604,13 @@ msgstr "未支付"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_sent_values__not_sent
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Sent"
-msgstr ""
+msgstr "未发送"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2many_tax_tags/many2many_tax_tags.js:0
 msgid "Not sure... Help me!"
-msgstr ""
+msgstr "不确定...帮助我！"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_note
@@ -9649,7 +9655,7 @@ msgstr "十一月"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Now, we'll create your first invoice"
-msgstr ""
+msgstr "现在，我们将创建您的第一张发票"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account
@@ -10379,7 +10385,7 @@ msgstr "合作伙伴名称"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_partners_reports_menu
 msgid "Partner Reports"
-msgstr ""
+msgstr "合作伙伴报告"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_type
@@ -10414,7 +10420,7 @@ msgstr "合作伙伴"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_missing_account_list_view
 msgid "Partners Missing a bank account"
-msgstr ""
+msgstr "合作伙伴缺少银行账户"
 
 #. module: account
 #. odoo-python
@@ -10740,7 +10746,7 @@ msgstr "付款用于登记流动性移动。可以通过您自己的方式或使
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid ""
 "Payments related to partners with no bank account specified will be skipped."
-msgstr ""
+msgstr "与未指定银行账户的合作伙伴相关的付款将被跳过。"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -10758,7 +10764,7 @@ msgstr "百分比"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__division
 msgid "Percentage Tax Included"
-msgstr ""
+msgstr "含税百分比"
 
 #. module: account
 #. odoo-python
@@ -10883,7 +10889,7 @@ msgstr "差额过账在"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Exchange difference entries:"
-msgstr ""
+msgstr "汇兑差额记项："
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
@@ -10893,12 +10899,12 @@ msgstr "过账付款"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank transactions and payments:"
-msgstr ""
+msgstr "银行交易和付款："
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Early payment discounts:"
-msgstr ""
+msgstr "提前付款折扣："
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
@@ -10968,7 +10974,7 @@ msgstr "用于定义适用于财务会计中特定账户的前缀。"
 #. module: account
 #: model:account.account,name:account.1_prepaid_expenses
 msgid "Prepaid Expenses"
-msgstr ""
+msgstr "预付费用"
 
 #. module: account
 #: model:account.account,name:account.1_prepayments
@@ -11139,7 +11145,7 @@ msgstr "采购税"
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__supplier_taxes_id
 msgid "Purchase Taxes"
-msgstr ""
+msgstr "采购税"
 
 #. module: account
 #: model:account.account,name:account.1_expense_invest
@@ -11163,7 +11169,7 @@ msgstr "QIF导入"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "QR Code"
-msgstr ""
+msgstr "二维码"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
@@ -11228,7 +11234,7 @@ msgstr "研发费用"
 #: model:ir.model.fields,field_description:account.field_res_company__rating_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "评分"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -11723,7 +11729,7 @@ msgstr "审查"
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_chart_of_accounts
 msgid "Review Chart of Accounts"
-msgstr ""
+msgstr "审查会计科目表"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__horizontal_split_side__right
@@ -11901,7 +11907,7 @@ msgstr "销售税"
 #: model:ir.model.fields,field_description:account.field_product_product__taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__taxes_id
 msgid "Sales Taxes"
-msgstr ""
+msgstr "销售税"
 
 #. module: account
 #. odoo-python
@@ -11924,7 +11930,7 @@ msgstr "销售员"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Same Account as product"
-msgstr ""
+msgstr "与产品相同的账户"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_same_currency
@@ -11967,7 +11973,7 @@ msgstr "保存该页面，返回该页面，以设置功能。"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Scan barcode"
-msgstr ""
+msgstr "扫描条码"
 
 #. module: account
 #. odoo-python
@@ -11979,7 +11985,7 @@ msgstr "从您的银行应用程序扫描."
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
 msgid "Scan this QR Code with<br/>your banking application"
-msgstr ""
+msgstr "使用您的银行应用程序扫描此二维码<br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -12036,14 +12042,14 @@ msgstr "搜索税项"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Search a name or Tax ID..."
-msgstr ""
+msgstr "搜索名称或税号..."
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.js:0
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Search a product"
-msgstr ""
+msgstr "搜索产品"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_label
@@ -12166,7 +12172,7 @@ msgstr "选择该“警告”选项，将通过消息通知用户，选择“阻
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr ""
+msgstr "销售和购买不同计量单位的产品"
 
 #. module: account
 #. odoo-python
@@ -12215,7 +12221,7 @@ msgstr "付款"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
 msgid "Send a bill to"
-msgstr ""
+msgstr "将账单发送至"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12285,7 +12291,7 @@ msgstr "正在发送发票"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "Sending these invoices will create a gap in the sequence."
-msgstr ""
+msgstr "发送这些发票会令序列间断。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__move_sent_values
@@ -12334,7 +12340,7 @@ msgstr "收入折扣独立账户"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Invoice line discounts:"
-msgstr ""
+msgstr "发票项目折扣："
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__9
@@ -12364,7 +12370,7 @@ msgstr "序列"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__sequence_gap_warning
 msgid "Sequence Gap Warning"
-msgstr ""
+msgstr "序列间断警告"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sequence_number
@@ -12402,12 +12408,12 @@ msgstr "服务"
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_company_data
 msgid "Set Company Data"
-msgstr ""
+msgstr "设置公司数据"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_fiscal_year
 msgid "Set Periods"
-msgstr ""
+msgstr "发送期间"
 
 #. module: account
 #. odoo-javascript
@@ -12474,13 +12480,13 @@ msgstr "设置"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Setup Bank"
-msgstr ""
+msgstr "设定银行"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Setup Bank Account"
-msgstr ""
+msgstr "设定银行账户"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -12543,7 +12549,7 @@ msgstr "显示完整的会计应用程序功能"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show Journal Entries to Hash"
-msgstr ""
+msgstr "显示要杂凑处理的日记账记项"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -12621,7 +12627,7 @@ msgstr "传统信件"
 msgid ""
 "Some journal entries have not been hashed yet. You should hash them before "
 "locking the fiscal year."
-msgstr ""
+msgstr "有些日记账分录尚未散列。应在锁定会计年度前对其进行散列。"
 
 #. module: account
 #. odoo-python
@@ -12708,7 +12714,7 @@ msgstr "初始余额"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "State"
-msgstr ""
+msgstr "省/州"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_statement
@@ -12844,12 +12850,12 @@ msgstr "Storno会计应用程序"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "Street 2..."
-msgstr ""
+msgstr "街道2......"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "Street..."
-msgstr ""
+msgstr "街道..."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__strict_range
@@ -13081,7 +13087,7 @@ msgstr "税项锁定日期消息"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_map
 msgid "Tax Map"
-msgstr ""
+msgstr "税项配对"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
@@ -13255,12 +13261,12 @@ msgstr "应用的税项"
 #: model:ir.model.fields,field_description:account.field_account_move__taxes_legal_notes
 #: model:ir.model.fields,field_description:account.field_account_payment__taxes_legal_notes
 msgid "Taxes Legal Notes"
-msgstr ""
+msgstr "税项 法律声明"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Taxes are also displayed in local currency on invoices"
-msgstr ""
+msgstr "发票上的税款也以当地货币显示"
 
 #. module: account
 #. odoo-python
@@ -13274,7 +13280,7 @@ msgstr "具有相同标签的付款和发票免税不能在相同日记账项目
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_tax_company_currency
 #: model:ir.model.fields,field_description:account.field_res_config_settings__display_invoice_tax_company_currency
 msgid "Taxes in company currency"
-msgstr ""
+msgstr "税款以公司货币表示"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13381,7 +13387,7 @@ msgstr "文本值"
 #. odoo-javascript
 #: code:addons/account/static/src/components/document_state/document_state_field.js:0
 msgid "Text copied"
-msgstr ""
+msgstr "文本已复制"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
@@ -13395,6 +13401,8 @@ msgid ""
 "The %(date_field)s (%(date)s) you've entered isn't aligned with the existing sequence number (%(sequence)s). Clear the sequence number to proceed.\n"
 "To maintain date-based sequences, select entries and use the resequence option from the actions menu, available in developer mode."
 msgstr ""
+"输入的%(date_field)s "
+"（%(date)s）与现有序列号码（%(sequence)s）不一致。请清除序列号码以继续。若要维护基于日期的序列，请选取所需记项，然后使用操作选单中的重新排序选项（该选项在开发人员模式可用）。"
 
 #. module: account
 #. odoo-python
@@ -13471,7 +13479,7 @@ msgid ""
 "The Tax Identification Number. Values here will be validated based on the "
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
-msgstr ""
+msgstr "税务识别码。此处的值将根据国家格式进行验证。您可以使用“/”表示合作伙伴无需纳税。"
 
 #. module: account
 #. odoo-python
@@ -13480,6 +13488,7 @@ msgid ""
 "The Unit of Measure (UoM) '%(uom)s' you have selected for product "
 "'%(product)s', is incompatible with its category : %(category)s."
 msgstr ""
+"您选择了 “%(uom)s” 作为产品 “%(product)s” 的计量单位，但相关产品类别 “%(category)s” 并不兼容使用此单位。"
 
 #. module: account
 #. odoo-python
@@ -15909,6 +15918,7 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
+"若未有在公司或 %(journal)s 日记账中的 %(payment_method)s 付款方式上，设定未结清付款/收款账户，便无法建立新付款。"
 
 #. module: account
 #. odoo-python
@@ -15957,7 +15967,7 @@ msgstr ""
 msgid ""
 "You can't have two payment method lines of the same payment type "
 "(%(payment_type)s) and with the same name (%(name)s) on a single journal."
-msgstr ""
+msgstr "同一个日记账内，不可有两个付款方式资料行的付款类型（%(payment_type)s）及名称（%(name)s）相同。"
 
 #. module: account
 #. odoo-python
@@ -15997,7 +16007,7 @@ msgstr "不能登记付款，因为选定日记账项目无待付款。"
 msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
-msgstr ""
+msgstr "不可同时登记入账及支账分录的付款。"
 
 #. module: account
 #. odoo-python
@@ -16088,7 +16098,7 @@ msgstr "不能删除税项行，因为会影响税务报告"
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
-msgstr ""
+msgstr "不能删除此账户标签（%s），它用于账户图表的定义内。"
 
 #. module: account
 #. odoo-python
@@ -16121,6 +16131,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %(entry)s (%(id)s)"
 msgstr ""
+"已对账的日记账记项，不可进行此修改。只可更改部份不符合规定的栏位，或必须先取消对账。\n"
+"日记账记项（识别码）： %(entry)s (%(id)s)"
 
 #. module: account
 #. odoo-python
@@ -16130,6 +16142,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%(entries)s"
 msgstr ""
+"您不能编辑以下字段：%(fields)s。\n"
+"以下条目已经散列：\n"
+"%(entries)s"
 
 #. module: account
 #. odoo-python
@@ -16204,7 +16219,7 @@ msgstr "不能修改日记账中有会计分录的字段%s。"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot modify the following readonly fields on a posted move: %s"
-msgstr ""
+msgstr "在已提交的移动操作中，您无法修改以下只读字段：%s"
 
 #. module: account
 #. odoo-python
@@ -16411,7 +16426,7 @@ msgstr "发票"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "ZIP"
-msgstr ""
+msgstr "ZIP"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -16575,7 +16590,7 @@ msgstr "例如：INV"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "e.g. My Company"
-msgstr ""
+msgstr "例如：我的公司"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -16585,7 +16600,7 @@ msgstr "例如：付款条款：发票日期后30天内付款"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "e.g. https://www.odoo.com"
-msgstr ""
+msgstr "例如：https://www.odoo.com"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -16695,7 +16710,7 @@ msgstr "在"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
 msgid "or"
-msgstr ""
+msgstr "或"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -16784,7 +16799,7 @@ msgstr "信任"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
 msgid "try our sample"
-msgstr ""
+msgstr "试试用我们的范例"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

@@ -114,7 +114,7 @@ msgstr "<span class=\"o_stat_text\">ใบบันทึกเวลา</span>"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "<span class=\"text-nowrap\">Time Spent on Sub-tasks:</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">เวลาที่ใช้ในงานย่อย:</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -173,7 +173,7 @@ msgstr "<span>พนักงาน</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span>Time Spent</span>"
-msgstr ""
+msgstr "<span>เวลาที่ใช้ไป</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -188,12 +188,12 @@ msgstr "<strong>ความคืบหน้า:</strong>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Time Remaining: </strong>"
-msgstr ""
+msgstr "<strong>เวลาที่เหลืออยู่:</strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Time recorded on sub-tasks: </strong>"
-msgstr ""
+msgstr "<strong>เวลาที่บันทึกไว้ในงานย่อย: </strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
@@ -208,7 +208,7 @@ msgstr "<strong>จำนวนชั่วโมงทั้งหมด: </str
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Total Time Spent: </strong>"
-msgstr ""
+msgstr "<strong>เวลาที่ใช้ทั้งหมด: </strong>"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_timesheet_manager
@@ -387,7 +387,7 @@ msgstr "วัน / ครึ่งวัน"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 msgid "Days Remaining"
-msgstr ""
+msgstr "วันคงเหลือ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__analytic_account_active
@@ -654,7 +654,7 @@ msgstr "ใหม่ล่าสุด"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "No Parent Task"
-msgstr ""
+msgstr "ไม่มีงานหลัก"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -798,7 +798,7 @@ msgstr "ค้นหาในพนักงาน"
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Search in Parent Task"
-msgstr ""
+msgstr "ค้นหาในงานหลัก"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -854,7 +854,7 @@ msgstr "งานย่อย:"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Sub-tasks Time Spent"
-msgstr ""
+msgstr "เวลาที่ใช้ไปของงานย่อย"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1000,12 +1000,12 @@ msgstr "เวลาคงเหลือ"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__remaining_hours_percentage
 msgid "Time Remaining Percentage"
-msgstr ""
+msgstr "เปอร์เซ็นต์เวลาที่เหลือ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Time Remaining on SO"
-msgstr ""
+msgstr "เวลาที่เหลืออยู่บน SO"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1020,18 +1020,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Time Spent"
-msgstr ""
+msgstr "เวลาที่ใช้ไป"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__subtask_effective_hours
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Time Spent on Sub-Tasks"
-msgstr ""
+msgstr "เวลาที่ใช้ในงานย่อย"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Time Spent on Sub-tasks"
-msgstr ""
+msgstr "เวลาที่ใช้ในงานย่อย"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
@@ -1240,7 +1240,7 @@ msgstr "เวลาที่จัดสรรทั้งหมด"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 msgid "Total Days Spent"
-msgstr ""
+msgstr "จำนวนวันที่ใช้ไปทั้งหมด"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -1249,7 +1249,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Time Spent"
-msgstr ""
+msgstr "ระยะเวลาที่ใช้ไปทั้งหมด"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
