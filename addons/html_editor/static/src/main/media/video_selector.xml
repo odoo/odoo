@@ -1,0 +1,67 @@
+<templates id="template" xml:space="preserve">
+
+<t t-name="html_editor.VideoOption">
+    <div class="mb-1">
+        <label class="d-flex align-items-start gap-2 cursor-pointer" t-on-change="props.onChangeOption">
+            <div class="o_switch flex-shrink-0">
+                <input type="checkbox" t-att-checked="props.value"/>
+                <span/>
+            </div>
+            <span t-esc="props.label"/>
+            <span t-if="props.description" class="text-muted" t-esc="props.description"/>
+        </label>
+    </div>
+</t>
+
+<t t-name="html_editor.VideoIframe">
+    <iframe t-att-src="this.props.src"
+        class="o_video_dialog_iframe mw-100 mh-100 overflow-hidden shadow"
+        width="1280" height="720"
+        allowfullscreen="allowfullscreen" frameborder="0"/>
+</t>
+
+<t t-name="html_editor.VideoSelector">
+    <div class="row">
+        <div class="col mt-4 o_video_dialog_form">
+            <div class="mb-2">
+                <label for="o_video_text">
+                    <b>Video code </b>(URL or Embed)
+                </label>
+                <div class="text-start">
+                    <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
+                </div>
+                <textarea t-ref="autofocus" t-model="state.urlInput" class="form-control" id="o_video_text" placeholder="Copy-paste your URL or embed code here" t-on-input="onChangeUrl" t-att-class="{ 'is-valid': state.urlInput and !this.state.errorMessage, 'is-invalid': state.urlInput and this.state.errorMessage }"/>
+            </div>
+            <div t-if="shownOptions.length" class="o_video_dialog_options">
+                <VideoOption t-foreach="shownOptions" t-as="option" t-key="option.id"
+                    value="option.value"
+                    onChangeOption="() => this.onChangeOption(option.id)"
+                    label="option.label"
+                    description="option.description"/>
+            </div>
+            <t t-if="state.vimeoPreviews.length">
+                <span class="fw-bold">Suggestions</span>
+                <div id="video-suggestion" class="mt-4 d-flex flex-wrap mh-75 overflow-auto">
+                    <t t-foreach="state.vimeoPreviews" t-as="vimeoPreview" t-key="vimeoPreview.id">
+                        <div class="o_sample_video w-25 mh-100 cursor-pointer" t-on-click="() => this.onClickSuggestion(vimeoPreview.src)">
+                            <img class="mw-100 mh-100 p-1" t-att-src="vimeoPreview.thumbnailSrc"/>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </div>
+        <div class="col-md-6">
+            <div class="o_video_preview position-relative border-0 p-3">
+                <div t-if="this.state.src and !this.state.errorMessage" class="o_video_dialog_preview_text mb-2">Preview</div>
+                <div class="media_iframe_video">
+                    <div class="media_iframe_video_size"/>
+                    <VideoIframe
+                        t-if="this.state.src and !this.state.errorMessage"
+                        src="this.state.src"/>
+                    <div t-if="this.state.errorMessage" class="alert alert-warning o_video_dialog_iframe mw-100 mh-100 mb-2 mt-2" t-esc="this.state.errorMessage"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+</templates>
