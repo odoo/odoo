@@ -162,19 +162,19 @@ test("Can see records on PIVOT cells", async function () {
         // B2 is a measure header
         B2: '=PIVOT.HEADER(1,"foo",1,"measure","probability")',
         // A3 is a row header
-        A3: '=PIVOT.HEADER(1,"bar","false")',
+        A3: '=PIVOT.HEADER(1,"bar",FALSE)',
         // A5 is a total header
         A5: "=PIVOT.HEADER(1)",
     };
     const data_cells = {
         // B3 is an empty value
-        B3: '=PIVOT.VALUE(1,"probability","bar","false","foo",1)',
+        B3: '=PIVOT.VALUE(1,"probability","bar",FALSE,"foo",1)',
         // B4 is an non-empty value
-        B4: '=PIVOT.VALUE(1,"probability","bar","true","foo",1)',
+        B4: '=PIVOT.VALUE(1,"probability","bar",TRUE,"foo",1)',
         // B5 is a column group total value
         B5: '=PIVOT.VALUE(1,"probability","foo",1)',
         // F3 is a row group total value
-        F3: '=PIVOT.VALUE(1,"probability","bar","false")',
+        F3: '=PIVOT.VALUE(1,"probability","bar",FALSE)',
         // F5 is the total
         F5: '=PIVOT.VALUE(1,"probability")',
     };
@@ -188,7 +188,7 @@ test("Can see records on PIVOT cells", async function () {
 
 test("Cannot see records of pivot formula without value", async function () {
     const { env, model } = await createSpreadsheetWithPivot();
-    expect(getCellFormula(model, "B3")).toBe(`=PIVOT.VALUE(1,"probability","bar","false","foo",1)`);
+    expect(getCellFormula(model, "B3")).toBe(`=PIVOT.VALUE(1,"probability","bar",FALSE,"foo",1)`);
     expect(getCellValue(model, "B3")).toBe("", { message: "B3 is empty" });
     selectCell(model, "B3");
     const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);

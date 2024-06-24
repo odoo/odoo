@@ -8,12 +8,24 @@ import { getBasicServerData, getBasicPivotArch } from "@spreadsheet/../tests/leg
 import { createModelWithDataSource } from "@spreadsheet/../tests/legacy/utils/model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { helpers } from "@odoo/o-spreadsheet";
-const { parseDimension } = helpers;
+const { parseDimension, isDateField } = helpers;
 
 /**
  * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
  * @typedef {import("@spreadsheet").Zone} Zone
  */
+
+function addEmptyGranularity(dimensions, fields) {
+    return dimensions.map((dimension) => {
+        if (dimension.name !== "id" && isDateField(fields[dimension.name])) {
+            return {
+                granularity: "month",
+                ...dimension,
+            };
+        }
+        return dimension;
+    });
+}
 
 /**
  * @param {OdooSpreadsheetModel} model
@@ -39,8 +51,14 @@ export async function insertPivotInSpreadsheet(model, pivotId, params) {
             aggregator: serverData.models[resModel].fields[measure]?.aggregator,
         })),
         model: resModel,
-        columns: archInfo.colGroupBys.map(parseDimension),
-        rows: archInfo.rowGroupBys.map(parseDimension),
+        columns: addEmptyGranularity(
+            archInfo.colGroupBys.map(parseDimension),
+            serverData.models[resModel].fields
+        ),
+        rows: addEmptyGranularity(
+            archInfo.rowGroupBys.map(parseDimension),
+            serverData.models[resModel].fields
+        ),
         name: "Partner Pivot",
     };
     model.dispatch("ADD_PIVOT", {
@@ -52,12 +70,12 @@ export async function insertPivotInSpreadsheet(model, pivotId, params) {
         throw new Error("The pivot data source is not an OdooPivot");
     }
     await ds.load();
-    const { cols, rows, measures, rowTitle } = ds.getTableStructure().export();
+    const { cols, rows, measures, fieldsType } = ds.getTableStructure().export();
     const table = {
         cols,
         rows,
         measures,
-        rowTitle,
+        fieldsType,
     };
     const [col, row] = params.anchor || [0, 0];
     model.dispatch("INSERT_PIVOT", {
