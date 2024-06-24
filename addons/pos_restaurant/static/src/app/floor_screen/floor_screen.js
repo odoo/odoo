@@ -101,7 +101,7 @@ export class FloorScreen extends Component {
     }
     getTablesSelectedByDefault() {
         const oToTrans = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
-        return oToTrans ? [oToTrans.table_id.id] : [];
+        return oToTrans?.table_id ? [oToTrans.table_id.id] : [];
     }
     async onWillStart() {
         this.pos.searchProductWord = "";
@@ -366,7 +366,7 @@ export class FloorScreen extends Component {
         }
         const oToTrans = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
         if (oToTrans) {
-            await this.pos.transferTable(table);
+            await this.pos.transferOrder(table);
         } else {
             try {
                 this.pos.tableSyncing = true;

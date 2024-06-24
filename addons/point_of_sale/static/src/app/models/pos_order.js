@@ -162,10 +162,8 @@ export class PosOrder extends Base {
                 const printingChanges = {
                     new: changes["new"],
                     cancelled: changes["cancelled"],
-                    table_name: this.config.module_pos_restaurant ? this.table_id.name : false,
-                    floor_name: this.config.module_pos_restaurant
-                        ? this.table_id.floor_id.name
-                        : false,
+                    table_name: this.table_id?.name,
+                    floor_name: this.table_id?.floor_id?.name,
                     name: this.name || "unknown order",
                     time: {
                         hours,
