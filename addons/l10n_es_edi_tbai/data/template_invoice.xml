@@ -100,7 +100,7 @@
                             <t t-set="seq_and_num" t-value="credit_note_invoice._get_l10n_es_tbai_sequence_and_number()"/>
                             <SerieFactura t-out="seq_and_num[0]"/>
                             <NumFactura t-out="seq_and_num[1]"/>
-                            <FechaExpedicionFactura t-out="format_date(credit_note_invoice._get_l10n_es_tbai_signature_and_date()[1])"/>
+                            <FechaExpedicionFactura t-out="format_date(credit_note_invoice.l10n_es_tbai_post_xml and credit_note_invoice._get_l10n_es_tbai_signature_and_date()[1] or credit_note_invoice.invoice_date)"/>
                         </IDFacturaRectificadaSustituida>
                     </FacturasRectificadasSustituidas>
                 </t>
