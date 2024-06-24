@@ -27,6 +27,7 @@
         ],
         'web.assets_backend': [
             "pos_self_order/static/src/upgrade_selection_field.js",
+            "pos_self_order/static/src/available_between_label/*",
         ],
         "pos_self_order.assets": [
             "pos_self_order/static/src/app/primary_variables.scss",
