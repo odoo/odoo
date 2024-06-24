@@ -1,0 +1,106 @@
+import { expect, test } from "@odoo/hoot";
+import { animationFrame, tick } from "@odoo/hoot-mock";
+import { setupEditor } from "./_helpers/editor";
+import { unformat } from "./_helpers/format";
+import {
+    getContent,
+    moveSelectionOutsideEditor,
+    setContent,
+    setSelection,
+} from "./_helpers/selection";
+
+test("hints are removed when editor is destroyed", async () => {
+    const { el, editor } = await setupEditor("<p>[]</p>", {});
+    expect(getContent(el)).toBe(`<p placeholder="Type "/" for commands" class="o-we-hint">[]</p>`);
+    editor.destroy();
+    expect(getContent(el)).toBe("<p>[]</p>");
+});
+
+test("powerbox hint is display when the selection is in the editor", async () => {
+    const { el } = await setupEditor("<p></p>", {});
+    expect(getContent(el)).toBe(`<p></p>`);
+
+    setContent(el, "<p>[]</p>");
+    await tick();
+    expect(getContent(el)).toBe(`<p placeholder="Type "/" for commands" class="o-we-hint">[]</p>`);
+
+    moveSelectionOutsideEditor();
+    await tick();
+    expect(getContent(el)).toBe(`<p></p>`);
+});
+
+test("placeholder is display when the selection is outside of the editor", async () => {
+    const { el } = await setupEditor("<p></p>", { config: { placeholder: "test" } });
+    expect(getContent(el)).toBe(`<p placeholder="test" class="o-we-hint"></p>`);
+
+    setContent(el, "<p>[]</p>");
+    await tick();
+    expect(getContent(el)).toBe(`<p placeholder="Type "/" for commands" class="o-we-hint">[]</p>`);
+
+    moveSelectionOutsideEditor();
+    await tick();
+    expect(getContent(el)).toBe(`<p placeholder="test" class="o-we-hint"></p>`);
+});
+
+test("placeholder must not be visible if there is content in the editor", async () => {
+    const { el } = await setupEditor("<p></p><p>Hello</p>", { config: { placeholder: "test" } });
+    expect(getContent(el)).toBe(`<p></p><p>Hello</p>`);
+});
+
+test("should not lose track of temporary hints on split block", async () => {
+    const { el, editor } = await setupEditor("<p>[]</p>", {});
+    expect(getContent(el)).toBe(`<p placeholder="Type "/" for commands" class="o-we-hint">[]</p>`);
+    editor.dispatch("SPLIT_BLOCK");
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p><br></p>
+            <p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>
+        `)
+    );
+    const [firstP, secondP] = el.children;
+    setSelection({ anchorNode: firstP, anchorOffset: 0, focusNode: firstP, focusOffset: 0 });
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>
+            <p><br></p>
+        `)
+    );
+    setSelection({ anchorNode: secondP, anchorOffset: 0, focusNode: secondP, focusOffset: 0 });
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p><br></p>
+            <p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>
+        `)
+    );
+});
+
+test("temporary hint should not be displayed where there's a permanent one", async () => {
+    const { el, editor } = await setupEditor("<p>[]<br></p>", {});
+    expect(getContent(el)).toBe(
+        `<p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`
+    );
+    editor.dispatch("SET_TAG", { tagName: "H1" });
+    await animationFrame();
+    // @todo @phoenix: getContent does not place the selection when anchor is BR
+    expect(el.innerHTML).toBe(`<h1 placeholder="Heading 1" class="o-we-hint"><br></h1>`);
+    editor.dispatch("SPLIT_BLOCK");
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <h1 placeholder="Heading 1" class="o-we-hint"><br></h1>
+            <p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>
+        `)
+    );
+    const h1 = el.firstElementChild;
+    setSelection({ anchorNode: h1, anchorOffset: 0, focusNode: h1, focusOffset: 0 });
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <h1 placeholder="Heading 1" class="o-we-hint">[]<br></h1>
+            <p><br></p>
+        `)
+    );
+});
