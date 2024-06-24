@@ -16,7 +16,6 @@ from os.path import join as opj
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.modules.module import adapt_version, MANIFEST_NAMES
-from odoo.osv.expression import is_leaf
 from odoo.release import major_version
 from odoo.tools import convert_csv_import, convert_sql_import, convert_xml_import, exception_to_unicode
 from odoo.tools import file_open, file_open_temporary_directory, ormcache
@@ -474,11 +473,10 @@ class IrModule(models.Model):
 
 def _domain_asks_for_industries(domain):
     for dom in domain:
-        if is_leaf(dom) and dom[0] == 'module_type':
-            if dom[2] == 'industries':
-                if dom[1] != '=':
-                    raise UserError('%r is an unsupported leaf' % (dom,))
-                return True
+        if dom[0] == 'module_type' and dom[2] == 'industries':
+            if dom[1] != '=':
+                raise UserError('%r is an unsupported leaf' % (dom,))
+            return True
     return False
 
 

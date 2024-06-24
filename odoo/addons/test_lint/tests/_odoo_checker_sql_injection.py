@@ -109,7 +109,8 @@ class OdooBaseChecker(BaseChecker):
         name = node.func.attrname if isinstance(node.func, astroid.Attribute) else node.func.name
         if isinstance(node.scope(), astroid.GeneratorExp):
             return True
-        if name == node.scope().name:
+        # TODO SQL(f" {op.upper()} ") raised 'DictComp' object has no attribute 'name'
+        if name == getattr(node.scope(), 'name', ''):
             return True
 
         const_args = self.all_const(node.args, args_allowed=args_allowed)
@@ -195,6 +196,8 @@ class OdooBaseChecker(BaseChecker):
                     assigned_node.append(left and right)
                 elif isinstance(n.parent, astroid.Module):
                     return True
+                elif isinstance(n.parent, astroid.Comprehension):
+                    assigned_node += [self._is_constexpr(n.parent.target, args_allowed=args_allowed)]
                 else:
                     assigned_node += [self._is_constexpr(n.parent.value, args_allowed=args_allowed)]
             if assigned_node and all(assigned_node):
