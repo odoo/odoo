@@ -289,7 +289,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
     }
 
     function create(model, vals, ignoreRelations = false, fromSerialized = false) {
-        if (!("id" in vals)) {
+        if (!("id" in vals) || vals["id"] === undefined) {
             vals["id"] = uuid(model);
         }
 
@@ -602,12 +602,21 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                     if (field.type === "many2one") {
                         result[name] = record[name] ? record[name].id : undefined;
                     } else if (X2MANY_TYPES.has(field.type)) {
-                        result[name] = [...record[name]].map((record) => record.id);
+                        result[name] = [...(record[name] || [])].map((record) => record.id);
                     } else {
                         result[name] = record[name];
                     }
                 }
                 return result;
+            },
+            duplicate(record) {
+                const serialized = this.serialize(record);
+                for (const key in serialized) {
+                    if (key.startsWith("__")) {
+                        delete serialized[key];
+                    }
+                }
+                return create(model, { ...serialized, id: undefined }, false, true);
             },
             getAllBy(key) {
                 return this.readAllBy(...arguments);
