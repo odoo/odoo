@@ -106,6 +106,15 @@ defineActions([
         ],
     },
     {
+        id: 5,
+        xml_id: "action_5",
+        name: "Create a Partner",
+        res_model: "partner",
+        target: "new",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    },
+    {
         id: 1001,
         tag: "__test__client__action__",
         target: "main",
@@ -1226,6 +1235,56 @@ describe(`new urls`, () => {
             "Partners Action 28",
             "First record",
         ]);
+    });
+
+    test(`don't load controllers when load action new`, async () => {
+        stepAllNetworkCalls();
+        redirect("/odoo/action-3/2");
+        Partner._views["form,false"] = /* xml */ `
+            <form string="Partner">
+                <sheet>
+                    <a href="http://example.com/odoo/action-5" class="clickMe">clickMe</a>
+                    <group>
+                        <field name="display_name"/>
+                        <field name="foo"/>
+                    </group>
+                </sheet>
+            </form>
+        `;
+        await mountWebClient();
+        expect(`.o_form_view`).toHaveCount(1);
+        expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+            "Partners",
+            "Second record",
+        ]);
+        expect([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+            "/web/action/load",
+            "get_views",
+            "web_read",
+        ]).toVerifySteps();
+        expect(browser.location.href).toBe("http://example.com/odoo/action-3/2", {
+            message: "url did not change",
+        });
+
+        // Open the dialog
+        await contains(`.clickMe`).click();
+        await animationFrame();
+        expect(`.o_dialog .o_form_view`).toHaveCount(1);
+        expect(["/web/action/load", "get_views", "onchange"]).toVerifySteps();
+        expect(browser.location.href).toBe("http://example.com/odoo/action-3/2", {
+            message: "url did not change",
+        });
+
+        // Close te dialog
+        await contains(`.o_dialog .o_form_button_cancel`).click();
+
+        // Go back to the multi-record view
+        await contains(`.breadcrumb-item`).click();
+        await animationFrame();
+        expect(`.o_list_view`).toHaveCount(1);
+        expect(["web_search_read", "has_group"]).toVerifySteps();
     });
 });
 
