@@ -39,7 +39,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
     run: "click",
 }, {
     content: 'eLearning: set description',
-    trigger: '.modal .o_field_html[name="description"]',
+    trigger: 'modal .o_field_html[name="description"] .odoo-editor-editable p',
     in_modal: false,
     run: "editor Déboulonnate is very common at Fleurus",
 }, {

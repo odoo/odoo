@@ -13,6 +13,7 @@
                     <field name="applicant_ids" widget="many2many_tags" context="{'show_partner_name': 1}"/>
                 </group>
                 <field name="body" nolabel="1" class="oe-bordered-editor"
+                        widget="html_legacy"
                         placeholder="Write your message here..."
                         options="{'style-inline': true}" force_save="1"/>
                 <group>
