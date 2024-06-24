@@ -60,6 +60,12 @@ export class ResourceEditor extends Component {
             scss: "SCSS (CSS)",
             js: "JS",
         };
+        this.typeToCodeEditorModeMap = {
+            xml: "qweb",
+            scss: "scss",
+            js: "javascript",
+        };
+
         this.xmlFilters = {
             views: _t("Only Views"),
             all: _t("Views and Assets bundles"),
