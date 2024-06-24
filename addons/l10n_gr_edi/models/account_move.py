@@ -3,7 +3,7 @@ from lxml import etree
 from odoo import models, fields, _, api
 from odoo.addons.l10n_gr_edi.models.classification_data import (
     CLASSIFICATION_CATEGORY_EXPENSE, INVOICE_TYPES_SELECTION, INVOICE_TYPES_HAVE_INCOME, INVOICE_TYPES_HAVE_EXPENSE,
-    TYPES_WITH_CORRELATE_INVOICE, COMBINATIONS_WITH_POSSIBLE_EMPTY_TYPE, VALID_TAX_AMOUNTS,
+    TYPES_WITH_CORRELATE_INVOICE, COMBINATIONS_WITH_POSSIBLE_EMPTY_TYPE, VALID_TAX_AMOUNTS, TYPES_WITH_MANDATORY_COUNTERPART,
     TYPES_WITH_FORBIDDEN_COUNTERPART, TYPES_WITH_VAT_EXEMPT, TYPES_WITH_VAT_CATEGORY_8, TYPES_WITH_FORBIDDEN_PAYMENT, TYPES_WITH_FORBIDDEN_QUANTITY,
 )
 from odoo.exceptions import UserError
@@ -98,6 +98,7 @@ class AccountMove(models.Model):
                 move.move_type in ('in_invoice', 'in_refund'),
                 move.state == 'posted',
                 move.l10n_gr_edi_state != 'move_sent',
+                move.l10n_gr_edi_mark,
                 have_payment,
             ))
 
@@ -232,6 +233,11 @@ class AccountMove(models.Model):
             if move.partner_id.country_code != 'GR':  # counterpart not from Greece (requires name & address)
                 party_vals.update({
                     'counterpart_name': move.partner_id.name.encode('utf-8'),
+                    'counterpart_postal_code': move.partner_id.zip,
+                    'counterpart_city': move.partner_id.city.encode('utf-8'),
+                })
+            elif move.l10n_gr_edi_inv_type in TYPES_WITH_MANDATORY_COUNTERPART:  # not from Greece but require address
+                party_vals.update({
                     'counterpart_postal_code': move.partner_id.zip,
                     'counterpart_city': move.partner_id.city.encode('utf-8'),
                 })

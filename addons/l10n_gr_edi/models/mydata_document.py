@@ -37,6 +37,7 @@ class GreeceEDIDocument(models.Model):
                                                                           {'error': <str>}} """
         url = f"https://mydataapidev.aade.gr/{endpoint}" if company.l10n_gr_edi_test_env else \
               f"https://mydatapi.aade.gr/myDATA/{endpoint}"
+        print(xml_content)
 
         try:
             response = requests.post(
@@ -47,8 +48,8 @@ class GreeceEDIDocument(models.Model):
                          'ocp-apim-subscription-key': company.l10n_gr_edi_aade_key})
         except ConnectionError as err:
             return {'error': str(err)}
-        if not response:  # in case of status 500 (problem from myDATA's server)
-            return {'error': _('No response from MyDATA, please try again later.')}
+        if not response:  # in case of status 429/500 (too many requests / problem from myDATA's server)
+            return {'error': _('No response from MyDATA, please try again later. [Status code: %s]', response.status_code)}
 
         result = {}
         root = etree.fromstring(response.content)

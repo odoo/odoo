@@ -2,8 +2,7 @@ import requests
 from datetime import timedelta
 from lxml import etree
 
-from odoo import models, fields, Command, _
-from odoo.exceptions import UserError
+from odoo import models, fields, Command
 
 ACCEPTED_ENDPOINTS = ('sendinvoices', 'sendexpensesclassification', 'requestdocs')
 NAMESPACES = {"ns": "http://www.aade.gr/myDATA/invoice/v1.0"}
@@ -31,8 +30,8 @@ class ResCompany(models.Model):
             date_today = fields.Datetime.now().strftime("%d/%m/%Y")
 
             response = session.get(
-                url=f"https://mydataapidev.aade.gr/RequestDocs" if gr_company.l10n_gr_edi_test_env else
-                    f"https://mydatapi.aade.gr/myDATA/RequestDocs",
+                url="https://mydataapidev.aade.gr/RequestDocs" if gr_company.l10n_gr_edi_test_env else
+                    "https://mydatapi.aade.gr/myDATA/RequestDocs",
                 headers={'aade-user-id': gr_company.l10n_gr_edi_aade_id,
                          'ocp-apim-subscription-key': gr_company.l10n_gr_edi_aade_key},
                 params={'mark': 0, 'dateFrom': date_90_days_ago, 'dateTo': date_today},
