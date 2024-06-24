@@ -78,7 +78,7 @@ import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
 
 const {
     clearTimeout,
-    console: { groupEnd: $groupEnd, log: $log, error: $error, table: $table, warn: $warn },
+    console: { groupEnd: $groupEnd, log: $log, table: $table },
     Map,
     Math: { floor: $floor },
     Object: {
@@ -178,10 +178,6 @@ const getDefaultPresets = () =>
 
 const noop = () => {};
 
-const restoreConsole = () => {
-    $assign(globalThis.console, ORINAL_CONSOLE_METHODS);
-};
-
 /**
  * @template T
  * @param {T[]} array
@@ -197,15 +193,19 @@ const shuffle = (array) => {
 };
 
 /**
- * @param {string} reason
+ * @param {boolean} shouldSuppress
  */
-const suppressConsoleErrors = (reason) => {
+const suppressErrorsAndWarnings = (shouldSuppress) => {
+    if (!shouldSuppress) {
+        return noop;
+    }
+
     /**
      * @param {string} label
      * @param {string} color
      */
     const suppressedMethod = (label, color) => {
-        const groupName = [`%c[${label}]%c suppressed by ${reason}`, `color: ${color}`, ""];
+        const groupName = [`%c[${label}]%c suppressed by "test.todo"`, `color: ${color}`, ""];
         return (...args) => {
             logger.groupCollapsed(...groupName);
             $log(...args);
@@ -213,10 +213,13 @@ const suppressConsoleErrors = (reason) => {
         };
     };
 
+    const originalMethods = { ...globalThis.console };
     $assign(globalThis.console, {
         error: suppressedMethod("ERROR", "#9f1239"),
         warn: suppressedMethod("WARNING", "#f59e0b"),
     });
+
+    return () => $assign(globalThis.console, originalMethods);
 };
 
 /**
@@ -229,15 +232,10 @@ const warnUserEvent = (ev) => {
 
     logger.warn(
         `User event detected: "${ev.type}"\n\n`,
-        `Note that this kind of interaction can interfere with the current test and should be avoided.`
+        `This kind of interaction can interfere with the current test and should be avoided.`
     );
 
     removeEventListener(ev.type, warnUserEvent);
-};
-
-const ORINAL_CONSOLE_METHODS = {
-    error: $error,
-    warn: $warn,
 };
 
 //-----------------------------------------------------------------------------
@@ -824,10 +822,7 @@ export class Runner {
 
             // Suppress console errors and warnings if test is in "todo" mode
             // (and not in debug).
-            const suppressErrors = test.config.todo && !this.debug;
-            if (suppressErrors) {
-                suppressConsoleErrors("test.todo");
-            }
+            const restoreConsole = suppressErrorsAndWarnings(test.config.todo && !this.debug);
 
             // Before test
             this.state.currentTest = test;
@@ -884,9 +879,7 @@ export class Runner {
                 }
             });
 
-            if (suppressErrors) {
-                restoreConsole();
-            }
+            restoreConsole();
 
             // Log test errors and increment counters
             this.expectHooks.after(test, this);
