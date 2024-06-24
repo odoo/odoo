@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
+import { Order } from "@point_of_sale/app/store/models";
 
 export class PosBus {
     static serviceDependencies = ["pos", "orm", "bus_service"];
@@ -21,7 +22,18 @@ export class PosBus {
         });
     }
 
-    dispatch(message) {}
+    async dispatch(message) {
+        if (message.type === "POS_SELF_ORDER_PAID") {
+            const fetchedOrders = await this.orm.call("pos.order", "export_for_ui", [
+                message.payload,
+            ]);
+            const order = new Order(
+                { env: this.pos.env },
+                { pos: this.pos, json: fetchedOrders[0] }
+            );
+            this.pos.sendOrderInPreparation(order);
+        }
+    }
 }
 
 export const posBusService = {
