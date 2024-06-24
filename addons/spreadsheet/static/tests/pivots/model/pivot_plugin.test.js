@@ -208,9 +208,7 @@ test("Format header displays an error for non-existing field", async function ()
     expect(getCellValue(model, "G10")).toBe("#ERROR");
     expect(getCellValue(model, "G11")).toBe("#ERROR");
     expect(getEvaluatedCell(model, "G10").message).toBe("Field non-existing does not exist");
-    expect(getEvaluatedCell(model, "G11").message).toBe(
-        "Dimensions don't match the pivot definition"
-    );
+    expect(getEvaluatedCell(model, "G11").message).toBe("Field non-existing does not exist");
 });
 
 test("invalid group dimensions", async function () {
@@ -543,13 +541,13 @@ test("pivot grouped by char field which represents numbers", async function () {
                 </pivot>`,
     });
     expect(getCell(model, "A3").content).toBe('=PIVOT.HEADER(1,"name","000111")');
-    expect(getCell(model, "A4").content).toBe('=PIVOT.HEADER(1,"name",111)');
+    expect(getCell(model, "A4").content).toBe('=PIVOT.HEADER(1,"name","111")');
     expect(getCell(model, "A5").content).toBe('=PIVOT.HEADER(1,"name","14.0")');
     expect(getEvaluatedCell(model, "A3").value).toBe("000111");
     expect(getEvaluatedCell(model, "A4").value).toBe("111");
     expect(getEvaluatedCell(model, "A5").value).toBe("14.0");
     expect(getCell(model, "B3").content).toBe('=PIVOT.VALUE(1,"probability","name","000111")');
-    expect(getCell(model, "B4").content).toBe('=PIVOT.VALUE(1,"probability","name",111)');
+    expect(getCell(model, "B4").content).toBe('=PIVOT.VALUE(1,"probability","name","111")');
     expect(getCell(model, "B5").content).toBe('=PIVOT.VALUE(1,"probability","name","14.0")');
     expect(getEvaluatedCell(model, "B3").value).toBe(15);
     expect(getEvaluatedCell(model, "B4").value).toBe(11);
@@ -773,18 +771,18 @@ test("Can group by many2many field ", async () => {
     });
     expect(getCellFormula(model, "A3")).toBe('=PIVOT.HEADER(1,"tag_ids",42)');
     expect(getCellFormula(model, "A4")).toBe('=PIVOT.HEADER(1,"tag_ids",67)');
-    expect(getCellFormula(model, "A5")).toBe('=PIVOT.HEADER(1,"tag_ids","false")');
+    expect(getCellFormula(model, "A5")).toBe('=PIVOT.HEADER(1,"tag_ids",FALSE)');
 
     expect(getCellFormula(model, "B3")).toBe('=PIVOT.VALUE(1,"probability","tag_ids",42,"foo",1)');
     expect(getCellFormula(model, "B4")).toBe('=PIVOT.VALUE(1,"probability","tag_ids",67,"foo",1)');
     expect(getCellFormula(model, "B5")).toBe(
-        '=PIVOT.VALUE(1,"probability","tag_ids","false","foo",1)'
+        '=PIVOT.VALUE(1,"probability","tag_ids",FALSE,"foo",1)'
     );
 
     expect(getCellFormula(model, "C3")).toBe('=PIVOT.VALUE(1,"probability","tag_ids",42,"foo",2)');
     expect(getCellFormula(model, "C4")).toBe('=PIVOT.VALUE(1,"probability","tag_ids",67,"foo",2)');
     expect(getCellFormula(model, "C5")).toBe(
-        '=PIVOT.VALUE(1,"probability","tag_ids","false","foo",2)'
+        '=PIVOT.VALUE(1,"probability","tag_ids",FALSE,"foo",2)'
     );
 
     expect(getCellValue(model, "A3")).toBe("isCool");
