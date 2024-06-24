@@ -1,7 +1,7 @@
 from odoo import fields, models, api
 
 
-PAYMENT_METHOD_MAPPING = {
+PAYMENT_METHOD_MAP = {
     '1': '1 - Domestic Payments Account Number',
     '2': '2 - Foreign Payments Account Number',
     '3': '3 - Cash',
@@ -10,7 +10,7 @@ PAYMENT_METHOD_MAPPING = {
     '6': '6 - Web Banking',
     '7': '7 - POS / e-POS',
 }
-PAYMENT_METHOD_SELECTION = [(key, value) for key, value in PAYMENT_METHOD_MAPPING.items()]
+PAYMENT_METHOD_SELECTION = list(PAYMENT_METHOD_MAP.items())
 
 
 class AccountPaymentMethodLine(models.Model):
@@ -26,4 +26,4 @@ class AccountPaymentMethodLine(models.Model):
     def _compute_name(self):
         for method in self:
             if method.l10n_gr_edi_payment_method_id:
-                method.name = PAYMENT_METHOD_MAPPING[method.l10n_gr_edi_payment_method_id]
+                method.name = PAYMENT_METHOD_MAP[method.l10n_gr_edi_payment_method_id]

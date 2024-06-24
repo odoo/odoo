@@ -2,8 +2,6 @@ import requests
 
 from lxml import etree
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
-from odoo.tools import cleanup_xml_node
 
 
 class GreeceEDIDocument(models.Model):

@@ -185,9 +185,7 @@ class AccountMove(models.Model):
             return xml_vals
 
     @api.model
-    def _l10n_gr_edi_generate_xml_content(self, xml_vals, send_classification=False):
-        xml_template = 'l10n_gr_edi.send_invoice' if not send_classification else \
-                       'l10n_gr_edi.send_expense_classification'
+    def _l10n_gr_edi_generate_xml_content(self, xml_template, xml_vals):
         xml_content = self.env['ir.qweb']._render(xml_template, xml_vals)
         xml_content = etree.tostring(cleanup_xml_node(xml_content), encoding='ISO-8859-7', standalone='yes')
         xml_content = xml_content.decode('iso8859_7')
@@ -195,11 +193,12 @@ class AccountMove(models.Model):
 
     @api.model
     def _l10n_gr_edi_create_move_xml_map(self, xml_vals):
+        """ Creates and returns a dictionary mapping of `move_id` -> `xml_content` """
         move_xml_map: dict[int, str] = {}
 
         for invoice_vals in xml_vals['invoices']:
             single_xml_vals = {'invoices': [invoice_vals]}
-            xml_content = self._l10n_gr_edi_generate_xml_content(single_xml_vals)
+            xml_content = self._l10n_gr_edi_generate_xml_content('l10n_gr_edi.send_invoice', single_xml_vals)
             move_xml_map[invoice_vals['__id__']] = xml_content
 
         return move_xml_map
@@ -377,6 +376,7 @@ class AccountMove(models.Model):
                 })
 
             xml_vals['invoices'].append({
+                '__id__': move.id,
                 'mark': move.l10n_gr_edi_mark,
                 'transaction_mode': '',  # Later, add a way to 'reject' received invoices
                 'details': details,
@@ -455,7 +455,7 @@ class AccountMove(models.Model):
     def _l10n_gr_edi_send_invoices(self):
         """ Send batch of invoices SendInvoice XML to MyDATA. """
         xml_vals = self._l10n_gr_edi_get_invoices_xml_vals()
-        xml_content = self._l10n_gr_edi_generate_xml_content(xml_vals)
+        xml_content = self._l10n_gr_edi_generate_xml_content('l10n_gr_edi.send_invoice', xml_vals)
         result = self.env['l10n_gr_edi.document']._make_mydata_request(
             company=self.company_id,
             endpoint='SendInvoices',
@@ -466,7 +466,7 @@ class AccountMove(models.Model):
     def _l10n_gr_edi_send_expense_classification(self):
         """ Send batch of invoices SendExpensesClassification XML to MyDATA. """
         xml_vals = self._l10n_gr_edi_get_expense_classification_xml_vals()
-        xml_content = self._l10n_gr_edi_generate_xml_content(xml_vals)
+        xml_content = self._l10n_gr_edi_generate_xml_content('l10n_gr_edi.send_expense_classification', xml_vals)
         result = self.env['l10n_gr_edi.document']._make_mydata_request(
             company=self.company_id,
             endpoint='SendExpensesClassification',

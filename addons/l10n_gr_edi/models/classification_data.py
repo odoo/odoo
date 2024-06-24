@@ -817,8 +817,8 @@ VALID_TAX_AMOUNTS = (24, 13, 6, 17, 9, 4, 0)
 
 
 def _get_l10n_gr_edi_available_cls_category(inv_type, category_type='0'):
-    """ Helper for getting the l10n_gr_edi_available_cls_category string value
-    @param category_type: '0' (all, default) | '1' (income) | '2' (expense) """
+    """ Helper for getting the l10n_gr_edi_available_cls_category string value.
+        @param category_type: '0' (all, default) | '1' (income) | '2' (expense) """
     available_cls_category = False
 
     if inv_type and CLASSIFICATION_MAP[inv_type] != 'associate':
@@ -835,7 +835,7 @@ def _get_l10n_gr_edi_available_cls_category(inv_type, category_type='0'):
 
 
 def _get_l10n_gr_edi_available_cls_type(inv_type, cls_category):
-    """ Helper for getting the l10n_gr_edi_available_cls_type string value """
+    """ Helper for getting the l10n_gr_edi_available_cls_type string value. """
     available_cls_type = False
 
     if (
@@ -861,7 +861,7 @@ def _get_l10n_gr_edi_available_cls_type(inv_type, cls_category):
 
 
 def _get_l10n_gr_edi_available_cls_vat(inv_type, cls_category):
-    """ Helper for getting the l10n_gr_edi_available_cls_vat string value """
+    """ Helper for getting the l10n_gr_edi_available_cls_vat string value. """
     available_cls_vat = False
 
     if (
