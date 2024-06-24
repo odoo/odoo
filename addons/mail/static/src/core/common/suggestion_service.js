@@ -1,5 +1,6 @@
 import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 import { cleanTerm } from "@mail/utils/common/format";
+import { toRaw } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 
@@ -114,6 +115,7 @@ export class SuggestionService {
      * @returns {{ type: String, suggestions: Array }}
      */
     searchSuggestions({ delimiter, term }, { thread, sort = false } = {}) {
+        thread = toRaw(thread);
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
             case "@": {
@@ -194,13 +196,21 @@ export class SuggestionService {
         const cleanedSearchTerm = cleanTerm(searchTerm);
         const compareFunctions = partnerCompareRegistry.getAll();
         const context = { recentChatPartnerIds: this.store.getRecentChatPartnerIds() };
+        const memberPartnerIds = new Set(
+            thread?.channelMembers
+                .filter((member) => member.persona.type === "partner")
+                .map((member) => member.persona.id)
+        );
         return partners.sort((p1, p2) => {
+            p1 = toRaw(p1);
+            p2 = toRaw(p2);
             if (p1.isSpecial || p2.isSpecial) {
                 return 0;
             }
             for (const fn of compareFunctions) {
                 const result = fn(p1, p2, {
                     env: this.env,
+                    memberPartnerIds,
                     searchTerms: cleanedSearchTerm,
                     thread,
                     context,
