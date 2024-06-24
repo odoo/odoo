@@ -72,23 +72,12 @@
                         <page string="Vendors" name="vendors">
                             <field name="vendors">
                                 <kanban quick_create="false" create="true">
-                                    <field name="name"/>
-                                    <field name="phone"/>
-                                    <field name="email"/>
                                     <templates>
-                                        <t t-name="kanban-box">
-                                            <div style="position: relative" class="oe_kanban_global_click">
-                                                <div>
-                                                    <div class="o_kanban_record_title">
-                                                        <field name="name"/>
-                                                        <div class="o_kanban_details float-end">
-                                                            <span class="text-muted">
-                                                                <t t-if="record.phone.raw_value"><field name="phone"/><br/></t>
-                                                                <t t-if="record.email.raw_value"><field name="email"/></t>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                        <t t-name="kanban-card" class="flex-row fw-bold">
+                                            <field name="name"/>
+                                            <div class="text-muted ms-auto">
+                                                <t t-if="record.phone.raw_value"><field name="phone"/><br/></t>
+                                                <t t-if="record.email.raw_value"><field name="email"/></t>
                                             </div>
                                         </t>
                                     </templates>
@@ -123,11 +112,9 @@
         <field name="arch" type="xml">
             <kanban string="Models">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click oe_kanban_details">
-                            <div><strong><field name="name"/></strong></div>
-                            <div><field name="brand_id"/></div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field class="fw-bold" name="name"/>
+                        <field name="brand_id"/>
                     </t>
                 </templates>
             </kanban>
@@ -206,9 +193,7 @@
         <field name="name">fleet.vehicle.model.brandkanban</field>
         <field name="model">fleet.vehicle.model.brand</field>
         <field name="arch" type="xml">
-            <kanban default_order="name" action="action_brand_model" type="object">
-                <field name="id"/>
-                <field name="name"/>
+            <kanban default_order="name">
                 <field name="active"/>
                 <templates>
                     <t t-name="kanban-menu">
@@ -219,22 +204,16 @@
                         </a>
                         <a role="menuitem" t-if="widget.deletable" type="delete" class="dropdown-item">Delete</a>
                     </t>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_vignette oe_semantic_html_override oe_kanban_global_click">
-                            <div class="o_kanban_image">
-                                <img alt="img" t-att-src="kanban_image('fleet.vehicle.model.brand', 'image_128', record.id.raw_value)" class="o_image_64_max" height="52"/>
-                            </div>
-                            <div class="oe_kanban_details">
-                                <h4 class="oe_partner_heading">
-                                    <a type="open" class="o_kanban_record_title">
-                                        <field name="name"/>
-                                    </a>
-                                </h4>
-                                <div>
-                                    <field name="model_count"/> MODELS
-                                </div>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card" class="flex-row p-1">
+                        <aside>
+                            <field name="image_128" widget="image" options="{'img_class': 'object-fit-contain'}"/>
+                        </aside>
+                        <main class="ms-2 mt-1">
+                            <field class="fw-bold fs-5" name="name"/>
+                            <a type="object" name="action_brand_model" class="mt-2 text-black">
+                                <field name="model_count"/> MODELS
+                            </a>
+                        </main>
                     </t>
                 </templates>
             </kanban>
