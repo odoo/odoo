@@ -8,7 +8,6 @@ from werkzeug.exceptions import NotFound
 from odoo import fields
 from odoo import http
 from odoo.http import request
-from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
@@ -209,18 +208,20 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
             yield {'loc': '/partners'}
 
         slug = env['ir.http']._slug
-        Grade = env['res.partner.grade']
-        dom = [('website_published', '=', True)]
-        dom += sitemap_qs2dom(qs=qs, route='/partners/grade/', field=Grade._rec_name)
-        for grade in env['res.partner.grade'].search(dom):
+        base_partner_domain = [
+            ('is_company', '=', True),
+            ('grade_id', '!=', False),
+            ('website_published', '=', True),
+            ('grade_id.website_published', '=', True),
+            ('grade_id.active', '=', True),
+        ]
+        grades = env['res.partner'].sudo()._read_group(base_partner_domain, groupby=['grade_id'])
+        for [grade] in grades:
             loc = '/partners/grade/%s' % slug(grade)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
-
-        partners_dom = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True),
-                        ('grade_id.website_published', '=', True), ('country_id', '!=', False)]
-        dom += sitemap_qs2dom(qs=qs, route='/partners/country/')
-        countries = env['res.partner'].sudo()._read_group(partners_dom, groupby=['country_id'])
+        country_partner_domain = base_partner_domain + [('country_id', '!=', False)]
+        countries = env['res.partner'].sudo()._read_group(country_partner_domain, groupby=['country_id'])
         for [country] in countries:
             loc = '/partners/country/%s' % slug(country)
             if not qs or qs.lower() in loc:
@@ -245,7 +246,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
         country_obj = request.env['res.country']
         search = post.get('search', '')
 
-        base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True)]
+        base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True), ('grade_id.active', '=', True)]
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             base_partner_domain += [('grade_id.website_published', '=', True)]
         if search:
