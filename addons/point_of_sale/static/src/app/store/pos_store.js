@@ -1436,7 +1436,7 @@ export class PosStore extends Reactive {
         );
     }
 
-    getTaxesValues(taxes, priceUnit, quantity, product) {
+    getTaxesValues(taxes, priceUnit, quantity, product, force_price_include = false) {
         const evalContext = accountTaxHelpers.eval_taxes_computation_prepare_context(
             priceUnit,
             quantity,
@@ -1449,7 +1449,9 @@ export class PosStore extends Reactive {
                 precision_rounding: this.currency.rounding,
             }
         );
-        return accountTaxHelpers.computeSingleLineTaxes(this.mapTaxValues(taxes), evalContext);
+        return accountTaxHelpers.computeSingleLineTaxes(this.mapTaxValues(taxes), evalContext, {
+            force_price_include: force_price_include,
+        });
     }
 
     /**
