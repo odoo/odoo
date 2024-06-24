@@ -1781,6 +1781,21 @@ class HttpCase(TransactionCase):
         # v8 api with correct xmlrpc exception handling.
         cls.xmlrpc_url = f'http://{HOST}:{odoo.tools.config["http_port"]:d}/xmlrpc/2/'
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
+        from odoo.addons.bus.models.bus import ImBus, dispatch, hashable, channel_with_db
+        original_send_many = ImBus._sendmany
+        def patched_send_many(self, notifications):
+            original_send_many(self, notifications)
+            channels = [
+                hashable(channel_with_db(self.env.registry.db_name, c)) for c, _, _ in notifications
+            ]
+            websockets = set()
+            for channel in channels:
+                websockets.update(dispatch._channels_to_ws.get(hashable(channel), []))
+            for websocket in websockets:
+                websocket.trigger_notification_dispatching()
+        patched_send_many = unittest.mock.patch.object(ImBus, "_sendmany", patched_send_many)
+        cls.startClassPatcher(patched_send_many)
+
 
     def setUp(self):
         super().setUp()
@@ -1792,6 +1807,8 @@ class HttpCase(TransactionCase):
         self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self.cr))
         # setup an url opener helper
         self.opener = Opener(self.cr)
+        from odoo.addons.bus.websocket import CloseCode, _kick_all
+        self.addCleanup(_kick_all, CloseCode.KILL_NOW)
 
     def url_open(self, url, data=None, files=None, timeout=12, headers=None, allow_redirects=True, head=False):
         if url.startswith('/'):

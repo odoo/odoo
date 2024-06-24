@@ -19,7 +19,7 @@ from urllib.parse import urlparse
 from weakref import WeakSet
 
 from werkzeug.local import LocalStack
-from werkzeug.exceptions import BadRequest, HTTPException, ServiceUnavailable
+from werkzeug.exceptions import BadRequest, HTTPException
 
 import odoo
 from odoo import api, modules
@@ -159,6 +159,7 @@ class CloseCode(IntEnum):
     BAD_GATEWAY = 1014
     SESSION_EXPIRED = 4001
     KEEP_ALIVE_TIMEOUT = 4002
+    KILL_NOW = 4003
 
 
 class ConnectionState(IntEnum):
@@ -294,7 +295,7 @@ class Websocket:
         orderly shutdown. Note that we don't need to wait for the
         acknowledgment if the connection was failed beforewards.
         """
-        if code is not CloseCode.ABNORMAL_CLOSURE:
+        if code not in (CloseCode.KILL_NOW, CloseCode.ABNORMAL_CLOSURE):
             self._send_close_frame(code, reason)
         else:
             self._terminate()
@@ -536,7 +537,8 @@ class Websocket:
             self.__socket.settimeout(1)
             while self.__socket.recv(4096):
                 pass
-        self.__selector.unregister(self.__socket)
+        with suppress(KeyError):
+            self.__selector.unregister(self.__socket)
         self.__selector.close()
         self.__socket.close()
         self.state = ConnectionState.CLOSED
@@ -817,10 +819,6 @@ class WebsocketConnectionHandler:
     }
 
     @classmethod
-    def websocket_allowed(cls, request):
-        return not modules.module.current_test
-
-    @classmethod
     def open_connection(cls, request):
         """
         Open a websocket connection if the handshake is successfull.
@@ -830,8 +828,6 @@ class WebsocketConnectionHandler:
         versions the client supports and those we support.
         :raise: BadRequest if the handshake data is incorrect.
         """
-        if not cls.websocket_allowed(request):
-            raise ServiceUnavailable("Websocket is disabled in test mode")
         public_session = cls._handle_public_configuration(request)
         try:
             response = cls._get_handshake_response(request.httprequest.headers)
@@ -943,11 +939,11 @@ class WebsocketConnectionHandler:
                     _logger.exception("Exception occurred during websocket request handling")
 
 
-def _kick_all():
+def _kick_all(code=CloseCode.GOING_AWAY):
     """ Disconnect all the websocket instances. """
     for websocket in _websocket_instances:
         if websocket.state is ConnectionState.OPEN:
-            websocket.disconnect(CloseCode.GOING_AWAY)
+            websocket.disconnect(code)
 
 
 CommonServer.on_stop(_kick_all)
