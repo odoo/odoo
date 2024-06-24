@@ -492,6 +492,7 @@ export class Store extends BaseStore {
         mentionedChannels,
         mentionedPartners,
         thread,
+        extraData,
     }) {
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions =
@@ -534,6 +535,7 @@ export class Store extends BaseStore {
             thread_id: thread.id,
             thread_model: thread.model,
             special_mentions: validMentions?.specialMentions ?? [],
+            ...extraData,
         };
     }
 
