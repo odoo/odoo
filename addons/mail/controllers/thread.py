@@ -129,3 +129,11 @@ class ThreadController(http.Controller):
             message_sudo, body, attachment_ids=attachment_ids, partner_ids=partner_ids
         )
         return message_sudo._message_format(for_current_user=True)[0]
+
+    @http.route("/mail/avatar_card/info", methods=["POST"], type="json", auth="user")
+    def mail_partner_avatar_card_info(self, avatar_id, res_model, field_names):
+        domain = [('id', '=', avatar_id)] if res_model == 'res.users' else [('partner_id', '=', avatar_id)]
+        partner_data = request.env['res.users'].search_read(domain, field_names['partnerwithuser'])
+        if not partner_data:
+            partner_data = request.env['res.partner'].search_read([('id', '=', avatar_id)], field_names['partnerwithoutuser'])
+        return partner_data

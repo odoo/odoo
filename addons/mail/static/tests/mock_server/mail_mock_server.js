@@ -791,6 +791,22 @@ async function mail_data(request) {
     return mailDataHelpers.processRequest.call(this, request);
 }
 
+registerRoute("/mail/avatar_card/info", mail_partner_avatar_card_info);
+/** @type {RouteCallback} */
+async function mail_partner_avatar_card_info(request) {
+    const { avatar_id, resModel, fieldNames } = await parseRequestParams(request);
+    const domain =
+        resModel === "res.users" ? [["id", "=", avatar_id]] : [["partner_id", "=", avatar_id]];
+    let partner_data = this.env["res.users"].search_read(domain, fieldNames["partnerwithuser"]);
+    if (!partner_data.length) {
+        partner_data = this.env["res.partner"].search_read(
+            [["id", "=", avatar_id]],
+            fieldNames["partnerwithoutuser"]
+        );
+    }
+    return partner_data;
+}
+
 /** @type {RouteCallback} */
 async function processRequest(request) {
     /** @type {import("mock_models").DiscussChannel} */

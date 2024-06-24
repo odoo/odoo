@@ -11,7 +11,7 @@ import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, step } from "@web/../tests/utils";
+import { click, contains } from "@web/../tests/utils";
 import { getOrigin } from "@web/core/utils/urls";
 
 const fakeMultiTab = {
@@ -366,19 +366,6 @@ test("avatar card preview", async (assert) => {
         phone: "+78786987",
         im_status: "online",
     });
-    const mockRPC = (route, args) => {
-        if (route === "/web/dataset/call_kw/res.users/read") {
-            assert.deepEqual(args.args[1], [
-                "name",
-                "email",
-                "phone",
-                "im_status",
-                "share",
-                "partner_id",
-            ]);
-            step("user read");
-        }
-    };
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_id: userId });
     const views = {
         "m2x.avatar.user,false,kanban": `
@@ -392,7 +379,7 @@ test("avatar card preview", async (assert) => {
                     </templates>
                 </kanban>`,
     };
-    const { openView } = await start({ serverData: { views }, mockRPC });
+    const { openView } = await start({ serverData: { views } });
     await openView({
         res_model: "m2x.avatar.user",
         res_id: avatarUserId,
@@ -405,7 +392,6 @@ test("avatar card preview", async (assert) => {
     await contains(".o_card_user_infos > span", { text: "Mario" });
     await contains(".o_card_user_infos > a", { text: "Mario@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+78786987" });
-    await assertSteps(["user read"]);
     // Close card
     await click(".o_action_manager");
     await contains(".o_avatar_card", { count: 0 });
