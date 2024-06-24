@@ -63,6 +63,10 @@ export class MediaPlugin extends Plugin {
         return resources;
     };
 
+    get recordInfo() {
+        return this.config.getRecordInfo ? this.config.getRecordInfo() : {};
+    }
+
     handleCommand(command, payload) {
         switch (command) {
             case "NORMALIZE":
@@ -141,7 +145,7 @@ export class MediaPlugin extends Plugin {
         const restoreSelection = () => {
             this.shared.setSelection(selection);
         };
-        const { resModel, resId, field, type } = this.config.recordInfo || {};
+        const { resModel, resId, field, type } = this.recordInfo;
         this.services.dialog.add(MediaDialog, {
             resModel,
             resId,
@@ -164,7 +168,7 @@ export class MediaPlugin extends Plugin {
 
     async savePendingImages() {
         const editableEl = this.editable;
-        const { resModel, resId } = this.config.recordInfo;
+        const { resModel, resId } = this.recordInfo;
         // When saving a webp, o_b64_image_to_save is turned into
         // o_modified_image_to_save by saveB64Image to request the saving
         // of the pre-converted webp resizes and all the equivalent jpgs.
