@@ -367,7 +367,9 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         description = (
-            self.product_id.get_product_multiline_description_sale()
+            self.product_id.with_context(
+                product_description_with_display_name=False
+            ).get_product_multiline_description_sale()
             + self._get_sale_order_line_multiline_description_variants()
         )
         if self.linked_line_id:

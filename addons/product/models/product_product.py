@@ -749,11 +749,13 @@ class ProductProduct(models.Model):
                 (do not use for purchases or other display reasons that don't intend to use "description_sale").
             It will often be used as the default description of a sale order line referencing this product.
         """
-        name = self.display_name
+        values = []
+        if self.env.context.get('product_description_with_display_name', True):
+            values.append(self.display_name)
         if self.description_sale:
-            name += '\n' + self.description_sale
+            values.append(self.description_sale)
 
-        return name
+        return '\n'.join(values)
 
     def _is_variant_possible(self, parent_combination=None):
         """Return whether the variant is possible based on its own combination,
