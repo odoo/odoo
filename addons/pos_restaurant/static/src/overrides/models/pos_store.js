@@ -222,10 +222,10 @@ patch(PosStore.prototype, {
         return {
             paidOrdersNotSent,
             orderToCreate: orderToCreate.filter(
-                (o) => context.table_ids.includes(o.table_id.id) && !this.tableSyncing
+                (o) => context.table_ids.includes(o.table_id?.id) && !this.tableSyncing
             ),
             orderToUpdate: orderToUpdate.filter(
-                (o) => context.table_ids.includes(o.table_id.id) && !this.tableSyncing
+                (o) => context.table_ids.includes(o.table_id?.id) && !this.tableSyncing
             ),
         };
     },
@@ -311,17 +311,13 @@ patch(PosStore.prototype, {
     shouldShowNavbarButtons() {
         return super.shouldShowNavbarButtons(...arguments) && !this.orderToTransferUuid;
     },
-    async transferTable(table) {
+    async transferTable(destinationTable) {
         const order = this.models["pos.order"].getBy("uuid", this.orderToTransferUuid);
         const originalTable = order.table_id;
-        if (table.id === originalTable.id) {
+        if (originalTable && destinationTable.id === originalTable.id) {
             return;
         }
-        if (
-            order.table_id.id !== table.id &&
-            this.tableHasOrders(table) &&
-            this.tableHasOrders(originalTable)
-        ) {
+        if (this.tableHasOrders(destinationTable)) {
             const confirm = await ask(this.dialog, {
                 title: _t("Multiple open orders"),
                 body: _t(
@@ -332,14 +328,14 @@ patch(PosStore.prototype, {
                 return;
             }
         }
-        this.selectedTable = table;
+        this.selectedTable = destinationTable;
         this.loadingOrderState = false;
-        if (this.isTableToMerge && order.table_id.id !== table.id) {
-            originalTable.update({ parent_id: table });
+        if (this.isTableToMerge) {
+            originalTable.update({ parent_id: destinationTable });
             this.updateTables(originalTable);
             this.isTableToMerge = false;
         }
-        order.update({ table_id: table });
+        order.update({ table_id: destinationTable });
         this.set_order(order);
         this.orderToTransferUuid = null;
         this.showScreen("ProductScreen");
