@@ -255,9 +255,16 @@ export class PosData extends Reactive {
 
         try {
             let result = true;
-
+            let limitedFields = false;
             if (fields.length === 0) {
-                fields = this.fields[model];
+                fields = this.fields[model] || [];
+            }
+
+            if (
+                this.fields[model] &&
+                fields.sort().join(",") !== this.fields[model].sort().join(",")
+            ) {
+                limitedFields = true;
             }
 
             switch (type) {
@@ -289,6 +296,55 @@ export class PosData extends Reactive {
                 const response = await this.orm.create(model, values);
                 values[0].id = response[0];
                 result = values;
+            }
+
+            if (limitedFields) {
+                const X2MANY_TYPES = new Set(["many2many", "one2many"]);
+                const nonExistentRecords = [];
+
+                for (const record of result) {
+                    const localRecord = this.models[model].get(record.id);
+
+                    if (localRecord) {
+                        const formattedForUpdate = {};
+                        for (const [field, value] of Object.entries(record)) {
+                            const fieldsParams = this.relations[model][field];
+
+                            if (!fieldsParams) {
+                                console.info("Warning, attempt to load a non-existent field.");
+                                continue;
+                            }
+
+                            if (X2MANY_TYPES.has(fieldsParams.type)) {
+                                formattedForUpdate[field] = value
+                                    .filter((id) => this.models[fieldsParams.relation].get(id))
+                                    .map((id) => [
+                                        "link",
+                                        this.models[fieldsParams.relation].get(id),
+                                    ]);
+                            } else if (fieldsParams.type === "many2one") {
+                                if (this.models[fieldsParams.relation].get(value)) {
+                                    formattedForUpdate[field] = [
+                                        "link",
+                                        this.models[fieldsParams.relation].get(value),
+                                    ];
+                                }
+                            } else {
+                                formattedForUpdate[field] = value;
+                            }
+                        }
+                        localRecord.update(formattedForUpdate);
+                    } else {
+                        nonExistentRecords.push(record);
+                    }
+                }
+
+                if (nonExistentRecords.length) {
+                    console.warn(
+                        "Warning, attempt to load a non-existent record with limited fields."
+                    );
+                    result = nonExistentRecords;
+                }
             }
 
             if (this.models[model] && this.opts.autoLoadedOrmMethods.includes(type)) {
