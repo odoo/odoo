@@ -14,6 +14,10 @@ TIMEOUT = 10
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    peppol_eas = fields.Selection(inverse='_inverse_peppol_fields')
+    peppol_endpoint = fields.Char(inverse='_inverse_peppol_fields')
+    ubl_cii_format = fields.Selection(inverse='_inverse_peppol_fields')
+
     account_peppol_verification_state = fields.Selection(
         selection=[
             ('not_verified', 'Not verified yet'),
@@ -22,7 +26,8 @@ class ResPartner(models.Model):
             ('valid', 'Valid'),
         ],
         string='Peppol endpoint validity',
-        compute='_compute_account_peppol_verification_state',
+        default='not_verified',
+        company_dependent=True,
     )
     is_peppol_edi_format = fields.Boolean(compute='_compute_is_peppol_edi_format')
 
@@ -94,8 +99,7 @@ class ResPartner(models.Model):
         for partner in self:
             partner.is_peppol_edi_format = partner.ubl_cii_format not in (False, 'facturx', 'oioubl_201', 'ciusro')
 
-    @api.depends('peppol_eas', 'peppol_endpoint', 'ubl_cii_format')
-    def _compute_account_peppol_verification_state(self):
+    def _inverse_peppol_fields(self):
         for partner in self:
             partner.button_account_peppol_check_partner_endpoint()
 
