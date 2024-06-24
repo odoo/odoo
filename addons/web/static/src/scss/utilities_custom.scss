@@ -187,9 +187,10 @@ $utilities: map-merge(
 // Use'.opacity-trigger-hover' class to allow hovered parents to
 // trigger their children ':hover' opacity state.
 @each $-opacity-key, $-opacity-level in $utilities-opacity {
-    .opacity-#{$-opacity-key}-hover {
+    .opacity-#{$-opacity-key}-hover, .bg-#{$-opacity-key}-hover {
         &:hover, .opacity-trigger-hover:hover & {
             opacity: $-opacity-level!important;
+            --bg-opacity: #{$-opacity-level} !important;
         }
     }
 }
