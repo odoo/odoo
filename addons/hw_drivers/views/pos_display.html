@@ -12,7 +12,7 @@
             {{ cust_js|safe }}
         </script>
         <script>
-            $(document).ready(function() {
+            $(function() {
                 setInterval(() => {
                     fetch('/point_of_sale/iot_devices', {
                         method: 'POST',
@@ -49,10 +49,9 @@
                         $('#iot-devices').html(iot_devices_html);
                     })
                     .catch((error) => {
-                        $('.error-message').text('Error: ' + error);
-                        $('.error-message').removeClass('d-none');
+                        $('.error-message').removeClass('d-none').text('Error: ' + error);
                     });
-                }, 10);
+                }, 60000); // fetch every minute
             });
 
         </script>
