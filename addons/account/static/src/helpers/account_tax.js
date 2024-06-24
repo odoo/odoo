@@ -582,10 +582,10 @@ export const accountTaxHelpers = {
     computeSingleLineTaxes(
         taxes_data,
         evaluation_context,
-        { force_price_include = false, is_refund = false, include_caba_tags = false } = {}
+        { special_mode = false, is_refund = false, include_caba_tags = false } = {}
     ) {
         const taxes_computation = this.prepare_taxes_computation(taxes_data, {
-            force_price_include: force_price_include,
+            special_mode: special_mode,
             is_refund: is_refund,
             include_caba_tags: include_caba_tags,
         });

@@ -3,6 +3,7 @@ import { patch } from "@web/core/utils/patch";
 import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "./pos_store";
+import { getTaxesValues } from "@point_of_sale/app/models/utils/tax_utils";
 const { DateTime } = luxon;
 
 function _newRandomRewardCode() {
@@ -1072,17 +1073,32 @@ patch(PosOrder.prototype, {
         // These are considered payments and do not require to be either taxed or split by tax
         const discountProduct = reward.discount_line_product_id;
         if (["ewallet", "gift_card"].includes(reward.program_id.program_type)) {
+            const tax_res = getTaxesValues(
+                discountProduct.taxes_id,
+                -Math.min(maxDiscount, discountable),
+                1,
+                discountProduct,
+                this.config._product_default_values,
+                this.company,
+                this.currency,
+                "total_included"
+            );
+            let new_price = tax_res.total_excluded;
+            new_price += tax_res.taxes_data
+                .filter((tax) => this.models["account.tax"].get(tax.id).price_include)
+                .reduce((sum, tax) => (sum += tax.tax_amount), 0);
+
             return [
                 {
                     product_id: discountProduct,
-                    price_unit: -Math.min(maxDiscount, discountable),
+                    price_unit: new_price,
                     qty: 1,
                     reward_id: reward,
                     is_reward_line: true,
                     coupon_id: coupon_id,
                     points_cost: pointCost,
                     reward_identifier_code: rewardCode,
-                    tax_ids: [],
+                    tax_ids: discountProduct.taxes_id,
                 },
             ];
         }
