@@ -721,11 +721,13 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 """,
                         "\n".join(conflicting_holidays_strings)))
                 for conflicting_holiday_data in conflicting_holidays_list:
-                    conflicting_holidays_string = "\n" + _('%(employee_name)s - from %(date_from)s to %(date_to)s - %(state)s',
-                                                    employee_name=conflicting_holiday_data['employee_name'],
-                                                    date_from=conflicting_holiday_data['date_from'],
-                                                    date_to=conflicting_holiday_data['date_to'],
-                                                    state=conflicting_holiday_data['state'])
+                    conflicting_holidays_string = _(
+                        "\n%(employee_name)s - from %(date_from)s to %(date_to)s - %(state)s",
+                        employee_name=conflicting_holiday_data["employee_name"],
+                        date_from=conflicting_holiday_data["date_from"],
+                        date_to=conflicting_holiday_data["date_to"],
+                        state=conflicting_holiday_data["state"],
+                    )
                     conflicting_holidays_strings.append(conflicting_holidays_string)
                 raise ValidationError(_(
                     "An employee already booked time off which overlaps with this period:%s",

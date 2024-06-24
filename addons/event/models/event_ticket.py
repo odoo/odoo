@@ -162,8 +162,9 @@ class EventTicket(models.Model):
                     '- the ticket "%(ticket_name)s" (%(event_name)s): Missing %(nb_too_many)i seats.',
                     ticket_name=ticket.name, event_name=ticket.event_id.name, nb_too_many=-ticket.seats_available)))
         if sold_out_tickets:
-            raise ValidationError(_('There are not enough seats available for:')
-                                  + '\n%s\n' % '\n'.join(sold_out_tickets))
+            raise ValidationError(
+                _("There are not enough seats available for:\n%(tickets)s\n", tickets="\n".join(sold_out_tickets))
+            )
 
     @api.depends('seats_max', 'seats_available')
     @api.depends_context('name_with_seats_availability')

@@ -13,7 +13,7 @@ class StockWarehouse(models.Model):
         values = super(StockWarehouse, self)._get_sequence_values(name=name, code=code)
         values.update({
             'repair_type_id': {
-                'name': self.name + ' ' + _('Sequence repair'),
+                'name': _('%(name)s Sequence repair', name=self.name),
                 'prefix': self.code + '/RO/',
                 'padding': 5,
                 'company_id': self.company_id.id

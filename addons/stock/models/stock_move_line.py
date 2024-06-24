@@ -572,8 +572,12 @@ class StockMoveLine(models.Model):
 
         if ml_ids_tracked_without_lot:
             mls_tracked_without_lot = self.env['stock.move.line'].browse(ml_ids_tracked_without_lot)
-            raise UserError(_('You need to supply a Lot/Serial Number for product: \n - ') +
-                              '\n - '.join(mls_tracked_without_lot.mapped('product_id.display_name')))
+            raise UserError(
+                _(
+                    "You need to supply a Lot/Serial Number for product: \n - %(products)s",
+                    products="\n - ".join(mls_tracked_without_lot.mapped("product_id.display_name")),
+                ),
+            )
         ml_to_create_lot = self.env['stock.move.line'].browse(ml_ids_to_create_lot)
         ml_to_create_lot._create_and_assign_production_lot()
 
@@ -865,7 +869,7 @@ class StockMoveLine(models.Model):
     def _prepare_stock_move_vals(self):
         self.ensure_one()
         return {
-            'name': _('New Move:') + self.product_id.display_name,
+            'name': _('New Move: %(product_name)s', product_name=self.product_id.display_name),
             'product_id': self.product_id.id,
             'product_uom_qty': 0 if self.picking_id and self.picking_id.state != 'done' else self.quantity,
             'product_uom': self.product_uom_id.id,

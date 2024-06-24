@@ -78,14 +78,14 @@ class PaymentTransaction(models.Model):
         :raise ValidationError: If the phone number is missing or incorrect.
         """
         if not phone and self.tokenize:
-            raise ValidationError("Razorpay: " + _("The phone number is missing."))
+            raise ValidationError(_("Razorpay: The phone number is missing."))
 
         try:
             phone = self._phone_format(
                 number=phone, country=self.partner_country_id, raise_exception=self.tokenize
             )
         except Exception:
-            raise ValidationError("Razorpay: " + _("The phone number is invalid."))
+            raise ValidationError(_("Razorpay: The phone number is invalid."))
         return phone
 
     def _razorpay_create_order(self, customer_id=None):
@@ -197,7 +197,7 @@ class PaymentTransaction(models.Model):
             return
 
         if not self.token_id:
-            raise UserError("Razorpay: " + _("The transaction is not linked to a token."))
+            raise UserError(_("Razorpay: The transaction is not linked to a token."))
 
         try:
             order_data = self._razorpay_create_order()
@@ -322,7 +322,7 @@ class PaymentTransaction(models.Model):
         if entity_type == 'payment':
             reference = notification_data.get('description')
             if not reference:
-                raise ValidationError("Razorpay: " + _("Received data with missing reference."))
+                raise ValidationError(_("Razorpay: Received data with missing reference."))
             tx = self.search([('reference', '=', reference), ('provider_code', '=', 'razorpay')])
         else:  # 'refund'
             reference = notification_data.get('notes', {}).get('reference')
@@ -342,9 +342,7 @@ class PaymentTransaction(models.Model):
                 else:  # The refund was initiated for an unknown source transaction.
                     pass  # Don't do anything with the refund notification.
         if not tx:
-            raise ValidationError(
-                "Razorpay: " + _("No transaction found matching reference %s.", reference)
-            )
+            raise ValidationError(_("Razorpay: No transaction found matching reference %s.", reference))
 
         return tx
 
@@ -361,7 +359,7 @@ class PaymentTransaction(models.Model):
         refund_provider_reference = notification_data.get('id')
         amount_to_refund = notification_data.get('amount')
         if not refund_provider_reference or not amount_to_refund:
-            raise ValidationError("Razorpay: " + _("Received incomplete refund data."))
+            raise ValidationError(_("Razorpay: Received incomplete refund data."))
 
         converted_amount = payment_utils.to_major_currency_units(
             amount_to_refund, source_tx.currency_id
@@ -397,7 +395,7 @@ class PaymentTransaction(models.Model):
         # Update the provider reference.
         entity_id = entity_data.get('id')
         if not entity_id:
-            raise ValidationError("Razorpay: " + _("Received data with missing entity id."))
+            raise ValidationError(_("Razorpay: Received data with missing entity id."))
         self.provider_reference = entity_id
 
         # Update the payment method.
@@ -412,7 +410,7 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         entity_status = entity_data.get('status')
         if not entity_status:
-            raise ValidationError("Razorpay: " + _("Received data with missing status."))
+            raise ValidationError(_("Razorpay: Received data with missing status."))
 
         if entity_status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
@@ -441,9 +439,7 @@ class PaymentTransaction(models.Model):
                 "Received data for transaction with reference %s with invalid payment status: %s",
                 self.reference, entity_status
             )
-            self._set_error(
-                "Razorpay: " + _("Received data with invalid status: %s", entity_status)
-            )
+            self._set_error(_("Razorpay: Received data with invalid status: %s", entity_status))
 
     def _razorpay_tokenize_from_notification_data(self, notification_data):
         """ Create a new token based on the notification data.

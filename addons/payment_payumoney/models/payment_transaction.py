@@ -61,15 +61,11 @@ class PaymentTransaction(models.Model):
 
         reference = notification_data.get('txnid')
         if not reference:
-            raise ValidationError(
-                "PayUmoney: " + _("Received data with missing reference (%s)", reference)
-            )
+            raise ValidationError("PayUmoney: " + _("PayUmoney: Received data with missing reference (%s)", reference))
 
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'payumoney')])
         if not tx:
-            raise ValidationError(
-                "PayUmoney: " + _("No transaction found matching reference %s.", reference)
-            )
+            raise ValidationError(_("PayUmoney: No transaction found matching reference %s.", reference))
 
         return tx
 
@@ -100,6 +96,4 @@ class PaymentTransaction(models.Model):
         else:  # 'failure'
             # See https://www.payumoney.com/pdf/PayUMoney-Technical-Integration-Document.pdf
             error_code = notification_data.get('Error')
-            self._set_error(
-                "PayUmoney: " + _("The payment encountered an error with code %s", error_code)
-            )
+            self._set_error(_("PayUmoney: The payment encountered an error with code %s", error_code))

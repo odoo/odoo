@@ -68,19 +68,17 @@ class PaymentProvider(models.Model):
             try:
                 response.raise_for_status()
             except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(data)
-                )
+                _logger.exception("Invalid API request at %s with data:\n%s", url, pprint.pformat(data))
                 raise ValidationError(
-                    "Mollie: " + _(
-                        "The communication with the API failed. Mollie gave us the following "
-                        "information: %s", response.json().get('detail', '')
-                    ))
+                    _(
+                        "Mollie: The communication with the API failed. Mollie gave us the following "
+                        "information: %s",
+                        response.json().get("detail", ""),
+                    ),
+                )
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError(
-                "Mollie: " + _("Could not establish the connection to the API.")
-            )
+            raise ValidationError(_("Mollie: Could not establish the connection to the API."))
         return response.json()
 
     def _get_default_payment_method_codes(self):

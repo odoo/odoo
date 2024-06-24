@@ -181,7 +181,7 @@ class CrmTeam(models.Model):
                                    team_names=", ".join(other_memberships.mapped('crm_team_id.name'))
                                   )
             if member_warning:
-                team.member_warning = member_warning + " " + _("To add a Salesperson into multiple Teams, activate the Multi-Team option in settings.")
+                team.member_warning = _("%(member_warning)s To add a Salesperson into multiple Teams, activate the Multi-Team option in settings.", member_warning=member_warning)
 
     def _search_member_ids(self, operator, value):
         return [('crm_team_member_ids.user_id', operator, value)]

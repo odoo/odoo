@@ -138,10 +138,10 @@ class PaymentProvider(models.Model):
             response.raise_for_status()
         except requests.exceptions.ConnectionError:
             _logger.exception("unable to reach endpoint at %s", url)
-            raise ValidationError("Ogone: " + _("Could not establish the connection to the API."))
+            raise ValidationError(_("Ogone: Could not establish the connection to the API."))
         except requests.exceptions.HTTPError:
             _logger.exception("invalid API request at %s with data %s", url, payload)
-            raise ValidationError("Ogone: " + _("The communication with the API failed."))
+            raise ValidationError(_("Ogone: The communication with the API failed."))
         return response.content
 
     def _get_default_payment_method_codes(self):

@@ -65,7 +65,7 @@ class PaymentTransaction(models.Model):
             return
 
         if not self.token_id.authorize_profile:
-            raise UserError("Authorize.Net: " + _("The transaction is not linked to a token."))
+            raise UserError(_("Authorize.Net: The transaction is not linked to a token."))
 
         authorize_API = AuthorizeAPI(self.provider_id)
         if self.provider_id.capture_manually:
@@ -99,8 +99,8 @@ class PaymentTransaction(models.Model):
         authorize_api = AuthorizeAPI(self.provider_id)
         tx_details = authorize_api.get_transaction_details(self.provider_reference)
         if 'err_code' in tx_details:  # Could not retrieve the transaction details.
-            raise ValidationError("Authorize.Net: " + _(
-                "Could not retrieve the transaction details. (error code: %(error_code)s; error_details: %(error_message)s)",
+            raise ValidationError(_(
+                "Authorize.Net: Could not retrieve the transaction details. (error code: %(error_code)s; error_details: %(error_message)s)",
                 error_code=tx_details['err_code'], error_message=tx_details.get('err_msg'),
             ))
 
@@ -138,8 +138,8 @@ class PaymentTransaction(models.Model):
             data = {'reference': tx_to_process.reference, 'response': res_content}
             tx_to_process._handle_notification_data('authorize', data)
         else:
-            raise ValidationError("Authorize.net: " + _(
-                "The transaction is not in a status to be refunded. (status: %(status)s, details: %(message)s)",
+            raise ValidationError(_(
+                "Authorize.Net: The transaction is not in a status to be refunded. (status: %(status)s, details: %(message)s)",
                 status=tx_status, message=tx_details.get('messages', {}).get('message'),
             ))
         return refund_tx
@@ -193,7 +193,7 @@ class PaymentTransaction(models.Model):
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'authorize')])
         if not tx:
             raise ValidationError(
-                "Authorize.Net: " + _("No transaction found matching reference %s.", reference)
+                _("Authorize.Net: No transaction found matching reference %s.", reference)
             )
         return tx
 
@@ -261,8 +261,8 @@ class PaymentTransaction(models.Model):
                 },
             )
             self._set_error(
-                "Authorize.Net: " + _(
-                    "Received data with status code \"%(status)s\" and error code \"%(error)s\"",
+                _(
+                    "Authorize.Net: Received data with status code \"%(status)s\" and error code \"%(error)s\"",
                     status=status_code, error=error_code
                 )
             )

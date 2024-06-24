@@ -79,7 +79,7 @@ export const barcodeGenericHandlers = {
                 if (fn) {
                     fn();
                 } else {
-                    notification.add(_t("Barcode: ") + `'${barcode}'`, {
+                    notification.add(_t("Barcode: %(barcode)s", { barcode }), {
                         title: _t("Unknown barcode command"),
                         type: "danger"
                     });

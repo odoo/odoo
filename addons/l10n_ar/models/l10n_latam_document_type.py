@@ -44,7 +44,7 @@ class L10nLatamDocumentType(models.Model):
         if not document_number:
             return False
 
-        msg = "'%s' " + _("is not a valid value for") + " '%s'.<br/>%s"
+        msg = _("%(value)s is not a valid value for %(field)s.<br/>%(extra)s")
 
         if not self.code:
             return document_number
@@ -52,7 +52,14 @@ class L10nLatamDocumentType(models.Model):
         # Import Dispatch Number Validator
         if self.code in ['66', '67']:
             if len(document_number) != 16:
-                raise UserError(msg % (document_number, self.name, _('The number of import Dispatch must be 16 characters')))
+                raise UserError(
+                    msg
+                    % {
+                        "value": document_number,
+                        "field": self.name,
+                        "extra": _("The number of import Dispatch must be 16 characters"),
+                    },
+                )
             return document_number
 
         # Invoice Number Validator (For Eg: 123-123)

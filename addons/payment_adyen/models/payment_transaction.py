@@ -59,7 +59,7 @@ class PaymentTransaction(models.Model):
 
         # Prepare the payment request to Adyen
         if not self.token_id:
-            raise UserError("Adyen: " + _("The transaction is not linked to a token."))
+            raise UserError(_("Adyen: The transaction is not linked to a token."))
 
         converted_amount = payment_utils.to_minor_currency_units(
             self.amount, self.currency_id, const.CURRENCY_DECIMALS.get(self.currency_id.name)
@@ -258,7 +258,7 @@ class PaymentTransaction(models.Model):
 
         reference = notification_data.get('merchantReference')
         if not reference:
-            raise ValidationError("Adyen: " + _("Received data with missing merchant reference"))
+            raise ValidationError(_("Adyen: Received data with missing merchant reference"))
 
         event_code = notification_data.get('eventCode', 'AUTHORISATION')  # Fallback on auth if S2S.
         provider_reference = notification_data.get('pspReference')
@@ -329,9 +329,7 @@ class PaymentTransaction(models.Model):
                     pass  # Don't do anything with the refund notification
 
         if not tx:
-            raise ValidationError(
-                "Adyen: " + _("No transaction found matching reference %s.", reference)
-            )
+            raise ValidationError(_("Adyen: No transaction found matching reference %s.", reference))
         return tx
 
     def _adyen_create_child_tx_from_notification_data(
@@ -349,9 +347,7 @@ class PaymentTransaction(models.Model):
         provider_reference = notification_data.get('pspReference')
         amount = notification_data.get('amount', {}).get('value')
         if not provider_reference or amount is None:  # amount == 0 if success == False
-            raise ValidationError(
-                "Adyen: " + _("Received data for child transaction with missing transaction values")
-            )
+            raise ValidationError(_("Adyen: Received data for child transaction with missing transaction values"))
 
         converted_amount = payment_utils.to_major_currency_units(amount, source_tx.currency_id)
         return source_tx._create_child_transaction(
@@ -401,7 +397,7 @@ class PaymentTransaction(models.Model):
         payment_state = notification_data.get('resultCode')
         refusal_reason = notification_data.get('refusalReason') or notification_data.get('reason')
         if not payment_state:
-            raise ValidationError("Adyen: " + _("Received data with missing payment state."))
+            raise ValidationError(_("Adyen: Received data with missing payment state."))
         if payment_state in const.RESULT_CODES_MAPPING['pending']:
             self._set_pending()
         elif payment_state in const.RESULT_CODES_MAPPING['done']:
@@ -470,9 +466,7 @@ class PaymentTransaction(models.Model):
                 "received data for transaction with reference %s with invalid payment state: %s",
                 self.reference, payment_state
             )
-            self._set_error(
-                "Adyen: " + _("Received data with invalid payment state: %s", payment_state)
-            )
+            self._set_error(_("Adyen: Received data with invalid payment state: %s", payment_state))
 
     def _adyen_tokenize_from_notification_data(self, notification_data):
         """ Create a new token based on the notification data.

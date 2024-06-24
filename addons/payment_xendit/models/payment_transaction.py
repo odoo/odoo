@@ -101,12 +101,12 @@ class PaymentTransaction(models.Model):
 
         reference = notification_data.get('external_id')
         if not reference:
-            raise ValidationError("Xendit: " + _("Received data with missing reference."))
+            raise ValidationError(_("Xendit: Received data with missing reference."))
 
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'xendit')])
         if not tx:
             raise ValidationError(
-                "Xendit: " + _("No transaction found matching reference %s.", reference)
+                _("Xendit: No transaction found matching reference %(reference)s.", reference=reference),
             )
         return tx
 

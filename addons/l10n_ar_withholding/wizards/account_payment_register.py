@@ -60,7 +60,7 @@ class AccountPaymentRegister(models.TransientModel):
             cc_base_amount = self.company_currency_id.round(base_amount * conversion_rate)
             payment_vals['write_off_line_vals'].append({
                 'currency_id': self.currency_id.id,
-                'name': _('Base Ret: ') + nice_base_label,
+                'name': _('Base Ret: %(label)s', label=nice_base_label),
                 'tax_ids': [Command.set(withholding_lines.mapped('tax_id').ids)],
                 'account_id': account_id,
                 'balance': cc_base_amount,
@@ -68,7 +68,7 @@ class AccountPaymentRegister(models.TransientModel):
             })
             payment_vals['write_off_line_vals'].append({
                 'currency_id': self.currency_id.id,  # Counterpart 0 operation
-                'name': _('Base Ret Cont: ') + nice_base_label,
+                'name': _('Base Ret Cont: %(label)s', label=nice_base_label),
                 'account_id': account_id,
                 'balance': -cc_base_amount,
                 'amount_currency': -base_amount,

@@ -79,8 +79,8 @@ class PaymentTransaction(models.Model):
         txn_id = notification_data.get('trade_no')
         if not reference or not txn_id:
             raise ValidationError(
-                "Alipay: " + _(
-                    "Received data with missing reference %(r)s or txn_id %(t)s.",
+                _(
+                    "Alipay: Received data with missing reference %(r)s or txn_id %(t)s.",
                     r=reference, t=txn_id
                 )
             )
@@ -88,7 +88,7 @@ class PaymentTransaction(models.Model):
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'alipay')])
         if not tx:
             raise ValidationError(
-                "Alipay: " + _("No transaction found matching reference %s.", reference)
+                _("Alipay: No transaction found matching reference %s.", reference)
             )
 
         return tx
@@ -117,4 +117,4 @@ class PaymentTransaction(models.Model):
                 "received data with invalid payment status (%s) for transaction with reference %s",
                 status, self.reference,
             )
-            self._set_error("Alipay: " + _("received invalid transaction status: %s", status))
+            self._set_error(_("Alipay: received invalid transaction status: %s", status))

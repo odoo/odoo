@@ -78,9 +78,7 @@ class PaymentTransaction(models.Model):
         reference = notification_data.get('item_number')
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'paypal')])
         if not tx:
-            raise ValidationError(
-                "PayPal: " + _("No transaction found matching reference %s.", reference)
-            )
+            raise ValidationError(_("PayPal: No transaction found matching reference %s.", reference))
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -112,10 +110,11 @@ class PaymentTransaction(models.Model):
         txn_type = notification_data.get('txn_type')
         if not all((txn_id, txn_type)):
             raise ValidationError(
-                "PayPal: " + _(
-                    "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s).",
-                    txn_id=txn_id, txn_type=txn_type
-                )
+                _(
+                    "PayPal: Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s).",
+                    txn_id=txn_id,
+                    txn_type=txn_type,
+                ),
             )
         self.provider_reference = txn_id
         self.paypal_type = txn_type
@@ -139,6 +138,4 @@ class PaymentTransaction(models.Model):
                 "received data with invalid payment status (%s) for transaction with reference %s",
                 payment_status, self.reference
             )
-            self._set_error(
-                "PayPal: " + _("Received data with invalid payment status: %s", payment_status)
-            )
+            self._set_error(_("PayPal: Received data with invalid payment status: %s", payment_status))

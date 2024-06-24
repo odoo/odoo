@@ -71,7 +71,7 @@ class PaymentTransaction(models.Model):
             return
 
         if not self.token_id:
-            raise UserError("Demo: " + _("The transaction is not linked to a token."))
+            raise UserError(_("Demo: The transaction is not linked to a token."))
 
         simulated_state = self.token_id.demo_simulated_state
         notification_data = {'reference': self.reference, 'simulated_state': simulated_state}
@@ -140,7 +140,7 @@ class PaymentTransaction(models.Model):
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'demo')])
         if not tx:
             raise ValidationError(
-                "Demo: " + _("No transaction found matching reference %s.", reference)
+                _("Demo: No transaction found matching reference %s.", reference)
             )
         return tx
 

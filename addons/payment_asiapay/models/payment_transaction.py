@@ -120,13 +120,13 @@ class PaymentTransaction(models.Model):
         reference = notification_data.get('Ref')
         if not reference:
             raise ValidationError(
-                "AsiaPay: " + _("Received data with missing reference %(ref)s.", ref=reference)
+                _("AsiaPay: Received data with missing reference %(ref)s.", ref=reference)
             )
 
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'asiapay')])
         if not tx:
             raise ValidationError(
-                "AsiaPay: " + _("No transaction found matching reference %s.", reference)
+                _("AsiaPay: No transaction found matching reference %s.", reference)
             )
 
         return tx
@@ -158,7 +158,7 @@ class PaymentTransaction(models.Model):
         success_code = notification_data.get('successcode')
         primary_response_code = notification_data.get('prc')
         if not success_code:
-            raise ValidationError("AsiaPay: " + _("Received data with missing success code."))
+            raise ValidationError(_("AsiaPay: Received data with missing success code."))
         if success_code in const.SUCCESS_CODE_MAPPING['done']:
             self._set_done()
         elif success_code in const.SUCCESS_CODE_MAPPING['error']:
@@ -171,4 +171,4 @@ class PaymentTransaction(models.Model):
                 "Received data with invalid success code (%s) for transaction with primary response "
                 "code %s and reference %s.", success_code, primary_response_code, self.reference
             )
-            self._set_error("AsiaPay: " + _("Unknown success code: %s", success_code))
+            self._set_error(_("AsiaPay: Unknown success code: %s", success_code))

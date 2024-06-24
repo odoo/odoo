@@ -74,7 +74,7 @@ class PaymentTransaction(models.Model):
 
         # Prepare the payment request to Flutterwave.
         if not self.token_id:
-            raise UserError("Flutterwave: " + _("The transaction is not linked to a token."))
+            raise UserError(_("Flutterwave: The transaction is not linked to a token."))
 
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         data = {
@@ -117,12 +117,12 @@ class PaymentTransaction(models.Model):
 
         reference = notification_data.get('tx_ref')
         if not reference:
-            raise ValidationError("Flutterwave: " + _("Received data with missing reference."))
+            raise ValidationError(_("Flutterwave: Received data with missing reference."))
 
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'flutterwave')])
         if not tx:
             raise ValidationError(
-                "Flutterwave: " + _("No transaction found matching reference %s.", reference)
+                _("Flutterwave: No transaction found matching reference %s.", reference)
             )
         return tx
 
@@ -178,7 +178,7 @@ class PaymentTransaction(models.Model):
                 "Received data with invalid payment status (%s) for transaction with reference %s.",
                 payment_status, self.reference
             )
-            self._set_error("Flutterwave: " + _("Unknown payment status: %s", payment_status))
+            self._set_error(_("Flutterwave: Unknown payment status: %s", payment_status))
 
     def _flutterwave_tokenize_from_notification_data(self, notification_data):
         """ Create a new token based on the notification data.

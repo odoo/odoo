@@ -15,8 +15,10 @@ class StockMoveLine(models.Model):
         if res and not self.lot_name and current_location_id.is_subcontracting_location:
             # we want to avoid auto-updating source location in this case + change the warning message
             self.location_id = current_location_id
-            res['warning']['message'] = res['warning']['message'].split("\n\n", 1)[0] + "\n\n" + \
-                _("Make sure you validate or adapt the related resupply picking to your subcontractor in order to avoid inconsistencies in your stock.")
+            res["warning"]["message"] = _(
+                "%(warning_message)s\n\nMake sure you validate or adapt the related resupply picking to your subcontractor in order to avoid inconsistencies in your stock.",
+                warning_message=res["warning"]["message"].split("\n\n", 1)[0],
+            )
         return res
 
     def write(self, vals):

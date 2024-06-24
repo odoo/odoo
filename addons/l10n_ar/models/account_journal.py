@@ -140,8 +140,11 @@ class AccountJournal(models.Model):
         invoices = self.env['account.move'].search([('journal_id', 'in', journals.ids), ('posted_before', '=', True)], limit=1)
         if invoices:
             raise ValidationError(
-                _("You can not change the journal's configuration if it already has validated invoices") + ' ('
-                + ', '.join(invoices.mapped('journal_id').mapped('name')) + ')')
+                _(
+                    "You cannot change the journal's configuration if it already has validated invoices (%(journals)s)",
+                    journals=", ".join(invoices.mapped("journal_id").mapped("name")),
+                ),
+            )
 
     @api.constrains('l10n_ar_afip_pos_system')
     def _check_afip_pos_system(self):

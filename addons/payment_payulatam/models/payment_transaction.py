@@ -108,9 +108,7 @@ class PaymentTransaction(models.Model):
         reference = notification_data.get('referenceCode')
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'payulatam')])
         if not tx:
-            raise ValidationError(
-                "PayU Latam: " + _("No transaction found matching reference %s.", reference)
-            )
+            raise ValidationError(_("PayU Latam: No transaction found matching reference %s.", reference))
 
         return tx
 
@@ -148,4 +146,4 @@ class PaymentTransaction(models.Model):
                 "received data with invalid payment status (%s) for transaction with reference %s",
                 status, self.reference
             )
-            self._set_error("PayU Latam: " + _("Invalid payment status."))
+            self._set_error(_("PayU Latam: Invalid payment status."))

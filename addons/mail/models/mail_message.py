@@ -416,8 +416,14 @@ class Message(models.Model):
                                     message.id = ANY (%%s)''' % (self._table), ('comment', self.ids,))
             if self._cr.fetchall():
                 raise AccessError(
-                    _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %(type)s, Operation: %(operation)s)', type=self._description, operation=operation)
-                    + ' - ({} {}, {} {})'.format(_('Records:'), self.ids[:6], _('User:'), self._uid)
+                    _(
+                        "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %(type)s, Operation: %(operation)s)\n\n"
+                        "Records: %(records)s, User: %(user)s",
+                        type=self._description,
+                        operation=operation,
+                        records=", ".join(map(str, self.ids[:6])),
+                        user=self._uid,
+                    ),
                 )
 
         # Read mail_message.ids to have their values
@@ -586,8 +592,14 @@ class Message(models.Model):
         if not self.browse(messages_to_check).exists():
             return
         raise AccessError(
-            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %(type)s, Operation: %(operation)s)', type=self._description, operation=operation)
-            + ' - ({} {}, {} {})'.format(_('Records:'), list(messages_to_check)[:6], _('User:'), self._uid)
+            _(
+                "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %(type)s, Operation: %(operation)s)\n\n"
+                "Records: %(records)s, User: %(user)s",
+                type=self._description,
+                operation=operation,
+                records=", ".join(list(messages_to_check)[:6]),
+                user=self._uid,
+            ),
         )
 
     def _validate_access_for_current_persona(self, operation):

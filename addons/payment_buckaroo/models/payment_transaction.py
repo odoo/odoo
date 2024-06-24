@@ -66,7 +66,7 @@ class PaymentTransaction(models.Model):
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'buckaroo')])
         if not tx:
             raise ValidationError(
-                "Buckaroo: " + _("No transaction found matching reference %s.", reference)
+                _("Buckaroo: No transaction found matching reference %s.", reference)
             )
 
         return tx
@@ -87,7 +87,7 @@ class PaymentTransaction(models.Model):
         # Update the provider reference.
         transaction_keys = notification_data.get('brq_transactions')
         if not transaction_keys:
-            raise ValidationError("Buckaroo: " + _("Received data with missing transaction keys"))
+            raise ValidationError(_("Buckaroo: Received data with missing transaction keys"))
         # BRQ_TRANSACTIONS can hold multiple, comma-separated, tx keys. In practice, it holds only
         # one reference. So we split for semantic correctness and keep the first transaction key.
         self.provider_reference = transaction_keys.split(',')[0]
@@ -119,4 +119,4 @@ class PaymentTransaction(models.Model):
                 "received data with invalid payment status (%s) for transaction with reference %s",
                 status_code, self.reference
             )
-            self._set_error("Buckaroo: " + _("Unknown status code: %s", status_code))
+            self._set_error(_("Buckaroo: Unknown status code: %s", status_code))

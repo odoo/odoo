@@ -94,13 +94,13 @@ class PaymentTransaction(models.Model):
         reference = notification_data.get('merchant_reference')
         if not reference:
             raise ValidationError(
-                "APS: " + _("Received data with missing reference %(ref)s.", ref=reference)
+                _("APS: Received data with missing reference %(ref)s.", ref=reference)
             )
 
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'aps')])
         if not tx:
             raise ValidationError(
-                "APS: " + _("No transaction found matching reference %s.", reference)
+                _("APS: No transaction found matching reference %s.", reference)
             )
 
         return tx
@@ -129,7 +129,7 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         status = notification_data.get('status')
         if not status:
-            raise ValidationError("APS: " + _("Received data with missing payment state."))
+            raise ValidationError(_("APS: Received data with missing payment state."))
         if status in PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
         elif status in PAYMENT_STATUS_MAPPING['done']:
@@ -141,7 +141,7 @@ class PaymentTransaction(models.Model):
                 "for transaction with reference %(ref)s",
                 {'status': status, 'reason': status_description, 'ref': self.reference},
             )
-            self._set_error("APS: " + _(
-                "Received invalid transaction status %(status)s and reason '%(reason)s'.",
+            self._set_error(_(
+                "APS: Received invalid transaction status %(status)s and reason '%(reason)s'.",
                 status=status, reason=status_description
             ))

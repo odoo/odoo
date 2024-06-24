@@ -297,11 +297,12 @@ class WebsiteHrRecruitment(http.Controller):
     def _get_ongoing_application_response(self, ongoing_application, job_id, value):
         message = _("An application already exists for %s. Duplicates might be rejected.", value)
         if ongoing_application.user_id:
-            message += " " + _("In case of issue, contact %s", ongoing_application.user_id.name)
+            contact = ongoing_application.user_id.name
             if ongoing_application.user_id.email:
-                message += ", %s" % ongoing_application.user_id.email
+                contact += ", %s" % ongoing_application.user_id.email
             if ongoing_application.user_id.phone:
-                message += ", %s" % ongoing_application.user_id.phone
+                contact += ", %s" % ongoing_application.user_id.phone
+            message += _(" In case of issue, contact %(contact_info)s", contact_info=contact)
         return {
             'applied_same_job': ongoing_application.job_id.id == int(job_id),
             'applied_other_job': True,

@@ -1,4 +1,4 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+هو # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 import pprint
@@ -123,13 +123,11 @@ class PaymentTransaction(models.Model):
 
         reference = notification_data.get('external_reference')
         if not reference:
-            raise ValidationError("Mercado Pago: " + _("Received data with missing reference."))
+            raise ValidationError(_("Mercado Pago: Received data with missing reference."))
 
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'mercado_pago')])
         if not tx:
-            raise ValidationError(
-                "Mercado Pago: " + _("No transaction found matching reference %s.", reference)
-            )
+            raise ValidationError(_("Mercado Pago: No transaction found matching reference %s.", reference))
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -148,7 +146,7 @@ class PaymentTransaction(models.Model):
         # Update the provider reference.
         payment_id = notification_data.get('payment_id')
         if not payment_id:
-            raise ValidationError("Mercado Pago: " + _("Received data with missing payment id."))
+            raise ValidationError(_("Mercado Pago: Received data with missing payment id."))
         self.provider_reference = payment_id
 
         # Verify the notification data.
@@ -174,7 +172,7 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         payment_status = verified_payment_data.get('status')
         if not payment_status:
-            raise ValidationError("Mercado Pago: " + _("Received data with missing status."))
+            raise ValidationError(_("Mercado Pago: Received data with missing status."))
 
         if payment_status in const.TRANSACTION_STATUS_MAPPING['pending']:
             self._set_pending()
@@ -196,7 +194,7 @@ class PaymentTransaction(models.Model):
                 self.reference, payment_status
             )
             self._set_error(
-                "Mercado Pago: " + _("Received data with invalid status: %s", payment_status)
+                _("Mercado Pago: Received data with invalid status: %s", payment_status)
             )
 
     @api.model

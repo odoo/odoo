@@ -113,7 +113,7 @@ class PaymentTransaction(models.Model):
             return
 
         if not self.token_id:
-            raise UserError("Ogone: " + _("The transaction is not linked to a token."))
+            raise UserError(_("Ogone: The transaction is not linked to a token."))
 
         # Make the payment request
         data = {
@@ -177,9 +177,7 @@ class PaymentTransaction(models.Model):
         reference = notification_data.get('ORDERID')
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'ogone')])
         if not tx:
-            raise ValidationError(
-                "Ogone: " + _("No transaction found matching reference %s.", reference)
-            )
+            raise ValidationError(_("Ogone: No transaction found matching reference %s.", reference))
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -226,17 +224,13 @@ class PaymentTransaction(models.Model):
             else:
                 reason = "Unknown reason"
             _logger.info("the payment has been declined: %s.", reason)
-            self._set_error(
-                "Ogone: " + _("The payment has been declined: %s", reason)
-            )
+            self._set_error(_("Ogone: The payment has been declined: %s", reason))
         else:  # Classify unknown payment statuses as `error` tx state
             _logger.info(
                 "received data with invalid payment status (%s) for transaction with reference %s",
                 payment_status, self.reference
             )
-            self._set_error(
-                "Ogone: " + _("Received data with invalid payment status: %s", payment_status)
-            )
+            self._set_error(_("Ogone: Received data with invalid payment status: %s", payment_status))
 
     def _ogone_tokenize_from_notification_data(self, notification_data):
         """ Create a token from notification data.

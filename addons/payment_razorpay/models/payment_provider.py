@@ -88,15 +88,13 @@ class PaymentProvider(models.Model):
                 _logger.exception(
                     "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload),
                 )
-                raise ValidationError("Razorpay: " + _(
-                    "Razorpay gave us the following information: '%s'",
+                raise ValidationError(_(
+                    "Razorpay: Razorpay gave us the following information: '%s'",
                     response.json().get('error', {}).get('description')
                 ))
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError(
-                "Razorpay: " + _("Could not establish the connection to the API.")
-            )
+            raise ValidationError(_("Razorpay: Could not establish the connection to the API."))
         return response.json()
 
     def _razorpay_calculate_signature(self, data):

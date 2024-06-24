@@ -62,10 +62,10 @@ class StockPickingType(models.Model):
     def _get_dtt_ir_seq_vals(self, warehouse_id, sequence_code):
         if warehouse_id:
             wh = self.env['stock.warehouse'].browse(warehouse_id)
-            ir_seq_name = wh.name + ' ' + _('Sequence') + ' ' + sequence_code
+            ir_seq_name = _('%(warehouse_name)s Sequence %(sequence_code)s', warehouse_name=wh.name, sequence_code=sequence_code)
             ir_seq_prefix = wh.code + '/' + sequence_code + '/DDT'
         else:
-            ir_seq_name = _('Sequence') + ' ' + sequence_code
+            ir_seq_name = _('Sequence %(sequence_code)s', sequence_code=sequence_code)
             ir_seq_prefix = sequence_code + '/DDT'
         return ir_seq_name, ir_seq_prefix
 

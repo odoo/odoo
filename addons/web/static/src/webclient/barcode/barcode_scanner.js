@@ -59,8 +59,9 @@ export class BarcodeDialog extends Component {
                     NotFoundError: _t("No device can be found."),
                     NotAllowedError: _t("Odoo needs your authorization first."),
                 };
-                const errorMessage =
-                    _t("Could not start scanning. ") + (errors[err.name] || err.message);
+                const errorMessage = _t("Could not start scanning. %(message)s", {
+                    message: errors[err.name] || err.message,
+                });
                 this.onError(new Error(errorMessage));
                 return;
             }

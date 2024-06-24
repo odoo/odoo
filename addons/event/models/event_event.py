@@ -621,8 +621,9 @@ class EventEvent(models.Model):
                     (_('- "%(event_name)s": Missing %(nb_too_many)i seats.',
                         event_name=event.name, nb_too_many=-event.seats_available)))
         if sold_out_events:
-            raise ValidationError(_('There are not enough seats available for:')
-                                  + '\n%s\n' % '\n'.join(sold_out_events))
+            raise ValidationError(
+                _("There are not enough seats available for:\n%(events)s\n", events="\n".join(sold_out_events))
+            )
 
     @api.constrains('date_begin', 'date_end')
     def _check_closing_date(self):

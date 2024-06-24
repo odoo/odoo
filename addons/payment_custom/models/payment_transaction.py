@@ -66,7 +66,7 @@ class PaymentTransaction(models.Model):
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'custom')])
         if not tx:
             raise ValidationError(
-                "Wire Transfer: " + _("No transaction found matching reference %s.", reference)
+                _("Wire Transfer: No transaction found matching reference %s.", reference)
             )
         return tx
 

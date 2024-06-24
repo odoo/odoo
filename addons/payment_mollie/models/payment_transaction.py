@@ -91,9 +91,9 @@ class PaymentTransaction(models.Model):
             [('reference', '=', notification_data.get('ref')), ('provider_code', '=', 'mollie')]
         )
         if not tx:
-            raise ValidationError("Mollie: " + _(
-                "No transaction found matching reference %s.", notification_data.get('ref')
-            ))
+            raise ValidationError(
+                _("Mollie: No transaction found matching reference %s.", notification_data.get("ref"))
+            )
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -130,12 +130,10 @@ class PaymentTransaction(models.Model):
         elif payment_status == 'paid':
             self._set_done()
         elif payment_status in ['expired', 'canceled', 'failed']:
-            self._set_canceled("Mollie: " + _("Cancelled payment with status: %s", payment_status))
+            self._set_canceled(_("Mollie: Cancelled payment with status: %s", payment_status))
         else:
             _logger.info(
                 "received data with invalid payment status (%s) for transaction with reference %s",
                 payment_status, self.reference
             )
-            self._set_error(
-                "Mollie: " + _("Received data with invalid payment status: %s", payment_status)
-            )
+            self._set_error(_("Mollie: Received data with invalid payment status: %s", payment_status))

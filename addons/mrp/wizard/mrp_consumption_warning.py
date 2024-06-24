@@ -66,8 +66,10 @@ class MrpConsumptionWarning(models.TransientModel):
                     })
         if problem_tracked_products:
             raise UserError(
-                _("Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n- ") +
-                "\n- ".join(problem_tracked_products.mapped('name'))
+                _(
+                    "Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n- %(products)s",
+                    products="\n- ".join(problem_tracked_products.mapped("name")),
+                ),
             )
         if missing_move_vals:
             self.env['stock.move'].create(missing_move_vals)

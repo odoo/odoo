@@ -291,16 +291,17 @@ class PaymentProvider(models.Model):
                     response.raise_for_status()
                 except requests.exceptions.HTTPError:
                     _logger.exception("invalid API request at %s with data %s", url, payload)
-                    error_msg = response.json().get('error', {}).get('message', '')
+                    error_msg = response.json().get("error", {}).get("message", "")
                     raise ValidationError(
-                        "Stripe: " + _(
-                            "The communication with the API failed.\n"
-                            "Stripe gave us the following info about the problem:\n'%s'", error_msg
+                        _(
+                            "Stripe: The communication with the API failed.\n"
+                            "Stripe gave us the following info about the problem:\n'%s'",
+                            error_msg,
                         )
                     )
         except requests.exceptions.ConnectionError:
             _logger.exception("unable to reach endpoint at %s", url)
-            raise ValidationError("Stripe: " + _("Could not establish the connection to the API."))
+            raise ValidationError(_("Stripe: Could not establish the connection to the API."))
         return response.json()
 
     def _get_stripe_extra_request_headers(self):
