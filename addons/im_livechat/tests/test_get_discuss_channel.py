@@ -159,9 +159,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         operator_member = self.env['discuss.channel.member'].search(operator_member_domain)
         self.assertEqual(channel_info['operator'], {
             "id": operator.partner_id.id,
-            "user_livechat_username": "Michel Operator",
             "type": "partner",
-            "write_date": fields.Datetime.to_string(operator.partner_id.write_date)
         })
         self.assertFalse(channel_info['anonymous_name'])
         self.assertEqual(channel_info['anonymous_country'], False)
@@ -176,6 +174,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "is_public": False,
                     "type": "partner",
                     "user_livechat_username": "Michel Operator",
+                    "write_date": fields.Datetime.to_string(operator.partner_id.write_date)
                 },
             ],
         )
