@@ -203,21 +203,20 @@ class Docker():
             'rpm': os.path.join(args.build_dir, 'setup/package.dffedora'),
             'win': os.path.join(args.build_dir, 'setup/package.dfwine'),
         }
-        self.docker_template = Path(docker_templates[self.arch]).read_text().replace('USER odoo', DOCKERUSER)
+        self.docker_template = Path(docker_templates[self.arch]).read_text(encoding='utf-8').replace('USER odoo', DOCKERUSER)
         self.test_log_file = '/data/src/test-%s.log' % self.arch
+        self.docker_dir = Path(self.args.build_dir) / 'docker'
+        if not self.docker_dir.exists():
+            self.docker_dir.mkdir()
         self.build_image()
 
     def build_image(self):
         """Build the dockerimage by copying Dockerfile into build_dir/docker"""
-        docker_dir = Path(self.args.build_dir) / 'docker'
-        docker_file = docker_dir / 'Dockerfile'
-        if not docker_dir.exists():
-            docker_dir.mkdir()
-
+        docker_file = self.docker_dir / 'Dockerfile'
         docker_file.write_text(self.docker_template)
-        shutil.copy(os.path.join(self.args.build_dir, 'requirements.txt'), docker_dir)
-        run_cmd(["docker", "build", "--rm=True", "-t", self.tag, "."], chdir=docker_dir, timeout=1200).check_returncode()
-        shutil.rmtree(docker_dir)
+        shutil.copy(os.path.join(self.args.build_dir, 'requirements.txt'), self.docker_dir)
+        run_cmd(["docker", "build", "--rm=True", "-t", self.tag, "."], chdir=self.docker_dir, timeout=1200).check_returncode()
+        shutil.rmtree(self.docker_dir)
 
     def run(self, cmd, build_dir, container_name, user='odoo', exposed_port=None, detach=False, timeout=None):
         self.container_name = container_name
@@ -402,13 +401,19 @@ class DockerWine(Docker):
 
     arch = 'win'
 
+    def build_image(self):
+        shutil.copy(os.path.join(self.args.build_dir, 'setup/win32/requirements-local-proxy.txt'), self.docker_dir)
+        super().build_image()
+
     def build(self):
         logging.info('Start building windows package')
         winver = "%s.%s" % (VERSION.replace('~', '_').replace('+', ''), TSTAMP)
         container_python = '/var/lib/odoo/.wine/drive_c/odoobuild/WinPy64/python-3.12.3.amd64/python.exe'
+        nsis_args = f'/DVERSION={winver} /DMAJOR_VERSION={version_info[0]} /DMINOR_VERSION={version_info[1]} /DSERVICENAME={nt_service_name} /DPYTHONVERSION=3.12.3'
         cmds = [
-            rf'cat /data/src/requirements.txt | while read PACKAGE; do wine {container_python} -m pip install "${{PACKAGE%%#*}}" ; done',
-            fr'wine "c:\nsis-3.10\makensis.exe" /DVERSION={winver} /DSERVICENAME={nt_service_name} /DPYTHONVERSION=3.12.3 "c:\odoobuild\server\setup\win32\setup.nsi"',
+            rf'wine {container_python} -m pip install --upgrade pip',
+            rf'cat /data/src/requirements*.txt  | while read PACKAGE; do wine {container_python} -m pip install "${{PACKAGE%%#*}}" ; done',
+            rf'wine "c:\nsis-3.10\makensis.exe" {nsis_args} "c:\odoobuild\server\setup\win32\setup.nsi"',
             rf'wine {container_python} -m pip list'
         ]
         self.run(' && '.join(cmds), self.args.build_dir, 'odoo-win-build-%s' % TSTAMP)
