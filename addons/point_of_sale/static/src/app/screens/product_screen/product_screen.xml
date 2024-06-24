@@ -22,7 +22,7 @@
                     <CategorySelector class="'d-grid p-1 gap-1'" style="'grid-template-columns: repeat(4, 1fr);'"
                         categories="getCategoriesAndSub()" onClick="(id) => this.pos.setSelectedCategory(id)"/>
                     <CameraBarcodeScanner t-if="pos.scanning"/>
-                    <div t-elif="productsToDisplay.length != 0 and pos.posHasValidProduct()" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
+                    <div t-elif="productsToDisplay.length != 0 and pos.session._has_available_products" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
                         <ProductCard
                             t-foreach="productsToDisplay" t-as="product" t-key="product.id"
                             class="pos.productViewMode"
@@ -37,7 +37,7 @@
                     </div>
                     <div t-else="" class="flex-grow-1 text-center mt-5">
                         <p t-if="searchWord">No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>
-                        <p t-elif="pos.posHasValidProduct()">There are no products in this category.</p>
+                        <p t-elif="pos.session._has_available_products">There are no products in this category.</p>
                     </div>
                     <div t-if="searchWord" class="search-more-button d-flex justify-content-center m-2">
                         <button class="btn btn-primary btn-lg" t-on-click="onPressEnterKey">Search more</button>
