@@ -17,11 +17,12 @@
                 <thead>
                     <tr>
                         <!-- Allows overrides in modules -->
-                        <t t-set="group_by_in_header_list" t-value="['priority', 'state', 'project_id', 'stage_id', 'milestone_id']"></t>
-                        <t t-set="number_of_header" t-value="8"></t>
+                        <t t-set="group_by_in_header_list" t-value="['priority', 'milestone_id']"></t>
+                        <t t-if="multiple_projects" t-set="group_by_in_header_list" t-value="group_by_in_header_list + ['project_id']"/>
                         <!-- Computes the right colspan once and use it everywhere -->
-                        <t t-set="grouped_tasks_colspan" t-value="number_of_header - 1 if groupby in group_by_in_header_list else number_of_header"></t>
-                        <t t-set="grouped_tasks_colspan" t-value="grouped_tasks_colspan if allow_milestone else grouped_tasks_colspan - 1"></t>
+                        <t t-set="grouped_tasks_colspan" t-value="5 if groupby in group_by_in_header_list else 6"></t>
+                        <t t-set="grouped_tasks_colspan" t-if="not allow_milestone" t-value="grouped_tasks_colspan - 1"></t>
+                        <t t-set="grouped_tasks_colspan" t-if="not multiple_projects" t-value="grouped_tasks_colspan - 1"/>
                         <th t-attf-colspan="{{2 if groupby != 'priority' else 1}}"/>
                         <th>Name</th>
                         <th>Assignees</th>
@@ -33,36 +34,42 @@
                 </thead>
                 <t t-foreach="grouped_tasks" t-as="tasks">
                     <tbody t-if="tasks">
-                        <tr t-if="not groupby == 'none'" class="table-light">
-                            <th t-if="groupby == 'project_id' and multiple_projects" t-attf-colspan="{{grouped_tasks_colspan}}">
-                                <!-- This div is necessary for documents_project_sale -->
-                                <div name="project_name" class="d-flex w-100 align-items-center">
-                                    <span t-if="tasks[0].sudo().project_id" t-field="tasks[0].sudo().project_id.name"/>
-                                    <span t-else="">No Project</span>
-                                </div>
+                        <tr name="grouped_tasks_groupby_columns" t-if="groupby != 'none'" class="table-light">
+                            <th name="groupby_name_col" t-att-colspan="grouped_tasks_colspan">
+                                <t t-if="groupby == 'project_id' and multiple_projects">
+                                    <!-- This div is necessary for documents_project_sale -->
+                                    <div name="project_name" class="d-flex w-100 align-items-center">
+                                        <span t-if="tasks[0].sudo().project_id" t-field="tasks[0].sudo().project_id.name"/>
+                                        <span t-else="">No Project</span>
+                                    </div>
+                                </t>
+                                <t t-elif="groupby == 'milestone_id'">
+                                    <span t-if="tasks[0].sudo().milestone_id and tasks[0].sudo().allow_milestones"
+                                        class="text-truncate"
+                                        t-field="tasks[0].sudo().milestone_id.name"/>
+                                    <span t-else="">No Milestone</span>
+                                </t>
+                                <t t-if="groupby == 'stage_id'">
+                                    <!-- This div is necessary for documents_project_sale -->
+                                    <div name="stage_name" class="d-flex w-100 align-items-center">
+                                        <span class="text-truncate" t-field="tasks[0].sudo().stage_id.name"/>
+                                    </div>
+                                </t>
+                                <t t-if="groupby == 'priority'">
+                                    <span class="text-truncate" t-field="tasks[0].sudo().priority"/>
+                                </t>
+                                <t t-if="groupby == 'state'">
+                                    <span class="text-truncate" t-field="tasks[0].sudo().state"/>
+                                </t>
+                                <t t-if="groupby == 'partner_id'">
+                                    <span t-if="tasks[0].sudo().partner_id"
+                                        class="text-truncate"
+                                        t-field="tasks[0].sudo().partner_id.name"/>
+                                    <span t-else="">No Customer</span>
+                                </t>
                             </th>
-                            <th t-if="groupby == 'milestone_id'" t-attf-colspan="{{grouped_tasks_colspan}}">
-                                <span t-if="tasks[0].sudo().milestone_id and tasks[0].sudo().allow_milestones"
-                                      class="text-truncate"
-                                      t-field="tasks[0].sudo().milestone_id.name"/>
-                                <span t-else="">No Milestone</span>
-                            </th>
-                            <th t-if="groupby == 'stage_id'" t-attf-colspan="{{grouped_tasks_colspan}}">
-                                <!-- This div is necessary for documents_project_sale -->
-                                <div name="stage_name" class="d-flex w-100 align-items-center">
-                                    <span class="text-truncate" t-field="tasks[0].sudo().stage_id.name"/>
-                                </div>
-                            </th>
-                            <th t-if="groupby == 'priority'" t-attf-colspan="{{grouped_tasks_colspan}}">
-                                <span class="text-truncate" t-field="tasks[0].sudo().priority"/></th>
-                            <th t-if="groupby == 'state'" t-attf-colspan="{{grouped_tasks_colspan}}">
-                                <span class="text-truncate" t-field="tasks[0].sudo().state"/></th>
-                            <th t-if="groupby == 'partner_id'" t-attf-colspan="{{grouped_tasks_colspan}}">
-                                <span t-if="tasks[0].sudo().partner_id"
-                                      class="text-truncate"
-                                      t-field="tasks[0].sudo().partner_id.name"/>
-                                <span t-else="">No Customer</span>
-                            </th>
+                            <th name="state_col" t-if="groupby != 'state'"/>
+                            <th name="stage_id_col" t-if="groupby != 'stage_id'"/>
                         </tr>
                     </tbody>
                     <tbody t-if="tasks">
