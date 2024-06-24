@@ -1811,10 +1811,9 @@ class AccountMoveLine(models.Model):
         query.add_where('account.id = account_move_line.account_id')
         id_rows = self.env.execute_query(SQL("""
             SELECT account.root_id
-              FROM account_account account,
-                   LATERAL (%s) line
-             WHERE account.company_id IN %s
-        """, query.select(), tuple(self.env.companies.ids)))
+              FROM account_account account
+             WHERE EXISTS(%s)
+        """, query.select()))
         return {
             root.id: {'id': root.id, 'display_name': root.display_name}
             for root in self.env['account.root'].browse(id_ for [id_] in id_rows)
