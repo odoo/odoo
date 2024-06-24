@@ -175,4 +175,4 @@ export const uploadService = {
     },
 };
 
-registry.category('services').add('upload', uploadService);
+// registry.category('services').add('upload', uploadService);

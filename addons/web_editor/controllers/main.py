@@ -19,15 +19,14 @@ from os.path import join as opj
 from odoo.http import request, Response
 from odoo import http, tools, _, SUPERUSER_ID, release
 from odoo.addons.http_routing.models.ir_http import slug, unslug
-from odoo.addons.web_editor.tools import get_video_url_data
 from odoo.exceptions import UserError, MissingError, AccessError
 from odoo.tools.misc import file_open
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_data_uri, binary_to_image
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.addons.html_editor.models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
-from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
 logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
@@ -253,50 +252,6 @@ class Web_Editor(http.Controller):
 
         return value
 
-    @http.route('/web_editor/video_url/data', type='json', auth='user', website=True)
-    def video_url_data(self, video_url, autoplay=False, loop=False,
-                       hide_controls=False, hide_fullscreen=False, hide_yt_logo=False,
-                       hide_dm_logo=False, hide_dm_share=False):
-        return get_video_url_data(
-            video_url, autoplay=autoplay, loop=loop,
-            hide_controls=hide_controls, hide_fullscreen=hide_fullscreen,
-            hide_yt_logo=hide_yt_logo, hide_dm_logo=hide_dm_logo,
-            hide_dm_share=hide_dm_share
-        )
-
-    @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
-    def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
-        data = b64decode(data)
-        if is_image:
-            format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_MIMETYPES.values()))
-            try:
-                data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
-                mimetype = guess_mimetype(data)
-                if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
-                    return {'error': format_error_msg}
-                if not name:
-                    name = '%s-%s%s' % (
-                        datetime.now().strftime('%Y%m%d%H%M%S'),
-                        str(uuid.uuid4())[:6],
-                        SUPPORTED_IMAGE_MIMETYPES[mimetype],
-                    )
-            except UserError:
-                # considered as an image by the browser file input, but not
-                # recognized as such by PIL, eg .webp
-                return {'error': format_error_msg}
-            except ValueError as e:
-                return {'error': e.args[0]}
-
-        self._clean_context()
-        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
-        return attachment._get_media_info()
-
-    @http.route('/web_editor/attachment/add_url', type='json', auth='user', methods=['POST'], website=True)
-    def add_url(self, url, res_id=False, res_model='ir.ui.view', **kwargs):
-        self._clean_context()
-        attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model)
-        return attachment._get_media_info()
-
     @http.route('/web_editor/attachment/remove', type='json', auth='user', website=True)
     def remove(self, ids, **kwargs):
         """ Removes a web-based image attachment if it is used by no view (template)
@@ -361,60 +316,6 @@ class Web_Editor(http.Controller):
             'attachment': attachment.read(['id'])[0],
             'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
         }
-
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
-        """Create and return a new attachment."""
-        IrAttachment = request.env['ir.attachment']
-
-        if name.lower().endswith('.bmp'):
-            # Avoid mismatch between content type and mimetype, see commit msg
-            name = name[:-4]
-
-        if not name and url:
-            name = url.split("/").pop()
-
-        if res_model != 'ir.ui.view' and res_id:
-            res_id = int(res_id)
-        else:
-            res_id = False
-
-        attachment_data = {
-            'name': name,
-            'public': res_model == 'ir.ui.view',
-            'res_id': res_id,
-            'res_model': res_model,
-        }
-
-        if data:
-            attachment_data['raw'] = data
-            if url:
-                attachment_data['url'] = url
-        elif url:
-            attachment_data.update({
-                'type': 'url',
-                'url': url,
-            })
-        else:
-            raise UserError(_("You need to specify either data or url to create an attachment."))
-
-        # Despite the user having no right to create an attachment, he can still
-        # create an image attachment through some flows
-        if (
-            not request.env.is_admin()
-            and IrAttachment._can_bypass_rights_on_media_dialog(**attachment_data)
-        ):
-            attachment = IrAttachment.sudo().create(attachment_data)
-            # When portal users upload an attachment with the wysiwyg widget,
-            # the access token is needed to use the image in the editor. If
-            # the attachment is not public, the user won't be able to generate
-            # the token, so we need to generate it using sudo
-            if not attachment_data['public']:
-                attachment.sudo().generate_access_token()
-        else:
-            attachment = get_existing_attachment(IrAttachment, attachment_data) \
-                or IrAttachment.create(attachment_data)
-
-        return attachment
 
     def _clean_context(self):
         # avoid allowed_company_ids which may erroneously restrict based on website
