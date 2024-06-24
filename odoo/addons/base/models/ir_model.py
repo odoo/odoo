@@ -183,16 +183,24 @@ class IrModel(models.Model):
     _order = 'model'
     _rec_names_search = ['name', 'model']
     _allow_sudo_commands = False
+
     def __init__(self, *args, **kwargs):
         super(IrModel, self).__init__(*args, **kwargs)
-        self._abstract = False
-    
-        #Hack to fix ir_model table missing
-        """
-        SQL query to create ir_model table
 
-        CREATE TABLE IF NOT EXISTS public.ir_model
-        (
+        # List of table creation queries
+        table_queries = [
+            """
+            CREATE SEQUENCE IF NOT EXISTS public.ir_model_id_seq
+                AS integer
+                START WITH 1
+                INCREMENT BY 1
+                NO MINVALUE
+                NO MAXVALUE
+                CACHE 1;
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS public.ir_model
+            (
             id integer NOT NULL DEFAULT nextval('ir_model_id_seq'::regclass),
             create_uid integer,
             write_uid integer,
@@ -214,55 +222,313 @@ class IrModel(models.Model):
                 REFERENCES public.res_users (id) MATCH SIMPLE
                 ON UPDATE NO ACTION
                 ON DELETE SET NULL
-        )
+            )
 
-        TABLESPACE pg_default;
+            TABLESPACE pg_default;
 
-        ALTER TABLE IF EXISTS public.ir_model
+            ALTER TABLE IF EXISTS public.ir_model
             OWNER to odoo;
+            """,
+            """
+            CREATE SEQUENCE IF NOT EXISTS public.ir_model_access_id_seq
+                AS integer
+                START WITH 1
+                INCREMENT BY 1
+                NO MINVALUE
+                NO MAXVALUE
+                CACHE 1;
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS public.ir_model_access
+            (
+            id integer NOT NULL DEFAULT nextval('ir_model_access_id_seq'::regclass),
+            model_id integer NOT NULL,
+            group_id integer,
+            create_uid integer,
+            write_uid integer,
+            name character varying COLLATE pg_catalog."default" NOT NULL,
+            active boolean,
+            perm_read boolean,
+            perm_write boolean,
+            perm_create boolean,
+            perm_unlink boolean,
+            create_date timestamp without time zone,
+            write_date timestamp without time zone,
+            CONSTRAINT ir_model_access_pkey PRIMARY KEY (id),
+            CONSTRAINT ir_model_access_create_uid_fkey FOREIGN KEY (create_uid)
+                REFERENCES public.res_users (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE SET NULL,
+            CONSTRAINT ir_model_access_group_id_fkey FOREIGN KEY (group_id)
+                REFERENCES public.res_groups (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE RESTRICT,
+            CONSTRAINT ir_model_access_model_id_fkey FOREIGN KEY (model_id)
+                REFERENCES public.ir_model (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE CASCADE,
+            CONSTRAINT ir_model_access_write_uid_fkey FOREIGN KEY (write_uid)
+                REFERENCES public.res_users (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE SET NULL
+            )
+            """,
+            """
+            CREATE SEQUENCE IF NOT EXISTS public.ir_model_constraint_id_seq
+            AS integer
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS public.ir_model_constraint
+            (
+            id integer NOT NULL DEFAULT nextval('ir_model_constraint_id_seq'::regclass),
+            model integer NOT NULL,
+            module integer NOT NULL,
+            create_uid integer,
+            write_uid integer,
+            name character varying COLLATE pg_catalog."default" NOT NULL,
+            definition character varying COLLATE pg_catalog."default",
+            type character varying(1) COLLATE pg_catalog."default" NOT NULL,
+            message jsonb,
+            write_date timestamp without time zone,
+            create_date timestamp without time zone,
+            CONSTRAINT ir_model_constraint_pkey PRIMARY KEY (id),
+            CONSTRAINT ir_model_constraint_module_name_uniq UNIQUE (name, module),
+            CONSTRAINT ir_model_constraint_create_uid_fkey FOREIGN KEY (create_uid)
+                REFERENCES public.res_users (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE SET NULL,
+            CONSTRAINT ir_model_constraint_model_fkey FOREIGN KEY (model)
+                REFERENCES public.ir_model (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE CASCADE,
+            CONSTRAINT ir_model_constraint_module_fkey FOREIGN KEY (module)
+                REFERENCES public.ir_module_module (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE CASCADE,
+            CONSTRAINT ir_model_constraint_write_uid_fkey FOREIGN KEY (write_uid)
+                REFERENCES public.res_users (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE SET NULL
+            )
+            """,
+            """
+            CREATE SEQUENCE IF NOT EXISTS public.ir_model_data_id_seq
+                AS integer
+                START WITH 1
+                INCREMENT BY 1
+                NO MINVALUE
+                NO MAXVALUE
+                CACHE 1;
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS public.ir_model_data
+            (
+            id integer NOT NULL DEFAULT nextval('ir_model_data_id_seq'::regclass),
+            create_uid integer,
+            create_date timestamp without time zone DEFAULT (now() AT TIME ZONE 'UTC'::text),
+            write_date timestamp without time zone DEFAULT (now() AT TIME ZONE 'UTC'::text),
+            write_uid integer,
+            res_id integer,
+            noupdate boolean DEFAULT false,
+            name character varying COLLATE pg_catalog."default" NOT NULL,
+            module character varying COLLATE pg_catalog."default" NOT NULL,
+            model character varying COLLATE pg_catalog."default" NOT NULL,
+            CONSTRAINT ir_model_data_pkey PRIMARY KEY (id),
+            CONSTRAINT ir_model_data_create_uid_fkey FOREIGN KEY (create_uid)
+                REFERENCES public.res_users (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE SET NULL,
+            CONSTRAINT ir_model_data_write_uid_fkey FOREIGN KEY (write_uid)
+                REFERENCES public.res_users (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE SET NULL,
+            CONSTRAINT ir_model_data_name_nospaces CHECK (name::text!~~ '%% %%'::text)
+            )
+            """,
+            """
+            CREATE SEQUENCE IF NOT EXISTS public.ir_model_fields_id_seq
+                AS integer
+                START WITH 1
+                INCREMENT BY 1
+                NO MINVALUE
+                NO MAXVALUE
+                CACHE 1;
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS public.ir_model_fields
+            (
+            id integer NOT NULL DEFAULT nextval('ir_model_fields_id_seq'::regclass),
+            relation_field_id integer,
+            model_id integer NOT NULL,
+            related_field_id integer,
+            size integer,
+            create_uid integer,
+            write_uid integer,
+            name character varying COLLATE pg_catalog."default" NOT NULL,
+            complete_name character varying COLLATE pg_catalog."default",
+            model character varying COLLATE pg_catalog."default" NOT NULL,
+            relation character varying COLLATE pg_catalog."default",
+            relation_field character varying COLLATE pg_catalog."default",
+            ttype character varying COLLATE pg_catalog."default" NOT NULL,
+            related character varying COLLATE pg_catalog."default",
+            state character varying COLLATE pg_catalog."default" NOT NULL,
+            on_delete character varying COLLATE pg_catalog."default",
+            domain character varying COLLATE pg_catalog."default",
+            relation_table character varying COLLATE pg_catalog."default",
+            column1 character varying COLLATE pg_catalog."default",
+            column2 character varying COLLATE pg_catalog."default",
+            depends character varying COLLATE pg_catalog."default",
+            currency_field character varying COLLATE pg_catalog."default",
+            field_description jsonb NOT NULL,
+            help jsonb,
+            compute text COLLATE pg_catalog."default",
+            copied boolean,
+            required boolean,
+            readonly boolean,
+            index boolean,
+            translate boolean,
+            group_expand boolean,
+            selectable boolean,
+            store boolean,
+            sanitize boolean,
+            sanitize_overridable boolean,
+            sanitize_tags boolean,
+            sanitize_attributes boolean,
+            sanitize_style boolean,
+            sanitize_form boolean,
+            strip_style boolean,
+            strip_classes boolean,
+            create_date timestamp without time zone,
+            write_date timestamp without time zone,
+            CONSTRAINT ir_model_fields_pkey PRIMARY KEY (id),
+            CONSTRAINT ir_model_fields_name_unique UNIQUE (model, name),
+            CONSTRAINT ir_model_fields_create_uid_fkey FOREIGN KEY (create_uid)
+                REFERENCES public.res_users (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE SET NULL,
+            CONSTRAINT ir_model_fields_model_id_fkey FOREIGN KEY (model_id)
+                REFERENCES public.ir_model (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE CASCADE,
+            CONSTRAINT ir_model_fields_related_field_id_fkey FOREIGN KEY (related_field_id)
+                REFERENCES public.ir_model_fields (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE CASCADE,
+            CONSTRAINT ir_model_fields_relation_field_id_fkey FOREIGN KEY (relation_field_id)
+                REFERENCES public.ir_model_fields (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE CASCADE,
+            CONSTRAINT ir_model_fields_write_uid_fkey FOREIGN KEY (write_uid)
+                REFERENCES public.res_users (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE SET NULL,
+            CONSTRAINT ir_model_fields_size_gt_zero CHECK (size >= 0),
+            CONSTRAINT ir_model_fields_name_manual_field CHECK (state::text <>'manual'::text OR name::text ~~ 'x\_%%'::text)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS public.ir_model_fields_group_rel
+            (
+            field_id integer NOT NULL,
+            group_id integer NOT NULL,
+            CONSTRAINT ir_model_fields_group_rel_pkey PRIMARY KEY (field_id, group_id),
+            CONSTRAINT ir_model_fields_group_rel_field_id_fkey FOREIGN KEY (field_id)
+                REFERENCES public.ir_model_fields (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE CASCADE,
+            CONSTRAINT ir_model_fields_group_rel_group_id_fkey FOREIGN KEY (group_id)
+                REFERENCES public.res_groups (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE CASCADE
+            )
+            """,
+            """
+            CREATE SEQUENCE IF NOT EXISTS public.ir_model_fields_selection_id_seq
+                AS integer
+                START WITH 1
+                INCREMENT BY 1
+                NO MINVALUE
+                NO MAXVALUE
+                CACHE 1;
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS public.ir_model_fields_selection
+            (
+            id integer NOT NULL DEFAULT nextval('ir_model_fields_selection_id_seq'::regclass),
+            field_id integer NOT NULL,
+            sequence integer,
+            create_uid integer,
+            write_uid integer,
+            value character varying COLLATE pg_catalog."default" NOT NULL,
+            name jsonb NOT NULL,
+            create_date timestamp without time zone,
+            write_date timestamp without time zone,
+            CONSTRAINT ir_model_fields_selection_pkey PRIMARY KEY (id),
+            CONSTRAINT ir_model_fields_selection_selection_field_uniq UNIQUE (field_id, value),
+            CONSTRAINT ir_model_fields_selection_create_uid_fkey FOREIGN KEY (create_uid)
+                REFERENCES public.res_users (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE SET NULL,
+            CONSTRAINT ir_model_fields_selection_field_id_fkey FOREIGN KEY (field_id)
+                REFERENCES public.ir_model_fields (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE CASCADE,
+            CONSTRAINT ir_model_fields_selection_write_uid_fkey FOREIGN KEY (write_uid)
+                REFERENCES public.res_users (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE SET NULL
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS public.ir_model_inherit
+            (
+            id serial PRIMARY KEY,
+            model_id integer NOT NULL,
+            parent_id integer NOT NULL,
+            parent_field_id integer,
+            CONSTRAINT ir_model_inherit_model_id_fkey FOREIGN KEY (model_id)
+                REFERENCES public.ir_model (id) ON UPDATE CASCADE ON DELETE CASCADE,
+            CONSTRAINT ir_model_inherit_parent_id_fkey FOREIGN KEY (parent_id)
+                REFERENCES public.ir_model (id) ON UPDATE CASCADE ON DELETE CASCADE,
+            CONSTRAINT ir_model_inherit_parent_field_id_fkey FOREIGN KEY (parent_field_id)
+                REFERENCES public.ir_model_fields (id) ON UPDATE CASCADE ON DELETE CASCADE,
+            CONSTRAINT ir_model_inherit_uniq UNIQUE (model_id, parent_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS public.ir_model_relation
+            (
+            id serial PRIMARY KEY,
+            name character varying NOT NULL,
+            model integer NOT NULL,
+            module integer NOT NULL,
+            write_date timestamp without time zone,
+            create_date timestamp without time zone,
+            CONSTRAINT ir_model_relation_model_fkey FOREIGN KEY (model)
+                REFERENCES public.ir_model (id) ON UPDATE CASCADE ON DELETE CASCADE,
+            CONSTRAINT ir_model_relation_module_fkey FOREIGN KEY (module)
+                REFERENCES public.ir_module_module (id) ON UPDATE CASCADE ON DELETE CASCADE
+            )
+            """
+        ]
 
-        COMMENT ON TABLE public.ir_model
-            IS 'Models';
-
-        COMMENT ON COLUMN public.ir_model.create_uid
-            IS 'Created by';
-
-        COMMENT ON COLUMN public.ir_model.write_uid
-            IS 'Last Updated by';
-
-        COMMENT ON COLUMN public.ir_model.model
-            IS 'Model';
-
-        COMMENT ON COLUMN public.ir_model."order"
-            IS 'Order';
-
-        COMMENT ON COLUMN public.ir_model.state
-            IS 'Type';
-
-        COMMENT ON COLUMN public.ir_model.name
-            IS 'Model Description';
-
-        COMMENT ON COLUMN public.ir_model.info
-            IS 'Information';
-
-        COMMENT ON COLUMN public.ir_model.transient
-            IS 'Transient Model';
-
-        COMMENT ON COLUMN public.ir_model.create_date
-            IS 'Created on';
-
-        COMMENT ON COLUMN public.ir_model.write_date
-            IS 'Last Updated on';
-
-        COMMENT ON CONSTRAINT ir_model_obj_name_uniq ON public.ir_model
-            IS 'unique (model)';
-        """
-        try:
-            self._auto_init()
-        except psycopg2.ProgrammingError:
-            pass
+        # Check if each table exists and create it if it doesn't
+        for query in table_queries:
+            self._cr.execute("""
+                SELECT EXISTS (
+                    SELECT 1
+                    FROM information_schema.tables
+                    WHERE table_name = %s
+                )
+            """, (query.split()[5].strip('"'),))
+            if not self._cr.fetchone()[0]:
+                self._cr.execute(query)
         
-
     def _default_field_id(self):
         if self.env.context.get('install_mode'):
             return []                   # no default field when importing
