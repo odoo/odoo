@@ -289,6 +289,8 @@ class CustomerPortal(payment_portal.PaymentPortal):
         if not order_sudo._has_to_be_paid():
             order_sudo.action_confirm()
             order_sudo._send_order_confirmation_mail()
+            if not order_sudo.amount_total:
+                order_sudo._validate_zero_amount_orders()
 
         pdf = request.env['ir.actions.report'].sudo()._render_qweb_pdf('sale.action_report_saleorder', [order_sudo.id])[0]
 

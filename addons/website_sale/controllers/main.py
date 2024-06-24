@@ -1775,7 +1775,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if order and not order.amount_total and not tx_sudo:
             if order.state != 'sale':
-                order._validate_zero_amount_cart()
+                order.with_context(send_email=True).sudo().action_confirm()
+                order._validate_zero_amount_orders()
 
             # clean context and session, then redirect to the portal page
             request.website.sale_reset()
