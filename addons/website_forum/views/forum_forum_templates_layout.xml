@@ -235,7 +235,7 @@
 <!-- User sidebar -->
 <template id="user_sidebar">
     <aside class="o_wforum_sidebar col-3 d-none d-lg-flex flex-column z-1">
-        <div class="flex-grow-1 px-2">
+        <div class="nav d-block px-2">
             <t t-call="website_forum.user_sidebar_header"/>
             <t t-call="website_forum.user_sidebar_body"/>
         </div>
@@ -252,7 +252,7 @@
     <div id="o_wforum_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none mw-75 p-0 overflow-visible">
         <button type="button" class="btn-close mt-3 ms-auto me-3" data-bs-dismiss="offcanvas" aria-label="Close"/>
         <div class="offcanvas-header align-items-start px-0" t-call="website_forum.user_sidebar_header"/>
-        <div class="offcanvas-body d-flex flex-column py-0">
+        <div class="offcanvas-body d-flex flex-column py-0 nav">
             <t t-call="website_forum.user_sidebar_body"/>
             <div t-if="forum" class="mb-2 d-flex justify-content-center align-items-end flex-grow-1">
                 <a class="btn btn-sm btn-link" t-att-href="_forum_path + '/faq'">
@@ -267,7 +267,7 @@
 <template id="user_sidebar_header">
     <t t-set="_location" t-value="( ('/tag/' + slug(tag) + '/questions?') if tag else '?' )"/>
 
-    <div t-if="not uid" class="o_wforum_sidebar_section mt-4 text-center">
+    <div t-if="not uid" class="o_wforum_sidebar_section mt-4 text-center mx-3 mx-lg-0">
         <div class="alert alert-info mb-2"><span>You need to be registered to interact with the community.</span>
             <a t-if="is_public_user and forum_welcome_message" href="/web/login" class="btn btn-primary mt-2">Sign up</a>
         </div>
@@ -315,7 +315,7 @@
     </div>
     <div t-if="forum and user.karma>=forum.karma_moderate" class="o_wforum_sidebar_section pt-3">
         <!-- Moderation Tools -->
-        <div class="pb-1 fw-bold">Moderation tools</div>
+        <div class="px-3 pb-1 fw-bold">Moderation tools</div>
         <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if queue_type == 'validation' else 'text-reset'}" t-attf-href="/forum/#{_forum_slug}/validation_queue">
             <i t-attf-class="fa fa-check-square-o fa-fw #{ 'opacity-50' if queue_type != 'validation' else ''}"/> To Validate
             <span id="count_posts_queue_validation" t-attf-class="badge #{ 'text-bg-warning' if forum.count_posts_waiting_validation > 0 else 'd-none'}" t-out="forum.count_posts_waiting_validation"/>
@@ -329,7 +329,7 @@
         </a>
     </div>
     <div t-if="forum and forum.tag_most_used_ids" class="o_wforum_sidebar_section pt-3">
-        <div class="d-flex align-items-center pb-1 fw-bold">Tags
+        <div class="d-flex align-items-center px-3 pb-1 fw-bold">Tags
             <a class="ms-2 px-0 fw-normal" t-att-href="_forum_path + '/tag'">
                 <small>(View all)</small>
             </a>
@@ -342,7 +342,7 @@
         </a>
     </div>
     <div t-if="my_other_forums" class="o_wforum_sidebar_section pt-3">
-        <div class="pb-1 fw-bold">My forums</div>
+        <div class="px-3 pb-1 fw-bold">My forums</div>
         <t t-foreach="my_other_forums.sorted(lambda f: f.name.casefold())" t-as="my_forum">
             <a class="nav-link my-1 py-1 text-reset" t-attf-href="/forum/#{slug(my_forum)}">
                 <i class="fa fa-file-o fa-fw opacity-50"/>
