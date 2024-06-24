@@ -7,8 +7,17 @@ import { serializeDateTime } from "@web/core/l10n/dates";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
+import {
+    ProductLabelSectionAndNoteField,
+    productLabelSectionAndNoteField,
+    productLabelSectionAndNoteOne2Many,
+    ProductLabelSectionAndNoteOne2Many,
+    ProductLabelSectionAndNoteListRender
+} from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
 import { ProductConfiguratorDialog } from "./product_configurator_dialog/product_configurator_dialog";
+import {
+    sectionAndNoteFieldOne2Many,
+} from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
 
 async function applyProduct(record, product) {
     // handle custom values & no variants
@@ -42,10 +51,10 @@ async function applyProduct(record, product) {
 };
 
 
-export class SaleOrderLineProductField extends Many2OneField {
+export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     static template = "sale.SaleProductField";
     static props = {
-        ...Many2OneField.props,
+        ...ProductLabelSectionAndNoteField.props,
         readonlyField: { type: Boolean, optional: true },
     };
 
@@ -256,13 +265,66 @@ export class SaleOrderLineProductField extends Many2OneField {
 }
 
 export const saleOrderLineProductField = {
-    ...many2OneField,
+    ...productLabelSectionAndNoteField,
     component: SaleOrderLineProductField,
     extractProps(fieldInfo, dynamicInfo) {
-        const props = many2OneField.extractProps(...arguments);
+        const props = productLabelSectionAndNoteField.extractProps(...arguments);
         props.readonlyField = dynamicInfo.readonly;
         return props;
     },
 };
 
 registry.category("fields").add("sol_product_many2one", saleOrderLineProductField);
+
+
+export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRender {
+    getCellTitle(column, record) {
+        // When using this list renderer, we don't want the product_id cell to have a tooltip with its label.
+        if (column.name === "product_id" || column.name === "product_template_id") {
+            return;
+        }
+        super.getCellTitle(column, record);
+    }
+
+    getActiveColumns(list) {
+        let activeColumns = super.getActiveColumns(list);
+        let productTmplCol = activeColumns.find((col) => col.name === "product_template_id");
+        let productCol = activeColumns.find((col) => col.name === "product_id");
+
+        if (productCol && productTmplCol) {
+            // hide the template column if the variant one is enabled
+            activeColumns = activeColumns.filter((col) => col.name != "product_template_id")
+        } else if (productTmplCol) {
+            // The `product_template_id` field should behave as the variant field
+            // c/p of super method logic
+            this.titleField = "product_template_id";
+
+            const labelCol = activeColumns.find((col) => col.name === "name");
+            if (labelCol) {
+                list.records.forEach((record) => (record.columnIsProductAndLabel = true));
+            } else {
+                list.records.forEach((record) => (record.columnIsProductAndLabel = false));
+            }
+
+            activeColumns = activeColumns.filter((col) => col.name !== "name");
+        }
+
+        return activeColumns;
+    }
+}
+
+export class SaleOrderLineOne2Many extends ProductLabelSectionAndNoteOne2Many {
+    static components = {
+        ...ProductLabelSectionAndNoteOne2Many.components,
+        ListRenderer: SaleOrderLineListRenderer,
+    };
+}
+export const saleOrderLineOne2Many = {
+    ...productLabelSectionAndNoteOne2Many,
+    component: SaleOrderLineOne2Many,
+    additionalClasses: sectionAndNoteFieldOne2Many.additionalClasses,
+};
+
+registry
+    .category("fields")
+    .add("sol_o2m", saleOrderLineOne2Many);

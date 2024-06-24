@@ -118,9 +118,9 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
         this.switchToLabel = false;
         this.columnIsProductAndLabel = useState({ value: this.props.record.columnIsProductAndLabel });
         this.labelNode = useRef("labelNodeRef");
-        useProductAndLabelAutoresize(this.labelNode, { targetParentName: "product_id" });
+        useProductAndLabelAutoresize(this.labelNode, { targetParentName: this.props.name });
         this.productNode = useRef("productNodeRef");
-        useProductAndLabelAutoresize(this.productNode, { targetParentName: "product_id" });
+        useProductAndLabelAutoresize(this.productNode, { targetParentName: this.props.name });
 
         useEffect(
             () => {
