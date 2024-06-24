@@ -2881,6 +2881,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             });
         }
 
+        console.log('options', this.options)
         return this._search('');
     },
     /**
@@ -2954,6 +2955,23 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             this.options.domainComponents.filterInModel = ['id', 'in', [...allowedIds]];
         }
     },
+    /**
+     * Retries records display_name and cache them.
+     *
+     * @param {integer[]} recordsIds
+     * @returns {Promise<[{ [this.options.callWith]: integer, display_name: string }]>}
+     */
+    async getRecords(recordsIds) {
+        const idKey = this.options.callWith;
+        const records = await this.orm.read(this.options.model, recordsIds, [idKey, 'display_name']);
+        return records.map(record => {
+            this.displayNameCache[record[idKey]] = record.display_name;
+            return ({
+                [idKey]: record[idKey],
+                display_name: record.display_name,
+            });
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -2965,6 +2983,18 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
      * @private
      */
     async _search(needle) {
+        if (!this.options.model) {
+            if (!this.noModelWarningElement) {
+                this.noModelWarningElement = document.createElement("div");
+                this.noModelWarningElement.innerText = _t("This widget has no configured model.");
+                this.menuEl.append(this.noModelWarningElement);
+            }
+            return Promise.resolve();
+        } else if (this.noModelWarningElement) {
+            this.noModelWarningElement.destroy();
+            delete this.noModelWarningElement;
+        }
+
         const recTuples = await this.orm.call(this.options.model, "name_search", [], {
             name: needle,
             args: (await this._getSearchDomain()).concat(
@@ -3172,11 +3202,13 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
             }
         });
         this.filterIn = options.filterIn !== undefined;
+
+        // Configure child m2o
         if (this.filterIn) {
-            // Transfer filter-in values to child m2o.
             dataAttributes.filterInModel = options.model;
             dataAttributes.filterInField = options.m2oField;
         }
+
         this.orm = this.bindService("orm");
         this.fields = this.bindService("field");
         return this._super(...arguments);
@@ -3186,6 +3218,7 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
      */
     async willStart() {
         await this._super(...arguments);
+        console.log(this.options)
         // If the widget does not have a real m2m field in the database
         // We do not need to fetch anything from the DB
         if (this.options.fakem2m) {
@@ -3260,7 +3293,8 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    setValue(value, methodName) {
+    async setValue(value, methodName) {
+        const _super = this._super;
         if (methodName === this.options.createMethod) {
             return this.createWidget.setValue(value, methodName);
         }
@@ -3268,8 +3302,26 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
             // TODO: why do we need this.
             value = this._value;
         }
-        this._super(value, methodName);
-        this.listWidget.setValue(this._value);
+
+        // Transform keys to list entries
+        if (value) {
+            const entries = JSON.parse(value);
+            const keys = [];
+            const records = [];
+            for (const entry of entries) {
+                if (typeof entry !== 'object') { // This is a key
+                    keys.push(entry);
+                } else { // This is already a record
+                    records.push(entry)
+                }
+            }
+            records.push(...(await this.createWidget.getRecords(keys)))
+            value = JSON.stringify(records);
+        }
+
+        console.log(value);
+        await _super.apply(this, value, methodName);
+        await this.listWidget.setValue(value);
     },
     /**
      * @override
