@@ -10,6 +10,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
 from odoo.tools import float_round, lazy
+from odoo.tools import str2bool
 
 
 def _generate_random_reward_code():
@@ -1247,3 +1248,20 @@ class SaleOrder(models.Model):
                 return apply_result
             coupon = apply_result.get('coupon', self.env['loyalty.card'])
         return self._get_claimable_rewards(forced_coupons=coupon)
+
+    def _validate_order(self):
+        """
+        Override of sale to create invoice for zero amount order. If the order total is zero and
+        automatic invoicing is enabled, it creates and posts an invoice.
+
+        :return: None
+        """
+        super()._validate_order()
+        if self.amount_total or not self.reward_amount:
+            return
+        auto_invoice = self.env['ir.config_parameter'].get_param('sale.automatic_invoice')
+        if str2bool(auto_invoice):
+            # create an invoice for order with zero total amount and automatic invoice enabled
+            self._force_lines_to_invoice_policy_order()
+            invoice = self._create_invoices(final=True)
+            invoice.action_post()
