@@ -10,6 +10,7 @@ class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
 
     combo_id = fields.Many2one('pos.combo', string='Combo line reference')
+    kitchen_printed = fields.Boolean('Kitchen Printed', default=False)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -60,6 +61,12 @@ class PosOrder(models.Model):
             self._send_notification(self)
 
         return res
+
+    def should_print_kitchen(self):
+        if self.kitchen_printed:
+            return False
+        self.kitchen_printed = True
+        return True
 
     @api.model
     def remove_from_ui(self, server_ids):

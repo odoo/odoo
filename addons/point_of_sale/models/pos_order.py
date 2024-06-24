@@ -317,6 +317,8 @@ class PosOrder(models.Model):
     tracking_number = fields.Char(string="Order Number", compute='_compute_tracking_number', search='_search_tracking_number')
     uuid = fields.Char(string='Uuid', readonly=True, copy=False)
 
+    kitchen_printed = fields.Boolean(string="Kitchen Printed", default=False)
+
     def _search_tracking_number(self, operator, value):
         #search is made over the pos_reference field
         #The pos_reference field is like 'Order 00001-001-0001'
@@ -1108,6 +1110,12 @@ class PosOrder(models.Model):
         orders.mapped('payment_ids').sudo().unlink()
         orders.sudo().unlink()
         return orders.ids
+
+    def should_print_kitchen(self):
+        if self.kitchen_printed:
+            return False
+        self.kitchen_printed = True
+        return True
 
     @api.model
     def search_paid_order_ids(self, config_id, domain, limit, offset):

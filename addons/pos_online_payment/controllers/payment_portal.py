@@ -242,6 +242,11 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         return tx_sudo._get_processing_values()
 
+    def notify_pos_order_paid(self, pos_order_id):
+        order = request.env['pos.order'].sudo().browse(pos_order_id)
+        pos_session_id = order.session_id
+        request.env['bus.bus'].sudo()._sendone(pos_session_id._get_bus_channel_name(), 'POS_SELF_ORDER_PAID', pos_order_id)
+
     @http.route('/pos/pay/confirmation/<int:pos_order_id>', type='http', methods=['GET'], auth='public', website=True, sitemap=False)
     def pos_order_pay_confirmation(self, pos_order_id, tx_id=None, access_token=None, exit_route=None, **kwargs):
         """ Behaves like payment.PaymentPortal.payment_confirm but for POS online payment.
@@ -262,6 +267,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             'exit_route': exit_route,
             'pay_route': self._get_pay_route(pos_order_id, access_token, exit_route)
         }
+        self.notify_pos_order_paid(pos_order_id)
         if not tx_id or not pos_order_id:
             return self._render_pay_confirmation(rendering_context)
 
