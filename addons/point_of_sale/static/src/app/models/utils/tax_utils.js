@@ -7,7 +7,8 @@ export const getTaxesValues = (
     product,
     productDefaultValues,
     company,
-    currency
+    currency,
+    special_mode = false
 ) => {
     const evalContext = accountTaxHelpers.eval_taxes_computation_prepare_context(
         priceUnit,
@@ -21,7 +22,9 @@ export const getTaxesValues = (
             precision_rounding: currency.rounding,
         }
     );
-    return accountTaxHelpers.computeSingleLineTaxes(taxes, evalContext);
+    return accountTaxHelpers.computeSingleLineTaxes(taxes, evalContext, {
+        special_mode: special_mode,
+    });
 };
 
 export const getTaxesAfterFiscalPosition = (taxes, fiscalPosition, models) => {
