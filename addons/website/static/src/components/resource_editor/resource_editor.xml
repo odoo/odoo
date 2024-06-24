@@ -76,7 +76,7 @@
                     class="'h-100'"
                     value="state.currentResource.arch"
                     sessionId="state.currentResource.id"
-                    mode="state.type === 'xml' ? 'qweb' : state.type"
+                    mode="typeToCodeEditorModeMap[state.type]"
                     theme="'monokai'"
                     onChange.bind="onEditorChange"/>
             </div>
