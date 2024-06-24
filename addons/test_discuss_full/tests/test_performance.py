@@ -161,6 +161,21 @@ class TestDiscussFullPerformance(HttpCase):
         """
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
         return {
+            "Persona": [
+                {
+                    "active": False,
+                    "email": "odoobot@example.com",
+                    "id": self.user_root.partner_id.id,
+                    "im_status": "bot",
+                    "isInternalUser": True,
+                    "is_company": False,
+                    "name": "OdooBot",
+                    "out_of_office_date_end": False,
+                    "type": "partner",
+                    "userId": self.user_root.id,
+                    "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
+                },
+            ],
             "Store": {
                 "channel_types_with_seen_infos": sorted(["chat", "group", "livechat"]),
                 "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
@@ -170,19 +185,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "hasMessageTranslationFeature": False,
                 "internalUserGroupId": self.env.ref("base.group_user").id,
                 "mt_comment_id": xmlid_to_res_id("mail.mt_comment"),
-                "odoobot": {
-                    "active": False,
-                    "email": "odoobot@example.com",
-                    "id": self.user_root.partner_id.id,
-                    "im_status": "bot",
-                    "is_company": False,
-                    "name": "OdooBot",
-                    "out_of_office_date_end": False,
-                    "type": "partner",
-                    "userId": self.user_root.id,
-                    "isInternalUser": True,
-                    "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
-                },
+                "odoobot": {"id": self.user_root.partner_id.id, "type": "partner"},
                 "self": {
                     "id": self.users[0].partner_id.id,
                     "isAdmin": False,
