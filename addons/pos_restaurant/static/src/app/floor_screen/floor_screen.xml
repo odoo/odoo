@@ -6,7 +6,10 @@
             <div t-if="pos.orderToTransferUuid" class="d-flex align-items-center justify-content-between px-3 border-bottom bg-view overflow-x-auto w-100">
                 <button t-attf-class="ms-auto {{editButtonClass}}" t-att-class="{active: !pos.isTableToMerge}" t-on-click="() => this.pos.isTableToMerge = false">
                     <i class="fa fa-arrow-right" role="img" aria-label="Transfer" title="Transfer" />Transfer</button>
-                <button t-attf-class="{{editButtonClass}}" t-att-class="{active: pos.isTableToMerge}" t-on-click="() => this.pos.isTableToMerge = true">
+                <button
+                    t-if="pos.models['pos.order'].find(o => o.uuid === pos.orderToTransferUuid).table_id"
+                    t-attf-class="{{editButtonClass}}" t-att-class="{active: pos.isTableToMerge}"
+                    t-on-click="() => this.pos.isTableToMerge = true">
                     <i class="fa fa-link" role="img" aria-label="Merge" title="Merge" />Merge</button>
                 <button t-attf-class="ms-auto {{editButtonClass}}" t-on-click.stop="stopOrderTransfer">
                     <i class="fa fa-times" role="img" aria-label="Close" title="Close" />Discard</button>

@@ -27,6 +27,13 @@ export function isCashMoveButtonHidden() {
         },
     ];
 }
+export function newOrder() {
+    return {
+        content: "create new order",
+        trigger: ".pos-topheader button i.fa-plus-circle",
+        run: "click",
+    };
+}
 export function endTour() {
     return {
         content: "Last tour step that avoids error mentioned in commit 443c209",
