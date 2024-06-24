@@ -353,7 +353,7 @@ class ProductProduct(models.Model):
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
-                    'title': _('At least one component can not be resupplied.'),
+                    'title': _('Cannot compute days to prepare due to missing route info for at least 1 component or for the final product.'),
                     'sticky': False,
                     }
                 }
