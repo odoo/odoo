@@ -30,7 +30,6 @@ import {
     match,
     strictEqual,
 } from "../hoot_utils";
-import { logger } from "./logger";
 import { Test } from "./test";
 
 /**
@@ -324,10 +323,10 @@ const formatError = (error) => {
  */
 const formatMessage = (message, { received, actual, not }) =>
     message
-        .replace(NOT_REGEX, (_, ifTrue, ifFalse) => (not ? ifFalse || "" : ifTrue || ""))
-        .replace(RECEIVED_REGEX, formatHumanReadable(received))
-        .replace(ACTUAL_REGEX, formatHumanReadable(actual))
-        .replace(ELEMENTS_REGEX, (_, elements) =>
+        .replace(R_NOT, (_, ifTrue, ifFalse) => (not ? ifFalse || "" : ifTrue || ""))
+        .replace(R_RECEIVED, formatHumanReadable(received))
+        .replace(R_ACTUAL, formatHumanReadable(actual))
+        .replace(R_ELEMENTS, (_, elements) =>
             typeof received === "string"
                 ? `${elements} matching "${received}"`
                 : formatHumanReadable(actual)
@@ -461,10 +460,10 @@ const step = (name) => {
     currentResult.steps.push(name);
 };
 
-const ACTUAL_REGEX = /%(actual)%/i;
-const ELEMENTS_REGEX = /%(elements?)%/i;
-const NOT_REGEX = /\[([\w\s]*)!([\w\s]*)\]/;
-const RECEIVED_REGEX = /%(received)%/i;
+const R_ACTUAL = /%(actual)%/i;
+const R_ELEMENTS = /%(elements?)%/i;
+const R_NOT = /\[([\w\s]*)!([\w\s]*)\]/;
+const R_RECEIVED = /%(received)%/i;
 
 /** @type {Set<Matchers>} */
 const unconsumedMatchers = new Set();
@@ -908,15 +907,7 @@ export class Matchers {
         return this._resolve({
             name: "toEqual",
             acceptedType: "any",
-            predicate: (actual) => {
-                if (strictEqual(actual, expected)) {
-                    logger.warn(
-                        `Called \`'toEqual()\` on strictly equal values in "${currentResult.test.fullName}". Did you mean to use \`toBe()\`?`
-                    );
-                    return true;
-                }
-                return deepEqual(actual, expected);
-            },
+            predicate: (actual) => deepEqual(actual, expected),
             message: (pass) =>
                 options?.message ||
                 (pass
