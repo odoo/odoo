@@ -278,6 +278,7 @@ class ProductTemplate(models.Model):
             product_taxes = template.sudo().taxes_id._filter_taxes_by_company(self.env.company)
             taxes = fiscal_position.map_tax(product_taxes)
 
+            base_price = None
             template_price_vals = {
                 'price_reduce': self._apply_taxes_to_price(
                     pricelist_price, currency, product_taxes, taxes, self, website=website,
@@ -286,7 +287,16 @@ class ProductTemplate(models.Model):
             if rule_id:
                 pricelist_rule = template.env['product.pricelist.item'].browse(rule_id)
                 if pricelist_rule._is_percentage():
-                    base_price = pricelist_rule._compute_price_before_discount()#TODO LINA args
+                    combination = template._get_first_possible_combination()
+                    base_price = pricelist_rule._compute_price_before_discount(
+                        product=template.with_context(
+                            **template._get_product_price_context(combination),
+                        ),
+                        quantity= 1.0,
+                        date=date,
+                        uom=self.uom_id,
+                        currency=currency,
+                    )
                     template_price_vals['base_price'] = self._apply_taxes_to_price(
                         base_price, currency, product_taxes, taxes, self, website=website,
                     )
@@ -462,7 +472,20 @@ class ProductTemplate(models.Model):
         if pricelist_rule_id:
             pricelist_rule = self.env['product.pricelist.item'].browse(pricelist_rule_id)
             if pricelist_rule._is_percentage():
-                price_before_discount = pricelist_rule._compute_price_before_discount() #TODO LINA
+                if product_or_template._name == 'product.template':
+                    combination = product_or_template._get_first_possible_combination()
+                else:
+                    combination = product_or_template.product_template_attribute_value_ids
+
+                price_before_discount = pricelist_rule._compute_price_before_discount(
+                    product=product_or_template.with_context(
+                        **product_or_template._get_product_price_context(combination),
+                    ),
+                    quantity=quantity or 1.0,
+                    date=date,
+                    uom=self.uom_id,
+                    currency=currency,
+                )
 
         combination_info = {
             'list_price': price_before_discount,
@@ -526,12 +549,6 @@ class ProductTemplate(models.Model):
             'product_taxes': product_taxes,  # taxes before fpos mapping
             'taxes': taxes,  # taxes after fpos mapping
         })
-
-        pricelist_item_id = self.env['product.pricelist.item'].browse(pricelist_rule_id)
-        if pricelist_item_id._is_percentage():
-            # Leftover from before cleanup, different behavior between ecommerce & backend configurator
-            # probably to keep product sales price hidden from customers ?
-            combination_info['list_price'] = combination_info['price']
 
         return combination_info
 

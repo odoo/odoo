@@ -544,7 +544,7 @@ class PricelistItem(models.Model):
                 rule_id = pricelist_item.base_pricelist_id._get_product_rule(*args, **kwargs)
                 rule_pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
                 if rule_pricelist_item and rule_pricelist_item._is_percentage():
-                    pricelist_item = pricelist_rule
+                    pricelist_item = rule_pricelist_item
 
             pricelist_rule = pricelist_item
 
