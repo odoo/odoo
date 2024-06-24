@@ -274,7 +274,7 @@ export class FloorScreen extends Component {
     }
     getTablesSelectedByDefault() {
         const oToTrans = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
-        return oToTrans ? [oToTrans.table_id.id] : [];
+        return oToTrans?.table_id ? [oToTrans.table_id.id] : [];
     }
     async onWillStart() {
         this.pos.searchProductWord = "";

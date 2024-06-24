@@ -65,6 +65,13 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
         [
             Dialog.confirm("Open session"),
 
+            // Create a floating order. The idea is to have one of the draft orders be a floating order during the tour.
+            Chrome.newOrder(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.back(),
+
             // Create first order
             FloorScreen.clickTable("5"),
             ProductScreen.orderBtnIsPresent(),
@@ -151,7 +158,9 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             FloorScreen.clickTable("5"),
             ProductScreen.isShown(),
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.deleteOrder("-0001"),
+            // The order ref ends with -0002 because it is actually the 2nd order made in the session.
+            // The first order made in the session is a floating order.
+            TicketScreen.deleteOrder("-0002"),
             Dialog.confirm(),
             {
                 ...Dialog.confirm(),
@@ -159,7 +168,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
             isSyncStatusConnected(),
-            TicketScreen.selectOrder("-0004"),
+            TicketScreen.selectOrder("-0005"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             ProductScreen.back(),

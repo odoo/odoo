@@ -55,7 +55,7 @@ patch(TicketScreen.prototype, {
             this.pos.config.module_pos_restaurant &&
             this.pos.selectedTable &&
             !this.pos.models["pos.order"].some(
-                (order) => order.table_id.id === this.pos.selectedTable.id
+                (order) => order.table_id?.id === this.pos.selectedTable.id
             )
         ) {
             return this.pos.showScreen("FloorScreen");
