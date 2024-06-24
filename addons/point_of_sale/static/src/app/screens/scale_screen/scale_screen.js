@@ -15,10 +15,10 @@ export class ScaleScreen extends Component {
     setup() {
         this.pos = usePos();
         this.hardwareProxy = useService("hardware_proxy");
-        this.state = useState({ weight: 0 });
+        this.state = useState({ weight: 0, tare: 0, tareLoading: false });
+        this.pricePerUom = this.props.product.get_price(this._activePricelist, 1);
         onMounted(this.onMounted);
         onWillUnmount(this.onWillUnmount);
-        this.pos = usePos();
     }
     onMounted() {
         // start the scale reading
@@ -29,7 +29,7 @@ export class ScaleScreen extends Component {
         this.shouldRead = false;
     }
     confirm() {
-        this.props.getPayload(this.state.weight);
+        this.props.getPayload(this.netWeight);
         this.props.close();
     }
     _readScale() {
@@ -42,6 +42,13 @@ export class ScaleScreen extends Component {
         }
         this.state.weight = await this.hardwareProxy.readScale();
         setTimeout(() => this._setWeight(), 500);
+    }
+    get netWeight() {
+        const weight = round_pr(this.state.weight || 0, this.productUnit.rounding);
+        const weightRound = weight.toFixed(
+            Math.ceil(Math.log(1.0 / this.productUnit.rounding) / Math.log(10))
+        );
+        return weightRound - parseFloat(this.state.tare);
     }
     get _activePricelist() {
         const current_order = this.pos.get_order();
@@ -56,7 +63,7 @@ export class ScaleScreen extends Component {
         if (!this.props.product) {
             return defaultstr;
         }
-        const unit = this.props.product.uom_id;
+        const unit = this.productUnit;
         if (!unit) {
             return defaultstr;
         }
@@ -65,8 +72,12 @@ export class ScaleScreen extends Component {
         weightstr += " " + unit.name;
         return weightstr;
     }
+    get productUnit() {
+        const unit = this.props.product.uom_id;
+        return unit;
+    }
     get computedPriceString() {
-        return this.env.utils.formatCurrency(this.productPrice * this.state.weight);
+        return this.env.utils.formatCurrency(this.netWeight * this.pricePerUom);
     }
     get productPrice() {
         const product = this.props.product;
@@ -74,5 +85,13 @@ export class ScaleScreen extends Component {
     }
     get productUom() {
         return this.props.product?.uom_id?.name;
+    }
+    async handleTareButtonClick() {
+        this.state.tareLoading = true;
+        const tareWeight = await this.hardwareProxy.readScale();
+        this.state.tare = tareWeight;
+        setTimeout(() => {
+            this.state.tareLoading = false;
+        }, 3000);
     }
 }
