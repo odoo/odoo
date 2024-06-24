@@ -24,7 +24,7 @@ class AccountMove(models.Model):
         moves_to_fix = self.env['account.move']
         for move in self.filtered(lambda m: m.company_id.country_id in gcc_countries and m.is_sale_document(include_receipts=True) and m.narration):
             lang = move.partner_id.lang or self.env.user.lang
-            if move.company_id.terms_type == 'html' or move.narration != move.company_id.with_context(lang=lang).invoice_terms:
+            if move.company_id.terms_type == 'html' or move.narration.unescape() != move.company_id.with_context(lang=lang).invoice_terms.unescape():
                 continue
             moves_to_fix |= move
         if not moves_to_fix:
