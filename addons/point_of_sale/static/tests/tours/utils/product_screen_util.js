@@ -555,3 +555,9 @@ export function finishOrder() {
         },
     ];
 }
+
+export function checkTaxAmount(amount) {
+    return {
+        trigger: `.tax:contains(${amount})`,
+    };
+}
