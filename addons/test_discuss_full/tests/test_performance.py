@@ -354,7 +354,6 @@ class TestDiscussFullPerformance(HttpCase):
         members = channel.channel_member_ids
         member_0 = members.filtered(lambda m: m.partner_id == self.users[0].partner_id)
         member_2 = members.filtered(lambda m: m.partner_id == self.users[2].partner_id)
-        write_date_0 = fields.Datetime.to_string(self.users[0].partner_id.write_date)
         last_interest_dt = fields.Datetime.to_string(channel.last_interest_dt)
         if channel == self.channel_general:
             return {
@@ -690,12 +689,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "name": "test1 Ernest Employee",
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "operator": {
-                    "id": self.users[0].partner_id.id,
-                    "name": "Ernest Employee",
-                    "type": "partner",
-                    "write_date": write_date_0,
-                },
+                "operator": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
@@ -731,12 +725,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "name": "anon 2 Ernest Employee",
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "operator": {
-                    "id": self.users[0].partner_id.id,
-                    "name": "Ernest Employee",
-                    "type": "partner",
-                    "write_date": write_date_0,
-                },
+                "operator": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
