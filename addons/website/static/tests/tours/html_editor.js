@@ -1,6 +1,8 @@
 /** @odoo-module**/
 /* global ace */
 
+import { registry } from "@web/core/registry";
+import { nextTick } from "@web/../tests/helpers/utils";
 import wTourUtils from "@website/js/tours/tour_utils";
 
 const adminCssModif = '#wrap {display: none;}';
@@ -215,3 +217,41 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
         },
     ]
 );
+
+registry.category("web_tour.tours").add("website_code_editor_usable", {
+    url: "/web?debug=1,tests#action=website.website_preview",
+    test: true,
+    steps: () => [
+        {
+            content: "Open Site menu",
+            trigger: 'button[data-menu-xmlid="website.menu_site"]',
+        },
+        {
+            content: "Open HTML / CSS Editor",
+            trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
+        },
+        {
+            content: "Bypass warning",
+            trigger: ".o_resource_editor_wrapper div:nth-child(2) button:nth-child(3)",
+        },
+        // Test all 3 file type options
+        ...[1, 2, 3].map((menuItemIndex) => [
+            {
+                content: "Open file type dropdown",
+                trigger: ".o_resource_editor_type_switcher .dropdown-toggle",
+            },
+            {
+                content: `Select type ${menuItemIndex}`,
+                trigger: `.o_resource_editor_type_switcher .dropdown-item:nth-child(${menuItemIndex})`,
+            },
+            {
+                content: "Wait for render",
+                trigger: "body",
+                async run() {
+                    await nextTick();
+                },
+            },
+        ]).flat(),
+    ],
+});
+
