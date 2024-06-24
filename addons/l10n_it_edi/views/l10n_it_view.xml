@@ -148,6 +148,7 @@
                                 <field name="l10n_it_stamp_duty" readonly="state != 'draft'"/>
                                 <field name="l10n_it_ddt_id" readonly="state != 'draft'" invisible="move_type not in ('out_invoice', 'out_refund')"/>
                                 <field name="l10n_it_document_type"/>
+                                <field name="l10n_it_payment_method"/>
                             </group>
                             <field name="l10n_it_partner_pa" invisible="1"/>
                             <group invisible="not l10n_it_partner_pa">

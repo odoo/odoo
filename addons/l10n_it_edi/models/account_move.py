@@ -140,6 +140,37 @@ class AccountMove(models.Model):
         string='Document Types',
     )
 
+    l10n_it_payment_method = fields.Selection(
+        selection=[
+            ('MP01', "MP01 - Cash"),
+            ('MP02', "MP02 - Check"),
+            ('MP03', "MP03 - Cashier's check"),
+            ('MP04', "MP04 - Cash at the Treasury"),
+            ('MP05', "MP05 - Wire transfer"),
+            ('MP06', "MP06 - Promissory note"),
+            ('MP07', "MP07 - Bank slip"),
+            ('MP08', "MP08 - Payment card"),
+            ('MP09', "MP09 - RID"),
+            ('MP10', "MP10 - RID users"),
+            ('MP11', "MP11 - Fast RID"),
+            ('MP12', "MP12 - RIBA"),
+            ('MP13', "MP13 - MAV"),
+            ('MP14', "MP14 - Treasury receipt"),
+            ('MP15', "MP15 - Transfer of special accounting accounts"),
+            ('MP16', "MP16 - Bank direct debit"),
+            ('MP17', "MP17 - Postal domiciliation"),
+            ('MP18', "MP18 - Postal account slip"),
+            ('MP19', "MP19 - SEPA Direct Debit"),
+            ('MP20', "MP20 - SEPA Direct Debit CORE"),
+            ('MP21', "MP21 - SEPA Direct Debit B2B"),
+            ('MP22', "MP22 - Withholding from sums already collected"),
+            ('MP23', "MP23 - PagoPA"),
+        ],
+        compute='_compute_l10n_it_payment_method',
+        store=True,
+        readonly=False,
+    )
+
     # -------------------------------------------------------------------------
     # Computes
     # -------------------------------------------------------------------------
@@ -148,6 +179,19 @@ class AccountMove(models.Model):
     def _compute_l10n_it_document_type(self):
         for move in self:
             move.l10n_it_document_type = move._l10n_it_edi_get_document_type()
+
+    @api.depends('line_ids.matching_number', 'payment_state')
+    def _compute_l10n_it_payment_method(self):
+        for move in self:
+            matching_line = move.line_ids.filtered('matching_number')
+            if matching_line and move.payment_state in {'in_payment', 'partial'}:
+                matched_ids = matching_line.matched_credit_ids or matching_line.matched_debit_ids
+                # In case of partial we take the first one to get the payment method
+                payment_move_id = matched_ids[0].credit_move_id.move_id if matched_ids[0].credit_move_id not in move.line_ids else matched_ids[0].debit_move_id.move_id
+
+                move.l10n_it_payment_method = payment_move_id.l10n_it_payment_method
+            else:
+                move.l10n_it_payment_method = move.payment_id.payment_method_line_id.l10n_it_payment_method or move.l10n_it_payment_method or 'MP05'
 
     @api.depends('commercial_partner_id.l10n_it_pa_index', 'company_id')
     def _compute_l10n_it_partner_pa(self):
@@ -476,6 +520,7 @@ class AccountMove(models.Model):
             'partner_bank': self.partner_bank_id,
             'formato_trasmissione': formato_trasmissione,
             'document_type': document_type,
+            'payment_method': self.l10n_it_payment_method,
             'tax_details': tax_details,
             'downpayment_moves': downpayment_moves,
             'rc_refund': reverse_charge_refund,
