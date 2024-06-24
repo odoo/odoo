@@ -575,7 +575,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         last_hash = ""
         for _ in range(3):
             move = self.init_invoice("out_invoice", self.partner_a, "2024-01-01", amounts=[1000, 2000], post=True)
-            move.inalterable_hash = move.with_context(hash_version=3)._calculate_hashes(last_hash)[move]
+            move.inalterable_hash = move.with_context(hash_version=3)._calculate_hashes(last_hash)[move.id]
             last_hash = move.inalterable_hash
             move.secure_sequence_number = secure_sequence.next_by_id()
             moves_v3_post_restrict_mode |= move
