@@ -64,6 +64,34 @@ class Menu(models.Model):
             res.append((menu.id, menu_name))
         return res
 
+    def _validate_parent_menu(self, values, record=None):
+        parent_menu = None
+        if 'parent_id' in values:
+            parent_menu = self.env['website.menu'].sudo().browse(values['parent_id'])
+        elif record and record.parent_id:
+            parent_menu = record.parent_id.sudo()
+
+        if parent_menu:
+            # Check hierarchy level
+            if parent_menu.parent_id and parent_menu.parent_id.parent_id:
+                raise UserError(_("Menus cannot have more than two levels of hierarchy."))
+
+            # Check mega menu conditions
+            is_mega_menu = values.get('is_mega_menu', record.is_mega_menu if record else False)
+            if is_mega_menu:
+                if parent_menu.parent_id:
+                    raise UserError(_("A mega menu cannot have a parent menu."))
+                if record and record.child_id:
+                    raise UserError(_("A mega menu cannot have a child menu."))
+
+            if parent_menu.is_mega_menu:
+                raise UserError(_("Any menu cannot be a child menu of a mega menu."))
+
+            # Check for child menu condition
+            if 'parent_id' in values and parent_menu.parent_id:
+                if record and record.child_id:
+                    raise UserError(_("Menus with child menus cannot be added as a submenu."))
+
     @api.model
     def create(self, vals):
         ''' In case a menu without a website_id is trying to be created, we duplicate
@@ -76,13 +104,7 @@ class Menu(models.Model):
         self.clear_caches()
 
         if 'parent_id' in vals:
-            parent_menu = self.env['website.menu'].sudo().browse(vals['parent_id'])
-            if vals.get('is_mega_menu') and parent_menu.parent_id:
-                raise UserError(_("A mega menu cannot have a parent menu."))
-            if parent_menu.parent_id and parent_menu.parent_id.parent_id:
-                raise UserError(_("Submenus cannot have more than two levels of hierarchy."))
-            if parent_menu.is_mega_menu:
-                raise UserError(_("Any menu cannot be a child menu of a mega menu."))
+            self._validate_parent_menu(vals, None)
 
         # Only used when creating website_data.xml default menu
         if vals.get('url') == '/default-main-menu':
@@ -109,24 +131,8 @@ class Menu(models.Model):
 
     def write(self, values):
         for record in self:
-            parent_menu = None
-
-            if 'parent_id' in values:
-                parent_menu = self.env['website.menu'].sudo().browse(values['parent_id'])
-                if parent_menu.parent_id and parent_menu.parent_id.parent_id:
-                    raise UserError(_("Menus cannot have more than two levels of hierarchy."))
-                if parent_menu.parent_id and record.is_mega_menu:
-                    raise UserError(_("A mega menu cannot have a parent menu."))
-                if parent_menu.parent_id and record.child_id:
-                    raise UserError(_("Menus with child menus cannot be added as a submenu."))
-
-            if 'is_mega_menu' in values:
-                if not parent_menu:
-                    parent_menu = record.parent_id.sudo()
-                if values['is_mega_menu'] and parent_menu.parent_id:
-                    raise UserError(_("A mega menu cannot be sub-menu."))
-                if values['is_mega_menu'] and record.child_id:
-                    raise UserError(_("A mega menu cannot have child menu."))
+            if any(key in values for key in ('parent_id', 'is_mega_menu')):
+                self._validate_parent_menu(values, record)
 
         res = super().write(values)
         if 'website_id' in values or 'group_ids' in values or 'sequence' in values or 'page_id' in values:
