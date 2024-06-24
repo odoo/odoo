@@ -7,7 +7,8 @@ export const getTaxesValues = (
     product,
     productDefaultValues,
     company,
-    currency
+    currency,
+    special_mode = null
 ) => {
     const results = accountTaxHelpers.evaluate_taxes_computation(taxes, priceUnit, quantity, {
         precision_rounding: currency.rounding,
@@ -16,6 +17,7 @@ export const getTaxesValues = (
             productDefaultValues,
             product
         ),
+        special_mode: special_mode,
     });
     for (const taxData of results.taxes_data) {
         Object.assign(taxData, taxData.tax);
