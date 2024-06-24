@@ -31,7 +31,7 @@ class ProductTemplate(models.Model):
         ],
         string="Re-Invoice Expenses", default='no',
         compute='_compute_expense_policy', store=True, readonly=False,
-        help="Validated expenses and vendor bills can be re-invoiced to a customer at its cost or sales price.")
+        help="Validated expenses can be re-invoiced to a customer at its cost or sales price.")
     visible_expense_policy = fields.Boolean(
         string="Re-Invoice Policy visible", compute='_compute_visible_expense_policy')
     sales_count = fields.Float(
