@@ -98,22 +98,12 @@
             <kanban default_group_by="state" quick_create_view="event_booth.event_booth_view_form_quick_create" sample="1">
                 <field name="name"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="o_kanban_content oe_kanban_global_click">
-                            <div class="o_kanban_record_title">
-                                <field name="name"/>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_left">
-                                        <field name="booth_category_id"/>
-                                    </div>
-                                    <div class="oe_kanban_bottom_right">
-                                        <field name="activity_ids" widget="kanban_activity"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field class="fw-bold fs-5" name="name"/>
+                        <footer class="p-0 fs-6">
+                            <field name="booth_category_id"/>
+                            <field class="ms-auto" name="activity_ids" widget="kanban_activity"/>
+                        </footer>
                     </t>
                 </templates>
             </kanban>
@@ -127,7 +117,7 @@
         <field name="mode">primary</field>
         <field name="priority">16</field>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('o_kanban_record_bottom')]" position="before">
+            <xpath expr="//footer" position="before">
                 <field name="event_id"/>
             </xpath>
         </field>
