@@ -13,14 +13,16 @@ class CalendarEvent(models.Model):
 
     @api.depends('partner_ids', 'start', 'stop', 'allday')
     def _compute_unavailable_partner_ids(self):
-        event_intervals = self._get_events_interval()
-
+        complete_events = self.filtered(
+            lambda event: event.start and event.stop and event.stop >= event.start and event.partner_ids)
+        incomplete_event = self - complete_events
+        incomplete_event.unavailable_partner_ids = []
+        if not complete_events:
+            return
+        event_intervals = complete_events._get_events_interval()
         # Event without start and stop are skipped, except all day event: their interval is computed
         # based on company calendar's interval.
         for event, event_interval in event_intervals.items():
-            if not event_interval or not event.partner_ids:
-                event.unavailable_partner_ids = []
-                continue
             start = event_interval._items[0][0]
             stop = event_interval._items[0][1]
             schedule_by_partner = event.partner_ids._get_schedule(start, stop, merge=False)
@@ -38,8 +40,6 @@ class CalendarEvent(models.Model):
         """
         start = min(self.mapped('start')).replace(hour=0, minute=0, second=0, tzinfo=UTC)
         stop = max(self.mapped('stop')).replace(hour=23, minute=59, second=59, tzinfo=UTC)
-        if not start or not stop:
-            return {}
         company_calendar = self.env.company.resource_calendar_id
         global_interval = company_calendar._work_intervals_batch(start, stop)[False]
         interval_by_event = {}
@@ -51,7 +51,7 @@ class CalendarEvent(models.Model):
             )])
             if event.allday:
                 interval_by_event[event] = event_interval & global_interval
-            elif event.start and event.stop:
+            else:
                 interval_by_event[event] = event_interval
         return interval_by_event
 
