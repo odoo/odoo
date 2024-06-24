@@ -196,7 +196,8 @@ export class ProductScreen extends Component {
     async _getPartnerByBarcode(code) {
         let partner = this.pos.models["res.partner"].getBy("barcode", code.code);
         if (!partner) {
-            partner = this.pos.data.searchRead("res.partner", ["barcode", "=", code.code]);
+            partner = await this.pos.data.searchRead("res.partner", [["barcode", "=", code.code]]);
+            partner = partner.length > 0 && partner[0];
         }
         return partner;
     }
