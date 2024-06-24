@@ -17,26 +17,6 @@ class ResCompany(models.Model):
     l10n_gr_edi_test_env = fields.Boolean('Test Environment', default=True, help="\
         Enable test environments with credentials obtained from https://mydata-dev-register.azurewebsites.net/")
 
-    def _l10n_gr_edi_get_mydata_url(self, endpoint):
-        """ Gets URL to send request to MyDATA API """
-        if endpoint not in ACCEPTED_ENDPOINTS:
-            raise Exception('Invalid MyDATA endpoint')
-        if self.l10n_gr_edi_test_env:
-            return f"https://mydataapidev.aade.gr/{endpoint}"
-        else:
-            return f"https://mydatapi.aade.gr/myDATA/{endpoint}"
-
-    def _l10n_gr_edi_get_headers_credentials(self):
-        """ Returns required credentials for header of all requests to MyDATA. """
-        if not self.l10n_gr_edi_aade_id or not self.l10n_gr_edi_aade_key:
-            # Will not happen as we've checked from _l10n_gr_edi_get_errors_pre_request check, but just in case
-            raise UserError(_('MyDATA credentials not found on company %s', self.name))
-
-        return {
-            'aade-user-id': self.l10n_gr_edi_aade_id,
-            'ocp-apim-subscription-key': self.l10n_gr_edi_aade_key,
-        }
-
     def _cron_l10n_gr_edi_fetch_invoices(self):
         """ Receive issued MyDATA Invoices and create draft Vendor Bills based on the received XML. """
         gr_companies = self.env['res.company'].search([
@@ -51,8 +31,10 @@ class ResCompany(models.Model):
             date_today = fields.Datetime.now().strftime("%d/%m/%Y")
 
             response = session.get(
-                url=gr_company._l10n_gr_edi_get_mydata_url('requestdocs'),
-                headers=gr_company._l10n_gr_edi_get_headers_credentials(),
+                url=f"https://mydataapidev.aade.gr/RequestDocs" if gr_company.l10n_gr_edi_test_env else
+                    f"https://mydatapi.aade.gr/myDATA/RequestDocs",
+                headers={'aade-user-id': gr_company.l10n_gr_edi_aade_id,
+                         'ocp-apim-subscription-key': gr_company.l10n_gr_edi_aade_key},
                 params={'mark': 0, 'dateFrom': date_90_days_ago, 'dateTo': date_today},
                 timeout=5,
             )

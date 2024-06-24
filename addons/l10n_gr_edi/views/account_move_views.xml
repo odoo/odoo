@@ -69,13 +69,13 @@
                       string="MyDATA"
                       invisible="not l10n_gr_edi_document_ids">
                     <field name="l10n_gr_edi_document_ids">
-                        <tree create="false" edit="false"
-                              decoration-primary="state == False"
-                              decoration-danger="state == 'error'"
-                              decoration-success="state == 'sent'">
+                        <tree create="false" delete="false" edit="false" no_open="1"
+                              decoration-danger="state == 'move_error'"
+                              decoration-success="state == 'move_sent'">
+                            <field name="message" column_invisible="1"/>
                             <field name="attachment_id" column_invisible="1"/>
                             <field name="datetime"/>
-                            <field name="state"/>
+                            <field name="state" widget="account_document_state"/>
                             <button name="action_download"
                                     type="object"
                                     string="Download"

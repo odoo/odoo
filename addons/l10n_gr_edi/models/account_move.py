@@ -49,8 +49,10 @@ class AccountMove(models.Model):
     @api.depends('l10n_gr_edi_document_ids')
     def _compute_l10n_gr_edi_state(self):
         for move in self:
-            active_document = move.l10n_gr_edi_document_ids.sorted()[0]
-            move.l10n_gr_edi_state = active_document.state
+            if gr_documents := move.l10n_gr_edi_document_ids.sorted():
+                move.l10n_gr_edi_state = gr_documents[0].state
+            else:
+                move.l10n_gr_edi_state = False
 
     @api.depends('l10n_gr_edi_state')
     def _compute_show_reset_to_draft_button(self):
@@ -136,7 +138,7 @@ class AccountMove(models.Model):
 
     @api.model
     def _l10n_gr_edi_document_create_attachment(self, document, move_id, xml_content):
-        document.attachment_id = self.env['ir.attachment'].create({
+        document.attachment_id = self.env['ir.attachment'].sudo().create({
             'name': self._l10n_gr_edi_get_attachment_file_name(move_id),
             'raw': xml_content,
             'res_model': self._name,
@@ -339,7 +341,7 @@ class AccountMove(models.Model):
                 })
 
             xml_vals['invoices'].append({
-                '__id__': move.id,  # will not be rendered; private move.id for move-xml mapping
+                '__id__': move.id,  # will not be rendered; for creating {move_id -> move_xml} mapping
                 'header_series': '_'.join(move.name.split('/')[:-1]),
                 'header_aa': move.name.split('/')[-1],
                 'header_issue_date': move.date.isoformat(),
@@ -427,6 +429,7 @@ class AccountMove(models.Model):
             Create the related error/sent document with the necessary values. """
         move_xml_map = self._l10n_gr_edi_create_move_xml_map(xml_vals)
         move_ids = list(move_xml_map.keys())
+        id_move_map = {move.id: move for move in self}
 
         if 'error' in result:
             # If the request failed at this stage, it is probably caused by connection/credentials issues.
@@ -437,10 +440,16 @@ class AccountMove(models.Model):
 
         for result_id, result_dict in result.items():
             move_id = move_ids[result_id]
+            move = id_move_map[move_id]
             xml_content = move_xml_map[move_id]
             if 'error' in result_dict:
-                self._l10n_gr_edi_create_document_move_error(move_id, result['error'], xml_content)
+                # In this stage, the sending process has succeeded, and any error we receive is generated from the API.
+                # Previous error(s) without attachments (generated from pre-compute) are now useless and can be unlinked.
+                move.l10n_gr_edi_document_ids.filtered(lambda d: d.state == 'move_error' and not d.attachment_id).unlink()
+                self._l10n_gr_edi_create_document_move_error(move_id, result_dict['error'], xml_content)
             else:
+                move.l10n_gr_edi_mark = result_dict['l10n_gr_edi_mark']
+                move.l10n_gr_edi_document_ids.filtered(lambda d: d.state == 'move_error').unlink()
                 self._l10n_gr_edi_create_document_move_sent(move_id, xml_content)
 
     def _l10n_gr_edi_send_invoices(self):
@@ -466,9 +475,10 @@ class AccountMove(models.Model):
         self._l10n_gr_edi_handle_send_result(result, xml_vals)
 
     def _l10n_gr_edi_get_moves_to_send(self):
-        """ This method pre-errors in each of move inside `self` and returns the "good" move(s).
-            Any errors detected will only be raised if we only send one move (the most often case).
-            Otherwise, an error document will be created instead on the problematic move(s). """
+        """ This method pre-compute the errors in each of move inside `self` and returns the "good" move(s).
+            If we only send one move (the most common scenario), any errors detected will be raised immediately.
+            Otherwise, an error document will be created on each problematic move(s).
+            The problematic move(s) will not be returned. """
         moves_to_send = self.env['account.move']
         for move in self:
             if errors := move._l10n_gr_edi_get_errors_pre_request():
@@ -479,24 +489,23 @@ class AccountMove(models.Model):
                 moves_to_send |= move
         return moves_to_send
 
+    def _l10n_gr_edi_handle_raise_error(self):
+        """ If error message is found on the invoice's document, raise an error. """
+        self.ensure_one()
+        if error_message := self.l10n_gr_edi_document_ids.sorted()[0].message:
+            self.env.cr.commit()  # Save the created document(s) before raising error
+            raise UserError(error_message)
+
     def l10n_gr_edi_try_send_invoices(self):
         moves_to_send = self._l10n_gr_edi_get_moves_to_send()
         if moves_to_send:
             moves_to_send._l10n_gr_edi_send_invoices()
-            if len(self) > 1:
-                return  # don't raise error when sending multiple invoices
-
-            errors = []
-            for move in moves_to_send:
-                last_document = move.l10n_gr_edi_document_ids.sorted()[0]
-                if last_document.state == 'move_error':
-                    errors.append(last_document.message)
-
-            if errors:
-                self.env.cr.commit()  # Save the created document(s) before raising error
-                raise UserError('\n'.join(errors))
+            if len(self) == 1:
+                moves_to_send._l10n_gr_edi_handle_raise_error()
 
     def l10n_gr_edi_try_send_expense_classification(self):
         moves_to_send = self._l10n_gr_edi_get_moves_to_send()
         if moves_to_send:
             moves_to_send._l10n_gr_edi_send_expense_classification()
+            if len(self) == 1:
+                moves_to_send._l10n_gr_edi_handle_raise_error()

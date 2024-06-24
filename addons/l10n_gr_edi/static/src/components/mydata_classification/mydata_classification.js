@@ -28,7 +28,7 @@ registry.category("fields").add("selection_l10n_gr_edi_inv_type", {
     ...selectionField,
     component: DynamicSelectionField,
     extractProps: (fieldInfo, dynamicInfo) => ({
-        ...selectionField.extractProps(fieldInfo, dynamicInfo),
+        // ...selectionField.extractProps(fieldInfo, dynamicInfo),
         available_field: "l10n_gr_edi_available_inv_type",
     }),
 });
@@ -36,7 +36,7 @@ registry.category("fields").add("selection_l10n_gr_edi_cls_category", {
     ...selectionField,
     component: DynamicSelectionField,
     extractProps: (fieldInfo, dynamicInfo) => ({
-        ...selectionField.extractProps(fieldInfo, dynamicInfo),
+        // ...selectionField.extractProps(fieldInfo, dynamicInfo),
         available_field: "l10n_gr_edi_available_cls_category",
     }),
 });
@@ -44,7 +44,7 @@ registry.category("fields").add("selection_l10n_gr_edi_cls_type", {
     ...selectionField,
     component: DynamicSelectionField,
     extractProps: (fieldInfo, dynamicInfo) => ({
-        ...selectionField.extractProps(fieldInfo, dynamicInfo),
+        // ...selectionField.extractProps(fieldInfo, dynamicInfo),
         available_field: "l10n_gr_edi_available_cls_type",
     }),
 });
@@ -52,7 +52,7 @@ registry.category("fields").add("selection_l10n_gr_edi_cls_vat", {
     ...selectionField,
     component: DynamicSelectionField,
     extractProps: (fieldInfo, dynamicInfo) => ({
-        ...selectionField.extractProps(fieldInfo, dynamicInfo),
+        // ...selectionField.extractProps(fieldInfo, dynamicInfo),
         available_field: "l10n_gr_edi_available_cls_vat",
     }),
 });

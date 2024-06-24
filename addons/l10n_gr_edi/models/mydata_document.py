@@ -2,6 +2,7 @@ import requests
 
 from lxml import etree
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 from odoo.tools import cleanup_xml_node
 
 
@@ -22,7 +23,7 @@ class GreeceEDIDocument(models.Model):
 
     def unlink(self):
         """ Make sure any created attachments are also deleted """
-        self.attachment_id.unlink()
+        self.attachment_id.sudo().unlink()
         return super().unlink()
 
     @api.model
@@ -33,7 +34,7 @@ class GreeceEDIDocument(models.Model):
                              'SendExpensesClassification' (for sending vendor bill's expense classification) |
                              'RequestDocs' (for fetching third-party-issued invoices (for creating vendor bills))
             :param xml_content: xml content to send to myDATA
-            :return: dict[str, str]            error_message   {'error': <str>} |
+            :return: dict[str, str]            error_object    {'error': <str>} |
                      dict[int, dict[str, str]] response_object {idx<int>: {'l10n_gr_edi_mark': <str>} |
                                                                           {'error': <str>}} """
         url = f"https://mydataapidev.aade.gr/{endpoint}" if company.l10n_gr_edi_test_env else \
@@ -68,8 +69,9 @@ class GreeceEDIDocument(models.Model):
         return result
 
     def action_download(self):
+        """ Download the XML file linked to the document. """
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
-            'url': f'/web/content/l10n_gr_edi.document/{self.id}/attachment_id/{self._get_attachment_file_name()}?download=true',
+            'url': f'/web/content/{self.attachment_id.id}?download=true',
         }
