@@ -260,13 +260,14 @@ class Users(models.Model):
         # sudo: res.partner - exposing OdooBot data
         odoobot = self.env.ref("base.partner_root").sudo()
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
+        store.add("Persona", odoobot.mail_partner_format().get(odoobot))
         store.add(
             {
                 "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
                 "hasLinkPreviewFeature": self.env["mail.link.preview"]._is_link_preview_enabled(),
                 "internalUserGroupId": self.env.ref("base.group_user").id,
                 "mt_comment_id": xmlid_to_res_id("mail.mt_comment"),
-                "odoobot": odoobot.mail_partner_format().get(odoobot),
+                "odoobot": {"id": odoobot.id, "type": "partner"},
             }
         )
         guest = self.env["mail.guest"]._get_guest_from_context()
