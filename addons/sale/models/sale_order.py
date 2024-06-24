@@ -2022,3 +2022,11 @@ class SaleOrder(models.Model):
             return self.partner_id.lang
 
         return self.env.lang
+
+    def _validate_order(self):
+        """
+        Confirm the sale order and send a confirmation email.
+
+        :return: None
+        """
+        self.with_context(send_email=True).action_confirm()
