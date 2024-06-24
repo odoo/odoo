@@ -191,6 +191,8 @@ class ImDispatch(threading.Thread):
     def _clear_outdated_channels(self, websocket, outdated_channels):
         """ Remove channels from channel to websocket map. """
         for channel in outdated_channels:
+            if channel not in self._channels_to_ws:
+                continue
             self._channels_to_ws[channel].remove(websocket)
             if not self._channels_to_ws[channel]:
                 self._channels_to_ws.pop(channel)
