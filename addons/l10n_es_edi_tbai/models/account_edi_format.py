@@ -114,8 +114,16 @@ class AccountEdiFormat(models.Model):
                 error_msg = _("TicketBAI: Cannot post invoice while chain head (%s) has not been posted", chain_head.name)
             if (
                 invoice.move_type == 'out_refund'
+<<<<<<< HEAD
                 and not invoice.reversed_entry_id._l10n_es_tbai_is_in_chain()
                 and invoice.reversed_entry_id.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai')  # avoid imported ones
+||||||| parent of 11ea0dea379c (temp)
+            if invoice.move_type == 'out_refund' and not invoice.reversed_entry_id._l10n_es_tbai_is_in_chain():
+=======
+                and not invoice.reversed_entry_id or (
+                    not invoice.reversed_entry_id._l10n_es_tbai_is_in_chain()
+                    and invoice.reversed_entry_id.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai'))  # avoid imported ones
+>>>>>>> 11ea0dea379c (temp)
             ):
                 error_msg = _("TicketBAI: Cannot post a reversal move while the source document (%s) has not been posted", invoice.reversed_entry_id.name)
 
