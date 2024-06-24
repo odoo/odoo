@@ -2031,3 +2031,38 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user",
         )
         self.assertEqual(loyalty_card.points, 100)
+
+    def test_gift_card_rewards_using_taxes(self):
+        """
+        Check the gift card value when the reward has taxes
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+        self.product_a = self.env["product.product"].create({
+            "name": "Test Product A",
+            "type": "product",
+            "list_price": 100,
+            "available_in_pos": True,
+            "taxes_id": False,
+        })
+
+        self.tax01 = self.env["account.tax"].create({
+            "name": "C01 Tax",
+            "amount": "15.00",
+        })
+        gift_card_program.payment_program_discount_product_id.taxes_id = self.tax01
+        self.main_pos_config.write({'gift_card_settings': 'scan_use'})
+        self.env["loyalty.generate.wizard"].with_context(
+            {"active_id": gift_card_program.id}
+        ).create({"coupon_qty": 1, 'points_granted': 50}).generate_coupons()
+        gift_card_program.coupon_ids.code = '044123456'
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyGiftCardTaxes",
+            login="accountman",
+        )
+        self.main_pos_config.current_session_id.close_session_from_ui()
