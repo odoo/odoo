@@ -1,5 +1,5 @@
 /** @odoo-module */
-import { Component, onWillDestroy, onWillStart, useEffect, useRef } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { useDebounced } from "@web/core/utils/timing";
 
@@ -58,6 +58,9 @@ export class CodeEditor extends Component {
 
     setup() {
         this.editorRef = useRef("editorRef");
+        this.state = useState({
+            activeMode: undefined,
+        });
 
         onWillStart(async () => await loadBundle("web.ace_lib"));
 
@@ -84,6 +87,10 @@ export class CodeEditor extends Component {
                     useWorker: false,
                 });
                 this.aceEditor.$blockScrolling = true;
+
+                this.aceEditor.on("changeMode", () => {
+                    this.state.activeMode = this.aceEditor.getSession().$modeId.split("/").at(-1);
+                });
 
                 const session = aceEditor.getSession();
                 if (!sessions[this.props.sessionId]) {
