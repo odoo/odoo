@@ -681,19 +681,6 @@ export class PosStore extends Reactive {
         return line;
     }
 
-    _loadPosPrinters(printers) {
-        this.unwatched.printers = [];
-        // list of product categories that belong to one or more order printer
-        for (const printerConfig of printers) {
-            const printer = this.create_printer(printerConfig);
-            printer.config = printerConfig;
-            this.unwatched.printers.push(printer);
-            for (const cat of printer.product_categories_ids) {
-                this.printers_category_ids_set.add(cat.id);
-            }
-        }
-        this.config.iface_printers = !!this.unwatched.printers.length;
-    }
     create_printer(config) {
         const url = deduceUrl(config.proxy_ip || "");
         return new HWPrinter({ url });
@@ -710,57 +697,6 @@ export class PosStore extends Reactive {
             // do not wait more than 5sec
             setTimeout(resolve, 5000);
         });
-    }
-    async _loadPictures() {
-        this.company_logo = new Image();
-        return new Promise((resolve, reject) => {
-            this.company_logo.onload = () => {
-                const img = this.company_logo;
-                let ratio = 1;
-                const targetwidth = 300;
-                const maxheight = 150;
-                if (img.width !== targetwidth) {
-                    ratio = targetwidth / img.width;
-                }
-                if (img.height * ratio > maxheight) {
-                    ratio = maxheight / img.height;
-                }
-                const width = Math.floor(img.width * ratio);
-                const height = Math.floor(img.height * ratio);
-                const c = document.createElement("canvas");
-                c.width = width;
-                c.height = height;
-                const ctx = c.getContext("2d");
-                ctx.drawImage(this.company_logo, 0, 0, width, height);
-
-                this.company_logo_base64 = c.toDataURL();
-                resolve();
-            };
-            this.company_logo.onerror = () => {
-                reject();
-            };
-            this.company_logo.crossOrigin = "anonymous";
-            this.company_logo.src = `/web/image?model=res.company&id=${this.company.id}&field=logo`;
-        });
-    }
-
-    loadOpenOrders(openOrders) {
-        // This method is for the demo data
-        let isOrderSet = false;
-        for (const json of openOrders) {
-            if (this.models["pos.order"].find((el) => el.id === json.id)) {
-                continue;
-            }
-            this.add_new_order(json);
-            if (!isOrderSet) {
-                this.selectedOrderUuid = this.pos.models["pos.order"].getFirst().uuid;
-                isOrderSet = true;
-            }
-        }
-    }
-
-    posHasValidProduct() {
-        return this.session._has_available_products;
     }
 
     setSelectedCategory(categoryId) {
@@ -1013,21 +949,6 @@ export class PosStore extends Reactive {
         return this.pushOrderMutex.exec(() => this.syncAllOrders(order));
     }
 
-    // created this hook for modularity
-    _updateOrder(ordersResponseData, orders) {
-        const order = orders.find((order) => order.name === ordersResponseData.pos_reference);
-        if (order) {
-            order.server_id = ordersResponseData.id;
-            return order;
-        }
-    }
-
-    // load the partners based on the ids
-    async _loadPartners(partnerIds) {
-        if (partnerIds.length > 0) {
-            await this.data.read("res.partner", partnerIds);
-        }
-    }
     setLoadingOrderState(bool) {
         this.loadingOrderState = bool;
     }
@@ -1132,16 +1053,6 @@ export class PosStore extends Reactive {
         return this.models["pos.order"].filter((o) => !o.finalized);
     }
 
-    getTaxesByIds(taxIds) {
-        const taxes = [];
-        for (let i = 0; i < taxIds.length; i++) {
-            if (this.tax_data_by_id[taxIds[i]]) {
-                taxes.push(this.tax_data_by_id[taxIds[i]]);
-            }
-        }
-        return taxes;
-    }
-
     // To be used in the context of closing the POS
     // Saves the order locally and try to send it to the backend.
     // If there is an error show a popup
@@ -1225,25 +1136,6 @@ export class PosStore extends Reactive {
                 paymentLine.payment_method_id.use_payment_terminal === terminalName &&
                 !paymentLine.is_done()
         );
-    }
-    /**
-     * TODO: We can probably remove this here and put it somewhere else.
-     * And that somewhere else becomes the parent of the proxy.
-     * Directly calls the requested service, instead of triggering a
-     * 'call_service' event up, which wouldn't work as services have no parent
-     *
-     * @param {OdooEvent} ev
-     */
-    _trigger_up(ev) {
-        if (ev.is_stopped()) {
-            return;
-        }
-        const payload = ev.data;
-        if (ev.name === "call_service") {
-            const service = this.env.services[payload.service];
-            const result = service[payload.method].apply(service, ev.data.args || []);
-            payload.callback(result);
-        }
     }
 
     get linesToRefund() {
@@ -1483,27 +1375,6 @@ export class PosStore extends Reactive {
 
         return currentPartner;
     }
-    // FIXME: POSREF, method exist only to be overrided
-    async addProductFromUi(product, options) {
-        return this.get_order().add_product(product, options);
-    }
-    async addProductToCurrentOrder(product, options = {}) {
-        if (Number.isInteger(product)) {
-            product = this.models["product.product"].get(product);
-        }
-        this.get_order() || this.add_new_order();
-
-        options = { ...options, ...(await this.getAddProductOptions(product)) };
-
-        if (!Object.keys(options).length) {
-            return;
-        }
-
-        // Add the product after having the extra information.
-        await this.addProductFromUi(product, options);
-        this.numberBuffer.reset();
-    }
-
     async editLots(product, packLotLinesToEdit) {
         const isAllowOnlyOneLot = product.isAllowOnlyOneLot();
         let canCreateLots = this.pickingType.use_create_lots || !this.pickingType.use_existing_lots;
@@ -1583,20 +1454,6 @@ export class PosStore extends Reactive {
         return this.config.cash_control && this.session.state == "opening_control";
     }
 
-    preloadImages() {
-        for (const product of this.models["product.product"].getAll()) {
-            const image = new Image();
-            image.src = `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.write_date}`;
-        }
-        for (const category of this.models["pos.category"].getAll()) {
-            if (category.id == 0) {
-                continue;
-            }
-            const image = new Image();
-            image.src = `/web/image?model=pos.category&field=image_128&id=${category.id}&unique=${category.write_date}`;
-        }
-    }
-
     /**
      * Close other tabs that contain the same pos session.
      */
@@ -1647,10 +1504,6 @@ export class PosStore extends Reactive {
             cashier: this.get_cashier()?.name,
             header: this.config.receipt_header,
         };
-    }
-
-    isChildPartner(partner) {
-        return partner.parent_name;
     }
 
     async showQR(payment) {
