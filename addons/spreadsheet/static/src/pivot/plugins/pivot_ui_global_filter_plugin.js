@@ -5,10 +5,8 @@ import { Domain } from "@web/core/domain";
 import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
-import { helpers } from "@odoo/o-spreadsheet";
 
 const { DateTime } = luxon;
-const { pivotTimeAdapter, toPivotDomain } = helpers;
 
 /**
  * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
@@ -158,7 +156,10 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
         const formulaId = args[0];
         const pivotId = this.getters.getPivotId(formulaId);
         const index = functionDescription.functionName === "PIVOT.HEADER" ? 1 : 2;
-        return this.getFiltersMatchingPivotArgs(pivotId, toPivotDomain(args.slice(index)));
+        const pivot = this.getters.getPivot(pivotId);
+        const domainArgs = args.slice(index).map((value) => ({ value }));
+        const domain = pivot.parseArgsToPivotDomain(domainArgs);
+        return this.getFiltersMatchingPivotArgs(pivotId, domain);
     }
 
     /**
@@ -194,10 +195,12 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
                         if (filter.rangeType === "fixedPeriod" && time) {
                             if (value === "false") {
                                 transformedValue = undefined;
-                            }
-                            else {
+                            } else {
                                 transformedValue = pivotPeriodToFilterValue(time, value);
-                                if (JSON.stringify(transformedValue) === JSON.stringify(currentValue)) {
+                                if (
+                                    JSON.stringify(transformedValue) ===
+                                    JSON.stringify(currentValue)
+                                ) {
                                     transformedValue = undefined;
                                 }
                             }
@@ -231,29 +234,6 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
     // ---------------------------------------------------------------------
     // Private
     // ---------------------------------------------------------------------
-
-    /**
-     * @param {import("@spreadsheet").OdooField} field
-     * @param {"day" | "week" | "month" | "quarter" | "year"} granularity
-     * @returns {string | undefined}
-     */
-    _getFieldFormat(field, granularity) {
-        switch (field.type) {
-            case "integer":
-                return "0";
-            case "float":
-                return "#,##0.00";
-            case "monetary":
-                return this.getters.getCompanyCurrencyFormat() || "#,##0.00";
-            case "date":
-            case "datetime": {
-                const timeAdapter = pivotTimeAdapter(granularity);
-                return timeAdapter.getFormat(this.getters.getLocale());
-            }
-            default:
-                return undefined;
-        }
-    }
 
     /**
      * Add an additional domain to a pivot

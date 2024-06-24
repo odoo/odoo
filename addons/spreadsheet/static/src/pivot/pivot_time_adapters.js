@@ -54,8 +54,7 @@ const odooDayAdapter = {
         return date.toFormat("MM/dd/yyyy");
     },
     increment(normalizedValue, step) {
-        const date = DateTime.fromFormat(normalizedValue, "MM/dd/yyyy");
-        return date.plus({ days: step }).toFormat("MM/dd/yyyy");
+        return normalizedValue + step;
     },
 };
 
@@ -122,7 +121,10 @@ function falseHandlerDecorator(adapter) {
             return adapter.normalizeServerValue(groupBy, field, readGroupResult);
         },
         increment(normalizedValue, step) {
-            if (normalizedValue === false) {
+            if (
+                normalizedValue === false ||
+                (typeof normalizedValue === "string" && normalizedValue.toLowerCase() === "false")
+            ) {
                 return false;
             }
             return adapter.increment(normalizedValue, step);
@@ -133,18 +135,20 @@ function falseHandlerDecorator(adapter) {
             }
             return adapter.normalizeFunctionValue(value);
         },
-        getFormat: adapter.getFormat.bind(adapter),
-        formatValue(normalizedValue, locale) {
-            if (normalizedValue === false) {
-                return _t("None");
+        toValueAndFormat(normalizedValue, locale) {
+            if (
+                normalizedValue === false ||
+                (typeof normalizedValue === "string" && normalizedValue.toLowerCase() === "false")
+            ) {
+                return { value: _t("None") };
             }
-            return adapter.formatValue(normalizedValue, locale);
+            return adapter.toValueAndFormat(normalizedValue, locale);
         },
-        toCellValue(normalizedValue) {
-            if (normalizedValue === false) {
-                return _t("None");
+        toFunctionValue(value) {
+            if (value === false) {
+                return "FALSE";
             }
-            return adapter.toCellValue(normalizedValue);
+            return adapter.toFunctionValue(value);
         },
     };
 }
