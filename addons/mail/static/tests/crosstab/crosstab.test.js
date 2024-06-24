@@ -46,6 +46,8 @@ test("Delete starred message updates counter", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
+    await contains(".o-mail-Message", { target: env1, text: "Hello World!" });
+    await contains(".o-mail-Message", { target: env2, text: "Hello World!" });
     await contains("button", { target: env2, text: "Starred1" });
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']", { target: env2 });
     await click(".o-mail-Message-moreMenu [title='Delete']", { target: env2 });
