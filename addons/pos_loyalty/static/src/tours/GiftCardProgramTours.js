@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Chrome } from "point_of_sale.tour.ChromeTourMethods";
 import { PosLoyalty } from 'pos_loyalty.tour.PosCouponTourMethods';
 import { ProductScreen } from 'point_of_sale.tour.ProductScreenTourMethods';
 import { TextInputPopup } from 'point_of_sale.tour.TextInputPopupTourMethods';
@@ -67,3 +68,13 @@ PosLoyalty.check.orderTotalIs("50.00");
 PosLoyalty.check.pointsAwardedAre("100"),
 PosLoyalty.exec.finalizeOrder("Cash", "50");
 Tour.register("PosLoyaltyPointsGiftcard", { test: true, url: "/pos/web" }, getSteps());
+
+startSteps();
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.clickDisplayedProduct("Test Product A");
+PosLoyalty.do.enterCode("044123456");
+Chrome.do.confirmPopup();
+PosLoyalty.check.orderTotalIs("50.00");
+ProductScreen.check.checkTaxAmount("-6.52");
+Tour.register("PosLoyaltyGiftCardTaxes", { test: true }, getSteps());
