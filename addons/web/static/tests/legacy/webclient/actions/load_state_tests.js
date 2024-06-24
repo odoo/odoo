@@ -1062,6 +1062,58 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
+    QUnit.test("don't load controllers when load action new", async function (assert) {
+        const mockRPC = async function (route, { method }) {
+            assert.step(method || route);
+        };
+        redirect("/odoo/action-3/2");
+
+        serverData.views = {
+            ...serverData.views,
+            "partner,false,form": `
+                <form>
+                    <a href="http://example.com/odoo/action-5" class="clickMe">clickMe</a>
+                    <group>
+                        <field name="display_name"/>
+                        <field name="foo"/>
+                    </group>
+                </form>`,
+        };
+
+        await createWebClient({ serverData, mockRPC });
+        assert.containsOnce(target, ".o_form_view");
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Second record"]);
+        assert.verifySteps([
+            "/web/webclient/load_menus",
+            "/web/action/load",
+            "get_views",
+            "web_read",
+        ]);
+        assert.strictEqual(
+            browser.location.href,
+            "http://example.com/odoo/action-3/2",
+            "the url did not change"
+        );
+
+        await click(target, ".clickMe");
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+        assert.verifySteps(["/web/action/load", "get_views", "onchange"]);
+        assert.strictEqual(
+            browser.location.href,
+            "http://example.com/odoo/action-3/2",
+            "the url did not change"
+        );
+
+        // Close the dialog
+        await click(target, ".o_dialog .o_form_button_cancel");
+
+        //Go back to the multi-record view
+        await click(target, ".breadcrumb-item");
+        await nextTick();
+        assert.containsOnce(target, ".o_list_view");
+        assert.verifySteps(["web_search_read"]);
+    });
+
     QUnit.module("Load State: legacy urls");
 
     QUnit.test("action loading", async (assert) => {
