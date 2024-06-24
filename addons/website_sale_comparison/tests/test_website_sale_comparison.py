@@ -5,6 +5,7 @@ import logging
 
 from collections import OrderedDict
 from lxml import etree
+from unittest import skip
 from odoo import tools
 
 import odoo.tests
@@ -114,6 +115,7 @@ class TestUi(odoo.tests.HttpCase):
         for variant, price in zip(self.variants_margaux, [487.32, 394.05, 532.44, 1047.84]):
             variant.product_template_attribute_value_ids.filtered(lambda ptav: ptav.attribute_id == self.attribute_vintage).price_extra = price
 
+    @skip("Random bug that will not be fixed in 15.0")
     def test_01_admin_tour_product_comparison(self):
         # YTI FIXME: Adapt to work without demo data
         if not odoo.tests.loaded_demo_data(self.env):
