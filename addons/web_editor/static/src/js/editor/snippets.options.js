@@ -4525,9 +4525,8 @@ const SnippetOptionWidget = Widget.extend({
                 // TODO the flag should be fetched through widget params somehow
                 return;
             }
-
             // Call widget option methods and update $target
-            await this._select(previewMode, widget);
+            await this._select(previewMode, widget).catch(() => { });
 
             // If it is not preview mode, the user selected the option for good
             // (so record the action)
