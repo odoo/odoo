@@ -178,7 +178,8 @@ class StockMove(models.Model):
         company = self.purchase_line_id.company_id
         if company.currency_id.is_zero(diff):
             return am_vals_list
-
+        layer.unit_cost -= unit_diff
+        layer.value -= diff
         sm = self.with_company(company).with_context(is_returned=True)
         accounts = sm.product_id.product_tmpl_id.get_product_accounts()
         acc_exp_id = accounts['expense'].id

@@ -553,8 +553,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         return_pick.move_ids[0].move_line_ids[0].qty_done = 10
         return_pick.button_validate()
 
-        # valuation of product1 should be 200 as the first items will be sent out
-        self.assertEqual(self.product1.value_svl, 200)
+        # valuation of product1 should be 100 as the second items will be sent out
+        self.assertEqual(self.product1.value_svl, 100)
         # create a credit note for po2
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_refund'))
         move_form.invoice_date = move_form.date
@@ -3282,6 +3282,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'debit': 100.0, 'credit': 0.0, 'reconciled': True},
         ])
         self.assertTrue(all(aml.full_reconcile_id for aml in in_stock_amls))
+        self.assertEqual(self.product1.value_svl, 110)
 
     def test_fifo_return_twice_and_bill(self):
         """
@@ -3322,14 +3323,13 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'debit': 10.0, 'credit': 0.0, 'reconciled': True},
             {'debit': 15.0, 'credit': 0.0, 'reconciled': True},
             # Receive it again
-            # The "return of a return" ignores the POL price and uses the value of the returned product
-            # So, same: 10 with valo, 15 with expense
-            {'debit': 0.0, 'credit': 10.0, 'reconciled': True},
-            {'debit': 0.0, 'credit': 15.0, 'reconciled': True},
+            # The "return of a return" ignores the POL price and uses the value of the returned product that was corrected
+            {'debit': 0.0, 'credit': 25.0, 'reconciled': True},
             # Bill it
             {'debit': 25.0, 'credit': 0.0, 'reconciled': True},
         ])
         self.assertTrue(all(aml.full_reconcile_id for aml in in_stock_amls))
+        self.assertEqual(self.product1.value_svl, 35)
 
     def test_fifo_bill_return_refund(self):
         """
@@ -3375,6 +3375,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'debit': 0.0, 'credit': 25.0, 'reconciled': True},
         ])
         self.assertTrue(all(aml.full_reconcile_id for aml in in_stock_amls))
+        self.assertEqual(self.product1.value_svl, 10)
 
     def test_bill_with_zero_qty(self):
         """
