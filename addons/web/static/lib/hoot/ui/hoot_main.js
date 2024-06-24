@@ -18,6 +18,12 @@ import { HootStatusPanel } from "./hoot_status_panel";
  */
 
 //-----------------------------------------------------------------------------
+// Global
+//-----------------------------------------------------------------------------
+
+const { setTimeout } = globalThis;
+
+//-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
@@ -74,6 +80,7 @@ export class HootMain extends Component {
     `;
 
     createURL = createURL;
+    escapeKeyPresses = 0;
 
     setup() {
         const { runner } = this.env;
@@ -121,10 +128,13 @@ export class HootMain extends Component {
                 break;
             }
             case "Escape": {
+                this.escapeKeyPresses++;
+                setTimeout(() => this.escapeKeyPresses--, 500);
+
                 if (ev.ctrlKey && runner.config.debugTest) {
                     runner.config.debugTest = false;
                 }
-                if (runner.state.status === "running") {
+                if (runner.state.status === "running" && this.escapeKeyPresses >= 2) {
                     ev.preventDefault();
                     runner.stop();
                 }
