@@ -274,31 +274,35 @@ class Users(models.Model):
         if not self.env.user._is_public():
             settings = self.env["res.users.settings"]._find_or_create_for_user(self.env.user)
             store.add(
+                "Persona",
                 {
-                    "self": {
-                        "id": self.env.user.partner_id.id,
-                        "isAdmin": self.env.user._is_admin(),
-                        "isInternalUser": not self.env.user.share,
-                        "name": self.env.user.partner_id.name,
-                        "notification_preference": self.env.user.notification_type,
-                        "type": "partner",
-                        "userId": self.env.user.id,
-                        "write_date": fields.Datetime.to_string(self.env.user.write_date),
-                    },
+                    "id": self.env.user.partner_id.id,
+                    "isAdmin": self.env.user._is_admin(),
+                    "isInternalUser": not self.env.user.share,
+                    "name": self.env.user.partner_id.name,
+                    "notification_preference": self.env.user.notification_type,
+                    "type": "partner",
+                    "userId": self.env.user.id,
+                    "write_date": fields.Datetime.to_string(self.env.user.write_date),
+                },
+            )
+            store.add(
+                {
+                    "self": {"id": self.env.user.partner_id.id, "type": "partner"},
                     "settings": settings._res_users_settings_format(),
                 }
             )
         elif guest:
             store.add(
+                "Persona",
                 {
-                    "self": {
-                        "id": guest.id,
-                        "name": guest.name,
-                        "type": "guest",
-                        "write_date": fields.Datetime.to_string(guest.write_date),
-                    }
-                }
+                    "id": guest.id,
+                    "name": guest.name,
+                    "type": "guest",
+                    "write_date": fields.Datetime.to_string(guest.write_date),
+                },
             )
+            store.add({"self": {"id": guest.id, "type": "guest"}})
 
     def _init_messaging(self, store):
         self.ensure_one()
