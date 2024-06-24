@@ -33,6 +33,7 @@ import { initElementForEdition } from "./utils/sanitize";
  * @property { Function } [onChange]
  * @property { boolean } [dropImageAsAttachment]
  * @property { CollaborationConfig } [collaboration]
+ * @property { Function } getRecordInfo
  */
 
 function sortPlugins(plugins) {
