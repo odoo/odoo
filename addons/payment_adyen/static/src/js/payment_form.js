@@ -58,7 +58,7 @@ paymentForm.include({
                 'formatted_amount': formattedAmount,
             });
             if (response.error) {
-                this._displayErrorDialog(_t("Cannot display the payment form"), response.error);
+                this._displayErrorDialog(this.errorMapping['displayFormError'], response.error);
                 this._enableButton();
                 return;
             }
@@ -137,7 +137,7 @@ paymentForm.include({
 
         // The `onError` event handler is not used to validate inputs anymore since v5.0.0.
         if (!this.adyenComponents[paymentOptionId].isValid) {
-            this._displayErrorDialog(_t("Incorrect payment details"));
+            this._displayErrorDialog(this.errorMapping['incorrectPaymentDetails']);
             this._enableButton();
             return;
         }
@@ -171,7 +171,9 @@ paymentForm.include({
             'browser_info': state.data.browserInfo,
         });
         if (paymentResponse.error) {
-            this._displayErrorDialog(_t("Payment processing failed"), paymentResponse.error);
+            this._displayErrorDialog(
+                this.errorMapping['paymentProcessingError'], paymentResponse.error
+            );
             this._enableButton();
             return;
         }
@@ -199,7 +201,9 @@ paymentForm.include({
             'payment_details': state.data,
         })
         if (paymentDetails.error) {
-            this._displayErrorDialog(_t("Payment processing failed"), paymentDetails.error);
+            this._displayErrorDialog(
+                this.errorMapping['paymentProcessingError'], paymentDetails.error
+            );
             this._enableButton();
             return;
         }
@@ -221,7 +225,7 @@ paymentForm.include({
      * @return {void}
      */
     _adyenOnError(error) {
-        this._displayErrorDialog(_t("Payment processing failed"), error.message);
+        this._displayErrorDialog(this.errorMapping['paymentProcessingError'], error.message);
         this._enableButton();
     },
 

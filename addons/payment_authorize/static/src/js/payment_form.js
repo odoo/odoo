@@ -135,7 +135,7 @@ paymentForm.include({
         if (response.messages.resultCode === 'Error') {
             let error = '';
             response.messages.message.forEach(msg => error += `${msg.code}: ${msg.text}\n`);
-            this._displayErrorDialog(_t("Payment processing failed"), error);
+            this._displayErrorDialog(this.errorMapping['paymentProcessingError'], error);
             this._enableButton();
             return;
         }
@@ -150,7 +150,9 @@ paymentForm.include({
             window.location = '/payment/status';
         }).catch((error) => {
             if (error instanceof RPCError) {
-                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+                this._displayErrorDialog(
+                    this.errorMapping['paymentProcessingError'], error.data.message
+                );
                 this._enableButton();
             } else {
                 return Promise.reject(error);

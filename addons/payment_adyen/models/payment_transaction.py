@@ -146,7 +146,6 @@ class PaymentTransaction(models.Model):
         )
         if payment_utils.set_tx_error_from_response(refund_tx, response_content):
             return refund_tx
-
         _logger.info(
             "refund request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(response_content)
@@ -188,7 +187,6 @@ class PaymentTransaction(models.Model):
         )
         if payment_utils.set_tx_error_from_response(capture_child_tx, response_content):
             return capture_child_tx
-
         _logger.info("capture request response:\n%s", pprint.pformat(response_content))
 
         # Handle the capture request response
@@ -224,10 +222,8 @@ class PaymentTransaction(models.Model):
             payload=data,
             method='POST',
         )
-
         if payment_utils.set_tx_error_from_response(child_void_tx, response_content):
             return child_void_tx
-
         _logger.info("void request response:\n%s", pprint.pformat(response_content))
 
         # Handle the void request response

@@ -47,7 +47,9 @@ paymentForm.include({
         const RazorpayJS = Razorpay(razorpayOptions);
         RazorpayJS.open();
         RazorpayJS.on('payment.failed', response => {
-            this._displayErrorDialog(_t("Payment processing failed"), response.error.description);
+            this._displayErrorDialog(
+                this.errorMapping['paymentProcessingError'], response.error.description
+            );
         });
     },
 

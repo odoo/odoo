@@ -299,7 +299,7 @@ class PaymentProvider(models.Model):
                     _logger.exception("invalid API request at %s with data %s", url, payload)
                     error_content = response.json().get('error', {})
                     error_response = payment_utils.format_error_response(
-                        f'{payment_const.ERRORS_MAPPING["api_communication_error"]}'
+                        f'{payment_const.PAYMENT_ERRORS_MAPPING["api_communication_error"]}'
                         f' {error_content.get("message", "")}'
                     )
                     if intent:
@@ -309,7 +309,7 @@ class PaymentProvider(models.Model):
         except requests.exceptions.ConnectionError:
             _logger.exception("unable to reach endpoint at %s", url)
             return payment_utils.format_error_response(
-                payment_const.ERRORS_MAPPING['api_connection_error']
+                payment_const.PAYMENT_ERRORS_MAPPING['api_connection_error']
             )
         return response.json()
 

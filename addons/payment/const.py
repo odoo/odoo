@@ -11,11 +11,11 @@ REPORT_REASONS_MAPPING = {
     'incompatible_website': _("incompatible website"),
     'manual_capture_not_supported': _("manual capture not supported"),
     'provider_not_available': _("no supported provider available"),
-    'tokenization_not_supported': _("tokenization not supPI connection errorported"),
+    'tokenization_not_supported': _("tokenization not supported"),
     'validation_not_supported': _("tokenization without payment no supported"),
 }
 
-ERRORS_MAPPING = {
+PAYMENT_ERRORS_MAPPING = {
     'api_connection_error': _("Could not establish the connection to the API."),
     'api_communication_error': _("The communication with the API failed. Details:"),
 }

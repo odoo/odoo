@@ -106,12 +106,12 @@ class PaymentProvider(models.Model):
                 )
                 msg = response.json().get('message', '')
                 return payment_utils.format_error_response(
-                    f'{payment_const.ERRORS_MAPPING["api_communication_error"]} {msg}'
+                    f'{payment_const.PAYMENT_ERRORS_MAPPING["api_communication_error"]} {msg}'
                 )
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             _logger.exception("Unable to reach endpoint at %s", url)
             return payment_utils.format_error_response(
-                payment_const.ERRORS_MAPPING['api_connection_error']
+                payment_const.PAYMENT_ERRORS_MAPPING['api_connection_error']
             )
         return response.json()
 

@@ -16,6 +16,11 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         'click [name="o_payment_expand_button"]': '_hideExpandButton',
         'click [name="o_payment_submit_button"]': '_submitForm',
     }),
+    errorMapping: {
+        'paymentProcessingError': _t("Payment processing failed"),
+        'incorrectPaymentDetails': _t("Incorrect payment details"),
+        'displayFormError': _t("Cannot display the payment form"),
+    },
 
     // #=== WIDGET LIFECYCLE ===#
 
@@ -398,7 +403,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         catch (error) {
             if (error instanceof RPCError || error instanceof Error) {
                 const errorMsg = error.data?.message || error.message;
-                this._displayErrorDialog(_t("Payment processing failed"), errorMsg);
+                this._displayErrorDialog(this.errorMapping['paymentProcessingError'], errorMsg);
                 this._enableButton(); // The button has been disabled before initiating the flow.
             } else {
                 return Promise.reject(error);
