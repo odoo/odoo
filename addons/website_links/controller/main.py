@@ -14,7 +14,10 @@ class WebsiteUrl(http.Controller):
 
     @http.route('/r', type='http', auth='user', website=True)
     def shorten_url(self, **post):
-        return request.render("website_links.page_shorten_url", post)
+        return request.render("website_links.page_shorten_url", {
+            "can_generate_link_tracker": request.env['link.tracker'].check_access_rights('create', raise_exception=False),
+            **post,
+        })
 
     @http.route('/website_links/add_code', type='json', auth='user')
     def add_code(self, **post):

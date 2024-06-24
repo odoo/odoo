@@ -90,13 +90,18 @@ registry.category("web_tour.tours").add('website_links_tour', {
         },
         // 3. Check that counter got incremented and charts are correctly displayed
         {
-            content: "filter recently used links",
-            trigger: '#filter-recently-used-links',
+            content: "Sort the recent links",
+            trigger: '.o_website_links_sort_by',
+            run: "click",
+        },
+        {
+            content: "Sort by last clicked links",
+            trigger: '#filter-last-clicked-links',
             run: "click",
         },
         {
             content: "visit link stats page",
-            trigger: "#o_website_links_recent_links a:contains(/^Stats$/):first",
+            trigger: "#o_website_links_recent_links a:contains(/^Open$/):first",
             run: "click",
         },
         {
