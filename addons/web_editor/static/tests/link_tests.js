@@ -67,7 +67,7 @@ QUnit.module(
                 resModel: "note",
                 arch:
                     "<form>" +
-                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '<field name="body" widget="html_legacy" style="height: 100px"/>' +
                     "</form>",
                 resId: 1,
             });
