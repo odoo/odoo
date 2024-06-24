@@ -153,7 +153,7 @@ class TestMailTemplate(MailCommon):
         with self.assertRaises(AccessError):
             employee_template.with_context(lang='fr_FR').subject = '{{ object.foo }}'
 
-        employee_template.with_context(lang='fr_FR').sudo().subject = '{{ object.foo }}'
+        employee_template.with_context(lang='fr_FR').sudo().subject = '{{ object.name }}'
 
     def test_mail_template_parse_partner_to(self):
         for partner_to, expected in [
