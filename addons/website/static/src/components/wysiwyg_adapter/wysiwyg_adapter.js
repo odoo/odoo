@@ -732,8 +732,8 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         };
         Object.entries(bundles).forEach(([bundleName, bundleURLs]) => {
             const selector = `link[href*="${bundleName}"]`;
-            const $linksIframe = this.websiteService.contentWindow.$(selector);
-            if ($linksIframe.length) {
+            const $linksIframe = this.websiteService.contentWindow.$?.(selector);
+            if ($linksIframe?.length) {
                 $allLinksIframe = $allLinksIframe.add($linksIframe);
                 createLinksProms(bundleURLs, $linksIframe.last());
             }
