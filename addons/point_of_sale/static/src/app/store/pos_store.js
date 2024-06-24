@@ -135,7 +135,6 @@ export class PosStore extends Reactive {
             this.data.read(model, ids);
         });
         this.onNotified("DATA_UNLINKED", ({ model, ids }) => {
-            this.data.read(model, ids);
             for (const id of ids) {
                 this.models[model].get(id).delete();
             }

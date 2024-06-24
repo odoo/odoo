@@ -3,6 +3,7 @@
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
+import json
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
@@ -183,7 +184,8 @@ class PosSession(models.Model):
             if not only_data:
                 self._load_pos_data_relations(model, response)
 
-        self.loaded_data = response
+        self.loaded_data = json.dumps(response, default=str)
+
         return response
 
     def _prepare_pricelist_domain(self, data):
