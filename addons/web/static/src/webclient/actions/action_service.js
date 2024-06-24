@@ -774,6 +774,9 @@ export function makeActionManager(env, router = _router) {
             reject = _rej;
         });
         const action = controller.action;
+        if (action.target !== "new" && "newStack" in options) {
+            controllerStack = options.newStack;
+        }
         const index = _computeStackIndex(options);
         const nextStack = [...controllerStack.slice(0, index), controller];
         // Compute breadcrumbs
@@ -1088,14 +1091,7 @@ export function makeActionManager(env, router = _router) {
         };
         action.controllers[view.type] = controller;
 
-        return _updateUI(controller, {
-            index: options.index,
-            clearBreadcrumbs: options.clearBreadcrumbs,
-            onClose: options.onClose,
-            stackPosition: options.stackPosition,
-            onActionReady: options.onActionReady,
-            noEmptyTransition: options.noEmptyTransition,
-        });
+        return _updateUI(controller, options);
     }
 
     /**
@@ -1140,15 +1136,7 @@ export function makeActionManager(env, router = _router) {
                 ..._getActionInfo(action, options.props),
             };
             controller.displayName ||= clientAction.displayName?.toString() || "";
-            const updateUIOptions = {
-                index: options.index,
-                clearBreadcrumbs: options.clearBreadcrumbs,
-                stackPosition: options.stackPosition,
-                onClose: options.onClose,
-                onActionReady: options.onActionReady,
-                noEmptyTransition: options.noEmptyTransition,
-            };
-            return _updateUI(controller, updateUIOptions);
+            return _updateUI(controller, options);
         } else {
             const next = await clientAction(env, action);
             if (next) {
@@ -1179,13 +1167,7 @@ export function makeActionManager(env, router = _router) {
             ..._getActionInfo(action, props),
         };
 
-        const updateUIOptions = {
-            clearBreadcrumbs: options.clearBreadcrumbs,
-            stackPosition: options.stackPosition,
-            onClose: options.onClose,
-            index: options.index,
-        };
-        return _updateUI(controller, updateUIOptions);
+        return _updateUI(controller, options);
     }
 
     /**
@@ -1519,11 +1501,12 @@ export function makeActionManager(env, router = _router) {
      * @returns {Promise<boolean>} true if doAction was performed
      */
     async function loadState() {
-        controllerStack = await _controllersFromState();
+        const newStack = await _controllersFromState();
         const actionParams = _getActionParams();
         if (actionParams) {
             // Params valid => performs a "doAction"
             const { actionRequest, options } = actionParams;
+            options.newStack = newStack;
             await doAction(actionRequest, options);
             return true;
         }
