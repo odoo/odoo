@@ -229,6 +229,12 @@ patch(PosStore.prototype, {
             ),
         };
     },
+    async addLineToCurrentOrder(vals, opts = {}, configure = true) {
+        if (this.config.module_pos_restaurant && !this.get_order().uiState.booked) {
+            this.get_order().setBooked(true);
+        }
+        return super.addLineToCurrentOrder(vals, opts, configure);
+    },
     async getServerOrders() {
         if (this.config.module_pos_restaurant) {
             const tableIds = [].concat(
@@ -358,12 +364,6 @@ patch(PosStore.prototype, {
     },
     toggleEditMode() {
         this.isEditMode = !this.isEditMode;
-    },
-    async addProductToCurrentOrder(product, options = {}) {
-        if (this.config.module_pos_restaurant && !this.get_order().booked) {
-            this.get_order().setBooked(true);
-        }
-        return super.addProductToCurrentOrder(...arguments);
     },
     _shouldLoadOrders() {
         return super._shouldLoadOrders() || this.config.module_pos_restaurant;
