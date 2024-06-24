@@ -215,3 +215,58 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
         },
     ]
 );
+
+wTourUtils.registerWebsitePreviewTour(
+    "website_code_editor_usable",
+    {
+        // TODO: enable debug mode when failing tests have been fixed (props validation)
+        url: "/",
+        test: true,
+    },
+    () => [
+        {
+            content: "Open Site menu",
+            trigger: 'button[data-menu-xmlid="website.menu_site"]',
+        },
+        {
+            content: "Open HTML / CSS Editor",
+            trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
+        },
+        {
+            content: "Bypass warning",
+            trigger: ".o_resource_editor_wrapper div:nth-child(2) button:nth-child(3)",
+        },
+        // Test all 3 file type options
+        ...[{
+            menuItemIndex: 1,
+            editorMode: 'qweb',
+        }, {
+            menuItemIndex: 2,
+            editorMode: 'scss',
+        }, {
+            menuItemIndex: 3,
+            editorMode: 'javascript',
+        }]
+            .map(({ menuItemIndex, editorMode }) => [
+                {
+                    content: "Open file type dropdown",
+                    trigger: ".o_resource_editor_type_switcher .dropdown-toggle",
+                },
+                {
+                    content: `Select type ${menuItemIndex}`,
+                    trigger: `.o-overlay-container .o-dropdown--menu .dropdown-item:nth-child(${menuItemIndex})`,
+                },
+                {
+                    content: "Wait for editor mode to change",
+                    trigger: `.ace_editor[data-mode="${editorMode}"]`,
+                    isCheck: true,
+                },
+                {
+                    content: "Make sure text is being highlighted",
+                    trigger: ".ace_content .ace_text-layer .ace_line:first-child span",
+                    isCheck: true,
+                },
+            ])
+            .flat(),
+    ]
+);
