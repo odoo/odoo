@@ -741,9 +741,90 @@ class Meeting(models.Model):
     def _compute_display_name(self):
         """ Hide private events' name for events which don't belong to the current user
         """
+<<<<<<< HEAD
         hidden = self.filtered(lambda event: event._check_private_event_conditions())
         hidden.display_name = _('Busy')
         super(Meeting, self - hidden)._compute_display_name()
+||||||| parent of cb25536e89d2 (temp)
+        hidden = self.filtered(lambda evt: evt._check_private_event_conditions())
+        shown = self - hidden
+        shown_names = super(Meeting, shown).name_get()
+        obfuscated_names = [(eid, _('Busy')) for eid in hidden.ids]
+        return shown_names + obfuscated_names
+
+    def read(self, fields=None, load='_classic_read'):
+        """
+        Return the events information to be shown on calendar/tree/form views.
+        Private events will have their sensitive fields hidden by default.
+        """
+        records = super().read(fields=fields, load=load)
+        if fields:
+            # Define the private fields and filter the private events from self.
+            private_fields = ['name', 'location', 'attendee_ids', 'description', 'videocall_location', 'message_ids']
+            private_events = self.filtered(lambda ev: ev._check_private_event_conditions())
+
+            # Hide the private information of the event by changing their values to 'Busy' and False.
+            for event in records:
+                if event['id'] in private_events.ids:
+                    for field in private_fields:
+                        if self._fields[field].type in ('one2many', 'many2many'):
+                            event[field] = []
+                        else:
+                            event[field] = _('Busy') if field in ('name', 'display_name') else False
+
+            # Update the cache with the new hidden values.
+            for field_name in private_fields:
+                if field_name in self._fields:
+                    field = self._fields[field_name]
+                    value = False
+                    if field.type in ('one2many', 'many2many'):
+                        value = []
+                    elif field_name in ('name', 'display_name'):
+                        value = _('Busy')
+                    replacement = field.convert_to_cache(value, private_events)
+                    self.env.cache.update(private_events, field, repeat(replacement))
+        return records
+=======
+        hidden = self.filtered(lambda evt: evt._check_private_event_conditions())
+        shown = self - hidden
+        shown_names = super(Meeting, shown).name_get()
+        obfuscated_names = [(eid, _('Busy')) for eid in hidden.ids]
+        return shown_names + obfuscated_names
+
+    def read(self, fields=None, load='_classic_read'):
+        """
+        Return the events information to be shown on calendar/tree/form views.
+        Private events will have their sensitive fields hidden by default.
+        """
+        records = super().read(fields=fields, load=load)
+        if fields:
+            # Define the private fields and filter the private events from self.
+            private_fields = ['name', 'location', 'attendee_ids', 'description', 'videocall_location', 'message_ids']
+            private_events = self.filtered(lambda ev: ev._check_private_event_conditions())
+
+            # Hide the private information of the event by changing their values to 'Busy' and False.
+            for event in records:
+                if event['id'] in private_events.ids:
+                    for field in private_fields:
+                        if self._fields[field].type in ('one2many', 'many2many'):
+                            event[field] = []
+                        else:
+                            event[field] = _('Busy') if field in ('name', 'display_name') else False
+
+            # Update the cache with the new hidden values.
+            for field_name in private_fields:
+                if field_name in self._fields:
+                    field = self._fields[field_name]
+                    value = False
+                    if field.type in ('one2many', 'many2many'):
+                        value = []
+                    elif field_name in ('name', 'display_name'):
+                        value = _('Busy')
+                    for private_event in private_events:
+                        replacement = field.convert_to_cache(value, private_event)
+                        self.env.cache.update(private_event, field, repeat(replacement))
+        return records
+>>>>>>> cb25536e89d2 (temp)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
