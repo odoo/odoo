@@ -87,7 +87,7 @@ QUnit.test("double clicking on a figure doesn't open the side panel", async (ass
         data: {
             type: "line",
             dataSetsHaveTitle: false,
-            dataSets: [ {dataRange: "A1" }],
+            dataSets: [{ dataRange: "A1" }],
             legendPosition: "top",
             verticalAxisPosition: "left",
             title: { text: "" },
