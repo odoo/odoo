@@ -76,6 +76,7 @@ class ResConfigSettings(models.TransientModel):
     module_sale_margin = fields.Boolean("Margins")
     module_sale_product_matrix = fields.Boolean("Sales Grid Entry")
     module_sale_pdf_quote_builder = fields.Boolean("PDF Quote builder")
+    module_sale_commission = fields.Boolean("Commissions")
 
     #=== ONCHANGE METHODS ===#
 
