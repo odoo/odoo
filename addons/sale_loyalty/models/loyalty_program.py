@@ -12,8 +12,9 @@ class LoyaltyProgram(models.Model):
 
     def _compute_order_count(self):
         # An order should count only once PER program but may appear in multiple programs
-        read_group_res = self.env['sale.order.line']._read_group(
-            [('reward_id', 'in', self.reward_ids.ids)], ['order_id'], ['reward_id:array_agg'])
+        read_group_res = self.env['sale.order.line'].sudo()._read_group(
+            [('reward_id', 'in', self.reward_ids.ids)], ['reward_id:array_agg'], ['order_id'])
+
         for program in self:
             program_reward_ids = program.reward_ids.ids
             program.order_count = sum(
