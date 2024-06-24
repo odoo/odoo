@@ -27,7 +27,7 @@ class TestSelfAccessProfile(TestHrCommon):
 
     def test_readonly_fields(self):
         """ Employee related fields should be readonly if self editing is not allowed """
-        self.env['ir.config_parameter'].sudo().set_param('hr.hr_employee_self_edit', False)
+        self.env['ir.config_parameter'].sudo().set_param('hr.hr_employee_self_edit', 'False')
         james = new_test_user(self.env, login='hel', groups='base.group_user', name='Simple employee', email='ric@example.com')
         james = james.with_user(james)
         self.env['hr.employee'].create({
@@ -171,7 +171,7 @@ class TestSelfAccessRights(TestHrCommon):
                 self.richard.with_user(self.richard).write({f: 'dummy'})
 
     def testWriteSelfUserEmployee(self):
-        self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', True)
+        self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', 'True')
         for f, v in self.self_protected_fields_user.items():
             val = None
             if v.type == 'char' or v.type == 'text':
@@ -182,7 +182,7 @@ class TestSelfAccessRights(TestHrCommon):
     def testWriteSelfUserPreferencesEmployee(self):
         # self should always be able to update non hr.employee fields if
         # they are in SELF_READABLE_FIELDS
-        self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', False)
+        self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', 'False')
         # should not raise
         vals = [
             {'tz': "Australia/Sydney"},
@@ -197,7 +197,7 @@ class TestSelfAccessRights(TestHrCommon):
     def testWriteOtherUserPreferencesEmployee(self):
         # self should always be able to update non hr.employee fields if
         # they are in SELF_READABLE_FIELDS
-        self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', False)
+        self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', 'False')
         vals = [
             {'tz': "Australia/Sydney"},
             {'email': "new@example.com"},
@@ -210,7 +210,7 @@ class TestSelfAccessRights(TestHrCommon):
 
     def testWriteSelfPhoneEmployee(self):
         # phone is a related from res.partner (from base) but added in SELF_READABLE_FIELDS
-        self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', False)
+        self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', 'False')
         with self.assertRaises(AccessError):
             self.richard.with_user(self.richard).write({'phone': '2154545'})
 

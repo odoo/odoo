@@ -178,7 +178,7 @@ class Http(models.AbstractModel):
             'profile_session': request.session.profile_session,
             'profile_collectors': request.session.profile_collectors,
             'profile_params': request.session.profile_params,
-            'show_effect': bool(request.env['ir.config_parameter'].sudo().get_param('base_setup.show_effect')),
+            'show_effect': str2bool(request.env['ir.config_parameter'].sudo().get_param('base_setup.show_effect')),
             'currencies': self.get_currencies(),
             'bundle_params': {
                 'lang': request.session.context['lang'],
