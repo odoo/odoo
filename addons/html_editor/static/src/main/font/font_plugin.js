@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock } from "@html_editor/utils/blocks";
-import { fillEmpty, setTagName } from "@html_editor/utils/dom";
+import { fillEmpty } from "@html_editor/utils/dom";
 import { isVisibleTextNode, paragraphRelatedElements } from "@html_editor/utils/dom_info";
 import {
     closestElement,
@@ -247,7 +247,8 @@ export class FontPlugin extends Plugin {
                 headingTags.includes(newElement.tagName) &&
                 !descendants(newElement).some(isVisibleTextNode)
             ) {
-                const p = setTagName(newElement, "P");
+                const p = this.document.createElement("P");
+                newElement.replaceWith(p);
                 p.replaceChildren(this.document.createElement("br"));
                 this.shared.setCursorStart(p);
             }
