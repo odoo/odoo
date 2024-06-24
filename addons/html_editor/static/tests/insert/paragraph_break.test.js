@@ -457,6 +457,14 @@ describe("Selection collapsed", () => {
                 contentAfter: "<h1><br></h1><p>[]<br></p>",
             });
         });
+
+        test("should insert a new paragraph after an h1 with style", async () => {
+            await testEditor({
+                contentBefore: `<h1 style="color: red">ab[]</h1>`,
+                stepFunction: splitBlock,
+                contentAfter: `<h1 style="color: red">ab</h1><p>[]<br></p>`,
+            });
+        });
     });
 });
 
