@@ -48,6 +48,8 @@ class Base(models.AbstractModel):
         return self._format_web_search_read_results(domain, values_records, offset, limit, count_limit)
 
     def _format_web_search_read_results(self, domain, records, offset=0, limit=None, count_limit=None):
+        return { 'length': 0, 'records': [], } #Disable App Retrieve TODO: Grab Custom Only
+    
         if not records:
             return {
                 'length': 0,

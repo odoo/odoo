@@ -315,6 +315,8 @@ class IrModule(models.Model):
 
     @api.model
     def _get_modules_from_apps(self, fields, module_type, module_name, domain=None, limit=None, offset=None):
+        return [] #Disable Industry Apps TODO: Grab Custom Only
+    
         if 'name' not in fields:
             fields = fields + ['name']
         payload = {
