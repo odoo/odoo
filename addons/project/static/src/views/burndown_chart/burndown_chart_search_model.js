@@ -45,11 +45,21 @@ export class BurndownChartSearchModel extends SearchModel {
      * @override
      */
     deactivateGroup(groupId) {
+<<<<<<< HEAD
         // Prevent removing 'Date & Stage' and 'Date & is closed' group by from the search
         if (this.searchItems[this.dateSearchItemId].groupId == groupId) {
             if (this.query.some(queryElem => [this.stageIdSearchItemId, this.isClosedSearchItemId].includes(queryElem.searchItemId))){
                 this._addGroupByNotification(_t("The report should be grouped either by \"Stage\" to represent a Burndown Chart or by \"Is Closed\" to represent a Burn-up chart. Without one of these groupings applied, the report will not provide relevant information."));
             }
+||||||| parent of 8f365baf6018 (temp)
+        // Prevent removing Date & Stage group by from the search
+        if (this.searchItems[this.stageIdSearchItemId].groupId == groupId && this.searchItems[this.dateSearchItemId].groupId) {
+            this._addGroupByNotification(_t("Date and Stage"));
+=======
+        // Prevent removing Date & Stage group by from the search
+        if (this.stageIdSearchItemId && this.searchItems[this.stageIdSearchItemId].groupId == groupId && this.searchItems[this.dateSearchItemId].groupId) {
+            this._addGroupByNotification(_t("Date and Stage"));
+>>>>>>> 8f365baf6018 (temp)
             return;
         }
         super.deactivateGroup(groupId);
