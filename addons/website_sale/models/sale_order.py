@@ -479,9 +479,6 @@ class SaleOrder(models.Model):
         self.ensure_one()
         order_line.write(update_values)
 
-    def _validate_zero_amount_cart(self):
-        self.with_context(send_email=True).with_user(SUPERUSER_ID).action_confirm()
-
     def _cart_accessories(self):
         """ Suggest accessories based on 'Accessory Products' of products in cart """
         product_ids = set(self.website_order_line.product_id.ids)
