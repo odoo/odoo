@@ -1,3 +1,20 @@
-.o-mail-MessageReaction.o-selfReacted {
-    background: mix($o-brand-primary, $o-view-background-color, 10%);
+.o-mail-MessageReaction {
+    &.o-selfReacted {
+        --border-opacity: 0.5;
+        background: mix($o-brand-primary, $o-view-background-color, 7.5%);
+
+        &:hover {
+            --border-opacity: 0.75;
+        }
+    }
+
+    &:not(.o-selfReacted) {
+        --border-opacity: 0.35;
+        border-color: rgba(var(--secondary-rgb), var(--border-opacity)) !important;
+
+        &:hover {
+            --border-opacity: 1;
+        }
+    }
 }
+
