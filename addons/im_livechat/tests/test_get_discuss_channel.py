@@ -66,7 +66,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "user_livechat_username": "Michel Operator",
                     "write_date": fields.Datetime.to_string(operator.write_date),
                 },
-                self._persona_to_store({
+                self._filter_persona_fields({
                     "active": False,
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
@@ -133,7 +133,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "user_livechat_username": "Michel Operator",
                     "write_date": fields.Datetime.to_string(operator.write_date),
                 },
-                self._persona_to_store({
+                self._filter_persona_fields({
                     "active": False,
                     "email": "odoobot@example.com",
                     "id": self.user_root.partner_id.id,
@@ -213,7 +213,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "user_livechat_username": "Michel Operator",
                     "write_date": fields.Datetime.to_string(operator.partner_id.write_date)
                 },
-                self._persona_to_store({
+                self._filter_persona_fields({
                     "active": False,
                     "email": "odoobot@example.com",
                     "id": self.user_root.partner_id.id,
