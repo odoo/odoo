@@ -362,6 +362,14 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 },
             ];
         }
+        checkTaxAmount(number) {
+            return [
+                {
+                    content: `check order tax amount`,
+                    trigger: `.subentry:contains("${number}")`,
+                },
+            ];
+        }
     }
 
     class Execute {
