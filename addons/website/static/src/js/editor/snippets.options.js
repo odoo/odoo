@@ -2994,7 +2994,7 @@ options.registry.CoverProperties = options.Class.extend({
                     // Convert to webp but keep original width.
                     const { dataURL, mimetype } = await applyModifications(
                         imgEl,
-                        { mimetype: "image/webp" },
+                        { mimetype: imgEl.dataset.mimetype },
                         true, // TODO: remove in master
                     );
                     imgEl.dataset.mimetype = mimetype;

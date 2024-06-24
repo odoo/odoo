@@ -423,6 +423,9 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
     },
 });
 
+/**
+ * TODO this should use web_editor/ImageTools somehow (_getImageMimetype) or centralized image processing service
+ */
 options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
     /**
      * @override
@@ -527,9 +530,13 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                                     "image/webp",
                                 ].includes(imgEl.dataset.mimetype)) {
                                     // Convert to webp but keep original width.
-                                    applyModifications(imgEl, {
-                                        mimetype: "image/webp",
-                                    }).then(({ dataURL, mimetype }) => {
+                                    applyModifications(
+                                        imgEl,
+                                        {
+                                            mimetype: this._getImageMimetype(imgEl),
+                                        },
+                                        true, // TODO: remove in master
+                                    ).then(({ dataURL, mimetype }) => {
                                         imgEl.dataset.mimetype = mimetype;
                                         imgEl.src = dataURL;
                                         imgEl.classList.add("o_modified_image_to_save");
@@ -615,6 +622,9 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                 $el.attr('href', '#slideshow_' + uuid);
             }
         });
+    },
+    _getImageMimetype(img) {
+        return img.dataset.shape && img.dataset.originalMimetype ? img.dataset.originalMimetype : img.dataset.mimetype;
     },
 });
 
