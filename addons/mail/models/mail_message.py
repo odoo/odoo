@@ -263,7 +263,7 @@ class Message(models.Model):
         self._cr.execute("""CREATE INDEX IF NOT EXISTS mail_message_model_res_id_id_idx ON mail_message (model, res_id, id)""")
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None):
         """ Override that adds specific access rights of mail.message, to remove
         ids uid could not see according to our custom rules. Please refer to
         check_access_rule for more details about those rules.
@@ -280,14 +280,14 @@ class Message(models.Model):
         """
         # Rules do not apply to administrator
         if self.env.is_superuser():
-            return super()._search(domain, offset, limit, order, access_rights_uid)
+            return super()._search(domain, offset, limit, order)
 
         # Non-employee see only messages with a subtype and not internal
         if not self.env.user._is_internal():
             domain = self._get_search_domain_share() + domain
 
         # make the search query with the default rules
-        query = super()._search(domain, offset, limit, order, access_rights_uid)
+        query = super()._search(domain, offset, limit, order)
 
         # retrieve matching records and determine which ones are truly accessible
         self.flush_model(['model', 'res_id', 'author_id', 'message_type', 'partner_ids'])

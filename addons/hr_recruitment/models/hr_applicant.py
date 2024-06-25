@@ -1,12 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 
-import re
-
 from markupsafe import Markup
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
 from odoo.tools.translate import _
@@ -298,7 +296,7 @@ class Applicant(models.Model):
         if stages:
             search_domain = ['|', ('id', 'in', stages.ids)] + search_domain
 
-        stage_ids = stages._search(search_domain, order=stages._order, access_rights_uid=SUPERUSER_ID)
+        stage_ids = stages.sudo()._search(search_domain, order=stages._order)
         return stages.browse(stage_ids)
 
     @api.depends('job_id', 'department_id')

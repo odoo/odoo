@@ -236,14 +236,14 @@ class Groups(models.Model):
             return expression.OR(where_domains)
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None):
         # add explicit ordering if search is sorted on full_name
         if order and order.startswith('full_name'):
             groups = super().search(domain)
             groups = groups.sorted('full_name', reverse=order.endswith('DESC'))
             groups = groups[offset:offset+limit] if limit else groups[offset:]
             return groups._as_query(order)
-        return super()._search(domain, offset, limit, order, access_rights_uid)
+        return super()._search(domain, offset, limit, order)
 
     def copy_data(self, default=None):
         default = dict(default or {})
@@ -653,12 +653,12 @@ class Users(models.Model):
         return super()._read_group_groupby(groupby_spec, query)
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None):
         if not self.env.su and domain:
             domain_fields = {term[0] for term in domain if isinstance(term, (tuple, list))}
             if domain_fields.intersection(USER_PRIVATE_FIELDS):
                 raise AccessError(_('Invalid search criterion'))
-        return super()._search(domain, offset, limit, order, access_rights_uid)
+        return super()._search(domain, offset, limit, order)
 
     @api.model_create_multi
     def create(self, vals_list):
