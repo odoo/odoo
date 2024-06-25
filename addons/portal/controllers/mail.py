@@ -111,18 +111,30 @@ class PortalChatter(http.Controller):
         """ Tells if we can effectively post on the model based on content. """
         return bool(message) or bool(attachment_ids)
 
-    @http.route('/mail/avatar/mail.message/<int:res_id>/author_avatar/<int:width>x<int:height>', type='http', auth='public')
-    def portal_avatar(self, res_id=None, height=50, width=50, access_token=None, _hash=None, pid=None):
-        """ Get the avatar image in the chatter of the portal """
+    @http.route("/mail/avatar/mail.message/<thread_model>/<int:thread_id>/<int:message_id>/author_avatar/<int:width>x<int:height>", type="http", auth="public")
+    def portal_avatar(
+            self,
+            thread_model,
+            thread_id,
+            message_id,
+            height=50,
+            width=50,
+            access_token=None,
+            _hash=None,
+            pid=None,
+    ):
+        """Get the avatar image in the chatter of the portal"""
         if access_token or (_hash and pid):
-            message = request.env['mail.message'].browse(int(res_id)).exists().filtered(
-                lambda msg: _check_special_access(msg.model, msg.res_id, access_token, _hash, pid and int(pid))
-            ).sudo()
+            message = request.env["mail.message"]
+            if _check_special_access(thread_model, int(thread_id), access_token, _hash, pid and int(pid)):
+                message = message.sudo().search(
+                    [("id", "=", int(message_id)), ("model", "=", thread_model), ("res_id", "=", int(thread_id))]
+                )
         else:
-            message = request.env.ref('web.image_placeholder').sudo()
+            message = request.env.ref("web.image_placeholder").sudo()
         # in case there is no message, it creates a stream with the placeholder image
-        stream = request.env['ir.binary']._get_image_stream_from(
-            message, field_name='author_avatar', width=int(width), height=int(height),
+        stream = request.env["ir.binary"]._get_image_stream_from(
+            message, field_name="author_avatar", width=int(width), height=int(height),
         )
         return stream.get_response()
 

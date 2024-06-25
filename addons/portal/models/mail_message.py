@@ -95,9 +95,9 @@ class MailMessage(models.Model):
                 values['attachment_ids'] = message_to_attachments.get(message.id, {})
             if 'author_avatar_url' in properties_names:
                 if options and 'token' in options:
-                    values['author_avatar_url'] = f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?access_token={options["token"]}'
+                    values['author_avatar_url'] = f'/mail/avatar/mail.message/{message.model}/{message.res_id}/{message.id}/author_avatar/50x50?access_token={options["token"]}'
                 elif options and options.keys() >= {"hash", "pid"}:
-                    values['author_avatar_url'] = f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={options["hash"]}&pid={options["pid"]}'
+                    values['author_avatar_url'] = f'/mail/avatar/mail.message/{message.model}/{message.res_id}/{message.id}/author_avatar/50x50?_hash={options["hash"]}&pid={options["pid"]}'
                 else:
                     values['author_avatar_url'] = f'/web/image/mail.message/{message.id}/author_avatar/50x50'
             if 'is_message_subtype_note' in properties_names:
