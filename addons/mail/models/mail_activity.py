@@ -340,7 +340,7 @@ class MailActivity(models.Model):
         return super(MailActivity, self).unlink()
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None):
         """ Override that adds specific access rights of mail.activity, to remove
         ids uid could not see according to our custom rules. Please refer to
         _filter_access_rules_remaining for more details about those rules.
@@ -349,11 +349,11 @@ class MailActivity(models.Model):
 
         # Rules do not apply to administrator
         if self.env.is_superuser():
-            return super()._search(domain, offset, limit, order, access_rights_uid)
+            return super()._search(domain, offset, limit, order)
 
         # retrieve activities and their corresponding res_model, res_id
         # Don't use the ORM to avoid cache pollution
-        query = super()._search(domain, offset, limit, order, access_rights_uid)
+        query = super()._search(domain, offset, limit, order)
         fnames_to_read = ['id', 'res_model', 'res_id', 'user_id']
         rows = self.env.execute_query(query.select(
             *[self._field_to_sql(self._table, fname) for fname in fnames_to_read],
@@ -368,7 +368,7 @@ class MailActivity(models.Model):
 
         allowed_ids = defaultdict(set)
         for res_model, res_ids in model_ids.items():
-            records = self.env[res_model].with_user(access_rights_uid or self._uid).browse(res_ids)
+            records = self.env[res_model].browse(res_ids)
             # fall back on related document access right checks. Use the same as defined for mail.thread
             # if available; otherwise fall back on read
             operation = getattr(records, '_mail_post_access', 'read')

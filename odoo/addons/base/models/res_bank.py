@@ -119,7 +119,7 @@ class ResPartnerBank(models.Model):
             acc.display_name = f'{acc.acc_number} - {acc.bank_id.name}' if acc.bank_id else acc.acc_number
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None):
         def sanitize(arg):
             if isinstance(arg, (tuple, list)) and arg[0] == 'acc_number':
                 value = arg[2]
@@ -131,4 +131,4 @@ class ResPartnerBank(models.Model):
             return arg
 
         domain = [sanitize(item) for item in domain]
-        return super()._search(domain, offset, limit, order, access_rights_uid)
+        return super()._search(domain, offset, limit, order)

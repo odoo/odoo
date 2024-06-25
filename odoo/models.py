@@ -5473,17 +5473,12 @@ class BaseModel(metaclass=MetaModel):
             self.env[model_name].flush_model(field_names)
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None) -> Query:
+    def _search(self, domain, offset=0, limit=None, order=None) -> Query:
         """
-        Private implementation of search() method, allowing specifying the uid to use for the access right check.
-        This is useful for example when filling in the selection list for a drop-down and avoiding access rights errors,
-        by specifying ``access_rights_uid=1`` to bypass access rights check, but not ir.rules!
-        This is ok at the security level because this method is private and not callable through XML-RPC.
+        Private implementation of search() method.
 
         No default order is applied when the method is invoked without parameter ``order``.
 
-        :param access_rights_uid: optional user ID to use when checking access rights
-                                  (not for ir.rules, this is only for ir.model.access)
         :return: a :class:`Query` object that represents the matching records
 
         This method may be overridden to modify the domain being searched, or to
@@ -5492,8 +5487,7 @@ class BaseModel(metaclass=MetaModel):
         default the returned query object is not actually executed, and it can
         be injected as a value in a domain in order to generate sub-queries.
         """
-        model = self.with_user(access_rights_uid) if access_rights_uid else self
-        model.check_access_rights('read')
+        self.check_access_rights('read')
 
         if expression.is_false(self, domain):
             # optimization: no need to query, as no record satisfies the domain

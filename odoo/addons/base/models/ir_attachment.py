@@ -4,8 +4,6 @@ import base64
 import binascii
 import contextlib
 import hashlib
-import io
-import itertools
 import logging
 import mimetypes
 import os
@@ -514,7 +512,7 @@ class IrAttachment(models.Model):
         return ret_attachments
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None):
         # add res_field=False in domain if not present; the arg[0] trick below
         # works for domain items and '&'/'|'/'!' operators too
         disable_binary_fields_attachments = False
@@ -524,14 +522,14 @@ class IrAttachment(models.Model):
 
         if self.env.is_superuser():
             # rules do not apply for the superuser
-            return super()._search(domain, offset, limit, order, access_rights_uid)
+            return super()._search(domain, offset, limit, order)
 
         # For attachments, the permissions of the document they are attached to
         # apply, so we must remove attachments for which the user cannot access
         # the linked document. For the sake of performance, fetch the fields to
         # determine those permissions within the same SQL query.
         fnames_to_read = ['id', 'res_model', 'res_id', 'res_field', 'public', 'create_uid']
-        query = super()._search(domain, offset, limit, order, access_rights_uid)
+        query = super()._search(domain, offset, limit, order)
         rows = self.env.execute_query(query.select(
             *[self._field_to_sql(self._table, fname) for fname in fnames_to_read],
         ))
@@ -575,7 +573,7 @@ class IrAttachment(models.Model):
         if len(all_ids) == limit and len(result) < self._context.get('need', limit):
             need = self._context.get('need', limit) - len(result)
             more_ids = self.with_context(need=need)._search(
-                domain, offset + len(all_ids), limit, order, access_rights_uid,
+                domain, offset + len(all_ids), limit, order,
             )
             result.extend(list(more_ids)[:limit - len(result)])
 

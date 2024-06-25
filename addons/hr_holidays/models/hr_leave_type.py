@@ -341,7 +341,7 @@ class HolidaysType(models.Model):
             record.display_name = name
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None):
         """ Override _search to order the results, according to some employee.
         The order is the following
 
@@ -356,11 +356,11 @@ class HolidaysType(models.Model):
         employee = self.env['hr.employee']._get_contextual_employee()
         if order == self._order and employee:
             # retrieve all leaves, sort them, then apply offset and limit
-            leaves = self.browse(super()._search(domain, access_rights_uid=access_rights_uid))
+            leaves = self.browse(super()._search(domain))
             leaves = leaves.sorted(key=self._model_sorting_key, reverse=True)
             leaves = leaves[offset:(offset + limit) if limit else None]
             return leaves._as_query()
-        return super()._search(domain, offset, limit, order, access_rights_uid)
+        return super()._search(domain, offset, limit, order)
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)

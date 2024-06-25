@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 import json
 
-from odoo import api, fields, models, _, SUPERUSER_ID
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_round, format_datetime
 
@@ -19,7 +19,9 @@ class MrpWorkorder(models.Model):
     def _read_group_workcenter_id(self, workcenters, domain):
         workcenter_ids = self.env.context.get('default_workcenter_id')
         if not workcenter_ids:
-            workcenter_ids = workcenters._search([], order=workcenters._order, access_rights_uid=SUPERUSER_ID)
+            # bypass ir.model.access checks, but search with ir.rules
+            search_domain = self.env['ir.rule']._compute_domain(workcenters._name)
+            workcenter_ids = workcenters.sudo()._search(search_domain, order=workcenters._order)
         return workcenters.browse(workcenter_ids)
 
     name = fields.Char(

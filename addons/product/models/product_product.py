@@ -462,12 +462,12 @@ class ProductProduct(models.Model):
         return new_products
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None):
         # TDE FIXME: strange
         if self._context.get('search_default_categ_id'):
             domain = domain.copy()
             domain.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
-        return super()._search(domain, offset, limit, order, access_rights_uid)
+        return super()._search(domain, offset, limit, order)
 
     @api.depends('name', 'default_code', 'product_tmpl_id')
     @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id')

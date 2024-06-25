@@ -70,7 +70,7 @@ class PhoneBlackList(models.Model):
             values['number'] = sanitized
         return super(PhoneBlackList, self).write(values)
 
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None):
         """ Override _search in order to grep search on sanitized number field """
         def sanitize_number(arg):
             if isinstance(arg, (list, tuple)) and arg[0] == 'number':
@@ -83,7 +83,7 @@ class PhoneBlackList(models.Model):
             return arg
 
         domain = [sanitize_number(item) for item in domain]
-        return super()._search(domain, offset, limit, order, access_rights_uid)
+        return super()._search(domain, offset, limit, order)
 
     def add(self, number, message=None):
         sanitized = self.env.user._phone_format(number=number)
