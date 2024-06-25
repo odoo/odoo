@@ -19,17 +19,17 @@ class SaleOrderLine(models.Model):
     event_booth_ids = fields.One2many('event.booth', 'sale_order_line_id', string='Confirmed Booths')
     is_event_booth = fields.Boolean(compute='_compute_is_event_booth')
 
+    def _get_short_description(self):
+        self.ensure_one()
+        if self.event_booth_pending_ids:
+            # return self.event_id.name ?
+            return self.event_booth_pending_ids.event_id.name
+        return super()._get_short_description()
+
     @api.depends('product_id.type')
     def _compute_is_event_booth(self):
         for record in self:
             record.is_event_booth = record.product_id.service_tracking == 'event_booth'
-
-    @api.depends('event_booth_ids')
-    def _compute_name_short(self):
-        wbooth = self.filtered(lambda line: line.event_booth_pending_ids)
-        for record in wbooth:
-            record.name_short = record.event_booth_pending_ids.event_id.name
-        super(SaleOrderLine, self - wbooth)._compute_name_short()
 
     @api.depends('event_booth_registration_ids')
     def _compute_event_booth_pending_ids(self):

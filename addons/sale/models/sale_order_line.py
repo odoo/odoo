@@ -287,11 +287,19 @@ class SaleOrderLine(models.Model):
 
     #=== COMPUTE METHODS ===#
 
+    def _get_short_description(self):
+        self.ensure_one()
+        if self.product_id:
+            return self.product_id.with_context(display_default_code=False).display_name
+        if self.name:
+            return self.name.splitlines()[0]
+        return ""
+
     @api.depends('order_partner_id', 'order_id', 'product_id')
     def _compute_display_name(self):
         name_per_id = self._additional_name_per_id()
         for so_line in self.sudo():
-            name = '{} - {}'.format(so_line.order_id.name, so_line.name and so_line.name.split('\n')[0] or so_line.product_id.name)
+            name = f'{so_line.order_id.name} - {so_line._get_short_description()}'
             additional_name = name_per_id.get(so_line.id)
             if additional_name:
                 name = f'{name} {additional_name}'

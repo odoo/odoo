@@ -41,7 +41,7 @@ class CustomerPortal(sale_portal.CustomerPortal):
                     } for pcav in line.product_custom_attribute_value_ids
                 ],
                 'type': line.product_id.type,
-                'name': line.name_short,
+                'name': line._get_short_description(),
                 'description_sale': line.product_id.description_sale or '' + line._get_sale_order_line_multiline_description_variants(),
                 'qty': line.product_uom_qty,
                 'add_to_cart_allowed': line.with_user(request.env.user).sudo()._is_reorder_allowed(),
