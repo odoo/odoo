@@ -426,17 +426,26 @@ class Location(models.Model):
         result = defaultdict(lambda: defaultdict(float))
         if not excluded_sml_ids:
             excluded_sml_ids = set()
+        Product = self.env['product.product']
+        StockMoveLine = self.env['stock.move.line']
         for location in self:
-            quants = location.quant_ids
-            incoming_move_lines = location.incoming_move_line_ids.filtered(lambda ml: ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
-            outgoing_move_lines = location.outgoing_move_line_ids.filtered(lambda ml: ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
-            for quant in quants:
-                result[location]['net_weight'] += quant.product_id.weight * quant.quantity
+            quants = self.env['stock.quant'].read_group([('location_id', '=', location.id)], ['quantity'], ['product_id'])
+            domain = [('state', 'not in', ['draft', 'done', 'cancel']), ('id', 'not in', tuple(excluded_sml_ids))]
+            outgoing_move_lines = StockMoveLine.read_group([('location_id', '=', location.id)] + domain, ['reserved_qty'], ['product_id'])
+            incoming_move_lines = StockMoveLine.read_group([('location_dest_id', '=', location.id)] + domain, ['reserved_qty'], ['product_id'])
+
+            products = {quant['product_id'][0] for quant in quants + outgoing_move_lines + incoming_move_lines}
+            weights = {weight['id']: weight['weight'] for weight in Product.browse(products).read(['weight'])}
+
+            result[location]['net_weight'] += sum(quant['quantity'] * weights[quant['product_id'][0]] for quant in quants)
             result[location]['forecast_weight'] = result[location]['net_weight']
-            for line in incoming_move_lines:
-                result[location]['forecast_weight'] += line.product_id.weight * line.reserved_qty
-            for line in outgoing_move_lines:
-                result[location]['forecast_weight'] -= line.product_id.weight * line.reserved_qty
+
+            result[location]['forecast_weight'] += sum(
+                line['reserved_qty'] * weights[line['product_id'][0]] for line in incoming_move_lines
+            )
+            result[location]['forecast_weight'] -= sum(
+                line['reserved_qty'] * weights[line['product_id'][0]] for line in outgoing_move_lines
+            )
         return result
 
 
