@@ -29,6 +29,16 @@ publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
         }
     },
 
+    hideWarningMessage(target, messageContainerId) {
+        $(target).removeClass("border-warning");
+        $(messageContainerId).hide();
+    },
+
+    ShowWarningMessage(target, messageContainerId, message) {
+        $(target).addClass("border-warning");
+        $(messageContainerId).text(message).show();
+    },
+
     async _onFocusOutName(ev) {
         const field = "name"
         const messageContainerId = "#name-message";
@@ -48,51 +58,40 @@ publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
     },
 
     async _onFocusOutLinkedin (ev) {
-        const linkedin = $(ev.currentTarget).val();
+        const target = $(ev.currentTarget);
+        const linkedin = target.val();
         const field = "linkedin";
         const messageContainerId = "#linkedin-message";
         const linkedin_regex = /^(https?:\/\/)?([\w\.]*)linkedin\.com\/in\/(.*?)(\/.*)?$/;
-        if (!linkedin_regex.test(linkedin)) {
-            $('#linkedin-message').removeClass('alert-warning').hide();
-            $(ev.currentTarget).addClass('border-warning');
-            $('#linkedin-message').text(_t("The value entered doesn't seems like a linkedin profile.")).addClass('alert-warning').show();
+        let hasWarningMessage = false;
+        if (!linkedin_regex.test(linkedin) && linkedin !== "") {
+            const message = _t("The profile that you gave us doesn't seems like a linkedin profile")
+            this.ShowWarningMessage(target, '#linkedin-message', message)
+            hasWarningMessage = true;
+        } else {
+            this.hideWarningMessage(target, '#linkedin-message');
         }
-
-        await this.checkRedundant(ev.currentTarget, field, messageContainerId);
+        await this.checkRedundant(target, field, messageContainerId, hasWarningMessage);
     },
 
-    async checkRedundant(target, field, messageContainerId) {
+    async checkRedundant(target, field, messageContainerId, keepPreviousWarningMessage = false) {
         const value = $(target).val();
         if (!value) {
-            $(target).removeClass("border-warning");
-            $(messageContainerId).removeClass("alert-warning").hide();
+            this.hideWarningMessage(target, messageContainerId);
             return;
         }
         const job_id = $('#recruitment7').val();
-                const data = await rpc("/website_hr_recruitment/check_recent_application", {
+        const data = await rpc("/website_hr_recruitment/check_recent_application", {
             field: field,
             value: value,
             job_id: job_id,
         });
 
-        if (data.applied_same_job) {
-            $(messageContainerId).removeClass("alert-warning").hide();
-            $(target).addClass("border-warning");
-            $(messageContainerId).text(_t(data.message)).addClass("alert-warning").show();
-        } else if (data.applied_other_job) {
-            $(messageContainerId).removeClass("alert-warning").hide();
-            $(target).addClass("border-warning");
-            $(messageContainerId)
-                .text(
-                    _t(
-                        "You already applied to another position recently. You can continue if it's not a mistake."
-                    )
-                )
-                .addClass("alert-warning")
-                .show();
-        } else {
-            $(target).removeClass("border-warning");
-            $(messageContainerId).removeClass("alert-warning").hide();
+        if (data.message) {
+            this.ShowWarningMessage(target, messageContainerId, data.message);
+        }
+        else if (!keepPreviousWarningMessage) {
+            this.hideWarningMessage(target, messageContainerId);
         }
     },
 });
