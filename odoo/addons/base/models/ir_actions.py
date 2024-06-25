@@ -662,8 +662,6 @@ class IrActionsServer(models.Model):
                     raise ValidationError(_("The path to the field to update contains a non-relational field (%s) that is not the last field in the path. You can't traverse non-relational fields (even in the quantum realm). Make sure only the last field in the path is non-relational.", field_name))
                 if isinstance(field, fields.Json):
                     raise ValidationError(_("I'm sorry to say that JSON fields (such as %s) are currently not supported.", field_name))
-                elif field.readonly:
-                    raise ValidationError(_("The field to update (%s) is read-only. You can't update a read-only field - even when asking nicely.", field_name))
         target_records = None
         if record is not None:
             target_records = reduce(getitem, path[:-1], record)
