@@ -1240,7 +1240,7 @@ export class Wysiwyg extends Component {
                 observerData.observer.observe(observerData.field, observerOptions);
             }
         } else {
-            const odooFieldSelector = '[data-oe-model], [data-oe-translation-initial-sha]';
+            const odooFieldSelector = '[data-oe-model], [data-oe-translation-source-sha]';
             const $odooFields = this.$editable.find(odooFieldSelector);
             const renderingClassesSelector = this.odooEditor.options.renderingClasses
                 .map(className => `.${className}`).join(", ");
@@ -1270,8 +1270,8 @@ export class Wysiwyg extends Component {
                             .filter('[data-oe-field="' + $node.data('oe-field') + '"]');
                     }
 
-                    if ($node.data('oe-translation-initial-sha')) {
-                        $nodes = $nodes.filter('[data-oe-translation-initial-sha="' + $node.data('oe-translation-initial-sha') + '"]');
+                    if ($node.data('oe-translation-source-sha')) {
+                        $nodes = $nodes.filter('[data-oe-translation-source-sha="' + $node.data('oe-translation-source-sha') + '"]');
                     }
                     if ($node.data('oe-type')) {
                         $nodes = $nodes.filter('[data-oe-type="' + $node.data('oe-type') + '"]');
@@ -2400,17 +2400,17 @@ export class Wysiwyg extends Component {
      * @override
      */
     _saveTranslationElement($el, context, withLang = true) {
-        if ($el.data('oe-translation-initial-sha')) {
+        if ($el.data('oe-translation-source-sha')) {
             const $els = $el;
             const translations = {};
             translations[context.lang] = Object.assign({}, ...$els.toArray().map(
                 (x) => ({
-                    [$(x).data('oe-translation-initial-sha')]: this._getEscapedElement($(x)).html()
+                    [$(x).data('oe-translation-source-sha')]: this._getEscapedElement($(x)).html()
                 })
             ));
             return this.orm.call(
                 $els.data('oe-model'),
-                'update_field_translations_sha',
+                'web_update_field_translations',
                 [
                     [+$els.data('oe-id')],
                     $els.data('oe-field'),

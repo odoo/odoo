@@ -1654,7 +1654,7 @@ ul.o_checklist > li.o_checked::after {
 .o_text_content_invisible {
     color: transparent !important;
 }
-[placeholder*="data-oe-translation-initial-sha"] {
+[placeholder*="data-oe-translation-source-sha"] {
     &::-webkit-input-placeholder{ /* WebKit */
         color: transparent;
         opacity: 0;
@@ -1664,10 +1664,10 @@ ul.o_checklist > li.o_checked::after {
         opacity: 0;
     }
 }
-input[value*="data-oe-translation-initial-sha"] {
+input[value*="data-oe-translation-source-sha"] {
     @extend .o_text_content_invisible;
 }
-[data-oe-translation-initial-sha] {
+[data-oe-translation-source-sha] {
     > .o_translation_select {
         border: $input-border-width solid $input-border-color;
         @include border-radius($input-border-radius, 0);

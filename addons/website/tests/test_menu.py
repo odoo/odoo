@@ -333,7 +333,7 @@ class TestMenuHttp(common.HttpCase):
         root = html.fromstring(menu.mega_menu_content)
         to_translate = root.text_content()
         sha = sha256(to_translate.encode()).hexdigest()
-        menu.update_field_translations_sha('mega_menu_content', {fr.code: {sha: 'french_mega_menu_content'}})
+        menu.web_update_field_translations('mega_menu_content', {fr.code: {sha: 'french_mega_menu_content'}})
         self.assertIn("french_mega_menu_content",
                       menu.with_context(lang=fr.code, website_id=website.id).mega_menu_content)
 
