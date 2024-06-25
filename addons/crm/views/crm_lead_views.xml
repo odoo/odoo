@@ -128,7 +128,7 @@
                             <group name="opportunity_partner" invisible="type == 'lead'">
                                 <field name="partner_id"
                                     widget="res_partner_many2one"
-                                    string="Customer"
+                                    string="Contact"
                                     context="{'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
                                         'default_name': contact_name or partner_name,
                                         'default_street': street,
@@ -451,7 +451,7 @@
                     <group>
                         <field name="partner_id" widget="res_partner_many2one"
                             class="o_field_highlight"
-                            string='Organization / Contact'
+                            string='Contact'
                             context="{
                             'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
                             'default_name': contact_name or partner_name,
