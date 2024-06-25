@@ -86,14 +86,18 @@ export function parseGroupField(allFields, groupFieldString) {
     if (field === undefined) {
         throw new EvaluationError(sprintf(_t("Field %s does not exist"), fieldName));
     }
-    const dimensionWithGranularity = granularity ? `${fieldName}:${granularity}` : fieldName;
     if (isDateField(field)) {
         granularity = granularity || "month";
     }
+    const dimensionWithGranularity = granularity ? `${fieldName}:${granularity}` : fieldName;
     return {
         isPositional,
         field,
         granularity,
         dimensionWithGranularity,
     };
+}
+
+export function domainHasNoRecordAtThisPosition(domain) {
+    return domain.some((node) => node.value === "NO_RECORD_AT_THIS_POSITION");
 }

@@ -99,7 +99,7 @@ export class OdooPivotModel extends PivotModel {
      *
      * @param {string} groupFieldString Name of the field
      * @param {string | number | boolean} groupValueString Value of the group by
-     * @returns {string | number}
+     * @returns {string | number | boolean}
      */
     getGroupByCellValue(groupFieldString, groupValueString) {
         if (groupValueString === NO_RECORD_AT_THIS_POSITION) {
@@ -112,7 +112,7 @@ export class OdooPivotModel extends PivotModel {
         const undef = _t("None");
         if (isDateField(field)) {
             const adapter = pivotTimeAdapter(granularity);
-            return adapter.toCellValue(value);
+            return adapter.toValueAndFormat(value).value;
         }
         if (field.relation) {
             if (value === false) {
@@ -145,6 +145,9 @@ export class OdooPivotModel extends PivotModel {
             throw new Error("Domain size should be at least 1");
         }
         if (lastNode.field.startsWith("#")) {
+            if (domain.filter((node) => node.value === NO_RECORD_AT_THIS_POSITION).length) {
+                return NO_RECORD_AT_THIS_POSITION;
+            }
             const { dimensionWithGranularity } = this.parseGroupField(lastNode.field);
             const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
             return this._isCol(dimensionWithGranularity) ? cols.at(-1) : rows.at(-1);
@@ -213,7 +216,15 @@ export class OdooPivotModel extends PivotModel {
         const rows = this._getSpreadsheetRows(this.data.rowGroupTree);
         rows.push(rows.shift()); //Put the Total row at the end.
         const measures = this.getDefinition().measures.map((measure) => measure.name);
-        return new SpreadsheetPivotTable(cols, rows, measures);
+        /** @type {Record<string, string | undefined>} */
+        const fieldsType = {};
+        for (const columns of this.getDefinition().columns) {
+            fieldsType[columns.name] = columns.type;
+        }
+        for (const row of this.getDefinition().rows) {
+            fieldsType[row.name] = row.type;
+        }
+        return new SpreadsheetPivotTable(cols, rows, measures, fieldsType);
     }
 
     //--------------------------------------------------------------------------

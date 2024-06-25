@@ -98,11 +98,11 @@ describe("toNormalizedPivotValue", () => {
             };
 
             dimension.granularity = "day";
-            expect(toNormalizedPivotValue(dimension, "1/11/2020")).toBe("01/11/2020");
-            expect(toNormalizedPivotValue(dimension, "01/11/2020")).toBe("01/11/2020");
-            expect(toNormalizedPivotValue(dimension, "11/2020")).toBe("11/01/2020");
-            expect(toNormalizedPivotValue(dimension, "1")).toBe("12/31/1899");
-            expect(toNormalizedPivotValue(dimension, 1)).toBe("12/31/1899");
+            expect(toNormalizedPivotValue(dimension, "1/11/2020")).toBe(43841);
+            expect(toNormalizedPivotValue(dimension, "01/11/2020")).toBe(43841);
+            expect(toNormalizedPivotValue(dimension, "11/2020")).toBe(44136);
+            expect(toNormalizedPivotValue(dimension, "1")).toBe(1);
+            expect(toNormalizedPivotValue(dimension, 1)).toBe(1);
             expect(toNormalizedPivotValue(dimension, "false")).toBe(false);
             expect(toNormalizedPivotValue(dimension, false)).toBe(false);
 
@@ -196,35 +196,58 @@ describe("toNormalizedPivotValue", () => {
 describe("pivot time adapters formatted value", () => {
     test("Day adapter", () => {
         const adapter = pivotTimeAdapter("day");
-        expect(adapter.formatValue("11/12/2020", DEFAULT_LOCALE)).toBe("11/12/2020");
-        expect(adapter.formatValue("01/11/2020", DEFAULT_LOCALE)).toBe("1/11/2020");
-        expect(adapter.formatValue("12/05/2020", DEFAULT_LOCALE)).toBe("12/5/2020");
+        expect(adapter.toValueAndFormat("11/12/2020", DEFAULT_LOCALE)).toEqual({
+            value: 44147,
+            format: "m/d/yyyy",
+        });
+        expect(adapter.toValueAndFormat("01/11/2020", DEFAULT_LOCALE)).toEqual({
+            value: 43841,
+            format: "m/d/yyyy",
+        });
+        expect(adapter.toValueAndFormat("12/05/2020", DEFAULT_LOCALE)).toEqual({
+            value: 44170,
+            format: "m/d/yyyy",
+        });
     });
 
     test("Week adapter", () => {
         patchTranslations();
         const adapter = pivotTimeAdapter("week");
-        expect(adapter.formatValue("5/2024", DEFAULT_LOCALE)).toBe("W5 2024");
-        expect(adapter.formatValue("51/2020", DEFAULT_LOCALE)).toBe("W51 2020");
+        expect(adapter.toValueAndFormat("5/2024", DEFAULT_LOCALE)).toEqual({ value: "W5 2024" });
+        expect(adapter.toValueAndFormat("51/2020", DEFAULT_LOCALE)).toEqual({
+            value: "W51 2020",
+        });
     });
 
     test("Month adapter", () => {
         patchTranslations();
         const adapter = pivotTimeAdapter("month");
-        expect(adapter.formatValue("12/2020", DEFAULT_LOCALE)).toBe("December 2020");
-        expect(adapter.formatValue("02/2020", DEFAULT_LOCALE)).toBe("February 2020");
+        expect(adapter.toValueAndFormat("12/2020", DEFAULT_LOCALE)).toEqual({
+            value: 44166,
+            format: "mmmm yyyy",
+        });
+        expect(adapter.toValueAndFormat("02/2020", DEFAULT_LOCALE)).toEqual({
+            value: 43862,
+            format: "mmmm yyyy",
+        });
     });
 
     test("Quarter adapter", () => {
         patchTranslations();
         const adapter = pivotTimeAdapter("quarter");
-        expect(adapter.formatValue("1/2022", DEFAULT_LOCALE)).toBe("Q1 2022");
-        expect(adapter.formatValue("3/1998", DEFAULT_LOCALE)).toBe("Q3 1998");
+        expect(adapter.toValueAndFormat("1/2022", DEFAULT_LOCALE)).toEqual({ value: "Q1 2022" });
+        expect(adapter.toValueAndFormat("3/1998", DEFAULT_LOCALE)).toEqual({ value: "Q3 1998" });
     });
 
     test("Year adapter", () => {
         const adapter = pivotTimeAdapter("year");
-        expect(adapter.formatValue("2020", DEFAULT_LOCALE)).toBe("2020");
-        expect(adapter.formatValue("1997", DEFAULT_LOCALE)).toBe("1997");
+        expect(adapter.toValueAndFormat("2020", DEFAULT_LOCALE)).toEqual({
+            value: 2020,
+            format: "0",
+        });
+        expect(adapter.toValueAndFormat("1997", DEFAULT_LOCALE)).toEqual({
+            value: 1997,
+            format: "0",
+        });
     });
 });
