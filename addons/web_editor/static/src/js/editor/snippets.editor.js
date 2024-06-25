@@ -976,6 +976,7 @@ var SnippetEditor = Widget.extend({
                     callbacks: {
                         requestUserValue: this._requestUserValue.bind(this),
                         cover: this.cover.bind(this),
+                        coverUpdate: (overlayVisible) => this.trigger_up("cover_update", { overlayVisible }),
                     }
                 });
                 optionName = (option.Class || SnippetOption).name
