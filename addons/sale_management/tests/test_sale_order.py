@@ -336,3 +336,25 @@ class TestSaleOrder(SaleManagementCommon):
         # after changing the quantity of the product, the price unit should not be recomputed
         sale_order_with_option.order_line.product_uom_qty = 10
         self.assertEqual(sale_order_with_option.sale_order_option_ids.price_unit, 10)
+
+    def test_order_retains_description_from_template(self):
+        water_bottle = self.env["product.product"].create({
+            "name": "Water Bottle",
+        })
+        will_smith = self.env["res.partner"].create({
+            "name": "Will Smith",
+        })
+
+        with Form(self.env["sale.order"]) as order_form:
+            order_form.partner_id = will_smith
+            order_form.sale_order_template_id = self.env["sale.order.template"].create({
+                "name": "Very nice template",
+                "sale_order_template_line_ids": [
+                    Command.create({
+                        "product_id": water_bottle.id,
+                        "name": "My Water Bottle",
+                    }),
+                ],
+            })
+            order = order_form.save()
+        self.assertEqual(order.order_line[0].name, "My Water Bottle")
