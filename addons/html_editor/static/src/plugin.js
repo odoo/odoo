@@ -17,7 +17,7 @@
  *
  * @typedef { Object } SharedMethods
  *
- * @property { HistoryPlugin['resetContent'] } resetContent
+ * @property { HistoryPlugin['reset'] } reset
  * @property { HistoryPlugin['makeSavePoint'] } makeSavePoint
  * @property { HistoryPlugin['makeSnapshotStep'] } makeSnapshotStep
  * @property { HistoryPlugin['disableObserver'] } disableObserver

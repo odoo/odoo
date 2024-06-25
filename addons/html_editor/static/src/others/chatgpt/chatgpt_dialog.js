@@ -48,6 +48,7 @@ export class ChatGPTDialog extends Component {
     static props = {
         insert: Function,
         close: Function,
+        sanitize: Function,
     };
 
     setup() {
@@ -66,22 +67,13 @@ export class ChatGPTDialog extends Component {
     }
 
     formatContent(content) {
-        return markup(
-            [...POSTPROCESS_GENERATED_CONTENT(content).childNodes]
-                .map((child) => {
-                    // Escape all text.
-                    const nodes = new Set(
-                        [...child.querySelectorAll("*")].flatMap((node) => node.childNodes)
-                    );
-                    nodes.forEach((node) => {
-                        if (node.nodeType === Node.TEXT_NODE) {
-                            node.textContent = escape(node.textContent);
-                        }
-                    });
-                    return child.outerHTML;
-                })
-                .join("")
-        );
+        const fragment = POSTPROCESS_GENERATED_CONTENT(content);
+        let result = "";
+        for (const child of fragment.children) {
+            this.props.sanitize(child, { IN_PLACE: true });
+            result += child.outerHTML;
+        }
+        return markup(result);
     }
 
     generate(prompt, callback) {
@@ -118,7 +110,9 @@ export class ChatGPTDialog extends Component {
                 title: _t("Content generated"),
                 type: "success",
             });
-            this.props.insert(POSTPROCESS_GENERATED_CONTENT(text || ""));
+            const fragment = POSTPROCESS_GENERATED_CONTENT(text || "");
+            this.props.sanitize(fragment, { IN_PLACE: true });
+            this.props.insert(fragment);
         } catch (e) {
             this.props.close();
             throw e;

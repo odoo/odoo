@@ -579,8 +579,7 @@ export class CollaborationOdooPlugin extends Plugin {
             return;
         }
 
-        const content =
-            record[this.config.collaboration.collaborationChannel.collaborationFieldName];
+        let content = record[this.config.collaboration.collaborationChannel.collaborationFieldName];
         const lastHistoryId = content && this.getLastHistoryStepId(content);
         // If a change was made in the document while retrieving it, the
         // lastHistoryId will be different if the odoo bus did not have time to
@@ -593,7 +592,11 @@ export class CollaborationOdooPlugin extends Plugin {
         }
 
         this.isDocumentStale = false;
-        this.shared.resetContent(content);
+        content = content || "<p><br></p>";
+        // content here is trusted
+        this.editable.innerHTML = content;
+        this.dispatch("NORMALIZE", { node: this.editable });
+        this.shared.reset(content);
 
         // After resetting from the server, try to resynchronise with a peer as
         // if it was the first time connecting to a peer in order to retrieve a
