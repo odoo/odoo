@@ -260,19 +260,10 @@ class SurveyQuestion(models.Model):
 
     @api.depends('survey_id.question_and_page_ids.is_page', 'survey_id.question_and_page_ids.sequence')
     def _compute_question_ids(self):
-        """Will take all questions of the survey for which the index is higher than the index of this page
-        and lower than the index of the next page."""
         for question in self:
             if question.is_page:
-                next_page_index = False
-                for page in question.survey_id.page_ids:
-                    if page._index() > question._index():
-                        next_page_index = page._index()
-                        break
-
-                question.question_ids = question.survey_id.question_ids.filtered(
-                    lambda q: q._index() > question._index() and (not next_page_index or q._index() < next_page_index)
-                )
+                question.question_ids = question.survey_id.question_ids\
+                    .filtered(lambda q: q.page_id == question).sorted(lambda q: q._index())
             else:
                 question.question_ids = self.env['survey.question']
 
