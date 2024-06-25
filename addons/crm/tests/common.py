@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from odoo.addons.crm.models.crm_lead import PARTNER_ADDRESS_FIELDS_TO_SYNC
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
-from odoo.addons.phone_validation.tools import phone_validation
+from odoo.tools import phone_validation
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.fields import Datetime
 from odoo import models, tools

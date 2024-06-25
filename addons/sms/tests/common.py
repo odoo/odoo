@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from odoo import exceptions, tools
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.addons.phone_validation.tools import phone_validation
+from odoo.tools import phone_validation
 from odoo.addons.sms.models.sms_sms import SmsApi, SmsSms
 from odoo.tests import common
 

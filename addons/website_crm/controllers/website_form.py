@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import tools
-from odoo.addons.phone_validation.tools import phone_validation
+from odoo.tools import phone_validation
 from odoo.addons.website.controllers import form
 from odoo.http import request
 

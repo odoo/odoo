@@ -5,7 +5,6 @@ from collections import defaultdict
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools, _
-from odoo.addons.phone_validation.tools import phone_validation
 
 
 class EventRegistration(models.Model):

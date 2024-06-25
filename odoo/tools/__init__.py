@@ -35,3 +35,4 @@ from .js_transpiler import transpile_javascript, is_odoo_module, URL_RE, ODOO_MO
 from .sourcemap_generator import SourceMapGenerator
 from .set_expression import SetDefinitions
 from .arabic_reshaper import arabic_reshaper
+from .phone_validation import *

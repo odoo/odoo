@@ -1,15 +1,15 @@
 /** @odoo-module **/
 
-    import {ReCaptcha} from "@google_recaptcha/js/recaptcha";
-    import { session } from "@web/session";
-    import publicWidget from "@web/legacy/js/public/public_widget";
-    import dom from "@web/legacy/js/core/dom";
-    import { delay } from "@web/core/utils/concurrency";
-    import { debounce } from "@web/core/utils/timing";
-    import { _t } from "@web/core/l10n/translation";
-    import { renderToElement } from "@web/core/utils/render";
-    import { post } from "@web/core/network/http_service";
-    import { localization } from "@web/core/l10n/localization";
+import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
+import { session } from "@web/session";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import dom from "@web/legacy/js/core/dom";
+import { delay } from "@web/core/utils/concurrency";
+import { debounce } from "@web/core/utils/timing";
+import { _t } from "@web/core/l10n/translation";
+import { renderToElement } from "@web/core/utils/render";
+import { post } from "@web/core/network/http_service";
+import { localization } from "@web/core/l10n/localization";
 import {
     formatDate,
     formatDateTime,
@@ -19,6 +19,7 @@ import {
     serializeDateTime,
 } from "@web/core/l10n/dates";
 import { addLoadingEffect } from "@web/core/utils/ui";
+import { rpc } from "@web/core/network/rpc";
 const { DateTime } = luxon;
 import wUtils from '@website/js/utils';
 
@@ -183,13 +184,15 @@ import wUtils from '@website/js/utils';
             }
             this._updateFieldsVisibility();
 
-            if (session.geoip_phone_code) {
-                this.el.querySelectorAll('input[type="tel"]').forEach(telField => {
-                    if (!telField.value) {
-                        telField.value = '+' + session.geoip_phone_code;
-                    }
-                });
-            }
+            this.el.querySelectorAll('input[type="tel"]').forEach(telField => {
+                if (!telField.value && session.geoip_phone_code) {
+                    telField.value = '+' + session.geoip_phone_code;
+                }
+                if(!this.editableMode) {
+                    telField.addEventListener('blur', this._onTelInputBlur);
+                }
+            });
+
             // Check disabled states
             this.inputEls = this.el.querySelectorAll('.s_website_form_field.s_website_form_field_hidden_if .s_website_form_input');
             this._disabledStates = new Map();
@@ -205,6 +208,24 @@ import wUtils from '@website/js/utils';
             });
 
             return this._super(...arguments).then(() => this.__startResolve());
+        },
+
+        /**
+         * handle formatting of phone number on blur the first time
+         * @param ev
+         * @returns {Promise<void>}
+         * @private
+         */
+        _onTelInputBlur: async function (ev) {
+            const telInput = ev.currentTarget;
+            if (telInput.value && !telInput.classList.contains('phone_format')) {
+                telInput.value = await rpc('/website/format_phone_number', {
+                    'phone_number': telInput.value,
+                    'country_code': session.geoip_country_code,
+                    'country_phone_code': session.geoip_phone_code,
+                });
+                telInput.classList.add('phone_format');
+            }
         },
 
         /**
