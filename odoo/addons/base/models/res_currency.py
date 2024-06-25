@@ -246,6 +246,8 @@ class Currency(models.Model):
 
     @api.model
     def _get_conversion_rate(self, from_currency, to_currency, company, date):
+        from_currency = from_currency or self.env.company.currency_id
+        to_currency = to_currency or self.env.company.currency_id
         currency_rates = (from_currency + to_currency)._get_rates(company, date)
         res = currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
         return res
