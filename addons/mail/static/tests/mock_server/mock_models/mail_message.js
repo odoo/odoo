@@ -467,15 +467,15 @@ export class MailMessage extends models.ServerModel {
     }
 
     /**
-     * @returns {number[]} ids
-     * @returns {Object[]}
+     * @param {number[]} ids
+     * @param {import("@mail/../tests/mock_server/mail_mock_server").mailDataHelpers.Store} store
      */
-    _message_notification_format(ids) {
+    _message_notifications_to_store(ids, store) {
         /** @type {import("mock_models").MailNotification} */
         const MailNotification = this.env["mail.notification"];
 
         const messages = this._filter([["id", "in", ids]]);
-        return messages.map((message) => {
+        for (const message of messages) {
             let notifications = MailNotification._filter([["mail_message_id", "=", message.id]]);
             notifications = MailNotification._filtered_for_web_client(
                 notifications.map((notification) => notification.id)
@@ -483,21 +483,24 @@ export class MailMessage extends models.ServerModel {
             notifications = MailNotification._notification_format(
                 notifications.map((notification) => notification.id)
             );
-            return {
+            const message_data = {
                 author: message.author_id ? { id: message.author_id, type: "partner" } : false,
                 body: message.body,
                 date: message.date,
                 id: message.id,
                 message_type: message.message_type,
                 notifications: notifications,
-                thread: message.res_id
-                    ? {
-                          id: message.res_id,
-                          model: message.model,
-                          modelName: this.env[message.model]._description,
-                      }
-                    : false,
+                thread: false,
             };
-        });
+            if (message.res_id) {
+                message_data.thread = { id: message.res_id, model: message.model };
+                store.add("Thread", {
+                    id: message.res_id,
+                    model: message.model,
+                    modelName: this.env[message.model]._description,
+                });
+            }
+            store.add("Message", message_data);
+        }
     }
 }

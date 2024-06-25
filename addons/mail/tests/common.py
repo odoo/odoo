@@ -22,6 +22,7 @@ from odoo.addons.mail.models.mail_mail import MailMail
 from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.models.mail_notification import MailNotification
 from odoo.addons.mail.models.res_users import Users
+from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import common, new_test_user
 from odoo.tools import email_normalize, formataddr, mute_logger, pycompat
 from odoo.tools.translate import code_translations
@@ -1158,11 +1159,11 @@ class MailCase(MockEmail):
     def assertMessageBusNotifications(self, message, count=1):
         """Asserts that the expected notification updates have been sent on the
         bus for the given message."""
+        store = Store()
+        message._message_notifications_to_store(store)
         self.assertBusNotifications([(self.cr.dbname, 'res.partner', message.author_id.id)] * count, [{
-            'type': 'mail.message/notification_update',
-            'payload': {
-                'elements': message._message_notification_format(),
-            },
+            "type": "mail.record/insert",
+            "payload": store.get_result()
         }], check_unique=False)
 
     def assertBusNotifications(self, channels, message_items=None, check_unique=True):

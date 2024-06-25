@@ -365,42 +365,6 @@ patch(MockServer.prototype, {
         return messages;
     },
     /**
-     * Simulates `_message_notification_format` on `mail.message`.
-     *
-     * @private
-     * @returns {integer[]} ids
-     * @returns {Object[]}
-     */
-    _mockMailMessage_MessageNotificationFormat(ids) {
-        const messages = this.getRecords("mail.message", [["id", "in", ids]]);
-        return messages.map((message) => {
-            let notifications = this.getRecords("mail.notification", [
-                ["mail_message_id", "=", message.id],
-            ]);
-            notifications = this._mockMailNotification_FilteredForWebClient(
-                notifications.map((notification) => notification.id)
-            );
-            notifications = this._mockMailNotification_NotificationFormat(
-                notifications.map((notification) => notification.id)
-            );
-            return {
-                author: message.author_id ? { id: message.author_id, type: "partner" } : false,
-                body: message.body,
-                date: message.date,
-                id: message.id,
-                message_type: message.message_type,
-                notifications: notifications,
-                thread: message.res_id
-                    ? {
-                          id: message.res_id,
-                          model: message.model,
-                          modelName: message.res_model_name,
-                      }
-                    : false,
-            };
-        });
-    },
-    /**
      * Simulates `set_message_done` on `mail.message`, which turns provided
      * needaction message to non-needaction (i.e. they are marked as read from
      * from the Inbox mailbox). Also notify on the longpoll bus that the

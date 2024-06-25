@@ -11,6 +11,7 @@ from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.tools import clean_context, groupby as tools_groupby, SQL
+from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
@@ -1136,26 +1137,36 @@ class Message(models.Model):
             'starred_partner_ids',  # list of partner ids for whom the message is starred (legacy)
         ]
 
-    def _message_notification_format(self):
+    def _message_notifications_to_store(self, store: Store):
         """Returns the current messages and their corresponding notifications in
         the format expected by the web client.
 
         Notifications hold the information about each recipient of a message: if
         the message was successfully sent or if an exception or bounce occurred.
         """
-        return [{
-            'author': {'id': message.author_id.id, 'type': "partner"} if message.author_id else False,
-            'id': message.id,
-            'date': message.date,
-            'message_type': message.message_type,
-            'body': message.body,
-            'notifications': message.notification_ids._filtered_for_web_client()._notification_format(),
-            'thread': {
-                'id': message.res_id,
-                'model': message.model,
-                'modelName': message.env['ir.model']._get(message.model).display_name,
-            } if message.res_id else False,
-        } for message in self]
+        for message in self:
+            message_data = {
+                "author": (
+                    {"id": message.author_id.id, "type": "partner"} if message.author_id else False
+                ),
+                "id": message.id,
+                "date": message.date,
+                "message_type": message.message_type,
+                "body": message.body,
+                "notifications": message.notification_ids._filtered_for_web_client()._notification_format(),
+                "thread": False,
+            }
+            if message.res_id:
+                message_data["thread"] = {"id": message.res_id, "model": message.model}
+                store.add(
+                    "Thread",
+                    {
+                        "id": message.res_id,
+                        "model": message.model,
+                        "modelName": message.env["ir.model"]._get(message.model).display_name,
+                    },
+                )
+            store.add("Message", message_data)
 
     def _notify_message_notification_update(self):
         """Send bus notifications to update status of notifications in the web
@@ -1181,10 +1192,11 @@ class Message(models.Model):
                 messages_per_partner[self.env.user.partner_id] |= message
             if message.author_id and not any(user._is_public() for user in message.author_id.with_context(active_test=False).user_ids):
                 messages_per_partner[message.author_id] |= message
-        updates = [
-            (partner, 'mail.message/notification_update', {'elements': messages._message_notification_format()})
-            for partner, messages in messages_per_partner.items()
-        ]
+        updates = []
+        for partner, messages in messages_per_partner.items():
+            store = Store()
+            messages._message_notifications_to_store(store)
+            updates.append((partner, "mail.record/insert", store.get_result()))
         self.env['bus.bus']._sendmany(updates)
 
     def _bus_notification_target(self):

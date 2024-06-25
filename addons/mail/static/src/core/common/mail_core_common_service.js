@@ -32,9 +32,6 @@ export class MailCoreCommon {
                 message.delete();
             }
         });
-        this.busService.subscribe("mail.message/notification_update", (payload) => {
-            this.store.Message.insert(payload.elements, { html: true });
-        });
         this.busService.subscribe("mail.message/toggle_star", (payload, { id: notifId }) => {
             const { message_ids: messageIds, starred } = payload;
             for (const messageId of messageIds) {

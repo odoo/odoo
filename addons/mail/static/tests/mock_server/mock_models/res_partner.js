@@ -333,37 +333,6 @@ export class ResPartner extends webModels.ResPartner {
         ]).length;
     }
 
-    /**
-     * @param {number} id
-     * @returns {Object[]}
-     */
-    _message_fetch_failed(id) {
-        /** @type {import("mock_models").MailMessage} */
-        const MailMessage = this.env["mail.message"];
-        /** @type {import("mock_models").MailNotification} */
-        const MailNotification = this.env["mail.notification"];
-
-        const [partner] = this._filter([["id", "=", id]], {
-            active_test: false,
-        });
-        const messages = MailMessage._filter([
-            ["author_id", "=", partner.id],
-            ["res_id", "!=", 0],
-            ["model", "!=", false],
-            ["message_type", "!=", "user_notification"],
-        ]).filter((message) => {
-            // Purpose is to simulate the following domain on mail.message:
-            // ['notification_ids.notification_status', 'in', ['bounce', 'exception']],
-            // But it's not supported by _filter domain to follow a relation.
-            const notifications = MailNotification._filter([
-                ["mail_message_id", "=", message.id],
-                ["notification_status", "in", ["bounce", "exception"]],
-            ]);
-            return notifications.length > 0;
-        });
-        return MailMessage._message_notification_format(messages.map((message) => message.id));
-    }
-
     _get_current_persona() {
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];

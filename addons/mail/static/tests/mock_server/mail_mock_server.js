@@ -842,9 +842,9 @@ async function processRequest(request) {
             return notifications.length > 0;
         });
         messages.length = Math.min(messages.length, 100);
-        store.add(
-            "Message",
-            MailMessage._message_notification_format(messages.map((message) => message.id))
+        MailMessage._message_notifications_to_store(
+            messages.map((message) => message.id),
+            store
         );
     }
     if (args.systray_get_activities && this.env.user?.partner_id) {
