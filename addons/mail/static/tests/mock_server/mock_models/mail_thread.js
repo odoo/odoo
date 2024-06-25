@@ -550,7 +550,7 @@ export class MailThread extends models.ServerModel {
         return false;
     }
 
-    _get_mail_thread_data(id, request_list) {
+    _to_store(id, request_list) {
         const kwargs = getKwArgs(arguments, "id", "request_list");
         id = kwargs.id;
         delete kwargs.id;
@@ -591,6 +591,8 @@ export class MailThread extends models.ServerModel {
             res["attachments"] = IrAttachment._attachment_format(
                 attachments.map((attachment) => attachment.id)
             );
+            res["isLoadingAttachments"] = false;
+            res["areAttachmentsLoaded"] = true;
             // Specific implementation of mail.thread.main.attachment
             if (this.env[this._name]._fields.message_main_attachment_id) {
                 res["mainAttachment"] = thread.message_main_attachment_id
@@ -625,6 +627,6 @@ export class MailThread extends models.ServerModel {
                 id,
             ]);
         }
-        return res;
+        return { Thread: [res] };
     }
 }

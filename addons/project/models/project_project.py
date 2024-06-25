@@ -7,6 +7,7 @@ from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, Command, fields, models, _, _lt
+from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.rating.models import rating_data
 from odoo.exceptions import UserError
 from odoo.tools import get_lang, SQL
@@ -993,10 +994,17 @@ class Project(models.Model):
         for partner, tasks in dict_tasks_per_partner.items():
             tasks.message_subscribe(dict_partner_ids_to_subscribe_per_partner[partner])
 
-    def _get_mail_thread_data(self, request_list):
-        result = super()._get_mail_thread_data(request_list)
-        if len(self) == 1 and 'followers' in request_list and result.get('followers'):
-            collaborator_ids = self.collaborator_ids.partner_id.ids
-            for follower in result['followers']:
-                follower['is_project_collaborator'] = follower['partner_id'] in collaborator_ids
-        return result
+    def _to_store(self, store: Store, request_list):
+        super()._to_store(store, request_list)
+        if "followers" in request_list:
+            store.add(
+                "Thread",
+                {
+                    "collaborator_ids": [
+                        {"id": partner.id, "type": "partner"}
+                        for partner in self.collaborator_ids.partner_id
+                    ],
+                    "id": self.id,
+                    "model": "project.project",
+                },
+            )

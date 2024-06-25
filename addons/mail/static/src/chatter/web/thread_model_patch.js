@@ -8,16 +8,9 @@ patch(Thread.prototype, {
     async fetchData(requestList) {
         this.isLoadingAttachments =
             this.isLoadingAttachments || requestList.includes("attachments");
-        const result = await super.fetchData(requestList);
+        await super.fetchData(requestList);
         if (!this.mainAttachment && this.attachmentsInWebClientView.length > 0) {
             this.setMainAttachmentFromIndex(0);
         }
-        if ("attachments" in result) {
-            Object.assign(this, {
-                areAttachmentsLoaded: true,
-                isLoadingAttachments: false,
-            });
-        }
-        return result;
     },
 });
