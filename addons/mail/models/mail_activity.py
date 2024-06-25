@@ -13,6 +13,7 @@ from odoo import api, exceptions, fields, models, _, Command
 from odoo.osv import expression
 from odoo.tools import is_html_empty
 from odoo.tools.misc import clean_context, get_lang, groupby
+from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
 
@@ -583,9 +584,13 @@ class MailActivity(models.Model):
             activity.date_deadline = max(activity.date_deadline, today) + timedelta(days=7)
 
     def activity_format(self):
+        return Store(self).get_result()
+
+    def _to_store(self, store: Store):
         activities = self.read()
         self.mail_template_ids.fetch(['name'])
         self.attachment_ids.fetch(['name'])
+        store.add("Persona", list(self.user_id.partner_id.mail_partner_format().values()))
         for record, activity in zip(self, activities):
             activity['mail_template_ids'] = [
                 {'id': mail_template.id, 'name': mail_template.name}
@@ -595,8 +600,8 @@ class MailActivity(models.Model):
                 {'id': attachment.id, 'name': attachment.name}
                 for attachment in record.attachment_ids
             ]
-            activity['persona'] = record.user_id.partner_id.mail_partner_format().get(record.user_id.partner_id)
-        return activities
+            activity["persona"] = {"id": record.user_id.partner_id.id, "type": "partner"}
+            store.add("Activity", activity)
 
     @api.model
     def get_activity_data(self, res_model, domain, limit=None, offset=0, fetch_done=False):
