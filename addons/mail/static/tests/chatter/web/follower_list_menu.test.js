@@ -30,10 +30,10 @@ test("base rendering editable", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     patchWithCleanup(MailThread.prototype, {
-        _get_mail_thread_data() {
+        _to_store() {
             // mimic user with write access
-            const res = super._get_mail_thread_data(...arguments);
-            res["hasWriteAccess"] = true;
+            const res = super._to_store(...arguments);
+            res["Thread"][0]["hasWriteAccess"] = true;
             return res;
         },
     });
@@ -62,10 +62,10 @@ test('click on "add followers" button', async () => {
         res_model: "res.partner",
     });
     patchWithCleanup(MailThread.prototype, {
-        _get_mail_thread_data() {
+        _to_store() {
             // mimic user with write access
-            const res = super._get_mail_thread_data(...arguments);
-            res["hasWriteAccess"] = true;
+            const res = super._to_store(...arguments);
+            res["Thread"][0]["hasWriteAccess"] = true;
             return res;
         },
     });
@@ -121,10 +121,10 @@ test("click on remove follower", async () => {
         res_model: "res.partner",
     });
     patchWithCleanup(MailThread.prototype, {
-        _get_mail_thread_data() {
+        _to_store() {
             // mimic user with write access
-            const res = super._get_mail_thread_data(...arguments);
-            res["hasWriteAccess"] = true;
+            const res = super._to_store(...arguments);
+            res["Thread"][0]["hasWriteAccess"] = true;
             return res;
         },
     });
@@ -163,10 +163,10 @@ test('Hide "Add follower" and subtypes edition/removal buttons except own user o
         },
     ]);
     patchWithCleanup(MailThread.prototype, {
-        _get_mail_thread_data() {
+        _to_store() {
             // mimic user with no write access
-            const res = super._get_mail_thread_data(...arguments);
-            res["hasWriteAccess"] = false;
+            const res = super._to_store(...arguments);
+            res["Thread"][0]["hasWriteAccess"] = false;
             return res;
         },
     });
@@ -302,10 +302,10 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
         },
     ]);
     patchWithCleanup(MailThread.prototype, {
-        _get_mail_thread_data() {
+        _to_store() {
             // mimic user with write access
-            const res = super._get_mail_thread_data(...arguments);
-            res["hasWriteAccess"] = true;
+            const res = super._to_store(...arguments);
+            res["Thread"][0]["hasWriteAccess"] = true;
             return res;
         },
     });
@@ -325,10 +325,10 @@ test('Show "No Followers" dropdown-item if there are no followers and user does 
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     patchWithCleanup(MailThread.prototype, {
-        _get_mail_thread_data() {
+        _to_store() {
             // mimic user without write access
-            const res = super._get_mail_thread_data(...arguments);
-            res["hasWriteAccess"] = false;
+            const res = super._to_store(...arguments);
+            res["Thread"][0]["hasWriteAccess"] = false;
             return res;
         },
     });

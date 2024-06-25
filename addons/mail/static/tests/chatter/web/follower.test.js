@@ -28,10 +28,10 @@ test("base rendering not editable", async () => {
         res_model: "res.partner",
     });
     patchWithCleanup(MailThread.prototype, {
-        _get_mail_thread_data() {
+        _to_store() {
             // mimic user without write access
-            const res = super._get_mail_thread_data(...arguments);
-            res["hasWriteAccess"] = false;
+            const res = super._to_store(...arguments);
+            res["Thread"][0]["hasWriteAccess"] = false;
             return res;
         },
     });

@@ -3,14 +3,19 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-export class ProjectFollowerList extends FollowerList {
+import { patch } from "@web/core/utils/patch";
+
+const followerListPatch = {
     setup() {
         super.setup();
         this.dialogService = useService("dialog");
-    }
-
+    },
+    /**
+     * @param {MouseEvent} ev
+     * @param {import("models").Follower} follower
+     */
     async onClickRemove(ev, follower) {
-        if (follower.is_project_collaborator) {
+        if (follower.partner.in(follower.thread.collaborator_ids)) {
             this.dialogService.add(ConfirmationDialog, {
                 title: _t("Remove Collaborator"),
                 body: _t(
@@ -24,5 +29,6 @@ export class ProjectFollowerList extends FollowerList {
         } else {
             super.onClickRemove(ev, follower);
         }
-    }
-}
+    },
+};
+patch(FollowerList.prototype, followerListPatch);
