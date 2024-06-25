@@ -21,6 +21,18 @@ class TestController(HttpCase):
         cls.admin = admin_user.login
         cls.headers = {"Content-Type": "application/json"}
         cls.pixel = 'R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs='
+        cls.project_internal_link_display = cls.env['project.project'].create({
+            'name': 'project',
+            'display_name': 'project_display_name',
+            'description': 'project_description',
+        })
+        cls.task_internal_link_customized = cls.env['project.task'].create({
+            'name': 'task1',
+            'display_name': 'task1_display_name',
+            'link_preview_name': 'test1 | test parent',
+            'project_id': cls.project_internal_link_display.id,
+            'description': 'task1_description',
+        })
 
     def _build_payload(self, params=None):
         """
@@ -150,3 +162,70 @@ class TestController(HttpCase):
         result = attachment.search(domain)
         self.assertTrue(len(result), "No attachment fetched")
         self.assertEqual(result, attachment)
+
+    def test_05_internal_link_preview(self):
+        self.authenticate(self.admin, self.admin)
+        # retrieve metadata of an record with customerized link_preview_name
+        response_with_preview_name = self.url_open(
+            '/html_editor/link_preview_internal',
+            data=json_safe.dumps({
+                "params": {
+                    "preview_url": f"/odoo/all-tasks/{self.task_internal_link_customized.id}",
+                }
+            }),
+            headers=self.headers
+        )
+        self.assertEqual(200, response_with_preview_name.status_code)
+        self.assertTrue('link_preview_name' in response_with_preview_name.text)
+
+        # retrieve metadata of an record without customerized link_preview_name but with display_name
+        response_without_preview_name = self.url_open(
+            '/html_editor/link_preview_internal',
+            data=json_safe.dumps({
+                "params": {
+                    "preview_url": f"/odoo/project/{self.project_internal_link_display.id}",
+                }
+            }),
+            headers=self.headers
+        )
+        self.assertEqual(200, response_without_preview_name.status_code)
+        self.assertTrue('display_name' in response_without_preview_name.text)
+
+        # retrieve metadata of a url with wrong action name
+        response_wrong_action = self.url_open(
+            '/html_editor/link_preview_internal',
+            data=json_safe.dumps({
+                "params": {
+                    "preview_url": "/odoo/projectInvalid/1",
+                }
+            }),
+            headers=self.headers
+        )
+        self.assertEqual(200, response_wrong_action.status_code)
+        self.assertTrue('error_msg' in response_wrong_action.text)
+
+        # retrieve metadata of a url with wrong record id
+        response_wrong_record = self.url_open(
+            '/html_editor/link_preview_internal',
+            data=json_safe.dumps({
+                "params": {
+                    "preview_url": "/odoo/project/999",
+                }
+            }),
+            headers=self.headers
+        )
+        self.assertEqual(200, response_wrong_record.status_code)
+        self.assertTrue('error_msg' in response_wrong_record.text)
+
+        # retrieve metadata of a url not directing to a record
+        response_not_record = self.url_open(
+            '/html_editor/link_preview_internal',
+            data=json_safe.dumps({
+                "params": {
+                    "preview_url": "/odoo/project",
+                }
+            }),
+            headers=self.headers
+        )
+        self.assertEqual(200, response_not_record.status_code)
+        self.assertTrue('other_error_msg' in response_not_record.text)
