@@ -1,21 +1,22 @@
 /** @odoo-module **/
 
+import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
-import options from "@web_editor/js/editor/snippets.options";
+import { SnippetOption } from "@web_editor/js/editor/snippets.options";
 
-options.registry.facebookPage = options.Class.extend({
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-    },
+export class FacebookPage extends SnippetOption {
+    constructor() {
+        super(...arguments);
+        this.orm = this.env.services.orm;
+    }
 
     /**
      * Initializes the required facebook page data to create the iframe.
      *
      * @override
      */
-    willStart: function () {
-        var defs = [this._super.apply(this, arguments)];
+    async willStart() {
+        const defs = [await super.willStart(...arguments)];
 
         var defaults = {
             href: '',
@@ -40,13 +41,13 @@ options.registry.facebookPage = options.Class.extend({
         }
 
         return Promise.all(defs).then(() => this._markFbElement()).then(() => this._refreshPublicWidgets());
-    },
+    }
     /**
      * @override
      */
     onBuilt() {
         this.$target[0].querySelector('.o_facebook_page_preview')?.remove();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -58,7 +59,7 @@ options.registry.facebookPage = options.Class.extend({
      * @see this.selectClass for parameters
      * @param {String} optionName the name of the option to toggle
      */
-    toggleOption: function (previewMode, widgetValue, params) {
+    toggleOption(previewMode, widgetValue, params) {
         let optionName = params.optionName;
         if (optionName.startsWith('tab.')) {
             optionName = optionName.replace('tab.', '');
@@ -82,16 +83,16 @@ options.registry.facebookPage = options.Class.extend({
             }
         }
         return this._markFbElement();
-    },
+    }
     /**
      * Sets the facebook page's URL.
      *
      * @see this.selectClass for parameters
      */
-    pageUrl: function (previewMode, widgetValue, params) {
+    pageUrl(previewMode, widgetValue, params) {
         this.fbData.href = widgetValue;
         return this._markFbElement();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -102,7 +103,7 @@ options.registry.facebookPage = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    _markFbElement: function () {
+    _markFbElement() {
         return this._checkURL().then(() => {
             // Managing height based on options
             if (this.fbData.tabs) {
@@ -116,11 +117,11 @@ options.registry.facebookPage = options.Class.extend({
                 this.$target[0].dataset[key] = value;
             }
         });
-    },
+    }
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         const optionName = params.optionName;
         switch (methodName) {
             case 'toggleOption': {
@@ -137,12 +138,12 @@ options.registry.facebookPage = options.Class.extend({
                 return this._checkURL().then(() => this.fbData.href);
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @private
      */
-    _checkURL: function () {
+    _checkURL() {
         const defaultURL = 'https://www.facebook.com/Odoo';
         // Patterns matched by the regex (all relate to existing pages,
         // in spite of the URLs containing "profile.php" or "people"):
@@ -173,5 +174,11 @@ options.registry.facebookPage = options.Class.extend({
         this.fbData.id = "";
         this.fbData.href = defaultURL;
         return Promise.resolve();
-    },
+    }
+}
+
+registry.category("snippet_options").add("FacebookPage", {
+    Class: FacebookPage,
+    template: "website.s_facebook_page_options",
+    selector: ".o_facebook_page",
 });

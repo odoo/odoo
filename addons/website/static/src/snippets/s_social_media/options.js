@@ -2,7 +2,7 @@
 
 import fonts from '@web_editor/js/wysiwyg/fonts';
 import weUtils from '@web_editor/js/common/utils';
-import options from '@web_editor/js/editor/snippets.options';
+import options from '@web_editor/js/editor/snippets.options.legacy';
 import { _t } from "@web/core/l10n/translation";
 import { ICON_SELECTOR } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 

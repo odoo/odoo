@@ -2,7 +2,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { useService } from "@web/core/utils/hooks";
-import options from '@web_editor/js/editor/snippets.options';
+import options from '@web_editor/js/editor/snippets.options.legacy';
 import { _t } from "@web/core/l10n/translation";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
 import { cloneContentEls } from "@website/js/utils";

@@ -5,18 +5,12 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
-import { registry } from "@web/core/registry";
 import { useChildRef } from "@web/core/utils/hooks";
 import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options.legacy";
 import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget";
 import wUtils from "@website/js/utils";
-import {
-    applyModifications,
-    isImageCorsProtected,
-    isImageSupportedForStyle,
-    loadImageInfo,
-} from "@web_editor/js/editor/image_processing";
+import {isImageCorsProtected, isImageSupportedForStyle} from "@web_editor/js/editor/image_processing";
 import "@website/snippets/s_popup/options";
 import { range } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
@@ -35,23 +29,8 @@ import {
     drawTextHighlightSVG,
 } from "@website/js/text_processing";
 
-import { useService } from '@web/core/utils/hooks';
-import { patch } from "@web/core/utils/patch";
-import { Component, markup, onMounted, onWillStart, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, markup, useRef, useState } from "@odoo/owl";
 
-import {
-    LayoutColumn,
-    legacyRegistry,
-    owlRegistry,
-    SelectUserValue,
-    SnippetOption,
-    UnitUserValue,
-    UserValue,
-    UserValueComponent,
-    WeButton,
-    WeInput,
-    WeSelect,
-} from '@web_editor/js/editor/snippets.options'; 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
 const Many2oneUserValueWidget = options.userValueWidgetsRegistry['we-many2one'];
@@ -101,39 +80,44 @@ Many2oneUserValueWidget.include({
     },
 });
 
-const UrlPickerUserValueWidget = InputUserValueWidget.extend({});
-class WeUrlPicker extends WeInput {
-    static template = "website.WeUrlPicker";
-    static defaultProps = {
-        ...WeInput.defaultProps,
-        unit: "",
-        saveUnit: "",
-    };
-    setup() {
-        super.setup();
-        this.website = useService('website');
-        useEffect((inputEl) => {
-            const options = {
-                classes: {
-                    "ui-autocomplete": 'o_website_ui_autocomplete'
-                },
-                urlChosen: this._onWebsiteURLChosen.bind(this),
-            };
-            const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(inputEl, options);
-            return () => unmountAutocompleteWithPages();
-        }, () => [this.inputRef.el]);
-    }
+const UrlPickerUserValueWidget = InputUserValueWidget.extend({
+    events: Object.assign({}, InputUserValueWidget.prototype.events || {}, {
+        'click .o_we_redirect_to': '_onRedirectTo',
+    }),
 
-    // TODO maybe these open & close can be removed
+    /**
+     * @override
+     */
+    start: async function () {
+        await this._super(...arguments);
+        const linkButton = document.createElement('we-button');
+        const icon = document.createElement('i');
+        icon.classList.add('fa', 'fa-fw', 'fa-external-link');
+        linkButton.classList.add('o_we_redirect_to', 'o_we_link', 'ms-1');
+        linkButton.title = _t("Preview this URL in a new tab");
+        linkButton.appendChild(icon);
+        this.containerEl.after(linkButton);
+        this.el.classList.add('o_we_large');
+        this.inputEl.classList.add('text-start');
+        const options = {
+            classes: {
+                "ui-autocomplete": 'o_website_ui_autocomplete'
+            },
+            body: this.getParent().$target[0].ownerDocument.body,
+            urlChosen: this._onWebsiteURLChosen.bind(this),
+        };
+        this.unmountAutocompleteWithPages = wUtils.autocompleteWithPages(this.inputEl, options);
+    },
+
     open() {
-        super.open(...arguments);
+        this._super(...arguments);
         document.querySelector(".o_website_ui_autocomplete")?.classList?.remove("d-none");
-    }
+    },
 
     close() {
-        super.close(...arguments);
+        this._super(...arguments);
         document.querySelector(".o_website_ui_autocomplete")?.classList?.add("d-none");
-    }
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -145,26 +129,45 @@ class WeUrlPicker extends WeInput {
      * @private
      * @param {OdooEvent} ev
      */
-    _onWebsiteURLChosen(ev) {
-        this.state.value = this.inputRef.el.value;
+    _onWebsiteURLChosen: function (ev) {
+        this._value = this.inputEl.value;
         this._onUserValueChange(ev);
-    }
+    },
     /**
      * Redirects to the URL the widget currently holds.
      *
      * @private
      */
-    _onRedirectTo() {
-        if (this.state.value) {
-            window.open(this.state.value, '_blank');
+    _onRedirectTo: function () {
+        if (this._value) {
+            window.open(this._value, '_blank');
         }
+    },
+    destroy() {
+        this.unmountAutocompleteWithPages?.();
+        this.unmountAutocompleteWithPages = null;
+        this._super(...arguments);
     }
-}
-registry.category("snippet_widgets").add("WeUrlPicker", WeUrlPicker);
+});
 
-class FontFamilyUserValue extends SelectUserValue {
-    constructor() {
-        super(...arguments);
+const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
+    events: Object.assign({}, SelectUserValueWidget.prototype.events || {}, {
+        'click .o_we_add_google_font_btn': '_onAddGoogleFontClick',
+        'click .o_we_delete_google_font_btn': '_onDeleteGoogleFontClick',
+    }),
+    fontVariables: [], // Filled by editor menu when all options are loaded
+
+    /**
+     * @override
+     */
+    init() {
+        this.dialog = this.bindService("dialog");
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    start: async function () {
         const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
         const nbFonts = parseInt(weUtils.getCSSVariableValue('number-of-fonts', style));
         // User fonts served by google server.
@@ -184,6 +187,8 @@ class FontFamilyUserValue extends SelectUserValue {
         });
         this.allFonts = [];
 
+        await this._super(...arguments);
+
         const fontsToLoad = [];
         for (const font of this.googleFonts) {
             const fontURL = `https://fonts.googleapis.com/css?family=${encodeURIComponent(font).replace(/%20/g, '+')}`;
@@ -194,12 +199,16 @@ class FontFamilyUserValue extends SelectUserValue {
             const fontURL = `/web/content/${encodeURIComponent(attachmentId)}`;
             fontsToLoad.push(fontURL);
         }
+        // TODO ideally, remove the <link> elements created once this widget
+        // instance is destroyed (although it should not hurt to keep them for
+        // the whole backend lifecycle).
         const proms = fontsToLoad.map(async fontURL => loadCSS(fontURL));
         const fontsLoadingProm = Promise.all(proms);
 
-        this._fonts = [];
+        const fontEls = [];
+        const methodName = this.el.dataset.methodName || 'customizeWebsiteVariable';
+        const variable = this.el.dataset.variable;
         const themeFontsNb = nbFonts - (this.googleLocalFonts.length + this.googleFonts.length);
-        const googleLocalFontsOffset = nbFonts - this.googleLocalFonts.length;
         for (let fontNb = 0; fontNb < nbFonts; fontNb++) {
             const realFontNb = fontNb + 1;
             const fontKey = weUtils.getCSSVariableValue(`font-number-${realFontNb}`, style);
@@ -211,40 +220,66 @@ class FontFamilyUserValue extends SelectUserValue {
                 fontName = _t("System Fonts");
                 fontFamily = 'var(--o-system-fonts)';
             }
-            this._fonts.push({
-                indexForType: fontNb >= googleLocalFontsOffset ? fontNb - googleLocalFontsOffset : fontNb - themeFontsNb,
-                string: fontName,
-                fontFamily: fontFamily,
-                isCloud: (fontNb < googleLocalFontsOffset) && !isSystemFonts,
-                isLocal: fontNb >= googleLocalFontsOffset,
+            const fontEl = document.createElement('we-button');
+            fontEl.setAttribute('string', fontName);
+            fontEl.dataset.variable = variable;
+            fontEl.dataset[methodName] = fontKey;
+            fontEl.dataset.fontFamily = fontFamily;
+            if ((realFontNb <= themeFontsNb) && !isSystemFonts) {
+                // Add the "cloud" icon next to the theme's default fonts
+                // because they are served by Google.
+                fontEl.appendChild(Object.assign(document.createElement('i'), {
+                    role: 'button',
+                    className: 'text-info me-2 fa fa-cloud',
+                    title: _t("This font is hosted and served to your visitors by Google servers"),
+                }));
+            }
+            fontEls.push(fontEl);
+            this.menuEl.appendChild(fontEl);
+        }
+
+        if (this.googleLocalFonts.length) {
+            const googleLocalFontsEls = fontEls.splice(-this.googleLocalFonts.length);
+            googleLocalFontsEls.forEach((el, index) => {
+                $(el).append(renderToFragment('website.delete_google_font_btn', {
+                    index: index,
+                    local: "true",
+                }));
             });
         }
-    }
-    
-    get fonts() {
-        return this._fonts;
-    }
-}
 
-const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({});
-class WeFontFamilyPicker extends WeSelect {
-    static isContainer = true;
-    static StateModel = FontFamilyUserValue;
-    static template = "website.WeFontFamilyPicker";
-    static components = { WeSelect, WeButton };
-    static defaultProps = {
-        ...WeSelect.defaultProps,
-        selectMethod: "customizeWebsiteVariable",
-    };
-    fontVariables = []; // Filled by editor menu when all options are loaded
+        if (this.googleFonts.length) {
+            const googleFontsEls = fontEls.splice(-this.googleFonts.length);
+            googleFontsEls.forEach((el, index) => {
+                $(el).append(renderToFragment('website.delete_google_font_btn', {
+                    index: index,
+                }));
+            });
+        }
 
-    forwardProps(fontValue) {
-        const result = Object.assign({}, this.props, {
-            [this.props.selectMethod]: fontValue.fontFamily,
-        });
-        delete result.selectMethod;
-        return result;
-    }
+        $(this.menuEl).append($(renderToElement('website.add_google_font_btn', {
+            variable: variable,
+        })));
+
+        return fontsLoadingProm;
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async setValue() {
+        await this._super(...arguments);
+
+        this.menuTogglerEl.style.fontFamily = '';
+        const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
+        if (activeWidget) {
+            this.menuTogglerEl.style.fontFamily = activeWidget.el.dataset.fontFamily;
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -253,7 +288,7 @@ class WeFontFamilyPicker extends WeSelect {
     /**
      * @private
      */
-    _onAddGoogleFontClick() {
+    _onAddGoogleFontClick: function (ev) {
         const addGoogleFontDialog = class extends Component {
             static template = "website.dialog.addGoogleFont";
             static components = { Dialog };
@@ -277,7 +312,8 @@ class WeFontFamilyPicker extends WeSelect {
                 this.props.close();
             }
         };
-        this.env.services.dialog.add(addGoogleFontDialog, {
+        const variable = $(ev.currentTarget).data('variable');
+        this.dialog.add(addGoogleFontDialog, {
             title: _t("Add a Google Font"),
             onClickSave: async (state, inputEl) => {
                 // if font page link (what is expected)
@@ -316,8 +352,8 @@ class WeFontFamilyPicker extends WeSelect {
                 // If the font already exists, it will only be added if
                 // the user chooses to add it locally when it is already
                 // imported from the Google Fonts server.
-                const fontExistsLocally = this.state.googleLocalFonts.some(localFont => localFont.split(':')[0] === fontName);
-                const fontExistsOnServer = this.state.allFonts.includes(fontName);
+                const fontExistsLocally = this.googleLocalFonts.some(localFont => localFont.split(':')[0] === fontName);
+                const fontExistsOnServer = this.allFonts.includes(fontName);
                 const preventFontAddition = fontExistsLocally || (fontExistsOnServer && googleFontServe);
                 if (preventFontAddition) {
                     inputEl.classList.add('is-invalid');
@@ -327,29 +363,29 @@ class WeFontFamilyPicker extends WeSelect {
                     return;
                 }
                 if (googleFontServe) {
-                    this.state.googleFonts.push(font);
+                    this.googleFonts.push(font);
                 } else {
-                    this.state.googleLocalFonts.push(`'${font}': ''`);
+                    this.googleLocalFonts.push(`'${font}': ''`);
                 }
-                this.state.option.instance._onGoogleFontsCustoRequest({
-                    // TODO: @owl-options should we allow something else that "variable" ? (most likely not)
-                    values: {[this.props.variable]: `'${font}'`},
-                    googleFonts: this.state.googleFonts,
-                    googleLocalFonts: this.state.googleLocalFonts,
+                this.trigger_up('google_fonts_custo_request', {
+                    values: {[variable]: `'${font}'`},
+                    googleFonts: this.googleFonts,
+                    googleLocalFonts: this.googleLocalFonts,
                 });
                 return true;
             },
         });
-    }
+    },
     /**
      * @private
-     * @param {Event} ev TODO update
+     * @param {Event} ev
      */
-    async _onDeleteGoogleFontClick(font) {
+    _onDeleteGoogleFontClick: async function (ev) {
+        ev.preventDefault();
         const values = {};
 
         const save = await new Promise(resolve => {
-            this.env.services.dialog.add(ConfirmationDialog, {
+            this.dialog.add(ConfirmationDialog, {
                 body: _t("Deleting a font requires a reload of the page. This will save all your changes and reload the page, are you sure you want to proceed?"),
                 confirm: () => resolve(true),
                 cancel: () => resolve(false),
@@ -360,22 +396,23 @@ class WeFontFamilyPicker extends WeSelect {
         }
 
         // Remove Google font
+        const googleFontIndex = parseInt(ev.target.dataset.fontIndex);
+        const isLocalFont = ev.target.dataset.localFont;
         let googleFontName;
-        const googleFontIndex = font.indexForType;
-        if (font.isLocal) {
-            const googleFont = this.state.googleLocalFonts[googleFontIndex].split(':');
+        if (isLocalFont) {
+            const googleFont = this.googleLocalFonts[googleFontIndex].split(':');
             // Remove double quotes
             googleFontName = googleFont[0].substring(1, googleFont[0].length - 1);
             values['delete-font-attachment-id'] = googleFont[1];
-            this.state.googleLocalFonts.splice(googleFontIndex, 1);
+            this.googleLocalFonts.splice(googleFontIndex, 1);
         } else {
-            googleFontName = this.state.googleFonts[googleFontIndex];
-            this.state.googleFonts.splice(googleFontIndex, 1);
+            googleFontName = this.googleFonts[googleFontIndex];
+            this.googleFonts.splice(googleFontIndex, 1);
         }
 
         // Adapt font variable indexes to the removal
-        const style = window.getComputedStyle(this.state.$target[0].ownerDocument.documentElement);
-        this.fontVariables.forEach((variable) => {
+        const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
+        FontFamilyPickerUserValueWidget.prototype.fontVariables.forEach((variable) => {
             const value = weUtils.getCSSVariableValue(variable, style);
             if (value.substring(1, value.length - 1) === googleFontName) {
                 // If an element is using the google font being removed, reset
@@ -383,28 +420,43 @@ class WeFontFamilyPicker extends WeSelect {
                 values[variable] = 'null';
             }
         });
-        this.state.option.instance._onGoogleFontsCustoRequest({
+
+        this.trigger_up('google_fonts_custo_request', {
             values: values,
-            googleFonts: this.state.googleFonts,
-            googleLocalFonts: this.state.googleLocalFonts,
+            googleFonts: this.googleFonts,
+            googleLocalFonts: this.googleLocalFonts,
         });
-    }
-}
-registry.category("snippet_widgets").add("WeFontFamilyPicker", WeFontFamilyPicker);
+    },
+});
 
-class GpsUserValue extends UserValue {
-    _gmapCacheGPSToPlace = {};
+const GPSPicker = InputUserValueWidget.extend({
+    // Explicitly not consider all InputUserValueWidget events. E.g. we actually
+    // don't want input focusout messing with the google map API. Because of
+    // this, clicking on google map autocomplete suggestion on Firefox was not
+    // working properly.
+    events: {},
 
-    constructor() {
-        super(...arguments);
-        this._state._gmapLoaded = false;
-        this._state.gmapPlace = {};
+    /**
+     * @constructor
+     */
+    init() {
+        this._super(...arguments);
+        this._gmapCacheGPSToPlace = {};
+
+        // The google API will be loaded inside the website iframe. Let's try
+        // not having to load it in the backend too and just using the iframe
+        // google object instead.
         this.contentWindow = this.$target[0].ownerDocument.defaultView;
-    }
-    async start() {
-        super.start();
-        this._state._gmapLoaded = await new Promise(resolve => {
-            this.env.gmapApiRequest({data: {
+
+        this.notification = this.bindService("notification");
+    },
+    /**
+     * @override
+     */
+    async willStart() {
+        await this._super(...arguments);
+        this._gmapLoaded = await new Promise(resolve => {
+            this.trigger_up('gmap_api_request', {
                 editableMode: true,
                 configureIfNecessary: true,
                 onSuccess: key => {
@@ -415,16 +467,44 @@ class GpsUserValue extends UserValue {
 
                     // TODO see _notifyGMapError, this tries to trigger an error
                     // early but this is not consistent with new gmap keys.
-                    const startLocation = this.$target[0].dataset.mapGps || "(50.854975,4.3753899)";
-                    this._nearbySearch(startLocation, !!key)
-                        .then(place => {
-                            this._state.gmapPlace = place;
-                            resolve(!!place);
-                        });
+                    this._nearbySearch('(50.854975,4.3753899)', !!key)
+                        .then(place => resolve(!!place));
                 },
-            }, stopPropagation: () => {}});
+            });
         });
-    }
+        if (!this._gmapLoaded && !this._gmapErrorNotified) {
+            this.trigger_up('user_value_widget_critical');
+            return;
+        }
+    },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        this.el.classList.add('o_we_large');
+        if (!this._gmapLoaded) {
+            return;
+        }
+
+        this._gmapAutocomplete = new this.contentWindow.google.maps.places.Autocomplete(this.inputEl, {types: ['geocode']});
+        this.contentWindow.google.maps.event.addListener(this._gmapAutocomplete, 'place_changed', this._onPlaceChanged.bind(this));
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+
+        // Without this, the google library injects elements inside the backend
+        // DOM but do not remove them once the editor is left. Notice that
+        // this is also done when the widget is destroyed for another reason
+        // than leaving the editor, but if the google API needs that container
+        // again afterwards, it will simply recreate it.
+        for (const el of document.body.querySelectorAll('.pac-container')) {
+            el.remove();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -433,26 +513,24 @@ class GpsUserValue extends UserValue {
     /**
      * @override
      */
-    getMethodsParams(methodName) {
-        return Object.assign({gmapPlace: this._state.gmapPlace || {}}, super.getMethodsParams(...arguments));
-    }
+    getMethodsParams: function (methodName) {
+        return Object.assign({gmapPlace: this._gmapPlace || {}}, this._super(...arguments));
+    },
     /**
      * @override
      */
     async setValue() {
-        await super.setValue(...arguments);
-        if (!this._state._gmapLoaded) {
+        await this._super(...arguments);
+        if (!this._gmapLoaded) {
             return;
         }
 
-        this._state.gmapPlace = await this._nearbySearch(this.value);
-    }
-    get formattedAddress() {
-        return this._state.gmapPlace?.formatted_address;
-    }
-    get isGmapLoaded() {
-        return this._state._gmapLoaded;
-    }
+        this._gmapPlace = await this._nearbySearch(this._value);
+
+        if (this._gmapPlace) {
+            this.inputEl.value = this._gmapPlace.formatted_address;
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -510,7 +588,7 @@ class GpsUserValue extends UserValue {
                 }
             });
         });
-    }
+    },
     /**
      * Indicates to the user there is an error with the google map API and
      * re-opens the configuration dialog. For good measures, this also notifies
@@ -529,11 +607,11 @@ class GpsUserValue extends UserValue {
         }
         this._gmapErrorNotified = true;
 
-        this.env.services.notification.add(
+        this.notification.add(
             _t("A Google Map error occurred. Make sure to read the key configuration popup carefully."),
             { type: 'danger', sticky: true }
         );
-        this.env.services.website.websiteRootInstance.trigger_up('gmap_api_request', {
+        this.trigger_up('gmap_api_request', {
             editableMode: true,
             reconfigure: true,
             onSuccess: () => {
@@ -541,40 +619,8 @@ class GpsUserValue extends UserValue {
             },
         });
 
-        // TODO user_value_widget_critical
-        setTimeout(() => this.env.services.website.websiteRootInstance.trigger_up('user_value_widget_critical'));
-    }
-}
-
-const GPSPicker = InputUserValueWidget.extend({});
-class WeGpsPicker extends UserValueComponent {
-    static template = "website.WeGpsPicker";
-    static StateModel = GpsUserValue;
-    setup() {
-        super.setup();
-        this.inputRef = useRef("input");
-
-        // The google API will be loaded inside the website iframe. Let's try
-        // not having to load it in the backend too and just using the iframe
-        // google object instead.
-        useEffect((gmapLoaded, inputEl) => {
-            if (gmapLoaded && inputEl) {
-                const contentWindow = this.state.$target[0].ownerDocument.defaultView;
-                this._gmapAutocomplete = new contentWindow.google.maps.places.Autocomplete(this.inputRef.el, {types: ['geocode']});
-                contentWindow.google.maps.event.addListener(this._gmapAutocomplete, 'place_changed', this._onPlaceChanged.bind(this));
-            }
-        }, () => [this.state.isGmapLoaded, this.inputRef.el]);
-        onWillUnmount(() => {
-            // Without this, the google library injects elements inside the backend
-            // DOM but do not remove them once the editor is left. Notice that
-            // this is also done when the widget is destroyed for another reason
-            // than leaving the editor, but if the google API needs that container
-            // again afterwards, it will simply recreate it.
-            for (const el of document.body.querySelectorAll('.pac-container')) {
-                el.remove();
-            }
-        });
-    }
+        setTimeout(() => this.trigger_up('user_value_widget_critical'));
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -587,34 +633,34 @@ class WeGpsPicker extends UserValueComponent {
     _onPlaceChanged(ev) {
         const gmapPlace = this._gmapAutocomplete.getPlace();
         if (gmapPlace && gmapPlace.geometry) {
-            this.state.gmapPlace = gmapPlace;
-            const location = this.state.gmapPlace.geometry.location;
-            const oldValue = this.state.value;
-            this.state.value = `(${location.lat()},${location.lng()})`;
-            this.state._gmapCacheGPSToPlace[this.state.value] = gmapPlace;
-            if (oldValue !== this.state.value) {
+            this._gmapPlace = gmapPlace;
+            const location = this._gmapPlace.geometry.location;
+            const oldValue = this._value;
+            this._value = `(${location.lat()},${location.lng()})`;
+            this._gmapCacheGPSToPlace[this._value] = gmapPlace;
+            if (oldValue !== this._value) {
                 this._onUserValueChange(ev);
             }
         }
-    }
-}
-registry.category("snippet_widgets").add("WeGpsPicker", WeGpsPicker);
-/*
+    },
+});
 options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-fontfamilypicker'] = FontFamilyPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
-*/
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-patch(SnippetOption.prototype, {
+options.Class.include({
+    custom_events: Object.assign({}, options.Class.prototype.custom_events || {}, {
+        'google_fonts_custo_request': '_onGoogleFontsCustoRequest',
+    }),
     specialCheckAndReloadMethodsNames: ['customizeWebsiteViews', 'customizeWebsiteVariable', 'customizeWebsiteColor'],
 
     /**
      * @override
      */
-    constructor() {
-        super.constructor(...arguments);
+    init() {
+        this._super(...arguments);
         // Since the website is displayed in an iframe, its jQuery
         // instance is not the same as the editor. This property allows
         // for easy access to bootstrap plugins (Carousel, Modal, ...).
@@ -623,6 +669,8 @@ patch(SnippetOption.prototype, {
         // triggers a custom event, only that same jQuery instance will
         // trigger handlers set with `.on`.
         this.$bsTarget = this.ownerDocument.defaultView.$(this.$target[0]);
+
+        this.orm = this.bindService("orm");
     },
 
     //--------------------------------------------------------------------------
@@ -668,7 +716,7 @@ patch(SnippetOption.prototype, {
      * @override
      */
     async _checkIfWidgetsUpdateNeedReload(widgets) {
-        const needReload = await super._checkIfWidgetsUpdateNeedReload(...arguments);
+        const needReload = await this._super(...arguments);
         if (needReload) {
             return needReload;
         }
@@ -686,7 +734,7 @@ patch(SnippetOption.prototype, {
     /**
      * @override
      */
-    async _computeWidgetState(methodName, params) {
+    _computeWidgetState: async function (methodName, params) {
         switch (methodName) {
             case 'customizeWebsiteViews': {
                 return this._getEnabledCustomizeValues(params.possibleValues, true);
@@ -714,7 +762,7 @@ patch(SnippetOption.prototype, {
                 return this._getEnabledCustomizeValues(params.possibleValues, false);
             }
         }
-        return super._computeWidgetState(...arguments);
+        return this._super(...arguments);
     },
     /**
      * @private
@@ -882,7 +930,7 @@ patch(SnippetOption.prototype, {
         Object.keys(values).forEach((key) => {
             values[key] = values[key] || defaultValue;
         });
-        return this.env.services.orm.call("web_editor.assets", "make_scss_customization", [url, values]);
+        return this.orm.call("web_editor.assets", "make_scss_customization", [url, values]);
     },
     /**
      * Refreshes all public widgets related to the given element.
@@ -893,7 +941,7 @@ patch(SnippetOption.prototype, {
      */
     _refreshPublicWidgets: async function ($el) {
         return new Promise((resolve, reject) => {
-            this.env.services.website.websiteRootInstance.trigger_up('widgets_start_request', {
+            this.trigger_up('widgets_start_request', {
                 editableMode: true,
                 $target: $el || this.$target,
                 onSuccess: resolve,
@@ -915,15 +963,15 @@ patch(SnippetOption.prototype, {
     /**
      * @override
      */
-    async _select(previewMode, widget) {
-        await super._select(...arguments);
+    _select: async function (previewMode, widget) {
+        await this._super(...arguments);
 
         // Some blocks flicker when we start their public widgets, so we skip
         // the refresh for them to avoid the flickering.
         const targetNoRefreshSelector = ".s_instagram_page";
         // TODO: we should review the way public widgets are restarted when
         // converting to OWL and a new API.
-        if (this.options.isWebsite && widget._methodsParams.noWidgetRefresh !== "true"
+        if (this.options.isWebsite && !widget.$el.closest('[data-no-widget-refresh="true"]').length
             && !this.$target[0].matches(targetNoRefreshSelector)) {
             // TODO the flag should be retrieved through widget params somehow
             await this._refreshPublicWidgets();
@@ -936,11 +984,12 @@ patch(SnippetOption.prototype, {
 
     /**
      * @private
-     * TODO: @owl-options update doc
-     * @param {Object}
+     * @param {OdooEvent} ev
      */
-    _onGoogleFontsCustoRequest({values, googleFonts, googleLocalFonts}) {
-        values = values ? Object.assign({}, values) : {};
+    _onGoogleFontsCustoRequest: function (ev) {
+        const values = ev.data.values ? Object.assign({}, ev.data.values) : {};
+        const googleFonts = ev.data.googleFonts;
+        const googleLocalFonts = ev.data.googleLocalFonts;
         if (googleFonts.length) {
             values['google-fonts'] = "('" + googleFonts.join("', '") + "')";
         } else {
@@ -951,18 +1000,13 @@ patch(SnippetOption.prototype, {
         } else {
             values['google-local-fonts'] = 'null';
         }
-        this.options.snippetEditionRequest({exec: async () => {
+        this.trigger_up('snippet_edition_request', {exec: async () => {
             return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values);
         }});
-        this.env.requestSave({data: {
+        this.trigger_up('request_save', {
             reloadEditor: true,
-        }});
+        });
     },
-});
-
-options.Class.include({
-    // TODO Keep until WebsiteLevelColor is converted
-    specialCheckAndReloadMethodsNames: ['customizeWebsiteViews', 'customizeWebsiteVariable', 'customizeWebsiteColor'],
 });
 
 function _getLastPreFilterLayerElement($el) {
@@ -2899,31 +2943,10 @@ options.registry.CoverProperties = options.Class.extend({
      * @see this.selectClass for parameters
      */
     background: async function (previewMode, widgetValue, params) {
-        if (previewMode === false) {
-            this.$image[0].classList.remove("o_b64_image_to_save");
-        }
         if (widgetValue === '') {
             this.$image.css('background-image', '');
             this.$target.removeClass('o_record_has_cover');
         } else {
-            if (previewMode === false) {
-                const imgEl = document.createElement("img");
-                imgEl.src = widgetValue;
-                await loadImageInfo(imgEl);
-                if (imgEl.dataset.mimetype && ![
-                    "image/gif",
-                    "image/svg+xml",
-                    "image/webp",
-                ].includes(imgEl.dataset.mimetype)) {
-                    // Convert to webp but keep original width.
-                    imgEl.dataset.mimetype = "image/webp";
-                    const base64src = await applyModifications(imgEl, {
-                        mimetype: "image/webp",
-                    });
-                    widgetValue = base64src;
-                    this.$image[0].classList.add("o_b64_image_to_save");
-                }
-            }
             this.$image.css('background-image', `url('${widgetValue}')`);
             this.$target.addClass('o_record_has_cover');
             const $defaultSizeBtn = this.$el.find('.o_record_cover_opt_size_default');
@@ -4148,20 +4171,13 @@ options.registry.Button = options.Class.extend({
     },
 });
 
-class WebsiteLayoutColumn extends LayoutColumn {
+options.registry.layout_column.include({
     /**
      * @override
      */
     _isMobile() {
-        return this.env.services.website.context.isMobile;
-    }
-}
-registry.category("snippet_options").add("WebsiteLayoutColumns", {
-    Class: WebsiteLayoutColumn,
-    template: "website.layout_column",
-    selector: "section, section.s_carousel_wrapper .carousel-item",
-    target: "> *:has(> .row), > .s_allow_columns",
-    exclude: ".s_masonry_block, .s_features_grid, .s_media_list, .s_showcase, .s_table_of_content, .s_process_steps, .s_image_gallery"
+        return wUtils.isMobile(this);
+    },
 });
 
 options.registry.SnippetMove.include({
@@ -4173,7 +4189,7 @@ options.registry.SnippetMove.include({
     },
 });
 
-const oldExport = {
-    // UrlPickerUserValueWidget: UrlPickerUserValueWidget,
-    // FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,
+export default {
+    UrlPickerUserValueWidget: UrlPickerUserValueWidget,
+    FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,
 };

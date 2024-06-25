@@ -3,7 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import dom from "@web/legacy/js/core/dom";
 import { rpc } from "@web/core/network/rpc";
-import sOptions from "@web_editor/js/editor/snippets.options";
+import sOptions from "@web_editor/js/editor/snippets.options.legacy";
 
 sOptions.registry.twitter = sOptions.Class.extend({
     /**

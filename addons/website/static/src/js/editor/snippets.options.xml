@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="website.column_count_option">
+    <WeSelect class="with_grid and 'o_grid'" noPreview="'true'" name="'column_count_opt'" dependencies="with_grid and 'normal_mode'">
+        <!-- TODO: @owl-options
+            This should be working but slots cannot be conditional so instead
+            make the caller define the title.
+            <t t-set-slot="title"><t t-if="!with_grid">Columns</t></t>
+        -->
+        <t t-raw="0"/>
+        <WeButton selectCount="'0'" name="'zero_cols_opt'">None</WeButton>
+        <WeButton selectCount="'1'">1</WeButton>
+        <WeButton selectCount="'2'">2</WeButton>
+        <WeButton selectCount="'3'">3</WeButton>
+        <WeButton selectCount="'4'">4</WeButton>
+        <WeButton selectCount="'5'">5</WeButton>
+        <WeButton selectCount="'6'">6</WeButton>
+        <WeButton selectCount="'custom'" name="'custom_cols_opt'">Custom</WeButton>
+    </WeSelect>
+</t>
+<t t-name="website.grid_layout_options">
+    <WeButtonGroup class="indent and 'o_we_sublevel_1'" noPreview="'true'" dependencies="'grid_mode'">
+        <t t-set-slot="title">Add Elements</t>
+        <WeButton class="'o_we_bg_brand_primary o_grid'" addElement="'image'" title="'Image'" name="'image'">Image</WeButton>
+        <WeButton class="'o_we_bg_brand_primary o_grid'" addElement="'text'" title="'Text'" name="'text'">Text</WeButton>
+        <WeButton class="'o_we_bg_brand_primary o_grid'" addElement="'button'" title="'Button'" name="'button'">Button</WeButton>
+    </WeButtonGroup>
+    <WeRow class="indent and 'o_we_sublevel_1'">
+        <t t-set-slot="title">Spacing (Y, X)</t>
+        <WeInput dependencies="'grid_mode'" selectStyle="''" cssProperty="'row-gap'" unit="'px'" preventImportant="'true'" applyTo="'.row'"/>
+        <WeInput dependencies="'grid_mode'" selectStyle="''" cssProperty="'column-gap'" unit="'px'" max="'60'" preventImportant="'true'" applyTo="'.row'"/>
+    </WeRow>
+</t>
+<t t-name="website.layout_column">
+    <WeRow>
+        <WeButtonGroup noPreview="'true'">
+            <t t-set-slot="title">Layout</t>
+            <WeButton selectLayout="'grid'" name="'grid_mode'">Grid</WeButton>
+            <WeButton selectLayout="'normal'" name="'normal_mode'">Cols</WeButton>
+        </WeButtonGroup>
+        <t t-call="website.column_count_option"/>
+    </WeRow>
+    <t t-call="website.grid_layout_options">
+        <t t-set="indent" t-value="true"/>
+    </t>
+</t>
+<t t-name="website.s_google_map_option">
+    <WeRow>
+        <t t-set-slot="title">Address</t>
+        <t t-set="placeholder">e.g. De Brouckere, Brussels, Belgium</t>
+        <WeGpsPicker
+            selectDataAttribute="''" attributeName="'mapGps'"
+            setFormattedAddress="''"
+            placeHolder="placeholder"
+            noPreview="'true'"
+        />
+    </WeRow>
+    <WeRow>
+        <t t-set-slot="title">Marker Style</t>
+        <WeSelect attributeName="'pinStyle'">
+            <WeButton selectDataAttribute="''">Default</WeButton>
+            <WeButton selectDataAttribute="'flat'">Flat</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow>
+        <t t-set-slot="title">Type</t>
+        <WeSelect attributeName="'mapType'" noPreview="'true'" resetMapColor="''">
+            <WeButton name="'roadmap_opt'" selectDataAttribute="'ROADMAP'">RoadMap</WeButton>
+            <WeButton selectDataAttribute="'TERRAIN'">Terrain</WeButton>
+            <WeButton selectDataAttribute="'SATELLITE'">Satellite</WeButton>
+            <WeButton selectDataAttribute="'HYBRID'">Hybrid</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow class="'o_we_sublevel_1'">
+        <t t-set-slot="title">Style</t>
+        <WeSelect dependencies="'roadmap_opt'" attributeName="'mapColor'" noPreview="'true'">
+            <t t-set="title">Default</t>
+            <WeButton selectDataAttribute="''" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-default.jpg'"/>
+            <t t-set="title">Light Mono</t>
+            <WeButton selectDataAttribute="'lightMonoMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-lightMono.jpg'"/>
+            <t t-set="title">Cupertino</t>
+            <WeButton selectDataAttribute="'cupertinoMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-cupertino.jpg'"/>
+            <t t-set="title">Retro</t>
+            <WeButton selectDataAttribute="'retroMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-retro.jpg'"/>
+            <t t-set="title">Cobalt</t>
+            <WeButton selectDataAttribute="'cobaltMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-cobalt.jpg'"/>
+            <t t-set="title">Flat</t>
+            <WeButton selectDataAttribute="'flatMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-flat.jpg'"/>
+            <t t-set="title">Blue</t>
+            <WeButton selectDataAttribute="'blueMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-blue.jpg'"/>
+            <t t-set="title">Lilla</t>
+            <WeButton selectDataAttribute="'lillaMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-lilla.jpg'"/>
+            <t t-set="title">Caramello</t>
+            <WeButton selectDataAttribute="'carMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-caramello.jpg'"/>
+            <t t-set="title">BW</t>
+            <WeButton selectDataAttribute="'bwMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-bw.jpg'"/>
+        </WeSelect>
+    </WeRow>
+    <WeRow>
+        <t t-set-slot="title">Zoom</t>
+        <WeInput selectDataAttribute="'12'" noPreview="'true'" attributeName="'mapZoom'" step="'1'"/>
+    </WeRow>
+    <WeRow>
+        <t t-set-slot="title">Description</t>
+        <WeCheckbox showDescription="'true'" noPreview="'true'"/>
+    </WeRow>
+</t>
+
+<t t-name="website.TestSnippetOption" t-inherit="web_editor.TestSnippetOption" t-inherit-mode="extension">
+    <xpath expr="//WeRow" position="before">
+        <WeRow>
+            <t t-set-slot="title">URL</t>
+            <WeUrlPicker selectDataAttribute="''" attributeName="'url'"/>
+        </WeRow>
+        <!-- Do not annoy devs with GMap key
+        <WeRow>
+            <t t-set-slot="title">Address</t>
+            <WeGpsPicker selectDataAttribute="''" attributeName="'mapGps'"
+                setFormattedAddress="''"
+                placeholder="'e.g. De Brouckere, Brussels, Belgium'"
+                noPreview="'true'"/>
+        </WeRow>
+        -->
+        <WeRow>
+            <t t-set-slot="title">Font</t>
+            <WeFontFamilyPicker selectMethod="'selectDataAttribute'" attributeName="'font'"/>
+        </WeRow>
+    </xpath>
+</t>
+
+<t t-name="website.WeUrlPicker">
+    <!-- TODO There was no w-100 -->
+    <we-input class="o_we_user_value_widget o_we_large w-100">
+        <div>
+            <input t-ref="input" type="text" class="text-start"
+                autocomplete="chrome-off"
+                t-att-placeholder="this.props.placeholder"
+                t-on-input="this._onInputInput"
+                t-on-blur="this._onInputBlur"
+                t-on-change="this._onUserValueChange"
+                t-on-keydown="this._onInputKeydown"
+                t-att-value="this.state.value"
+            />
+        </div>
+        <we-button class="o_we_redirect_to o_we_link ms-1"
+            title="Preview this URL in a new tab"
+            t-on-click="() => { this._onRedirectTo(); }"
+        >
+            <i class="fa fa-fw fa-external-link"/>
+        </we-button>
+    </we-input>
+</t>
+<t t-name="website.WeGpsPicker">
+    <we-input class="o_we_user_value_widget o_we_large w-100">
+        <div>
+            <input t-ref="input" type="text" class="text-start"
+                autocomplete="chrome-off"
+                t-att-placeholder="this.props.placeholder"
+                t-att-value="this.state.formattedAddress"
+            />
+        </div>
+    </we-input>
+</t>
+<t t-name="website.WeFontFamilyPicker">
+    <we-select class="o_we_user_value_widget" t-att-class="getAllClasses()" t-on-click="_onClick">
+        <div>
+            <we-toggler t-out="state.toggler.textContent" t-att-class="{ 'active': state.opened }"/>
+            <we-selection-items t-ref="menu">
+                <t t-foreach="state.fonts" t-as="font" t-key="font_index">
+                    <WeButton class="'o_we_user_value_widget'" t-props="forwardProps(font)">
+                        <t t-set="style">font-family: <t t-out="font.fontFamily"/>;</t>
+                        <we-title t-att-style="style" t-out="font.string"></we-title>
+                        <div>
+                            <i t-if="font.isCloud" role="button" class="text-info me-2 fa fa-cloud" title="This font is hosted and served to your visitors by Google servers"></i>
+                            <span t-out="font.typeIndex"/>
+                            <t t-if="font.indexForType >= 0">
+                                <t t-set="delete_font_title">Delete this font</t>
+                                <i role="button"
+                                   t-on-click.prevent="() => this._onDeleteGoogleFontClick(font)"
+                                   class="text-danger fa fa-trash-o o_we_delete_google_font_btn"
+                                   t-att-aria-label="delete_font_title"
+                                   t-att-title="delete_font_title"
+                                   t-att-data-local-font="!font.isCloud"
+                                   t-att-data-font-index="font_index"/>
+                            </t>
+                        </div>
+                    </WeButton>
+                </t>
+                <WeButton class="'o_we_user_value_widget o_we_add_google_font_btn'" t-on-click="() => this._onAddGoogleFontClick()">Add a Google Font</WeButton>
+                <t t-slot="default"/>
+            </we-selection-items>
+            <span class="o_we_dropdown_caret"/>
+        </div>
+    </we-select>
+</t>
+</templates>

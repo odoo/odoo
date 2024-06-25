@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { renderToElement } from "@web/core/utils/render";
-import options from "@web_editor/js/editor/snippets.options";
+import options from "@web_editor/js/editor/snippets.options.legacy";
 
 options.registry.countdown = options.Class.extend({
     events: Object.assign({}, options.Class.prototype.events || {}, {
