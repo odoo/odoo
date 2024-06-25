@@ -116,7 +116,7 @@ function pathFromActionState(state) {
  */
 export function stateToUrl(state) {
     let path = "";
-    const pathKeysToOmit = [...PATH_KEYS, "actionStack"];
+    const pathKeysToOmit = [..._hiddenKeysFromUrl];
     const actionStack = (state.actionStack || [state]).map((a) => ({ ...a }));
     if (actionStack.at(-1)?.action !== "menu") {
         for (const [prevAct, currentAct] of slidingWindow(actionStack, 2).reverse()) {
@@ -228,6 +228,7 @@ let state;
 let pushTimeout;
 let pushArgs;
 let _lockedKeys;
+let _hiddenKeysFromUrl = new Set();
 
 export function startRouter() {
     const url = new URL(browser.location);
@@ -246,6 +247,7 @@ export function startRouter() {
         state: {},
     };
     _lockedKeys = new Set(["debug", "lang"]);
+    _hiddenKeysFromUrl = new Set([...PATH_KEYS, "actionStack"]);
 }
 
 /**
@@ -342,7 +344,7 @@ function makeDebouncedPush(mode) {
         pushArgs.title = document.title;
         Object.assign(pushArgs.state, state);
         browser.clearTimeout(pushTimeout);
-        pushTimeout = browser.setTimeout(() => {
+        const push = () => {
             doPush();
             pushTimeout = null;
             pushArgs = {
@@ -350,7 +352,14 @@ function makeDebouncedPush(mode) {
                 reload: false,
                 state: {},
             };
-        });
+        };
+        if (options.sync) {
+            push();
+        } else {
+            pushTimeout = browser.setTimeout(() => {
+                push();
+            });
+        }
     };
 }
 
@@ -366,6 +375,7 @@ export const router = {
     replaceState: makeDebouncedPush("replace"),
     cancelPushes: () => browser.clearTimeout(pushTimeout),
     addLockedKey: (key) => _lockedKeys.add(key),
+    hideKeyFromUrl: (key) => _hiddenKeysFromUrl.add(key),
     skipLoad: false,
 };
 
