@@ -14,7 +14,7 @@ export class ProductInfoPopup extends Component {
     }
     searchProduct(productName) {
         this.pos.selectedCategoryId = 0;
-        this.pos.searchProductWord = productName;
+        this.pos.searchProductWord = productName + ";product_tmpl_id:" + this.props.product.product_tmpl_id;;
         this.props.close();
     }
     _hasMarginsCostsAccessRights() {
