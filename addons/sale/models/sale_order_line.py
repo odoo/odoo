@@ -1178,6 +1178,8 @@ class SaleOrderLine(models.Model):
             'is_downpayment': self.is_downpayment,
         }
         self._set_analytic_distribution(res, **optional_values)
+        if self.is_downpayment:
+            res['account_id'] = self.invoice_lines.filtered('is_downpayment').account_id[:1].id
         if optional_values:
             res.update(optional_values)
         if self.display_type:
