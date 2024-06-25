@@ -1881,3 +1881,60 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(pick_return.move_ids.product_uom_qty, 1)
         self.assertEqual(pick_return.location_dest_id, warehouse.lot_stock_id)
         self.assertEqual(pick_return.state, 'assigned')
+
+    def test_return_partial_delivery(self):
+        """
+        Test that the qty_delivered is correctly computed when a return of backorder delivery is validated:
+        - Set the delivery process to three steps.
+        - Update the quantity of the product to 10.
+        - Create a sales order to deliver 3 units.
+        - Validate a pick for 1 unit and create a backorder.
+        - Validate the pack for 1 unit.
+        - Validate the backorder for 2 units.
+        - Create and validate a return.
+        Check that the qty_delivered is 0.
+        """
+        warehouse = self.company_data['default_warehouse']
+        warehouse.delivery_steps = 'pick_pack_ship'
+        product = self.env['product.product'].create({
+            'name': 'To be delivered',
+            'is_storable': True,
+        })
+        self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 10)
+        with Form(self.env['sale.order']) as so_form:
+            so_form.partner_id = self.partner_a
+            with so_form.order_line.new() as line:
+                line.product_id = product
+                line.product_uom_qty = 3
+            sale_order = so_form.save()
+        sale_order.action_confirm()
+        self.assertEqual(len(sale_order.picking_ids), 1)
+        pick = sale_order.picking_ids
+        self.assertEqual(pick.picking_type_id, warehouse.pick_type_id)
+        pick.move_ids.write({'quantity': 1, 'picked': True})
+        # Create backorder for missing qty
+        pick._action_done()
+        pick_backorder = pick.backorder_ids
+        self.assertEqual(pick_backorder.move_ids.product_uom_qty, 2)
+        # validate the pack for one unit
+        pack_1 = sale_order.picking_ids - pick
+        pack_1.move_ids.write({'quantity': 1, 'picked': True})
+        pack_1._action_done()
+        # validate the pick_backorder and then create the return
+        pick_backorder.move_ids.write({'quantity': 2, 'picked': True})
+        pick_backorder._action_done()
+        self.assertEqual(pick_backorder.state, 'done')
+        # Create return picking
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=pick_backorder.ids, active_id=pick_backorder.sorted().ids[0],
+            active_model='stock.picking'))
+        return_wiz = stock_return_picking_form.save()
+        return_wiz.product_return_moves.quantity = 2.0
+        return_wiz.product_return_moves.to_refund = True
+        res = return_wiz.action_create_returns()
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        # Validate the return
+        return_pick.move_ids.write({'quantity': 2, 'picked': True})
+        return_pick.button_validate()
+        # check the qty delivered in the SOL
+        self.assertEqual(sale_order.order_line.qty_delivered, 0)
