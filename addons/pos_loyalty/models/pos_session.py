@@ -33,6 +33,7 @@ class PosSession(models.Model):
                     'discount', 'discount_mode', 'discount_applicability', 'all_discount_product_ids', 'is_global_discount',
                     'discount_max_amount', 'discount_line_product_id',
                     'multi_product', 'reward_product_ids', 'reward_product_qty', 'reward_product_uom_id', 'reward_product_domain'],
+                'context': {**self.env.context},
             },
             'loyalty.card': {
                 'domain': lambda data: [('program_id', 'in', [program["id"] for program in data["loyalty.program"]])],

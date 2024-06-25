@@ -461,3 +461,21 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsGlobalDiscountProgramNo
             PosLoyalty.finalizeOrder("Cash", "90"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("ChangeRewardValueWithLanguage", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            ProductScreen.selectedOrderlineHas("Desk Organizer", "1.00", "5.10"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Colleen Diaz"),
+            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.claimReward("$ 2 on your order"),
+            PosLoyalty.hasRewardLine("$ 2 on your order", "-2.00"),
+            PosLoyalty.orderTotalIs("3.10"),
+        ].flat(),
+});
