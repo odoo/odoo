@@ -23,7 +23,7 @@ export class HintPlugin extends Plugin {
     /** @type { (p: HintPlugin) => Record<string, any> } */
     static resources = (p) => {
         const resources = {
-            history_rendering_classes: ["o-we-hint"],
+            mutation_filtered_classes: ["o-we-hint"],
             is_mutation_record_savable: isMutationRecordSavable,
             onSelectionChange: p.updateTempHint.bind(p),
             onExternalHistorySteps: p.updateHints.bind(p),
