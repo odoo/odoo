@@ -25,7 +25,8 @@ export class ProtectedNodePlugin extends Plugin {
                 if (
                     record.type !== "attributes" ||
                     record.target !== closestProtectedCandidate ||
-                    isProtected(closestProtectedCandidate.parentElement)
+                    (closestProtectedCandidate.parentElement &&
+                        isProtected(closestProtectedCandidate.parentElement))
                 ) {
                     return false;
                 }
@@ -34,6 +35,7 @@ export class ProtectedNodePlugin extends Plugin {
                 if (
                     record.type === "attributes" &&
                     record.target === closestProtectedCandidate &&
+                    closestProtectedCandidate.parentElement &&
                     isProtected(closestProtectedCandidate.parentElement)
                 ) {
                     return false;

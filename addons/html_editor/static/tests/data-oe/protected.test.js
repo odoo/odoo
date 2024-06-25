@@ -1,4 +1,3 @@
-import { HistoryPlugin } from "@html_editor/core/history_plugin";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "../_helpers/editor";
@@ -6,7 +5,6 @@ import { unformat } from "../_helpers/format";
 import { setSelection, setContent } from "../_helpers/selection";
 import { insertText } from "../_helpers/user_actions";
 import { waitFor, waitForNone } from "@odoo/hoot-dom";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 test("should ignore protected elements children mutations (true)", async () => {
     await testEditor({
@@ -189,14 +187,7 @@ test("select a protected element shouldn't open the toolbar", async () => {
 });
 
 test("should protect disconnected nodes", async () => {
-    let historyPlugin;
-    patchWithCleanup(HistoryPlugin.prototype, {
-        setup() {
-            super.setup();
-            historyPlugin = this;
-        },
-    });
-    const { editor, el } = await setupEditor(
+    const { editor, el, plugins } = await setupEditor(
         `<div data-oe-protected="true"><p>a</p></div><p>a</p>`
     );
     const div = el.querySelector("div");
@@ -208,7 +199,25 @@ test("should protect disconnected nodes", async () => {
     const lastStep = editor.shared.getHistorySteps().at(-1);
     expect(lastStep.mutations.length).toBe(1);
     expect(lastStep.mutations[0].type).toBe("remove");
-    expect(historyPlugin.unserializeNode(lastStep.mutations[0].node).outerHTML).toBe(
+    expect(plugins.get("history").unserializeNode(lastStep.mutations[0].node).outerHTML).toBe(
         `<div data-oe-protected="true"></div>`
+    );
+});
+
+test("should not crash when changing attributes and removing a protecting anchor", async () => {
+    const { editor, el, plugins } = await setupEditor(
+        `<div data-oe-protected="true" data-attr="value"><p>a</p></div><p>a</p>`
+    );
+    const div = el.querySelector("div");
+    div.dataset.attr = "other";
+    div.remove();
+    editor.dispatch("ADD_STEP");
+    await animationFrame();
+    const lastStep = editor.shared.getHistorySteps().at(-1);
+    expect(lastStep.mutations.length).toBe(2);
+    expect(lastStep.mutations[0].type).toBe("attributes");
+    expect(lastStep.mutations[1].type).toBe("remove");
+    expect(plugins.get("history").unserializeNode(lastStep.mutations[1].node).outerHTML).toBe(
+        `<div data-oe-protected="true" data-attr="other"><p>a</p></div>`
     );
 });

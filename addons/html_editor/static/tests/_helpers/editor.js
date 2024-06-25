@@ -101,6 +101,11 @@ export async function setupEditor(content, options = {}) {
     return {
         el: editor.editable,
         editor,
+        plugins: new Map(
+            editor.plugins.map((plugin) => {
+                return [plugin.constructor.name, plugin];
+            })
+        ),
     };
 }
 
