@@ -48,7 +48,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
     payment_method_code = fields.Char(related='payment_id.payment_method_code')
     partner_id = fields.Many2one(related='payment_id.partner_id')
     journal_id = fields.Many2one(related='payment_id.journal_id')
-    company_id = fields.Many2one(related='payment_id.company_id')
+    company_id = fields.Many2one(related='payment_id.company_id', store=True)
     currency_id = fields.Many2one(related='payment_id.currency_id')
     payment_method_line_id = fields.Many2one(
         related='payment_id.payment_method_line_id',

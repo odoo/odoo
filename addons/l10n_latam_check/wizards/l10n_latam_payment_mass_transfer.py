@@ -82,7 +82,7 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
                         'is_internal_transfer': True,
                         'payment_method_line_id': pay_method_line.id,
                         'destination_journal_id': self.destination_journal_id.id,
-                        'l10n_latam_operation_ids': [Command.link(x.id) for x in checks]
+                        'l10n_latam_move_check_ids': [Command.link(x.id) for x in checks]
                     }
 
         payments = self.env['account.payment'].create(payment_vals)

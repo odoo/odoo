@@ -6,8 +6,8 @@ from odoo.tools.misc import format_date
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
-    l10n_latam_check_ids = fields.One2many('l10n_latam.check', 'payment_id', string='Checks')
-    l10n_latam_operation_ids = fields.Many2many(
+    l10n_latam_new_check_ids = fields.One2many('l10n_latam.check', 'payment_id', string='Checks')
+    l10n_latam_move_check_ids = fields.Many2many(
         comodel_name='l10n_latam.check', relation='account_payment_account_payment_check_rel',
         required=True,
         copy=False,
@@ -17,12 +17,12 @@ class AccountPayment(models.Model):
     l10n_latam_check_warning_msg = fields.Text(compute='_compute_l10n_latam_check_warning_msg')
     amount = fields.Monetary(compute="_compute_amount", readonly=False, store=True)
 
-    @api.depends('l10n_latam_operation_ids.amount', 'l10n_latam_check_ids.amount', 'payment_method_code')
+    @api.depends('l10n_latam_move_check_ids.amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
     def _compute_amount(self):
         for rec in self.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')):
-            rec.amount = sum(rec.l10n_latam_check_ids.mapped('amount'))
+            rec.amount = sum(rec.l10n_latam_new_check_ids.mapped('amount'))
         for rec in self.filtered(lambda x: x._is_latam_check_payment(check_subtype='move_check')):
-            rec.amount = sum(rec.l10n_latam_operation_ids.mapped('amount'))
+            rec.amount = sum(rec.l10n_latam_move_check_ids.mapped('amount'))
 
     def _is_latam_check_payment(self, check_subtype=False):
         if check_subtype == 'move_check':
@@ -37,10 +37,10 @@ class AccountPayment(models.Model):
         # unlink checks if payment method code is not for checks. We do it on post and not when changing payment
         # method so that the user don't loose checks data in case of changing payment method and coming back again
         # also, changing partner recompute payment method so all checks would be cleaned
-        for payment in self.filtered(lambda x: x.l10n_latam_check_ids and not x._is_latam_check_payment(check_subtype='new_check')):
-            payment.l10n_latam_check_ids.unlink()
-        for payment in self.filtered(lambda x: x.l10n_latam_operation_ids and not x._is_latam_check_payment(check_subtype='move_check')):
-            payment.l10n_latam_operation_ids = False
+        for payment in self.filtered(lambda x: x.l10n_latam_new_check_ids and not x._is_latam_check_payment(check_subtype='new_check')):
+            payment.l10n_latam_new_check_ids.unlink()
+        for payment in self.filtered(lambda x: x.l10n_latam_move_check_ids and not x._is_latam_check_payment(check_subtype='move_check')):
+            payment.l10n_latam_move_check_ids = False
         msgs = self._get_blocking_l10n_latam_warning_msg()
         if msgs:
             raise ValidationError('* %s' % '\n* '.join(msgs))
@@ -50,9 +50,9 @@ class AccountPayment(models.Model):
     def _get_latam_checks(self):
         self.ensure_one()
         if self._is_latam_check_payment(check_subtype='new_check'):
-            return self.l10n_latam_check_ids
+            return self.l10n_latam_new_check_ids
         elif self._is_latam_check_payment(check_subtype='move_check'):
-            return self.l10n_latam_operation_ids
+            return self.l10n_latam_move_check_ids
         else:
             return self.env['l10n_latam.check']
 
@@ -67,22 +67,22 @@ class AccountPayment(models.Model):
                     'Please try to deselect and select the check again.'))
             # checks being moved
             if rec._is_latam_check_payment(check_subtype='move_check'):
-                if any(check.payment_id.state != 'posted' for check in rec.l10n_latam_operation_ids):
+                if any(check.payment_id.state != 'posted' for check in rec.l10n_latam_move_check_ids):
                     msgs.append(_('Selecteds checks "%s" are not posted',
-                                  rec.l10n_latam_operation_ids.filtered(lambda x: x.payment_id.state != 'posted').mapped('display_name')))
+                                  rec.l10n_latam_move_check_ids.filtered(lambda x: x.payment_id.state != 'posted').mapped('display_name')))
                 elif (rec.payment_type == 'outbound' and
-                        any(check.current_journal_id != rec.journal_id for check in rec.l10n_latam_operation_ids)) or (
+                        any(check.current_journal_id != rec.journal_id for check in rec.l10n_latam_move_check_ids)) or (
                         rec.payment_type == 'inbound' and rec.is_internal_transfer and
-                        any(check.current_journal_id != rec.destination_journal_id for check in rec.l10n_latam_operation_ids)):
+                        any(check.current_journal_id != rec.destination_journal_id for check in rec.l10n_latam_move_check_ids)):
                     # check outbound payment and transfer or inbound transfer
                     msgs.append(_(
                         'Some checks are not anymore in journal, it seems it has been moved by another payment.'))
                 elif rec.payment_type == 'inbound' and not rec.is_internal_transfer and \
-                        any(rec.l10n_latam_operation_ids.mapped('current_journal_id')):
+                        any(rec.l10n_latam_move_check_ids.mapped('current_journal_id')):
                     msgs.append(_("Some checks are already in hand and can't be received again. Checks: %s",
-                                ', '.join(rec.l10n_latam_operation_ids.mapped('display_name'))))
+                                ', '.join(rec.l10n_latam_move_check_ids.mapped('display_name'))))
 
-                for check in rec.l10n_latam_operation_ids:
+                for check in rec.l10n_latam_move_check_ids:
                     date = rec.date or fields.Datetime.now()
 
                     last_operation = check._get_last_operation()
@@ -90,13 +90,13 @@ class AccountPayment(models.Model):
                         msgs.append(_(
                             "It seems you're trying to move a check with a date (%s) prior to last operation done with "
                             "the check (%s). This may be wrong, please double check it. By continue, the last operation on "
-                            "the check will remain being %s",
-                            format_date(self.env, date), last_operation.display_name, last_operation.display_name))
+                            "the check will remain being %s") %
+                            (format_date(self.env, date), last_operation.display_name, last_operation.display_name))
 
         return msgs
 
     def _get_reconciled_checks_error(self):
-        checks_reconciled = self.l10n_latam_check_ids.filtered(lambda x: x.issue_state in ['debited', 'voided'])
+        checks_reconciled = self.l10n_latam_new_check_ids.filtered(lambda x: x.issue_state in ['debited', 'voided'])
         if checks_reconciled:
             raise UserError(_(
                 "You can't cancel or re-open a payment with checks if some check has been debited or been voided. Checks:\n"
@@ -112,17 +112,17 @@ class AccountPayment(models.Model):
 
     def _l10n_latam_check_split_move(self):
         for payment in self.filtered(lambda x: x.payment_method_code == 'own_checks' and x.payment_type == 'outbound'):
-            if len(payment.l10n_latam_check_ids) == 1:
-                liquidity_line, counterpart_lines, dummy = payment._seek_for_lines()
-                payment.l10n_latam_check_ids.liquidity_line_id = liquidity_line.id
+            if len(payment.l10n_latam_new_check_ids) == 1:
+                liquidity_line = payment._seek_for_lines()[0]
+                payment.l10n_latam_new_check_ids.liquidity_line_id = liquidity_line.id
                 continue
             move_id = self.env['account.move'].create({
                 'journal_id': payment.journal_id.id,
                 'move_type': 'entry',
             })
-            liquidity_line, counterpart_lines, dummy = payment._seek_for_lines()
+            liquidity_line = payment._seek_for_lines()[0]
 
-            for check in payment.l10n_latam_check_ids:
+            for check in payment.l10n_latam_new_check_ids:
                 liquidity_amount_currency = -check.amount
                 liquidity_balance = payment.currency_id._convert(
                     liquidity_amount_currency,
@@ -161,7 +161,7 @@ class AccountPayment(models.Model):
 
     def _l10n_latam_check_unlink_split_move(self):
         self.ensure_one()
-        for check in self.l10n_latam_check_ids:
+        for check in self.l10n_latam_new_check_ids:
             if self.move_id == check.liquidity_line_id.move_id:
                 check.liquidity_line_id = False
                 continue
@@ -170,8 +170,8 @@ class AccountPayment(models.Model):
 
     @api.depends(
         'payment_method_line_id', 'state', 'date', 'is_internal_transfer', 'amount', 'currency_id', 'company_id',
-        'l10n_latam_operation_ids.issuer_vat', 'l10n_latam_operation_ids.bank_id', 'l10n_latam_operation_ids.payment_id.date',
-        'l10n_latam_check_ids.amount', 'l10n_latam_check_ids.name',
+        'l10n_latam_move_check_ids.issuer_vat', 'l10n_latam_move_check_ids.bank_id', 'l10n_latam_move_check_ids.payment_id.date',
+        'l10n_latam_new_check_ids.amount', 'l10n_latam_new_check_ids.name',
     )
     def _compute_l10n_latam_check_warning_msg(self):
         """
@@ -185,7 +185,7 @@ class AccountPayment(models.Model):
             # new third party check uniqueness warning (on own checks it's done by a sql constraint)
             if rec.payment_method_code == 'new_third_party_checks':
                 same_checks = self.env['l10n_latam.check']
-                for check in rec.l10n_latam_check_ids.filtered(
+                for check in rec.l10n_latam_new_check_ids.filtered(
                         lambda x: x.name and x.payment_method_line_id.code == 'new_third_party_checks' and
                         x.bank_id and x.issuer_vat):
                     same_checks += same_checks.search([
@@ -216,22 +216,22 @@ class AccountPayment(models.Model):
     @api.model
     def _get_trigger_fields_to_synchronize(self):
         res = super()._get_trigger_fields_to_synchronize()
-        return res + ('l10n_latam_check_ids',)
+        return res + ('l10n_latam_new_check_ids',)
 
     def _prepare_move_line_default_vals(self, write_off_line_vals=None, force_balance=None):
         """ Add check name and operation on liquidity line """
         res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals, force_balance=force_balance)
 
         # if only one check we don't create the split line, we add same data on liquidity line
-        if self.payment_method_code == 'own_checks' and self.payment_type == 'outbound' and len(self.l10n_latam_check_ids) == 1:
+        if self.payment_method_code == 'own_checks' and self.payment_type == 'outbound' and len(self.l10n_latam_new_check_ids) == 1:
             res[0].update({
-                'name': _('Check %s - ') % self.l10n_latam_check_ids.name + ''.join([item[1] for item in self._get_aml_default_display_name_list()]),
-                'date_maturity': self.l10n_latam_check_ids.payment_date,
+                'name': _('Check %s - ') % self.l10n_latam_new_check_ids.name + ''.join([item[1] for item in self._get_aml_default_display_name_list()]),
+                'date_maturity': self.l10n_latam_new_check_ids.payment_date,
             })
         # we dont check the payment method code because when deposited on bank/cash journals pay method is manual but we still change the label
-        elif self.l10n_latam_check_ids or self.l10n_latam_operation_ids:
+        elif self.l10n_latam_new_check_ids or self.l10n_latam_move_check_ids:
             document_name = (_('Checks %s received') if self.payment_type == 'inbound' else _('Checks %s delivered')) % (
-                ', '.join((self.l10n_latam_check_ids or self.l10n_latam_operation_ids).mapped('name')))
+                ', '.join((self.l10n_latam_new_check_ids or self.l10n_latam_move_check_ids).mapped('name')))
             res[0].update({
                 'name': document_name + ' - ' + ''.join([item[1] for item in self._get_aml_default_display_name_list()]),
             })
@@ -257,10 +257,10 @@ class AccountPayment(models.Model):
             if dest_payment_method:
                 super(AccountPayment, rec.with_context(
                     default_payment_method_line_id=dest_payment_method.id,
-                    default_l10n_latam_operation_ids=rec.l10n_latam_operation_ids.ids,
+                    default_l10n_latam_move_check_ids=rec.l10n_latam_move_check_ids.ids,
                 ))._create_paired_internal_transfer_payment()
             else:
                 super(AccountPayment, rec.with_context(
-                    default_l10n_latam_operation_ids=rec.l10n_latam_operation_ids.ids,
+                    default_l10n_latam_move_check_ids=rec.l10n_latam_move_check_ids.ids,
                 ))._create_paired_internal_transfer_payment()
         super(AccountPayment, self - third_party_checks)._create_paired_internal_transfer_payment()

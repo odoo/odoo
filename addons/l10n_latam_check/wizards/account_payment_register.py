@@ -4,19 +4,19 @@ from odoo import models, fields, api, Command
 class AccountPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
 
-    l10n_latam_check_ids = fields.One2many('l10n_latam.payment.register.check', 'payment_register_id', string="New Checks")
-    l10n_latam_operation_ids = fields.Many2many(
+    l10n_latam_new_check_ids = fields.One2many('l10n_latam.payment.register.check', 'payment_register_id', string="New Checks")
+    l10n_latam_move_check_ids = fields.Many2many(
         comodel_name='l10n_latam.check',
         string='Checks',
     )
 
-    @api.depends('l10n_latam_operation_ids.amount', 'l10n_latam_check_ids.amount', 'payment_method_code')
+    @api.depends('l10n_latam_move_check_ids.amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
     def _compute_amount(self):
         super()._compute_amount()
         for wizard in self.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')):
-            wizard.amount = sum(wizard.l10n_latam_check_ids.mapped('amount'))
+            wizard.amount = sum(wizard.l10n_latam_new_check_ids.mapped('amount'))
         for wizard in self.filtered(lambda x: x._is_latam_check_payment(check_subtype='move_check')):
-            wizard.amount = sum(wizard.l10n_latam_operation_ids.mapped('amount'))
+            wizard.amount = sum(wizard.l10n_latam_move_check_ids.mapped('amount'))
 
     def _is_latam_check_payment(self, check_subtype=False):
         if check_subtype == 'move_check':
@@ -29,16 +29,16 @@ class AccountPaymentRegister(models.TransientModel):
 
     def _create_payment_vals_from_wizard(self, batch_result):
         vals = super()._create_payment_vals_from_wizard(batch_result)
-        if self.l10n_latam_check_ids:
-            vals.update({'l10n_latam_check_ids': [Command.create({
+        if self.l10n_latam_new_check_ids:
+            vals.update({'l10n_latam_new_check_ids': [Command.create({
                 'name': x.name,
                 'bank_id': x.bank_id.id,
                 'issuer_vat': x.issuer_vat,
                 'payment_date': x.payment_date,
-                'amount': x.amount}) for x in self.l10n_latam_check_ids
+                'amount': x.amount}) for x in self.l10n_latam_new_check_ids
             ]})
-        if self.l10n_latam_operation_ids:
+        if self.l10n_latam_move_check_ids:
             vals.update({
-                'l10n_latam_operation_ids': [Command.link(x.id) for x in self.l10n_latam_operation_ids]
+                'l10n_latam_move_check_ids': [Command.link(x.id) for x in self.l10n_latam_move_check_ids]
             })
         return vals
