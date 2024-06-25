@@ -33,7 +33,8 @@
                     options="{'no_open': True, 'no_create': True}"/>
             </xpath>
             <xpath expr="//field[@name='order_line']//tree//field[@name='product_template_id']" position="after">
-                <field name="event_id" optional="hide"
+                <field name="event_id"
+                    column_invisible="True"
                     domain="[
                         ('event_ticket_ids.product_id','=', product_id),
                         ('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00')),
@@ -42,7 +43,8 @@
                     invisible="service_tracking != 'event'"
                     required="service_tracking == 'event'"
                     options="{'no_open': True, 'no_create': True}"/>
-                <field name="event_ticket_id" optional="hide"
+                <field name="event_ticket_id"
+                    column_invisible="True"
                     domain="[
                         ('event_id', '=', event_id), ('product_id','=',product_id),
                          '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)

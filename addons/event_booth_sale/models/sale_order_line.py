@@ -17,7 +17,6 @@ class SaleOrderLine(models.Model):
     event_booth_registration_ids = fields.One2many(
         'event.booth.registration', 'sale_order_line_id', string='Confirmed Registration')
     event_booth_ids = fields.One2many('event.booth', 'sale_order_line_id', string='Confirmed Booths')
-    is_event_booth = fields.Boolean(compute='_compute_is_event_booth')
 
     def _get_short_description(self):
         self.ensure_one()
@@ -25,11 +24,6 @@ class SaleOrderLine(models.Model):
             # return self.event_id.name ?
             return self.event_booth_pending_ids.event_id.name
         return super()._get_short_description()
-
-    @api.depends('product_id.type')
-    def _compute_is_event_booth(self):
-        for record in self:
-            record.is_event_booth = record.product_id.service_tracking == 'event_booth'
 
     @api.depends('event_booth_registration_ids')
     def _compute_event_booth_pending_ids(self):
@@ -83,7 +77,9 @@ class SaleOrderLine(models.Model):
         super()._compute_name()
 
     def _update_event_booths(self, set_paid=False):
-        for so_line in self.filtered('is_event_booth'):
+        for so_line in self:
+            if so_line.product_id.service_tracking != 'event_booth':
+                continue
             if so_line.event_booth_pending_ids and not so_line.event_booth_ids:
                 unavailable = so_line.event_booth_pending_ids.filtered(lambda booth: not booth.is_available)
                 if unavailable:
