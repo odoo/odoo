@@ -1946,3 +1946,46 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user",
         )
         self.assertEqual(loyalty_card.points, 100)
+
+    def test_change_reward_value_with_language(self):
+        """
+        Verify that the displayed language is not en_US.
+        When a user has another language than en_US set,
+        he shouldn't have the en_US message displayed but the message of the active language.
+        For this test, we shouldn't have the description displayed for selecting the reward in en_US but in en_GB.
+        Description in en_US (unexpected): 'A en_US name which should not be displayed'
+        Description in en_GB (expected): '$ 2 on your order'
+        """
+
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['res.lang']._activate_lang('en_GB')
+        env_gb = self.env(context={'lang': 'en_GB'})
+        self.pos_user.write({'lang': 'en_GB'})
+
+        loyalty_program = env_gb['loyalty.program'].create({
+            'name': 'Loyalty Program',
+            'program_type': 'loyalty',
+            'applies_on': 'both',
+            'trigger': 'auto',
+            'rule_ids': [(0, 0, {
+                'reward_point_amount': 1,
+                'reward_point_mode': 'money',
+                'minimum_qty': 0,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 2,
+                'discount_mode': 'per_order',
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+
+        loyalty_program.reward_ids.update_field_translations('description', {'en_US': 'A en_US name which should not be displayed'})
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "ChangeRewardValueWithLanguage",
+            login="pos_user",
+        )
