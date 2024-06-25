@@ -232,6 +232,8 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @returns {Promise}
      */
     appendTo: function (targetEl) {
+        // TO- remove : backward compatibility targetEl can be a jQuery object
+        targetEl = targetEl instanceof jQuery ? targetEl[0] : targetEl;
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
             t.append(self.el);
@@ -244,6 +246,8 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @returns {Promise}
      */
     attachTo: function (targetEl) {
+        // TO- remove : backward compatibility targetEl can be a jQuery object
+        targetEl = targetEl instanceof jQuery ? targetEl[0] : targetEl;
         var self = this;
         this.setElement(targetEl.el || targetEl);
         return this.willStart().then(function () {
@@ -261,6 +265,8 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @returns {Promise}
      */
     insertAfter: function (targetEl) {
+        // TO- remove : backward compatibility targetEl can be a jQuery object
+        targetEl = targetEl instanceof jQuery ? targetEl[0] : targetEl;
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
             self.el.append(t.nextSibling);
@@ -274,6 +280,8 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @returns {Promise}
      */
     insertBefore: function (targetEl) {
+        // TO- remove : backward compatibility targetEl can be a jQuery object
+        targetEl = targetEl instanceof jQuery ? targetEl[0] : targetEl;
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
             t.insertBefore(self.el);
@@ -286,6 +294,8 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @returns {Promise}
      */
     prependTo: function (targetEl) {
+        // TO- remove : backward compatibility targetEl can be a jQuery object
+        targetEl = targetEl instanceof jQuery ? targetEl[0] : targetEl;
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
             t.prepend(self.el);
