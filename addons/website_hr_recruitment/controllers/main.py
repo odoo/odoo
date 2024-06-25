@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import warnings
-from datetime import datetime, timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from operator import itemgetter
 from werkzeug.urls import url_encode
 
 from odoo import http, _
@@ -285,74 +287,64 @@ class WebsiteHrRecruitment(WebsiteForm):
             code=301,
         )
 
-    def _build_search_domain(self, field, value):
-        if field == 'name':
-            return [('partner_name', '=ilike', value)]
-        if field == 'email':
-            return [('email_normalized', '=', email_normalize(value))]
-        if field == 'phone':
-            return ['|', ('partner_phone', '=', value), ('partner_mobile', '=', value)]
-        if field == 'linkedin':
-            return [('linkedin_profile', '=ilike', value)]
-
-    def _get_ongoing_application_response(self, ongoing_application, job_id, value):
-        message = _("An application already exists for %s. Duplicates might be rejected.", value)
-        if ongoing_application.user_id:
-            message += " " + _("In case of issue, contact %s", ongoing_application.user_id.name)
-            if ongoing_application.user_id.email:
-                message += ", %s" % ongoing_application.user_id.email
-            if ongoing_application.user_id.phone:
-                message += ", %s" % ongoing_application.user_id.phone
-        return {
-            'applied_same_job': ongoing_application.job_id.id == int(job_id),
-            'applied_other_job': True,
-            'message': message
-        }
-
-    def _get_refused_application_response(self, job_id):
-        message = _("You applied for this position less than 6 months ago, and have been rejected. Please don't reapply unless you have a good reason.")
-        return {
-            'applied_same_job': True,
-            'applied_other_job': False,
-            'message': message
-        }
-
     @http.route('/website_hr_recruitment/check_recent_application', type='json', auth="public", website=True)
     def check_recent_application(self, field, value, job_id):
-        Applicant = http.request.env['hr.applicant'].sudo()
-        search_domain = self._build_search_domain(field, value)
-        if not search_domain:
+        def refused_applicants_condition(applicant):
+            return not applicant.active \
+                and applicant.job_id.id == int(job_id) \
+                and applicant.create_date >= (datetime.now() - relativedelta(months=6))
+
+        field_domain = {
+            'name': [('partner_name', '=ilike', value)],
+            'email': [('email_normalized', '=', email_normalize(value))],
+            'phone': ['|', ('partner_phone', '=', value), ('partner_mobile', '=', value)],
+            'linkedin': [('linkedin_profile', '=ilike', value)],
+        }.get(field, [])
+
+        applications_by_status = http.request.env['hr.applicant'].sudo().search(AND([
+            field_domain,
+            [
+                ('job_id.website_id', 'in', [http.request.website.id, False]),
+                '|',
+                    ('application_status', '=', 'ongoing'),
+                    '&',
+                        ('application_status', '=', 'refused'),
+                        ('active', '=', False),
+            ]
+        ]), order='create_date DESC').grouped('application_status')
+        refused_applicants = applications_by_status.get('refused', http.request.env['hr.applicant'])
+        if any(applicant for applicant in refused_applicants if refused_applicants_condition(applicant)):
             return {
-                'applied_same_job': False,
-                'applied_other_job': False,
-                'message': '',
+                'message':  _(
+                    'You applied for this position less than 6 months ago, and have been rejected.'
+                    ' Please don\'t reapply unless you have a good reason.'
+                )
             }
 
-        applications = Applicant.search(search_domain + [
-            ('job_id.website_id', 'in', [http.request.website.id, False]),
-            '|',
-                ('application_status', '=', 'ongoing'),
-                '&',
-                    ('application_status', '=', 'refused'),
-                    ('active', '=', False),
-        ], order='create_date desc')
+        if 'ongoing' not in applications_by_status:
+            return {'message': None}
 
-        refused_applications = applications.filtered(
-            lambda a: a.application_status == 'refused'
-                      and not a.active
-                      and a.job_id.id == int(job_id)
-                      and a.create_date >= (datetime.now() - timedelta(days=180)))
-        if refused_applications:
-            return self._get_refused_application_response(job_id)
-
-        ongoing_applications = applications.filtered(lambda a: a.application_status == 'ongoing')
-        if ongoing_applications:
-            return self._get_ongoing_application_response(ongoing_applications[0], job_id, value)
+        ongoing_application = applications_by_status.get('ongoing')[0]
+        if ongoing_application.job_id.id == int(job_id):
+            recruiter_contact = "" if not ongoing_application.user_id else _(
+                ' In case of issue, contact %(contact_infos)s',
+                contact_infos=", ".join(
+                    [value for value in itemgetter('name', 'email', 'phone')(ongoing_application.user_id) if value]
+                ))
+            return {
+                'message':  _(
+                    'An application already exists for %(value)s.'
+                    ' Duplicates might be rejected. %(recruiter_contact)s',
+                    value=value,
+                    recruiter_contact=recruiter_contact
+                )
+            }
 
         return {
-            'applied_same_job': False,
-            'applied_other_job': False,
-            'message': '',
+            'message':  _(
+                'You already applied to another position recently.'
+                ' You can continue if it\'s not a mistake.'
+            )
         }
 
     def _should_log_authenticate_message(self, record):
