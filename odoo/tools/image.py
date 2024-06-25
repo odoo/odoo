@@ -422,7 +422,10 @@ def image_fix_orientation(image):
     """
     getexif = getattr(image, 'getexif', None) or getattr(image, '_getexif', None)  # support PIL < 6.0
     if getexif:
-        exif = getexif()
+        try:
+            exif = getexif()
+        except SyntaxError:
+            raise UserError(_("This file could not be decoded as an image file. Please try with a different file."))
         if exif:
             orientation = exif.get(EXIF_TAG_ORIENTATION, 0)
             for method in EXIF_TAG_ORIENTATION_TO_TRANSPOSE_METHODS.get(orientation, []):
