@@ -137,6 +137,7 @@ export class DeletePlugin extends Plugin {
             this.correctTripleClick,
             this.expandRangeToIncludeNonEditables,
             this.includeEndOrStartBlock,
+            this.fullyIncludeLinks,
         ]);
 
         for (const { callback } of this.resources["handle_delete_range"]) {
@@ -767,7 +768,7 @@ export class DeletePlugin extends Plugin {
         const { startContainer, startOffset, commonAncestorContainer } = range;
         if (
             block === commonAncestorContainer ||
-            !this.isCursorAtStartOfBlock(block, startContainer, startOffset)
+            !this.isCursorAtStartOfElement(block, startContainer, startOffset)
         ) {
             return range;
         }
@@ -786,7 +787,7 @@ export class DeletePlugin extends Plugin {
         const { endContainer, endOffset, commonAncestorContainer } = range;
         if (
             block === commonAncestorContainer ||
-            !this.isCursorAtEndOfBlock(block, endContainer, endOffset)
+            !this.isCursorAtEndOfElement(block, endContainer, endOffset)
         ) {
             return range;
         }
@@ -820,6 +821,34 @@ export class DeletePlugin extends Plugin {
         // Only include start block if end block could not be included.
         if (range.endContainer === endContainer) {
             range = this.includeBlockStart(startBlock, range);
+        }
+        return range;
+    }
+
+    /**
+     * Fully select link if:
+     * - range spans content inside and outside the link AND
+     * - all of its content is selected.
+     *
+     * <a>[abc</a>d]ef -> [<a>abc</a>d]ef
+     * ab[c<a>def]</a> ->  ab[c<a>def</a>]
+     * But:
+     * <a>[abc]</a> -> <a>[abc]</a> (remains unchanged)
+     *
+     * @param {Range} range
+     * @returns {Range}
+     */
+    fullyIncludeLinks(range) {
+        const { startContainer, startOffset, endContainer, endOffset, commonAncestorContainer } =
+            range;
+        const [startLink, endLink] = [startContainer, endContainer].map((container) =>
+            this.getClosest(container, commonAncestorContainer, (node) => node.nodeName === "A")
+        );
+        if (startLink && this.isCursorAtStartOfElement(startLink, startContainer, startOffset)) {
+            range.setStartBefore(startLink);
+        }
+        if (endLink && this.isCursorAtEndOfElement(endLink, endContainer, endOffset)) {
+            range.setEndAfter(endLink);
         }
         return range;
     }
@@ -1082,8 +1111,8 @@ export class DeletePlugin extends Plugin {
     // @todo @phoenix: there are not enough tests for visibility of characters
     // (invisible whitespace, separate nodes, etc.)
     isVisibleChar(char, textNode, offset) {
-        // ZWS is invisible.
-        if (char === "\u200B") {
+        // ZWS and ZWNBSP are invisible.
+        if (["\u200B", "\uFEFF"].includes(char)) {
             return false;
         }
         if (!isWhitespace(char) || isInPre(textNode)) {
@@ -1247,14 +1276,14 @@ export class DeletePlugin extends Plugin {
         return null;
     }
 
-    isCursorAtStartOfBlock(block, cursorNode, cursorOffset) {
+    isCursorAtStartOfElement(element, cursorNode, cursorOffset) {
         const [node] = this.findPreviousPosition(cursorNode, cursorOffset);
-        return !block.contains(node);
+        return !element.contains(node);
     }
 
-    isCursorAtEndOfBlock(block, cursorNode, cursorOffset) {
+    isCursorAtEndOfElement(element, cursorNode, cursorOffset) {
         const [node] = this.findNextPosition(cursorNode, cursorOffset);
-        return !block.contains(node);
+        return !element.contains(node);
     }
 
     /**
