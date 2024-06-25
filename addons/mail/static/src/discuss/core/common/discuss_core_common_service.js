@@ -115,12 +115,12 @@ export class DiscussCoreCommon {
         });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
             if (message.thread) {
+                const { selfMember } = message.thread;
                 if (
-                    (!message.thread.selfMember?.seen_message_id ||
-                        message.id > message.thread.selfMember.seen_message_id.id) &&
-                    notifId > message.thread.message_unread_counter_bus_id
+                    message.id > selfMember?.seen_message_id.id &&
+                    notifId > selfMember.message_unread_counter_bus_id
                 ) {
-                    message.thread.message_unread_counter--;
+                    selfMember.message_unread_counter--;
                 }
             }
         });
@@ -182,8 +182,8 @@ export class DiscussCoreCommon {
                     channel.selfMember.syncUnread = true;
                     channel.scrollUnread = true;
                 }
-                if (notifId > channel.message_unread_counter_bus_id) {
-                    channel.message_unread_counter++;
+                if (notifId > channel.selfMember?.message_unread_counter_bus_id) {
+                    channel.selfMember.message_unread_counter++;
                 }
             }
         }

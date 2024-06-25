@@ -58,7 +58,7 @@ export class ChatWindowContainer extends Component {
     get unread() {
         let unreadCounter = 0;
         for (const chatWindow of this.store.hiddenChatWindows) {
-            unreadCounter += chatWindow.thread.message_unread_counter;
+            unreadCounter += chatWindow.thread.selfMember?.message_unread_counter ?? 0;
         }
         return unreadCounter;
     }
