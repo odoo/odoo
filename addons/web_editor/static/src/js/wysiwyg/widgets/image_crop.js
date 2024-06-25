@@ -205,6 +205,7 @@ export class ImageCrop extends Component {
         });
         delete this.media.dataset.resizeWidth;
         this.initialSrc = await applyModifications(this.media, {forceModification: true, mimetype: this.mimetype});
+        cropped = this.aspectRatio === "0/0" ? false : cropped;
         this.media.classList.toggle('o_we_image_cropped', cropped);
         this.$media.trigger('image_cropped');
         this._closeCropper();
