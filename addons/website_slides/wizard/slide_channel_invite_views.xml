@@ -33,7 +33,7 @@
                                 <field name="subject" placeholder="Subject..."/>
                             </group>
                             <field name="can_edit_body" invisible="1"/>
-                            <field name="body" class="oe-bordered-editor" widget="html_legacy" options="{'style-inline': true}" invisible="not send_email" readonly="not can_edit_body" force_save="1"/>
+                            <field name="body" class="oe-bordered-editor" widget="html_mail" invisible="not send_email" readonly="not can_edit_body" force_save="1"/>
                             <group invisible="not send_email">
                                 <group>
                                     <field name="attachment_ids" widget="many2many_binary"/>

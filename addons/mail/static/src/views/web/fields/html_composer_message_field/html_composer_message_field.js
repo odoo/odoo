@@ -1,8 +1,7 @@
-import { htmlField, HtmlField } from "@html_editor/fields/html_field";
 import { registry } from "@web/core/registry";
+import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
 
-// @todo @phoenix should extends HtmlMailField
-export class HtmlComposerMessageField extends HtmlField {
+export class HtmlComposerMessageField extends HtmlMailField {
     getConfig() {
         const config = super.getConfig(...arguments);
         config.onAttachmentChange = (attachment) => {
@@ -22,9 +21,8 @@ export class HtmlComposerMessageField extends HtmlField {
 }
 
 export const htmlComposerMessageField = {
-    ...htmlField,
+    ...htmlMailField,
     component: HtmlComposerMessageField,
-    additionalClasses: ["o_field_html"],
 };
 
 registry.category("fields").add("html_composer_message", htmlComposerMessageField);

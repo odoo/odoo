@@ -95,6 +95,11 @@ export class HtmlField extends Component {
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
     }
 
+    async getEditorContent() {
+        await this.editor.shared.savePendingImages();
+        return this.editor.getElContent();
+    }
+
     async commitChanges({ urgent } = {}) {
         if (this.isDirty) {
             if (this.state.showCodeView) {
@@ -102,13 +107,13 @@ export class HtmlField extends Component {
                 return;
             }
 
-            const savePendingImagesPromise = this.editor.shared.savePendingImages();
             if (urgent) {
                 await this.updateValue(this.editor.getContent());
             }
-            const isDirty = await savePendingImagesPromise;
-            if (isDirty || !urgent) {
-                await this.updateValue(this.editor.getContent());
+            const el = await this.getEditorContent();
+            const content = el.innerHTML;
+            if (!urgent || (urgent && this.lastValue !== content)) {
+                await this.updateValue(content);
             }
         }
     }

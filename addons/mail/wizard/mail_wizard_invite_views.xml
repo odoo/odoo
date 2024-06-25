@@ -17,8 +17,7 @@
                                 context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                         <field name="notify"/>
                         <field name="message" invisible="not notify"
-                               widget="html_legacy"
-                               options="{'style-inline': true}"
+                               widget="html_mail"
                                class="oe-bordered-editor"/>
                     </group>
                     <footer>
