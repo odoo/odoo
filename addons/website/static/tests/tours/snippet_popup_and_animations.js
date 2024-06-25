@@ -139,11 +139,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     wTourUtils.clickOnElement("Image of the 'Columns' snippet with the overlay effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']"),
     wTourUtils.changeOption("WebsiteAnimate", 'we-toggler:contains("Overlay")'),
-    wTourUtils.changeOption("WebsiteAnimate", 'we-button[data-select-data-attribute="outline"]'),
+    wTourUtils.changeOption("WebsiteAnimate", 'we-button[data-select-image-option="outline"]'),
     {
         content: "Check that the outline effect has been applied on the image",
         trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
-        extra_trigger: ".snippet-option-WebsiteAnimate we-select[data-attribute-name='hoverEffect'] we-toggler:contains('Outline')",
+        extra_trigger: ".snippet-option-WebsiteAnimate we-select[data-option-name='hoverEffect'] we-toggler:contains('Outline')",
     },
     ...wTourUtils.clickOnSave(),
     {
@@ -163,7 +163,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     wTourUtils.changeOption("ImageTools", 'we-button:contains("Blur")'),
     {
         content: "Check that the Blur filter has been applied on the image",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-gl-filter='blur']",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll img.o_modified_image_to_save",
         extra_trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
     },
     {
@@ -173,7 +173,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Check that the Blur filter has been removed from the image",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img:not([data-gl-filter='blur'])",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll img:not(.o_modified_image_to_save)",
     },
     ...wTourUtils.clickOnSave(),
     {

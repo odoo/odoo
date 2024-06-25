@@ -792,7 +792,7 @@ export async function toInline($editable, options) {
 }
 /**
  * Take all elements with a `background-image` style and convert them to `vml`
- * for Outlook. Also remove data-bg-src to avoid Gmail cutting the html.
+ * for Outlook.
  *
  * @param {Element} editable
  */
@@ -807,12 +807,6 @@ function flattenBackgroundImages(editable) {
             backgroundImage.after(_createMso(vml));
             // Hide the original element for Outlook.
             backgroundImage.classList.add('mso-hide');
-        }
-        if (backgroundImage.hasAttribute('data-bg-src')) {
-            // Remove data-bg-src as it is not needed for email rendering and
-            // can cause Gmail to cut the email prematurely if the attributes
-            // contain an image in the form of a long base64 string.
-            backgroundImage.removeAttribute('data-bg-src');
         }
     }
 }

@@ -23,7 +23,7 @@ const preventRaceConditionSteps = [{
 const selectSignImageStep = {
     content: "Click on image 14",
     extra_trigger: ".o_we_customize_panel:not(:has(.snippet-option-GalleryElement))",
-    trigger: ":iframe .s_image_gallery img[data-original-src*='library_image_14']",
+    trigger: ":iframe .s_image_gallery img[src*='library_image_14']",
     run: "click",
 };
 // Without reselecting the image, the tour manages to click on the
@@ -73,7 +73,7 @@ selectSignImageStep,
     run: "click",
 }, {
     content: "Check if sign is in second column",
-    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(2):has(a[href='/contactus'] img[data-index='1'][data-original-src*='library_image_14'])",
+    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(2):has(a[href='/contactus'] img[data-index='1'][src*='library_image_14'])",
 },
 ...reselectSignImageSteps,
 {
@@ -82,7 +82,7 @@ selectSignImageStep,
     run: "click",
 }, {
     content: "Check if sign is in first column",
-    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][data-original-src*='library_image_14'])",
+    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][src*='library_image_14'])",
 },
 ...reselectSignImageSteps,
 {
@@ -91,7 +91,7 @@ selectSignImageStep,
     run: "click",
 }, {
     content: "Check if sign is in third column",
-    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][data-original-src*='library_image_14'])",
+    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][src*='library_image_14'])",
 },
 ...reselectSignImageSteps,
 {
@@ -100,7 +100,7 @@ selectSignImageStep,
     run: "click",
 }, {
     content: "Check if sign is in first column",
-    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][data-original-src*='library_image_14'])",
+    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][src*='library_image_14'])",
 },
 ...reselectSignImageSteps,
 {
@@ -109,5 +109,6 @@ selectSignImageStep,
     run: "click",
 }, {
     content: "Check layout",
-    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][data-original-src*='library_image_14'])",
+    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][src*='library_image_14'])",
+
 }]);

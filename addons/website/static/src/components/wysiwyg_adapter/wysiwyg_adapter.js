@@ -1091,7 +1091,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         return {
             resModel: $editable.data('oe-model'),
             resId: $editable.data('oe-id'),
-            field: $editable.data('oe-field'),
+            resField: $editable.data('oe-field'),
             type: $editable.data('oe-type'),
         };
     }

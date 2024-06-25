@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { registry } from "@web/core/registry";
 import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
 import {
     normalizeCSSColor,
@@ -86,12 +87,17 @@ const DEFAULT_PALETTE = {
     '5': '#383E45',
 };
 /**
- * Set of all the data attributes relative to the background images.
+ * Set of the image options related to the shape.
  */
-const BACKGROUND_IMAGE_ATTRIBUTES = new Set([
-    "originalId", "originalSrc", "mimetype", "resizeWidth", "glFilter", "quality", "bgSrc",
-    "filterOptions",
-    "mimetypeBeforeConversion",
+const IMAGE_SHAPE_OPTIONS = new Set([
+    "shape", "shapeAnimationSpeed", "shapeColors", "shapeFlip", "shapeRotate", "fileName",
+    "mimetypeBeforeShape",
+]);
+/**
+ * Set of the image options to keep on the DOM.
+ */
+const DATASET_IMAGE_OPTIONS = new Set([
+    ...IMAGE_SHAPE_OPTIONS.keys(), "hoverEffect",
 ]);
 
 /**
@@ -423,22 +429,15 @@ function _getColorClass(el, colorNames, prefix) {
     return el.classList.value.split(' ').filter(cl => prefixedColorNames.includes(cl)).join(' ');
 }
 /**
- * Add one or more new attributes related to background images in the
- * BACKGROUND_IMAGE_ATTRIBUTES set.
+ * Checks if an option is in the DATASET_IMAGE_OPTIONS set.
  *
- * @param {...string} newAttributes The new attributes to add in the
- * BACKGROUND_IMAGE_ATTRIBUTES set.
+ * @param {string} option The option that has to be checked.
  */
-function _addBackgroundImageAttributes(...newAttributes) {
-    BACKGROUND_IMAGE_ATTRIBUTES.add(...newAttributes);
+function _isDatasetImageOption(option) {
+    return DATASET_IMAGE_OPTIONS.has(option);
 }
-/**
- * Check if an attribute is in the BACKGROUND_IMAGE_ATTRIBUTES set.
- *
- * @param {string} attribute The attribute that has to be checked.
- */
-function _isBackgroundImageAttribute(attribute) {
-    return BACKGROUND_IMAGE_ATTRIBUTES.has(attribute);
+function _isImageShapeOption(option) {
+    return IMAGE_SHAPE_OPTIONS.has(option);
 }
 /**
  * Checks if an element supposedly marked with the o_editable_media class should
@@ -487,6 +486,89 @@ function _isMobileView(targetEl) {
 function _getLinkLabel(linkEl) {
     return linkEl.textContent.replaceAll("\u200B", "").replaceAll("\uFEFF", "");
 }
+/**
+ * Updates the "image.data" registry thanks to imgSrc (key) and a copy of
+ * imageData (value).
+ *
+ * @param {string} imgSrc - the source of the image whose data must be updated
+ * on the "image.data" registry.
+ * @param {Object} imageData - the data whose copy must be updated on the
+ * registry.
+ */
+function _updateImageDataRegistry(imgSrc, imageData) {
+    const imageDataCopy = Object.assign({}, imageData);
+    registry.category("image.data").add(imgSrc, imageDataCopy, { force: true });
+}
+/**
+ * Returns a proxy of the data associated to imgEl. If a data present in
+ * 'DATASET_IMAGE_OPTIONS' is updated on the proxy, it updates the dataset of
+ * the image accordingly.
+ *
+ * @param {HTMLImageElement} imgEl
+ * @param {Object} preImageData - default data.
+ * @returns {Object} A proxy of the data associated to imgEl.
+ */
+function _getImageData(imgEl, preImageData = {}) {
+    const imgSrc = imgEl.getAttribute("src");
+    const imageData = registry.category("image.data").get(imgSrc, {});
+
+    const handlerImageData = {
+        set(obj, optionName, optionValue) {
+            if (_isDatasetImageOption(optionName)) {
+                // If a "data-attribute option" is modified, also modify the
+                // option in the dataset.
+                imgEl.dataset[optionName] = optionValue;
+            }
+            return Reflect.set(...arguments);
+        },
+        deleteProperty(imageData, optionName) {
+            if (_isDatasetImageOption(optionName)) {
+                // If a "data-attribute option" is removed, remove it also from
+                // the dataset.
+                delete imgEl.dataset[optionName];
+            }
+            return Reflect.deleteProperty(...arguments);
+        },
+    };
+    return new Proxy(Object.assign({}, preImageData, imageData), handlerImageData);
+}
+/**
+ * Converts a snake case string to camel case.
+ *
+ * @param {string} snakeString - the snake case string to convert to camel case.
+ * @returns {string} The camel case version of snakeString.
+ */
+function _convertSnakeToCamelString(snakeString) {
+    return snakeString.replace(/(_[a-z])/g, (group) => group.replace("_", "").toUpperCase());
+}
+/**
+ * Converts a camel case string to snake case.
+ *
+ * @param {string} camelString - the camel case string to convert to snake case.
+ * @returns {string} The snake case version of camelString.
+ */
+function _convertCamelToSnakeString(camelString) {
+    return camelString.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
+}
+/**
+ * Converts the keys of an object from snake to camel cases if snakeToCamel is
+ * set to 'true' or from camel to snake cases otherwise.
+ *
+ * @param {Object} objectToConvert - the object whose keys have to be converted.
+ * @param {boolean} snakeToCamel - true if the keys of objectToConvert are snake
+ * cases and they have to be converted to camel cases and false if they are
+ * camel cases and they have to be converted to snake cases.
+ * @returns {Object} A copy of objectToConvert whose keys have been converted.
+ */
+function _convertSnakeToCamelOrCamelToSnakeObject(objectToConvert, snakeToCamel) {
+    const newDict = {};
+    const objectToConvertKeys = Object.keys(objectToConvert);
+    objectToConvertKeys.forEach((objectToConvertKey) => {
+        const newKey = snakeToCamel ? _convertSnakeToCamelString(objectToConvertKey) : _convertCamelToSnakeString(objectToConvertKey);
+        newDict[newKey] = objectToConvert[objectToConvertKey];
+    });
+    return newDict;
+}
 
 export default {
     COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
@@ -511,9 +593,12 @@ export default {
     getColorClass: _getColorClass,
     setEditableWindow: _setEditableWindow,
     setEditableDocument: _setEditableDocument,
-    addBackgroundImageAttributes: _addBackgroundImageAttributes,
-    isBackgroundImageAttribute: _isBackgroundImageAttribute,
     shouldEditableMediaBeEditable: _shouldEditableMediaBeEditable,
     isMobileView: _isMobileView,
     getLinkLabel: _getLinkLabel,
+    isDatasetImageOption: _isDatasetImageOption,
+    isImageShapeOption: _isImageShapeOption,
+    getImageData: _getImageData,
+    updateImageDataRegistry: _updateImageDataRegistry,
+    convertSnakeToCamelOrCamelToSnakeObject: _convertSnakeToCamelOrCamelToSnakeObject,
 };

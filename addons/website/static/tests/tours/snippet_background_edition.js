@@ -119,7 +119,7 @@ wTourUtils.clickOnSnippet(snippets[0]),
 ...wTourUtils.clickOnSave(),
 {
     content: "Check that the image is set",
-    trigger: `:iframe section.${snippets[0].id} img[data-original-id]`,
+    trigger: `:iframe section.${snippets[0].id} img`,
 },
 ...wTourUtils.clickOnEditAndWaitEditMode(),
 wTourUtils.clickOnSnippet(snippets[0]),

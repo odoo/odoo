@@ -1,0 +1,87 @@
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
+
+
+class ImageData(models.Model):
+    _name = 'web_editor.image.data'
+    _description = 'Image Data'
+
+    res_model = fields.Char('Resource Model', required=True, readonly=True)
+    res_field = fields.Char('Resource Field', required=True, readonly=True)
+    res_id = fields.Many2oneReference('Resource ID', model_field='res_model', required=True, readonly=True)
+
+    original_id = fields.Many2one('ir.attachment', string='Original (unoptimized, unresized) attachment')
+    original_src = fields.Char(compute='_compute_original_src')
+    image_checksum = fields.Char("Checksum/SHA1", size=40, readonly=True)
+    mimetype = fields.Char(help='Current mimetype of the image')
+    mimetype_before_shape = fields.Char(help='Mimetype of the image before a shape has been applied')
+    mimetype_before_format_conversion = fields.Char(help='Mimetype of the image before the webp conversion')
+    resize_width = fields.Char(help='The width of the image')
+    gl_filter = fields.Char(help='The name of the filter applied on the image')
+    quality = fields.Char(default='75', help='The quality of the image')
+    filter_options = fields.Char(help='The values of the custom filter applied on the image')
+    # Shape options
+    shape = fields.Char(help='The name of the shape applied on the image')
+    shape_animation_speed = fields.Char(help='The speed of the shape applied on the image')
+    shape_colors = fields.Char(help='The colors of the shape applied on the image')
+    shape_flip = fields.Char(help='The directions in which the shape applied on the image have been flipped')
+    shape_rotate = fields.Char(help='The tilt of the shape applied on the image')
+    file_name = fields.Char(help='Name useful to recover the shape of the image')
+    # Crop options
+    is_cropped = fields.Boolean(default=False, help='Boolean indicating if the image is cropped')
+    x = fields.Char(help='')
+    y = fields.Char(help='')
+    width = fields.Char(help='Width of the cropped image')
+    height = fields.Char(help='Height of the cropped image')
+    rotate = fields.Char(help='Rotation of the cropped image')
+    scale_x = fields.Char(help='')
+    scale_y = fields.Char(help='')
+    aspect_ratio = fields.Char(help='Ratio of the width of an image over its height')
+    # HoverEffect options
+    hover_effect = fields.Char(help='Name of the hover effect')
+    hover_effect_color = fields.Char(help='Color of the hover effect')
+    hover_effect_stroke_width = fields.Char(help='Stroke width of the hover effect')
+    hover_effect_intensity = fields.Char(help='Intensity of the hover effect')
+
+    @api.constrains('res_model', 'res_field', 'res_id')
+    def check_unique_record(self):
+        for record in self:
+            if self.search_count([('res_model', '=', record.res_model), ('res_field', '=', record.res_field), ('res_id', '=', record.res_id)]) > 1:
+                raise ValidationError(_('There can be at most one image data linked to the field of a record'))
+
+    def _compute_original_src(self):
+        for image_data in self:
+            image_data.original_src = image_data.original_id.image_src
+
+    def _get_image_data(self):
+        """ Returns the data related to the image. """
+        image_data_names = self._get_image_data_names()
+        image_data_dict = {image_data_name: self[image_data_name] for image_data_name in image_data_names if self[image_data_name]}
+        image_data_dict['original_id'] = self['original_id'].id
+        return image_data_dict
+
+    def _get_image_data_names(self):
+        """ Returns a list of the names of the data stored in the record. """
+        return self._get_removable_option_names() + [
+            'original_src', 'mimetype', 'mimetype_before_format_conversion', 'quality', 'filter_options',
+        ]
+
+    def _get_removable_option_names(sef):
+        """ Returns a list of the names of the image options that can be removed
+        from the image. """
+        return [
+            'mimetype_before_shape', 'resize_width', 'gl_filter', 'shape', 'shape_animation_speed',
+            'shape_colors', 'shape_flip', 'shape_rotate', 'file_name', 'is_cropped', 'x', 'y',
+            'width', 'height', 'rotate', 'scale_x', 'scale_y', 'aspect_ratio', 'hover_effect',
+            'hover_effect_color', 'hover_effect_stroke_width', 'hover_effect_intensity',
+        ]
+
+    def _update_image_data(self, vals):
+        """ Updates the data related to the image.
+        :param dict vals: the new data of the image.
+        """
+        for option_to_remove in self._get_removable_option_names():
+            # Remove some options before updating the record as they could have
+            # been removed.
+            self[option_to_remove] = ''
+        return self.write(vals)

@@ -74,7 +74,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
     run: "click",
 }, {
     content: 'eLearning: is the Corgi set ?',
-    trigger: ':iframe img.o_wslides_course_pict[data-original-src$="GoldWinnerPembrookeWelshCorgi.jpg"]',
+    trigger: ':iframe img.o_wslides_course_pict.o_modified_image_to_save',
     run: "click",
 }, {
     content: 'eLearning: save course edition',
