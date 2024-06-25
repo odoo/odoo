@@ -220,11 +220,12 @@ class TestDigest(TestDigestCommon):
         digest = self.env['digest.digest'].browse(self.digest_1.ids)
         digest._action_subscribe_users(self.user_employee)
 
-        for logs, (periodicity, run_date), (exp_periodicity, exp_run_date) in zip(
+        for logs, (periodicity, run_date), (exp_periodicity, exp_run_date, msg) in zip(
             [
                 # daily
                 [(self.user_employee, self.reference_datetime)],
-                [(self.user_employee, self.reference_datetime - relativedelta(days=4))],  # old logs -> tone down
+                [(self.user_employee, self.reference_datetime - relativedelta(days=1, hours=23))],  # two days logs -> do not tone down
+                [(self.user_employee, self.reference_datetime - relativedelta(days=2, hours=1))],  # > two days logs -> tone down
                 [],  # no logs -> tone down
                 # weekly
                 [(self.user_employee, self.reference_datetime - relativedelta(days=6))],
@@ -244,6 +245,7 @@ class TestDigest(TestDigestCommon):
                 ('daily', self.reference_datetime.date()),
                 ('daily', self.reference_datetime.date()),
                 ('daily', self.reference_datetime.date()),
+                ('daily', self.reference_datetime.date()),
                 # weekly
                 ('weekly', self.reference_datetime.date()),
                 ('weekly', self.reference_datetime.date()),
@@ -255,27 +257,28 @@ class TestDigest(TestDigestCommon):
                 # quarterly
                 ('quarterly', self.reference_datetime.date()),
                 ('quarterly', self.reference_datetime.date()),
-                # ('quarterly', self.reference_datetime.date()),
+                ('quarterly', self.reference_datetime.date()),
             ],
             [
-                ('daily', self.reference_datetime.date() + relativedelta(days=1)),  # just push date
-                ('weekly', self.reference_datetime.date() + relativedelta(weeks=1)),  # tone down on daily
-                ('weekly', self.reference_datetime.date() + relativedelta(weeks=1)),  # tone down on daily
+                ('daily', self.reference_datetime.date() + relativedelta(days=1), 'Daily ok'),  # just push date
+                ('daily', self.reference_datetime.date() + relativedelta(days=1), 'Daily ok, 2 days - 1 hour'),  # just push date
+                ('weekly', self.reference_datetime.date() + relativedelta(weeks=1), 'Daily old logs (2 days + 1 hour)'),  # tone down on daily
+                ('weekly', self.reference_datetime.date() + relativedelta(weeks=1), 'Daily no logs'),  # tone down on daily
                 # weekly
-                ('weekly', self.reference_datetime.date() + relativedelta(weeks=1)),  # just push date
-                ('monthly', self.reference_datetime.date() + relativedelta(months=1)),  # tone down on weekly
-                ('monthly', self.reference_datetime.date() + relativedelta(months=1)),  # tone down on weekly
+                ('weekly', self.reference_datetime.date() + relativedelta(weeks=1), 'Weekly ok'),  # just push date
+                ('monthly', self.reference_datetime.date() + relativedelta(months=1), 'Weekly old logs'),  # tone down on weekly
+                ('monthly', self.reference_datetime.date() + relativedelta(months=1), 'Weekly no logs'),  # tone down on weekly
                 # monthly
-                ('monthly', self.reference_datetime.date() + relativedelta(months=1)),  # just push date
-                ('quarterly', self.reference_datetime.date() + relativedelta(months=3)),  # tone down on monthly
-                ('quarterly', self.reference_datetime.date() + relativedelta(months=3)),  # tone down on monthly
+                ('monthly', self.reference_datetime.date() + relativedelta(months=1), 'Monthly ok'),  # just push date
+                ('quarterly', self.reference_datetime.date() + relativedelta(months=3), 'Monthly old logs'),  # tone down on monthly
+                ('quarterly', self.reference_datetime.date() + relativedelta(months=3), 'Monthly no logs'),  # tone down on monthly
                 # quarterly
-                ('quarterly', self.reference_datetime.date() + relativedelta(months=3)),  # just push date
-                ('quarterly', self.reference_datetime.date() + relativedelta(months=3)),  # just push date
-                ('quarterly', self.reference_datetime.date() + relativedelta(months=3)),  # just push date
+                ('quarterly', self.reference_datetime.date() + relativedelta(months=3), 'Quaterly ok'),  # just push date
+                ('quarterly', self.reference_datetime.date() + relativedelta(months=3), 'Quaterly ok'),  # just push date
+                ('quarterly', self.reference_datetime.date() + relativedelta(months=3), 'Quaterly ok'),  # just push date
             ],
         ):
-            with self.subTest(logs=logs, periodicity=periodicity, run_date=run_date):
+            with self.subTest(logs=logs, msg=msg, periodicity=periodicity, run_date=run_date):
                 digest.write({
                     'next_run_date': run_date,
                     'periodicity': periodicity,
@@ -283,7 +286,7 @@ class TestDigest(TestDigestCommon):
                 for log_user, log_dt in logs:
                     self._setup_logs_for_users(log_user, log_dt)
 
-                with self.mock_datetime_and_now(run_date), \
+                with self.mock_datetime_and_now(self.reference_datetime), \
                      self.mock_mail_gateway():
                     digest.action_send()
 
