@@ -18,12 +18,12 @@
                     </div>
                     <field name="currency_id" invisible="1"/>
                     <label for="list_base_price" string="Delivery Cost"/>
-                    <div>
-                        <field name="list_base_price" widget="monetary" class="oe_inline"/>
+                    <div class="row">
+                        <div class="col-2"><field name="list_base_price" widget="monetary" class="oe_inline"/></div>
                         +
-                        <field name="list_price" widget="monetary" class="oe_inline"/>
+                        <div class="col-2"><field name="list_price" widget="monetary" class="oe_inline"/></div>
                         *
-                        <field name="variable_factor" class="oe_inline"/>
+                        <div class="col-2"><field name="variable_factor" class="oe_inline"/></div>
                     </div>
                 </group>
             </form>

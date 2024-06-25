@@ -29,7 +29,7 @@ class MrpUnbuild(models.Model):
         compute='_compute_product_qty', store=True, precompute=True, readonly=False,
         required=True)
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Unit of Measure',
+        'uom.uom', 'Unit',
         compute='_compute_product_uom_id', store=True, readonly=False, precompute=True,
         required=True)
     bom_id = fields.Many2one(
