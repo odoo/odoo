@@ -99,13 +99,13 @@ export class TranslatorInfoDialog extends Component {
     }
 }
 
-const savableSelector = '[data-oe-translation-initial-sha], ' +
+const savableSelector = '[data-oe-translation-source-sha], ' +
     '[data-oe-model][data-oe-id][data-oe-field], ' +
-    '[placeholder*="data-oe-translation-initial-sha="], ' +
-    '[title*="data-oe-translation-initial-sha="], ' +
-    '[value*="data-oe-translation-initial-sha="], ' +
-    'textarea:contains(data-oe-translation-initial-sha), ' +
-    '[alt*="data-oe-translation-initial-sha="]';
+    '[placeholder*="data-oe-translation-source-sha="], ' +
+    '[title*="data-oe-translation-source-sha="], ' +
+    '[value*="data-oe-translation-source-sha="], ' +
+    'textarea:contains(data-oe-translation-source-sha), ' +
+    '[alt*="data-oe-translation-source-sha="]';
 
 export class WebsiteTranslator extends WebsiteEditorComponent {
     setup() {
@@ -169,10 +169,10 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         const self = this;
         var attrs = ['placeholder', 'title', 'alt', 'value'];
         const $editable = this.getEditableArea();
-        const translationRegex = /<span [^>]*data-oe-translation-initial-sha="([^"]+)"[^>]*>(.*)<\/span>/;
+        const translationRegex = /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>(.*)<\/span>/;
         let $edited = $();
         attrs.forEach((attr) => {
-            const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-initial-sha="]').filter(':empty, input, select, textarea, img');
+            const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-source-sha="]').filter(':empty, input, select, textarea, img');
             attrEdit.each(function () {
                 var $node = $(this);
                 var translation = $node.data('translation') || {};
@@ -195,7 +195,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             });
             $edited = $edited.add(attrEdit);
         });
-        const textEdit = $editable.filter('textarea:contains(data-oe-translation-initial-sha)');
+        const textEdit = $editable.filter('textarea:contains(data-oe-translation-source-sha)');
         textEdit.each(function () {
             var $node = $(this);
             var translation = $node.data('translation') || {};
@@ -229,7 +229,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         // Hack: we add a temporary element to handle option's text
         // translations from the linked <select/>. The final values are
         // copied to the original element right before save.
-        $editable.filter('[data-oe-translation-initial-sha] > select').each((index, select) => {
+        $editable.filter('[data-oe-translation-source-sha] > select').each((index, select) => {
             const selectTranslationEl = document.createElement('div');
             selectTranslationEl.className = 'o_translation_select';
             const optionNames = [...select.options].map(option => option.text);
@@ -294,7 +294,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             if (translationEl.closest('.s_table_of_content_navbar_wrap')) {
                 // Make sure the same translation ids are used.
                 const href = translationEl.closest('a').getAttribute('href');
-                const headerEl = translationEl.closest('.s_table_of_content').querySelector(`${href} [data-oe-translation-initial-sha]`);
+                const headerEl = translationEl.closest('.s_table_of_content').querySelector(`${href} [data-oe-translation-source-sha]`);
                 if (headerEl) {
                     if (translationEl.dataset.oeTranslationInitialSha !== headerEl.dataset.oeTranslationInitialSha) {
                         // Use the same identifier for the generated navigation

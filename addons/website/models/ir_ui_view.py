@@ -511,8 +511,8 @@ class View(models.Model):
             res['website_id'] = website_id
         return res
 
-    def _update_field_translations(self, fname, translations, digest=None):
-        return super(View, self.with_context(no_cow=True))._update_field_translations(fname, translations, digest)
+    def _update_field_translations(self, fname, translations, digest=None, source_lang=None):
+        return super(View, self.with_context(no_cow=True))._update_field_translations(fname, translations, digest=digest, source_lang=source_lang)
 
     def _get_base_lang(self):
         """ Returns the default language of the website as the base language if the record is bound to it """

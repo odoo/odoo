@@ -106,8 +106,8 @@ class MailRenderMixin(models.AbstractModel):
             self._check_access_right_dynamic_template()
         return True
 
-    def _update_field_translations(self, fname, translations, digest=None):
-        res = super()._update_field_translations(fname, translations, digest)
+    def _update_field_translations(self, fname, translations, digest=None, source_lang=None):
+        res = super()._update_field_translations(fname, translations, digest=digest, source_lang=source_lang)
         if self._unrestricted_rendering:
             for lang in translations:
                 # If the rendering is unrestricted (e.g. mail.template),

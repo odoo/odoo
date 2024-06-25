@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // on JS until the editor's code sets the right values on textareas.
     if (editTranslations) {
         [...document.querySelectorAll('textarea')].map(textarea => {
-            if (textarea.value.indexOf('data-oe-translation-initial-sha') !== -1) {
+            if (textarea.value.indexOf('data-oe-translation-source-sha') !== -1) {
                 textarea.classList.add('o_text_content_invisible');
             }
         });
