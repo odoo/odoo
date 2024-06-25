@@ -22,7 +22,7 @@ class SaleOrderLine(models.Model):
     #=== BUSINESS METHODS ===#
 
     def get_description_following_lines(self):
-        return self.name.splitlines()[1:]
+        return self.name.splitlines()
 
     def _get_pricelist_price_before_discount(self):
         """On ecommerce orders, the base price must always be the sales price."""

@@ -86,6 +86,15 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         }, () => [Array.isArray(this.value) && this.value[0]]);
     }
 
+    get displayName() {
+        if (this.props.name == 'product_template_id') {
+            const product_id_data = this.props.record.data.product_id;
+            if (product_id_data && product_id_data[1]) {
+                return product_id_data[1].split("\n")[0];
+            }
+        }
+        return super.displayName
+    }
     get isProductClickable() {
         // product form should be accessible if the widget field is readonly
         // or if the line cannot be edited (e.g. locked SO)
