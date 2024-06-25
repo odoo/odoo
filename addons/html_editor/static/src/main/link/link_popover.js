@@ -4,6 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { cleanZWChars, deduceURLfromText } from "./utils";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { rpc } from "@web/core/network/rpc";
 
 export class LinkPopover extends Component {
     static template = "html_editor.linkPopover";
@@ -43,11 +44,13 @@ export class LinkPopover extends Component {
             editing: this.props.linkEl.href ? false : true,
             url: this.props.linkEl.href || "",
             label: cleanZWChars(this.props.linkEl.textContent),
-            previewImg: false,
-            showFullUrl: false,
+            previewIcon: false,
             faIcon: "fa-globe",
             urlTitle: "",
+            urlDescription: "",
+            linkPreviewName: "",
             imgSrc: "",
+            iconSrc: "",
             classes: this.props.linkEl.className || "",
             type:
                 this.props.linkEl.className.match(/btn(-[a-z0-9_-]*)(primary|secondary)/)?.pop() ||
@@ -58,6 +61,7 @@ export class LinkPopover extends Component {
         this.notificationService = useService("notification");
 
         this.keepLastPromise = new KeepLast();
+        this.http = useService("http");
 
         this.editingWrapper = useRef("editing-wrapper");
 
@@ -115,6 +119,10 @@ export class LinkPopover extends Component {
             this.onClickApply();
         }
     }
+    onClickReplaceTitle() {
+        this.state.label = this.state.urlTitle;
+        this.onClickApply();
+    }
 
     /**
      * @private
@@ -148,14 +156,15 @@ export class LinkPopover extends Component {
      */
     resetPreview() {
         this.state.faIcon = "fa-globe";
-        this.state.previewImg = false;
+        this.state.previewIcon = false;
         this.state.urlTitle = this.state.url || _t("No URL specified");
-        this.state.showFullUrl = false;
+        this.state.urlDescription = "";
+        this.state.linkPreviewName = "";
     }
     async loadAsyncLinkPreview() {
         let url;
         if (this.state.url === "") {
-            this.resetPreview("");
+            this.resetPreview();
             this.state.faIcon = "fa-question-circle-o";
             return;
         }
@@ -170,7 +179,7 @@ export class LinkPopover extends Component {
             });
             return;
         }
-        this.resetPreview(url);
+        this.resetPreview();
         const protocol = url.protocol;
         if (!protocol.startsWith("http")) {
             const faMap = { "mailto:": "fa-envelope-o", "tel:": "fa-phone" };
@@ -183,34 +192,80 @@ export class LinkPopover extends Component {
             // most of the time raise a CORS error. To avoid that error, we
             // would need to fetch the page through the server (s2s), involving
             // enduser fetching problematic pages such as illicit content.
-            this.state.imgSrc = `https://www.google.com/s2/favicons?sz=16&domain=${encodeURIComponent(
+            this.state.iconSrc = `https://www.google.com/s2/favicons?sz=16&domain=${encodeURIComponent(
                 url
             )}`;
-            this.state.previewImg = true;
+            this.state.previewIcon = true;
+
+            let metadata = {};
+            // Fetch the metadata
+            try {
+                metadata = await rpc("/html_editor/link_preview_external", {
+                    preview_url: url,
+                });
+            } catch {
+                // when it's not possible to fetch the metadata we don't want to block the ui
+                return;
+            }
+
+            this.state.urlTitle = metadata?.og_title || this.state.url;
+            this.state.urlDescription = metadata?.og_description || "";
+            this.state.imgSrc = metadata?.og_image || "";
+            if (metadata?.og_image && this.state.label && this.state.urlTitle === this.state.url) {
+                this.state.urlTitle = this.state.label;
+            }
         } else {
             await this.keepLastPromise
-                .add(fetch(this.state.href))
+                .add(fetch(this.state.url))
                 .then((response) => response.text())
-                .then((content) => {
-                    const parser = new window.DOMParser();
-                    const doc = parser.parseFromString(content, "text/html");
+                .then(async (content) => {
+                    const html_parser = new window.DOMParser();
+                    const doc = html_parser.parseFromString(content, "text/html");
 
                     // Get
                     const favicon = doc.querySelector("link[rel~='icon']");
                     const ogTitle = doc.querySelector("[property='og:title']");
                     const title = doc.querySelector("title");
+                    // Get the metadata internally
+                    const internalUrlData = await rpc("/html_editor/link_preview_internal", {
+                        preview_url: url.pathname,
+                    });
 
                     // Set
+                    // for record missing errors, we push a warning that the url is likely invalid
+                    // for other errors, we log them to not block the ui
                     if (favicon) {
-                        this.state.imgSrc = favicon.href;
-                        this.state.previewImg = true;
+                        this.state.iconSrc = favicon.href;
+                        this.state.previewIcon = true;
                     }
-                    if (ogTitle || title) {
+                    if (internalUrlData.error_msg) {
+                        this.notificationService.add(internalUrlData.error_msg, {
+                            type: "warning",
+                        });
+                    } else if (internalUrlData.other_error_msg) {
+                        console.error(
+                            "Internal meta data retrieve error for link preview: " +
+                                internalUrlData.other_error_msg
+                        );
+                    } else {
+                        this.state.linkPreviewName =
+                            internalUrlData.link_preview_name ||
+                            internalUrlData.display_name ||
+                            internalUrlData.name;
+                        this.state.urlDescription = internalUrlData.description
+                            ? html_parser.parseFromString(internalUrlData.description, "text/html")
+                                  .body.textContent
+                            : "";
+                        this.state.urlTitle = this.state.linkPreviewName
+                            ? this.state.linkPreviewName
+                            : this.state.url;
+                    }
+
+                    if ((ogTitle || title) && !this.state.linkPreviewName) {
                         this.state.urlTitle = ogTitle
                             ? ogTitle.getAttribute("content")
                             : title.text.trim();
                     }
-                    this.state.showFullUrl = true;
                 })
                 .catch((error) => {
                     // HTTP error codes should not prevent to edit the links, so we
