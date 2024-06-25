@@ -6,387 +6,13 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, test } from "@odoo/hoot";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
-
-test("rendering when just one has received the message", async () => {
-    const pyEnv = await startServer();
-    const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
-    const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId_1 }),
-            Command.create({ partner_id: partnerId_2 }),
-        ],
-        channel_type: "group",
-    });
-    const messageId = pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
-        body: "<p>Test</p>",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    const [memberId_1] = pyEnv["discuss.channel.member"].search([
-        ["channel_id", "=", channelId],
-        ["partner_id", "=", partnerId_1],
-    ]);
-    pyEnv["discuss.channel.member"].write([memberId_1], {
-        fetched_message_id: messageId,
-        seen_message_id: false,
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-MessageSeenIndicator");
-    expect($(".o-mail-MessageSeenIndicator")).not.toHaveClass("o-all-seen");
-    await contains(".o-mail-MessageSeenIndicator i");
-});
-
-test("rendering when everyone have received the message", async () => {
-    const pyEnv = await startServer();
-    const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
-    const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId_1 }),
-            Command.create({ partner_id: partnerId_2 }),
-        ],
-        channel_type: "group",
-    });
-    const messageId = pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
-        body: "<p>Test</p>",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
-    pyEnv["discuss.channel.member"].write(memberIds, {
-        fetched_message_id: messageId,
-        seen_message_id: false,
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-MessageSeenIndicator");
-    expect($(".o-mail-MessageSeenIndicator")).not.toHaveClass("o-all-seen");
-    await contains(".o-mail-MessageSeenIndicator i");
-});
-
-test("rendering when just one has seen the message", async () => {
-    const pyEnv = await startServer();
-    const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
-    const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId_1 }),
-            Command.create({ partner_id: partnerId_2 }),
-        ],
-        channel_type: "group",
-    });
-    const messageId = pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
-        body: "<p>Test</p>",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
-    pyEnv["discuss.channel.member"].write(memberIds, {
-        fetched_message_id: messageId,
-        seen_message_id: false,
-    });
-    const [memberId_1] = pyEnv["discuss.channel.member"].search([
-        ["channel_id", "=", channelId],
-        ["partner_id", "=", partnerId_1],
-    ]);
-    pyEnv["discuss.channel.member"].write([memberId_1], {
-        seen_message_id: messageId,
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-MessageSeenIndicator");
-    expect($(".o-mail-MessageSeenIndicator")).not.toHaveClass("o-all-seen");
-    await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
-});
-
-test("rendering when just one has seen & received the message", async () => {
-    const pyEnv = await startServer();
-    const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
-    const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId_1 }),
-            Command.create({ partner_id: partnerId_2 }),
-        ],
-        channel_type: "group",
-    });
-    const mesageId = pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
-        body: "<p>Test</p>",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    const [memberId_1] = pyEnv["discuss.channel.member"].search([
-        ["channel_id", "=", channelId],
-        ["partner_id", "=", partnerId_1],
-    ]);
-    pyEnv["discuss.channel.member"].write([memberId_1], {
-        seen_message_id: mesageId,
-        fetched_message_id: mesageId,
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-MessageSeenIndicator");
-    expect($(".o-mail-MessageSeenIndicator")).not.toHaveClass("o-all-seen");
-    await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
-});
-
-test("rendering when just everyone has seen the message", async () => {
-    const pyEnv = await startServer();
-    const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
-    const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId_1 }),
-            Command.create({ partner_id: partnerId_2 }),
-        ],
-        channel_type: "group",
-    });
-    const messageId = pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
-        body: "<p>Test</p>",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
-    pyEnv["discuss.channel.member"].write(memberIds, {
-        fetched_message_id: messageId,
-        seen_message_id: messageId,
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-MessageSeenIndicator");
-    expect($(".o-mail-MessageSeenIndicator")).toHaveClass("o-all-seen");
-    await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
-});
-
-test("'channel_fetch' notification received is correctly handled", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "test" });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-        channel_type: "chat",
-    });
-    pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
-        body: "<p>Test</p>",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Message");
-    await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
-
-    const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
-    // Simulate received channel fetched notification
-    pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
-        id: pyEnv["discuss.channel.member"].search([
-            ["channel_id", "=", channelId],
-            ["partner_id", "=", partnerId],
-        ])[0],
-        channel_id: channelId,
-        last_message_id: 100,
-        partner_id: partnerId,
-    });
-    await contains(".o-mail-MessageSeenIndicator i");
-});
-
-test("mark channel as seen from the bus", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "test" });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-        channel_type: "chat",
-    });
-    const messageId = pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
-        body: "<p>Test</p>",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Message");
-    await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
-    const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
-    // Simulate received channel seen notification
-    pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-        ChannelMember: {
-            id: pyEnv["discuss.channel.member"].search([
-                ["channel_id", "=", channelId],
-                ["partner_id", "=", partnerId],
-            ])[0],
-            seen_message_id: messageId,
-        },
-    });
-    await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
-});
-
-test("should display message indicator when message is fetched/seen", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Recipient" });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-        channel_type: "chat",
-    });
-    const messageId = pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
-        body: "<p>Test</p>",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Message");
-    await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
-    const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
-    // Simulate received channel fetched notification
-    pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
-        id: pyEnv["discuss.channel.member"].search([
-            ["channel_id", "=", channelId],
-            ["partner_id", "=", partnerId],
-        ])[0],
-        channel_id: channelId,
-        last_message_id: messageId,
-        partner_id: partnerId,
-    });
-    await contains(".o-mail-MessageSeenIndicator i");
-    // Simulate received channel seen notification
-    pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-        ChannelMember: {
-            id: pyEnv["discuss.channel.member"].search([
-                ["channel_id", "=", channelId],
-                ["partner_id", "=", partnerId],
-            ])[0],
-            seen_message_id: messageId,
-        },
-    });
-    await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
-});
-
-test("do not show message seen indicator on the last message seen by everyone when the current user is not author of the message", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_type: "chat",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-    });
-    const messageId = pyEnv["mail.message"].create({
-        author_id: partnerId,
-        body: "<p>Test</p>",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
-    pyEnv["discuss.channel.member"].write(memberIds, { seen_message_id: messageId });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Message");
-    await contains(".o-mail-MessageSeenIndicator", { count: 0 });
-});
-
-test("do not show message seen indicator on all the messages of the current user that are older than the last message seen by everyone", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_type: "chat",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-    });
-    const [, messageId_2] = pyEnv["mail.message"].create([
-        {
-            author_id: serverState.partnerId,
-            body: "<p>Message before last seen</p>",
-            model: "discuss.channel",
-            res_id: channelId,
-        },
-        {
-            author_id: serverState.partnerId,
-            body: "<p>Last seen by everyone</p>",
-            model: "discuss.channel",
-            res_id: channelId,
-        },
-    ]);
-    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
-    pyEnv["discuss.channel.member"].write(memberIds, { seen_message_id: messageId_2 });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Message", {
-        text: "Message before last seen",
-        contains: [".o-mail-MessageSeenIndicator", { contains: ["i", { count: 0 }] }],
-    });
-});
-
-test("only show messaging seen indicator if authored by me, after last seen by all message", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_type: "chat",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-    });
-    const messageId = pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
-        body: "<p>Test</p>",
-        res_id: channelId,
-        model: "discuss.channel",
-    });
-    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
-    pyEnv["discuss.channel.member"].write(memberIds, {
-        fetched_message_id: messageId,
-        seen_message_id: messageId - 1,
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Message");
-    await contains(".o-mail-MessageSeenIndicator");
-    await contains(".o-mail-MessageSeenIndicator i");
-});
 
 test("no seen indicator in 'channel' channels (with is_typing)", async () => {
     // is_typing info contains fetched / seen message so this could mistakenly show seen indicators
@@ -397,16 +23,16 @@ test("no seen indicator in 'channel' channels (with is_typing)", async () => {
         name: "test-channel",
         channel_type: "channel",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: demoId }),
+            Command.create({ partner_id: serverState.partnerId, last_seen_dt: "2024-06-01 12:00" }),
+            Command.create({ partner_id: demoId, last_seen_dt: "2024-06-01 12:00" }),
         ],
     });
     const chatId = pyEnv["discuss.channel"].create({
         name: "test-chat",
         channel_type: "chat",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: demoId }),
+            Command.create({ partner_id: serverState.partnerId, last_seen_dt: "2024-06-01 12:00" }),
+            Command.create({ partner_id: demoId, last_seen_dt: "2024-06-01 12:00" }),
         ],
     });
     const [channelMsgId, chatMsgId] = pyEnv["mail.message"].create([
@@ -429,19 +55,19 @@ test("no seen indicator in 'channel' channels (with is_typing)", async () => {
     const chatMemberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", chatId]]);
     pyEnv["discuss.channel.member"].write(channelMemberIds, {
         fetched_message_id: channelMsgId,
-        seen_message_id: 0,
+        seen_message_id: channelMsgId,
     });
     pyEnv["discuss.channel.member"].write(chatMemberIds, {
         fetched_message_id: chatMsgId,
-        seen_message_id: 0,
+        seen_message_id: chatMsgId,
     });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { text: "channel-msg" });
-    await contains(".o-mail-MessageSeenIndicator i", { count: 0 }); // none in channel
+    await contains(".o_avatar_seen_indicator", { count: 0 }); // none in channel
     await click(".o-mail-DiscussSidebar-item", { text: "Demo User" });
     await contains(".o-mail-Message", { text: "chat-msg" });
-    await contains(".o-mail-MessageSeenIndicator i", { count: 1 }); // received in chat
+    await contains(".o_avatar_seen_indicator", { count: 1 }); // received in chat
     // simulate channel read by Demo User in both threads
     await withUser(demoUserId, () =>
         rpc("/discuss/channel/mark_as_read", {
@@ -468,8 +94,211 @@ test("no seen indicator in 'channel' channels (with is_typing)", async () => {
             is_typing: true,
         })
     );
-    await contains(".o-mail-MessageSeenIndicator i", { count: 2 }); // seen in chat
+    await contains(".o_avatar_seen_indicator", { count: 1 }); // seen in chat
     await click(".o-mail-DiscussSidebar-item", { text: "test-channel" });
     await contains(".o-mail-Message", { text: "channel-msg" });
-    await contains(".o-mail-MessageSeenIndicator i", { count: 0 }); // none in channel
+    await contains(".o_avatar_seen_indicator", { count: 0 }); // none in channel
+});
+
+test("Show avatars of user that have seen the message", async () => {
+    const pyEnv = await startServer();
+    const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
+    const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, last_seen_dt: "2024-06-01 12:00" }),
+            Command.create({ partner_id: partnerId_1, last_seen_dt: "2024-06-01 12:00" }),
+            Command.create({ partner_id: partnerId_2, last_seen_dt: "2024-06-01 13:00" }),
+        ],
+        channel_type: "group",
+    });
+    const mesageId = pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "<p>Test</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const [memberId_1, memberId_2] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "in", [partnerId_1, partnerId_2]],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId_1], {
+        seen_message_id: mesageId,
+        fetched_message_id: mesageId,
+    });
+    pyEnv["discuss.channel.member"].write([memberId_2], {
+        seen_message_id: mesageId,
+        fetched_message_id: mesageId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o_avatar_seen_indicator", { count: 2 });
+});
+
+test("Show avatars of user that have seen on multiple messages message", async () => {
+    const pyEnv = await startServer();
+    const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
+    const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, last_seen_dt: "2024-06-01 12:00" }),
+            Command.create({ partner_id: partnerId_1, last_seen_dt: "2024-06-01 12:00" }),
+            Command.create({ partner_id: partnerId_2, last_seen_dt: "2024-06-01 13:00" }),
+        ],
+        channel_type: "group",
+    });
+    const [messageId1, messageId2] = pyEnv["mail.message"].create([
+        {
+            author_id: serverState.partnerId,
+            body: "<p>Test</p>",
+            model: "discuss.channel",
+            res_id: channelId,
+            date: "2024-06-01 12:00",
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "<p>Test 2</p>",
+            model: "discuss.channel",
+            res_id: channelId,
+            date: "2024-06-01 13:00",
+        },
+    ]);
+    const [memberId_1, memberId_2] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "in", [partnerId_1, partnerId_2]],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId_1], {
+        seen_message_id: messageId1,
+        fetched_message_id: messageId1,
+    });
+    pyEnv["discuss.channel.member"].write([memberId_2], {
+        seen_message_id: messageId2,
+        fetched_message_id: messageId2,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o_avatar_seen_indicator", { count: 2 });
+});
+
+test("Show avatars of user that have seen on multiple squashed messages", async () => {
+    const pyEnv = await startServer();
+    const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
+    const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, last_seen_dt: "2024-06-01 12:00" }),
+            Command.create({ partner_id: partnerId_1, last_seen_dt: "2024-06-01 12:00" }),
+            Command.create({ partner_id: partnerId_2, last_seen_dt: "2024-06-01 13:00" }),
+        ],
+        channel_type: "group",
+    });
+    const [messageId1, messageId2] = pyEnv["mail.message"].create([
+        {
+            author_id: serverState.partnerId,
+            body: "<p>Test</p>",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "Test 2",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    const [memberId_1, memberId_2] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "in", [partnerId_1, partnerId_2]],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId_1], {
+        seen_message_id: messageId1,
+        fetched_message_id: messageId1,
+    });
+    pyEnv["discuss.channel.member"].write([memberId_2], {
+        seen_message_id: messageId2,
+        fetched_message_id: messageId2,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o_avatar_seen_indicator", { count: 2 });
+});
+
+test("Display the first 5 avatars of members that have seen a message an open a modal to display everyone", async () => {
+    const pyEnv = await startServer();
+    const partners = [];
+    for (let i = 0; i < 12; i++) {
+        partners.push({ name: `User ${i}` });
+    }
+    const partnerIds = pyEnv["res.partner"].create(partners);
+    const channelMemberIds = [];
+    for (const partner_id of partnerIds) {
+        channelMemberIds.push(Command.create({ partner_id, last_seen_dt: "2024-06-01 12:00" }));
+    }
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, last_seen_dt: "2024-06-01 12:00" }),
+            ...channelMemberIds,
+        ],
+        channel_type: "group",
+    });
+    const mesageId = pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "test",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const members = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "in", partnerIds],
+    ]);
+    pyEnv["discuss.channel.member"].write(members, {
+        seen_message_id: mesageId,
+        fetched_message_id: mesageId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o_avatar_seen_indicator", { count: 5 });
+});
+
+test("Display the first 5 avatars of members that have seen in chatwindow", async () => {
+    const pyEnv = await startServer();
+    const partners = [];
+    for (let i = 0; i < 12; i++) {
+        partners.push({ name: `User ${i}` });
+    }
+    const partnerIds = pyEnv["res.partner"].create(partners);
+    const channelMemberIds = [];
+    for (const partner_id of partnerIds) {
+        channelMemberIds.push(Command.create({ partner_id, last_seen_dt: "2024-06-01 12:00" }));
+    }
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, last_seen_dt: "2024-06-01 12:00" }),
+            ...channelMemberIds,
+        ],
+        channel_type: "group",
+    });
+    const mesageId = pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "test",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const members = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "in", partnerIds],
+    ]);
+    pyEnv["discuss.channel.member"].write(members, {
+        seen_message_id: mesageId,
+        fetched_message_id: mesageId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    await contains(".o_avatar_seen_indicator", { count: 5 });
 });

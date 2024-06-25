@@ -771,6 +771,7 @@ class TestDiscussFullPerformance(HttpCase):
         members = channel.channel_member_ids
         member_0 = members.filtered(lambda m: m.partner_id == self.users[0].partner_id)
         member_0_last_interest_dt = fields.Datetime.to_string(member_0.last_interest_dt)
+        member_0_last_seen_dt = fields.Datetime.to_string(member_0.last_seen_dt)
         member_0_create_date = fields.Datetime.to_string(member_0.create_date)
         member_1 = members.filtered(lambda m: m.partner_id == self.users[1].partner_id)
         member_2 = members.filtered(lambda m: m.partner_id == self.users[2].partner_id)
@@ -787,6 +788,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
+                "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "seen_message_id": False,
@@ -798,6 +800,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetched_message_id": {"id": last_message.id},
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
+                "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": last_message.id + 1,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "seen_message_id": {"id": last_message.id},
@@ -809,6 +812,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetched_message_id": {"id": last_message.id},
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
+                "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": last_message.id + 1,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "seen_message_id": {"id": last_message.id},
@@ -820,6 +824,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetched_message_id": {"id": last_message.id},
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
+                "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": last_message.id + 1,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "seen_message_id": {"id": last_message.id},
@@ -837,6 +842,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetched_message_id": {"id": last_message.id},
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
+                "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": last_message.id + 1,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "seen_message_id": {"id": last_message.id},
@@ -848,6 +854,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
+                "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "seen_message_id": False,
@@ -856,6 +863,7 @@ class TestDiscussFullPerformance(HttpCase):
         if channel == self.channel_group_1 and partner == self.users[12].partner_id:
             return {
                 "create_date": fields.Datetime.to_string(member_12.create_date),
+                "last_seen_dt": False,
                 "fetched_message_id": False,
                 "id": member_12.id,
                 "persona": {"id": self.users[12].partner_id.id, "type": "partner"},
@@ -868,6 +876,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
+                "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "seen_message_id": False,
@@ -876,6 +885,7 @@ class TestDiscussFullPerformance(HttpCase):
         if channel == self.channel_chat_1 and partner == self.users[14].partner_id:
             return {
                 "create_date": fields.Datetime.to_string(member_14.create_date),
+                "last_seen_dt": False,
                 "fetched_message_id": False,
                 "id": member_14.id,
                 "persona": {"id": self.users[14].partner_id.id, "type": "partner"},
@@ -888,6 +898,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
+                "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "seen_message_id": False,
@@ -896,6 +907,7 @@ class TestDiscussFullPerformance(HttpCase):
         if channel == self.channel_chat_2 and partner == self.users[15].partner_id:
             return {
                 "create_date": fields.Datetime.to_string(member_15.create_date),
+                "last_seen_dt": False,
                 "fetched_message_id": False,
                 "id": member_15.id,
                 "persona": {"id": self.users[15].partner_id.id, "type": "partner"},
@@ -908,6 +920,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
+                "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "seen_message_id": False,
@@ -916,6 +929,7 @@ class TestDiscussFullPerformance(HttpCase):
         if channel == self.channel_chat_3 and partner == self.users[2].partner_id:
             return {
                 "create_date": fields.Datetime.to_string(member_2.create_date),
+                "last_seen_dt": False,
                 "fetched_message_id": False,
                 "id": member_2.id,
                 "persona": {"id": self.users[2].partner_id.id, "type": "partner"},
@@ -928,6 +942,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
+                "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "seen_message_id": False,
@@ -936,6 +951,7 @@ class TestDiscussFullPerformance(HttpCase):
         if channel == self.channel_chat_4 and partner == self.users[3].partner_id:
             return {
                 "create_date": fields.Datetime.to_string(member_3.create_date),
+                "last_seen_dt": False,
                 "fetched_message_id": False,
                 "id": member_3.id,
                 "persona": {"id": self.users[3].partner_id.id, "type": "partner"},
@@ -948,6 +964,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
+                "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "seen_message_id": False,
@@ -956,6 +973,7 @@ class TestDiscussFullPerformance(HttpCase):
         if channel == self.channel_livechat_1 and partner == self.users[1].partner_id:
             return {
                 "create_date": fields.Datetime.to_string(member_1.create_date),
+                "last_seen_dt": fields.Datetime.to_string(member_1.last_seen_dt),
                 "fetched_message_id": {"id": last_message.id},
                 "id": member_1.id,
                 "persona": {"id": self.users[1].partner_id.id, "type": "partner"},
@@ -968,6 +986,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
+                "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "seen_message_id": False,
@@ -976,6 +995,7 @@ class TestDiscussFullPerformance(HttpCase):
         if channel == self.channel_livechat_2 and guest:
             return {
                 "create_date": fields.Datetime.to_string(member_g.create_date),
+                "last_seen_dt": fields.Datetime.to_string(member_g.last_seen_dt),
                 "fetched_message_id": {"id": last_message.id},
                 "id": member_g.id,
                 "persona": {"id": guest.id, "type": "guest"},

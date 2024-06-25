@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.MessageSeenIndicator">
-        <span class="o-mail-MessageSeenIndicator position-relative d-flex" t-att-class="{ 'opacity-50': !props.message.hasEveryoneSeen, 'o-all-seen text-primary': props.message.hasEveryoneSeen }" t-attf-class="{{ props.className }}">
-            <t t-if="!props.message.isMessagePreviousToLastSelfMessageSeenByEveryone">
-                <i t-if="props.message.hasSomeoneFetched or props.message.hasSomeoneSeen" class="fa fa-check ps-1"/>
-                <i t-if="props.message.hasSomeoneSeen" class="o-second fa fa-check position-absolute"/>
+        <a role="button" t-on-click="openModal" class="d-flex justify-content-end">
+            <small t-if="props.message.channelMemberHaveSeen.length gt 5" class="text-muted opacity-75 o-smaller">
+                +<t t-out="props.message.channelMemberHaveSeen.length - 5" />
+            </small>
+            <t t-foreach="props.message.channelMemberHaveSeen.slice(0, 5)" t-as="member" t-key="member.id">
+                <span t-if="props.message.id gte member.seen_message_id.id" class="o_avatar_seen_indicator ms-1" style="width:15px;height:15px;">
+                    <img t-att-src="member.persona.avatarUrl" class="w-100 h-100 rounded" t-att-title="'Saw by ' + member.name" />
+                </span>
             </t>
-        </span>
+        </a>
     </t>
+
+    <t t-name="mail.MessageSeenIndicator.card">
+        <div class="o-mail-MessageSeenIndicatorPopover-card d-flex align-items-center gap-2">
+            <span class="o_avatar pt-1 position-relative o_card_avatar" style="width: 30px;height:30px;">
+                <img t-att-src="member.persona.avatarUrl" class="w-100 h-100 rounded" />
+            </span>
+            <div class="d-flex flex-column o_card_user_infos overflow-hidden">
+                <span class="fw-bold" t-esc="member.persona.name"/>
+                <span t-if="member.lastSeenDt" t-out="member.lastSeenDt"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mail.MessageSeenIndicator.dialog">
+        <Dialog size="'sm'">
+            <ul class="list-unstyled m-0">
+                <li t-foreach="props.message.channelMemberHaveSeen" t-as="member" t-key="member.id">
+                    <t t-call="mail.MessageSeenIndicator.card"/>
+                </li>
+            </ul>
+        </Dialog>
+    </t>
+
 </templates>
