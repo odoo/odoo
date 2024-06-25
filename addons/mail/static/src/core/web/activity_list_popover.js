@@ -43,7 +43,6 @@ export class ActivityListPopover extends Component {
         return allActivities
             .filter((activity) => this.props.activityIds.includes(activity.id))
             .sort((a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id);
-
     }
 
     onClickAddActivityButton() {
@@ -74,9 +73,9 @@ export class ActivityListPopover extends Component {
     }
 
     async updateFromProps(props) {
-        const activitiesData = await this.orm.silent.call("mail.activity", "activity_format", [
+        const data = await this.orm.silent.call("mail.activity", "activity_format", [
             props.activityIds,
         ]);
-        this.store.Activity.insert(activitiesData, { html: true });
+        this.store.insert(data, { html: true });
     }
 }

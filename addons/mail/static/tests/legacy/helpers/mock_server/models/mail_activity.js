@@ -20,7 +20,7 @@ patch(MockServer.prototype, {
         }
         if (args.model === "mail.activity" && args.method === "activity_format") {
             const ids = args.args[0];
-            return this._mockMailActivityActivityFormat(ids);
+            return { Activity: this._mockMailActivityActivityFormat(ids) };
         }
         if (args.model === "mail.activity" && args.method === "get_activity_data") {
             const res_model = args.args[0] || args.kwargs.res_model;

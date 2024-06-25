@@ -4523,8 +4523,10 @@ class MailThread(models.AbstractModel):
             res['hasWriteAccess'] = True
         except AccessError:
             pass
-        if isinstance(self.env[self._name], self.env.registry['mail.activity.mixin']):
-            res['activities'] = self.with_context(active_test=True).activity_ids.activity_format()
+        if isinstance(self.env[self._name], self.env.registry["mail.activity.mixin"]):
+            activities = self.with_context(active_test=True).activity_ids
+            store.add(activities)
+            res["activities"] = [{"id": activity.id} for activity in activities]
         if 'attachments' in request_list:
             res['attachments'] = self._get_mail_thread_data_attachments()._attachment_format()
             res["areAttachmentsLoaded"] = True

@@ -62,9 +62,6 @@ export class Activity extends Record {
         if (data.request_partner_id) {
             data.request_partner_id = data.request_partner_id[0];
         }
-        if (!data.icon) {
-            data.icon = "fa-tasks";
-        }
         assignDefined(activity, data);
         if (broadcast) {
             this.store.activityBroadcastChannel?.postMessage({
@@ -104,7 +101,7 @@ export class Activity extends Record {
     /** @type {string} */
     feedback;
     /** @type {string} */
-    icon;
+    icon = "fa-tasks";
     /** @type {number} */
     id;
     /** @type {Object[]} */

@@ -1,4 +1,6 @@
-import { fields, getKwArgs, models, serverState } from "@web/../tests/web_test_helpers";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+
+import { fields, getKwArgs, makeKwArgs, models, serverState } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
 import { deserializeDate, serializeDate, today } from "@web/core/l10n/dates";
 import { groupBy, sortBy, unique } from "@web/core/utils/arrays";
@@ -65,6 +67,13 @@ export class MailActivity extends models.ServerModel {
 
     /** @param {number[]} ids */
     activity_format(ids) {
+        return new mailDataHelpers.Store(
+            this.search([["id", "in", ids]], makeKwArgs({ context: { active_test: false } }))
+        ).get_result();
+    }
+
+    /** @param {number[]} ids */
+    _to_store(ids, store) {
         /** @type {import("mock_models").MailActivityType} */
         const MailActivityType = this.env["mail.activity.type"];
         /** @type {import("mock_models").MailTemplate} */
@@ -74,7 +83,7 @@ export class MailActivity extends models.ServerModel {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        return this.read(ids).map((record) => {
+        for (const record of this.read(ids)) {
             const activityType = record.activity_type_id
                 ? MailActivityType.find((r) => r.id === record.activity_type_id[0])
                 : false;
@@ -92,12 +101,14 @@ export class MailActivity extends models.ServerModel {
             if (record.summary) {
                 record.display_name = record.summary;
             }
-            const user = ResUsers.search_read([["id", "=", record.user_id[0]]])[0];
-            record.persona = ResPartner.mail_partner_format([user.partner_id[0]])[
-                user.partner_id[0]
-            ];
-            return record;
-        });
+            const [user] = ResUsers._filter([["id", "=", record.user_id[0]]]);
+            record.persona = { id: user.partner_id, type: "partner" };
+            store.add(
+                "Persona",
+                ResPartner.mail_partner_format([user.partner_id])[user.partner_id]
+            );
+            store.add("Activity", record);
+        }
     }
 
     /**
