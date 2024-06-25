@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
-import options from "@web_editor/js/editor/snippets.options.legacy";
+import { CarouselHandler, SnippetOption } from "@web_editor/js/editor/snippets.options";
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
 import wUtils from '@website/js/utils';
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
@@ -16,8 +17,7 @@ import {
  * This is typically the case when adding/removing/moving images, changing the
  * layout mode and changing the number of columns.
  */
-options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
-
+class GalleryLayout extends CarouselHandler {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -40,7 +40,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             mode = 'nomode';
         }
         return mode;
-    },
+    }
     /**
      * Displays the images with the "grid" layout.
      *
@@ -63,7 +63,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             }
         });
         this.$target.css('height', '');
-    },
+    }
     /**
      * Displays the images with the "masonry" layout.
      *
@@ -109,7 +109,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             }
             resolve();
         });
-    },
+    }
     /**
      * Allows to change the images layout. @see grid, masonry, nomode, slideshow
      *
@@ -131,9 +131,9 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
         }
         await this[`_${modeName}`]();
-        this.trigger_up('cover_update');
+        this.callbacks.coverUpdate();
         await this._refreshPublicWidgets();
-    },
+    }
     /**
      * Displays the images with the standard layout: floating images.
      *
@@ -154,7 +154,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             var $wrap = $('<div/>', {class: wrapClass}).append(imgHolderEls[index]);
             $row.append($wrap);
         });
-    },
+    }
     /**
      * Displays the images with a "slideshow" layout.
      *
@@ -188,7 +188,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
         this._slideshowStart();
         this.$('li.fa').off('click');
-    },
+    }
     /**
      * @override
      */
@@ -196,7 +196,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
         const imgs = this.$('img').get();
         imgs.sort((a, b) => this._getIndex(a) - this._getIndex(b));
         return imgs;
-    },
+    }
     /**
      * Returns the images, or the images holder if this holder is an anchor,
      * sorted by index.
@@ -204,10 +204,10 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      * @private
      * @returns {Array.<HTMLImageElement|HTMLAnchorElement>}
      */
-    _getImgHolderEls: function () {
+    _getImgHolderEls() {
         const imgEls = this._getItemsGallery();
         return imgEls.map(imgEl => imgEl.closest("a") || imgEl);
-    },
+    }
     /**
      * Returns the index associated to a given image.
      *
@@ -215,18 +215,18 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      * @param {DOMElement} img
      * @returns {integer}
      */
-    _getIndex: function (img) {
+    _getIndex(img) {
         return img.dataset.index || 0;
-    },
+    }
     /**
      * Returns the currently selected column option.
      *
      * @private
      * @returns {integer}
      */
-    _getColumns: function () {
+    _getColumns() {
         return parseInt(this.$target.attr('data-columns')) || 3;
-    },
+    }
     /**
      * @override
      */
@@ -234,19 +234,16 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
         itemsEls.forEach((img, index) => {
             img.dataset.index = index;
         });
-        this.trigger_up('snippet_edition_request', {exec: async () => {
+        this.options.snippetEditionRequest({exec: async () => {
             await this._relayout();
             if (this._getMode() === "slideshow") {
                 this._updateIndicatorAndActivateSnippet(newItemPosition);
             } else {
                 const imageEl = this.$target[0].querySelector(`[data-index='${newItemPosition}']`);
-                this.trigger_up("activate_snippet", {
-                    $snippet: $(imageEl),
-                    ifInactiveOptions: true,
-                });
+                this.env.activateSnippet($(imageEl), false, true);
             }
         }});
-    },
+    }
     /**
      * Empties the container, adds the given content and returns the container.
      *
@@ -254,11 +251,11 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      * @param {jQuery} $content
      * @returns {jQuery} the main container of the snippet
      */
-    _replaceContent: function ($content) {
+    _replaceContent($content) {
         var $container = this.$('> .container, > .container-fluid, > .o_container_small');
         $container.empty().append($content);
         return $container;
-    },
+    }
     /**
      * Redraws the current layout.
      *
@@ -266,7 +263,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      */
     _relayout() {
         return this._setMode(this._getMode());
-    },
+    }
     /**
      * Sets up listeners on slideshow to activate selected image.
      */
@@ -284,13 +281,13 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
         $carousel.on("slide.bs.carousel.image_gallery", (ev) => {
             lastSlideTimeStamp = ev.timeStamp;
             const activeImageEl = this.$target[0].querySelector(".carousel-item.active img");
-            this.trigger_up("is_element_selected", {
+            this.env.isElementSelected({
                 el: activeImageEl,
                 callback: () => {
                     _previousEditor = true;
                 },
             });
-            this.trigger_up("hide_overlay");
+            this.env.hideOverlay();
         });
         $carousel.on("slid.bs.carousel.image_gallery", (ev) => {
             if (!_previousEditor && !_miniatureClicked) {
@@ -305,21 +302,20 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             const _slideDuration = new Date().getTime() - lastSlideTimeStamp;
             setTimeout(() => {
                 const activeImageEl = this.$target[0].querySelector(".carousel-item.active img");
-                this.trigger_up("activate_snippet", {
-                    $snippet: $(activeImageEl),
-                    ifInactiveOptions: true,
-                });
+                this.env.activateSnippet($(activeImageEl), false, true);
             }, 0.2 * _slideDuration);
         });
-    },
-});
+    }
+}
 
-options.registry.gallery = options.registry.GalleryLayout.extend({
+
+class Gallery extends GalleryLayout {
     /**
      * @override
      */
-    start() {
-        const _super = this._super.bind(this);
+    constructor() {
+        super(...arguments);
+
         let layoutPromise;
         const containerEl = this.$target[0].querySelector(":scope > .container, :scope > .container-fluid, :scope > .o_container_small");
         if (containerEl.querySelector(":scope > *:not(div)")) {
@@ -327,14 +323,14 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
         } else {
             layoutPromise = Promise.resolve();
         }
-        return layoutPromise.then(() => _super.apply(this, arguments).then(() => {
+        layoutPromise.then(() => {
             // Call specific mode's start if defined (e.g. _slideshowStart)
             const startMode = this[`_${this._getMode()}Start`];
             if (startMode) {
                 startMode.bind(this)();
             }
-        }));
-    },
+        });
+    }
     /**
      * @override
      */
@@ -342,7 +338,7 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
         if (this.$target.hasClass('slideshow')) {
             this.$target.removeAttr('style');
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -359,7 +355,7 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
         this.$target.attr('data-columns', nbColumns);
 
         return this._relayout();
-    },
+    }
     /**
      * Allows to change the images layout. @see grid, masonry, nomode, slideshow
      *
@@ -367,7 +363,7 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
      */
     mode(previewMode, widgetValue, params) {
         return this._setMode(widgetValue);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -393,8 +389,8 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
                 return `${this._getColumns()}`;
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @private
      */
@@ -402,15 +398,15 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
         if (widgetName === 'slideshow_mode_opt') {
             return false;
         }
-        return this._super(...arguments);
-    },
-});
+        return super._computeWidgetVisibility(...arguments);
+    }
+}
 
-options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
-    /**
-     * @override
-     */
-    start() {
+class GalleryImageList extends GalleryLayout {
+    constructor() {
+        super(...arguments);
+        this.dialog = this.env.services.dialog;
+
         // Make sure image previews are updated if images are changed
         this.$target.on('image_changed.gallery', 'img', ev => {
             const $img = $(ev.currentTarget);
@@ -431,38 +427,36 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
             if (!ev.target.height) {
                 $(ev.target).one('load', () => {
                     setTimeout(() => {
-                        this.trigger_up('cover_update');
+                        this.callbacks.coverUpdate();
                     });
                 });
             }
         });
-
-        return this._super.apply(this, arguments);
-    },
+    }
     /**
      * @override
      */
     async onBuilt() {
-        await this._super(...arguments);
+        await super.onBuilt(...arguments);
         if (this.$target.find('.o_add_images').length) {
             await this.addImages(false);
         }
         // TODO should consider the async parts
         this._adaptNavigationIDs();
-    },
+    }
     /**
      * @override
      */
     onClone() {
         this._adaptNavigationIDs();
-    },
+    }
     /**
      * @override
      */
     destroy() {
-        this._super(...arguments);
+        super.destroy(...arguments);
         this.$target.off('.gallery');
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -522,17 +516,17 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                         savedPromise = savedPromise.then(async () => {
                             await this._relayout();
                         });
-                        this.trigger_up('cover_update');
+                        this.callbacks.coverUpdate();
                     }
                 },
             };
-            this.call("dialog", "add", MediaDialog, props, {
+            this.dialog.add(MediaDialog, props, {
                 onClose: () => {
                     savedPromise.then(resolve);
                 },
             });
         });
-    },
+    }
     /**
      * Allows to remove all images. Restores the snippet to the way it was when
      * it was added in the page.
@@ -552,7 +546,7 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
             class: ' fa fa-plus-circle',
         });
         this._replaceContent($addImg.append($icon).append($text));
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -564,14 +558,14 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
      * @override
      */
     notify(name, data) {
-        this._super(...arguments);
+        super.notify(...arguments);
         if (name === 'image_removed') {
             data.$image.remove(); // Force the removal of the image before reset
-            this.trigger_up('snippet_edition_request', {exec: () => {
+            this.options.snippetEditionRequest({exec: () => {
                 return this._relayout();
             }});
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -591,22 +585,38 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                 $el.attr('href', '#slideshow_' + uuid);
             }
         });
-    },
-});
+    }
+}
 
-options.registry.gallery_img = options.Class.extend({
+class GalleryImage extends SnippetOption {
     /**
      * Rebuilds the whole gallery when one image is removed.
      *
      * @override
      */
-    onRemove: function () {
-        this.trigger_up('option_update', {
+    onRemove() {
+        this.callbacks.notifyOptions({
             optionName: 'GalleryImageList',
             name: 'image_removed',
             data: {
                 $image: this.$target,
             },
         });
-    },
+    }
+}
+
+registerWebsiteOption("GalleryImageList", {
+    Class: GalleryImageList,
+    template: "website.GalleryImageList",
+    selector: ".s_image_gallery",
+}, { sequence: 24 }); // Before website.snippet_options_background_options
+registerWebsiteOption("Gallery", {
+    Class: Gallery,
+    template: "website.Gallery",
+    selector: ".s_image_gallery",
+});
+registerWebsiteOption("GalleryImage", {
+    Class: GalleryImage,
+    template: "website.GalleryImage",
+    selector: ".s_image_gallery img",
 });

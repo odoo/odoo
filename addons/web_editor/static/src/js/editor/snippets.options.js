@@ -10215,8 +10215,7 @@ legacyRegistry.SelectTemplate = SnippetOptionWidget.extend({
  * the "CarouselHandler" option) that handles all the common parts (reordering
  * of elements).
  */
-legacyRegistry.GalleryHandler = SnippetOptionWidget.extend({
-
+export class GalleryHandler extends SnippetOption {
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -10227,7 +10226,7 @@ legacyRegistry.GalleryHandler = SnippetOptionWidget.extend({
      * @override
      */
     notify(name, data) {
-        this._super(...arguments);
+        super.notify(...arguments);
         if (name === "reorder_items") {
             const itemsEls = this._getItemsGallery();
             const oldPosition = itemsEls.indexOf(data.itemEl);
@@ -10253,7 +10252,7 @@ legacyRegistry.GalleryHandler = SnippetOptionWidget.extend({
             }
             this._reorderItems(itemsEls, itemsEls.indexOf(data.itemEl));
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -10266,7 +10265,7 @@ legacyRegistry.GalleryHandler = SnippetOptionWidget.extend({
      * @abstract
      * @returns {HTMLElement[]}
      */
-    _getItemsGallery() {},
+    _getItemsGallery() {}
     /**
      * Called to reorder the items of the gallery.
      *
@@ -10274,15 +10273,14 @@ legacyRegistry.GalleryHandler = SnippetOptionWidget.extend({
      * @param {HTMLElement[]} itemsEls - the items to reorder.
      * @param {integer} newItemPosition - the new position of the moved items.
      */
-    _reorderItems(itemsEls, newItemPosition) {},
-});
+    _reorderItems(itemsEls, newItemPosition) {}
+}
 
 /*
  * Abstract option to be extended by the Carousel and gallery options that
  * handles the update of the carousel indicator.
  */
-legacyRegistry.CarouselHandler = legacyRegistry.GalleryHandler.extend({
-
+export class CarouselHandler extends GalleryHandler {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -10304,13 +10302,10 @@ legacyRegistry.CarouselHandler = legacyRegistry.GalleryHandler.extend({
         }
         this.$target[0].querySelector(`.carousel-indicators li[data-bs-slide-to="${position}"]`)
                     .classList.add("active");
-        this.trigger_up("activate_snippet", {
-            $snippet: $(this.$target[0].querySelector(".carousel-item.active img")),
-            ifInactiveOptions: true,
-        });
+        this.env.activateSnippet($(this.$target[0].querySelector(".carousel-item.active img")), false, true);
         carouselEl.classList.add("slide");
-    },
-});
+    }
+}
 
 export function registerBackgroundOptions(name, options, getTemplateName = () => null) {
     registerOption(`${name}-bgToggler`, {
