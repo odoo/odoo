@@ -19,10 +19,12 @@ class Base(models.AbstractModel):
 class BaseModel(models.AbstractModel):
     _inherit = 'base'
 
-    def update_field_translations_sha(self, fname, translations):
+    def web_update_field_translations(self, fname, translations):
         field = self._fields[fname]
+        source_lang = None
         if callable(field.translate):
             for translation in translations.values():
                 for key, value in translation.items():
                     translation[key] = field.translate.term_converter(value)
-        return self._update_field_translations(fname, translations, lambda old_term: sha256(old_term.encode()).hexdigest())
+            source_lang = self._get_base_lang()
+        return self._update_field_translations(fname, translations, lambda old_term: sha256(old_term.encode()).hexdigest(), source_lang=source_lang)

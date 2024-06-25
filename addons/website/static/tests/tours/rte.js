@@ -156,7 +156,7 @@ wTourUtils.dragNDrop({
     run: "click",
 }, {
     content: "check if translation is activate",
-    trigger: ':iframe [data-oe-translation-initial-sha]',
+    trigger: ':iframe [data-oe-translation-source-sha]',
     run: "click",
 },
 {

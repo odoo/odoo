@@ -1009,7 +1009,7 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>bonjour</div>',
                          "copy on write (COW) also copy existing translations")
 
-        self.base_view.update_field_translations('arch_db', {'fr_BE': {'bonjour': 'salut'}})
+        self.base_view.update_field_translations('arch_db', {'fr_BE': {'hello': 'salut'}})
         self.assertEqual(self.base_view.with_context(lang='fr_BE').arch, '<div>salut</div>')
         self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>bonjour</div>',
                          "updating translation of base view doesn't update specific view")
@@ -1174,7 +1174,7 @@ class TestCowViewSaving(TestViewSavingCommon):
         root = html.fromstring(self.base_view.arch, parser=html.HTMLParser(encoding="utf-8"))
         to_translate = root.text_content()
         sha = sha256(to_translate.encode()).hexdigest()
-        view.update_field_translations_sha('arch_db', {french.code: {sha: 'contenu de base'}})
+        view.web_update_field_translations('arch_db', {french.code: {sha: 'contenu de base'}})
 
         new_specific_views = View.search([('website_id', '!=', None)])
         self.assertEqual(len(old_specific_views), len(new_specific_views), "No additional specific view must have been created")
