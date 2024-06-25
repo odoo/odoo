@@ -3,6 +3,7 @@
 
 import base64
 import logging
+import threading
 import warnings
 
 from odoo import api, fields, models, tools, _, Command, SUPERUSER_ID
@@ -224,6 +225,7 @@ class Company(models.Model):
         is_ready_and_not_test = (
             not tools.config['test_enable']
             and (self.env.registry.ready or not self.env.registry._init)
+            and not getattr(threading.current_thread(), 'testing', False)
         )
         if uninstalled_modules and is_ready_and_not_test:
             return uninstalled_modules.button_immediate_install()
