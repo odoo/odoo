@@ -93,7 +93,7 @@ export class ImageCrop extends Component {
                 this.aspectRatio = '0/0';
                 this.$cropperImage.cropper('setAspectRatio', this.aspectRatios[this.aspectRatio].value);
             }
-            await this._save(false);
+            await this._save();
         }
     }
 
@@ -192,7 +192,7 @@ export class ImageCrop extends Component {
      * @private
      * @param {boolean} [cropped=true]
      */
-    async _save(cropped = true) {
+    async _save() {
         // Mark the media for later creation of cropped attachment
         this.media.classList.add('o_modified_image_to_save');
 
@@ -205,6 +205,7 @@ export class ImageCrop extends Component {
         });
         delete this.media.dataset.resizeWidth;
         this.initialSrc = await applyModifications(this.media, {forceModification: true, mimetype: this.mimetype});
+        const cropped = this.aspectRatio !== "0/0";
         this.media.classList.toggle('o_we_image_cropped', cropped);
         this.$media.trigger('image_cropped');
         this._closeCropper();
