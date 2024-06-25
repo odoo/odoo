@@ -45,7 +45,7 @@
                     </group>
                     <field name="can_edit_body" invisible="1"/>
                     <div invisible="composition_mode == 'mass_mail'">
-                        <field name="body" widget="html_composer_message" class="oe-bordered-editor" placeholder="Write your message here..." options="{'style-inline': true}" readonly="not can_edit_body" force_save="1"/>
+                        <field name="body" widget="html_composer_message" class="oe-bordered-editor" placeholder="Write your message here..." readonly="not can_edit_body" force_save="1"/>
                         <group>
                             <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
                         </group>
@@ -57,7 +57,7 @@
                     <notebook invisible="composition_mode != 'mass_mail'">
                         <page string="Content" name="page_content">
                             <div>
-                                <field name="body" widget="html_composer_message" class="oe-bordered-editor" placeholder="Write your message here..." options="{'style-inline': true}" readonly="not can_edit_body" force_save="1"/>
+                                <field name="body" widget="html_composer_message" class="oe-bordered-editor" placeholder="Write your message here..." readonly="not can_edit_body" force_save="1"/>
                                 <group>
                                     <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
                                 </group>

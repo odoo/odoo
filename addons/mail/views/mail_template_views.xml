@@ -51,7 +51,7 @@
                             <page string="Content" name="content">
                                 <field name="can_write" invisible="1"/>
                                 <field name="body_html" widget="html_legacy" class="oe-bordered-editor"
-                                    options="{'style-inline': true, 'codeview': true, 'dynamic_placeholder': true}"
+                                    options="{'codeview': true, 'dynamic_placeholder': true}"
                                     readonly="not can_write and id"/>
                                 <field name="attachment_ids" widget="many2many_binary"/>
                             </page>
