@@ -126,13 +126,14 @@ export class ProductsWidget extends Component {
             this.state.currentOffset = 0;
         }
         const result = await this.loadProductFromDB();
+        const cleanedProductWord = searchProductWord.replace(/;product_tmpl_id:\d+$/, '');
         if (result.length > 0) {
             this.notification.add(
-                _t('%s product(s) found for "%s".', result.length, searchProductWord),
+                _t('%s product(s) found for "%s".', result.length, cleanedProductWord),
                 3000
             );
         } else {
-            this.notification.add(_t('No more product found for "%s".', searchProductWord), 3000);
+            this.notification.add(_t('No more product found for "%s".', cleanedProductWord), 3000);
         }
         if (this.state.previousSearchWord === searchProductWord) {
             this.state.currentOffset += result.length;
@@ -146,12 +147,13 @@ export class ProductsWidget extends Component {
         if (!searchProductWord) {
             return;
         }
+        const cleanedProductWord = searchProductWord.replace(/;product_tmpl_id:\d+$/, '');
         const domain = [
             "|",
             "|",
-            ["name", "ilike", searchProductWord],
-            ["default_code", "ilike", searchProductWord],
-            ["barcode", "ilike", searchProductWord],
+            ["name", "ilike", cleanedProductWord],
+            ["default_code", "ilike", cleanedProductWord],
+            ["barcode", "ilike", cleanedProductWord],
             ["available_in_pos", "=", true],
             ["sale_ok", "=", true],
         ];
@@ -166,7 +168,17 @@ export class ProductsWidget extends Component {
             const ProductIds = await this.orm.call(
                 "product.product",
                 "search",
-                [domain],
+                [
+                    [
+                        "&",
+                        ["available_in_pos", "=", true],
+                        "|",
+                        "|",
+                        ["name", "ilike", searchProductWord],
+                        ["default_code", "ilike", searchProductWord],
+                        ["barcode", "ilike", searchProductWord],
+                    ],
+                ],
                 {
                     offset: this.state.currentOffset,
                     limit: limit,
