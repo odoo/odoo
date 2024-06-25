@@ -20,14 +20,18 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             trigger: ':iframe form.js_attributes input:checked + label:contains(Steel - Test)',
         },
         {
+            trigger: ":iframe body:not(:has(.oe_website_sale .oe_product_cart:eq(3)))",
+        },
+        {
             content: "select product",
-            extra_trigger: ':iframe body:not(:has(.oe_website_sale .oe_product_cart:eq(3)))',
             trigger: ':iframe .oe_product_cart a:contains("Test Product")',
             run: "click",
         },
         {
+            trigger: ":iframe #product_detail",
+        },
+        {
             content: "check list view of variants is disabled initially",
-            extra_trigger: ":iframe #product_detail",
             trigger: ':iframe body:not(:has(.js_product_change))',
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
@@ -37,8 +41,10 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             run: "click",
         },
         {
+            trigger: "#oe_snippets .o_we_customize_panel",
+        },
+        {
             content: "open 'Variants' selector",
-            extra_trigger: '#oe_snippets .o_we_customize_panel',
             trigger: '[data-name="variants_opt"] we-toggler',
             run: "click",
         },
@@ -72,8 +78,10 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             run: "click",
         },
         {
+            trigger: "#oe_snippets .o_we_customize_panel",
+        },
+        {
             content: "open 'Variants' selector",
-            extra_trigger: '#oe_snippets .o_we_customize_panel',
             trigger: '[data-name="variants_opt"] we-toggler',
             run: "click",
         },
@@ -120,9 +128,11 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         },
         tourUtils.goToCart({backend: true}),
         {
+            trigger: ":iframe body:not(:has(#products_grid_before .js_attributes))",
+        },
+        {
             content: "click on shop",
             trigger: ":iframe a:contains(Continue shopping)",
-            extra_trigger: ':iframe body:not(:has(#products_grid_before .js_attributes))',
             run: "click",
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
@@ -132,8 +142,10 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             run: "click",
         },
         {
+            trigger: "#oe_snippets .o_we_customize_panel",
+        },
+        {
             content: "remove 'Attributes'",
-            extra_trigger: '#oe_snippets .o_we_customize_panel',
             trigger: 'we-button[data-name="attributes_opt"]',
             run: "click",
         },
@@ -144,8 +156,10 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             run: "click",
         },
         {
+            trigger: ":iframe body:not(:has(#products_grid_before .js_attributes))",
+        },
+        {
             content: "finish",
-            extra_trigger: ':iframe body:not(:has(#products_grid_before .js_attributes))',
             trigger: ':iframe #wrap:not(:has(li:has(.my_cart_quantity):visible))',
         },
     ],

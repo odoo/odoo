@@ -72,9 +72,12 @@
     const addField = function (name, type, label, required, isCustom,
                                display = {visibility: VISIBLE, condition: ""}) {
         const data = isCustom ? `data-custom-field="${name}"` : `data-existing-field="${name}"`;
-        const ret = [{
+        const ret = [
+        {
+            trigger: ":iframe .s_website_form_field",
+        },
+        {
             content: "Select form",
-            extra_trigger: ':iframe .s_website_form_field',
             trigger: ':iframe section.s_website_form',
             run: "click",
         }, {
@@ -141,35 +144,42 @@
             content: "Drop the form snippet",
             trigger: '#oe_snippets .oe_snippet .oe_snippet_thumbnail[data-snippet=s_website_form]',
             run: "drag_and_drop :iframe #wrap",
-        }, {
+        },
+        {
+            trigger: ":iframe .s_website_form_field",
+        },
+        {
             content: "Select form by clicking on an input field",
-            extra_trigger: ':iframe .s_website_form_field',
             trigger: ':iframe section.s_website_form input',
             run: "click",
         }, {
             content: "Verify that the form editor appeared",
             trigger: '.o_we_customize_panel .snippet-option-WebsiteFormEditor',
-            run: () => null,
         },
         wTourUtils.goBackToBlocks(),
         {
+            trigger: ":iframe .s_website_form_field",
+        },
+        {
             content: "Select form by clicking on a text area",
-            extra_trigger: ':iframe .s_website_form_field',
             trigger: ':iframe section.s_website_form textarea',
             run: "click",
-        }, {
+        },
+        {
             content: "Verify that the form editor appeared",
             trigger: '.o_we_customize_panel .snippet-option-WebsiteFormEditor',
-            run: () => null,
-        }, {
+        },
+        {
             content: "Rename and leave the field label",
             trigger: 'we-input[data-set-label-text] input',
             run: "edit Renamed && click body",
         },
         wTourUtils.goBackToBlocks(),
         {
+            trigger: ":iframe .s_website_form_field",
+        },
+        {
             content: "Select form itself (not a specific field)",
-            extra_trigger: ':iframe .s_website_form_field',
             trigger: ':iframe section.s_website_form',
             run: "click",
         },
@@ -703,18 +713,20 @@
         }
     ]);
 
-    function editContactUs(steps) {
-        return [
-            {
-                content: "Select the contact us form by clicking on an input field",
-                trigger: ':iframe .s_website_form input',
-                extra_trigger: '#oe_snippets .oe_snippet_thumbnail',
-                run: 'click',
-            },
-            ...steps,
-            ...wTourUtils.clickOnSave(),
-        ];
-    }
+function editContactUs(steps) {
+    return [
+        {
+            trigger: "#oe_snippets .oe_snippet_thumbnail",
+        },
+        {
+            content: "Select the contact us form by clicking on an input field",
+            trigger: ":iframe .s_website_form input",
+            run: "click",
+        },
+        ...steps,
+        ...wTourUtils.clickOnSave(),
+    ];
+}
 
     wTourUtils.registerWebsitePreviewTour('website_form_contactus_edition_with_email', {
         url: '/contactus',
@@ -756,9 +768,12 @@
             content: "Add the form snippet",
             trigger: '#oe_snippets .oe_snippet .oe_snippet_thumbnail[data-snippet=s_website_form]',
             run: "drag_and_drop :iframe #wrap",
-        }, {
+        },
+        {
+            trigger: ":iframe .s_website_form_field",
+        },
+        {
             content: "Select the form by clicking on an input field",
-            extra_trigger: ':iframe .s_website_form_field',
             trigger: ':iframe section.s_website_form input',
             run: function (actions) {
                 actions.click();
@@ -903,8 +918,10 @@
             run: "drag_and_drop :iframe #wrap",
         },
         {
+            trigger: ":iframe .s_website_form_field",
+        },
+        {
             content: "Check that a form field is not editable",
-            extra_trigger: ":iframe .s_website_form_field",
             trigger: ":iframe section.s_website_form input",
             run: function () {
                 if (this.anchor.isContentEditable) {
@@ -960,8 +977,10 @@
             run: "drag_and_drop :iframe #wrap",
         },
         {
+            trigger: ":iframe .s_website_form_field",
+        },
+        {
             content: "Select form by clicking on an input field",
-            extra_trigger: ":iframe .s_website_form_field",
             trigger: ":iframe section.s_website_form input",
             run: "click",
         },

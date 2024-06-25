@@ -38,7 +38,7 @@ wTourUtils.registerThemeHomepageTour('configurator_tour', () => {
 
     return [
         wTourUtils.clickOnText(titleSelector),
-        imageStep,
+        ...imageStep,
         ...backgroundColorStep,
         ...shapeStep,
         wTourUtils.changePaddingSize('top'),

@@ -42,9 +42,12 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         run: "click",
     },
     {
+        trigger: ":iframe #website_cookies_bar:not(.d-none)",
+        allowInvisible: true,
+    },
+    {
         content: "Scroll to top",
         trigger: ":iframe #wrapwrap",
-        extra_trigger: ":iframe #website_cookies_bar:not(.d-none)",
         run: function () {
             const animatedColumnEl = this.anchor.querySelector(".s_three_columns .row > :last-child");
             // When the animated element is fully visible, its animation delay
@@ -60,9 +63,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         },
     },
     {
+        trigger: ":iframe header#top:not(.o_header_affixed)",
+    },
+    {
         content: "Wait for the page to be scrolled to the top.",
         trigger: ":iframe .s_three_columns .row > :last-child:not(.o_animating)",
-        extra_trigger: ":iframe header#top:not(.o_header_affixed)",
         run: function () {
             // If the column has been animated successfully, the animation delay
             // should be set to approximately zero when it is not visible.
@@ -81,9 +86,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     wTourUtils.dragNDrop(snippets[0]), // Popup
     wTourUtils.dragNDrop(snippets[1]), // Media List
     {
+        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+    },
+    {
         content: "Drag the Columns building block and drop it at the bottom of the popup.",
         trigger: '#oe_snippets .oe_snippet[name="Columns"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
-        extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets",
         run: "drag_and_drop :iframe #wrap .s_popup .modal-content.oe_structure .oe_drop_zone:last",
     },
     wTourUtils.clickOnElement("3rd columns", ":iframe .s_popup .s_three_columns .row > :last-child"),
@@ -131,9 +138,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     wTourUtils.changeOption("WebsiteAnimate", 'we-toggler:contains("None")'),
     wTourUtils.changeOption("WebsiteAnimate", 'we-button[data-animation-mode="onHover"]'),
     {
+        trigger: ".snippet-option-WebsiteAnimate we-row:contains('Animation') we-select[data-is-animation-type-selection] we-toggler:contains('On Hover')",
+    },
+    {
         content: "Check that the hover effect animation has been applied on the image",
         trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']",
-        extra_trigger: ".snippet-option-WebsiteAnimate we-row:contains('Animation') we-select[data-is-animation-type-selection] we-toggler:contains('On Hover')",
     },
     ...wTourUtils.clickOnSave(),
     ...wTourUtils.clickOnEditAndWaitEditMode(),
@@ -141,9 +150,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     wTourUtils.changeOption("WebsiteAnimate", 'we-toggler:contains("Overlay")'),
     wTourUtils.changeOption("WebsiteAnimate", 'we-button[data-select-data-attribute="outline"]'),
     {
+        trigger: ".snippet-option-WebsiteAnimate we-select[data-attribute-name='hoverEffect'] we-toggler:contains('Outline')",
+    },
+    {
         content: "Check that the outline effect has been applied on the image",
         trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
-        extra_trigger: ".snippet-option-WebsiteAnimate we-select[data-attribute-name='hoverEffect'] we-toggler:contains('Outline')",
     },
     ...wTourUtils.clickOnSave(),
     {
@@ -162,9 +173,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     wTourUtils.changeOption("ImageTools", 'we-select:contains("Filter") we-toggler:contains("None")'),
     wTourUtils.changeOption("ImageTools", 'we-button:contains("Blur")'),
     {
+        trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+    },
+    {
         content: "Check that the Blur filter has been applied on the image",
         trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-gl-filter='blur']",
-        extra_trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
     },
     {
         content: "Click on the 'undo' button",

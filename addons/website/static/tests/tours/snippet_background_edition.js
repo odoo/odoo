@@ -39,15 +39,16 @@ function addCheck(steps, checkX, checkNoX, xType, noSwitch = false) {
     const step = {
         trigger: selectorCheckX || selectorCheckNoX,
         content: `The correct ${name} is marked as selected`,
-        position: 'bottom',
-        run: () => null,
+        position: "bottom",
     };
-    if (!selectorCheckX && selectorCheckNoX) {
-        step.extra_trigger = selectorCheckNoX;
-    }
-
     if (!noSwitch) {
         steps.push(switchTo(xType, name));
+    }
+    if (!selectorCheckX && selectorCheckNoX) {
+        steps.push({
+            isActive: ["auto"],
+            trigger: selectorCheckNoX,
+        });
     }
     steps.push(step);
 }

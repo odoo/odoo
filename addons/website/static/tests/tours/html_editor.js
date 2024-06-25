@@ -53,22 +53,28 @@ wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
             run: "click",
         },
         {
+            trigger: '.o_resource_editor .o_select_menu_toggler:contains("oe_structure_test_ui")',
+        },
+        {
             content: "add something in the oe_structure specific view",
-            extra_trigger: '.o_resource_editor .o_select_menu_toggler:contains("oe_structure_test_ui")',
             trigger: 'div.ace_line .ace_xml:contains("s_cover")',
             run: function () {
                 ace.edit(document.querySelector('#resource-editor div')).getSession().insert({row: 2, column: 1}, '<p>anothernewcontent</p>\n');
             },
         },
         {
+            trigger: 'div.ace_line .ace_xml:contains("anothernewcontent")',
+        },
+        {
             content: "save the html editor",
-            extra_trigger: 'div.ace_line .ace_xml:contains("anothernewcontent")',
             trigger: ".o_resource_editor button:contains(Save)",
             run: "click",
         },
         {
+            trigger: ':iframe #wrapwrap:contains("anothernewcontent")',
+        },
+        {
            content: "check that the page has both modification",
-           extra_trigger: ':iframe #wrapwrap:contains("anothernewcontent")',
            trigger: ':iframe #wrapwrap:contains("somenewcontent")',
        },
     ]
@@ -81,8 +87,10 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
     () => [
         // 1. Open Html Editor and select a scss file
         {
+            trigger: ":iframe #wrap:visible", // ensure state for later
+        },
+        {
             content: "open site menu",
-            extra_trigger: ':iframe #wrap:visible', // ensure state for later
             trigger: 'button[data-menu-xmlid="website.menu_site"]',
             run: "click",
         },
@@ -114,8 +122,10 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
             },
         },
         {
+            trigger: `div.ace_line:contains("${adminCssModif}")`,
+        },
+        {
             content: "save the html editor",
-            extra_trigger: `div.ace_line:contains("${adminCssModif}")`,
             trigger: ".o_resource_editor_title button:contains(Save)",
             run: "click",
         },
@@ -149,8 +159,10 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
             },
         },
         {
+            trigger: `div.ace_line:contains("${adminCssModif}")`,
+        },
+        {
             content: "save the html editor",
-            extra_trigger: `div.ace_line:contains("${adminCssModif}")`,
             trigger: ".o_resource_editor_title button:contains(Save)",
             run: "click",
         },
@@ -203,8 +215,10 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
             },
         },
         {
+            trigger: `div.ace_line:contains("${demoCssModif}")`,
+        },
+        {
             content: "save the html editor",
-            extra_trigger: `div.ace_line:contains("${demoCssModif}")`,
             trigger: ".o_resource_editor button:contains(Save)",
             run: "click",
         },
@@ -220,8 +234,10 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
             run: "click",
         },
         {
+            trigger: `body:not(:has(div.ace_line:contains("${adminCssModif}")))`,
+        },
+        {
             content: "check that the scss file was reset correctly",
-            extra_trigger: `body:not(:has(div.ace_line:contains("${adminCssModif}")))`,
             trigger: `body:not(:has(div.ace_line:contains("${demoCssModif}")))`,
             timeout: 30000, // SCSS compilation might take some time
         },

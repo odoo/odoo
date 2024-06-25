@@ -22,14 +22,18 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
         run: "click",
     },
     {
+        trigger: '#wrap:not(:has(a[href*="/event"]:contains("Last ticket test")))',
+    },
+    {
         content: "Select 2 units of `VIP` ticket type",
-        extra_trigger: '#wrap:not(:has(a[href*="/event"]:contains("Last ticket test")))',
         trigger: 'select:eq(0)',
         run: "select 2",
     },
     {
+        trigger: "select:eq(0):has(option:contains(2):selected)",
+    },
+    {
         content: "Click on `Order Now` button",
-        extra_trigger: 'select:eq(0):has(option:contains(2):selected)',
         trigger: '.a-submit:contains("Register")',
         run: "click",
     },
@@ -46,8 +50,10 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
         },
     },
     {
+        trigger: "input[name*='1-name'], input[name*='2-name']",
+    },
+    {
         content: "Validate attendees details",
-        extra_trigger: "input[name*='1-name'], input[name*='2-name']",
         trigger: "button[type=submit]:contains(Go to Payment)",
         run: "click",
     },

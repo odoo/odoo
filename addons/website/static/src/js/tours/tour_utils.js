@@ -39,12 +39,14 @@ function assertPathName(pathName, trigger) {
 }
 
 function changeBackground(snippet, position = "bottom") {
-    return {
-        trigger: ".o_we_customize_panel .o_we_bg_success",
+    return [
+        {
+            trigger: ".o_we_customize_panel .o_we_bg_success",
         content: markup(_t("<b>Customize</b> any block through this menu. Try to change the background image of this block.")),
-        position: position,
-        run: "click",
-    };
+            position: position,
+            run: "click",
+        },
+    ];
 }
 
 function changeBackgroundColor(position = "bottom") {
@@ -75,24 +77,18 @@ function changeColumnSize(position = "right") {
     };
 }
 
-function changeIcon(snippet, index = 0, position = "bottom") {
-    return {
-        trigger: `#wrapwrap .${snippet.id} i:eq(${index})`,
-        extra_trigger: "body.editor_enable",
-        content: markup(_t("<b>Double click on an icon</b> to change it with one of your choice.")),
-        position: position,
-        run: "dblclick",
-    };
-}
-
 function changeImage(snippet, position = "bottom") {
-    return {
-        trigger: snippet.id ? `#wrapwrap .${snippet.id} img` : snippet,
-        extra_trigger: "body.editor_enable",
+    return [
+        {
+            trigger: "body.editor_enable",
+        },
+        {
+            trigger: snippet.id ? `#wrapwrap .${snippet.id} img` : snippet,
         content: markup(_t("<b>Double click on an image</b> to change it with one of your choice.")),
-        position: position,
-        run: "dblclick",
-    };
+            position: position,
+            run: "dblclick",
+        },
+    ];
 }
 
 /**
@@ -236,27 +232,37 @@ function clickOnSnippet(snippet, position = "bottom") {
 }
 
 function clickOnSave(position = "bottom", timeout) {
-    return [{
-        trigger: "div:not(.o_loading_dummy) > #oe_snippets button[data-action=\"save\"]:not([disabled])",
-        // TODO this should not be needed but for now it better simulates what
-        // an human does. By the time this was added, it's technically possible
-        // to drag and drop a snippet then immediately click on save and have
-        // some problem. Worst case probably is a traceback during the redirect
-        // after save though so it's not that big of an issue. The problem will
-        // of course be solved (or at least prevented in stable). More details
-        // in related commit message.
-        extra_trigger: "body:not(:has(.o_dialog)) #oe_snippets:not(:has(.o_we_already_dragging))",
-        in_modal: false,
+    return [
+        {
+            trigger: "#oe_snippets:not(:has(.o_we_already_dragging))",
+        },
+        {
+            trigger: "body:not(:has(.o_dialog))",
+            noPrepend: true,
+        },
+        {
+            trigger:
+                'div:not(.o_loading_dummy) > #oe_snippets button[data-action="save"]:not([disabled])',
+            // TODO this should not be needed but for now it better simulates what
+            // an human does. By the time this was added, it's technically possible
+            // to drag and drop a snippet then immediately click on save and have
+            // some problem. Worst case probably is a traceback during the redirect
+            // after save though so it's not that big of an issue. The problem will
+            // of course be solved (or at least prevented in stable). More details
+            // in related commit message.
+            in_modal: false,
         content: markup(_t("Good job! It's time to <b>Save</b> your work.")),
-        position: position,
-        timeout: timeout,
-        run: "click",
-    }, {
-        isActive: ["auto"], // Just making sure save is finished in automatic tests
-        trigger: ':iframe body:not(.editor_enable)',
-        noPrepend: true,
-        timeout: timeout,
-    }];
+            position: position,
+            timeout: timeout,
+            run: "click",
+        },
+        {
+            isActive: ["auto"], // Just making sure save is finished in automatic tests
+            trigger: ":iframe body:not(.editor_enable)",
+            noPrepend: true,
+            timeout: timeout,
+        },
+    ];
 }
 
 /**
@@ -481,9 +487,12 @@ function switchWebsite(websiteId, websiteName) {
         content: `Click on the website switch to switch to website '${websiteName}'`,
         trigger: '.o_website_switcher_container button',
         run: "click",
-    }, {
+    },
+    {
+        trigger: `:iframe html:not([data-website-id="${websiteId}"])`,
+    },
+    {
         content: `Switch to website '${websiteName}'`,
-        extra_trigger: `:iframe html:not([data-website-id="${websiteId}"])`,
         trigger: `.o-dropdown--menu .dropdown-item:contains("${websiteName}")`,
         run: "click",
     }, {
@@ -506,15 +515,20 @@ function toggleMobilePreview(toggleOn) {
     const onOrOff = toggleOn ? "on" : "off";
     const mobileOnSelector = ".o_is_mobile";
     const mobileOffSelector = ":not(.o_is_mobile)";
-    return [{
-        content: `Toggle the mobile preview ${onOrOff}`,
-        trigger: ".o_we_website_top_actions [data-action='mobile']",
-        extra_trigger: `:iframe #wrapwrap${toggleOn ? mobileOffSelector : mobileOnSelector}`,
-        run: "click",
-    }, {
-        content: `Check that the mobile preview is ${onOrOff}`,
-        trigger: `:iframe #wrapwrap${toggleOn ? mobileOnSelector : mobileOffSelector}`,
-    }];
+    return [
+        {
+            trigger: `:iframe #wrapwrap${toggleOn ? mobileOffSelector : mobileOnSelector}`,
+        },
+        {
+            content: `Toggle the mobile preview ${onOrOff}`,
+            trigger: ".o_we_website_top_actions [data-action='mobile']",
+            run: "click",
+        },
+        {
+            content: `Check that the mobile preview is ${onOrOff}`,
+            trigger: `:iframe #wrapwrap${toggleOn ? mobileOnSelector : mobileOffSelector}`,
+        },
+    ];
 }
 
 export default {
@@ -524,7 +538,6 @@ export default {
     changeBackground,
     changeBackgroundColor,
     changeColumnSize,
-    changeIcon,
     changeImage,
     changeOption,
     changePaddingSize,
