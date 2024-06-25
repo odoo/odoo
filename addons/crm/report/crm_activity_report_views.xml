@@ -57,7 +57,7 @@
                     <separator/>
                     <filter string="Trailing 12 months" name="completion_date" domain="[
                         ('date', '>=', (datetime.datetime.combine(context_today() + relativedelta(days=-365), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
-                        ('date', '&lt;=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                        ('date', '&lt;=', (datetime.datetime.combine(context_today(), datetime.time(23, 59, 59)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
                     <separator/>
                     <filter name="filter_date" date="date"/>
                     <separator/>
@@ -94,9 +94,9 @@
             <field name="domain">[]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    No data yet!
+                    Let's get to work!
                 </p><p>
-                    Start scheduling activities on your opportunities
+                    Activities marked as Done on Leads will appear here, providing an overview of lead interactions.
                 </p>
             </field>
        </record>
@@ -109,9 +109,9 @@
             <field name="domain">[]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    No data yet!
+                    Let's get to work!
                 </p><p>
-                    Start scheduling activities on your opportunities
+                    Activities marked as Done on Leads will appear here, providing an overview of lead interactions.
                 </p>
             </field>
         </record>
