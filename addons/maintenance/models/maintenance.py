@@ -3,7 +3,7 @@
 import ast
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import ValidationError
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -190,7 +190,7 @@ class MaintenanceEquipment(models.Model):
         """ Read group customization in order to display all the categories in
             the kanban view, even if they are empty.
         """
-        category_ids = categories._search([], order=categories._order, access_rights_uid=SUPERUSER_ID)
+        category_ids = categories._search([], order=categories._order, grant_access=True)
         return categories.browse(category_ids)
 
 
@@ -383,7 +383,7 @@ class MaintenanceRequest(models.Model):
         """ Read group customization in order to display all the stages in the
             kanban view, even if they are empty
         """
-        stage_ids = stages._search([], order=stages._order, access_rights_uid=SUPERUSER_ID)
+        stage_ids = stages._search([], order=stages._order, grant_access=True)
         return stages.browse(stage_ids)
 
 
