@@ -3,7 +3,6 @@
 
 import re
 
-from odoo.addons.http_routing.models.ir_http import slugify
 from odoo.addons.website.tools import text_from_html
 from odoo import api, fields, models
 from odoo.osv import expression
@@ -132,7 +131,7 @@ class Page(models.Model):
         page = self.browse(int(page_id))
         copy_param = dict(name=page_name or page.name, website_id=self.env['website'].get_current_website().id)
         if page_name:
-            url = '/' + slugify(page_name, max_length=1024, path=True)
+            url = '/' + self.env['ir.http']._slugify(page_name, max_length=1024, path=True)
             copy_param['url'] = self.env['website'].get_unique_path(url)
 
         new_page = page.copy(copy_param)
@@ -176,7 +175,7 @@ class Page(models.Model):
                     redirect_old_url = url.get('redirect_old_url')
                     redirect_type = url.get('redirect_type')
                     url = url.get('url')
-                url = '/' + slugify(url, max_length=1024, path=True)
+                url = '/' + self.env['ir.http']._slugify(url, max_length=1024, path=True)
                 if page.url != url:
                     url = self.env['website'].with_context(website_id=website_id).get_unique_path(url)
                     page.menu_ids.write({'url': url})
@@ -198,7 +197,7 @@ class Page(models.Model):
 
             # If name has changed, check for key uniqueness
             if 'name' in vals and page.name != vals['name']:
-                vals['key'] = self.env['website'].with_context(website_id=website_id).get_unique_key(slugify(vals['name']))
+                vals['key'] = self.env['website'].with_context(website_id=website_id).get_unique_key(self.env['ir.http']._slugify(vals['name']))
             if 'visibility' in vals:
                 if vals['visibility'] != 'restricted_group':
                     vals['groups_id'] = False

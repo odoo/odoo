@@ -2,7 +2,6 @@ import ast
 
 import werkzeug
 
-from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.http import Controller, request, route
 from odoo.osv.expression import AND, OR
 
@@ -49,12 +48,12 @@ class ModelPageController(Controller):
         domains = [rec_domain]
 
         if record_slug:
-            _, res_id = unslug(record_slug)
+            _, res_id = request.env['ir.http']._unslug(record_slug)
             record = Model.browse(res_id).filtered_domain(AND(domains))
             # We check for slug matching because we are not entirely sure
             # that we end up seeing record for the right model
             # i.e. in case of a redirect when a "single" page doesn't match the listing
-            if not record.exists() or record_slug != slug(record):
+            if not record.exists() or record_slug != request.env['ir.http']._slug(record):
                 raise werkzeug.exceptions.NotFound()
 
             listing = request.env["website.controller.page"].search(AND([
@@ -97,7 +96,7 @@ class ModelPageController(Controller):
         def record_to_url(record):
             if not single_record_page:
                 return None
-            return "/model/%s/%s" % (single_record_page.name_slugified, slug(record))
+            return "/model/%s/%s" % (single_record_page.name_slugified, request.env['ir.http']._slug(record))
 
         if searches["search"]:
             # _name_search doesn't take offset, we reimplement the logic that builds the name domain here

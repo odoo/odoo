@@ -2,15 +2,11 @@
 #----------------------------------------------------------
 # ir_http modular http routing
 #----------------------------------------------------------
-import base64
 import hashlib
 import json
 import logging
-import mimetypes
 import os
 import re
-import sys
-import traceback
 import threading
 
 import werkzeug
@@ -25,7 +21,7 @@ except ImportError:
 
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
-from odoo.exceptions import AccessDenied, AccessError, MissingError
+from odoo.exceptions import AccessDenied
 from odoo.http import request, Response, ROUTING_KEYS, Stream
 from odoo.modules.registry import Registry
 from odoo.service import security
@@ -47,13 +43,17 @@ class ModelConverter(werkzeug.routing.BaseConverter):
         self.model = model
         self.regex = r'([0-9]+)'
 
-    def to_python(self, value):
+        IrHttp = Registry(threading.current_thread().dbname)['ir.http']
+        self.slug = IrHttp._slug
+        self.unslug = IrHttp._unslug
+
+    def to_python(self, value: str) -> models.BaseModel:
         _uid = RequestUID(value=value, converter=self)
         env = api.Environment(request.cr, _uid, request.context)
-        return env[self.model].browse(int(value))
+        return env[self.model].browse(self.unslug(value)[1])
 
-    def to_url(self, value):
-        return value.id
+    def to_url(self, value: models.BaseModel) -> str:
+        return self.slug(value)
 
 
 class ModelsConverter(werkzeug.routing.BaseConverter):
@@ -64,12 +64,12 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
         # TODO add support for slug in the form [A-Za-z0-9-] bla-bla-89 -> id 89
         self.regex = r'([0-9,]+)'
 
-    def to_python(self, value):
+    def to_python(self, value: str) -> models.BaseModel:
         _uid = RequestUID(value=value, converter=self)
         env = api.Environment(request.cr, _uid, request.context)
         return env[self.model].browse(int(v) for v in value.split(','))
 
-    def to_url(self, value):
+    def to_url(self, value: models.BaseModel) -> str:
         return ",".join(value.ids)
 
 
@@ -118,12 +118,25 @@ class IrHttp(models.AbstractModel):
     _name = 'ir.http'
     _description = "HTTP Routing"
 
+    @classmethod
+    def _slug(cls, value: models.BaseModel | tuple[int, str]) -> str:
+        if isinstance(value, tuple):
+            return str(value[0])
+        return str(value.id)
+
+    @classmethod
+    def _unslug(cls, value: str) -> tuple[str | None, int] | tuple[None, None]:
+        try:
+            return None, int(value)
+        except ValueError:
+            return None, None
+
     #------------------------------------------------------
     # Routing map
     #------------------------------------------------------
 
     @classmethod
-    def _get_converters(cls):
+    def _get_converters(cls) -> dict[str, type]:
         return {'model': ModelConverter, 'models': ModelsConverter, 'int': SignedIntConverter}
 
     @classmethod

@@ -14,7 +14,6 @@ from markupsafe import Markup
 from werkzeug import urls
 
 from odoo import api, fields, models, _
-from odoo.addons.http_routing.models.ir_http import slug, url_for
 from odoo.exceptions import RedirectWarning, UserError, AccessError
 from odoo.http import request
 from odoo.tools import html2plaintext, sql
@@ -490,8 +489,8 @@ class Slide(models.Model):
             elif slide.slide_category in ['infographic', 'document'] and slide.source_type == 'external' and slide.google_drive_id:
                 embed_code = Markup('<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0" aria-label="%s"></iframe>') % (slide.google_drive_id, _('Google Drive'))
             elif slide.slide_category == 'document' and slide.source_type == 'local_file':
-                slide_url = base_url + url_for('/slides/embed/%s?page=1' % slide.id)
-                slide_url_external = base_url + url_for('/slides/embed_external/%s?page=1' % slide.id)
+                slide_url = base_url + self.env['ir.http']._url_for('/slides/embed/%s?page=1' % slide.id)
+                slide_url_external = base_url + self.env['ir.http']._url_for('/slides/embed_external/%s?page=1' % slide.id)
                 base_embed_code = Markup('<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0" aria-label="%s"></iframe>')
                 iframe_aria_label = _('Embed code')
                 embed_code = base_embed_code % (slide_url, 315, 420, iframe_aria_label)
@@ -596,7 +595,7 @@ class Slide(models.Model):
         for slide in self:
             if slide.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 base_url = slide.channel_id.get_base_url()
-                slide.website_url = '%s/slides/slide/%s' % (base_url, slug(slide))
+                slide.website_url = '%s/slides/slide/%s' % (base_url, self.env['ir.http']._slug(slide))
 
     @api.depends('is_published')
     def _compute_website_share_url(self):
@@ -1399,4 +1398,4 @@ class Slide(models.Model):
         """ Overridden to use a relative URL instead of an absolute when website_id is False. """
         if self.website_id:
             return super().open_website_url()
-        return self.env['website'].get_client_action(f'/slides/slide/{slug(self)}')
+        return self.env['website'].get_client_action(f'/slides/slide/{self.env["ir.http"]._slug(self)}')

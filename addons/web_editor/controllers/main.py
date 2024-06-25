@@ -17,15 +17,13 @@ from math import floor
 from os.path import join as opj
 
 from odoo.http import request, Response
-from odoo import http, tools, _, SUPERUSER_ID, release
-from odoo.addons.http_routing.models.ir_http import slug, unslug
+from odoo import http, tools, _, SUPERUSER_ID
 from odoo.addons.web_editor.tools import get_video_url_data
 from odoo.exceptions import UserError, MissingError, AccessError
 from odoo.tools.misc import file_open
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_data_uri, binary_to_image
 from odoo.addons.iap.tools import iap_tools
-from odoo.addons.base.models.assetsbundle import AssetsBundle
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
@@ -689,7 +687,8 @@ class Web_Editor(http.Controller):
         """
         svg = None
         if module == 'illustration':
-            attachment = request.env['ir.attachment'].sudo().browse(unslug(filename)[1])
+            res_id = request.env['ir.http']._unslug(filename)[1]
+            attachment = request.env['ir.attachment'].sudo().browse(res_id)
             if (not attachment.exists()
                     or attachment.type != 'binary'
                     or not attachment.public
@@ -888,7 +887,7 @@ class Web_Editor(http.Controller):
                 attachment = IrAttachment.with_user(SUPERUSER_ID).create(attachment_data)
             if media[id]['is_dynamic_svg']:
                 colorParams = werkzeug.urls.url_encode(media[id]['dynamic_colors'])
-                attachment['url'] = '/web_editor/shape/illustration/%s?%s' % (slug(attachment), colorParams)
+                attachment['url'] = '/web_editor/shape/illustration/%s?%s' % (request.env['ir.http']._slug(attachment), colorParams)
             attachments.append(attachment._get_media_info())
 
         return attachments
