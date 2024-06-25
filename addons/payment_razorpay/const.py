@@ -115,6 +115,7 @@ DEFAULT_PAYMENT_METHOD_CODES = {
 FALLBACK_PAYMENT_METHOD_CODES = {
     'wallets_india',
     'paylater_india',
+    'emi',
 }
 
 # Mapping of payment method codes to Razorpay codes.
