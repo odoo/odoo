@@ -31,8 +31,12 @@
     },
         tourUtils.goToCart({quantity: 2}),
     {
+        isActive: ["auto"],
+        trigger:
+            '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:value(2)',
+    },
+    {
         content: "Check for 2 products in cart and proceed to checkout",
-        extra_trigger: '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:value(2)',
         trigger: 'a[href*="/shop/checkout"]',
         run: "click",
     },
@@ -81,9 +85,12 @@
         run: "click",
     },
     {
+        isActive: ["auto"],
+        trigger: 'h3:contains("Delivery address")',
+    },
+    {
         content: "Fulfill shipping address form",
         trigger: 'select[name="country_id"]',
-        extra_trigger: 'h3:contains("Delivery address")',
         run: "selectByLabel Afghanistan",
     },
     {
@@ -130,9 +137,12 @@
         run: "click",
     },
     {
+        isActive: ["auto"],
+        trigger: 'h3:contains("Billing address")',
+    },
+    {
         content: "Change billing address form",
         trigger: 'select[name="country_id"]',
-        extra_trigger: 'h3:contains("Billing address")',
     },
     {
         trigger: `input[name="name"]`,
@@ -166,8 +176,12 @@
         run: "click",
     },
     {
+        isActive: ["auto"],
+        trigger:
+            'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
+    },
+    {
         content: "Pay Now",
-        extra_trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
         trigger: 'button[name="o_payment_submit_button"]:not(:disabled)',
         run: "click",
     },
@@ -196,8 +210,11 @@
     },
     // Sign in as admin change config auth_signup -> b2b, sale_show_tax -> total and Logout
     {
+        isActive: ["auto"],
+        trigger: ".o_header_standard:not(.o_transitioning)",
+    },
+    {
         content: "Open Dropdown for logout",
-        extra_trigger: ".o_header_standard:not(.o_transitioning)",
         trigger: 'header#top li.dropdown:visible a:contains("abcd")',
         run: "click",
     },
@@ -232,8 +249,11 @@
         run: "click"
     },
     {
+        isActive: ["auto"],
+        trigger: ".o_frontend_to_backend_nav", // Check if the user is connected
+    },
+    {
         content: "Configuration Settings for 'Tax Included' and sign up 'On Invitation'",
-        extra_trigger: '.o_frontend_to_backend_nav', // Check if the user is connected
         trigger: '#wrapwrap',
         run: function () {
             var def1 = rpc(`/web/dataset/call_kw/res.config.settings/create`, {
@@ -279,9 +299,13 @@
         run: "click",
     },
         tourUtils.goToCart({quantity: 2}),
+        {
+            isActive: ["auto"],
+            trigger:
+                '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:value(2)',
+        },
     {
         content: "Check for 2 products in cart and proceed to checkout",
-        extra_trigger: '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:value(2)',
         trigger: 'a[href*="/shop/checkout"]',
         run: "click",
     },
@@ -349,28 +373,40 @@
         run: "click",
     },
     {
+        isActive: ["auto"],
+        trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
+    },
+    {
         content: "Pay Now",
-        extra_trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
         trigger: 'button[name="o_payment_submit_button"]:not(:disabled)',
         run: "click",
     },
     {
+        isActive: ["auto"],
+        trigger: '.oe_cart .oe_website_sale_tx_status',
+    },
+    {
         content: "Open Dropdown for See quotation",
-        extra_trigger: '.oe_cart .oe_website_sale_tx_status',
         trigger: 'header#top li.dropdown:visible a:contains("abc")',
         run: "click",
     },
     {
+        isActive: ["auto"],
+        trigger: "header#top li.dropdown .js_usermenu.show",
+    },
+    {
         content: "My account",
-        extra_trigger: 'header#top li.dropdown .js_usermenu.show',
         trigger: 'header#top .dropdown-menu a[href="/my/home"]:visible',
         run: "click",
     },
 
     // enable extra step on website checkout and check extra step on checkout process
     {
+        isActive: ["auto"],
+        trigger: ".o_header_standard:not(.o_transitioning)",
+    },
+    {
         content: "Open Dropdown for logout",
-        extra_trigger: ".o_header_standard:not(.o_transitioning)",
         trigger: 'header#top li.dropdown:visible a:contains("abc")',
         run: "click",
     },
@@ -410,8 +446,11 @@
         url: '/shop/cart',
         steps: () => [
     {
+        isActive: ["auto"],
+        trigger: '.o_wizard:contains("Extra Info")',
+    },
+    {
         content: "Open Dropdown for logout",
-        extra_trigger: '.o_wizard:contains("Extra Info")',
         trigger: 'header#top li.dropdown:visible a:contains("Mitchell Admin")',
         run: "click",
     },

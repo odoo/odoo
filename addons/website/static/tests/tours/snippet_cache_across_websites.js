@@ -17,8 +17,10 @@ wTourUtils.registerWebsitePreviewTour('snippet_cache_across_websites', {
     ...wTourUtils.switchWebsite(2, 'My Website 2'),
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
+        trigger: '#oe_snippets:not(:has(#snippet_custom_body span:contains("custom_snippet_test")))',
+    },
+    {
         content: "Check that the custom snippet is not here",
-        extra_trigger: '#oe_snippets:not(:has(#snippet_custom_body span:contains("custom_snippet_test")))',
         trigger: '#oe_snippets:not(:has(#snippet_custom))',
         run: () => null,
     },

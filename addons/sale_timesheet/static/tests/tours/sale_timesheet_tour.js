@@ -97,9 +97,12 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown.',
     run: "click",
-}, {
+},
+{
+    trigger: "div.o_notebook_headers",
+},
+{
     trigger: 'a.nav-link:contains(Timesheets)',
-    extra_trigger: 'div.o_notebook_headers',
     content: 'Click on Timesheets page to log a timesheet',
     run: "click",
 }, {
@@ -164,9 +167,12 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: 'button.o_list_button_add',
     content: 'Click on Create button to create a new project and see the different configuration available for the project.',
     run: "click",
-}, {
+},
+{
+    trigger: "div.o_notebook_headers",
+},
+{
     trigger: 'a.nav-link[name="settings"]',
-    extra_trigger: 'div.o_notebook_headers',
     content: 'Click on Settings page to check the allow_billable checkbox',
     run: "click",
 }, {
@@ -193,9 +199,12 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: '[name="sale_line_id"] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the Sales Order Item in the autocomplete dropdown.',
     run: "click",
-}, {
+},
+{
+    trigger: "div.o_notebook_headers",
+},
+{
     trigger: 'a.nav-link[name="billing_employee_rate"]',
-    extra_trigger: 'div.o_notebook_headers',
     content: 'Click on Invoicing tab to configure the invoicing of this project.',
     run: "click",
 }, {
@@ -244,9 +253,12 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown',
     run: "click",
-}, {
+},
+{
+    trigger: "div.o_notebook_headers",
+},
+{
     trigger: 'a.nav-link[name="settings"]',
-    extra_trigger: 'div.o_notebook_headers',
     content: 'Click on Settings tab to configure this project.',
     run: "click",
 }, {

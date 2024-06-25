@@ -98,5 +98,9 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
 }, {
     trigger: 'button:contains("Confirm")',
     run: 'click' // apply the matrix
-}, ...stepUtils.saveForm({ extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("8.20")' })
+},
+{
+    trigger: ".o_field_cell.o_data_cell.o_list_number:contains(8.20)",
+},
+...stepUtils.saveForm()
 ]});
