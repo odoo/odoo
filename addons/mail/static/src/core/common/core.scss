@@ -141,3 +141,11 @@ a.o-discuss-mention {
         visibility: visible;
     }
 }
+
+// .o-opacity-hoberable class disable the opacity effect (see opacity-100-hover) on
+// device that dont support the hover effect (mainly touch device).
+@media (hover: none) {
+    .o-opacity-hoverable {
+        opacity: 100 !important;
+    }
+}
