@@ -3181,14 +3181,6 @@ export class OdooEditor extends EventTarget {
                     this.options.convertNumericToUnit
                 ));
             }
-
-            const table = getInSelection(this.document, 'table');
-            const toolbarButton = this.toolbar.querySelector('.toolbar-edit-table');
-            if (toolbarButton) {
-                this.toolbar.querySelector('.toolbar-edit-table').style.display = table
-                    ? 'block'
-                    : 'none';
-            }
         }
         this.updateColorpickerLabels();
         const listUIClasses = {UL: 'fa-list-ul', OL: 'fa-list-ol', CL: 'fa-tasks'};
