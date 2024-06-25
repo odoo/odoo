@@ -462,7 +462,7 @@ export class OdooPivotModel extends PivotModel {
             indent,
         });
 
-        const subTreeKeys = tree.sortedKeys || tree.directSubTrees.keys();
+        const subTreeKeys = tree.sortedKeys || [...tree.directSubTrees.keys()];
         subTreeKeys.forEach((subTreeKey) => {
             const subTree = tree.directSubTrees.get(subTreeKey);
             rows.push(...this._getSpreadsheetRows(subTree));
