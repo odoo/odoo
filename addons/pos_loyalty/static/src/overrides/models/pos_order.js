@@ -94,7 +94,15 @@ patch(PosOrder.prototype, {
             }
         }
     },
-
+    setupState(vals) {
+        super.setupState(...arguments);
+        this.uiState.disabledRewards = new Set(vals.disabledRewards);
+    },
+    serializeState() {
+        const state = super.serializeState(...arguments);
+        state.disabledRewards = [...this.uiState.disabledRewards];
+        return state;
+    },
     /** @override */
     getEmailItems() {
         return super

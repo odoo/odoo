@@ -155,6 +155,15 @@ export class Base {
             }
         }
     }
+
+    setupState(vals) {
+        this.uiState = vals;
+    }
+
+    serializeState() {
+        return { ...this.uiState };
+    }
+
     update(vals) {
         this.model.update(this, vals);
     }
@@ -767,7 +776,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             const newRec = this.loadData({ [model]: data });
             for (const record of newRec[model]) {
                 if (uiState[record[key]]) {
-                    record.uiState = uiState[record[key]];
+                    record.setupState(uiState[record[key]]);
                 }
             }
 
