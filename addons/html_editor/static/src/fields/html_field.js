@@ -4,6 +4,7 @@ import { Component, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { localization } from "@web/core/l10n/localization";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { HtmlViewer } from "./html_viewer";
@@ -173,6 +174,7 @@ export class HtmlField extends Component {
                     },
                 ],
             },
+            direction: localization.direction || "ltr",
             getRecordInfo: () => {
                 const { resModel, resId } = this.props.record;
                 return { resModel, resId };
