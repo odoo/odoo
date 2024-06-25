@@ -556,52 +556,16 @@ class Lead(models.Model):
           * phone_sanitized exact match;
           * same commercial entity;
         """
-        SEARCH_RESULT_LIMIT = 21
-
-        def return_if_relevant(model_name, domain):
-            """ Returns the recordset obtained by performing a search on the provided
-            model with the provided domain if the cardinality of that recordset is
-            below a given threshold (i.e: `SEARCH_RESULT_LIMIT`). Otherwise, returns
-            an empty recordset of the provided model as it indicates search term
-            was not relevant.
-            Note: The function will use the administrator privileges to guarantee
-            that a maximum amount of leads will be included in the search results
-            and transcend multi-company record rules. It also includes archived
-            records. Idea is that counter indicates duplicates are present and
-            the lead could be escalated to managers.
-            """
-            model = self.env[model_name].sudo().with_context(active_test=False)
-            res = model.search(domain, limit=SEARCH_RESULT_LIMIT)
-            return res if len(res) < SEARCH_RESULT_LIMIT else model
-
         for lead in self:
-            lead_id = lead._origin.id if isinstance(lead.id, models.NewId) else lead.id
-            common_lead_domain = [
-                ('id', '!=', lead_id)
-            ]
-
             duplicate_lead_ids = self.env['crm.lead']
-
-            # check the "company" email domain duplicates
-            if lead.email_domain_criterion:
-                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
-                    ('email_domain_criterion', '=', lead.email_domain_criterion)
-                ])
-            # check for "same commercial entity" duplicates
-            if lead.partner_id and lead.partner_id.commercial_partner_id:
-                duplicate_lead_ids |= lead.with_context(active_test=False).search(common_lead_domain + [
-                    ("partner_id", "child_of", lead.partner_id.commercial_partner_id.ids)
-                ])
-            # check the phone number duplicates, based on phone_sanitized. Only
-            # exact matches are found, and the single one stored in phone_sanitized
-            # in case phone and mobile are both set.
-            if lead.phone_sanitized:
-                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
-                    ('phone_sanitized', '=', lead.phone_sanitized)
-                ])
-
-            lead.duplicate_lead_ids = duplicate_lead_ids + lead
-            lead.duplicate_lead_count = len(duplicate_lead_ids)
+            duplicate_lead_ids |= lead._get_lead_duplicates(
+                partner=lead.partner_id,
+                email=lead.email_domain_criterion,
+                phone_sanitized=lead.phone_sanitized,
+                include_lost=True)
+            duplicate_lead_ids |= lead
+            lead.duplicate_lead_ids = duplicate_lead_ids
+            lead.duplicate_lead_count = len(duplicate_lead_ids - lead)
 
     @api.depends('email_from', 'partner_id')
     def _compute_partner_email_update(self):
@@ -1749,34 +1713,60 @@ class Lead(models.Model):
     # CLASSIFICATION TOOLS
     # --------------------------------------------------
 
-    def _get_lead_duplicates(self, partner=None, email=None, include_lost=False):
-        """ Search for leads that seem duplicated based on partner / email.
+    def _get_lead_duplicates(self, partner=None, email=None, phone_sanitized=None, include_lost=False):
+        """ Search for leads that seem duplicated based on partner / email / phone.
 
         :param partner : optional customer when searching duplicated
-        :param email: email (possibly formatted) to search
-        :param boolean include_lost: if True, search includes archived opportunities
-          (still only active leads are considered). If False, search for active
-          and not won leads and opportunities;
+        :param email: email domain exact match
+        :param phone_sanitized: phone_sanitized exact match
+        :param boolean include_lost: if True, search includes archived records.
+          If False, search for active and not won leads and opportunities;
         """
-        if not email and not partner:
-            return self.env['crm.lead']
+        duplicate_lead_ids = self.env['crm.lead']
+        if not email and not partner and not phone_sanitized:
+            return duplicate_lead_ids
+
+        SEARCH_RESULT_LIMIT = 21
+
+        def return_if_relevant(model_name, domain):
+            """ Returns the recordset obtained by performing a search on the provided
+            model with the provided domain if the cardinality of that recordset is
+            below a given threshold (i.e: `SEARCH_RESULT_LIMIT`). Otherwise, returns
+            an empty recordset of the provided model as it indicates search term
+            was not relevant.
+            Note: The function will use the administrator privileges to guarantee
+            that a maximum amount of leads will be included in the search results
+            and transcend multi-company record rules. It also includes archived
+            records. Idea is that counter indicates duplicates are present and
+            the lead could be escalated to managers.
+            """
+            model = self.env[model_name].with_context(active_test=False)
+            res = model.search(domain, limit=SEARCH_RESULT_LIMIT)
+            return res if len(res) < SEARCH_RESULT_LIMIT else model
 
         domain = []
-        for normalized_email in [tools.email_normalize(email) for email in tools.email_split(email)]:
-            domain.append(('email_normalized', '=', normalized_email))
-        if partner:
-            domain.append(('partner_id', '=', partner.id))
-
-        if not domain:
-            return self.env['crm.lead']
-
-        domain = ['|'] * (len(domain) - 1) + domain
-        if include_lost:
-            domain += ['|', ('type', '=', 'opportunity'), ('active', '=', True)]
-        else:
+        if not include_lost:
             domain += ['&', ('active', '=', True), '|', ('stage_id', '=', False), ('stage_id.is_won', '=', False)]
 
-        return self.with_context(active_test=False).search(domain)
+        email_domain = []
+        for email_domain_criterion in [iap_tools.mail_prepare_for_domain_search(email) for email in tools.email_split(email)]:
+            email_domain.append(('email_domain_criterion', '=', email_domain_criterion))
+        # check the "company" email domain duplicates
+        if email_domain:
+            duplicate_lead_ids |= return_if_relevant(
+                'crm.lead', email_domain + domain)
+        # check for "same commercial entity" duplicates
+        if partner and partner.commercial_partner_id:
+            duplicate_lead_ids |= self.env['crm.lead'].with_context(active_test=False).search(domain + [
+                ("partner_id", "child_of", partner.commercial_partner_id.ids)
+            ])
+        # check the phone number duplicates, based on phone_sanitized. Only
+        if phone_sanitized:
+            duplicate_lead_ids |= return_if_relevant('crm.lead', domain + [
+                ('phone_sanitized', '=', phone_sanitized)
+            ])
+
+        return duplicate_lead_ids
 
     def _sort_by_confidence_level(self, reverse=False):
         """ Sorting the leads/opps according to the confidence level to it
@@ -1805,27 +1795,13 @@ class Lead(models.Model):
     # CUSTOMER TOOLS
     # --------------------------------------------------
 
-    def _find_matching_partner(self, email_only=False):
-        """ Try to find a matching partner with available information on the
-        lead, using notably customer's name, email, ...
-
-        :param email_only: Only find a matching based on the email. To use
-            for automatic process where ilike based on name can be too dangerous
-        :return: partner browse record
-        """
+    def _find_matching_partner(self):
         self.ensure_one()
         partner = self.partner_id
 
         if not partner and self.email_from:
-            partner = self.env['res.partner'].search([('email', '=', self.email_from)], limit=1)
-
-        if not partner and not email_only:
-            # search through the existing partners based on the lead's partner or contact name
-            # to be aligned with _create_customer, search on lead's name as last possibility
-            for customer_potential_name in [self[field_name] for field_name in ['partner_name', 'contact_name', 'name'] if self[field_name]]:
-                partner = self.env['res.partner'].search([('name', 'ilike', customer_potential_name)], limit=1)
-                if partner:
-                    break
+            # some of the tests contain formatted emails, and it appears possible to have formatted emails in partner emails so used ilike
+            partner = self.env['res.partner'].search([('email', 'ilike', self.email_from)], limit=1)
 
         return partner
 
