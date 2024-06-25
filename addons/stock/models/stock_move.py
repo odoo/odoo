@@ -375,6 +375,8 @@ class StockMove(models.Model):
 
         err = []
         for move in self:
+            if move.state == 'done':
+                continue
             uom_qty = float_round(move.quantity, precision_rounding=move.product_uom.rounding, rounding_method='HALF-UP')
             precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             qty = float_round(move.quantity, precision_digits=precision_digits, rounding_method='HALF-UP')

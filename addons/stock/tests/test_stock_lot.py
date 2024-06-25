@@ -78,9 +78,17 @@ class TestLotSerial(TestStockCommon):
 
     def test_bypass_reservation(self):
         """
-        Check that the reservation of is bypassed when the stock move is added after the picking is done
+        Check that the reservation of is bypassed when the stock move is added after the picking is done.
+
+        Create and validate a delivery for a product. Unlock the picking and add a stock move or modify 
+        the quantity on a done move. Since the move is done, the stock should not be updated.
         """
         customer = self.PartnerObj.create({'name': 'bob'})
+        product = self.productA
+        product.tracking = False
+        stock = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(product, stock, 10)
+        stock_quant = product.stock_quant_ids.filtered(lambda q: q.location_id == stock)
         delivery_picking = self.env['stock.picking'].create({
             'partner_id': customer.id,
             'picking_type_id': self.picking_type_out,
@@ -95,14 +103,18 @@ class TestLotSerial(TestStockCommon):
         })
         delivery_picking.button_validate()
         delivery_picking.is_locked = False
-        self.env['stock.move.line'].create({
-            'product_id': self.productA.id,
-            'product_uom_id': self.productA.uom_id.id,
+        additional_move = self.env['stock.move'].create({
+            'name': product.name,
+            'product_id': product.id,
             'picking_id': delivery_picking.id,
-            'quantity': 1,
-            'lot_id': self.lot_p_a.id,
-            'quant_id': self.lot_p_a.quant_ids.id
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'quantity': 1.0,
+            'state': 'done',
         })
-        self.assertRecordValues(delivery_picking.move_ids, [{'state': 'done', 'quantity': 5.0, 'picked': True}, {'state': 'done', 'quantity': 1.0, 'picked': True}])
-        quant = self.lot_p_a.quant_ids.filtered(lambda q: q.location_id == self.locationA)
-        self.assertRecordValues(quant, [{'quantity': 9.0, 'reserved_quantity': 0.0}])
+        self.assertRecordValues(delivery_picking.move_ids, [{'state': 'done', 'quantity': 5.0}, {'state': 'done', 'quantity': 1.0}])
+        self.assertRecordValues(stock_quant, [{'quantity': 10.0, 'reserved_quantity': 0.0}])
+        self.assertFalse(additional_move.move_line_ids)
+        delivery_picking.move_ids[1].quantity = 5.0
+        self.assertRecordValues(stock_quant, [{'quantity': 10.0, 'reserved_quantity': 0.0}])
+        self.assertFalse(additional_move.move_line_ids)
