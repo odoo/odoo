@@ -6,7 +6,7 @@ import { ChatGPTAlternativesDialog } from "./chatgpt_alternatives_dialog";
 
 export class ChatGPTPlugin extends Plugin {
     static name = "chatgpt";
-    static dependencies = ["selection", "history", "dom"];
+    static dependencies = ["selection", "history", "dom", "sanitize"];
     static resources = (p) => ({
         toolbarGroup: {
             id: "ai",
@@ -90,8 +90,9 @@ export class ChatGPTPlugin extends Plugin {
             },
         };
         // collapse to end
+        const sanitize = this.shared.sanitize;
         if (selection.isCollapsed) {
-            this.services.dialog.add(ChatGPTPromptDialog, params, { onClose });
+            this.services.dialog.add(ChatGPTPromptDialog, { ...params, sanitize }, { onClose });
         } else {
             const range = new Range();
             range.setStart(selection.startContainer, selection.startOffset);
@@ -99,7 +100,7 @@ export class ChatGPTPlugin extends Plugin {
             const originalText = range.toString() || "";
             this.services.dialog.add(
                 ChatGPTAlternativesDialog,
-                { ...params, originalText },
+                { ...params, originalText, sanitize },
                 { onClose }
             );
         }

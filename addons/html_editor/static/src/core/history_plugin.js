@@ -81,7 +81,7 @@ export class HistoryPlugin extends Plugin {
     static name = "history";
     static dependencies = ["dom", "selection"];
     static shared = [
-        "resetContent",
+        "reset",
         "canUndo",
         "canRedo",
         "makeSavePoint",
@@ -171,15 +171,6 @@ export class HistoryPlugin extends Plugin {
         this.clean();
         this.steps.push(this.makeSnapshotStep());
         this.dispatch("HISTORY_RESET", { content });
-    }
-    /**
-     * @param { string } [value]
-     */
-    resetContent(value) {
-        value = value || "<p><br></p>";
-        this.editable.innerHTML = value;
-        this.dispatch("NORMALIZE", { node: this.editable });
-        this.reset(value);
     }
     /**
      * @param { HistoryStep[] } steps

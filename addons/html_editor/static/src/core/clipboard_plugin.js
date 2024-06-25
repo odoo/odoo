@@ -336,8 +336,10 @@ export class ClipboardPlugin extends Plugin {
      * @returns {DocumentFragment}
      */
     prepareClipboardData(clipboardData) {
+        const fragment = parseHTML(this.document, clipboardData);
+        this.shared.sanitize(fragment, { IN_PLACE: true });
         const container = this.document.createElement("fake-container");
-        container.append(parseHTML(this.document, clipboardData));
+        container.append(fragment);
 
         for (const tableElement of container.querySelectorAll("table")) {
             tableElement.classList.add("table", "table-bordered", "o_table");
@@ -372,25 +374,25 @@ export class ClipboardPlugin extends Plugin {
         // particular case in all of those functions. In fact, this case cannot
         // happen on a new document created using this editor, but will happen
         // instantly when editing a document that was created from Etherpad.
-        const fragment = this.document.createDocumentFragment();
+        const result = this.document.createDocumentFragment();
         let p = this.document.createElement("p");
         for (const child of [...container.childNodes]) {
             if (isBlock(child)) {
                 if (p.childNodes.length > 0) {
-                    fragment.appendChild(p);
+                    result.appendChild(p);
                     p = this.document.createElement("p");
                 }
-                fragment.appendChild(child);
+                result.appendChild(child);
             } else {
                 p.appendChild(child);
             }
 
             if (p.childNodes.length > 0) {
-                fragment.appendChild(p);
+                result.appendChild(p);
             }
 
             // Split elements containing <br> into seperate elements for each line.
-            const brs = fragment.querySelectorAll("br");
+            const brs = result.querySelectorAll("br");
             for (const br of brs) {
                 const block = closestBlock(br);
                 if (
@@ -409,7 +411,7 @@ export class ClipboardPlugin extends Plugin {
                 }
             }
         }
-        return fragment;
+        return result;
     }
     /**
      * Clean a node for safely pasting. Cleaning an element involves unwrapping
