@@ -284,7 +284,13 @@
                             </t>
                             <div class="row" t-if="dashboard.nb_lines_outstanding_pay_account_balance > 0">
                                 <div id="dashboard_bank_cash_outstanding_balance" class="col overflow-hidden text-start">
-                                    <a type="action" name="%(account.action_account_all_payments)d" context="{'search_default_unmatched': True, 'search_default_journal_id': id}">Payments</a>
+                                    <a
+                                        type="action"
+                                        name="%(account.action_account_all_payments)d"
+                                        context="{'search_default_unmatched': True, 'search_default_journal_id': id, 'search_default_state_posted': True, }"
+                                    >
+                                        Payments
+                                    </a>
                                 </div>
                                 <div class="col-auto text-end">
                                     <span><t t-out="dashboard.outstanding_pay_account_balance"/></span>
