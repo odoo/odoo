@@ -42,15 +42,26 @@ class WebsiteProfile(http.Controller):
             Raises a Not Found Exception when the profile does not exist
         """
         user_sudo = request.env['res.users'].sudo().browse(user_id)
-        # User can access - no matter what - his own profile
-        if user_sudo.id == request.env.user.id:
-            return user_sudo, False
-        if request.env.user.karma < request.website.karma_profile_min:
-            return False, _("Not have enough karma to view other users' profile.")
-        elif not user_sudo.exists():
+
+        # Design:
+        # - Negative Check (Deny Conditions First) VS Positive Check first?
+        # - Prevelance priority ??
+
+        # ?? why that wasn't first before (performance?),
+        # ??why would not-existing be allowed to access non-existing website
+        if not user_sudo.exists():
             raise request.not_found()
-        elif user_sudo.karma == 0 or not user_sudo.website_published:
+
+        # User can access always access his own profile (Highly prevelent I guess -> check first)
+        elif user_sudo.id == request.env.user.id:
+            return user_sudo, False
+
+        # Profile beeing published is more specyfic than general karma requirement
+        if not user_sudo.website_published:
             return False, _('This profile is private!')
+
+        elif request.env.user.karma < request.website.karma_profile_min:
+            return False, _("Not have enough karma to view other users' profile.")
         return user_sudo, False
 
     def _prepare_user_values(self, **kwargs):
