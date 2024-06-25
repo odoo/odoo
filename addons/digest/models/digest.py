@@ -444,11 +444,11 @@ class Digest(models.Model):
     def _check_daily_logs(self):
         """ Badly named method that checks user logs and slowdown the sending
         of digest emails based on recipients being away. """
-        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        today = datetime.now().replace(microsecond=0)
         to_slowdown = self.env['digest.digest']
         for digest in self:
-            if digest.periodicity == 'daily':  # 3 days ago
-                limit_dt = today - relativedelta(days=3)
+            if digest.periodicity == 'daily':  # 2 days ago
+                limit_dt = today - relativedelta(days=2)
             elif digest.periodicity == 'weekly':  # 1 week ago
                 limit_dt = today - relativedelta(days=7)
             elif digest.periodicity == 'monthly':  # 1 month ago
