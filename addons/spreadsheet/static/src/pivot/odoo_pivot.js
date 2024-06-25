@@ -4,12 +4,12 @@ import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { OdooViewsDataSource } from "../data_sources/odoo_views_data_source";
-import { OdooPivotModel } from "./pivot_model";
+import { NO_RECORD_AT_THIS_POSITION, OdooPivotModel } from "./pivot_model";
 import { EvaluationError, PivotRuntimeDefinition, registries, helpers } from "@odoo/o-spreadsheet";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
 
 const { pivotRegistry, supportedPivotPositionalFormulaRegistry } = registries;
-const { pivotTimeAdapter } = helpers;
+const { pivotTimeAdapter, toString, areDomainArgsFieldsValid } = helpers;
 
 /**
  * @typedef {import("@odoo/o-spreadsheet").FPayload} FPayload
@@ -96,6 +96,62 @@ export class OdooPivot extends OdooViewsDataSource {
     }
 
     /**
+     * @param {import("@odoo/o-spreadsheet").Maybe<FPayload>[]} args
+     *
+     * @returns {PivotDomain}
+     */
+    parseArgsToPivotDomain(args) {
+        /** @type {PivotDomain} */
+        const domain = [];
+        const stringArgs = args.map(toString);
+        for (let i = 0; i < stringArgs.length; i += 2) {
+            if (stringArgs[i] === "measure") {
+                domain.push({ field: stringArgs[i], value: stringArgs[i + 1] });
+                continue;
+            }
+            const { dimensionWithGranularity, isPositional, field } = this.parseGroupField(
+                stringArgs[i]
+            );
+            if (isPositional) {
+                const previousDomain = [
+                    ...domain,
+                    // Need to keep the "#"
+                    { field: stringArgs[i], value: stringArgs[i + 1], type: "number" },
+                ];
+                domain.push({
+                    field: dimensionWithGranularity,
+                    value: this.getLastPivotGroupValue(previousDomain),
+                    type: field.type,
+                });
+            } else {
+                domain.push({
+                    field: dimensionWithGranularity,
+                    value: stringArgs[i + 1],
+                    type: field.type,
+                });
+            }
+        }
+        return domain;
+    }
+
+    /**
+     * @param {import("@odoo/o-spreadsheet").Maybe<FPayload>[]} args
+     * @returns {boolean}
+     */
+    areDomainArgsFieldsValid(args) {
+        let dimensions = args
+            .filter((_, index) => index % 2 === 0)
+            .map(toString)
+            .map((arg) =>
+                arg === "measure" ? "measure" : this.parseGroupField(arg).dimensionWithGranularity
+            );
+        if (dimensions.length && dimensions.at(-1) === "measure") {
+            dimensions = dimensions.slice(0, -1);
+        }
+        return areDomainArgsFieldsValid(dimensions, this.definition);
+    }
+
+    /**
      * Retrieves the display name of the measure with the given name from the pivot model.
      *
      * @param {string} name - The name of the measure.
@@ -127,11 +183,8 @@ export class OdooPivot extends OdooViewsDataSource {
             const measureName = lastNode.value;
             return { value: this.getMeasure(measureName).displayName };
         }
-        const value = this._model.getGroupByCellValue(
-            lastNode.field,
-            this._model.getLastPivotGroupValue(domain)
-        );
-        const format = this._getPivotFieldFormat(lastNode.field);
+        const value = this._model.getGroupByCellValue(lastNode.field, lastNode.value);
+        const format = this._getPivotFieldFormat(lastNode.field, lastNode.value);
         return { value, format };
     }
 
@@ -171,7 +224,7 @@ export class OdooPivot extends OdooViewsDataSource {
      * @param {string} fieldName
      * @returns {string | undefined}
      */
-    _getPivotFieldFormat(fieldName) {
+    _getPivotFieldFormat(fieldName, value) {
         const { field, granularity } = this.parseGroupField(fieldName);
         switch (field.type) {
             case "integer":
@@ -183,7 +236,7 @@ export class OdooPivot extends OdooViewsDataSource {
             case "date":
             case "datetime": {
                 const timeAdapter = pivotTimeAdapter(granularity);
-                return timeAdapter.getFormat(this.getters.getLocale());
+                return timeAdapter.toValueAndFormat(value, this.getters.getLocale()).format;
             }
             default:
                 return undefined;
@@ -197,6 +250,9 @@ export class OdooPivot extends OdooViewsDataSource {
      */
     getPivotCellValueAndFormat(measureName, domain) {
         this.assertIsValid();
+        if (domain.filter((node) => node.value === NO_RECORD_AT_THIS_POSITION).length) {
+            return { value: "" };
+        }
         const value = this._model.getPivotCellValue(measureName, domain);
         const measure = this.getMeasure(measureName);
         let format;
@@ -206,7 +262,10 @@ export class OdooPivot extends OdooViewsDataSource {
                 format = "0";
                 break;
             default:
-                format = measure.name === "__count" ? "0" : this._getPivotFieldFormat(measure.name);
+                format =
+                    measure.name === "__count"
+                        ? "0"
+                        : this._getPivotFieldFormat(measure.name, value);
         }
         return { value, format };
     }

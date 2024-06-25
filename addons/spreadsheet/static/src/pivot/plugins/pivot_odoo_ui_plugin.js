@@ -20,8 +20,8 @@ export class PivotOdooUIPlugin extends OdooUIPlugin {
                 this.refreshAllPivots();
                 break;
             case "INSERT_ODOO_FIX_PIVOT": {
-                const { cols, rows, measures, rowTitle } = cmd.table;
-                const table = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
+                const { cols, rows, measures, fieldsType } = cmd.table;
+                const table = new SpreadsheetPivotTable(cols, rows, measures, fieldsType);
                 this.insertOdooFixPivot(cmd.pivotId, cmd.position, table);
                 break;
             }

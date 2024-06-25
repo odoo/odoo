@@ -24,10 +24,8 @@ defineSpreadsheetModels();
 
 test("odoo pivot functions are replaced with their value", async function () {
     const { model } = await createSpreadsheetWithPivot();
-    expect(getCell(model, "A3").content).toBe('=PIVOT.HEADER(1,"bar","false")');
-    expect(getCell(model, "C3").content).toBe(
-        '=PIVOT.VALUE(1,"probability","bar","false","foo",2)'
-    );
+    expect(getCell(model, "A3").content).toBe('=PIVOT.HEADER(1,"bar",FALSE)');
+    expect(getCell(model, "C3").content).toBe('=PIVOT.VALUE(1,"probability","bar",FALSE,"foo",2)');
     expect(getEvaluatedCell(model, "A3").value).toBe("No");
     expect(getEvaluatedCell(model, "C3").value).toBe(15);
     const data = await freezeOdooData(model);
@@ -77,10 +75,8 @@ test("Pivot with a type different of ODOO is not converted", async function () {
 
 test("values are not exported formatted", async function () {
     const { model } = await createSpreadsheetWithPivot();
-    expect(getCell(model, "A3").content).toBe('=PIVOT.HEADER(1,"bar","false")');
-    expect(getCell(model, "C3").content).toBe(
-        '=PIVOT.VALUE(1,"probability","bar","false","foo",2)'
-    );
+    expect(getCell(model, "A3").content).toBe('=PIVOT.HEADER(1,"bar",FALSE)');
+    expect(getCell(model, "C3").content).toBe('=PIVOT.VALUE(1,"probability","bar",FALSE,"foo",2)');
     setCellFormat(model, "C3", "mmmm yyyy");
     setCellContent(model, "C4", "=C3+31");
     expect(getEvaluatedCell(model, "C3").value).toBe(15);
