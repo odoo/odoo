@@ -1,9 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
-import { Mutex } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
-import { PeerToPeer, RequestError } from "./PeerToPeer";
+import { RemoteConnectionError, RemoteConnections } from "./remote/RemoteConnections";
+import { Mutex } from "@web/core/utils/concurrency";
+import { RequestError } from "./remote/remoteHelpers";
 
 /**
  * @typedef {Object} CollaborationSelection
@@ -43,20 +44,18 @@ export class CollaborationOdooPlugin extends Plugin {
     /** @type { (p: CollaborationOdooPlugin) => Record<string, any> } */
     static resources = (p) => ({
         onSelectionChange: debounce(() => {
-            p.ptp?.notifyAllPeers(
+            p.remoteConnections?.notifyAllPeers(
                 "oe_history_set_selection",
-                p.getCurrentCollaborativeSelection(),
-                {
-                    transport: "rtc",
-                }
+                p.getCurrentCollaborativeSelection()
             );
         }, 50),
+        onExternalMissingParentStep: p.onExternalMissingParentStep.bind(p),
     });
 
     setup() {
         this.isDocumentStale = false;
-
         this.ptpJoined = false;
+        this.peerMetadatas = {};
 
         // Each time a reset of the document is triggered, it is assigned a
         // unique identifier. Since resetting the editor involves asynchronous
@@ -85,11 +84,11 @@ export class CollaborationOdooPlugin extends Plugin {
         }
     }
     destroy() {
-        this.collaborationStopBus && this.collaborationStopBus();
+        this.collaborationStopBus?.();
         // If peer to peer is initializing, wait for properly closing it.
-        if (this.peerToPeerLoading) {
-            this.peerToPeerLoading.then(() => {
-                this.stopPeerToPeer();
+        if (this.remoteLoading) {
+            this.remoteLoading.then(() => {
+                this.stopRemote();
             });
         }
         // todo: to implement
@@ -99,11 +98,8 @@ export class CollaborationOdooPlugin extends Plugin {
 
     handleCommand(commandName, payload) {
         switch (commandName) {
-            case "HISTORY_MISSING_PARENT_STEP":
-                this.onHistoryMissingParentStep(payload);
-                break;
             case "STEP_ADDED":
-                this.ptp?.notifyAllPeers("oe_history_step", payload.step, { transport: "rtc" });
+                this.remoteConnections?.notifyAllPeers?.("oe_history_step", payload.step);
                 break;
             case "CLEAN":
                 // TODO @phoenix: evaluate if this should be cleanforsave instead
@@ -115,11 +111,11 @@ export class CollaborationOdooPlugin extends Plugin {
         }
     }
 
-    stopPeerToPeer() {
+    stopRemote() {
         this.joiningPtp = false;
         this.ptpJoined = false;
         this.resetCollabRequests();
-        this.ptp && this.ptp.stop();
+        this.remoteConnections.stop();
     }
 
     getCurrentCollaborativeSelection() {
@@ -135,42 +131,16 @@ export class CollaborationOdooPlugin extends Plugin {
         const resId = collaborationChannel.collaborationResId;
         const channelName = `editor_collaboration:${modelName}:${fieldName}:${resId}`;
 
-        if (
-            !(modelName && fieldName && resId)
-            // todo: handle this feature
-            // || Wysiwyg.activeCollaborationChannelNames.has(channelName)
-        ) {
+        if (!(modelName && fieldName && resId)) {
             return;
         }
 
         this.collaborationChannelName = channelName;
-        this.historyStepsBuffer = [];
-        // Wysiwyg.activeCollaborationChannelNames.add(channelName);
 
-        const collaborationBusListener = (payload) => {
-            if (
-                payload.model_name === modelName &&
-                payload.field_name === fieldName &&
-                payload.res_id === resId
-            ) {
-                if (payload.notificationName === "html_field_write") {
-                    this.onServerLastIdUpdate(payload.notificationPayload.last_step_id);
-                } else if (this.ptpJoined) {
-                    this.peerToPeerLoading.then(() => this.ptp.handleNotification(payload));
-                }
-            }
-        };
-        const { busService } = this.config.collaboration;
-        busService.subscribe("editor_collaboration", collaborationBusListener);
-        busService.addChannel(this.collaborationChannelName);
-        this.collaborationStopBus = () => {
-            // Wysiwyg.activeCollaborationChannelNames.delete(this.collaborationChannelName);
-            busService.unsubscribe("editor_collaboration", collaborationBusListener);
-            busService.deleteChannel(this.collaborationChannelName);
-        };
-
+        this.listenCollaborationBus(modelName, fieldName, resId);
         this.startCollaborationTime = new Date().getTime();
 
+        // todo: handle this feature
         // this.checkConnectionChange = () => {
         //     if (!this.ptp) {
         //         return;
@@ -206,10 +176,14 @@ export class CollaborationOdooPlugin extends Plugin {
         //     }
         // }, CHECK_OFFLINE_TIME);
 
-        const loadPeerToPeer = async () => {
-            if (!ICE_SERVERS) {
-                ICE_SERVERS = await rpc("/html_editor/get_ice_servers");
-            }
+        const loadCollabInfos = async () => {
+            const infos = await rpc("/html_editor/get_collab_infos", {
+                model_name: modelName,
+                field_name: fieldName,
+                res_id: resId,
+                peer_id: this.config.collaboration.peerId,
+            });
+            ICE_SERVERS = infos.ice_servers;
 
             let iceServers = ICE_SERVERS;
             if (!iceServers.length) {
@@ -220,142 +194,98 @@ export class CollaborationOdooPlugin extends Plugin {
                 ];
             }
             this.iceServers = iceServers;
-
-            this.ptp = this.getNewPtp();
+            this.sfuConfig = infos.sfu_config;
         };
 
-        this.peerToPeerLoading = loadPeerToPeer();
-    }
-
-    getNewPtp() {
-        const rpcMutex = new Mutex();
-        const { collaborationChannel } = this.config.collaboration;
-        const modelName = collaborationChannel.collaborationModelName;
-        const fieldName = collaborationChannel.collaborationFieldName;
-        const resId = collaborationChannel.collaborationResId;
-
-        // Wether or not the history has been sent or received at least
-        // once.
-        this.historySyncAtLeastOnce = false;
-
-        return new PeerToPeer({
-            peerConnectionConfig: { iceServers: this.iceServers },
-            currentPeerId: this.config.collaboration.peerId,
-            broadcastAll: (rpcData) => {
-                return rpcMutex.exec(async () => {
-                    return rpc("/html_editor/bus_broadcast", {
-                        model_name: modelName,
-                        field_name: fieldName,
-                        res_id: resId,
-                        bus_data: rpcData,
-                    });
-                });
-            },
-            onRequest: {
-                get_peer_metadata: this.getMetadata.bind(this),
-                get_missing_steps: (params) =>
-                    this.shared.historyGetMissingSteps(params.requestPayload),
-                get_history_from_snapshot: () => this.getHistorySnapshot(),
-                get_collaborative_selection: () => this.getCurrentCollaborativeSelection(),
-                recover_document: (params) => {
-                    const { serverDocumentId, fromStepId } = params.requestPayload;
-                    if (!this.shared.getBranchIds().includes(serverDocumentId)) {
-                        return;
+        this.remoteLoading = loadCollabInfos().then(() => {
+            const handlers = getRemoteHandlers(this);
+            const config = {
+                peerId: this.config.collaboration.peerId,
+                RemoteConnections,
+                handleNotification: (notificationName, fromPeerId, notificationPayload) => {
+                    for (const dict of this.resources.handleCollaborationNotification || []) {
+                        dict[notificationName]?.(fromPeerId, notificationPayload);
                     }
-                    return {
-                        missingSteps: this.shared.historyGetMissingSteps({ fromStepId }),
-                        snapshot: this.getHistorySnapshot(),
-                    };
+                    handlers.notificationHandlers?.[notificationName]?.(
+                        fromPeerId,
+                        notificationPayload
+                    );
                 },
-            },
-            onNotification: async (notification) => {
-                for (const cb of this.resources.handleCollaborationNotification || []) {
-                    cb(notification);
+                handleRequest: (requestName, fromPeerId, notificationPayload) => {
+                    return handlers.requestHandlers?.[requestName]?.(
+                        fromPeerId,
+                        notificationPayload.requestPayload
+                    );
+                },
+                getRemotePingPayload: () => ({
+                    metadata: this.getMetadata(),
+                    historyShareId: this.historyShareId,
+                }),
+            };
+            if (this.sfuConfig) {
+                this.remoteType = "sfu";
+                config.sfuConfig = this.sfuConfig;
+            } else {
+                this.remoteType = "peerToPeer";
+                const rpcMutex = new Mutex();
+                config.peerToPeerConfig = {
+                    iceServers: this.iceServers,
+                    broadcastAll: (rpcData) => {
+                        return rpcMutex.exec(async () => {
+                            return rpc("/html_editor/bus_broadcast", {
+                                model_name: modelName,
+                                field_name: fieldName,
+                                res_id: resId,
+                                bus_data: rpcData,
+                            });
+                        });
+                    },
+                };
+            }
+            this.remoteConnections = this.getRemoteConnections(config);
+            this.remoteConnections.start().catch((e) => {
+                if (e instanceof RemoteConnectionError) {
+                    this.services.notification.add(e.message, {
+                        type: "warning",
+                    });
+                } else {
+                    throw e;
                 }
-                let { fromPeerId, notificationName, notificationPayload } = notification;
-                switch (notificationName) {
-                    case "ptp_remove":
-                        // todo: to implement
-                        // this.odooEditor.multiselectionRemove(notificationPayload);
-                        break;
-                    case "ptp_disconnect":
-                        this.ptp.removePeer(fromPeerId);
-                        // todo: to implement
-                        // this.odooEditor.multiselectionRemove(fromPeerId);
-                        break;
-                    case "rtc_data_channel_open": {
-                        fromPeerId = notificationPayload.connectionPeerId;
-                        const metadata = await this.requestPeer(
-                            fromPeerId,
-                            "get_peer_metadata",
-                            undefined,
-                            { transport: "rtc" }
-                        );
-                        if (metadata === REQUEST_ERROR) {
-                            return;
-                        }
-
-                        this.ptp.peersInfos[fromPeerId].metadata = metadata;
-
-                        if (!this.historySyncAtLeastOnce) {
-                            const localPeer = {
-                                id: this.config.collaboration.peerId,
-                                startTime: this.startCollaborationTime,
-                            };
-                            const remotePeer = {
-                                id: fromPeerId,
-                                startTime: metadata.startTime,
-                            };
-                            if (isPeerFirst(localPeer, remotePeer)) {
-                                this.historySyncAtLeastOnce = true;
-                                this.historySyncFinished = true;
-                            } else {
-                                this.resetCollabRequests();
-                                const response = await this.resetFromPeer(
-                                    fromPeerId,
-                                    this.lastCollaborationResetId
-                                );
-                                if (response === REQUEST_ERROR) {
-                                    return;
-                                }
-                            }
-                        } else {
-                            // Make both send their last step to each other to
-                            // ensure they are in sync.
-                            this.ptp.notifyAllPeers(
-                                "oe_history_step",
-                                this.shared.getHistorySteps().at(-1),
-                                { transport: "rtc" }
-                            );
-                            this.resetCollaborativeSelection(fromPeerId);
-                        }
-                        break;
-                    }
-                    case "oe_history_step":
-                        if (this.historySyncFinished) {
-                            this.shared.onExternalHistorySteps([notificationPayload]);
-                        } else {
-                            this.historyStepsBuffer.push(notificationPayload);
-                        }
-                        break;
-                    case "oe_history_set_selection": {
-                        const peer = this.ptp.peersInfos[fromPeerId];
-                        if (!peer) {
-                            return;
-                        }
-                        const selection = notificationPayload;
-                        this.onExternalMultiselectionUpdate(selection);
-                        break;
-                    }
-                }
-            },
+            });
         });
     }
+    getRemoteConnections(config) {
+        return new RemoteConnections(config);
+    }
+    listenCollaborationBus(modelName, fieldName, resId) {
+        const collaborationBusListener = async (payload) => {
+            if (
+                payload.model_name === modelName &&
+                payload.field_name === fieldName &&
+                payload.res_id === resId
+            ) {
+                if (payload.notificationName === "html_field_write") {
+                    this.onServerLastIdUpdate(payload.notificationPayload.last_step_id);
+                } else if (this.remoteType === "peerToPeer" && this.ptpJoined) {
+                    await this.remoteLoading;
+                    this.remoteConnections.remoteInterface.handleExternalNotification(payload);
+                }
+            }
+        };
+        const { busService } = this.config.collaboration;
+        busService.subscribe("editor_collaboration", collaborationBusListener);
+        busService.addChannel(this.collaborationChannelName);
+        this.collaborationStopBus = () => {
+            busService.unsubscribe("editor_collaboration", collaborationBusListener);
+            busService.deleteChannel(this.collaborationChannelName);
+        };
+    }
+
     /**
      * @param {string} peerId
      */
     getPeerMetadata(peerId) {
-        return this.ptp.peersInfos[peerId]?.metadata;
+        return this.peerMetadatas[peerId];
     }
     /**
      * @param {CollaborationSelection} selection
@@ -364,14 +294,17 @@ export class CollaborationOdooPlugin extends Plugin {
         this.resources.collaborativeSelectionUpdate?.forEach((cb) => cb(selection));
     }
 
-    async requestPeer(peerId, requestName, requestPayload, params) {
-        return this.ptp.requestPeer(peerId, requestName, requestPayload, params).catch((e) => {
-            if (e instanceof RequestError) {
-                return REQUEST_ERROR;
-            } else {
-                throw e;
-            }
-        });
+    async requestPeer(peerId, requestName, requestPayload) {
+        return (
+            this.remoteConnections &&
+            this.remoteConnections.requestPeer(peerId, requestName, requestPayload).catch((e) => {
+                if (e instanceof RequestError) {
+                    return REQUEST_ERROR;
+                } else {
+                    throw e;
+                }
+            })
+        );
     }
     getMetadata() {
         const metadatas = {
@@ -391,7 +324,8 @@ export class CollaborationOdooPlugin extends Plugin {
         this.serverLastStepId = last_step_id;
         // Check if the current document is stale.
         this.isDocumentStale = this.isLastDocumentStale();
-        if (this.isDocumentStale && this.ptpJoined) {
+        // todo: Add test that it works for SFU and peer to peer.
+        if (this.isDocumentStale && (this.sfuConfig || this.ptpJoined)) {
             return this.recoverFromStaleDocument();
         } else if (this.isDocumentStale && this.joiningPtp) {
             // In case there is a stale document while a previous recovery is
@@ -401,22 +335,26 @@ export class CollaborationOdooPlugin extends Plugin {
         }
     }
 
-    joinPeerToPeer() {
-        this.editable.removeEventListener("focus", this.joinPeerToPeer);
-        if (this.peerToPeerLoading) {
-            return this.peerToPeerLoading.then(async () => {
-                this.joiningPtp = true;
-                if (this.isDocumentStale) {
-                    const success = await this.resetFromServerAndResyncWithPeers();
-                    if (!success) {
-                        return;
-                    }
-                }
-                this.ptp.notifyAllPeers("ptp_join");
-                this.joiningPtp = false;
-                this.ptpJoined = true;
-            });
+    async joinPeerToPeer() {
+        await this.remoteLoading;
+        if (!this.remoteConnections) {
+            return;
         }
+        // Only try to join if there is no SFU server (to connect in peer to peer).
+        if (this.sfuConfig) {
+            return;
+        }
+        this.editable.removeEventListener("focus", this.joinPeerToPeer);
+        this.joiningPtp = true;
+        if (this.isDocumentStale) {
+            const success = await this.resetFromServerAndResyncWithPeers();
+            if (!success) {
+                return;
+            }
+        }
+        this.remoteConnections.remoteInterface.ptpJoin();
+        this.joiningPtp = false;
+        this.ptpJoined = true;
     }
     isLastDocumentStale() {
         if (!this.serverLastStepId) {
@@ -453,7 +391,7 @@ export class CollaborationOdooPlugin extends Plugin {
             // 1. Try to recover a converging document from other peers.
             const resetCollabCount = this.lastCollaborationResetId;
 
-            const allPeers = this.getPtpPeers().map((peer) => peer.id);
+            const allPeers = this.getPeers().map((peer) => peer.id);
 
             if (allPeers.length === 0) {
                 if (this.isDocumentStale) {
@@ -473,15 +411,10 @@ export class CollaborationOdooPlugin extends Plugin {
             };
 
             for (const peerId of allPeers) {
-                this.requestPeer(
-                    peerId,
-                    "recover_document",
-                    {
-                        serverDocumentId: this.serverLastStepId,
-                        fromStepId: this.shared.getBranchIds().at(-1),
-                    },
-                    { transport: "rtc" }
-                ).then((response) => {
+                this.requestPeer(peerId, "recover_document", {
+                    serverDocumentId: this.serverLastStepId,
+                    fromStepId: this.shared.getBranchIds().at(-1),
+                }).then((response) => {
                     nbPendingResponses--;
                     if (
                         response === REQUEST_ERROR ||
@@ -495,8 +428,11 @@ export class CollaborationOdooPlugin extends Plugin {
                         }
                         return;
                     }
-                    this.processMissingSteps(response.missingSteps);
-                    this.isDocumentStale = this.isLastDocumentStale();
+                    if (response.missingSteps && response.missingSteps.length) {
+                        // todo: what if the steps will be on the externalStepsBuffers?
+                        this.addMissingSteps(response.missingSteps, peerId);
+                        this.isDocumentStale = this.isLastDocumentStale();
+                    }
                     snapshots.push(response.snapshot);
                     if (nbPendingResponses < 1) {
                         processSnapshots();
@@ -547,12 +483,12 @@ export class CollaborationOdooPlugin extends Plugin {
     }
 
     /**
-     * Get peer to peer peers.
+     * Get peers.
      */
-    getPtpPeers() {
-        const peers = Object.entries(this.ptp.peersInfos).map(([peerId, peerInfo]) => ({
+    getPeers() {
+        const peers = Object.entries(this.peerMetadatas).map(([peerId, metadata]) => ({
             id: peerId,
-            ...peerInfo,
+            startTime: metadata.startTime,
         }));
         return peers.sort((a, b) => (isPeerFirst(a, b) ? -1 : 1));
     }
@@ -568,7 +504,7 @@ export class CollaborationOdooPlugin extends Plugin {
         // `Wysiwyg.requestPeer` will return REQUEST_ERROR. Most requests that
         // calls `Wysiwyg.requestPeer` might want to check if the response is
         // REQUEST_ERROR.
-        this.ptp && this.ptp.abortCurrentRequests();
+        this.remoteConnections.abortCurrentRequests();
     }
     /**
      * Reset the document from the server and resync with the peers.
@@ -577,7 +513,7 @@ export class CollaborationOdooPlugin extends Plugin {
         let collaborationResetId = this.lastCollaborationResetId;
         const record = await this.getCurrentRecord();
         if (collaborationResetId !== this.lastCollaborationResetId) {
-            return;
+            return false;
         }
 
         let content = record[this.config.collaboration.collaborationChannel.collaborationFieldName];
@@ -604,18 +540,20 @@ export class CollaborationOdooPlugin extends Plugin {
         // proper snapshot (e.g. This case could arise if we tried to recover
         // from a peer but the timeout (PTP_MAX_RECOVERY_TIME) was reached
         // before receiving a response).
-        this.historySyncAtLeastOnce = false;
         this.resetCollabRequests();
         collaborationResetId = this.lastCollaborationResetId;
         this.startCollaborationTime = new Date().getTime();
         await Promise.all(
-            this.getPtpPeers().map((peer) => {
+            this.getPeers().map((peer) => {
                 // Reset from the fastest peer. The first peer to reset will set
-                // this.historySyncAtLeastOnce to true canceling the other peers
                 // resets.
                 return this.resetFromPeer(peer.id, collaborationResetId);
             })
         );
+        this.isStaleDocument = this.isLastDocumentStale();
+        if (this.isStaleDocument) {
+            return false;
+        }
         return true;
     }
     onReset(content) {
@@ -631,27 +569,8 @@ export class CollaborationOdooPlugin extends Plugin {
         }
     }
 
-    /**
-     * Process missing steps received from a peer.
-     *
-     * @private
-     * @param {Array<Object>|-1} missingSteps
-     * @return {Promise<boolean>} true if missing steps have been processed
-     */
-    async processMissingSteps(missingSteps) {
-        // If missing steps === -1, it means that either:
-        // - the step.peerId has a stale document
-        // - the step.peerId has a snapshot and does not includes the step in
-        //   its history
-        // - if another share history id
-        //   - because the step.peerId has reset from the server and
-        //     step.peerId is not synced with this peer
-        //   - because the step.peerId is in a network partition
-        if (missingSteps === -1 || !missingSteps.length) {
-            return false;
-        }
-        this.shared.onExternalHistorySteps(missingSteps);
-        return true;
+    addMissingSteps(missingSteps, originPeerId) {
+        this.shared.onExternalHistorySteps(missingSteps, originPeerId);
     }
     applySnapshot(snapshot) {
         const { steps, historyIds, historyShareId } = snapshot;
@@ -663,7 +582,6 @@ export class CollaborationOdooPlugin extends Plugin {
             return;
         }
         this.historyShareId = historyShareId;
-        this.historySyncAtLeastOnce = true;
         this.shared.resetFromSteps(steps, historyIds);
 
         // todo: ensure that if the selection was not in the editable before the
@@ -695,20 +613,15 @@ export class CollaborationOdooPlugin extends Plugin {
     }
 
     getHistorySnapshot() {
-        return Object.assign({}, this.shared.getSnapshotSteps(), {
+        const snapshot = this.shared.getSnapshotSteps();
+        return Object.assign({}, snapshot, {
+            steps: snapshot.steps,
             historyShareId: this.historyShareId,
         });
     }
 
     async resetFromPeer(fromPeerId, resetCollabCount) {
-        this.historySyncFinished = false;
-        this.historyStepsBuffer = [];
-        const snapshot = await this.requestPeer(
-            fromPeerId,
-            "get_history_from_snapshot",
-            undefined,
-            { transport: "rtc" }
-        );
+        const snapshot = await this.requestPeer(fromPeerId, "get_history_from_snapshot", undefined);
         if (snapshot === REQUEST_ERROR) {
             return REQUEST_ERROR;
         }
@@ -717,68 +630,65 @@ export class CollaborationOdooPlugin extends Plugin {
         }
         // Ensure that the history hasn't been synced by another peer before
         // this `get_history_from_snapshot` finished.
-        if (this.historySyncAtLeastOnce) {
+        if (this.lastResetPeerCount && this.lastResetPeerCount >= this.lastCollaborationResetId) {
             return;
         }
         const applied = this.applySnapshot(snapshot);
         if (!applied) {
             return;
         }
+        this.isDocumentStale = this.isLastDocumentStale();
+
+        this.lastResetPeerCount = this.lastCollaborationResetId;
         this.shared.setCursorStart(this.editable.firstChild);
-        this.historySyncFinished = true;
-        // In case there are steps received in the meantime, process them.
-        if (this.historyStepsBuffer.length) {
-            this.shared.onExternalHistorySteps(this.historyStepsBuffer);
-            this.historyStepsBuffer = [];
-        }
+        this.remoteConnections.notifyAllPeers("oe_get_selection");
+        // Ask the steps in case some other steps were not received meanwhile.
+        this.remoteConnections.notifyAllPeers("oe_get_last_step");
         this.editable.dispatchEvent(new CustomEvent("onHistoryResetFromPeer"));
-        this.resetCollaborativeSelection(fromPeerId);
     }
 
-    async resetCollaborativeSelection(fromPeerId) {
-        const remoteSelection = await this.requestPeer(
-            fromPeerId,
-            "get_collaborative_selection",
-            undefined,
-            { transport: "rtc" }
-        );
-        if (remoteSelection === REQUEST_ERROR) {
-            return;
-        }
-        if (remoteSelection) {
-            this.onExternalMultiselectionUpdate(remoteSelection);
-        }
-    }
-    async onHistoryMissingParentStep({ step, fromStepId }) {
-        if (!this.ptp) {
-            return;
-        }
-        const missingSteps = await this.requestPeer(
-            step.peerId,
-            "get_missing_steps",
-            {
-                fromStepId: fromStepId,
-                toStepId: step.id,
-            },
-            { transport: "rtc" }
-        );
+    async onExternalMissingParentStep({ step, fromStepId, originPeerId }) {
+        const missingSteps = await this.requestPeer(originPeerId, "get_missing_steps", {
+            fromStepId: fromStepId,
+            toStepId: step.id,
+        });
         if (missingSteps === REQUEST_ERROR) {
             return;
         }
-        this.processMissingSteps(
-            Array.isArray(missingSteps) ? missingSteps.concat(step) : missingSteps
-        );
+
+        // If missing steps === -1, it means:
+        // 1) stale document: the step.peerId has a stale document
+        // 2) snapshot: the step.peerId has a snapshot and does not includes the step in
+        //   its history
+        // 3) if another share history id
+        //   - because the step.peerId has reset from the server and
+        //     step.peerId is not synced with this peer
+        //   - because the step.peerId is in a network partition
+        if (missingSteps === -1) {
+            // todo: in case 2 (snapshot), we should try first to apply all the
+            // steps in the history of that peer instead of reseting.
+            // todo:
+            // - what if there is 3 peer connecting at the same time and
+            //   peer2 reset from peer1 while peer3 reset from peer2?
+            // - what if peer2 reset from peer1 while peer1 reset from peer2?
+            this.resetCollabRequests();
+            this.resetFromPeer(originPeerId, this.lastCollaborationResetId);
+            return;
+        } else if (!missingSteps.length) {
+            return;
+        }
+        this.addMissingSteps(missingSteps.concat(step), originPeerId);
     }
     async getCurrentRecord() {
-        const [record] = await this.options.collaboration.ormService.read(
-            this.options.collaboration.collaborationChannel.collaborationModelName,
-            [this.options.collaboration.collaborationChannel.collaborationResId],
+        const [record] = await this.config.collaboration.ormService.read(
+            this.config.collaboration.collaborationChannel.collaborationModelName,
+            [this.config.collaboration.collaborationChannel.collaborationResId],
             [this.config.collaboration.collaborationChannel.collaborationFieldName]
         );
         return record;
     }
     attachHistoryIds(editable) {
-        // clean existig 'data-last-history-steps' attributes
+        // Clean existing 'data-last-history-steps' attributes.
         editable
             .querySelectorAll("[data-last-history-steps]")
             .forEach((el) => el.removeAttribute("data-last-history-steps"));
@@ -789,6 +699,89 @@ export class CollaborationOdooPlugin extends Plugin {
             firstChild.setAttribute("data-last-history-steps", historyIds);
         }
     }
+}
+
+/**
+ * @param {CollaborationOdooPlugin} plugin
+ */
+function getRemoteHandlers(plugin) {
+    return {
+        notificationHandlers: {
+            // This signal is send from a peer that just joined the network or
+            // when a peer is disconnected and reconnected.
+            remote_ping: (fromPeerId, { metadata, historyShareId }) => {
+                plugin.peerMetadatas[fromPeerId] = metadata;
+                plugin.remoteConnections.notifyPeer(fromPeerId, "remote_pong", {
+                    metadata: plugin.getMetadata(),
+                    selection: plugin.getCurrentCollaborativeSelection(),
+                    lastHistoryStep: plugin.shared.getHistorySteps().at(-1),
+                    historyShareId: plugin.historyShareId,
+                });
+                if (historyShareId === plugin.historyShareId) {
+                    plugin.remoteConnections.notifyPeer(fromPeerId, "oe_get_last_step");
+                    plugin.remoteConnections.notifyPeer(fromPeerId, "oe_get_selection");
+                }
+            },
+            remote_pong: async (
+                fromPeerId,
+                { metadata, selection, lastHistoryStep, historyShareId }
+            ) => {
+                plugin.peerMetadatas[fromPeerId] = metadata;
+
+                if (historyShareId !== plugin.historyShareId) {
+                    plugin.resetCollabRequests();
+                    plugin.resetFromPeer(fromPeerId, plugin.lastCollaborationResetId);
+                    return;
+                }
+                // todo: what if other steps arrive in the meantime?
+                plugin.onExternalMultiselectionUpdate(selection);
+                plugin.shared.onExternalHistorySteps([lastHistoryStep], fromPeerId);
+            },
+            oe_history_step: (fromPeerId, notificationPayload) => {
+                plugin.shared.onExternalHistorySteps([notificationPayload], fromPeerId);
+            },
+            oe_get_selection: (fromPeerId) => {
+                plugin.remoteConnections.notifyPeer(
+                    fromPeerId,
+                    "oe_history_set_selection",
+                    plugin.getCurrentCollaborativeSelection()
+                );
+            },
+            oe_history_set_selection: (fromPeerId, notificationPayload) => {
+                if (!plugin.peerMetadatas[fromPeerId]) {
+                    return;
+                }
+                const selection = notificationPayload;
+                plugin.onExternalMultiselectionUpdate(selection);
+            },
+            oe_get_last_step: (fromPeerId) => {
+                plugin.remoteConnections.notifyPeer(
+                    fromPeerId,
+                    "oe_history_step",
+                    plugin.shared.getHistorySteps().at(-1)
+                );
+            },
+            // todo: Ensure the peer is always removed in SFU and Peer to peer
+            remove_peer: (fromPeerId) => {
+                delete plugin.peerMetadatas[fromPeerId];
+            },
+        },
+        requestHandlers: {
+            get_missing_steps: (fromPeerId, requestPayload) =>
+                plugin.shared.historyGetMissingSteps(requestPayload),
+            get_history_from_snapshot: () => plugin.getHistorySnapshot(),
+            get_collaborative_selection: () => plugin.getCurrentCollaborativeSelection(),
+            recover_document: (fromPeerId, { serverDocumentId, fromStepId }) => {
+                if (!plugin.shared.getBranchIds().includes(serverDocumentId)) {
+                    return;
+                }
+                return {
+                    missingSteps: plugin.shared.historyGetMissingSteps({ fromStepId }),
+                    snapshot: plugin.getHistorySnapshot(),
+                };
+            },
+        },
+    };
 }
 
 /**

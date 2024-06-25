@@ -1,43 +1,8 @@
-const urlParams = new URLSearchParams(window.location.search);
-const collaborationDebug = urlParams.get("collaborationDebug");
-const COLLABORATION_LOCALSTORAGE_KEY = "odoo_editor_collaboration_debug";
-if (typeof collaborationDebug === "string") {
-    if (collaborationDebug === "false") {
-        localStorage.removeItem(
-            COLLABORATION_LOCALSTORAGE_KEY,
-            urlParams.get("collaborationDebug")
-        );
-    } else {
-        localStorage.setItem(COLLABORATION_LOCALSTORAGE_KEY, urlParams.get("collaborationDebug"));
-    }
-}
-const debugValue = localStorage.getItem(COLLABORATION_LOCALSTORAGE_KEY);
+import { debugShowLog, debugValue } from "./remoteHelpers";
 
-const debugShowLog = ["", "true", "all"].includes(debugValue);
-const debugShowNotifications = debugValue === "all";
+export const debugShowNotifications = debugValue === "all";
 
 const baseNotificationMethods = {
-    ptp_request: async function (notification) {
-        const { requestId, requestName, requestPayload, requestTransport } =
-            notification.notificationPayload;
-        this._onRequest(
-            notification.fromPeerId,
-            requestId,
-            requestName,
-            requestPayload,
-            requestTransport
-        );
-    },
-    ptp_request_result: function (notification) {
-        const { requestId, result } = notification.notificationPayload;
-        // If not in _pendingRequestResolver, it means it has timeout.
-        if (this._pendingRequestResolver[requestId]) {
-            clearTimeout(this._pendingRequestResolver[requestId].rejectTimeout);
-            this._pendingRequestResolver[requestId].resolve(result);
-            delete this._pendingRequestResolver[requestId];
-        }
-    },
-
     ptp_join: async function (notification) {
         const peerId = notification.fromPeerId;
         if (this.peersInfos[peerId] && this.peersInfos[peerId].peerConnection) {
@@ -179,8 +144,6 @@ export class PeerToPeer {
 
         // peerId -> PeerInfos
         this.peersInfos = {};
-        this._lastRequestId = -1;
-        this._pendingRequestResolver = {};
         this._stopped = false;
     }
 
@@ -219,7 +182,7 @@ export class PeerToPeer {
 
     closeAllConnections() {
         for (const peerId of Object.keys(this.peersInfos)) {
-            this.notifyAllPeers("ptp_disconnect");
+            this.notifyAllPeers("ptp_remove");
             this.removePeer(peerId);
         }
     }
@@ -251,33 +214,13 @@ export class PeerToPeer {
             return;
         }
         if (debugShowNotifications) {
-            if (notificationName === "ptp_request_result") {
-                console.log(
-                    `%c${Date.now()} - REQUEST RESULT SEND: %c${transport}:${
-                        notificationPayload.requestId
-                    }:${this._currentPeerId.slice("-5")}:${peerId.slice("-5")}`,
-                    "color: #aaa;font-weight:bold;",
-                    "color: #aaa;font-weight:normal"
-                );
-            } else if (notificationName === "ptp_request") {
-                console.log(
-                    `%c${Date.now()} - REQUEST SEND: %c${transport}:${
-                        notificationPayload.requestName
-                    }|${notificationPayload.requestId}:${this._currentPeerId.slice(
-                        "-5"
-                    )}:${peerId.slice("-5")}`,
-                    "color: #aaa;font-weight:bold;",
-                    "color: #aaa;font-weight:normal"
-                );
-            } else {
-                console.log(
-                    `%c${Date.now()} - NOTIFICATION SEND: %c${transport}:${notificationName}:${this._currentPeerId.slice(
-                        "-5"
-                    )}:${peerId.slice("-5")}`,
-                    "color: #aaa;font-weight:bold;",
-                    "color: #aaa;font-weight:normal"
-                );
-            }
+            console.log(
+                `%c${Date.now()} - NOTIFICATION SEND: %c${transport}:${notificationName}:${this._currentPeerId.slice(
+                    "-5"
+                )}:${peerId.slice("-5")}`,
+                "color: #aaa;font-weight:bold;",
+                "color: #aaa;font-weight:normal"
+            );
         }
         const transportPayload = {
             fromPeerId: this._currentPeerId,
@@ -316,37 +259,13 @@ export class PeerToPeer {
             notification.toPeerId === this._currentPeerId
         ) {
             if (debugShowNotifications) {
-                if (notification.notificationName === "ptp_request_result") {
-                    console.log(
-                        `%c${Date.now()} - REQUEST RESULT RECEIVE: %c${
-                            notification.notificationPayload.requestId
-                        }:${notification.fromPeerId.slice("-5")}:${notification.toPeerId.slice(
-                            "-5"
-                        )}`,
-                        "color: #aaa;font-weight:bold;",
-                        "color: #aaa;font-weight:normal"
-                    );
-                } else if (notification.notificationName === "ptp_request") {
-                    console.log(
-                        `%c${Date.now()} - REQUEST RECEIVE: %c${
-                            notification.notificationPayload.requestName
-                        }|${
-                            notification.notificationPayload.requestId
-                        }:${notification.fromPeerId.slice("-5")}:${notification.toPeerId.slice(
-                            "-5"
-                        )}`,
-                        "color: #aaa;font-weight:bold;",
-                        "color: #aaa;font-weight:normal"
-                    );
-                } else {
-                    console.log(
-                        `%c${Date.now()} - NOTIFICATION RECEIVE: %c${
-                            notification.notificationName
-                        }:${notification.fromPeerId}:${notification.toPeerId}`,
-                        "color: #aaa;font-weight:bold;",
-                        "color: #aaa;font-weight:normal"
-                    );
-                }
+                console.log(
+                    `%c${Date.now()} - NOTIFICATION RECEIVE: %c${notification.notificationName}:${
+                        notification.fromPeerId
+                    }:${notification.toPeerId}`,
+                    "color: #aaa;font-weight:bold;",
+                    "color: #aaa;font-weight:normal"
+                );
             }
             try {
                 const baseMethod = baseNotificationMethods[notification.notificationName];
@@ -364,47 +283,6 @@ export class PeerToPeer {
         }
     }
 
-    requestPeer(peerId, requestName, requestPayload, { transport = "server" } = {}) {
-        if (this._stopped) {
-            return;
-        }
-        return new Promise((resolve, reject) => {
-            const requestId = this._getRequestId();
-
-            const abort = (reason) => {
-                clearTimeout(rejectTimeout);
-                delete this._pendingRequestResolver[requestId];
-                reject(new RequestError(reason || "Request was aborted."));
-            };
-            const rejectTimeout = setTimeout(
-                () => abort("Request took too long (more than 10 seconds)."),
-                10000
-            );
-
-            this._pendingRequestResolver[requestId] = {
-                resolve,
-                rejectTimeout,
-                abort,
-            };
-
-            this.notifyPeer(
-                peerId,
-                "ptp_request",
-                {
-                    requestId,
-                    requestName,
-                    requestPayload,
-                    requestTransport: transport,
-                },
-                { transport }
-            );
-        });
-    }
-    abortCurrentRequests() {
-        for (const { abort } of Object.values(this._pendingRequestResolver)) {
-            abort();
-        }
-    }
     _createPeer(peerId, { makeOffer = true } = {}) {
         if (this._stopped) {
             return;
@@ -469,6 +347,7 @@ export class PeerToPeer {
                     this.removePeer(peerId);
                     break;
                 case "disconnected":
+                    this.notifySelf("ptp_remove", peerId);
                     if (navigator.onLine) {
                         await this._recoverConnection(peerId, {
                             delay: 3000,
@@ -493,6 +372,7 @@ export class PeerToPeer {
                     this.removePeer(peerId);
                     break;
                 case "disconnected":
+                    this.notifySelf("ptp_remove", peerId);
                     if (navigator.onLine) {
                         await this._recoverConnection(peerId, {
                             delay: 3000,
@@ -584,29 +464,6 @@ export class PeerToPeer {
         }
     }
 
-    _getRequestId() {
-        this._lastRequestId++;
-        return this._lastRequestId;
-    }
-
-    async _onRequest(fromPeerId, requestId, requestName, requestPayload, requestTransport) {
-        if (this._stopped) {
-            return;
-        }
-        const requestFunction = this.options.onRequest && this.options.onRequest[requestName];
-        const result = await requestFunction({
-            fromPeerId,
-            requestId,
-            requestName,
-            requestPayload,
-        });
-        this.notifyPeer(
-            fromPeerId,
-            "ptp_request_result",
-            { requestId, result },
-            { transport: requestTransport }
-        );
-    }
     /**
      * Attempts a connection recovery by updating the tracks, which will start
      * a new transaction: negotiationneeded -> offer -> answer -> ...
@@ -684,12 +541,5 @@ export class PeerToPeer {
                 }
             }
         }, 10000);
-    }
-}
-
-export class RequestError extends Error {
-    constructor(message) {
-        super(message);
-        this.name = "RequestError";
     }
 }

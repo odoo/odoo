@@ -11,15 +11,14 @@ import { initElementForEdition } from "./utils/sanitize";
 /**
  * @typedef { Object } CollaborationConfig
  * @property { string } collaboration.peerId
+ * @property { Object } collaboration.ormService
  * @property { Object } collaboration.busService
  * @property { Object } collaboration.collaborationChannel
  * @property { String } collaboration.collaborationChannel.collaborationModelName
  * @property { String } collaboration.collaborationChannel.collaborationFieldName
  * @property { Number } collaboration.collaborationChannel.collaborationResId
  * @property { 'start' | 'focus' } [collaboration.collaborativeTrigger]
-/**
 
-/**
  * @typedef { Object } EditorConfig
  * @property { string } [content]
  * @property { boolean } [allowInlineAtRoot]

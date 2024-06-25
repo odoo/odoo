@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import json
-import logging
 import re
 import time
 import requests
@@ -18,8 +17,6 @@ from odoo import http, tools, _
 from odoo.tools.misc import file_open
 from odoo.tools.image import image_data_uri, binary_to_image
 
-
-logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
 
@@ -495,3 +492,6 @@ class Web_Editor(http.Controller):
     def test_suite(self, mod=None, **kwargs):
         return request.render('web_editor.tests')
 
+    @http.route(["/web_editor/get_ice_servers"], type='json', auth="user")
+    def get_ice_servers(self):
+        return request.env['mail.ice.server']._get_ice_servers()

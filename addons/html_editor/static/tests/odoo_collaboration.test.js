@@ -12,11 +12,14 @@ import { patch } from "@web/core/utils/patch";
 import { getContent, getSelection, setSelection } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 import { animationFrame, advanceTime } from "@odoo/hoot-mock";
+import { RemoteConnections } from "@html_editor/others/collaboration/remote/RemoteConnections";
 
 /**
  * @typedef PeerPool
  * @property {Record<string, PeerTest>} peers
  * @property {string} lastRecordSaved
+ *
+ * @typedef {import("@html_editor/others/collaboration/collaboration_odoo_plugin").CollaborationOdooPlugin} CollaborationOdooPlugin
  */
 
 function makeSpy(obj, functionName) {
@@ -40,11 +43,27 @@ function makeSpies(obj, methodNames) {
 }
 
 class PeerTest {
+    /**
+     * @type {RemoteConnections}
+     */
+    remoteConnections = null;
+
     constructor() {
         this.connections = new Set();
         this.onlineMutex = new Mutex();
         this.isOnline = true;
     }
+    /**
+     * @param {Object} infos
+     * @param {string} infos.peerId
+     * @param {import("@html_editor/plugin").Editor} infos.editor
+     * @param {Object} infos.plugins
+     * @param {CollaborationOdooPlugin} infos.plugins.collaboration_odoo
+     * @param {PeerPool} infos.pool
+     * @param {PeerPool['peers']} peers
+     * @param {Document} document
+     *
+     */
     setInfos(infos) {
         this.peerId = infos.peerId;
         this.editor = infos.editor;
@@ -60,23 +79,20 @@ class PeerTest {
         this.editor.destroy();
     }
     async focus() {
-        return this.plugins["collaboration_odoo"].joinPeerToPeer();
+        this.plugins.collaboration_odoo.ptpJoined = true;
     }
-    async openDataChannel(peer) {
-        this.connections.add(peer);
-        peer.connections.add(this);
-        const ptpFrom = this.ptp;
-        const ptpTo = peer.ptp;
-        ptpFrom.peersInfos[peer.peerId] ||= {};
-        ptpTo.peersInfos[this.peerId] ||= {};
+    /**
+     * @param {PeerTest} fromPeer
+     */
+    async ping(fromPeer) {
+        this.connections.add(fromPeer);
+        fromPeer.connections.add(this);
 
-        // Simulate the rtc_data_channel_open on both peers.
-        await this.ptp.notifySelf("rtc_data_channel_open", {
-            connectionPeerId: peer.peerId,
-        });
-        await peer.ptp.notifySelf("rtc_data_channel_open", {
-            connectionPeerId: this.peerId,
-        });
+        fromPeer.remoteConnections.notifyPeer(
+            this.peerId,
+            "remote_ping",
+            fromPeer.remoteConnections.config.getRemotePingPayload()
+        );
     }
     getValue() {
         return stripHistoryIds(getContent(this.editor.editable));
@@ -180,8 +196,9 @@ class Wysiwygs extends Component {
         const startPlugins = editor.startPlugins.bind(editor);
         editor.startPlugins = () => {
             const plugins = Object.fromEntries(editor.plugins.map((p) => [p.constructor.name, p]));
+            /** @type {PeerPool}*/
             const { pool } = this.props;
-            const { peers } = this.props.pool;
+            const { peers } = pool;
 
             patch(plugins["collaboration_odoo"], {
                 getMetadata() {
@@ -189,62 +206,44 @@ class Wysiwygs extends Component {
                     result.avatarUrl = ``;
                     return result;
                 },
-                getNewPtp() {
+                async setupCollaboration(...args) {
+                    super.setupCollaboration(...args);
                     this.startCollaborationTime = parseInt(peerId.match(/\d+/));
-                    const ptp = super.getNewPtp();
-                    peers[peerId].ptp = ptp;
-                    const broadcastAll = (params) => {
-                        for (const peer of peers[peerId].connections) {
-                            peer.ptp.handleNotification(structuredClone(params));
-                        }
-                    };
-                    patch(ptp, {
-                        removePeer(peerId) {
-                            this.notifySelf("ptp_remove", peerId);
-                            delete this.peersInfos[peerId];
-                        },
-                        notifyAllPeers(...args) {
-                            // This is not needed because the opening of the
-                            // dataChannel is done through `openDataChannel` and we
-                            // do not want to simulate the events that thrigger the
-                            // openning of the dataChannel.
-                            if (args[0] === "ptp_join") {
-                                return;
-                            }
-                            this.options.broadcastAll = broadcastAll;
-                            super.notifyAllPeers(...args);
-                        },
-                        _getPtpPeers() {
-                            return peers[peerId].connections.map((peer) => {
-                                return { id: peer.peerId };
-                            });
-                        },
-                        async _channelNotify(peerId, transportPayload) {
-                            if (
-                                !peers[peerId].isOnline ||
-                                !peers[transportPayload.fromPeerId].isOnline
-                            ) {
-                                return;
-                            }
-                            peers[peerId].ptp.handleNotification(structuredClone(transportPayload));
-                        },
-
-                        _createPeer() {
-                            throw new Error("Should not be called.");
-                        },
-                        _addIceCandidate() {
-                            throw new Error("Should not be called.");
-                        },
-                        _recoverConnection() {
-                            throw new Error("Should not be called.");
-                        },
-                        _killPotentialZombie() {
-                            throw new Error("Should not be called.");
-                        },
+                    this.remoteLoading = this.remoteLoading.then(() => {
+                        loadedResolver();
+                        peers[peerId].remoteConnections = this.remoteConnections;
                     });
-
-                    loadedResolver();
-                    return ptp;
+                },
+                getRemoteConnections(config) {
+                    const odooPlugin = this;
+                    class PatchedRemoteConnections extends RemoteConnections {
+                        async start() {
+                            this.remoteInterface = {
+                                stop() {
+                                    odooPlugin.remoteConnections.notifyAllPeers("remove_peer");
+                                },
+                                notifyAllPeers() {
+                                    for (const peer of peers[peerId].connections) {
+                                        this.notifyPeer(peer.peerId, ...arguments);
+                                    }
+                                },
+                                notifyPeer(toPeerId, notificationName, notificationPayload) {
+                                    if (
+                                        notificationName !== "remove_peer" &&
+                                        (!peers[toPeerId].isOnline || !peers[peerId].isOnline)
+                                    ) {
+                                        return;
+                                    }
+                                    peers[toPeerId].remoteConnections.handleNotification(
+                                        notificationName,
+                                        peerId,
+                                        structuredClone(notificationPayload)
+                                    );
+                                },
+                            };
+                        }
+                    }
+                    return new PatchedRemoteConnections(config);
                 },
                 getCurrentRecord() {
                     return {
@@ -312,8 +311,8 @@ beforeEach(() => {
     onRpc("/web/dataset/call_kw/res.users/read", () => {
         return [{ id: 0, name: "admin" }];
     });
-    onRpc("/html_editor/get_ice_servers", () => {
-        return [];
+    onRpc("/html_editor/get_collab_infos", () => {
+        return { ice_servers: [] };
     });
     onRpc("/html_editor/bus_broadcast", (params) => {
         throw new Error("Should not be called.");
@@ -347,8 +346,7 @@ describe("Focus", () => {
         await peers.p1.focus();
         await peers.p2.focus();
 
-        await peers.p1.openDataChannel(peers.p2);
-
+        await peers.p1.ping(peers.p2);
         insertEditorText(peers.p1.editor, "b");
         await animationFrame();
 
@@ -371,7 +369,8 @@ describe("Focus", () => {
 
         insertEditorText(peers.p1.editor, "b");
 
-        await peers.p1.openDataChannel(peers.p2);
+        await peers.p1.ping(peers.p2);
+        await new Promise((resolve) => setTimeout(resolve));
 
         expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
             message: "p1 should have the same document as p2",
@@ -392,9 +391,11 @@ describe("Stale detection & recovery", () => {
 
             await peers.p1.focus();
             await peers.p2.focus();
-            await peers.p1.openDataChannel(peers.p2);
+            await peers.p1.ping(peers.p2);
+            await new Promise((resolve) => setTimeout(resolve));
 
             insertEditorText(peers.p1.editor, "b");
+            await new Promise((resolve) => setTimeout(resolve));
 
             await peers.p1.writeToServer();
 
@@ -420,8 +421,7 @@ describe("Stale detection & recovery", () => {
             });
 
             await peers.p3.focus();
-            await peers.p1.openDataChannel(peers.p3);
-            // This timeout is necessary for the selection to be set
+            await peers.p1.ping(peers.p3);
             await new Promise((resolve) => setTimeout(resolve));
 
             expect(peers.p3.plugins.collaboration_odoo.isDocumentStale).toBe(false, {
@@ -450,14 +450,15 @@ describe("Stale detection & recovery", () => {
                 await peers.p1.focus();
                 await peers.p2.focus();
                 await peers.p3.focus();
-                await peers.p1.openDataChannel(peers.p2);
-                await peers.p1.openDataChannel(peers.p3);
-                await peers.p2.openDataChannel(peers.p3);
+                await peers.p1.ping(peers.p2);
+                await peers.p1.ping(peers.p3);
+                await peers.p2.ping(peers.p3);
+                await new Promise((resolve) => setTimeout(resolve));
 
                 const p3Spies = makeSpies(peers.p3.plugins.collaboration_odoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
-                    "processMissingSteps",
+                    "addMissingSteps",
                     "applySnapshot",
                 ]);
 
@@ -514,8 +515,8 @@ describe("Stale detection & recovery", () => {
                 expect(p3Spies.recoverFromStaleDocument.callCount).toBe(1, {
                     message: "p3 recoverFromStaleDocument should have been called once",
                 });
-                expect(p3Spies.processMissingSteps.callCount).toBe(1, {
-                    message: "p3 processMissingSteps should have been called once",
+                expect(p3Spies.addMissingSteps.callCount).toBe(1, {
+                    message: "p3 addMissingSteps should have been called once",
                 });
                 expect(p3Spies.applySnapshot.callCount).toBe(0, {
                     message: "p3 applySnapshot should not have been called",
@@ -544,22 +545,23 @@ describe("Stale detection & recovery", () => {
                 await peers.p2.focus();
                 await peers.p3.focus();
 
-                await peers.p1.openDataChannel(peers.p2);
-                await peers.p1.openDataChannel(peers.p3);
-                await peers.p2.openDataChannel(peers.p3);
+                await peers.p1.ping(peers.p2);
+                await peers.p1.ping(peers.p3);
+                await peers.p2.ping(peers.p3);
+                await new Promise((resolve) => setTimeout(resolve));
                 peers.p2.setOffline();
                 peers.p3.setOffline();
 
                 const p2Spies = makeSpies(peers.p2.plugins.collaboration_odoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
-                    "processMissingSteps",
+                    "addMissingSteps",
                     "applySnapshot",
                 ]);
                 const p3Spies = makeSpies(peers.p3.plugins.collaboration_odoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
-                    "processMissingSteps",
+                    "addMissingSteps",
                     "applySnapshot",
                     "onRecoveryPeerTimeout",
                 ]);
@@ -579,6 +581,7 @@ describe("Stale detection & recovery", () => {
                 });
 
                 peers.p1.destroyEditor();
+                await new Promise((resolve) => setTimeout(resolve));
 
                 expect(p2Spies.recoverFromStaleDocument.callCount).toBe(0, {
                     message: "p2 recoverFromStaleDocument should not have been called",
@@ -586,8 +589,8 @@ describe("Stale detection & recovery", () => {
                 expect(p2Spies.resetFromServerAndResyncWithPeers.callCount).toBe(0, {
                     message: "p2 resetFromServerAndResyncWithPeers should not have been called",
                 });
-                expect(p2Spies.processMissingSteps.callCount).toBe(0, {
-                    message: "p2 processMissingSteps should not have been called",
+                expect(p2Spies.addMissingSteps.callCount).toBe(0, {
+                    message: "p2 addMissingSteps should not have been called",
                 });
                 expect(p2Spies.applySnapshot.callCount).toBe(0, {
                     message: "p2 applySnapshot should not have been called",
@@ -607,8 +610,8 @@ describe("Stale detection & recovery", () => {
                 expect(p2Spies.resetFromServerAndResyncWithPeers.callCount).toBe(1, {
                     message: "p2 resetFromServerAndResyncWithPeers should have been called once",
                 });
-                expect(p2Spies.processMissingSteps.callCount).toBe(0, {
-                    message: "p2 processMissingSteps should not have been called",
+                expect(p2Spies.addMissingSteps.callCount).toBe(0, {
+                    message: "p2 addMissingSteps should not have been called",
                 });
                 expect(p2Spies.applySnapshot.callCount).toBe(0, {
                     message: "p2 applySnapshot should not have been called",
@@ -624,8 +627,8 @@ describe("Stale detection & recovery", () => {
                 expect(p3Spies.resetFromServerAndResyncWithPeers.callCount).toBe(0, {
                     message: "p3 resetFromServerAndResyncWithPeers should not have been called",
                 });
-                expect(p3Spies.processMissingSteps.callCount).toBe(1, {
-                    message: "p3 processMissingSteps should have been called once",
+                expect(p3Spies.addMissingSteps.callCount).toBe(0, {
+                    message: "p3 addMissingSteps should not have been called",
                 });
                 expect(p3Spies.applySnapshot.callCount).toBe(1, {
                     message: "p3 applySnapshot should have been called once",
@@ -642,22 +645,23 @@ describe("Stale detection & recovery", () => {
                 await peers.p2.focus();
                 await peers.p3.focus();
 
-                await peers.p1.openDataChannel(peers.p2);
-                await peers.p1.openDataChannel(peers.p3);
-                await peers.p2.openDataChannel(peers.p3);
+                await peers.p1.ping(peers.p2);
+                await peers.p1.ping(peers.p3);
+                await peers.p2.ping(peers.p3);
+                await new Promise((resolve) => setTimeout(resolve));
                 peers.p2.setOffline();
                 peers.p3.setOffline();
 
                 const p2Spies = makeSpies(peers.p2.plugins.collaboration_odoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
-                    "processMissingSteps",
+                    "addMissingSteps",
                     "applySnapshot",
                 ]);
                 const p3Spies = makeSpies(peers.p3.plugins.collaboration_odoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
-                    "processMissingSteps",
+                    "addMissingSteps",
                     "applySnapshot",
                     "onRecoveryPeerTimeout",
                 ]);
@@ -682,8 +686,8 @@ describe("Stale detection & recovery", () => {
                 expect(p2Spies.resetFromServerAndResyncWithPeers.callCount).toBe(0, {
                     message: "p2 resetFromServerAndResyncWithPeers should not have been called",
                 });
-                expect(p2Spies.processMissingSteps.callCount).toBe(0, {
-                    message: "p2 processMissingSteps should not have been called",
+                expect(p2Spies.addMissingSteps.callCount).toBe(0, {
+                    message: "p2 addMissingSteps should not have been called",
                 });
                 expect(p2Spies.applySnapshot.callCount).toBe(0, {
                     message: "p2 applySnapshot should not have been called",
@@ -703,8 +707,8 @@ describe("Stale detection & recovery", () => {
                 expect(p2Spies.resetFromServerAndResyncWithPeers.callCount).toBe(1, {
                     message: "p2 resetFromServerAndResyncWithPeers should have been called once",
                 });
-                expect(p2Spies.processMissingSteps.callCount).toBe(0, {
-                    message: "p2 processMissingSteps should not have been called",
+                expect(p2Spies.addMissingSteps.callCount).toBe(0, {
+                    message: "p2 addMissingSteps should not have been called",
                 });
                 expect(p2Spies.applySnapshot.callCount).toBe(0, {
                     message: "p2 applySnapshot should not have been called",
@@ -720,8 +724,8 @@ describe("Stale detection & recovery", () => {
                 expect(p3Spies.resetFromServerAndResyncWithPeers.callCount).toBe(0, {
                     message: "p3 resetFromServerAndResyncWithPeers should have been called once",
                 });
-                expect(p3Spies.processMissingSteps.callCount).toBe(1, {
-                    message: "p3 processMissingSteps should have been called once",
+                expect(p3Spies.addMissingSteps.callCount).toBe(0, {
+                    message: "p3 addMissingSteps should not have been called",
                 });
                 expect(p3Spies.applySnapshot.callCount).toBe(1, {
                     message: "p3 applySnapshot should have been called once",
@@ -740,9 +744,10 @@ describe("Stale detection & recovery", () => {
                 await peers.p2.focus();
                 await peers.p3.focus();
 
-                await peers.p1.openDataChannel(peers.p2);
-                await peers.p1.openDataChannel(peers.p3);
-                await peers.p2.openDataChannel(peers.p3);
+                await peers.p1.ping(peers.p2);
+                await peers.p1.ping(peers.p3);
+                await peers.p2.ping(peers.p3);
+                await new Promise((resolve) => setTimeout(resolve));
                 peers.p2.setOffline();
                 peers.p3.setOffline();
 
@@ -835,7 +840,8 @@ describe("Stale detection & recovery", () => {
                 await peers.p1.focus();
                 await peers.p2.focus();
 
-                await peers.p1.openDataChannel(peers.p2);
+                await peers.p1.ping(peers.p2);
+                await new Promise((resolve) => setTimeout(resolve));
                 peers.p2.setOffline();
 
                 const p2Spies = makeSpies(peers.p2.plugins.collaboration_odoo, [
@@ -906,9 +912,10 @@ describe("Stale detection & recovery", () => {
                 await peers.p1.focus();
                 await peers.p2.focus();
 
-                await peers.p1.openDataChannel(peers.p2);
-                await peers.p1.openDataChannel(peers.p3);
-                await peers.p2.openDataChannel(peers.p3);
+                await peers.p1.ping(peers.p2);
+                await peers.p1.ping(peers.p3);
+                await peers.p2.ping(peers.p3);
+                await new Promise((resolve) => setTimeout(resolve));
                 peers.p2.setOffline();
                 peers.p3.setOffline();
 
@@ -993,7 +1000,8 @@ describe("Disconnect & reconnect", () => {
 
         await peers.p1.focus();
         await peers.p2.focus();
-        await peers.p1.openDataChannel(peers.p2);
+        await peers.p1.ping(peers.p2);
+        await new Promise((resolve) => setTimeout(resolve));
 
         insertEditorText(peers.p1.editor, "b");
 
@@ -1017,7 +1025,6 @@ describe("Disconnect & reconnect", () => {
 
         setSelection(peers.p1);
         insertEditorText(peers.p1.editor, "c");
-
         addP(peers.p1, "d");
 
         setSelection(peers.p2);
@@ -1027,31 +1034,8 @@ describe("Disconnect & reconnect", () => {
         peers.p1.setOnline();
         peers.p2.setOnline();
 
-        // todo: p1PromiseForMissingStep and p2PromiseForMissingStep
-        // should be removed when the fix of undetected missing step
-        // will be merged. (task-3208277)
-        const p1PromiseForMissingStep = new Promise((resolve) => {
-            patch(peers.p2.plugins.collaboration_odoo, {
-                async processMissingSteps() {
-                    // Wait for the p2PromiseForMissingStep to resolve
-                    // to avoid undetected missing step.
-                    await p2PromiseForMissingStep;
-                    super.processMissingSteps(...arguments);
-                    resolve();
-                },
-            });
-        });
-        const p2PromiseForMissingStep = new Promise((resolve) => {
-            patch(peers.p1.plugins.collaboration_odoo, {
-                async processMissingSteps() {
-                    super.processMissingSteps(...arguments);
-                    resolve();
-                },
-            });
-        });
-
-        await peers.p1.openDataChannel(peers.p2);
-        await p1PromiseForMissingStep;
+        await peers.p1.ping(peers.p2);
+        await new Promise((resolve) => setTimeout(resolve));
 
         expect(peers.p1.getValue()).toBe(`<p>ac[]b</p><p>f</p><p>d</p>`, {
             message: "p1 should have the value merged with p2",
