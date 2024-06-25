@@ -26,25 +26,34 @@ wTourUtils.goToTheme(),
     content: 'select Parseltongue',
     trigger: '.dropdown-item:contains(Parseltongue)',
     run: "click",
-}, {
+}, 
+{
+    trigger: '.modal-dialog div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(Parseltongue)',
+},
+{
     content: "load Parseltongue",
     trigger: '.modal-footer .btn-primary',
-    extra_trigger: '.modal-dialog div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(Parseltongue)',
     run: "click",
 }, {
     content: "click language dropdown (2)",
     trigger: ':iframe .js_language_selector .dropdown-toggle',
     timeout: 60000,
     run: "click",
-}, {
+},
+{
+    trigger: ':iframe html[lang*="pa-GB"]',
+},
+{
     content: "go to english version",
     trigger: ':iframe .js_language_selector a[data-url_code="en"]',
-    extra_trigger: ':iframe html[lang*="pa-GB"]',
     run: "click",
-}, {
+},
+{
+    trigger: ':iframe html[lang*="en-US"]',
+},
+{
     content: "Open new page menu",
     trigger: ".o_menu_systray .o_new_content_container > a",
-    extra_trigger: ':iframe html[lang*="en-US"]',
     consumeVisibleOnly: true,
     run: "click",
 }, {
@@ -59,10 +68,13 @@ wTourUtils.goToTheme(),
     content: "insert file name",
     trigger: '.modal-dialog input[type="text"]',
     run: "edit rte_translator.xml",
-}, {
+},
+{
+    trigger: 'input[type="text"]:value(rte_translator.xml)',
+},
+{
     content: "create file",
-    trigger: '.modal-dialog button.btn-primary',
-    extra_trigger: 'input[type="text"]:value(rte_translator.xml)',
+    trigger: '.modal-dialog button.btn-primary:contains(create)',
     run: "click",
 }, {
     content: "click on the 'page manager' button",
@@ -89,10 +101,13 @@ wTourUtils.goToTheme(),
     content: "insert page name",
     trigger: '.modal-dialog input[type="text"]',
     run: "edit rte_translator",
-}, {
+},
+{
+    trigger: 'input[type="text"]:value(rte_translator)',
+},
+{
     content: "create page",
     trigger: '.modal-dialog button.btn-primary',
-    extra_trigger: 'input[type="text"]:value(rte_translator)',
     run: "click",
 },
 wTourUtils.dragNDrop({
@@ -117,19 +132,25 @@ wTourUtils.dragNDrop({
     content: "click language dropdown (3)",
     trigger: ':iframe .js_language_selector .dropdown-toggle',
     run: "click",
-}, {
+},
+{
+    trigger: ':iframe html[lang*="en"]',
+},
+{
     content: "click on Parseltongue version",
     trigger: ':iframe .js_language_selector a[data-url_code="pa_GB"]',
-    extra_trigger: ':iframe html[lang*="en"]',
     run: "click",
 }, {
     content: "edit",
     trigger: '.o_edit_website_container button',
     run: "click",
-}, {
+},
+{
+    trigger: ":iframe html:not(:has(#wrap p span))",
+},
+{
     content: "translate",
     trigger: '.o_translate_website_dropdown_item',
-    extra_trigger: ':iframe html:not(:has(#wrap p span))',
     run: "click",
 }, {
     content: "close modal",
@@ -139,9 +160,12 @@ wTourUtils.dragNDrop({
     content: "check if translation is activate",
     trigger: ':iframe [data-oe-translation-initial-sha]',
     run: "click",
-}, {
+},
+{
+    trigger: "#oe_snippets.o_loaded",
+},
+{
     content: "translate text",
-    extra_trigger: '#oe_snippets.o_loaded',
     trigger: ':iframe #wrap p font:first',
     run: function (actionHelper) {
         actionHelper.editor('translated Parseltongue text');
@@ -161,10 +185,13 @@ wTourUtils.dragNDrop({
         this.anchor.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: "_" }));
         this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
     },
-}, {
+},
+{
+    trigger: ':iframe #wrap .o_dirty font:first:contains(translated Parseltongue text)',
+},
+{
     content: "click on input",
     trigger: ':iframe #wrap input:first',
-    extra_trigger: ':iframe #wrap .o_dirty font:first:contains(translated Parseltongue text)',
     run: 'click',
 }, {
     content: "translate placeholder",
@@ -174,10 +201,14 @@ wTourUtils.dragNDrop({
     content: "translate default value",
     trigger: '.modal-dialog input:last',
     run: "edit test Parseltongue default value",
-}, {
+},
+{
+    in_modal: false,
+    trigger: '.modal input:value("test Parseltongue placeholder")',
+},
+{
     content: "close modal",
     trigger: '.modal-footer .btn-primary',
-    extra_trigger: '.modal input:value("test Parseltongue placeholder")',
     run: "click",
 }, {
     content: "check: input marked as translated",
@@ -196,10 +227,13 @@ wTourUtils.dragNDrop({
 }, {
     content: "check: default value translation",
     trigger: ':iframe input[value="test Parseltongue default value"]',
-}, {
+},
+{
+    trigger: ':iframe html[lang*="pa-GB"]:not(:has(#wrap p span))',
+},
+{
     content: "open language selector",
     trigger: ':iframe .js_language_selector button:first',
-    extra_trigger: ':iframe html[lang*="pa-GB"]:not(:has(#wrap p span))',
     run: "click",
 }, {
     content: "return to english version",
@@ -243,10 +277,13 @@ wTourUtils.dragNDrop({
     content: "return in Parseltongue",
     trigger: ':iframe html[lang="en-US"] .js_language_selector .js_change_lang[data-url_code="pa_GB"]',
     run: "click",
-}, {
+},
+{
+    trigger: ':iframe html[lang*="pa-GB"]',
+},
+{
     content: "check bis: content is translated",
     trigger: ':iframe #wrap p font:first:contains(translated Parseltongue text)',
-    extra_trigger: ':iframe html[lang*="pa-GB"]',
     run: "click",
 }, {
     content: "check bis: placeholder translation",

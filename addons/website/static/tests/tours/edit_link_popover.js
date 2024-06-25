@@ -112,8 +112,10 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
         run: "click",
     },
     {
+        trigger: "div:not(.o_loading_dummy) > #oe_snippets",
+    },
+    {
         content: "Click on the Home menu again",
-        extra_trigger: 'div:not(.o_loading_dummy) > #oe_snippets',
         trigger: ':iframe .top_menu a:contains("Home")[href="/contactus"]',
         run: "click",
     },
@@ -181,8 +183,10 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_2', {
     ...clickFooter,
     // 5. Double click should not open popover but should open toolbar link
     {
+        trigger: ":iframe html:not(:has(.o_edit_menu_popover))", // popover should be closed
+    },
+    {
         content: "Double click on link",
-        extra_trigger: ':iframe html:not(:has(.o_edit_menu_popover))', // popover should be closed
         trigger: ':iframe footer a[href="/"]',
         run: function (actions) {
             // Create range to simulate real double click, see pull request
@@ -196,14 +200,18 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_2', {
         },
     },
     {
+        trigger: ":iframe html:has(.o_edit_menu_popover)",
+    },
+    {
         content: "Ensure popover is opened on double click, and so is right panel edit link",
         trigger: 'html:has(#o_link_dialog_url_input)',
-        extra_trigger: ':iframe html:has(.o_edit_menu_popover)',
+    },
+    {
+        trigger: ':iframe .o_edit_menu_popover a.o_we_full_url[target="_blank"]',
     },
     {
         content: "Ensure that a click on the link popover link opens a new window in edit mode",
         trigger: ':iframe .o_edit_menu_popover a.o_we_url_link[target="_blank"]',
-        extra_trigger: ':iframe .o_edit_menu_popover a.o_we_full_url[target="_blank"]',
         run: (actions) => {
             // We do not want to open a link in a tour
             patch(browser, {

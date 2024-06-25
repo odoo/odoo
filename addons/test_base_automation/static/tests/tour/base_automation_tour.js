@@ -56,8 +56,10 @@ registry.category("web_tour.tours").add("test_base_automation", {
             run: "edit res.partner",
         },
         {
+            trigger: ".dropdown-menu:contains(Contact)",
+        },
+        {
             content: "Select model contact",
-            extra_trigger: ".dropdown-menu:contains(Contact)",
             trigger: ".dropdown-menu li a:contains(Contact):not(:has(.fa-spin))",
             run: "click",
         },
@@ -89,7 +91,7 @@ registry.category("web_tour.tours").add("test_base_automation", {
         {
             content: "Input field name",
             trigger:
-                '.o_model_field_selector_popover .o_model_field_selector_popover_search  input',
+                ".o_model_field_selector_popover .o_model_field_selector_popover_search  input",
             run: "edit Job Position",
             in_modal: false,
         },
@@ -110,9 +112,10 @@ registry.category("web_tour.tours").add("test_base_automation", {
             trigger: ".modal-content .o_form_button_save",
             run: "click",
         },
-        ...stepUtils.saveForm({
-            extra_trigger: ".o-overlay-container:not(:has(.modal-content))",
-        }),
+        {
+            trigger: "body:not(:has(.modal-content))",
+        },
+        ...stepUtils.saveForm(),
     ],
 });
 
@@ -194,7 +197,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         {
             content: "Input field name",
             trigger:
-                '.o_model_field_selector_popover .o_model_field_selector_popover_search  input',
+                ".o_model_field_selector_popover .o_model_field_selector_popover_search  input",
             run: "edit Name",
             in_modal: false,
         },
@@ -229,7 +232,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         {
             content: "Input field name",
             trigger:
-                '.o_model_field_selector_popover .o_model_field_selector_popover_search  input',
+                ".o_model_field_selector_popover .o_model_field_selector_popover_search  input",
             run: "edit Priority",
             in_modal: false,
         },
@@ -252,9 +255,10 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             trigger: ".modal-content .o_form_button_save",
             run: "click",
         },
-        ...stepUtils.saveForm({
-            extra_trigger: ".o-overlay-container:not(:has(.modal-content))",
-        }),
+        {
+            trigger: "body:not(:has(.modal-content))",
+        },
+        ...stepUtils.saveForm(),
         {
             trigger: ".breadcrumb .o_back_button a",
             run: "click",
@@ -470,13 +474,17 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
             run: "click",
         },
         {
-            extra_trigger:
+            trigger:
                 ".modal-content .o_form_renderer [name='state'] span.active[value*='followers']",
+        },
+        {
             trigger: ".modal-content .o_form_button_cancel",
             run: "click",
         },
         {
-            extra_trigger: "body:not(:has(.modal-content))",
+            trigger: "body:not(:has(.modal-content))",
+        },
+        {
             trigger: ".o_form_button_cancel",
         },
     ],
@@ -563,7 +571,9 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
             run: "click",
         },
         {
-            extra_trigger: "body:not(:has(.o_field_widget[name='trg_field_ref']))",
+            trigger: "body:not(:has(.o_field_widget[name='trg_field_ref']))",
+        },
+        {
             trigger: ".o_field_widget[name='trigger'] select",
             run: `select "on_stage_set"`,
         },
@@ -627,7 +637,7 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
                         .join(", "),
                     "Values Updated, Timing Conditions, Custom, External"
                 );
-            }
+            },
         },
         {
             trigger: ".o_field_widget[name='model_id'] input",
@@ -657,7 +667,7 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
                         .join(", "),
                     "Values Updated, Email Events, Timing Conditions, Custom, External"
                 );
-            }
+            },
         },
         {
             trigger: "button.o_form_button_cancel",
@@ -665,35 +675,42 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
         },
         {
             trigger: "body:not(:has(button.o_form_button_cancel)",
-        }
+        },
     ],
 });
 
-registry.category("web_tour.tours").add('base_automation.on_change_rule_creation', {
+registry.category("web_tour.tours").add("base_automation.on_change_rule_creation", {
     test: true,
     url: "/web#action=base_automation.base_automation_act",
     steps: () => [
-    {
-        trigger: ".o-kanban-button-new",
-        run: "click",
-    }, {
-        trigger: ".o_field_widget[name=name] input",
-        run: "edit Test rule",
-    }, {
-        trigger: ".o_field_widget[name=model_id] input",
-        run: "edit ir.ui.view",
-    }, {
-        trigger: ".ui-menu-item > a:contains(/^View$/)",
-        run: "click",
-    }, {
-        trigger: ".o_field_widget[name=trigger] select",
-        run: `select "on_change"`,
-    }, {
-        trigger: ".o_field_widget[name=on_change_field_ids] input",
-        run: "edit Active",
-    }, {
-        trigger: ".ui-menu-item > a:contains(/^Active$/)",
-        run: "click",
-    },
-    ...stepUtils.saveForm(),
-]});
+        {
+            trigger: ".o-kanban-button-new",
+            run: "click",
+        },
+        {
+            trigger: ".o_field_widget[name=name] input",
+            run: "edit Test rule",
+        },
+        {
+            trigger: ".o_field_widget[name=model_id] input",
+            run: "edit ir.ui.view",
+        },
+        {
+            trigger: ".ui-menu-item > a:contains(/^View$/)",
+            run: "click",
+        },
+        {
+            trigger: ".o_field_widget[name=trigger] select",
+            run: `select "on_change"`,
+        },
+        {
+            trigger: ".o_field_widget[name=on_change_field_ids] input",
+            run: "edit Active",
+        },
+        {
+            trigger: ".ui-menu-item > a:contains(/^Active$/)",
+            run: "click",
+        },
+        ...stepUtils.saveForm(),
+    ],
+});

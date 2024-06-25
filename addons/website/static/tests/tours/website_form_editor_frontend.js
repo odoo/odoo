@@ -6,46 +6,50 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     test: true,
     steps: () => [
     {
+        trigger:  "form[data-model_name='mail.mail']" +
+                "[data-success-page='/contactus-thank-you']" +
+                ":has(.s_website_form_field:has(label:contains('Your Name')):has(input[type='text'][name='name'][required]))" +
+                ":has(.s_website_form_field:has(label:contains('Your Email')):has(input[type='email'][name='email_from'][required]))" +
+                ":has(.s_website_form_field:has(label:contains('Your Question')):has(textarea[name='description'][required]))" +
+                ":has(.s_website_form_field:has(label:contains('Subject')):has(input[type='text'][name='subject'][required]))" +
+                ":has(.s_website_form_field:has(label:contains('Test Date')):has(input[type='text'][name='date'][required]))" +
+                ":has(.s_website_form_field:has(label:contains('Awesome Label')):hidden)" +
+                ":has(.s_website_form_field:has(label:contains('Your Message')):has(textarea[name='body_html'][required]))" +
+                ":has(.s_website_form_field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Iphone'][required]))" +
+                ":has(.s_website_form_field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Galaxy S'][required]))" +
+                ":has(.s_website_form_field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Xperia'][required]))" +
+                ":has(.s_website_form_field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Wiko Stairway'][required]))" +
+                ":has(.s_website_form_field:has(label:contains('Service')):has(input[type='radio'][name='Service'][value='After-sales Service']:not([required])))" +
+                ":has(.s_website_form_field:has(label:contains('Service')):has(input[type='radio'][name='Service'][value='Invoicing Service']:not([required])))" +
+                ":has(.s_website_form_field:has(label:contains('Service')):has(input[type='radio'][name='Service'][value='Development Service']:not([required])))" +
+                ":has(.s_website_form_field:has(label:contains('Service')):has(input[type='radio'][name='Service'][value='Management Service']:not([required])))" +
+                ":has(.s_website_form_field:has(label:contains('State')):has(select[name='State'][required]:has(option[value='Belgium'])))" +
+                ":has(.s_website_form_field.s_website_form_required:has(label:contains('State')):has(select[name='State'][required]:has(option[value='France'])))" +
+                ":has(.s_website_form_field:has(label:contains('State')):has(select[name='State'][required]:has(option[value='Canada'])))" +
+                ":has(.s_website_form_field:has(label:contains('Invoice Scan')))" +
+                ":has(.s_website_form_field:has(input[name='email_to'][value='test@test.test']))" +
+                ":has(.s_website_form_field:has(input[name='website_form_signature']))",
+    },
+    {
         content:  "Try to send the form with some required fields not filled in",
-        extra_trigger:  "form[data-model_name='mail.mail']" +
-                        "[data-success-page='/contactus-thank-you']" +
-                        ":has(.s_website_form_field:has(label:contains('Your Name')):has(input[type='text'][name='name'][required]))" +
-                        ":has(.s_website_form_field:has(label:contains('Your Email')):has(input[type='email'][name='email_from'][required]))" +
-                        ":has(.s_website_form_field:has(label:contains('Your Question')):has(textarea[name='description'][required]))" +
-                        ":has(.s_website_form_field:has(label:contains('Subject')):has(input[type='text'][name='subject'][required]))" +
-                        ":has(.s_website_form_field:has(label:contains('Test Date')):has(input[type='text'][name='date'][required]))" +
-                        ":has(.s_website_form_field:has(label:contains('Awesome Label')):hidden)" +
-                        ":has(.s_website_form_field:has(label:contains('Your Message')):has(textarea[name='body_html'][required]))" +
-                        ":has(.s_website_form_field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Iphone'][required]))" +
-                        ":has(.s_website_form_field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Galaxy S'][required]))" +
-                        ":has(.s_website_form_field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Xperia'][required]))" +
-                        ":has(.s_website_form_field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Wiko Stairway'][required]))" +
-                        ":has(.s_website_form_field:has(label:contains('Service')):has(input[type='radio'][name='Service'][value='After-sales Service']:not([required])))" +
-                        ":has(.s_website_form_field:has(label:contains('Service')):has(input[type='radio'][name='Service'][value='Invoicing Service']:not([required])))" +
-                        ":has(.s_website_form_field:has(label:contains('Service')):has(input[type='radio'][name='Service'][value='Development Service']:not([required])))" +
-                        ":has(.s_website_form_field:has(label:contains('Service')):has(input[type='radio'][name='Service'][value='Management Service']:not([required])))" +
-                        ":has(.s_website_form_field:has(label:contains('State')):has(select[name='State'][required]:has(option[value='Belgium'])))" +
-                        ":has(.s_website_form_field.s_website_form_required:has(label:contains('State')):has(select[name='State'][required]:has(option[value='France'])))" +
-                        ":has(.s_website_form_field:has(label:contains('State')):has(select[name='State'][required]:has(option[value='Canada'])))" +
-                        ":has(.s_website_form_field:has(label:contains('Invoice Scan')))" +
-                        ":has(.s_website_form_field:has(input[name='email_to'][value='test@test.test']))" +
-                        ":has(.s_website_form_field:has(input[name='website_form_signature']))",
         trigger:  ".s_website_form_send",
         run: "click",
     },
     {
+        trigger:  "form:has(#s_website_form_result.text-danger)" +
+                ":has(.s_website_form_field:has(label:contains('Your Name')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('Email')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Your Question')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Subject')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Test Date')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Your Message')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Products')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
+    },
+    {
         content:  "Check if required fields were detected and complete the Subject field",
-        extra_trigger:  "form:has(#s_website_form_result.text-danger)" +
-                        ":has(.s_website_form_field:has(label:contains('Your Name')):not(.o_has_error))" +
-                        ":has(.s_website_form_field:has(label:contains('Email')).o_has_error)" +
-                        ":has(.s_website_form_field:has(label:contains('Your Question')).o_has_error)" +
-                        ":has(.s_website_form_field:has(label:contains('Subject')).o_has_error)" +
-                        ":has(.s_website_form_field:has(label:contains('Test Date')).o_has_error)" +
-                        ":has(.s_website_form_field:has(label:contains('Your Message')).o_has_error)" +
-                        ":has(.s_website_form_field:has(label:contains('Products')).o_has_error)" +
-                        ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
-                        ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
-                        ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
         trigger:  "input[name=subject]",
         run:      "edit Jane Smith",
     },
@@ -55,18 +59,20 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
         run: "click",
     },
     {
+        trigger:  "form:has(#s_website_form_result.text-danger)" +
+                ":has(.s_website_form_field:has(label:contains('Your Name')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('Email')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Your Question')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Subject')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('Test Date')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Your Message')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Products')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
+    },
+    {
         content:  "Check if required fields were detected and complete the Message field",
-        extra_trigger:  "form:has(#s_website_form_result.text-danger)" +
-                        ":has(.s_website_form_field:has(label:contains('Your Name')):not(.o_has_error))" +
-                        ":has(.s_website_form_field:has(label:contains('Email')).o_has_error)" +
-                        ":has(.s_website_form_field:has(label:contains('Your Question')).o_has_error)" +
-                        ":has(.s_website_form_field:has(label:contains('Subject')):not(.o_has_error))" +
-                        ":has(.s_website_form_field:has(label:contains('Test Date')).o_has_error)" +
-                        ":has(.s_website_form_field:has(label:contains('Your Message')).o_has_error)" +
-                        ":has(.s_website_form_field:has(label:contains('Products')).o_has_error)" +
-                        ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
-                        ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
-                        ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
         trigger:  "textarea[name=body_html]",
         run:      "edit A useless message"
     },
@@ -76,18 +82,20 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
         run: "click",
     },
     {
+        trigger:  "form:has(#s_website_form_result.text-danger)" +
+                ":has(.s_website_form_field:has(label:contains('Your Name')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('Email')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Your Question')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Subject')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('Test Date')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Your Message')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('Products')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
+    },
+    {
         content:  "Check if required fields was detected and check a product. If this fails, you probably broke the cleanForSave.",
-        extra_trigger:  "form:has(#s_website_form_result.text-danger)" +
-                        ":has(.s_website_form_field:has(label:contains('Your Name')):not(.o_has_error))" +
-                        ":has(.s_website_form_field:has(label:contains('Email')).o_has_error)" +
-                        ":has(.s_website_form_field:has(label:contains('Your Question')).o_has_error)" +
-                        ":has(.s_website_form_field:has(label:contains('Subject')):not(.o_has_error))" +
-                        ":has(.s_website_form_field:has(label:contains('Test Date')).o_has_error)" +
-                        ":has(.s_website_form_field:has(label:contains('Your Message')):not(.o_has_error))" +
-                        ":has(.s_website_form_field:has(label:contains('Products')).o_has_error)" +
-                        ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
-                        ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
-                        ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
         trigger:  "input[name=Products][value='Wiko Stairway']",
         run: "click",
     },

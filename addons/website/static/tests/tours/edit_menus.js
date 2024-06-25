@@ -8,8 +8,10 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
 }, () => [
     // Add a megamenu item from the menu.
     {
+        trigger: ":iframe #wrapwrap",
+    },
+    {
         content: "open site menu",
-        extra_trigger: ":iframe #wrapwrap",
         trigger: 'button[data-menu-xmlid="website.menu_site"]',
         run: "click",
     },
@@ -19,8 +21,10 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     {
+        trigger: ".o_website_dialog:visible",
+    },
+    {
         content: "Trigger the link dialog (click 'Add Mega Menu Item')",
-        extra_trigger: '.o_website_dialog:visible',
         trigger: '.modal-body a:eq(1)',
         run: "click",
     },
@@ -35,12 +39,17 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     {
+        trigger: '.oe_menu_editor [data-is-mega-menu="true"] .js_menu_label:contains("Megaaaaa!")',
+    },
+    {
         content: "Save the new menu",
         trigger: '.modal-footer .btn-primary',
-        extra_trigger: '.oe_menu_editor [data-is-mega-menu="true"] .js_menu_label:contains("Megaaaaa!")',
         run: "click",
     },
-    wTourUtils.clickOnExtraMenuItem({extra_trigger: 'body:not(:has(.oe_menu_editor))'}, true),
+    {
+        trigger: "body:not(:has(.oe_menu_editor))",
+    },
+    wTourUtils.clickOnExtraMenuItem({}, true),
     {
         content: "There should be a new megamenu item.",
         trigger: ':iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
@@ -58,20 +67,23 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     {
+        trigger: ".o_website_dialog:visible",
+    },
+    {
         content: "Trigger the link dialog (click 'Add Menu Item')",
-        extra_trigger: '.o_website_dialog:visible',
         trigger: '.modal-body a:eq(0)',
         run: "click",
     },
     {
+        trigger: ".modal-dialog .o_website_dialog input:eq(0)",
+    },
+    {
         content: "Confirm the new menu entry without a label",
-        extra_trigger: '.modal-dialog .o_website_dialog input:eq(0)',
         trigger: '.modal-footer .btn-primary',
         run: "click",
     },
     {
         content: "It didn't save without a label. Fill label input.",
-        extra_trigger: '.o_website_dialog:eq(1):visible',
         trigger: '.modal-dialog .o_website_dialog input:eq(0)',
         run: "edit Random!",
     },
@@ -81,9 +93,11 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     {
+        trigger: ".modal-dialog .o_website_dialog input.is-invalid",
+    },
+    {
         content: "It didn't save without a url. Fill url input.",
         trigger: '.modal-dialog .o_website_dialog input:eq(1)',
-        extra_trigger: '.modal-dialog .o_website_dialog input.is-invalid',
         run: "edit #",
     },
     {
@@ -92,18 +106,25 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     {
+        trigger: '.oe_menu_editor .js_menu_label:contains("Random!")',
+    },
+    {
         content: "Save the website menu with the new entry",
         trigger: '.modal-footer .btn-primary',
-        extra_trigger: '.oe_menu_editor .js_menu_label:contains("Random!")',
         run: "click",
     },
+    {
+        trigger: "#oe_snippets.o_loaded",
+    },
     // Edit the new menu item from the "edit link" popover button
-    wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}, true),
+    wTourUtils.clickOnExtraMenuItem({}, true),
+    {
+        trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)",
+    },
     {
         content: "Menu should have a new link item",
         trigger: ':iframe .top_menu .nav-item a:contains("Random!")',
         // Don't click the new menu when the editor is still blocked.
-        extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)",
         run: "click",
     },
     {
@@ -163,9 +184,11 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     {
+        trigger: '.oe_menu_editor .js_menu_label:contains("Modnar !!")',
+    },
+    {
         content: "Save the website menu with the new menu label",
         trigger: '.modal-footer .btn-primary',
-        extra_trigger: '.oe_menu_editor .js_menu_label:contains("Modnar !!")',
         run: "click",
     },
     // Drag a block to be able to scroll later.

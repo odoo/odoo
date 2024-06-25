@@ -15,15 +15,23 @@
         position: "top",
         content: _t("Give your post title."),
         run: "edit Test",
-    }, {
+    },
+    {
+        isActive: ["auto"],
+        trigger: `input[name=post_name]:not(:empty)`,
+    },
+    {
         trigger: ".note-editable p",
-        extra_trigger: `input[name=post_name]:not(:empty)`,
         content: _t("Put your question here."),
         position: "bottom",
         run: "editor Test",
-    }, {
+    },
+    {
+        isActive: ["auto"],
+        trigger: `.note-editable p:not(:contains(/^<br>$/))`,
+    },
+    {
         trigger: ".select2-choices",
-        extra_trigger: `.note-editable p:not(:contains(/^<br>$/))`,
         content: _t("Insert tags related to your question."),
         position: "top",
     }, 
@@ -32,8 +40,11 @@
         run: "editor Test",
     },
     {
+        isActive: ["auto"],
+        trigger: `input[id=s2id_autogen2]:not(:contains(Tags))`,
+    },
+    {
         trigger: "button:contains(/^Post/)",
-        extra_trigger: `input[id=s2id_autogen2]:not(:contains(Tags))`,
         content: _t("Click to post your question."),
         position: "bottom",
         run: "click",
@@ -53,9 +64,13 @@
         content: _t("Put your answer here."),
         position: "bottom",
         run: "editor Test",
-    }, {
+    },
+    {
+        isActive: ["auto"],
+        trigger: `.note-editable p:not(:contains(/^<br>$/))`,
+    },
+    {
         trigger: "button:contains(\"Post Answer\")",
-        extra_trigger: `.note-editable p:not(:contains(/^<br>$/))`,
         content: _t("Click to post your answer."),
         position: "bottom",
         run: "click",

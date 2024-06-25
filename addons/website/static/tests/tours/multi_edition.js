@@ -20,8 +20,10 @@ wTourUtils.registerWebsitePreviewTour('website_multi_edition', {
     // Edit another part in the page, like the footer
     // TODO: use wTourUtils.dragNDrop() instead
     {
+        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+    },
+    {
         trigger: `#oe_snippets .oe_snippet[name="Separator"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
-        extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets",
         content: "Drag the Separator building block and drop it at the bottom of the page.",
         run: "drag_and_drop :iframe .oe_drop_zone:last",
     },

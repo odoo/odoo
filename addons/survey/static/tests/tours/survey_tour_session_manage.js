@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import { zip } from "@web/core/utils/arrays";
 import { accessSurveysteps } from "./survey_tour_session_tools";
+import { press } from "@odoo/hoot-dom";
 
 let rootWidget = null;
 
@@ -34,11 +35,11 @@ const getChartData = () => {
 };
 
 const nextScreen = () => {
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+    press("ArrowRight");
 };
 
 const previousScreen = () => {
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
+    press("ArrowLeft");
 };
 
 const REGULAR_ANSWER_COLOR = '#212529';
@@ -73,7 +74,7 @@ const checkAnswerAppearance = (answerLabel, shownAnswer, expectedAnswerType) => 
             console.error(`${answerLabel} should not be shown as "correct" or "incorrect"!`);
         }
     } else {
-        throw new Error(`Unsupported answer type.`);
+        console.error(`Unsupported answer type.`);
     }
 };
 
@@ -219,9 +220,13 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
 }, {
     trigger: 'h1',
     run: nextScreen
-}, {
+},
+{
     trigger: 'h1:contains("Scale Question")',
-    extra_trigger: '.o_survey_session_progress_small[style*="width: 100%"]',
+},
+{
+    content: "chart check 1",
+    trigger: '.o_survey_session_progress_small[style*="width: 100%"]',
     run: () => {
         checkAnswers(getChartData(), [
             ...Array(5).fill({ value: 0, type: "regular" }),
@@ -231,10 +236,14 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
         ]);
         nextScreen();
     }
-}, {
+},
+{
     trigger: 'h1:contains("Regular Simple Choice")',
+},
+{
+    content: "chart check 2",
+    trigger: '.o_survey_session_progress_small[style*="width: 100%"]',
     // Wait for answers' data to be fetched (see commit message).
-    extra_trigger: '.o_survey_session_progress_small[style*="width: 100%"]',
     run: () => {
         checkAnswers(getChartData(), [
             {value: 2, type: "regular"},
@@ -242,20 +251,29 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
             {value: 0, type: "regular"},
         ]);
         nextScreen();
-    }
-}, {
-    trigger: 'h1:contains("Scored Simple Choice")',
+    }, 
+},
+{
+    trigger: "h1:contains(  Scored Simple Choice)",
+},
+{
+    content: "chart check 3",
+    trigger: '.o_survey_session_progress_small[style*="width: 100%"]',
     run: () => {
         const chartData = getChartData();
         checkAnswersCount(chartData, 4);
         checkAnswersAllZeros(chartData);
 
         nextScreen();
-    }
-}, {
+    },
+},
+{
     trigger: 'h1:contains("Scored Simple Choice")',
+},
+{
+    content: "chart check 4",
+    trigger: '.o_survey_session_progress_small[style*="width: 100%"]',
     // Wait for progressbar to be updated ("late" enough DOM change after onNext() is triggered).
-    extra_trigger: '.o_survey_session_progress_small[style*="width: 100%"]',
     run: () => {
         checkAnswers(getChartData(), [
             {value: 1, type: "regular"},
@@ -264,11 +282,15 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
             {value: 0, type: "regular"},
         ]);
         nextScreen();
-    }
-}, {
+    },
+},
+{
+    trigger: '.o_survey_session_navigation_next_label:contains("Show Leaderboard")',
+},
+{
+    content: "chart check 5",
     trigger: 'h1:contains("Scored Simple Choice")',
     // Wait for Button to be updated ("late" enough DOM change after onNext() is triggered).
-    extra_trigger: '.o_survey_session_navigation_next_label:contains("Show Leaderboard")',
     run: () => {
         checkAnswers(getChartData(), [
             {value: 1, type: "correct"},
@@ -278,7 +300,7 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
         ]);
         nextScreen();
         nextScreen();
-    }
+    },
 }, {
     trigger: 'h1:contains("Timed Scored Multiple Choice")',
     async run() {
@@ -312,8 +334,6 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
 }, {
     // Final Leaderboard is displayed
     trigger: 'h1:contains("Final Leaderboard")',
-}, {
-    trigger: 'h1',
     run: () => {
         // previous screen testing
         previousScreen();

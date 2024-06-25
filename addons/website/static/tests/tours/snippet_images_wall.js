@@ -20,12 +20,16 @@ const preventRaceConditionSteps = [{
     }
 }];
 
-const selectSignImageStep = {
-    content: "Click on image 14",
-    extra_trigger: ".o_we_customize_panel:not(:has(.snippet-option-GalleryElement))",
-    trigger: ":iframe .s_image_gallery img[data-original-src*='library_image_14']",
-    run: "click",
-};
+const selectSignImageStep = [
+    {
+        trigger: ".o_we_customize_panel:not(:has(.snippet-option-GalleryElement))",
+    },
+    {
+        content: "Click on image 14",
+        trigger: ":iframe .s_image_gallery img[data-original-src*='library_image_14']",
+        run: "click",
+    },
+];
 // Without reselecting the image, the tour manages to click on the
 // move button before the active image is updated.
 
@@ -34,12 +38,16 @@ const selectSignImageStep = {
 // another block would be ignored.
 const reselectSignImageSteps = [
     ...preventRaceConditionSteps,
-{
-    content: "Select footer",
-    extra_trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'])",
-    trigger: ":iframe footer",
-    run: "click",
-}, selectSignImageStep];
+    {
+        trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'])",
+    },
+    {
+        content: "Select footer",
+        trigger: ":iframe footer",
+        run: "click",
+    },
+    ...selectSignImageStep,
+];
 
 wTourUtils.registerWebsitePreviewTour("snippet_images_wall", {
     test: true,
@@ -53,7 +61,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_images_wall", {
     id: "s_image_gallery",
     name: "Images Wall",
 }),
-selectSignImageStep,
+        ...selectSignImageStep,
 {
     content: "Click on add a link",
     trigger: ".snippet-option-ReplaceMedia we-button[data-set-link]",

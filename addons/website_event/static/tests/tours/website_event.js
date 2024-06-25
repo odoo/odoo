@@ -36,9 +36,13 @@
             el2.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
             el1.click();
         }
-    }, {
+    },
+    {
+        isActive: ["auto"],
+        trigger: `.modal-dialog input[type=text]:not(:value(""))`,
+    },
+    {
         trigger: '.modal-footer button.btn-primary',
-        extra_trigger: `.modal-dialog input[type=text]:not(:value(""))`,
         content: markup(_t("Click <em>Continue</em> to create the event.")),
         position: "right",
         run: "click",
@@ -56,9 +60,12 @@
         content: _t("Once you click on save, your event is updated."),
         position: "bottom",
         run: "click",
-    }, {
+    },
+    {
+        trigger: ":iframe body:not(.editor_enable)",
+    },
+    {
         trigger: ".o_menu_systray_item.o_website_publish_container a",
-        extra_trigger: ":iframe body:not(.editor_enable)",
         content: _t("Click to publish your event."),
         position: "top",
         run: "click",

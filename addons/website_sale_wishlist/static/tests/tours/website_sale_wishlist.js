@@ -14,8 +14,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             run: "click",
         },
         {
+            trigger: 'a[href="/shop/wishlist"] .badge:contains(1)',
+        },
+        {
             content: "go to wishlist",
-            extra_trigger: 'a[href="/shop/wishlist"] .badge:contains(1)',
             trigger: 'a[href="/shop/wishlist"]',
             run: "click",
         },
@@ -35,8 +37,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             run: "click",
         },
         {
+            trigger: ".my_wish_quantity:contains(1)",
+        },
+        {
             content: "check value of wishlist and go to login",
-            extra_trigger: ".my_wish_quantity:contains(1)",
             trigger: 'a[href="/web/login"]',
             run: "click",
         },
@@ -65,20 +69,26 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             allowDisabled: true,
         },
         {
+            trigger: "#product_detail label:contains(Aluminium) input",
+        },
+        {
             content: "change variant",
-            extra_trigger: '#product_detail label:contains(Aluminium) input',
             trigger: 'label:contains(Aluminium) input',
             run: "click",
         },
         {
+            trigger: "#product_detail .o_add_wishlist_dyn:not(:disabled)",
+        },
+        {
             content: "wait button enable and click on add to wishlist",
-            extra_trigger: '#product_detail .o_add_wishlist_dyn:not(:disabled)',
             trigger: '#product_detail .o_add_wishlist_dyn',
             run: "click",
         },
         {
+            trigger: 'a[href="/shop/wishlist"] .badge:contains(2)',
+        },
+        {
             content: "check that wishlist contains 2 items and go to wishlist",
-            extra_trigger: 'a[href="/shop/wishlist"] .badge:contains(2)',
             trigger: 'a[href="/shop/wishlist"]',
             run: "click",
         },
@@ -178,8 +188,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             },
         },
         {
+            trigger: '.oe_product_cart:contains("Bottle")',
+        },
+        {
             content: "Add Bottle to wishlist from /shop",
-            extra_trigger: '.oe_product_cart:contains("Bottle")',
             trigger: '.oe_product_cart:contains("Bottle") .o_add_wishlist',
             run: "click",
         },
@@ -188,8 +200,11 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             trigger: '.my_wish_quantity:contains(1)',
         },
         {
+            trigger: '.oe_product_cart:contains("Bottle") .o_add_wishlist.disabled',
+            allowDisabled: true,
+        },
+        {
             content: "Click on product",
-            extra_trigger: '.oe_product_cart:contains("Bottle") .o_add_wishlist.disabled',
             trigger: '.oe_product_cart a:contains("Bottle")',
             run: "click",
         },
@@ -199,8 +214,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             run: "click",
         },
         {
+            trigger: "#product_detail .o_add_wishlist_dyn:not(.disabled)",
+        },
+        {
             content: "Add product in wishlist",
-            extra_trigger: "#product_detail .o_add_wishlist_dyn:not(.disabled)",
             trigger: '#product_detail .o_add_wishlist_dyn',
             run: "click",
         },
@@ -210,8 +227,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             run: "click",
         },
         {
+            trigger: "#product_detail .o_add_wishlist_dyn:not(.disabled)",
+        },
+        {
             content: "Add product in wishlist",
-            extra_trigger: "#product_detail .o_add_wishlist_dyn:not(.disabled)",
             trigger: '#product_detail .o_add_wishlist_dyn',
             run: "click",
         },
@@ -272,8 +291,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             },
         },
         {
+            trigger: ".js_sale",
+        },
+        {
             content: "Check there is wishlist button on product from /shop",
-            extra_trigger: '.js_sale',
             trigger: '.oe_product_cart:contains("Bottle") .o_add_wishlist',
         },
         {
@@ -342,8 +363,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             }
         },
         {
+            trigger: ".js_sale",
+        },
+        {
             content: "Check that there is no wishlist button from /shop",
-            extra_trigger: '.js_sale',
             trigger: '.oe_product_cart:contains("Bottle"):not(:has(.o_add_wishlist))',
         },
         {

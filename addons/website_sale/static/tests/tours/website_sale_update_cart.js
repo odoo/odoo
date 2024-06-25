@@ -14,20 +14,26 @@ registry.category('web_tour.tours').add('shop_update_cart', {
             run: "click",
         },
         {
+            trigger: "#product_detail",
+        },
+        {
             content: "select Conference Chair Aluminium",
-            extra_trigger: '#product_detail',
             trigger: 'label:contains(Aluminium) input',
             run: "click",
         },
         {
+            trigger: "#product_detail",
+        },
+        {
             content: "select Conference Chair Steel",
-            extra_trigger: '#product_detail',
             trigger: 'label:contains(Steel) input',
             run: "click",
         },
         {
+            trigger: "label:contains(Steel) input:checked",
+        },
+        {
             content: "click on add to cart",
-            extra_trigger: 'label:contains(Steel) input:checked',
             trigger: '#product_detail form[action^="/shop/cart/update"] #add_to_cart',
             run: "click",
         },
@@ -42,22 +48,30 @@ registry.category('web_tour.tours').add('shop_update_cart', {
             run: "click",
         },
         {
+            trigger: '#cart_products div>a>h6:contains("Storage Box")',
+        },
+        {
             content: "add one more",
-            extra_trigger: '#cart_products div>a>h6:contains("Storage Box")',
             trigger: '#cart_products div:has(div>a>h6:contains("Steel")) a.js_add_cart_json:eq(1)',
             run: "click",
         },
         {
+            trigger:
+                '#cart_products div:has(div>a>h6:contains("Steel")) input.js_quantity:value(2)',
+        },
+        {
             content: "remove Storage Box",
-            extra_trigger: '#cart_products div:has(div>a>h6:contains("Steel")) input.js_quantity:value(2)',
-            trigger: '#cart_products div:has(div>a>h6:contains("Storage Box")) a.js_add_cart_json:first',
+            trigger:
+                '#cart_products div:has(div>a>h6:contains("Storage Box")) a.js_add_cart_json:first',
             run: "click",
         },
         {
+            trigger: '#wrap:not(:has(#cart_products div>a>h6:contains("Storage Box")))',
+        },
+        {
             content: "set one",
-            extra_trigger: '#wrap:not(:has(#cart_products div>a>h6:contains("Storage Box")))',
             trigger: '#cart_products input.js_quantity',
             run: "edit 1",
         },
-    ]
+    ],
 });

@@ -200,8 +200,10 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     wTourUtils.clickOnElement("menu link", ":iframe header .nav-item a"),
     wTourUtils.clickOnElement("'Edit menu' icon", ":iframe .o_edit_menu_popover .fa-sitemap"),
     {
+        trigger: ".o_website_dialog:visible",
+    },
+    {
         content: "Click on 'Add Mega Menu Item' link",
-        extra_trigger: '.o_website_dialog:visible',
         trigger: ".modal-body a:contains('Add Mega Menu Item')",
         run: "click",
     },
@@ -300,9 +302,11 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: ":iframe .s_text_image p a[href='https://odoo.com']:contains('odoo.com')",
     },
     {
+        trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
+    },
+    {
         content: "Change it back http",
         trigger: "#o_link_dialog_url_input",
-        extra_trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
         run(helpers) {
             // TODO: update the tour to use helpers.edit("http://odoo.com")
             this.anchor.value = "http://odoo.com";
@@ -315,9 +319,11 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     // 9. Test conversion between http and mailto links.
     {
+        trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
+    },
+    {
         content: "Change URL into an email address",
         trigger: "#o_link_dialog_url_input",
-        extra_trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
         run: "edit callme@maybe.com",
     },
     {
@@ -325,10 +331,12 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: ":iframe .s_text_image p a[href='mailto:callme@maybe.com']:contains('callme@maybe.com')",
     },
     {
+        trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
+    },
+    {
         content: "Change URL back into a http one",
         trigger: "#o_link_dialog_url_input",
         // TODO: remove && click
-        extra_trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
         run: "edit callmemaybe.com && click body",
     },
     {
@@ -407,15 +415,18 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     */
     // 11. Pick a URL with auto-complete
     {
+        trigger: `input#o_link_dialog_url_input`,
+    },
+    {
         content: "Wait the sidebar is openend",
         trigger: `we-title:contains(Inline text)`,
-        extra_trigger: `input#o_link_dialog_url_input`,
+    },
+    {
+        trigger: 'body:not(:has(.o_we_ui_loading))',
     },
     {
         content: "Enter partial URL",
         trigger: "input#o_link_dialog_url_input",
-        // TODO: remove extra_trigger
-        extra_trigger: 'body:not(:has(.o_we_ui_loading))',
         run: "edit /contact",
     },
     {
@@ -455,9 +466,11 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         run: "click",
     },
     {
+        trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
+    },
+    {
         content: "Verify that the link label input does not contain ZWS",
         trigger: "#o_link_dialog_label_input:value('Contact Us')",
-        extra_trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
     },
     // TODO: understand why tour need big timeout to passed and remove it
     ...wTourUtils.clickOnSave("bottom", 20000),
