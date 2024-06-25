@@ -18,7 +18,7 @@
                                 </t>
                             </t>
                         </select>
-                        <div id="o_link_dialog_button_opts_collapse" t-if="state.type !== 'custom' and state.type !==  ''" class="input-group md-3">
+                        <div t-if="state.type !== 'custom' and state.type !==  ''" class="input-group md-3">
                                 <select name="link_style_size" class="form-select link-style" t-on-change="(ev)=>this.state.buttonSize = ev.target.value">
                                     <t t-foreach="this.buttonSizesData" t-as="buttonSizesData" t-key="buttonSizesData.size">
                                         <option t-att-value="buttonSizesData.size" t-att-selected="state.buttonSize === buttonSizesData.size">
@@ -34,7 +34,7 @@
                                     </t>
                                 </select>
                         </div>
-                        <div class="input-group-append">
+                        <div>
                             <button class="o_we_apply_link btn btn-primary m-1" t-on-click="onClickApply">Apply</button>
                         </div>
                     </div>
