@@ -71,10 +71,6 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'web.report_assets_common': [
             'hr_expense/static/src/scss/hr_expense.scss',
         ],
-        'web.assets_unit_tests': [
-            'hr_expense/static/tests/**/*.js',
-            ('remove', 'hr_expense/static/tests/tours/**/*'),
-        ],
     },
     'license': 'LGPL-3',
 }
