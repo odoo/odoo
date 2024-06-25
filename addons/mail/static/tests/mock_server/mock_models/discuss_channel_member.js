@@ -94,12 +94,14 @@ export class DiscussChannelMember extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _discuss_channel_member_format(ids, fields) {
-        const kwargs = getKwArgs(arguments, "ids", "fields");
+    _discuss_channel_member_format(ids, fields, extra_fields) {
+        const kwargs = getKwArgs(arguments, "ids", "fields", "extra_fields");
         ids = kwargs.ids;
         fields = kwargs.fields;
+        extra_fields = kwargs.extra_fields;
         delete kwargs.ids;
         delete kwargs.fields;
+        delete kwargs.extra_fields;
 
         if (!fields) {
             fields = {
@@ -113,10 +115,8 @@ export class DiscussChannelMember extends models.ServerModel {
                 new_message_separator: true,
             };
         }
-        if (fields.message_unread_counter && !fields.channel) {
-            throw new Error(
-                "'message_unread_counter' cannot be used without 'channel' in 'fields'"
-            );
+        if (extra_fields) {
+            fields = { ...fields, ...extra_fields };
         }
 
         /** @type {import("mock_models").MailGuest} */
@@ -158,11 +158,8 @@ export class DiscussChannelMember extends models.ServerModel {
                     : false;
             }
             if ("message_unread_counter" in fields) {
-                data.thread.message_unread_counter = this._compute_message_unread_counter([
-                    member.id,
-                ]);
-                data.thread.message_unread_counter_bus_id =
-                    this.env["bus.bus"].lastBusNotificationId;
+                data.message_unread_counter = this._compute_message_unread_counter([member.id]);
+                data.message_unread_counter_bus_id = this.env["bus.bus"].lastBusNotificationId;
             }
             if ("last_interest_dt" in fields) {
                 data.last_interest_dt = member.last_interest_dt;

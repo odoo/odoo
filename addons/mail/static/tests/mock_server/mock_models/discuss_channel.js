@@ -444,8 +444,6 @@ export class DiscussChannel extends models.ServerModel {
                 Object.assign(res, {
                     custom_channel_name: memberOfCurrentUser.custom_channel_name,
                     is_pinned: memberOfCurrentUser.is_pinned,
-                    message_unread_counter,
-                    message_unread_counter_bus_id: bus_last_id,
                     state: memberOfCurrentUser.fold_state || "closed",
                 });
                 if (memberOfCurrentUser.rtc_inviting_session_id) {
@@ -456,21 +454,35 @@ export class DiscussChannel extends models.ServerModel {
                 res.channelMembers = [
                     [
                         "ADD",
-                        DiscussChannelMember._discuss_channel_member_format([
-                            memberOfCurrentUser.id,
-                        ]),
+                        DiscussChannelMember._discuss_channel_member_format(
+                            [memberOfCurrentUser.id],
+                            undefined,
+                            { message_unread_counter: true }
+                        ),
                     ],
                 ];
             }
             if (channel.channel_type !== "channel") {
+                const otherMembers = members.filter(
+                    (member) => member.id !== memberOfCurrentUser?.id
+                );
                 res.channelMembers = [
                     [
                         "ADD",
                         DiscussChannelMember._discuss_channel_member_format(
-                            members.map((member) => member.id)
+                            otherMembers.map((member) => member.id)
                         ),
                     ],
                 ];
+                if (memberOfCurrentUser) {
+                    res.channelMembers[0][1].push(
+                        ...DiscussChannelMember._discuss_channel_member_format(
+                            [memberOfCurrentUser.id],
+                            undefined,
+                            { message_unread_counter: true }
+                        )
+                    );
+                }
             }
             res.rtcSessions = [
                 [

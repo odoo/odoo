@@ -223,11 +223,11 @@ class ChannelMember(models.Model):
             }
         if extra_fields:
             fields.update(extra_fields)
-        if "message_unread_counter" in fields and "channel" not in fields:
-            raise ValueError("'message_unread_counter' cannot be used without 'channel' in 'fields'")
         if "message_unread_counter" in fields:
-            # sudo: bus.bus: reading non-sensitive last id
-            bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
+            bus_last_id = fields.get("message_unread_counter_bus_id")
+            if bus_last_id is None:
+                # sudo: bus.bus: reading non-sensitive last id
+                bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         for member in self:
             data = {}
             if 'id' in fields:
@@ -255,8 +255,9 @@ class ChannelMember(models.Model):
                 data['seen_message_id'] = {'id': member.seen_message_id.id} if member.seen_message_id else False
             if 'new_message_separator' in fields:
                 data['new_message_separator'] = member.new_message_separator
-            if data.get("thread") and "message_unread_counter" in fields:
-                data["thread"].update(message_unread_counter=member.message_unread_counter, message_unread_counter_bus_id=bus_last_id)
+            if "message_unread_counter" in fields:
+                data["message_unread_counter"] = member.message_unread_counter
+                data["message_unread_counter_bus_id"] = bus_last_id
             if fields.get("last_interest_dt"):
                 data['last_interest_dt'] = odoo.fields.Datetime.to_string(member.last_interest_dt)
             store.add("ChannelMember", data)

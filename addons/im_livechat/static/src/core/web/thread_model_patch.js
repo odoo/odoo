@@ -27,7 +27,7 @@ patch(Thread.prototype, {
     },
     get canUnpin() {
         if (this.channel_type === "livechat") {
-            return this.message_unread_counter === 0;
+            return !this.selfMember || this.selfMember.message_unread_counter === 0;
         }
         return super.canUnpin;
     },
