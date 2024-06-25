@@ -1675,8 +1675,8 @@ const Wysiwyg = Widget.extend({
                         // Deselect tables so the applied color can be seen
                         // without using `!important` (otherwise the selection
                         // hides it).
-                        if (this.odooEditor.deselectTable() && hasValidSelection(this.odooEditor.editable)) {
-                            this.odooEditor.document.getSelection().collapseToStart();
+                        if (hasValidSelection(this.odooEditor.editable)) {
+                            this.odooEditor.deselectTable();
                         }
                         this._updateEditorUI(this.lastMediaClicked && { target: this.lastMediaClicked });
                         colorpicker.off('color_leave');
