@@ -578,10 +578,9 @@ export class MailThread extends models.ServerModel {
         }
         res["canPostOnReadonly"] = this._mail_post_access === "read";
         if (this.has_activities) {
-            const activities = MailActivity.search_read([["id", "in", thread.activity_ids || []]]);
-            res["activities"] = MailActivity.activity_format(
-                activities.map((activity) => activity.id)
-            );
+            const activities = MailActivity.search([["id", "in", thread.activity_ids || []]]);
+            store.add(activities);
+            res["activities"] = activities.map((activity) => ({ id: activity }));
         }
         if (request_list.includes("attachments")) {
             const attachments = IrAttachment.search_read([
