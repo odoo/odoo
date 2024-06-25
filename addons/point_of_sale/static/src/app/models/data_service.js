@@ -260,7 +260,10 @@ export class PosData extends Reactive {
             if (fields.length === 0) {
                 fields = this.fields[model];
             }
-
+            values = {
+                ...values,
+                origin_pos_config_id: odoo.pos_config_id,
+            };
             switch (type) {
                 case "write":
                     result = await this.orm.write(model, ids, values);
