@@ -234,15 +234,15 @@ describe("step", () => {
     });
 });
 
-describe("prevent renderingClasses to be set from history", () => {
-    class TestRenderingClassesPlugin extends Plugin {
+describe("prevent mutationFilteredClasses to be set from history", () => {
+    class TestMutationFilteredClassesPlugin extends Plugin {
         static name = "testRenderClasses";
         static resources = () => ({
-            history_rendering_classes: ["x"],
+            mutation_filtered_classes: ["x"],
         });
     }
-    const Plugins = [...MAIN_PLUGINS, TestRenderingClassesPlugin];
-    test("should prevent renderingClasses to be added", async () => {
+    const Plugins = [...MAIN_PLUGINS, TestMutationFilteredClassesPlugin];
+    test("should prevent mutationFilteredClasses to be added", async () => {
         await testEditor({
             contentBefore: `<p>a</p>`,
             stepFunction: async (editor) => {
@@ -256,7 +256,7 @@ describe("prevent renderingClasses to be set from history", () => {
         });
     });
 
-    test("should prevent renderingClasses to be added when adding 2 classes", async () => {
+    test("should prevent mutationFilteredClasses to be added when adding 2 classes", async () => {
         await testEditor({
             contentBefore: `<p>a</p>`,
             stepFunction: async (editor) => {
@@ -271,7 +271,7 @@ describe("prevent renderingClasses to be set from history", () => {
         });
     });
 
-    test("should prevent renderingClasses to be added in historyApply", async () => {
+    test("should prevent mutationFilteredClasses to be added in historyApply", async () => {
         const { el, editor } = await setupEditor(`<p>a</p>`, { config: { Plugins } });
         /** @type import("../src/core/history_plugin").HistoryPlugin") */
         const historyPlugin = editor.plugins.find((p) => p.constructor.name === "history");

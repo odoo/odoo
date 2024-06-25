@@ -104,7 +104,7 @@ export class HistoryPlugin extends Plugin {
     });
 
     setup() {
-        this.renderingClasses = new Set(this.resources["history_rendering_classes"]);
+        this.mutationFilteredClasses = new Set(this.resources["mutation_filtered_classes"]);
         this.addDomListener(this.editable, "pointerup", () => {
             this.stageSelection();
             this.stageNextSelection = true;
@@ -297,7 +297,7 @@ export class HistoryPlugin extends Plugin {
                 }
                 // @todo @phoenix test attributeCache
                 attributeCache.set(record.target, attributeCache.get(record.target) || {});
-                // @todo @phoenix add test for renderingClasses.
+                // @todo @phoenix add test for mutationFilteredClasses.
                 if (record.attributeName === "class") {
                     const classBefore = (record.oldValue && record.oldValue.split(" ")) || [];
                     const classAfter =
@@ -318,7 +318,7 @@ export class HistoryPlugin extends Plugin {
                     }
                     if (
                         excludedClasses.length &&
-                        excludedClasses.every((c) => this.renderingClasses.has(c))
+                        excludedClasses.every((c) => this.mutationFilteredClasses.has(c))
                     ) {
                         continue;
                     }
@@ -901,7 +901,7 @@ export class HistoryPlugin extends Plugin {
         if (typeof value === "string" && attributeName === "class") {
             value = value
                 .split(" ")
-                .filter((c) => !this.renderingClasses.has(c))
+                .filter((c) => !this.mutationFilteredClasses.has(c))
                 .join(" ");
         }
         return value;

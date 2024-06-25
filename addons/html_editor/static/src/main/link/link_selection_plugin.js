@@ -52,7 +52,7 @@ export class LinkSelectionPlugin extends Plugin {
     static dependencies = ["selection"];
     /** @type { (p: LinkSelectionPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        history_rendering_classes: ["o_link_in_selection"],
+        mutation_filtered_classes: ["o_link_in_selection"],
         link_ignore_classes: ["o_link_in_selection"],
         onSelectionChange: p.resetLinkInSelection.bind(p),
     });
