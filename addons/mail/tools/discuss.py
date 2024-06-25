@@ -42,10 +42,6 @@ ids_by_model.update(
     }
 )
 
-target_model_by_model = {
-    "discuss.channel": "Thread",
-}
-
 
 class Store:
     """Helper to build a dict of data for sending to web client.
@@ -67,10 +63,9 @@ class Store:
         """
         if isinstance(data, models.Model):
             assert not values, f"expected empty values with recordset {data}: {values}"
-            records = data
-            model_name = target_model_by_model.get(records._name, records._name)
-            values = records._to_store(self, **kwargs)
-        elif isinstance(data, dict):
+            data._to_store(self, **kwargs)
+            return self
+        if isinstance(data, dict):
             assert not values, f"expected empty values with dict {data}: {values}"
             assert not kwargs, f"expected empty kwargs with dict {data}: {kwargs}"
             model_name = "Store"
