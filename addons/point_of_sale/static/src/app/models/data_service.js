@@ -91,9 +91,8 @@ export class PosData extends Reactive {
         // This methods will add uiState to the serialized object
         const dataFormatter = (record) => {
             const serializedData = record.serialize();
-            const uiState =
-                typeof record.uiState === "object" ? JSON.stringify(record.uiState) : "{}";
-            return { ...serializedData, JSONuiState: uiState, id: record.id };
+            const uiState = typeof record.uiState === "object" ? record.serializeState() : "{}";
+            return { ...serializedData, JSONuiState: JSON.stringify(uiState), id: record.id };
         };
 
         for (const model of this.opts.databaseTable) {
@@ -149,7 +148,7 @@ export class PosData extends Reactive {
                     const loadedRecords = this.models[model].find((r) => r.uuid === record.uuid);
 
                     if (loadedRecords) {
-                        loadedRecords.uiState = JSON.parse(record.raw.JSONuiState);
+                        loadedRecords.setupState(JSON.parse(record.raw.JSONuiState));
                     }
                 }
             }
