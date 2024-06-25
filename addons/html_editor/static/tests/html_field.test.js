@@ -15,6 +15,7 @@ import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock"
 import {
     contains,
     defineModels,
+    defineParams,
     fields,
     models,
     mountView,
@@ -1529,5 +1530,57 @@ describe("sandbox", () => {
         expect(readonlyIframe.contentDocument.body).toHaveInnerHTML(
             `<div id="iframe_target"> <p> second </p> </div>`
         );
+    });
+});
+
+describe("direction config", () => {
+    test("ltr direction", async () => {
+        defineParams({
+            lang_parameters: {
+                direction: "ltr",
+            },
+        });
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+        });
+        expect(".odoo-editor-editable").toHaveAttribute("dir", "ltr");
+        const node = queryOne(".odoo-editor-editable p");
+        setSelection({ anchorNode: node.firstChild, anchorOffset: 0 });
+        insertText(htmlEditor, "/Switchdirection");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toEqual(["Switch direction"]);
+        press("Enter");
+        expect(".odoo-editor-editable p").toHaveAttribute("dir", "rtl");
+    });
+
+    test("rtl direction", async () => {
+        defineParams({
+            lang_parameters: {
+                direction: "rtl",
+            },
+        });
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+        });
+        expect(".odoo-editor-editable").toHaveAttribute("dir", "rtl");
+        const node = queryOne(".odoo-editor-editable p");
+        setSelection({ anchorNode: node.firstChild, anchorOffset: 0 });
+        insertText(htmlEditor, "/Switchdirection");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toEqual(["Switch direction"]);
+        press("Enter");
+        expect(".odoo-editor-editable p").toHaveAttribute("dir", "ltr");
     });
 });
