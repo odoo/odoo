@@ -117,9 +117,9 @@ class TestNestedTaskUpdate(TransactionCase):
         })
         self.assertFalse(child.partner_id)
         parent.write({'partner_id': self.user.partner_id.id})
-        self.assertNotEqual(child.partner_id, parent.partner_id)
+        self.assertEqual(child.partner_id, parent.partner_id)
         parent.write({'partner_id': False})
-        self.assertNotEqual(child.partner_id, self.user.partner_id)
+        self.assertEqual(child.partner_id, self.user.partner_id)
 
     def test_write_sale_line_id_on_parent_write_on_child_if_same_partner(self):
         parent = self.env['project.task'].create({'name': 'parent', 'partner_id': self.partner.id, 'project_id': self.project.id})
