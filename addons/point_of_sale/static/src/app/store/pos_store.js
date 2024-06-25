@@ -82,7 +82,6 @@ const getProductImage = memoize(function getProductImage(productId, writeDate) {
 });
 
 export class PosStore extends Reactive {
-    hasBigScrollBars = false;
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
 
