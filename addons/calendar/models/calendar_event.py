@@ -681,8 +681,9 @@ class Meeting(models.Model):
                         value = []
                     elif field_name in ('name', 'display_name'):
                         value = _('Busy')
-                    replacement = field.convert_to_cache(value, private_events)
-                    self.env.cache.update(private_events, field, repeat(replacement))
+                    for private_event in private_events:
+                        replacement = field.convert_to_cache(value, private_event)
+                        self.env.cache.update(private_event, field, repeat(replacement))
         return records
 
     @api.model

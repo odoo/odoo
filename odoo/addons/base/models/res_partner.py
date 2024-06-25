@@ -352,7 +352,7 @@ class Partner(models.Model):
     @api.depends_context('lang')
     @api.depends('display_name')
     def _compute_translated_display_name(self):
-        names = dict(self.with_context({'lang': self.env.lang}).name_get())
+        names = dict(self.with_context(lang=self.env.lang).name_get())
         for partner in self:
             partner.translated_display_name = names.get(partner.id)
 
