@@ -26,6 +26,13 @@ class MassMailController(http.Controller):
     # SUBSCRIPTION MANAGEMENT
     # ------------------------------------------------------------
 
+    # csrf is disabled here because it will be called by the MUA with unpredictable session at that time
+    @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe_oneclick'], type='http', website=True, auth='public',
+                methods=["POST"], csrf=False)
+    def mailing_unsubscribe_oneclick(self, mailing_id, email=None, res_id=None, token="", **post):
+        self.mailing(mailing_id, email=email, res_id=res_id, token=token, **post)
+        return Response(status=200)
+
     @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
     def mailing(self, mailing_id, email=None, res_id=None, token="", **post):
         mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
