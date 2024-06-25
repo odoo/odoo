@@ -935,11 +935,14 @@ class Channel(models.Model):
                 if member:
                     store.add(
                         member,
-                        extra_fields={"last_interest_dt": True, "new_message_separator": True},
+                        extra_fields={
+                            "last_interest_dt": True,
+                            "message_unread_counter": True,
+                            "message_unread_counter_bus_id": bus_last_id,
+                            "new_message_separator": True
+                        },
                     )
                     info['state'] = member.fold_state or 'closed'
-                    info['message_unread_counter'] = member.message_unread_counter
-                    info["message_unread_counter_bus_id"] = bus_last_id
                     info['custom_notifications'] = member.custom_notifications
                     info['mute_until_dt'] = fields.Datetime.to_string(member.mute_until_dt)
                     info['custom_channel_name'] = member.custom_channel_name
@@ -951,7 +954,6 @@ class Channel(models.Model):
                 # avoid sending potentially a lot of members for big channels
                 # exclude chat and other small channels from this optimization because they are
                 # assumed to be smaller and it's important to know the member list for them
-                store.add(member, extra_fields={"new_message_separator": True})
                 store.add(members_by_channel[channel] - member)
             # add RTC sessions info
             invited_members = invited_members_by_channel[channel]

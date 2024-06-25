@@ -172,7 +172,7 @@ export class Thread extends Record {
             return this.counter;
         }
         if (this.isChatChannel) {
-            return this.message_unread_counter || this.message_needaction_counter;
+            return this.selfMember?.message_unread_counter || this.message_needaction_counter;
         }
         return this.message_needaction_counter;
     }
@@ -218,8 +218,6 @@ export class Thread extends Record {
     memberCount = 0;
     message_needaction_counter = 0;
     message_needaction_counter_bus_id = 0;
-    message_unread_counter = 0;
-    message_unread_counter_bus_id = 0;
     /**
      * Contains continuous sequence of messages to show in message list.
      * Messages are ordered from older to most recent.
@@ -359,7 +357,7 @@ export class Thread extends Record {
     }
 
     get isUnread() {
-        return this.message_unread_counter > 0 || this.needactionMessages.length > 0;
+        return this.selfMember?.message_unread_counter > 0 || this.needactionMessages.length > 0;
     }
 
     get typesAllowingCalls() {
@@ -444,7 +442,9 @@ export class Thread extends Record {
     }
 
     get needactionCounter() {
-        return this.isChatChannel ? this.message_unread_counter : this.message_needaction_counter;
+        return this.isChatChannel
+            ? this.selfMember?.message_unread_counter ?? 0
+            : this.message_needaction_counter;
     }
 
     newestMessage = Record.one("Message", {

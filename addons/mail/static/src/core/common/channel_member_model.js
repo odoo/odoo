@@ -42,18 +42,20 @@ export class ChannelMember extends Record {
             }
             return (
                 this.localNewMessageSeparator !== this.new_message_separator ||
-                this.localMessageUnreadCounter !== this.thread.message_unread_counter
+                this.localMessageUnreadCounter !== this.message_unread_counter
             );
         },
         onUpdate() {
             if (this._syncUnread) {
                 this.localNewMessageSeparator = this.new_message_separator;
-                this.localMessageUnreadCounter = this.thread.message_unread_counter;
+                this.localMessageUnreadCounter = this.message_unread_counter;
             }
         },
     });
     localMessageUnreadCounter = 0;
     localNewMessageSeparator = null;
+    message_unread_counter = 0;
+    message_unread_counter_bus_id = 0;
     new_message_separator = null;
     threadAsTyping = Record.one("Thread", {
         compute() {
