@@ -65,6 +65,7 @@
     'assets': {
         'web.assets_backend': [
             'project/static/src/css/project.css',
+            'project/static/src/core/web/**/*',
             'project/static/src/utils/**/*',
             'project/static/src/components/**/*',
             'project/static/src/views/**/*',

@@ -13,7 +13,6 @@ patch(Thread.prototype, {
             thread_id: this.id,
             thread_model: this.model,
         });
-        this.store.Thread.insert(result, { html: true });
-        return result;
+        this.store.insert(result, { html: true });
     },
 });

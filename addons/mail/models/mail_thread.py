@@ -26,6 +26,7 @@ from xmlrpc import client as xmlrpclib
 from markupsafe import Markup, escape
 
 from odoo import _, api, exceptions, fields, models, tools, Command
+from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import push_to_end_point, DeviceUnreachableError
 from odoo.exceptions import MissingError, AccessError
 from odoo.osv import expression
@@ -4508,7 +4509,7 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
 
-    def _get_mail_thread_data(self, request_list):
+    def _to_store(self, store: Store, request_list):
         res = {'hasWriteAccess': False, 'hasReadAccess': True, "id": self.id, "model": self._name}
         if not self:
             res['hasReadAccess'] = False
@@ -4526,6 +4527,8 @@ class MailThread(models.AbstractModel):
             res['activities'] = self.with_context(active_test=True).activity_ids.activity_format()
         if 'attachments' in request_list:
             res['attachments'] = self._get_mail_thread_data_attachments()._attachment_format()
+            res["areAttachmentsLoaded"] = True
+            res["isLoadingAttachments"] = False
         if 'followers' in request_list:
             res['followersCount'] = self.env['mail.followers'].search_count([
                 ("res_id", "=", self.id),
@@ -4549,7 +4552,7 @@ class MailThread(models.AbstractModel):
             res['recipients'] = self.message_get_followers(filter_recipients=True)
         if 'suggestedRecipients' in request_list:
             res['suggestedRecipients'] = self._message_get_suggested_recipients()
-        return res
+        store.add("Thread", res)
 
     @api.model
     def get_views(self, views, options=None):

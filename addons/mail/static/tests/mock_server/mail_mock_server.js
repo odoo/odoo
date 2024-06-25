@@ -752,7 +752,7 @@ export async function mail_thread_data(request) {
     const MailThread = this.env["mail.thread"];
 
     const { request_list, thread_model, thread_id } = await parseRequestParams(request);
-    return MailThread._get_mail_thread_data.call(this.env[thread_model], thread_id, request_list);
+    return MailThread._to_store.call(this.env[thread_model], thread_id, request_list);
 }
 
 registerRoute("/mail/thread/messages", mail_thread_messages);

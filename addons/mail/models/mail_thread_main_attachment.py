@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons.mail.tools.discuss import Store
 
 
 class MailMainAttachmentMixin(models.AbstractModel):
@@ -48,8 +49,18 @@ class MailMainAttachmentMixin(models.AbstractModel):
                     key=lambda r: (r.mimetype.endswith('pdf'), r.mimetype.startswith('image'))
                 ).id
 
-    def _get_mail_thread_data(self, request_list):
-        res = super()._get_mail_thread_data(request_list)
+    def _to_store(self, store: Store, request_list):
+        super()._to_store(store, request_list)
         if 'attachments' in request_list:
-            res['mainAttachment'] = {'id': self.message_main_attachment_id.id} if self.message_main_attachment_id else False
-        return res
+            store.add(
+                "Thread",
+                {
+                    "id": self.id,
+                    "model": self._name,
+                    "mainAttachment": (
+                        {"id": self.message_main_attachment_id.id}
+                        if self.message_main_attachment_id
+                        else False
+                    ),
+                },
+            )

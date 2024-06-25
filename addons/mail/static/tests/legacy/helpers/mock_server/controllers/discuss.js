@@ -658,7 +658,7 @@ patch(MockServer.prototype, {
                 thread.id
             );
         }
-        return res;
+        return { Thread: [res] };
     },
     /**
      * Simulates the `/mail/thread/messages` route.
