@@ -24,6 +24,10 @@ $min-contrast-ratio: $o-frontend-min-contrast-ratio !default;
 
 $enable-smooth-scroll: false !default;
 
+// Color contrast variables used in the color-contrast function
+$color-contrast-dark: $black !default; // BS Default
+$color-contrast-light: $white !default; // BS Default
+
 // Body
 
 $body-bg: $white !default; // BS Default
@@ -37,6 +41,7 @@ $body-emphasis-color: $black !default; // BS Default
 $border-width: 1px !default; // BS Default
 
 $component-active-bg: $primary !default;
+$component-active-color: color-contrast($component-active-bg) !default;
 
 // Fonts
 //
@@ -98,6 +103,11 @@ $form-range-thumb-disabled-bg: $input-disabled-bg !default;
 
 $form-file-button-bg: mix($input-color, $input-bg, $btn-hover-bg-shade-amount * 0.3) !default;
 $form-file-button-hover-bg: mix($input-color, $input-bg, $btn-hover-bg-shade-amount) !default;
+
+// Dropdowns
+$dropdown-bg: $body-bg !default;
+$dropdown-link-active-bg: rgba(color-contrast($dropdown-bg), .2) !default;
+$dropdown-link-active-color: color-contrast($dropdown-link-active-bg) !default;
 
 // Figures
 
