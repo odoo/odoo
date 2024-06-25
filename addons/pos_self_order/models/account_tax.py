@@ -10,7 +10,8 @@ class AccountTax(models.Model):
         taxes_list = []
 
         for tax in tax_ids:
-            taxes_list.append(tax._prepare_dict_for_taxes_computation())
+            # Sudo because self_order user does not have access to _prepare_dict_for_taxes_computation
+            taxes_list.append(tax.sudo()._prepare_dict_for_taxes_computation())
 
         if data.get('pos.config') and len(data['pos.config']['data']) > 0:
             product_fields = self.env['account.tax']._eval_taxes_computation_prepare_product_fields(taxes_list)
