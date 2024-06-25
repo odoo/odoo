@@ -1,4 +1,6 @@
 import { parseEmail } from "@mail/utils/common/format";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+
 import {
     Command,
     getKwArgs,
@@ -223,11 +225,12 @@ export class MailThread extends models.ServerModel {
         );
         // Send bus notifications to update status of notifications in the web client
         const [partner] = ResPartner.read(this.env.user.partner_id);
-        BusBus._sendone(partner, "mail.message/notification_update", {
-            elements: MailMessage._message_notification_format(
-                notifications.map((notification) => notification.mail_message_id)
-            ),
-        });
+        const store = new mailDataHelpers.Store();
+        MailMessage._message_notifications_to_store(
+            notifications.map((notification) => notification.mail_message_id),
+            store
+        );
+        BusBus._sendone(partner, "mail.record/insert", store.get_result());
     }
 
     /**

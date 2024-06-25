@@ -73,8 +73,7 @@ class WebclientController(http.Controller):
             # sudo as to not check ACL, which is far too costly
             # sudo: mail.notification - return only failures of current user as author
             notifications = request.env["mail.notification"].sudo().search(domain, limit=100)
-            messages_format = notifications.mail_message_id._message_notification_format()
-            store.add("Message", messages_format)
+            notifications.mail_message_id._message_notifications_to_store(store)
 
     def _process_request_for_internal_user(self, store, **kwargs):
         if kwargs.get("systray_get_activities"):
