@@ -1128,7 +1128,7 @@ test("allow attachment delete on authored message", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-AttachmentImage div[title='Remove']");
+    await click(".o-mail-AttachmentImage [title='Remove']");
     await contains(".modal-dialog .modal-body", { text: 'Do you really want to delete "BLAH"?' });
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentCard", { count: 0 });
