@@ -440,6 +440,7 @@ class Related(models.Model):
     message = fields.Many2one('test_new_api.message')
     message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
     message_currency = fields.Many2one(related="message.author", string='Message Author')
+    stored_message_currency = fields.Many2one(related="message.author", string='(Saved) Message Author', store=True)
 
     foo_id = fields.Many2one('test_new_api.related_foo')
 

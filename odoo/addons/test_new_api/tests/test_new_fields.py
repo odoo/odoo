@@ -1382,6 +1382,12 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record.related_name, record.name)
         self.assertEqual(record.related_related_name, record.name)
 
+        # related is copyable if chained fields are stored copyable
+        field = record._fields['message_currency']
+        self.assertFalse(field.store)
+        field = record._fields['stored_message_currency']
+        self.assertTrue(field.store)
+
         # check searching on related fields
         records0 = record.search([('name', '=', 'A')])
         self.assertIn(record, records0)

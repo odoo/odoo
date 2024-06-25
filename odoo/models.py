@@ -5511,7 +5511,7 @@ class BaseModel(metaclass=MetaModel):
 
         fields_to_copy = {name: field
                           for name, field in self._fields.items()
-                          if field.copy and name not in default and name not in blacklist}
+                          if field.copy and (not field.related or field.related.split(".", 1)[0] not in default) and name not in default and name not in blacklist}
 
         for record in self:
             seen_map = self._context['__copy_data_seen']
@@ -5555,7 +5555,7 @@ class BaseModel(metaclass=MetaModel):
         valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
 
         for name, field in old._fields.items():
-            if not field.copy:
+            if not field.copy or (field.related and not field.related.split(".", 1)[0] not in excluded):
                 continue
 
             if field.inherited and field.related.split('.')[0] in excluded:
