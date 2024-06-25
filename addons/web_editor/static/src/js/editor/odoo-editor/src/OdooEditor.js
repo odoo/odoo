@@ -3336,15 +3336,6 @@ export class OdooEditor extends EventTarget {
      * @private
      */
     _onInput(ev) {
-        // See if the Powerbox should be opened. If so, it will open at the end.
-        const newSelection = this.document.getSelection();
-        const shouldOpenPowerbox = newSelection.isCollapsed && newSelection.rangeCount &&
-            ev.data === '/' && this.powerbox && !this.powerbox.isOpen &&
-            (!this.options.getPowerboxElement || !!this.options.getPowerboxElement());
-        if (shouldOpenPowerbox) {
-            // Undo input '/'.
-            this._powerboxBeforeStepIndex = this._historySteps.length - 1;
-        }
         // Record the selection position that was computed on keydown or before
         // contentEditable execCommand (whatever preceded the 'input' event)
         this._recordHistorySelection(true);
@@ -3352,6 +3343,15 @@ export class OdooEditor extends EventTarget {
         const { anchorNodeOid, anchorOffset, focusNodeOid, focusOffset } = selection || {};
         const wasCollapsed =
             !selection || (focusNodeOid === anchorNodeOid && focusOffset === anchorOffset);
+        // See if the Powerbox should be opened. If so, it will open at the end.
+        const newSelection = this.document.getSelection();
+        const shouldOpenPowerbox = newSelection.isCollapsed && newSelection.rangeCount &&
+            ev.data === '/' && this.powerbox && !this.powerbox.isOpen && wasCollapsed &&
+            (!this.options.getPowerboxElement || !!this.options.getPowerboxElement());
+        if (shouldOpenPowerbox) {
+            // Undo input '/'.
+            this._powerboxBeforeStepIndex = this._historySteps.length - 1;
+        }
         // Sometimes google chrome wrongly triggers an input event with `data`
         // being `null` on `deleteContentForward` `insertParagraph`. Luckily,
         // chrome provide the proper signal with the event `beforeinput`.
