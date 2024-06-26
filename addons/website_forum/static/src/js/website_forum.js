@@ -3,6 +3,7 @@
 import { markup } from "@odoo/owl";
 import { FlagMarkAsOffensiveDialog } from "../components/flag_mark_as_offensive/flag_mark_as_offensive";
 import dom from "@web/legacy/js/core/dom";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { cookie } from "@web/core/browser/cookie";;
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 import publicWidget from "@web/legacy/js/public/public_widget";
@@ -29,7 +30,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .o_wforum_validation_queue a[href*="/validate"]': '_onValidationQueueClick',
         'click .o_wforum_validate_toggler:not(.karma_required)': '_onAcceptAnswerClick',
         'click .o_wforum_favourite_toggle': '_onFavoriteQuestionClick',
-        'click .comment_delete': '_onDeleteCommentClick',
+        'click .comment_delete:not(.karma_required)': '_onDeleteCommentClick',
         'click .js_close_intro': '_onCloseIntroClick',
         'click .answer_collapse': '_onExpandAnswerClick',
         'submit .js_wforum_submit_form:has(:not(.karma_required).o_wforum_submit_post)': '_onSubmitForm',
@@ -532,18 +533,16 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      */
     _onDeleteCommentClick: function (ev) {
         ev.preventDefault();
-        var $link = $(ev.currentTarget);
-        var $container = $link.closest('.o_wforum_post_comments_container');
-
-        rpc($link.closest('form').attr('action')).then(function () {
-            $link.closest('.o_wforum_post_comment').remove();
-
-            var count = $container.find('.o_wforum_post_comment').length;
-            if (count) {
-                $container.find('.o_wforum_comments_count').text(count);
-            } else {
-                $container.find('.o_wforum_comments_count_header').remove();
-            }
+        this.call("dialog", "add", ConfirmationDialog, {
+            body: _t("Are you sure you want to delete this comment?"),
+            confirmLabel: _t("Delete"),
+            confirm: () => {
+                const deleteBtn = ev.currentTarget;
+                rpc(deleteBtn.closest("form").attributes.action.value).then(
+                    deleteBtn.closest(".o_wforum_post_comment").remove()
+                );
+            },
+            cancel: () => {},
         });
     },
     /**
