@@ -308,3 +308,56 @@ class TestSaleMrpProcurement(TransactionCase):
         so.action_confirm()
         self.assertEqual(len(so.picking_ids), 1)
         self.assertEqual(so.picking_ids.picking_type_id, warehouse.out_type_id)
+
+    def test_transfer_custom_description_from_SO_to_MO(self):
+        """
+        Check that the custom description of a product using the MTO, manufacturing
+        routes is transfered from the SO to the generated MO.
+        """
+        warehouse = self.env.ref("stock.warehouse0")
+        mto = self.env.ref('stock.route_warehouse0_mto')
+        mto.active = True
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+
+        product, component = self.env['product.product'].create([{
+            'name': 'Super product',
+            'type': 'product',
+            'route_ids': [Command.set(mto.ids + manufacture_route.ids)],
+        }, {
+            'name': 'Component',
+            'type': 'consu',
+        }])
+
+        self.env['mrp.bom'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': product.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({'product_id': component.id, 'product_qty': 1}),
+            ],
+        })
+
+        customer = self.env['res.partner'].create({
+            'name': 'customer',
+        })
+
+        # check that the custom description is transferred
+        # but that the non-custom one is not
+        so = self.env['sale.order'].create({
+            'partner_id': customer.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product.id,
+                    'name': 'My custom description',
+                    'product_uom_qty': 1.0,
+                }),
+                Command.create({
+                    'product_id': product.id,
+                    'product_uom_qty': 2.0,
+                })],
+        })
+        so.action_confirm()
+        orders = so.mrp_production_ids
+        self.assertRecordValues(orders, [{'product_description_variants': 'My custom description', 'product_uom_qty': 1.0}, {'product_description_variants': '', 'product_uom_qty': 2.0}])

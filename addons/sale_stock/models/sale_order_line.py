@@ -256,6 +256,7 @@ class SaleOrderLine(models.Model):
         # Use the delivery date if there is else use date_order and lead time
         date_deadline = self.order_id.commitment_date or self._expected_date()
         date_planned = date_deadline - timedelta(days=self.order_id.company_id.security_lead)
+        lang = self.order_id.partner_id.lang
         values.update({
             'group_id': group_id,
             'sale_line_id': self.id,
@@ -264,7 +265,8 @@ class SaleOrderLine(models.Model):
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,
             'partner_id': self.order_id.partner_shipping_id.id,
-            'product_description_variants': self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants(),
+            'product_description_variants': self.name if self.name != self.product_id.with_context(lang=lang).display_name
+                 else self.with_context(lang=lang)._get_sale_order_line_multiline_description_variants(),
             'company_id': self.order_id.company_id,
             'product_packaging_id': self.product_packaging_id,
             'sequence': self.sequence,
