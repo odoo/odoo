@@ -40,19 +40,6 @@ class AliasDomain(models.Model):
              "'notifications@example.com' to override all outgoing emails.")
     default_from_email = fields.Char('Default From', compute='_compute_default_from_email')
 
-    _sql_constraints = [
-        (
-            'bounce_email_uniques',
-            'UNIQUE(bounce_alias, name)',
-            'Bounce emails should be unique'
-        ),
-        (
-            'catchall_email_uniques',
-            'UNIQUE(catchall_alias, name)',
-            'Catchall emails should be unique'
-        ),
-    ]
-
     @api.depends('bounce_alias', 'name')
     def _compute_bounce_email(self):
         self.bounce_email = ''
@@ -82,23 +69,6 @@ class AliasDomain(models.Model):
         names = self.filtered('bounce_alias').mapped('bounce_alias') + self.filtered('catchall_alias').mapped('catchall_alias')
         if not names:
             return
-
-        similar_domains = self.env['mail.alias.domain'].search([('name', 'in', self.mapped('name'))])
-        for tocheck in self:
-            if any(similar.bounce_alias == tocheck.bounce_alias
-                   for similar in similar_domains if similar != tocheck and similar.name == tocheck.name):
-                raise exceptions.ValidationError(
-                    _('Bounce alias %(bounce)s is already used for another domain with same name. '
-                      'Use another bounce or simply use the other alias domain.',
-                      bounce=tocheck.bounce_email)
-                )
-            if any(similar.catchall_alias == tocheck.catchall_alias
-                   for similar in similar_domains if similar != tocheck and similar.name == tocheck.name):
-                raise exceptions.ValidationError(
-                    _('Catchall alias %(catchall)s is already used for another domain with same name. '
-                      'Use another catchall or simply use the other alias domain.',
-                      catchall=tocheck.catchall_email)
-                )
 
         # search on left-part only to speedup, then filter on right part
         potential_aliases = self.env['mail.alias'].search([

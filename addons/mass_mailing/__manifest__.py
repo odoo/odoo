@@ -32,6 +32,7 @@
         'data/mailing_subscription.xml',
         'data/res_users_data.xml',
         'wizard/mail_compose_message_views.xml',
+        'wizard/mail_server_configurator.xml',
         'wizard/mailing_contact_import_views.xml',
         'wizard/mailing_contact_to_list_views.xml',
         'wizard/mailing_list_merge_views.xml',

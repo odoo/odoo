@@ -9,10 +9,19 @@
             <field name="arch" type="xml">
                 <div id="emails" position='replace'>
                     <block title="Emails" id="emails">
-                        <setting id="email_servers_setting" title="Using your own email server is required to send/receive emails in Community and Enterprise versions. Online users already benefit from a ready-to-use email server (@mycompany.odoo.com)." documentation="/applications/general/email_communication/email_servers.html" help="Configure your own email servers">
+                        <setting id="email_servers_setting" class="o_mail_ir_mail_server_settings" title="Using your own email server is required to send/receive emails in Community and Enterprise versions. Online users already benefit from a ready-to-use email server (@mycompany.odoo.com)." documentation="/applications/general/email_communication/email_servers.html">
                             <field name="external_email_server_default"/>
                             <div class="content-group mb-3" invisible="not external_email_server_default">
                                 <div>
+                                    <span class="text-muted">
+                                        <a type="action" name="%(mail.mail_server_configurator_action)d"
+                                            class="btn btn-link p-0 align-baseline"
+                                            role="button">
+                                            <i class="fa fa-wrench"/>
+                                            Configure
+                                        </a>
+                                            your own email servers
+                                        </span>
                                     <div class="mt8">
                                         <button type="action"
                                         name="%(action_email_server_tree)d"
