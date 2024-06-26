@@ -8,6 +8,7 @@ from collections import defaultdict
 
 import psycopg2
 import pytz
+import re
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, float_round, float_repr, float_compare
@@ -1460,6 +1461,10 @@ class PosOrderLine(models.Model):
             product_name = line.product_id\
                 .with_context(lang=line.order_id.partner_id.lang or self.env.user.lang)\
                 .get_product_multiline_description_sale()
+            if line.product_id.display_name:
+                product_name = re.sub(re.escape(line.product_id.display_name), '', product_name)
+                product_name = re.sub(r'^\n', '', product_name)
+                product_name = re.sub(r'(?<=\n) ', '', product_name)
             base_line_vals_list.append(
                 {
                     **self.env['account.tax']._convert_to_tax_base_line_dict(
