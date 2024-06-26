@@ -102,6 +102,10 @@
                     <templates>
                         <t t-name="card">
                             <field name="product_id" readonly="state == 'done'" class="fw-bold fs-5"/>
+                            <a name="action_show_details"
+                                title="Show details"
+                                class="o_icon_button fa fa-list" type="object"
+                                invisible="not show_details_visible"/>
                             <div invisible="not is_inventory">
                                 <span>Initial Demand <field name="product_uom_qty" readonly="state == 'done'"/></span><br/>
                                 <span>Quantity <field name="quantity"/></span>
@@ -141,6 +145,8 @@
                     <field name="show_quant" invisible="1"/>
                     <field name="show_lots_text" invisible="1"/>
                     <field name="show_lots_m2o" invisible="1"/>
+                    <field name="product_qty" invisible="1"/>
+                    <field name="quantity" invisible="1"/>
                     <group>
                         <group>
                             <field name="product_id" readonly="id or move_line_ids"/>

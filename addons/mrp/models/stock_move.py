@@ -526,11 +526,13 @@ class StockMove(models.Model):
         self.ensure_one()
         action = super().action_show_details()
         if self.raw_material_production_id:
+            action['name'] = _("Components")
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_raw').id, 'form')]
             action['context']['show_destination_location'] = False
             action['context']['force_manual_consumption'] = True
             action['context']['active_mo_id'] = self.raw_material_production_id.id
         elif self.production_id:
+            action['name'] = _("Move Byproduct")
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_finished').id, 'form')]
             action['context']['show_source_location'] = False
             action['context']['show_reserved_quantity'] = False

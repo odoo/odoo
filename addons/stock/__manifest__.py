@@ -119,7 +119,6 @@
             'stock/static/tests/inventory_report_list_tests.js',
             'stock/static/tests/popover_widget_tests.js',
             'stock/static/tests/stock_traceability_report_backend_tests.js',
-            'stock/static/tests/stock_move_one2many_tests.js',
         ],
     },
     'license': 'LGPL-3',
