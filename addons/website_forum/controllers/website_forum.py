@@ -24,6 +24,18 @@ class WebsiteForum(WebsiteProfile):
     _post_per_page = 10
     _user_per_page = 30
 
+    @staticmethod
+    def routes_with_embed(routes):
+        """ Returns the routes and their embed equivalent if it applies. """
+        if isinstance(routes, str):
+            routes = [routes]
+        res = []
+        for route in routes:
+            res.append(route)
+            if route.startswith('/forum/'):
+                res.append('/forum/embed/' + route[len('/forum/'):])
+        return res
+
     def _prepare_user_values(self, **kwargs):
         values = super(WebsiteForum, self)._prepare_user_values(**kwargs)
         values['forum_welcome_message'] = request.httprequest.cookies.get('forum_welcome_message', False)
@@ -103,14 +115,7 @@ class WebsiteForum(WebsiteProfile):
             'tag': str(tag.id) if tag else None,
         }
 
-    @http.route(['/forum/all',
-                 '/forum/all/page/<int:page>',
-                 '/forum/<model("forum.forum"):forum>',
-                 '/forum/<model("forum.forum"):forum>/page/<int:page>',
-                 '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions''',
-                 '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions/page/<int:page>''',
-                 ], type='http', auth="public", website=True, sitemap=sitemap_forum)
-    def questions(self, forum=None, tag=None, page=1, filters='all', my=None, sorting=None, search='', create_uid=False, include_answers=False, **post):
+    def _prepare_question_values(self, forum=None, tag=None, page=1, filters='all', my=None, sorting=None, search='', create_uid=False, include_answers=False, **post):
         Post = request.env['forum.post']
 
         author = request.env['res.users'].browse(int(create_uid))
@@ -145,9 +150,9 @@ class WebsiteForum(WebsiteProfile):
         question_ids = question_ids[(page - 1) * self._post_per_page:page * self._post_per_page]
 
         if not forum:
-            url = '/forum/all'
+            url = self._get_embed_url('/forum/all')
         else:
-            url = f"/forum/{slug(forum)}{f'/tag/{slug(tag)}/questions' if tag else ''}"
+            url = self._get_embed_url(f"/forum/{slug(forum)}{f'/tag/{slug(tag)}/questions' if tag else ''}")
 
         url_args = {'sorting': sorting}
 
@@ -159,8 +164,7 @@ class WebsiteForum(WebsiteProfile):
             url=url, total=question_count, page=page, step=self._post_per_page,
             scope=self._post_per_page, url_args=url_args))
 
-        values = self._prepare_user_values(forum=forum, searches=post)
-        values.update({
+        values = {
             'author': author,
             'edit_in_backend': True,
             'question_ids': question_ids,
@@ -173,27 +177,41 @@ class WebsiteForum(WebsiteProfile):
             'sorting': sorting,
             'search': fuzzy_search_term or search,
             'original_search': fuzzy_search_term and search,
-        })
+        }
 
         if forum or tag:
             values['main_object'] = tag or forum
+        return values
 
-        return request.render("website_forum.forum_index", values)
+    @http.route(routes_with_embed([
+        '/forum/all',
+        '/forum/all/page/<int:page>',
+        '/forum/<model("forum.forum"):forum>',
+        '/forum/<model("forum.forum"):forum>/page/<int:page>',
+        '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions''',
+        '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions/page/<int:page>''',
+    ]), type='http', auth="public", website=True, sitemap=sitemap_forum)
+    def questions(self, forum=None, tag=None, page=1, filters='all', my=None, sorting=None, search='', create_uid=False, include_answers=False, **post):
+        values = self._prepare_user_values(forum=forum, searches=post)
+        values.update(self._prepare_question_values(
+            forum=forum, tag=tag, page=page, filters=filters,
+            my=my, sorting=sorting, search=search, create_uid=create_uid, include_answers=include_answers, **post))
+        return request.render("website_forum.forum_index", self._add_embed_values(values))
 
     @http.route(['''/forum/<model("forum.forum"):forum>/faq'''], type='http', auth="public", website=True, sitemap=True)
     def forum_faq(self, forum, **post):
         values = self._prepare_user_values(forum=forum, searches=dict(), header={'is_guidelines': True}, **post)
-        return request.render("website_forum.faq", values)
+        return request.render("website_forum.faq", self._add_embed_values(values))
 
     @http.route(['/forum/<model("forum.forum"):forum>/faq/karma'], type='http', auth="public", website=True, sitemap=False)
     def forum_faq_karma(self, forum, **post):
         values = self._prepare_user_values(forum=forum, header={'is_guidelines': True, 'is_karma': True}, **post)
-        return request.render("website_forum.faq_karma", values)
+        return request.render("website_forum.faq_karma", self._add_embed_values(values))
 
     # Tags
     # --------------------------------------------------
 
-    @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'], website=True, sitemap=False)
+    @http.route(routes_with_embed('/forum/get_tags'), type='http', auth="public", methods=['GET'], website=True, sitemap=False)
     def tag_read(self, forum_id, query='', limit=25, **post):
         data = request.env['forum.tag'].search_read(
             domain=[('forum_id', '=', int(forum_id)), ('name', '=ilike', (query or '') + "%")],
@@ -205,9 +223,10 @@ class WebsiteForum(WebsiteProfile):
             headers=[("Content-Type", "application/json")]
         )
 
-    @http.route(['/forum/<model("forum.forum"):forum>/tag',
-                 '/forum/<model("forum.forum"):forum>/tag/<string:tag_char>',
-                 ], type='http', auth="public", website=True, sitemap=False)
+    @http.route(routes_with_embed([
+        '/forum/<model("forum.forum"):forum>/tag',
+        '/forum/<model("forum.forum"):forum>/tag/<string:tag_char>',
+    ]), type='http', auth="public", website=True, sitemap=False)
     def tags(self, forum, tag_char='', filters='all', search='', **post):
         """Render a list of tags matching filters and search parameters.
 
@@ -261,12 +280,12 @@ class WebsiteForum(WebsiteProfile):
             'search_count': len(tags) if search else None,
             'tags': tags,
         })
-        return request.render("website_forum.forum_index_tags", values)
+        return request.render("website_forum.forum_index_tags", self._add_embed_values(values))
 
     # Questions
     # --------------------------------------------------
 
-    @http.route('/forum/get_url_title', type='json', auth="user", methods=['POST'], website=True)
+    @http.route(routes_with_embed('/forum/get_url_title'), type='json', auth="user", methods=['POST'], website=True)
     def get_url_title(self, **kwargs):
         try:
             req = requests.get(kwargs.get('url'))
@@ -276,11 +295,11 @@ class WebsiteForum(WebsiteProfile):
         except IOError:
             return False
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
+    @http.route(routes_with_embed('''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''),
                 type='http', auth="public", website=True, sitemap=False)
     def old_question(self, forum, question, **post):
         # Compatibility pre-v14
-        return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)), code=301)
+        return request.redirect(self._get_embed_url("/forum/%s/%s" % (slug(forum), slug(question))), code=301)
 
     def sitemap_forum_post(env, rule, qs):
         ForumPost = env['forum.post']
@@ -293,8 +312,7 @@ class WebsiteForum(WebsiteProfile):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc, 'lastmod': forum_post.write_date.date()}
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/<model("forum.post"):question>'''],
-                type='http', auth="public", website=True, sitemap=sitemap_forum_post)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/<model("forum.post"):question>'), type='http', auth="public", website=True, sitemap=sitemap_forum_post)
     def question(self, forum, question, **post):
         if not forum.active:
             return request.render("website_forum.header", {'forum': forum})
@@ -309,7 +327,7 @@ class WebsiteForum(WebsiteProfile):
             raise werkzeug.exceptions.NotFound()
 
         if question.parent_id:
-            redirect_url = "/forum/%s/%s" % (slug(forum), slug(question.parent_id))
+            redirect_url = self._get_embed_url("/forum/%s/%s" % (slug(forum), slug(question.parent_id)))
             return request.redirect(redirect_url, 301)
         filters = 'question'
         values = self._prepare_user_values(forum=forum, searches=post)
@@ -326,9 +344,9 @@ class WebsiteForum(WebsiteProfile):
         # increment view counter
         question.sudo()._set_viewed()
 
-        return request.render("website_forum.post_description_full", values)
+        return request.render("website_forum.post_description_full", self._add_embed_values(values))
 
-    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite', type='json', auth="user", methods=['POST'], website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite'), type='json', auth="user", methods=['POST'], website=True)
     def question_toggle_favorite(self, forum, question, **post):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
@@ -341,7 +359,7 @@ class WebsiteForum(WebsiteProfile):
             question.sudo().message_subscribe(request.env.user.partner_id.ids)
         return favourite
 
-    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/ask_for_close', type='http', auth="user", methods=['POST'], website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/ask_for_close'), type='http', auth="user", methods=['POST'], website=True)
     def question_ask_for_close(self, forum, question, **post):
         reasons = request.env['forum.post.reason'].search([('reason_type', '=', 'basic')])
 
@@ -351,9 +369,9 @@ class WebsiteForum(WebsiteProfile):
             'forum': forum,
             'reasons': reasons,
         })
-        return request.render("website_forum.close_post", values)
+        return request.render("website_forum.close_post", self._add_embed_values(values))
 
-    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/edit_answer', type='http', auth="user", website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/edit_answer'), type='http', auth="user", website=True)
     def question_edit_answer(self, forum, question, **kwargs):
         for record in question.child_ids:
             if record.create_uid.id == request.uid:
@@ -361,51 +379,53 @@ class WebsiteForum(WebsiteProfile):
                 break
         else:
             raise werkzeug.exceptions.NotFound()
-        return request.redirect(f'/forum/{slug(forum)}/post/{slug(answer)}/edit')
+        return request.redirect(self._get_embed_url(f'/forum/{slug(forum)}/post/{slug(answer)}/edit'))
 
-    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/close', type='http', auth="user", methods=['POST'], website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/close'), type='http', auth="user", methods=['POST'], website=True)
     def question_close(self, forum, question, **post):
         question.close(reason_id=int(post.get('reason_id', False)))
-        return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
+        return request.redirect(self._get_embed_url("/forum/%s/%s" % (slug(forum), slug(question))))
 
-    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/reopen', type='http', auth="user", methods=['POST'], website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/reopen'), type='http', auth="user", methods=['POST'], website=True)
     def question_reopen(self, forum, question, **kwarg):
         question.reopen()
-        return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
+        return request.redirect(self._get_embed_url("/forum/%s/%s" % (slug(forum), slug(question))))
 
-    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/delete', type='http', auth="user", methods=['POST'], website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/delete'), type='http', auth="user", methods=['POST'], website=True)
     def question_delete(self, forum, question, **kwarg):
         question.active = False
-        return request.redirect("/forum/%s" % slug(forum))
+        return request.redirect(self._get_embed_url("/forum/%s" % slug(forum)))
 
-    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/undelete', type='http', auth="user", methods=['POST'], website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/undelete'), type='http', auth="user", methods=['POST'], website=True)
     def question_undelete(self, forum, question, **kwarg):
         question.active = True
-        return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
+        return request.redirect(self._get_embed_url("/forum/%s/%s" % (slug(forum), slug(question))))
 
     # Post
     # --------------------------------------------------
-    @http.route(['/forum/<model("forum.forum"):forum>/ask'], type='http', auth="user", website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/ask'), type='http', auth="user", website=True)
     def forum_post(self, forum, **post):
         user = request.env.user
         if not user.email or not tools.single_email_re.match(user.email):
-            return request.redirect("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), request.session.uid))
+            return request.redirect(self._get_embed_url("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), request.session.uid)))
         values = self._prepare_user_values(forum=forum, searches={}, new_question=True)
-        return request.render("website_forum.new_question", values)
+        return request.render("website_forum.new_question", self._add_embed_values(values))
 
-    @http.route(['/forum/<model("forum.forum"):forum>/new',
-                 '/forum/<model("forum.forum"):forum>/<model("forum.post"):post_parent>/reply'],
+    @http.route(routes_with_embed([
+        '/forum/<model("forum.forum"):forum>/new',
+        '/forum/<model("forum.forum"):forum>/<model("forum.post"):post_parent>/reply',
+    ]),
                 type='http', auth="user", methods=['POST'], website=True)
     def post_create(self, forum, post_parent=None, **post):
         if post.get('content', '') == '<p><br></p>':
-            return request.render('http_routing.http_error', {
+            return request.render('http_routing.http_error', self._add_embed_values({
                 'status_code': _('Bad Request'),
                 'status_message': post_parent and _('Reply should not be empty.') or _('Question should not be empty.')
-            })
+            }))
 
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
         if forum.has_pending_post:
-            return request.redirect("/forum/%s/ask" % slug(forum))
+            return request.redirect(self._get_embed_url("/forum/%s/ask" % slug(forum)))
 
         new_question = request.env['forum.post'].create({
             'forum_id': forum.id,
@@ -416,9 +436,9 @@ class WebsiteForum(WebsiteProfile):
         })
         if post_parent:
             post_parent._update_last_activity()
-        return request.redirect(f'/forum/{slug(forum)}/{slug(post_parent) if post_parent else new_question.id}')
+        return request.redirect(self._get_embed_url(f'/forum/{slug(forum)}/{slug(post_parent) if post_parent else new_question.id}'))
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment', type='http', auth="user", methods=['POST'], website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment'), type='http', auth="user", methods=['POST'], website=True)
     def post_comment(self, forum, post, **kwargs):
         question = post.parent_id or post
         if kwargs.get('comment') and post.forum_id.id == forum.id:
@@ -429,9 +449,9 @@ class WebsiteForum(WebsiteProfile):
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment')
             question._update_last_activity()
-        return request.redirect(f'/forum/{slug(forum)}/{slug(question)}')
+        return request.redirect(self._get_embed_url(f'/forum/{slug(forum)}/{slug(question)}'))
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct'), type='json', auth="public", website=True)
     def post_toggle_correct(self, forum, post, **kwargs):
         if post.parent_id is False:
             return request.redirect('/')
@@ -445,15 +465,15 @@ class WebsiteForum(WebsiteProfile):
         post.is_correct = not post.is_correct
         return post.is_correct
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/delete', type='http', auth="user", methods=['POST'], website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/delete'), type='http', auth="user", methods=['POST'], website=True)
     def post_delete(self, forum, post, **kwargs):
         question = post.parent_id
         post.unlink()
         if question:
-            request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
-        return request.redirect("/forum/%s" % slug(forum))
+            request.redirect(self._get_embed_url("/forum/%s/%s" % (slug(forum), slug(question))))
+        return request.redirect(self._get_embed_url("/forum/%s" % slug(forum)))
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/edit', type='http', auth="user", website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/edit'), type='http', auth="user", website=True)
     def post_edit(self, forum, post, **kwargs):
         tags = [dict(id=tag.id, name=tag.name) for tag in post.tag_ids]
         tags = json.dumps(tags)
@@ -466,9 +486,9 @@ class WebsiteForum(WebsiteProfile):
             'searches': kwargs,
             'content': post.name,
         })
-        return request.render("website_forum.edit_post", values)
+        return request.render("website_forum.edit_post", self._add_embed_values(values))
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", methods=['POST'], website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save'), type='http', auth="user", methods=['POST'], website=True)
     def post_save(self, forum, post, **kwargs):
         vals = {
             'content': kwargs.get('content'),
@@ -485,12 +505,12 @@ class WebsiteForum(WebsiteProfile):
         vals['tag_ids'] = forum._tag_to_write_vals(kwargs.get('post_tags', ''))
         post.write(vals)
         question = post.parent_id if post.parent_id else post
-        return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
+        return request.redirect(self._get_embed_url("/forum/%s/%s" % (slug(forum), slug(question))))
 
     #  JSON utilities
     # --------------------------------------------------
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/upvote', type='json', auth="public", website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/upvote'), type='json', auth="public", website=True)
     def post_upvote(self, forum, post, **kwargs):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
@@ -499,7 +519,7 @@ class WebsiteForum(WebsiteProfile):
         upvote = True if not post.user_vote > 0 else False
         return post.vote(upvote=upvote)
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/downvote', type='json', auth="public", website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/downvote'), type='json', auth="public", website=True)
     def post_downvote(self, forum, post, **kwargs):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
@@ -568,7 +588,7 @@ class WebsiteForum(WebsiteProfile):
 
         return request.render("website_forum.moderation_queue", values)
 
-    @http.route('/forum/<model("forum.forum"):forum>/closed_posts', type='http', auth="user", website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/closed_posts'), type='http', auth="user", website=True)
     def closed_posts(self, forum, **kwargs):
         if request.env.user.karma < forum.karma_moderate:
             raise werkzeug.exceptions.NotFound()
@@ -583,7 +603,7 @@ class WebsiteForum(WebsiteProfile):
             'queue_type': 'close',
         })
 
-        return request.render("website_forum.moderation_queue", values)
+        return request.render("website_forum.moderation_queue", self._add_embed_values(values))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/validate', type='http', auth="user", website=True)
     def post_accept(self, forum, post, **kwargs):
@@ -603,7 +623,7 @@ class WebsiteForum(WebsiteProfile):
         post._refuse()
         return self.question_ask_for_close(forum, post)
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/flag', type='json', auth="public", website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/flag'), type='json', auth="public", website=True)
     def post_flag(self, forum, post, **kwargs):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
@@ -634,7 +654,7 @@ class WebsiteForum(WebsiteProfile):
 
     # User
     # --------------------------------------------------
-    @http.route(['/forum/<model("forum.forum"):forum>/partner/<int:partner_id>'], type='http', auth="public", website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/partner/<int:partner_id>', type='http', auth="public", website=True)
     def open_partner(self, forum, partner_id=0, **post):
         if partner_id:
             partner = request.env['res.partner'].sudo().search([('id', '=', partner_id)])
@@ -645,7 +665,7 @@ class WebsiteForum(WebsiteProfile):
     # Profile
     # -----------------------------------
 
-    @http.route(['/forum/user/<int:user_id>'], type='http', auth="public", website=True)
+    @http.route('/forum/user/<int:user_id>', type='http', auth="public", website=True)
     def view_user_forum_profile(self, user_id, forum_id='', forum_origin='/forum', **post):
         forum_origin_query = f'?forum_origin={forum_origin}&forum_id={forum_id}' if forum_id else ''
         return request.redirect(f'/profile/user/{user_id}{forum_origin_query}')
@@ -762,24 +782,53 @@ class WebsiteForum(WebsiteProfile):
     # Messaging
     # --------------------------------------------------
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/convert_to_answer', type='http', auth="user", methods=['POST'], website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/convert_to_answer'), type='http', auth="user", methods=['POST'], website=True)
     def convert_comment_to_answer(self, forum, post, comment, **kwarg):
         post = request.env['forum.post'].convert_comment_to_answer(comment.id)
         if not post:
-            return request.redirect("/forum/%s" % slug(forum))
+            return request.redirect(self._get_embed_url("/forum/%s" % slug(forum)))
         question = post.parent_id if post.parent_id else post
-        return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
+        return request.redirect(self._get_embed_url("/forum/%s/%s" % (slug(forum), slug(question))))
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/convert_to_comment', type='http', auth="user", methods=['POST'], website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/convert_to_comment'), type='http', auth="user", methods=['POST'], website=True)
     def convert_answer_to_comment(self, forum, post, **kwarg):
         question = post.parent_id
         new_msg = post.convert_answer_to_comment()
         if not new_msg:
-            return request.redirect("/forum/%s" % slug(forum))
-        return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
+            return request.redirect(self._get_embed_url("/forum/%s" % slug(forum)))
+        return request.redirect(self._get_embed_url("/forum/%s/%s" % (slug(forum), slug(question))))
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/delete', type='json', auth="user", website=True)
+    @http.route(routes_with_embed('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/delete'), type='json', auth="user", website=True)
     def delete_comment(self, forum, post, comment, **kwarg):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
         return post.unlink_comment(comment.id)[0]
+
+    # Utility functions for the embedded forum version
+    # --------------------------------------------------
+    @staticmethod
+    def _is_embed():
+        return request.httprequest.path.startswith('/forum/embed/')
+
+    @staticmethod
+    def _base_url():
+        return '/forum/embed' if WebsiteForum._is_embed() else '/forum'
+
+    @staticmethod
+    def _add_embed_values(values):
+        if not WebsiteForum._is_embed():
+            values.update({'forum_base_path': '/forum'})
+        else:
+            values.update({
+                'forum_embed': True,
+                'no_header': True,
+                'no_footer': True,
+                'forum_base_path': '/forum/embed',
+            })
+        return values
+
+    @staticmethod
+    def _get_embed_url(url):
+        if url.startswith('/forum/') and WebsiteForum._is_embed():
+            return '/forum/embed/' + url[len('/forum/'):]
+        return url

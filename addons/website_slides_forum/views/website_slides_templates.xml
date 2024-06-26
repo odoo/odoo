@@ -3,10 +3,19 @@
     <template id='course_main' inherit_id="website_slides.course_main">
         <!-- Channel main template: add link to forum -->
         <xpath expr="//li[hasclass('o_wslides_course_header_nav_review')]" position="after">
-            <li class="nav-item" t-if="not invite_preview and (channel.is_member or channel.visibility == 'public') and channel.forum_id">
-                <a t-att-href="'/forum/%s' % (slug(channel.forum_id))"
-                    t-att-class="'nav-link'" target="new">Forum</a>
+            <li class="nav-item" role="presentation" t-if="not invite_preview and (channel.is_member or channel.visibility == 'public') and channel.forum_id">
+                <a href="#forum" t-att-aria-selected="'true' if active_tab == 'forum' else 'false'"
+                   t-att-class="'nav-link %s' % ('active' if active_tab == 'forum' else '')"
+                   id="forum-tab" data-bs-toggle="pill" role="tab" aria-controls="forum">
+                    Forum
+                </a>
             </li>
+        </xpath>
+        <xpath expr="//div[@id='home']" position="after">
+            <div t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'forum' else '')" id="forum" role="tabpanel" aria-labelledby="forum-tab"
+                 t-if="not invite_preview and (channel.is_member or channel.visibility == 'public') and channel.forum_id">
+                <iframe class="w-100 vh-100 border rounded" frameborder="0" t-attf-src="/forum/embed/#{slug(channel.forum_id)}"/>
+            </div>
         </xpath>
     </template>
 
