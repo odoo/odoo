@@ -73,6 +73,7 @@ _ref_vat = {
     'sk': 'SK2022749619',
     'sm': 'SM24165',
     'tr': _('TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)'),  # Levent Karakas @ Eska Yazilim A.S.
+    'uy': '214130990011',
     've': 'V-12345678-1, V123456781, V-12.345.678-1',
     'xi': 'XI123456782',
     'sa': _('310175397400003 [Fifteen digits, first and last digits should be "3"]')
@@ -779,6 +780,10 @@ class ResPartner(models.Model):
         is_valid_vat = stdnum.util.get_cc_module("de", "vat").is_valid
         is_valid_stnr = stdnum.util.get_cc_module("de", "stnr").is_valid
         return is_valid_vat(vat) or is_valid_stnr(vat)
+
+    # Uruguayan VAT validation, contributed by Adhoc
+    def check_vat_uy(self, vat):
+        return stdnum.util.get_cc_module('uy', 'rut').is_valid(vat)
 
     def format_vat_sm(self, vat):
         stdnum_vat_format = stdnum.util.get_cc_module('sm', 'vat').compact
