@@ -6,7 +6,7 @@ from odoo import api, fields, models
 class ProductReplenishMixin(models.AbstractModel):
     _inherit = 'stock.replenish.mixin'
 
-    supplier_id = fields.Many2one('product.supplierinfo', string="Vendor", check_company=True)
+    supplier_id = fields.Many2one('product.supplierinfo', string="Supplier", check_company=True)
     show_vendor = fields.Boolean(compute='_compute_show_vendor')
 
     @api.model

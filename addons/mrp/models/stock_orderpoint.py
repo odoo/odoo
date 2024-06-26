@@ -10,9 +10,7 @@ from dateutil.relativedelta import relativedelta
 class StockWarehouseOrderpoint(models.Model):
     _inherit = 'stock.warehouse.orderpoint'
 
-    show_bom = fields.Boolean('Show BoM column', compute='_compute_show_bom')
     bom_id = fields.Many2one(
-        'mrp.bom', string='Bill of Materials', check_company=True,
         domain="[('type', '=', 'normal'), '&', '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
     manufacturing_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the manufacturing routes.")
 
@@ -39,14 +37,6 @@ class StockWarehouseOrderpoint(models.Model):
                 }
             }
         return super()._get_replenishment_order_notification()
-
-    @api.depends('route_id')
-    def _compute_show_bom(self):
-        manufacture_route = []
-        for res in self.env['stock.rule'].search_read([('action', '=', 'manufacture')], ['route_id']):
-            manufacture_route.append(res['route_id'][0])
-        for orderpoint in self:
-            orderpoint.show_bom = orderpoint.route_id.id in manufacture_route
 
     def _compute_visibility_days(self):
         res = super()._compute_visibility_days()

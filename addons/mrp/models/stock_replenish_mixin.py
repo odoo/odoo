@@ -6,14 +6,20 @@ from odoo import api, fields, models
 class ProductReplenishMixin(models.AbstractModel):
     _inherit = 'stock.replenish.mixin'
 
-    bom_id = fields.Many2one('mrp.bom', string="Bill of Material", compute='_compute_bom',
-                             store=True, readonly=False, check_company=True)
+    bom_id = fields.Many2one('mrp.bom', string="Bill of Material", check_company=True)
     show_bom = fields.Boolean(compute='_compute_show_bom')
 
-    @api.depends('product_id')
-    def _compute_bom(self):
-        for rec in self:
-            rec.bom_id = self.env['mrp.bom']._bom_find(rec.product_id)[rec.product_id]
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if res.get('product_id'):
+            product_id = self.env['product.product'].browse(res['product_id'])
+            res['bom_id'] = self.env['mrp.bom']._bom_find(product_id)[product_id].id
+        return res
+
+    # @api.depends('product_id')
+    # def _compute_bom(self):
+    #     for rec in self:
+    #         rec.bom_id = self.env['mrp.bom']._bom_find(rec.product_id)[rec.product_id]
 
     @api.depends('route_id')
     def _compute_show_bom(self):
