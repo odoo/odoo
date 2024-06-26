@@ -151,7 +151,7 @@ test("clickbot clickeverywhere test", async () => {
     });
     window.clickEverywhere();
     await clickEverywhereDef;
-    expect([
+    expect.verifySteps([
         "Clicking on: apps menu toggle button",
         "Testing app menu: app1",
         "Testing menu App1 app1",
@@ -191,7 +191,7 @@ test("clickbot clickeverywhere test", async () => {
         "Successfully tested 0 modals",
         "Successfully tested 10 filters",
         SUCCESS_SIGNAL,
-    ]).toVerifySteps();
+    ]);
 });
 
 test("clickbot clickeverywhere test (with dropdown menu)", async () => {
@@ -265,7 +265,7 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
     expect(".o_menu_sections .dropdown-toggle").toHaveText("a dropdown");
     window.clickEverywhere();
     await clickEverywhereDef;
-    expect([
+    expect.verifySteps([
         "Clicking on: apps menu toggle button",
         "Testing app menu: app2",
         "Testing menu App2 app2",
@@ -293,7 +293,7 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
         "Successfully tested 0 modals",
         "Successfully tested 6 filters",
         SUCCESS_SIGNAL,
-    ]).toVerifySteps();
+    ]);
 });
 
 test("clickbot test waiting rpc after clicking filter", async () => {
@@ -348,7 +348,7 @@ test("clickbot test waiting rpc after clicking filter", async () => {
     clickBotStarted = true;
     window.clickEverywhere();
     await clickEverywhereDef;
-    expect([
+    expect.verifySteps([
         "web_search_read called", // click on the App
         "response",
         "web_search_read called", // click on the Filter
@@ -356,7 +356,7 @@ test("clickbot test waiting rpc after clicking filter", async () => {
         "web_search_read called", // click on the Second Filter
         "response",
         SUCCESS_SIGNAL,
-    ]).toVerifySteps();
+    ]);
 });
 
 test("clickbot show rpc error when an error dialog is detected", async () => {
@@ -422,11 +422,11 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
     window.clickEverywhere();
     await clickEverywhereDef;
     await tick();
-    expect([
+    expect.verifySteps([
         'A RPC in error was detected, maybe it\'s related to the error dialog : {"data":{"id":null,"jsonrpc":"2.0","method":"call","params":{"model":"foo","method":"web_search_read","args":[],"kwargs":{"specification":{"foo":{}},"offset":0,"order":"","limit":80,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"bin_size":true,"current_company_id":1},"count_limit":10001,"domain":["|",["bar","=",false],"&",["date",">=","2024-04-01"],["date","<=","2024-04-30"]]}}},"settings":{"silent":false},"error":{"name":"RPC_ERROR","type":"server","code":200,"data":{"name":"odoo.exceptions.Programming error","debug":"traceback","arguments":[],"context":{}},"exceptionName":"odoo.exceptions.Programming error","subType":"server","message":"This is a server Error, it should be displayed in an error dialog","errorEvent":{"isTrusted":true}}}',
         "Error while testing App1 app1",
         'Error: Error dialog detected<header class="modal-header"><h4 class="modal-title text-break">Odoo Error</h4><button type="button" class="btn-close" aria-label="Close" tabindex="-1"></button></header><main class="modal-body"><div role="alert"><p class="text-prewrap"><p><b>An error occurred</b></p><p>Please use the copy button to report the error to your support service.</p></p><button class="btn btn-link">See details</button></div></main><footer class="modal-footer justify-content-around justify-content-sm-start flex-wrap gap-1 w-100"><button class="btn btn-primary o-default-button">Close</button><button class="btn btn-secondary"><i class="fa fa-clipboard mr8"></i>Copy error to clipboard</button></footer>',
-    ]).toVerifySteps();
+    ]);
 });
 
 test("clickbot test waiting render after clicking filter", async () => {
@@ -493,7 +493,7 @@ test("clickbot test waiting render after clicking filter", async () => {
     clickBotStarted = true;
     window.clickEverywhere();
     await clickEverywhereDef;
-    expect([
+    expect.verifySteps([
         "onWillStart called", // click on APP
         "response",
         "onWillUpdateProps called", // click on filter
@@ -501,7 +501,7 @@ test("clickbot test waiting render after clicking filter", async () => {
         "onWillUpdateProps called", // click on second filter
         "response",
         SUCCESS_SIGNAL,
-    ]).toVerifySteps();
+    ]);
 });
 
 test("clickbot clickeverywhere menu modal", async () => {
@@ -561,7 +561,7 @@ test("clickbot clickeverywhere menu modal", async () => {
     });
     window.clickEverywhere();
     await clickEverywhereDef;
-    expect([
+    expect.verifySteps([
         "Clicking on: apps menu toggle button",
         "Testing app menu: app1",
         "Testing menu App1 app1",
@@ -587,5 +587,5 @@ test("clickbot clickeverywhere menu modal", async () => {
         "Successfully tested 1 modals",
         "Successfully tested 4 filters",
         SUCCESS_SIGNAL,
-    ]).toVerifySteps();
+    ]);
 });

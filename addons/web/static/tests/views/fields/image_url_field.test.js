@@ -167,7 +167,7 @@ test("image url fields in kanban don't stop opening record", async () => {
 
     click(".o_kanban_record");
     await animationFrame();
-    expect(["open record"]).toVerifySteps();
+    expect.verifySteps(["open record"]);
 });
 
 test("image fields with empty value", async () => {

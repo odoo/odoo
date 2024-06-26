@@ -128,18 +128,16 @@ test("burndown.chart: check that the sort buttons are invisible", async () => {
 test("burndown.chart: check that removing the group by 'Date: Month > Stage' in the search bar triggers a notification", async () => {
     await mountViewWithSearch();
     click(".o_facet_remove");
-    expect(["notification"]).toVerifySteps({
-        message: "Only the notification will be triggered and the file won't be uploaded.",
-    });
+    // Only the notification will be triggered and the file won't be uploaded.
+    expect.verifySteps(["notification"]);
 });
 
 test("burndown.chart: check that removing the group by 'Date' triggers a notification", async () => {
     await mountViewWithSearch();
     await toggleGroupBy("Date");
     await toggleMenuItemOption("Date", "Month");
-    expect(["notification"]).toVerifySteps({
-        message: "Only the notification will be triggered and the file won't be uploaded.",
-    });
+    // Only the notification will be triggered and the file won't be uploaded.
+    expect.verifySteps(["notification"]);
 });
 
 test("burndown.chart: check that adding a group by 'Date' actually toggles it", async () => {

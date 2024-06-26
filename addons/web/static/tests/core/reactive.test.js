@@ -21,13 +21,13 @@ describe("class", () => {
 
         obj.counter; // initial subscription to counter
         obj.counter++;
-        expect(["counter: 1"]).toVerifySteps();
+        expect.verifySteps(["counter: 1"]);
         bus.trigger("change");
         expect(obj.counter).toBe(2);
-        expect([
+        expect.verifySteps([
             // The mutation in the event handler was missed by the reactivity, this is because
             // the `this` in the event handler is captured during construction and is not reactive
-        ]).toVerifySteps();
+        ]);
     });
 
     test("callback registered in Reactive class constructor will notify", async () => {
@@ -44,48 +44,45 @@ describe("class", () => {
         });
         obj.counter; // initial subscription to counter
         obj.counter++;
-        expect(["counter: 1"]).toVerifySteps();
+        expect.verifySteps(["counter: 1"]);
         bus.trigger("change");
         expect(obj.counter).toBe(2);
-        expect(["counter: 2"]).toVerifySteps();
+        expect.verifySteps(["counter: 2"]);
     });
 });
 
 describe("effect", () => {
     test("effect runs once immediately", async () => {
         const state = reactive({ counter: 0 });
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         effect(
             (state) => {
                 expect.step(`counter: ${state.counter}`);
             },
             [state]
         );
-        expect(["counter: 0"]).toVerifySteps();
+        expect.verifySteps(["counter: 0"]);
     });
 
     test("effect runs when reactive deps change", async () => {
         const state = reactive({ counter: 0 });
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         effect(
             (state) => {
                 expect.step(`counter: ${state.counter}`);
             },
             [state]
         );
-        expect(["counter: 0"]).toVerifySteps({
-            message: "effect runs immediately",
-        });
+        // effect runs immediately
+        expect.verifySteps(["counter: 0"]);
 
         state.counter++;
-        expect(["counter: 1"]).toVerifySteps({
-            message: "first mutation runs the effect",
-        });
+        // first mutation runs the effect
+        expect.verifySteps(["counter: 1"]);
 
         state.counter++;
-        expect(["counter: 2"]).toVerifySteps({
-            message: "subsequent mutations run the effect",
-        });
+        // subsequent mutations run the effect
+        expect.verifySteps(["counter: 2"]);
     });
 
     test("Original reactive callback is not subscribed to keys observed by effect", async () => {
@@ -96,7 +93,7 @@ describe("effect", () => {
             },
             () => reactiveCallCount++
         );
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         expect(reactiveCallCount).toBe(0);
         effect(
             (state) => {
@@ -104,18 +101,18 @@ describe("effect", () => {
             },
             [state]
         );
-        expect(["counter: 0"]).toVerifySteps();
+        expect.verifySteps(["counter: 0"]);
         expect(reactiveCallCount).toBe(0, {
             message: "did not call the original reactive's callback",
         });
         state.counter = 1;
-        expect(["counter: 1"]).toVerifySteps();
+        expect.verifySteps(["counter: 1"]);
         expect(reactiveCallCount).toBe(0, {
             message: "did not call the original reactive's callback",
         });
         state.counter; // subscribe the original reactive
         state.counter = 2;
-        expect(["counter: 2"]).toVerifySteps();
+        expect.verifySteps(["counter: 2"]);
         expect(reactiveCallCount).toBe(1, {
             message: "the original callback was called because it is subscribed independently",
         });
@@ -130,11 +127,11 @@ describe("effect", () => {
             [state]
         );
 
-        expect(["counter: 0"]).toVerifySteps();
+        expect.verifySteps(["counter: 0"]);
         state.counter = 1;
-        expect(["counter: 1"]).toVerifySteps();
+        expect.verifySteps(["counter: 1"]);
         state.unobserved = 1;
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
     });
 });
 
@@ -172,9 +169,9 @@ describe("withComputedProperties", () => {
             expect.step(`doubleCounter: ${observed.doubleCounter}`);
         });
         observed.doubleCounter; // subscribe to doubleCounter
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         source.counter++;
-        expect(["doubleCounter: 4"]).toVerifySteps();
+        expect.verifySteps(["doubleCounter: 4"]);
     });
 
     test("computed properties can use nested objects", async () => {
@@ -189,12 +186,10 @@ describe("withComputedProperties", () => {
         });
         observed.doubleCounter; // subscribe to doubleCounter
         expect(derived.doubleCounter).toBe(2);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         source.subObj.counter++;
         expect(derived.doubleCounter).toBe(4);
-        expect(["doubleCounter: 4"]).toVerifySteps({
-            message:
-                "reactive gets notified even for computed properties dervied from nested objects",
-        });
+        // reactive gets notified even for computed properties dervied from nested objects
+        expect.verifySteps(["doubleCounter: 4"]);
     });
 });

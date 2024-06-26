@@ -173,9 +173,8 @@ test("Numeric fields: NumpadDecimal key is different from the decimalPoint", asy
         expect(el.selectionStart).toBe(selectionRange[0] + 2);
         expect(el.selectionEnd).toBe(selectionRange[0] + 2);
         await animationFrame();
-        expect(["preventDefault"]).toVerifySteps({
-            message: "NumpadDecimal event should be default prevented",
-        });
+        // NumpadDecimal event should be default prevented
+        expect.verifySteps(["preventDefault"]);
         expect(el).toHaveValue(expectedValue, { message: msg });
     }
 
@@ -244,7 +243,7 @@ test("useNumpadDecimal should synchronize handlers on input elements", async () 
             }
             await animationFrame();
 
-            expect(["preventDefault"]).toVerifySteps();
+            expect.verifySteps(["preventDefault"]);
         }
     }
 

@@ -427,7 +427,7 @@ test("works when required in a readonly view", async () => {
     await animationFrame();
     click(".dropdown-item:eq(2)");
     await animationFrame();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
     expect(".o_field_state_selection span").toHaveClass("o_status_green");
 });
 
@@ -452,7 +452,7 @@ test("StateSelectionField - auto save record when field toggled", async () => {
     await animationFrame();
     click(".dropdown-menu .dropdown-item:last-child");
     await animationFrame();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test("StateSelectionField -  prevent auto save with autosave option", async () => {
@@ -476,7 +476,7 @@ test("StateSelectionField -  prevent auto save with autosave option", async () =
     await animationFrame();
     click(".dropdown-menu .dropdown-item:last-child");
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("StateSelectionField - hotkey handling when there are more than 3 options available", async () => {

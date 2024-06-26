@@ -115,14 +115,14 @@ test("Simple sorting in single group", async () => {
 
     expect(".item").toHaveCount(3);
     expect(".o_dragged").toHaveCount(0);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // First item after 2nd item
     await contains(".item:first-child").dragAndDrop(".item:nth-child(2)");
 
     expect(".item").toHaveCount(3);
     expect(".o_dragged").toHaveCount(0);
-    expect(["start", "elemententer", "drop", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "elemententer", "drop", "end"]);
 });
 
 test("Simple sorting in multiple groups", async () => {
@@ -172,14 +172,14 @@ test("Simple sorting in multiple groups", async () => {
 
     expect(".list").toHaveCount(3);
     expect(".item").toHaveCount(9);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // First item of 2nd list appended to first list
     await contains(".list2 .item:first-child").dragAndDrop(".list1");
 
     expect(".list").toHaveCount(3);
     expect(".item").toHaveCount(9);
-    expect(["start", "groupenter", "drop", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "groupenter", "drop", "end"]);
 });
 // TODO WAITING HOOT TO SUPPORT THIS CASE
 test.skip("Sorting in groups with distinct per-axis scrolling", async () => {
@@ -409,13 +409,13 @@ test("Dynamically disable sortable feature", async () => {
 
     await mountWithCleanup(List);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // First item before last item
     await contains(".item:first-child").dragAndDrop(".item:last-child");
 
     // Drag should have occurred
-    expect(["start"]).toVerifySteps();
+    expect.verifySteps(["start"]);
 
     state.enableSortable = false;
     await animationFrame();
@@ -424,7 +424,7 @@ test("Dynamically disable sortable feature", async () => {
     await contains(".item:first-child").dragAndDrop(".item:last-child");
 
     // Drag shouldn't have occurred
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("Drag has a default tolerance of 10 pixels before initiating the dragging", async () => {
@@ -465,16 +465,16 @@ test("Drag has a default tolerance of 10 pixels before initiating the dragging",
         x: listItem.getBoundingClientRect().width / 2,
         y: listItem.getBoundingClientRect().height / 2 + 5,
     });
-    expect([]).toVerifySteps({ message: "No drag sequence should have been initiated" });
+    // No drag sequence should have been initiated
+    expect.verifySteps([]);
 
     // Move the element from more than 10 pixels
     await dnd(listItem, {
         x: listItem.getBoundingClientRect().width / 2 + 10,
         y: listItem.getBoundingClientRect().height / 2 + 10,
     });
-    expect(["Initiation of the drag sequence"]).toVerifySteps({
-        message: "A drag sequence should have been initiated",
-    });
+    // A drag sequence should have been initiated
+    expect.verifySteps(["Initiation of the drag sequence"]);
 });
 
 test("Ignore specified elements", async () => {
@@ -505,22 +505,22 @@ test("Ignore specified elements", async () => {
 
     await mountWithCleanup(List);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // Drag root item element
     await contains(".item:first-child").dragAndDrop(".item:nth-child(2)");
 
-    expect(["drag"]).toVerifySteps();
+    expect.verifySteps(["drag"]);
 
     // Drag ignored element
     await contains(".item:first-child .not-ignored").dragAndDrop(".item:nth-child(2)");
 
-    expect(["drag"]).toVerifySteps();
+    expect.verifySteps(["drag"]);
 
     // Drag non-ignored element
     await contains(".item:first-child .ignored").dragAndDrop(".item:nth-child(2)");
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("the classes parameters (placeholderElement, helpElement)", async () => {

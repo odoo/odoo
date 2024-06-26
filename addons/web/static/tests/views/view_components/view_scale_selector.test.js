@@ -45,7 +45,7 @@ test("basic ViewScaleSelector component usage", async () => {
 
     await mountWithCleanup(Parent);
     expect(".o_view_scale_selector").toHaveCount(1);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(".o_view_scale_selector").toHaveText("Weekly");
     expect(".scale_button_selection").toHaveAttribute("data-hotkey", "v");
     click(".scale_button_selection");
@@ -59,11 +59,11 @@ test("basic ViewScaleSelector component usage", async () => {
     });
     click(".o_scale_button_day");
     await animationFrame();
-    expect(["day"]).toVerifySteps();
+    expect.verifySteps(["day"]);
     expect(".o_view_scale_selector").toHaveText("Daily");
     click(".scale_button_selection");
     await contains(".dropdown-item:last-child").click();
-    expect(["toggleWeekendVisibility"]).toVerifySteps();
+    expect.verifySteps(["toggleWeekendVisibility"]);
 });
 
 test("ViewScaleSelector with only one scale available", async () => {

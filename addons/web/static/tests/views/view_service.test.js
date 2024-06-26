@@ -46,7 +46,7 @@ test("stores calls in cache in success", async () => {
         },
         {}
     );
-    expect(["get_views"]).toVerifySteps();
+    expect.verifySteps(["get_views"]);
 });
 
 test("stores calls in cache when failed", async () => {
@@ -74,7 +74,7 @@ test("stores calls in cache when failed", async () => {
             {}
         )
     ).rejects.toThrow(/my little error/);
-    expect(["get_views", "get_views"]).toVerifySteps();
+    expect.verifySteps(["get_views", "get_views"]);
 });
 
 test("clear cache when updating ir.ui.view", async () => {
@@ -93,13 +93,13 @@ test("clear cache when updating ir.ui.view", async () => {
             {}
         );
     await loadView();
-    expect(["get_views"]).toVerifySteps();
+    expect.verifySteps(["get_views"]);
     await loadView();
-    expect([]).toVerifySteps(); // cache works => no actual rpc
+    expect.verifySteps([]); // cache works => no actual rpc
     await getService("orm").unlink("ir.ui.view", [3]);
     await loadView();
-    expect(["get_views"]).toVerifySteps(); // cache was invalidated
+    expect.verifySteps(["get_views"]); // cache was invalidated
     await getService("orm").unlink("take.five", [3]);
     await loadView();
-    expect([]).toVerifySteps(); // cache was not invalidated
+    expect.verifySteps([]); // cache was not invalidated
 });

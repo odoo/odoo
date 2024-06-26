@@ -265,7 +265,7 @@ test("don't fetch list data if no formula use it", async function () {
             expect.step(`${model}/${method}`);
         },
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     setCellContent(model, "A1", `=ODOO.LIST("1", "1", "foo")`);
     /*
@@ -274,7 +274,7 @@ test("don't fetch list data if no formula use it", async function () {
     expect(getCellValue(model, "A1")).toBe("Loading...");
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe(12);
-    expect(["partner/fields_get", "partner/web_search_read"]).toVerifySteps();
+    expect.verifySteps(["partner/fields_get", "partner/web_search_read"]);
 });
 
 test("user context is combined with list context to fetch data", async function () {
@@ -336,7 +336,7 @@ test("user context is combined with list context to fetch data", async function 
         },
     });
     await waitForDataLoaded(model);
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test("rename list with empty name is refused", async () => {
@@ -447,7 +447,7 @@ test("Cannot see record of a list in dashboard mode if wrong list formula", asyn
     });
     model.updateMode("dashboard");
     selectCell(model, "A2");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("field matching is removed when filter is deleted", async function () {
@@ -552,7 +552,7 @@ test("fetch all and only required fields", async function () {
             }
         },
     });
-    expect(["data-fetched"]).toVerifySteps();
+    expect.verifySteps(["data-fetched"]);
 });
 
 test("list with both a monetary field and the related currency field 1", async function () {
@@ -637,7 +637,7 @@ test("can import (export) contextual domain", async function () {
     expect(model.exportData().lists[1].domain).toBe('[("foo", "=", uid)]', {
         message: "the domain is exported with the dynamic parts",
     });
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test("Load list spreadsheet with models that cannot be accessed", async function () {

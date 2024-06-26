@@ -978,7 +978,7 @@ const stepState = {
         if (!success && !crashOnFail) {
             return;
         }
-        expect(this.expectedSteps).toVerifySteps();
+        expect.verifySteps(this.expectedSteps);
         if (success) {
             this.deferred.resolve();
         } else {

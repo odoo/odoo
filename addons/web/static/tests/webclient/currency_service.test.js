@@ -31,16 +31,16 @@ test("reload currencies when updating a res.currency", async () => {
         };
     });
     await makeMockEnv();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await getService("orm").read("res.currency", [32]);
-    expect(["/web/dataset/call_kw/res.currency/read"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/res.currency/read"]);
     await getService("orm").unlink("res.currency", [32]);
-    expect([
+    expect.verifySteps([
         "/web/dataset/call_kw/res.currency/unlink",
         "/web/session/get_session_info",
-    ]).toVerifySteps();
+    ]);
     await getService("orm").unlink("notcurrency", [32]);
-    expect(["/web/dataset/call_kw/notcurrency/unlink"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/notcurrency/unlink"]);
     expect(Object.keys(currencies)).toEqual(["7"]);
 });
 
@@ -49,17 +49,17 @@ test("do not reload webclient when updating a res.currency, but there is an erro
         expect.step(new URL(url).pathname);
     });
     await makeMockEnv();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     rpcBus.trigger("RPC:RESPONSE", {
         data: { params: { model: "res.currency", method: "write" } },
         settings: {},
         result: {},
     });
-    expect(["/web/session/get_session_info"]).toVerifySteps();
+    expect.verifySteps(["/web/session/get_session_info"]);
     rpcBus.trigger("RPC:RESPONSE", {
         data: { params: { model: "res.currency", method: "write" } },
         settings: {},
         error: {},
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });

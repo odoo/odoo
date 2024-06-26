@@ -59,7 +59,7 @@ test("BadgeSelectionField widget on a many2one in a new record", async () => {
     expect(`span.active`).toHaveCount(1, { message: "one of the input should be checked" });
 
     await clickSave();
-    expect(["saved product_id: 37"]).toVerifySteps();
+    expect.verifySteps(["saved product_id: 37"]);
 });
 
 test("BadgeSelectionField widget on a selection in a new record", async () => {
@@ -82,7 +82,7 @@ test("BadgeSelectionField widget on a selection in a new record", async () => {
 
     await contains(`span.o_selection_badge:last`).click();
     await clickSave();
-    expect(["saved color: black"]).toVerifySteps();
+    expect.verifySteps(["saved color: black"]);
 });
 
 test("BadgeSelectionField widget on a selection in a readonly mode", async () => {
@@ -118,9 +118,9 @@ test("BadgeSelectionField widget on a selection unchecking selected value", asyn
 
     // click again on red option and save to update the server data
     await contains("span.o_selection_badge.active").click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await contains(".o_form_button_save").click();
-    expect(["web_save"]).toVerifySteps({ message: "should have created a new record" });
+    expect.verifySteps(["web_save"]);
 
     const newRecord = Partner._records.at(-1);
     expect(newRecord.color).toBe(false, {
@@ -158,9 +158,9 @@ test("BadgeSelectionField widget on a selection unchecking selected value (requi
 
     // click again on red option and save to update the server data
     await contains("span.o_selection_badge.active").click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await contains(".o_form_button_save").click();
-    expect(["web_save"]).toVerifySteps({ message: "should have created a new record" });
+    expect.verifySteps(["web_save"]);
 
     const newRecord = Partner._records.at(-1);
     expect(newRecord.color).toBe("red", { message: "the new value should be red" });

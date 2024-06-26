@@ -57,11 +57,11 @@ test(`can start an asynchronous service`, async () => {
 
     const envCreationPromise = makeMockEnv();
     await tick(); // wait for startServices
-    expect(["before"]).toVerifySteps();
+    expect.verifySteps(["before"]);
 
     deferred.resolve(15);
     const env = await envCreationPromise;
-    expect(["after"]).toVerifySteps();
+    expect.verifySteps(["after"]);
     expect(env.services.test).toBe(15);
 });
 
@@ -70,7 +70,7 @@ test(`can start a service with a dependency`, async () => {
     registerService("appa", [], () => expect.step("appa"));
 
     await makeMockEnv();
-    expect(["appa", "aang"]).toVerifySteps();
+    expect.verifySteps(["appa", "aang"]);
 });
 
 test(`get an object containing dependencies as second arg`, async () => {
@@ -84,7 +84,7 @@ test(`get an object containing dependencies as second arg`, async () => {
     });
 
     await makeMockEnv();
-    expect(["appa", "aang"]).toVerifySteps();
+    expect.verifySteps(["appa", "aang"]);
 });
 
 test(`can start two sequentially dependant asynchronous services`, async () => {
@@ -106,15 +106,15 @@ test(`can start two sequentially dependant asynchronous services`, async () => {
 
     const envCreationPromise = makeMockEnv();
     await tick();
-    expect(["test1"]).toVerifySteps();
+    expect.verifySteps(["test1"]);
 
     deferred2.resolve();
     await tick();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     deferred1.resolve();
     await tick();
-    expect(["test2", "test3"]).toVerifySteps();
+    expect.verifySteps(["test2", "test3"]);
 
     await envCreationPromise;
 });
@@ -138,15 +138,15 @@ test(`can start two independant asynchronous services in parallel`, async () => 
 
     const envCreationPromise = makeMockEnv();
     await tick();
-    expect(["test1", "test2"]).toVerifySteps();
+    expect.verifySteps(["test1", "test2"]);
 
     deferred1.resolve();
     await tick();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     deferred2.resolve();
     await tick();
-    expect(["test3"]).toVerifySteps();
+    expect.verifySteps(["test3"]);
 
     await envCreationPromise;
 });
@@ -205,9 +205,9 @@ test(`mountComponent uses the env when provided and doesn't start the services`,
     });
 
     const env = makeEnv();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await startServices(env);
-    expect(["starting myService"]).toVerifySteps();
+    expect.verifySteps(["starting myService"]);
 
     class Root extends Component {
         static template = xml`Root`;
@@ -215,7 +215,7 @@ test(`mountComponent uses the env when provided and doesn't start the services`,
     }
 
     const app = await mountComponent(Root, getFixture(), { env });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(app.env.services).toBe(env.services);
     expect(odoo.__WOWL_DEBUG__).toBe(undefined);
     expect(getFixture()).toHaveText("Root");

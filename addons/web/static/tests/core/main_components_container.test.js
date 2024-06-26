@@ -66,11 +66,11 @@ test("unmounts erroring main component", async () => {
     );
     compA.state.shouldThrow = true;
     await animationFrame();
-    expect([
+    expect.verifySteps([
         'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
         "BOOM",
-    ]).toVerifySteps();
-    expect(["BOOM"]).toVerifyErrors();
+    ]);
+    expect.verifyErrors(["BOOM"]);
 
     expect(".o-main-components-container span").toHaveCount(1);
     expect(".o-main-components-container span").toHaveInnerHTML("MainComponentB");
@@ -110,11 +110,11 @@ test("unmounts erroring main component: variation", async () => {
     );
     compB.state.shouldThrow = true;
     await animationFrame();
-    expect([
+    expect.verifySteps([
         'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
         "BOOM",
-    ]).toVerifySteps();
-    expect(["BOOM"]).toVerifyErrors();
+    ]);
+    expect.verifyErrors(["BOOM"]);
     expect(".o-main-components-container span").toHaveCount(1);
     expect(".o-main-components-container span").toHaveInnerHTML("MainComponentA");
 });

@@ -104,14 +104,14 @@ test("can execute report actions from db ID", async () => {
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(7, { onClose: () => expect.step("on_close") });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
         "/report/check_wkhtmltopdf",
         "/report/download",
         "on_close",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("report actions can close modals and reload views", async () => {
@@ -149,7 +149,7 @@ test("report actions can close modals and reload views", async () => {
     expect(".o_technical_modal .o_form_view").toHaveCount(0, {
         message: "the modal should have been closed after the action report",
     });
-    expect(["/report/download", "on_printed", "/report/download", "on_close"]).toVerifySteps();
+    expect.verifySteps(["/report/download", "on_printed", "/report/download", "on_close"]);
 });
 
 test("should trigger a notification if wkhtmltopdf is to upgrade", async () => {
@@ -168,14 +168,14 @@ test("should trigger a notification if wkhtmltopdf is to upgrade", async () => {
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(7);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
         "/report/check_wkhtmltopdf",
         "/report/download",
         "notify",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("should open the report client action if wkhtmltopdf is broken", async () => {
@@ -215,14 +215,14 @@ test("should open the report client action if wkhtmltopdf is broken", async () =
     expect(":not(.d-none) > button[title='Print']").toHaveCount(1, {
         message: "should have a print button",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
         "/report/check_wkhtmltopdf",
         "notify",
         "/report/html/some_report",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("send context in case of html report", async () => {
@@ -260,12 +260,12 @@ test("send context in case of html report", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(12);
     expect(".o_content iframe").toHaveCount(1, { message: "should have opened the client action" });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
         "/report/html/some_report",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("UI unblocks after downloading the report even if it threw an error", async () => {
@@ -302,7 +302,7 @@ test("UI unblocks after downloading the report even if it threw an error", async
     } catch {
         expect.step("error caught");
     }
-    expect([
+    expect.verifySteps([
         "block",
         "successful download",
         "unblock",
@@ -310,7 +310,7 @@ test("UI unblocks after downloading the report even if it threw an error", async
         "failed download",
         "unblock",
         "error caught",
-    ]).toVerifySteps();
+    ]);
     getService("ui").bus.removeEventListener("BLOCK", onBlock);
     getService("ui").bus.removeEventListener("UNBLOCK", onUnblock);
 });
@@ -340,7 +340,7 @@ test("can use custom handlers for report actions", async () => {
     expect.step("first doAction finished");
 
     await getService("action").doAction(7);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -349,7 +349,7 @@ test("can use custom handlers for report actions", async () => {
         "falling through to default handler",
         "/report/check_wkhtmltopdf",
         "/report/download",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("context is correctly passed to the client action report", async (assert) => {
@@ -395,13 +395,13 @@ test.tags("desktop")("context is correctly passed to the client action report", 
         report_type: "qweb-html",
         type: "ir.actions.report",
     };
-    expect(["/web/webclient/translations", "/web/webclient/load_menus"]).toVerifySteps();
+    expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
 
     await getService("action").doAction(action);
-    expect(["/report/html/ennio.morricone/99"]).toVerifySteps();
+    expect.verifySteps(["/report/html/ennio.morricone/99"]);
 
     await contains(".o_control_panel_main_buttons button[title='Print']").click();
-    expect(["/report/check_wkhtmltopdf", "/report/download"]).toVerifySteps();
+    expect.verifySteps(["/report/check_wkhtmltopdf", "/report/download"]);
 });
 
 test("url is valid", async (assert) => {

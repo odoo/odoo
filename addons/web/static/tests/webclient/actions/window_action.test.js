@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, waitFor } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     MockServer,
     contains,
@@ -25,7 +25,9 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { redirect } from "@web/core/utils/urls";
+import { listView } from "@web/views/list/list_view";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
 import { WebClient } from "@web/webclient/webclient";
 import {
@@ -43,8 +45,6 @@ import {
     toggleSaveFavorite,
     validateSearch,
 } from "../../web_test_helpers";
-import { listView } from "@web/views/list/list_view";
-import { useSetupAction } from "@web/webclient/actions/action_hook";
 
 const { ResCompany, ResPartner, ResUsers } = webModels;
 
@@ -198,13 +198,13 @@ test("can execute act_window actions from db ID", async () => {
     await getService("action").doAction(1);
     expect(".o_control_panel").toHaveCount(1, { message: "should have rendered a control panel" });
     expect(".o_kanban_view").toHaveCount(1, { message: "should have rendered a kanban view" });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("sidebar is present in list view", async () => {
@@ -259,7 +259,7 @@ test.tags("desktop")("can switch between views", async () => {
     await contains(".o_control_panel .breadcrumb a").click();
     expect(".o_list_view").toHaveCount(1, { message: "should display the list view" });
     expect(".o_form_view").toHaveCount(0, { message: "should no longer display the form view" });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -270,7 +270,7 @@ test.tags("desktop")("can switch between views", async () => {
         "web_search_read",
         "web_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("switching into a view with mode=edit lands in edit mode", async () => {
@@ -309,7 +309,7 @@ test.tags("desktop")("switching into a view with mode=edit lands in edit mode", 
     expect(".o_form_view .o_form_editable").toHaveCount(1, {
         message: "should display the form view in edit mode",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -321,7 +321,7 @@ test.tags("desktop")("switching into a view with mode=edit lands in edit mode", 
         "name_create",
         "web_read",
         "web_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")(
@@ -671,9 +671,9 @@ test.tags("desktop")("A new form view can be reloaded after a failed one", async
     });
     expect(".o_last_breadcrumb_item").toHaveText("Second record");
 
-    expect([
+    expect.verifyErrors([
         "It seems the records with IDs 1 cannot be found. They might have been deleted.",
-    ]).toVerifyErrors();
+    ]);
 });
 
 test.tags("desktop")("there is no flickering when switching between views", async () => {
@@ -802,7 +802,7 @@ test.tags("desktop")("reload previous controller when discarding a new record", 
     expect(".o_list_view").toHaveCount(1, {
         message: "should have switched back to the list view",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -811,7 +811,7 @@ test.tags("desktop")("reload previous controller when discarding a new record", 
         "has_group",
         "onchange",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("execute_action of type object are handled", async () => {
@@ -857,7 +857,7 @@ test.tags("desktop")("execute_action of type object are handled", async () => {
     expect(".o_field_widget[name=foo] input").toHaveValue("value changed", {
         message: "'yop' has been changed by the server, and should be updated in the UI",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -867,7 +867,7 @@ test.tags("desktop")("execute_action of type object are handled", async () => {
         "web_read",
         "object",
         "web_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("execute_action of type object: disable buttons (2)", async () => {
@@ -984,7 +984,7 @@ test.tags("desktop")("execute_action of type action are handled", async () => {
     expect(".o_kanban_view").toHaveCount(1, {
         message: "the returned action should have been executed",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -995,7 +995,7 @@ test.tags("desktop")("execute_action of type action are handled", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("execute smart button and back", async () => {
@@ -1019,7 +1019,7 @@ test.tags("desktop")("execute smart button and back", async () => {
     await contains(".breadcrumb-item").click();
     expect(".o_form_view").toHaveCount(1);
     expect(".o_form_button_create:not([disabled]):visible").toHaveCount(1);
-    expect(["web_read", "web_search_read", "web_read"]).toVerifySteps();
+    expect.verifySteps(["web_read", "web_search_read", "web_read"]);
 });
 
 test("execute smart button and fails", async () => {
@@ -1037,7 +1037,7 @@ test("execute smart button and fails", async () => {
     await contains(".oe_stat_button").click();
     expect(".o_form_view").toHaveCount(1);
     expect(".o_form_button_create:not([disabled]):visible").toHaveCount(1);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -1047,8 +1047,8 @@ test("execute smart button and fails", async () => {
         "get_views",
         "web_search_read",
         "web_read",
-    ]).toVerifySteps();
-    expect(["Oups"]).toVerifyErrors();
+    ]);
+    expect.verifyErrors(["Oups"]);
 });
 
 test.tags("desktop")("requests for execute_action of type object: disable buttons", async () => {
@@ -1127,7 +1127,7 @@ test.tags("desktop")("can open different records from a multi record view", asyn
     expect(".o_field_widget[name=foo] input").toHaveValue("blip", {
         message: "should have opened the correct record",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -1137,7 +1137,7 @@ test.tags("desktop")("can open different records from a multi record view", asyn
         "web_read",
         "web_search_read",
         "web_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("restore previous view state when switching back", async () => {
@@ -1278,7 +1278,7 @@ test.tags("desktop")("can open a many2one external window", async () => {
     await contains(".o_data_row .o_data_cell").click();
     // click on external button for m2o
     await contains(".o_external_button", { visible: false }).click();
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -1289,7 +1289,7 @@ test.tags("desktop")("can open a many2one external window", async () => {
         "get_formview_action",
         "get_views",
         "web_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")('save when leaving a "dirty" view', async () => {
@@ -1473,14 +1473,14 @@ test("switch request to unknown view type", async () => {
     contains(".o_list_view .o_data_row:first").click();
     expect(".o_list_view").toHaveCount(1, { message: "should still display the list view" });
     expect(".o_form_view").toHaveCount(0, { message: "should not display the form view" });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("execute action with unknown view type", async () => {
@@ -1547,7 +1547,7 @@ test("flags field of ir.actions.act_window is used", async () => {
     expect(".o_form_view .o_form_readonly").toHaveCount(1, {
         message: "should display the form view in readonly mode",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -1556,7 +1556,7 @@ test("flags field of ir.actions.act_window is used", async () => {
         "/web/action/load",
         "get_views",
         "web_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("save current search", async () => {
@@ -1815,7 +1815,7 @@ test.tags("desktop")("execute action from dirty, new record, and come back", asy
     await contains(".o_control_panel .breadcrumb-item a:eq(1)").click();
     expect(".o_form_view .o_form_editable").toHaveCount(1);
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners", "test"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -1828,7 +1828,7 @@ test.tags("desktop")("execute action from dirty, new record, and come back", asy
         "get_views",
         "web_read",
         "web_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("execute a contextual action from a form view", async () => {
@@ -2050,7 +2050,7 @@ test("onClose should be called only once with right parameters", async () => {
         type: "ir.actions.act_window_close",
         infos: { cantaloupe: "island" },
     });
-    expect(["onClose"]).toVerifySteps();
+    expect.verifySteps(["onClose"]);
     expect(".modal").toHaveCount(0);
 });
 
@@ -2072,7 +2072,7 @@ test.tags("desktop")("search view should keep focus during do_search", async () 
     await getService("action").doAction(3);
     await editSearch("m");
     await validateSearch();
-    expect(["search_read ", "search_read foo,ilike,m"]).toVerifySteps();
+    expect.verifySteps(["search_read ", "search_read foo,ilike,m"]);
 
     // Triggering the do_search above will kill the current searchview Input
     await editSearch("o");
@@ -2081,7 +2081,7 @@ test.tags("desktop")("search view should keep focus during do_search", async () 
     // However we want to hold on to what we just typed
     searchPromise.resolve();
     await validateSearch();
-    expect(["search_read |,foo,ilike,m,foo,ilike,o"]).toVerifySteps();
+    expect.verifySteps(["search_read |,foo,ilike,m,foo,ilike,o"]);
 });
 
 test.tags("desktop")(
@@ -2236,10 +2236,10 @@ test.tags("desktop")("reload a view via the view switcher keep state", async () 
 
     await switchView("pivot");
     expect(".o_pivot_measure_row").toHaveClass("o_pivot_sort_order_asc");
-    expect([
+    expect.verifySteps([
         "read_group", // initial read_group
         "read_group", // read_group at reload after switch view
-    ]).toVerifySteps();
+    ]);
 });
 
 test("doAction supports being passed globalState prop", async () => {
@@ -2343,22 +2343,22 @@ test("action and get_views rpcs are cached", async () => {
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
-    expect(["/web/webclient/translations", "/web/webclient/load_menus"]).toVerifySteps();
+    expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
 
     await getService("action").doAction(1);
     expect(".o_kanban_view").toHaveCount(1);
-    expect(["/web/action/load", "get_views", "web_search_read"]).toVerifySteps();
+    expect.verifySteps(["/web/action/load", "get_views", "web_search_read"]);
 
     await getService("action").doAction(1);
     expect(".o_kanban_view").toHaveCount(1);
 
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 
     await getService("orm").unlink("ir.actions.act_window", [333]);
-    expect(["unlink"]).toVerifySteps();
+    expect.verifySteps(["unlink"]);
     await getService("action").doAction(1);
     // cache was cleared => reload the action
-    expect(["/web/action/load", "web_search_read"]).toVerifySteps();
+    expect.verifySteps(["/web/action/load", "web_search_read"]);
 });
 
 test.tags("desktop")("pushState also changes the title of the tab", async () => {
@@ -2537,9 +2537,9 @@ test.tags("desktop")("click on breadcrumb of a deleted record", async () => {
     expect(".o_list_view").toHaveCount(1);
     expect(queryAllTexts(".breadcrumb-item")).toEqual([]);
     expect(".o_breadcrumb .active").toHaveText("Partners");
-    expect([
+    expect.verifyErrors([
         "It seems the records with IDs 1 cannot be found. They might have been deleted.",
-    ]).toVerifyErrors();
+    ]);
 });
 
 test.tags("desktop")("executing an action closes dialogs", async () => {

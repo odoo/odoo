@@ -40,17 +40,17 @@ test("data source is ready after all concurrent requests are resolved", async ()
         },
     });
     dataSource.load();
-    expect(["notify-from-promise"]).toVerifySteps();
+    expect.verifySteps(["notify-from-promise"]);
     dataSource.load({ reload: true });
     expect(dataSource.isReady()).toBe(false);
     def1.resolve();
     await animationFrame();
-    expect(["cancel-promise", "notify-from-promise"]).toVerifySteps();
+    expect.verifySteps(["cancel-promise", "notify-from-promise"]);
     expect(dataSource.isReady()).toBe(false);
     def2.resolve();
     await animationFrame();
     expect(dataSource.isReady()).toBe(true);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("Datasources handle errors thrown at _load", async () => {
@@ -77,7 +77,7 @@ test("Datasources handle errors thrown at _load", async () => {
         },
     });
     await dataSource.load();
-    expect(["notify-from-promise"]).toVerifySteps();
+    expect.verifySteps(["notify-from-promise"]);
     expect(dataSource._isFullyLoaded).toBe(true);
     expect(dataSource._isValid).toBe(false);
     expect(dataSource._loadError.message).toBe("Ya done!");

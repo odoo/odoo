@@ -175,11 +175,11 @@ test("RedirectWarningDialog", async () => {
 
     click("footer button:nth-child(1)"); // click on "Buy book on cryptography"
     await animationFrame();
-    expect(["buy_action_id", "dialog-closed"]).toVerifySteps();
+    expect.verifySteps(["buy_action_id", "dialog-closed"]);
 
     click("footer button:nth-child(2)"); // click on "Cancel"
     await animationFrame();
-    expect(["dialog-closed"]).toVerifySteps();
+    expect.verifySteps(["dialog-closed"]);
 });
 
 test("Error504Dialog", async () => {
@@ -212,5 +212,5 @@ test("SessionExpiredDialog", async () => {
     expect(".o_dialog footer button").toHaveText("Close");
     click(".o_dialog footer button");
     await animationFrame();
-    expect(["location reload"]).toVerifySteps();
+    expect.verifySteps(["location reload"]);
 });

@@ -2746,16 +2746,16 @@ test("export data in excel with comparison", async () => {
             data = JSON.parse(data.data);
             for (const l of data.col_group_headers) {
                 const titles = l.map((o) => o.title);
-                expect.step(JSON.stringify(titles));
+                expect.step(titles);
             }
             const measures = data.measure_headers.map((o) => o.title);
-            expect.step(JSON.stringify(measures));
+            expect.step(measures);
             const origins = data.origin_headers.map((o) => o.title);
-            expect.step(JSON.stringify(origins));
-            expect.step(String(data.measure_count));
-            expect.step(String(data.origin_count));
+            expect.step(origins);
+            expect.step(data.measure_count);
+            expect.step(data.origin_count);
             const valuesLength = data.rows.map((o) => o.values.length);
-            expect.step(JSON.stringify(valuesLength));
+            expect.step(valuesLength);
             expect(url).toBe("/web/pivot/export_xlsx");
             return Promise.resolve();
         },
@@ -2796,22 +2796,31 @@ test("export data in excel with comparison", async () => {
     // export data. Should execute 'get_file'
     await contains(".o_pivot_buttons button.o_pivot_download").click();
 
-    expect([
+    expect.verifySteps([
         // col group headers
-        '["Total",""]',
-        '["November 2016","December 2016"]',
+        ["Total", ""],
+        ["November 2016", "December 2016"],
         // measure headers
-        '["Foo","Foo","Foo"]',
+        ["Foo", "Foo", "Foo"],
         // origin headers
-        '["November 2016","December 2016","Variation","November 2016","December 2016"' +
-            ',"Variation","November 2016","December 2016","Variation"]',
+        [
+            "November 2016",
+            "December 2016",
+            "Variation",
+            "November 2016",
+            "December 2016",
+            "Variation",
+            "November 2016",
+            "December 2016",
+            "Variation",
+        ],
         // number of 'measures'
-        "1",
+        1,
         // number of 'origins'
-        "2",
+        2,
         // rows values length
-        "[9]",
-    ]).toVerifySteps();
+        [9],
+    ]);
 });
 
 test("rendering pivot view with comparison and count measure", async () => {
@@ -3201,7 +3210,7 @@ test.tags("desktop")("Navigation list view for a group and back with breadcrumbs
 
     await contains(".o_control_panel ol.breadcrumb li.breadcrumb-item").click();
 
-    expect([
+    expect.verifySteps([
         "read_group",
         "read_group",
         "read_group",
@@ -3209,7 +3218,7 @@ test.tags("desktop")("Navigation list view for a group and back with breadcrumbs
         "web_search_read",
         "read_group",
         "read_group",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("Cell values are kept when flippin a pivot view in comparison mode", async () => {
@@ -3718,13 +3727,13 @@ test.tags("desktop")("pivot is reloaded when leaving and coming back", async () 
     expect(".o_pivot_view").toHaveCount(1);
     expect(getCurrentValues()).toBe(["4", "2", "2"].join(","));
 
-    expect(["/web/webclient/load_menus", "get_views", "read_group", "read_group"]).toVerifySteps();
+    expect.verifySteps(["/web/webclient/load_menus", "get_views", "read_group", "read_group"]);
 
     // switch to list view
     await contains(".o_control_panel .o_switch_view.o_list").click();
 
     expect(".o_list_view").toHaveCount(1);
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 
     // switch back to pivot
     await contains(".o_control_panel .o_switch_view.o_pivot").click();
@@ -3732,7 +3741,7 @@ test.tags("desktop")("pivot is reloaded when leaving and coming back", async () 
     expect(".o_pivot_view").toHaveCount(1);
     expect(getCurrentValues()).toBe(["4", "2", "2"].join(","));
 
-    expect(["read_group", "read_group"]).toVerifySteps();
+    expect.verifySteps(["read_group", "read_group"]);
 });
 
 test.tags("desktop")("expanded groups are kept when leaving and coming back", async () => {
@@ -4506,18 +4515,18 @@ test("group by properties in pivot view", async () => {
     expect(".o_value").toHaveText("4");
 
     await contains(".border-top-0 span").click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     expect(".o_accordion_toggle").toHaveText("Properties");
     await contains(".o_accordion_toggle:contains(Properties)").click();
 
     await animationFrame();
-    expect(["fetch_definition"]).toVerifySteps();
+    expect.verifySteps(["fetch_definition"]);
 
     await contains(".o_accordion_values .o_menu_item").click();
 
     await animationFrame();
-    expect(["read_group"]).toVerifySteps();
+    expect.verifySteps(["read_group"]);
 
     const cells = queryAll(".o_value");
     expect(cells).toHaveLength(4);
@@ -4535,7 +4544,7 @@ test("group by properties in pivot view", async () => {
 
 test("avoid duplicates in read_group parameter 'groupby'", async () => {
     onRpc("read_group", ({ kwargs }) => {
-        expect.step(JSON.stringify(kwargs.groupby));
+        expect.step(kwargs.groupby);
     });
     await mountView({
         type: "pivot",
@@ -4547,5 +4556,5 @@ test("avoid duplicates in read_group parameter 'groupby'", async () => {
 				</pivot>
 			`,
     });
-    expect([`[]`, `["date:month"]`]).toVerifySteps();
+    expect.verifySteps([[], ["date:month"]]);
 });

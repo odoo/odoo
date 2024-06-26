@@ -9,10 +9,10 @@ test("method is correctly set", async () => {
     mockFetch((_, { method }) => expect.step(method));
 
     await get("/call_get");
-    expect(["GET"]).toVerifySteps();
+    expect.verifySteps(["GET"]);
 
     await post("/call_post");
-    expect(["POST"]).toVerifySteps();
+    expect.verifySteps(["POST"]);
 });
 
 test("check status 502", async () => {

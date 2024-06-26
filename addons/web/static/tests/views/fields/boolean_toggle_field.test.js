@@ -71,7 +71,7 @@ test("BooleanToggleField - auto save record when field toggled", async () => {
     });
     click(`.o_field_widget[name='bar'] input`);
     await animationFrame();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test("BooleanToggleField - autosave option set to false", async () => {
@@ -84,5 +84,5 @@ test("BooleanToggleField - autosave option set to false", async () => {
     });
     click(`.o_field_widget[name='bar'] input`);
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });

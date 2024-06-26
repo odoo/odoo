@@ -107,7 +107,7 @@ test("can display a notification with a button", async () => {
     expect(".o_notification_buttons").toHaveText("I'm a button");
     click(".o_notification .btn-primary");
     await animationFrame();
-    expect(["Button clicked"]).toVerifySteps();
+    expect.verifySteps(["Button clicked"]);
     expect(".o_notification").toHaveCount(1);
 });
 
@@ -127,7 +127,7 @@ test("can display a notification with a callback when closed", async () => {
     expect(".o_notification").toHaveCount(1);
     click(".o_notification .o_notification_close");
     await animationFrame();
-    expect(["Notification closed"]).toVerifySteps();
+    expect.verifySteps(["Notification closed"]);
     expect(".o_notification").toHaveCount(0);
 });
 

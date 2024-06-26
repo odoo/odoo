@@ -213,5 +213,5 @@ test(`Scale: scale default is fetched from sessionStorage`, async () => {
 
     await changeScale("year");
     expect(`.scale_button_selection`).toHaveText("Year");
-    expect(["scale_year"]).toVerifySteps();
+    expect.verifySteps(["scale_year"]);
 });

@@ -198,7 +198,7 @@ test("click on icon external link on chart redirect to the odoo menu", async fun
 
     await clickChartExternalLink(fixture);
 
-    expect([doActionStep]).toVerifySteps();
+    expect.verifySteps([doActionStep]);
 });
 
 test("Click on chart in dashboard mode redirect to the odoo menu", async function () {
@@ -220,17 +220,15 @@ test("Click on chart in dashboard mode redirect to the odoo menu", async functio
 
     click(fixture.querySelector(".o-chart-container"));
     await animationFrame();
-    expect([]).toVerifySteps({
-        message: "Clicking on a chart while not dashboard mode do nothing",
-    });
+    // Clicking on a chart while not dashboard mode do nothing
+    expect.verifySteps([]);
 
     model.updateMode("dashboard");
     await animationFrame();
     click(fixture.querySelector(".o-chart-container"));
     await animationFrame();
-    expect([doActionStep]).toVerifySteps({
-        message: "Clicking on a chart while on dashboard mode redirect to the odoo menu",
-    });
+    // Clicking on a chart while on dashboard mode redirect to the odoo menu
+    expect.verifySteps([doActionStep]);
 });
 
 test("can use menus xmlIds instead of menu ids", async function () {
@@ -249,7 +247,7 @@ test("can use menus xmlIds instead of menu ids", async function () {
 
     await clickChartExternalLink(fixture);
 
-    expect(["doAction"]).toVerifySteps();
+    expect.verifySteps(["doAction"]);
 });
 
 test("Trying to open a menu without an action sends a notification to the user", async function () {
@@ -277,7 +275,6 @@ test("Trying to open a menu without an action sends a notification to the user",
 
     const expectedNotificationMessage =
         "The menu linked to this chart doesn't have an corresponding action. Please link the chart to another menu.";
-    expect([expectedNotificationMessage]).toVerifySteps({
-        message: "Notification was send and doAction wasn't called",
-    });
+    // Notification was send and doAction wasn't called
+    expect.verifySteps([expectedNotificationMessage]);
 });

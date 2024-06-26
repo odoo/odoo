@@ -64,11 +64,11 @@ test("hotkeys work on dialogs", async () => {
     // Same effect as clicking on the x button
     press("escape");
     await animationFrame();
-    expect(["dismiss", "close"]).toVerifySteps();
+    expect.verifySteps(["dismiss", "close"]);
     // Same effect as clicking on the Ok button
     keyDown("control+enter");
     keyUp("ctrl+enter");
-    expect(["close"]).toVerifySteps();
+    expect.verifySteps(["close"]);
 });
 
 test("simple rendering with two dialogs", async () => {
@@ -115,7 +115,7 @@ test("click on the button x triggers the service close", async () => {
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);
     await contains(".o_dialog header button.btn-close").click();
-    expect(["dismiss", "close"]).toVerifySteps();
+    expect.verifySteps(["dismiss", "close"]);
 });
 
 test("click on the button x triggers the close and dismiss defined by a Child component", async () => {
@@ -143,7 +143,7 @@ test("click on the button x triggers the close and dismiss defined by a Child co
     expect(".o_dialog").toHaveCount(1);
 
     await contains(".o_dialog header button.btn-close").click();
-    expect(["dismiss", "close"]).toVerifySteps();
+    expect.verifySteps(["dismiss", "close"]);
 });
 
 test("click on the default footer button triggers the service close", async () => {
@@ -168,7 +168,7 @@ test("click on the default footer button triggers the service close", async () =
     expect(".o_dialog").toHaveCount(1);
 
     await contains(".o_dialog footer button").click();
-    expect(["close"]).toVerifySteps();
+    expect.verifySteps(["close"]);
 });
 
 test("render custom footer buttons is possible", async () => {
@@ -239,7 +239,7 @@ test("embed an arbitrary component in a dialog is possible", async () => {
     expect(".o_dialog main .o_subcomponent").toHaveCount(1);
     expect(".o_subcomponent").toHaveText("Wow(l) Effect");
     await contains(".o_subcomponent").click();
-    expect(["subcomponent-clicked", "message received by parent"]).toVerifySteps();
+    expect.verifySteps(["subcomponent-clicked", "message received by parent"]);
 });
 
 test("dialog without header/footer", async () => {

@@ -103,5 +103,5 @@ test("handles success download", async () => {
     expect("a[download]").toHaveCount(0); // link will be added by download
     download({ data: { someKey: "someValue" }, url: "/some_url" });
     await deferred;
-    expect(["fetching file", "file downloaded"]).toVerifySteps();
+    expect.verifySteps(["fetching file", "file downloaded"]);
 });

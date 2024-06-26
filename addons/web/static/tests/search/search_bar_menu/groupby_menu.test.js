@@ -119,7 +119,8 @@ test(`toggle a "simple" groupby quickly does not crash`, async () => {
     toggleMenuItem("Foo");
     toggleMenuItem("Foo");
     await animationFrame();
-    expect([]).toVerifyErrors();
+
+    expect(isItemSelected("Foo")).toBe(false);
 });
 
 test(`remove a "Group By" facet properly unchecks groupbys in groupby menu`, async () => {

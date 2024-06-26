@@ -75,7 +75,7 @@ describe(parseUrl(import.meta.url), () => {
         await mountOnFixture(/* xml */ `<input type="text" value="Test" />`);
 
         expect("input").toHaveValue("Test");
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         click("input");
 
@@ -84,7 +84,7 @@ describe(parseUrl(import.meta.url), () => {
         clear();
 
         expect("input").not.toHaveValue();
-        expect([
+        expect.verifySteps([
             "input.keydown",
             "input.select",
             "input.keyup",
@@ -92,7 +92,7 @@ describe(parseUrl(import.meta.url), () => {
             "input.beforeinput",
             "input.input",
             "input.keyup",
-        ]).toVerifySteps();
+        ]);
     });
 
     test("clear: email", async () => {
@@ -139,7 +139,7 @@ describe(parseUrl(import.meta.url), () => {
 
         click("button");
 
-        expect([
+        expect.verifySteps([
             // Hover
             "button.pointerover",
             "button.mouseover",
@@ -154,7 +154,7 @@ describe(parseUrl(import.meta.url), () => {
             "button.pointerup",
             "button.mouseup",
             "button.click",
-        ]).toVerifySteps();
+        ]);
     });
 
     test("dblclick", async () => {
@@ -163,7 +163,7 @@ describe(parseUrl(import.meta.url), () => {
 
         dblclick("button");
 
-        expect([
+        expect.verifySteps([
             // Hover
             "button.pointerover",
             "button.mouseover",
@@ -186,7 +186,7 @@ describe(parseUrl(import.meta.url), () => {
             "button.click",
             // Double click event
             "button.dblclick",
-        ]).toVerifySteps();
+        ]);
     });
 
     test("triple click", async () => {
@@ -251,7 +251,7 @@ describe(parseUrl(import.meta.url), () => {
         // Drag & cancel
         drag("#first-item").cancel();
 
-        expect([
+        expect.verifySteps([
             // Move to first
             "first-item.pointerover",
             "first-item.mouseover",
@@ -266,12 +266,12 @@ describe(parseUrl(import.meta.url), () => {
             // Cancel
             "keydown:Escape",
             "keyup:Escape",
-        ]).toVerifySteps();
+        ]);
 
         // Drag & drop
         drag("#first-item").drop("#third-item");
 
-        expect([
+        expect.verifySteps([
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
@@ -287,12 +287,12 @@ describe(parseUrl(import.meta.url), () => {
             "third-item.dragover",
             // Drop
             "third-item.dragend",
-        ]).toVerifySteps();
+        ]);
 
         // Drag, move & cancel
         drag("#first-item").moveTo("#third-item").cancel();
 
-        expect([
+        expect.verifySteps([
             // Leave third
             "third-item.pointermove",
             "third-item.mousemove",
@@ -323,12 +323,12 @@ describe(parseUrl(import.meta.url), () => {
             // Cancel
             "keydown:Escape",
             "keyup:Escape",
-        ]).toVerifySteps();
+        ]);
 
         // Drag, move & drop
         drag("#first-item").moveTo("#third-item").drop();
 
-        expect([
+        expect.verifySteps([
             // Leave third
             "third-item.pointermove",
             "third-item.mousemove",
@@ -358,12 +358,12 @@ describe(parseUrl(import.meta.url), () => {
             "third-item.dragover",
             // Drop
             "third-item.dragend",
-        ]).toVerifySteps();
+        ]);
 
         // Drag, move & drop (different target)
         drag("#first-item").moveTo("#second-item").drop("#third-item");
 
-        expect([
+        expect.verifySteps([
             // Leave third
             "third-item.pointermove",
             "third-item.mousemove",
@@ -401,7 +401,7 @@ describe(parseUrl(import.meta.url), () => {
             "third-item.dragover",
             // Drop
             "third-item.dragend",
-        ]).toVerifySteps();
+        ]);
     });
 
     test("drag & drop: non-draggable items", async () => {
@@ -419,7 +419,7 @@ describe(parseUrl(import.meta.url), () => {
         // Drag & cancel
         drag("#first-item").cancel();
 
-        expect([
+        expect.verifySteps([
             // Move to first
             "first-item.pointerover",
             "first-item.mouseover",
@@ -433,12 +433,12 @@ describe(parseUrl(import.meta.url), () => {
             // Cancel
             "keydown:Escape",
             "keyup:Escape",
-        ]).toVerifySteps();
+        ]);
 
         // Drag & drop
         drag("#first-item").drop("#third-item");
 
-        expect([
+        expect.verifySteps([
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
@@ -459,12 +459,12 @@ describe(parseUrl(import.meta.url), () => {
             // Drop
             "third-item.pointerup",
             "third-item.mouseup",
-        ]).toVerifySteps();
+        ]);
 
         // Drag, move & cancel
         drag("#first-item").moveTo("#third-item").cancel();
 
-        expect([
+        expect.verifySteps([
             // Leave third
             "third-item.pointermove",
             "third-item.mousemove",
@@ -499,12 +499,12 @@ describe(parseUrl(import.meta.url), () => {
             // Cancel
             "keydown:Escape",
             "keyup:Escape",
-        ]).toVerifySteps();
+        ]);
 
         // Drag, move & drop
         drag("#first-item").moveTo("#third-item").drop();
 
-        expect([
+        expect.verifySteps([
             // Leave third
             "third-item.pointermove",
             "third-item.mousemove",
@@ -539,12 +539,12 @@ describe(parseUrl(import.meta.url), () => {
             // Drop
             "third-item.pointerup",
             "third-item.mouseup",
-        ]).toVerifySteps();
+        ]);
 
         // Drag, move & drop (different target)
         drag("#first-item").moveTo("#second-item").drop("#third-item");
 
-        expect([
+        expect.verifySteps([
             // Leave third
             "third-item.pointermove",
             "third-item.mousemove",
@@ -593,14 +593,14 @@ describe(parseUrl(import.meta.url), () => {
             // Drop
             "third-item.pointerup",
             "third-item.mouseup",
-        ]).toVerifySteps();
+        ]);
     });
 
     test("fill: text", async () => {
         await mountOnFixture(/* xml */ `<input type="text" value="" />`);
 
         expect("input").not.toHaveValue();
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         click("input");
 
@@ -609,14 +609,14 @@ describe(parseUrl(import.meta.url), () => {
         fill("Test value");
 
         expect("input").toHaveValue("Test value");
-        expect([
+        expect.verifySteps([
             ...[..."Test value"].flatMap(() => [
                 "input.keydown",
                 "input.beforeinput",
                 "input.input",
                 "input.keyup",
             ]),
-        ]).toVerifySteps();
+        ]);
     });
 
     test("fill: text with previous value", async () => {
@@ -664,18 +664,18 @@ describe(parseUrl(import.meta.url), () => {
         edit("test value");
 
         expect("input").toHaveValue("test value");
-        expect([
+        expect.verifySteps([
             ...[..."test value"].flatMap((char) => [
                 `keydown:${char}`,
                 `beforeinput`,
                 `input`,
                 `keyup:${char}`,
             ]),
-        ]).toVerifySteps();
+        ]);
 
         click(getFixture());
 
-        expect([
+        expect.verifySteps([
             // Pointer out
             "pointermove",
             "mousemove",
@@ -686,7 +686,7 @@ describe(parseUrl(import.meta.url), () => {
             // Change
             "blur",
             "change",
-        ]).toVerifySteps();
+        ]);
     });
 
     test("edit on existing value", async () => {
@@ -701,7 +701,7 @@ describe(parseUrl(import.meta.url), () => {
         edit(" value");
 
         expect("input").toHaveValue(" value");
-        expect([
+        expect.verifySteps([
             // Clear
             "keydown:a.ctrl",
             "select",
@@ -717,7 +717,7 @@ describe(parseUrl(import.meta.url), () => {
                 `input`,
                 `keyup:${char}`,
             ]),
-        ]).toVerifySteps();
+        ]);
     });
 
     test("edit: iframe", async () => {
@@ -737,19 +737,19 @@ describe(parseUrl(import.meta.url), () => {
         click("input");
         edit("abc");
 
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         expect("input").toHaveValue("abc");
         expect(":iframe input").toHaveValue("");
 
         click(":iframe input");
         edit("def");
 
-        expect(["top:change"]).toVerifySteps();
+        expect.verifySteps(["top:change"]);
         expect("input").toHaveValue("abc");
         expect(":iframe input").toHaveValue("def");
 
         click(":iframe body");
-        expect(["iframe:change"]).toVerifySteps();
+        expect.verifySteps(["iframe:change"]);
     });
 
     test("setInputFiles: single file", async () => {
@@ -833,7 +833,7 @@ describe(parseUrl(import.meta.url), () => {
         setInputRange("input", 30);
 
         expect("input").toHaveValue(30);
-        expect([
+        expect.verifySteps([
             // Hover input
             "input.pointerover",
             "input.mouseover",
@@ -852,7 +852,7 @@ describe(parseUrl(import.meta.url), () => {
             "input.pointerup",
             "input.mouseup",
             "input.click",
-        ]).toVerifySteps();
+        ]);
     });
 
     test("setInputRange: out of min and max values", async () => {
@@ -873,18 +873,18 @@ describe(parseUrl(import.meta.url), () => {
 
         hover("button");
 
-        expect([
+        expect.verifySteps([
             "button.pointerover",
             "button.mouseover",
             "button.pointerenter",
             "button.mouseenter",
             "button.pointermove",
             "button.mousemove",
-        ]).toVerifySteps();
+        ]);
 
         hover("button");
 
-        expect(["button.pointermove", "button.mousemove"]).toVerifySteps();
+        expect.verifySteps(["button.pointermove", "button.mousemove"]);
     });
 
     test("leave", async () => {
@@ -896,14 +896,14 @@ describe(parseUrl(import.meta.url), () => {
 
         leave();
 
-        expect([
+        expect.verifySteps([
             "button.pointermove",
             "button.mousemove",
             "button.pointerout",
             "button.mouseout",
             "button.pointerleave",
             "button.mouseleave",
-        ]).toVerifySteps();
+        ]);
     });
 
     test("keyDown", async () => {
@@ -915,12 +915,12 @@ describe(parseUrl(import.meta.url), () => {
 
         keyDown("a");
 
-        expect(["input.keydown", "input.beforeinput", "input.input"]).toVerifySteps();
+        expect.verifySteps(["input.keydown", "input.beforeinput", "input.input"]);
 
         keyUp("a");
 
         expect("input").toHaveValue("a");
-        expect(["input.keyup"]).toVerifySteps();
+        expect.verifySteps(["input.keyup"]);
     });
 
     test("pointerDown", async () => {
@@ -929,7 +929,7 @@ describe(parseUrl(import.meta.url), () => {
 
         pointerDown("button");
 
-        expect([
+        expect.verifySteps([
             // Pointer enter on button
             "button.pointerover",
             "button.mouseover",
@@ -941,11 +941,11 @@ describe(parseUrl(import.meta.url), () => {
             "button.pointerdown",
             "button.mousedown",
             "button.focus",
-        ]).toVerifySteps();
+        ]);
 
         pointerUp("button");
 
-        expect(["button.pointerup", "button.mouseup", "button.click"]).toVerifySteps();
+        expect.verifySteps(["button.pointerup", "button.mouseup", "button.click"]);
     });
 
     test("press key on text input", async () => {
@@ -958,12 +958,7 @@ describe(parseUrl(import.meta.url), () => {
         press("a");
 
         expect("input").toHaveValue("a");
-        expect([
-            "input.keydown",
-            "input.beforeinput",
-            "input.input",
-            "input.keyup",
-        ]).toVerifySteps();
+        expect.verifySteps(["input.keydown", "input.beforeinput", "input.input", "input.keyup"]);
     });
 
     test("press key on number input", async () => {
@@ -1078,7 +1073,7 @@ describe(parseUrl(import.meta.url), () => {
 
         press("Enter");
 
-        expect([
+        expect.verifySteps([
             // Tab
             "input.focus",
             // Enter
@@ -1087,7 +1082,7 @@ describe(parseUrl(import.meta.url), () => {
             "form.submit",
             "input.keyup",
             "form.keyup",
-        ]).toVerifySteps();
+        ]);
     });
 
     test("press 'Enter' on form button", async () => {
@@ -1107,7 +1102,7 @@ describe(parseUrl(import.meta.url), () => {
 
         press("Enter");
 
-        expect([
+        expect.verifySteps([
             // Tab
             "button.focus",
             // Enter
@@ -1117,7 +1112,7 @@ describe(parseUrl(import.meta.url), () => {
             "form.click",
             "button.keyup",
             "form.keyup",
-        ]).toVerifySteps();
+        ]);
     });
 
     test("press 'Enter' on form submit button", async () => {
@@ -1137,7 +1132,7 @@ describe(parseUrl(import.meta.url), () => {
 
         press("Enter");
 
-        expect([
+        expect.verifySteps([
             // Tab
             "button.focus",
             // Enter
@@ -1146,7 +1141,7 @@ describe(parseUrl(import.meta.url), () => {
             "form.submit",
             "button.keyup",
             "form.keyup",
-        ]).toVerifySteps();
+        ]);
     });
 
     test("press 'Space' on checkbox input", async () => {
@@ -1163,7 +1158,7 @@ describe(parseUrl(import.meta.url), () => {
         press(" "); // false -> true
 
         expect("input").toHaveProperty("checked", true);
-        expect([
+        expect.verifySteps([
             // Key press
             "input.keydown",
             "input.beforeinput",
@@ -1173,7 +1168,7 @@ describe(parseUrl(import.meta.url), () => {
             "input.click",
             "input.input",
             "input.change",
-        ]).toVerifySteps();
+        ]);
     });
 
     test("press 'Backspace' on number input", async () => {
@@ -1213,19 +1208,19 @@ describe(parseUrl(import.meta.url), () => {
 
         press("alt");
 
-        expect(["keydown:Alt.alt", "keyup:Alt.alt"]).toVerifySteps();
+        expect.verifySteps(["keydown:Alt.alt", "keyup:Alt.alt"]);
 
         press("ctrl");
 
-        expect(["keydown:Control.ctrl", "keyup:Control.ctrl"]).toVerifySteps();
+        expect.verifySteps(["keydown:Control.ctrl", "keyup:Control.ctrl"]);
 
         press("meta");
 
-        expect(["keydown:Meta.meta", "keyup:Meta.meta"]).toVerifySteps();
+        expect.verifySteps(["keydown:Meta.meta", "keyup:Meta.meta"]);
 
         press("shift");
 
-        expect(["keydown:Shift.shift", "keyup:Shift.shift"]).toVerifySteps();
+        expect.verifySteps(["keydown:Shift.shift", "keyup:Shift.shift"]);
     });
 
     test("special keys modifiers: Mac", async () => {
@@ -1239,19 +1234,19 @@ describe(parseUrl(import.meta.url), () => {
 
         press("alt");
 
-        expect(["keydown:Alt.alt", "keyup:Alt.alt"]).toVerifySteps();
+        expect.verifySteps(["keydown:Alt.alt", "keyup:Alt.alt"]);
 
         press("ctrl");
 
-        expect(["keydown:Control.ctrl", "keyup:Control.ctrl"]).toVerifySteps();
+        expect.verifySteps(["keydown:Control.ctrl", "keyup:Control.ctrl"]);
 
         press("meta");
 
-        expect(["keydown:Meta.meta", "keyup:Meta.meta"]).toVerifySteps();
+        expect.verifySteps(["keydown:Meta.meta", "keyup:Meta.meta"]);
 
         press("shift");
 
-        expect(["keydown:Shift.shift", "keyup:Shift.shift"]).toVerifySteps();
+        expect.verifySteps(["keydown:Shift.shift", "keyup:Shift.shift"]);
     });
 
     test("compose shift, alt and control and a key", async () => {
@@ -1263,34 +1258,34 @@ describe(parseUrl(import.meta.url), () => {
 
         press(["ctrl", "b"]);
 
-        expect([
+        expect.verifySteps([
             "keydown:Control.ctrl",
             "keydown:b.ctrl",
             "keyup:b.ctrl",
             "keyup:Control.ctrl",
-        ]).toVerifySteps();
+        ]);
 
         press(["shift", "b"]);
 
-        expect([
+        expect.verifySteps([
             "keydown:Shift.shift",
             "keydown:b.shift",
             "beforeinput",
             "input",
             "keyup:b.shift",
             "keyup:Shift.shift",
-        ]).toVerifySteps();
+        ]);
 
         press(["Alt", "Control", "b"]);
 
-        expect([
+        expect.verifySteps([
             "keydown:Alt.alt",
             "keydown:Control.alt.ctrl",
             "keydown:b.alt.ctrl",
             "keyup:b.alt.ctrl",
             "keyup:Control.alt.ctrl",
             "keyup:Alt.alt",
-        ]).toVerifySteps();
+        ]);
     });
 
     test("scroll", async () => {
@@ -1307,14 +1302,14 @@ describe(parseUrl(import.meta.url), () => {
 
         expect(".scrollable").toHaveProperty("scrollTop", 500);
         expect(".scrollable").toHaveProperty("scrollLeft", 0);
-        expect(["div.wheel", "div.scroll", "div.scrollend"]).toVerifySteps();
+        expect.verifySteps(["div.wheel", "div.scroll", "div.scrollend"]);
 
         scroll(".scrollable", { left: 1200 });
         await animationFrame();
 
         expect(".scrollable").toHaveProperty("scrollTop", 500);
         expect(".scrollable").toHaveProperty("scrollLeft", 1200);
-        expect(["div.wheel", "div.scroll", "div.scrollend"]).toVerifySteps();
+        expect.verifySteps(["div.wheel", "div.scroll", "div.scrollend"]);
     });
 
     test("resize", async () => {
@@ -1331,14 +1326,14 @@ describe(parseUrl(import.meta.url), () => {
         expect(window.innerWidth).toBe(300);
         expect(window.innerHeight).toBe(innerHeight);
 
-        expect(["window.resize"]).toVerifySteps();
+        expect.verifySteps(["window.resize"]);
 
         resize({ height: 264 });
 
         expect(window.innerWidth).toBe(300);
         expect(window.innerHeight).toBe(264);
 
-        expect(["window.resize"]).toVerifySteps();
+        expect.verifySteps(["window.resize"]);
     });
 
     test("select", async () => {
@@ -1351,7 +1346,7 @@ describe(parseUrl(import.meta.url), () => {
         `);
 
         expect("select").toHaveValue("a"); // default to first option
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         click("select");
 
@@ -1360,7 +1355,7 @@ describe(parseUrl(import.meta.url), () => {
         select("b");
 
         expect("select").toHaveValue("b");
-        expect(["select.change"]).toVerifySteps();
+        expect.verifySteps(["select.change"]);
     });
 
     test("can trigger synthetic event handlers", async () => {
@@ -1379,7 +1374,7 @@ describe(parseUrl(import.meta.url), () => {
 
         click("button");
 
-        expect(["click"]).toVerifySteps();
+        expect.verifySteps(["click"]);
     });
 
     test("synthetic event handlers are not cleaned up between tests", async () => {
@@ -1398,6 +1393,6 @@ describe(parseUrl(import.meta.url), () => {
 
         click("button");
 
-        expect(["clack"]).toVerifySteps();
+        expect.verifySteps(["clack"]);
     });
 });

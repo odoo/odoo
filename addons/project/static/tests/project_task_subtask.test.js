@@ -202,11 +202,11 @@ test("project.task (kanban): check closed subtask count update", async () => {
     expect(inProgressStatesSelector).toHaveCount(0, {
         message: "The state of the subtask should no longer be in progress",
     });
-    expect([
+    expect.verifySteps([
         "project.task/web_read",
         "project.task/onchange",
         "project.task/web_save",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("project.task (kanban): check subtask creation", async () => {
@@ -247,11 +247,11 @@ test("project.task (kanban): check subtask creation", async () => {
         message:
             "The subtasks list should now display the subtask created on the card, thus we are looking for 4 in total",
     });
-    expect([
+    expect.verifySteps([
         "project.task/web_read",
         "project.task/create",
         "project.task/web_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("project.task (form): check that the subtask of another project can be added", async () => {

@@ -19,21 +19,21 @@ describe(parseUrl(import.meta.url), () => {
         expect(timeoutId).toBeGreaterThan(0);
         expect(intervalId).toBeGreaterThan(0);
         expect(animationHandle).toBeGreaterThan(0);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         await advanceTime(10_000); // 10 seconds
 
-        expect(["animation", "timeout", "interval", "interval", "interval"]).toVerifySteps();
+        expect.verifySteps(["animation", "timeout", "interval", "interval", "interval"]);
 
         await advanceTime(10_000);
 
-        expect(["interval", "interval", "interval"]).toVerifySteps();
+        expect.verifySteps(["interval", "interval", "interval"]);
 
         window.clearInterval(intervalId);
 
         await advanceTime(10_000);
 
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
     });
 
     test("Deferred", async () => {
@@ -49,7 +49,7 @@ describe(parseUrl(import.meta.url), () => {
 
         await expect(def).resolves.toBe(14);
 
-        expect(["before", "after", "resolved"]).toVerifySteps();
+        expect.verifySteps(["before", "after", "resolved"]);
     });
 
     test("tick", async () => {
@@ -73,11 +73,11 @@ describe(parseUrl(import.meta.url), () => {
             expect.step("animation");
         });
 
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         const ms = await runAllTimers();
 
         expect(ms).toBeWithin(1e6 - 1, 1e6 + 1); // more or less
-        expect(["animation", "timeout"]).toVerifySteps();
+        expect.verifySteps(["animation", "timeout"]);
     });
 });

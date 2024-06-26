@@ -440,7 +440,7 @@ test(`editable list with edit="0"`, async () => {
 
     await contains(`.o_data_cell`).click();
     expect(`tbody tr.o_selected_row`).toHaveCount(0, { message: "should not have editable row" });
-    expect(["switch to form - resId: 1 activeIds: 1,2,3,4"]).toVerifySteps();
+    expect.verifySteps(["switch to form - resId: 1 activeIds: 1,2,3,4"]);
 });
 
 test(`non-editable list with open_form_view`, async () => {
@@ -479,7 +479,7 @@ test(`editable list with open_form_view`, async () => {
     });
 
     await contains(`td.o_list_record_open_form_view`).click();
-    expect(["switch to form - resId: 1 activeIds: 1,2,3,4"]).toVerifySteps();
+    expect.verifySteps(["switch to form - resId: 1 activeIds: 1,2,3,4"]);
 });
 
 test(`editable readonly list with open_form_view`, async () => {
@@ -814,7 +814,7 @@ test(`list view: give a context dependent on the current context to a header but
         },
     });
     await contains(`button[name=toDo]`).click();
-    expect(["doActionButton"]).toVerifySteps();
+    expect.verifySteps(["doActionButton"]);
 });
 
 test(`list view: action button executes action on click: buttons are disabled and re-enabled`, async () => {
@@ -874,7 +874,7 @@ test(`list view: buttons handler is called once on double click`, async () => {
     executeActionDef.resolve();
     await animationFrame();
     expect(`tbody .o_list_button > button:eq(0)`).not.toHaveProperty("disabled");
-    expect(["execute_action"]).toVerifySteps();
+    expect.verifySteps(["execute_action"]);
 });
 
 test(`list view: click on an action button saves the record before executing the action`, async () => {
@@ -897,7 +897,7 @@ test(`list view: click on an action button saves the record before executing the
 
     await contains(`.o_data_row button`).click();
     expect(queryFirst(`.o_data_row [name='foo']`)).toHaveText("plop");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -906,7 +906,7 @@ test(`list view: click on an action button saves the record before executing the
         "web_save",
         "toDo",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`list view: action button executes action on click: correct parameters`, async () => {
@@ -957,7 +957,7 @@ test(`list view: action button executes action on click: correct parameters`, as
     });
     await contains(`.o_data_row .o_list_record_selector input[type="checkbox"]`).click();
     await contains(`button[name=x]`).click();
-    expect(["doActionButton"]).toVerifySteps();
+    expect.verifySteps(["doActionButton"]);
 });
 
 test(`list view: action button executes action on click with domain selected: correct parameters`, async () => {
@@ -1010,10 +1010,10 @@ test(`list view: action button executes action on click with domain selected: co
     });
     await contains(`.o_data_row .o_list_record_selector input[type="checkbox"]`).click();
     await contains(`.o_list_select_domain`).click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(`button[name="x"]`).click();
-    expect(["search", "doActionButton", "execute_action"]).toVerifySteps();
+    expect.verifySteps(["search", "doActionButton", "execute_action"]);
 });
 
 test(`column names (noLabel, label, string and default)`, async () => {
@@ -1233,20 +1233,20 @@ test(`save a record with an invisible required field`, async () => {
         `,
     });
     expect(`.o_data_row`).toHaveCount(4);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     await contains(`.o_list_button_add`).click();
     await contains(`[name='int_field'] input`).edit("1", { confirm: false });
     await contains(`.o_list_view`).click();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_data_row:eq(0) [name='int_field']`).toHaveText("1");
-    expect(["onchange", "web_save"]).toVerifySteps();
+    expect.verifySteps(["onchange", "web_save"]);
 });
 
 test.todo(
@@ -1266,13 +1266,13 @@ test.todo(
         `,
         });
         expect(`.o_data_row`).toHaveCount(4);
-        expect([
+        expect.verifySteps([
             "/web/webclient/translations",
             "/web/webclient/load_menus",
             "get_views",
             "web_search_read",
             "has_group",
-        ]).toVerifySteps();
+        ]);
 
         await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
         await contains(`.o_data_row:eq(0) .o_data_cell[name='foo']`).click();
@@ -1283,7 +1283,7 @@ test.todo(
         await contains(`.modal .btn`).click();
         expect(`.o_data_row:eq(0) .o_data_cell[name='foo']`).toHaveText("yop");
         expect(`.o_data_row:eq(0)`).toHaveClass("o_data_row_selected");
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
     }
 );
 
@@ -1304,13 +1304,13 @@ test.todo(
         `,
         });
         expect(`.o_data_row`).toHaveCount(4);
-        expect([
+        expect.verifySteps([
             "/web/webclient/translations",
             "/web/webclient/load_menus",
             "get_views",
             "web_search_read",
             "has_group",
-        ]).toVerifySteps();
+        ]);
 
         await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
         await contains(`.o_data_row:eq(0) .o_data_cell[name='foo']`).click();
@@ -1320,7 +1320,7 @@ test.todo(
         await contains(`.modal-header .btn-close`).click();
         expect(`.o_data_row:eq(0) .o_data_cell[name='foo']`).toHaveText("yop");
         expect(`.o_data_row:eq(0)`).toHaveClass("o_data_row_selected");
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
     }
 );
 
@@ -1464,14 +1464,15 @@ test(`do not perform extra RPC to read invisible many2one fields`, async () => {
     });
 
     await contains(`.o_list_button_add`).click();
-    expect([
+    // no nameget should be done
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
         "onchange",
-    ]).toVerifySteps({ message: "no nameget should be done" });
+    ]);
 });
 
 test(`editable list datepicker destroy widget (edition)`, async () => {
@@ -2066,7 +2067,7 @@ test(`add record in list grouped by m2m`, async () => {
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_selected_row .o_field_tags .o_tag`).toHaveCount(1);
     expect(`.o_selected_row .o_field_tags .o_tag`).toHaveText("Value 1");
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 });
 
 test(`editing a record should change same record in other groups when grouped by m2m field`, async () => {
@@ -2133,7 +2134,7 @@ test(`change a record field in readonly should change same record in other group
     expect(`.o_priority_star.fa-star`).toHaveCount(2, {
         message: "both 'yop' records should have been starred",
     });
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`ordered target, sort attribute in context`, async () => {
@@ -2159,7 +2160,7 @@ test(`ordered target, sort attribute in context`, async () => {
     await toggleSaveFavorite();
     await editFavoriteName("My favorite");
     await saveFavorite();
-    expect([`["date","foo desc"]`]).toVerifySteps();
+    expect.verifySteps([`["date","foo desc"]`]);
 });
 
 test(`Loading a filter with a sort attribute`, async () => {
@@ -2198,7 +2199,7 @@ test(`Loading a filter with a sort attribute`, async () => {
     });
     await toggleSearchBarMenu();
     await toggleMenuItem("My second favorite");
-    expect(["date ASC, foo DESC", "date DESC, foo ASC"]).toVerifySteps();
+    expect.verifySteps(["date ASC, foo DESC", "date DESC, foo ASC"]);
 });
 
 test(`many2one field rendering`, async () => {
@@ -2230,13 +2231,13 @@ test(`many2one field rendering when display_name is falsy`, async () => {
         arch: `<tree><field name="m2o"/></tree>`,
     });
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["Unnamed", "Value 2", "Unnamed", "Unnamed"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`grouped list view, with 1 open group`, async () => {
@@ -2284,7 +2285,7 @@ test(`opening records when clicking on record`, async () => {
 
     await contains(`th.o_group_name`).click();
     await contains(`tr:not(.o_group_header) td:not(.o_list_record_selector)`).click();
-    expect(["openRecord", "openRecord"]).toVerifySteps();
+    expect.verifySteps(["openRecord", "openRecord"]);
 });
 
 test(`execute an action before and after each valid save in a list view`, async () => {
@@ -2316,11 +2317,11 @@ test(`execute an action before and after each valid save in a list view`, async 
     await contains(`.o_data_cell`).click();
     await contains(`[name=foo] input`).edit("");
     await contains(`.o_list_view`).click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(`[name=foo] input`).edit("YOLO");
     await contains(`.o_list_view`).click();
-    expect(["onWillSaveRecord 1", "web_save 1", "onRecordSaved 1"]).toVerifySteps();
+    expect.verifySteps(["onWillSaveRecord 1", "web_save 1", "onRecordSaved 1"]);
 });
 
 test(`execute an action before and after each valid save in a grouped list view`, async () => {
@@ -2349,11 +2350,11 @@ test(`execute an action before and after each valid save in a grouped list view`
     await contains(`.o_data_cell[name='foo']`).click();
     await contains(`[name=foo] input`).edit("");
     await contains(`.o_list_view`).click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(`[name=foo] input`).edit("YOLO");
     await contains(`.o_list_view`).click();
-    expect(["onWillSaveRecord 4", "web_save 4", "onRecordSaved 4"]).toVerifySteps();
+    expect.verifySteps(["onWillSaveRecord 4", "web_save 4", "onRecordSaved 4"]);
 });
 
 test(`don't exec a valid save with onWillSaveRecord in a list view`, async () => {
@@ -2388,12 +2389,12 @@ test(`don't exec a valid save with onWillSaveRecord in a list view`, async () =>
     await contains(`.o_data_cell`).click();
     await contains(`[name=foo] input`).edit("");
     await contains(`.o_list_view`).click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(`.o_data_cell`).click();
     await contains(`[name=foo] input`).edit("YOLO", { confirm: false });
     await contains(`.o_list_view`).click();
-    expect(["onWillSaveRecord 1"]).toVerifySteps();
+    expect.verifySteps(["onWillSaveRecord 1"]);
 });
 
 test(`action/type attributes on tree arch, type='object'`, async () => {
@@ -2410,16 +2411,16 @@ test(`action/type attributes on tree arch, type='object'`, async () => {
         type: "list",
         arch: `<tree action="a1" type="object"><field name="foo"/></tree>`,
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     await contains(`.o_data_cell`).click();
-    expect(["doActionButton type object name a1", "web_search_read"]).toVerifySteps();
+    expect.verifySteps(["doActionButton type object name a1", "web_search_read"]);
 });
 
 test(`action/type attributes on tree arch, type='action'`, async () => {
@@ -2436,16 +2437,16 @@ test(`action/type attributes on tree arch, type='action'`, async () => {
         type: "list",
         arch: `<tree action="a1" type="action"><field name="foo"/></tree>`,
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     await contains(`.o_data_cell`).click();
-    expect(["doActionButton type action name a1", "web_search_read"]).toVerifySteps();
+    expect.verifySteps(["doActionButton type action name a1", "web_search_read"]);
 });
 
 test(`editable list view: readonly fields cannot be edited`, async () => {
@@ -2511,7 +2512,7 @@ test(`editable list view: line with no active element`, async () => {
     expect(`.o_data_cell:eq(0)`).toHaveClass("o_readonly_modifier");
 
     await contains(`.o_data_cell:eq(1) .o_boolean_toggle input`).click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test(`editable list view: click on last element after creation empty new line`, async () => {
@@ -2568,7 +2569,7 @@ test(`edit field in editable field without editing the row`, async () => {
     await contains(`.o_data_row .o_boolean_toggle input`).click();
     expect(`.o_data_row:eq(0) .o_boolean_toggle input`).not.toBeChecked();
     expect(`.o_selected_row`).toHaveCount(0);
-    expect(["web_save: false"]).toVerifySteps();
+    expect.verifySteps(["web_save: false"]);
 
     // toggle the boolean value after switching the row in edition
     expect(`.o_selected_row`).toHaveCount(0);
@@ -2577,7 +2578,7 @@ test(`edit field in editable field without editing the row`, async () => {
     expect(`.o_selected_row`).toHaveCount(1);
 
     await contains(`.o_selected_row .o_field_boolean_toggle div`).click();
-    expect(["web_save: true"]).toVerifySteps();
+    expect.verifySteps(["web_save: true"]);
 });
 
 test(`basic operations for editable list renderer`, async () => {
@@ -2637,11 +2638,11 @@ test(`field changes are triggered correctly`, async () => {
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
 
     await contains(`.o_field_widget[name=foo] input`).edit("abc");
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 
     await contains(`.o_data_cell:eq(2)`).click();
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test(`editable list view: basic char field edition`, async () => {
@@ -2688,7 +2689,7 @@ test(`editable list view: save data when list sorting in edit mode`, async () =>
     await contains(`.o_field_widget[name=foo] input`).edit("xyz");
     await contains(`.o_column_sortable`).click();
     expect(`.o_selected_row`).toHaveCount(0);
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`editable list view: check that controlpanel buttons are updating when groupby applied`, async () => {
@@ -2818,33 +2819,33 @@ test(`selection changes are triggered correctly`, async () => {
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0, {
         message: "no record should be selected",
     });
-    expect(["onRendered ListController"]).toVerifySteps();
+    expect.verifySteps(["onRendered ListController"]);
 
     // tbody checkbox click
     await contains(`tbody .o_list_record_selector input`).click();
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(1, {
         message: "only 1 record should be selected",
     });
-    expect(["onRendered ListController"]).toVerifySteps();
+    expect.verifySteps(["onRendered ListController"]);
 
     await contains(`tbody .o_list_record_selector input`).click();
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0, {
         message: "no record should be selected",
     });
-    expect(["onRendered ListController"]).toVerifySteps();
+    expect.verifySteps(["onRendered ListController"]);
 
     // head checkbox click
     await contains(`thead .o_list_record_selector input`).click();
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(4, {
         message: "all records should be selected",
     });
-    expect(["onRendered ListController"]).toVerifySteps();
+    expect.verifySteps(["onRendered ListController"]);
 
     await contains(`thead .o_list_record_selector input`).click();
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0, {
         message: "no records should be selected",
     });
-    expect(["onRendered ListController"]).toVerifySteps();
+    expect.verifySteps(["onRendered ListController"]);
 });
 
 test(`Row selection checkbox can be toggled by clicking on the cell`, async () => {
@@ -3556,7 +3557,7 @@ test(`groups can not be sorted on a different field than the first field of the 
         arch: `<tree default_order="foo"><field name="foo"/><field name="bar"/></tree>`,
         groupBy: ["bar"],
     });
-    expect(["web_read_group"]).toVerifySteps();
+    expect.verifySteps(["web_read_group"]);
 });
 
 test(`groups can not be sorted on a different field than the first field of the groupBy - 2`, async () => {
@@ -3576,7 +3577,7 @@ test(`groups can not be sorted on a different field than the first field of the 
         `,
         groupBy: ["bar", "foo"],
     });
-    expect(["web_read_group"]).toVerifySteps();
+    expect.verifySteps(["web_read_group"]);
 });
 
 test(`groups can be sorted on the first field of the groupBy`, async () => {
@@ -3593,7 +3594,7 @@ test(`groups can be sorted on the first field of the groupBy`, async () => {
     });
     expect(`.o_group_header:eq(0)`).toHaveText("Yes (3)");
     expect(`.o_group_header:eq(-1)`).toHaveText("No (1)");
-    expect(["web_read_group"]).toVerifySteps();
+    expect.verifySteps(["web_read_group"]);
 });
 
 test(`groups can't be sorted on aggregates if there is no record`, async () => {
@@ -3615,7 +3616,7 @@ test(`groups can't be sorted on aggregates if there is no record`, async () => {
         groupBy: ["foo"],
     });
     await contains(`.o_column_sortable`).click();
-    expect(["default order"]).toVerifySteps();
+    expect.verifySteps(["default order"]);
 });
 
 test(`groups can be sorted on aggregates`, async () => {
@@ -3650,7 +3651,7 @@ test(`groups can be sorted on aggregates`, async () => {
         message: "initial order should be 17, 10, 5",
     });
     expect(`tfoot td:eq(-1)`).toHaveText("32", { message: "total should still be 32" });
-    expect(["default order", "int_field ASC", "int_field DESC"]).toVerifySteps();
+    expect.verifySteps(["default order", "int_field ASC", "int_field DESC"]);
 });
 
 test(`groups cannot be sorted on non-aggregable fields if every group is folded`, async () => {
@@ -3675,23 +3676,23 @@ test(`groups cannot be sorted on non-aggregable fields if every group is folded`
             </tree>
         `,
     });
-    expect(["default order"]).toVerifySteps();
+    expect.verifySteps(["default order"]);
 
     // we cannot sort by sort_field since it doesn't have a aggregator
     await contains(`.o_column_sortable[data-name='sort_field']`).click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // we can sort by int_field since it has a aggregator
     await contains(`.o_column_sortable[data-name='int_field']`).click();
-    expect(["int_field ASC"]).toVerifySteps();
+    expect.verifySteps(["int_field ASC"]);
 
     // we keep previous order
     await contains(`.o_column_sortable[data-name='sort_field']`).click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // we can sort on foo since we are groupped by foo + previous order
     await contains(`.o_column_sortable[data-name='foo']`).click();
-    expect(["foo ASC, int_field ASC"]).toVerifySteps();
+    expect.verifySteps(["foo ASC, int_field ASC"]);
 });
 
 test(`groups can be sorted on non-aggregable fields if a group isn't folded`, async () => {
@@ -3710,17 +3711,14 @@ test(`groups can be sorted on non-aggregable fields if a group isn't folded`, as
     });
     await contains(`.o_group_header:eq(1)`).click();
     expect(queryAllTexts(`.o_data_cell[name='foo']`)).toEqual(["yop", "blip", "gnap"]);
-    expect([
+    expect.verifySteps([
         "web_read_group.orderby: default order",
         "web_search_read.order: default order",
-    ]).toVerifySteps();
+    ]);
 
     await contains(`.o_column_sortable[data-name='foo']`).click();
     expect(queryAllTexts(`.o_data_cell[name='foo']`)).toEqual(["blip", "gnap", "yop"]);
-    expect([
-        "web_read_group.orderby: default order",
-        "web_search_read.order: foo ASC",
-    ]).toVerifySteps();
+    expect.verifySteps(["web_read_group.orderby: default order", "web_search_read.order: foo ASC"]);
 });
 
 test(`groups can be sorted on non-aggregable fields if a group isn't folded with expand='1'`, async () => {
@@ -3738,19 +3736,19 @@ test(`groups can be sorted on non-aggregable fields if a group isn't folded with
         groupBy: ["bar"],
     });
     expect(queryAllTexts(`.o_data_cell[name='foo']`)).toEqual(["blip", "yop", "blip", "gnap"]);
-    expect([
+    expect.verifySteps([
         "web_read_group.orderby: default order",
         "web_search_read.orderby: default order",
         "web_search_read.orderby: default order",
-    ]).toVerifySteps();
+    ]);
 
     await contains(`.o_column_sortable[data-name='foo']`).click();
     expect(queryAllTexts(`.o_data_cell[name='foo']`)).toEqual(["blip", "blip", "gnap", "yop"]);
-    expect([
+    expect.verifySteps([
         "web_read_group.orderby: default order",
         "web_search_read.orderby: foo ASC",
         "web_search_read.orderby: foo ASC",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`properly apply onchange in simple case`, async () => {
@@ -4764,7 +4762,7 @@ test(`deleting one record and verify context key`, async () => {
     });
 
     await contains(`.modal footer button.btn-primary`).click();
-    expect(["unlink"]).toVerifySteps();
+    expect.verifySteps(["unlink"]);
     expect(`tbody td.o_list_record_selector`).toHaveCount(3, { message: "should have 3 records" });
 });
 
@@ -4864,7 +4862,7 @@ test(`delete all records matching the domain`, async () => {
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
 
     await contains(`.modal footer button.btn-primary`).click();
-    expect(["unlink"]).toVerifySteps();
+    expect.verifySteps(["unlink"]);
 });
 
 test(`delete all records matching the domain (limit reached)`, async () => {
@@ -4906,7 +4904,7 @@ test(`delete all records matching the domain (limit reached)`, async () => {
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
 
     await contains(`.modal footer button.btn-primary`).click();
-    expect(["unlink", "notify"]).toVerifySteps();
+    expect.verifySteps(["unlink", "notify"]);
 });
 
 test(`duplicate one record`, async () => {
@@ -4966,13 +4964,13 @@ test(`archiving one record`, async () => {
 
     await contains(`tbody td.o_list_record_selector:eq(0) input`).click();
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Archive");
@@ -4989,7 +4987,7 @@ test(`archiving one record`, async () => {
 
     await contains(`.modal-footer .btn-primary`).click();
     expect(`tbody td.o_list_record_selector`).toHaveCount(3, { message: "should have 3 records" });
-    expect(["action_archive", "web_search_read"]).toVerifySteps();
+    expect.verifySteps(["action_archive", "web_search_read"]);
 });
 
 test(`archive all records matching the domain`, async () => {
@@ -5028,7 +5026,7 @@ test(`archive all records matching the domain`, async () => {
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
 
     await contains(`.modal-footer .btn-primary`).click();
-    expect(["action_archive"]).toVerifySteps();
+    expect.verifySteps(["action_archive"]);
 });
 
 test(`archive all records matching the domain (limit reached)`, async () => {
@@ -5072,7 +5070,7 @@ test(`archive all records matching the domain (limit reached)`, async () => {
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
 
     await contains(`.modal-footer .btn-primary`).click();
-    expect(["action_archive", "notify"]).toVerifySteps();
+    expect.verifySteps(["action_archive", "notify"]);
 });
 
 test(`archive/unarchive handles returned action`, async () => {
@@ -5162,7 +5160,7 @@ test(`apply custom static action menu (archive)`, async () => {
 
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Archive");
-    expect(["customArchive"]).toVerifySteps();
+    expect.verifySteps(["customArchive"]);
 });
 
 test(`add custom static action menu`, async () => {
@@ -5220,11 +5218,11 @@ test(`add custom static action menu`, async () => {
     ]);
 
     await toggleMenuItem("Custom Available");
-    expect(["Custom Available"]).toVerifySteps();
+    expect.verifySteps(["Custom Available"]);
 
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Custom Default Available");
-    expect(["Custom Default Available"]).toVerifySteps();
+    expect.verifySteps(["Custom Default Available"]);
 });
 
 test(`grouped, update the count of the group (and ancestors) when a record is deleted`, async () => {
@@ -5275,7 +5273,7 @@ test(`pager (ungrouped and grouped mode), default limit`, async () => {
             </search>
         `,
     });
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
     expect(`div.o_control_panel .o_cp_pager .o_pager`).toHaveCount(1);
     expect(`.o_pager_limit`).toHaveText("4");
 
@@ -5301,23 +5299,23 @@ test(`pager, ungrouped, with count limit reached`, async () => {
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
     expect(`.o_pager_limit`).toHaveText("3+");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     await contains(`.o_pager_limit`).click();
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
     expect(`.o_pager_limit`).toHaveText("4");
-    expect(["search_count"]).toVerifySteps();
+    expect.verifySteps(["search_count"]);
 
     expectedCountLimit = undefined;
     await contains(`.o_pager_next`).click();
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test(`pager, ungrouped, with count limit reached, click next`, async () => {
@@ -5337,20 +5335,20 @@ test(`pager, ungrouped, with count limit reached, click next`, async () => {
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
     expect(`.o_pager_limit`).toHaveText("3+");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     expectedCountLimit = 5;
     await contains(`.o_pager_next`).click();
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("3-4");
     expect(`.o_pager_limit`).toHaveText("4");
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test(`pager, ungrouped, with count limit reached, click next (2)`, async () => {
@@ -5371,27 +5369,27 @@ test(`pager, ungrouped, with count limit reached, click next (2)`, async () => {
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
     expect(`.o_pager_limit`).toHaveText("3+");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     expectedCountLimit = 5;
     await contains(`.o_pager_next`).click();
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("3-4");
     expect(`.o_pager_limit`).toHaveText("4+");
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 
     expectedCountLimit = 7;
     await contains(`.o_pager_next`).click();
     expect(`.o_data_row`).toHaveCount(1);
     expect(`.o_pager_value`).toHaveText("5-5");
     expect(`.o_pager_limit`).toHaveText("5");
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test(`pager, ungrouped, with count limit reached, click previous`, async () => {
@@ -5412,20 +5410,20 @@ test(`pager, ungrouped, with count limit reached, click previous`, async () => {
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
     expect(`.o_pager_limit`).toHaveText("3+");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     expectedCountLimit = undefined;
     await contains(`.o_pager_previous`).click();
     expect(`.o_data_row`).toHaveCount(1);
     expect(`.o_pager_value`).toHaveText("5-5");
     expect(`.o_pager_limit`).toHaveText("5");
-    expect(["search_count", "web_search_read"]).toVerifySteps();
+    expect.verifySteps(["search_count", "web_search_read"]);
 });
 
 test(`pager, ungrouped, with count limit reached, edit pager`, async () => {
@@ -5446,13 +5444,13 @@ test(`pager, ungrouped, with count limit reached, edit pager`, async () => {
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
     expect(`.o_pager_limit`).toHaveText("3+");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     expectedCountLimit = 5;
     await contains(`.o_pager_value`).click();
@@ -5460,7 +5458,7 @@ test(`pager, ungrouped, with count limit reached, edit pager`, async () => {
     expect(`.o_data_row`).toHaveCount(3);
     expect(`.o_pager_value`).toHaveText("2-4");
     expect(`.o_pager_limit`).toHaveText("4+");
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 
     expectedCountLimit = 15;
     await contains(`.o_pager_value`).click();
@@ -5468,7 +5466,7 @@ test(`pager, ungrouped, with count limit reached, edit pager`, async () => {
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_pager_value`).toHaveText("2-5");
     expect(`.o_pager_limit`).toHaveText("5");
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test(`pager, ungrouped, with count equals count limit`, async () => {
@@ -5483,13 +5481,13 @@ test(`pager, ungrouped, with count equals count limit`, async () => {
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
     expect(`.o_pager_limit`).toHaveText("4");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`pager, ungrouped, reload while fetching count`, async () => {
@@ -5507,29 +5505,29 @@ test(`pager, ungrouped, reload while fetching count`, async () => {
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
     expect(`.o_pager_limit`).toHaveText("3+");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     await contains(`.o_pager_limit`).click();
     expect(`.o_pager_value`).toHaveText("1-2");
     expect(`.o_pager_limit`).toHaveText("3+");
-    expect(["search_count"]).toVerifySteps();
+    expect.verifySteps(["search_count"]);
 
     await contains(`.o_searchview_input`).press("enter");
     expect(`.o_pager_value`).toHaveText("1-2");
     expect(`.o_pager_limit`).toHaveText("3+");
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 
     deferred.resolve();
     await animationFrame();
     expect(`.o_pager_value`).toHaveText("1-2");
     expect(`.o_pager_limit`).toHaveText("3+");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test(`pager, ungrouped, next and fetch count simultaneously`, async () => {
@@ -5550,13 +5548,13 @@ test(`pager, ungrouped, next and fetch count simultaneously`, async () => {
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
     expect(`.o_pager_limit`).toHaveText("5+");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     deferred = new Deferred();
     await contains(`.o_pager_next`).click(); // this request will be pending
@@ -5564,7 +5562,7 @@ test(`pager, ungrouped, next and fetch count simultaneously`, async () => {
     expect(`.o_pager_limit`).toHaveText("5+");
     // can't fetch count simultaneously as it is temporarily disabled while updating
     expect(`.o_pager_limit`).toHaveClass("disabled");
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 
     deferred.resolve();
     await animationFrame();
@@ -5676,23 +5674,23 @@ test(`count_limit attrs set in arch`, async () => {
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
     expect(`.o_pager_limit`).toHaveText("3+");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     await contains(`.o_pager_limit`).click();
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
     expect(`.o_pager_limit`).toHaveText("4");
-    expect(["search_count"]).toVerifySteps();
+    expect.verifySteps(["search_count"]);
 
     expectedCountLimit = undefined;
     await contains(`.o_pager_next`).click();
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test(`pager, grouped, pager limit should be based on the group's count`, async () => {
@@ -5796,14 +5794,14 @@ test(`list keeps offset on switchView`, async () => {
             [100, "form"],
         ],
     });
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 
     await contains(`.o_pager_next`).click();
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 
     await contains(`.o_data_cell`).click();
     await contains(`.o_back_button`).click();
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test(`Navigate between the list and kanban view using the command palette`, async () => {
@@ -5880,11 +5878,11 @@ test(`grouped list keeps offset on switchView`, async () => {
         },
     });
     expect(`.o_list_view`).toHaveCount(1);
-    expect(["web_read_group"]).toVerifySteps();
+    expect.verifySteps(["web_read_group"]);
 
     await contains(`.o_pager_next`).click();
     expect(`.o_data_row`).toHaveCount(0);
-    expect(["web_read_group"]).toVerifySteps();
+    expect.verifySteps(["web_read_group"]);
 
     await contains(`.o_group_header`).click();
     expect(`.o_data_row`).toHaveCount(1);
@@ -5894,7 +5892,7 @@ test(`grouped list keeps offset on switchView`, async () => {
 
     await contains(`.o_back_button`).click();
     expect(`.o_data_row`).toHaveCount(1);
-    expect(["web_read_group"]).toVerifySteps();
+    expect.verifySteps(["web_read_group"]);
 });
 
 test(`can sort records when clicking on header`, async () => {
@@ -5904,15 +5902,15 @@ test(`can sort records when clicking on header`, async () => {
         type: "list",
         arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
     });
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
     expect(queryAllTexts(`.o_data_cell.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
 
     await contains(`thead th:contains(Foo)`).click();
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
     expect(queryAllTexts(`.o_data_cell.o_list_char`)).toEqual(["blip", "blip", "gnap", "yop"]);
 
     await contains(`thead th:contains(Foo)`).click();
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
     expect(queryAllTexts(`.o_data_cell.o_list_char`)).toEqual(["yop", "gnap", "blip", "blip"]);
 });
 
@@ -5923,7 +5921,7 @@ test(`do not sort records when clicking on header with nolabel`, async () => {
         type: "list",
         arch: `<tree><field name="foo" nolabel="1"/><field name="int_field"/></tree>`,
     });
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
     expect(queryAllTexts(`.o_data_cell`)).toEqual([
         "yop",
         "10",
@@ -5936,7 +5934,7 @@ test(`do not sort records when clicking on header with nolabel`, async () => {
     ]);
 
     await contains(`thead th:eq(2)`).click();
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
     expect(queryAllTexts(`.o_data_cell`)).toEqual([
         "blip",
         "-4",
@@ -5949,7 +5947,7 @@ test(`do not sort records when clicking on header with nolabel`, async () => {
     ]);
 
     await contains(`thead th:eq(1)`).click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(queryAllTexts(`.o_data_cell`)).toEqual([
         "blip",
         "-4",
@@ -5975,7 +5973,7 @@ test(`use default_order`, async () => {
         type: "list",
         arch: `<tree default_order="foo"><field name="foo"/><field name="bar"/></tree>`,
     });
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
     expect(queryAllTexts(`.o_data_cell.o_list_char`)).toEqual(["blip", "blip", "gnap", "yop"]);
 });
 
@@ -5996,7 +5994,7 @@ test(`use more complex default_order`, async () => {
             </tree>
         `,
     });
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
     expect(queryAllTexts(`.o_data_cell.o_list_char`)).toEqual(["blip", "blip", "gnap", "yop"]);
 });
 
@@ -6162,13 +6160,13 @@ test(`can display a list with a many2many field`, async () => {
         type: "list",
         arch: `<tree><field name="m2m"/></tree>`,
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
     expect(queryAllTexts(`.o_data_cell`)).toEqual([
         "2 records",
         "3 records",
@@ -6858,30 +6856,30 @@ test(`groupby node with a button`, async () => {
             </tree>
         `,
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
     expect(`thead th:not(.o_list_record_selector)`).toHaveCount(1, {
         message: "there should be only one column",
     });
 
     await selectGroup("currency_id");
-    expect(["web_read_group"]).toVerifySteps();
+    expect.verifySteps(["web_read_group"]);
     expect(`.o_group_header`).toHaveCount(2, { message: "there should be 2 group headers" });
     expect(`.o_group_header button`).toHaveCount(0, {
         message: "there should be no button in the header",
     });
 
     await contains(`.o_group_header:eq(0)`).click();
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
     expect(`.o_group_header button`).toHaveCount(1);
 
     await contains(`.o_group_header:eq(0) button`).click();
-    expect(["button_method"]).toVerifySteps();
+    expect.verifySteps(["button_method"]);
 });
 
 test(`groupby node with a button when many2one is None`, async () => {
@@ -6957,7 +6955,7 @@ test(`groupby node with a button with modifiers`, async () => {
         groupBy: ["currency_id"],
     });
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -6965,17 +6963,17 @@ test(`groupby node with a button with modifiers`, async () => {
         "has_group",
         "web_read",
         "res.currency:web_read",
-    ]).toVerifySteps();
+    ]);
     expect(`.o_group_header button`).toHaveCount(0);
     expect(`.o_data_row`).toHaveCount(0);
 
     await contains(`.o_group_header:eq(1)`).click();
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
     expect(`.o_group_header button`).toHaveCount(0);
     expect(`.o_data_row`).toHaveCount(1);
 
     await contains(`.o_group_header:eq(0)`).click();
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
     expect(`.o_group_header button`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(4);
 });
@@ -7002,7 +7000,7 @@ test(`groupby node with a button with modifiers using a many2one`, async () => {
     });
     expect(`.o_group_header:eq(0) button`).toHaveCount(1);
     expect(`.o_group_header:eq(1) button`).toHaveCount(0);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -7011,7 +7009,7 @@ test(`groupby node with a button with modifiers using a many2one`, async () => {
         "web_search_read",
         "web_search_read",
         "web_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`reload list view with groupby node`, async () => {
@@ -7095,7 +7093,7 @@ test(`groupby node with edit button`, async () => {
     });
 
     await contains(`.o_group_header button:eq(1)`).click();
-    expect(["doAction"]).toVerifySteps();
+    expect.verifySteps(["doAction"]);
 });
 
 test(`groupby node with subfields, and onchange`, async () => {
@@ -7134,7 +7132,7 @@ test(`groupby node with subfields, and onchange`, async () => {
     });
     await contains(`.o_data_row .o_data_cell`).click();
     await contains(`.o_field_widget[name=foo] input`).edit("new value");
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 });
 
 test(`list view, editable, without data`, async () => {
@@ -7191,7 +7189,7 @@ test(`list view, editable, without data`, async () => {
     expect(`.o_list_button button:eq(0)`).toHaveProperty("disabled", false, {
         message: "buttons should not be disabled once the record is created",
     });
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`list view, editable, with a button`, async () => {
@@ -7224,9 +7222,8 @@ test(`list view, editable, with a button`, async () => {
     });
 
     await contains(`table button`).click();
-    expect(["web_save", "call_button"]).toVerifySteps({
-        message: "clicking the button should save the record and then execute the action",
-    });
+    // clicking the button should save the record and then execute the action
+    expect.verifySteps(["web_save", "call_button"]);
 });
 
 test(`list view with a button without icon`, async () => {
@@ -7287,17 +7284,17 @@ test(`editable list view, click on the list to save`, async () => {
     await contains(`.o_list_button_add`).click();
     await contains(`.o_field_widget[name=foo] input`).edit("new value");
     await contains(`.o_list_renderer`).click();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 
     await contains(`.o_list_button_add`).click();
     await contains(`.o_field_widget[name=foo] input`).edit("new value");
     await contains(`tfoot`).click();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 
     await contains(`.o_list_button_add`).click();
     await contains(`.o_field_widget[name=foo] input`).edit("new value");
     await contains(`tbody tr:eq(2) .o_data_cell`).click();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`editable list view, should refocus date field`, async () => {
@@ -7381,7 +7378,7 @@ test(`click on a button cell in a list view`, async () => {
         message: "Focus should have returned to the editable cell without throwing an error",
     });
     expect(`.o_selected_row`).toHaveCount(1);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test(`click on a button in a list view`, async () => {
@@ -7410,22 +7407,21 @@ test(`click on a button in a list view`, async () => {
             </tree>
         `,
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
     expect(`tbody .o_list_button`).toHaveCount(4, {
         message: "there should be one button per row",
     });
     expect(`.o_data_row .o_list_button .o_button_icon.fa.fa-car`).toHaveCount(4);
 
     await contains(`.o_data_row .o_list_button > button`).click();
-    expect(["doActionButton", "web_search_read"]).toVerifySteps({
-        message: "should have reloaded the view (after the action is complete)",
-    });
+    // should have reloaded the view (after the action is complete)
+    expect.verifySteps(["doActionButton", "web_search_read"]);
 });
 
 test(`invisible attrs in readonly and editable list`, async () => {
@@ -7560,7 +7556,7 @@ test(`list view with nested groups`, async () => {
             expect.step(`switch to form - resId: ${resId}`);
         },
     });
-    expect(["web_read_group"]).toVerifySteps();
+    expect.verifySteps(["web_read_group"]);
 
     // basic rendering tests
     expect(`.o_group_header`).toHaveCount(2);
@@ -7571,7 +7567,7 @@ test(`list view with nested groups`, async () => {
 
     // open the first group
     await contains(`.o_group_header:eq(0)`).click();
-    expect(["web_read_group"]).toVerifySteps();
+    expect.verifySteps(["web_read_group"]);
     expect(queryAllTexts(`.o_group_name`)).toEqual([
         "Value 1 (4)",
         "blip (2)",
@@ -7596,25 +7592,25 @@ test(`list view with nested groups`, async () => {
 
     // open subgroup
     await contains(`.o_group_header:eq(1)`).click();
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
     expect(`.o_group_header`).toHaveCount(5);
     expect(`.o_data_row`).toHaveCount(2);
     expect(queryAllTexts(`.o_data_row .o_data_cell`)).toEqual(["4", "-4", "5", "-7"]);
 
     // open a record (should trigger event 'open_record')
     await contains(`.o_data_row .o_data_cell`).click();
-    expect([`switch to form - resId: 4`]).toVerifySteps();
+    expect.verifySteps([`switch to form - resId: 4`]);
 
     // sort by int_field (ASC) and check that open groups are still open
     await contains(`.o_list_view thead [data-name='int_field']`).click();
-    expect(["web_read_group", "web_read_group", "web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_read_group", "web_read_group", "web_search_read"]);
     expect(`.o_group_header`).toHaveCount(5);
     expect(`.o_data_row`).toHaveCount(2);
     expect(queryAllTexts(`.o_data_row .o_data_cell`)).toEqual(["5", "-7", "4", "-4"]);
 
     // close first level group
     await contains(`.o_group_header:eq(1)`).click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(`.o_group_header`).toHaveCount(2);
     expect(`.o_group_name .fa-caret-right`).toHaveCount(2);
     expect(`.o_data_row`).toHaveCount(0);
@@ -7919,13 +7915,13 @@ test(`pressing enter on last line of editable list view`, async () => {
         type: "list",
         arch: `<tree editable="bottom"><field name="foo"/></tree>`,
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
     expect(`tr.o_data_row`).toHaveCount(4);
 
     // click on 3rd line
@@ -7944,7 +7940,7 @@ test(`pressing enter on last line of editable list view`, async () => {
     await animationFrame();
     expect(`tr.o_data_row`).toHaveCount(5);
     expect(`tr.o_data_row:eq(4)`).toHaveClass("o_selected_row");
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 });
 
 test(`pressing tab on last cell of editable list view`, async () => {
@@ -7969,7 +7965,7 @@ test(`pressing tab on last cell of editable list view`, async () => {
 
     await contains(`[name=foo] input`).edit("blip-changed", { confirm: false });
     expect(`[name=foo] input`).toBeFocused();
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -7977,7 +7973,7 @@ test(`pressing tab on last cell of editable list view`, async () => {
         "has_group",
         "web_save",
         "onchange",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`navigation with tab and read completes after default_get`, async () => {
@@ -8012,7 +8008,7 @@ test(`navigation with tab and read completes after default_get`, async () => {
     expect(`tr.o_data_row:eq(4)`).toHaveClass("o_selected_row", {
         message: "5th row should be selected",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -8020,7 +8016,7 @@ test(`navigation with tab and read completes after default_get`, async () => {
         "has_group",
         "web_save",
         "onchange",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`display toolbar`, async () => {
@@ -8056,7 +8052,7 @@ test(`execute ActionMenus actions`, async () => {
 
     mockService("action", {
         doAction(id, { additionalContext, onClose }) {
-            expect.step(JSON.stringify({ action_id: id, context: additionalContext }));
+            expect.step({ action_id: id, context: additionalContext });
             onClose(); // simulate closing of target new action's dialog
         },
     });
@@ -8091,21 +8087,33 @@ test(`execute ActionMenus actions`, async () => {
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Custom Action");
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-        `{"action_id":44,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}`,
+        {
+            action_id: 44,
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+                allowed_company_ids: [1],
+                active_id: 1,
+                active_ids: [1, 2, 3, 4],
+                active_model: "foo",
+                active_domain: [],
+            },
+        },
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`execute ActionMenus actions with correct params (single page)`, async () => {
     mockService("action", {
         doAction(id, { additionalContext }) {
-            expect.step(JSON.stringify({ action_id: id, context: additionalContext }));
+            expect.step({ action_id: id, context: additionalContext });
         },
     });
 
@@ -8164,17 +8172,53 @@ test(`execute ActionMenus actions with correct params (single page)`, async () =
 
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Custom Action");
-    expect([
-        '{"action_id":44,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}',
-        '{"action_id":44,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_id":2,"active_ids":[2,3,4],"active_model":"foo","active_domain":[]}}',
-        '{"action_id":44,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_id":1,"active_ids":[1,2],"active_model":"foo","active_domain":[["bar","=",true]]}}',
-    ]).toVerifySteps();
+    expect.verifySteps([
+        {
+            action_id: 44,
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+                allowed_company_ids: [1],
+                active_id: 1,
+                active_ids: [1, 2, 3, 4],
+                active_model: "foo",
+                active_domain: [],
+            },
+        },
+        {
+            action_id: 44,
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+                allowed_company_ids: [1],
+                active_id: 2,
+                active_ids: [2, 3, 4],
+                active_model: "foo",
+                active_domain: [],
+            },
+        },
+        {
+            action_id: 44,
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+                allowed_company_ids: [1],
+                active_id: 1,
+                active_ids: [1, 2],
+                active_model: "foo",
+                active_domain: [["bar", "=", true]],
+            },
+        },
+    ]);
 });
 
 test(`execute ActionMenus actions with correct params (multi pages)`, async () => {
     mockService("action", {
         doAction(id, { additionalContext }) {
-            expect.step(JSON.stringify({ action_id: id, context: additionalContext }));
+            expect.step({ action_id: id, context: additionalContext });
         },
     });
 
@@ -8234,11 +8278,47 @@ test(`execute ActionMenus actions with correct params (multi pages)`, async () =
 
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Custom Action");
-    expect([
-        '{"action_id":44,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_id":1,"active_ids":[1,2],"active_model":"foo","active_domain":[]}}',
-        '{"action_id":44,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}',
-        '{"action_id":44,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_id":1,"active_ids":[1,2,3],"active_model":"foo","active_domain":[["bar","=",true]]}}',
-    ]).toVerifySteps();
+    expect.verifySteps([
+        {
+            action_id: 44,
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+                allowed_company_ids: [1],
+                active_id: 1,
+                active_ids: [1, 2],
+                active_model: "foo",
+                active_domain: [],
+            },
+        },
+        {
+            action_id: 44,
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+                allowed_company_ids: [1],
+                active_id: 1,
+                active_ids: [1, 2, 3, 4],
+                active_model: "foo",
+                active_domain: [],
+            },
+        },
+        {
+            action_id: 44,
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+                allowed_company_ids: [1],
+                active_id: 1,
+                active_ids: [1, 2, 3],
+                active_model: "foo",
+                active_domain: [["bar", "=", true]],
+            },
+        },
+    ]);
 });
 
 test(`edit list line after line deletion`, async () => {
@@ -8489,14 +8569,14 @@ test(`edition, then navigation with tab (with a readonly field)`, async () => {
     expect(`tbody tr:eq(0) td:contains(new value)`).toHaveCount(1, {
         message: "should have the new value visible in dom",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
         "web_save",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`edition, then navigation with tab (with a readonly field and onchange)`, async () => {
@@ -8540,7 +8620,7 @@ test(`edition, then navigation with tab (with a readonly field and onchange)`, a
 
     await contains(`.o_data_cell[name=foo] input`).edit("new value", { confirm: "tab" });
     expect(`.o_data_cell[name=int_field] input`).toBeFocused();
-    expect(["onchange:bar"]).toVerifySteps();
+    expect.verifySteps(["onchange:bar"]);
 });
 
 test(`pressing SHIFT-TAB in editable list with a readonly field [REQUIRE FOCUS]`, async () => {
@@ -8894,7 +8974,7 @@ test(`list with handle widget`, async () => {
             </tree>
         `,
     });
-    expect(["web_search_read: order: int_field ASC, id ASC"]).toVerifySteps();
+    expect.verifySteps(["web_search_read: order: int_field ASC, id ASC"]);
     expect(`.o_data_row:eq(0) [name='amount']`).toHaveText("0", {
         message: "default fourth record should have amount 0",
     });
@@ -8910,7 +8990,7 @@ test(`list with handle widget`, async () => {
 
     // Drag and drop the fourth line in second position
     await contains(`tbody tr:eq(3) .o_handle_cell`).dragAndDrop(queryFirst(`tbody tr:eq(1)`));
-    expect(["resequence"]).toVerifySteps();
+    expect.verifySteps(["resequence"]);
     expect(`.o_data_row:eq(0) [name='amount']`).toHaveText("0", {
         message: "new second record should have amount 0",
     });
@@ -9005,7 +9085,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
     await contains(`.o_list_view tbody tr:eq(3) .o_handle_cell`).dragAndDrop(
         ".o_list_view tbody tr:eq(2)"
     );
-    expect(["resequence"]).toVerifySteps();
+    expect.verifySteps(["resequence"]);
     expect(queryAllTexts(`tbody tr td[name=id]`)).toEqual(["1", "2", "4", "3"], {
         message: "the int_field (sequence) should have been correctly updated",
     });
@@ -9013,7 +9093,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
     await contains(`.o_list_view tbody tr:eq(2) .o_handle_cell`).dragAndDrop(
         ".o_list_view tbody tr:eq(1)"
     );
-    expect(["resequence"]).toVerifySteps();
+    expect.verifySteps(["resequence"]);
     expect(queryAllTexts(`tbody tr td[name=id]`)).toEqual(["1", "4", "2", "3"], {
         message: "the int_field (sequence) should have been correctly updated",
     });
@@ -9021,7 +9101,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
     await contains(`.o_list_view tbody tr:eq(1) .o_handle_cell`).dragAndDrop(
         ".o_list_view tbody tr:eq(2)"
     );
-    expect(["resequence"]).toVerifySteps();
+    expect.verifySteps(["resequence"]);
     expect(queryAllTexts(`tbody tr td[name=id]`)).toEqual(["1", "2", "4", "3"], {
         message: "the int_field (sequence) should have been correctly updated",
     });
@@ -9029,7 +9109,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
     await contains(`.o_list_view tbody tr:eq(2) .o_handle_cell`).dragAndDrop(
         ".o_list_view tbody tr:eq(1)"
     );
-    expect(["resequence"]).toVerifySteps();
+    expect.verifySteps(["resequence"]);
     expect(queryAllTexts(`tbody tr td[name=id]`)).toEqual(["1", "4", "2", "3"], {
         message: "the int_field (sequence) should have been correctly updated",
     });
@@ -9081,7 +9161,7 @@ test(`editable list with handle widget`, async () => {
 
     // Drag and drop the fourth line in second position
     await contains(`tbody tr:eq(3) .o_handle_cell`).dragAndDrop(queryFirst(`tbody tr:eq(1)`));
-    expect(["resequence"]).toVerifySteps();
+    expect.verifySteps(["resequence"]);
     expect(`tbody tr:eq(0) td:last`).toHaveText("1,200", {
         message: "new first record should have amount 1,200",
     });
@@ -9209,7 +9289,7 @@ test(`editable list with handle widget with slow network`, async () => {
 
     // drag and drop the fourth line in second position
     await contains(`tbody tr:eq(3) .o_handle_cell`).dragAndDrop(`tbody tr:eq(1)`);
-    expect(["resequence"]).toVerifySteps();
+    expect.verifySteps(["resequence"]);
 
     // edit moved row before the end of resequence
     await contains(`tbody tr:eq(3) .o_field_widget[name='amount']`).click();
@@ -9300,7 +9380,7 @@ test(`reference field batched in grouped list`, async () => {
         `,
         groupBy: ["foo"],
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -9308,7 +9388,7 @@ test(`reference field batched in grouped list`, async () => {
         "has_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
     expect(`.o_group_header`).toHaveCount(2);
     expect(queryAllTexts(`.o_data_cell`)).toEqual([
         "Value 1",
@@ -9379,7 +9459,7 @@ test(`multi edit reference field batched in grouped list`, async () => {
         `,
         groupBy: ["foo"],
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -9387,7 +9467,7 @@ test(`multi edit reference field batched in grouped list`, async () => {
         "has_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
     await contains(`.o_data_row .o_list_record_selector input:eq(0)`).click();
     await contains(`.o_data_row .o_list_record_selector input:eq(1)`).click();
     await contains(`.o_data_row .o_list_record_selector input:eq(2)`).click();
@@ -9396,7 +9476,7 @@ test(`multi edit reference field batched in grouped list`, async () => {
 
     await contains(`.modal .modal-footer .btn-primary`).click();
     expect(`.modal`).toHaveCount(0);
-    expect(["write", "web_read"]).toVerifySteps();
+    expect.verifySteps(["write", "web_read"]);
     expect(`.o_group_header`).toHaveCount(2);
     expect(queryAllTexts(`.o_data_cell[name=reference]`)).toEqual([
         "Value 1",
@@ -9471,7 +9551,7 @@ test(`multi edit field with daterange widget`, async () => {
     // Valid the confirm dialog
     await contains(`.modal .btn-primary`).click();
     expect(`.modal`).toHaveCount(0);
-    expect(["write"]).toVerifySteps();
+    expect.verifySteps(["write"]);
 });
 
 test(`multi edit field with daterange widget (edition without using the picker)`, async () => {
@@ -9536,7 +9616,7 @@ test(`multi edit field with daterange widget (edition without using the picker)`
     // Valid the confirm dialog
     await contains(`.modal .btn-primary`).click();
     expect(`.modal`).toHaveCount(0);
-    expect(["write"]).toVerifySteps();
+    expect.verifySteps(["write"]);
 });
 
 test(`list daterange with start date and empty end date`, async () => {
@@ -9597,12 +9677,12 @@ test(`editable list view: contexts are correctly sent`, async () => {
         arch: `<tree editable="top"><field name="foo"/></tree>`,
         context: { active_field: 2 },
     });
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 
     await contains(`.o_data_cell`).click();
     await contains(`.o_field_widget[name=foo] input`).edit("abc", { confirm: false });
     await contains(`.o_list_button_save`).click();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`editable list view: contexts with multiple edit`, async () => {
@@ -9632,7 +9712,7 @@ test(`editable list view: contexts with multiple edit`, async () => {
     // Edits first record then confirms changes.
     await contains(`.o_data_row [name=foo] input`).edit("legion");
     await contains(`.modal-dialog button.btn-primary`).click();
-    expect(["write", "web_read"]).toVerifySteps();
+    expect.verifySteps(["write", "web_read"]);
 });
 
 test(`editable list view: single edition with selected records`, async () => {
@@ -9737,13 +9817,13 @@ test(`editable list view: multi edition`, async () => {
             </tree>
         `,
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     // select two records
     await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
@@ -9758,13 +9838,13 @@ test(`editable list view: multi edition`, async () => {
 
     // create a record and edit its value
     await contains(`.o_list_button_add`).click();
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 
     await contains(`.o_selected_row [name=int_field] input`).edit("123", { confirm: false });
     expect(`.modal`).toHaveCount(0);
 
     await contains(`.o_list_button_save`).click();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 
     // edit a field
     await contains(`.o_data_row:eq(0) [name=int_field]`).click();
@@ -9791,7 +9871,7 @@ test(`editable list view: multi edition`, async () => {
     expect(`.o_list_record_selector input:checked`).toHaveCount(0, {
         message: "no record should be selected anymore",
     });
-    expect(["write", "web_read", "conditional web_read"]).toVerifySteps();
+    expect.verifySteps(["write", "web_read", "conditional web_read"]);
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["yop", "666"], {
         message: "the first row should be updated",
     });
@@ -9848,7 +9928,7 @@ test(`create in multi editable list`, async () => {
 
     // click on CREATE (should trigger a switch_view)
     await contains(`.o_list_button_add`).click();
-    expect(["createRecord"]).toVerifySteps();
+    expect.verifySteps(["createRecord"]);
 });
 
 test(`editable list view: multi edition cannot call onchanges`, async () => {
@@ -9876,13 +9956,13 @@ test(`editable list view: multi edition cannot call onchanges`, async () => {
             </tree>
         `,
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     // select and edit a single record
     await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
@@ -9891,7 +9971,7 @@ test(`editable list view: multi edition cannot call onchanges`, async () => {
     expect(`.modal`).toHaveCount(0);
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["hi", "2"]);
     expect(queryAllTexts(`.o_data_row:eq(1) .o_data_cell`)).toEqual(["blip", "9"]);
-    expect(["write", "web_read"]).toVerifySteps();
+    expect.verifySteps(["write", "web_read"]);
     // select the second record (the first one is still selected)
     expect(`.o_list_record_selector input:checked`).toHaveCount(1, {
         message: "Record should be still selected",
@@ -9906,9 +9986,8 @@ test(`editable list view: multi edition cannot call onchanges`, async () => {
     await contains(`.modal .btn-primary`).click();
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["hello", "5"]);
     expect(queryAllTexts(`.o_data_row:eq(1) .o_data_cell`)).toEqual(["hello", "5"]);
-    expect(["write", "web_read"]).toVerifySteps({
-        message: "should not perform the onchange in multi edition",
-    });
+    // should not perform the onchange in multi edition
+    expect.verifySteps(["write", "web_read"]);
 });
 
 test.todo(`editable list view: multi edition error and cancellation handling`, async () => {
@@ -10058,7 +10137,7 @@ test(`editable list view: multi edition of many2one: set same value`, async () =
 
     await contains(`.modal .modal-footer .btn-primary`).click();
     expect(queryAllTexts(`.o_list_many2one`)).toEqual(["Value 2", "Value 2", "Value 2", "Value 2"]);
-    expect(["write"]).toVerifySteps();
+    expect.verifySteps(["write"]);
 });
 
 test(`editable list view: clicking on "Discard changes" in multi edition`, async () => {
@@ -10149,41 +10228,38 @@ test(`discard has to wait for changes in each field in multi edit`, async () => 
     expect(`.o_data_row:eq(0) .o_data_cell input`).toHaveValue("yop");
 });
 
-test.todo(
-    `editable list view: mousedown on "Discard", mouseup somewhere else (no multi-edit)`,
-    async () => {
-        stepAllNetworkCalls();
+test(`editable list view: mousedown on "Discard", mouseup somewhere else (no multi-edit)`, async () => {
+    stepAllNetworkCalls();
 
-        await mountView({
-            resModel: "foo",
-            type: "list",
-            arch: `
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
             <tree editable="top">
                 <field name="foo"/>
             </tree>
         `,
-        });
+    });
 
-        // select two records
-        await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
-        await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
-        await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
-        await contains(`.o_data_row [name=foo] input`).edit("oof", { confirm: false });
-        pointerDown(`.o_list_button_discard`);
-        pointerUp(".o_control_panel");
-        await animationFrame();
-        expect(`.modal`).toHaveCount(0, { message: "should not open modal" });
-        expect(queryAllTexts(`.o_data_cell`)).toEqual(["oof", "blip", "gnap", "blip"]);
-        expect([
-            "/web/webclient/translations",
-            "/web/webclient/load_menus",
-            "get_views",
-            "web_search_read",
-            "has_group",
-            "web_save",
-        ]).toVerifySteps();
-    }
-);
+    // select two records
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
+    await contains(`.o_data_row [name=foo] input`).edit("oof", { confirm: false });
+    pointerDown(`.o_list_button_discard`);
+    pointerUp(".o_control_panel");
+    await animationFrame();
+    expect(`.modal`).toHaveCount(0, { message: "should not open modal" });
+    expect(queryAllTexts(`.o_data_cell`)).toEqual(["oof", "blip", "gnap", "blip"]);
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "get_views",
+        "web_search_read",
+        "has_group",
+        "web_save",
+    ]);
+});
 
 test(`multi edit list view: mousedown on "Discard" with invalid field`, async () => {
     await mountView({
@@ -10264,13 +10340,13 @@ test(`editable list view (multi edition): writable fields in readonly (force sav
             </tree>
         `,
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
     // select two records
     await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
     await contains(`.o_data_row:eq(2) .o_list_record_selector input`).click();
@@ -10278,7 +10354,7 @@ test(`editable list view (multi edition): writable fields in readonly (force sav
     expect(`.modal-header`).toHaveText("Confirmation");
 
     await contains(`.modal .btn-primary`).click();
-    expect(["write", "web_read"]).toVerifySteps();
+    expect.verifySteps(["write", "web_read"]);
 });
 
 test(`editable list view: multi edition with readonly modifiers`, async () => {
@@ -10316,7 +10392,7 @@ Update to: 666`);
     );
 
     await contains(`.modal .btn-primary`).click();
-    expect(["write"]).toVerifySteps();
+    expect.verifySteps(["write"]);
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["1", "yop", "666"], {
         message: "the first row should be updated",
     });
@@ -10500,9 +10576,9 @@ test(`editable readonly list view: navigation`, async () => {
     expect(`.o_selected_row`).toHaveCount(0);
 
     // Clicking on an unselected record while no row is being edited will open the record
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await contains(`.o_data_row:eq(2) [name=foo]`).click();
-    expect([`resId: 3`]).toVerifySteps();
+    expect.verifySteps([`resId: 3`]);
 });
 
 test(`editable list view: multi edition: edit and validate last row`, async () => {
@@ -10579,7 +10655,7 @@ test(`editable readonly list view: navigation in grouped list`, async () => {
 
     // Click again should select the clicked record
     await contains(`.o_data_row:eq(3) [name=foo]`).click();
-    expect(["resId: 3"]).toVerifySteps();
+    expect.verifySteps(["resId: 3"]);
 });
 
 test.todo(
@@ -10635,13 +10711,13 @@ test(`non editable list view: multi edition`, async () => {
             </tree>
         `,
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     // select two records
     await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
@@ -10666,7 +10742,7 @@ test(`non editable list view: multi edition`, async () => {
     });
 
     await contains(`.modal .btn-primary`).click();
-    expect(["write", "web_read", "conditional web_read"]).toVerifySteps();
+    expect.verifySteps(["write", "web_read", "conditional web_read"]);
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["yop", "666"], {
         message: "the first row should be updated",
     });
@@ -10840,7 +10916,7 @@ test(`grouped list edition with boolean_favorite widget`, async () => {
     });
 
     await contains(".o_data_row:eq(0) .fa-star", { visible: false }).click();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
     expect(`.o_data_row:eq(0) .fa-star-o`).toHaveCount(1, {
         message: "boolean value of the first record should have been updated",
     });
@@ -10926,7 +11002,7 @@ test(`use the limit attribute in arch`, async () => {
         type: "list",
         arch: `<tree limit="2"><field name="foo"/></tree>`,
     });
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
     expect(getPagerValue()).toEqual([1, 2]);
     expect(getPagerLimit()).toBe(4);
     expect(`.o_data_row`).toHaveCount(2, { message: "should display 2 data rows" });
@@ -11011,7 +11087,7 @@ test(`list view move to previous page when all records from last page deleted`, 
     await contains(`.modal button.btn-primary`).click();
     expect(getPagerValue()).toEqual([1, 3]);
     expect(getPagerLimit()).toBe(3);
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test(`grouped list view move to previous page of group when all records from last page deleted`, async () => {
@@ -11055,7 +11131,7 @@ test(`grouped list view move to previous page of group when all records from las
     await contains(`.modal .btn-primary`).click();
     expect(`th.o_group_name:eq(0) .o_pager_counter`).toHaveCount(0);
     expect(`.o_data_row`).toHaveCount(2);
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test(`grouped list view move to next page when all records from the current page deleted`, async () => {
@@ -11160,20 +11236,21 @@ test(`list should ask to scroll to top on page changes`, async () => {
     // switch pages (should ask to scroll)
     await pagerNext();
     await pagerPrevious();
-    expect(["scroll", "scroll"]).toVerifySteps({
-        message: "should ask to scroll when switching pages",
-    });
+    // should ask to scroll when switching pages
+    expect.verifySteps(["scroll", "scroll"]);
 
     // change the limit (should not ask to scroll)
     await contains(`.o_pager_value`).click();
     await contains(`.o_pager_value`).edit("1-2");
     await animationFrame();
     expect(getPagerValue()).toEqual([1, 2]);
-    expect([]).toVerifySteps({ message: "should not ask to scroll when changing the limit" });
+    // should not ask to scroll when changing the limit
+    expect.verifySteps([]);
 
     // switch pages again (should still ask to scroll)
     await pagerNext();
-    expect(["scroll"]).toVerifySteps({ message: "this is still working after a limit change" });
+    // this is still working after a limit change
+    expect.verifySteps(["scroll"]);
 });
 
 test(`list with handle field, override default_get, bottom when inline`, async () => {
@@ -11287,14 +11364,14 @@ test(`grouped list with groups_limit attribute`, async () => {
     await pagerNext(); // switch to page 2
     expect(`.o_group_header`).toHaveCount(1); // page 2
     expect(`.o_data_row`).toHaveCount(0);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group", // read_group page 1
         "has_group",
         "web_read_group", // read_group page 2
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`ungrouped list with groups_limit attribute, then group`, async () => {
@@ -11390,7 +11467,7 @@ test(`grouped list with expand attribute`, async () => {
     expect(`.o_group_header`).toHaveCount(2);
     expect(`.o_data_row`).toHaveCount(4);
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["blip", "yop", "blip", "gnap"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -11398,7 +11475,7 @@ test(`grouped list with expand attribute`, async () => {
         "has_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`grouped list with dynamic expand attribute (eval true)`, async () => {
@@ -11440,7 +11517,7 @@ test(`grouped list (two levels) with expand attribute`, async () => {
         groupBy: ["bar", "int_field"],
     });
     expect(`.o_group_header`).toHaveCount(6);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -11448,7 +11525,7 @@ test(`grouped list (two levels) with expand attribute`, async () => {
         "has_group",
         "web_read_group", // first group
         "web_read_group", // second group
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`grouped lists with expand attribute and a lot of groups`, async () => {
@@ -11493,10 +11570,10 @@ test(`grouped lists with expand attribute and a lot of groups`, async () => {
         "14 (1)",
         "17 (1)",
     ]);
-    expect([
+    expect.verifySteps([
         "web_read_group", // read_group page 1
         "web_read_group", // read_group page 2
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`add filter in a grouped list with a pager`, async () => {
@@ -11522,7 +11599,7 @@ test(`add filter in a grouped list with a pager`, async () => {
     };
 
     onRpc("web_read_group", ({ kwargs }) => {
-        expect.step(JSON.stringify(kwargs.domain) + ", " + kwargs.offset);
+        expect.step({ domain: kwargs.domain, offset: kwargs.offset });
     });
 
     await mountWithCleanup(WebClient);
@@ -11540,7 +11617,11 @@ test(`add filter in a grouped list with a pager`, async () => {
     await toggleMenuItem("Not Bar");
     expect(getPagerValue()).toEqual([1, 1]);
     expect(`.o_group_header`).toHaveCount(1); // page 1
-    expect(["[], 0", "[], 3", '[["bar","=",false]], 0']).toVerifySteps();
+    expect.verifySteps([
+        { domain: [], offset: 0 },
+        { domain: [], offset: 3 },
+        { domain: [["bar", "=", false]], offset: 0 },
+    ]);
 });
 
 test(`grouped list: have a group with pager, then apply filter`, async () => {
@@ -12053,7 +12134,7 @@ test.todo(`editing then pressing TAB in editable grouped list`, async () => {
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -12065,7 +12146,7 @@ test.todo(`editing then pressing TAB in editable grouped list`, async () => {
         "onchange",
         "web_save",
         "onchange",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`editing then pressing TAB (with a readonly field) in grouped list`, async () => {
@@ -12089,7 +12170,7 @@ test(`editing then pressing TAB (with a readonly field) in grouped list`, async 
     await contains(`.o_selected_row [name=foo] input`).edit("new value", { confirm: "tab" });
     expect(`.o_data_row:eq(0) [name=foo]`).toHaveText("new value");
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -12097,7 +12178,7 @@ test(`editing then pressing TAB (with a readonly field) in grouped list`, async 
         "has_group",
         "web_search_read",
         "web_save",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`pressing ENTER in editable="bottom" grouped list view`, async () => {
@@ -12127,7 +12208,7 @@ test(`pressing ENTER in editable="bottom" grouped list view`, async () => {
     await animationFrame();
     expect(`tr.o_data_row`).toHaveCount(5);
     expect(`tr.o_data_row:eq(4)`).toHaveClass("o_selected_row");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -12136,7 +12217,7 @@ test(`pressing ENTER in editable="bottom" grouped list view`, async () => {
         "web_search_read",
         "web_search_read",
         "onchange",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`pressing ENTER in editable="top" grouped list view`, async () => {
@@ -12164,7 +12245,7 @@ test(`pressing ENTER in editable="top" grouped list view`, async () => {
     press("Enter");
     await animationFrame();
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -12172,7 +12253,7 @@ test(`pressing ENTER in editable="top" grouped list view`, async () => {
         "has_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`pressing ENTER in editable grouped list view with create=0`, async () => {
@@ -12186,20 +12267,20 @@ test(`pressing ENTER in editable grouped list view with create=0`, async () => {
     });
     expect(`.o_group_header`).toHaveCount(2);
     expect(`.o_data_row`).toHaveCount(0);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     // Open group headers
     await contains(`.o_group_header:eq(0)`).click();
     await contains(`.o_group_header:eq(1)`).click();
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_selected_row`).toHaveCount(0);
-    expect(["web_search_read", "web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read", "web_search_read"]);
 
     // Click on first data row
     await contains(`.o_data_row:eq(0) [name=foo]`).click();
@@ -12234,7 +12315,7 @@ test(`pressing ENTER in editable grouped list view with create=0`, async () => {
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test(`cell-level keyboard navigation in non-editable list`, async () => {
@@ -12311,7 +12392,7 @@ test(`cell-level keyboard navigation in non-editable list`, async () => {
 
     press("Enter");
     await animationFrame();
-    expect(["resId: 3"]).toVerifySteps();
+    expect.verifySteps(["resId: 3"]);
 });
 
 test(`keyboard navigation from last cell in editable list`, async () => {
@@ -12984,11 +13065,11 @@ test(`execute group header button with keyboard navigation`, async () => {
     expect(`.o_group_header .o_group_buttons button:eq(0)`).toBeFocused();
 
     // click on the button by pressing enter
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(3);
-    expect(["some_method"]).toVerifySteps();
+    expect.verifySteps(["some_method"]);
 });
 
 test(`add a new row in grouped editable="top" list`, async () => {
@@ -13151,7 +13232,7 @@ test(`add a new row in (selection) grouped editable list`, async () => {
     await contains(`.o_group_field_row_add a`).click(); // add a new row
     await contains(`[name=foo] input`).edit("xyz", { confirm: false }); // make record dirty
     await contains(`.o_list_view`).click(); // unselect row
-    expect(["1"]).toVerifySteps();
+    expect.verifySteps(["1"]);
     expect(`.o_data_row .o_data_cell:eq(1)`).toHaveText("Low", {
         message: "should have a column name with a value from the groupby",
     });
@@ -13162,7 +13243,7 @@ test(`add a new row in (selection) grouped editable list`, async () => {
     expect(`.o_data_row:eq(5) .o_data_cell:eq(1)`).toHaveText("Medium", {
         message: "should have a column name with a value from the groupby",
     });
-    expect(["2"]).toVerifySteps();
+    expect.verifySteps(["2"]);
 });
 
 test(`add a new row in (m2o) grouped editable list`, async () => {
@@ -13187,7 +13268,7 @@ test(`add a new row in (m2o) grouped editable list`, async () => {
     expect(`.o_data_row:eq(0) .o_data_cell:eq(1)`).toHaveText("Value 1", {
         message: "should have a column name with a value from the groupby",
     });
-    expect(["1"]).toVerifySteps();
+    expect.verifySteps(["1"]);
 
     await contains(`.o_group_header:eq(1)`).click();
     await contains(`.o_group_field_row_add a:eq(1)`).click(); // create row in second group
@@ -13195,7 +13276,7 @@ test(`add a new row in (m2o) grouped editable list`, async () => {
     expect(`.o_data_row:eq(3) .o_data_cell:eq(1)`).toHaveText("Value 2", {
         message: "should have a column name with a value from the groupby",
     });
-    expect(["2"]).toVerifySteps();
+    expect.verifySteps(["2"]);
 });
 
 test(`list view with optional fields rendering`, async () => {
@@ -13431,7 +13512,7 @@ test(`list view with optional fields and async rendering`, async () => {
     expect(`th`).toHaveCount(3);
     expect(`.o_optional_columns_dropdown .show`).toHaveCount(1);
     expect(`.o-dropdown--menu input:checked`).toHaveCount(1);
-    expect(["onWillStart", "onWillStart", "onWillStart", "onWillStart"]).toVerifySteps(); // 4 rows
+    expect.verifySteps(["onWillStart", "onWillStart", "onWillStart", "onWillStart"]); // 4 rows
 
     deferred.resolve();
     await animationFrame();
@@ -13543,7 +13624,7 @@ test(`list view with optional fields rendering and local storage mock`, async ()
     patchWithCleanup(localStorage, {
         getItem(key) {
             if (key.startsWith("optional_fields")) {
-                expect.step("getItem " + key);
+                expect.step(["getItem", key]);
                 if (forceLocalStorage) {
                     return "m2o";
                 }
@@ -13552,7 +13633,7 @@ test(`list view with optional fields rendering and local storage mock`, async ()
         },
         setItem(key, value) {
             if (key.startsWith("optional_fields")) {
-                expect.step("setItem " + key + " to " + JSON.stringify(String(value)));
+                expect.step(["setItem " + key, value]);
             }
             super.setItem(...arguments);
         },
@@ -13572,7 +13653,7 @@ test(`list view with optional fields rendering and local storage mock`, async ()
     });
 
     const localStorageKey = "optional_fields,foo,list,42,foo,m2o,reference";
-    expect(["getItem " + localStorageKey]).toVerifySteps();
+    expect.verifySteps([["getItem", localStorageKey]]);
     expect(`th`).toHaveCount(4, {
         message: "should have 4 th, 1 for selector, 2 for columns, 1 for optional columns",
     });
@@ -13590,10 +13671,10 @@ test(`list view with optional fields rendering and local storage mock`, async ()
     await contains(`.o-dropdown--menu span.dropdown-item:eq(1) input`).click();
     // Only a setItem since the list view maintains its own internal state of toggled
     // optional columns.
-    expect([
-        `setItem ${localStorageKey} to "m2o,reference"`,
-        "getItem optional_fields,foo,list,42,foo,m2o,reference",
-    ]).toVerifySteps();
+    expect.verifySteps([
+        [`setItem ${localStorageKey}`, ["m2o", "reference"]],
+        ["getItem", "optional_fields,foo,list,42,foo,m2o,reference"],
+    ]);
     // 5 th (1 for checkbox, 3 for columns, 1 for optional columns)
     expect(`th`).toHaveCount(5, { message: "should have 5 th" });
     expect(`th[data-name=m2o]`).toHaveCount(1);
@@ -13604,13 +13685,13 @@ test(`list view with optional fields from local storage being the empty array`, 
     patchWithCleanup(localStorage, {
         getItem(key) {
             if (key.startsWith("optional_fields")) {
-                expect.step("getItem " + key);
+                expect.step(["getItem", key]);
             }
             return super.getItem(...arguments);
         },
         setItem(key, value) {
             if (key.startsWith("optional_fields")) {
-                expect.step("setItem " + key + " to " + JSON.stringify(String(value)));
+                expect.step(["setItem " + key, value]);
             }
             super.setItem(...arguments);
         },
@@ -13657,7 +13738,7 @@ test(`list view with optional fields from local storage being the empty array`, 
     await getService("action").doAction(1);
 
     // verify initialization
-    expect(["getItem " + localStorageKey]).toVerifySteps();
+    expect.verifySteps([["getItem", localStorageKey]]);
     verifyHeaders(["foo", "reference"]);
     // open optional columns headers dropdown
     await contains(`table .o_optional_columns_dropdown button`).click();
@@ -13666,14 +13747,14 @@ test(`list view with optional fields from local storage being the empty array`, 
     });
     // disable optional field "reference" (no optional column enabled)
     await contains(`.o-dropdown--menu span.dropdown-item input:eq(1)`).click();
-    expect([
-        `setItem ${localStorageKey} to ""`,
-        "getItem optional_fields,foo,list,42,foo,m2o,reference",
-    ]).toVerifySteps();
+    expect.verifySteps([
+        [`setItem ${localStorageKey}`, []],
+        ["getItem", "optional_fields,foo,list,42,foo,m2o,reference"],
+    ]);
     verifyHeaders(["foo"]);
     // mount again to ensure that active optional columns will not be reset while empty
     await getService("action").doAction(1);
-    expect(["getItem " + localStorageKey]).toVerifySteps();
+    expect.verifySteps([["getItem", localStorageKey]]);
     verifyHeaders(["foo"]);
 });
 
@@ -14187,7 +14268,7 @@ test(`Auto save: modify a record and leave action (reject)`, async () => {
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["", "blip", "gnap", "blip"]);
     expect(`.o_selected_row .o_field_widget[name=foo]`).toHaveClass("o_field_invalid");
     expect(`.o_data_row`).toHaveCount(4);
-    expect(["Invalid fields: ", "<ul><li>Foo</li></ul>"]).toVerifySteps();
+    expect.verifySteps(["Invalid fields: ", "<ul><li>Foo</li></ul>"]);
 });
 
 test(`Auto save: add a record and change page`, async () => {
@@ -14268,7 +14349,7 @@ test(`Auto save: save on closing tab/browser`, async () => {
     const [event] = unload();
     await animationFrame();
     expect(event.defaultPrevented).toBe(false);
-    expect(["save"]).toVerifySteps();
+    expect.verifySteps(["save"]);
 });
 
 test(`Auto save: save on closing tab/browser (pending changes)`, async () => {
@@ -14287,7 +14368,7 @@ test(`Auto save: save on closing tab/browser (pending changes)`, async () => {
 
     unload();
     await animationFrame();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`Auto save: save on closing tab/browser (invalid field)`, async () => {
@@ -14305,7 +14386,8 @@ test(`Auto save: save on closing tab/browser (invalid field)`, async () => {
 
     const [event] = unload();
     await animationFrame();
-    expect([]).toVerifySteps({ message: "should not save because of invalid field" });
+    // should not save because of invalid field
+    expect.verifySteps([]);
     expect(event.defaultPrevented).toBe(true);
 });
 
@@ -14338,7 +14420,7 @@ test(`Auto save: save on closing tab/browser (onchanges + pending changes)`, asy
 
     unload();
     await animationFrame();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`Auto save: save on closing tab/browser (onchanges)`, async () => {
@@ -14371,7 +14453,7 @@ test(`Auto save: save on closing tab/browser (onchanges)`, async () => {
 
     unload();
     await animationFrame();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`edition, then navigation with tab (with a readonly re-evaluated field and onchange)`, async () => {
@@ -14414,7 +14496,7 @@ test(`edition, then navigation with tab (with a readonly re-evaluated field and 
 
     await contains(`.o_data_cell[name=foo] input`).edit("new value", { confirm: "tab" });
     expect(`.o_data_cell[name=date] input`).toHaveCount(0);
-    expect(["onchange:bar"]).toVerifySteps();
+    expect.verifySteps(["onchange:bar"]);
 });
 
 test(`selecting a row after another one containing a table within an html field should be the correct one`, async () => {
@@ -14652,7 +14734,7 @@ test(`renders banner_route`, async () => {
         type: "list",
         arch: `<tree banner_route="/mybody/isacage"><field name="foo"/></tree>`,
     });
-    expect(["/mybody/isacage"]).toVerifySteps();
+    expect.verifySteps(["/mybody/isacage"]);
     expect(`.setmybodyfree`).toHaveCount(1);
 });
 
@@ -14691,13 +14773,13 @@ test(`fieldDependencies support for fields: dependence on a relational field`, a
         arch: `<list><field name="foo" widget="custom_field"/></list>`,
     });
     expect(`[name=foo] span:eq(0)`).toHaveText("1");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`editable list correctly saves dirty fields `, async () => {
@@ -14715,7 +14797,7 @@ test(`editable list correctly saves dirty fields `, async () => {
     });
     await contains(`.o_data_cell`).click();
     await contains(`.o_data_cell input`).edit("test", { confirm: "tab" });
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`edit a field with a slow onchange in a new row`, async () => {
@@ -14733,17 +14815,17 @@ test(`edit a field with a slow onchange in a new row`, async () => {
         type: "list",
         arch: `<tree editable="bottom"><field name="int_field"/></tree>`,
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     // add a new line
     await contains(`.o_list_button_add`).click();
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 
     // we want to add a delay to simulate an onchange
     deferred = new Deferred();
@@ -14755,7 +14837,7 @@ test(`edit a field with a slow onchange in a new row`, async () => {
     await contains(`.o_list_view`).click();
     // check that nothing changed before the onchange finished
     expect(`[name=int_field] input`).toHaveValue("14");
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 
     // unlock onchange
     deferred.resolve();
@@ -14763,7 +14845,7 @@ test(`edit a field with a slow onchange in a new row`, async () => {
 
     // check the current line is added with the correct content
     expect(`.o_data_row [name=int_field]:eq(0)`).toHaveText("14");
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`create a record with the correct context`, async () => {
@@ -14798,7 +14880,7 @@ test(`create a record with the correct context`, async () => {
     await contains(`.o_list_view`).click();
     expect(`.o_selected_row`).toHaveCount(0);
     expect(queryAllTexts`.o_data_row:eq(-1) .o_data_cell`).toEqual(["blop", "yop"]);
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`create a record with the correct context in a group`, async () => {
@@ -14835,7 +14917,7 @@ test(`create a record with the correct context in a group`, async () => {
     await contains(`.o_list_view`).click();
     expect(`.o_selected_row`).toHaveCount(0);
     expect(queryAllTexts`.o_data_row:eq(-1) .o_data_cell`).toEqual(["blop", "yop"]);
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`classNames given to a field are set on the right field directly`, async () => {
@@ -15141,10 +15223,10 @@ test(`Search more in a many2one`, async () => {
 
     await contains(`.o_data_row:eq(0) td.o_list_many2one`).click();
     await selectFieldDropdownItem("m2o", "Search More...");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(`.modal .o_data_row:eq(2) td[name=display_name]`).click();
-    expect(["web_read 3"]).toVerifySteps();
+    expect.verifySteps(["web_read 3"]);
 
     await contains(`.o_list_button_save`).click();
     expect(queryAllTexts`.o_data_row td[name=m2o]`).toEqual([
@@ -15153,7 +15235,7 @@ test(`Search more in a many2one`, async () => {
         "Value 1",
         "Value 1",
     ]);
-    expect(["web_save 1"]).toVerifySteps();
+    expect.verifySteps(["web_save 1"]);
 });
 
 test(`view's context is passed down as evalContext`, async () => {
@@ -15176,7 +15258,7 @@ test(`view's context is passed down as evalContext`, async () => {
     });
     await contains(`.o_data_row:eq(0) td.o_list_many2one`).click();
     await contains(`.o_field_many2one_selection .o-autocomplete--input`).click();
-    expect(["name_search"]).toVerifySteps();
+    expect.verifySteps(["name_search"]);
 });
 
 test(`list view with default_group_by`, async () => {
@@ -15205,15 +15287,15 @@ test(`list view with default_group_by`, async () => {
     });
     expect(`.o_list_renderer table`).toHaveClass("o_list_table_grouped");
     expect(`.o_group_header`).toHaveCount(2);
-    expect(["web_read_group1"]).toVerifySteps();
+    expect.verifySteps(["web_read_group1"]);
 
     await selectGroup("m2m");
     expect(`.o_group_header`).toHaveCount(4);
-    expect(["web_read_group2"]).toVerifySteps();
+    expect.verifySteps(["web_read_group2"]);
 
     await toggleMenuItem("M2m");
     expect(`.o_group_header`).toHaveCount(2);
-    expect(["web_read_group3"]).toVerifySteps();
+    expect.verifySteps(["web_read_group3"]);
 });
 
 test(`ungrouped list, apply filter, decrease limit`, async () => {
@@ -15284,7 +15366,7 @@ test(`Properties: char`, async () => {
 
     await contains(`.o_list_button_save`).click();
     expect(`.o_field_cell.o_char_cell:eq(0)`).toHaveText("TEST");
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`Properties: boolean`, async () => {
@@ -15327,7 +15409,7 @@ test(`Properties: boolean`, async () => {
     await contains(`.o_field_cell.o_boolean_cell input`).click();
     await contains(`.o_list_button_save`).click();
     expect(`.o_field_cell.o_boolean_cell input`).not.toBeChecked();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`Properties: integer`, async () => {
@@ -15374,7 +15456,7 @@ test(`Properties: integer`, async () => {
         message:
             "First property is 321, second is zero because it has a different parent and the 2 others are 123 so the total should be 321 + 123 * 2 = 567",
     });
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`Properties: float`, async () => {
@@ -15421,7 +15503,7 @@ test(`Properties: float`, async () => {
         message:
             "First property is 3.21, second is zero because it has a different parent the other is 123.45 and the last one zero because it is false so the total should be 3.21 + 123.45 = 126.66",
     });
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`Properties: date`, async () => {
@@ -15463,7 +15545,7 @@ test(`Properties: date`, async () => {
     await contains(getPickerCell("19")).click();
     await contains(`.o_list_button_save`).click();
     expect(`.o_field_cell.o_date_cell:eq(0)`).toHaveText("12/19/2022");
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`Properties: datetime`, async () => {
@@ -15512,7 +15594,7 @@ test(`Properties: datetime`, async () => {
     await contains(getPickerCell("19")).click();
     await contains(`.o_list_button_save`).click();
     expect(`.o_field_cell.o_datetime_cell:eq(0)`).toHaveText("12/19/2022 12:12:00");
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`Properties: selection`, async () => {
@@ -15560,7 +15642,7 @@ test(`Properties: selection`, async () => {
     await contains(`.o_field_cell.o_selection_cell select`).select(`"a"`);
     await contains(`.o_list_button_save`).click();
     expect(`.o_field_cell.o_selection_cell:eq(0)`).toHaveText("A");
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`Properties: tags`, async () => {
@@ -15608,14 +15690,14 @@ test(`Properties: tags`, async () => {
     expectedValue = ["c"];
     await contains(`.o_list_button_save`).click();
     expect(`.o_field_cell.o_property_tags_cell:eq(0)`).toHaveText("C");
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 
     await contains(`.o_field_cell.o_property_tags_cell`).click();
     await selectFieldDropdownItem(`properties.property_tags`, "B");
     expectedValue = ["c", "b"];
     await contains(`.o_list_button_save`).click();
     expect(`.o_field_cell.o_property_tags_cell:eq(0)`).toHaveText("B\nC");
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`Properties: many2one`, async () => {
@@ -15660,7 +15742,7 @@ test(`Properties: many2one`, async () => {
     await selectFieldDropdownItem(`properties.property_many2one`, "EUR");
     await contains(`.o_list_button_save`).click();
     expect(`.o_field_cell.o_many2one_cell:eq(0)`).toHaveText("EUR");
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test(`Properties: many2many`, async () => {
@@ -15930,17 +16012,17 @@ test(`reload properties definitions when domain change`, async () => {
             },
         ],
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     await toggleSearchBarMenu();
     await toggleMenuItem("only one");
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test(`do not reload properties definitions when page change`, async () => {
@@ -15967,16 +16049,16 @@ test(`do not reload properties definitions when page change`, async () => {
             </tree>
         `,
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     await pagerNext();
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test(`load properties definitions only once when grouped`, async () => {
@@ -16004,16 +16086,16 @@ test(`load properties definitions only once when grouped`, async () => {
         `,
         groupBy: ["m2o"],
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     await contains(`.o_group_header`).click();
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test(`Invisible Properties`, async () => {
@@ -16041,13 +16123,13 @@ test(`Invisible Properties`, async () => {
         `,
     });
     expect(`.o_optional_columns_dropdown_toggle`).toHaveCount(0);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`header buttons in list view`, async () => {
@@ -16075,7 +16157,7 @@ test(`header buttons in list view`, async () => {
     expect(`.modal-body`).toHaveText("Are you sure?");
 
     await contains(`.modal footer button.btn-primary`).click();
-    expect(["a"]).toVerifySteps();
+    expect.verifySteps(["a"]);
 });
 
 test(`restore orderBy from state when using default order`, async () => {
@@ -16114,11 +16196,11 @@ test(`restore orderBy from state when using default order`, async () => {
     await contains(`th[data-name=amount]`).click(); // order by amount
     await contains(`.o_data_row .o_data_cell`).click(); // switch to the form view
     await contains(`.breadcrumb-item`).click(); // go back to the list view
-    expect([
+    expect.verifySteps([
         "order:foo ASC", // initial list view
         "order:amount ASC, foo ASC", // order by amount
         "order:amount ASC, foo ASC", // go back to the list view, it should still be ordered by amount
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`x2many onchange, check result`, async () => {
@@ -16147,7 +16229,7 @@ test(`x2many onchange, check result`, async () => {
 
     await contains(`.o_data_cell.o_many2many_tags_cell:eq(0)`).click();
     await selectFieldDropdownItem("m2m", "Value 3");
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 
     await contains(`.o_list_button_save`).click();
     deferred.resolve();
@@ -16210,31 +16292,72 @@ test(`context keys not passed down the stack and not to fields`, async () => {
 
     onRpc(({ model, method, kwargs }) => {
         if (["foo", "bar"].includes(model) && method) {
-            expect.step(`${model}: ${method}: ${JSON.stringify(kwargs.context)}`);
+            expect.step({ model, method, context: kwargs.context });
         }
     });
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    expect([
-        `foo: get_views: {"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"tree_view_ref":"foo_view_ref"}`,
-        `foo: web_search_read: {"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"bin_size":true,"tree_view_ref":"foo_view_ref","current_company_id":1}`,
-    ]).toVerifySteps();
+    expect.verifySteps([
+        {
+            model: "foo",
+            method: "get_views",
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+                allowed_company_ids: [1],
+                tree_view_ref: "foo_view_ref",
+            },
+        },
+        {
+            model: "foo",
+            method: "web_search_read",
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+                allowed_company_ids: [1],
+                bin_size: true,
+                tree_view_ref: "foo_view_ref",
+                current_company_id: 1,
+            },
+        },
+    ]);
 
     await contains(`.o_data_row .o_data_cell:eq(1)`).click();
     await contains(`.o_selected_row .o_field_many2many_tags input`).click();
     await runAllTimers();
-    expect([
-        `bar: name_search: {"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]}`,
-    ]).toVerifySteps();
+    expect.verifySteps([
+        {
+            model: "bar",
+            method: "name_search",
+            context: { lang: "en", tz: "taht", uid: 7, allowed_company_ids: [1] },
+        },
+    ]);
 
     await contains(
         `.o_selected_row .o_field_many2many_tags .dropdown-item:contains(Search More...)`
     ).click();
-    expect([
-        `bar: get_views: {"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]}`,
-        `bar: web_search_read: {"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"bin_size":true,"current_company_id":1}`,
-    ]).toVerifySteps();
+    expect.verifySteps([
+        {
+            model: "bar",
+            method: "get_views",
+            context: { lang: "en", tz: "taht", uid: 7, allowed_company_ids: [1] },
+        },
+        {
+            model: "bar",
+            method: "web_search_read",
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+                allowed_company_ids: [1],
+                bin_size: true,
+                current_company_id: 1,
+            },
+        },
+    ]);
     expect(`.modal`).toHaveCount(1);
     expect(`.modal .modal-header .modal-title`).toHaveText("Search: M2m");
 });
@@ -16354,7 +16477,7 @@ test(`Adding new record in list view with open form view button`, async () => {
 
     await contains(`.o_field_widget[name=foo] input`).edit("new", { confirm: false });
     await contains(`td.o_list_record_open_form_view`).click();
-    expect(["switch to form - resId: 5 activeIds: 5,1,2,3,4"]).toVerifySteps();
+    expect.verifySteps(["switch to form - resId: 5 activeIds: 5,1,2,3,4"]);
 });
 
 test(`onchange should only be called once after pressing enter on a field`, async () => {
@@ -16377,7 +16500,8 @@ test(`onchange should only be called once after pressing enter on a field`, asyn
     });
     await contains(`.o_data_cell`).click();
     await contains(`.o_field_widget[name=foo] input`).edit("1", { confirm: "enter" });
-    expect(["onchange"]).toVerifySteps({ message: "There should only be one onchange call" });
+    // There should only be one onchange call
+    expect.verifySteps(["onchange"]);
 });
 
 test(`list: remove a record from sorted recordlist`, async () => {

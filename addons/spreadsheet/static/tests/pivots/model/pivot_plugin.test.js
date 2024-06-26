@@ -317,7 +317,7 @@ test("user context is combined with pivot context to fetch data", async function
         },
     });
     await waitForDataLoaded(model);
-    expect(["read_group", "read_group", "read_group", "read_group"]).toVerifySteps();
+    expect.verifySteps(["read_group", "read_group", "read_group", "read_group"]);
 });
 
 test("fetch metadata only once per model", async function () {
@@ -363,7 +363,7 @@ test("fetch metadata only once per model", async function () {
         },
     });
     await waitForDataLoaded(model);
-    expect(["partner/fields_get"]).toVerifySteps();
+    expect.verifySteps(["partner/fields_get"]);
 });
 
 test("don't fetch pivot data if no formula use it", async function () {
@@ -388,17 +388,17 @@ test("don't fetch pivot data if no formula use it", async function () {
             expect.step(`${model}/${method}`);
         },
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability")`);
     expect(getCellValue(model, "A1")).toBe("Loading...");
     await animationFrame();
-    expect([
+    expect.verifySteps([
         "partner/fields_get",
         "partner/read_group",
         "partner/read_group",
         "partner/read_group",
         "partner/read_group",
-    ]).toVerifySteps();
+    ]);
     expect(getCellValue(model, "A1")).toBe(131);
 });
 
@@ -437,9 +437,8 @@ test("evaluates only once when two pivots are loading", async function () {
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe(131);
     expect(getCellValue(model, "A2")).toBe(131);
-    expect(["data-source-notified"]).toVerifySteps({
-        message: "evaluation after both pivots are loaded",
-    });
+    // evaluation after both pivots are loaded
+    expect.verifySteps(["data-source-notified"]);
 });
 
 test("concurrently load the same pivot twice", async function () {
@@ -533,7 +532,7 @@ test("display loading while data is not fully available", async function () {
     expect(getCellValue(model, "A1")).toBe("Probability");
     expect(getCellValue(model, "A2")).toBe("xphone");
     expect(getCellValue(model, "A3")).toBe(131);
-    expect(["partner/fields_get", "partner/read_group"]).toVerifySteps();
+    expect.verifySteps(["partner/fields_get", "partner/read_group"]);
 });
 
 test("pivot grouped by char field which represents numbers", async function () {
@@ -769,7 +768,7 @@ test("can import (export) contextual domain", async () => {
     expect(model.exportData().pivots[1].domain).toBe('[("foo", "=", uid)]', {
         message: "the domain is exported with the dynamic parts",
     });
-    expect(["read_group"]).toVerifySteps();
+    expect.verifySteps(["read_group"]);
 });
 
 test("Can group by many2many field ", async () => {
@@ -1197,7 +1196,7 @@ test("Data are fetched with the correct aggregator", async () => {
             }
         },
     });
-    expect(["read_group"]).toVerifySteps();
+    expect.verifySteps(["read_group"]);
 });
 
 test("changing measure aggregates", async () => {
@@ -1212,7 +1211,7 @@ test("changing measure aggregates", async () => {
             }
         },
     });
-    expect(["probability:avg"]).toVerifySteps();
+    expect.verifySteps(["probability:avg"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1221,7 +1220,7 @@ test("changing measure aggregates", async () => {
         },
     });
     await animationFrame();
-    expect(["probability:sum"]).toVerifySteps();
+    expect.verifySteps(["probability:sum"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1230,7 +1229,7 @@ test("changing measure aggregates", async () => {
         },
     });
     await animationFrame();
-    expect(["foo:sum"]).toVerifySteps();
+    expect.verifySteps(["foo:sum"]);
 });
 
 test("many2one measures are aggregated with count_distinct by default", async () => {
@@ -1245,7 +1244,7 @@ test("many2one measures are aggregated with count_distinct by default", async ()
             }
         },
     });
-    expect(["probability:avg"]).toVerifySteps();
+    expect.verifySteps(["probability:avg"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1256,7 +1255,7 @@ test("many2one measures are aggregated with count_distinct by default", async ()
     setCellContent(model, "A1", '=PIVOT.VALUE(1, "product_id")');
     await animationFrame();
     expect(getEvaluatedCell(model, "A1").value).toBe(2);
-    expect(["product_id:count_distinct"]).toVerifySteps();
+    expect.verifySteps(["product_id:count_distinct"]);
 });
 
 test("changing measure aggregates changes the format", async () => {
@@ -1292,7 +1291,7 @@ test("changing order of group by", async () => {
             }
         },
     });
-    expect(["NO_ORDER", "NO_ORDER"]).toVerifySteps();
+    expect.verifySteps(["NO_ORDER", "NO_ORDER"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1304,7 +1303,7 @@ test("changing order of group by", async () => {
         { name: "foo", order: "asc" },
     ]);
     await animationFrame();
-    expect(["NO_ORDER", "foo asc"]).toVerifySteps();
+    expect.verifySteps(["NO_ORDER", "foo asc"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1313,7 +1312,7 @@ test("changing order of group by", async () => {
         },
     });
     await animationFrame();
-    expect(["NO_ORDER", "NO_ORDER"]).toVerifySteps();
+    expect.verifySteps(["NO_ORDER", "NO_ORDER"]);
 });
 
 test("change date order", async () => {
@@ -1328,7 +1327,7 @@ test("change date order", async () => {
             }
         },
     });
-    expect(["NO_ORDER"]).toVerifySteps();
+    expect.verifySteps(["NO_ORDER"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1340,7 +1339,7 @@ test("change date order", async () => {
         },
     });
     await animationFrame();
-    expect(["NO_ORDER", "date:year asc", "date:year asc,date:month desc"]).toVerifySteps();
+    expect.verifySteps(["NO_ORDER", "date:year asc", "date:year asc,date:month desc"]);
 });
 
 test("duplicated dimension on col and row with different granularity", async () => {
@@ -1382,7 +1381,7 @@ test("changing granularity of group by", async () => {
             }
         },
     });
-    expect(["date:month"]).toVerifySteps();
+    expect.verifySteps(["date:month"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1394,5 +1393,5 @@ test("changing granularity of group by", async () => {
         { name: "date", granularity: "day" },
     ]);
     await animationFrame();
-    expect(["date:day"]).toVerifySteps();
+    expect.verifySteps(["date:day"]);
 });

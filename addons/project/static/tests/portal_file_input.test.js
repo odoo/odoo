@@ -42,7 +42,6 @@ test("check that uploading a file that is too heavy in portal sends a notificati
     await contains(".o_file_input input", { visible: false }).click();
     setInputFiles([file]);
     await animationFrame();
-    expect(["notification"]).toVerifySteps({
-        message: "Only the notification should be triggered and the file shouldn't be uploaded",
-    });
+    // Only the notification should be triggered and the file shouldn't be uploaded
+    expect.verifySteps(["notification"]);
 });

@@ -23,10 +23,10 @@ test("simple synchronous get", async () => {
     expect(() => serverData.get("partner", "get_something", [5])).toThrow(LoadingDataError, {
         message: "it should throw when it's not loaded",
     });
-    expect(["partner/get_something", "data-fetching-notification"]).toVerifySteps();
+    expect.verifySteps(["partner/get_something", "data-fetching-notification"]);
     await animationFrame();
     expect(serverData.get("partner", "get_something", [5])).toBe(5);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("synchronous get which returns an error", async () => {
@@ -42,10 +42,10 @@ test("synchronous get which returns an error", async () => {
     expect(() => serverData.get("partner", "get_something", [5])).toThrow(LoadingDataError, {
         message: "it should throw when it's not loaded",
     });
-    expect(["partner/get_something", "data-fetching-notification"]).toVerifySteps();
+    expect.verifySteps(["partner/get_something", "data-fetching-notification"]);
     await animationFrame();
     expect(() => serverData.get("partner", "get_something", [5])).toThrow(Error);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("simple async fetch", async () => {
@@ -60,9 +60,9 @@ test("simple async fetch", async () => {
     });
     const result = await serverData.fetch("partner", "get_something", [5]);
     expect(result).toBe(5);
-    expect(["partner/get_something"]).toVerifySteps();
+    expect.verifySteps(["partner/get_something"]);
     expect(await serverData.fetch("partner", "get_something", [5])).toBe(5);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("async fetch which throws an error", async () => {
@@ -76,9 +76,9 @@ test("async fetch which throws an error", async () => {
         whenDataStartLoading: () => expect.step("data-fetching-notification"),
     });
     expect(serverData.fetch("partner", "get_something", [5])).rejects.toThrow();
-    expect(["partner/get_something"]).toVerifySteps();
+    expect.verifySteps(["partner/get_something"]);
     expect(serverData.fetch("partner", "get_something", [5])).rejects.toThrow();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("two identical concurrent async fetch", async () => {
@@ -95,12 +95,11 @@ test("two identical concurrent async fetch", async () => {
         serverData.fetch("partner", "get_something", [5]),
         serverData.fetch("partner", "get_something", [5]),
     ]);
-    expect(["partner/get_something"]).toVerifySteps({
-        message: "it should have fetch the data once",
-    });
+    // it should have fetch the data once
+    expect.verifySteps(["partner/get_something"]);
     expect(result1).toBe(5);
     expect(result2).toBe(5);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("batch get with a single item", async () => {
@@ -120,12 +119,12 @@ test("batch get with a single item", async () => {
         { message: "it should throw when it's not loaded" }
     );
     await animationFrame(); // wait for the next tick for the batch to be called
-    expect(["data-fetching-notification"]).toVerifySteps();
+    expect.verifySteps(["data-fetching-notification"]);
     deferred.resolve();
     await animationFrame();
-    expect(["partner/get_something_in_batch"]).toVerifySteps();
+    expect.verifySteps(["partner/get_something_in_batch"]);
     expect(serverData.batch.get("partner", "get_something_in_batch", 5)).toBe(5);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("batch get with multiple items", async () => {
@@ -147,10 +146,10 @@ test("batch get with multiple items", async () => {
         { message: "it should throw when it's not loaded" }
     );
     await animationFrame();
-    expect(["partner/get_something_in_batch", "data-fetching-notification"]).toVerifySteps();
+    expect.verifySteps(["partner/get_something_in_batch", "data-fetching-notification"]);
     expect(serverData.batch.get("partner", "get_something_in_batch", 5)).toBe(5);
     expect(serverData.batch.get("partner", "get_something_in_batch", 6)).toBe(6);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("batch get with one error", async () => {
@@ -179,7 +178,7 @@ test("batch get with one error", async () => {
         { message: "it should throw when it's not loaded" }
     );
     await animationFrame();
-    expect([
+    expect.verifySteps([
         // one call for the batch
         "partner/get_something_in_batch",
         "data-fetching-notification",
@@ -187,11 +186,11 @@ test("batch get with one error", async () => {
         "partner/get_something_in_batch",
         "partner/get_something_in_batch",
         "partner/get_something_in_batch",
-    ]).toVerifySteps();
+    ]);
     expect(serverData.batch.get("partner", "get_something_in_batch", 4)).toBe(4);
     expect(() => serverData.batch.get("partner", "get_something_in_batch", 5)).toThrow(Error);
     expect(serverData.batch.get("partner", "get_something_in_batch", 6)).toBe(6);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("concurrently fetch then get the same request", async () => {
@@ -206,16 +205,17 @@ test("concurrently fetch then get the same request", async () => {
     });
     const promise = serverData.fetch("partner", "get_something", [5]);
     expect(() => serverData.get("partner", "get_something", [5])).toThrow(LoadingDataError);
-    expect([
+    // it loads the data independently
+    expect.verifySteps([
         "partner/get_something",
         "partner/get_something",
         "data-fetching-notification",
-    ]).toVerifySteps({ message: "it loads the data independently" });
+    ]);
     const result = await promise;
     await animationFrame();
     expect(result).toBe(5);
     expect(serverData.get("partner", "get_something", [5])).toBe(5);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("concurrently get then fetch the same request", async () => {
@@ -230,14 +230,15 @@ test("concurrently get then fetch the same request", async () => {
     });
     expect(() => serverData.get("partner", "get_something", [5])).toThrow(LoadingDataError);
     const result = await serverData.fetch("partner", "get_something", [5]);
-    expect([
+    // it should have fetch the data once
+    expect.verifySteps([
         "partner/get_something",
         "data-fetching-notification",
         "partner/get_something",
-    ]).toVerifySteps({ message: "it should have fetch the data once" });
+    ]);
     expect(result).toBe(5);
     expect(serverData.get("partner", "get_something", [5])).toBe(5);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("concurrently batch get then fetch the same request", async () => {
@@ -253,14 +254,15 @@ test("concurrently batch get then fetch the same request", async () => {
     expect(() => serverData.batch.get("partner", "get_something", 5)).toThrow(LoadingDataError);
     const result = await serverData.fetch("partner", "get_something", [5]);
     await animationFrame();
-    expect([
+    // it should have fetch the data once
+    expect.verifySteps([
         "partner/get_something",
         "partner/get_something",
         "data-fetching-notification",
-    ]).toVerifySteps({ message: "it should have fetch the data once" });
+    ]);
     expect(result).toBe(5);
     expect(serverData.batch.get("partner", "get_something", 5)).toBe(5);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("concurrently get and batch get the same request", async () => {
@@ -276,12 +278,11 @@ test("concurrently get and batch get the same request", async () => {
     expect(() => serverData.batch.get("partner", "get_something", 5)).toThrow(LoadingDataError);
     expect(() => serverData.get("partner", "get_something", [5])).toThrow(LoadingDataError);
     await animationFrame();
-    expect(["partner/get_something", "data-fetching-notification"]).toVerifySteps({
-        message: "it should have fetch the data once",
-    });
+    // it should have fetch the data once
+    expect.verifySteps(["partner/get_something", "data-fetching-notification"]);
     expect(serverData.get("partner", "get_something", [5])).toBe(5);
     expect(serverData.batch.get("partner", "get_something", 5)).toBe(5);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("Call the correct callback after a batch result", async () => {
@@ -302,7 +303,7 @@ test("Call the correct callback after a batch result", async () => {
     const request2 = new Request("partner", "get_something", [5]);
     batchEndpoint.call(request);
     batchEndpoint.call(request2);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await animationFrame();
-    expect(["success-callback", "failure-callback"]).toVerifySteps();
+    expect.verifySteps(["success-callback", "failure-callback"]);
 });

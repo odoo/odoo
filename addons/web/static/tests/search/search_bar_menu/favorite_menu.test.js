@@ -137,13 +137,13 @@ test("delete an active favorite", async () => {
     expect(queryFirst`.o_favorite_menu .o_menu_item`).toHaveClass("selected");
 
     await deleteFavorite("My favorite");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(`div.o_dialog footer button`).click();
     expect(getFacetTexts()).toEqual([]);
     expect(".o_favorite_menu .o_menu_item").toHaveCount(1);
     expect(".o_favorite_menu .o_add_favorite").toHaveCount(1);
-    expect(["deleteFavorite", "CLEAR-CACHES", "props updated"]).toVerifySteps();
+    expect.verifySteps(["deleteFavorite", "CLEAR-CACHES", "props updated"]);
 });
 
 test("default favorite is not activated if activateFavorite is set to false", async () => {
@@ -341,7 +341,7 @@ test("shared favorites are grouped under a dropdown if there are more than 3", a
     await editFavoriteName("My favorite4");
     await contains(".o-checkbox:eq(1)").click();
     await saveFavorite();
-    expect(["/web/dataset/call_kw/ir.filters/create_or_replace"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create_or_replace"]);
     expect(".o_favorite_menu .o-dropdown-item").toHaveCount(0);
     expect(".o_favorite_menu .o_menu_item:contains(Shared filters)").toHaveCount(1);
     await contains(".o_favorite_menu .o_menu_item:contains(Shared filters)").click();

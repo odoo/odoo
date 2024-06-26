@@ -40,10 +40,10 @@ test("Can be rendered with different tags", async () => {
     expect(".o_tag").toHaveCount(3);
 
     click(".o_tag:nth-of-type(2) .o_delete");
-    expect(["tag2 delete button has been clicked"]).toVerifySteps();
+    expect.verifySteps(["tag2 delete button has been clicked"]);
 
     click(".o_tag:nth-of-type(3)");
-    expect(["tag3 has been clicked"]).toVerifySteps();
+    expect.verifySteps(["tag3 has been clicked"]);
 });
 
 test("Tags can be displayed with an image", async () => {

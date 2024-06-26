@@ -38,7 +38,7 @@ test("basic interactions", async () => {
     click(".o_pager button.o_pager_previous");
     await animationFrame();
 
-    expect(["offset: 4, limit: 4", "offset: 0, limit: 4"]).toVerifySteps();
+    expect.verifySteps(["offset: 4, limit: 4", "offset: 0, limit: 4"]);
 });
 
 test.tags("desktop")("basic interactions on desktop", async () => {
@@ -143,13 +143,13 @@ test.tags("desktop")("keydown on pager with same value", async () => {
 
     expect("input").toHaveCount(1);
     expect(".o_pager_counter .o_pager_value").toHaveValue("1-4");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     press("Enter");
     await animationFrame();
     expect("input").toHaveCount(0);
     expect(".o_pager_counter .o_pager_value").toHaveText("1-4");
-    expect(["pager-changed"]).toVerifySteps();
+    expect.verifySteps(["pager-changed"]);
 });
 
 test.tags("desktop")("pager value formatting", async () => {

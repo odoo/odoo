@@ -105,12 +105,12 @@ test("close dialog by clicking on the header button", async () => {
     expect(".o_dialog").toHaveCount(1);
     await contains(".o_dialog .modal-header button").click();
     expect(".o_dialog").toHaveCount(0);
-    expect(["on_close"]).toVerifySteps();
+    expect.verifySteps(["on_close"]);
 
     // execute an 'ir.actions.act_window_close' action
     // should not call 'on_close' as it was already called.
     await getService("action").doAction({ type: "ir.actions.act_window_close" });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test('execute "on_close" only if there is no dialog to close', async () => {
@@ -124,11 +124,11 @@ test('execute "on_close" only if there is no dialog to close', async () => {
     // execute an 'ir.actions.act_window_close' action
     // should not call 'on_close' as there is a dialog to close
     await getService("action").doAction({ type: "ir.actions.act_window_close" }, options);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     // execute again an 'ir.actions.act_window_close' action
     // should call 'on_close' as there is no dialog to close
     await getService("action").doAction({ type: "ir.actions.act_window_close" }, options);
-    expect(["on_close"]).toVerifySteps();
+    expect.verifySteps(["on_close"]);
 });
 
 test("close action with provided infos", async () => {
@@ -161,7 +161,7 @@ test("history back calls on_close handler of dialog action", async () => {
     expect(".modal").toHaveCount(1);
     const form = findComponent(webClient, (c) => c instanceof formView.Controller);
     form.env.config.historyBack();
-    expect(["on_close"]).toVerifySteps();
+    expect.verifySteps(["on_close"]);
     await animationFrame();
     expect(".modal").toHaveCount(0);
 });
@@ -193,7 +193,7 @@ test.tags("desktop")("history back called within on_close", async () => {
     expect(".modal").toHaveCount(0);
     expect(".o_list_view").toHaveCount(0);
     expect(".o_kanban_view").toHaveCount(1);
-    expect(["on_close"]).toVerifySteps();
+    expect.verifySteps(["on_close"]);
 });
 
 test.tags("desktop")(
@@ -218,7 +218,7 @@ test.tags("desktop")(
         expect(".modal").toHaveCount(1);
         expect(".o_list_view").toHaveCount(1);
         list.env.config.historyBack();
-        expect(["on_close"]).toVerifySteps();
+        expect.verifySteps(["on_close"]);
         await animationFrame();
         expect(".o_list_view").toHaveCount(1);
         expect(".modal").toHaveCount(0);
@@ -242,7 +242,7 @@ test.tags("desktop")("web client is not deadlocked when a view crashes", async (
     await contains(".o_list_view .o_data_cell").click();
     readOnFirstRecordDef.reject(new Error("not working as intended"));
     await animationFrame();
-    expect(["not working as intended"]).toVerifyErrors();
+    expect.verifyErrors(["not working as intended"]);
 
     expect(".o_list_view").toHaveCount(1, { message: "there should still be a list view in dom" });
     // open another record, the read will not crash
