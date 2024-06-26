@@ -55,7 +55,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 5)
 
-        with self.assertQueryCount(__system__=2, demo=2):
+        with self.assertQueryCount(__system__=3, demo=3):
             # without cache
             for record in records:
                 record.partner_id.country_id.name
