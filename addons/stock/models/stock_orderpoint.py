@@ -180,11 +180,20 @@ class StockWarehouseOrderpoint(models.Model):
         if self.route_id:
             self.qty_multiple = self._get_qty_multiple_to_order()
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        if any(val.get('snoozed_until', False) and val.get('trigger', self.default_get(['trigger'])['trigger']) == 'auto' for val in vals_list):
+            raise UserError(_("You can not create a snoozed orderpoint that is not manually triggered."))
+        return super().create(vals_list)
+
     def write(self, vals):
         if 'company_id' in vals:
             for orderpoint in self:
                 if orderpoint.company_id.id != vals['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
+        if 'snoozed_until' in vals:
+            if any(orderpoint.trigger == 'auto' for orderpoint in self):
+                raise UserError(_("You can only snooze manual orderpoints. You should rather archive 'auto-trigger' orderpoints if you do not want them to be triggered."))
         return super().write(vals)
 
     def action_product_forecast_report(self):
