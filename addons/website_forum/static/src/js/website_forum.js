@@ -68,14 +68,27 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
 
         const element = document.querySelector("input.js_select2");
         const tagsSelectMenu = await attachComponent(this, element.parentNode, SelectMenu, {
+            searchPlaceholder: _t("Please enter 2 or more characters"),
             placeholder: _t("Tags"),
             element: element,
+            multiSelect: true,
             onSelect: (value) => {
                 tagsSelectMenu?.update({
                     value: value,
                 });
             },
             choiceFetchFunction: (searchString) => {
+                const choices = [
+                    {
+                        id: "new",
+                        name: `Create ${searchString}`,
+                        value: searchString,
+                        label: `Create ${searchString}`,
+                    },
+                ];
+                if (searchString.length < 3) {
+                    return choices;
+                }
                 const forumID = $("#wrapwrap").data("forum_id");
                 return new Promise((resolve, reject) => {
                     this.http
@@ -87,6 +100,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                                 choice.value = choice.name;
                                 choice.label = choice.name;
                             });
+                            result = result.concat(choices);
                             resolve(result);
                         });
                 });
