@@ -277,6 +277,59 @@
     <WeInput title.translate="Zoom" selectDataAttribute="'12'" noPreview="'true'" attributeName="'mapZoom'" step="'1'"/>
     <WeCheckbox title.translate="Description" showDescription="'true'" noPreview="'true'"/>
 </t>
+<t t-name="web_editor.mega_menu_layout_options">
+    <WeSelect name="'mega_menu_template_opt'" title.translate="Template">
+        <t t-set="_label">Multi Menus</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_multi_menus'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_multi_menus.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Image Menu</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_menu_image_menu'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_menu_image_menu.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Odoo Menu</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_odoo_menu'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_odoo_menu.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Little Icons</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_little_icons'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_little_icons.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Big Icons Subtitles</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_big_icons_subtitles'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_big_icons_subtitles.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Images Subtitles</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_images_subtitles'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_images_subtitles.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Logos</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_menus_logos'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_menus_logos.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Thumbnails</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_thumbnails'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_thumbnails.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Cards</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_cards'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_cards.svg'"
+                  t-out="_label"/>
+    </WeSelect>
+    <WeSelect title.translate="Size">
+        <WeButton selectClass="''">Full-Width</WeButton>
+        <WeButton selectClass="'o_mega_menu_container_size'">Narrow</WeButton>
+    </WeSelect>
+</t>
 
 <t t-name="website.TestSnippetOption" t-inherit="web_editor.TestSnippetOption" t-inherit-mode="extension">
     <xpath expr="//WeRow" position="before">

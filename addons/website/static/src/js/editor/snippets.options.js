@@ -277,7 +277,7 @@ class FontFamilyUserValue extends SelectUserValue {
     async start() {
         return this.fontsLoadingProm;
     }
-    
+
     get fonts() {
         return this._fonts;
     }
@@ -4067,14 +4067,16 @@ options.registry.TextHighlight = options.Class.extend({
 /**
  * Replaces current target with the specified template layout
  */
-options.registry.MegaMenuLayout = options.registry.SelectTemplate.extend({
+export class MegaMenuLayout extends SelectTemplate {
     /**
      * @override
      */
-    init() {
-        this._super(...arguments);
+    static forceNoDeleteButton = true;
+
+    constructor() {
+        super(...arguments);
         this.selectTemplateWidgetName = 'mega_menu_template_opt';
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -4091,9 +4093,9 @@ options.registry.MegaMenuLayout = options.registry.SelectTemplate.extend({
                 data.onSuccess();
             });
         } else {
-            this._super(...arguments);
+            super.notify(...arguments);
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -4102,28 +4104,36 @@ options.registry.MegaMenuLayout = options.registry.SelectTemplate.extend({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         if (methodName === 'selectTemplate') {
             return this._getCurrentTemplateXMLID();
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @private
      * @returns {string} xmlid of the current template.
      */
-    _getCurrentTemplateXMLID: function () {
+    _getCurrentTemplateXMLID() {
         const templateDefiningClass = this.containerEl.querySelector('section')
             .classList.value.split(' ').filter(cl => cl.startsWith('s_mega_menu'))[0];
         return `website.${templateDefiningClass}`;
-    },
+    }
+}
+registerWebsiteOption("MegaMenuLayout", {
+    Class: MegaMenuLayout,
+    template: "web_editor.mega_menu_layout_options",
+    selector: ".o_mega_menu",
 });
 
 /**
  * Hides delete and clone buttons for Mega Menu block.
  */
-options.registry.MegaMenuNoDelete = options.Class.extend({
-    forceNoDeleteButton: true,
+export class MegaMenuNoDelete extends SnippetOption {
+    /**
+     * @override
+     */
+    static forceNoDeleteButton = true;
 
     /**
      * @override
@@ -4138,7 +4148,16 @@ options.registry.MegaMenuNoDelete = options.Class.extend({
                 }
             });
         });
-    },
+    }
+}
+registerWebsiteOption("MegaMenuNoDelete", {
+    Class: MegaMenuLayout,
+    selector: ".o_mega_menu > section",
+});
+registerWebsiteOption("MegaMenuNoDeleteDrop", {
+    selector: ".o_mega_menu .nav > .nav-link",
+    dropIn: ".o_mega_menu nav",
+    dropNear: () => ".o_mega_menu .nav-link",
 });
 
 options.registry.sizing.include({
