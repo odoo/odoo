@@ -51,4 +51,9 @@ class ProjectCustomerPortal(CustomerPortal):
         values['allow_timesheets'] = task.allow_timesheets
         values['timesheets'] = timesheets
         values['is_uom_day'] = request.env['account.analytic.line']._is_timesheet_encode_uom_day()
+        parent_task = values['task']
+        sub_task_ids = parent_task._get_subtask_ids_per_task_id()[parent_task.id]
+        sub_task_ids.append(parent_task.id)
+        search_domain = expression.AND([domain, [('parent_task_id', 'in', sub_task_ids)]])
+        values['enable_sub_task_link'] = request.env['account.analytic.line'].sudo().search_count(search_domain, limit=1)
         return values
