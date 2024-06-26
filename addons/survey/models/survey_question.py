@@ -113,6 +113,9 @@ class SurveyQuestion(models.Model):
     suggested_answer_ids = fields.One2many(
         'survey.question.answer', 'question_id', string='Types of answers', copy=True,
         help='Labels used for proposed choices: simple choice, multiple choice and columns of matrix')
+    end_message_selection = fields.Selection(
+        related="survey_id.end_message_selection", readonly=True,
+        help="Tags enable to display an end message based on participants' answers.")
     # -- matrix
     matrix_subtype = fields.Selection([
         ('simple', 'One choice per row'),
