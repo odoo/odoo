@@ -3,21 +3,40 @@
         padding: 1rem;
 
         .o_error_detail {
-            overflow: auto;
-
-            pre {
-                max-height: 30vh;
+            > div pre {
+                max-height: 40vh;
             }
+        }
+    }
+
+    .o_error_detail {
+        > div {
+            overflow: auto;
+            pre {
+                border: none;
+                overflow: unset;
+            }
+        }
+        button {
+            top: 10px;
+            right: 15px;
+            opacity: 0.66;
+        }
+        button:hover {
+            opacity: 1;
         }
     }
 
     .modal-header {
         border: none;
-        padding-bottom: 0;
-        margin-bottom: -1rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
         .modal-title {
             font-size: 1.625rem;
         }
+    }
+    .modal-body {
+        padding-top: 0;
     }
 
     .modal-footer{
