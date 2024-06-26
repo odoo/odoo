@@ -1,66 +1,55 @@
-import { test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { deleteBackward, insertText } from "../_helpers/user_actions";
-import { testEditor } from "../_helpers/editor";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { descendants } from "@html_editor/utils/dom_traversal";
 import { tick } from "@odoo/hoot-mock";
-import { setSelection } from "../_helpers/selection";
+import { getContent, setSelection } from "../_helpers/selection";
+import { cleanLinkArtifacts } from "../_helpers/format";
+import { waitFor } from "@odoo/hoot-dom";
 
-async function clickOnLink(editor) {
-    throw new Error("clickOnLink not implemented");
-    // const a = editor.editable.querySelector("a");
-    // await click(a, { clientX: a.getBoundingClientRect().left + 5 });
-    // return a;
-}
-
-test.todo("should restrict editing to link when clicked", async () => {
+test("should pad a link with ZWNBSPs and add visual indication", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="#/"><span class="a">b</span></a></p>',
+        contentBefore: '<p>a<a href="#/">b</a>c</p>',
+        contentBeforeEdit: '<p>a\ufeff<a href="#/">\ufeffb\ufeff</a>\ufeffc</p>',
         stepFunction: async (editor) => {
-            const a = await clickOnLink(editor);
-            window.chai.expect(a.isContentEditable).to.be.equal(true);
+            setSelection({ anchorNode: editor.editable.querySelector("a"), anchorOffset: 1 });
+            await tick();
         },
-        contentAfter: '<p>a<a href="#/"><span class="a">b</span></a></p>',
+        contentAfterEdit:
+            '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeff[]b\ufeff</a>\ufeffc</p>',
+        contentAfter: '<p>a<a href="#/">[]b</a>c</p>',
     });
-    // The following is a regression test, checking that the link
-    // remains non-editable whenever the editable zone is contained by
-    // the link.
-    await testEditor(
-        {
-            contentBefore: '<p>a<a href="#/"><span class="a">b</span></a></p>',
-            stepFunction: async (editor) => {
-                const a = await clickOnLink(editor);
-                window.chai.expect(a.isContentEditable).to.be.equal(false);
-            },
-            contentAfter:
-                '<p>a<a href="#/"><span class="a" contenteditable="true">b</span></a></p>',
-        },
-        {
-            isRootEditable: false,
-            getContentEditableAreas: function (editor) {
-                return [...editor.editable.querySelectorAll("a span")];
-            },
-        }
-    );
 });
 
-test.todo("should keep isolated link after a delete", async () => {
+test("should pad a link with ZWNBSPs and add visual indication (2)", async () => {
+    await testEditor({
+        contentBefore: '<p>a<a href="#/"><span class="a">b</span></a></p>',
+        contentBeforeEdit:
+            '<p>a\ufeff<a href="#/">\ufeff<span class="a">b</span>\ufeff</a>\ufeff</p>',
+        stepFunction: async (editor) => {
+            setSelection({ anchorNode: editor.editable.querySelector("a span"), anchorOffset: 0 });
+            await tick();
+        },
+        contentAfterEdit:
+            '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeff<span class="a">[]b</span>\ufeff</a>\ufeff</p>',
+        contentAfter: '<p>a<a href="#/"><span class="a">[]b</span></a></p>',
+    });
+});
+
+test("should keep link padded with ZWNBSPs after a delete", async () => {
     await testEditor({
         contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
-        stepFunction: async (editor) => {
-            await clickOnLink(editor);
-            deleteBackward(editor);
-        },
+        stepFunction: deleteBackward,
         contentAfterEdit:
             '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeff[]\ufeff</a>\ufeffc</p>',
         contentAfter: "<p>a[]c</p>",
     });
 });
 
-test.todo("should keep isolated link after a delete and typing", async () => {
+test("should keep isolated link after a delete and typing", async () => {
     await testEditor({
         contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
         stepFunction: async (editor) => {
-            await clickOnLink(editor);
             deleteBackward(editor);
             insertText(editor, "a");
             insertText(editor, "b");
@@ -70,18 +59,18 @@ test.todo("should keep isolated link after a delete and typing", async () => {
     });
 });
 
-test.todo("should delete the content from the link when popover is active", async () => {
-    await testEditor({
-        contentBefore: '<p><a href="#/">abc[]abc</a></p>',
-        stepFunction: async (editor) => {
-            await clickOnLink(editor);
-            deleteBackward(editor);
-            deleteBackward(editor);
-            deleteBackward(editor);
-            deleteBackward(editor);
-        },
-        contentAfter: '<p><a href="#/">[]abc</a></p>',
-    });
+test("should delete the content from the link when popover is active", async () => {
+    const { editor, el } = await setupEditor('<p><a href="#/">abc[]abc</a></p>');
+    await waitFor(".o-we-linkpopover");
+    expect(".o-we-linkpopover").toHaveCount(1);
+    deleteBackward(editor);
+    deleteBackward(editor);
+    deleteBackward(editor);
+    const content = getContent(el);
+    expect(content).toBe(
+        '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufeff[]abc\ufeff</a>\ufeff</p>'
+    );
+    expect(cleanLinkArtifacts(content)).toBe('<p><a href="#/">[]abc</a></p>');
 });
 
 test("should zwnbsp-pad simple text link", async () => {
