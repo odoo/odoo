@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: "click",
         },
         {
-            trigger: ".o_data_row > td:contains('7')",
+            trigger: ".modal .o_data_row > td:contains('7')",
             run: "click",
         },
         {
