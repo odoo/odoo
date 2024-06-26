@@ -303,10 +303,13 @@ patch(PosStore.prototype, {
         }
         this.set_order(null);
     },
+    getActiveOrdersOnTable(table) {
+        return this.models["pos.order"].filter(
+            (o) => o.table_id?.id === table.id && !o.finalized && o.lines.length
+        );
+    },
     tableHasOrders(table) {
-        return this.models["pos.order"]
-            .filter((o) => !o.finalized)
-            .some((o) => o.table_id?.id === table?.id && o.lines.length);
+        return this.getActiveOrdersOnTable(table).length > 0;
     },
     shouldShowNavbarButtons() {
         return super.shouldShowNavbarButtons(...arguments) && !this.orderToTransferUuid;
@@ -342,7 +345,6 @@ patch(PosStore.prototype, {
         order.update({ table_id: table });
         this.set_order(order);
         this.orderToTransferUuid = null;
-        this.showScreen("ProductScreen");
     },
     updateTables(...tables) {
         this.data.call("restaurant.table", "update_tables", [
