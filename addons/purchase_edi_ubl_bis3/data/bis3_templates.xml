@@ -148,7 +148,7 @@
             <cac:StandardItemIdentification>
                 <cbc:ID t-out="vals.get('standard_item_identification')" />
             </cac:StandardItemIdentification>
-            <cac:ClassifiedTaxCategory>
+            <cac:ClassifiedTaxCategory t-if="vals.get('classified_tax_category_vals')" >
                 <t t-call="purchase_edi_ubl_bis3.bis3_TaxCategoryType">
                     <t t-set="vals" t-value="vals.get('classified_tax_category_vals')" />
                 </t>

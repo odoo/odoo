@@ -86,6 +86,8 @@ class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
         }
 
     def _get_tax_category_vals(self, order, order_line):
+        if not order_line.taxes_id:
+            return None
         tax = order_line.taxes_id[0]
         tax_unece_codes = self.env['account.edi.common'].get_tax_unece_codes_order(order, tax)
         return {
