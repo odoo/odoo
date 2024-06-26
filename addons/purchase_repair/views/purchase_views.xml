@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_invoice']" position="after">
+                <button
+                    name="action_show_mto_links"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-wrench"
+                    invisible="repairs_count == 0"
+                    groups="stock.group_stock_user"
+                    help="Repairs">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">
+                            Repair Orders
+                            <field name="repairs_count"/>
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
