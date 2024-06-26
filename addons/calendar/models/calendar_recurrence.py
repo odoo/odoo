@@ -119,7 +119,7 @@ class RecurrenceRule(models.Model):
     weekday = fields.Selection(WEEKDAY_SELECTION, string='Weekday')
     byday = fields.Selection(BYDAY_SELECTION, string='By day')
     until = fields.Date('Repeat Until')
-    trigger_id = fields.Many2one('ir.cron.trigger')
+    trigger_ids = fields.Many2many('ir.cron.trigger')
 
     _sql_constraints = [
         ('month_day',
@@ -305,11 +305,11 @@ class RecurrenceRule(models.Model):
         events = self.env['calendar.event'].browse(value['event_id'] for value in result)
         triggers_by_events = events._setup_alarms()
         for vals in result:
-            trigger_id = triggers_by_events.get(vals['event_id'])
-            if not trigger_id:
+            trigger_ids = triggers_by_events.get(vals['event_id'])
+            if not trigger_ids:
                 continue
             recurrence = self.env['calendar.recurrence'].browse(vals['recurrence_id'])
-            recurrence.trigger_id = trigger_id
+            recurrence.trigger_ids = [(6, 0, trigger_ids)]
 
     def _split_from(self, event, recurrence_values=None):
         """Stops the current recurrence at the given event and creates a new one starting
