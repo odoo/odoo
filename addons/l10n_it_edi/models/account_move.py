@@ -1191,10 +1191,11 @@ class AccountMove(models.Model):
             errors['l10n_it_edi_move_rc_mixed_product_types'] = build_error(
                 message=_("Cannot apply Reverse Charge to bills which contains both services and goods."),
                 records=moves)
-        if pa_moves := self.filtered(lambda move: move.company_id.partner_id._l10n_it_edi_is_public_administration()):
-            if moves := pa_moves.filtered(lambda move: move.l10n_it_origin_document_type):
-                message = _("Your company belongs to the Public Administration, please fill out Origin Document Type field in the Electronic Invoicing tab.")
-                errors['l10n_it_edi_move_missing_origin_document'] = build_error(message=message, records=moves)
+
+        if pa_moves := self.filtered(lambda move: move.commercial_partner_id._l10n_it_edi_is_public_administration()):
+            if moves := pa_moves.filtered(lambda move: not move.l10n_it_origin_document_type):
+                message = _("Partner(s) belongs to the Public Administration, please fill out Origin Document Type field in the Electronic Invoicing tab.")
+                errors['move_missing_origin_document'] = build_error(message=message, records=moves)
             if moves := pa_moves.filtered(lambda move: move.l10n_it_origin_document_date and move.l10n_it_origin_document_date > fields.Date.today()):
                 message = _("The Origin Document Date cannot be in the future.")
                 errors['l10n_it_edi_move_future_origin_document_date'] = build_error(message=message, records=moves)
