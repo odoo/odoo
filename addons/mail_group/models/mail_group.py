@@ -435,7 +435,7 @@ class MailGroup(models.Model):
                     ** self._notify_by_email_get_headers(),
                     'List-Archive': f'<{base_url}/groups/{slug(self)}>',
                     'List-Subscribe': f'<{base_url}/groups?email={email_url_encoded}>',
-                    'List-Unsubscribe': unsubscribe_url,
+                    'List-Unsubscribe': f'<{unsubscribe_url}>',
                     'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
                     'Precedence': 'list',
                     'X-Auto-Response-Suppress': 'OOF',  # avoid out-of-office replies from MS Exchange
