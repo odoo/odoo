@@ -24,6 +24,7 @@ export function negate(selector, parent = "body") {
 export function negateStep(step) {
     return {
         ...step,
+        content: `Check that: ---${step.content}--- is not true`,
         trigger: negate(step.trigger),
     };
 }
