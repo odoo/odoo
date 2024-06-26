@@ -449,15 +449,106 @@ const registerAssertion = (assertion) => {
 const scopeError = (method) => new HootError(`cannot call \`${method}()\` outside of a test`);
 
 /**
- * @param {string} name
+ * @param {any} value
  */
-const step = (name) => {
+const step = (value) => {
     if (!currentResult) {
         throw scopeError("expect.step");
     }
-    ensureArguments([[name, "string"]]);
+    ensureArguments([[value, "any"]]);
 
-    currentResult.steps.push(name);
+    currentResult.steps.push(value);
+};
+
+/**
+ * Expects the received matchers to match the errors thrown since the start
+ * of the test or the last call to {@link verifyErrors}. Calling this matcher
+ * will reset the list of current errors.
+ *
+ * @param {unknown[]} errors
+ * @example
+ *  expect.verifyErrors([/RPCError/, /Invalid domain AST/]);
+ */
+const verifyErrors = (errors) => {
+    if (!currentResult) {
+        throw scopeError("expect.verifyErrors");
+    }
+    ensureArguments([[errors, "any[]"]]);
+
+    const actualErrors = currentResult.errors;
+    currentResult.errors = [];
+    const pass =
+        actualErrors.length === errors.length &&
+        actualErrors.every(
+            (error, i) => match(error, errors[i]) || (error.cause && match(error.cause, errors[i]))
+        );
+
+    const message = pass
+        ? errors.length
+            ? errors.map(formatHumanReadable).join(" -> ")
+            : "no errors"
+        : `expected the following errors`;
+    const assertion = new Assertion({
+        label: "verifySteps",
+        message,
+        pass,
+    });
+
+    if (!pass) {
+        const fActual = actualErrors.map(formatError);
+        const fExpected = errors.map(formatError);
+        const formattedStack = formatStack(new Error().stack);
+        assertion.info = [
+            [Markup.green("Expected:"), fExpected],
+            [Markup.red("Received:"), fActual],
+            [Markup.text("Diff:"), Markup.diff(fExpected, fActual)],
+            [Markup.red("Source:"), Markup.text(formattedStack, { technical: true })],
+        ];
+    }
+
+    registerAssertion(assertion);
+};
+
+/**
+ * Expects the received steps to be equal to the steps emitted since the start
+ * of the test or the last call to {@link verifySteps}. Calling this matcher
+ * will reset the list of current steps.
+ *
+ * @param {any[]} steps
+ * @example
+ *  expect.verifySteps(["web_read_group", "web_search_read"]);
+ */
+const verifySteps = (steps) => {
+    if (!currentResult) {
+        throw scopeError("expect.verifySteps");
+    }
+    ensureArguments([[steps, "any[]"]]);
+
+    const actualSteps = currentResult.steps;
+    currentResult.steps = [];
+    const pass = deepEqual(actualSteps, steps);
+    const message = pass
+        ? steps.length
+            ? steps.map(formatHumanReadable).join(" -> ")
+            : "no steps"
+        : `expected the following steps`;
+    const assertion = new Assertion({
+        label: "verifySteps",
+        message,
+        pass,
+    });
+
+    if (!pass) {
+        const formattedStack = formatStack(new Error().stack);
+        assertion.info = [
+            [Markup.green("Expected:"), steps],
+            [Markup.red("Received:"), actualSteps],
+            [Markup.text("Diff:"), Markup.diff(steps, actualSteps)],
+            [Markup.red("Source:"), Markup.text(formattedStack, { technical: true })],
+        ];
+    }
+
+    registerAssertion(assertion);
 };
 
 const R_ACTUAL = /%(actual)%/i;
@@ -506,6 +597,8 @@ export function makeExpect(params) {
         assertions,
         errors,
         step,
+        verifyErrors,
+        verifySteps,
     });
     const expectHooks = {
         after: afterTest,
@@ -1095,93 +1188,6 @@ export class Matchers {
             details: (actual) => [
                 [Markup.green("Matcher:"), matcher],
                 [Markup.red("Received:"), actual],
-            ],
-        });
-    }
-
-    /**
-     * Expects the received matchers to match the errors thrown since the start
-     * of the test or the last call to {@link toVerifyErrors}. Calling this matcher
-     * will reset the list of current errors.
-     *
-     * @param {ExpectOptions} [options]
-     * @example
-     *  expect([/RPCError/, /Invalid domain AST/]).toVerifyErrors();
-     */
-    toVerifyErrors(options) {
-        this._saveStack();
-
-        ensureArguments([[options, ["object", null]]]);
-
-        let receivedErrors;
-        return this._resolve({
-            name: "toVerifyErrors",
-            acceptedType: ["string[]", "regex[]"],
-            predicate: (expected) => {
-                receivedErrors = currentResult.errors;
-                currentResult.errors = [];
-                return (
-                    receivedErrors.length === expected.length &&
-                    receivedErrors.every(
-                        (error, i) =>
-                            match(error, expected[i]) ||
-                            (error.cause && match(error.cause, expected[i]))
-                    )
-                );
-            },
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? receivedErrors.length
-                        ? receivedErrors.map(formatHumanReadable).join(" > ")
-                        : "no errors"
-                    : `expected the following errors`),
-            details: (actual) => {
-                const fActual = actual.map(formatError);
-                const fReceived = receivedErrors.map(formatError);
-                return [
-                    [Markup.green("Expected:"), fActual],
-                    [Markup.red("Received:"), fReceived],
-                    [Markup.text("Diff:"), Markup.diff(fActual, fReceived)],
-                ];
-            },
-        });
-    }
-
-    /**
-     * Expects the received steps to be equal to the steps emitted since the start
-     * of the test or the last call to {@link toVerifySteps}. Calling this matcher
-     * will reset the list of current steps.
-     *
-     * @param {ExpectOptions} [options]
-     * @example
-     *  expect(["web_read_group", "web_search_read"]).toVerifySteps();
-     */
-    toVerifySteps(options) {
-        this._saveStack();
-
-        ensureArguments([[options, ["object", null]]]);
-
-        let receivedSteps;
-        return this._resolve({
-            name: "toVerifySteps",
-            acceptedType: "string[]",
-            predicate: (actual) => {
-                receivedSteps = currentResult.steps;
-                currentResult.steps = [];
-                return deepEqual(actual, receivedSteps);
-            },
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? receivedSteps.length
-                        ? receivedSteps.map(formatHumanReadable).join(" -> ")
-                        : "no steps"
-                    : `expected the following steps`),
-            details: (actual) => [
-                [Markup.green("Expected:"), actual],
-                [Markup.red("Received:"), receivedSteps],
-                [Markup.text("Diff:"), Markup.diff(actual, receivedSteps)],
             ],
         });
     }

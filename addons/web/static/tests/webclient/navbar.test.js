@@ -405,11 +405,11 @@ test.tags("desktop")("can adapt with 'more' menu sections behavior", async () =>
         message: "should have 3 menu sections displayed (that are not the 'more' menu)",
     });
     expect(".o_menu_sections_more").toHaveCount(0, { message: "the 'more' menu should not exist" });
-    expect([
+    expect.verifySteps([
         "adapt -> hide 0/3 sections",
         "adapt -> hide 3/3 sections",
         "adapt -> hide 0/3 sections",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")(
@@ -618,12 +618,12 @@ test("Do not execute adapt when navbar is destroyed", async () => {
     // Set menu and mount
     getService("menu").setCurrentMenu(1);
     const navbar = await mountWithCleanup(MyNavbar);
-    expect(["adapt NavBar"]).toVerifySteps();
+    expect.verifySteps(["adapt NavBar"]);
     resize();
     await runAllTimers();
-    expect(["adapt NavBar"]).toVerifySteps();
+    expect.verifySteps(["adapt NavBar"]);
     resize();
     destroy(navbar);
     await runAllTimers();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });

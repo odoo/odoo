@@ -300,14 +300,14 @@ test("building a domain with a m2o without following the relation", async () => 
             expect.step(domain);
         },
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(isNotSupportedValue()).toBe(true);
 
     await clearNotSupported();
-    expect([`[("product_id", "ilike", "")]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "ilike", "")]`]);
 
     await contains(`${SELECTORS.valueEditor} input`).edit("pad");
-    expect([`[("product_id", "ilike", "pad")]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "ilike", "pad")]`]);
 });
 
 test("editing a domain with `parent` key", async () => {
@@ -392,7 +392,7 @@ test("cache fields_get", async () => {
     await makeDomainSelector({
         domain: "['&', ['foo', '=', 'kikou'], ['bar', '=', 'true']]",
     });
-    expect(["fields_get"]).toVerifySteps();
+    expect.verifySteps(["fields_get"]);
 });
 
 test("selection field with operator change from 'is set' to '='", async () => {
@@ -554,7 +554,7 @@ test("reset domain", async () => {
     expect(".o_domain_selector").toHaveText("Match all records\nNew Rule");
     expect(SELECTORS.resetButton).toHaveCount(0);
     expect(SELECTORS.addNewRule).toHaveCount(1);
-    expect(["[]"]).toVerifySteps();
+    expect.verifySteps(["[]"]);
 });
 
 test("default condition depends on available fields", async () => {
@@ -572,7 +572,7 @@ test("default condition depends on available fields", async () => {
     });
     expect(".o_domain_selector").toHaveText("Match all records\nNew Rule");
     await addNewRule();
-    expect(['[("user_id", "in", [])]']).toVerifySteps();
+    expect.verifySteps(['[("user_id", "in", [])]']);
 });
 
 test("debug input in model field selector popover", async () => {
@@ -601,7 +601,7 @@ test("debug input in model field selector popover", async () => {
     await openModelFieldSelectorPopover();
     await contains(".o_model_field_selector_debug").edit("a", { confirm: "tab" });
     await contains(".o_model_field_selector_popover_close").click();
-    expect([`[("a", "=", 1)]`]).toVerifySteps();
+    expect.verifySteps([`[("a", "=", 1)]`]);
     expect(getCurrentPath()).toBe("a");
     expect(".o_model_field_selector_warning").toHaveCount(1);
     expect(getOperatorOptions()).toHaveLength(1);
@@ -625,14 +625,14 @@ test("between operator", async () => {
     expect(".o_datetime_input").toHaveCount(2);
 
     await contains(".o_datetime_input:first").edit("2023-01-02 00:00:00");
-    expect([
+    expect.verifySteps([
         `["&", ("datetime", ">=", "2023-01-02 00:00:00"), ("datetime", "<=", "2023-01-10 00:00:00")]`,
-    ]).toVerifySteps();
+    ]);
 
     await contains(".o_datetime_input:eq(1)").edit("2023-01-08 00:00:00");
-    expect([
+    expect.verifySteps([
         `["&", ("datetime", ">=", "2023-01-02 00:00:00"), ("datetime", "<=", "2023-01-08 00:00:00")]`,
-    ]).toVerifySteps();
+    ]);
 });
 
 test("between operator (2)", async () => {
@@ -699,9 +699,9 @@ test("expressions in between operator", async () => {
     await clearNotSupported();
     expect(SELECTORS.valueEditor).toHaveCount(1);
     expect(`${SELECTORS.editor} .o_datetime_input`).toHaveCount(2);
-    expect([
+    expect.verifySteps([
         `["&", ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 00:00:00")]`,
-    ]).toVerifySteps();
+    ]);
 });
 
 test("support of connector '!' (mode readonly)", async () => {
@@ -1205,18 +1205,18 @@ test("Edit the value for field char and an operator in", async () => {
 
     await editValue("c");
     expect(queryAllTexts(SELECTORS.tag)).toEqual([`"a"`, `"b"`, `uid`, `"c"`]);
-    expect([`[("foo", "in", ["a", "b", uid, "c"])]`]).toVerifySteps();
+    expect.verifySteps([`[("foo", "in", ["a", "b", uid, "c"])]`]);
 
     await contains(".o_tag .o_delete:eq(2)").click();
     expect(queryAllTexts(SELECTORS.tag)).toEqual([`a`, `b`, `c`]);
-    expect([`[("foo", "in", ["a", "b", "c"])]`]).toVerifySteps();
+    expect.verifySteps([`[("foo", "in", ["a", "b", "c"])]`]);
 
     await parent.set(`[("foo", "in", ["a"])]`);
     expect(queryAllTexts(SELECTORS.tag)).toEqual([`a`]);
 
     await editValue("b");
     expect(queryAllTexts(SELECTORS.tag)).toEqual([`a`, `b`]);
-    expect([`[("foo", "in", ["a", "b"])]`]).toVerifySteps();
+    expect.verifySteps([`[("foo", "in", ["a", "b"])]`]);
 });
 
 test("display of an unknown operator (readonly)", async () => {
@@ -1553,28 +1553,28 @@ test("many2one field: operator switch (edit)", async () => {
     await selectOperator("in");
     expect(queryAllTexts(SELECTORS.tag)).toEqual([]);
     expect(getCurrentValue()).toBe("");
-    expect([`[("product_id", "in", [])]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "in", [])]`]);
 
     await selectOperator("=");
     expect(getCurrentValue()).toBe("");
-    expect([`[("product_id", "=", False)]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "=", False)]`]);
 
     await selectOperator("not in");
     expect(queryAllTexts(SELECTORS.tag)).toEqual([]);
     expect(getCurrentValue()).toBe("");
-    expect([`[("product_id", "not in", [])]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "not in", [])]`]);
 
     await selectOperator("ilike");
     expect(getCurrentValue()).toBe("");
-    expect([`[("product_id", "ilike", "")]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "ilike", "")]`]);
 
     await selectOperator("!=");
     expect(getCurrentValue()).toBe("");
-    expect([`[("product_id", "!=", False)]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "!=", False)]`]);
 
     await selectOperator("not ilike");
     expect(getCurrentValue()).toBe("");
-    expect([`[("product_id", "not ilike", "")]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "not ilike", "")]`]);
 });
 
 test("many2one field and operator =/!= (edit)", async () => {
@@ -1586,7 +1586,7 @@ test("many2one field and operator =/!= (edit)", async () => {
     });
     expect(getCurrentOperator()).toBe("=");
     expect(getCurrentValue()).toBe("");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(".dropdown-menu").toHaveCount(0);
 
     await editValue("xph", { confirm: false });
@@ -1599,26 +1599,26 @@ test("many2one field and operator =/!= (edit)", async () => {
     await contains(".dropdown-menu li").click();
     expect(getCurrentOperator()).toBe("=");
     expect(getCurrentValue()).toBe("xphone");
-    expect([`[("product_id", "=", 37)]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "=", 37)]`]);
     expect(".dropdown-menu").toHaveCount(0);
 
     await editValue("", { confirm: false });
     expect(getCurrentOperator()).toBe("=");
     expect(getCurrentValue()).toBe("");
     await contains(".o_domain_selector").click();
-    expect([`[("product_id", "=", False)]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "=", False)]`]);
 
     await selectOperator("!=");
     expect(getCurrentOperator()).toBe("!=");
     expect(getCurrentValue()).toBe("");
-    expect([`[("product_id", "!=", False)]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "!=", False)]`]);
 
     await editValue("xpa", { confirm: false });
     await runAllTimers();
     await contains(".dropdown-menu li").click();
     expect(getCurrentOperator()).toBe("!=");
     expect(getCurrentValue()).toBe("xpad");
-    expect([`[("product_id", "!=", 41)]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "!=", 41)]`]);
 });
 
 test("many2one field on record with falsy display_name", async () => {
@@ -1646,7 +1646,7 @@ test("many2one field and operator in/not in (edit)", async () => {
     });
     expect(getCurrentOperator()).toBe("is in");
     expect(getCurrentValue()).toBe("xphone");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(".dropdown-menu").toHaveCount(0);
     await contains(SELECTORS.valueEditor + " input").fill("x", { confirm: false });
     await runAllTimers();
@@ -1654,18 +1654,18 @@ test("many2one field and operator in/not in (edit)", async () => {
     expect(queryAllTexts(".dropdown-menu li")).toEqual(["xpad"]);
 
     await contains(".dropdown-menu li").click();
-    expect([`[("product_id", "in", [37, 41])]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "in", [37, 41])]`]);
     expect(getCurrentValue()).toBe("xphone xpad");
 
     await selectOperator("not in");
     expect(getCurrentOperator()).toBe("is not in");
     expect(getCurrentValue()).toBe("xphone xpad");
-    expect([`[("product_id", "not in", [37, 41])]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "not in", [37, 41])]`]);
 
     await contains(".o_tag .o_delete").click();
     expect(getCurrentOperator()).toBe("is not in");
     expect(getCurrentValue()).toBe("xpad");
-    expect([`[("product_id", "not in", [41])]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "not in", [41])]`]);
 });
 
 test("many2one field and operator ilike/not ilike (edit)", async () => {
@@ -1679,19 +1679,19 @@ test("many2one field and operator ilike/not ilike (edit)", async () => {
     expect(".o-autocomplete--input").toHaveCount(0);
     expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
     expect(getCurrentValue()).toBe("abc");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(`${SELECTORS.valueEditor} .o_input`).edit("def");
     expect(getCurrentOperator()).toBe("contains");
     expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
     expect(getCurrentValue()).toBe("def");
-    expect([`[("product_id", "ilike", "def")]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "ilike", "def")]`]);
 
     await selectOperator("not ilike");
     expect(getCurrentOperator()).toBe("does not contain");
     expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
     expect(getCurrentValue()).toBe("def");
-    expect([`[("product_id", "not ilike", "def")]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "not ilike", "def")]`]);
 });
 
 test("many2many field and operator set/not set (edit)", async () => {
@@ -1703,23 +1703,23 @@ test("many2many field and operator set/not set (edit)", async () => {
     });
     expect(getCurrentOperator()).toBe("=");
     expect(getCurrentValue()).toBe("");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await selectOperator("not_set");
 
     expect(getCurrentOperator()).toBe("is not set");
     expect(".o_ds_value_cell").toHaveCount(0);
-    expect([`[("product_id", "=", False)]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "=", False)]`]);
 
     await selectOperator("set");
     expect(getCurrentOperator()).toBe("is set");
     expect(".o_ds_value_cell").toHaveCount(0);
-    expect([`[("product_id", "!=", False)]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "!=", False)]`]);
 
     await selectOperator("!=");
     expect(getCurrentOperator()).toBe("!=");
     expect(getCurrentValue()).toBe("");
-    expect([`[("product_id", "!=", False)]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "!=", False)]`]);
 });
 
 test("many2many field: clone a set/not set condition", async () => {
@@ -1731,19 +1731,19 @@ test("many2many field: clone a set/not set condition", async () => {
     });
     expect(getCurrentOperator()).toBe("=");
     expect(getCurrentValue()).toBe("");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await selectOperator("not_set");
     expect(getCurrentOperator()).toBe("is not set");
     expect(".o_ds_value_cell").toHaveCount(0);
-    expect([`[("product_id", "=", False)]`]).toVerifySteps();
+    expect.verifySteps([`[("product_id", "=", False)]`]);
     expect(SELECTORS.condition).toHaveCount(1);
 
     await clickOnButtonAddNewRule();
     expect(SELECTORS.condition).toHaveCount(2);
     expect(getCurrentOperator()).toBe("is not set");
     expect(getCurrentOperator(1)).toBe("is not set");
-    expect([`["&", ("product_id", "=", False), ("product_id", "=", False)]`]).toVerifySteps();
+    expect.verifySteps([`["&", ("product_id", "=", False), ("product_id", "=", False)]`]);
 });
 
 test("x2many field operators (edit)", async () => {
@@ -1774,38 +1774,38 @@ test("x2many field: operator switch (edit)", async () => {
     await selectOperator("in");
     expect(queryAllTexts(SELECTORS.tag)).toEqual([]);
     expect(getCurrentValue()).toBe("");
-    expect([`[("product_ids", "in", [])]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "in", [])]`]);
 
     await selectOperator("=");
     expect(queryAllTexts(SELECTORS.tag)).toEqual([]);
     expect(getCurrentValue()).toBe("");
-    expect([`[("product_ids", "=", [])]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "=", [])]`]);
 
     await selectOperator("not in");
     expect(queryAllTexts(SELECTORS.tag)).toEqual([]);
     expect(getCurrentValue()).toBe("");
-    expect([`[("product_ids", "not in", [])]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "not in", [])]`]);
 
     await selectOperator("ilike");
     expect(getCurrentValue()).toBe("");
-    expect([`[("product_ids", "ilike", "")]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "ilike", "")]`]);
 
     await selectOperator("not_set");
     expect(".o_ds_value_cell").toHaveCount(0);
-    expect([`[("product_ids", "=", False)]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "=", False)]`]);
 
     await selectOperator("!=");
     expect(queryAllTexts(SELECTORS.tag)).toEqual([]);
     expect(getCurrentValue()).toBe("");
-    expect([`[("product_ids", "!=", [])]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "!=", [])]`]);
 
     await selectOperator("not ilike");
     expect(getCurrentValue()).toBe("");
-    expect([`[("product_ids", "not ilike", "")]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "not ilike", "")]`]);
 
     await selectOperator("set");
     expect(".o_ds_value_cell").toHaveCount(0);
-    expect([`[("product_ids", "!=", False)]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "!=", False)]`]);
 });
 
 test("many2many field: operator =/!=/in/not in (edit)", async () => {
@@ -1818,7 +1818,7 @@ test("many2many field: operator =/!=/in/not in (edit)", async () => {
     });
     expect(getCurrentOperator()).toBe("is in");
     expect(getCurrentValue()).toBe("xphone");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(".dropdown-menu").toHaveCount(0);
 
     await contains(SELECTORS.valueEditor + " input").fill("x", { confirm: false });
@@ -1827,28 +1827,28 @@ test("many2many field: operator =/!=/in/not in (edit)", async () => {
     expect(queryAllTexts(".dropdown-menu li")).toEqual(["xpad"]);
 
     await contains(".dropdown-menu li").click();
-    expect([`[("product_ids", "in", [37, 41])]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "in", [37, 41])]`]);
     expect(getCurrentValue()).toBe("xphone xpad");
 
     await selectOperator("not in");
     expect(getCurrentOperator()).toBe("is not in");
     expect(getCurrentValue()).toBe("xphone xpad");
-    expect([`[("product_ids", "not in", [37, 41])]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "not in", [37, 41])]`]);
 
     await contains(".o_tag .o_delete").click();
     expect(getCurrentOperator()).toBe("is not in");
     expect(getCurrentValue()).toBe("xpad");
-    expect([`[("product_ids", "not in", [41])]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "not in", [41])]`]);
 
     await selectOperator("=");
     expect(getCurrentOperator()).toBe("=");
     expect(getCurrentValue()).toBe("xpad");
-    expect([`[("product_ids", "=", [41])]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "=", [41])]`]);
 
     await selectOperator("!=");
     expect(getCurrentOperator()).toBe("!=");
     expect(getCurrentValue()).toBe("xpad");
-    expect([`[("product_ids", "!=", [41])]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "!=", [41])]`]);
 });
 
 test("many2many field: operator ilike/not ilike (edit)", async () => {
@@ -1863,19 +1863,19 @@ test("many2many field: operator ilike/not ilike (edit)", async () => {
     expect(".o-autocomplete--input").toHaveCount(0);
     expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
     expect(getCurrentValue()).toBe("abc");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(`${SELECTORS.valueEditor} .o_input`).edit("def");
     expect(getCurrentOperator()).toBe("contains");
     expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
     expect(getCurrentValue()).toBe("def");
-    expect([`[("product_ids", "ilike", "def")]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "ilike", "def")]`]);
 
     await selectOperator("not ilike");
     expect(getCurrentOperator()).toBe("does not contain");
     expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
     expect(getCurrentValue()).toBe("def");
-    expect([`[("product_ids", "not ilike", "def")]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "not ilike", "def")]`]);
 });
 
 test("many2many field: operator set/not set (edit)", async () => {
@@ -1888,12 +1888,12 @@ test("many2many field: operator set/not set (edit)", async () => {
     });
     expect(getCurrentOperator()).toBe("is not set");
     expect(".o_ds_value_cell").toHaveCount(0);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await selectOperator("set");
     expect(getCurrentOperator()).toBe("is set");
     expect(".o_ds_value_cell").toHaveCount(0);
-    expect([`[("product_ids", "!=", False)]`]).toVerifySteps();
+    expect.verifySteps([`[("product_ids", "!=", False)]`]);
 });
 
 test("Include archived button basic use", async () => {
@@ -1913,20 +1913,20 @@ test("Include archived button basic use", async () => {
 
     await toggleArchive();
     expect(SELECTORS.condition).toHaveCount(2);
-    expect([
+    expect.verifySteps([
         '["&", "&", ("foo", "=", "test"), ("bar", "=", True), ("active", "in", [True, False])]',
-    ]).toVerifySteps();
+    ]);
 
     await contains(".dropdown-toggle").click();
     await contains(".dropdown-menu span:nth-child(2)").click();
     expect(SELECTORS.condition).toHaveCount(2);
-    expect([
+    expect.verifySteps([
         '["&", "|", ("foo", "=", "test"), ("bar", "=", True), ("active", "in", [True, False])]',
-    ]).toVerifySteps();
+    ]);
 
     await toggleArchive();
     expect(SELECTORS.condition).toHaveCount(2);
-    expect(['["|", ("foo", "=", "test"), ("bar", "=", True)]']).toVerifySteps();
+    expect.verifySteps(['["|", ("foo", "=", "test"), ("bar", "=", True)]']);
 });
 
 test("Include archived on empty tree", async () => {
@@ -1946,22 +1946,22 @@ test("Include archived on empty tree", async () => {
 
     await toggleArchive();
     expect(SELECTORS.condition).toHaveCount(1);
-    expect(['["&", ("foo", "=", "test"), ("active", "in", [True, False])]']).toVerifySteps();
+    expect.verifySteps(['["&", ("foo", "=", "test"), ("active", "in", [True, False])]']);
 
     await clickOnButtonDeleteNode();
     expect(SELECTORS.condition).toHaveCount(0);
-    expect(['[("active", "in", [True, False])]']).toVerifySteps();
+    expect.verifySteps(['[("active", "in", [True, False])]']);
 
     await toggleArchive();
-    expect(["[]"]).toVerifySteps();
+    expect.verifySteps(["[]"]);
 
     await toggleArchive();
     expect(SELECTORS.condition).toHaveCount(0);
-    expect(['[("active", "in", [True, False])]']).toVerifySteps();
+    expect.verifySteps(['[("active", "in", [True, False])]']);
 
     await addNewRule();
     expect(SELECTORS.condition).toHaveCount(1);
-    expect(['["&", ("id", "=", 1), ("active", "in", [True, False])]']).toVerifySteps();
+    expect.verifySteps(['["&", ("id", "=", 1), ("active", "in", [True, False])]']);
 });
 
 test("Include archived not shown when model doesn't have the active field", async () => {
@@ -1991,13 +1991,13 @@ test("date/datetime edition: switch !=/is set", async () => {
     await selectOperator("set");
     expect(getCurrentOperator()).toBe("is set");
     expect(".o_datetime_input").toHaveCount(0);
-    expect([`[("date", "!=", False)]`]).toVerifySteps();
+    expect.verifySteps([`[("date", "!=", False)]`]);
 
     await selectOperator("!=");
     expect(getCurrentOperator()).toBe("!=");
     expect(".o_datetime_input").toHaveCount(1);
     expect(getCurrentValue()).toBe("");
-    expect([`[("date", "!=", False)]`]).toVerifySteps();
+    expect.verifySteps([`[("date", "!=", False)]`]);
 });
 
 test("render false and true leaves", async () => {

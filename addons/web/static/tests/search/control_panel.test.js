@@ -55,7 +55,7 @@ test.tags`desktop`("breadcrumbs", async () => {
 
     getService("action").restore = (jsId) => expect.step(jsId);
     click(breadcrumbItems[0]);
-    expect(["controller_7"]).toVerifySteps();
+    expect.verifySteps(["controller_7"]);
 });
 
 test("view switcher", async () => {
@@ -82,7 +82,7 @@ test("view switcher", async () => {
 
     getService("action").switchView = (viewType) => expect.step(viewType);
     click(views[1]);
-    expect(["kanban"]).toVerifySteps();
+    expect.verifySteps(["kanban"]);
 });
 
 test("pager", async () => {

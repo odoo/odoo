@@ -108,7 +108,7 @@ test("Display a tooltip on click", async () => {
 
     await expect(".o_clipboard_button.o_btn_text_copy").toHaveCount(1);
     await contains(".o_clipboard_button").click();
-    expect(["This is a text field", "copied tooltip"]).toVerifySteps();
+    expect.verifySteps(["This is a text field", "copied tooltip"]);
 });
 
 test("CopyClipboardButtonField in form view", async () => {
@@ -139,7 +139,7 @@ test("CopyClipboardButtonField in form view", async () => {
     await contains(".o_clipboard_button.o_btn_text_copy").click();
     await contains(".o_clipboard_button.o_btn_char_copy").click();
 
-    expect(["This is a text field", "char value"]).toVerifySteps();
+    expect.verifySteps(["This is a text field", "char value"]);
 });
 
 test("CopyClipboardButtonField can be disabled", async () => {

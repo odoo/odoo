@@ -94,7 +94,7 @@ test("search query props are passed as props to concrete component", async () =>
         context: { key: "val" },
         orderBy: [{ name: "bar", asc: true }],
     });
-    expect(["setup"]).toVerifySteps();
+    expect.verifySteps(["setup"]);
 });
 
 test("do not load search view description by default", async () => {
@@ -110,7 +110,7 @@ test("do not load search view description by default", async () => {
     await mountWithSearch(TestComponent, {
         resModel: "animal",
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("load search view description if not provided and loadSearchView=true", async () => {
@@ -141,7 +141,7 @@ test("load search view description if not provided and loadSearchView=true", asy
         resModel: "animal",
         searchViewId: false,
     });
-    expect(["get_views"]).toVerifySteps();
+    expect.verifySteps(["get_views"]);
 });
 
 test("do not load the search view description if provided even if loadSearchView=true", async () => {
@@ -160,7 +160,7 @@ test("do not load the search view description if provided even if loadSearchView
         searchViewFields: {},
         searchViewId: false,
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("load view description if it is not complete and loadSearchView=true", async () => {
@@ -185,7 +185,7 @@ test("load view description if it is not complete and loadSearchView=true", asyn
         searchViewId: true,
         loadIrFilters: true,
     });
-    expect(["get_views"]).toVerifySteps();
+    expect.verifySteps(["get_views"]);
 });
 
 test("load view description with given id if it is not provided and loadSearchView=true", async () => {
@@ -203,7 +203,7 @@ test("load view description with given id if it is not provided and loadSearchVi
         resModel: "animal",
         searchViewId: 1,
     });
-    expect(["get_views"]).toVerifySteps();
+    expect.verifySteps(["get_views"]);
 
     await toggleSearchBarMenu();
     expect(getMenuItemTexts()).toEqual([
@@ -237,11 +237,11 @@ test("toggle a filter render the underlying component with an updated domain", a
         resModel: "animal",
         searchViewId: 1,
     });
-    expect(["willStart"]).toVerifySteps();
+    expect.verifySteps(["willStart"]);
 
     await toggleSearchBarMenu();
     await toggleMenuItem("True domain");
-    expect(["willUpdateProps"]).toVerifySteps();
+    expect.verifySteps(["willUpdateProps"]);
 });
 
 test("react to prop 'domain' changes", async () => {
@@ -279,11 +279,11 @@ test("react to prop 'domain' changes", async () => {
     }
 
     const parent = await mountWithCleanup(Parent);
-    expect(["willStart"]).toVerifySteps();
+    expect.verifySteps(["willStart"]);
 
     parent.searchState.domain = [["type", "=", "herbivorous"]];
     await animationFrame();
-    expect(["willUpdateProps"]).toVerifySteps();
+    expect.verifySteps(["willUpdateProps"]);
 });
 
 test("search defaults are removed from context at reload", async function () {
@@ -338,13 +338,13 @@ test("search defaults are removed from context at reload", async function () {
     }
 
     const parent = await mountWithCleanup(Parent);
-    expect(["willStart"]).toVerifySteps();
+    expect.verifySteps(["willStart"]);
 
     expect(parent.searchState.context).toEqual(context);
 
     parent.searchState.domain = [["type", "=", "herbivorous"]];
 
     await animationFrame();
-    expect(["willUpdateProps"]).toVerifySteps();
+    expect.verifySteps(["willUpdateProps"]);
     expect(parent.searchState.context).toEqual(context);
 });
