@@ -144,7 +144,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 },
                             ],
                             "Persona": [
-                                {
+                                self._filter_persona_fields({
                                     "active": True,
                                     "email": "test_customer@example.com",
                                     "id": self.test_partner.id,
@@ -156,7 +156,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "type": "partner",
                                     "userId": False,
                                     "write_date": test_partner_write_date,
-                                },
+                                }),
                             ],
                             "Thread": [
                                 {
@@ -194,7 +194,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 }
                             ],
                             "Persona": [
-                                {
+                                self._filter_persona_fields({
                                     "active": True,
                                     "email": "test_customer@example.com",
                                     "id": self.test_partner.id,
@@ -206,7 +206,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "type": "partner",
                                     "userId": False,
                                     "write_date": test_partner_write_date,
-                                },
+                                }),
                             ],
                             "Thread": [
                                 {

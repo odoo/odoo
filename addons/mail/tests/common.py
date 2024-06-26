@@ -1507,3 +1507,11 @@ class MailCommon(common.TransactionCase, MailCase):
             'res_id': res_id,
             **attach_values,
         } for x in range(count)]
+
+    def _filter_persona_fields(self, data):
+        """ Remove store persona data dependant on other modules if they are not not installed.
+        Not written in a modular way to avoid complex override for a simple test tool.
+        """
+        if "hr.leave" not in self.env:
+            data.pop("out_of_office_date_end")
+        return data
