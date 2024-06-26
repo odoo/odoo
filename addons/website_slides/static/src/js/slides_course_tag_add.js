@@ -106,8 +106,9 @@ var TagCourseDialog = Dialog.extend({
                 return fmt(data.text);
             },
             createSearchChoice: function (term, data) {
-                var addedTags = $(this.opts.element).select2('data');
-                if (addedTags.concat(data).filter(tag => {
+                var addedTags = $(this.opts.element).select2('data') || [];
+                addedTags = Array.isArray(addedTags) ? addedTags : [addedTags];
+                if (addedTags.concat(data || []).filter(tag => {
                     return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
                 }).length === 0) {
                     if (this.opts.can_create) {
