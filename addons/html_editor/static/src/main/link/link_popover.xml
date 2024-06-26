@@ -6,7 +6,7 @@
                 <div class="col m-1" data-prevent-closing-overlay="true">
                     <div class="input-group">
                         <input class="o_we_label_link m-1" t-model="state.label" placeholder="Type your link label"/>
-                        <input class="o_we_href_input_link m-1" t-model="state.url" placeholder="Type your URL" t-on-keydown="(event) => event.key === 'Enter' ? this.onClickApply() : ()=>{}"/>
+                        <input class="o_we_href_input_link m-1" t-model="state.url" placeholder="Type your URL" t-on-keydown="onKeydownEnter"/>
                     </div>
                     <div class="input-group" t-on-change="onChangeClasses">
                         <select name="link_type" class="form-select" t-on-change="(ev)=>this.state.type = ev.target.value">
