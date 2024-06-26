@@ -70,7 +70,7 @@ test("render following an onchange", async () => {
     await fieldTextArea("description").edit("Description as text");
     expect(textarea.offsetHeight).toBe(initialHeight);
     expect(textarea.clientHeight).toBe(textarea.scrollHeight);
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 });
 
 test("no scroll bar in editable list", async () => {

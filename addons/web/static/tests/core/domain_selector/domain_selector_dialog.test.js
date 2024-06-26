@@ -56,7 +56,7 @@ test("a domain with a user context dynamic part is valid", async () => {
         return true;
     });
     await contains(".o_dialog footer button").click();
-    expect(["validation", "confirmed"]).toVerifySteps();
+    expect.verifySteps(["validation", "confirmed"]);
 });
 
 test("can extend eval context", async () => {
@@ -73,7 +73,7 @@ test("can extend eval context", async () => {
         return true;
     });
     await contains(".o_dialog footer button").click();
-    expect(["validation", "confirmed"]).toVerifySteps();
+    expect.verifySteps(["validation", "confirmed"]);
 });
 
 test("a domain with an unknown expression is not valid", async () => {
@@ -88,7 +88,7 @@ test("a domain with an unknown expression is not valid", async () => {
         return true;
     });
     await contains(".o_dialog footer button").click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("model_field_selector should close on dialog drag", async () => {

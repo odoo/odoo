@@ -102,7 +102,7 @@ test("Signature widget: full_name option", async () => {
     click("span.o_sign_label");
     await waitFor(".modal .modal-body");
     expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(1);
-    expect(["Pop's Chock'lit"]).toVerifySteps();
+    expect.verifySteps(["Pop's Chock'lit"]);
 });
 
 test("Signature widget: highlight option", async () => {

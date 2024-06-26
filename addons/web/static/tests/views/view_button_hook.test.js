@@ -56,19 +56,19 @@ test("action can be prevented", async () => {
 
     await mountWithCleanup(MyComponent);
     await contains(".myComponent").click();
-    expect([
+    expect.verifySteps([
         "beforeExecuteAction on handler",
         "beforeExecuteAction in hook",
         "doActionButton",
-    ]).toVerifySteps();
+    ]);
 
     executeInHook = false;
     await contains(".myComponent").click();
-    expect(["beforeExecuteAction on handler", "beforeExecuteAction in hook"]).toVerifySteps();
+    expect.verifySteps(["beforeExecuteAction on handler", "beforeExecuteAction in hook"]);
 
     executeInHandler = false;
     await contains(".myComponent").click();
-    expect(["beforeExecuteAction on handler"]).toVerifySteps();
+    expect.verifySteps(["beforeExecuteAction on handler"]);
 });
 
 test("ViewButton clicked in Dropdown close the Dropdown", async () => {
@@ -110,6 +110,6 @@ test("ViewButton clicked in Dropdown close the Dropdown", async () => {
     expect(".dropdown-menu").toHaveCount(1);
 
     await contains("a[type=action]").click();
-    expect(["doActionButton"]).toVerifySteps();
+    expect.verifySteps(["doActionButton"]);
     expect(".dropdown-menu").toHaveCount(0);
 });

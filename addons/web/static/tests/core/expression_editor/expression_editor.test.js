@@ -308,7 +308,7 @@ test("rendering of connectors (2)", async () => {
         { level: 1, value: "expr" },
         { level: 1, value: ["Foo", "=", "abc"] },
     ]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(queryOne(SELECTORS.debugArea)).toHaveValue(`not (expr or foo == "abc")`);
 
     await selectConnector("all");
@@ -318,7 +318,7 @@ test("rendering of connectors (2)", async () => {
         { level: 1, value: "expr" },
         { level: 1, value: ["Foo", "=", "abc"] },
     ]);
-    expect([`expr and foo == "abc"`]).toVerifySteps();
+    expect.verifySteps([`expr and foo == "abc"`]);
     expect(queryOne(SELECTORS.debugArea)).toHaveValue(`expr and foo == "abc"`);
 });
 
@@ -391,7 +391,7 @@ test("no field of type properties in model field selector", async () => {
     ]);
     expect(isNotSupportedPath()).toBe(true);
     await clearNotSupported();
-    expect([`foo == ""`]).toVerifySteps();
+    expect.verifySteps([`foo == ""`]);
 
     await openModelFieldSelectorPopover();
     expect(queryAllTexts(".o_model_field_selector_popover_item_name")).toEqual(["Bar", "Foo"]);
@@ -415,7 +415,7 @@ test("between operator", async () => {
         "is set",
         "is not set",
     ]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await selectOperator("between");
-    expect([`id >= 1 and id <= 1`]).toVerifySteps();
+    expect.verifySteps([`id >= 1 and id <= 1`]);
 });
