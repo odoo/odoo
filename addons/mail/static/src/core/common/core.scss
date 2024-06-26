@@ -50,17 +50,56 @@
     z-index: 1;
 }
 
+// see `@mixin button-variant`, this is the implementation without requiring `.btn` classname
+@mixin o-mention-variant(
+    $background,
+    $border,
+    $color: color-contrast($background),
+    $hover-background: if($color == $color-contrast-light, shade-color($background, $btn-hover-bg-shade-amount), tint-color($background, $btn-hover-bg-tint-amount)),
+    $hover-border: if($color == $color-contrast-light, shade-color($border, $btn-hover-border-shade-amount), tint-color($border, $btn-hover-border-tint-amount)),
+    $hover-color: color-contrast($hover-background),
+    $active-background: if($color == $color-contrast-light, shade-color($background, $btn-active-bg-shade-amount), tint-color($background, $btn-active-bg-tint-amount)),
+    $active-border: if($color == $color-contrast-light, shade-color($border, $btn-active-border-shade-amount), tint-color($border, $btn-active-border-tint-amount)),
+    $active-color: color-contrast($active-background),
+    $disabled-background: $background,
+    $disabled-border: $border,
+    $disabled-color: color-contrast($disabled-background)
+) {
+    color: #{$color};
+    background-color: #{$background};
+    border-color: #{$border};
+    &:hover {
+        color: #{$hover-color};
+        background-color: #{$hover-background};
+        border-color: #{$hover-border};
+    }
+    &:focus {
+        box-shadow: #{to-rgb(mix($color, $border, 15%))};
+    }
+    &:active {
+        color: #{$active-color};
+        background-color: #{$active-background};
+        border-color: #{$active-border};
+    }
+    &:disabled {
+        color: #{$disabled-color};
+        background-color: #{$disabled-background};
+        border-color: #{$disabled-border};
+    }
+}
+
 a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention {
-    @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
-    padding: map-get($spacers, 1);
+    @include rfs($btn-font-size-sm, $btn-font-size-sm);
+    border-radius: $btn-border-radius-sm;
+    padding: 0rem 0.1875rem;
 }
 
 a.o_mail_redirect, a.o_channel_redirect {
-    @include button-variant(rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%), rgba($primary, .3), rgba($primary, .3), darken($link-color, 10%));
+    @include o-mention-variant(rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%), rgba($primary, .3), rgba($primary, .3), darken($link-color, 10%));
 }
 
 a.o-discuss-mention {
-    @include button-variant(rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%), rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%));
+    @include o-mention-variant(rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%), rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%));
     cursor: default !important;
 }
 
