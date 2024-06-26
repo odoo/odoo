@@ -4,18 +4,20 @@
  */
 /* FONT PATH
  * -------------------------- */
-@font-face {
-  font-family: 'FontAwesome';
-  src: url('../fonts/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), url('../fonts/fontawesome-webfont.woff?v=4.7.0') format('woff');
+ @font-face {
+  font-display: block;
   font-weight: normal;
   font-style: normal;
-  font-display: block;
+  font-family: "FontAwesome";
+  src: url("../fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6") format("woff2"),
+url("../fonts/bootstrap-icons.woff?dd67030699838ea613ee6dbda90effa6") format("woff");
 }
 .fa {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
   text-rendering: auto;
+  vertical-align: -.125em;  /* from bi- class */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -135,8 +137,3143 @@
 .fa-inverse {
   color: #ffffff;
 }
+
+/* Bootstrap icons mapping */
+
+.fa-500px:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-address-book:before {
+	/* corresponding to bi-journal -- good match -- never used in the codebase */
+	content : "\f446";
+}
+.fa-address-book-o:before {
+	/* corresponding to bi-journal -- good match -- never used in the codebase */
+	content : "\f446";
+}
+.fa-adn:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-amazon:before {
+	/* corresponding to bi-amazon -- good match -- never used in the codebase */
+	content : "\f68d";
+}
+.fa-ambulance:before {
+	/* corresponding to bi-truck -- good match -- never used in the codebase */
+	content : "\f5ea";
+}
+.fa-american-sign-language-interpreting:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-anchor:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-angellist:before {
+	/* corresponding to bi-award -- can do better -- never used in the codebase */
+	content : "\f154";
+}
+.fa-angle-double-down:before {
+	/* corresponding to bi-chevron-double-down -- good match -- never used in the codebase */
+	content : "\f27e";
+}
+.fa-arrow-circle-down:before {
+	/* corresponding to bi-arrow-down-circle-fill -- good match -- never used in the codebase */
+	content : "\f118";
+}
+.fa-arrow-circle-o-down:before {
+	/* corresponding to bi-arrow-down-circle -- good match -- never used in the codebase */
+	content : "\f119";
+}
+.fa-arrow-circle-o-left:before {
+	/* corresponding to bi-arrow-left-circle -- good match -- never used in the codebase */
+	content : "\f12a";
+}
+.fa-arrow-circle-o-right:before {
+	/* corresponding to bi-arrow-right-circle -- good match -- never used in the codebase */
+	content : "\f134";
+}
+.fa-arrow-circle-o-up:before {
+	/* corresponding to bi-arrow-up-circle -- good match -- never used in the codebase */
+	content : "\f13a";
+}
+.fa-arrow-circle-up:before {
+	/* corresponding to bi-arrow-up-circle-fill -- good match -- never used in the codebase */
+	content : "\f139";
+}
+.fa-arrow-down:before {
+	/* corresponding to bi-arrow-down -- good match -- never used in the codebase */
+	content : "\f128";
+}
+.fa-arrow-up:before {
+	/* corresponding to bi-arrow-up -- good match -- never used in the codebase */
+	content : "\f148";
+}
+.fa-arrows-h:before {
+	/* corresponding to bi-arrows -- good match -- never used in the codebase */
+	content : "\f6a2";
+}
+.fa-arrows-v:before {
+	/* corresponding to bi-arrows-vertical -- good match -- never used in the codebase */
+	content : "\f698";
+}
+.fa-asl-interpreting:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-assistive-listening-systems:before {
+	/* corresponding to bi-ear -- can do better -- never used in the codebase */
+	content : "\f689";
+}
+.fa-at:before {
+	/* corresponding to bi-at -- good match -- never used in the codebase */
+	content : "\f152";
+}
+.fa-audio-description:before {
+	/* corresponding to bi-badge-ad -- can do better -- never used in the codebase */
+	content : "\f161";
+}
+.fa-automobile:before {
+	/* corresponding to bi-car-front-fill -- good match -- never used in the codebase */
+	content : "\f7e0";
+}
+.fa-backward:before {
+	/* corresponding to bi-skip-backward-fill -- good match -- never used in the codebase */
+	content : "\f551";
+}
+.fa-balance-scale:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-bandcamp:before {
+	/* corresponding to bi-disc-fill -- good match -- never used in the codebase */
+	content : "\f2fe";
+}
+.fa-bank:before {
+	/* corresponding to bi-bank2 -- good match -- never used in the codebase */
+	content : "\f62f";
+}
+.fa-bath:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-bathtub:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-battery:before {
+	/* corresponding to bi-battery-full -- good match -- never used in the codebase */
+	content : "\f186";
+}
+.fa-battery-0:before {
+	/* corresponding to bi-battery -- good match -- never used in the codebase */
+	content : "\f188";
+}
+.fa-battery-1:before {
+	/* corresponding to bi-battery-half -- good match -- never used in the codebase */
+	content : "\f187";
+}
+.fa-battery-2:before {
+	/* corresponding to bi-battery-half -- good match -- never used in the codebase */
+	content : "\f187";
+}
+.fa-battery-3:before {
+	/* corresponding to bi-battery-half -- good match -- never used in the codebase */
+	content : "\f187";
+}
+.fa-battery-4:before {
+	/* corresponding to bi-battery-full -- good match -- never used in the codebase */
+	content : "\f186";
+}
+.fa-battery-empty:before {
+	/* corresponding to bi-battery -- good match -- never used in the codebase */
+	content : "\f188";
+}
+.fa-battery-full:before {
+	/* corresponding to bi-battery-full -- good match -- never used in the codebase */
+	content : "\f186";
+}
+.fa-battery-half:before {
+	/* corresponding to bi-battery-half -- good match -- never used in the codebase */
+	content : "\f187";
+}
+.fa-battery-quarter:before {
+	/* corresponding to bi-battery-half -- good match -- never used in the codebase */
+	content : "\f187";
+}
+.fa-battery-three-quarters:before {
+	/* corresponding to bi-battery-half -- good match -- never used in the codebase */
+	content : "\f187";
+}
+.fa-bed:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-behance:before {
+	/* corresponding to bi-behance -- good match -- never used in the codebase */
+	content : "\f65c";
+}
+.fa-behance-square:before {
+	/* corresponding to bi-behance -- good match -- never used in the codebase */
+	content : "\f65c";
+}
+.fa-bicycle:before {
+	/* corresponding to bi-bicycle -- good match -- never used in the codebase */
+	content : "\f18d";
+}
+.fa-birthday-cake:before {
+	/* corresponding to bi-cake2-fill -- good match -- never used in the codebase */
+	content : "\f8e9";
+}
+.fa-bitbucket:before {
+	/* corresponding to bi-bucket-fill -- can do better -- never used in the codebase */
+	content : "\f1d9";
+}
+.fa-bitbucket-square:before {
+	/* corresponding to bi-bucket-fill -- good match -- never used in the codebase */
+	content : "\f1d9";
+}
+.fa-bitcoin:before {
+	/* corresponding to bi-currency-bitcoin -- good match -- never used in the codebase */
+	content : "\f635";
+}
+.fa-blind:before {
+	/* corresponding to bi-eye-slash -- can do better -- never used in the codebase */
+	content : "\f340";
+}
+.fa-bluetooth:before {
+	/* corresponding to bi-bluetooth -- good match -- never used in the codebase */
+	content : "\f682";
+}
+.fa-bluetooth-b:before {
+	/* corresponding to bi-bluetooth -- good match -- never used in the codebase */
+	content : "\f682";
+}
+.fa-bomb:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-bookmark:before {
+	/* corresponding to bi-bookmark-fill -- good match -- never used in the codebase */
+	content : "\f199";
+}
+.fa-bookmark-o:before {
+	/* corresponding to bi-bookmark -- good match -- never used in the codebase */
+	content : "\f1a2";
+}
+.fa-braille:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-btc:before {
+	/* corresponding to bi-currency-bitcoin -- good match -- never used in the codebase */
+	content : "\f635";
+}
+.fa-bullhorn:before {
+	/* corresponding to bi-megaphone -- good match -- never used in the codebase */
+	content : "\f484";
+}
+.fa-bus:before {
+	/* corresponding to bi-bus-front-fill -- good match -- never used in the codebase */
+	content : "\f87e";
+}
+.fa-buysellads:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-cab:before {
+	/* corresponding to bi-car-front-fill -- good match -- never used in the codebase */
+	content : "\f7e0";
+}
+.fa-calculator:before {
+	/* corresponding to bi-calculator -- good match -- never used in the codebase */
+	content : "\f1e0";
+}
+.fa-calendar-check-o:before {
+	/* corresponding to bi-calendar-check -- good match -- never used in the codebase */
+	content : "\f1e2";
+}
+.fa-calendar-minus-o:before {
+	/* corresponding to bi-calendar-minus -- good match -- never used in the codebase */
+	content : "\f1eb";
+}
+.fa-calendar-plus-o:before {
+	/* corresponding to bi-calendar-plus -- good match -- never used in the codebase */
+	content : "\f1ef";
+}
+.fa-calendar-times-o:before {
+	/* corresponding to bi-calendar-x -- good match -- never used in the codebase */
+	content : "\f1f5";
+}
+.fa-camera-retro:before {
+	/* corresponding to bi-camera-fill -- good match -- never used in the codebase */
+	content : "\f219";
+}
+.fa-caret-square-o-down:before {
+	/* corresponding to bi-caret-down-square -- good match -- never used in the codebase */
+	content : "\f22b";
+}
+.fa-caret-square-o-left:before {
+	/* corresponding to bi-caret-left-square -- good match -- never used in the codebase */
+	content : "\f22f";
+}
+.fa-caret-square-o-right:before {
+	/* corresponding to bi-caret-right-square -- good match -- never used in the codebase */
+	content : "\f233";
+}
+.fa-caret-square-o-up:before {
+	/* corresponding to bi-caret-up-square -- good match -- never used in the codebase */
+	content : "\f237";
+}
+.fa-cart-arrow-down:before {
+	/* corresponding to bi-cart-check -- good match -- never used in the codebase */
+	content : "\f23a";
+}
+.fa-cc:before {
+	/* corresponding to bi-badge-cc -- good match -- never used in the codebase */
+	content : "\f165";
+}
+.fa-cc-amex:before {
+	/* corresponding to bi-credit-card-2-back -- good match -- never used in the codebase */
+	content : "\f2d8";
+}
+.fa-cc-diners-club:before {
+	/* corresponding to bi-credit-card-2-front -- good match -- never used in the codebase */
+	content : "\f2da";
+}
+.fa-cc-discover:before {
+	/* corresponding to bi-credit-card-2-front -- good match -- never used in the codebase */
+	content : "\f2da";
+}
+.fa-cc-jcb:before {
+	/* corresponding to bi-credit-card-2-back -- good match -- never used in the codebase */
+	content : "\f2d8";
+}
+.fa-cc-mastercard:before {
+	/* corresponding to bi-credit-card-2-front -- good match -- never used in the codebase */
+	content : "\f2da";
+}
+.fa-cc-paypal:before {
+	/* corresponding to bi-paypal -- good match -- never used in the codebase */
+	content : "\f662";
+}
+.fa-cc-stripe:before {
+	/* corresponding to bi-stripe -- good match -- never used in the codebase */
+	content : "\f847";
+}
+.fa-cc-visa:before {
+	/* corresponding to bi-credit-card-2-front -- good match -- never used in the codebase */
+	content : "\f2da";
+}
+.fa-chain:before {
+	/* corresponding to bi-link-45deg -- good match -- never used in the codebase */
+	content : "\f470";
+}
+.fa-chevron-circle-up:before {
+	/* corresponding to bi-arrow-up-circle-fill -- good match -- never used in the codebase */
+	content : "\f139";
+}
+.fa-chevron-down:before {
+	/* corresponding to bi-chevron-down -- good match -- never used in the codebase */
+	content : "\f282";
+}
+.fa-chrome:before {
+	/* corresponding to bi-browser-chrome -- good match -- never used in the codebase */
+	content : "\f7d4";
+}
+.fa-cny:before {
+	/* corresponding to bi-currency-yen -- good match -- never used in the codebase */
+	content : "\f63a";
+}
+.fa-codepen:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-codiepie:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-compass:before {
+	/* corresponding to bi-compass -- good match -- never used in the codebase */
+	content : "\f2d1";
+}
+.fa-connectdevelop:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-contao:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-creative-commons:before {
+	/* corresponding to bi-cc-circle -- good match -- never used in the codebase */
+	content : "\f7e7";
+}
+.fa-css3:before {
+	/* corresponding to bi-filetype-css -- good match -- never used in the codebase */
+	content : "\f742";
+}
+.fa-cut:before {
+	/* corresponding to bi-scissors -- good match -- never used in the codebase */
+	content : "\f528";
+}
+.fa-dashboard:before {
+	/* corresponding to bi-speedometer -- good match -- never used in the codebase */
+	content : "\f57f";
+}
+.fa-dashcube:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-deafness:before {
+	/* corresponding to bi-ear -- can do better -- never used in the codebase */
+	content : "\f689";
+}
+.fa-dedent:before {
+	/* corresponding to bi-unindent -- good match -- never used in the codebase */
+	content : "\f823";
+}
+.fa-delicious:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-deviantart:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-digg:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-dribbble:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-drivers-license:before {
+	/* corresponding to bi-person-vcard-fill -- good match -- never used in the codebase */
+	content : "\f8c8";
+}
+.fa-drivers-license-o:before {
+	/* corresponding to bi-person-vcard -- good match -- never used in the codebase */
+	content : "\f8c9";
+}
+.fa-drupal:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-edge:before {
+	/* corresponding to bi-browser-edge -- good match -- never used in the codebase */
+	content : "\f7d5";
+}
+.fa-eercast:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-eject:before {
+	/* corresponding to bi-eject-fill -- good match -- never used in the codebase */
+	content : "\f314";
+}
+.fa-empire:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-envelope-open:before {
+	/* corresponding to bi-envelope-open-fill -- good match -- never used in the codebase */
+	content : "\f32d";
+}
+.fa-envelope-open-o:before {
+	/* corresponding to bi-envelope-open -- good match -- never used in the codebase */
+	content : "\f32e";
+}
+.fa-envelope-square:before {
+	/* corresponding to bi-envelope -- good match -- never used in the codebase */
+	content : "\f32f";
+}
+.fa-envira:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-etsy:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-eur:before {
+	/* corresponding to bi-currency-euro -- good match -- never used in the codebase */
+	content : "\f637";
+}
+.fa-euro:before {
+	/* corresponding to bi-currency-euro -- good match -- never used in the codebase */
+	content : "\f637";
+}
+.fa-expeditedssl:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-external-link-square:before {
+	/* corresponding to bi-box-arrow-up-right -- good match -- never used in the codebase */
+	content : "\f1c5";
+}
+.fa-fa:before {
+	/* corresponding to bi-flag-fill -- good match -- never used in the codebase */
+	content : "\f3cb";
+}
+.fa-facebook-f:before {
+	/* corresponding to bi-facebook -- good match -- never used in the codebase */
+	content : "\f344";
+}
+.fa-facebook-official:before {
+	/* corresponding to bi-facebook -- good match -- never used in the codebase */
+	content : "\f344";
+}
+.fa-fast-backward:before {
+	/* corresponding to bi-skip-backward-fill -- good match -- never used in the codebase */
+	content : "\f551";
+}
+.fa-fast-forward:before {
+	/* corresponding to bi-skip-forward-fill -- good match -- never used in the codebase */
+	content : "\f55d";
+}
+.fa-fax:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-feed:before {
+	/* corresponding to bi-rss -- good match -- never used in the codebase */
+	content : "\f522";
+}
+.fa-female:before {
+	/* corresponding to bi-person-standing-dress -- good match -- never used in the codebase */
+	content : "\f8f8";
+}
+.fa-fighter-jet:before {
+	/* corresponding to bi-airplane-engines-fill -- good match -- never used in the codebase */
+	content : "\f7ca";
+}
+.fa-file-archive-o:before {
+	/* corresponding to bi-file-earmark-zip -- good match -- never used in the codebase */
+	content : "\f391";
+}
+.fa-file-audio-o:before {
+	/* corresponding to bi-file-earmark-music -- good match -- never used in the codebase */
+	content : "\f377";
+}
+.fa-file-movie-o:before {
+	/* corresponding to bi-file-earmark-play -- good match -- never used in the codebase */
+	content : "\f37b";
+}
+.fa-file-photo-o:before {
+	/* corresponding to bi-file-earmark-image -- good match -- never used in the codebase */
+	content : "\f36d";
+}
+.fa-file-sound-o:before {
+	/* corresponding to bi-file-earmark-music -- good match -- never used in the codebase */
+	content : "\f377";
+}
+.fa-file-zip-o:before {
+	/* corresponding to bi-file-earmark-zip -- good match -- never used in the codebase */
+	content : "\f391";
+}
+.fa-fire:before {
+	/* corresponding to bi-fire -- good match -- never used in the codebase */
+	content : "\f7f6";
+}
+.fa-fire-extinguisher:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-firefox:before {
+	/* corresponding to bi-browser-firefox -- good match -- never used in the codebase */
+	content : "\f7d6";
+}
+.fa-first-order:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-flash:before {
+	/* corresponding to bi-lightning-charge-fill -- good match -- never used in the codebase */
+	content : "\f46c";
+}
+.fa-flickr:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-folder-open-o:before {
+	/* corresponding to bi-folder -- good match -- never used in the codebase */
+	content : "\f3d7";
+}
+.fa-fonticons:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-fort-awesome:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-forumbee:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-forward:before {
+	/* corresponding to bi-fast-forward-fill -- good match -- never used in the codebase */
+	content : "\f7f3";
+}
+.fa-foursquare:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-free-code-camp:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-gamepad:before {
+	/* corresponding to bi-controller -- good match -- never used in the codebase */
+	content : "\f2d4";
+}
+.fa-gbp:before {
+	/* corresponding to bi-currency-pound -- good match -- never used in the codebase */
+	content : "\f639";
+}
+.fa-ge:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-genderless:before {
+	/* corresponding to bi-gender-neuter -- good match -- never used in the codebase */
+	content : "\f8ed";
+}
+.fa-get-pocket:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-gg:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-gg-circle:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-git:before {
+	/* corresponding to bi-github -- good match -- never used in the codebase */
+	content : "\f3ed";
+}
+.fa-git-square:before {
+	/* corresponding to bi-github -- good match -- never used in the codebase */
+	content : "\f3ed";
+}
+.fa-github-alt:before {
+	/* corresponding to bi-github -- good match -- never used in the codebase */
+	content : "\f3ed";
+}
+.fa-github-square:before {
+	/* corresponding to bi-github -- good match -- never used in the codebase */
+	content : "\f3ed";
+}
+.fa-gitlab:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-gittip:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-glide:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-glide-g:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-google-plus:before {
+	/* corresponding to bi-google -- good match -- never used in the codebase */
+	content : "\f3f0";
+}
+.fa-google-plus-circle:before {
+	/* corresponding to bi-google -- good match -- never used in the codebase */
+	content : "\f3f0";
+}
+.fa-google-plus-official:before {
+	/* corresponding to bi-google -- good match -- never used in the codebase */
+	content : "\f3f0";
+}
+.fa-google-plus-square:before {
+	/* corresponding to bi-google -- good match -- never used in the codebase */
+	content : "\f3f0";
+}
+.fa-google-wallet:before {
+	/* corresponding to bi-google -- good match -- never used in the codebase */
+	content : "\f3f0";
+}
+.fa-gratipay:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-grav:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-h-square:before {
+	/* corresponding to bi-h-square-fill -- good match -- never used in the codebase */
+	content : "\f7fc";
+}
+.fa-hacker-news:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-hand-grab-o:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-hand-lizard-o:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-hand-o-down:before {
+	/* corresponding to bi-hand-index-thumb -- good match -- never used in the codebase */
+	content : "\f402";
+}
+.fa-hand-o-left:before {
+	/* corresponding to bi-hand-index-thumb -- good match -- never used in the codebase */
+	content : "\f402";
+}
+.fa-hand-o-right:before {
+	/* corresponding to bi-hand-index-thumb -- good match -- never used in the codebase */
+	content : "\f402";
+}
+.fa-hand-o-up:before {
+	/* corresponding to bi-hand-index-thumb -- good match -- never used in the codebase */
+	content : "\f402";
+}
+.fa-hand-peace-o:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-hand-pointer-o:before {
+	/* corresponding to bi-hand-index -- good match -- never used in the codebase */
+	content : "\f403";
+}
+.fa-hand-rock-o:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-hand-scissors-o:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-hand-spock-o:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-hand-stop-o:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-hard-of-hearing:before {
+	/* corresponding to bi-ear -- can do better -- never used in the codebase */
+	content : "\f689";
+}
+.fa-hdd-o:before {
+	/* corresponding to bi-hdd -- good match -- never used in the codebase */
+	content : "\f412";
+}
+.fa-heartbeat:before {
+	/* corresponding to bi-heart-pulse-fill -- good match -- never used in the codebase */
+	content : "\f76e";
+}
+.fa-hospital-o:before {
+	/* corresponding to bi-hospital -- good match -- never used in the codebase */
+	content : "\f774";
+}
+.fa-hotel:before {
+	/* corresponding to bi-house -- good match -- never used in the codebase */
+	content : "\f425";
+}
+.fa-hourglass:before {
+	/* corresponding to bi-hourglass -- good match -- never used in the codebase */
+	content : "\f421";
+}
+.fa-hourglass-1:before {
+	/* corresponding to bi-hourglass-top -- good match -- never used in the codebase */
+	content : "\f420";
+}
+.fa-hourglass-2:before {
+	/* corresponding to bi-hourglass-split -- good match -- never used in the codebase */
+	content : "\f41f";
+}
+.fa-hourglass-3:before {
+	/* corresponding to bi-hourglass-bottom -- good match -- never used in the codebase */
+	content : "\f41e";
+}
+.fa-hourglass-end:before {
+	/* corresponding to bi-hourglass-bottom -- good match -- never used in the codebase */
+	content : "\f41e";
+}
+.fa-hourglass-start:before {
+	/* corresponding to bi-hourglass-top -- good match -- never used in the codebase */
+	content : "\f420";
+}
+.fa-houzz:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-html5:before {
+	/* corresponding to bi-filetype-html -- good match -- never used in the codebase */
+	content : "\f749";
+}
+.fa-i-cursor:before {
+	/* corresponding to bi-cursor-text -- good match -- never used in the codebase */
+	content : "\f2e2";
+}
+.fa-id-badge:before {
+	/* corresponding to bi-person-badge -- good match -- never used in the codebase */
+	content : "\f4d3";
+}
+.fa-ils:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-imdb:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-indent:before {
+	/* corresponding to bi-indent -- good match -- never used in the codebase */
+	content : "\f7fe";
+}
+.fa-inr:before {
+	/* corresponding to bi-currency-rupee -- good match -- never used in the codebase */
+	content : "\f7ec";
+}
+.fa-institution:before {
+	/* corresponding to bi-bank2 -- good match -- never used in the codebase */
+	content : "\f62f";
+}
+.fa-internet-explorer:before {
+	/* corresponding to bi-browser-edge -- can do better -- never used in the codebase */
+	content : "\f7d5";
+}
+.fa-intersex:before {
+	/* corresponding to bi-gender-ambiguous -- good match -- never used in the codebase */
+	content : "\f641";
+}
+.fa-ioxhost:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-joomla:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-jpy:before {
+	/* corresponding to bi-currency-yen -- good match -- never used in the codebase */
+	content : "\f63a";
+}
+.fa-jsfiddle:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-krw:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-laptop:before {
+	/* corresponding to bi-laptop -- good match -- never used in the codebase */
+	content : "\f456";
+}
+.fa-lastfm:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-lastfm-square:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-leanpub:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-life-bouy:before {
+	/* corresponding to bi-life-preserver -- good match -- never used in the codebase */
+	content : "\f467";
+}
+.fa-life-buoy:before {
+	/* corresponding to bi-life-preserver -- good match -- never used in the codebase */
+	content : "\f467";
+}
+.fa-life-ring:before {
+	/* corresponding to bi-life-preserver -- good match -- never used in the codebase */
+	content : "\f467";
+}
+.fa-life-saver:before {
+	/* corresponding to bi-life-preserver -- good match -- never used in the codebase */
+	content : "\f467";
+}
+.fa-linode:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-linux:before {
+	/* corresponding to bi-ubuntu -- can do better -- never used in the codebase */
+	content : "\f822";
+}
+.fa-location-arrow:before {
+	/* corresponding to bi-send-fill -- good match -- never used in the codebase */
+	content : "\f6b9";
+}
+.fa-low-vision:before {
+	/* corresponding to bi-eye-slash -- can do better -- never used in the codebase */
+	content : "\f340";
+}
+.fa-magnet:before {
+	/* corresponding to bi-magnet-fill -- good match -- never used in the codebase */
+	content : "\f778";
+}
+.fa-mail-forward:before {
+	/* corresponding to bi-reply-fill -- good match -- never used in the codebase */
+	content : "\f51f";
+}
+.fa-mail-reply-all:before {
+	/* corresponding to bi-reply-all-fill -- good match -- never used in the codebase */
+	content : "\f51d";
+}
+.fa-male:before {
+	/* corresponding to bi-person-standing -- good match -- never used in the codebase */
+	content : "\f8f9";
+}
+.fa-map:before {
+	/* corresponding to bi-map-fill -- good match -- never used in the codebase */
+	content : "\f47e";
+}
+.fa-map-pin:before {
+	/* corresponding to bi-geo-fill -- good match -- never used in the codebase */
+	content : "\f3e9";
+}
+.fa-map-signs:before {
+	/* corresponding to bi-signpost-2-fill -- good match -- never used in the codebase */
+	content : "\f545";
+}
+.fa-mars:before {
+	/* corresponding to bi-gender-male -- good match -- never used in the codebase */
+	content : "\f643";
+}
+.fa-mars-double:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-mars-stroke:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-mars-stroke-h:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-mars-stroke-v:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-maxcdn:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-meanpath:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-medium:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-medkit:before {
+	/* corresponding to bi-prescription2 -- can do better -- never used in the codebase */
+	content : "\f80b";
+}
+.fa-meetup:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-mercury:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-microchip:before {
+	/* corresponding to bi-cpu-fill -- good match -- never used in the codebase */
+	content : "\f2d5";
+}
+.fa-minus-square:before {
+	/* corresponding to bi-dash-square-fill -- good match -- never used in the codebase */
+	content : "\f2e8";
+}
+.fa-mixcloud:before {
+	/* corresponding to bi-cloud -- can do better -- never used in the codebase */
+	content : "\f2c1";
+}
+.fa-mobile-phone:before {
+	/* corresponding to bi-phone -- good match -- never used in the codebase */
+	content : "\f4e7";
+}
+.fa-modx:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-moon-o:before {
+	/* corresponding to bi-moon -- good match -- never used in the codebase */
+	content : "\f497";
+}
+.fa-mortar-board:before {
+	/* corresponding to bi-mortarboard-fill -- good match -- never used in the codebase */
+	content : "\f6fd";
+}
+.fa-motorcycle:before {
+	/* corresponding to bi-bicycle -- can do better -- never used in the codebase */
+	content : "\f18d";
+}
+.fa-neuter:before {
+	/* corresponding to bi-gender-neuter -- good match -- never used in the codebase */
+	content : "\f8ed";
+}
+.fa-object-group:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-odnoklassniki:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-odnoklassniki-square:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-opencart:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-openid:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-optin-monster:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-outdent:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-pagelines:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-paste:before {
+	/* corresponding to bi-clipboard -- good match -- never used in the codebase */
+	content : "\f290";
+}
+.fa-pause-circle-o:before {
+	/* corresponding to bi-pause-circle -- good match -- never used in the codebase */
+	content : "\f4c2";
+}
+.fa-paw:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-percent:before {
+	/* corresponding to bi-percent -- good match -- never used in the codebase */
+	content : "\f4d1";
+}
+.fa-phone-square:before {
+	/* corresponding to bi-telephone -- good match -- never used in the codebase */
+	content : "\f5c1";
+}
+.fa-pied-piper:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-pied-piper-alt:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-pied-piper-pp:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-pinterest-p:before {
+	/* corresponding to bi-pinterest -- good match -- never used in the codebase */
+	content : "\f663";
+}
+.fa-pinterest-square:before {
+	/* corresponding to bi-pinterest -- good match -- never used in the codebase */
+	content : "\f663";
+}
+.fa-plug:before {
+	/* corresponding to bi-plug-fill -- good match -- never used in the codebase */
+	content : "\f4f6";
+}
+.fa-podcast:before {
+	/* corresponding to bi-broadcast-pin -- good match -- never used in the codebase */
+	content : "\f1d5";
+}
+.fa-power-off:before {
+	/* corresponding to bi-power -- good match -- never used in the codebase */
+	content : "\f4ff";
+}
+.fa-product-hunt:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-qq:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-qrcode:before {
+	/* corresponding to bi-qr-code -- good match -- never used in the codebase */
+	content : "\f6ae";
+}
+.fa-quora:before {
+	/* corresponding to bi-quora -- good match -- never used in the codebase */
+	content : "\f6af";
+}
+.fa-ra:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-ravelry:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-rebel:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-reddit:before {
+	/* corresponding to bi-reddit -- good match -- never used in the codebase */
+	content : "\f650";
+}
+.fa-reddit-alien:before {
+	/* corresponding to bi-reddit -- good match -- never used in the codebase */
+	content : "\f650";
+}
+.fa-reddit-square:before {
+	/* corresponding to bi-reddit -- good match -- never used in the codebase */
+	content : "\f650";
+}
+.fa-registered:before {
+	/* corresponding to bi-r-circle -- good match -- never used in the codebase */
+	content : "\f80f";
+}
+.fa-renren:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-reorder:before {
+	/* corresponding to bi-list -- good match -- never used in the codebase */
+	content : "\f479";
+}
+.fa-reply-all:before {
+	/* corresponding to bi-reply-all-fill -- good match -- never used in the codebase */
+	content : "\f51d";
+}
+.fa-resistance:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-retweet:before {
+	/* corresponding to bi-arrow-repeat -- can do better -- never used in the codebase */
+	content : "\f130";
+}
+.fa-rmb:before {
+	/* corresponding to bi-currency-yen -- good match -- never used in the codebase */
+	content : "\f63a";
+}
+.fa-road:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-rouble:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-rub:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-ruble:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-rupee:before {
+	/* corresponding to bi-currency-rupee -- good match -- never used in the codebase */
+	content : "\f7ec";
+}
+.fa-s15:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-safari:before {
+	/* corresponding to bi-browser-safari -- good match -- never used in the codebase */
+	content : "\f7d7";
+}
+.fa-scribd:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-sellsy:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-send:before {
+	/* corresponding to bi-send-fill -- good match -- never used in the codebase */
+	content : "\f6b9";
+}
+.fa-server:before {
+	/* corresponding to bi-hdd-rack-fill -- good match -- never used in the codebase */
+	content : "\f40e";
+}
+.fa-share:before {
+	/* corresponding to bi-reply-fill -- good match -- never used in the codebase */
+	content : "\f51f";
+}
+.fa-share-alt-square:before {
+	/* corresponding to bi-share-fill -- good match -- never used in the codebase */
+	content : "\f52d";
+}
+.fa-share-square:before {
+	/* corresponding to bi-reply -- good match -- never used in the codebase */
+	content : "\f520";
+}
+.fa-shekel:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-sheqel:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-ship:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-shirtsinbulk:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-shower:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-sign-language:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-signing:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-simplybuilt:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-skyatlas:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-skype:before {
+	/* corresponding to bi-skype -- good match -- never used in the codebase */
+	content : "\f656";
+}
+.fa-slack:before {
+	/* corresponding to bi-slack -- good match -- never used in the codebase */
+	content : "\f565";
+}
+.fa-slideshare:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-snapchat:before {
+	/* corresponding to bi-snapchat -- good match -- never used in the codebase */
+	content : "\f665";
+}
+.fa-snapchat-ghost:before {
+	/* corresponding to bi-snapchat -- good match -- never used in the codebase */
+	content : "\f665";
+}
+.fa-snapchat-square:before {
+	/* corresponding to bi-snapchat -- good match -- never used in the codebase */
+	content : "\f665";
+}
+.fa-snowflake-o:before {
+	/* corresponding to bi-snow -- good match -- never used in the codebase */
+	content : "\f56d";
+}
+.fa-soccer-ball-o:before {
+	/* corresponding to bi-balloon -- can do better -- never used in the codebase */
+	content : "\f709";
+}
+.fa-sort-alpha-asc:before {
+	/* corresponding to bi-sort-alpha-down -- good match -- never used in the codebase */
+	content : "\f571";
+}
+.fa-sort-alpha-desc:before {
+	/* corresponding to bi-sort-alpha-down-alt -- good match -- never used in the codebase */
+	content : "\f570";
+}
+.fa-sort-asc:before {
+	/* corresponding to bi-caret-up-fill -- good match -- never used in the codebase */
+	content : "\f235";
+}
+.fa-sort-desc:before {
+	/* corresponding to bi-caret-down-fill -- good match -- never used in the codebase */
+	content : "\f229";
+}
+.fa-sort-down:before {
+	/* corresponding to bi-caret-down-fill -- good match -- never used in the codebase */
+	content : "\f229";
+}
+.fa-sort-up:before {
+	/* corresponding to bi-caret-up-fill -- good match -- never used in the codebase */
+	content : "\f235";
+}
+.fa-soundcloud:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-space-shuttle:before {
+	/* corresponding to bi-rocket-takeoff -- good match -- never used in the codebase */
+	content : "\f845";
+}
+.fa-spoon:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-spotify:before {
+	/* corresponding to bi-spotify -- good match -- never used in the codebase */
+	content : "\f666";
+}
+.fa-stack-exchange:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-stack-overflow:before {
+	/* corresponding to bi-stack-overflow -- good match -- never used in the codebase */
+	content : "\f667";
+}
+.fa-star-half:before {
+	/* corresponding to bi-star-half -- good match -- never used in the codebase */
+	content : "\f587";
+}
+.fa-star-half-empty:before {
+	/* corresponding to bi-star-half -- good match -- never used in the codebase */
+	content : "\f587";
+}
+.fa-star-half-full:before {
+	/* corresponding to bi-star-half -- good match -- never used in the codebase */
+	content : "\f587";
+}
+.fa-steam:before {
+	/* corresponding to bi-steam -- good match -- never used in the codebase */
+	content : "\f6c1";
+}
+.fa-steam-square:before {
+	/* corresponding to bi-steam -- good match -- never used in the codebase */
+	content : "\f6c1";
+}
+.fa-stethoscope:before {
+	/* corresponding to bi-heart-pulse -- can do better -- never used in the codebase */
+	content : "\f76f";
+}
+.fa-sticky-note-o:before {
+	/* corresponding to bi-sticky -- good match -- never used in the codebase */
+	content : "\f58d";
+}
+.fa-stop-circle:before {
+	/* corresponding to bi-stop-circle-fill -- good match -- never used in the codebase */
+	content : "\f590";
+}
+.fa-stop-circle-o:before {
+	/* corresponding to bi-stop-circle -- good match -- never used in the codebase */
+	content : "\f591";
+}
+.fa-street-view:before {
+	/* corresponding to bi-person-standing -- can do better -- never used in the codebase */
+	content : "\f8f9";
+}
+.fa-stumbleupon:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-stumbleupon-circle:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-subscript:before {
+	/* corresponding to bi-subscript -- good match -- never used in the codebase */
+	content : "\f848";
+}
+.fa-subway:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-superpowers:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-superscript:before {
+	/* corresponding to bi-superscript -- good match -- never used in the codebase */
+	content : "\f849";
+}
+.fa-support:before {
+	/* corresponding to bi-life-preserver -- good match -- never used in the codebase */
+	content : "\f467";
+}
+.fa-tablet:before {
+	/* corresponding to bi-tablet -- good match -- never used in the codebase */
+	content : "\f5ae";
+}
+.fa-taxi:before {
+	/* corresponding to bi-taxi-front-fill -- good match -- never used in the codebase */
+	content : "\f8ac";
+}
+.fa-telegram:before {
+	/* corresponding to bi-telegram -- good match -- never used in the codebase */
+	content : "\f5b3";
+}
+.fa-television:before {
+	/* corresponding to bi-tv -- good match -- never used in the codebase */
+	content : "\f5ed";
+}
+.fa-terminal:before {
+	/* corresponding to bi-terminal -- good match -- never used in the codebase */
+	content : "\f5c3";
+}
+.fa-text-height:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-text-width:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-themeisle:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-thermometer:before {
+	/* corresponding to bi-thermometer-high -- good match -- never used in the codebase */
+	content : "\f5ce";
+}
+.fa-thermometer-0:before {
+	/* corresponding to bi-thermometer -- good match -- never used in the codebase */
+	content : "\f5d2";
+}
+.fa-thermometer-1:before {
+	/* corresponding to bi-thermometer-half -- good match -- never used in the codebase */
+	content : "\f5cd";
+}
+.fa-thermometer-2:before {
+	/* corresponding to bi-thermometer-half -- good match -- never used in the codebase */
+	content : "\f5cd";
+}
+.fa-thermometer-3:before {
+	/* corresponding to bi-thermometer-half -- good match -- never used in the codebase */
+	content : "\f5cd";
+}
+.fa-thermometer-4:before {
+	/* corresponding to bi-thermometer-high -- good match -- never used in the codebase */
+	content : "\f5ce";
+}
+.fa-thermometer-empty:before {
+	/* corresponding to bi-thermometer -- good match -- never used in the codebase */
+	content : "\f5d2";
+}
+.fa-thermometer-full:before {
+	/* corresponding to bi-thermometer-high -- good match -- never used in the codebase */
+	content : "\f5ce";
+}
+.fa-thermometer-half:before {
+	/* corresponding to bi-thermometer-half -- good match -- never used in the codebase */
+	content : "\f5cd";
+}
+.fa-thermometer-quarter:before {
+	/* corresponding to bi-thermometer-half -- good match -- never used in the codebase */
+	content : "\f5cd";
+}
+.fa-thermometer-three-quarters:before {
+	/* corresponding to bi-thermometer-half -- good match -- never used in the codebase */
+	content : "\f5cd";
+}
+.fa-times-circle-o:before {
+	/* corresponding to bi-x-circle -- good match -- never used in the codebase */
+	content : "\f623";
+}
+.fa-times-rectangle-o:before {
+	/* corresponding to bi-x-square -- good match -- never used in the codebase */
+	content : "\f629";
+}
+.fa-tint:before {
+	/* corresponding to bi-droplet -- good match -- never used in the codebase */
+	content : "\f30d";
+}
+.fa-toggle-down:before {
+	/* corresponding to bi-caret-down-square -- good match -- never used in the codebase */
+	content : "\f22b";
+}
+.fa-toggle-left:before {
+	/* corresponding to bi-caret-left-square -- good match -- never used in the codebase */
+	content : "\f22f";
+}
+.fa-toggle-right:before {
+	/* corresponding to bi-caret-right-square -- good match -- never used in the codebase */
+	content : "\f233";
+}
+.fa-toggle-up:before {
+	/* corresponding to bi-caret-up-square -- good match -- never used in the codebase */
+	content : "\f237";
+}
+.fa-trademark:before {
+	/* corresponding to bi-badge-tm -- good match -- never used in the codebase */
+	content : "\f169";
+}
+.fa-train:before {
+	/* corresponding to bi-train-front-fill -- good match -- never used in the codebase */
+	content : "\f81c";
+}
+.fa-transgender:before {
+	/* corresponding to bi-gender-ambiguous -- good match -- never used in the codebase */
+	content : "\f641";
+}
+.fa-transgender-alt:before {
+	/* corresponding to bi-gender-trans -- good match -- never used in the codebase */
+	content : "\f644";
+}
+.fa-tree:before {
+	/* corresponding to bi-tree-fill -- good match -- never used in the codebase */
+	content : "\f5e1";
+}
+.fa-trello:before {
+	/* corresponding to bi-trello -- good match -- never used in the codebase */
+	content : "\f84a";
+}
+.fa-tripadvisor:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-try:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-tty:before {
+	/* corresponding to bi-terminal -- good match -- never used in the codebase */
+	content : "\f5c3";
+}
+.fa-tumblr:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-tumblr-square:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-tv:before {
+	/* corresponding to bi-tv -- good match -- never used in the codebase */
+	content : "\f5ed";
+}
+.fa-twitch:before {
+	/* corresponding to bi-twitch -- good match -- never used in the codebase */
+	content : "\f5ee";
+}
+.fa-umbrella:before {
+	/* corresponding to bi-umbrella-fill -- good match -- never used in the codebase */
+	content : "\f5fc";
+}
+.fa-universal-access:before {
+	/* corresponding to bi-person-arms-up -- good match -- never used in the codebase */
+	content : "\f8f6";
+}
+.fa-unlock:before {
+	/* corresponding to bi-unlock-fill -- good match -- never used in the codebase */
+	content : "\f5ff";
+}
+.fa-unsorted:before {
+	/* corresponding to bi-arrows-vertical -- good match -- never used in the codebase */
+	content : "\f698";
+}
+.fa-usb:before {
+	/* corresponding to bi-usb-symbol -- good match -- never used in the codebase */
+	content : "\f6dd";
+}
+.fa-user-md:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-user-secret:before {
+	/* corresponding to bi-incognito -- good match -- never used in the codebase */
+	content : "\f777";
+}
+.fa-vcard:before {
+	/* corresponding to bi-person-vcard-fill -- good match -- never used in the codebase */
+	content : "\f8c8";
+}
+.fa-vcard-o:before {
+	/* corresponding to bi-person-vcard -- good match -- never used in the codebase */
+	content : "\f8c9";
+}
+.fa-venus:before {
+	/* corresponding to bi-gender-female -- good match -- never used in the codebase */
+	content : "\f642";
+}
+.fa-venus-double:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-venus-mars:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-viacoin:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-viadeo:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-viadeo-square:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-vimeo-square:before {
+	/* corresponding to bi-vimeo -- good match -- never used in the codebase */
+	content : "\f66a";
+}
+.fa-vine:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-vk:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-volume-control-phone:before {
+	/* corresponding to bi-volume-up-fill -- good match -- never used in the codebase */
+	content : "\f610";
+}
+.fa-volume-down:before {
+	/* corresponding to bi-volume-down-fill -- good match -- never used in the codebase */
+	content : "\f60a";
+}
+.fa-volume-off:before {
+	/* corresponding to bi-volume-mute-fill -- good match -- never used in the codebase */
+	content : "\f60c";
+}
+.fa-weibo:before {
+	/* corresponding to bi-sina-weibo -- good match -- never used in the codebase */
+	content : "\f8ca";
+}
+.fa-weixin:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-wheelchair:before {
+	/* corresponding to bi-person-wheelchair -- good match -- never used in the codebase */
+	content : "\f8fb";
+}
+.fa-wheelchair-alt:before {
+	/* corresponding to bi-person-wheelchair -- good match -- never used in the codebase */
+	content : "\f8fb";
+}
+.fa-wikipedia-w:before {
+	/* corresponding to bi-wikipedia -- good match -- never used in the codebase */
+	content : "\f8cc";
+}
+.fa-window-close-o:before {
+	/* corresponding to bi-x-square -- good match -- never used in the codebase */
+	content : "\f629";
+}
+.fa-window-restore:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-won:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-wordpress:before {
+	/* corresponding to bi-wordpress -- good match -- never used in the codebase */
+	content : "\f669";
+}
+.fa-wpbeginner:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-wpexplorer:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-wpforms:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-xing:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-xing-square:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-y-combinator:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-y-combinator-square:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-yahoo:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-yc:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-yc-square:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-yelp:before {
+	/* corresponding to bi-yelp -- good match -- never used in the codebase */
+	content : "\f82a";
+}
+.fa-yen:before {
+	/* corresponding to bi-currency-yen -- good match -- never used in the codebase */
+	content : "\f63a";
+}
+.fa-yoast:before {
+	/* corresponding to bi-question -- no match... -- never used in the codebase */
+	content : "\f50c";
+}
+.fa-youtube-square:before {
+	/* corresponding to bi-youtube -- good match -- never used in the codebase */
+	content : "\f62b";
+}
+.fa-address-card:before {
+	/* corresponding to bi-person-vcard-fill -- good match -- used in the codebase */
+	content : "\f8c8";
+}
+.fa-address-card-o:before {
+	/* corresponding to bi-person-vcard -- good match -- used in the codebase */
+	content : "\f8c9";
+}
+.fa-adjust:before {
+	/* corresponding to bi-circle-half -- good match -- used in the codebase */
+	content : "\f288";
+}
+.fa-align-center:before {
+	/* corresponding to bi-text-center -- good match -- used in the codebase */
+	content : "\f5c4";
+}
+.fa-align-justify:before {
+	/* corresponding to bi-justify -- good match -- used in the codebase */
+	content : "\f44b";
+}
+.fa-align-left:before {
+	/* corresponding to bi-justify-left -- good match -- used in the codebase */
+	content : "\f449";
+}
+.fa-align-right:before {
+	/* corresponding to bi-justify-right -- good match -- used in the codebase */
+	content : "\f44a";
+}
+.fa-android:before {
+	/* corresponding to bi-android2 -- good match -- used in the codebase */
+	content : "\f7d1";
+}
+.fa-angle-double-left:before {
+	/* corresponding to bi-chevron-double-left -- good match -- used in the codebase */
+	content : "\f27f";
+}
+.fa-angle-double-right:before {
+	/* corresponding to bi-chevron-double-right -- good match -- used in the codebase */
+	content : "\f280";
+}
+.fa-angle-double-up:before {
+	/* corresponding to bi-chevron-double-up -- good match -- used in the codebase */
+	content : "\f281";
+}
+.fa-angle-down:before {
+	/* corresponding to bi-chevron-down -- good match -- used in the codebase */
+	content : "\f282";
+}
+.fa-angle-left:before {
+	/* corresponding to bi-chevron-left -- good match -- used in the codebase */
+	content : "\f284";
+}
+.fa-angle-right:before {
+	/* corresponding to bi-chevron-right -- good match -- used in the codebase */
+	content : "\f285";
+}
+.fa-angle-up:before {
+	/* corresponding to bi-chevron-up -- good match -- used in the codebase */
+	content : "\f286";
+}
+.fa-apple:before {
+	/* corresponding to bi-apple -- good match -- used in the codebase */
+	content : "\f65b";
+}
+.fa-archive:before {
+	/* corresponding to bi-archive -- good match -- used in the codebase */
+	content : "\f10d";
+}
+.fa-area-chart:before {
+	/* corresponding to bi-graph-up -- good match -- used in the codebase */
+	content : "\f3f2";
+}
+.fa-arrow-circle-left:before {
+	/* corresponding to bi-arrow-left-circle -- good match -- used in the codebase */
+	content : "\f12a";
+}
+.fa-arrow-circle-right:before {
+	/* corresponding to bi-arrow-right-circle -- good match -- used in the codebase */
+	content : "\f134";
+}
+.fa-arrow-left:before {
+	/* corresponding to bi-arrow-left -- good match -- used in the codebase */
+	content : "\f12f";
+}
+.fa-arrow-right:before {
+	/* corresponding to bi-arrow-right -- good match -- used in the codebase */
+	content : "\f138";
+}
+.fa-arrows:before {
+	/* corresponding to bi-arrows-move -- good match -- used in the codebase */
+	content : "\f14e";
+}
+.fa-arrows-alt:before {
+	/* corresponding to bi-arrows-fullscreen -- good match -- used in the codebase */
+	content : "\f14d";
+}
+.fa-asterisk:before {
+	/* corresponding to bi-asterisk -- good match -- used in the codebase */
+	content : "\f151";
+}
+.fa-ban:before {
+	/* corresponding to bi-ban -- good match -- used in the codebase */
+	content : "\f6b6";
+}
+.fa-bar-chart:before {
+	/* corresponding to bi-graph-up -- good match -- used in the codebase */
+	content : "\f3f2";
+}
+.fa-bar-chart-o:before {
+	/* corresponding to bi-graph-up -- good match -- used in the codebase */
+	content : "\f3f2";
+}
+.fa-barcode:before {
+	/* corresponding to bi-upc-scan -- good match -- used in the codebase */
+	content : "\f601";
+}
+.fa-bars:before {
+	/* corresponding to bi-list -- good match -- used in the codebase */
+	content : "\f479";
+}
+.fa-beer:before {
+	/* corresponding to bi-cup-straw -- good match -- used in the codebase */
+	content : "\f2df";
+}
+.fa-bell:before {
+	/* corresponding to bi-bell-fill -- good match -- used in the codebase */
+	content : "\f189";
+}
+.fa-bell-o:before {
+	/* corresponding to bi-bell -- good match -- used in the codebase */
+	content : "\f18a";
+}
+.fa-bell-slash:before {
+	/* corresponding to bi-bell-slash-fill -- good match -- used in the codebase */
+	content : "\f630";
+}
+.fa-bell-slash-o:before {
+	/* corresponding to bi-bell-slash -- good match -- used in the codebase */
+	content : "\f631";
+}
+.fa-binoculars:before {
+	/* corresponding to bi-binoculars-fill -- good match -- used in the codebase */
+	content : "\f18e";
+}
+.fa-black-tie:before {
+	/* corresponding to bi-question -- no match... -- used in the codebase */
+	content : "\f50c";
+}
+.fa-bold:before {
+	/* corresponding to bi-type-bold -- good match -- used in the codebase */
+	content : "\f5f0";
+}
+.fa-bolt:before {
+	/* corresponding to bi-lightning-fill -- good match -- used in the codebase */
+	content : "\f46e";
+}
+.fa-book:before {
+	/* corresponding to bi-book-fill -- good match -- used in the codebase */
+	content : "\f192";
+}
+.fa-briefcase:before {
+	/* corresponding to bi-briefcase -- good match -- used in the codebase */
+	content : "\f1cc";
+}
+.fa-bug:before {
+	/* corresponding to bi-bug-fill -- good match -- used in the codebase */
+	content : "\f1db";
+}
+.fa-building:before {
+	/* corresponding to bi-building-fill -- good match -- used in the codebase */
+	content : "\f876";
+}
+.fa-building-o:before {
+	/* corresponding to bi-building -- good match -- used in the codebase */
+	content : "\f1dd";
+}
+.fa-bullseye:before {
+	/* corresponding to bi-bullseye -- good match -- used in the codebase */
+	content : "\f1de";
+}
+.fa-bus-alt:before {
+	/* corresponding to bi-bus-front -- good match -- used in the codebase */
+	content : "\f87f";
+}
+.fa-calendar:before {
+	/* corresponding to bi-calendar3 -- good match -- used in the codebase */
+	content : "\f214";
+}
+.fa-calendar-o:before {
+	/* corresponding to bi-calendar2 -- good match -- used in the codebase */
+	content : "\f20c";
+}
+.fa-camera:before {
+	/* corresponding to bi-camera-fill -- good match -- used in the codebase */
+	content : "\f219";
+}
+.fa-car:before {
+	/* corresponding to bi-car-front-fill -- good match -- used in the codebase */
+	content : "\f7e0";
+}
+.fa-caret-down:before {
+	/* corresponding to bi-caret-down-fill -- good match -- used in the codebase */
+	content : "\f229";
+}
+.fa-caret-left:before {
+	/* corresponding to bi-caret-left-fill -- good match -- used in the codebase */
+	content : "\f22d";
+}
+.fa-caret-right:before {
+	/* corresponding to bi-caret-right-fill -- good match -- used in the codebase */
+	content : "\f231";
+}
+.fa-caret-up:before {
+	/* corresponding to bi-caret-up-fill -- good match -- used in the codebase */
+	content : "\f235";
+}
+.fa-cart-plus:before {
+	/* corresponding to bi-cart-plus-fill -- good match -- used in the codebase */
+	content : "\f23e";
+}
+.fa-certificate:before {
+	/* corresponding to bi-award-fill -- good match -- used in the codebase */
+	content : "\f153";
+}
+.fa-chain-broken:before {
+	/* corresponding to bi-link-45deg -- good match -- used in the codebase */
+	content : "\f470";
+}
+.fa-check:before {
+	/* corresponding to bi-check-lg -- good match -- used in the codebase */
+	content : "\f633";
+}
+.fa-check-circle:before {
+	/* corresponding to bi-check-circle-fill -- good match -- used in the codebase */
+	content : "\f26a";
+}
+.fa-check-circle-o:before {
+	/* corresponding to bi-check-circle -- good match -- used in the codebase */
+	content : "\f26b";
+}
+.fa-check-square:before {
+	/* corresponding to bi-check-square-fill -- good match -- used in the codebase */
+	content : "\f26c";
+}
+.fa-check-square-o:before {
+	/* corresponding to bi-check-square -- good match -- used in the codebase */
+	content : "\f26d";
+}
+.fa-chevron-circle-down:before {
+	/* corresponding to bi-caret-down-square-fill -- good match -- used in the codebase */
+	content : "\f22a";
+}
+.fa-chevron-circle-left:before {
+	/* corresponding to bi-caret-left-square-fill -- good match -- used in the codebase */
+	content : "\f22e";
+}
+.fa-chevron-circle-right:before {
+	/* corresponding to bi-caret-right-square-fill -- good match -- used in the codebase */
+	content : "\f232";
+}
+.fa-chevron-left:before {
+	/* corresponding to bi-chevron-left -- good match -- used in the codebase */
+	content : "\f284";
+}
+.fa-chevron-right:before {
+	/* corresponding to bi-chevron-right -- good match -- used in the codebase */
+	content : "\f285";
+}
+.fa-chevron-up:before {
+	/* corresponding to bi-chevron-up -- good match -- used in the codebase */
+	content : "\f286";
+}
+.fa-child:before {
+	/* corresponding to bi-person-arms-up -- good match -- used in the codebase */
+	content : "\f8f6";
+}
+.fa-circle:before {
+	/* corresponding to bi-circle-fill -- good match -- used in the codebase */
+	content : "\f287";
+}
+.fa-circle-o:before {
+	/* corresponding to bi-circle -- good match -- used in the codebase */
+	content : "\f28a";
+}
+.fa-circle-o-notch:before {
+	/* corresponding to bi-record-circle -- good match -- used in the codebase */
+	content : "\f518";
+}
+.fa-circle-thin:before {
+	/* corresponding to bi-circle -- good match -- used in the codebase */
+	content : "\f28a";
+}
+.fa-clipboard:before {
+	/* corresponding to bi-clipboard-fill -- good match -- used in the codebase */
+	content : "\f71d";
+}
+.fa-clock-o:before {
+	/* corresponding to bi-clock -- good match -- used in the codebase */
+	content : "\f293";
+}
+.fa-clone:before {
+	/* corresponding to bi-copy -- good match -- used in the codebase */
+	content : "\f759";
+}
+.fa-close:before {
+	/* corresponding to bi-x-lg -- good match -- used in the codebase */
+	content : "\f659";
+}
+.fa-cloud:before {
+	/* corresponding to bi-cloud-fill -- good match -- used in the codebase */
+	content : "\f29e";
+}
+.fa-cloud-download:before {
+	/* corresponding to bi-cloud-download-fill -- good match -- used in the codebase */
+	content : "\f29a";
+}
+.fa-cloud-upload:before {
+	/* corresponding to bi-cloud-arrow-up-fill -- good match -- used in the codebase */
+	content : "\f296";
+}
+.fa-code:before {
+	/* corresponding to bi-code-slash -- good match -- used in the codebase */
+	content : "\f2c6";
+}
+.fa-code-fork:before {
+	/* corresponding to bi-git -- good match -- used in the codebase */
+	content : "\f69d";
+}
+.fa-coffee:before {
+	/* corresponding to bi-cup-hot-fill -- good match -- used in the codebase */
+	content : "\f7ea";
+}
+.fa-cog:before {
+	/* corresponding to bi-gear-fill -- good match -- used in the codebase */
+	content : "\f3e2";
+}
+.fa-cogs:before {
+	/* corresponding to bi-gear-wide-connected -- good match -- used in the codebase */
+	content : "\f3e3";
+}
+.fa-columns:before {
+	/* corresponding to bi-layout-split -- good match -- used in the codebase */
+	content : "\f460";
+}
+.fa-comment:before {
+	/* corresponding to bi-chat-fill -- good match -- used in the codebase */
+	content : "\f24b";
+}
+.fa-comment-o:before {
+	/* corresponding to bi-chat -- good match -- used in the codebase */
+	content : "\f268";
+}
+.fa-commenting:before {
+	/* corresponding to bi-chat-dots-fill -- good match -- used in the codebase */
+	content : "\f249";
+}
+.fa-commenting-o:before {
+	/* corresponding to bi-chat-dots -- good match -- used in the codebase */
+	content : "\f24a";
+}
+.fa-comments:before {
+	/* corresponding to bi-chat-dots-fill -- good match -- used in the codebase */
+	content : "\f249";
+}
+.fa-comments-o:before {
+	/* corresponding to bi-chat-quote -- good match -- used in the codebase */
+	content : "\f255";
+}
+.fa-compress:before {
+	/* corresponding to bi-arrows-angle-contract -- good match -- used in the codebase */
+	content : "\f149";
+}
+.fa-copy:before {
+	/* corresponding to bi-copy -- good match -- used in the codebase */
+	content : "\f759";
+}
+.fa-copyright:before {
+	/* corresponding to bi-c-circle -- good match -- used in the codebase */
+	content : "\f7db";
+}
+.fa-credit-card:before {
+	/* corresponding to bi-credit-card -- good match -- used in the codebase */
+	content : "\f2dc";
+}
+.fa-credit-card-alt:before {
+	/* corresponding to bi-credit-card-fill -- good match -- used in the codebase */
+	content : "\f2db";
+}
+.fa-crop:before {
+	/* corresponding to bi-crop -- good match -- used in the codebase */
+	content : "\f2dd";
+}
+.fa-crosshairs:before {
+	/* corresponding to bi-crosshair -- good match -- used in the codebase */
+	content : "\f769";
+}
+.fa-cube:before {
+	/* corresponding to bi-box -- good match -- used in the codebase */
+	content : "\f1c8";
+}
+.fa-cubes:before {
+	/* corresponding to bi-boxes -- good match -- used in the codebase */
+	content : "\f685";
+}
+.fa-cutlery:before {
+	/* corresponding to bi-question -- no match... -- used in the codebase */
+	content : "\f50c";
+}
+.fa-database:before {
+	/* corresponding to bi-database-fill -- good match -- used in the codebase */
+	content : "\f8be";
+}
+.fa-deaf:before {
+	/* corresponding to bi-ear -- good match -- used in the codebase */
+	content : "\f689";
+}
+.fa-desktop:before {
+	/* corresponding to bi-display -- good match -- used in the codebase */
+	content : "\f302";
+}
+.fa-diamond:before {
+	/* corresponding to bi-gem -- good match -- used in the codebase */
+	content : "\f3e6";
+}
+.fa-dollar:before {
+	/* corresponding to bi-currency-dollar -- good match -- used in the codebase */
+	content : "\f636";
+}
+.fa-dot-circle-o:before {
+	/* corresponding to bi-record-circle -- good match -- used in the codebase */
+	content : "\f518";
+}
+.fa-download:before {
+	/* corresponding to bi-download -- good match -- used in the codebase */
+	content : "\f30a";
+}
+.fa-dropbox:before {
+	/* corresponding to bi-dropbox -- good match -- used in the codebase */
+	content : "\f7ed";
+}
+.fa-edit:before {
+	/* corresponding to bi-pencil-square -- good match -- used in the codebase */
+	content : "\f4ca";
+}
+.fa-ellipsis-h:before {
+	/* corresponding to bi-three-dots -- good match -- used in the codebase */
+	content : "\f5d4";
+}
+.fa-ellipsis-v:before {
+	/* corresponding to bi-three-dots-vertical -- good match -- used in the codebase */
+	content : "\f5d3";
+}
+.fa-envelope:before {
+	/* corresponding to bi-envelope-fill -- good match -- used in the codebase */
+	content : "\f32c";
+}
+.fa-envelope-o:before {
+	/* corresponding to bi-envelope -- good match -- used in the codebase */
+	content : "\f32f";
+}
+.fa-eraser:before {
+	/* corresponding to bi-eraser-fill -- good match -- used in the codebase */
+	content : "\f330";
+}
+.fa-exchange:before {
+	/* corresponding to bi-arrow-left-right -- good match -- used in the codebase */
+	content : "\f12b";
+}
+.fa-exclamation:before {
+	/* corresponding to bi-exclamation -- good match -- used in the codebase */
+	content : "\f33c";
+}
+.fa-exclamation-circle:before {
+	/* corresponding to bi-exclamation-circle -- good match -- used in the codebase */
+	content : "\f333";
+}
+.fa-exclamation-triangle:before {
+	/* corresponding to bi-exclamation-triangle -- good match -- used in the codebase */
+	content : "\f33b";
+}
+.fa-expand:before {
+	/* corresponding to bi-arrows-angle-expand -- good match -- used in the codebase */
+	content : "\f14a";
+}
+.fa-external-link:before {
+	/* corresponding to bi-arrow-up-right-square -- good match -- used in the codebase */
+	content : "\f143";
+}
+.fa-eye:before {
+	/* corresponding to bi-eye -- good match -- used in the codebase */
+	content : "\f341";
+}
+.fa-eye-slash:before {
+	/* corresponding to bi-eye-slash -- good match -- used in the codebase */
+	content : "\f340";
+}
+.fa-eyedropper:before {
+	/* corresponding to bi-eyedropper -- good match -- used in the codebase */
+	content : "\f342";
+}
+.fa-facebook:before {
+	/* corresponding to bi-facebook -- good match -- used in the codebase */
+	content : "\f344";
+}
+.fa-facebook-square:before {
+	/* corresponding to bi-facebook -- good match -- used in the codebase */
+	content : "\f344";
+}
+.fa-file:before {
+	/* corresponding to bi-file-earmark-fill -- good match -- used in the codebase */
+	content : "\f369";
+}
+.fa-file-code-o:before {
+	/* corresponding to bi-file-earmark-code -- good match -- used in the codebase */
+	content : "\f362";
+}
+.fa-file-excel-o:before {
+	/* corresponding to bi-file-earmark-excel -- good match -- used in the codebase */
+	content : "\f368";
+}
+.fa-file-image-o:before {
+	/* corresponding to bi-file-earmark-image -- good match -- used in the codebase */
+	content : "\f36d";
+}
+.fa-file-o:before {
+	/* corresponding to bi-file-earmark -- good match -- used in the codebase */
+	content : "\f392";
+}
+.fa-file-pdf-o:before {
+	/* corresponding to bi-file-earmark-pdf -- good match -- used in the codebase */
+	content : "\f63e";
+}
+.fa-file-picture-o:before {
+	/* corresponding to bi-file-earmark-image -- good match -- used in the codebase */
+	content : "\f36d";
+}
+.fa-file-powerpoint-o:before {
+	/* corresponding to bi-file-earmark-ppt -- good match -- used in the codebase */
+	content : "\f381";
+}
+.fa-file-text:before {
+	/* corresponding to bi-file-earmark-text -- good match -- used in the codebase */
+	content : "\f38b";
+}
+.fa-file-text-o:before {
+	/* corresponding to bi-file-earmark-text -- good match -- used in the codebase */
+	content : "\f38b";
+}
+.fa-file-video-o:before {
+	/* corresponding to bi-file-earmark-play -- good match -- used in the codebase */
+	content : "\f37b";
+}
+.fa-file-word-o:before {
+	/* corresponding to bi-file-earmark-word -- good match -- used in the codebase */
+	content : "\f38d";
+}
+.fa-files-o:before {
+	/* corresponding to bi-files -- good match -- used in the codebase */
+	content : "\f3c2";
+}
+.fa-film:before {
+	/* corresponding to bi-film -- good match -- used in the codebase */
+	content : "\f3c3";
+}
+.fa-filter:before {
+	/* corresponding to bi-funnel-fill -- good match -- used in the codebase */
+	content : "\f3e0";
+}
+.fa-flag:before {
+	/* corresponding to bi-flag-fill -- good match -- used in the codebase */
+	content : "\f3cb";
+}
+.fa-flag-checkered:before {
+	/* corresponding to bi-flag-fill -- can do better -- used in the codebase */
+	content : "\f3cb";
+}
+.fa-flag-o:before {
+	/* corresponding to bi-flag -- good match -- used in the codebase */
+	content : "\f3cc";
+}
+.fa-flask:before {
+	/* corresponding to bi-question -- no match... -- used in the codebase */
+	content : "\f50c";
+}
+.fa-floppy-o:before {
+	/* corresponding to bi-floppy -- good match -- used in the codebase */
+	content : "\f7d8";
+}
+.fa-folder:before {
+	/* corresponding to bi-folder-fill -- good match -- used in the codebase */
+	content : "\f3d1";
+}
+.fa-folder-o:before {
+	/* corresponding to bi-folder -- good match -- used in the codebase */
+	content : "\f3d7";
+}
+.fa-folder-open:before {
+	/* corresponding to bi-folder2-open -- good match -- used in the codebase */
+	content : "\f3d8";
+}
+.fa-font:before {
+	/* corresponding to bi-fonts -- good match -- used in the codebase */
+	content : "\f3da";
+}
+.fa-font-awesome:before {
+	/* corresponding to bi-flag -- can do better -- used in the codebase */
+	content : "\f3cc";
+}
+.fa-frown-o:before {
+	/* corresponding to bi-emoji-frown -- good match -- used in the codebase */
+	content : "\f31d";
+}
+.fa-futbol-o:before {
+	/* corresponding to bi-activity -- can do better -- used in the codebase */
+	content : "\f66b";
+}
+.fa-gavel:before {
+	/* corresponding to bi-hammer -- good match -- used in the codebase */
+	content : "\f3ff";
+}
+.fa-gear:before {
+	/* corresponding to bi-gear-fill -- good match -- used in the codebase */
+	content : "\f3e2";
+}
+.fa-gears:before {
+	/* corresponding to bi-gear-wide-connected -- good match -- used in the codebase */
+	content : "\f3e3";
+}
+.fa-gift:before {
+	/* corresponding to bi-gift-fill -- good match -- used in the codebase */
+	content : "\f3eb";
+}
+.fa-github:before {
+	/* corresponding to bi-github -- good match -- used in the codebase */
+	content : "\f3ed";
+}
+.fa-glass:before {
+	/* corresponding to bi-cup-straw -- good match -- used in the codebase */
+	content : "\f2df";
+}
+.fa-globe:before {
+	/* corresponding to bi-globe-americas -- good match -- used in the codebase */
+	content : "\f882";
+}
+.fa-google:before {
+	/* corresponding to bi-google -- good match -- used in the codebase */
+	content : "\f3f0";
+}
+.fa-graduation-cap:before {
+	/* corresponding to bi-mortarboard-fill -- good match -- used in the codebase */
+	content : "\f6fd";
+}
+.fa-group:before {
+	/* corresponding to bi-people-fill -- good match -- used in the codebase */
+	content : "\f4cf";
+}
+.fa-hand-paper-o:before {
+	/* corresponding to bi-question -- no match... -- used in the codebase */
+	content : "\f50c";
+}
+.fa-handshake-o:before {
+	/* corresponding to bi-question -- no match... -- used in the codebase */
+	content : "\f50c";
+}
+.fa-hashtag:before {
+	/* corresponding to bi-hash -- good match -- used in the codebase */
+	content : "\f40a";
+}
+.fa-header:before {
+	/* corresponding to bi-type-h1 -- good match -- used in the codebase */
+	content : "\f5f1";
+}
+.fa-headphones:before {
+	/* corresponding to bi-headphones -- good match -- used in the codebase */
+	content : "\f413";
+}
+.fa-heart:before {
+	/* corresponding to bi-heart-fill -- good match -- used in the codebase */
+	content : "\f415";
+}
+.fa-heart-o:before {
+	/* corresponding to bi-heart -- good match -- used in the codebase */
+	content : "\f417";
+}
+.fa-history:before {
+	/* corresponding to bi-clock-history -- good match -- used in the codebase */
+	content : "\f292";
+}
+.fa-home:before {
+	/* corresponding to bi-house-fill -- good match -- used in the codebase */
+	content : "\f424";
+}
+.fa-hourglass-half:before {
+	/* corresponding to bi-hourglass-split -- good match -- used in the codebase */
+	content : "\f41f";
+}
+.fa-hourglass-o:before {
+	/* corresponding to bi-hourglass -- good match -- used in the codebase */
+	content : "\f421";
+}
+.fa-id-card:before {
+	/* corresponding to bi-person-badge-fill -- good match -- used in the codebase */
+	content : "\f4d2";
+}
+.fa-id-card-o:before {
+	/* corresponding to bi-person-badge -- good match -- used in the codebase */
+	content : "\f4d3";
+}
+.fa-image:before {
+	/* corresponding to bi-image -- good match -- used in the codebase */
+	content : "\f42a";
+}
+.fa-inbox:before {
+	/* corresponding to bi-inbox-fill -- good match -- used in the codebase */
+	content : "\f42c";
+}
+.fa-industry:before {
+	/* corresponding to bi-buildings-fill -- good match -- used in the codebase */
+	content : "\f87c";
+}
+.fa-info:before {
+	/* corresponding to bi-info -- good match -- used in the codebase */
+	content : "\f434";
+}
+.fa-info-circle:before {
+	/* corresponding to bi-info-circle-fill -- good match -- used in the codebase */
+	content : "\f430";
+}
+.fa-instagram:before {
+	/* corresponding to bi-instagram -- good match -- used in the codebase */
+	content : "\f437";
+}
+.fa-italic:before {
+	/* corresponding to bi-type-italic -- good match -- used in the codebase */
+	content : "\f5f4";
+}
+.fa-key:before {
+	/* corresponding to bi-key-fill -- good match -- used in the codebase */
+	content : "\f44e";
+}
+.fa-keyboard-o:before {
+	/* corresponding to bi-keyboard -- good match -- used in the codebase */
+	content : "\f451";
+}
+.fa-language:before {
+	/* corresponding to bi-translate -- good match -- used in the codebase */
+	content : "\f658";
+}
+.fa-leaf:before {
+	/* corresponding to bi-tree -- can do better -- used in the codebase */
+	content : "\f5e2";
+}
+.fa-legal:before {
+	/* corresponding to bi-hammer -- can do better -- used in the codebase */
+	content : "\f3ff";
+}
+.fa-lemon-o:before {
+	/* corresponding to bi-question -- can do better -- used in the codebase */
+	content : "\f50c";
+}
+.fa-level-down:before {
+	/* corresponding to bi-arrow-90deg-down -- good match -- used in the codebase */
+	content : "\f10e";
+}
+.fa-level-up:before {
+	/* corresponding to bi-arrow-90deg-up -- good match -- used in the codebase */
+	content : "\f111";
+}
+.fa-lightbulb-o:before {
+	/* corresponding to bi-lightbulb -- good match -- used in the codebase */
+	content : "\f46b";
+}
+.fa-line-chart:before {
+	/* corresponding to bi-graph-up-arrow -- good match -- used in the codebase */
+	content : "\f673";
+}
+.fa-link:before {
+	/* corresponding to bi-link-45deg -- good match -- used in the codebase */
+	content : "\f470";
+}
+.fa-linkedin:before {
+	/* corresponding to bi-linkedin -- good match -- used in the codebase */
+	content : "\f472";
+}
+.fa-linkedin-square:before {
+	/* corresponding to bi-linkedin -- good match -- used in the codebase */
+	content : "\f472";
+}
+.fa-list:before {
+	/* corresponding to bi-list -- good match -- used in the codebase */
+	content : "\f479";
+}
+.fa-list-alt:before {
+	/* corresponding to bi-list-ul -- good match -- used in the codebase */
+	content : "\f478";
+}
+.fa-list-ol:before {
+	/* corresponding to bi-list-ol -- good match -- used in the codebase */
+	content : "\f475";
+}
+.fa-list-ul:before {
+	/* corresponding to bi-list-ul -- good match -- used in the codebase */
+	content : "\f478";
+}
+.fa-lock:before {
+	/* corresponding to bi-lock-fill -- good match -- used in the codebase */
+	content : "\f47a";
+}
+.fa-long-arrow-down:before {
+	/* corresponding to bi-arrow-down -- good match -- used in the codebase */
+	content : "\f128";
+}
+.fa-long-arrow-left:before {
+	/* corresponding to bi-arrow-left -- good match -- used in the codebase */
+	content : "\f12f";
+}
+.fa-long-arrow-right:before {
+	/* corresponding to bi-arrow-right -- good match -- used in the codebase */
+	content : "\f138";
+}
+.fa-long-arrow-up:before {
+	/* corresponding to bi-arrow-up -- good match -- used in the codebase */
+	content : "\f148";
+}
+.fa-magic:before {
+	/* corresponding to bi-magic -- good match -- used in the codebase */
+	content : "\f675";
+}
+.fa-mail-reply:before {
+	/* corresponding to bi-reply-fill -- good match -- used in the codebase */
+	content : "\f51f";
+}
+.fa-map-marker:before {
+	/* corresponding to bi-geo-alt-fill -- good match -- used in the codebase */
+	content : "\f3e7";
+}
+.fa-map-o:before {
+	/* corresponding to bi-map -- good match -- used in the codebase */
+	content : "\f47f";
+}
+.fa-meh-o:before {
+	/* corresponding to bi-emoji-neutral -- good match -- used in the codebase */
+	content : "\f323";
+}
+.fa-microphone:before {
+	/* corresponding to bi-mic-fill -- good match -- used in the codebase */
+	content : "\f48d";
+}
+.fa-microphone-slash:before {
+	/* corresponding to bi-mic-mute-fill -- good match -- used in the codebase */
+	content : "\f48e";
+}
+.fa-minus:before {
+	/* corresponding to bi-dash-lg -- good match -- used in the codebase */
+	content : "\f63b";
+}
+.fa-minus-circle:before {
+	/* corresponding to bi-dash-circle -- good match -- used in the codebase */
+	content : "\f2e6";
+}
+.fa-minus-square-o:before {
+	/* corresponding to bi-dash-square -- good match -- used in the codebase */
+	content : "\f2e9";
+}
+.fa-mobile:before {
+	/* corresponding to bi-phone -- good match -- used in the codebase */
+	content : "\f4e7";
+}
+.fa-money:before {
+	/* corresponding to bi-cash -- good match -- used in the codebase */
+	content : "\f247";
+}
+.fa-mouse-pointer:before {
+	/* corresponding to bi-cursor-fill -- good match -- used in the codebase */
+	content : "\f2e1";
+}
+.fa-music:before {
+	/* corresponding to bi-music-note-beamed -- good match -- used in the codebase */
+	content : "\f49e";
+}
+.fa-navicon:before {
+	/* corresponding to bi-list -- good match -- used in the codebase */
+	content : "\f479";
+}
+.fa-newspaper-o:before {
+	/* corresponding to bi-newspaper -- good match -- used in the codebase */
+	content : "\f4a3";
+}
+.fa-object-ungroup:before {
+	/* corresponding to bi-question -- no match... -- used in the codebase */
+	content : "\f50c";
+}
+.fa-paint-brush:before {
+	/* corresponding to bi-brush-fill -- good match -- used in the codebase */
+	content : "\f1d7";
+}
+.fa-paper-plane:before {
+	/* corresponding to bi-send-fill -- good match -- used in the codebase */
+	content : "\f6b9";
+}
+.fa-paper-plane-o:before {
+	/* corresponding to bi-send -- good match -- used in the codebase */
+	content : "\f6c0";
+}
+.fa-paperclip:before {
+	/* corresponding to bi-paperclip -- good match -- used in the codebase */
+	content : "\f4b3";
+}
+.fa-paragraph:before {
+	/* corresponding to bi-paragraph -- good match -- used in the codebase */
+	content : "\f4b4";
+}
+.fa-pause:before {
+	/* corresponding to bi-pause -- good match -- used in the codebase */
+	content : "\f4c4";
+}
+.fa-pause-circle:before {
+	/* corresponding to bi-pause-circle -- good match -- used in the codebase */
+	content : "\f4c2";
+}
+.fa-paypal:before {
+	/* corresponding to bi-paypal -- good match -- used in the codebase */
+	content : "\f662";
+}
+.fa-pencil:before {
+	/* corresponding to bi-pencil-fill -- good match -- used in the codebase */
+	content : "\f4c9";
+}
+.fa-pencil-square:before {
+	/* corresponding to bi-pencil-square -- good match -- used in the codebase */
+	content : "\f4ca";
+}
+.fa-pencil-square-o:before {
+	/* corresponding to bi-pencil-square -- good match -- used in the codebase */
+	content : "\f4ca";
+}
+.fa-phone:before {
+	/* corresponding to bi-telephone-fill -- good match -- used in the codebase */
+	content : "\f5b4";
+}
+.fa-photo:before {
+	/* corresponding to bi-image -- good match -- used in the codebase */
+	content : "\f42a";
+}
+.fa-picture-o:before {
+	/* corresponding to bi-image -- good match -- used in the codebase */
+	content : "\f42a";
+}
+.fa-pie-chart:before {
+	/* corresponding to bi-pie-chart-fill -- good match -- used in the codebase */
+	content : "\f4e8";
+}
+.fa-pinterest:before {
+	/* corresponding to bi-pinterest -- good match -- used in the codebase */
+	content : "\f663";
+}
+.fa-plane:before {
+	/* corresponding to bi-airplane-fill -- good match -- used in the codebase */
+	content : "\f7cc";
+}
+.fa-play:before {
+	/* corresponding to bi-play-fill -- good match -- used in the codebase */
+	content : "\f4f4";
+}
+.fa-play-circle:before {
+	/* corresponding to bi-play-circle-fill -- good match -- used in the codebase */
+	content : "\f4f2";
+}
+.fa-play-circle-o:before {
+	/* corresponding to bi-play-circle -- good match -- used in the codebase */
+	content : "\f4f3";
+}
+.fa-plus:before {
+	/* corresponding to bi-plus-lg -- good match -- used in the codebase */
+	content : "\f64d";
+}
+.fa-plus-circle:before {
+	/* corresponding to bi-plus-circle-fill -- good match -- used in the codebase */
+	content : "\f4f9";
+}
+.fa-plus-square:before {
+	/* corresponding to bi-plus-square-fill -- good match -- used in the codebase */
+	content : "\f4fc";
+}
+.fa-plus-square-o:before {
+	/* corresponding to bi-plus-square -- good match -- used in the codebase */
+	content : "\f4fd";
+}
+.fa-print:before {
+	/* corresponding to bi-printer-fill -- good match -- used in the codebase */
+	content : "\f500";
+}
+.fa-puzzle-piece:before {
+	/* corresponding to bi-puzzle-fill -- good match -- used in the codebase */
+	content : "\f502";
+}
+.fa-question:before {
+	/* corresponding to bi-question -- no match... -- used in the codebase */
+	content : "\f50c";
+}
+.fa-question-circle:before {
+	/* corresponding to bi-question-circle-fill -- good match -- used in the codebase */
+	content : "\f504";
+}
+.fa-question-circle-o:before {
+	/* corresponding to bi-question-circle -- good match -- used in the codebase */
+	content : "\f505";
+}
+.fa-quote-left:before {
+	/* corresponding to bi-quote -- good match -- used in the codebase */
+	content : "\f6b0";
+}
+.fa-quote-right:before {
+	/* corresponding to bi-quote -- good match -- used in the codebase */
+	content : "\f6b0";
+}
+.fa-random:before {
+	/* corresponding to bi-shuffle -- good match -- used in the codebase */
+	content : "\f544";
+}
+.fa-recycle:before {
+	/* corresponding to bi-recycle -- good match -- used in the codebase */
+	content : "\f64f";
+}
+.fa-refresh:before {
+	/* corresponding to bi-arrow-repeat -- good match -- used in the codebase */
+	content : "\f130";
+}
+.fa-remove:before {
+	/* corresponding to bi-x-lg -- good match -- used in the codebase */
+	content : "\f659";
+}
+.fa-repeat:before {
+	/* corresponding to bi-arrow-clockwise -- good match -- used in the codebase */
+	content : "\f116";
+}
+.fa-reply:before {
+	/* corresponding to bi-reply-fill -- good match -- used in the codebase */
+	content : "\f51f";
+}
+.fa-rocket:before {
+	/* corresponding to bi-rocket -- good match -- used in the codebase */
+	content : "\f846";
+}
+.fa-rss:before {
+	/* corresponding to bi-rss -- good match -- used in the codebase */
+	content : "\f522";
+}
+.fa-rss-square:before {
+	/* corresponding to bi-rss-fill -- good match -- used in the codebase */
+	content : "\f521";
+}
+.fa-save:before {
+	/* corresponding to bi-floppy -- good match -- used in the codebase */
+	content : "\f7d8";
+}
+.fa-scissors:before {
+	/* corresponding to bi-scissors -- good match -- used in the codebase */
+	content : "\f528";
+}
+.fa-search:before {
+	/* corresponding to bi-search -- good match -- used in the codebase */
+	content : "\f52a";
+}
+.fa-search-minus:before {
+	/* corresponding to bi-zoom-out -- good match -- used in the codebase */
+	content : "\f62d";
+}
+.fa-search-plus:before {
+	/* corresponding to bi-zoom-in -- good match -- used in the codebase */
+	content : "\f62c";
+}
+.fa-send-o:before {
+	/* corresponding to bi-send -- good match -- used in the codebase */
+	content : "\f6c0";
+}
+.fa-share-alt:before {
+	/* corresponding to bi-share-fill -- good match -- used in the codebase */
+	content : "\f52d";
+}
+.fa-share-square-o:before {
+	/* corresponding to bi-share -- good match -- used in the codebase */
+	content : "\f52e";
+}
+.fa-shield:before {
+	/* corresponding to bi-shield-shaded -- good match -- used in the codebase */
+	content : "\f53b";
+}
+.fa-shopping-bag:before {
+	/* corresponding to bi-bag-fill -- good match -- used in the codebase */
+	content : "\f174";
+}
+.fa-shopping-basket:before {
+	/* corresponding to bi-basket-fill -- good match -- used in the codebase */
+	content : "\f17f";
+}
+.fa-shopping-cart:before {
+	/* corresponding to bi-cart-fill -- good match -- used in the codebase */
+	content : "\f23d";
+}
+.fa-sign-in:before {
+	/* corresponding to bi-box-arrow-in-right -- good match -- used in the codebase */
+	content : "\f1be";
+}
+.fa-sign-out:before {
+	/* corresponding to bi-box-arrow-right -- good match -- used in the codebase */
+	content : "\f1c3";
+}
+.fa-signal:before {
+	/* corresponding to bi-reception-4 -- good match -- used in the codebase */
+	content : "\f514";
+}
+.fa-sitemap:before {
+	/* corresponding to bi-diagram-3-fill -- good match -- used in the codebase */
+	content : "\f2ed";
+}
+.fa-sliders:before {
+	/* corresponding to bi-sliders -- good match -- used in the codebase */
+	content : "\f56b";
+}
+.fa-smile-o:before {
+	/* corresponding to bi-emoji-smile -- good match -- used in the codebase */
+	content : "\f327";
+}
+.fa-sort:before {
+	/* corresponding to bi-arrow-down-up -- good match -- used in the codebase */
+	content : "\f127";
+}
+.fa-sort-amount-asc:before {
+	/* corresponding to bi-sort-down -- good match -- used in the codebase */
+	content : "\f575";
+}
+.fa-sort-amount-desc:before {
+	/* corresponding to bi-sort-up -- good match -- used in the codebase */
+	content : "\f57b";
+}
+.fa-sort-numeric-asc:before {
+	/* corresponding to bi-sort-numeric-down -- good match -- used in the codebase */
+	content : "\f577";
+}
+.fa-sort-numeric-desc:before {
+	/* corresponding to bi-sort-numeric-up -- good match -- used in the codebase */
+	content : "\f579";
+}
+.fa-spinner:before {
+	/* corresponding to bi-arrow-clockwise -- good match -- used in the codebase */
+	content : "\f116";
+}
+.fa-square:before {
+	/* corresponding to bi-square-fill -- good match -- used in the codebase */
+	content : "\f582";
+}
+.fa-square-o:before {
+	/* corresponding to bi-square -- good match -- used in the codebase */
+	content : "\f584";
+}
+.fa-star:before {
+	/* corresponding to bi-star-fill -- good match -- used in the codebase */
+	content : "\f586";
+}
+.fa-star-half-o:before {
+	/* corresponding to bi-star-half -- good match -- used in the codebase */
+	content : "\f587";
+}
+.fa-star-o:before {
+	/* corresponding to bi-star -- good match -- used in the codebase */
+	content : "\f588";
+}
+.fa-step-backward:before {
+	/* corresponding to bi-skip-start-fill -- good match -- used in the codebase */
+	content : "\f563";
+}
+.fa-step-forward:before {
+	/* corresponding to bi-skip-end-fill -- good match -- used in the codebase */
+	content : "\f557";
+}
+.fa-sticky-note:before {
+	/* corresponding to bi-sticky-fill -- good match -- used in the codebase */
+	content : "\f58c";
+}
+.fa-stop:before {
+	/* corresponding to bi-stop-fill -- good match -- used in the codebase */
+	content : "\f592";
+}
+.fa-strikethrough:before {
+	/* corresponding to bi-type-strikethrough -- good match -- used in the codebase */
+	content : "\f5f5";
+}
+.fa-suitcase:before {
+	/* corresponding to bi-briefcase-fill -- good match -- used in the codebase */
+	content : "\f1cb";
+}
+.fa-sun-o:before {
+	/* corresponding to bi-sun -- good match -- used in the codebase */
+	content : "\f5a2";
+}
+.fa-table:before {
+	/* corresponding to bi-table -- good match -- used in the codebase */
+	content : "\f5aa";
+}
+.fa-tachometer:before {
+	/* corresponding to bi-speedometer -- good match -- used in the codebase */
+	content : "\f57f";
+}
+.fa-tag:before {
+	/* corresponding to bi-tag-fill -- good match -- used in the codebase */
+	content : "\f5af";
+}
+.fa-tags:before {
+	/* corresponding to bi-tags-fill -- good match -- used in the codebase */
+	content : "\f5b1";
+}
+.fa-tasks:before {
+	/* corresponding to bi-list-task -- good match -- used in the codebase */
+	content : "\f477";
+}
+.fa-th:before {
+	/* corresponding to bi-grid-3x3-gap-fill -- good match -- used in the codebase */
+	content : "\f3f8";
+}
+.fa-th-large:before {
+	/* corresponding to bi-grid-fill -- good match -- used in the codebase */
+	content : "\f3fb";
+}
+.fa-th-list:before {
+	/* corresponding to bi-grid-1x2-fill -- good match -- used in the codebase */
+	content : "\f3f3";
+}
+.fa-thumb-tack:before {
+	/* corresponding to bi-pin-fill -- good match -- used in the codebase */
+	content : "\f4ec";
+}
+.fa-thumbs-down:before {
+	/* corresponding to bi-hand-thumbs-down-fill -- good match -- used in the codebase */
+	content : "\f404";
+}
+.fa-thumbs-o-down:before {
+	/* corresponding to bi-hand-thumbs-down -- good match -- used in the codebase */
+	content : "\f405";
+}
+.fa-thumbs-o-up:before {
+	/* corresponding to bi-hand-thumbs-up -- good match -- used in the codebase */
+	content : "\f407";
+}
+.fa-thumbs-up:before {
+	/* corresponding to bi-hand-thumbs-up-fill -- good match -- used in the codebase */
+	content : "\f406";
+}
+.fa-ticket:before {
+	/* corresponding to bi-ticket-perforated-fill -- good match -- used in the codebase */
+	content : "\f6c9";
+}
+.fa-tiktok:before {
+	/* corresponding to bi-tiktok -- good match -- used in the codebase */
+	content : "\f6cc";
+}
+.fa-times:before {
+	/* corresponding to bi-x-lg -- good match -- used in the codebase */
+	content : "\f659";
+}
+.fa-times-circle:before {
+	/* corresponding to bi-x-circle-fill -- good match -- used in the codebase */
+	content : "\f622";
+}
+.fa-times-rectangle:before {
+	/* corresponding to bi-x-square-fill -- good match -- used in the codebase */
+	content : "\f628";
+}
+.fa-toggle-off:before {
+	/* corresponding to bi-toggle-off -- good match -- used in the codebase */
+	content : "\f5d5";
+}
+.fa-toggle-on:before {
+	/* corresponding to bi-toggle-on -- good match -- used in the codebase */
+	content : "\f5d6";
+}
+.fa-trash:before {
+	/* corresponding to bi-trash-fill -- good match -- used in the codebase */
+	content : "\f5dd";
+}
+.fa-trash-o:before {
+	/* corresponding to bi-trash -- good match -- used in the codebase */
+	content : "\f5de";
+}
+.fa-trophy:before {
+	/* corresponding to bi-trophy-fill -- good match -- used in the codebase */
+	content : "\f5e6";
+}
+.fa-truck:before {
+	/* corresponding to bi-truck -- good match -- used in the codebase */
+	content : "\f5ea";
+}
+.fa-twitter:before {
+	/* corresponding to bi-twitter -- good match -- used in the codebase */
+	content : "\f5ef";
+}
+.fa-twitter-square:before {
+	/* corresponding to bi-twitter -- good match -- used in the codebase */
+	content : "\f5ef";
+}
+.fa-underline:before {
+	/* corresponding to bi-type-underline -- good match -- used in the codebase */
+	content : "\f5f6";
+}
+.fa-undo:before {
+	/* corresponding to bi-arrow-counterclockwise -- good match -- used in the codebase */
+	content : "\f117";
+}
+.fa-university:before {
+	/* corresponding to bi-bank2 -- good match -- used in the codebase */
+	content : "\f62f";
+}
+.fa-unlink:before {
+	/* corresponding to bi-question -- no match... -- used in the codebase */
+	content : "\f50c";
+}
+.fa-unlock-alt:before {
+	/* corresponding to bi-unlock-fill -- good match -- used in the codebase */
+	content : "\f5ff";
+}
+.fa-upload:before {
+	/* corresponding to bi-upload -- good match -- used in the codebase */
+	content : "\f603";
+}
+.fa-usd:before {
+	/* corresponding to bi-currency-dollar -- good match -- used in the codebase */
+	content : "\f636";
+}
+.fa-user:before {
+	/* corresponding to bi-person-fill -- good match -- used in the codebase */
+	content : "\f4da";
+}
+.fa-user-circle:before {
+	/* corresponding to bi-person-circle -- good match -- used in the codebase */
+	content : "\f4d7";
+}
+.fa-user-circle-o:before {
+	/* corresponding to bi-person-circle -- good match -- used in the codebase */
+	content : "\f4d7";
+}
+.fa-user-o:before {
+	/* corresponding to bi-person -- good match -- used in the codebase */
+	content : "\f4e1";
+}
+.fa-user-plus:before {
+	/* corresponding to bi-person-plus-fill -- good match -- used in the codebase */
+	content : "\f4dc";
+}
+.fa-user-times:before {
+	/* corresponding to bi-person-x-fill -- good match -- used in the codebase */
+	content : "\f4df";
+}
+.fa-users:before {
+	/* corresponding to bi-people-fill -- good match -- used in the codebase */
+	content : "\f4cf";
+}
+.fa-video-camera:before {
+	/* corresponding to bi-camera-video-fill -- good match -- used in the codebase */
+	content : "\f21c";
+}
+.fa-vimeo:before {
+	/* corresponding to bi-vimeo -- good match -- used in the codebase */
+	content : "\f66a";
+}
+.fa-volume-up:before {
+	/* corresponding to bi-volume-up-fill -- good match -- used in the codebase */
+	content : "\f610";
+}
+.fa-warning:before {
+	/* corresponding to bi-exclamation-triangle-fill -- good match -- used in the codebase */
+	content : "\f33a";
+}
+.fa-whatsapp:before {
+	/* corresponding to bi-whatsapp -- good match -- used in the codebase */
+	content : "\f618";
+}
+.fa-wifi:before {
+	/* corresponding to bi-wifi -- good match -- used in the codebase */
+	content : "\f61c";
+}
+.fa-window-close:before {
+	/* corresponding to bi-x-square-fill -- good match -- used in the codebase */
+	content : "\f628";
+}
+.fa-window-maximize:before {
+	/* corresponding to bi-arrows-angle-expand -- good match -- used in the codebase */
+	content : "\f14a";
+}
+.fa-window-minimize:before {
+	/* corresponding to bi-arrows-angle-contract -- good match -- used in the codebase */
+	content : "\f149";
+}
+.fa-windows:before {
+	/* corresponding to bi-windows -- good match -- used in the codebase */
+	content : "\f65e";
+}
+.fa-wrench:before {
+	/* corresponding to bi-wrench-adjustable -- good match -- used in the codebase */
+	content : "\f790";
+}
+.fa-youtube:before {
+	/* corresponding to bi-youtube -- good match -- used in the codebase */
+	content : "\f62b";
+}
+.fa-youtube-play:before {
+	/* corresponding to bi-youtube -- good match -- used in the codebase */
+	content : "\f62b";
+}
+
+
+
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
    readers do not read off random characters that represent icons */
+/* 
 .fa-glass:before {
   content: "\f000";
 }
@@ -2272,7 +5409,7 @@
 }
 .fa-meetup:before {
   content: "\f2e0";
-}
+} */
 .visually-hidden {
   position: absolute;
   width: 1px;
