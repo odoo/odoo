@@ -1306,7 +1306,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 "name": "Desk Combo",
                 "type": "combo",
                 "taxes_id": False,
-                "categ_id": self.env.ref("product.product_category_1").id,
+                "categ_id": self.env.ref("product.product_category_services").id,
                 "combo_ids": [
                     (6, 0, [combo.id for combo in combos])
                 ],

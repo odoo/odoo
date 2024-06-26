@@ -35,7 +35,6 @@ class TestProjectHrExpenseProfitabilityCommon(TestExpenseCommon):
 class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProjectHrExpenseProfitabilityCommon):
 
     def test_project_profitability(self):
-        self.product_c.categ_id = self.product_category
         self.project.company_id = False
         # Create a new company with the foreign currency.
         foreign_company = self.company_data_2['company']
