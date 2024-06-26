@@ -179,13 +179,19 @@
                         <tr>
                             <div t-if="task.subtask_effective_hours">
                                 <t t-if="is_uom_day">
-                                    <td><a t-att-href="'/my/timesheets?search_in=parent_task_id&amp;search=%s' % task.id"><strong>Days recorded on sub-tasks: </strong></a></td>
+                                    <td>
+                                        <a t-if="enable_sub_task_link" t-att-href="'/my/timesheets?search_in=parent_task_id&amp;search=%s' % task.id"><strong>Days recorded on sub-tasks: </strong></a>
+                                        <strong t-else="">Days recorded on sub-tasks: </strong>
+                                    </td>
                                     <td class="text-end">
                                         <span t-esc="timesheets._convert_hours_to_days(task.subtask_effective_hours)" t-options='{"widget": "timesheet_uom"}'/>
                                     </td>
                                 </t>
                                 <t t-else="">
-                                    <td><a t-att-href="'/my/timesheets?search_in=parent_task_id&amp;search=%s' % task.id"><strong>Hours recorded on sub-tasks: </strong></a></td>
+                                    <td>
+                                        <a t-if="enable_sub_task_link" t-att-href="'/my/timesheets?search_in=parent_task_id&amp;search=%s' % task.id"><strong>Hours recorded on sub-tasks: </strong></a>
+                                        <strong t-else="">Hours recorded on sub-tasks: </strong>
+                                    </td>
                                     <td class="text-end">
                                         <span t-esc="task.subtask_effective_hours" t-options='{"widget": "float_time"}'/>
                                     </td>

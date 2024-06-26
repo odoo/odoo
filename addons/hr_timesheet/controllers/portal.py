@@ -58,7 +58,11 @@ class TimesheetCustomerPortal(CustomerPortal):
         if search_in in ('task', 'all'):
             search_domain = OR([search_domain, [('task_id', 'ilike', search)]])
         if search_in == 'parent_task_id':
-            search_domain = OR([search_domain, [('parent_task_id', '=', int(search))]])
+            parent_task_id = int(search)
+            if parent_task_id:
+                sub_task_ids = request.env['project.task'].browse(parent_task_id)._get_subtask_ids_per_task_id()[parent_task_id]
+                sub_task_ids.append(parent_task_id)
+                search_domain = OR([search_domain, [('parent_task_id', 'in', sub_task_ids)]])
         return search_domain
 
     def _get_groupby_mapping(self):
