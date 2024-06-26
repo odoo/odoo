@@ -1,3 +1,4 @@
+import { after } from "@odoo/hoot";
 import {
     check,
     clear,
@@ -260,6 +261,17 @@ export function contains(target, options) {
             await animationFrame();
         },
     };
+}
+
+/**
+ * @param {string} style
+ */
+export function defineStyle(style) {
+    const styleEl = document.createElement("style");
+    styleEl.textContent = style;
+
+    document.head.appendChild(styleEl);
+    after(() => styleEl.remove());
 }
 
 /**
