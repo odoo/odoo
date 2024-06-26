@@ -116,6 +116,18 @@ test("can get a pivotId from cell formula where the id is a reference", async fu
     expect(pivotId).toBe(model.getters.getPivotId("1"));
 });
 
+test("can get a Pivot from cell formula where the id is a reference in an inactive sheet", async function () {
+    const { model } = await createSpreadsheetWithPivot();
+    const firstSheetId = model.getters.getActiveSheetId();
+    model.dispatch("CREATE_SHEET", { sheetId: "2" });
+    model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: firstSheetId, sheetIdTo: "2" });
+    setCellContent(model, "A1", "1");
+    setCellContent(model, "A2", '=PIVOT.VALUE(A1,"probability")');
+    model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: "2", sheetIdTo: firstSheetId });
+    const pivotId = model.getters.getPivotIdFromPosition({ sheetId: "2", col: 0, row: 1 });
+    expect(pivotId).toBe("PIVOT#1");
+});
+
 test("can get a pivotId from cell formula (Mix of test scenarios above)", async function () {
     const { model } = await createSpreadsheetWithPivot({
         arch: /*xml*/ `
