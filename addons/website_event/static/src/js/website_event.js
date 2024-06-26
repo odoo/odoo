@@ -101,14 +101,14 @@ publicWidget.registry.WebsiteEventLayout = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onApplyEventLayoutChange: function (ev) {
+    _onApplyEventLayoutChange: async function (ev) {
         const wysiwyg = this.options.wysiwyg;
         if (wysiwyg) {
             wysiwyg.odooEditor.observerUnactive('_onApplyEventLayoutChange');
         }
         var clickedValue = $(ev.target).val();
         if (!this.editableMode) {
-            rpc('/event/save_event_layout_mode', {
+            await rpc('/event/save_event_layout_mode', {
                 'layout_mode': clickedValue,
             });
         }
@@ -118,62 +118,8 @@ publicWidget.registry.WebsiteEventLayout = publicWidget.Widget.extend({
             activeClasses.map(c => btn.classList.toggle(c));
         });
 
-        // Toggle all css classes in order to switch between grid and list view
-        var EventsIndexMainCol = document.querySelector('#o_wevent_index_main_col');
-        EventsIndexMainCol.classList.toggle('opt_events_list_columns');
-        EventsIndexMainCol.classList.toggle('opt_events_list_rows');
-
-        var eventsGridElement = document.querySelector('#o_wevent_events_grid');
-        const isSideNav = eventsGridElement.classList.contains('o_wevent_sidebar_enabled');
-        const isCardBorder = eventsGridElement.classList.contains('o_wevent_card_border_enabled');
-
-        let className = []
-        if (clickedValue === 'grid') {
-            if (isSideNav) {
-                className = 'col-md-6';
-            } else {
-                className = 'col-md-6 col-lg-4 col-xl-3';
-            }
-        } else {
-            if (isSideNav) {
-                className = 'col-12';
-            } else {
-                className = 'col-xl-12';
-            }
-            if (!isCardBorder) {
-                className += ' mt-0';
-            }
-        }
-        eventsGridElement.querySelectorAll('#o_wevent_event_main_div').forEach((eventDiv) => {
-            eventDiv.className = className;
-        });
-
-        if (clickedValue === 'grid') {
-            className = 'h-100 d-flex flex-wrap flex-column';
-        } else {
-            className = 'h-100 row mx-0';
-        }
-        eventsGridElement.querySelectorAll('#o_wevent_event_article_div').forEach((articleDiv) => {
-            articleDiv.className = className;
-        });
-
-        eventsGridElement.querySelectorAll('header').forEach((header) => {
-            header.classList.toggle('d-none');
-        });
-
-        eventsGridElement.querySelectorAll('.card-body').forEach((sidebar) => {
-            sidebar.classList.toggle('d-none');
-        });
-
-        eventsGridElement.querySelectorAll('footer').forEach((footer) => {
-            footer.classList.toggle('d-none');
-        });
-
-        if(!isCardBorder) {
-            eventsGridElement.querySelectorAll('hr').forEach((horizontalRule) => {
-                horizontalRule.classList.toggle('d-none');
-            });
-        }
+        document.querySelector('#o_wevent_event_grid_layout').classList.toggle('d-none');
+        document.querySelector('#o_wevent_event_list_layout').classList.toggle('d-none');
 
         if (wysiwyg) {
             wysiwyg.odooEditor.observerActive('_onApplyShopLayoutChange');

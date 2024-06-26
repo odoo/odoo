@@ -28,11 +28,9 @@
             <div class="o_wevent_events_list">
                 <div class="container">
                     <div class="row">
-                        <div id="o_wevent_index_main_col" t-attf-class="col-md mb-3 #{layout_mode == 'grid' and 'opt_events_list_columns' or 'opt_events_list_rows'}">
-                            <div id="o_wevent_events_grid" t-attf-class="row g-4 g-lg-3 g-xxl-4 #{opt_index_sidebar and 'o_wevent_sidebar_enabled'} #{opt_events_list_cards and 'o_wevent_card_border_enabled'}">
-                                <!-- Events List -->
-                                <t t-call="website_event.events_list"/>
-                            </div>
+                        <div id="o_wevent_index_main_col" class="col-md mb-3">
+                            <!-- Events List -->
+                            <t t-call="website_event.events_list"/>
                         </div>
                     </div>
                 </div>
@@ -290,10 +288,6 @@
 
 <!-- Index - Events list -->
 <template id="events_list" name="Events list">
-    <!-- Options -->
-    <t t-if="layout_mode == 'grid'" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-md-6' or 'col-md-6 col-lg-4 col-xl-3'"/>
-    <t t-else="" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-12' or 'col-xl-12'"/>
-    <t t-set="show_horizontal_rules" t-value="layout_mode == 'list' and not opt_events_list_cards"/>
     <!-- No events -->
     <div t-if="not event_ids" class="col-12 text-center">
         <div t-call="website_event.event_empty_events_svg" class="my-4"/>
@@ -311,117 +305,27 @@
     <div t-if="event_ids and original_search" class="col-12 alert alert-warning mt8">
         No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="searches['search']"/>'.
     </div>
-    <!-- List -->
-    <div id="o_wevent_event_main_div" t-foreach="event_ids" t-as="event" t-attf-class=" #{opt_event_size} #{layout_mode == 'list' and not opt_events_list_cards and 'mt-0'}">
-        <a t-cache="event if not editable and event.website_published else None" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" class="text-decoration-none text-reset " t-att-data-publish="event.website_published and 'on' or 'off'">
-            <article t-attf-class="h-100 #{opt_events_list_cards and 'card'}" itemscope="itemscope" itemtype="http://schema.org/Event">
-                <div id="o_wevent_event_article_div" t-attf-class="h-100 #{layout_mode == 'grid' and 'd-flex flex-wrap flex-column' or 'row mx-0'}">
-                    <!-- Header in Grid -->
-                    <header t-attf-class="card-header overflow-hidden bg-secondary p-0 border-0 rounded-0 col-12 #{layout_mode != 'grid' and 'd-none'}">
-                        <!-- Image + Link -->
-                        <div class="d-block h-100 w-100">
-                            <t t-call="website.record_cover">
-                                <t t-set="_record" t-value="event"/>
-                                <!-- Short Date -->
-                                <div t-attf-class="o_wevent_event_date position-absolute shadow-sm o_not_editable">
-                                    <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'LLL'}" class="o_wevent_event_month"/>
-                                    <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit"/>
-                                </div>
-                                <!-- Not open -->
-                                <span t-if="not event.event_registrations_open and not opt_events_list_cards" class="position-absolute bottom-0 px-3 py-2 w-100 text-bg-light">
-                                    <t t-if="not event.event_registrations_started and not event.event_registrations_sold_out">
-                                        Registrations not yet open
-                                    </t>
-                                    <t t-elif="event.event_registrations_sold_out">
-                                        Sold Out
-                                    </t>
-                                    <t t-else="">
-                                        Registrations Closed
-                                    </t>
-                                </span>
-                                <!-- Participating -->
-                                <small t-if="event.is_participating" class="o_wevent_participating position-absolute bottom-0 px-3 py-2 w-100 text-bg-success">
-                                    <i class="fa fa-check me-2"/>Registered
-                                </small>
-                                <!-- Unpublished -->
-                                <small t-if="not event.website_published" class="o_wevent_unpublished position-absolute bottom-0 px-3 py-2 w-100 text-bg-danger">
-                                    <i class="fa fa-ban me-2"/>Unpublished
-                                </small>
-                            </t>
-                        </div>
-                    </header>
-                    <!-- Header in List -->
-                    <header t-attf-class="overflow-hidden p-0 border-0 rounded-0 d-flex w-auto align-items-center #{layout_mode != 'list' and 'd-none'}">
-                        <!-- Short Date -->
-                        <div class="o_wevent_event_date shadow-sm o_not_editable m-3">
-                            <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'LLL'}" class="o_wevent_event_month"/>
-                            <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit"/>
-                        </div>
-                    </header>
 
-                    <!-- Body in Grid -->
-                    <main t-attf-class="card-body position-relative d-flex flex-column justify-content-between gap-2 col-12 py-3 #{not opt_events_list_cards and 'bg-transparent px-0'} #{layout_mode != 'grid' and 'd-none'}">
-                        <div>
-                            <!-- Tags -->
-                            <div class="d-flex flex-wrap gap-1 small">
-                                <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)" t-as="tag">
-                                    <span t-if="tag.color"
-                                        t-attf-class="badge rounded-pill #{'o_badge_color_%s' % tag.color if tag.color else 'text-bg-light'}">
-                                        <t t-out="tag.name"/>
-                                    </span>
-                                </t>
-                            </div>
-                            <!-- Title -->
-                            <h5 t-attf-class="card-title my-2 #{(not event.website_published) and 'text-danger'}">
-                                <span t-field="event.name" itemprop="name"/>
-                            </h5>
-                            <!-- Subtitle -->
-                            <small class="o_not_editable opacity-75" itemprop="description" t-out="event.subtitle">
-                            </small>
-                        </div>
-                        <!-- Location -->
-                        <t t-set="has_city_or_country" t-value="event.address_id.sudo().city or event.address_id.sudo().country_id"/>
-                        <div t-if="not event.address_id or has_city_or_country" class="d-flex align-items-center">
-                            <i class="fa fa-map-marker me-2" title="Location"/>
-                            <small t-if="event.address_id" class="o_not_editable fw-bold" itemprop="location" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
-                            <small t-else="" class="o_not_editable fw-bold" itemprop="location">Online event</small>
-                        </div>
-                    </main>
-                    <!-- Body in List -->
-                    <main t-attf-class="card-body position-relative d-flex justify-content-between align-items-center col-8 col-lg-9 px-4 #{not opt_events_list_cards and 'bg-transparent py-0'} #{layout_mode != 'list' and 'd-none'}">
-                        <div>
-                            <div class="d-flex align-items-center gap-3">
-                                <!-- Title -->
-                                <h5 t-attf-class="card-title my-2 #{(not event.website_published) and 'text-danger'} #{(not event.event_registrations_open) and 'text-muted'}">
-                                    <span t-field="event.name" itemprop="name"/>
-                                </h5>
-                            </div>
-                            <div class="d-inline-flex flex-wrap gap-3">
-                                <!-- Location -->
-                                <t t-set="has_city_or_country" t-value="event.address_id.sudo().city or event.address_id.sudo().country_id"/>
-                                <div t-if="not event.address_id or has_city_or_country" class="d-flex align-items-center">
-                                    <i t-attf-class="fa fa-map-marker me-2 #{(not event.event_registrations_open) and 'text-muted'}" title="Location"/>
-                                    <small t-if="event.address_id" t-attf-class="o_not_editable fw-bold #{(not event.event_registrations_open) and 'text-muted'}" itemprop="location" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
-                                    <small t-else="" t-attf-class="o_not_editable fw-bold #{(not event.event_registrations_open) and 'text-muted'}" itemprop="location">Online event</small>
-                                </div>
-                                <!-- Tags -->
-                                <div class="d-flex flex-wrap  gap-1 small">
-                                    <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)" t-as="tag">
-                                        <span t-if="tag.color"
-                                            t-attf-class="badge rounded-pill d-flex align-items-center px-2 p-1 #{'o_badge_color_%s' % tag.color if tag.color else 'text-bg-light'}">
-                                            <t t-out="tag.name"/>
-                                        </span>
-                                    </t>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Action Button -->
-                        <div class="d-none d-lg-block">
-                            <div class="d-flex flex-column align-items-end gap-1">
-                                <t t-if="not event.event_registrations_open">
-                                    <small class="text-muted fw-bold">
+    <!-- Grid Layout -->
+    <div id="o_wevent_event_grid_layout" t-attf-class="row mt-2 g-4 g-lg-3 g-xxl-4 #{layout_mode != 'grid' and 'd-none'}">
+        <div id="o_wevent_event_main_div" t-foreach="event_ids" t-as="event" t-attf-class="#{opt_index_sidebar and 'col-md-6' or 'col-md-6 col-lg-4 col-xl-3'}">
+            <a t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" class="text-decoration-none text-reset " t-att-data-publish="event.website_published and 'on' or 'off'">
+                <article t-attf-class="h-100 #{opt_events_list_cards and 'card'}" itemscope="itemscope" itemtype="http://schema.org/Event">
+                    <div id="o_wevent_event_article_div" class="h-100 d-flex flex-wrap flex-column">
+                        <header class="card-header overflow-hidden bg-secondary p-0 border-0 rounded-0 col-12">
+                            <!-- Image + Link -->
+                            <div t-cache="event if not editable and event.website_published else None" class="d-block h-100 w-100">
+                                <t t-call="website.record_cover">
+                                    <t t-set="_record" t-value="event"/>
+                                    <!-- Short Date -->
+                                    <div t-attf-class="o_wevent_event_date position-absolute shadow-sm o_not_editable">
+                                        <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'LLL'}" class="o_wevent_event_month"/>
+                                        <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit"/>
+                                    </div>
+                                    <!-- Not open -->
+                                    <span t-if="not event.event_registrations_open and not opt_events_list_cards" class="position-absolute bottom-0 px-3 py-2 w-100 text-bg-light">
                                         <t t-if="not event.event_registrations_started and not event.event_registrations_sold_out">
-                                            Registrations not open
+                                            Registrations not yet open
                                         </t>
                                         <t t-elif="event.event_registrations_sold_out">
                                             Sold Out
@@ -429,42 +333,138 @@
                                         <t t-else="">
                                             Registrations Closed
                                         </t>
+                                    </span>
+                                    <!-- Participating -->
+                                    <small t-if="event.is_participating" class="o_wevent_participating position-absolute bottom-0 px-3 py-2 w-100 text-bg-success">
+                                        <i class="fa fa-check me-2"/>Registered
+                                    </small>
+                                    <!-- Unpublished -->
+                                    <small t-if="not event.website_published" class="o_wevent_unpublished position-absolute bottom-0 px-3 py-2 w-100 text-bg-danger">
+                                        <i class="fa fa-ban me-2"/>Unpublished
                                     </small>
                                 </t>
-                                <t t-if="event.event_registrations_open">
-                                    <button type="button" class="btn btn-primary">
-                                        Get Tickets <i class="fa fa-chevron-right"/>
-                                    </button>
+                            </div>
+                        </header>
+                        <main t-attf-class="card-body d-flex flex-column justify-content-between gap-2 col-12 py-3 #{not opt_events_list_cards and 'bg-transparent px-0'}">
+                            <div>
+                                <!-- Tags -->
+                                <div class="d-flex flex-wrap gap-1 small">
+                                    <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)" t-as="tag">
+                                        <span t-if="tag.color"
+                                            t-attf-class="badge rounded-pill #{'o_badge_color_%s' % tag.color if tag.color else 'text-bg-light'}">
+                                            <t t-out="tag.name"/>
+                                        </span>
+                                    </t>
+                                </div>
+                                <!-- Title -->
+                                <h5 t-attf-class="card-title my-2 #{(not event.website_published) and 'text-danger'}">
+                                    <span t-field="event.name" itemprop="name"/>
+                                </h5>
+                                <!-- Subtitle -->
+                                <small class="o_not_editable opacity-75" itemprop="description" t-out="event.subtitle">
+                                </small>
+                            </div>
+                            <!-- Location -->
+                            <t t-set="has_city_or_country" t-value="event.address_id.sudo().city or event.address_id.sudo().country_id"/>
+                            <div t-if="not event.address_id or has_city_or_country" class="d-flex align-items-center">
+                                <i class="fa fa-map-marker me-2" title="Location"/>
+                                <small t-if="event.address_id" class="o_not_editable fw-bold" itemprop="location" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
+                                <small t-else="" class="o_not_editable fw-bold" itemprop="location">Online event</small>
+                            </div>
+                        </main>
+                        <footer t-if="not event.event_registrations_open and opt_events_list_cards" t-attf-class="small align-self-end w-100 card-footer border-top">
+                            <span t-if="not event.event_registrations_open">
+                                <t t-if="not event.event_registrations_started and not event.event_registrations_sold_out">
+                                    Registrations not yet open
+                                </t>
+                                <t t-elif="event.event_registrations_sold_out">
+                                    Sold Out
                                 </t>
                                 <t t-else="">
-                                    <button type="button" class="btn btn-secondary">
-                                        Event Info <i class="fa fa-chevron-right"/>
-                                    </button>
+                                    Registrations Closed
                                 </t>
-                            </div>
-                        </div>
-                    </main>
-
-                    <!-- Footer -->
-                    <footer t-if="not event.event_registrations_open and opt_events_list_cards"
-                        t-attf-class="small align-self-end w-100 card-footer border-top #{layout_mode == 'list' and 'd-none'}">
-                        <span t-if="not event.event_registrations_open">
-                            <t t-if="not event.event_registrations_started and not event.event_registrations_sold_out">
-                                Registrations not yet open
-                            </t>
-                            <t t-elif="event.event_registrations_sold_out">
-                                Sold Out
-                            </t>
-                            <t t-else="">
-                                Registrations Closed
-                            </t>
-                        </span>
-                    </footer>
-                </div>
-            </article>
-        </a>
-        <hr t-if="event_index &lt; len(event_ids)-1" t-attf-class="m-0 z-1 position-relative #{not show_horizontal_rules and 'd-none'}"/>
+                            </span>
+                        </footer>
+                    </div>
+                </article>
+            </a>
+        </div>
     </div>
+
+    <!-- List Layout -->
+    <div id="o_wevent_event_list_layout" t-attf-class="#{not opt_events_list_cards and 'mt-2'} #{layout_mode != 'list' and 'd-none'}">
+        <div id="o_wevent_event_main_div" t-foreach="event_ids" t-as="event" t-attf-class="#{opt_events_list_cards and 'mt-3'}">
+            <a t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" class="text-decoration-none text-reset " t-att-data-publish="event.website_published and 'on' or 'off'">
+                <article t-attf-class="#{opt_events_list_cards and 'card'}" itemscope="itemscope" itemtype="http://schema.org/Event">
+                    <div id="o_wevent_event_article_div" class="h-100 row mx-0">
+                        <header class="p-0 w-auto">
+                            <!-- Short Date -->
+                            <div class="o_wevent_event_date shadow-sm o_not_editable m-3">
+                                <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'LLL'}" class="o_wevent_event_month"/>
+                                <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit"/>
+                            </div>
+                        </header>
+                        <main t-attf-class="card-body d-flex justify-content-between align-items-center col-8 col-lg-9 px-4 #{not opt_events_list_cards and 'bg-transparent py-0'}">
+                            <div>
+                                <!-- Title -->
+                                <h5 t-attf-class="card-title my-2 #{(not event.website_published) and 'text-danger'} #{(not event.event_registrations_open) and 'text-muted'}">
+                                    <span t-field="event.name" itemprop="name"/>
+                                </h5>
+                                <div class="d-inline-flex flex-wrap gap-3">
+                                    <!-- Location -->
+                                    <t t-set="has_city_or_country" t-value="event.address_id.sudo().city or event.address_id.sudo().country_id"/>
+                                    <div t-if="not event.address_id or has_city_or_country" class="d-flex align-items-center">
+                                        <i t-attf-class="fa fa-map-marker me-2 #{(not event.event_registrations_open) and 'text-muted'}" title="Location"/>
+                                        <small t-if="event.address_id" t-attf-class="o_not_editable fw-bold #{(not event.event_registrations_open) and 'text-muted'}" itemprop="location" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
+                                        <small t-else="" t-attf-class="o_not_editable fw-bold #{(not event.event_registrations_open) and 'text-muted'}" itemprop="location">Online event</small>
+                                    </div>
+                                    <!-- Tags -->
+                                    <div class="d-flex flex-wrap  gap-1 small">
+                                        <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)" t-as="tag">
+                                            <span t-if="tag.color"
+                                                t-attf-class="badge rounded-pill d-flex align-items-center px-2 p-1 #{'o_badge_color_%s' % tag.color if tag.color else 'text-bg-light'}">
+                                                <t t-out="tag.name"/>
+                                            </span>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Action Button -->
+                            <div t-attf-class="d-none #{opt_index_sidebar and 'd-xl-block' or 'd-lg-block'}">
+                                <div class="d-flex flex-column align-items-end gap-1">
+                                    <t t-if="not event.event_registrations_open">
+                                        <small class="text-muted fw-bold">
+                                            <t t-if="not event.event_registrations_started and not event.event_registrations_sold_out">
+                                                Registrations not open
+                                            </t>
+                                            <t t-elif="event.event_registrations_sold_out">
+                                                Sold Out
+                                            </t>
+                                            <t t-else="">
+                                                Registrations Closed
+                                            </t>
+                                        </small>
+                                    </t>
+                                    <t t-if="event.event_registrations_open">
+                                        <button type="button" class="btn btn-primary">
+                                            Get Tickets <i class="fa fa-chevron-right"/>
+                                        </button>
+                                    </t>
+                                    <t t-else="">
+                                        <button type="button" class="btn btn-secondary">
+                                            Event Info <i class="fa fa-chevron-right"/>
+                                        </button>
+                                    </t>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </article>
+            </a>
+            <hr t-if="not opt_events_list_cards and event_index &lt; len(event_ids)-1" class="m-0 z-1 position-relative"/>
+        </div>
+    </div>
+
     <!-- Pager -->
     <div class="d-flex justify-content-center my-3">
         <t t-call="website.pager"/>
