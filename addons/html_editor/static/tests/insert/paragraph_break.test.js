@@ -358,31 +358,28 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test.todo(
-            "should insert a paragraph break outside the starting edge of an anchor",
-            async () => {
-                await testEditor({
-                    contentBefore: "<p><a>[]ab</a></p>",
-                    stepFunction: async (editor) => {
-                        splitBlock(editor);
-                        await tick();
-                    },
-                    contentAfterEdit:
-                        '<p><br></p><p>\ufeff<a class="o_link_in_selection">[]\ufeffab\ufeff</a>\ufeff</p>',
-                    contentAfter: "<p><br></p><p><a>[]ab</a></p>",
-                });
-                await testEditor({
-                    contentBefore: "<p>ab<a>[]cd</a></p>",
-                    stepFunction: async (editor) => {
-                        splitBlock(editor);
-                        await tick();
-                    },
-                    contentAfterEdit:
-                        '<p>ab</p><p>\ufeff<a class="o_link_in_selection">[]\ufeffcd\ufeff</a>\ufeff</p>',
-                    contentAfter: "<p>ab</p><p><a>[]cd</a></p>",
-                });
-            }
-        );
+        test("should insert a paragraph break outside the starting edge of an anchor", async () => {
+            await testEditor({
+                contentBefore: "<p><a>[]ab</a></p>",
+                stepFunction: async (editor) => {
+                    splitBlock(editor);
+                    await tick();
+                },
+                contentAfterEdit:
+                    '<p><br></p><p>\ufeff<a class="o_link_in_selection">\ufeff[]ab\ufeff</a>\ufeff</p>',
+                contentAfter: "<p><br></p><p><a>[]ab</a></p>",
+            });
+            await testEditor({
+                contentBefore: "<p>ab<a>[]cd</a></p>",
+                stepFunction: async (editor) => {
+                    splitBlock(editor);
+                    await tick();
+                },
+                contentAfterEdit:
+                    '<p>ab</p><p>\ufeff<a class="o_link_in_selection">\ufeff[]cd\ufeff</a>\ufeff</p>',
+                contentAfter: "<p>ab</p><p><a>[]cd</a></p>",
+            });
+        });
         test("should insert a paragraph break in the middle of an anchor", async () => {
             await testEditor({
                 contentBefore: "<p><a>a[]b</a></p>",
