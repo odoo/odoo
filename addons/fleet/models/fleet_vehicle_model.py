@@ -27,7 +27,7 @@ class FleetVehicleModel(models.Model):
     brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Manufacturer', required=True, tracking=True)
     category_id = fields.Many2one('fleet.vehicle.model.category', 'Category', tracking=True)
     vendors = fields.Many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors')
-    image_128 = fields.Image(related='brand_id.image_128', readonly=True)
+    image_1920 = fields.Image(related='brand_id.image_1920', readonly=True)
     active = fields.Boolean(default=True)
     vehicle_type = fields.Selection([('car', 'Car'), ('bike', 'Bike')], default='car', required=True, tracking=True)
     transmission = fields.Selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', tracking=True)
@@ -44,6 +44,10 @@ class FleetVehicleModel(models.Model):
     horsepower = fields.Integer(tracking=True)
     horsepower_tax = fields.Float('Horsepower Taxation', tracking=True)
     electric_assistance = fields.Boolean(default=False, tracking=True)
+    power_unit = fields.Selection([
+        ('power', 'kW'),
+        ('horsepower', 'Horses')
+        ], 'Power Unit', default='power', required=True)
     vehicle_properties_definition = fields.PropertiesDefinition('Vehicle Properties')
     vehicle_range = fields.Integer(string="Range")
 
@@ -88,12 +92,20 @@ class FleetVehicleModel(models.Model):
 
     def action_model_vehicle(self):
         self.ensure_one()
+        context = {'default_model_id': self.id}
+        if self.vehicle_count == 0:
+            view_mode = 'form'
+            name = _('Vehicle')
+        else:
+            view_mode = 'kanban,tree,form'
+            name = _('Vehicles')
+            context['search_default_model_id'] = self.id
         view = {
             'type': 'ir.actions.act_window',
-            'view_mode': 'kanban,tree,form',
+            'view_mode': view_mode,
             'res_model': 'fleet.vehicle',
-            'name': _('Vehicles'),
-            'context': {'search_default_model_id': self.id, 'default_model_id': self.id}
+            'name': name,
+            'context': context,
         }
 
         return view

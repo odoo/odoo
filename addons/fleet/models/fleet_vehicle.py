@@ -85,13 +85,17 @@ class FleetVehicle(models.Model):
         [('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission',
         compute='_compute_model_fields', store=True, readonly=False)
     fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', compute='_compute_model_fields', store=True, readonly=False)
+    power_unit = fields.Selection([
+        ('power', 'kW'),
+        ('horsepower', 'Horses')
+        ], 'Power Unit', default='power', required=True)
     horsepower = fields.Integer(compute='_compute_model_fields', store=True, readonly=False)
     horsepower_tax = fields.Float('Horsepower Taxation', compute='_compute_model_fields', store=True, readonly=False)
     power = fields.Integer('Power', help='Power in kW of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
     co2 = fields.Float('CO2 Emissions', help='CO2 emissions of the vehicle', compute='_compute_model_fields', store=True, readonly=False, tracking=True, aggregator=None)
     co2_standard = fields.Char('CO2 Standard', compute='_compute_model_fields', store=True, readonly=False)
     category_id = fields.Many2one('fleet.vehicle.model.category', 'Category', compute='_compute_model_fields', store=True, readonly=False)
-    image_128 = fields.Image(related='model_id.image_128', readonly=True)
+    image_1920 = fields.Image(compute='_compute_image_1920', readonly=False, store=True)
     contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder', search='_search_contract_renewal_due_soon',
         string='Has Contracts to renew')
     contract_renewal_overdue = fields.Boolean(compute='_compute_contract_reminder', search='_search_get_overdue_contract_reminder',
@@ -126,6 +130,12 @@ class FleetVehicle(models.Model):
             vehicle.service_activity = sorted(activities_state)[0] if activities_state else 'none'
 
     @api.depends('model_id')
+    def _compute_image_1920(self):
+        for vehicle in self:
+            if not vehicle.image_1920:
+                vehicle.image_1920 = vehicle.model_id.image_1920
+
+    @api.onchange('model_id')
     def _compute_model_fields(self):
         '''
         Copies all the related fields from the model to the vehicle

@@ -6,12 +6,13 @@ from odoo import api, fields, models
 
 class FleetVehicleModelBrand(models.Model):
     _name = 'fleet.vehicle.model.brand'
+    _inherit = ['avatar.mixin']
     _description = 'Brand of the vehicle'
     _order = 'name asc'
 
     name = fields.Char('Name', required=True)
     active = fields.Boolean(default=True)
-    image_128 = fields.Image("Logo", max_width=128, max_height=128)
+    image_1920 = fields.Image("Logo")
     model_count = fields.Integer(compute="_compute_model_count", string="", store=True)
     model_ids = fields.One2many('fleet.vehicle.model', 'brand_id')
 
