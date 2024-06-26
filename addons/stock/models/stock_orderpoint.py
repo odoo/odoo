@@ -12,7 +12,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import float_compare, float_is_zero, frozendict, split_every
+from odoo.tools import float_compare, float_is_zero, frozendict, split_every, format_date
 
 _logger = logging.getLogger(__name__)
 
@@ -197,6 +197,10 @@ class StockWarehouseOrderpoint(models.Model):
         action['context'] = {
             'active_id': self.product_id.id,
             'active_model': 'product.product',
+            'lead_days_date': format_date(self.env, self.lead_days_date),
+            'qty_to_order': self.qty_to_order,
+            'qty_to_order_computed': self.qty_to_order_computed,
+            'visibility': format_date(self.env, fields.Date.add(self.lead_days_date, days=int(self.visibility_days)))
         }
         warehouse = self.warehouse_id
         if warehouse:
