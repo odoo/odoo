@@ -234,3 +234,26 @@ export function updatePivot(model, pivotId, pivotData) {
     };
     return model.dispatch("UPDATE_PIVOT", { pivotId, pivot });
 }
+
+/**
+ * Copy a zone
+ */
+export function copy(model, xc) {
+    setSelection(model, xc);
+    return model.dispatch("COPY");
+}
+
+/**
+ * Cut a zone
+ */
+export function cut(model, xc) {
+    setSelection(model, xc);
+    return model.dispatch("CUT");
+}
+
+/**
+ * Paste on a zone
+ */
+export function paste(model, range, pasteOption) {
+    return model.dispatch("PASTE", { target: [toZone(range)], pasteOption });
+}
