@@ -403,7 +403,6 @@
                     <notebook>
                         <page string="Components" name="components">
                             <field name="move_raw_ids"
-                                widget="stock_move_one2many"
                                 context="{'default_date': date_start, 'default_date_deadline': date_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_warehouse_id': warehouse_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'mrp.view_mrp_stock_move_operations', 'active_mo_id': id}"
 
                                 readonly="state == 'cancel' or (state == 'done' and is_locked)">
@@ -470,6 +469,8 @@
                                         context="{'default_product_id': product_id}"
                                         domain="[('product_id','=',product_id)]"/>
                                     <field name="group_id" column_invisible="True"/>
+                                    <button name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" invisible="not show_details_visible or has_tracking == 'none'"/>
+                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" invisible="has_tracking != 'none' or not show_details_visible"/>
                                 </list>
                             </field>
                         </page>
@@ -480,7 +481,6 @@
                         </page>
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
                             <field name="move_byproduct_ids"
-                                widget="stock_move_one2many"
                                 context="{'default_date': date_finished, 'default_date_deadline': date_deadline, 'default_location_id': production_location_id, 'default_location_dest_id': location_dest_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'mrp.view_mrp_stock_move_operations'}"
                                 readonly="state == 'cancel' or (state == 'done' and is_locked)" options="{'delete': [('state', '=', 'draft')]}">
                                 <list default_order="is_done,sequence" decoration-muted="is_done" editable="bottom">
@@ -527,6 +527,8 @@
                                         options="{'create': [('parent.use_create_components_lots', '!=', False)]}"
                                         context="{'default_product_id': product_id}"
                                         domain="[('product_id','=',product_id)]"/>
+                                    <button name="action_show_details" type="object" title="Show Details" icon="fa-list" invisible="has_tracking == 'none' or not show_details_visible"/>
+                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" invisible="has_tracking != 'none' or not show_details_visible"/>
                                 </list>
                             </field>
                         </page>
