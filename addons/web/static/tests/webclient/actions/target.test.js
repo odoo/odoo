@@ -115,13 +115,13 @@ describe("new", () => {
         expect(".o_technical_modal .o_form_view .o_form_editable").toHaveCount(1, {
             message: "form view should be in edit mode",
         });
-        expect([
+        expect.verifySteps([
             "/web/webclient/translations",
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
             "onchange",
-        ]).toVerifySteps();
+        ]);
     });
 
     test("chained action on_close", async () => {
@@ -133,13 +133,13 @@ describe("new", () => {
         await getService("action").doAction(5, { onClose });
         // a target=new action shouldn't activate the on_close
         await getService("action").doAction(5);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         // An act_window_close should trigger the on_close
         await getService("action").doAction({
             type: "ir.actions.act_window_close",
             infos: "smallCandle",
         });
-        expect(["Close Action"]).toVerifySteps();
+        expect.verifySteps(["Close Action"]);
     });
 
     test("footer buttons are moved to the dialog footer", async () => {
@@ -210,14 +210,14 @@ describe("new", () => {
         stepAllNetworkCalls();
 
         await mountWithCleanup(WebClient);
-        expect(["/web/webclient/translations", "/web/webclient/load_menus"]).toVerifySteps();
+        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
         await getService("action").doAction(4);
-        expect(["/web/action/load", "get_views", "onchange"]).toVerifySteps();
+        expect.verifySteps(["/web/action/load", "get_views", "onchange"]);
         await contains(`button[name="5"]`).click();
-        expect(["web_save", "/web/action/load", "get_views", "onchange"]).toVerifySteps();
+        expect.verifySteps(["web_save", "/web/action/load", "get_views", "onchange"]);
         expect(".modal").toHaveCount(1);
         await contains(`button[name=some_method]`).click();
-        expect(["web_save", "some_method", "web_read"]).toVerifySteps();
+        expect.verifySteps(["web_save", "some_method", "web_read"]);
         expect(".modal").toHaveCount(0);
     });
 
@@ -320,11 +320,11 @@ describe("new", () => {
 
         // sanity check: execute an action in target="current"
         await getService("action").doAction(1);
-        expect(["Partners Action 1"]).toVerifySteps();
+        expect.verifySteps(["Partners Action 1"]);
 
         // execute an action in target="new"
         await getService("action").doAction(5);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
     });
 
     test("do not commit a dialog in error", async () => {
@@ -385,7 +385,7 @@ describe("new", () => {
 
         await contains(".modal-body button.btn-link").click();
         expect(queryText(".modal-body .o_error_detail")).toInclude("my error");
-        expect(["my error"]).toVerifyErrors();
+        expect.verifyErrors(["my error"]);
 
         await contains(".modal-footer .btn-primary").click();
         expect(".modal").toHaveCount(0);
@@ -397,7 +397,7 @@ describe("new", () => {
         });
         expect(".modal .my_action_new").toHaveCount(1);
 
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
     });
 
     test('breadcrumbs of actions in target="new"', async () => {

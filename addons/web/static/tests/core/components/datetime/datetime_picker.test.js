@@ -445,7 +445,7 @@ test("twelve-hour clock with non-null focus date index", async () => {
     });
 
     select("7", { target: ".o_time_picker_select:eq(0)" });
-    expect(["2023-04-20T08:43:00,2023-04-23T07:16:00"]).toVerifySteps();
+    expect.verifySteps(["2023-04-20T08:43:00,2023-04-23T07:16:00"]);
 });
 
 test("twelve-hour clock", async () => {
@@ -968,7 +968,7 @@ test("no value, select date without handler", async () => {
     click(getPickerCell("12"));
     await animationFrame();
 
-    expect([]).toVerifySteps(); // This test just asserts that nothing happens
+    expect.verifySteps([]); // This test just asserts that nothing happens
 });
 
 test("no value, select date", async () => {
@@ -983,7 +983,7 @@ test("no value, select date", async () => {
     click(getPickerCell("12"));
     await animationFrame();
 
-    expect(["2023-04-05T13:00:00", "2023-04-12T13:00:00"]).toVerifySteps();
+    expect.verifySteps(["2023-04-05T13:00:00", "2023-04-12T13:00:00"]);
 });
 
 test("no value, select time", async () => {
@@ -997,7 +997,7 @@ test("no value, select time", async () => {
     select("5", { target: ".o_time_picker_select:eq(1)" });
     await animationFrame();
 
-    expect(["2023-04-25T18:00:00", "2023-04-25T18:05:00"]).toVerifySteps();
+    expect.verifySteps(["2023-04-25T18:00:00", "2023-04-25T18:05:00"]);
 });
 
 test("minDate with time: selecting out-of-range and in-range times", async () => {
@@ -1010,11 +1010,11 @@ test("minDate with time: selecting out-of-range and in-range times", async () =>
 
     select("15", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     select("16", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
-    expect(["2023-04-25T16:00:00"]).toVerifySteps();
+    expect.verifySteps(["2023-04-25T16:00:00"]);
 });
 
 test("maxDate with time: selecting out-of-range and in-range times", async () => {
@@ -1027,11 +1027,11 @@ test("maxDate with time: selecting out-of-range and in-range times", async () =>
 
     select("17", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     select("16", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
-    expect(["2023-04-25T16:00:00"]).toVerifySteps();
+    expect.verifySteps(["2023-04-25T16:00:00"]);
 });
 
 test("max and min date with time: selecting out-of-range and in-range times", async () => {
@@ -1046,11 +1046,11 @@ test("max and min date with time: selecting out-of-range and in-range times", as
     select("15", { target: ".o_time_picker_select:eq(0)" });
     select("17", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     select("16", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
-    expect(["2023-04-25T16:00:00"]).toVerifySteps();
+    expect.verifySteps(["2023-04-25T16:00:00"]);
 });
 
 test("max and min date with time: selecting invalid minutes and making it valid by selecting hours", async () => {
@@ -1065,11 +1065,11 @@ test("max and min date with time: selecting invalid minutes and making it valid 
     select("13", { target: ".o_time_picker_select:eq(0)" });
     select("30", { target: ".o_time_picker_select:eq(1)" });
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     select("16", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
-    expect(["2023-04-25T16:30:00"]).toVerifySteps();
+    expect.verifySteps(["2023-04-25T16:30:00"]);
 });
 
 test("max and min date with time: valid time on invalid day becomes valid when selecting day", async () => {
@@ -1084,11 +1084,11 @@ test("max and min date with time: valid time on invalid day becomes valid when s
     select("16", { target: ".o_time_picker_select:eq(0)" });
     select("30", { target: ".o_time_picker_select:eq(1)" });
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     click(getPickerCell("24"));
     await animationFrame();
-    expect(["2023-04-24T16:30:00"]).toVerifySteps();
+    expect.verifySteps(["2023-04-24T16:30:00"]);
 });
 
 test("custom invalidity function", async () => {
@@ -1152,7 +1152,7 @@ test("single value, select date", async () => {
 
     click(getPickerCell("5").at(0));
     await animationFrame();
-    expect(["2023-04-05T08:43:00"]).toVerifySteps();
+    expect.verifySteps(["2023-04-05T08:43:00"]);
 });
 
 test("single value, select time", async () => {
@@ -1166,7 +1166,7 @@ test("single value, select time", async () => {
     select("18", { target: ".o_time_picker_select:eq(0)" });
     select("5", { target: ".o_time_picker_select:eq(1)" });
     await animationFrame();
-    expect(["2023-04-30T18:43:00", "2023-04-30T18:05:00"]).toVerifySteps();
+    expect.verifySteps(["2023-04-30T18:43:00", "2023-04-30T18:05:00"]);
 });
 
 test("single value, select time in twelve-hour clock format", async () => {
@@ -1186,7 +1186,7 @@ test("single value, select time in twelve-hour clock format", async () => {
     select("5", { target: ".o_time_picker_select:eq(1)" });
     select("PM", { target: ".o_time_picker_select:eq(2)" });
     await animationFrame();
-    expect(["2023-04-30T07:43:00", "2023-04-30T07:05:00", "2023-04-30T19:05:00"]).toVerifySteps();
+    expect.verifySteps(["2023-04-30T07:43:00", "2023-04-30T07:05:00", "2023-04-30T19:05:00"]);
 });
 
 test("range value, select date for first value", async () => {
@@ -1204,7 +1204,7 @@ test("range value, select date for first value", async () => {
 
     click(getPickerCell("5").at(0));
     await animationFrame();
-    expect(["2023-04-05T08:43:00,2023-04-23T17:16:00"]).toVerifySteps();
+    expect.verifySteps(["2023-04-05T08:43:00,2023-04-23T17:16:00"]);
 });
 
 test("range value, select time for first value", async () => {
@@ -1222,10 +1222,10 @@ test("range value, select time for first value", async () => {
     select("18", { target: ".o_time_picker_select:eq(0)" });
     select("5", { target: ".o_time_picker_select:eq(1)" });
     await animationFrame();
-    expect([
+    expect.verifySteps([
         "2023-04-20T18:43:00,2023-04-23T17:16:00",
         "2023-04-20T18:05:00,2023-04-23T17:16:00",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("range value, select date for second value", async () => {
@@ -1243,7 +1243,7 @@ test.tags("desktop")("range value, select date for second value", async () => {
 
     click(getPickerCell("21").at(0));
     await animationFrame();
-    expect(["2023-04-20T08:43:00,2023-04-21T17:16:00"]).toVerifySteps();
+    expect.verifySteps(["2023-04-20T08:43:00,2023-04-21T17:16:00"]);
 });
 
 test("range value, select time for second value", async () => {
@@ -1262,10 +1262,10 @@ test("range value, select time for second value", async () => {
     select("18", { target: ".o_time_picker_select:eq(2)" });
     select("5", { target: ".o_time_picker_select:eq(3)" });
     await animationFrame();
-    expect([
+    expect.verifySteps([
         "2023-04-20T08:43:00,2023-04-23T18:16:00",
         "2023-04-20T08:43:00,2023-04-23T18:05:00",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("range value, select date for second value before first value", async () => {
@@ -1283,7 +1283,7 @@ test.tags("desktop")("range value, select date for second value before first val
 
     click(getPickerCell("19").at(0));
     await animationFrame();
-    expect(["2023-04-19T08:43:00,2023-04-23T17:16:00"]).toVerifySteps();
+    expect.verifySteps(["2023-04-19T08:43:00,2023-04-23T17:16:00"]);
 });
 
 test("range value, select date for first value after second value", async () => {
@@ -1301,7 +1301,7 @@ test("range value, select date for first value after second value", async () => 
 
     click(getPickerCell("27").at(1));
     await animationFrame();
-    expect(["2023-04-20T08:43:00,2023-04-27T17:16:00"]).toVerifySteps();
+    expect.verifySteps(["2023-04-20T08:43:00,2023-04-27T17:16:00"]);
 });
 
 test("focus proper month when changing props out of current month", async () => {

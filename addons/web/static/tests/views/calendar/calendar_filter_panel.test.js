@@ -108,7 +108,7 @@ test(`click on remove button`, async () => {
     });
     click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(1) .o_remove`);
     click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(2) .o_remove`);
-    expect(["partner_ids 1", "partner_ids 2"]).toVerifySteps();
+    expect.verifySteps(["partner_ids 1", "partner_ids 2"]);
 });
 
 test(`click on filter`, async () => {
@@ -125,11 +125,11 @@ test(`click on filter`, async () => {
     click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(2) input`);
     click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(3) input`);
     click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(3) input`);
-    expect([
+    expect.verifySteps([
         "partner_ids 3 false",
         "partner_ids 4 false",
         "partner_ids 6 true",
         "partner_ids all true",
         "partner_ids all false",
-    ]).toVerifySteps();
+    ]);
 });

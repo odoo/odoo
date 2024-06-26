@@ -394,9 +394,8 @@ test("Export dialog: interacting with available fields", async () => {
     await contains(firstField + ".o_export_tree_item").click();
     await contains(firstField + ".o_export_tree_item").click();
     await contains(firstField + ".o_export_tree_item").click();
-    expect(["fetch fields for 'partner_ids'"]).toVerifySteps({
-        message: "we should only make one rpc to fetch fields",
-    });
+    // we should only make one rpc to fetch fields
+    expect.verifySteps(["fetch fields for 'partner_ids'"]);
     expect(
         ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids'] .o_expand_parent"
     ).toHaveCount(0, {
@@ -481,9 +480,8 @@ test("Export dialog: compatible and export type options", async () => {
     await animationFrame();
     await contains(".o_import_compat input").click();
     await contains(".o_select_button").click();
-    expect(["/web/export/wow"]).toVerifySteps({
-        message: "download file has been called with the correct url",
-    });
+    // download file has been called with the correct url
+    expect.verifySteps(["/web/export/wow"]);
 });
 
 test("toggling import compatibility after adding an expanded field", async () => {
@@ -519,9 +517,8 @@ test("toggling import compatibility after adding an expanded field", async () =>
     await contains(".o_import_compat input").click();
     await contains("[data-field_id='activity_ids']").click();
     await contains(".o_select_button").click();
-    expect(["/web/export/csv"]).toVerifySteps({
-        message: "download file has been called with the correct url",
-    });
+    // download file has been called with the correct url
+    expect.verifySteps(["/web/export/csv"]);
 });
 
 test("Export dialog: many2many fields are extendable", async () => {
@@ -678,10 +675,10 @@ test("ExportDialog: export all records of the domain", async () => {
     await contains(".o_control_panel .o_cp_action_menus .dropdown-toggle").click();
     await contains(".dropdown-menu span:contains(Export)").click();
     await contains(".o_select_button").click();
-    expect([
+    expect.verifySteps([
         "download called with correct params when only one record is selected",
         "download called with correct params when all records are selected",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("Direct export list", async () => {

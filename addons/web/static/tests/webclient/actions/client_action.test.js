@@ -155,10 +155,10 @@ test("soft_reload will refresh data", async () => {
     });
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 
     await getService("action").doAction("soft_reload");
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test("soft_reload when there is no controller", async () => {
@@ -181,7 +181,7 @@ test("can execute client actions from tag name", async () => {
     await getService("action").doAction("HelloWorldTest");
     expect(".o_control_panel").toHaveCount(0);
     expect(".o_client_action_test").toHaveText("Hello World");
-    expect(["/web/webclient/translations", "/web/webclient/load_menus"]).toVerifySteps();
+    expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
 });
 
 test("async client action (function) returning another action", async () => {
@@ -205,7 +205,7 @@ test("'CLEAR-UNCOMMITTED-CHANGES' is not triggered for function client actions",
     });
 
     await getService("action").doAction("my_action");
-    expect(["my_action"]).toVerifySteps();
+    expect.verifySteps(["my_action"]);
 });
 
 test.tags("desktop")("ClientAction receives breadcrumbs and exports title", async () => {
@@ -352,7 +352,7 @@ test("test next action on display_notification client action", async () => {
     );
     await animationFrame(); // wait for the notification to be displayed
     expect(".o_notification_manager .o_notification").toHaveCount(1);
-    expect(["onClose"]).toVerifySteps();
+    expect.verifySteps(["onClose"]);
 });
 
 test("test reload client action", async () => {
@@ -406,7 +406,7 @@ test("test reload client action", async () => {
         },
     });
     await runAllTimers();
-    expect([
+    expect.verifySteps([
         "replaceState /odoo?test=42",
         "window_reload",
         "pushState /odoo/action-2",
@@ -415,7 +415,7 @@ test("test reload client action", async () => {
         "window_reload",
         "pushState /odoo/action-1?menu_id=2",
         "window_reload",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("test home client action", async () => {
@@ -438,5 +438,5 @@ test("test home client action", async () => {
     });
     await runAllTimers();
     await animationFrame();
-    expect(["/web/webclient/version_info", "assign /"]).toVerifySteps();
+    expect.verifySteps(["/web/webclient/version_info", "assign /"]);
 });

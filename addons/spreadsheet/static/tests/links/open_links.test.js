@@ -34,7 +34,7 @@ test("click a web link", async () => {
     const cell = getEvaluatedCell(model, "A1");
     expect(urlRepresentation(cell.link, model.getters)).toBe("https://odoo.com");
     openLink(cell.link, env);
-    expect(["https://odoo.com"]).toVerifySteps();
+    expect.verifySteps(["https://odoo.com"]);
 });
 
 test("click a menu link", async () => {
@@ -59,7 +59,7 @@ test("click a menu link", async () => {
     const cell = getEvaluatedCell(model, "A1");
     expect(urlRepresentation(cell.link, model.getters)).toBe("menu with xmlid");
     openLink(cell.link, env);
-    expect(["action1"]).toVerifySteps();
+    expect.verifySteps(["action1"]);
 });
 
 test("click a menu link [2]", async () => {
@@ -93,7 +93,7 @@ test("click a menu link [2]", async () => {
     const cell = getEvaluatedCell(model, "A1");
     expect(urlRepresentation(cell.link, model.getters)).toBe("an odoo view");
     openLink(cell.link, env);
-    expect(["do-action"]).toVerifySteps();
+    expect.verifySteps(["do-action"]);
 });
 
 test("Click a link containing an action xml id", async () => {
@@ -127,7 +127,7 @@ test("Click a link containing an action xml id", async () => {
     expect(urlRepresentation(cell.link, model.getters)).toBe("My Action Name");
     await openLink(cell.link, env);
     await animationFrame();
-    expect(["do-action"]).toVerifySteps();
+    expect.verifySteps(["do-action"]);
 });
 
 test("Can open link when some views are absent from the referred action", async () => {
@@ -168,5 +168,5 @@ test("Can open link when some views are absent from the referred action", async 
     expect(urlRepresentation(cell.link, model.getters)).toBe("My Action Name");
     await openLink(cell.link, env);
     await animationFrame();
-    expect(["do-action"]).toVerifySteps();
+    expect.verifySteps(["do-action"]);
 });

@@ -1003,7 +1003,7 @@ test("ODOO.FILTER.VALUE relation filter", async function () {
     });
     await animationFrame();
     const [filter] = model.getters.getGlobalFilters();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     // One record; displayNames not defined => rpc
     await setGlobalFilterValue(model, {
         id: filter.id,
@@ -1028,7 +1028,7 @@ test("ODOO.FILTER.VALUE relation filter", async function () {
     });
     await animationFrame();
     expect(getCellValue(model, "A10")).toBe("Raoul Grosbedon");
-    expect(["read_1", "read_2"]).toVerifySteps();
+    expect.verifySteps(["read_1", "read_2"]);
 });
 
 test("ODOO.FILTER.VALUE with escaped quotes in the filter label", async function () {
@@ -1217,12 +1217,12 @@ test("load data only once if filter is not active (without default value)", asyn
         },
     });
     await waitForDataLoaded(model);
-    expect([
+    expect.verifySteps([
         "partner/read_group",
         "partner/read_group",
         "partner/read_group",
         "partner/read_group",
-    ]).toVerifySteps();
+    ]);
     expect(getCellValue(model, "A1")).toBe(131);
 });
 
@@ -1267,7 +1267,7 @@ test("load data only once if filter is active (with a default value)", async fun
         },
     });
     await waitForDataLoaded(model);
-    expect(["partner/read_group"]).toVerifySteps();
+    expect.verifySteps(["partner/read_group"]);
     expect(getCellValue(model, "A1")).toBe("");
 });
 
@@ -1302,12 +1302,12 @@ test("don't reload data if an empty filter is added", async function () {
         },
     });
     await waitForDataLoaded(model);
-    expect([
+    expect.verifySteps([
         "partner/read_group",
         "partner/read_group",
         "partner/read_group",
         "partner/read_group",
-    ]).toVerifySteps();
+    ]);
     expect(getCellValue(model, "A1")).toBe(131);
     addGlobalFilter(model, {
         id: "42",
@@ -1317,7 +1317,7 @@ test("don't reload data if an empty filter is added", async function () {
         defaultValue: {}, // no default value!
     });
     expect(getCellValue(model, "A1")).toBe(131);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("don't load data if a filter is added but the data is not needed", async function () {
@@ -1343,7 +1343,7 @@ test("don't load data if a filter is added but the data is not needed", async fu
             }
         },
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     model.dispatch("ADD_GLOBAL_FILTER", {
         filter: {
             id: "42",
@@ -1356,12 +1356,12 @@ test("don't load data if a filter is added but the data is not needed", async fu
             1: { chain: "date", type: "date" },
         },
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability")`);
     expect(getCellValue(model, "A1")).toBe("Loading...");
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("");
-    expect(["partner/read_group"]).toVerifySteps();
+    expect.verifySteps(["partner/read_group"]);
 });
 
 test("don't load data if a filter is activated but the data is not needed", async function () {
@@ -1396,18 +1396,18 @@ test("don't load data if a filter is activated but the data is not needed", asyn
             }
         },
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     model.dispatch("SET_GLOBAL_FILTER_VALUE", {
         id: "filterId",
         value: { yearOffset: 0 },
     });
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability")`);
     expect(getCellValue(model, "A1")).toBe("Loading...");
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("");
-    expect(["partner/read_group"]).toVerifySteps();
+    expect.verifySteps(["partner/read_group"]);
 });
 
 test("Default value defines value", async function () {

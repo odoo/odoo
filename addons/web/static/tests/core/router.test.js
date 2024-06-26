@@ -1453,7 +1453,7 @@ describe("pushState", () => {
 
         router.pushState({ k1: undefined });
         await tick();
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         expect(router.current).toEqual({});
     });
 
@@ -1475,11 +1475,11 @@ describe("pushState", () => {
 
         router.pushState({ k1: 1, k2: 2 });
         await tick();
-        expect(["pushed state"]).toVerifySteps();
+        expect.verifySteps(["pushed state"]);
 
         router.pushState({ k2: 2, k1: 1 });
         await tick();
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
     });
 
     test("do not re-push when hash is same (with integers as strings)", async () => {
@@ -1488,11 +1488,11 @@ describe("pushState", () => {
 
         router.pushState({ k1: 1, k2: "2" });
         await tick();
-        expect(["pushed state"]).toVerifySteps();
+        expect.verifySteps(["pushed state"]);
 
         router.pushState({ k2: 2, k1: "1" });
         await tick();
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
     });
 
     test("pushState adds action-related keys to last entry in actionStack", async () => {
@@ -1578,7 +1578,7 @@ describe("History", () => {
         await tick();
         expect(browser.location.href).toBe("https://www.hoot.test/odoo?k4=3");
 
-        expect(["ROUTE_CHANGE", "ROUTE_CHANGE", "ROUTE_CHANGE"]).toVerifySteps();
+        expect.verifySteps(["ROUTE_CHANGE", "ROUTE_CHANGE", "ROUTE_CHANGE"]);
     });
 
     test("unserialized parts of action stack are preserved when going back/forward", async () => {
@@ -1636,7 +1636,7 @@ describe("History", () => {
         expect(router.current).toEqual({ k1: 1, k2: 2 });
         expect(browser.location.href).toBe("https://www.hoot.test/odoo?k2=2");
 
-        expect(["ROUTE_CHANGE"]).toVerifySteps();
+        expect.verifySteps(["ROUTE_CHANGE"]);
     });
 });
 
@@ -1703,7 +1703,7 @@ describe("internal links", () => {
         });
         click("a");
         await tick();
-        expect(["click"]).toVerifySteps();
+        expect.verifySteps(["click"]);
         expect(router.current).toEqual({
             action: "some-action",
             actionStack: [
@@ -1742,7 +1742,7 @@ describe("internal links", () => {
         });
         click("a");
         await tick();
-        expect(["click"]).toVerifySteps();
+        expect.verifySteps(["click"]);
         expect(router.current).toEqual({
             action: "some-action",
             actionStack: [
@@ -1780,7 +1780,7 @@ describe("internal links", () => {
         });
         click("a");
         await tick();
-        expect(["click"]).toVerifySteps();
+        expect.verifySteps(["click"]);
         expect(router.current).toEqual({
             action: 114,
             active_id: 1,
@@ -1819,7 +1819,7 @@ describe("internal links", () => {
         });
         click("a");
         await tick();
-        expect(["click"]).toVerifySteps();
+        expect.verifySteps(["click"]);
         expect(router.current).toEqual({});
         expect(defaultPrevented).toBe(false);
     });

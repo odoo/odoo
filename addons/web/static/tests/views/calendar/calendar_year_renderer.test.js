@@ -71,33 +71,33 @@ test.tags("desktop")(`display events`, async () => {
     });
 
     await clickDate("2021-07-15");
-    expect(["2021-07-15 allDay:true no event"]).toVerifySteps();
+    expect.verifySteps(["2021-07-15 allDay:true no event"]);
     await clickDate("2021-07-16");
-    expect(["2021-07-16 1 day, all day in July"]).toVerifySteps();
+    expect.verifySteps(["2021-07-16 1 day, all day in July"]);
     await clickDate("2021-07-17");
-    expect(["2021-07-17 allDay:true no event"]).toVerifySteps();
+    expect.verifySteps(["2021-07-17 allDay:true no event"]);
     await clickDate("2021-07-18");
-    expect(["2021-07-18 3 days, all day in July"]).toVerifySteps();
+    expect.verifySteps(["2021-07-18 3 days, all day in July"]);
     await clickDate("2021-07-19");
-    expect(["2021-07-19 3 days, all day in July"]).toVerifySteps();
+    expect.verifySteps(["2021-07-19 3 days, all day in July"]);
     await clickDate("2021-07-20");
-    expect(["2021-07-20 3 days, all day in July"]).toVerifySteps();
+    expect.verifySteps(["2021-07-20 3 days, all day in July"]);
     await clickDate("2021-07-21");
-    expect(["2021-07-21 allDay:true no event"]).toVerifySteps();
+    expect.verifySteps(["2021-07-21 allDay:true no event"]);
     await clickDate("2021-06-28");
-    expect(["2021-06-28 allDay:true no event"]).toVerifySteps();
+    expect.verifySteps(["2021-06-28 allDay:true no event"]);
     await clickDate("2021-06-29");
-    expect(["2021-06-29 Over June and July"]).toVerifySteps();
+    expect.verifySteps(["2021-06-29 Over June and July"]);
     await clickDate("2021-06-30");
-    expect(["2021-06-30 Over June and July"]).toVerifySteps();
+    expect.verifySteps(["2021-06-30 Over June and July"]);
     await clickDate("2021-07-01");
-    expect(["2021-07-01 Over June and July"]).toVerifySteps();
+    expect.verifySteps(["2021-07-01 Over June and July"]);
     await clickDate("2021-07-02");
-    expect(["2021-07-02 Over June and July"]).toVerifySteps();
+    expect.verifySteps(["2021-07-02 Over June and July"]);
     await clickDate("2021-07-03");
-    expect(["2021-07-03 Over June and July"]).toVerifySteps();
+    expect.verifySteps(["2021-07-03 Over June and July"]);
     await clickDate("2021-07-04");
-    expect(["2021-07-04 allDay:true no event"]).toVerifySteps();
+    expect.verifySteps(["2021-07-04 allDay:true no event"]);
 });
 
 test.tags("desktop")(`select a range of date`, async () => {
@@ -110,7 +110,7 @@ test.tags("desktop")(`select a range of date`, async () => {
         },
     });
     await selectDateRange("2021-07-02", "2021-07-05");
-    expect(["create"]).toVerifySteps();
+    expect.verifySteps(["create"]);
 });
 
 test(`display correct column header for days, independent of the timezone`, async () => {

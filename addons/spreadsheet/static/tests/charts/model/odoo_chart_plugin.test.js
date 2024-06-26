@@ -81,7 +81,8 @@ test("Odoo bar chart runtime loads the data", async () => {
     });
     const sheetId = model.getters.getActiveSheetId();
     const chartId = model.getters.getChartIds(sheetId)[0];
-    expect([]).toVerifySteps({ message: "it should not be loaded eagerly" });
+    // it should not be loaded eagerly
+    expect.verifySteps([]);
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data).toEqual({
         datasets: [],
         labels: [],
@@ -98,7 +99,8 @@ test("Odoo bar chart runtime loads the data", async () => {
         ],
         labels: ["false", "true"],
     });
-    expect(["web_read_group"]).toVerifySteps({ message: "it should have loaded the data" });
+    // it should have loaded the data
+    expect.verifySteps(["web_read_group"]);
 });
 
 test("Odoo pie chart runtime loads the data", async () => {
@@ -112,7 +114,8 @@ test("Odoo pie chart runtime loads the data", async () => {
     });
     const sheetId = model.getters.getActiveSheetId();
     const chartId = model.getters.getChartIds(sheetId)[0];
-    expect([]).toVerifySteps({ message: "it should not be loaded eagerly" });
+    // it should not be loaded eagerly
+    expect.verifySteps([]);
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data).toEqual({
         datasets: [],
         labels: [],
@@ -129,7 +132,8 @@ test("Odoo pie chart runtime loads the data", async () => {
         ],
         labels: ["false", "true"],
     });
-    expect(["web_read_group"]).toVerifySteps({ message: "it should have loaded the data" });
+    // it should have loaded the data
+    expect.verifySteps(["web_read_group"]);
 });
 
 test("Odoo line chart runtime loads the data", async () => {
@@ -143,7 +147,8 @@ test("Odoo line chart runtime loads the data", async () => {
     });
     const sheetId = model.getters.getActiveSheetId();
     const chartId = model.getters.getChartIds(sheetId)[0];
-    expect([]).toVerifySteps({ message: "it should not be loaded eagerly" });
+    // it should not be loaded eagerly
+    expect.verifySteps([]);
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data).toEqual({
         datasets: [],
         labels: [],
@@ -163,7 +168,8 @@ test("Odoo line chart runtime loads the data", async () => {
         ],
         labels: ["false", "true"],
     });
-    expect(["web_read_group"]).toVerifySteps({ message: "it should have loaded the data" });
+    // it should have loaded the data
+    expect.verifySteps(["web_read_group"]);
 });
 
 test("Data reloaded strictly upon domain update", async () => {
@@ -182,7 +188,8 @@ test("Data reloaded strictly upon domain update", async () => {
     // force runtime computation
     model.getters.getChartRuntime(chartId);
     await animationFrame();
-    expect(["web_read_group"]).toVerifySteps({ message: "it should have loaded the data" });
+    // it should have loaded the data
+    expect.verifySteps(["web_read_group"]);
 
     model.dispatch("UPDATE_CHART", {
         definition: {
@@ -195,9 +202,8 @@ test("Data reloaded strictly upon domain update", async () => {
     // force runtime computation
     model.getters.getChartRuntime(chartId);
     await animationFrame();
-    expect(["web_read_group"]).toVerifySteps({
-        message: "it should have loaded the data with a new domain",
-    });
+    // it should have loaded the data with a new domain
+    expect.verifySteps(["web_read_group"]);
 
     const newDefinition = model.getters.getChartDefinition(chartId);
     model.dispatch("UPDATE_CHART", {
@@ -211,9 +217,8 @@ test("Data reloaded strictly upon domain update", async () => {
     // force runtime computation
     model.getters.getChartRuntime(chartId);
     await animationFrame();
-    expect([]).toVerifySteps({
-        message: "it should have not have loaded the data since the domain was unchanged",
-    });
+    // it should have not have loaded the data since the domain was unchanged
+    expect.verifySteps([]);
 });
 
 test("Can import/export an Odoo chart", async () => {
@@ -282,7 +287,7 @@ test("can import (export) contextual domain", async function () {
         '[("foo", "=", uid)]',
         { message: "the domain is exported with the dynamic parts" }
     );
-    expect(["web_read_group"]).toVerifySteps();
+    expect.verifySteps(["web_read_group"]);
 });
 
 test("Can undo/redo an Odoo chart creation", async () => {

@@ -69,7 +69,7 @@ test("companies can be toggled: toggle a second company", async () => {
         }
     }
     await createSwitchCompanyMenu({ onSetCookie });
-    expect(["3"]).toVerifySteps();
+    expect.verifySteps(["3"]);
 
     /**
      *   [x] **Hermit**
@@ -124,7 +124,7 @@ test("companies can be toggled: toggle a second company", async () => {
         "false",
         "false",
     ]);
-    expect(["3-2"]).toVerifySteps();
+    expect.verifySteps(["3-2"]);
 });
 
 test("can toggle multiple companies at once", async () => {
@@ -140,7 +140,7 @@ test("can toggle multiple companies at once", async () => {
         }
     }
     await createSwitchCompanyMenu({ onSetCookie, toggleDelay: ORIGINAL_TOGGLE_DELAY });
-    expect(["3"]).toVerifySteps();
+    expect.verifySteps(["3"]);
 
     /**
      *   [x] **Hermit**
@@ -170,9 +170,9 @@ test("can toggle multiple companies at once", async () => {
     expect("[data-company-id] .fa-check-square").toHaveCount(4);
     expect("[data-company-id] .fa-square-o").toHaveCount(1);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await prom;
-    expect(["2-1-4-5"]).toVerifySteps();
+    expect.verifySteps(["2-1-4-5"]);
 });
 
 test("single company selected: toggling it off will keep it", async () => {
@@ -182,7 +182,7 @@ test("single company selected: toggling it off will keep it", async () => {
         }
     }
     await createSwitchCompanyMenu({ onSetCookie });
-    expect(["3"]).toVerifySteps();
+    expect.verifySteps(["3"]);
 
     /**
      *   [x] **Hermit**
@@ -210,7 +210,7 @@ test("single company selected: toggling it off will keep it", async () => {
     await contains(".toggle_company:eq(0)").click();
     await runAllTimers();
 
-    expect(["3"]).toVerifySteps();
+    expect.verifySteps(["3"]);
     expect(getService("company").activeCompanyIds).toEqual([3]);
     expect(getService("company").currentCompany.id).toBe(3);
     expect(".dropdown-menu").toHaveCount(1, { message: "dropdown is still opened" });
@@ -225,7 +225,7 @@ test("single company mode: companies can be logged in", async () => {
         }
     }
     await createSwitchCompanyMenu({ onSetCookie, toggleDelay: ORIGINAL_TOGGLE_DELAY });
-    expect(["3"]).toVerifySteps();
+    expect.verifySteps(["3"]);
 
     /**
      *   [x] **Hermit**
@@ -250,7 +250,7 @@ test("single company mode: companies can be logged in", async () => {
      */
     await contains(".log_into:eq(1)").click();
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
-    expect(["2"]).toVerifySteps();
+    expect.verifySteps(["2"]);
 });
 
 test("multi company mode: log into a non selected company", async () => {
@@ -261,7 +261,7 @@ test("multi company mode: log into a non selected company", async () => {
     }
     cookie.set("cids", "3-1");
     await createSwitchCompanyMenu({ onSetCookie });
-    expect(["3-1"]).toVerifySteps();
+    expect.verifySteps(["3-1"]);
 
     /**
      *   [x] Hermit
@@ -286,7 +286,7 @@ test("multi company mode: log into a non selected company", async () => {
      */
     await contains(".log_into:eq(1)").click();
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
-    expect(["2-3-1"]).toVerifySteps();
+    expect.verifySteps(["2-3-1"]);
 });
 
 test("multi company mode: log into an already selected company", async () => {
@@ -297,7 +297,7 @@ test("multi company mode: log into an already selected company", async () => {
     }
     cookie.set("cids", "2-1");
     await createSwitchCompanyMenu({ onSetCookie });
-    expect(["2-1"]).toVerifySteps();
+    expect.verifySteps(["2-1"]);
 
     /**
      *   [ ] Hermit
@@ -322,7 +322,7 @@ test("multi company mode: log into an already selected company", async () => {
      */
     await contains(".log_into:eq(2)").click();
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
-    expect(["1-2-4-5"]).toVerifySteps();
+    expect.verifySteps(["1-2-4-5"]);
 });
 
 test("companies can be logged in even if some toggled within delay", async () => {
@@ -332,7 +332,7 @@ test("companies can be logged in even if some toggled within delay", async () =>
         }
     }
     await createSwitchCompanyMenu({ onSetCookie, toggleDelay: ORIGINAL_TOGGLE_DELAY });
-    expect(["3"]).toVerifySteps();
+    expect.verifySteps(["3"]);
 
     /**
      *   [x] **Hermit**
@@ -359,7 +359,7 @@ test("companies can be logged in even if some toggled within delay", async () =>
     await contains(".toggle_company:eq(0)").click();
     await contains(".log_into:eq(1)").click();
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
-    expect(["2"]).toVerifySteps();
+    expect.verifySteps(["2"]);
 });
 
 test("always show the name of the company on the top right of the app", async () => {
@@ -379,7 +379,7 @@ test("always show the name of the company on the top right of the app", async ()
         }
     }
     await createSwitchCompanyMenu({ onSetCookie });
-    expect(["1"]).toVerifySteps();
+    expect.verifySteps(["1"]);
 
     // in case of a single company, drop down button should be displayed but disabled
     expect(".dropdown-toggle").toBeDisplayed();
@@ -396,7 +396,7 @@ test("single company mode: from company loginto branch", async () => {
         }
     }
     await createSwitchCompanyMenu({ onSetCookie });
-    expect(["3"]).toVerifySteps();
+    expect.verifySteps(["3"]);
 
     /**
      *   [x] **Hermit**
@@ -420,7 +420,7 @@ test("single company mode: from company loginto branch", async () => {
      *   [x]    Hulk
      */
     await contains(".log_into:eq(2)").click();
-    expect(["1-4-5"]).toVerifySteps();
+    expect.verifySteps(["1-4-5"]);
 });
 
 test("single company mode: from branch loginto company", async () => {
@@ -432,7 +432,7 @@ test("single company mode: from branch loginto company", async () => {
     }
     cookie.set("cids", "1-4-5");
     await createSwitchCompanyMenu({ onSetCookie });
-    expect(["1-4-5"]).toVerifySteps();
+    expect.verifySteps(["1-4-5"]);
 
     /**
      *   [ ] Hermit
@@ -456,7 +456,7 @@ test("single company mode: from branch loginto company", async () => {
      *   [ ]    Hulk
      */
     await contains(".log_into:eq(0)").click();
-    expect(["3"]).toVerifySteps();
+    expect.verifySteps(["3"]);
 });
 
 test("single company mode: from leaf (only one company in branch selected) loginto company", async () => {
@@ -468,7 +468,7 @@ test("single company mode: from leaf (only one company in branch selected) login
     }
     cookie.set("cids", "1");
     await createSwitchCompanyMenu({ onSetCookie });
-    expect(["1"]).toVerifySteps();
+    expect.verifySteps(["1"]);
 
     /**
      *   [ ] Hermit
@@ -492,7 +492,7 @@ test("single company mode: from leaf (only one company in branch selected) login
      *   [ ]    Hulk
      */
     await contains(".log_into:eq(1)").click();
-    expect(["2"]).toVerifySteps();
+    expect.verifySteps(["2"]);
 });
 
 test("multi company mode: switching company doesn't deselect already selected ones", async () => {
@@ -504,7 +504,7 @@ test("multi company mode: switching company doesn't deselect already selected on
     }
     cookie.set("cids", "1-2-4-5");
     await createSwitchCompanyMenu({ onSetCookie });
-    expect(["1-2-4-5"]).toVerifySteps();
+    expect.verifySteps(["1-2-4-5"]);
 
     /**
      *   [ ] Hermit
@@ -528,5 +528,5 @@ test("multi company mode: switching company doesn't deselect already selected on
      *   [x]    Hulk
      */
     await contains(".log_into:eq(1)").click();
-    expect(["2-1-4-5"]).toVerifySteps();
+    expect.verifySteps(["2-1-4-5"]);
 });

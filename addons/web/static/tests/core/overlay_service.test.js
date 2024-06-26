@@ -34,9 +34,9 @@ test("onRemove callback", async () => {
     const onRemove = () => expect.step("onRemove");
     const remove = getService("overlay").add(MyComp, {}, { onRemove });
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     remove();
-    expect(["onRemove"]).toVerifySteps();
+    expect.verifySteps(["onRemove"]);
 });
 
 test("multiple overlays", async () => {

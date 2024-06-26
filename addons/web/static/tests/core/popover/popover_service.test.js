@@ -112,7 +112,7 @@ test("close callback", async () => {
     click(document.body);
     await animationFrame();
 
-    expect(["close"]).toVerifySteps();
+    expect.verifySteps(["close"]);
 });
 
 test("sub component triggers close", async () => {
@@ -170,7 +170,7 @@ test("close and do not crash if target parent does not exist", async () => {
     getService("popover").add(dissapearedTarget, Comp, {}, { onClose });
     await animationFrame();
 
-    expect(["close"]).toVerifySteps();
+    expect.verifySteps(["close"]);
 });
 
 test("keep popover if target sibling is removed", async () => {

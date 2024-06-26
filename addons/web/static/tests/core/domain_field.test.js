@@ -381,12 +381,8 @@ test("domain field: manually edit domain with textarea", async function () {
         search: `<search />`,
     };
 
-    onRpc("search_count", ({ args }) => {
-        expect.step(JSON.stringify(args[0]));
-    });
-    onRpc("/web/domain/validate", () => {
-        return true;
-    });
+    onRpc("search_count", ({ args }) => expect.step(args[0]));
+    onRpc("/web/domain/validate", () => true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
         name: "test",
@@ -395,19 +391,19 @@ test("domain field: manually edit domain with textarea", async function () {
         type: "ir.actions.act_window",
         views: [[false, "form"]],
     });
-    expect(["[]"]).toVerifySteps();
+    expect.verifySteps([[]]);
 
     expect(".o_domain_show_selection_button").toHaveText("2 record(s)");
 
     await contains(SELECTORS.debugArea).edit("[['id', '<', 40]]");
     // the count should not be re-computed when editing with the textarea
     expect(".o_domain_show_selection_button").toHaveText("2 record(s)");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(".o_form_button_save").click();
     await animationFrame();
     expect(".o_domain_show_selection_button").toHaveText("1 record(s)");
-    expect(['[["id","<",40]]']).toVerifySteps();
+    expect.verifySteps([[["id", "<", 40]]]);
 });
 
 test("domain field: manually set an invalid domain with textarea", async function () {
@@ -437,7 +433,7 @@ test("domain field: manually set an invalid domain with textarea", async functio
 
     onRpc(({ args, method }) => {
         if (method === "search_count") {
-            expect.step(JSON.stringify(args[0]));
+            expect.step(args[0]);
         }
         if (method === "write") {
             throw new Error("should not save");
@@ -453,7 +449,7 @@ test("domain field: manually set an invalid domain with textarea", async functio
         views: [[false, "form"]],
     });
 
-    expect(["[]"]).toVerifySteps();
+    expect.verifySteps([[]]);
 
     expect(".o_domain_show_selection_button").toHaveText("2 record(s)");
 
@@ -461,11 +457,11 @@ test("domain field: manually set an invalid domain with textarea", async functio
     await animationFrame();
     // the count should not be re-computed when editing with the textarea
     expect(".o_domain_show_selection_button").toHaveText("2 record(s)");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(SELECTORS.debugArea).edit("[['abc']]");
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(".o_form_button_save").click();
     expect(".o_field_domain").toHaveClass("o_field_invalid", {
@@ -474,7 +470,7 @@ test("domain field: manually set an invalid domain with textarea", async functio
     expect(".o_form_view .o_form_editable").toHaveCount(1, {
         message: "the view is still in edit mode",
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("domain field: reload count by clicking on the refresh button", async function () {
@@ -498,9 +494,7 @@ test("domain field: reload count by clicking on the refresh button", async funct
     };
 
     onRpc("/web/domain/validate", () => true);
-    onRpc("search_count", ({ args }) => {
-        expect.step(JSON.stringify(args[0]));
-    });
+    onRpc("search_count", ({ args }) => expect.step(args[0]));
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
         name: "test",
@@ -510,7 +504,7 @@ test("domain field: reload count by clicking on the refresh button", async funct
         views: [[false, "form"]],
     });
 
-    expect(["[]"]).toVerifySteps();
+    expect.verifySteps([[]]);
 
     expect(".o_domain_show_selection_button").toHaveText("2 record(s)");
 
@@ -521,7 +515,7 @@ test("domain field: reload count by clicking on the refresh button", async funct
     // click on the refresh button
     await contains(".o_refresh_count").click();
     expect(".o_domain_show_selection_button").toHaveText("1 record(s)");
-    expect(['[["id","<",40]]']).toVerifySteps();
+    expect.verifySteps([[["id", "<", 40]]]);
 });
 
 test("domain field: does not wait for the count to render", async function () {
@@ -636,14 +630,14 @@ test("domain field: edit through selector (dynamic content)", async function () 
         views: [[false, "form"]],
     });
 
-    expect(["get_views", "web_read", "search_count", "fields_get"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "search_count", "fields_get"]);
 
     expect(SELECTORS.debugArea).toHaveValue(rawDomain);
 
     await clearNotSupported();
     rawDomain = `[("date", ">=", "2020-09-05")]`;
     expect(".o_datetime_input").toHaveCount(1, { message: "there should be a datepicker" });
-    expect(["search_count"]).toVerifySteps();
+    expect.verifySteps(["search_count"]);
 
     // Open and close the datepicker
     await contains(".o_datetime_input").click();
@@ -651,17 +645,17 @@ test("domain field: edit through selector (dynamic content)", async function () 
     scroll(getFixture(), { top: 10 });
     expect(".o_datetime_picker").toHaveCount(1);
     expect(SELECTORS.debugArea).toHaveValue(rawDomain);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // Manually input a date
     rawDomain = `[("date", ">=", "2020-09-09")]`;
     await contains(".o_datetime_input").edit("09/09/2020");
-    expect(["search_count"]).toVerifySteps();
+    expect.verifySteps(["search_count"]);
     expect(SELECTORS.debugArea).toHaveValue(rawDomain);
 
     // Save
     await contains(".o_form_button_save").click();
-    expect(["web_save", "search_count"]).toVerifySteps();
+    expect.verifySteps(["web_save", "search_count"]);
     expect(SELECTORS.debugArea).toHaveValue(rawDomain);
 });
 
@@ -684,12 +678,12 @@ test("domain field without model", async function () {
     expect('.o_field_widget[name="name"]').toHaveText("Select a model to add a filter.", {
         message: "should contain an error message saying the model is missing",
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(".o_field_widget[name=model_name] input").edit("partner");
     await animationFrame();
     expect('.o_field_widget[name="name"] .o_field_domain_panel').toHaveText("3 record(s)");
-    expect(["partner"]).toVerifySteps();
+    expect.verifySteps(["partner"]);
 });
 
 test.tags("desktop")("domain field in kanban view", async function () {
@@ -727,9 +721,7 @@ test.tags("desktop")("domain field in kanban view", async function () {
     });
 
     await contains(".o_domain_selector").click();
-    expect(["open record 1"]).toVerifySteps({
-        message: "record should not open when clicked on the 'N record(s)' button",
-    });
+    expect.verifySteps(["open record 1"]);
 });
 
 test("domain field with 'inDialog' options", async function () {
@@ -819,7 +811,7 @@ test("debug input editing sets the field as dirty even without a focus out", asy
     await contains(SELECTORS.debugArea).edit("[['id', '=', False]]", { confirm: false });
     expect(".o_form_button_save").toHaveCount(1);
     await contains(".o_form_button_save").click();
-    expect(["validate domain"]).toVerifySteps();
+    expect.verifySteps(["validate domain"]);
 });
 
 test("debug input corrections don't need a focus out to be saved", async function () {
@@ -868,7 +860,7 @@ test("quick check on save if domain has been edited via the debug input", async 
     await contains(SELECTORS.debugArea).edit("[['id', '!=', False]]");
     await contains("button.o_form_button_save").click();
     await animationFrame();
-    expect(["validate model", "validate model"]).toVerifySteps();
+    expect.verifySteps(["validate model", "validate model"]);
     expect(".o_domain_show_selection_button").toHaveText("4 record(s)");
 });
 test("domain field can be foldable", async function () {

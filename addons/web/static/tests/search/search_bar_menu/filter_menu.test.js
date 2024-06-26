@@ -871,7 +871,7 @@ test("Add a custom filter: notification on invalid domain", async () => {
     await contains(`.o_domain_selector_debug_container textarea`).edit(`[(uid, uid, uid)]`);
     await contains(".modal footer button").click();
     expect(".modal .o_domain_selector").toHaveCount(1);
-    expect(["notification"]).toVerifySteps();
+    expect.verifySteps(["notification"]);
 });
 
 test("display names in facets", async () => {
@@ -1005,17 +1005,17 @@ test("group by properties", async () => {
         searchMenuTypes: ["groupBy"],
     });
     // definition is fetched only when we open the properties menu
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(".o_searchview_dropdown_toggler").click();
     // definition is fetched only when we open the properties menu
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(queryAllTexts`.o_menu_item`).toEqual(["Properties"]);
 
     await contains(".o_accordion_toggle").click();
     await animationFrame();
     // now that we open the properties we fetch the definition
-    expect(["definitionFetched"]).toVerifySteps();
+    expect.verifySteps(["definitionFetched"]);
     expect(queryAllTexts`.o_accordion_values .dropdown-item`).toEqual([
         "My Text (First Parent)",
         "My Partner (First Parent)",

@@ -633,7 +633,7 @@ test("can click on action-bound links -- 1", async () => {
     expect("a").toHaveCount(1);
     click("a");
     await animationFrame();
-    expect(["root called"]).toVerifySteps();
+    expect.verifySteps(["root called"]);
 });
 
 test("can click on action-bound links -- 2", async () => {
@@ -707,7 +707,7 @@ test("renders banner_route", async () => {
     });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
     expect(".setmybodyfree").toHaveCount(1);
-    expect(["root called"]).toVerifySteps();
+    expect.verifySteps(["root called"]);
 });
 
 test("renders banner_route with js and css assets", async () => {
@@ -754,7 +754,7 @@ test("renders banner_route with js and css assets", async () => {
     };
     patchWithCleanup(document, { createElement });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
-    expect(["root called", "js loaded", "css loaded"]).toVerifySteps();
+    expect.verifySteps(["root called", "js loaded", "css loaded"]);
     expect(".setmybodyfree").toHaveCount(1);
 });
 
@@ -781,12 +781,12 @@ test("banner can re-render with new HTML", async () => {
         return { type: "ir.actions.act_window_close" };
     });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
-    expect(["/mybody/isacage"]).toVerifySteps();
+    expect.verifySteps(["/mybody/isacage"]);
     expect(".banner1").toHaveCount(1);
     expect(".banner2").toHaveCount(0);
     click("a");
     await animationFrame();
-    expect(["/mybody/isacage"]).toVerifySteps();
+    expect.verifySteps(["/mybody/isacage"]);
     expect(".banner1").toHaveCount(0);
     expect(".banner2").toHaveCount(1);
 });
@@ -814,10 +814,10 @@ test("banner does not reload on render", async () => {
         return { html: bannerArch };
     });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
-    expect(["/mybody/isacage"]).toVerifySteps();
+    expect.verifySteps(["/mybody/isacage"]);
     await toy.render();
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(".setmybodyfree").toHaveCount(1);
 });
 
@@ -906,7 +906,7 @@ test("real life banner", async () => {
         return true;
     });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
-    expect(["/mybody/isacage"]).toVerifySteps();
+    expect.verifySteps(["/mybody/isacage"]);
     expect(".modal").not.toBeVisible();
     expect(".o_onboarding_container").toHaveClass("o-vertical-slide");
     click("#closeOnboarding");
@@ -914,7 +914,7 @@ test("real life banner", async () => {
     expect(".modal").toBeVisible();
     click(queryOne(".modal a[type='action']"));
     await animationFrame();
-    expect(["/web/dataset/call_kw/mah.model/mah_method"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/mah.model/mah_method"]);
 
     runAllTimers();
     await animationFrame();
@@ -1040,7 +1040,7 @@ test("'resModel' must be passed as prop", async function () {
     } catch (error) {
         expect.step(error.message);
     }
-    expect([`View props should have a "resModel" key`]).toVerifySteps();
+    expect.verifySteps([`View props should have a "resModel" key`]);
 });
 
 test("'type' must be passed as prop", async function () {
@@ -1050,7 +1050,7 @@ test("'type' must be passed as prop", async function () {
     } catch (error) {
         expect.step(error.message);
     }
-    expect([`View props should have a "type" key`]).toVerifySteps();
+    expect.verifySteps([`View props should have a "type" key`]);
 });
 
 test("'arch' cannot be passed as prop alone", async function () {
@@ -1060,7 +1060,7 @@ test("'arch' cannot be passed as prop alone", async function () {
     } catch (error) {
         expect.step(error.message);
     }
-    expect([`"arch" and "fields" props must be given together`]).toVerifySteps();
+    expect.verifySteps([`"arch" and "fields" props must be given together`]);
 });
 
 test("'fields' cannot be passed as prop alone", async function () {
@@ -1070,7 +1070,7 @@ test("'fields' cannot be passed as prop alone", async function () {
     } catch (error) {
         expect.step(error.message);
     }
-    expect([`"arch" and "fields" props must be given together`]).toVerifySteps();
+    expect.verifySteps([`"arch" and "fields" props must be given together`]);
 });
 
 test("'searchViewArch' cannot be passed as prop alone", async function () {
@@ -1080,9 +1080,7 @@ test("'searchViewArch' cannot be passed as prop alone", async function () {
     } catch (error) {
         expect.step(error.message);
     }
-    expect([
-        `"searchViewArch" and "searchViewFields" props must be given together`,
-    ]).toVerifySteps();
+    expect.verifySteps([`"searchViewArch" and "searchViewFields" props must be given together`]);
 });
 
 test("'searchViewFields' cannot be passed as prop alone", async function () {
@@ -1092,9 +1090,7 @@ test("'searchViewFields' cannot be passed as prop alone", async function () {
     } catch (error) {
         expect.step(error.message);
     }
-    expect([
-        `"searchViewArch" and "searchViewFields" props must be given together`,
-    ]).toVerifySteps();
+    expect.verifySteps([`"searchViewArch" and "searchViewFields" props must be given together`]);
 });
 
 ////////////////////////////////////////////////////////////////////////////

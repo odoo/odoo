@@ -267,7 +267,7 @@ test("New record with a o2m also with 2 new records, ordered, and resequenced", 
     // of the lines of "p"
     await contains("tbody tr:eq(1) .o_handle_cell").dragAndDrop("tbody tr");
 
-    expect(["onchange partner"]).toVerifySteps();
+    expect.verifySteps(["onchange partner"]);
 });
 
 test.tags("desktop")("one2many in a list x2many editable use the right context", async () => {
@@ -296,7 +296,7 @@ test.tags("desktop")("one2many in a list x2many editable use the right context",
     await contains("[name='trululu'] input").edit("new partner");
     await selectFieldDropdownItem("trululu", 'Create "new partner"');
 
-    expect(["name_create list"]).toVerifySteps();
+    expect.verifySteps(["name_create list"]);
 });
 
 test.tags("desktop")("one2many in a list x2many non-editable use the right context", async () => {
@@ -325,7 +325,7 @@ test.tags("desktop")("one2many in a list x2many non-editable use the right conte
     await contains("[name='trululu'] input").edit("new partner");
     await selectFieldDropdownItem("trululu", 'Create "new partner"');
 
-    expect(["name_create form"]).toVerifySteps();
+    expect.verifySteps(["name_create form"]);
 });
 
 test("O2M field without relation_field", async () => {
@@ -409,7 +409,7 @@ test("O2M List with pager, decoration and default_order: add and cancel adding",
 });
 
 test.tags("desktop")("O2M with parented m2o and domain on parent.m2o", async () => {
-    expect.assertions(7);
+    expect.assertions(4);
 
     // Records in an o2m can have a m2o pointing to themselves.
     // In that case, a domain evaluation on that field followed by name_search
@@ -427,7 +427,6 @@ test.tags("desktop")("O2M with parented m2o and domain on parent.m2o", async () 
     };
     onRpc("name_search", ({ kwargs }) => {
         expect(kwargs.args).toEqual([["id", "in", []]]);
-        expect(JSON.stringify(kwargs.args)).toBe('[["id","in",[]]]');
     });
     await mountView({
         type: "form",
@@ -584,7 +583,7 @@ test.tags("desktop")("clicking twice on a record in a one2many will open it once
     await contains(".o_data_cell").click();
     expect(".modal").toHaveCount(1);
 
-    expect(["web_read turtle"]).toVerifySteps();
+    expect.verifySteps(["web_read turtle"]);
 });
 
 test("resequence a x2m in a form view dialog from another x2m", async () => {
@@ -626,19 +625,19 @@ test("resequence a x2m in a form view dialog from another x2m", async () => {
                 </field>
             </form>`,
     });
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
 
     await contains(".o_data_cell").click();
     expect(".modal").toHaveCount(1);
     expect(queryAllTexts(".modal [name='name']")).toEqual(["aaa", "second record"]);
-    expect(["web_read"]).toVerifySteps();
+    expect.verifySteps(["web_read"]);
     await contains(".modal tr:eq(2) .o_handle_cell").dragAndDrop(".modal [name='name']:eq(0)");
     expect(queryAllTexts(".modal [name='name']")).toEqual(["second record", "aaa"]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(".modal .o_form_button_save").click();
     await clickSave();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test("one2many list editable with cell readonly modifier", async () => {
@@ -732,7 +731,7 @@ test("one2many wait for the onchange of the resequenced finish before save", asy
     // resolve the onchange promise
     def.resolve();
     await animationFrame();
-    expect(["onchange", "web_save"]).toVerifySteps();
+    expect.verifySteps(["onchange", "web_save"]);
 });
 
 test("one2many basic properties", async () => {
@@ -760,7 +759,7 @@ test("one2many basic properties", async () => {
         resId: 1,
     });
 
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
     expect(".o_field_x2many_list_row_add").toHaveCount(1);
     expect(".o_field_x2many_list_row_add").toHaveAttribute("colspan", "2");
     expect("td.o_list_record_remove").toHaveCount(1);
@@ -920,7 +919,7 @@ test.tags("desktop")(
             resId: 1,
         });
         expect(".o_data_row").toHaveCount(2);
-        expect(["get_views", "get_views", "web_read"]).toVerifySteps();
+        expect.verifySteps(["get_views", "get_views", "web_read"]);
     }
 );
 
@@ -1012,7 +1011,7 @@ test.tags("desktop")("embedded one2many with handle widget", async () => {
     // Drag and drop the second line in first position
     await contains("tbody tr:eq(1) .o_handle_cell").dragAndDrop("tbody tr");
 
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 
     expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["blip", "yop", "kawa"]);
 
@@ -2180,7 +2179,7 @@ test("embedded one2many with handle widget with minimum setValue calls", async (
         await contains(`tbody tr:eq(${sourceIndex}) .o_handle_cell`).dragAndDrop(
             `tbody tr:eq(${targetIndex})`
         );
-        expect(steps).toVerifySteps();
+        expect.verifySteps(steps);
     }
 
     expect(queryAllTexts(".o_data_row [name='turtle_foo']")).toEqual([
@@ -2224,7 +2223,7 @@ test("embedded one2many (editable list) with handle widget", async () => {
         "yop",
     ]);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // Drag and drop the second line in first position
     await contains("tbody tr:eq(1) .o_handle_cell").dragAndDrop(".o_field_one2many tbody tr:eq(0)");
@@ -2239,11 +2238,11 @@ test("embedded one2many (editable list) with handle widget", async () => {
 
     expect(".o_field_widget[name=foo] input").toHaveValue("blip");
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await clickSave();
 
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
     expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual([
         "blip",
         "My little Foo Value",
@@ -2270,7 +2269,7 @@ test("one2many list order with handle widget", async () => {
             </form>`,
         resId: 1,
     });
-    expect(["web_read"]).toVerifySteps();
+    expect.verifySteps(["web_read"]);
 });
 
 test("one2many field when using the pager", async () => {
@@ -2310,38 +2309,38 @@ test("one2many field when using the pager", async () => {
         resIds: [1, 2],
     });
 
-    expect(["unity read 1"]).toVerifySteps();
+    expect.verifySteps(["unity read 1"]);
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
 
     // move to record 2, which has 3 related records (and shouldn't contain the
     // related records of record 1 anymore)
     await contains(".o_form_view .o_control_panel .o_pager_next").click();
-    expect(["unity read 2"]).toVerifySteps();
+    expect.verifySteps(["unity read 2"]);
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(3);
 
     // move back to record 1, which should contain again its first 40 related
     // records
     await contains(".o_form_view .o_control_panel .o_pager_previous").click();
-    expect(["unity read 1"]).toVerifySteps();
+    expect.verifySteps(["unity read 1"]);
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
 
     // move to the second page of the o2m: 1 RPC should have been done to fetch
     // the 2 subrecords of page 2, and those records should now be displayed
     await contains(".o_x2m_control_panel .o_pager_next").click();
-    expect(["unity read 50,51"]).toVerifySteps();
+    expect.verifySteps(["unity read 50,51"]);
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
 
     // move to record 2 again and check that everything is correctly updated
     await contains(".o_form_view .o_control_panel .o_pager_next").click();
-    expect(["unity read 2"]).toVerifySteps();
+    expect.verifySteps(["unity read 2"]);
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(3);
 
     // move back to record 1 and move to page 2 again: all data should have
     // been correctly reloaded
     await contains(".o_form_view .o_control_panel .o_pager_previous").click();
-    expect(["unity read 1"]).toVerifySteps();
+    expect.verifySteps(["unity read 1"]);
     await contains(".o_x2m_control_panel .o_pager_next").click();
-    expect(["unity read 50,51"]).toVerifySteps();
+    expect.verifySteps(["unity read 50,51"]);
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
 });
 
@@ -2480,7 +2479,7 @@ test("edition of one2many field with pager", async () => {
     // save
     await clickSave();
 
-    expect(["web_save", "web_save", "web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save", "web_save", "web_save"]);
 });
 
 test.tags("desktop")("edition of one2many field with pager on desktop", async () => {
@@ -2594,7 +2593,7 @@ test.tags("desktop")("edition of one2many field with pager on desktop", async ()
     // save
     await clickSave();
 
-    expect(["web_save", "web_save", "web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save", "web_save", "web_save"]);
 });
 
 test("When viewing one2many records in an embedded kanban, the delete button should say 'Delete' and not 'Remove'", async () => {
@@ -2789,7 +2788,7 @@ test("open a record in a one2many kanban with an x2m in the form", async () => {
     expect(".modal [name=name] input").toHaveValue("second record");
     expect(queryAllTexts(".modal .o_data_row")).toEqual(["aaa"]);
 
-    expect(["web_read: 2"]).toVerifySteps();
+    expect.verifySteps(["web_read: 2"]);
 });
 
 test("one2many in kanban: add a line custom control create editable", async () => {
@@ -2888,7 +2887,7 @@ test("one2many in kanban: add a line custom control create editable (2)", async 
     ]);
 
     await contains(".o_x2m_control_panel .o_cp_buttons button:eq(1)").click();
-    expect(["do_something"]).toVerifySteps();
+    expect.verifySteps(["do_something"]);
 });
 
 test("add record in a one2many non editable list with context", async () => {
@@ -3830,7 +3829,7 @@ test("one2many list (editable): discarding required empty data", async () => {
     await clickSave();
     expect("tr.o_data_row").toHaveCount(0);
 
-    expect(["get_views", "web_read", "onchange", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "onchange", "onchange"]);
 });
 
 test.tags("desktop")("discard O2M field with close button", async () => {
@@ -4176,7 +4175,7 @@ test("pressing enter in a o2m with a required empty field", async () => {
     press("Enter");
     await animationFrame();
     expect('div[name="turtle_foo"]').toHaveClass("o_field_invalid");
-    expect(["get_views", "web_read", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "onchange"]);
 });
 
 test("pressing enter several times in a one2many", async () => {
@@ -4286,7 +4285,7 @@ test("editing a o2m, with required field and onchange", async () => {
     expect(".o_data_row .o_data_cell.o_list_char").toHaveText("aubergine");
     expect(".o_data_row .o_data_cell.o_list_number").toHaveText("9");
 
-    expect(["get_views", "web_read", "onchange", "onchange", "web_save"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "onchange", "onchange", "web_save"]);
 });
 
 test("editable o2m, pressing ESC discard current changes", async () => {
@@ -4313,7 +4312,7 @@ test("editable o2m, pressing ESC discard current changes", async () => {
     press("Escape");
     await animationFrame();
     expect("tr.o_data_row").toHaveCount(0);
-    expect(["get_views", "web_read", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "onchange"]);
 });
 
 test("editable o2m with required field, pressing ESC discard current changes", async () => {
@@ -4341,7 +4340,7 @@ test("editable o2m with required field, pressing ESC discard current changes", a
     press("Escape");
     await animationFrame();
     expect("tr.o_data_row").toHaveCount(0);
-    expect(["get_views", "web_read", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "onchange"]);
 });
 
 test("pressing escape in editable o2m list in dialog", async () => {
@@ -4406,12 +4405,14 @@ test.tags("desktop")(
             resId: 1,
         });
 
-        expect(["get_views", "web_read"]).toVerifySteps();
+        expect.verifySteps(["get_views", "web_read"]);
         await contains(".o_data_cell").click();
         await contains(".o_field_widget[name=product_id] input").clear();
-        expect([]).toVerifySteps({ message: "no onchange should be done as line is invalid" });
+        // no onchange should be done as line is invalid
+        expect.verifySteps([]);
         await contains(".o_list_record_remove").click();
-        expect(["onchange"]).toVerifySteps({ message: "onchange should have been done" });
+        // onchange should have been done
+        expect.verifySteps(["onchange"]);
     }
 );
 
@@ -4533,7 +4534,7 @@ test("one2many and onchange (with integer)", async () => {
     expect("td:eq(0)").toHaveText("9");
     contains("td").click();
     await contains('td [name="turtle_int"] input').edit("3", { confirm: "blur" });
-    expect(["get_views", "web_read", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "onchange"]);
 });
 
 test("one2many and onchange (with date)", async () => {
@@ -4564,7 +4565,7 @@ test("one2many and onchange (with date)", async () => {
     contains(getPickerCell("1").at(0)).click();
     await clickSave();
 
-    expect(["get_views", "web_read", "onchange", "web_save"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "onchange", "web_save"]);
 });
 
 test("one2many and onchange only write modified field", async () => {
@@ -5095,7 +5096,7 @@ test("one2many list, multi page, with many2one and with context with parent key"
     });
 
     await contains(".o_x2m_control_panel .o_pager_next").click();
-    expect(["web_read turtle"]).toVerifySteps();
+    expect.verifySteps(["web_read turtle"]);
 });
 
 test("one2many list, editable, with a date in the context", async () => {
@@ -5324,7 +5325,7 @@ test.tags("desktop")("one2many with many2many widget: create", async () => {
     await animationFrame();
 
     await contains(".modal-footer button").click();
-    expect(["turtle save"]).toVerifySteps();
+    expect.verifySteps(["turtle save"]);
 
     expect(".modal").toHaveCount(0);
     expect(".o_data_row").toHaveCount(3);
@@ -5570,7 +5571,7 @@ test("parent data is properly sent on an onchange rpc, new record", async () => 
             </form>`,
     });
     await contains(".o_field_x2many_list_row_add a").click();
-    expect(["get_views", "onchange", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "onchange", "onchange"]);
 });
 
 test("id in one2many obtained in onchange is properly set", async () => {
@@ -5860,13 +5861,13 @@ test("many2manytag in one2many, onchange, some modifiers, and more than one page
     await contains(".o_list_record_remove").click();
     expect(".o_data_row").toHaveCount(1);
 
-    expect([
+    expect.verifySteps([
         "get_views", // main form view
         "web_read", // initial read on partner
         "web_read", // after first delete, read on turtle (to fetch 3rd record)
         "onchange", // after first delete, onchange on field turtles
         "onchange", // onchange after second delete
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("onchange many2many in one2many list editable", async () => {
@@ -6543,17 +6544,17 @@ test("one2many field with virtual ids with kanban button", async () => {
 
     // click on the button
     await contains(btn1Disabled).click();
-    expect(["button_disabled_partner_4"]).toVerifySteps();
+    expect.verifySteps(["button_disabled_partner_4"]);
 
     await contains(btn1Warn).click();
-    expect(["button_warn_partner_4"]).toVerifySteps();
+    expect.verifySteps(["button_warn_partner_4"]);
 
     // click on existing buttons
     await contains(btn1Disabled).click();
-    expect(["button_disabled_partner_4"]).toVerifySteps();
+    expect.verifySteps(["button_disabled_partner_4"]);
 
     await contains(btn1Warn).click();
-    expect(["button_warn_partner_4"]).toVerifySteps();
+    expect.verifySteps(["button_warn_partner_4"]);
 
     // create new kanban record
     await contains(".o_field_widget .o-kanban-button-new").click();
@@ -6581,15 +6582,15 @@ test("one2many field with virtual ids with kanban button", async () => {
 
     // click all buttons
     await contains(btn1Disabled).click();
-    expect(["web_save", "button_disabled_partner_4"]).toVerifySteps();
+    expect.verifySteps(["web_save", "button_disabled_partner_4"]);
     await contains(btn1Warn).click();
     await contains(btn2Disabled).click();
     await contains(btn2Warn).click();
-    expect([
+    expect.verifySteps([
         "button_warn_partner_4",
         "button_disabled_partner_5",
         "button_warn_partner_5",
-    ]).toVerifySteps();
+    ]);
 
     // save the form
     expect(".o_form_saved").toHaveCount(1);
@@ -6600,12 +6601,13 @@ test("one2many field with virtual ids with kanban button", async () => {
     await contains(btn2Disabled).click();
     await contains(btn2Warn).click();
 
-    expect([
+    // should have clicked once on every button
+    expect.verifySteps([
         "button_disabled_partner_4",
         "button_warn_partner_4",
         "button_disabled_partner_5",
         "button_warn_partner_5",
-    ]).toVerifySteps({ message: "should have clicked once on every button" });
+    ]);
 });
 
 test("focusing fields in one2many list", async () => {
@@ -6848,12 +6850,12 @@ test("one2many list editable, onchange and required field", async () => {
     intFieldVal = 1;
     await contains(".o_field_x2many_list_row_add a").click();
     expect('.o_field_widget[name="int_field"] input').toHaveValue("0");
-    expect(["get_views", "web_read", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "onchange"]);
 
     await contains('.o_field_widget[name="turtle_foo"] input').edit("some text", {
         confirm: "blur",
     });
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
     expect('.o_field_widget[name="int_field"] input').toHaveValue("1");
 });
 
@@ -6908,7 +6910,7 @@ test.tags("desktop")("one2many list editable: trigger onchange when row is valid
     expect('.o_field_widget[name="int_field"] input').toHaveValue("0", {
         message: "int_field should still be 0 (no onchange should have been done yet)",
     });
-    expect(["get_views", "web_read", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "onchange"]);
 
     // fill turtle_foo field
     await contains('.o_field_widget[name="turtle_foo"] input').edit("some text", {
@@ -6917,7 +6919,8 @@ test.tags("desktop")("one2many list editable: trigger onchange when row is valid
     expect('.o_field_widget[name="int_field"] input').toHaveValue("0", {
         message: "int_field should still be 0 (no onchange should have been done yet)",
     });
-    expect([]).toVerifySteps({ message: "no onchange should have been applied" });
+    // no onchange should have been applied
+    expect.verifySteps([]);
 
     // fill partner_ids field with a tag (all required fields will then be set)
     await selectFieldDropdownItem("partner_ids", "first record");
@@ -6925,7 +6928,7 @@ test.tags("desktop")("one2many list editable: trigger onchange when row is valid
     expect('.o_field_widget[name="int_field"] input').toHaveValue("1", {
         message: "int_field should now be 1 (the onchange should have been done",
     });
-    expect(["name_search", "web_read", "onchange"]).toVerifySteps();
+    expect.verifySteps(["name_search", "web_read", "onchange"]);
 });
 
 test("one2many list editable: 'required' modifiers is properly working", async () => {
@@ -7174,7 +7177,7 @@ test("editable list: onchange that returns a warning", async () => {
     // and a warning again)
     await contains(".o_field_x2many_list_row_add a").click();
 
-    expect(["onchange", "warning", "onchange", "warning"]).toVerifySteps();
+    expect.verifySteps(["onchange", "warning", "onchange", "warning"]);
 });
 
 test("editable list: contexts are correctly sent", async () => {
@@ -7353,7 +7356,7 @@ test("resetting invisible one2manys", async () => {
         resId: 1,
     });
     await contains('[name="foo"] input').edit("abcd", { confirm: "blur" });
-    expect(["get_views", "web_read", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "onchange"]);
 });
 
 test("one2many: onchange that returns unknown field in list, but not in form", async () => {
@@ -7496,7 +7499,7 @@ test("onchange and required fields with override in arch", async () => {
     // triggers an onchange on partner, because the new record is valid
     await contains(".o_field_x2many_list_row_add a").click();
 
-    expect(["get_views", "web_read", "onchange", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "onchange", "onchange"]);
 });
 
 test("onchange on a one2many containing a one2many", async () => {
@@ -7600,7 +7603,7 @@ test("editing tabbed one2many (editable=bottom)", async () => {
     await clickSave();
     expect("tr.o_data_row").toHaveCount(40);
 
-    expect(["get_views", "web_read", "onchange", "web_save"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "onchange", "web_save"]);
 });
 
 test("editing tabbed one2many (editable=bottom), again...", async () => {
@@ -7680,7 +7683,7 @@ test("editing tabbed one2many (editable=top)", async () => {
     await clickSave();
     expect("tr.o_data_row").toHaveCount(40);
 
-    expect(["get_views", "web_read", "web_read", "onchange", "web_save"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "web_read", "onchange", "web_save"]);
 });
 
 test.tags("desktop")("one2many field: change value before pending onchange returns", async () => {
@@ -8428,7 +8431,7 @@ test("one2many with several pages, onchange and default order", async () => {
     await contains(".o_form_view").click();
     expect(queryAllTexts(".o_data_cell.foo")).toEqual(["blip", "kawa"]);
 
-    expect([
+    expect.verifySteps([
         "get_views",
         "web_read [1]", // main record
         "onchange",
@@ -8439,7 +8442,7 @@ test("one2many with several pages, onchange and default order", async () => {
         // is taken into account but the basicmodel doesn't care it concerns a
         // record of the second page, and does the read. I don't think we
         // introduced a regression here, this test was simply wrong...
-    ]).toVerifySteps();
+    ]);
 });
 
 test("one2many with several pages, onchange return command update on unknown record (readonly field)", async () => {
@@ -8560,7 +8563,7 @@ test.tags("desktop")(
         // swap 2 lines in the one2many
         await contains("tbody tr:eq(1) .o_handle_cell").dragAndDrop("tbody tr");
 
-        expect(["get_views", "get_views", "web_read", "onchange", "onchange"]).toVerifySteps();
+        expect.verifySteps(["get_views", "get_views", "web_read", "onchange", "onchange"]);
     }
 );
 
@@ -8597,13 +8600,13 @@ test.tags("desktop")("onchange in a one2many with non inline view on a new recor
 
     expect(".o_field_cell[name=turtle_int]").toHaveText("44");
 
-    expect([
+    expect.verifySteps([
         "get_views", // load main form
         "get_views", // load sub list
         "onchange", // main record
         "onchange", // sub record
         "onchange", // edition of name of sub record
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")('add a line, edit it and "Save & New"', async () => {
@@ -8823,7 +8826,7 @@ test("o2m add an action button control", async () => {
     expect(".o_field_x2many_list_row_add").toHaveText("CreateAction Button");
 
     await contains(".o_field_x2many_list_row_add button").click();
-    expect(["do_something"]).toVerifySteps();
+    expect.verifySteps(["do_something"]);
 });
 
 test("o2m button with parent in context", async () => {
@@ -8847,7 +8850,7 @@ test("o2m button with parent in context", async () => {
             </form>`,
     });
     await contains('button[name="test_button"]').click();
-    expect(["test_button"]).toVerifySteps();
+    expect.verifySteps(["test_button"]);
 });
 
 test("o2m add a line custom control create align with handle", async () => {
@@ -9016,11 +9019,11 @@ test("click on URL should not open the record", async () => {
 
     await contains(".o_email_cell a").click();
     expect(".modal").toHaveCount(0);
-    expect(["link clicked"]).toVerifySteps();
+    expect.verifySteps(["link clicked"]);
 
     await contains(".o_url_cell a").click();
     expect(".modal").toHaveCount(0);
-    expect(["link clicked"]).toVerifySteps();
+    expect.verifySteps(["link clicked"]);
 });
 
 test.tags("desktop")("create and edit on m2o in o2m, and press ESCAPE", async () => {
@@ -9163,7 +9166,7 @@ test("o2m add a line custom control create editable with 'tab'", async () => {
     press("Tab");
     await animationFrame();
     expect(".o_data_row").toHaveCount(2);
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 });
 
 test("one2many with onchange, required field, shortcut enter", async () => {
@@ -9191,12 +9194,12 @@ test("one2many with onchange, required field, shortcut enter", async () => {
             </form>`,
     });
 
-    expect(["get_views", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "onchange"]);
 
     // add a new line
     await contains(".o_field_x2many_list_row_add a").click();
 
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 
     // we want to add a delay to simulate an onchange
     def = new Deferred();
@@ -9208,7 +9211,7 @@ test("one2many with onchange, required field, shortcut enter", async () => {
     expect("[name=turtle_foo] input").toHaveValue("hello");
     expect(".o_data_row").toHaveCount(1);
 
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 
     // unlock onchange
     def.resolve();
@@ -9219,7 +9222,7 @@ test("one2many with onchange, required field, shortcut enter", async () => {
     expect(".o_data_row:eq(0) [name=turtle_foo]").toHaveText("hello");
     expect(".o_data_row:eq(1) [name=turtle_foo] input").toHaveValue("");
 
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 });
 
 test("edit a field with a slow onchange in one2many", async () => {
@@ -9247,12 +9250,12 @@ test("edit a field with a slow onchange in one2many", async () => {
             </form>`,
     });
 
-    expect(["get_views", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "onchange"]);
 
     // add a new line
     await contains(".o_field_x2many_list_row_add a").click();
 
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 
     // we want to add a delay to simulate an onchange
     def = new Deferred();
@@ -9266,7 +9269,7 @@ test("edit a field with a slow onchange in one2many", async () => {
     // check that nothing changed before the onchange finished
     expect("[name=turtle_foo] input").toHaveValue("hello");
 
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 
     // unlock onchange
     def.resolve();
@@ -9309,13 +9312,13 @@ test("no deadlock when leaving a one2many line with uncommitted changes", async 
 
     expect(".o_form_editable").toHaveCount(1);
     expect(".o_data_row:eq(0)").toHaveText("some foo value");
-    expect([
+    expect.verifySteps([
         "get_views", // main form view
         "onchange", // main record
         "onchange", // line 1
         "onchange", // line 2
         "web_save",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("one2many with extra field from server not in form", async () => {
@@ -9577,9 +9580,9 @@ test("one2many editable list: edit and click on add a line", async () => {
     await contains(".o_selected_row .o_field_widget[name=turtle_int] input").edit("44", {
         confirm: false,
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await contains(".o_field_x2many_list_row_add a").click();
-    expect(["onchange", "onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange", "onchange"]);
 
     expect(".o_data_row").toHaveCount(2);
     expect(".o_data_cell:eq(0)").toHaveText("44");
@@ -9626,7 +9629,7 @@ test("many2manys inside a one2many are fetched in batch after onchange", async (
         "second record\naaa",
     ]);
 
-    expect(["get_views", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "onchange"]);
 });
 
 test("two one2many fields with same relation and _onChanges", async () => {
@@ -10275,7 +10278,7 @@ test("do not call read if name already known", async () => {
 
     expect(".o_field_widget[name=trululu] input").toHaveValue("first record");
     expect(".o_field_widget[name=product_id] input").toHaveValue("xphone");
-    expect(["get_views on partner", "onchange on partner"]).toVerifySteps();
+    expect.verifySteps(["get_views on partner", "onchange on partner"]);
 });
 
 test("x2many default_order multiple fields", async () => {
@@ -10477,7 +10480,7 @@ test("one2many, onchange, edition and multipage...", async () => {
     await contains(".o_field_widget[name=turtle_foo] input").edit("nora", { confirm: false });
     await contains(".o_field_x2many_list_row_add a").click();
 
-    expect([
+    expect.verifySteps([
         "get_views partner",
         "web_read partner",
         "onchange turtle",
@@ -10485,7 +10488,7 @@ test("one2many, onchange, edition and multipage...", async () => {
         "onchange partner",
         "onchange turtle",
         "onchange partner",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("x2many multipage, onchange returning update commands with readonly field", async () => {
@@ -11457,17 +11460,17 @@ test("open a one2many record containing a one2many", async () => {
         resId: 2,
     });
 
-    expect([
+    expect.verifySteps([
         "localStorage getItem pwa.installationState", // from install_prompt service
         "localStorage getItem optional_fields,partner,form,123456789,p,list,name",
-    ]).toVerifySteps();
+    ]);
 
     await contains(".o_data_cell").click();
     expect(".modal .o_data_row").toHaveCount(1);
-    expect([
+    expect.verifySteps([
         "localStorage getItem optional_fields,partner,form,123456789,p,list,name",
         "localStorage getItem optional_fields,partner,form,123456789,turtles,list,name",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("if there are less than 4 lines in a one2many, empty lines must be displayed to cover the difference.", async () => {
@@ -11538,7 +11541,7 @@ test("one2many can delete a new record", async () => {
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(0);
 
     await clickSave();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("toggle boolean in o2m with the formView in edition", async () => {
@@ -11564,10 +11567,10 @@ test("toggle boolean in o2m with the formView in edition", async () => {
             </form>`,
         resId: 1,
     });
-    expect(["get_views partner", "web_read partner"]).toVerifySteps();
+    expect.verifySteps(["get_views partner", "web_read partner"]);
 
     await contains(".o_boolean_toggle").click();
-    expect(["onchange partner"]).toVerifySteps();
+    expect.verifySteps(["onchange partner"]);
 });
 
 test("create a new record with an x2m invisible", async () => {
@@ -11628,10 +11631,10 @@ test("create a new record with an x2m invisible", async () => {
     });
 
     expect("[name='p']").toHaveCount(0);
-    expect(["get_views", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "onchange"]);
 
     await contains(".o_form_button_save").click();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test("edit a record with an x2m invisible", async () => {
@@ -11672,11 +11675,11 @@ test("edit a record with an x2m invisible", async () => {
     });
 
     expect("[name='p']").toHaveCount(0);
-    expect(["get_views partner", "web_read partner"]).toVerifySteps();
+    expect.verifySteps(["get_views partner", "web_read partner"]);
 
     await contains("[name='foo'] input").edit("plop", { confirm: false });
     await clickSave();
-    expect(["web_save partner"]).toVerifySteps();
+    expect.verifySteps(["web_save partner"]);
 });
 
 test("can't select a record in a one2many", async () => {
@@ -11760,7 +11763,7 @@ test("nested one2manys, multi page, onchange", async () => {
     });
 
     await contains(".o_field_widget[name=int_field] input").edit("5", { confirm: "blur" });
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 
     await clickSave();
     expect(Partner._records[0].int_field).toBe(5);
@@ -12132,7 +12135,7 @@ test('Add a line, click on "Save & New" with an invalid form', async () => {
     // Click on "Save & New" with an invalid form
     await contains(".o_dialog .o_form_button_save_new").click();
     expect(".o_dialog .o_form_view").toHaveCount(1);
-    expect(["danger"]).toVerifySteps();
+    expect.verifySteps(["danger"]);
 
     // Check that no buttons are disabled
     expect(".o_dialog .o_form_button_save_new").toBeEnabled();
@@ -12171,17 +12174,17 @@ test("field in list but not in fetched form", async () => {
             </form>`,
     });
 
-    expect(["get_views: partner", "onchange: partner"]).toVerifySteps();
+    expect.verifySteps(["get_views: partner", "onchange: partner"]);
     await contains(".o_field_x2many_list_row_add a").click();
-    expect(["get_views: partnertype", "onchange: partnertype"]).toVerifySteps();
+    expect.verifySteps(["get_views: partnertype", "onchange: partnertype"]);
     await contains(".modal .o_field_widget[name='name'] input").edit("changed", {
         confirm: "blur",
     });
-    expect(["onchange: partnertype"]).toVerifySteps();
+    expect.verifySteps(["onchange: partnertype"]);
     await contains(".modal .o_form_button_save").click();
     expect(".o_data_row").toHaveText("changed 5");
     await contains(".o_form_button_save").click();
-    expect(["web_save: partner"]).toVerifySteps();
+    expect.verifySteps(["web_save: partner"]);
     expect(".o_data_row").toHaveText("changed 5");
 });
 
@@ -12289,12 +12292,12 @@ test("add a row to an x2many and ask canBeRemoved twice", async () => {
     await animationFrame();
     getService("action").doAction(actions[1]);
     await animationFrame();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 
     def.resolve();
     await animationFrame();
     expect(".o_list_view").toHaveCount(1);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("one2many: save a record before the onchange is complete in a form dialog", async () => {
@@ -12615,7 +12618,7 @@ test("one2many with default_order on id, but id not in view", async () => {
     await clickSave();
 
     expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["kawa", "yop", "blip"]);
-    expect(["get_views", "web_read", "web_save"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "web_save"]);
 });
 
 test("one2many causes an onchange on the parent which fails", async () => {
@@ -12805,7 +12808,7 @@ test("onchange on x2many returning an update command with only readonly fields",
 
     await clickSave();
     expect(".o_data_cell").toHaveText("donatello");
-    expect(["get_views", "web_read", "onchange", "web_save"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "onchange", "web_save"]);
 });
 
 test("onchange on x2many returning a create command with only readonly fields", async () => {
@@ -12846,7 +12849,7 @@ test("onchange on x2many returning a create command with only readonly fields", 
 
     await clickSave();
     expect(".o_field_widget[name=turtles] .o_data_row").toHaveCount(2);
-    expect(["get_views", "web_read", "onchange", "web_save"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "onchange", "web_save"]);
 });
 
 test("onchange on x2many add and delete x2m record, returning to initial state", async () => {
@@ -12899,5 +12902,5 @@ test("onchange on x2many add and delete x2m record, returning to initial state",
 
     await clickSave();
     expect(".o_field_widget[name=turtles] .o_data_row").toHaveCount(1);
-    expect(["get_views", "web_read", "onchange", "onchange", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "onchange", "onchange", "onchange"]);
 });

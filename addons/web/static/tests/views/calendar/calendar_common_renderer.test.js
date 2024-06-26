@@ -74,7 +74,7 @@ test(`Day: click all day slot`, async () => {
         },
     });
     await clickAllDaySlot("2021-07-16");
-    expect(["create"]).toVerifySteps();
+    expect.verifySteps(["create"]);
 });
 
 test.tags("desktop")(`Day: select range`, async () => {
@@ -88,7 +88,7 @@ test.tags("desktop")(`Day: select range`, async () => {
         },
     });
     await selectTimeRange("2021-07-16 08:00:00", "2021-07-16 10:00:00");
-    expect(["create"]).toVerifySteps();
+    expect.verifySteps(["create"]);
 });
 
 test(`Day: check event`, async () => {
@@ -108,7 +108,7 @@ test.tags("desktop")(`Day: click on event`, async () => {
     await start({ model: { ...FAKE_MODEL, scale: "day" } });
     await clickEvent(1);
     await runAllTimers();
-    expect(["popover"]).toVerifySteps();
+    expect.verifySteps(["popover"]);
 });
 
 test(`Week: check week number`, async () => {

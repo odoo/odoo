@@ -448,14 +448,14 @@ test("settings views does not read existing id when coming back in breadcrumbs",
     click(".o_control_panel .breadcrumb-item a");
     await animationFrame();
     expect(".o_field_boolean input").not.toHaveProperty("disabled");
-    expect([
+    expect.verifySteps([
         "get_views", // initial setting action
         "onchange", // this is a setting view => new record transient record
         "web_save", // create the record before doing the action
         "get_views", // for other action in breadcrumb,
         "web_search_read", // with a searchread
         "onchange", // when we come back, we want to restart from scratch
-    ]).toVerifySteps();
+    ]);
 });
 
 test("resIds should contains only 1 id", async () => {
@@ -571,27 +571,27 @@ test("settings views does not read existing id when reload", async () => {
 
     await getService("action").doAction(1);
 
-    expect([
+    expect.verifySteps([
         "get_views", // initial setting action
         "onchange", // this is a setting view => new record transient record
-    ]).toVerifySteps();
+    ]);
 
     click("button[name='4']");
     await animationFrame();
 
-    expect([
+    expect.verifySteps([
         "web_save", // settings: create the record before doing the action
         "get_views", // dialog: get views
         "onchange", // dialog: onchange
-    ]).toVerifySteps();
+    ]);
 
     click(".modal button.btn.btn-primary.o_form_button_save");
     await animationFrame();
 
-    expect([
+    expect.verifySteps([
         "web_save", // dialog: create the record before doing back to the settings
         "onchange", // settings: when we come back, we want to restart from scratch
-    ]).toVerifySteps();
+    ]);
 });
 
 test("settings views ask for confirmation when leaving if dirty", async () => {
@@ -1023,17 +1023,17 @@ test("clicking a button with dirty settings -- save", async () => {
         `,
         resModel: "res.config.settings",
     });
-    expect(["get_views", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "onchange"]);
     click(".o_field_boolean input[type='checkbox']");
     await animationFrame();
     click(".myBtn");
     await animationFrame();
     click(".modal .btn-primary");
     await animationFrame();
-    expect([
+    expect.verifySteps([
         "web_save",
         'action executed {"name":"execute","type":"object","resModel":"res.config.settings","resId":1,"resIds":[1],"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]},"buttonContext":{}}',
-    ]).toVerifySteps();
+    ]);
 });
 
 test("click on save button which throws an error", async () => {
@@ -1055,7 +1055,7 @@ test("click on save button which throws an error", async () => {
         `,
         resModel: "res.config.settings",
     });
-    expect(["get_views", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "onchange"]);
     expect(".o_form_button_save").toHaveCount(1);
     expect(".o_form_button_save").not.toHaveProperty("disabled");
 
@@ -1071,7 +1071,7 @@ test("click on save button which throws an error", async () => {
     await animationFrame();
     expect(".o_form_button_save").toHaveCount(1);
     expect(".o_form_button_save").not.toHaveProperty("disabled");
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test("clicking a button with dirty settings -- discard", async () => {
@@ -1095,17 +1095,17 @@ test("clicking a button with dirty settings -- discard", async () => {
         `,
         resModel: "res.config.settings",
     });
-    expect(["get_views", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "onchange"]);
     click(".o_field_boolean input[type='checkbox']");
     await animationFrame();
     click(".myBtn");
     await animationFrame();
     click(".modal .btn-secondary:eq(1)");
     await animationFrame();
-    expect([
+    expect.verifySteps([
         "web_save",
         'action executed {"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]},"type":"object","name":"mymethod","resModel":"res.config.settings","resId":1,"resIds":[1],"buttonContext":{}}',
-    ]).toVerifySteps();
+    ]);
 });
 
 test("clicking on a button with noSaveDialog will not show discard warning", async () => {
@@ -1415,10 +1415,10 @@ test('call "call_button/execute" when clicking on a button in dirty settings', a
 
     click(".modal-footer .btn-primary");
     await animationFrame();
-    expect([
+    expect.verifySteps([
         "web_save", // saveRecord from modal
         "execute", // execute_action
-    ]).toVerifySteps();
+    ]);
 });
 
 test("Discard button clean the settings view", async () => {
@@ -1455,13 +1455,13 @@ test("Discard button clean the settings view", async () => {
     await mountWithCleanup(WebClient);
 
     await getService("action").doAction(1);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
         "get_views",
         "onchange",
-    ]).toVerifySteps();
+    ]);
     expect(".o_field_boolean input").not.toBeChecked({ message: "checkbox should not be checked" });
 
     click(".o_field_boolean input");
@@ -1473,7 +1473,7 @@ test("Discard button clean the settings view", async () => {
     click(".o_control_panel .o_form_button_cancel");
     await animationFrame();
     expect(".o_field_boolean input").not.toBeChecked({ message: "checkbox should not be checked" });
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 });
 
 test("Settings Radio widget: show and search", async () => {
@@ -1674,9 +1674,9 @@ test("settings form doesn't autofocus", async () => {
     });
 
     expect("[name='textField'] input").toHaveCount(1);
-    expect([
+    expect.verifySteps([
         `focusin: <input type="text" class="o_searchview_input o_input flex-grow-1 w-auto border-0" accesskey="Q" placeholder="Search..." role="searchbox">`,
-    ]).toVerifySteps();
+    ]);
 });
 
 test("settings form keeps scrolling by app", async () => {
@@ -1783,7 +1783,7 @@ test("server actions are called with the correct context", async () => {
     await getService("action").doAction(1);
     click("button[name='2']");
     await animationFrame();
-    expect(["/web/action/run"]).toVerifySteps();
+    expect.verifySteps(["/web/action/run"]);
 });
 
 test("BinaryField is correctly rendered in Settings form view", async () => {

@@ -72,8 +72,8 @@ test(`call onResize callback`, async () => {
         }
     }
     await mountWithCleanup(ResizableInput);
-    expect(["onResize"]).toVerifySteps();
+    expect.verifySteps(["onResize"]);
 
     await contains(`.resizable-input`).edit("new value", { instantly: true });
-    expect(["onResize"]).toVerifySteps();
+    expect.verifySteps(["onResize"]);
 });

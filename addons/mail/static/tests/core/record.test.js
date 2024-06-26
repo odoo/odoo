@@ -254,24 +254,24 @@ test("Computed fields: lazy (default) vs. eager", async () => {
     const store = await start();
     const thread = store.Thread.insert("General");
     const members = thread.members;
-    expect(["EAGER"]).toVerifySteps();
+    expect.verifySteps(["EAGER"]);
     expect(thread.typeEager).toBe("empty chat");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(thread.typeLazy).toBe("empty chat");
-    expect(["LAZY"]).toVerifySteps();
+    expect.verifySteps(["LAZY"]);
     members.add("John");
-    expect(["EAGER"]).toVerifySteps();
+    expect.verifySteps(["EAGER"]);
     expect(thread.typeEager).toBe("self-chat");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     members.add("Antony");
-    expect(["EAGER"]).toVerifySteps();
+    expect.verifySteps(["EAGER"]);
     expect(thread.typeEager).toBe("dm chat");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     members.add("Demo");
-    expect(["EAGER"]).toVerifySteps();
+    expect.verifySteps(["EAGER"]);
     expect(thread.typeEager).toBe("group chat");
     expect(thread.typeLazy).toBe("group chat");
-    expect(["LAZY"]).toVerifySteps();
+    expect.verifySteps(["LAZY"]);
 });
 
 test("Trusted insert on html field with { html: true }", async () => {
@@ -347,7 +347,7 @@ test("onAdd hook should see fully inserted data", async () => {
     const store = await start();
     const thread = store.Thread.insert("General");
     thread.members.add({ name: "John", type: "admin" });
-    expect(["Thread.onAdd::John.admin.true"]).toVerifySteps();
+    expect.verifySteps(["Thread.onAdd::John.admin.true"]);
 });
 
 test("Can insert with relation as id, using relation as data object", async () => {
@@ -379,10 +379,10 @@ test("Set on attr should invoke onChange", async () => {
     const store = await start();
     const message = store.Message.insert(1);
     Record.onChange(message, "body", () => expect.step("BODY_CHANGED"));
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     message.update({ body: "test1" });
     message.body = "test2";
-    expect(["BODY_CHANGED", "BODY_CHANGED"]).toVerifySteps();
+    expect.verifySteps(["BODY_CHANGED", "BODY_CHANGED"]);
 });
 
 test("record list sort should be manually observable", async () => {
@@ -413,22 +413,22 @@ test("record list sort should be manually observable", async () => {
     expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
     sortMessages();
     expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
-    expect(["sortMessages"]).toVerifySteps();
+    expect.verifySteps(["sortMessages"]);
     messages[0].body = "c";
     expect(`${thread.messages.map((m) => m.id)}`).toBe("2,1");
-    expect(["sortMessages", "sortMessages"]).toVerifySteps();
+    expect.verifySteps(["sortMessages", "sortMessages"]);
     messages[0].body = "d";
     expect(`${thread.messages.map((m) => m.id)}`).toBe("2,1");
-    expect(["sortMessages"]).toVerifySteps();
+    expect.verifySteps(["sortMessages"]);
     messages[0].author = "Jane";
     expect(`${thread.messages.map((m) => m.id)}`).toBe("2,1");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     store.Message.insert({ id: 3, body: "c", thread });
     expect(`${thread.messages.map((m) => m.id)}`).toBe("2,3,1");
-    expect(["sortMessages", "sortMessages"]).toVerifySteps();
+    expect.verifySteps(["sortMessages", "sortMessages"]);
     messages[0].delete();
     expect(`${thread.messages.map((m) => m.id)}`).toBe("2,3");
-    expect(["sortMessages"]).toVerifySteps();
+    expect.verifySteps(["sortMessages"]);
 });
 
 test("relation field sort should be automatically observed", async () => {
@@ -524,39 +524,31 @@ test("lazy compute should re-compute while they are observed", async () => {
     }
     const reactiveChannel = reactive(channel, render);
     render();
-    expect(["computing", "render few", "render few"]).toVerifySteps({
-        message: "initial call, render with new value",
-    });
+    expect.verifySteps(["computing", "render few", "render few"]);
     channel.count = 2;
-    expect(["computing"]).toVerifySteps({ message: "changing value to 2 is observed" });
+    expect.verifySteps(["computing"]);
     channel.count = 5;
-    expect(["computing", "render many"]).toVerifySteps({
-        message: "changing value to 5 is observed",
-    });
+    expect.verifySteps(["computing", "render many"]);
     observe = false;
     channel.count = 6;
-    expect(["computing"]).toVerifySteps({
-        message: "changing value to 6, still observed until it changes",
-    });
+    expect.verifySteps(["computing"]);
     channel.count = 7;
-    expect(["computing"]).toVerifySteps({
-        message: "changing value to 7, still observed until it changes",
-    });
+    expect.verifySteps(["computing"]);
     channel.count = 1;
-    expect(["computing"]).toVerifySteps({ message: "changing value to 1, observed one last time" });
+    expect.verifySteps(["computing"]);
     channel.count = 0;
-    expect([]).toVerifySteps({ message: "changing value to 0, no longer observed" });
+    expect.verifySteps([]);
     channel.count = 7;
-    expect([]).toVerifySteps({ message: "changing value to 7, no longer observed" });
+    expect.verifySteps([]);
     channel.count = 1;
-    expect([]).toVerifySteps({ message: "changing value to 1, no longer observed" });
+    expect.verifySteps([]);
     expect(channel.multiplicity).toBe("few");
-    expect(["computing"]).toVerifySteps();
+    expect.verifySteps(["computing"]);
     observe = true;
     render();
-    expect(["render few"]).toVerifySteps();
+    expect.verifySteps(["render few"]);
     channel.count = 7;
-    expect(["computing", "render many"]).toVerifySteps();
+    expect.verifySteps(["computing", "render many"]);
 });
 
 test("lazy sort should re-sort while they are observed", async () => {
@@ -585,15 +577,15 @@ test("lazy sort should re-sort while they are observed", async () => {
     const reactiveChannel = reactive(thread, render);
     render();
     const message = thread.messages[0];
-    expect(["render 1,2"]).toVerifySteps();
+    expect.verifySteps(["render 1,2"]);
     message.sequence = 3;
-    expect(["render 2,1"]).toVerifySteps();
+    expect.verifySteps(["render 2,1"]);
     message.sequence = 4;
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     message.sequence = 5;
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     message.sequence = 1;
-    expect(["render 1,2"]).toVerifySteps();
+    expect.verifySteps(["render 1,2"]);
     observe = false;
     message.sequence = 10;
     expect(
@@ -601,7 +593,7 @@ test("lazy sort should re-sort while they are observed", async () => {
             (localId) => toRaw(thread)._raw.store.get(localId).id
         )}`
     ).toBe("2,1", { message: "observed one last time when it changes" });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     message.sequence = 1;
     expect(
         `${toRaw(thread)._raw.messages.data.map(
@@ -611,9 +603,9 @@ test("lazy sort should re-sort while they are observed", async () => {
     expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
     observe = true;
     render();
-    expect(["render 1,2"]).toVerifySteps();
+    expect.verifySteps(["render 1,2"]);
     message.sequence = 10;
-    expect(["render 2,1"]).toVerifySteps();
+    expect.verifySteps(["render 2,1"]);
 });
 
 test("sort works on Record.attr()", async () => {
@@ -637,21 +629,21 @@ test("sort works on Record.attr()", async () => {
     const reactiveChannel = reactive(thread, render);
     render();
     const message = thread.messages[0];
-    expect(["render 1,2"]).toVerifySteps();
+    expect.verifySteps(["render 1,2"]);
     message.sequence = 3;
-    expect(["render 2,1"]).toVerifySteps();
+    expect.verifySteps(["render 2,1"]);
     message.sequence = 4;
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     message.sequence = 5;
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     message.sequence = 1;
-    expect(["render 1,2"]).toVerifySteps();
+    expect.verifySteps(["render 1,2"]);
     observe = false;
     message.sequence = 10;
     expect(`${toRaw(thread)._raw.messages.map((msg) => toRaw(msg).id)}`).toBe("2,1", {
         message: "observed one last time when it changes",
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     message.sequence = 1;
     expect(`${toRaw(thread)._raw.messages.map((msg) => toRaw(msg).id)}`).toBe("2,1", {
         message: "no longer observed",
@@ -659,9 +651,9 @@ test("sort works on Record.attr()", async () => {
     expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
     observe = true;
     render();
-    expect(["render 1,2"]).toVerifySteps();
+    expect.verifySteps(["render 1,2"]);
     message.sequence = 10;
-    expect(["render 2,1"]).toVerifySteps();
+    expect.verifySteps(["render 2,1"]);
 });
 
 test("store updates can be observed", async () => {
@@ -672,13 +664,13 @@ test("store updates can be observed", async () => {
     const rawStore = toRaw(store)._raw;
     const reactiveStore = reactive(store, onUpdate);
     onUpdate();
-    expect(["abc:undefined"]).toVerifySteps();
+    expect.verifySteps(["abc:undefined"]);
     store.abc = 1;
-    expect(["abc:1"]).toVerifySteps({ message: "observable from makeStore" });
+    expect.verifySteps(["abc:1"]); // observable from makeStore"
     rawStore.store.abc = 2;
-    expect(["abc:2"]).toVerifySteps({ message: "observable from record.store" });
+    expect.verifySteps(["abc:2"]); // observable from record.store
     rawStore.Model.store.abc = 3;
-    expect(["abc:3"]).toVerifySteps({ message: "observable from Model.store" });
+    expect.verifySteps(["abc:3"]);
 });
 
 test("onAdd/onDelete hooks on one without inverse", async () => {

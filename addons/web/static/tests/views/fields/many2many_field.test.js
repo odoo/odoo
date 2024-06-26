@@ -531,20 +531,20 @@ test("many2many list (non editable): create a new record and click on action but
     await contains(".o_field_x2many_list_row_add a").click();
 
     await contains(".modal .o_create_button").click();
-    expect([
+    expect.verifySteps([
         "get_views",
         "web_read",
         "get_views",
         "web_search_read",
         "has_group",
         "onchange",
-    ]).toVerifySteps();
+    ]);
     await contains(".modal [name='name'] input").edit("Hello");
     expect("[name='name'] input").toHaveValue("Hello");
 
     await contains(".modal .o_statusbar_buttons [name='myaction']").click();
     expect("[name='name'] input").toHaveValue("Hello");
-    expect(["web_save", "action: myaction", "web_read"]).toVerifySteps();
+    expect.verifySteps(["web_save", "action: myaction", "web_read"]);
 });
 
 test("many2many list (non editable): create a new record and click on action button 2", async () => {
@@ -584,14 +584,14 @@ test("many2many list (non editable): create a new record and click on action but
     await contains(".o_field_x2many_list_row_add a").click();
 
     await contains(".modal .o_create_button").click();
-    expect([
+    expect.verifySteps([
         "get_views",
         "web_read",
         "get_views",
         "web_search_read",
         "has_group",
         "onchange",
-    ]).toVerifySteps();
+    ]);
 
     await contains(".modal [name='name'] input").edit("Hello");
     expect("[name='name'] input").toHaveValue("Hello");
@@ -610,7 +610,7 @@ test("many2many list (non editable): create a new record and click on action but
     expect(".modal").toHaveCount(0);
     expect(queryAllTexts("[name='timmy'] .o_data_row")).toEqual(["Hello (edited)"]);
 
-    expect(["web_save", "action: myaction", "web_read", "web_save", "web_read"]).toVerifySteps();
+    expect.verifySteps(["web_save", "action: myaction", "web_read", "web_save", "web_read"]);
 });
 
 test("add record in a many2many non editable list with context", async () => {
@@ -705,7 +705,7 @@ test("many2many list (editable): edition", async () => {
     expect(".o_list_renderer tbody td:eq(0)").toHaveText("new name", {
         message: "value of subrecord should have been updated",
     });
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
 
     // add new subrecords
     await contains(".o_field_x2many_list_row_add a").click();
@@ -729,13 +729,13 @@ test("many2many list (editable): edition", async () => {
         message: "the updated row still has the correct values",
     });
 
-    expect([
+    expect.verifySteps([
         "get_views", // list view in dialog
         "web_search_read", // list view in dialog
         "has_group",
         "web_read", // relational field (updated)
         "web_save", // save main record
-    ]).toVerifySteps();
+    ]);
 });
 
 test("many2many: create & delete attributes (both true)", async () => {
@@ -1162,14 +1162,14 @@ test("many2many list with x2many: add a record", async () => {
     expect(".o_data_row").toHaveCount(2);
     expect(queryAllTexts(".o_data_row:eq(1) .o_tag_badge_text")).toEqual(["donatello", "raphael"]);
 
-    expect([
+    expect.verifySteps([
         "web_read on partner",
         "web_search_read on partnertype",
         "has_group on res.users",
         "web_read on partnertype",
         "web_search_read on partnertype",
         "web_read on partnertype",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("many2many with a domain", async () => {
@@ -1224,14 +1224,14 @@ test("many2many list with onchange and edition of a record", async () => {
             </form>`,
         resId: 1,
     });
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
 
     await contains("td.o_data_cell").click();
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
 
     await contains(".modal-body input[type=checkbox]").click();
     await contains(".modal .modal-footer .btn-primary").click();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
     expect(".o_form_button_save").not.toBeVisible();
 });
 
@@ -1325,14 +1325,14 @@ test("many2many widget: creates a new record with a context containing the paren
             </form>`,
         resId: 1,
     });
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
 
     await contains(".o_field_x2many_list_row_add a").click();
-    expect(["get_views", "web_search_read", "has_group"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_search_read", "has_group"]);
 
     await contains(".o_create_button").click();
     expect("[name='turtle_trululu'] input").toHaveValue("first record");
-    expect(["get_views", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "onchange"]);
 });
 
 test("onchange with 40+ commands for a many2many", async () => {
@@ -1380,13 +1380,13 @@ test("onchange with 40+ commands for a many2many", async () => {
         resId: 1,
     });
 
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
 
     await contains(".o_field_widget[name=foo] input").edit("trigger onchange");
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
     await contains(".o_field_widget[name=timmy] .o_pager_next:eq(0)").click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
 
     await clickSave();
@@ -1399,7 +1399,7 @@ test("onchange with 40+ commands for a many2many", async () => {
     await contains(".o_field_widget[name=timmy] .o_pager_next:eq(0)").click();
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
 
-    expect(["web_save", "web_read"]).toVerifySteps();
+    expect.verifySteps(["web_save", "web_read"]);
 });
 
 test.tags("desktop")("onchange with 40+ commands for a many2many on desktop", async () => {
@@ -1610,7 +1610,7 @@ test("many2many kanban: action/type attribute", async () => {
         resId: 1,
     });
     await contains(".o_kanban_record").click();
-    expect(["action: a1"]).toVerifySteps();
+    expect.verifySteps(["action: a1"]);
 });
 
 test("select create with _view_ref as text", async () => {
@@ -1645,7 +1645,7 @@ test("select create with _view_ref as text", async () => {
     await contains(".o_field_many2many_selection input").click();
     checkGetViews = true;
     await contains(".o_m2o_dropdown_option_search_more").click();
-    expect([`get_views`]).toVerifySteps();
+    expect.verifySteps([`get_views`]);
 
     expect(".modal").toHaveCount(1);
     expect(".modal-title").toHaveText("Search: pokemon");

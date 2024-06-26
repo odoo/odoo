@@ -180,19 +180,19 @@ test("can execute actions from id, xmlid and tag", async () => {
 
     await makeMockEnv();
     await getService("action").doAction(1);
-    expect(["client_action_db_id"]).toVerifySteps();
+    expect.verifySteps(["client_action_db_id"]);
     await getService("action").doAction("some_action");
-    expect(["client_action_xml_id"]).toVerifySteps();
+    expect.verifySteps(["client_action_xml_id"]);
     await getService("action").doAction("my_action");
-    expect(["client_action_path"]).toVerifySteps();
+    expect.verifySteps(["client_action_path"]);
     await getService("action").doAction("client_action_by_tag");
-    expect(["client_action_tag"]).toVerifySteps();
+    expect.verifySteps(["client_action_tag"]);
     await getService("action").doAction({
         tag: "client_action_by_object",
         target: "current",
         type: "ir.actions.client",
     });
-    expect(["client_action_object"]).toVerifySteps();
+    expect.verifySteps(["client_action_object"]);
 });
 
 test("action doesn't exists", async () => {
@@ -221,7 +221,7 @@ test("action in handler registry", async () => {
         target: "current",
         type: "ir.action_in_handler_registry",
     });
-    expect(["ir.action_in_handler_registry"]).toVerifySteps();
+    expect.verifySteps(["ir.action_in_handler_registry"]);
 });
 
 test("properly handle case when action id does not exist", async () => {
@@ -294,20 +294,18 @@ test("actions can be cached", async () => {
     // With active_model change
     await getService("action").loadAction(3, { active_model: "b" });
 
-    expect(
-        [
-            '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]}}',
-            '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"configuratorMode":"add"}}',
-            '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"configuratorMode":"edit"}}',
-            '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_id":1}}',
-            '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_id":2}}',
-            '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_ids":[1,2]}}',
-            '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_ids":[1,2,3]}}',
-            '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_model":"a"}}',
-            '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_model":"b"}}',
-        ],
-        "should load from server once per active_id/active_ids/active_model change, nothing else"
-    ).toVerifySteps();
+    // should load from server once per active_id/active_ids/active_model change, nothing else
+    expect.verifySteps([
+        '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]}}',
+        '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"configuratorMode":"add"}}',
+        '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"configuratorMode":"edit"}}',
+        '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_id":1}}',
+        '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_id":2}}',
+        '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_ids":[1,2]}}',
+        '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_ids":[1,2,3]}}',
+        '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_model":"a"}}',
+        '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_model":"b"}}',
+    ]);
 });
 
 test("action cache: additionalContext is used on the key", async () => {
@@ -323,7 +321,7 @@ test("action cache: additionalContext is used on the key", async () => {
     };
 
     let action = await getService("action").loadAction(3, actionParams);
-    expect(["server loaded"]).toVerifySteps();
+    expect.verifySteps(["server loaded"]);
     expect(action.context).toEqual(actionParams);
 
     // Modify the action in place
@@ -332,7 +330,7 @@ test("action cache: additionalContext is used on the key", async () => {
     // Change additionalContext and reload
     actionParams.additionalContext.some.deep.nested = "Marley";
     action = await getService("action").loadAction(3, actionParams);
-    expect(["server loaded"]).toVerifySteps();
+    expect.verifySteps(["server loaded"]);
     expect(action.context).toEqual(actionParams);
 });
 

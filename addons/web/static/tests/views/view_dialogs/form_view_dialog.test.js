@@ -232,15 +232,15 @@ test("click on view buttons in a FormViewDialog", async () => {
     await animationFrame();
     expect(".o_dialog .o_form_view").toHaveCount(1);
     expect(".o_dialog .o_form_view button").toHaveCount(2);
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
     click(".o_dialog .o_form_view .btn1");
     await animationFrame();
     expect(".o_dialog .o_form_view").toHaveCount(1);
-    expect(["method1", "web_read"]).toVerifySteps(); // should re-read the record
+    expect.verifySteps(["method1", "web_read"]); // should re-read the record
     click(".o_dialog .o_form_view .btn2");
     await animationFrame();
     expect(".o_dialog .o_form_view").toHaveCount(0);
-    expect(["method2"]).toVerifySteps(); // should not read as we closed
+    expect.verifySteps(["method2"]); // should not read as we closed
 });
 
 test("formviewdialog is not closed when button handlers return a rejected promise", async () => {
@@ -297,7 +297,7 @@ test("FormViewDialog with remove button", async () => {
     expect(".o_dialog .modal-footer .o_form_button_remove").toHaveCount(1);
     click(".o_dialog .modal-footer .o_form_button_remove");
     await animationFrame();
-    expect(["remove"]).toVerifySteps();
+    expect.verifySteps(["remove"]);
     expect(".o_dialog .o_form_view").toHaveCount(0);
 });
 
@@ -349,7 +349,7 @@ test("FormViewDialog with discard button", async () => {
     expect(".o_dialog .modal-footer .o_form_button_cancel").toHaveCount(1);
     click(".o_dialog .modal-footer .o_form_button_cancel");
     await animationFrame();
-    expect(["discard"]).toVerifySteps();
+    expect.verifySteps(["discard"]);
     expect(".o_dialog .o_form_view").toHaveCount(0);
 });
 

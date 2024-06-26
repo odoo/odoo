@@ -204,7 +204,7 @@ test("Sorting in a single group without nesting", async () => {
 
     expect(".sortable_list > .item").toHaveCount(3);
     expect(".o_dragged").toHaveCount(0);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // Move first item after second item
     const { drop, moveUnder } = sortableDrag(".sortable_list > .item:first-child");
@@ -215,7 +215,7 @@ test("Sorting in a single group without nesting", async () => {
     drop();
     expect(".sortable_list > .item").toHaveCount(3);
     expect(".o_dragged").toHaveCount(0);
-    expect(["start", "move", "drop", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "move", "drop", "end"]);
 });
 
 test("Sorting in groups without nesting", async () => {
@@ -298,13 +298,13 @@ test("Sorting in groups without nesting", async () => {
 
     expect(".sortable_list").toHaveCount(3);
     expect(".item").toHaveCount(18);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     // Append second item of second list to first list
     await dragAndDrop("section:nth-child(2) > ul > .item:nth-child(2)", "section:first-child");
 
     expect(".sortable_list").toHaveCount(3);
     expect(".item").toHaveCount(18);
-    expect(["start", "move", "enter", "leave", "drop", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "move", "enter", "leave", "drop", "end"]);
 });
 
 test("Sorting with nesting - move right", async () => {
@@ -377,7 +377,7 @@ test("Sorting with nesting - move right", async () => {
     await mountWithCleanup(NestedSortable);
 
     expect(".item").toHaveCount(6);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     const movedEl = queryFirst(".sortable_list > .item:nth-child(2)");
     const { drop, moveTo } = drag(movedEl);
@@ -404,7 +404,7 @@ test("Sorting with nesting - move right", async () => {
     });
     await animationFrame();
     expect(".item").toHaveCount(6);
-    expect(["start", "move 1", "move 2", "drop", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "move 1", "move 2", "drop", "end"]);
 });
 
 test("Sorting with nesting - move left", async () => {
@@ -473,7 +473,7 @@ test("Sorting with nesting - move left", async () => {
     await mountWithCleanup(NestedSortable);
 
     expect(".item").toHaveCount(4);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     const movedEl = queryFirst(".item#dragged");
     const { drop, moveTo } = drag(movedEl);
@@ -502,7 +502,7 @@ test("Sorting with nesting - move left", async () => {
     await animationFrame();
 
     expect(".item").toHaveCount(4);
-    expect(["start", "move", "drop", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "move", "drop", "end"]);
 });
 
 test("Sorting with nesting - move root down", async () => {
@@ -579,7 +579,7 @@ test("Sorting with nesting - move root down", async () => {
     }
 
     await mountWithCleanup(NestedSortable);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     const { drop, moveUnder } = sortableDrag(".item#dragged");
     moveUnder(".item#noChild");
@@ -590,7 +590,7 @@ test("Sorting with nesting - move root down", async () => {
     drop();
 
     expect(".item").toHaveCount(4);
-    expect(["start", "move 1", "move 2", "drop", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "move 1", "move 2", "drop", "end"]);
 });
 
 test("Sorting with nesting - move child down", async () => {
@@ -666,7 +666,7 @@ test("Sorting with nesting - move child down", async () => {
         }
     }
     await mountWithCleanup(NestedSortable);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     const { drop, moveUnder } = sortableDrag(".item#dragged");
     moveUnder(".item#child");
@@ -676,7 +676,7 @@ test("Sorting with nesting - move child down", async () => {
     drop();
 
     expect(".item").toHaveCount(4);
-    expect(["start", "move 1", "move 2", "drop", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "move 1", "move 2", "drop", "end"]);
 });
 
 test("Sorting with nesting - move root up", async () => {
@@ -752,7 +752,7 @@ test("Sorting with nesting - move root up", async () => {
     }
 
     await mountWithCleanup(NestedSortable);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     const { drop, moveAbove } = sortableDrag(".item#dragged");
     moveAbove(".item#noChild");
@@ -762,7 +762,7 @@ test("Sorting with nesting - move root up", async () => {
     drop();
 
     expect(".item").toHaveCount(4);
-    expect(["start", "move 1", "move 2", "drop", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "move 1", "move 2", "drop", "end"]);
 });
 
 test("Sorting with nesting - move child up", async () => {
@@ -836,7 +836,7 @@ test("Sorting with nesting - move child up", async () => {
     }
 
     await mountWithCleanup(NestedSortable);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     const { drop, moveAbove } = sortableDrag(".item#dragged");
     moveAbove(".item#child");
@@ -846,7 +846,7 @@ test("Sorting with nesting - move child up", async () => {
     drop();
 
     expect(".item").toHaveCount(3);
-    expect(["start", "move 1", "move 2", "drop", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "move 1", "move 2", "drop", "end"]);
 });
 
 test("Dynamically disable NestedSortable feature", async () => {
@@ -878,11 +878,11 @@ test("Dynamically disable NestedSortable feature", async () => {
 
     await mountWithCleanup(NestedSortable);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await dragAndDrop(".item:first-child", ".item:last-child");
     // Drag should have occurred
-    expect(["start"]).toVerifySteps();
+    expect.verifySteps(["start"]);
 
     state.enableNestedSortable = false;
     await animationFrame();
@@ -890,7 +890,7 @@ test("Dynamically disable NestedSortable feature", async () => {
     await dragAndDrop(".item:first-child", ".item:last-child");
 
     // Drag shouldn't have occurred
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("Drag has a default tolerance of 10 pixels before initiating the dragging", async () => {
@@ -930,7 +930,8 @@ test("Drag has a default tolerance of 10 pixels before initiating the dragging",
         relative: true,
     });
     await animationFrame();
-    expect([]).toVerifySteps({ message: "No drag sequence should have been initiated" });
+    // No drag sequence should have been initiated
+    expect.verifySteps([]);
     // Move the element from more than 10 pixels
     moveTo(listItem, {
         position: {
@@ -940,9 +941,8 @@ test("Drag has a default tolerance of 10 pixels before initiating the dragging",
         relative: true,
     });
     await animationFrame();
-    expect(["Initiation of the drag sequence"]).toVerifySteps({
-        message: "A drag sequence should have been initiated",
-    });
+    // A drag sequence should have been initiated
+    expect.verifySteps(["Initiation of the drag sequence"]);
     drop();
 });
 
@@ -1001,7 +1001,7 @@ test("shouldn't drag above max level", async () => {
     moveTo("#parent", { position: "right" });
     await animationFrame();
     drop();
-    expect(["start", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "end"]);
 });
 
 test("shouldn't drag outside a nest level", async () => {
@@ -1077,28 +1077,28 @@ test("shouldn't drag outside a nest level", async () => {
     moveAbove("#C > span");
     await animationFrame();
     drop();
-    expect(["start", "move", "drop", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "move", "drop", "end"]);
     // Move after a sibling (success)
     dragged.id = "D2";
     ({ drop, moveUnder } = sortableDrag("#D2"));
     moveUnder("#E > span");
     await animationFrame();
     drop();
-    expect(["start", "move", "drop", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "move", "drop", "end"]);
     // Attempt to change parent by going above the current parent (fail)
     dragged.id = "D3";
     ({ drop, moveAbove } = sortableDrag("#D3"));
     moveAbove("#B > span");
     await animationFrame();
     drop();
-    expect(["start", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "end"]);
     // Attempt to change parent by becoming the child of a sibling (fail)
     dragged.id = "D4";
     ({ drop, moveUnder } = sortableDrag("#D4"));
     moveUnder("#F > span");
     await animationFrame();
     drop();
-    expect(["start", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "end"]);
 });
 
 test("shouldn't drag when not allowed", async () => {
@@ -1158,7 +1158,7 @@ test("shouldn't drag when not allowed", async () => {
     moveTo("#target", { position: "right" });
     await animationFrame();
     drop();
-    expect(["start", "allowed_check", "allowed_check", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "allowed_check", "allowed_check", "end"]);
 });
 
 test("placeholder and drag element have same size", async () => {
@@ -1235,14 +1235,14 @@ test("Ignore specified elements", async () => {
 
     await mountWithCleanup(NestedSortable);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     // Drag root item element
     await dragAndDrop(".item:first-child", ".item:nth-child(2)");
-    expect(["drag"]).toVerifySteps();
+    expect.verifySteps(["drag"]);
     // Drag ignored element
     await dragAndDrop(".item:first-child .not-ignored", ".item:nth-child(2)");
-    expect(["drag"]).toVerifySteps();
+    expect.verifySteps(["drag"]);
     // Drag non-ignored element
     await dragAndDrop(".item:first-child .ignored", ".item:nth-child(2)");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });

@@ -46,12 +46,12 @@ test.tags("desktop")("control-click <a href/> in a standalone component", async 
 
     await mountWithCleanup(MyComponent);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(".MyComponent").click();
     await contains(".MyComponent").click({ ctrlKey: true });
 
-    expect(["click", "ctrl-click"]).toVerifySteps();
+    expect.verifySteps(["click", "ctrl-click"]);
 });
 
 test.tags("desktop")("control-click propagation stopped on <a href/>", async () => {
@@ -89,10 +89,10 @@ test.tags("desktop")("control-click propagation stopped on <a href/>", async () 
     registry.category("main_components").add("mycomponent", { Component: MyComponent });
     await animationFrame();
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(".MyComponent").click();
     await contains(".MyComponent").click({ ctrlKey: true });
 
-    expect(["click"]).toVerifySteps();
+    expect.verifySteps(["click"]);
 });

@@ -63,14 +63,14 @@ test.tags("desktop")(
         click(queryOne(".one"));
         await animationFrame();
 
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         expect(DROPDOWN_MENU).toHaveCount(1);
         expect(".one").toHaveClass("show");
 
         // Hover on TWO
         hover(".two");
         await animationFrame();
-        expect(["beforeOpen"]).toVerifySteps();
+        expect.verifySteps(["beforeOpen"]);
         expect(DROPDOWN_MENU).toHaveCount(1);
         expect(".menu-two").toHaveCount(0);
 

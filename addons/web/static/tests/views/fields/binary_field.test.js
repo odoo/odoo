@@ -97,7 +97,7 @@ test("BinaryField is correctly rendered (readonly)", async () => {
 
     await contains(`.o_field_widget[name="document"] a`).click();
     await deferred;
-    expect(["/web/content"]).toVerifySteps();
+    expect.verifySteps(["/web/content"]);
 });
 
 test("BinaryField is correctly rendered", async () => {
@@ -158,7 +158,7 @@ test("BinaryField is correctly rendered", async () => {
 
     click(`.fa-download`);
     await deferred;
-    expect(["/web/content"]).toVerifySteps();
+    expect.verifySteps(["/web/content"]);
 
     click(`.o_field_binary .o_clear_file_button`);
     await animationFrame();
@@ -322,7 +322,7 @@ test.tags("desktop")("readonly in create mode does not download", async () => {
     expect(`.o_field_widget[name="document"] a > .fa-download`).toHaveCount(0, {
         message: "The download icon should not be present",
     });
-    expect([]).toVerifySteps({ message: "We shouldn't have passed through steps" });
+    expect.verifySteps([]);
 });
 
 test("BinaryField in list view (formatter)", async () => {
@@ -432,6 +432,6 @@ test("isUploading state should be set to false after upload", async () => {
     setInputFiles([file]);
     await waitFor(`.o_form_button_save:visible`);
     await animationFrame();
-    expect([/RPC_ERROR/]).toVerifyErrors();
+    expect.verifyErrors([/RPC_ERROR/]);
     expect(`.o_select_file_button`).toHaveText("Upload your file");
 });

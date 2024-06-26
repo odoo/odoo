@@ -20,7 +20,7 @@ test("successive calls to hasGroup", async () => {
     const hasGroupXAgain = await user.hasGroup("x");
     expect(hasGroupXAgain).toBe(true);
 
-    expect(["res.users/has_group/x", "res.users/has_group/y"]).toVerifySteps();
+    expect.verifySteps(["res.users/has_group/x", "res.users/has_group/y"]);
 });
 
 test("set user settings do not override old valid keys", async () => {
@@ -34,6 +34,6 @@ test("set user settings do not override old valid keys", async () => {
     expect(user.settings).toEqual({ a: 1, b: 2 });
 
     await user.setUserSettings("a", 3);
-    expect(['{"a":3}']).toVerifySteps();
+    expect.verifySteps(['{"a":3}']);
     expect(user.settings).toEqual({ a: 3, b: 2, c: 4 });
 });

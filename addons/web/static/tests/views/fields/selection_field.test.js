@@ -119,7 +119,7 @@ test("SelectionField, edition and on many2one field", async () => {
         message: "should have correct value in color field",
     });
 
-    expect(["get_views", "web_read", "name_search", "name_search", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "name_search", "name_search", "onchange"]);
 });
 
 test("unset selection field with 0 as key", async () => {
@@ -360,7 +360,7 @@ test("SelectionField - auto save record in kanban view", async () => {
     click(".o_field_widget[name='color'] select");
     select('"black"');
     await animationFrame();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test("SelectionField don't open form view on click in kanban view", async function (assert) {
@@ -385,7 +385,7 @@ test("SelectionField don't open form view on click in kanban view", async functi
 
     click(".o_field_widget[name='color'] select");
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("SelectionField is disabled if field readonly", async () => {

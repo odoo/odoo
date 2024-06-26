@@ -34,9 +34,9 @@ test("useTransition hook", async () => {
 
     // Leaving: -leave but not -enter-active
     expect(".test.test-leave:not(.test-enter-active)").toHaveCount(1);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await runAllTimers();
-    expect(["leave"]).toVerifySteps();
+    expect.verifySteps(["leave"]);
     await animationFrame();
     expect(".test").toHaveCount(0);
 });
@@ -75,9 +75,9 @@ test("Transition HOC", async () => {
 
     // Leaving: -leave but not -enter-active
     expect(".test.test-leave:not(.test-enter-active)").toHaveCount(1);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await runAllTimers();
-    expect(["leave"]).toVerifySteps();
+    expect.verifySteps(["leave"]);
     await animationFrame();
     expect(".test").toHaveCount(0);
 });

@@ -61,7 +61,7 @@ test("basic flow in form view", async () => {
         message: "The new value should be saved and displayed properly.",
     });
 
-    expect(["8"]).toVerifySteps();
+    expect.verifySteps(["8"]);
 });
 
 test("kanban view (readonly) with option force_button", async () => {

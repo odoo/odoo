@@ -46,7 +46,7 @@ test("loadDisplayNames is done in silent mode", async () => {
     after(() => rpcBus.removeEventListener("RPC:REQUEST", onRPCRequest));
 
     await getService("name").loadDisplayNames("dev", [1]);
-    expect(["RPC:REQUEST(silent)"]).toVerifySteps();
+    expect.verifySteps(["RPC:REQUEST(silent)"]);
 });
 
 test("single loadDisplayNames following addDisplayNames", async () => {
@@ -58,7 +58,7 @@ test("single loadDisplayNames following addDisplayNames", async () => {
     getService("name").addDisplayNames("dev", { 1: "JUM", 2: "PIPU" });
     const displayNames = await getService("name").loadDisplayNames("dev", [1, 2]);
     expect(displayNames).toEqual({ 1: "JUM", 2: "PIPU" });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("single loadDisplayNames following addDisplayNames (2)", async () => {
@@ -70,7 +70,7 @@ test("single loadDisplayNames following addDisplayNames (2)", async () => {
     getService("name").addDisplayNames("dev", { 1: "JUM" });
     const displayNames = await getService("name").loadDisplayNames("dev", [1, 2]);
     expect(displayNames).toEqual({ 1: "JUM", 2: "Pierre" });
-    expect(["dev:web_search_read:2"]).toVerifySteps();
+    expect.verifySteps(["dev:web_search_read:2"]);
 });
 
 test("loadDisplayNames in batch", async () => {
@@ -80,14 +80,14 @@ test("loadDisplayNames in batch", async () => {
     });
 
     const loadPromise1 = getService("name").loadDisplayNames("dev", [1]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     const loadPromise2 = getService("name").loadDisplayNames("dev", [2]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     const [displayNames1, displayNames2] = await Promise.all([loadPromise1, loadPromise2]);
     expect(displayNames1).toEqual({ 1: "Julien" });
     expect(displayNames2).toEqual({ 2: "Pierre" });
-    expect(["dev:web_search_read:1,2"]).toVerifySteps();
+    expect.verifySteps(["dev:web_search_read:1,2"]);
 });
 
 test("loadDisplayNames on different models", async () => {
@@ -97,15 +97,15 @@ test("loadDisplayNames on different models", async () => {
     });
 
     const loadPromise1 = getService("name").loadDisplayNames("dev", [1]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     const loadPromise2 = getService("name").loadDisplayNames("po", [1]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     const [displayNames1, displayNames2] = await Promise.all([loadPromise1, loadPromise2]);
     expect(displayNames1).toEqual({ 1: "Julien" });
     expect(displayNames2).toEqual({ 1: "Damien" });
 
-    expect(["dev:web_search_read:1", "po:web_search_read:1"]).toVerifySteps();
+    expect.verifySteps(["dev:web_search_read:1", "po:web_search_read:1"]);
 });
 
 test("invalid id", async () => {
@@ -125,7 +125,7 @@ test("inaccessible or missing id", async () => {
 
     const displayNames = await getService("name").loadDisplayNames("dev", [3]);
     expect(displayNames).toEqual({ 3: ERROR_INACCESSIBLE_OR_MISSING });
-    expect(["dev:web_search_read:3"]).toVerifySteps();
+    expect.verifySteps(["dev:web_search_read:3"]);
 });
 
 test("batch + inaccessible/missing", async () => {
@@ -135,12 +135,12 @@ test("batch + inaccessible/missing", async () => {
     });
 
     const loadPromise1 = getService("name").loadDisplayNames("dev", [1, 3]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     const loadPromise2 = getService("name").loadDisplayNames("dev", [2, 4]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     const [displayNames1, displayNames2] = await Promise.all([loadPromise1, loadPromise2]);
     expect(displayNames1).toEqual({ 1: "Julien", 3: ERROR_INACCESSIBLE_OR_MISSING });
     expect(displayNames2).toEqual({ 2: "Pierre", 4: ERROR_INACCESSIBLE_OR_MISSING });
-    expect(["dev:web_search_read:1,3,2,4"]).toVerifySteps();
+    expect.verifySteps(["dev:web_search_read:1,3,2,4"]);
 });

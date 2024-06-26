@@ -129,5 +129,5 @@ test.tags("desktop")("toggling through multiple ways", async () => {
     await contains(".o-checkbox input").press(" ");
 
     expect(`.o-checkbox input`).not.toBeChecked();
-    expect(["true", "false", "true", "false"]).toVerifySteps();
+    expect.verifySteps(["true", "false", "true", "false"]);
 });

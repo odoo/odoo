@@ -315,7 +315,7 @@ test("kanban records with global_click='0'", async () => {
     });
 
     await contains(".o_kanban_record").click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("float fields are formatted properly without using a widget", async () => {
@@ -471,7 +471,7 @@ test.tags("desktop")("basic grouped rendering", async () => {
     expect(".o_kanban_group").toHaveCount(2);
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(3);
-    expect(["rendered"]).toVerifySteps();
+    expect.verifySteps(["rendered"]);
 
     await toggleKanbanColumnActions(0);
 
@@ -494,7 +494,7 @@ test.tags("desktop")("basic grouped rendering", async () => {
     // changing its result.
     await validateSearch();
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(3);
-    expect(["rendered"]).toVerifySteps();
+    expect.verifySteps(["rendered"]);
 });
 
 test("basic grouped rendering with no record", async () => {
@@ -909,12 +909,12 @@ test("field with widget and dynamic attributes in kanban", async () => {
                 </templates>
             </kanban>`,
     });
-    expect([
+    expect.verifySteps([
         "false/hello yop/hello yop !/hello yop }}",
         "true/hello blip/hello blip !/hello blip }}",
         "true/hello gnap/hello gnap !/hello gnap }}",
         "true/hello blip/hello blip !/hello blip }}",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("view button and string interpolated attribute in kanban", async () => {
@@ -944,7 +944,7 @@ test("view button and string interpolated attribute in kanban", async () => {
                 </templates>
             </kanban>`,
     });
-    expect([
+    expect.verifySteps([
         "[one] className: 'hola oe_kanban_action oe_kanban_action_a'",
         "[two] className: 'hola oe_kanban_action oe_kanban_action_a hello'",
         "[sri] className: 'hola oe_kanban_action oe_kanban_action_a yop'",
@@ -965,7 +965,7 @@ test("view button and string interpolated attribute in kanban", async () => {
         "[sri] className: 'hola oe_kanban_action oe_kanban_action_a blip'",
         "[foa] className: 'hola oe_kanban_action oe_kanban_action_a blip olleh'",
         "[fye] className: 'hola oe_kanban_action oe_kanban_action_a hello blip'",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("pager should be hidden in grouped mode", async () => {
@@ -1160,19 +1160,19 @@ test.tags("desktop")("pager, ungrouped, with count limit reached", async () => {
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
     expect(".o_pager_value").toHaveText("1-2");
     expect(".o_pager_limit").toHaveText("3+");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 
     await contains(".o_pager_limit").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
     expect(".o_pager_value").toHaveText("1-2");
     expect(".o_pager_limit").toHaveText("4");
-    expect(["search_count"]).toVerifySteps();
+    expect.verifySteps(["search_count"]);
 });
 
 test("pager, ungrouped, with count limit reached, click next", async () => {
@@ -1194,17 +1194,17 @@ test("pager, ungrouped, with count limit reached, click next", async () => {
     });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 
     await contains(".o_pager_next").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test.tags("desktop")(
@@ -1256,22 +1256,22 @@ test("pager, ungrouped, with count limit reached, click next (2)", async () => {
     });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 
     await contains(".o_pager_next").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 
     await contains(".o_pager_next").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test.tags("desktop")(
@@ -1330,17 +1330,17 @@ test("pager, ungrouped, with count limit reached, click previous", async () => {
     });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 
     await contains(".o_pager_previous").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
-    expect(["search_count", "web_search_read"]).toVerifySteps();
+    expect.verifySteps(["search_count", "web_search_read"]);
 });
 
 test.tags("desktop")(
@@ -1395,12 +1395,12 @@ test.tags("desktop")("pager, ungrouped, with count limit reached, edit pager", a
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
     expect(".o_pager_value").toHaveText("1-2");
     expect(".o_pager_limit").toHaveText("3+");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 
     await contains("span.o_pager_value").click();
     await contains("input.o_pager_value").edit("2-4");
@@ -1408,7 +1408,7 @@ test.tags("desktop")("pager, ungrouped, with count limit reached, edit pager", a
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(3);
     expect(".o_pager_value").toHaveText("2-4");
     expect(".o_pager_limit").toHaveText("4+");
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 
     await contains("span.o_pager_value").click();
     await contains("input.o_pager_value").edit("2-14");
@@ -1416,7 +1416,7 @@ test.tags("desktop")("pager, ungrouped, with count limit reached, edit pager", a
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
     expect(".o_pager_value").toHaveText("2-5");
     expect(".o_pager_limit").toHaveText("5");
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test.tags("desktop")("count_limit attrs set in arch", async () => {
@@ -1438,19 +1438,19 @@ test.tags("desktop")("count_limit attrs set in arch", async () => {
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
     expect(".o_pager_value").toHaveText("1-2");
     expect(".o_pager_limit").toHaveText("3+");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 
     await contains(".o_pager_limit").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
     expect(".o_pager_value").toHaveText("1-2");
     expect(".o_pager_limit").toHaveText("4");
-    expect(["search_count"]).toVerifySteps();
+    expect.verifySteps(["search_count"]);
 });
 
 test.tags("desktop")("pager, ungrouped, deleting all records from last page", async () => {
@@ -1527,7 +1527,7 @@ test.tags("desktop")("pager, update calls onUpdatedPager", async () => {
     expect.step("next page");
     await contains(".o_pager_next").click();
     expect(getPagerValue()).toEqual([4, 4]);
-    expect(["render", "next page", "render", "onUpdatedPager"]).toVerifySteps();
+    expect.verifySteps(["render", "next page", "render", "onUpdatedPager"]);
 });
 
 test("click on a button type='delete' to delete a record in a column", async () => {
@@ -1588,11 +1588,11 @@ test("click on a button type='archive' to archive a record in a column", async (
     await contains(".o_kanban_record .o_archive").click();
 
     expect(".modal").toHaveCount(1);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(".modal .btn-primary").click();
 
-    expect(["archive:1"]).toVerifySteps();
+    expect.verifySteps(["archive:1"]);
 });
 
 test("click on a button type='unarchive' to unarchive a record in a column", async () => {
@@ -1622,7 +1622,7 @@ test("click on a button type='unarchive' to unarchive a record in a column", asy
 
     await contains(".o_kanban_record .o_unarchive").click();
 
-    expect(["unarchive:1"]).toVerifySteps();
+    expect.verifySteps(["unarchive:1"]);
 });
 
 test.tags("desktop")("kanban with an action id as on_create attrs", async () => {
@@ -1654,14 +1654,14 @@ test.tags("desktop")("kanban with an action id as on_create attrs", async () => 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
     await createKanbanRecord();
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
         "doAction some.action",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("grouped kanban with quick_create attrs set to false", async () => {
@@ -1687,7 +1687,7 @@ test.tags("desktop")("grouped kanban with quick_create attrs set to false", asyn
     await createKanbanRecord();
 
     expect(".o_kanban_quick_create").toHaveCount(0);
-    expect(["create record"]).toVerifySteps();
+    expect.verifySteps(["create record"]);
 });
 
 test.tags("desktop")("create in grouped on m2o", async () => {
@@ -1895,7 +1895,7 @@ test.tags("desktop")("quick create record without quick_create_view", async () =
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -1906,7 +1906,7 @@ test.tags("desktop")("quick create record without quick_create_view", async () =
         "name_create", // should perform a name_create to create the record
         "web_read", // read the created record
         "onchange", // reopen the quick create automatically
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("quick create record with quick_create_view", async () => {
@@ -1962,7 +1962,7 @@ test.tags("desktop")("quick create record with quick_create_view", async () => {
     await validateKanbanRecord();
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -1974,7 +1974,7 @@ test.tags("desktop")("quick create record with quick_create_view", async () => {
         "web_save", // should perform a web_save to create the record
         "web_read", // read the created record
         "onchange", // new quick create
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("quick create record flickering", async () => {
@@ -2161,12 +2161,12 @@ test.tags("desktop")("quick_create_view without quick_create option", async () =
     // click on 'Create' in control panel -> should not open the quick create
     await createKanbanRecord();
     expect(".o_kanban_quick_create").toHaveCount(0);
-    expect(["create record"]).toVerifySteps();
+    expect.verifySteps(["create record"]);
 
     // click "+" icon in first column -> should open the quick create
     await contains(".o_kanban_quick_add").click();
     expect(".o_kanban_group:first .o_kanban_quick_create").toHaveCount(1);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test.tags("desktop")("quick create record in grouped on m2o (no quick_create_view)", async () => {
@@ -2205,7 +2205,7 @@ test.tags("desktop")("quick create record in grouped on m2o (no quick_create_vie
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(3);
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -2216,7 +2216,7 @@ test.tags("desktop")("quick create record in grouped on m2o (no quick_create_vie
         "name_create", // should perform a name_create to create the record
         "web_read", // read the created record
         "onchange", // reopen the quick create automatically
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("quick create record in grouped on m2o (with quick_create_view)", async () => {
@@ -2271,7 +2271,7 @@ test.tags("desktop")("quick create record in grouped on m2o (with quick_create_v
     await validateKanbanRecord();
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(3);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -2283,7 +2283,7 @@ test.tags("desktop")("quick create record in grouped on m2o (with quick_create_v
         "web_save", // should perform a web_save to create the record
         "web_read", // read the created record
         "onchange", // reopen the quick create automatically
-    ]).toVerifySteps();
+    ]);
 });
 
 test("quick create record in grouped on m2m (no quick_create_view)", async () => {
@@ -2317,7 +2317,7 @@ test("quick create record in grouped on m2m (no quick_create_view)", async () =>
     await validateKanbanRecord();
 
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -2328,7 +2328,7 @@ test("quick create record in grouped on m2m (no quick_create_view)", async () =>
         "name_create", // should perform a name_create to create the record
         "web_read", // read the created record
         "onchange", // reopen the quick create automatically
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("quick create record in grouped on m2m in the None column", async () => {
@@ -2364,7 +2364,7 @@ test.tags("desktop")("quick create record in grouped on m2m in the None column",
     await validateKanbanRecord();
 
     expect(".o_kanban_group:nth-child(1) .o_kanban_record").toHaveCount(3);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -2376,7 +2376,7 @@ test.tags("desktop")("quick create record in grouped on m2m in the None column",
         "name_create", // should perform a name_create to create the record
         "web_read", // read the created record
         "onchange", // reopen the quick create automatically
-    ]).toVerifySteps();
+    ]);
 });
 
 test("quick create record in grouped on m2m (field not in template)", async () => {
@@ -2417,7 +2417,7 @@ test("quick create record in grouped on m2m (field not in template)", async () =
 
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2);
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -2429,7 +2429,7 @@ test("quick create record in grouped on m2m (field not in template)", async () =
         "web_save", // should perform a web_save to create the record
         "web_read", // read the created record
         "onchange", // reopen the quick create automatically
-    ]).toVerifySteps();
+    ]);
 });
 
 test("quick create record in grouped on m2m (field in the form view)", async () => {
@@ -2476,7 +2476,7 @@ test("quick create record in grouped on m2m (field in the form view)", async () 
 
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2);
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -2488,7 +2488,7 @@ test("quick create record in grouped on m2m (field in the form view)", async () 
         "web_save", // should perform a web_save to create the record
         "web_read",
         "onchange",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("quick create record validation: stays open when invalid", async () => {
@@ -2509,22 +2509,22 @@ test.tags("desktop")("quick create record validation: stays open when invalid", 
         groupBy: ["bar"],
     });
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 
     await createKanbanRecord();
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 
     // do not fill anything and validate
     await validateKanbanRecord();
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(".o_kanban_group:first-child .o_kanban_quick_create").toHaveCount(1);
     expect("[name=display_name]").toHaveClass("o_field_invalid");
     expect(".o_notification_manager .o_notification").toHaveCount(1);
@@ -2578,7 +2578,7 @@ test.tags("desktop")("quick create record with default values and onchanges", as
     expect(".o_field_widget[name=int_field] input").toHaveValue("8", {
         message: "onchange should have been triggered",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -2588,7 +2588,7 @@ test.tags("desktop")("quick create record with default values and onchanges", as
         "get_views", // form view in quick create
         "onchange", // quick create
         "onchange", // onchange due to 'foo' field change
-    ]).toVerifySteps();
+    ]);
 });
 
 test("quick create record with quick_create_view: modifiers", async () => {
@@ -2661,25 +2661,25 @@ test("quick create record with onchange of field marked readonly", async () => {
             </kanban>`,
         groupBy: ["bar"],
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group", // initial read_group
         "web_search_read", // initial search_read (first column)
         "web_search_read", // initial search_read (second column)
-    ]).toVerifySteps();
+    ]);
 
     // click on 'Create' -> should open the quick create in the first column
     await quickCreateKanbanRecord();
-    expect(["get_views", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "onchange"]);
 
     // fill the 'foo' field -> should trigger the onchange
     await editKanbanRecordQuickCreateInput("foo", "new partner");
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 
     await validateKanbanRecord();
-    expect(["web_save", "web_read", "onchange"]).toVerifySteps();
+    expect.verifySteps(["web_save", "web_read", "onchange"]);
 });
 
 test("quick create record and change state in grouped mode", async () => {
@@ -2889,7 +2889,7 @@ test("quick create record: prevent multiple adds with ENTER", async () => {
     expect(".o_kanban_quick_create .o_field_widget[name=foo] input").toHaveValue("");
     expect(".o_kanban_quick_create").not.toHaveClass("o_disabled");
 
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test("quick create record: prevent multiple adds with Add clicked", async () => {
@@ -2939,7 +2939,7 @@ test("quick create record: prevent multiple adds with Add clicked", async () => 
     expect(".o_kanban_quick_create .o_field_widget[name=foo] input").toHaveValue("");
     expect(".o_kanban_quick_create").not.toHaveClass("o_disabled");
 
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test.tags("desktop")("save a quick create record and create a new one simultaneously", async () => {
@@ -2988,7 +2988,7 @@ test.tags("desktop")("save a quick create record and create a new one simultaneo
     expect(".o_kanban_record").toHaveCount(5);
     expect(".o_kanban_quick_create [name=display_name] input").toHaveValue("");
     expect(".o_kanban_quick_create").not.toHaveClass("o_disabled");
-    expect(["name_create"]).toVerifySteps();
+    expect.verifySteps(["name_create"]);
 });
 
 test("quick create record: prevent multiple adds with ENTER, with onchange", async () => {
@@ -3063,12 +3063,12 @@ test("quick create record: prevent multiple adds with ENTER, with onchange", asy
     });
     expect(".o_kanban_quick_create").not.toHaveClass("o_disabled");
 
-    expect([
+    expect.verifySteps([
         "onchange", // default_get
         "onchange", // new partner
         "web_save",
         "onchange", // default_get
-    ]).toVerifySteps();
+    ]);
 });
 
 test("quick create record: click Add to create, with delayed onchange", async () => {
@@ -3141,12 +3141,12 @@ test("quick create record: click Add to create, with delayed onchange", async ()
     });
     expect(".o_kanban_quick_create").not.toHaveClass("o_disabled");
 
-    expect([
+    expect.verifySteps([
         "onchange", // default_get
         "onchange", // new partner
         "web_save",
         "onchange", // default_get
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("quick create when first column is folded", async () => {
@@ -3856,7 +3856,7 @@ test.tags("desktop")("quick create record in grouped on date(time) field", async
         message: "should not have opened the quick create widget",
     });
 
-    expect(["createKanbanRecord", "createKanbanRecord"]).toVerifySteps();
+    expect.verifySteps(["createKanbanRecord", "createKanbanRecord"]);
 });
 
 test("quick create record feature is properly enabled/disabled at reload", async () => {
@@ -4201,14 +4201,14 @@ test.tags("desktop")("close a column while quick creating a record", async () =>
 
     def = new Deferred();
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(".o_kanban_group").toHaveCount(2);
     expect(".o_column_folded").toHaveCount(0);
 
     // click to quick create a new record in the first column (this operation is delayed)
     await quickCreateKanbanRecord();
 
-    expect(["get_views"]).toVerifySteps();
+    expect.verifySteps(["get_views"]);
     expect(".o_form_view").toHaveCount(0);
 
     // click to fold the first column
@@ -4220,13 +4220,13 @@ test.tags("desktop")("close a column while quick creating a record", async () =>
     def.resolve();
     await animationFrame();
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(".o_form_view").toHaveCount(0);
     expect(".o_column_folded").toHaveCount(1);
 
     await createKanbanRecord();
 
-    expect([]).toVerifySteps(); // "get_views" should have already be done
+    expect.verifySteps([]); // "get_views" should have already be done
     expect(".o_form_view").toHaveCount(1);
     expect(".o_column_folded").toHaveCount(0);
 });
@@ -4309,12 +4309,12 @@ test("many2many_tags in kanban views", async () => {
             message: "first tag should have color 2",
         }
     );
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 
     // Checks that second records has only one tag as one should be hidden (color 0)
     expect(".o_kanban_record:nth-child(2) .o_tag").toHaveCount(1, {
@@ -4326,7 +4326,7 @@ test("many2many_tags in kanban views", async () => {
     // Write on the record using the priority widget to trigger a re-render in readonly
     await contains(".o_kanban_record:first-child .o_priority_star:first-child").click();
 
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
     expect(".o_kanban_record:first-child .o_field_many2many_tags .o_tag").toHaveCount(2, {
         message: "first record should still contain only 2 tags",
     });
@@ -4417,7 +4417,7 @@ test("Do not open record when clicking on `a` with `href`", async () => {
     });
 
     click(testLink);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("Open record when clicking on widget field", async function (assert) {
@@ -4484,7 +4484,7 @@ test("o2m loaded in only one batch", async () => {
     });
 
     await validateSearch();
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -4494,7 +4494,7 @@ test("o2m loaded in only one batch", async () => {
         "web_read_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("kanban with many2many, load and reload", async () => {
@@ -4520,7 +4520,7 @@ test.tags("desktop")("kanban with many2many, load and reload", async () => {
     press("Enter"); // reload
     await animationFrame();
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -4530,7 +4530,7 @@ test.tags("desktop")("kanban with many2many, load and reload", async () => {
         "web_read_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("kanban with reference field", async () => {
@@ -4560,7 +4560,7 @@ test.tags("desktop")("kanban with reference field", async () => {
     press("Enter"); // reload
     await animationFrame();
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -4570,7 +4570,7 @@ test.tags("desktop")("kanban with reference field", async () => {
         "web_read_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
     expect(queryAllTexts(".o_kanban_record span")).toEqual(["hello", "", "xmo", ""]);
 });
 
@@ -4602,7 +4602,7 @@ test.tags("desktop")("can drag and drop a record from one column to the next", a
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2);
     expect(".thisiseditable").toHaveCount(4);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // first record of first column moved to the bottom of second column
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
@@ -4613,7 +4613,7 @@ test.tags("desktop")("can drag and drop a record from one column to the next", a
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(3);
     expect(".thisiseditable").toHaveCount(4);
 
-    expect(["resequence"]).toVerifySteps();
+    expect.verifySteps(["resequence"]);
 });
 
 test.tags("desktop")(
@@ -4648,7 +4648,7 @@ test.tags("desktop")(
 
         expect(queryAllTexts(".o_column_title")).toEqual(["hello", "xmo"]);
 
-        expect(["No Permission"]).toVerifyErrors();
+        expect.verifyErrors(["No Permission"]);
     }
 );
 
@@ -4693,7 +4693,7 @@ test.tags("desktop")(
             message: "Check that the record does not become static after d&d",
         });
 
-        expect(["No Permission"]).toVerifyErrors();
+        expect.verifyErrors(["No Permission"]);
     }
 );
 
@@ -4787,7 +4787,7 @@ test.tags("desktop")("drag and drop a record, grouped by selection", async () =>
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(0);
-    expect(["resequence"]).toVerifySteps();
+    expect.verifySteps(["resequence"]);
 });
 
 test.tags("desktop")("prevent drag and drop of record if grouped by readonly", async () => {
@@ -4922,7 +4922,7 @@ test.tags("desktop")("prevent drag and drop of record if grouped by readonly", a
     expect(".o_kanban_group:nth-child(3) .o_kanban_record").toHaveCount(0);
 
     expect(getKanbanRecordTexts(0)).toEqual(["yopABC", "gnapGHI"]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("prevent drag and drop if grouped by date/datetime field", async () => {
@@ -5195,7 +5195,7 @@ test.tags("desktop")("prevent drag and drop of record if save fails", async () =
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2);
 
-    expect(["Save failed"]).toVerifyErrors();
+    expect.verifyErrors(["Save failed"]);
 });
 
 test("kanban view with default_group_by", async () => {
@@ -5281,7 +5281,7 @@ test.tags("desktop")("kanban view not groupable", async () => {
     // validate presence of the search arch info
     await toggleSearchBarMenu();
     expect(".o_filter_menu .o_menu_item").toHaveCount(2);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("kanban view with create=False", async () => {
@@ -5439,7 +5439,7 @@ test.tags("desktop")("create a column in grouped on m2o", async () => {
     expect(getKanbanColumn(2)).not.toHaveClass("o_column_folded", {
         message: "the created column should not be folded",
     });
-    expect(["name_create", "/web/dataset/resequence", "3,5,6"]).toVerifySteps();
+    expect.verifySteps(["name_create", "/web/dataset/resequence", "3,5,6"]);
 
     // fold and unfold the created column, and check that no RPCs are done (as there are no records)
     const clickColumnAction = await toggleKanbanColumnActions(2);
@@ -5451,7 +5451,8 @@ test.tags("desktop")("create a column in grouped on m2o", async () => {
     await animationFrame();
 
     expect(getKanbanColumn(1)).not.toHaveClass("o_column_folded");
-    expect([]).toVerifySteps({ message: "no rpc should have been done when folding/unfolding" });
+    // no rpc should have been done when folding/unfolding
+    expect.verifySteps([]);
 
     // quick create a record
     await createKanbanRecord();
@@ -5499,7 +5500,7 @@ test("create a column in grouped on m2o without sequence field on view model", a
     await editKanbanColumnName("new value");
     await validateKanbanColumn();
 
-    expect(["name_create", "resequence", "3,5,6"]).toVerifySteps();
+    expect.verifySteps(["name_create", "resequence", "3,5,6"]);
 });
 
 test.tags("desktop")("auto fold group when reach the limit", async () => {
@@ -5548,7 +5549,7 @@ test.tags("desktop")("auto fold group when reach the limit", async () => {
     expect(".o_kanban_group:not(.o_column_folded)").toHaveCount(10);
     expect(".o_kanban_group.o_column_folded").toHaveCount(4);
 
-    expect([
+    expect.verifySteps([
         "web_search_read domain: product_id,=,3",
         "web_search_read domain: product_id,=,5",
         "web_search_read domain: product_id,=,9",
@@ -5559,7 +5560,7 @@ test.tags("desktop")("auto fold group when reach the limit", async () => {
         "web_search_read domain: product_id,=,15",
         "web_search_read domain: product_id,=,16",
         "web_search_read domain: product_id,=,17",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("auto fold group when reach the limit (2)", async () => {
@@ -5612,7 +5613,7 @@ test.tags("desktop")("auto fold group when reach the limit (2)", async () => {
     expect(".o_kanban_group:not(.o_column_folded)").toHaveCount(10);
     expect(".o_kanban_group.o_column_folded").toHaveCount(4);
 
-    expect([
+    expect.verifySteps([
         "web_search_read domain: product_id,=,3",
         "web_search_read domain: product_id,=,5",
         "web_search_read domain: product_id,=,9",
@@ -5623,7 +5624,7 @@ test.tags("desktop")("auto fold group when reach the limit (2)", async () => {
         "web_search_read domain: product_id,=,15",
         "web_search_read domain: product_id,=,16",
         "web_search_read domain: product_id,=,17",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("show/hide help message (ESC) in quick create [REQUIRE FOCUS]", async () => {
@@ -5757,7 +5758,7 @@ test.tags("desktop")("delete a column in grouped on m2o", async () => {
     expect(
         queryAll(".o_column_unarchive_records", { root: getKanbanColumnDropdownMenu(0) })
     ).toHaveCount(0, { message: "should not be able to restore all the records" });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -5768,7 +5769,7 @@ test.tags("desktop")("delete a column in grouped on m2o", async () => {
         "web_read_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
     expect(".o_kanban_group").toHaveCount(2, {
         message: "the old groups should have been correctly deleted",
     });
@@ -5787,7 +5788,7 @@ test.tags("desktop")("delete a column in grouped on m2o", async () => {
     await editKanbanColumnName("once third column");
     await validateKanbanColumn();
 
-    expect(["name_create", "/web/dataset/resequence"]).toVerifySteps();
+    expect.verifySteps(["name_create", "/web/dataset/resequence"]);
     expect(resequencedIDs).toEqual([3, 4], {
         message: "creating a column should trigger a resequence",
     });
@@ -5804,7 +5805,7 @@ test.tags("desktop")("delete a column in grouped on m2o", async () => {
     await contains(".o_kanban_group:nth-child(2) .o_column_title").dragAndDrop(
         queryAll(".o_kanban_group")[2]
     );
-    expect(["/web/dataset/resequence"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/resequence"]);
     expect(resequencedIDs).toEqual([4, 3], {
         message: "moved column should be resequenced accordingly",
     });
@@ -6312,13 +6313,13 @@ test.tags("desktop")("quick create column and examples: with folded columns", as
     await contains(".o_column_quick_create .o_kanban_examples").click();
 
     // apply the examples
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await contains(".modal .modal-footer .btn.btn-primary").click();
-    expect([
+    expect.verifySteps([
         'name_create (model: product):["not folded"]',
         'name_create (model: product):["folded"]',
         'write (model: product):[[7],{"folded":true}]',
-    ]).toVerifySteps();
+    ]);
 
     // the applied examples should be visible
     expect(".o_kanban_group").toHaveCount(2);
@@ -6505,7 +6506,7 @@ test("nocontent helper after adding a record (kanban with progressbar)", async (
     expect(".o_view_nocontent").toHaveCount(0, {
         message: "the nocontent helper is not displayed after cancelling the quick create",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -6517,7 +6518,7 @@ test("nocontent helper after adding a record (kanban with progressbar)", async (
         "read_progress_bar",
         "web_read_group",
         "onchange",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("ungrouped kanban view can be grouped, then ungrouped", async () => {
@@ -7258,12 +7259,13 @@ test("empty grouped kanban with sample data and many2many_tags", async () => {
     expect(queryAll(".o_field_many2many_tags .o_tag").length >= 1).toBe(true, {
         message: "there should be tags",
     });
-    expect([
+    // should not read the tags
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
-    ]).toVerifySteps({ message: "should not read the tags" });
+    ]);
 });
 
 test.tags("desktop")("sample data does not change after reload with sample data", async () => {
@@ -7731,12 +7733,12 @@ test("button executes action and reloads", async () => {
             </kanban>`,
     });
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
     expect("button.a1").toHaveCount(4);
 
     click(queryFirst("button.a1"));
@@ -7744,9 +7746,8 @@ test("button executes action and reloads", async () => {
     await animationFrame();
 
     expect(count).toBe(1, { message: "should have triggered an execute action only once" });
-    expect(["web_search_read"]).toVerifySteps({
-        message: "the records should be reloaded after executing a button action",
-    });
+    // the records should be reloaded after executing a button action
+    expect.verifySteps(["web_search_read"]);
 });
 
 test("button executes action and check domain", async () => {
@@ -8034,19 +8035,19 @@ test.tags("desktop")("resequence all when creating new record + partial resequen
     await quickCreateKanbanColumn();
     await editKanbanColumnName("foo");
     await validateKanbanColumn();
-    expect([JSON.stringify({ ids: [3, 5, 6] })]).toVerifySteps();
+    expect.verifySteps([JSON.stringify({ ids: [3, 5, 6] })]);
 
     await editKanbanColumnName("bar");
     await validateKanbanColumn();
-    expect([JSON.stringify({ ids: [3, 5, 6, 7] })]).toVerifySteps();
+    expect.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7] })]);
 
     await editKanbanColumnName("baz");
     await validateKanbanColumn();
-    expect([JSON.stringify({ ids: [3, 5, 6, 7, 8] })]).toVerifySteps();
+    expect.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7, 8] })]);
 
     await editKanbanColumnName("boo");
     await validateKanbanColumn();
-    expect([JSON.stringify({ ids: [3, 5, 6, 7, 8, 9] })]).toVerifySteps();
+    expect.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7, 8, 9] })]);
 
     // When rearranging, only resequence the affected records. In this example,
     // dragging column 2 to column 4 should only resequence [5, 6, 7] to [6, 7, 5]
@@ -8054,7 +8055,7 @@ test.tags("desktop")("resequence all when creating new record + partial resequen
     await contains(".o_kanban_group:nth-child(2) .o_column_title").dragAndDrop(
         ".o_kanban_group:nth-child(4)"
     );
-    expect([JSON.stringify({ ids: [6, 7, 5], offset: 1 })]).toVerifySteps();
+    expect.verifySteps([JSON.stringify({ ids: [6, 7, 5], offset: 1 })]);
 });
 
 test("prevent resequence columns if groups_draggable=false", async () => {
@@ -8205,7 +8206,8 @@ test("edit the kanban color with the colorpicker", async () => {
 
     await contains(".o_kanban_colorpicker a.o_kanban_color_9").click();
 
-    expect(["write-color-9"]).toVerifySteps({ message: "should write on the color field" });
+    // should write on the color field
+    expect.verifySteps(["write-color-9"]);
     expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_9");
 });
 
@@ -8235,7 +8237,8 @@ test("kanban with colorpicker and node with color attribute", async () => {
     expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_3");
     await toggleKanbanRecordDropdown(0);
     await contains(`.o_kanban_colorpicker li[title="Raspberry"] a.o_kanban_color_9`).click();
-    expect(["write-color-9"]).toVerifySteps({ message: "should write on the color field" });
+    // should write on the color field
+    expect.verifySteps(["write-color-9"]);
     expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_9");
 });
 
@@ -8323,9 +8326,8 @@ test("load more records in column", async () => {
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(3, {
         message: "there should now be 3 records in the column",
     });
-    expect(["2 - 0", "2 - 0", "4 - 0"]).toVerifySteps({
-        message: "the records should be correctly fetched",
-    });
+    // the records should be correctly fetched
+    expect.verifySteps(["2 - 0", "2 - 0", "4 - 0"]);
     expect(getKanbanRecordTexts(1)).toEqual(["1", "2", "3"]);
 
     // reload
@@ -8335,7 +8337,7 @@ test("load more records in column", async () => {
         message: "there should still be 3 records in the column after reload",
     });
     expect(getKanbanRecordTexts(1)).toEqual(["1", "2", "3"]);
-    expect(["2 - 0", "4 - 0"]).toVerifySteps();
+    expect.verifySteps(["2 - 0", "4 - 0"]);
 });
 
 test("load more records in column with x2many", async () => {
@@ -8372,7 +8374,7 @@ test("load more records in column with x2many", async () => {
         "silver",
         "",
     ]);
-    expect(["web_search_read 2-0", "web_search_read 2-0"]).toVerifySteps();
+    expect.verifySteps(["web_search_read 2-0", "web_search_read 2-0"]);
 
     // load more
     await clickKanbanLoadMore(1);
@@ -8383,7 +8385,7 @@ test("load more records in column with x2many", async () => {
         "",
         "gold",
     ]);
-    expect(["web_search_read 4-0"]).toVerifySteps();
+    expect.verifySteps(["web_search_read 4-0"]);
 });
 
 test("update buttons after column creation", async () => {
@@ -8466,9 +8468,8 @@ test.tags("desktop")("group_by_tooltip option when grouping on a many2one", asyn
         message:
             "tooltip of first column should not defined, since group_by_tooltip title and the many2one field has no value",
     });
-    expect([]).toVerifySteps({
-        message: "should not have done any read on product because no value",
-    });
+    // should not have done any read on product because no value
+    expect.verifySteps([]);
 
     hover(queryOne(".o_column_title:eq(1)"));
     await runAllTimers();
@@ -8481,9 +8482,8 @@ test.tags("desktop")("group_by_tooltip option when grouping on a many2one", asyn
         "hello",
         { message: "second column should have a title with a value from the many2one" }
     );
-    expect(["read: product"]).toVerifySteps({
-        message: "should have done one read on product for the second column tooltip",
-    });
+    // should have done one read on product for the second column tooltip
+    expect.verifySteps(["read: product"]);
 });
 
 test.tags("desktop")("asynchronous tooltips when grouped", async () => {
@@ -8527,7 +8527,7 @@ test.tags("desktop")("asynchronous tooltips when grouped", async () => {
 
     expect(".o-tooltip").toHaveCount(1);
     expect(queryFirst(".o-tooltip").textContent.trim()).toBe("Namehello");
-    expect(["read: product"]).toVerifySteps();
+    expect.verifySteps(["read: product"]);
 });
 
 test.tags("desktop")("loads data tooltips only when first opening", async () => {
@@ -8554,7 +8554,7 @@ test.tags("desktop")("loads data tooltips only when first opening", async () => 
     await runAllTimers();
     expect(".o-tooltip").toHaveCount(1);
     expect(queryFirst(".o-tooltip").textContent.trim()).toBe("Namehello");
-    expect(["read: product"]).toVerifySteps();
+    expect.verifySteps(["read: product"]);
 
     leave(".o_kanban_group .o_kanban_header_title .o_column_title");
     await animationFrame();
@@ -8564,7 +8564,7 @@ test.tags("desktop")("loads data tooltips only when first opening", async () => 
     await runAllTimers();
     expect(".o-tooltip").toHaveCount(1);
     expect(queryFirst(".o-tooltip").textContent.trim()).toBe("Namehello");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test.tags("desktop")("move a record then put it again in the same column", async () => {
@@ -8672,9 +8672,8 @@ test.tags("desktop")("resequence a record twice", async () => {
     expect(getKanbanRecordTexts()).toEqual(["record2", "record1"], {
         message: "records should be correctly ordered",
     });
-    expect(["resequence", "resequence"]).toVerifySteps({
-        message: "should have resequenced twice",
-    });
+    // should have resequenced twice
+    expect.verifySteps(["resequence", "resequence"]);
 });
 
 test("basic support for widgets (being Owl Components)", async () => {
@@ -8782,7 +8781,7 @@ test("column progressbars properly work", async () => {
     expect(getKanbanCounters()).toEqual(["-4", "36"], {
         message: "counter should display the sum of int_field values",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -8790,7 +8789,7 @@ test("column progressbars properly work", async () => {
         "web_read_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("filter on progressbar in new groups", async () => {
@@ -8884,7 +8883,7 @@ test('column progressbars: "false" bar is clickable', async () => {
     ).toHaveClass("progress-bar-animated");
     expect(queryFirst(".o_kanban_group:last-child")).toHaveClass("o_kanban_group_show_200");
     expect(getKanbanCounters()).toEqual(["1", "1"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -8893,7 +8892,7 @@ test('column progressbars: "false" bar is clickable', async () => {
         "web_search_read",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test('column progressbars: "false" bar with sum_field', async () => {
@@ -8937,7 +8936,7 @@ test('column progressbars: "false" bar with sum_field', async () => {
         queryFirst(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200")
     ).toHaveClass("progress-bar-animated");
     expect(getKanbanCounters()).toEqual(["-4", "15"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -8947,7 +8946,7 @@ test('column progressbars: "false" bar with sum_field', async () => {
         "web_search_read",
         "web_read_group",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("column progressbars should not crash in non grouped views", async () => {
@@ -8972,14 +8971,13 @@ test("column progressbars should not crash in non grouped views", async () => {
     });
 
     expect(getKanbanRecordTexts()).toEqual(["yop", "blip", "gnap", "blip"]);
-    expect([
+    // no read on progress bar data is done
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps({
-        message: "no read on progress bar data is done",
-    });
+    ]);
 });
 
 test("column progressbars: creating a new column should create a new progressbar", async () => {
@@ -9020,7 +9018,7 @@ test("column progressbars: creating a new column should create a new progressbar
     expect(".o_kanban_counter").toHaveCount(3, {
         message: "a new column with a new column progressbar should have been created",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -9030,7 +9028,7 @@ test("column progressbars: creating a new column should create a new progressbar
         "web_search_read",
         "name_create",
         "/web/dataset/resequence",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("column progressbars on quick create properly update counter", async () => {
@@ -9065,7 +9063,7 @@ test("column progressbars on quick create properly update counter", async () => 
     expect(getKanbanCounters()).toEqual(["2", "3"], {
         message: "kanban counters should have updated on quick create",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -9078,7 +9076,7 @@ test("column progressbars on quick create properly update counter", async () => 
         "web_read",
         "read_progress_bar",
         "onchange",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("column progressbars are working with load more", async () => {
@@ -9108,7 +9106,7 @@ test("column progressbars are working with load more", async () => {
     await clickKanbanLoadMore(0);
 
     expect(getKanbanRecordTexts(0)).toEqual(["1", "2", "3"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -9117,7 +9115,7 @@ test("column progressbars are working with load more", async () => {
         "web_search_read",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("column progressbars with an active filter are working with load more", async () => {
@@ -9154,7 +9152,7 @@ test("column progressbars with an active filter are working with load more", asy
     await clickKanbanLoadMore(0);
 
     expect(getKanbanRecordTexts()).toEqual(["5", "6", "7"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -9164,7 +9162,7 @@ test("column progressbars with an active filter are working with load more", asy
         "web_search_read",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("column progressbars on archiving records update counter", async () => {
@@ -9207,7 +9205,7 @@ test("column progressbars on archiving records update counter", async () => {
     expect(queryAll(".progress-bar", { root: getKanbanColumn(1) })).toHaveCount(0, {
         message: "the counter progressbars should have been correctly updated",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -9219,7 +9217,7 @@ test("column progressbars on archiving records update counter", async () => {
         "read_progress_bar",
         "web_read_group",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("kanban with progressbars: correctly update env when archiving records", async () => {
@@ -9256,7 +9254,7 @@ test("kanban with progressbars: correctly update env when archiving records", as
     await contains(".o_dialog footer .btn-primary").click(); // confirm
 
     expect(getKanbanRecordTexts()).toEqual(["1", "2", "3"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -9268,7 +9266,7 @@ test("kanban with progressbars: correctly update env when archiving records", as
         "read_progress_bar",
         "web_read_group",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("RPCs when (re)loading kanban view progressbars", async () => {
@@ -9295,7 +9293,7 @@ test("RPCs when (re)loading kanban view progressbars", async () => {
 
     await validateSearch();
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         // initial load
@@ -9309,7 +9307,7 @@ test("RPCs when (re)loading kanban view progressbars", async () => {
         "web_read_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("RPCs when (de)activating kanban view progressbar filters", async () => {
@@ -9342,7 +9340,7 @@ test("RPCs when (de)activating kanban view progressbar filters", async () => {
     // Deactivate "gnap" on second column
     await contains(".progress-bar.bg-warning", { root: getKanbanColumn(1) }).click();
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         // initial load
@@ -9361,7 +9359,7 @@ test("RPCs when (de)activating kanban view progressbar filters", async () => {
         'web_read_group domain ["&",["bar","=",true],["foo","=","gnap"]]', // perform read_group only on second column (bar=true)
         // activate another filter (switching)
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("drag & drop records grouped by m2o with progressbar", async () => {
@@ -9408,7 +9406,7 @@ test.tags("desktop")("drag & drop records grouped by m2o with progressbar", asyn
     );
 
     expect(getKanbanCounters()).toEqual(["0", "1", "3"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -9429,7 +9427,7 @@ test.tags("desktop")("drag & drop records grouped by m2o with progressbar", asyn
         "read_progress_bar",
         "/web/dataset/resequence",
         "read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("d&d records grouped by date with progressbar with aggregates", async () => {
@@ -9474,7 +9472,7 @@ test.tags("desktop")("d&d records grouped by date with progressbar with aggregat
 
     expect(getKanbanCounters()).toEqual(["-4", "36"]);
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -9487,7 +9485,7 @@ test.tags("desktop")("d&d records grouped by date with progressbar with aggregat
         "web_read_group",
         "/web/dataset/resequence",
         "read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("progress bar subgroup count recompute", async () => {
@@ -9515,7 +9513,7 @@ test("progress bar subgroup count recompute", async () => {
     await contains(".o_kanban_group:nth-child(2) .bg-success").click();
 
     expect(getKanbanCounters()).toEqual(["1", "1"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -9524,7 +9522,7 @@ test("progress bar subgroup count recompute", async () => {
         "web_search_read",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("progress bar recompute after d&d to and from other column", async () => {
@@ -9557,7 +9555,7 @@ test.tags("desktop")("progress bar recompute after d&d to and from other column"
 
     expect(getKanbanColumnTooltips()).toEqual(["1 gnap", "1 blip", "1 yop", "1 blip"]);
     expect(getKanbanCounters()).toEqual(["2", "2"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -9569,7 +9567,7 @@ test.tags("desktop")("progress bar recompute after d&d to and from other column"
         "read_progress_bar",
         "/web/dataset/resequence",
         "read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("progress bar recompute after filter selection", async () => {
@@ -9602,7 +9600,7 @@ test("progress bar recompute after filter selection", async () => {
 
     expect(getKanbanColumnTooltips()).toEqual(["1 blip", "4 yop", "1 gnap", "1 blip"]);
     expect(getKanbanCounters()).toEqual(["1", "6"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -9610,13 +9608,13 @@ test("progress bar recompute after filter selection", async () => {
         "web_read_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 
     await contains(".progress-bar.bg-success", { root: getKanbanColumn(1) }).click();
 
     expect(getKanbanColumnTooltips()).toEqual(["1 blip", "4 yop", "1 gnap", "1 blip"]);
     expect(getKanbanCounters()).toEqual(["1", "4"]);
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 
     // Add search domain to something restricting progressbars' values (records still in filtered group)
     await toggleSearchBarMenu();
@@ -9624,7 +9622,7 @@ test("progress bar recompute after filter selection", async () => {
 
     expect(getKanbanColumnTooltips()).toEqual(["3 yop"]);
     expect(getKanbanCounters()).toEqual(["3"]);
-    expect(["read_progress_bar", "web_read_group", "web_search_read"]).toVerifySteps();
+    expect.verifySteps(["read_progress_bar", "web_read_group", "web_search_read"]);
 });
 
 test("progress bar recompute after filter selection (aggregates)", async () => {
@@ -9657,7 +9655,7 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
 
     expect(getKanbanColumnTooltips()).toEqual(["1 blip", "4 yop", "1 gnap", "1 blip"]);
     expect(getKanbanCounters()).toEqual(["-4", "636"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -9665,16 +9663,16 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
         "web_read_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 
     await contains(".progress-bar.bg-success", { root: getKanbanColumn(1) }).click();
 
     expect(getKanbanColumnTooltips()).toEqual(["1 blip", "4 yop", "1 gnap", "1 blip"]);
     expect(getKanbanCounters()).toEqual(["-4", "610"]);
-    expect([
+    expect.verifySteps([
         "web_read_group", // recomputes aggregates
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 
     // Add searchdomain to something restricting progressbars' values (records still in filtered group)
     await toggleSearchBarMenu();
@@ -9682,7 +9680,7 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
 
     expect(getKanbanColumnTooltips()).toEqual(["3 yop"]);
     expect(getKanbanCounters()).toEqual(["600"]);
-    expect(["read_progress_bar", "web_read_group", "web_search_read"]).toVerifySteps();
+    expect.verifySteps(["read_progress_bar", "web_read_group", "web_search_read"]);
 });
 
 test("progress bar with aggregates: activate bars (grouped by boolean)", async () => {
@@ -9916,7 +9914,7 @@ test.tags("desktop")("column progressbars on quick create with quick_create_view
     expect(getKanbanCounters()).toEqual(["40", "36"], {
         message: "kanban counters should have been updated on quick create",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -9931,7 +9929,7 @@ test.tags("desktop")("column progressbars on quick create with quick_create_view
         "read_progress_bar",
         "web_read_group",
         "onchange",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("progressbars and active filter with quick_create_view", async () => {
@@ -9987,7 +9985,7 @@ test.tags("desktop")("progressbars and active filter with quick_create_view", as
         message:
             "kanban counters should have been updated on quick create, respecting the active filter",
     });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -10011,7 +10009,7 @@ test.tags("desktop")("progressbars and active filter with quick_create_view", as
         "web_read_group",
         "web_read_group",
         "onchange",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("quickcreate in first column after moving a record from it", async () => {
@@ -10318,7 +10316,7 @@ test.tags("desktop")("quick_create on grouped kanban without column", async () =
     });
 
     await createKanbanRecord();
-    expect(["createKanbanRecord"]).toVerifySteps();
+    expect.verifySteps(["createKanbanRecord"]);
 });
 
 test("keynav: right/left", async () => {
@@ -10530,7 +10528,7 @@ test.tags("desktop")("keynav: no global_click, press ENTER on card with a link",
     await animationFrame();
     expect(".o_dialog").toHaveCount(1);
     expect(".o_dialog main").toHaveText("Are you sure that you want to archive this record?");
-    expect([]).toVerifySteps(); // should not try to open the record
+    expect.verifySteps([]); // should not try to open the record
 });
 
 test.tags("desktop")("keynav: kanban with global_click", async () => {
@@ -10654,7 +10652,8 @@ test.tags("desktop")("set cover image", async () => {
 
     await contains(".o_kanban_record:first-child .o_attachment_image").click(); //Not sure, to discuss
 
-    expect(["1", "2"]).toVerifySteps({ message: "should writes on both kanban records" });
+    // should writes on both kanban records
+    expect.verifySteps(["1", "2"]);
 });
 
 test.tags("desktop")("unset cover image", async () => {
@@ -10742,7 +10741,8 @@ test.tags("desktop")("unset cover image", async () => {
     expect(queryAll("img", { root: getKanbanRecord({ index: 1 }) })).toHaveCount(0, {
         message: "The cover image should be removed.",
     });
-    expect(["1", "2"]).toVerifySteps({ message: "should writes on both kanban records" });
+    // should writes on both kanban records
+    expect.verifySteps(["1", "2"]);
 });
 
 test.tags("desktop")("ungrouped kanban with handle field", async () => {
@@ -10805,7 +10805,7 @@ test("ungrouped kanban without handle field", async () => {
     await contains(".o_kanban_record").dragAndDrop(queryFirst(".o_kanban_record:nth-child(4)"));
 
     expect(getKanbanRecordTexts()).toEqual(["yop", "blip", "gnap", "blip"]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("click on image field in kanban (with default global_click)", async () => {
@@ -11059,7 +11059,7 @@ test("progressbar filter state is kept unchanged when domain is updated (records
     expect(queryAllTexts(".o_column_title")).toEqual(["No", "Yes"]);
     expect(getKanbanColumnTooltips(0)).toEqual(["1 blip"]);
     expect(getKanbanColumnTooltips(1)).toEqual(["1 yop", "1 blip", "1 Other"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -11075,7 +11075,7 @@ test("progressbar filter state is kept unchanged when domain is updated (records
         "web_read_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("progressbar filter state is kept unchanged when domain is updated (emptying group)", async () => {
@@ -11145,7 +11145,7 @@ test("progressbar filter state is kept unchanged when domain is updated (emptyin
     expect(getKanbanRecordTexts(0)).toEqual(["4blip"]);
     expect(getKanbanColumnTooltips(1)).toEqual(["1 yop", "1 blip", "1 Other"]);
     expect(getKanbanRecordTexts(1)).toEqual(["1yop", "2blip", "3gnap"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -11163,7 +11163,7 @@ test("progressbar filter state is kept unchanged when domain is updated (emptyin
         "web_read_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("filtered column counters when dropping in non-matching record", async () => {
@@ -11219,7 +11219,7 @@ test.tags("desktop")("filtered column counters when dropping in non-matching rec
     expect(getKanbanRecordTexts(0)).toEqual([]);
     expect(getKanbanColumnTooltips(1)).toEqual(["1 yop", "2 blip", "1 Other"]);
     expect(getKanbanRecordTexts(1)).toEqual(["1yop", "4blip"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -11232,7 +11232,7 @@ test.tags("desktop")("filtered column counters when dropping in non-matching rec
         "read_progress_bar",
         "/web/dataset/resequence",
         "read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("filtered column is reloaded when dragging out its last record", async () => {
@@ -11265,7 +11265,7 @@ test.tags("desktop")("filtered column is reloaded when dragging out its last rec
     expect(getKanbanRecordTexts(0)).toEqual(["4blip"]);
     expect(getKanbanColumnTooltips(1)).toEqual(["1 yop", "1 blip", "1 Other"]);
     expect(getKanbanRecordTexts(1)).toEqual(["1yop", "2blip", "3gnap"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -11273,7 +11273,7 @@ test.tags("desktop")("filtered column is reloaded when dragging out its last rec
         "web_read_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 
     // Apply an active filter
     await contains(".o_kanban_group:nth-child(2) .progress-bar.bg-success").click();
@@ -11283,7 +11283,7 @@ test.tags("desktop")("filtered column is reloaded when dragging out its last rec
     expect(queryAllTexts(".o_column_title")).toEqual(["No", "Yes"]);
     expect(".o_kanban_group.o_kanban_group_show .o_kanban_record").toHaveCount(1);
     expect(getKanbanRecordTexts(1)).toEqual(["1yop"]);
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 
     // Drag out its only record onto the first column
     await contains(".o_kanban_group.o_kanban_group_show .o_kanban_record").dragAndDrop(
@@ -11298,13 +11298,13 @@ test.tags("desktop")("filtered column is reloaded when dragging out its last rec
     expect(getKanbanRecordTexts(0)).toEqual(["4blip", "1yop"]);
     expect(getKanbanColumnTooltips(1)).toEqual(["1 blip", "1 Other"]);
     expect(getKanbanRecordTexts(1)).toEqual(["2blip", "3gnap"]);
-    expect([
+    expect.verifySteps([
         "web_save",
         "read_progress_bar",
         "web_search_read",
         "/web/dataset/resequence",
         "read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("kanban widget can extract props from attrs", async () => {
@@ -11367,14 +11367,14 @@ test("action/type attributes on kanban arch, type='object'", async () => {
             </kanban>`,
     });
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
     await contains(".o_kanban_record p").click();
-    expect(["doActionButton type object name a1", "web_search_read"]).toVerifySteps();
+    expect.verifySteps(["doActionButton type object name a1", "web_search_read"]);
 });
 
 test("action/type attributes on kanban arch, type='action'", async () => {
@@ -11402,14 +11402,14 @@ test("action/type attributes on kanban arch, type='action'", async () => {
             </kanban>`,
     });
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
     await contains(".o_kanban_record p").click();
-    expect(["doActionButton type action name a1", "web_search_read"]).toVerifySteps();
+    expect.verifySteps(["doActionButton type action name a1", "web_search_read"]);
 });
 
 test("Missing t-key is automatically filled with a warning", async () => {
@@ -11430,7 +11430,7 @@ test("Missing t-key is automatically filled with a warning", async () => {
             </kanban>`,
     });
 
-    expect(["warning"]).toVerifySteps();
+    expect.verifySteps(["warning"]);
     expect(getKanbanRecord({ index: 0 }).innerText).toBe("123");
 });
 
@@ -11462,7 +11462,7 @@ test("Quick created record is rendered after load", async () => {
     });
 
     expect(getKanbanRecordTexts(0)).toEqual(["0", "1"]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     def = new Deferred();
 
@@ -11475,7 +11475,7 @@ test("Quick created record is rendered after load", async () => {
     await animationFrame();
 
     expect(getKanbanRecordTexts(0)).toEqual(["0", "0", "1"]);
-    expect(["name_create", "web_read"]).toVerifySteps();
+    expect.verifySteps(["name_create", "web_read"]);
 });
 
 test("Allow use of 'editable'/'deletable' in ungrouped kanban", async () => {
@@ -11729,14 +11729,14 @@ test("basic rendering with 2 groupbys", async () => {
     expect(".o_kanban_group").toHaveCount(2);
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(3);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("basic rendering with a date groupby with a granularity", async () => {
@@ -11768,14 +11768,14 @@ test("basic rendering with a date groupby with a granularity", async () => {
     expect(".o_kanban_group").toHaveCount(2);
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(3);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(1);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("quick create record and click outside (no dirty input)", async () => {
@@ -11829,11 +11829,11 @@ test.tags("desktop")("quick create record and click outside (no dirty input)", a
     expect(".o_kanban_quick_create").toHaveCount(1);
     expect(".o_kanban_group:nth-child(1) .o_kanban_quick_create").toHaveCount(1);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await createKanbanRecord();
 
-    expect(["create record"]).toVerifySteps();
+    expect.verifySteps(["create record"]);
     expect(".o_kanban_quick_create").toHaveCount(0);
 });
 
@@ -11897,11 +11897,11 @@ test.tags("desktop")("quick create record and click outside (with dirty input)",
     await editKanbanRecordQuickCreateInput("display_name", "ABC");
 
     expect(".o_kanban_quick_create [name=display_name] input").toHaveValue("ABC");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await createKanbanRecord();
 
-    expect(["create record"]).toVerifySteps();
+    expect.verifySteps(["create record"]);
     expect(".o_kanban_quick_create").toHaveCount(0);
 });
 
@@ -12042,7 +12042,7 @@ test("Color '200' (gray) can be used twice (for false value and another value) i
     expect(getKanbanCounters()).toEqual(["2", "1"]);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveText("");
     expect(".o_kanban_group:nth-child(2) .o_kanban_load_more").toHaveCount(0);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -12053,7 +12053,7 @@ test("Color '200' (gray) can be used twice (for false value and another value) i
         "web_search_read",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("update field on which progress bars are computed", async () => {
@@ -12132,7 +12132,7 @@ test("update field on which progress bars are computed", async () => {
     expect(getKanbanProgressBars(1)[0].style.width).toBe("25%"); // abc: 1
     expect(getKanbanProgressBars(1)[1].style.width).toBe("50%"); // def: 2
     expect(getKanbanProgressBars(1)[2].style.width).toBe("25%"); // ghi: 1
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -12145,7 +12145,7 @@ test("update field on which progress bars are computed", async () => {
         "read_progress_bar",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("load more button shouldn't be visible when unfiltering column", async () => {
@@ -12243,7 +12243,7 @@ test("click on the progressBar of a new column", async () => {
     await contains(getKanbanProgressBars(0)[0]).click();
 
     expect(".o_kanban_record").toHaveCount(1);
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test.tags("desktop")("keep focus in cp when pressing arrowdown and no kanban card", async () => {
@@ -12329,7 +12329,7 @@ test.tags("desktop")("no leak of TransactionInProgress (grouped case)", async ()
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveText("blip");
     expect(".o_kanban_group:nth-child(3) .o_kanban_record").toHaveCount(2);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // move "yop" from first to second column
     await contains(".o_kanban_group:nth-child(1) .o_kanban_record").dragAndDrop(
@@ -12340,7 +12340,7 @@ test.tags("desktop")("no leak of TransactionInProgress (grouped case)", async ()
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2);
     expect(queryAllTexts(".o_kanban_group:nth-child(2) .o_kanban_record")).toEqual(["blip", "yop"]);
     expect(".o_kanban_group:nth-child(3) .o_kanban_record").toHaveCount(2);
-    expect(["resequence"]).toVerifySteps();
+    expect.verifySteps(["resequence"]);
 
     // try to move "yop" from second to third column
     await contains(".o_kanban_group:nth-child(2) .o_kanban_record:nth-child(3)").dragAndDrop(
@@ -12351,7 +12351,7 @@ test.tags("desktop")("no leak of TransactionInProgress (grouped case)", async ()
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2);
     expect(queryAllTexts(".o_kanban_group:nth-child(2) .o_kanban_record")).toEqual(["blip", "yop"]);
     expect(".o_kanban_group:nth-child(3) .o_kanban_record").toHaveCount(2);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     def.resolve();
     await animationFrame();
@@ -12369,7 +12369,7 @@ test.tags("desktop")("no leak of TransactionInProgress (grouped case)", async ()
         "blip",
         "yop",
     ]);
-    expect(["resequence"]).toVerifySteps();
+    expect.verifySteps(["resequence"]);
 });
 
 test.tags("desktop")("no leak of TransactionInProgress (not grouped case)", async () => {
@@ -12402,7 +12402,7 @@ test.tags("desktop")("no leak of TransactionInProgress (not grouped case)", asyn
         "yop",
         "gnap",
     ]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // move second "blip" to third place
     await contains(".o_kanban_record:nth-child(2)").dragAndDrop(
@@ -12415,13 +12415,13 @@ test.tags("desktop")("no leak of TransactionInProgress (not grouped case)", asyn
         "blip",
         "gnap",
     ]);
-    expect(["resequence"]).toVerifySteps();
+    expect.verifySteps(["resequence"]);
 
     // try again
     await contains(".o_kanban_record:nth-child(2)").dragAndDrop(
         queryFirst(".o_kanban_record:nth-child(3)")
     );
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     def.resolve();
     await animationFrame();
@@ -12443,7 +12443,7 @@ test.tags("desktop")("no leak of TransactionInProgress (not grouped case)", asyn
         "gnap",
         "blip",
     ]);
-    expect(["resequence"]).toVerifySteps();
+    expect.verifySteps(["resequence"]);
 });
 
 test("renders banner_route", async () => {
@@ -12466,7 +12466,7 @@ test("renders banner_route", async () => {
         groupBy: ["bar"],
     });
 
-    expect(["/mybody/isacage"]).toVerifySteps();
+    expect.verifySteps(["/mybody/isacage"]);
     expect(".setmybodyfree").toHaveCount(1);
 });
 
@@ -12528,12 +12528,12 @@ test("fieldDependencies support for fields: dependence on a relational field", a
     });
 
     expect(queryFirst("[name=foo] span").innerText).toBe("hello");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("column quick create - title and placeholder", async function (assert) {
@@ -12675,7 +12675,7 @@ test.tags("desktop")("drag record to folded column, with progressbars", async ()
     expect(queryText(getKanbanColumn(1))).toBe("Yes\n3");
     expect(getKanbanProgressBars(0).map((pb) => pb.style.width)).toEqual(["100%"]);
     expect(getKanbanCounters()).toEqual(["-4"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -12686,7 +12686,7 @@ test.tags("desktop")("drag record to folded column, with progressbars", async ()
         "web_save",
         "read_progress_bar",
         "web_read_group",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("quick create record in grouped kanban in a form view dialog", async () => {
@@ -12739,7 +12739,7 @@ test.tags("desktop")("quick create record in grouped kanban in a form view dialo
         "yop",
         "gnap",
     ]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -12753,7 +12753,7 @@ test.tags("desktop")("quick create record in grouped kanban in a form view dialo
         "web_save", // save virtual record
         "web_read", // read the created record to get foo value
         "onchange", // reopen the quick create automatically
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("no sample data when all groups are folded then one is unfolded", async () => {
@@ -12973,14 +12973,14 @@ test.tags("desktop")("d&d records grouped by m2o with m2o displayed in records",
         groupBy: ["product_id"],
     });
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
     expect(queryAllTexts(".o_kanban_record")).toEqual(["hello", "hello", "xmo", "xmo"]);
 
     await contains(".o_kanban_group:nth-child(2) .o_kanban_record").dragAndDrop(
@@ -12991,7 +12991,7 @@ test.tags("desktop")("d&d records grouped by m2o with m2o displayed in records",
     def.resolve();
     await animationFrame();
 
-    expect(["web_save", "/web/dataset/resequence", "read"]).toVerifySteps();
+    expect.verifySteps(["web_save", "/web/dataset/resequence", "read"]);
     expect(queryAllTexts(".o_kanban_record")).toEqual(["hello", "hello", "hello", "xmo"]);
 });
 
@@ -13093,7 +13093,7 @@ test.tags("desktop")("rerenders only once after resequencing records", async () 
 
     expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 4, 4: 1 });
 
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
@@ -13106,7 +13106,7 @@ test.tags("desktop")("rerenders only once after resequencing records", async () 
         "web_save",
         "/web/dataset/resequence",
         "read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("sample server: _mockWebReadGroup API", async () => {
@@ -13194,7 +13194,7 @@ test.tags("desktop")("scroll on group unfold and progressbar click", async () =>
         groupBy: ["product_id"],
     });
 
-    expect(["get_views", "read_progress_bar", "web_read_group", "web_search_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "read_progress_bar", "web_read_group", "web_search_read"]);
     queryOne(".o_content").scrollTo = (params) => {
         expect.step("scrolled");
         expect(params.top).toBe(0);
@@ -13202,12 +13202,12 @@ test.tags("desktop")("scroll on group unfold and progressbar click", async () =>
 
     await contains(getKanbanProgressBars(0)[0]).click();
 
-    expect(["web_read_group", "web_search_read", "scrolled"]).toVerifySteps();
+    expect.verifySteps(["web_read_group", "web_search_read", "scrolled"]);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
 
     await contains(getKanbanColumn(1)).click();
 
-    expect(["web_search_read", "scrolled"]).toVerifySteps();
+    expect.verifySteps(["web_search_read", "scrolled"]);
 });
 
 test.tags("desktop")("action button in controlPanel with display='always'", async () => {
@@ -13272,7 +13272,7 @@ test.tags("desktop")("action button in controlPanel with display='always'", asyn
 
     await contains(cpButtons[1]).click();
 
-    expect(["execute_action"]).toVerifySteps();
+    expect.verifySteps(["execute_action"]);
 });
 
 test.tags("desktop")("Keep scrollTop when loading records with load more", async () => {
@@ -13547,7 +13547,7 @@ test.tags("desktop")("group by properties and drag and drop", async () => {
         groupBy: ["properties.my_char"],
     });
 
-    expect(["get_property_definition"]).toVerifySteps();
+    expect.verifySteps(["get_property_definition"]);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(1);
     expect(".o_kanban_group:nth-child(3) .o_kanban_record").toHaveCount(1);
 
@@ -13555,7 +13555,7 @@ test.tags("desktop")("group by properties and drag and drop", async () => {
         queryFirst(".o_kanban_group:nth-child(3)")
     );
 
-    expect(["web_save", "resequence"]).toVerifySteps();
+    expect.verifySteps(["web_save", "resequence"]);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(0);
     expect(".o_kanban_group:nth-child(3) .o_kanban_record").toHaveCount(2);
 });

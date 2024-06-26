@@ -265,12 +265,12 @@ test("share dashboard from dashboard view", async function () {
     );
     def.resolve();
     await animationFrame();
-    expect(["dashboard_shared", "share url copied"]).toVerifySteps();
+    expect.verifySteps(["dashboard_shared", "share url copied"]);
     expect(target.querySelector(".o_field_CopyClipboardChar").innerText).toBe(
         "localhost:8069/share/url/132465"
     );
     await contains(".fa-clipboard").click();
-    expect(["share url copied"]).toVerifySteps();
+    expect.verifySteps(["share url copied"]);
 });
 
 test("Changing filter values will create a new share", async function () {

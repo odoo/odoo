@@ -358,10 +358,10 @@ test("editing a many2one (with form view opened with external button)", async ()
 
     // save and close modal
     await contains(".modal:eq(1) .o_form_button_save").click();
-    expect(["web_save", "read partner: display_name"]).toVerifySteps();
+    expect.verifySteps(["web_save", "read partner: display_name"]);
     // save form
     await clickSave();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("many2ones in form views with show_address", async () => {
@@ -615,11 +615,11 @@ test("many2ones in list views: create in dialog keeps the input", async () => {
     await clickFieldDropdownItem("trululu", "Create and edit...");
 
     await clickSave();
-    expect([`web_save: [[],{"name":"yy"}]`]).toVerifySteps();
+    expect.verifySteps([`web_save: [[],{"name":"yy"}]`]);
     expect(".o_field_widget[name=trululu] input").toHaveValue("yy");
 
     await contains(getFixture()).click();
-    expect([`web_save: [[1],{"trululu":5}]`]).toVerifySteps();
+    expect.verifySteps([`web_save: [[1],{"trululu":5}]`]);
     expect(".o_data_cell[name=trululu]:eq(0)").toHaveText("yy");
 });
 
@@ -651,7 +651,7 @@ test("many2ones in list views: create a new record with a context", async () => 
     await runAllTimers();
     await clickFieldDropdownItem("user_id", 'Create "yy"');
     expect(".o_external_button").toHaveCount(1);
-    expect(["name_create"]).toVerifySteps();
+    expect.verifySteps(["name_create"]);
 });
 
 test("using a many2one widget must take into account the decorations", async () => {
@@ -712,7 +712,7 @@ test("onchanges on many2ones trigger when editing record in form view", async ()
     // TODISCUSS ? Same record, don't change the display name (opti ?)
     // save the modal and make sure an onchange is triggered
     await contains(".modal:eq(1) .o_form_button_save").click();
-    expect([
+    expect.verifySteps([
         "get_views",
         "web_read",
         "get_formview_id",
@@ -721,7 +721,7 @@ test("onchanges on many2ones trigger when editing record in form view", async ()
         "web_save",
         "read",
         "onchange",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("edit many2one before onchange is finished should not reset the value", async () => {
@@ -755,7 +755,7 @@ test("edit many2one before onchange is finished should not reset the value", asy
     await animationFrame();
     expect("[name='user_id'] input").toHaveValue("Plop");
 
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 });
 
 test("many2one doesn't trigger field_change when being emptied", async () => {
@@ -802,11 +802,11 @@ test("..._view_ref keys are removed from many2one context on create and edit", a
         },
     });
 
-    expect(['["get_views",null,"test_form_view"]']).toVerifySteps();
+    expect.verifySteps(['["get_views",null,"test_form_view"]']);
     await contains(".o_field_widget[name=trululu] input").edit("ABC", { confirm: false });
     await runAllTimers();
     await contains(".o_field_widget[name=trululu] .o_m2o_dropdown_option_create_edit").click();
-    expect(['["get_views",null,null]']).toVerifySteps();
+    expect.verifySteps(['["get_views",null,null]']);
 });
 
 test("empty a many2one field in list view", async () => {
@@ -830,7 +830,7 @@ test("empty a many2one field in list view", async () => {
     await contains(".o_list_view").click();
     expect(".o_data_row:eq(0)").toHaveText("");
 
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test("focus tracking on a many2one in a list", async () => {
@@ -1169,7 +1169,7 @@ test("many2one searches with correct value", async () => {
     await contains(".o_field_many2one input").click();
     await runAllTimers();
 
-    expect(["search: ", "search: ", "search: p", "search: p"]).toVerifySteps();
+    expect.verifySteps(["search: ", "search: ", "search: p", "search: p"]);
 });
 
 test("many2one search with server returning multiple lines", async () => {
@@ -1211,7 +1211,7 @@ test("many2one search with server returning multiple lines", async () => {
                 </sheet>
             </form>`,
     });
-    expect(["web_read"]).toVerifySteps();
+    expect.verifySteps(["web_read"]);
 
     // Initial value
     expect(".o_field_widget input").toHaveValue("aaa");
@@ -1223,11 +1223,11 @@ test("many2one search with server returning multiple lines", async () => {
     await contains(".o_field_widget input").edit("fizz", { confirm: false });
     await runAllTimers();
     // should display only the first line of the returned value from the server
-    expect(["name_search"]).toVerifySteps();
+    expect.verifySteps(["name_search"]);
     expect(queryAllTexts(".dropdown-menu li:not(.o_m2o_dropdown_option")).toEqual(["fizz", "aaa"]);
     await contains(".dropdown-menu li").click();
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(".o_field_widget input").toHaveValue("fizz");
     expect(".o_field_many2one_extra").toHaveInnerHTML(
         "<span>buzz</span><br><span>fizzbuzz</span>",
@@ -1235,7 +1235,7 @@ test("many2one search with server returning multiple lines", async () => {
     );
 
     await clickSave();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test("many2one search with trailing and leading spaces", async () => {
@@ -1280,7 +1280,7 @@ test("many2one search with trailing and leading spaces", async () => {
         ".o_field_many2one[name='trululu'] .dropdown-menu li:not(.o_m2o_dropdown_option)"
     ).toHaveCount(1);
 
-    expect(["search: ", "search: first", "search: first", "search: first"]).toVerifySteps();
+    expect.verifySteps(["search: ", "search: first", "search: first", "search: first"]);
 });
 
 // Should be removed ?
@@ -1365,7 +1365,7 @@ test("standalone many2one field", async () => {
     await runAllTimers();
     await contains(".o_field_widget .ui-menu-item").click();
     expect(".o_field_widget .o_external_button").toHaveCount(0);
-    expect(["name_search", "name_create"]).toVerifySteps();
+    expect.verifySteps(["name_search", "name_create"]);
 });
 
 test("form: quick create then save directly", async () => {
@@ -1393,14 +1393,13 @@ test("form: quick create then save directly", async () => {
     await contains(".ui-menu-item").click();
     await contains(".o_form_button_save").click();
 
-    expect(["name_create"]).toVerifySteps({
-        message: "should wait for the name_create before creating the record",
-    });
+    // should wait for the name_create before creating the record
+    expect.verifySteps(["name_create"]);
 
     def.resolve();
     await animationFrame();
 
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test("form: quick create for field that returns false after name_create call", async () => {
@@ -1419,7 +1418,7 @@ test("form: quick create for field that returns false after name_create call", a
     await contains(".o_field_widget[name=trululu] input").edit("beam", { confirm: false });
     await runAllTimers();
     await contains(".ui-menu-item").click();
-    expect(["name_create"]).toVerifySteps();
+    expect.verifySteps(["name_create"]);
     expect(".o_input_dropdown input").toHaveValue("");
 });
 
@@ -1459,15 +1458,14 @@ test("list: quick create then save directly", async () => {
 
     await contains(".o_list_button_save").click();
 
-    expect(["name_create"]).toVerifySteps({
-        message: "should wait for the name_create before creating the record",
-    });
+    // should wait for the name_create before creating the record
+    expect.verifySteps(["name_create"]);
     expect(".o_data_row").toHaveCount(4);
 
     def.resolve();
     await animationFrame();
 
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
     expect(".o_data_row").toHaveCount(4);
     expect(".o_data_row .o_data_cell:eq(0)").toHaveText("b");
 });
@@ -1509,14 +1507,13 @@ test("list in form: quick create then save directly", async () => {
 
     await contains(".o_form_button_save").click();
 
-    expect(["name_create"]).toVerifySteps({
-        message: "should wait for the name_create before creating the record",
-    });
+    // should wait for the name_create before creating the record
+    expect.verifySteps(["name_create"]);
 
     await def.resolve();
     await animationFrame();
 
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
     expect(".o_data_row .o_data_cell").toHaveText("b");
 });
 
@@ -1550,7 +1547,7 @@ test("name_create in form dialog", async () => {
     await runAllTimers();
     await contains(".modal .o_field_widget[name=product_id] .ui-menu-item").click();
 
-    expect(["name_create"]).toVerifySteps();
+    expect.verifySteps(["name_create"]);
 });
 
 test("many2one inside one2many form view, with domain", async () => {
@@ -2162,7 +2159,7 @@ test("list in form: call button in sub view", async () => {
     const buttons = queryAll(".o_dialog:not(.o_inactive_modal) .o_form_statusbar button");
 
     await contains(buttons[0]).click();
-    expect(["action"]).toVerifySteps();
+    expect.verifySteps(["action"]);
     expect(buttons[1]).not.toBeEnabled();
 
     def.resolve();
@@ -2175,7 +2172,7 @@ test("list in form: call button in sub view", async () => {
     expect(".modal").toHaveCount(2);
 
     await contains(".o_dialog:not(.o_inactive_modal) .o_form_statusbar button:eq(1)").click();
-    expect(["object"]).toVerifySteps();
+    expect.verifySteps(["object"]);
 });
 
 test("X2Many sequence list in modal", async () => {
@@ -2267,7 +2264,7 @@ test("X2Many sequence list in modal", async () => {
     await contains(".modal:eq(1) .o_form_button_save").click();
     await clickSave();
 
-    expect(["onchange sequence", "partnertype web_save"]).toVerifySteps();
+    expect.verifySteps(["onchange sequence", "partnertype web_save"]);
 });
 
 test("autocompletion in a many2one, in form view with a domain", async () => {
@@ -2338,7 +2335,7 @@ test("creating record with many2one with option always_reload", async () => {
     });
 
     expect(".o_field_widget[name='trululu'] input").toHaveValue("hello world");
-    expect(["get_views", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "onchange"]);
 });
 
 test("empty list with sample data and many2one with option always_reload", async () => {
@@ -3061,14 +3058,14 @@ test("many2one in editable list + onchange, with enter [REQUIRE FOCUS]", async (
     press("enter");
     await animationFrame();
     expect(".modal").toHaveCount(0);
-    expect([
+    expect.verifySteps([
         "get_views",
         "web_search_read", // to display results in the dialog
         "has_group",
         "name_search",
         "onchange",
         "web_save",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("many2one in editable list + onchange, with enter, part 2 [REQUIRE FOCUS]", async () => {
@@ -3106,14 +3103,14 @@ test("many2one in editable list + onchange, with enter, part 2 [REQUIRE FOCUS]",
     def.resolve();
     await animationFrame();
     expect(".modal").toHaveCount(0);
-    expect([
+    expect.verifySteps([
         "get_views",
         "web_search_read", // to display results in the dialog
         "has_group",
         "name_search",
         "onchange",
         "web_save",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("many2one: dynamic domain set in the field's definition", async () => {
@@ -3246,14 +3243,14 @@ test("search more in many2one: no text in input", async () => {
     await contains(`.o_field_widget[name="trululu"] input`).click();
     await contains(`.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`).click();
 
-    expect([
+    expect.verifySteps([
         "get_views", // main form view
         "onchange",
         "name_search", // to display results in the dropdown
         "get_views", // list view in dialog
         "has_group",
         "web_search_read", // to display results in the dialog
-    ]).toVerifySteps();
+    ]);
 });
 
 test("search more in many2one: text in input", async () => {
@@ -3301,7 +3298,7 @@ test("search more in many2one: text in input", async () => {
     expectedDomain = [];
     await contains(".modal .o_cp_searchview .o_facet_remove").click();
 
-    expect([
+    expect.verifySteps([
         "get_views", // main form view
         "onchange",
         "name_search", // empty search, triggered when the user clicks in the input
@@ -3311,7 +3308,7 @@ test("search more in many2one: text in input", async () => {
         "has_group",
         "web_search_read", // to display results in the dialog
         "web_search_read", // after removal of dynamic filter
-    ]).toVerifySteps();
+    ]);
 });
 
 test("search more in many2one: dropdown click", async () => {
@@ -3435,7 +3432,7 @@ test("search more in many2one: resequence inside dialog", async () => {
     );
     await animationFrame();
 
-    expect([
+    expect.verifySteps([
         "get_views",
         "onchange",
         "name_search", // to display results in the dropdown
@@ -3444,7 +3441,7 @@ test("search more in many2one: resequence inside dialog", async () => {
         "has_group",
         "/web/dataset/resequence", // resequencing lines
         "read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("many2one dropdown disappears on scroll", async () => {
@@ -3671,7 +3668,7 @@ test("click on many2one link in list view", async () => {
     expect(".o_breadcrumb").toHaveCount(1);
 
     await contains("a.o_form_uri").click();
-    expect(["get_formview_action"]).toVerifySteps();
+    expect.verifySteps(["get_formview_action"]);
     expect(".breadcrumb-item").toHaveCount(1);
     expect(".o_breadcrumb").toHaveCount(1);
 });
@@ -3716,7 +3713,7 @@ test("external_button performs a doAction by default", async () => {
     expect(".o_field_widget .o_external_button.oi-arrow-right").toHaveCount(1);
     await contains(".o_field_widget .o_external_button", { visible: false }).click();
 
-    expect(["get_formview_action"]).toVerifySteps();
+    expect.verifySteps(["get_formview_action"]);
     expect(".breadcrumb").toHaveText("first record");
 });
 
@@ -3736,7 +3733,7 @@ test("external_button opens a FormViewDialog in dialogs", async () => {
     expect(".o_field_widget .o_external_button.oi-launch").toHaveCount(1);
     await contains(".o_field_widget .o_external_button", { visible: false }).click();
 
-    expect(["get_formview_id"]).toVerifySteps();
+    expect.verifySteps(["get_formview_id"]);
     expect(".modal").toHaveCount(2);
 });
 
@@ -3773,7 +3770,7 @@ test("keep changes when editing related record in a dialog", async () => {
 
     expect(".modal").toHaveCount(1);
     expect(".o_field_widget[name=foo] input").toHaveValue("some value");
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test("create and edit, save and then discard", async () => {

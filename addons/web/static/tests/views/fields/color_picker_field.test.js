@@ -87,7 +87,7 @@ test("color picker on tree view", async () => {
     });
 
     await contains(".o_field_color_picker button").click();
-    expect(["record selected to open"]).toVerifySteps();
+    expect.verifySteps(["record selected to open"]);
 });
 
 test("color picker in editable list view", async () => {

@@ -134,12 +134,12 @@ test("value is not updated if it did not change", async () => {
     click(document.body);
 
     expect(getShortDate(pickerProps.value)).toBe("2023-06-06");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     click(".datetime_hook_input");
     edit("07/07/2023");
     click(document.body);
 
     expect(getShortDate(pickerProps.value)).toBe("2023-07-07");
-    expect(["2023-07-07"]).toVerifySteps();
+    expect.verifySteps(["2023-07-07"]);
 });

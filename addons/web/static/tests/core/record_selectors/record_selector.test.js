@@ -97,7 +97,7 @@ test("Display name is correctly fetched", async () => {
     });
 
     expect(".o_record_selector input").toHaveValue("Alice");
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test("Can give domain and context props for the name search", async () => {
@@ -115,10 +115,10 @@ test("Can give domain and context props for the name search", async () => {
     });
 
     expect(".o_record_selector input").toHaveValue("Alice");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     click(".o_record_selector input");
     await animationFrame();
-    expect(["name_search"]).toVerifySteps();
+    expect.verifySteps(["name_search"]);
 });
 
 test("Support placeholder", async () => {

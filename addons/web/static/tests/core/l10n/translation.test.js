@@ -37,7 +37,7 @@ test("lang is given by the user context", async () => {
         expect.step(urlParams.get("lang"));
     });
     await mockLang("fr_FR");
-    expect(["fr_FR"]).toVerifySteps();
+    expect.verifySteps(["fr_FR"]);
 });
 
 test("lang is given by an attribute on the DOM root node", async () => {
@@ -51,7 +51,7 @@ test("lang is given by an attribute on the DOM root node", async () => {
         document.documentElement.removeAttribute("lang");
     });
     await makeMockEnv();
-    expect(["fr_FR"]).toVerifySteps();
+    expect.verifySteps(["fr_FR"]);
 });
 
 test("url is given by the session", async () => {

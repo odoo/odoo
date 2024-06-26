@@ -51,7 +51,7 @@ test("save on hiding tab", async () => {
     expect('.o_field_widget[name="name"] input').toHaveValue("Xavier Lancer");
     await fieldInput("name").edit("Mathiew Brown");
     await hideTab();
-    expect(["save"]).toVerifySteps();
+    expect.verifySteps(["save"]);
 });
 
 test("save on hiding tab (not dirty)", async () => {
@@ -65,7 +65,8 @@ test("save on hiding tab (not dirty)", async () => {
         resId: 1,
     });
     await hideTab();
-    expect([]).toVerifySteps({ message: "should not have saved" });
+    // should not have saved
+    expect.verifySteps([]);
 });
 
 test("save on hiding tab (invalid field)", async () => {
@@ -78,7 +79,8 @@ test("save on hiding tab (invalid field)", async () => {
         arch: `<form><field name="name" required="1"/></form>`,
     });
     await hideTab();
-    expect([]).toVerifySteps({ message: "should not save because of invalid field" });
+    // should not save because of invalid field
+    expect.verifySteps([]);
 });
 
 test("save only once when hiding tab several times quickly", async () => {
@@ -96,7 +98,8 @@ test("save only once when hiding tab several times quickly", async () => {
     await hideTab();
     await hideTab();
     await hideTab();
-    expect(["save"]).toVerifySteps({ message: "should have saved, but only once" });
+    // should have saved, but only once
+    expect.verifySteps(["save"]);
 });
 
 test.tags("desktop")(`save when page changed`, async () => {
@@ -136,7 +139,7 @@ test.tags("desktop")(`save when page changed`, async () => {
 
     await contains(`.o_field_widget[name='name'] input`).edit("aaa");
     await contains(`.o_pager button.o_pager_next`).click();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
     expect(`.o_form_editable`).toHaveCount(1);
     expect(`.o_breadcrumb`).toHaveText("Partner\nKeth MacBeat");
     expect(`.o_field_widget[name="name"] input`).toHaveValue("Keth MacBeat");
@@ -191,7 +194,7 @@ test.tags("desktop")(`save when breadcrumb clicked`, async () => {
 
     await contains(`.o_field_widget[name='name'] input`).edit("aaa");
     await contains(`.breadcrumb-item.o_back_button`).click();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
     expect(`.o_breadcrumb`).toHaveText("Partner");
     expect(`.o_field_cell:eq(0)`).toHaveText("aaa");
 
@@ -237,7 +240,7 @@ test.tags("desktop")(`error on save when breadcrumb clicked`, async () => {
 
     await contains(`.o_field_widget[name='name'] input`).edit("aaa");
     await contains(`.breadcrumb-item.o_back_button`).click();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
     await animationFrame();
     expect(`.o_error_dialog`).toHaveCount(1);
 });
@@ -298,7 +301,7 @@ test.tags("desktop")(`save when action changed`, async () => {
 
     await contains(`.o_field_widget[name='name'] input`).edit("aaa");
     await getService("action").doAction(2, { clearBreadcrumbs: true });
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 
     expect(`.o_breadcrumb`).toHaveText("Other action");
     await getService("action").doAction(1, { clearBreadcrumbs: true });
@@ -341,7 +344,7 @@ test(`save on closing tab/browser`, async () => {
 
     const [event] = unload();
     await sendBeaconDeferred;
-    expect(["sendBeacon"]).toVerifySteps();
+    expect.verifySteps(["sendBeacon"]);
     expect(event.defaultPrevented).toBe(false);
 });
 
@@ -369,7 +372,7 @@ test(`save on closing tab/browser (sendBeacon fails)`, async () => {
 
     const [event] = unload();
     await animationFrame();
-    expect(["sendBeacon"]).toVerifySteps();
+    expect.verifySteps(["sendBeacon"]);
     expect(event.defaultPrevented).toBe(true);
     expect(`.o_notification`).toHaveCount(1);
 
@@ -396,7 +399,7 @@ test(`save on closing tab/browser (invalid field)`, async () => {
     await contains(`.o_field_widget[name="name"] input`).edit("");
     const [event] = unload();
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(event.defaultPrevented).toBe(true);
     expect(`.o_notification`).toHaveCount(1);
 });
@@ -420,7 +423,7 @@ test(`save on closing tab/browser (not dirty)`, async () => {
 
     unload();
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test(`save on closing tab/browser (not dirty but trailing spaces)`, async () => {
@@ -438,12 +441,12 @@ test(`save on closing tab/browser (not dirty but trailing spaces)`, async () => 
         arch: `<form><field name="expertise"/></form>`,
         resId: 1,
     });
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
     expect(`.o_field_widget[name=expertise] input`).toHaveValue("name with trailing spaces   ");
 
     unload();
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test(`save on closing tab/browser (not dirty) with text field`, async () => {
@@ -468,7 +471,7 @@ test(`save on closing tab/browser (not dirty) with text field`, async () => {
 
     unload();
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test.tags("desktop")(`save on closing tab/browser (detached form)`, async () => {
@@ -510,7 +513,7 @@ test.tags("desktop")(`save on closing tab/browser (detached form)`, async () => 
 
     unload();
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test(`save on closing tab/browser (onchanges)`, async () => {
@@ -554,7 +557,7 @@ test(`save on closing tab/browser (onchanges)`, async () => {
     unload();
     await animationFrame();
     await sendBeaconDeferred;
-    expect(["sendBeacon"]).toVerifySteps();
+    expect.verifySteps(["sendBeacon"]);
 });
 
 test(`save on closing tab/browser (onchanges 2)`, async () => {
@@ -598,7 +601,7 @@ test(`save on closing tab/browser (onchanges 2)`, async () => {
     unload();
     await animationFrame();
     await sendBeaconDeferred;
-    expect(["sendBeacon"]).toVerifySteps();
+    expect.verifySteps(["sendBeacon"]);
 });
 
 test(`save on closing tab/browser (pending change)`, async () => {
@@ -622,7 +625,7 @@ test(`save on closing tab/browser (pending change)`, async () => {
         arch: `<form><field name="expertise"/></form>`,
         resId: 1,
     });
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
 
     // edit 'expertise' but do not focusout -> the model isn't aware of the change
     // until the 'beforeunload' event is triggered
@@ -630,7 +633,7 @@ test(`save on closing tab/browser (pending change)`, async () => {
     unload();
     await animationFrame();
     await sendBeaconDeferred;
-    expect(["sendBeacon"]).toVerifySteps();
+    expect.verifySteps(["sendBeacon"]);
 });
 
 test(`save on closing tab/browser (onchanges + pending change)`, async () => {
@@ -673,13 +676,13 @@ test(`save on closing tab/browser (onchanges + pending change)`, async () => {
         `,
         resId: 1,
     });
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
 
     // edit 'unformatted_name' and simulate a focusout (trigger the 'change' event)
     await contains(`.o_field_widget[name="unformatted_name"] input`).edit("John Doe ", {
         confirm: "blur",
     });
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 
     // edit 'name' and simulate a focusout (trigger the 'change' event)
     await contains(`.o_field_widget[name="name"] input`).edit("john doe", { confirm: "blur" });
@@ -692,7 +695,7 @@ test(`save on closing tab/browser (onchanges + pending change)`, async () => {
     unload();
     await animationFrame();
     await sendBeaconDeferred;
-    expect(["sendBeacon"]).toVerifySteps();
+    expect.verifySteps(["sendBeacon"]);
 });
 
 test(`save on closing tab/browser (invalid pending change)`, async () => {
@@ -707,14 +710,14 @@ test(`save on closing tab/browser (invalid pending change)`, async () => {
         arch: `<form><field name="age"/></form>`,
         resId: 1,
     });
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
 
     // edit 'expertise' but do not focusout -> the model isn't aware of the change
     // until the 'beforeunload' event is triggered
     await contains(`.o_field_widget[name="age"] input`).edit("invalid value", { confirm: false });
     unload();
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test(`save on closing tab/browser (onchanges + invalid field)`, async () => {
@@ -742,15 +745,15 @@ test(`save on closing tab/browser (onchanges + invalid field)`, async () => {
         `,
         resId: 1,
     });
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
 
     await contains(`.o_field_widget[name="expertise"] input`).edit("test", { confirm: "blur" });
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 
     await contains(`.o_field_widget[name="name"] input`).edit("", { confirm: "blur" });
     unload();
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test(`save when action button clicked`, async () => {
@@ -769,7 +772,7 @@ test(`save when action button clicked`, async () => {
 
     await contains(`.o_cp_action_menus button`).click();
     await contains(`.o-dropdown--menu .dropdown-item`).click();
-    expect(["save"]).toVerifySteps();
+    expect.verifySteps(["save"]);
     expect(`.o_field_widget[name='expertise'] input`).toHaveValue("test");
 
     await contains(`.o_pager_previous`).click();
@@ -812,7 +815,7 @@ test(`error on save when action button clicked`, async () => {
     await contains(`.o_field_widget[name='expertise'] input`).edit("test");
     await contains(`.o_cp_action_menus button`).click();
     await contains(`.o-dropdown--menu .dropdown-item`).click();
-    expect(["save"]).toVerifySteps();
+    expect.verifySteps(["save"]);
     await animationFrame();
     expect(`.o_error_dialog`).toHaveCount(1);
 });
@@ -829,7 +832,7 @@ test.tags("desktop")(`save when create button clicked`, async () => {
 
     await contains(`.o_field_widget[name='expertise'] input`).edit("test");
     await contains(`.o_control_panel_main_buttons .o_form_button_create`).click();
-    expect(["save"]).toVerifySteps();
+    expect.verifySteps(["save"]);
     expect(`.o_field_widget[name='expertise'] input`).toHaveValue("Marketing");
     expect(`.o_breadcrumb .active`).toHaveText("New");
 });
@@ -849,7 +852,7 @@ test(`error on save when create button clicked`, async () => {
 
     await contains(`.o_field_widget[name='expertise'] input`).edit("test");
     await contains(`.o_form_button_create`).click();
-    expect(["save"]).toVerifySteps();
+    expect.verifySteps(["save"]);
     await animationFrame();
     expect(`.o_error_dialog`).toHaveCount(1);
 });

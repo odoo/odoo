@@ -151,7 +151,7 @@ test(`click on delete button`, async () => {
         deleteRecord: () => expect.step("delete"),
     });
     click(`.o_cw_popover_delete`);
-    expect(["delete"]).toVerifySteps();
+    expect.verifySteps(["delete"]);
 });
 
 test(`click on edit button`, async () => {
@@ -159,5 +159,5 @@ test(`click on edit button`, async () => {
         editRecord: () => expect.step("edit"),
     });
     click(`.o_cw_popover_edit`);
-    expect(["edit"]).toVerifySteps();
+    expect.verifySteps(["edit"]);
 });

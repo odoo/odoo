@@ -73,17 +73,17 @@ test("Create drill down domain", async () => {
         .find((item) => item.id === "move_lines_see_records");
     expect(root.isVisible(env)).toBe(true);
     await root.execute(env);
-    expect(["drill down action"]).toVerifySteps();
+    expect.verifySteps(["drill down action"]);
     selectCell(model, "A2");
     expect(root.isVisible(env)).toBe(false);
     selectCell(model, "A3");
     expect(root.isVisible(env)).toBe(true);
     await root.execute(env);
-    expect(["drill down action"]).toVerifySteps();
+    expect.verifySteps(["drill down action"]);
     selectCell(model, "A4");
     expect(root.isVisible(env)).toBe(true);
     await root.execute(env);
-    expect(["drill down action"]).toVerifySteps();
+    expect.verifySteps(["drill down action"]);
     selectCell(model, "A5");
     expect(root.isVisible(env)).toBe(false);
 });
@@ -118,5 +118,5 @@ test("Create drill down domain when month date is a reference", async () => {
     await waitForDataLoaded(model);
     selectCell(model, "A2");
     await doMenuAction(cellMenuRegistry, ["move_lines_see_records"], env);
-    expect(["spreadsheet_move_line_action"]).toVerifySteps();
+    expect.verifySteps(["spreadsheet_move_line_action"]);
 });

@@ -461,11 +461,11 @@ test("check the concurrency during a research", async () => {
     await runAllTimers();
     press("enter");
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     imSearchDef.resolve();
     await animationFrame();
-    expect(["b"]).toVerifySteps();
+    expect.verifySteps(["b"]);
 });
 
 test("open the command palette with a searchValue already in the searchbar", async () => {
@@ -823,7 +823,7 @@ test("click on command", async () => {
     expect(queryAllTexts(".o_command")).toEqual(["Command1", "Command2"]);
     expect(".o_command.focused").toHaveText(commands[0].name);
     await contains(".o_command.focused").click();
-    expect(["C1"]).toVerifySteps();
+    expect.verifySteps(["C1"]);
 });
 
 test("press enter on command", async () => {
@@ -863,7 +863,7 @@ test("press enter on command", async () => {
     press("enter");
     await animationFrame();
 
-    expect(["C2"]).toVerifySteps();
+    expect.verifySteps(["C2"]);
 });
 
 test("keyboard navigation scroll", async () => {
@@ -1378,13 +1378,13 @@ test("checks that href is correctly used", async () => {
     // Check that we get url when doing ctrl+enter on a command having a link inside it
     press("control+enter");
     await animationFrame();
-    expect(["https://www.odoo.com"]).toVerifySteps();
+    expect.verifySteps(["https://www.odoo.com"]);
     // Check that command has no link inside it
     expect(".o_command_palette .o_command:eq(1) a").not.toHaveAttribute("href");
     // Check that clicking on a command having a link inside it triggers the command action
     // instead of redirecting to the href (last step because it closes the command palette).
     await contains(".o_command_palette .o_command:eq(0)").click();
-    expect(["command_with_link_clicked"]).toVerifySteps();
+    expect.verifySteps(["command_with_link_clicked"]);
 });
 
 test("searchValue must not change without edition", async () => {

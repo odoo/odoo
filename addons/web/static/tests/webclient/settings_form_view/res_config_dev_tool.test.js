@@ -69,7 +69,7 @@ test("Activate the developer mode", async () => {
     await click("a:contains('Activate the developer mode')");
     await tick();
     expect(router.current).toEqual({ debug: 1 });
-    expect(["location reload"]).toVerifySteps();
+    expect.verifySteps(["location reload"]);
 });
 
 test("Activate the developer mode (with assets)", async () => {
@@ -96,7 +96,7 @@ test("Activate the developer mode (with assets)", async () => {
     await click("a:contains('Activate the developer mode (with assets)')");
     await tick();
     expect(router.current).toEqual({ debug: "assets" });
-    expect(["location reload"]).toVerifySteps();
+    expect.verifySteps(["location reload"]);
 });
 
 test("Activate the developer mode (with tests assets)", async () => {
@@ -124,7 +124,7 @@ test("Activate the developer mode (with tests assets)", async () => {
     await click("a:contains('Activate the developer mode (with tests assets)')");
     await tick();
     expect(router.current).toEqual({ debug: "assets,tests" });
-    expect(["location reload"]).toVerifySteps();
+    expect.verifySteps(["location reload"]);
 });
 
 test("Activate the developer modeddd (with tests assets)", async () => {
@@ -157,5 +157,5 @@ test("Activate the developer modeddd (with tests assets)", async () => {
     await click("a:contains('Deactivate the developer mode')");
     await tick();
     expect(router.current).toEqual({});
-    expect(["location reload"]).toVerifySteps();
+    expect.verifySteps(["location reload"]);
 });

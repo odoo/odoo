@@ -14,7 +14,7 @@ test("execute an 'ir.actions.act_url' action with target 'self'", async () => {
         target: "self",
         url: "/my/test/url",
     });
-    expect(["/my/test/url"]).toVerifySteps();
+    expect.verifySteps(["/my/test/url"]);
 });
 
 test("execute an 'ir.actions.act_url' action with onClose option", async () => {
@@ -26,7 +26,7 @@ test("execute an 'ir.actions.act_url' action with onClose option", async () => {
         onClose: () => expect.step("onClose"),
     };
     await getService("action").doAction({ type: "ir.actions.act_url" }, options);
-    expect(["browser open", "onClose"]).toVerifySteps();
+    expect.verifySteps(["browser open", "onClose"]);
 });
 
 test("execute an 'ir.actions.act_url' action with url javascript:", async () => {
@@ -41,7 +41,7 @@ test("execute an 'ir.actions.act_url' action with url javascript:", async () => 
         target: "self",
         url: "javascript:alert()",
     });
-    expect(["/javascript:alert()"]).toVerifySteps();
+    expect.verifySteps(["/javascript:alert()"]);
 });
 
 test("execute an 'ir.actions.act_url' action with target 'download'", async () => {
@@ -57,5 +57,5 @@ test("execute an 'ir.actions.act_url' action with target 'download'", async () =
         url: "/my/test/url",
     });
     expect(".o_blockUI").toHaveCount(0);
-    expect(["/my/test/url"]).toVerifySteps();
+    expect.verifySteps(["/my/test/url"]);
 });

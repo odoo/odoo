@@ -22,17 +22,17 @@ test("register / unregister", async () => {
 
     const key = "q";
     press(key);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     const removeHotkey = hotkey.add(key, () => expect.step(key));
     await animationFrame();
 
     press(key);
-    expect([key]).toVerifySteps();
+    expect.verifySteps([key]);
 
     removeHotkey();
     press(key);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("should ignore when IME is composing", async () => {
@@ -42,9 +42,9 @@ test("should ignore when IME is composing", async () => {
     hotkey.add(key, () => expect.step(key));
     await animationFrame();
     press(key);
-    expect([key]).toVerifySteps();
+    expect.verifySteps([key]);
     press(key, { isComposing: true });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("hotkey handles wrongly formed KeyboardEvent", async () => {
@@ -67,7 +67,7 @@ test("hotkey handles wrongly formed KeyboardEvent", async () => {
     const key = "q";
     let removeHotkey = hotkey.add(key, () => expect.step(key), { global: true });
     press(key);
-    expect([key]).toVerifySteps();
+    expect.verifySteps([key]);
     removeHotkey();
 
     removeHotkey = hotkey.add(
@@ -79,12 +79,12 @@ test("hotkey handles wrongly formed KeyboardEvent", async () => {
     );
 
     press(key);
-    expect(["error"]).toVerifySteps();
+    expect.verifySteps(["error"]);
 
     // Trigger an event that doesn't honor KeyboardEvent API: that's the point
     // in particular, it has no `key`
     press("");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("[accesskey] attrs replaced by [data-hotkey]", async () => {
@@ -109,9 +109,9 @@ test("[accesskey] attrs replaced by [data-hotkey]", async () => {
     expect(".foo[accesskey]").toHaveCount(0);
 
     // try to press the related hotkey, just to make sure it works
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     press(["alt", "a"]);
-    expect(["click"]).toVerifySteps();
+    expect.verifySteps(["click"]);
 });
 
 test("[accesskey] attrs replaced by [data-hotkey], part 2", async () => {
@@ -159,9 +159,9 @@ test("[accesskey] attrs replaced by [data-hotkey], part 2", async () => {
     expect(getService("ui").getActiveElementOf(queryOne("main div"))).not.toBe(
         getService("ui").activeElement
     );
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     press(["alt", "a"]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // remove the UIOwnershipTakerComponent
     comp.state.foo = false;
@@ -175,9 +175,9 @@ test("[accesskey] attrs replaced by [data-hotkey], part 2", async () => {
     expect("main div[data-hotkey]").toHaveCount(1);
     expect("main div[accesskey]").toHaveCount(0);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     press(["alt", "a"]);
-    expect(["click"]).toVerifySteps();
+    expect.verifySteps(["click"]);
 });
 
 test("data-hotkey", async () => {
@@ -195,17 +195,17 @@ test("data-hotkey", async () => {
 
     const strokes = ["alt", "b"];
     press(strokes);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     const comp = await mountWithCleanup(MyComponent);
 
     press(strokes);
-    expect(["click"]).toVerifySteps();
+    expect.verifySteps(["click"]);
 
     destroy(comp);
 
     press(strokes);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("invisible data-hotkeys are not enabled. ", async () => {
@@ -223,16 +223,17 @@ test("invisible data-hotkeys are not enabled. ", async () => {
 
     const strokes = ["alt", "b"];
     press(strokes);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await mountWithCleanup(MyComponent);
 
     press(strokes);
-    expect(["click"]).toVerifySteps();
+    expect.verifySteps(["click"]);
 
     queryOne(".myButton").disabled = true;
     press(strokes);
-    expect([]).toVerifySteps({ message: "shouldn't trigger the hotkey of an invisible button" });
+    // shouldn't trigger the hotkey of an invisible button
+    expect.verifySteps([]);
 });
 
 test("hook", async () => {
@@ -246,17 +247,17 @@ test("hook", async () => {
     }
 
     press(key);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     const comp = await mountWithCleanup(TestComponent);
 
     press(key);
-    expect([key]).toVerifySteps();
+    expect.verifySteps([key]);
 
     destroy(comp);
 
     press(key);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("non-MacOS usability", async () => {
@@ -268,10 +269,10 @@ test("non-MacOS usability", async () => {
     let removeHotkey = hotkey.add(`alt+${key}`, () => expect.step(`alt+${key}`));
     await animationFrame();
     press(["alt", key]);
-    expect([`alt+${key}`]).toVerifySteps();
+    expect.verifySteps([`alt+${key}`]);
 
     press(["control", key]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     removeHotkey();
 
@@ -280,10 +281,10 @@ test("non-MacOS usability", async () => {
     await animationFrame();
 
     press(["control", key]);
-    expect([`control+${key}`]).toVerifySteps();
+    expect.verifySteps([`control+${key}`]);
 
     press(["command", key]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     removeHotkey();
 });
@@ -307,7 +308,7 @@ test("the overlay of hotkeys is correctly displayed", async () => {
     keyDown("alt");
     expect(getOverlays()).toEqual(["B", "C"], { message: "should display the overlay" });
     press("b");
-    expect(["click b"]).toVerifySteps();
+    expect.verifySteps(["click b"]);
     expect(getOverlays()).toEqual([], { message: "shouldn't display the overlay" });
 
     // apply a non-existent hotkey
@@ -315,7 +316,7 @@ test("the overlay of hotkeys is correctly displayed", async () => {
     expect(getOverlays()).toEqual(["B", "C"], { message: "should display the overlay" });
     press("x");
     expect(getOverlays()).toEqual([], { message: "shouldn't display the overlay" });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("the overlay of hotkeys is correctly displayed on MacOs", async () => {
@@ -338,7 +339,7 @@ test("the overlay of hotkeys is correctly displayed on MacOs", async () => {
     keyDown("ctrl");
     expect(getOverlays()).toEqual(["B", "C"], { message: "should display the overlay" });
     press("b");
-    expect(["click b"]).toVerifySteps();
+    expect.verifySteps(["click b"]);
     expect(getOverlays()).toEqual([], { message: "shouldn't display the overlay" });
 
     // apply a non-existent hotkey
@@ -346,7 +347,7 @@ test("the overlay of hotkeys is correctly displayed on MacOs", async () => {
     expect(getOverlays()).toEqual(["B", "C"], { message: "should display the overlay" });
     press("x");
     expect(getOverlays()).toEqual([], { message: "shouldn't display the overlay" });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("overlays can be toggled multiple times in a row", async () => {
@@ -387,10 +388,10 @@ test("MacOS usability", async () => {
     await animationFrame();
 
     press(["alt", key]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     press(["ctrl", key]);
-    expect([`alt+${key}`]).toVerifySteps();
+    expect.verifySteps([`alt+${key}`]);
 
     removeHotkey();
 
@@ -399,10 +400,10 @@ test("MacOS usability", async () => {
     await animationFrame();
 
     press(["ctrl", key]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     press(["cmd", key]);
-    expect([`control+${key}`]).toVerifySteps();
+    expect.verifySteps([`control+${key}`]);
 
     removeHotkey();
 });
@@ -420,10 +421,10 @@ test("[data-hotkey] alt is required", async () => {
     await mountWithCleanup(TestComponent);
 
     press(["alt", key]);
-    expect([key]).toVerifySteps();
+    expect.verifySteps([key]);
 
     press(key);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("registration allows repeat if specified", async () => {
@@ -446,13 +447,13 @@ test("registration allows repeat if specified", async () => {
     press(allowRepeatKey);
     press(disallowRepeatKey);
     press(defaultBehaviourKey);
-    expect([allowRepeatKey, disallowRepeatKey, defaultBehaviourKey]).toVerifySteps();
+    expect.verifySteps([allowRepeatKey, disallowRepeatKey, defaultBehaviourKey]);
 
     // Dispatch the three keys with repeat:
     press(allowRepeatKey, { repeat: true });
     press(disallowRepeatKey, { repeat: true });
     press(defaultBehaviourKey, { repeat: true });
-    expect([allowRepeatKey]).toVerifySteps();
+    expect.verifySteps([allowRepeatKey]);
 });
 
 test("[data-hotkey] never allow repeat", async () => {
@@ -468,10 +469,10 @@ test("[data-hotkey] never allow repeat", async () => {
     await mountWithCleanup(TestComponent);
 
     press(["alt", key]);
-    expect([key]).toVerifySteps();
+    expect.verifySteps([key]);
 
     press(["alt", key], { repeat: true });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("hotkeys evil 👹", async () => {
@@ -506,7 +507,7 @@ test("component can register many hotkeys", async () => {
     press("a");
     press("b");
     press(["alt", "c"]);
-    expect(["callback:a", "callback:b", "click"]).toVerifySteps();
+    expect.verifySteps(["callback:a", "callback:b", "click"]);
 });
 
 test("many components can register same hotkeys (call order matters)", async () => {
@@ -534,34 +535,26 @@ test("many components can register same hotkeys (call order matters)", async () 
     press("a");
     press("b");
     press(["alt", "c"]);
-    expect(["comp1:a", "comp1:b", "comp1:c:button"]).toVerifySteps({
-        message: "the callbacks of comp1 are called",
-    });
+    // the callbacks of comp1 are called
+    expect.verifySteps(["comp1:a", "comp1:b", "comp1:c:button"]);
 
     press(["alt", "z"]);
-    expect(["comp1:z"]).toVerifySteps({
-        message:
-            "calls only the callback from the useHotkey registration and the button is not clicked",
-    });
+    // calls only the callback from the useHotkey registration and the button is not clicked
+    expect.verifySteps(["comp1:z"]);
 
     await mountWithCleanup(getComp("comp2"));
     press("a");
     press("b");
-    expect(["comp2:a", "comp2:b"]).toVerifySteps({
-        message: "calls only the callbacks from last useHotkey registrations",
-    });
+    // calls only the callbacks from last useHotkey registrations
+    expect.verifySteps(["comp2:a", "comp2:b"]);
 
     press(["alt", "c"]);
-    expect(["comp1:c:button"]).toVerifySteps({
-        message:
-            "calls only the callback of the first encountered button with proper [data-hotkey]",
-    });
+    // calls only the callback of the first encountered button with proper [data-hotkey]
+    expect.verifySteps(["comp1:c:button"]);
 
     press(["alt", "z"]);
-    expect(["comp2:z"]).toVerifySteps({
-        message:
-            "calls only the callbacks from last useHotkey registrations and no button is clicked",
-    });
+    // calls only the callbacks from last useHotkey registrations and no button is clicked
+    expect.verifySteps(["comp2:z"]);
 });
 
 test("registrations and elements belong to the correct UI owner", async () => {
@@ -591,17 +584,17 @@ test("registrations and elements belong to the correct UI owner", async () => {
     await mountWithCleanup(MyComponent1);
     press("a");
     press(["alt", "b"]);
-    expect(["MyComponent1 subscription", "MyComponent1 [data-hotkey]"]).toVerifySteps();
+    expect.verifySteps(["MyComponent1 subscription", "MyComponent1 [data-hotkey]"]);
 
     const comp2 = await mountWithCleanup(MyComponent2);
     press("a");
     press(["alt", "b"]);
-    expect(["MyComponent2 subscription", "MyComponent2 [data-hotkey]"]).toVerifySteps();
+    expect.verifySteps(["MyComponent2 subscription", "MyComponent2 [data-hotkey]"]);
 
     destroy(comp2);
     press("a");
     press(["alt", "b"]);
-    expect(["MyComponent1 subscription", "MyComponent1 [data-hotkey]"]).toVerifySteps();
+    expect.verifySteps(["MyComponent1 subscription", "MyComponent1 [data-hotkey]"]);
 });
 
 test("replace the overlayModifier for non-MacOs", async () => {
@@ -622,10 +615,10 @@ test("replace the overlayModifier for non-MacOs", async () => {
     });
     const key = "b";
     press(["alt", "shift", key]);
-    expect(["click"]).toVerifySteps();
+    expect.verifySteps(["click"]);
 
     press(["alt", key]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("replace the overlayModifier for MacOs", async () => {
@@ -649,10 +642,10 @@ test("replace the overlayModifier for MacOs", async () => {
 
     const key = "b";
     press(["ctrl", "shift", key]);
-    expect(["click"]).toVerifySteps();
+    expect.verifySteps(["click"]);
 
     press(["ctrl", key]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("protects editable elements", async () => {
@@ -665,15 +658,14 @@ test("protects editable elements", async () => {
     }
     await mountWithCleanup(Comp);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     press("ArrowLeft");
-    expect(["called"]).toVerifySteps();
+    expect.verifySteps(["called"]);
 
     await contains(".foo").focus();
     press("ArrowLeft");
-    expect([]).toVerifySteps({
-        message: "the callback is not getting called when it is triggered from an editable",
-    });
+    // the callback is not getting called when it is triggered from an editable
+    expect.verifySteps([]);
 });
 
 test("protects editable elements: can bypassEditableProtection", async () => {
@@ -686,15 +678,14 @@ test("protects editable elements: can bypassEditableProtection", async () => {
     }
     await mountWithCleanup(Comp);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     press("ArrowLeft");
-    expect(["called"]).toVerifySteps();
+    expect.verifySteps(["called"]);
 
     await contains(".foo").focus();
     press("ArrowLeft");
-    expect(["called"]).toVerifySteps({
-        message: "the callback still gets called even if triggered from an editable",
-    });
+    // the callback still gets called even if triggered from an editable
+    expect.verifySteps(["called"]);
 });
 
 test("protects editable elements: an editable can allow hotkeys", async () => {
@@ -707,22 +698,19 @@ test("protects editable elements: an editable can allow hotkeys", async () => {
     }
     await mountWithCleanup(Comp);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     press("ArrowLeft");
-    expect(["called"]).toVerifySteps();
+    expect.verifySteps(["called"]);
 
     await contains(".foo").focus();
     press("ArrowLeft");
-    expect(["called"]).toVerifySteps({
-        message: "the callback gets called as the foo editable allows it",
-    });
+    // the callback gets called as the foo editable allows it
+    expect.verifySteps(["called"]);
 
     await contains(".bar").focus();
     press("ArrowLeft");
-    expect([]).toVerifySteps({
-        message:
-            "the callback does not get called as the bar editable does not explicitly allow hotkeys",
-    });
+    // the callback does not get called as the bar editable does not explicitly allow hotkeys
+    expect.verifySteps([]);
 });
 
 test("ignore numpad keys", async () => {
@@ -734,10 +722,10 @@ test("ignore numpad keys", async () => {
     keyDown("alt"); // for the whole test
 
     press(key, { code: "Numpad1" });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     press(key, { code: "Digit1" });
-    expect(["1"]).toVerifySteps();
+    expect.verifySteps(["1"]);
 });
 
 test("within iframes", async () => {
@@ -747,7 +735,7 @@ test("within iframes", async () => {
 
     // Dispatch directly to target to show that the hotkey service works as expected
     press("Enter");
-    expect(["called"]).toVerifySteps();
+    expect.verifySteps(["called"]);
 
     // Append an iframe to target and wait until it is fully loaded.
     const iframe = document.createElement("iframe");
@@ -760,12 +748,12 @@ test("within iframes", async () => {
     // Dispatch an hotkey from within the iframe
     await contains("iframe:iframe button").focus();
     press("Enter");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // Register the iframe to the hotkey service
     getService("hotkey").registerIframe(iframe);
     press("Enter");
-    expect(["called"]).toVerifySteps();
+    expect.verifySteps(["called"]);
 });
 
 test("callback: received context", async () => {
@@ -833,11 +821,11 @@ test("operating area can be restricted", async () => {
     await mountWithCleanup(A);
     await contains(".one").focus();
     press("Space");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(".two").focus();
     press("Space");
-    expect(["RGNTDJÛ!"]).toVerifySteps();
+    expect.verifySteps(["RGNTDJÛ!"]);
 });
 
 test("operating area and UI active element", async () => {
@@ -897,13 +885,13 @@ test("operating area and UI active element", async () => {
     await contains(".one").focus();
     press("Space");
     press("BackSpace");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // Trigger hotkeys from the 'two'
     await contains(".two").focus();
     press("Space");
     press("BackSpace");
-    expect(["RGNTDJÛ! (global)"]).toVerifySteps();
+    expect.verifySteps(["RGNTDJÛ! (global)"]);
 });
 
 test("validating option", async () => {
@@ -926,11 +914,11 @@ test("validating option", async () => {
     await mountWithCleanup(A);
 
     press("Space");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     isAvailable = true;
     press("Space");
-    expect(["RGNTDJÛ!"]).toVerifySteps();
+    expect.verifySteps(["RGNTDJÛ!"]);
 });
 
 test("operation area with validating option", async () => {
@@ -959,22 +947,22 @@ test("operation area with validating option", async () => {
 
     isAvailable = false;
     press("Space");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     isAvailable = true;
     press("Space");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // Trigger hotkeys from the 'two'
     await contains(".two").focus();
 
     isAvailable = false;
     press("Space");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     isAvailable = true;
     press("Space");
-    expect(["RGNTDJÛ!"]).toVerifySteps();
+    expect.verifySteps(["RGNTDJÛ!"]);
 });
 
 test("mixing hotkeys with and without operation area", async () => {
@@ -991,7 +979,7 @@ test("mixing hotkeys with and without operation area", async () => {
 
     await contains(".root").focus();
     press("Space");
-    expect(["withArea"]).toVerifySteps();
+    expect.verifySteps(["withArea"]);
 });
 
 test("native browser space key ' ' is correctly translated to 'space' ", async () => {
@@ -1007,7 +995,7 @@ test("native browser space key ' ' is correctly translated to 'space' ", async (
 
     await mountWithCleanup(A);
     press([" "]); // event key triggered by the browser
-    expect(["space"]).toVerifySteps();
+    expect.verifySteps(["space"]);
 });
 
 test("useHotkey can display an overlay over a DOM element ", async () => {
@@ -1035,5 +1023,5 @@ test("useHotkey can display an overlay over a DOM element ", async () => {
     expect(getOverlays()).toEqual(["A"], { message: "should display the overlay" });
 
     press("a");
-    expect(["hotkey alt+a has been triggered"]).toVerifySteps();
+    expect.verifySteps(["hotkey alt+a has been triggered"]);
 });

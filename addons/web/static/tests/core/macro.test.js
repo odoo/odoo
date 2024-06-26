@@ -159,7 +159,7 @@ test("a step can have no trigger", async () => {
     expect(input).toHaveValue("");
     await advanceTime(600);
     expect(input).toHaveValue("aaron");
-    expect(["1", "2", "3"]).toVerifySteps();
+    expect.verifySteps(["1", "2", "3"]);
 });
 
 test("onStep function is called at each step", async () => {
@@ -188,7 +188,7 @@ test("onStep function is called at each step", async () => {
     // default interval is 500
     await advanceTime(600);
     expect(span).toHaveText("1");
-    expect(["1", "2"]).toVerifySteps();
+    expect.verifySteps(["1", "2"]);
 });
 
 test("trigger can be a function returning an htmlelement", async () => {

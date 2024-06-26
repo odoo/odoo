@@ -37,7 +37,7 @@ test("get default currency format when it's not in the config", async () => {
     expect(() => model.getters.getCompanyCurrencyFormat()).toThrow(LoadingDataError);
     await animationFrame();
     expect(model.getters.getCompanyCurrencyFormat()).toBe("#,##0.00[$θ]");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("get specific currency format", async () => {

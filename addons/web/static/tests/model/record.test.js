@@ -59,10 +59,10 @@ test(`display a simple field`, async () => {
             </div>
         </div>
     `);
-    expect([
+    expect.verifySteps([
         "/web/dataset/call_kw/foo/fields_get",
         "/web/dataset/call_kw/foo/web_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test(`can be updated with different resId`, async () => {
@@ -85,15 +85,15 @@ test(`can be updated with different resId`, async () => {
 
     onRpc(({ route }) => expect.step(route));
     await mountWithCleanup(Parent);
-    expect([
+    expect.verifySteps([
         "/web/dataset/call_kw/foo/fields_get",
         "/web/dataset/call_kw/foo/web_read",
-    ]).toVerifySteps();
+    ]);
     expect(`.o_field_char:contains(yop)`).toHaveCount(1);
 
     await contains(`button.my-btn`).click();
     expect(`.o_field_char:contains(blip)`).toHaveCount(1);
-    expect(["/web/dataset/call_kw/foo/web_read"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/foo/web_read"]);
 });
 
 test(`predefined fields and values`, async () => {
@@ -126,7 +126,7 @@ test(`predefined fields and values`, async () => {
 
     onRpc(({ route }) => expect.step(route));
     await mountWithCleanup(Parent);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(`.o_field_widget input`).toHaveValue("abc");
 });
 
@@ -169,7 +169,7 @@ test(`provides a way to handle changes in the record`, async () => {
     expect(`[name='foo'] input`).toHaveValue("abc");
 
     await contains(`[name='foo'] input`).edit("753");
-    expect(["record changed"]).toVerifySteps();
+    expect.verifySteps(["record changed"]);
     expect(`[name='foo'] input`).toHaveValue("753");
 });
 
@@ -198,13 +198,7 @@ test(`provides a way to handle before/after saved the record`, async () => {
 
     await contains(`[name='foo'] input`).edit("abc");
     await contains(`button.save`).click();
-    expect([
-        "fields_get",
-        "web_read",
-        "onWillSaveRecord",
-        "web_save",
-        "onRecordSaved",
-    ]).toVerifySteps();
+    expect.verifySteps(["fields_get", "web_read", "onWillSaveRecord", "web_save", "onRecordSaved"]);
 });
 
 test.tags("desktop")(`handles many2one fields: value is a pair id, display_name`, async () => {
@@ -249,15 +243,15 @@ test.tags("desktop")(`handles many2one fields: value is a pair id, display_name`
 
     onRpc(({ route }) => expect.step(route));
     await mountWithCleanup(Parent);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(`.o_field_many2one_selection input`).toHaveValue("bar1");
 
     await contains(`.o_field_many2one_selection input`).edit("abc", { confirm: false });
     await runAllTimers();
-    expect(["/web/dataset/call_kw/bar/name_search"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/bar/name_search"]);
 
     await contains(`.o-autocomplete--dropdown-item a:eq(0)`).click();
-    expect(["record changed"]).toVerifySteps();
+    expect.verifySteps(["record changed"]);
     expect(`.o_field_many2one_selection input`).toHaveValue("abc");
 });
 
@@ -297,7 +291,7 @@ test(`handles many2one fields: value is an id`, async () => {
 
     onRpc(({ route }) => expect.step(route));
     await mountWithCleanup(Parent);
-    expect(["/web/dataset/call_kw/bar/web_read"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/bar/web_read"]);
     expect(`.o_field_many2one_selection input`).toHaveValue("bar1");
 });
 
@@ -337,7 +331,7 @@ test(`handles many2one fields: value is an array with id only`, async () => {
 
     onRpc(({ route }) => expect.step(route));
     await mountWithCleanup(Parent);
-    expect(["/web/dataset/call_kw/bar/web_read"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/bar/web_read"]);
     expect(`.o_field_many2one_selection input`).toHaveValue("bar1");
 });
 
@@ -389,7 +383,7 @@ test(`handles x2many fields`, async () => {
 
     onRpc(({ route }) => expect.step(route));
     await mountWithCleanup(Parent);
-    expect(["/web/dataset/call_kw/tag/web_read"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/tag/web_read"]);
     expect(queryAllTexts`.o_tag`).toEqual(["bug", "ref"]);
 });
 
@@ -435,7 +429,7 @@ test(`supports passing dynamic values -- full control to the user of Record`, as
     expect(`[name='foo'] input`).toHaveValue("abc");
 
     await contains(`[name='foo'] input`).edit("753");
-    expect(["record changed"]).toVerifySteps();
+    expect.verifySteps(["record changed"]);
     expect(`[name='foo'] input`).toHaveValue("357");
 });
 
@@ -467,18 +461,18 @@ test(`can switch records`, async () => {
         );
     });
     await mountWithCleanup(Parent);
-    expect([`web_read : [1] - {"foo":{}}`]).toVerifySteps();
+    expect.verifySteps([`web_read : [1] - {"foo":{}}`]);
     expect(`#increment`).toHaveText("0");
     expect(`div[name='foo']`).toHaveText("yop");
 
     await contains(`#increment`).click();
     // No reload when a render from upstream comes
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(`#increment`).toHaveText("1");
     expect(`div[name='foo']`).toHaveText("yop");
 
     await contains(`#next`).click();
-    expect([`web_read : [5] - {"foo":{}}`]).toVerifySteps();
+    expect.verifySteps([`web_read : [5] - {"foo":{}}`]);
     expect(`#increment`).toHaveText("2");
     expect(`div[name='foo']`).toHaveText("blop");
 });
@@ -529,7 +523,7 @@ test(`can switch records with values`, async () => {
     );
 
     // No load since the values are provided to the record
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     // First values are loaded
     expect(`div[name='foo']`).toHaveText("abc");
     // Verify that the underlying _Record Model root has the specified resId
@@ -537,7 +531,7 @@ test(`can switch records with values`, async () => {
 
     await contains(`#next`).click();
     // Still no load.
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     // Second values are loaded
     expect(`div[name='foo']`).toHaveText("def");
     // Verify that the underlying _Record Model root has the updated resId

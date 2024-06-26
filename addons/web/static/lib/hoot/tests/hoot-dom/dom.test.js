@@ -347,11 +347,11 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
             return el;
         });
 
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         await animationFrame();
 
-        expect(["title"]).toVerifySteps();
+        expect.verifySteps(["title"]);
     });
 
     test("waitFor: rejects", async () => {
@@ -372,22 +372,22 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
 
         await animationFrame();
 
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         getFixture().append(el1, el2);
 
         await expect(promise).resolves.toBe(el1);
 
-        expect(["new-element"]).toVerifySteps();
+        expect.verifySteps(["new-element"]);
     });
 
     test("waitForNone: DOM empty", async () => {
         waitForNone(".title").then(() => expect.step("none"));
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         await animationFrame();
 
-        expect(["none"]).toVerifySteps();
+        expect.verifySteps(["none"]);
     });
 
     test("waitForNone: rejects", async () => {
@@ -403,14 +403,14 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         expect(".title").toHaveCount(3);
 
         for (const title of queryAll(".title")) {
-            expect([]).toVerifySteps();
+            expect.verifySteps([]);
 
             title.remove();
 
             await animationFrame();
         }
 
-        expect(["none"]).toVerifySteps();
+        expect.verifySteps(["none"]);
     });
 
     test("waitUntil: already true", async () => {
@@ -425,15 +425,15 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         let value = "";
         waitUntil(() => value).then((v) => expect.step(v));
 
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         value = "test";
 
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         await animationFrame();
 
-        expect(["test"]).toVerifySteps();
+        expect.verifySteps(["test"]);
     });
 
     describe("query", () => {

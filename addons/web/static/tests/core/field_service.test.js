@@ -210,7 +210,7 @@ test("loadPath", async () => {
             expect.step("error");
         }
     }
-    expect(errorToTest.map(() => "error")).toVerifySteps();
+    expect.verifySteps(errorToTest.map(() => "error"));
 });
 
 test("store loadFields calls in cache in success", async () => {
@@ -223,7 +223,7 @@ test("store loadFields calls in cache in success", async () => {
     await getService("field").loadFields("tortoise");
     await getService("field").loadFields("tortoise");
 
-    expect(["fields_get"]).toVerifySteps();
+    expect.verifySteps(["fields_get"]);
 });
 
 test("does not store loadFields calls in cache when failed", async () => {
@@ -236,7 +236,7 @@ test("does not store loadFields calls in cache when failed", async () => {
     await expect(getService("field").loadFields("take.five")).rejects.toThrow(/my little error/);
     await expect(getService("field").loadFields("take.five")).rejects.toThrow(/my little error/);
 
-    expect(["fields_get", "fields_get"]).toVerifySteps();
+    expect.verifySteps(["fields_get", "fields_get"]);
 });
 
 test("async method loadFields is protected", async () => {
@@ -278,7 +278,7 @@ test("async method loadFields is protected", async () => {
     expect(".o_child_component").toHaveCount(1);
 
     callFieldService();
-    expect(["loadFields called"]).toVerifySteps();
+    expect.verifySteps(["loadFields called"]);
 
     parent.state.displayChild = false;
     await animationFrame();
@@ -286,7 +286,7 @@ test("async method loadFields is protected", async () => {
     def.resolve();
     await animationFrame();
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     try {
         await callFieldService();
@@ -294,5 +294,5 @@ test("async method loadFields is protected", async () => {
         expect.step(e.message);
     }
 
-    expect(["loadFields called", "Component is destroyed"]).toVerifySteps();
+    expect.verifySteps(["loadFields called", "Component is destroyed"]);
 });

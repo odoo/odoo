@@ -203,5 +203,5 @@ test("dialog component crashes", async () => {
     await animationFrame();
 
     expect(".modal .o_error_dialog").toHaveCount(1);
-    expect(["Error: Some Error"]).toVerifyErrors();
+    expect.verifyErrors(["Error: Some Error"]);
 });

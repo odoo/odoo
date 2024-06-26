@@ -70,12 +70,12 @@ test("select option", async () => {
     await contains(".o-autocomplete input").click();
     await contains(queryFirst(".o-autocomplete--dropdown-item")).click();
     expect(".o-autocomplete input").toHaveValue("World");
-    expect(["World"]).toVerifySteps();
+    expect.verifySteps(["World"]);
 
     await contains(".o-autocomplete input").click();
     await contains(queryLast(".o-autocomplete--dropdown-item")).click();
     expect(".o-autocomplete input").toHaveValue("Hello");
-    expect(["Hello"]).toVerifySteps();
+    expect.verifySteps(["Hello"]);
 });
 
 test("autocomplete with resetOnSelect='true'", async () => {
@@ -120,7 +120,7 @@ test("autocomplete with resetOnSelect='true'", async () => {
     await contains(queryLast(".o-autocomplete--dropdown-item")).click();
     expect(".test_value").toHaveText("Hello");
     expect(".o-autocomplete input").toHaveValue("");
-    expect(["Hello"]).toVerifySteps();
+    expect.verifySteps(["Hello"]);
 });
 
 test("open dropdown on input", async () => {
@@ -573,14 +573,14 @@ test("correct sequence of blur, focus and select", async () => {
     await runAllTimers();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
     await contains(queryLast(".o-autocomplete--dropdown-item")).click();
-    expect(["change", "select Hello"]).toVerifySteps();
+    expect.verifySteps(["change", "select Hello"]);
     expect(".o-autocomplete input").toBeFocused();
 
     // Clear input and focus out
     await contains(".o-autocomplete input").edit("", { confirm: false });
     await runAllTimers();
     await contains(document.body).click();
-    expect(["blur", "change"]).toVerifySteps();
+    expect.verifySteps(["blur", "change"]);
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
 });
 

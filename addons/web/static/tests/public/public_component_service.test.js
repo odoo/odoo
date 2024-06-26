@@ -32,15 +32,15 @@ test(`render Public Component`, async () => {
         static props = ["*"];
     }
     await mountWithCleanup(MyComponent);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await getService("public_component").mountComponents();
     await animationFrame();
-    expect([
+    expect.verifySteps([
         "MyPublicComp: blibli - string",
         "MyPublicComp: 3 - number",
         'MyPublicComp: {"test":"plop"} - object',
-    ]).toVerifySteps();
+    ]);
 
     expect(`.my_public_comp`).toHaveCount(3);
     expect(queryAllTexts`.my_public_comp`).toEqual(["blibli", "3", `{"test":"plop"}`]);
@@ -48,5 +48,5 @@ test(`render Public Component`, async () => {
     getService("public_component").destroyComponents();
     await animationFrame();
     expect(`.my_public_comp`).toHaveCount(0);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });

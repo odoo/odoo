@@ -78,5 +78,5 @@ test("open the list of colors if canToggle props is given", async function () {
 
     await contains(".o_colorlist_toggler").click();
     await contains(".o_colorlist button:eq(2)").click();
-    expect(["color #6 is selected"]).toVerifySteps();
+    expect.verifySteps(["color #6 is selected"]);
 });

@@ -93,7 +93,8 @@ test("kanban with colorpicker and node with color attribute", async () => {
     expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_3");
     await toggleKanbanRecordDropdown(0);
     await contains(`.oe_kanban_colorpicker li[title="Raspberry"] a.oe_kanban_color_9`).click();
-    expect(["write-color-9"]).toVerifySteps({ message: "should write on the color field" });
+    // should write on the color field
+    expect.verifySteps(["write-color-9"]);
     expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_9");
 });
 
@@ -139,7 +140,8 @@ test("edit the kanban color with the colorpicker", async () => {
 
     await contains(".oe_kanban_colorpicker a.oe_kanban_color_9").click();
 
-    expect(["write-color-9"]).toVerifySteps({ message: "should write on the color field" });
+    // should write on the color field
+    expect.verifySteps(["write-color-9"]);
     expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_9");
 });
 

@@ -33,7 +33,7 @@ test("add user context to a simple read request", async () => {
     const { services } = await makeMockEnv();
     await services.orm.read("res.partner", [3], ["id", "descr"]);
 
-    expect(["/web/dataset/call_kw/res.partner/read"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/res.partner/read"]);
 });
 
 test("context is combined with user context in read request", async () => {
@@ -63,7 +63,7 @@ test("context is combined with user context in read request", async () => {
         },
     });
 
-    expect(["/web/dataset/call_kw/res.partner/read"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/res.partner/read"]);
 });
 
 test("basic method call of model", async () => {
@@ -89,7 +89,7 @@ test("basic method call of model", async () => {
     const { services } = await makeMockEnv();
     await services.orm.call("res.partner", "test", [], { context: { a: 1 } });
 
-    expect(["/web/dataset/call_kw/res.partner/test"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/res.partner/test"]);
 });
 
 test("create method: one record", async () => {
@@ -114,7 +114,7 @@ test("create method: one record", async () => {
     const { services } = await makeMockEnv();
     await services.orm.create("res.partner", [{ color: "red" }]);
 
-    expect(["/web/dataset/call_kw/res.partner/create"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/res.partner/create"]);
 });
 
 test("create method: several records", async () => {
@@ -139,7 +139,7 @@ test("create method: several records", async () => {
     const { services } = await makeMockEnv();
     await services.orm.create("res.partner", [{ color: "red" }, { color: "green" }]);
 
-    expect(["/web/dataset/call_kw/res.partner/create"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/res.partner/create"]);
 });
 
 test("read method", async () => {
@@ -172,7 +172,7 @@ test("read method", async () => {
         context: { abc: 3 },
     });
 
-    expect(["/web/dataset/call_kw/sale.order/read"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/sale.order/read"]);
 });
 
 test("unlink method", async () => {
@@ -197,7 +197,7 @@ test("unlink method", async () => {
     const { services } = await makeMockEnv();
     await services.orm.unlink("res.partner", [43]);
 
-    expect(["/web/dataset/call_kw/res.partner/unlink"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/res.partner/unlink"]);
 });
 
 test("write method", async () => {
@@ -222,7 +222,7 @@ test("write method", async () => {
     const { services } = await makeMockEnv();
     await services.orm.write("res.partner", [43, 14], { active: false });
 
-    expect(["/web/dataset/call_kw/res.partner/write"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/res.partner/write"]);
 });
 
 test("webReadGroup method", async () => {
@@ -257,7 +257,7 @@ test("webReadGroup method", async () => {
         { offset: 1 }
     );
 
-    expect(["/web/dataset/call_kw/sale.order/web_read_group"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/sale.order/web_read_group"]);
 });
 
 test("readGroup method", async () => {
@@ -292,7 +292,7 @@ test("readGroup method", async () => {
         { offset: 1 }
     );
 
-    expect(["/web/dataset/call_kw/sale.order/read_group"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/sale.order/read_group"]);
 });
 
 test("test readGroup method removes duplicate values from groupby", async () => {
@@ -313,7 +313,7 @@ test("test readGroup method removes duplicate values from groupby", async () => 
         { offset: 1 }
     );
 
-    expect(["/web/dataset/call_kw/sale.order/read_group"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/sale.order/read_group"]);
 });
 
 test("search_read method", async () => {
@@ -340,7 +340,7 @@ test("search_read method", async () => {
     const { services } = await makeMockEnv();
     await services.orm.searchRead("sale.order", [["user_id", "=", 2]], ["amount_total"]);
 
-    expect(["/web/dataset/call_kw/sale.order/search_read"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/sale.order/search_read"]);
 });
 
 test("search_count method", async () => {
@@ -365,7 +365,7 @@ test("search_count method", async () => {
     const { services } = await makeMockEnv();
     await services.orm.searchCount("sale.order", [["user_id", "=", 2]]);
 
-    expect(["/web/dataset/call_kw/sale.order/search_count"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/sale.order/search_count"]);
 });
 
 test("webRead method", async () => {
@@ -395,7 +395,7 @@ test("webRead method", async () => {
         context: { abc: 3 },
     });
 
-    expect(["/web/dataset/call_kw/sale.order/web_read"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/sale.order/web_read"]);
 });
 
 test("webSearchRead method", async () => {
@@ -424,7 +424,7 @@ test("webSearchRead method", async () => {
         specification: { amount_total: {} },
     });
 
-    expect(["/web/dataset/call_kw/sale.order/web_search_read"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/sale.order/web_search_read"]);
 });
 
 test("orm is specialized for component", async () => {
@@ -463,7 +463,7 @@ test("silent mode", async () => {
     await services.orm.silent.read("res.partner", [1], []);
     await services.orm.read("res.partner", [1], []);
 
-    expect([
+    expect.verifySteps([
         "/web/dataset/call_kw/res.partner/partner_method",
         "response",
         "/web/dataset/call_kw/res.partner/partner_method",
@@ -476,7 +476,7 @@ test("silent mode", async () => {
         "response (silent)",
         "/web/dataset/call_kw/res.partner/read",
         "response",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("validate some obviously wrong calls", async () => {
@@ -501,14 +501,14 @@ test("optimize read and unlink if no ids", async () => {
     const { services } = await makeMockEnv();
 
     await services.orm.read("res.partner", [1], []);
-    expect(["/web/dataset/call_kw/res.partner/read"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/res.partner/read"]);
 
     await services.orm.read("res.partner", [], []);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await services.orm.unlink("res.partner", [1], {});
-    expect(["/web/dataset/call_kw/res.partner/unlink"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/res.partner/unlink"]);
 
     await services.orm.unlink("res.partner", [], {});
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });

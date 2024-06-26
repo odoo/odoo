@@ -72,7 +72,7 @@ test("companies can be toggled: toggle a second company", async () => {
         }
     }
     await createSwitchCompanyMenu({ onSetCookie });
-    expect(["1"]).toVerifySteps();
+    expect.verifySteps(["1"]);
 
     /**
      *   [x] **Company 1**
@@ -93,7 +93,7 @@ test("companies can be toggled: toggle a second company", async () => {
     await contains(".toggle_company:eq(1)").click();
     expect("[data-company-id] .fa-check-square").toHaveCount(2);
     expect("[data-company-id] .fa-square-o").toHaveCount(1);
-    expect(["1-2"]).toVerifySteps();
+    expect.verifySteps(["1-2"]);
 });
 
 test("can toggle multiple companies at once", async () => {
@@ -109,7 +109,7 @@ test("can toggle multiple companies at once", async () => {
         }
     }
     await createSwitchCompanyMenu({ onSetCookie, toggleDelay: ORIGINAL_TOGGLE_DELAY });
-    expect(["1"]).toVerifySteps();
+    expect.verifySteps(["1"]);
     /**
      *   [x] **Company 1**
      *   [ ] Company 2
@@ -132,9 +132,9 @@ test("can toggle multiple companies at once", async () => {
     expect("[data-company-id] .fa-check-square").toHaveCount(2);
     expect("[data-company-id] .fa-square-o").toHaveCount(1);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await prom; // await toggle promise
-    expect(["2-3"]).toVerifySteps();
+    expect.verifySteps(["2-3"]);
 });
 
 test("single company selected: toggling it off will keep it", async () => {
@@ -144,7 +144,7 @@ test("single company selected: toggling it off will keep it", async () => {
         }
     }
     await createSwitchCompanyMenu({ onSetCookie });
-    expect(["1"]).toVerifySteps();
+    expect.verifySteps(["1"]);
 
     /**
      *   [x] **Company 1**
@@ -167,7 +167,7 @@ test("single company selected: toggling it off will keep it", async () => {
     await contains(".toggle_company:eq(0)").click();
     await runAllTimers();
 
-    expect(["1"]).toVerifySteps();
+    expect.verifySteps(["1"]);
     expect(getService("company").activeCompanyIds).toEqual([1]);
     expect(getService("company").currentCompany.id).toBe(1);
     expect("[data-company-id] .fa-check-squarqe").toHaveCount(0);
@@ -181,7 +181,7 @@ test("single company mode: companies can be logged in", async () => {
         }
     }
     await createSwitchCompanyMenu({ onSetCookie });
-    expect(["1"]).toVerifySteps();
+    expect.verifySteps(["1"]);
 
     /**
      *   [x] **Company 1**
@@ -200,7 +200,7 @@ test("single company mode: companies can be logged in", async () => {
      *   [ ] Company 3
      */
     await contains(".log_into:eq(1)").click();
-    expect(["2"]).toVerifySteps();
+    expect.verifySteps(["2"]);
 });
 
 test("multi company mode: log into a non selected company", async () => {
@@ -211,7 +211,7 @@ test("multi company mode: log into a non selected company", async () => {
     }
     cookie.set("cids", "3-1");
     await createSwitchCompanyMenu({ onSetCookie });
-    expect(["3-1"]).toVerifySteps();
+    expect.verifySteps(["3-1"]);
 
     /**
      *   [x] Company 1
@@ -230,7 +230,7 @@ test("multi company mode: log into a non selected company", async () => {
      *   [x] **Company 3**
      */
     await contains(".log_into:eq(1)").click();
-    expect(["2-3-1"]).toVerifySteps();
+    expect.verifySteps(["2-3-1"]);
 });
 
 test("multi company mode: log into an already selected company", async () => {
@@ -241,7 +241,7 @@ test("multi company mode: log into an already selected company", async () => {
     }
     cookie.set("cids", "2-3");
     await createSwitchCompanyMenu({ onSetCookie });
-    expect(["2-3"]).toVerifySteps();
+    expect.verifySteps(["2-3"]);
 
     /**
      *   [ ] Company 1
@@ -260,7 +260,7 @@ test("multi company mode: log into an already selected company", async () => {
      *   [x] Company 3      -> log into
      */
     await contains(".log_into:eq(2)").click();
-    expect(["3-2"]).toVerifySteps();
+    expect.verifySteps(["3-2"]);
 });
 
 test("companies can be logged in even if some toggled within delay", async () => {
@@ -270,7 +270,7 @@ test("companies can be logged in even if some toggled within delay", async () =>
         }
     }
     await createSwitchCompanyMenu({ onSetCookie, toggleDelay: ORIGINAL_TOGGLE_DELAY });
-    expect(["1"]).toVerifySteps();
+    expect.verifySteps(["1"]);
 
     /**
      *   [x] **Company 1**
@@ -291,5 +291,5 @@ test("companies can be logged in even if some toggled within delay", async () =>
     await contains(".toggle_company:eq(2)").click();
     await contains(".toggle_company:eq(0)").click();
     await contains(".log_into:eq(1)").click();
-    expect(["2"]).toVerifySteps();
+    expect.verifySteps(["2"]);
 });
