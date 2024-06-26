@@ -53,9 +53,9 @@ function computeFreeQuantity(numberItems, n, m) {
 patch(PosOrder, {
     extraFields: {
         ...(PosOrder.extraFields || {}),
-        code_activated_coupon_ids: {
+        _code_activated_coupon_ids: {
             model: "pos.order",
-            name: "code_activated_coupon_ids",
+            name: "_code_activated_coupon_ids",
             relation: "loyalty.card",
             type: "one2many",
             local: true,
@@ -222,7 +222,7 @@ patch(PosOrder.prototype, {
         for (const rewardLine of this.lines.filter((line) => line.is_reward_line)) {
             rewardLine.delete();
         }
-        this.update({ code_activated_coupon_ids: [["clear"]] });
+        this.update({ _code_activated_coupon_ids: [["clear"]] });
     },
     /**
      * Refreshes the currently applied rewards, if they are not applicable anymore they are removed.
@@ -243,7 +243,7 @@ patch(PosOrder.prototype, {
                 reward: line.reward_id,
                 coupon_id: line.coupon_id?.id,
                 args: {
-                    product: line.reward_product_id,
+                    product: line._reward_product_id,
                     price: line.price_unit,
                     quantity: line.qty,
                     cost: line.points_cost,
@@ -289,7 +289,7 @@ patch(PosOrder.prototype, {
         for (const claimedReward of allRewardsMerged) {
             // For existing coupons check that they are still claimed, they can exist in either `couponPointChanges` or `codeActivatedCoupons`
             if (
-                !this.code_activated_coupon_ids.find(
+                !this._code_activated_coupon_ids.find(
                     (coupon) => coupon.id === claimedReward.coupon_id
                 ) &&
                 !this.uiState.couponPointChanges[claimedReward.coupon_id]
@@ -393,7 +393,7 @@ patch(PosOrder.prototype, {
         }
 
         // Check if the reward line is part of the rule
-        if (!(rule.any_product || rule.valid_product_ids.includes(line.reward_product_id))) {
+        if (!(rule.any_product || rule.valid_product_ids.includes(line._reward_product_id))) {
             return false;
         }
 
@@ -539,28 +539,28 @@ patch(PosOrder.prototype, {
                     const valid_product_ids = rule.valid_product_ids.map((p) => p.id);
 
                     if (
-                        ((!line.reward_product_id &&
+                        ((!line._reward_product_id &&
                             (rule.any_product || valid_product_ids.includes(line.product_id.id))) ||
-                            (line.reward_product_id &&
+                            (line._reward_product_id &&
                                 (rule.any_product ||
-                                    valid_product_ids.includes(line.reward_product_id.id)))) &&
+                                    valid_product_ids.includes(line._reward_product_id.id)))) &&
                         !line.ignoreLoyaltyPoints({ program })
                     ) {
                         // We only count reward products from the same program to avoid unwanted feedback loops
-                        if (line.reward_product_id) {
+                        if (line._reward_product_id) {
                             const reward = line.reward_id;
                             if (program.id !== reward.program_id) {
                                 continue;
                             }
                         }
-                        const lineQty = line.reward_product_id
+                        const lineQty = line._reward_product_id
                             ? -line.get_quantity()
                             : line.get_quantity();
-                        if (qtyPerProduct[line.reward_product_id || line.get_product().id]) {
-                            qtyPerProduct[line.reward_product_id || line.get_product().id] +=
+                        if (qtyPerProduct[line._reward_product_id || line.get_product().id]) {
+                            qtyPerProduct[line._reward_product_id || line.get_product().id] +=
                                 lineQty;
                         } else {
-                            qtyPerProduct[line.reward_product_id?.id || line.get_product().id] =
+                            qtyPerProduct[line._reward_product_id?.id || line.get_product().id] =
                                 lineQty;
                         }
                         if (!line.is_reward_line) {
@@ -609,11 +609,11 @@ patch(PosOrder.prototype, {
                             if (pointsPerUnit > 0) {
                                 splitPoints.push(
                                     ...Array.apply(null, Array(line.get_quantity())).map(() => {
-                                        if (line.gift_barcode && line.get_quantity() == 1) {
+                                        if (line._gift_barcode && line.get_quantity() == 1) {
                                             return {
                                                 points: pointsPerUnit,
-                                                barcode: line.gift_barcode,
-                                                giftCardId: line.gift_card_id.id,
+                                                barcode: line._gift_barcode,
+                                                giftCardId: line._gift_card_id.id,
                                             };
                                         }
                                         return { points: pointsPerUnit };
@@ -702,7 +702,7 @@ patch(PosOrder.prototype, {
                 };
             })
             .concat(
-                this.code_activated_coupon_ids.map((coupon) => {
+                this._code_activated_coupon_ids.map((coupon) => {
                     return {
                         program_id: coupon.program_id.id,
                         coupon_id: coupon.id,
@@ -898,7 +898,7 @@ patch(PosOrder.prototype, {
             }
             if (
                 applicableProductIds.has(line.get_product().id) ||
-                applicableProductIds.has(line.reward_product_id?.id)
+                applicableProductIds.has(line._reward_product_id?.id)
             ) {
                 discountableLines.push(line);
             }
@@ -924,7 +924,7 @@ patch(PosOrder.prototype, {
             remainingAmountPerLine[line.uuid] = line.get_price_with_tax();
             if (
                 applicableProductIds.has(line.get_product().id) ||
-                (line.reward_product_id && applicableProductIds.has(line.reward_product_id.id))
+                (line._reward_product_id && applicableProductIds.has(line._reward_product_id.id))
             ) {
                 linesToDiscount.push(line);
             } else if (line.reward_id) {
@@ -1136,7 +1136,7 @@ patch(PosOrder.prototype, {
             } else if (
                 reward.reward_product_ids
                     .map((reward) => reward.id)
-                    .includes(line.reward_product_id?.id)
+                    .includes(line._reward_product_id?.id)
             ) {
                 if (line.reward_id.id == reward.id) {
                     remainingPoints += line.points_cost;
@@ -1216,7 +1216,7 @@ patch(PosOrder.prototype, {
                 reward.program_id.applies_on !== "future"
             ) {
                 const line = this.get_orderlines().find(
-                    (line) => line.reward_product_id === product.id
+                    (line) => line._reward_product_id === product.id
                 );
                 // Compute the correction points once even if there are multiple reward lines.
                 // This is because _getPointsCorrection is taking into account all the lines already.
@@ -1276,7 +1276,7 @@ patch(PosOrder.prototype, {
                 qty: args["quantity"] || freeQuantity,
                 reward_id: reward,
                 is_reward_line: true,
-                reward_product_id: product,
+                _reward_product_id: product,
                 coupon_id: args["coupon_id"],
                 points_cost: args["cost"] || cost,
                 reward_identifier_code: _newRandomRewardCode(),

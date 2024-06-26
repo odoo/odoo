@@ -12,7 +12,7 @@ patch(OrderSummary.prototype, {
     async updateSelectedOrderline({ buffer, key }) {
         const selectedLine = this.currentOrder.get_selected_orderline();
         if (key === "-") {
-            if (selectedLine && selectedLine.e_wallet_program_id) {
+            if (selectedLine && selectedLine._e_wallet_program_id) {
                 // Do not allow negative quantity or price in a gift card or ewallet orderline.
                 // Refunding gift card or ewallet is not supported.
                 this.notification.add(
@@ -69,7 +69,7 @@ patch(OrderSummary.prototype, {
             if (
                 coupon &&
                 coupon.id > 0 &&
-                this.currentOrder.code_activated_coupon_ids.find((c) => c.code === coupon.code)
+                this.currentOrder._code_activated_coupon_ids.find((c) => c.code === coupon.code)
             ) {
                 coupon.delete();
             }
