@@ -445,9 +445,8 @@ test("SelectCreateDialog: multiple clicks on record", async () => {
     click(queryFirst(".modal .o_data_row .o_data_cell"));
     click(queryFirst(".modal .o_data_row .o_data_cell"));
     await animationFrame();
-    expect(["select record 1"]).toVerifySteps({
-        message: "should have called onSelected only once",
-    });
+    // should have called onSelected only once
+    expect.verifySteps(["select record 1"]);
 });
 
 test("SelectCreateDialog: default props, create a record", async () => {
@@ -485,7 +484,7 @@ test("SelectCreateDialog: default props, create a record", async () => {
     await clickSave();
 
     expect(".o_dialog").toHaveCount(0);
-    expect(["onSelected 4"]).toVerifySteps();
+    expect.verifySteps(["onSelected 4"]);
 });
 
 test("SelectCreateDialog empty list, default no content helper", async () => {

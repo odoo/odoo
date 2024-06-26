@@ -494,7 +494,7 @@ test("Run custom tour", async () => {
     await advanceTime(9999);
     await def;
 
-    expect(["Clicked on div"]).toVerifySteps();
+    expect.verifySteps(["Clicked on div"]);
 });
 
 test("Run a custom tour twice doesn't trigger traceback", async () => {

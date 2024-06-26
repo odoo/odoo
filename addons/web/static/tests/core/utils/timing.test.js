@@ -235,10 +235,10 @@ describe("debounce", () => {
         myDebouncedFunc().then((x) => {
             expect.step("resolved " + x);
         });
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         await advanceTime(3000);
-        expect(["myFunc", "resolved 42"]).toVerifySteps();
+        expect.verifySteps(["myFunc", "resolved 42"]);
     });
 
     test("debounce on an async function", async () => {
@@ -254,15 +254,15 @@ describe("debounce", () => {
         myDebouncedFunc().then((x) => {
             expect.step("resolved " + x);
         });
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         await advanceTime(3000);
-        expect(["myFunc"]).toVerifySteps();
+        expect.verifySteps(["myFunc"]);
 
         imSearchDef.resolve(42);
         await microTick(); // wait for promise returned by myFunc
         await microTick(); // wait for promise returned by debounce
-        expect(["resolved 42"]).toVerifySteps();
+        expect.verifySteps(["resolved 42"]);
     });
 
     test("debounce with immediate", async () => {
@@ -274,35 +274,35 @@ describe("debounce", () => {
         myDebouncedFunc().then((x) => {
             expect.step("resolved " + x);
         });
-        expect(["myFunc"]).toVerifySteps();
+        expect.verifySteps(["myFunc"]);
 
         await microTick(); // wait for promise returned by debounce
         await microTick(); // wait for promise returned chained onto it (step resolved x)
-        expect(["resolved 42"]).toVerifySteps();
+        expect.verifySteps(["resolved 42"]);
 
         myDebouncedFunc().then((x) => {
             expect.step("resolved " + x);
         });
         await runAllTimers();
-        expect([]).toVerifySteps(); // not called 3000ms did not elapse between the previous call and the first
+        expect.verifySteps([]); // not called 3000ms did not elapse between the previous call and the first
 
         myDebouncedFunc().then((x) => {
             expect.step("resolved " + x);
         });
-        expect(["myFunc"]).toVerifySteps();
+        expect.verifySteps(["myFunc"]);
 
         await microTick(); // wait for promise returned by debounce
         await microTick(); // wait for promise returned chained onto it (step resolved x)
-        expect(["resolved 42"]).toVerifySteps();
+        expect.verifySteps(["resolved 42"]);
     });
 
     test("debounce with 'animationFrame' delay", async () => {
         const myFunc = () => expect.step("myFunc");
 
         debounce(myFunc, "animationFrame")();
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         await nextAnimationFrame();
-        expect(["myFunc"]).toVerifySteps();
+        expect.verifySteps(["myFunc"]);
     });
 
     test("debounced call can be cancelled", async () => {
@@ -313,11 +313,11 @@ describe("debounce", () => {
         myDebouncedFunc();
         myDebouncedFunc.cancel();
         await runAllTimers();
-        expect([]).toVerifySteps(); // Debounced call was cancelled
+        expect.verifySteps([]); // Debounced call was cancelled
 
         myDebouncedFunc();
         await runAllTimers();
-        expect(["myFunc"]).toVerifySteps(); // Debounced call was not cancelled
+        expect.verifySteps(["myFunc"]); // Debounced call was not cancelled
     });
 });
 
@@ -327,10 +327,10 @@ describe("throttleForAnimation", () => {
             expect.step(`${value}`);
         });
         throttledFn(1);
-        expect(["1"]).toVerifySteps({ message: "has been called on the leading edge" });
+        expect.verifySteps(["1"]);
 
         await runAllTimers();
-        expect([]).toVerifySteps({ message: "has not been called" });
+        expect.verifySteps([]);
     });
 
     test("successive calls", async () => {
@@ -338,14 +338,14 @@ describe("throttleForAnimation", () => {
             expect.step(`${value}`);
         });
         throttledFn(1);
-        expect(["1"]).toVerifySteps({ message: "has been called on the leading edge" });
+        expect.verifySteps(["1"]);
 
         throttledFn(2);
         throttledFn(3);
-        expect([]).toVerifySteps({ message: "has not been called" });
+        expect.verifySteps([]);
 
         await runAllTimers();
-        expect(["3"]).toVerifySteps({ message: "only the last queued call was executed" });
+        expect.verifySteps(["3"]);
     });
 
     test("successive calls (more precise timing)", async () => {
@@ -353,19 +353,19 @@ describe("throttleForAnimation", () => {
             expect.step(`${value}`);
         });
         throttledFn(1);
-        expect(["1"]).toVerifySteps({ message: "has been called on the leading edge" });
+        expect.verifySteps(["1"]);
 
         await nextAnimationFrame();
         throttledFn(2);
-        expect(["2"]).toVerifySteps({ message: "has been called on the leading edge" });
+        expect.verifySteps(["2"]);
 
         throttledFn(3);
         throttledFn(4);
         await nextAnimationFrame();
-        expect(["4"]).toVerifySteps({ message: "last call is executed on the trailing edge" });
+        expect.verifySteps(["4"]);
 
         await runAllTimers();
-        expect([]).toVerifySteps({ message: "has not been called" });
+        expect.verifySteps([]);
     });
 
     test("can be cancelled", async () => {
@@ -373,22 +373,20 @@ describe("throttleForAnimation", () => {
             expect.step(`${value}`);
         });
         throttledFn(1);
-        expect(["1"]).toVerifySteps({ message: "has been called on the leading edge" });
+        expect.verifySteps(["1"]);
 
         throttledFn(2);
         throttledFn(3);
         throttledFn.cancel();
         await runAllTimers();
-        expect([]).toVerifySteps({
-            message: "queued throttled function calls were cancelled correctly",
-        });
+        expect.verifySteps([]);
     });
 });
 
 describe("throttleForAnimationScrollEvent", () => {
     test("scroll loses target", async () => {
         let resolveThrottled;
-        let throttled = new Promise(resolve => resolveThrottled = resolve);
+        let throttled = new Promise((resolve) => (resolveThrottled = resolve));
         const throttledFn = throttleForAnimation((val, targetEl) => {
             // In Chrome, the currentTarget of scroll events is lost after the
             // event was handled, it is therefore null here.
@@ -396,7 +394,9 @@ describe("throttleForAnimationScrollEvent", () => {
             // callback signature.
             const nodeName = val && val.currentTarget && val.currentTarget.nodeName;
             const targetName = targetEl && targetEl.nodeName;
-            expect.step(`throttled function called with ${nodeName} in event, but ${targetName} in parameter`);
+            expect.step(
+                `throttled function called with ${nodeName} in event, but ${targetName} in parameter`
+            );
             resolveThrottled();
         });
 
@@ -405,7 +405,7 @@ describe("throttleForAnimationScrollEvent", () => {
         const childEl = document.createElement("div");
         childEl.style = "height: 200px; width: 200px;";
         let resolveScrolled;
-        let scrolled = new Promise(resolve => resolveScrolled = resolve);
+        let scrolled = new Promise((resolve) => (resolveScrolled = resolve));
         el.appendChild(childEl);
         el.addEventListener("scroll", (ev) => {
             expect.step("before scroll");
@@ -418,29 +418,27 @@ describe("throttleForAnimationScrollEvent", () => {
         el.scrollBy(2, 2);
         await scrolled;
         await throttled;
-    
-        expect([
+
+        expect.verifySteps([
             "before scroll",
             "throttled function called with DIV in event, but DIV in parameter",
             "after scroll",
-        ]).toVerifySteps({ message: "scroll happened and direct first call to throttled function happened too" });
-    
-        throttled = new Promise(resolve => resolveThrottled = resolve);
-        scrolled = new Promise(resolve => resolveScrolled = resolve);
+        ]);
+
+        throttled = new Promise((resolve) => (resolveThrottled = resolve));
+        scrolled = new Promise((resolve) => (resolveScrolled = resolve));
         el.scrollBy(3, 3);
         await scrolled;
-        expect([
+        expect.verifySteps([
             "before scroll",
             // Further call is delayed.
             "after scroll",
-        ]).toVerifySteps({ message: "scroll happened but throttled function hasn't been called yet" });
+        ]);
         setTimeout(async () => {
             await nextAnimationFrame();
         });
         await throttled;
-        expect([
-            "throttled function called with null in event, but DIV in parameter",
-        ]).toVerifySteps({ message: "currentTarget was not available in throttled function's event" });
+        expect.verifySteps(["throttled function called with null in event, but DIV in parameter"]);
         el.remove();
     });
 });
@@ -455,23 +453,23 @@ describe("useDebounced", () => {
             }
         }
         const component = await mountOnFixture(TestComponent);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         expect("button.c").toHaveCount(1);
 
         click(`button.c`);
         await advanceTime(900);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         await advanceTime(200);
-        expect(["debounced"]).toVerifySteps();
+        expect.verifySteps(["debounced"]);
 
         click(`button.c`);
         await advanceTime(900);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         destroy(component);
         await advanceTime(200);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
     });
 
     test("execBeforeUnmount option (callback not resolved before component destroy)", async () => {
@@ -485,22 +483,22 @@ describe("useDebounced", () => {
             }
         }
         const component = await mountOnFixture(TestComponent);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         expect(`button.c`).toHaveCount(1);
 
         click(`button.c`);
         await advanceTime(900);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         await advanceTime(200);
-        expect(["debounced: hello"]).toVerifySteps();
+        expect.verifySteps(["debounced: hello"]);
 
         click(`button.c`);
         await advanceTime(900);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         destroy(component);
-        expect(["debounced: hello"]).toVerifySteps();
+        expect.verifySteps(["debounced: hello"]);
     });
 
     test("execBeforeUnmount option (callback resolved before component destroy)", async () => {
@@ -514,19 +512,19 @@ describe("useDebounced", () => {
             }
         }
         const component = await mountOnFixture(TestComponent);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         expect(`button.c`).toHaveCount(1);
 
         click(`button.c`);
         await advanceTime(900);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         await advanceTime(200);
-        expect(["debounced"]).toVerifySteps();
+        expect.verifySteps(["debounced"]);
 
         destroy(component);
         await advanceTime(1000);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
     });
 });
 
@@ -540,32 +538,32 @@ describe("useThrottleForAnimation", () => {
             }
         }
         const component = await mountOnFixture(TestComponent);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         expect(`button.c`).toHaveCount(1);
 
         // Without destroy
         click(`button.c`);
-        expect(["throttled"]).toVerifySteps();
+        expect.verifySteps(["throttled"]);
 
         click(`button.c`);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         await animationFrame();
-        expect(["throttled"]).toVerifySteps();
+        expect.verifySteps(["throttled"]);
 
         // Clean restart
         await runAllTimers();
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         // With destroy
         click(`button.c`);
-        expect(["throttled"]).toVerifySteps();
+        expect.verifySteps(["throttled"]);
 
         click(`button.c`);
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         destroy(component);
         await animationFrame();
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
     });
 });

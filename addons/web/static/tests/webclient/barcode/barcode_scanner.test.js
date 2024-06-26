@@ -65,7 +65,7 @@ test("Barcode scanner crop overlay", async () => {
             videoReady.resolve();
         },
         onResize(overlayInfo) {
-            expect.step(JSON.stringify(overlayInfo));
+            expect.step(overlayInfo);
             return super.onResize(...arguments);
         },
     });
@@ -97,12 +97,9 @@ test("Barcode scanner crop overlay", async () => {
         message: `The detected barcode (${secondValueScanned}) should be the same as generated (${secondBarcodeValue})`,
     });
 
-    expect([
-        JSON.stringify({ x: 25, y: 100, width: 200, height: 50 }),
-        JSON.stringify({ x: 0, y: 0, width: 250, height: 250 }),
-        JSON.stringify({ x: 0, y: 0, width: 250, height: 250 }),
-    ]).toVerifySteps({
-        message:
-            "We should haves three resize event; one for the default position, another one for the all frame and the last one must be the same as the saved second position",
-    });
+    expect.verifySteps([
+        { x: 25, y: 100, width: 200, height: 50 },
+        { x: 0, y: 0, width: 250, height: 250 },
+        { x: 0, y: 0, width: 250, height: 250 },
+    ]);
 });

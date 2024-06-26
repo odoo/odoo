@@ -89,12 +89,12 @@ describe("DateTimeInput (date)", () => {
         await contains(".o_datetime_input").click();
         await contains(".o_datetime_picker .o_next").click();
 
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         await contains(getPickerCell("8").at(0)).click();
 
         expect(".o_datetime_input").toHaveValue("08/02/1997");
         // the onchange is called twice (when clicking and whe the popover is closing)
-        expect(["datetime-changed"]).toVerifySteps();
+        expect.verifySteps(["datetime-changed"]);
     });
 
     test("pick a date with FR locale", async () => {
@@ -125,7 +125,7 @@ describe("DateTimeInput (date)", () => {
         await animationFrame();
 
         expect(".o_datetime_input").toHaveValue("19 sept., 1997");
-        expect(["datetime-changed"]).toVerifySteps();
+        expect.verifySteps(["datetime-changed"]);
     });
 
     test("pick a date with locale (locale with different symbols)", async () => {
@@ -159,7 +159,7 @@ describe("DateTimeInput (date)", () => {
         await animationFrame();
 
         expect(".o_datetime_input").toHaveValue("19 સપ્ટે, 1997");
-        expect(["datetime-changed"]).toVerifySteps();
+        expect.verifySteps(["datetime-changed"]);
     });
 
     test("enter a date value", async () => {
@@ -178,7 +178,7 @@ describe("DateTimeInput (date)", () => {
             },
         });
 
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         await contains(".o_datetime_input").click();
         edit("08/02/1997");
@@ -186,7 +186,7 @@ describe("DateTimeInput (date)", () => {
         click(document.body);
         await animationFrame();
 
-        expect(["datetime-changed"]).toVerifySteps();
+        expect.verifySteps(["datetime-changed"]);
 
         click(".o_datetime_input");
         await animationFrame();
@@ -280,11 +280,7 @@ describe("DateTimeInput (datetime)", () => {
         select("45", { target: minuteSelect });
 
         expect(".o_datetime_input").toHaveValue("08/02/1997 15:45:01");
-        expect([
-            "1997-02-08 12:30:01",
-            "1997-02-08 15:30:01",
-            "1997-02-08 15:45:01",
-        ]).toVerifySteps();
+        expect.verifySteps(["1997-02-08 12:30:01", "1997-02-08 15:30:01", "1997-02-08 15:45:01"]);
     });
 
     test("pick a date and time with locale", async () => {
@@ -313,11 +309,7 @@ describe("DateTimeInput (datetime)", () => {
         select("45", { target: minuteSelect });
 
         expect(".o_datetime_input").toHaveValue("01 sept., 1997 15:45:01");
-        expect([
-            "1997-09-01 12:30:01",
-            "1997-09-01 15:30:01",
-            "1997-09-01 15:45:01",
-        ]).toVerifySteps();
+        expect.verifySteps(["1997-09-01 12:30:01", "1997-09-01 15:30:01", "1997-09-01 15:45:01"]);
     });
 
     test("pick a time with 12 hour format without meridiem", async () => {
@@ -347,7 +339,7 @@ describe("DateTimeInput (datetime)", () => {
         click(document.body);
         await animationFrame();
 
-        expect(["1997-01-09 08:15:01"]).toVerifySteps();
+        expect.verifySteps(["1997-01-09 08:15:01"]);
     });
 
     test("enter a datetime value", async () => {
@@ -366,7 +358,7 @@ describe("DateTimeInput (datetime)", () => {
             },
         });
 
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         await contains(".o_datetime_input").click();
         edit("08/02/1997 15:45:05");
@@ -374,7 +366,7 @@ describe("DateTimeInput (datetime)", () => {
         click(document.body);
         await animationFrame();
 
-        expect(["datetime-changed"]).toVerifySteps();
+        expect.verifySteps(["datetime-changed"]);
 
         await contains(".o_datetime_input").click();
 
@@ -431,11 +423,11 @@ describe("DateTimeInput (datetime)", () => {
 
         await contains(getPickerCell("1").at(0)).click();
         expect(".o_datetime_input").toHaveValue("01 apr., 1997");
-        expect(["datetime-changed"]).toVerifySteps();
+        expect.verifySteps(["datetime-changed"]);
 
         click(".o_apply");
         await animationFrame();
-        expect(["datetime-changed"]).toVerifySteps();
+        expect.verifySteps(["datetime-changed"]);
     });
 
     test("Datepicker works with dots and commas in format", async () => {
@@ -472,7 +464,7 @@ describe("DateTimeInput (datetime)", () => {
         });
 
         expect(".o_datetime_input").toHaveValue("");
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         await contains(".o_datetime_input").click();
         edit("08/02/1997 15:45:05");
@@ -480,7 +472,7 @@ describe("DateTimeInput (datetime)", () => {
         click(document.body);
         await animationFrame();
 
-        expect(["datetime-changed"]).toVerifySteps();
+        expect.verifySteps(["datetime-changed"]);
         expect(".o_datetime_input").toHaveValue("08/02/1997 15:45:05");
     });
 

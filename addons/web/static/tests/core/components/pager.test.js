@@ -81,13 +81,13 @@ test.tags("desktop")("keydown on pager with same value", async () => {
 
     expect("input").toHaveCount(1);
     expect(".o_pager_counter .o_pager_value").toHaveValue("1-4");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     press("Enter");
     await animationFrame();
     expect("input").toHaveCount(0);
     expect(".o_pager_counter .o_pager_value").toHaveText("1-4");
-    expect(["pager-changed"]).toVerifySteps();
+    expect.verifySteps(["pager-changed"]);
 });
 
 test("pager value formatting", async () => {

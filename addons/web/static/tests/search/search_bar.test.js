@@ -749,7 +749,7 @@ test("globalContext keys in name_search", async () => {
     await editSearch("F");
     keyDown("ArrowRight");
     await animationFrame();
-    expect(["name_search"]).toVerifySteps();
+    expect.verifySteps(["name_search"]);
 });
 
 test("search a property", async () => {
@@ -1139,7 +1139,7 @@ test("search a property: definition record id in the context", async () => {
     await contains(".o_cp_searchview").click();
     await editSearch("a");
     await contains(".o_expand").click();
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
     expect(`.o_searchview_input_container li`).toHaveCount(2);
     expect(queryAll`.o_searchview_input_container li`[1]).toHaveText("My Text (Bar 2) for: a");
 });
@@ -1401,7 +1401,7 @@ test("edit a field", async () => {
 test("no rpc for getting display_name for facets if known", async () => {
     onRpc("/web/domain/validate", () => true);
     onRpc("name_search", ({ kwargs }) => {
-        expect.step(JSON.stringify(kwargs.args /** domain */));
+        expect.step(kwargs.args /** domain */);
     });
     onRpc(({ method }) => expect.step(method));
 
@@ -1418,13 +1418,13 @@ test("no rpc for getting display_name for facets if known", async () => {
         },
     });
     expect(getFacetTexts()).toEqual(["Filter"]);
-    expect([`get_views`]).toVerifySteps();
+    expect.verifySteps(["get_views"]);
 
     await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect([`fields_get`]).toVerifySteps();
+    expect.verifySteps(["fields_get"]);
 
     await contains(".o-autocomplete--input").click();
-    expect([`name_search`, `["!",["id","in",[]]]`]).toVerifySteps();
+    expect.verifySteps(["name_search", ["!", ["id", "in", []]]]);
 
     await contains(".dropdown-menu li").click();
     await contains(".modal footer button").click();
@@ -1469,16 +1469,16 @@ test("facets display with any / not any operator", async function () {
         },
     });
     expect(getFacetTexts()).toEqual(["Filter"]);
-    expect([`get_views`]).toVerifySteps();
+    expect.verifySteps([`get_views`]);
 
     await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect([`fields_get`]).toVerifySteps();
+    expect.verifySteps([`fields_get`]);
 
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([
         "Company matches ( Bar matches ( Company is in ( JD7 , KDB ) ) )",
     ]);
-    expect([`/web/domain/validate`]).toVerifySteps();
+    expect.verifySteps([`/web/domain/validate`]);
 });
 
 test("facets display with any / not any operator (with a complex path)", async function () {
@@ -1500,14 +1500,14 @@ test("facets display with any / not any operator (with a complex path)", async f
         },
     });
     expect(getFacetTexts()).toEqual(["Filter"]);
-    expect([`get_views`]).toVerifySteps();
+    expect.verifySteps([`get_views`]);
 
     await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect([`fields_get`]).toVerifySteps();
+    expect.verifySteps([`fields_get`]);
 
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual(["Company ➔ Company matches ( Id = 1 ) or Bar = false"]);
-    expect([`/web/domain/validate`]).toVerifySteps();
+    expect.verifySteps([`/web/domain/validate`]);
 });
 
 test("facets display with any / not any operator (with a or)", async function () {
@@ -1529,14 +1529,14 @@ test("facets display with any / not any operator (with a or)", async function ()
         },
     });
     expect(getFacetTexts()).toEqual(["Filter"]);
-    expect([`get_views`]).toVerifySteps();
+    expect.verifySteps([`get_views`]);
 
     await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect([`fields_get`]).toVerifySteps();
+    expect.verifySteps([`fields_get`]);
 
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual(["Company matches ( Id = 1 ) or Bar = false"]);
-    expect([`/web/domain/validate`]).toVerifySteps();
+    expect.verifySteps([`/web/domain/validate`]);
 });
 
 test("facets display with any / not any operator (check brackets)", async function () {
@@ -1558,16 +1558,16 @@ test("facets display with any / not any operator (check brackets)", async functi
         },
     });
     expect(getFacetTexts()).toEqual(["Filter"]);
-    expect([`get_views`]).toVerifySteps();
+    expect.verifySteps([`get_views`]);
 
     await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect([`fields_get`]).toVerifySteps();
+    expect.verifySteps([`fields_get`]);
 
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([
         "Company matches ( Bar matches ( Bool is not set ) and Bar matches ( Bool is set ) ) or Bar = false",
     ]);
-    expect([`/web/domain/validate`]).toVerifySteps();
+    expect.verifySteps([`/web/domain/validate`]);
 });
 
 test("select autocompleted many2one with allowed_company_ids domain", async () => {

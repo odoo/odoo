@@ -118,13 +118,13 @@ test("save filter", async () => {
     const clearCacheListener = () => expect.step("CLEAR-CACHES");
     component.env.bus.addEventListener("CLEAR-CACHES", clearCacheListener);
     after(() => component.env.bus.removeEventListener("CLEAR-CACHES", clearCacheListener));
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await toggleSearchBarMenu();
     await toggleSaveFavorite();
     await editFavoriteName("aaa");
     await saveFavorite();
-    expect(["/web/dataset/call_kw/ir.filters/create_or_replace", "CLEAR-CACHES"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create_or_replace", "CLEAR-CACHES"]);
 });
 
 test("dynamic filters are saved dynamic", async () => {
@@ -155,7 +155,7 @@ test("dynamic filters are saved dynamic", async () => {
     await editFavoriteName("My favorite");
     await saveFavorite();
     expect(getFacetTexts()).toEqual(["My favorite"]);
-    expect(["/web/dataset/call_kw/ir.filters/create_or_replace"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create_or_replace"]);
 });
 
 test("save filters created via autocompletion works", async () => {
@@ -183,7 +183,7 @@ test("save filters created via autocompletion works", async () => {
     await editFavoriteName("My favorite");
     await saveFavorite();
     expect(getFacetTexts()).toEqual(["My favorite"]);
-    expect(["/web/dataset/call_kw/ir.filters/create_or_replace"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create_or_replace"]);
 });
 
 test("favorites have unique descriptions (the submenus of the favorite menu are correctly updated)", async () => {
@@ -235,17 +235,17 @@ test("favorites have unique descriptions (the submenus of the favorite menu are 
     // first try: should fail
     await editFavoriteName("My favorite");
     await saveFavorite();
-    expect(["notification"]).toVerifySteps();
+    expect.verifySteps(["notification"]);
 
     // second try: should succeed
     await editFavoriteName("My favorite 2");
     await saveFavorite();
-    expect(["/web/dataset/call_kw/ir.filters/create_or_replace"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create_or_replace"]);
 
     // third try: should fail
     await editFavoriteName("My favorite 2");
     await saveFavorite();
-    expect(["notification"]).toVerifySteps();
+    expect.verifySteps(["notification"]);
 });
 
 test("undefined name for filter shows notification and not error", async () => {
@@ -267,7 +267,7 @@ test("undefined name for filter shows notification and not error", async () => {
     await toggleSearchBarMenu();
     await toggleSaveFavorite();
     await saveFavorite();
-    expect(["notification"]).toVerifySteps();
+    expect.verifySteps(["notification"]);
 });
 
 test("add favorite with enter which already exists", async () => {
@@ -298,5 +298,5 @@ test("add favorite with enter which already exists", async () => {
     await toggleSaveFavorite();
     await editFavoriteName("My favorite");
     press("Enter");
-    expect(["notification"]).toVerifySteps();
+    expect.verifySteps(["notification"]);
 });

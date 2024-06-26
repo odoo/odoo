@@ -275,7 +275,7 @@ test("within iframe", async () => {
         },
     });
 
-    expect(["bottom"]).toVerifySteps();
+    expect.verifySteps(["bottom"]);
     expect(".o_popover").toHaveCount(1);
     expect(":iframe .o_popover").toHaveCount(0);
 
@@ -292,7 +292,7 @@ test("within iframe", async () => {
 
     scroll(popoverTarget.ownerDocument.documentElement, { y: 100 });
     await animationFrame();
-    expect(["bottom"]).toVerifySteps();
+    expect.verifySteps(["bottom"]);
     popoverBox = popoverEl.getBoundingClientRect();
     expectedTop -= 100;
     expect(Math.floor(popoverBox.top)).toBe(Math.floor(expectedTop));
@@ -331,7 +331,7 @@ test("within iframe -- wrong element class", async () => {
     });
 
     expect(".o_popover").toHaveCount(1);
-    expect(['validate target props: "true"']).toVerifySteps();
+    expect.verifySteps(['validate target props: "true"']);
 });
 
 test("popover fixed position", async () => {
@@ -359,7 +359,7 @@ test("popover fixed position", async () => {
     });
 
     expect(".o_popover").toHaveCount(1);
-    expect(["onPositioned"]).toVerifySteps();
+    expect.verifySteps(["onPositioned"]);
 
     // force the DOM update
     container.style.height = "125px";
@@ -367,5 +367,5 @@ test("popover fixed position", async () => {
     resize();
     await animationFrame();
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });

@@ -138,7 +138,7 @@ test("drop previous actions if possible", async () => {
     await animationFrame();
     // action 4 loads a kanban view first, 6 loads a list view. We want a list
     expect(".o_list_view").toHaveCount(1);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -146,7 +146,7 @@ test("drop previous actions if possible", async () => {
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("handle switching view and switching back on slow network", async () => {
@@ -163,7 +163,7 @@ test.tags("desktop")("handle switching view and switching back on slow network",
     // switch back to kanban view
     await switchView("kanban");
     // here, we want the kanban view to reload itself, regardless of list view
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -172,7 +172,7 @@ test.tags("desktop")("handle switching view and switching back on slow network",
         "web_search_read",
         "has_group",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 
     // we resolve def => list view is now ready (but we want to ignore it)
     def.resolve();
@@ -227,7 +227,7 @@ test.tags("desktop")("execute a new action while loading a lazy-loaded controlle
     await getService("action").doAction(8, { clearBreadcrumbs: true });
     expect(".o_list_view").toHaveCount(1, { message: "should display action 8" });
     expect(".o_form_view").toHaveCount(0, { message: "should no longer display the form view" });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -238,7 +238,7 @@ test.tags("desktop")("execute a new action while loading a lazy-loaded controlle
         "get_views",
         "web_search_read",
         "has_group",
-    ]).toVerifySteps();
+    ]);
 
     // unblock the switch to Kanban in action 4
     def.resolve();
@@ -247,7 +247,7 @@ test.tags("desktop")("execute a new action while loading a lazy-loaded controlle
     expect(".o_kanban_view").toHaveCount(0, {
         message: "should not display the kanban view of action 4",
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test.tags("desktop")("execute a new action while handling a call_button", async () => {
@@ -279,7 +279,7 @@ test.tags("desktop")("execute a new action while handling a call_button", async 
     await getService("action").doAction(8, { clearBreadcrumbs: true });
     expect(".o_list_view").toHaveCount(1, { message: "should display the list view of action 8" });
     expect(".o_form_view").toHaveCount(0, { message: "should no longer display the form view" });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -291,7 +291,7 @@ test.tags("desktop")("execute a new action while handling a call_button", async 
         "/web/action/load",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 
     // unblock the call_button request
     def.resolve();
@@ -300,7 +300,7 @@ test.tags("desktop")("execute a new action while handling a call_button", async 
         message: "should still display the list view of action 8",
     });
     expect(".o_kanban_view").toHaveCount(0, { message: "should not display action 1" });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test.tags("desktop")("execute a new action while switching to another controller", async () => {
@@ -333,7 +333,7 @@ test.tags("desktop")("execute a new action while switching to another controller
         message: "should display the kanban view of action 8",
     });
     expect(".o_list_view").toHaveCount(0, { message: "should no longer display the list view" });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -344,7 +344,7 @@ test.tags("desktop")("execute a new action while switching to another controller
         "/web/action/load",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 
     // unblock the switch to the form view in action 3
     def.resolve();
@@ -355,7 +355,7 @@ test.tags("desktop")("execute a new action while switching to another controller
     expect(".o_form_view").toHaveCount(0, {
         message: "should not display the form view of action 3",
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("execute a new action while loading views", async () => {
@@ -383,7 +383,7 @@ test("execute a new action while loading views", async () => {
         message: "should not display the list view of action 3",
     });
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners Action 4"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -391,7 +391,7 @@ test("execute a new action while loading views", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("execute a new action while loading data of default view", async () => {
@@ -418,7 +418,7 @@ test.tags("desktop")("execute a new action while loading data of default view", 
         message: "should not display the list view of action 3",
     });
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners Action 4"]);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -428,7 +428,7 @@ test.tags("desktop")("execute a new action while loading data of default view", 
         "/web/action/load",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("open a record while reloading the list view", async () => {
@@ -510,7 +510,7 @@ test.tags("desktop")(
         expect(".o_list_view").toHaveCount(1);
         expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
         expect(".o_form_view").toHaveCount(0);
-        expect([
+        expect.verifySteps([
             "/web/webclient/translations",
             "/web/webclient/load_menus",
             "/web/action/load",
@@ -520,7 +520,7 @@ test.tags("desktop")(
             "web_read",
             "/web/action/load",
             "web_search_read",
-        ]).toVerifySteps();
+        ]);
     }
 );
 
@@ -544,7 +544,7 @@ test.tags("desktop")("switching when doing an action -- load_action slow", async
     expect(".o_kanban_view").toHaveCount(1);
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
     expect(".o_list_view").toHaveCount(0);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -553,7 +553,7 @@ test.tags("desktop")("switching when doing an action -- load_action slow", async
         "has_group",
         "/web/action/load",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("switching when doing an action -- get_views slow", async () => {
@@ -576,7 +576,7 @@ test.tags("desktop")("switching when doing an action -- get_views slow", async (
     expect(".o_kanban_view").toHaveCount(1);
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
     expect(".o_list_view").toHaveCount(0);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -586,7 +586,7 @@ test.tags("desktop")("switching when doing an action -- get_views slow", async (
         "/web/action/load",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("switching when doing an action -- search_read slow", async () => {
@@ -607,7 +607,7 @@ test.tags("desktop")("switching when doing an action -- search_read slow", async
     expect(".o_kanban_view").toHaveCount(1);
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
     expect(".o_list_view").toHaveCount(0);
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -618,7 +618,7 @@ test.tags("desktop")("switching when doing an action -- search_read slow", async
         "get_views",
         "web_search_read",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test.tags("desktop")("click multiple times to open a record", async () => {
@@ -740,9 +740,9 @@ test.tags("desktop")("local state, global state, and race conditions", async () 
     // currentController.action.globalState contains in any case the search state
     // of the first instantiated toy view.
 
-    expect([
+    expect.verifySteps([
         `"no state"`, // setup first view instantiated
         `{"fromId":1}`, // setup second view instantiated
         `{"fromId":1}`, // setup third view instantiated
-    ]).toVerifySteps();
+    ]);
 });

@@ -1,22 +1,22 @@
-import { browser } from "@web/core/browser/browser";
-import { describe, test, expect, beforeEach, onError as onErrorHoot } from "@odoo/hoot";
-import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { beforeEach, describe, expect, onError as onErrorHoot, test } from "@odoo/hoot";
 import { Deferred, advanceTime, animationFrame } from "@odoo/hoot-mock";
+import { Component, OwlError, onError, onWillStart, xml } from "@odoo/owl";
+import {
+    makeMockEnv,
+    mockService,
+    mountWithCleanup,
+    onRpc,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
 import {
     ClientErrorDialog,
     RPCErrorDialog,
     standardErrorDialogProps,
 } from "@web/core/errors/error_dialogs";
-import { registry } from "@web/core/registry";
-import {
-    makeMockEnv,
-    mockService,
-    onRpc,
-    mountWithCleanup,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
-import { Component, xml, OwlError, onWillStart, onError } from "@odoo/owl";
 import { UncaughtPromiseError } from "@web/core/errors/error_service";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
 
 const errorDialogRegistry = registry.category("error_dialogs");
 const errorHandlerRegistry = registry.category("error_handlers");
@@ -38,7 +38,7 @@ test("can handle rejected promise errors with a string as reason", async () => {
     );
     Promise.reject("-- something went wrong --");
     await animationFrame();
-    expect(["-- something went wrong --"]).toVerifySteps();
+    expect.verifySteps(["-- something went wrong --"]);
 });
 
 test("handle RPC_ERROR of type='server' and no associated dialog class", async () => {
@@ -69,7 +69,7 @@ test("handle RPC_ERROR of type='server' and no associated dialog class", async (
     await makeMockEnv();
     Promise.reject(error);
     await animationFrame();
-    expect(["RPC_ERROR: Some strange error occured"]).toVerifySteps();
+    expect.verifySteps(["RPC_ERROR: Some strange error occured"]);
 });
 
 test("handle custom RPC_ERROR of type='server' and associated custom dialog class", async () => {
@@ -107,7 +107,7 @@ test("handle custom RPC_ERROR of type='server' and associated custom dialog clas
     errorDialogRegistry.add("strange_error", CustomDialog);
     Promise.reject(error);
     await animationFrame();
-    expect(["RPC_ERROR: Some strange error occured"]).toVerifySteps();
+    expect.verifySteps(["RPC_ERROR: Some strange error occured"]);
 });
 
 test("handle normal RPC_ERROR of type='server' and associated custom dialog class", async () => {
@@ -150,7 +150,7 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
     errorDialogRegistry.add("normal_error", NormalDialog);
     Promise.reject(error);
     await animationFrame();
-    expect(["RPC_ERROR: A normal error occured"]).toVerifySteps();
+    expect.verifySteps(["RPC_ERROR: A normal error occured"]);
 });
 
 test("handle CONNECTION_LOST_ERROR", async () => {
@@ -183,14 +183,14 @@ test("handle CONNECTION_LOST_ERROR", async () => {
     // wait for timeouts
     await advanceTime(2000);
     await advanceTime(3500);
-    expect([
+    expect.verifySteps([
         'Error: Connection to "/fake_url" couldn\'t be established or was interrupted',
         "create (Connection lost. Trying to reconnect...)",
         "version_info",
         "version_info",
         "close",
         "create (Connection restored. You are back online.)",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("will let handlers from the registry handle errors first", async () => {
@@ -208,7 +208,7 @@ test("will let handlers from the registry handle errors first", async () => {
 
     Promise.reject(error);
     await animationFrame();
-    expect(["boom", "in handler"]).toVerifySteps();
+    expect.verifySteps(["boom", "in handler"]);
 });
 
 test("originalError is the root cause of the error chain", async () => {
@@ -246,10 +246,10 @@ test("originalError is the root cause of the error chain", async () => {
     let prom = new Deferred();
     mountWithCleanup(ErrHandler, { props: { comp: ThrowInSetup } });
     await prom;
-    expect([
+    expect.verifySteps([
         'Error: An error occured in the owl lifecycle (see this Error\'s "cause" property)',
         "in handler",
-    ]).toVerifySteps();
+    ]);
 
     class ThrowInWillStart extends Component {
         static template = xml``;
@@ -264,10 +264,7 @@ test("originalError is the root cause of the error chain", async () => {
     prom = new Deferred();
     mountWithCleanup(ErrHandler, { props: { comp: ThrowInWillStart } });
     await prom;
-    expect([
-        'Error: The following error occurred in onWillStart: ""',
-        "in handler",
-    ]).toVerifySteps();
+    expect.verifySteps(['Error: The following error occurred in onWillStart: ""', "in handler"]);
 });
 
 test("handle uncaught promise errors", async () => {
@@ -291,7 +288,7 @@ test("handle uncaught promise errors", async () => {
 
     Promise.reject(error);
     await animationFrame();
-    expect(["TestError: This is an error test"]).toVerifySteps();
+    expect.verifySteps(["TestError: This is an error test"]);
 });
 
 test("handle uncaught client errors", async () => {
@@ -314,7 +311,7 @@ test("handle uncaught client errors", async () => {
         throw error;
     });
     await animationFrame();
-    expect(["TestError: This is an error test"]).toVerifySteps();
+    expect.verifySteps(["TestError: This is an error test"]);
 });
 
 test("don't show dialog for errors in third-party scripts", async () => {
@@ -335,7 +332,7 @@ test("don't show dialog for errors in third-party scripts", async () => {
     const errorEvent = new ErrorEvent("error", { error, cancelable: true });
     window.dispatchEvent(errorEvent);
     await animationFrame();
-    expect(["Script error."]).toVerifySteps();
+    expect.verifySteps(["Script error."]);
 });
 
 test("show dialog for errors in third-party scripts in debug mode", async () => {
@@ -357,7 +354,7 @@ test("show dialog for errors in third-party scripts in debug mode", async () => 
     const errorEvent = new ErrorEvent("error", { error, cancelable: true });
     window.dispatchEvent(errorEvent);
     await animationFrame();
-    expect(["Script error.", "Dialog: Third-Party Script Error"]).toVerifySteps();
+    expect.verifySteps(["Script error.", "Dialog: Third-Party Script Error"]);
 });
 
 test("lazy loaded handlers", async () => {
@@ -367,7 +364,7 @@ test("lazy loaded handlers", async () => {
     Promise.reject(new Error("error"));
     await animationFrame();
 
-    expect(["Error: error"]).toVerifySteps();
+    expect.verifySteps(["Error: error"]);
 
     errorHandlerRegistry.add("__test_handler__", () => {
         expect.step("in handler");
@@ -377,7 +374,7 @@ test("lazy loaded handlers", async () => {
     Promise.reject(new Error("error"));
     await animationFrame();
 
-    expect(["Error: error", "in handler"]).toVerifySteps();
+    expect.verifySteps(["Error: error", "in handler"]);
 });
 
 let unhandledRejectionCb;

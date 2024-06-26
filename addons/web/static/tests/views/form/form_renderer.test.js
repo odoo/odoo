@@ -104,7 +104,7 @@ test("render field with placeholder", async () => {
         type: "form",
         resId: 1,
     });
-    expect(["setup field component"]).toVerifySteps();
+    expect.verifySteps(["setup field component"]);
 });
 
 test("compile a button with id", async () => {

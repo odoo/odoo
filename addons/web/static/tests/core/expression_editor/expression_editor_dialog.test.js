@@ -64,7 +64,7 @@ test("expr well sent, onConfirm and onClose", async () => {
     });
     expect(".o_technical_modal").toHaveCount(1);
     await contains(".o_dialog footer button").click();
-    expect([expression, "close"]).toVerifySteps();
+    expect.verifySteps([expression, "close"]);
 });
 
 test("expr well sent but wrong, so notification when onConfirm", async () => {
@@ -83,5 +83,5 @@ test("expr well sent but wrong, so notification when onConfirm", async () => {
     await contains(".modal-footer button").click();
     await contains(".modal-body button").click();
     expect(getTreeEditorContent()).toEqual([{ level: 0, value: "all" }]);
-    expect(["notification"]).toVerifySteps();
+    expect.verifySteps(["notification"]);
 });

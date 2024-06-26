@@ -134,13 +134,13 @@ test("delete an active favorite", async () => {
     expect(queryFirst`.o_favorite_menu .o_menu_item`).toHaveClass("selected");
 
     await deleteFavorite("My favorite");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await contains(`div.o_dialog footer button`).click();
     expect(getFacetTexts()).toEqual([]);
     expect(".o_favorite_menu .o_menu_item").toHaveCount(1);
     expect(".o_favorite_menu .o_add_favorite").toHaveCount(1);
-    expect(["deleteFavorite", "CLEAR-CACHES", "props updated"]).toVerifySteps();
+    expect.verifySteps(["deleteFavorite", "CLEAR-CACHES", "props updated"]);
 });
 
 test("default favorite is not activated if activateFavorite is set to false", async () => {

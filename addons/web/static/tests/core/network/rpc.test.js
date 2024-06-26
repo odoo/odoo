@@ -76,11 +76,11 @@ test("check trigger RPC:REQUEST and RPC:RESPONSE for a simple rpc", async () => 
 
     await rpc("/test/");
     expect(rpcIdsRequest.toString()).toBe(rpcIdsResponse.toString());
-    expect(["RPC:REQUEST", "RPC:RESPONSE(ok)"]).toVerifySteps();
+    expect.verifySteps(["RPC:REQUEST", "RPC:RESPONSE(ok)"]);
 
     await rpc("/test/", {}, { silent: true });
     expect(rpcIdsRequest.toString()).toBe(rpcIdsResponse.toString());
-    expect(["RPC:REQUEST(silent)", "RPC:RESPONSE(silent)(ok)"]).toVerifySteps();
+    expect.verifySteps(["RPC:REQUEST(silent)", "RPC:RESPONSE(silent)(ok)"]);
 });
 
 test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error", async () => {
@@ -113,7 +113,7 @@ test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error", async
 
     const error = new RPCError("message");
     await expect(rpc("/test/")).rejects.toThrow(error);
-    expect(["RPC:REQUEST", "RPC:RESPONSE(ko)"]).toVerifySteps();
+    expect.verifySteps(["RPC:REQUEST", "RPC:RESPONSE(ko)"]);
 });
 
 test("check connection aborted", async () => {
@@ -125,7 +125,7 @@ test("check connection aborted", async () => {
     connection.abort();
     const error = new ConnectionAbortedError();
     await expect(connection).rejects.toThrow(error);
-    expect(["RPC:REQUEST", "RPC:RESPONSE"]).toVerifySteps();
+    expect.verifySteps(["RPC:REQUEST", "RPC:RESPONSE"]);
 });
 
 test("trigger a ConnectionLostError when response isn't json parsable", async () => {

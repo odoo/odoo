@@ -104,8 +104,8 @@ test("CodeEditor shouldn't accepts markup values", async () => {
     codeEditor.state.value = textMarkup;
     await animationFrame();
 
-    expect(["Invalid props for component 'CodeEditor': 'value' is not valid"]).toVerifyErrors();
-    expect(["[Owl] Unhandled error. Destroying the root component"]).toVerifySteps();
+    expect.verifyErrors(["Invalid props for component 'CodeEditor': 'value' is not valid"]);
+    expect.verifySteps(["[Owl] Unhandled error. Destroying the root component"]);
 });
 
 test("onChange props called when code is edited", async () => {
@@ -120,7 +120,7 @@ test("onChange props called when code is edited", async () => {
 
     await mountWithCleanup(Parent);
     await editAce("Some Text");
-    expect(["Some Text"]).toVerifySteps();
+    expect.verifySteps(["Some Text"]);
 });
 
 test("onChange props not called when value props is updated", async () => {
@@ -148,7 +148,7 @@ test("onChange props not called when value props is updated", async () => {
     await animationFrame();
     expect(".ace_line").toHaveText("new value");
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("Default value correctly set and updates", async () => {
@@ -203,7 +203,7 @@ test("Default value correctly set and updates", async () => {
     await animationFrame();
     await animationFrame();
     expect(getDomValue()).toBe(textC);
-    expect([textB]).toVerifySteps();
+    expect.verifySteps([textB]);
 });
 
 test("Mode props update imports the mode", async () => {
@@ -229,11 +229,11 @@ test("Mode props update imports the mode", async () => {
     }
 
     const codeEditor = await mountWithCleanup(Parent);
-    expect(["ace/mode/xml"]).toVerifySteps();
+    expect.verifySteps(["ace/mode/xml"]);
 
     await codeEditor.setMode("javascript");
     await animationFrame();
-    expect(["ace/mode/javascript"]).toVerifySteps();
+    expect.verifySteps(["ace/mode/javascript"]);
 });
 
 test("Theme props updates imports the theme", async () => {
@@ -259,11 +259,11 @@ test("Theme props updates imports the theme", async () => {
     }
 
     const codeEditor = await mountWithCleanup(Parent);
-    expect(["default"]).toVerifySteps({ message: "Default theme should be loaded" });
+    expect.verifySteps(["default"]);
 
     await codeEditor.setTheme("monokai");
     await animationFrame();
-    expect(["ace/theme/monokai"]).toVerifySteps({ message: "Monokai theme should be loaded" });
+    expect.verifySteps(["ace/theme/monokai"]);
 });
 
 test("initial value cannot be undone", async () => {
@@ -295,5 +295,5 @@ test("initial value cannot be undone", async () => {
     ]);
     await animationFrame();
     expect(".ace_editor .ace_content").toHaveText("some value");
-    expect(["ace undo"]).toVerifySteps();
+    expect.verifySteps(["ace undo"]);
 });

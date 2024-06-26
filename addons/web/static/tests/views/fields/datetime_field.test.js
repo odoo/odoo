@@ -124,7 +124,7 @@ test("DatetimeField only triggers fieldChange when a day is picked and when an h
     click(getPickerCell("22"));
     await animationFrame();
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     const [hourSelect, minuteSelect] = getTimePickers().at(0);
     select("8", { target: hourSelect });
@@ -132,7 +132,7 @@ test("DatetimeField only triggers fieldChange when a day is picked and when an h
     select("25", { target: minuteSelect });
     await animationFrame();
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // Close the datepicker
     click(document.body);
@@ -141,7 +141,7 @@ test("DatetimeField only triggers fieldChange when a day is picked and when an h
     expect(".o_datetime_picker").toHaveCount(0);
 
     expect(".o_field_datetime input").toHaveValue("04/22/2018 08:25:00");
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 });
 
 test("DatetimeField with datetime formatted without second", async () => {

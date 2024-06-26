@@ -15,7 +15,7 @@ test("do not call getValue if already cached", () => {
     expect(cache.read("b")).toBe("B");
     expect(cache.read("a")).toBe("A");
 
-    expect(["a", "b"]).toVerifySteps();
+    expect.verifySteps(["a", "b"]);
 });
 
 test("multiple cache key", async () => {
@@ -25,7 +25,7 @@ test("multiple cache key", async () => {
     cache.read("a", 2);
     cache.read("a", 1);
 
-    expect(["a-1", "a-2"]).toVerifySteps();
+    expect.verifySteps(["a-1", "a-2"]);
 });
 
 test("compute key", async () => {
@@ -37,7 +37,7 @@ test("compute key", async () => {
     cache.read("a");
     cache.read("A");
 
-    expect(["a"]).toVerifySteps();
+    expect.verifySteps(["a"]);
 });
 
 test("cache promise", async () => {
@@ -54,7 +54,7 @@ test("cache promise", async () => {
 
     await Promise.resolve();
 
-    expect(["read a", "read b", "then a", "then a", "then b"]).toVerifySteps();
+    expect.verifySteps(["read a", "read b", "then a", "then a", "then b"]);
 });
 
 test("clear cache", async () => {
@@ -62,24 +62,24 @@ test("clear cache", async () => {
 
     cache.read("a");
     cache.read("b");
-    expect(["a", "b"]).toVerifySteps();
+    expect.verifySteps(["a", "b"]);
 
     cache.read("a");
     cache.read("b");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     cache.clear("a");
     cache.read("a");
     cache.read("b");
-    expect(["a"]).toVerifySteps();
+    expect.verifySteps(["a"]);
 
     cache.clear();
     cache.read("a");
     cache.read("b");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     cache.invalidate();
     cache.read("a");
     cache.read("b");
-    expect(["a", "b"]).toVerifySteps();
+    expect.verifySteps(["a", "b"]);
 });

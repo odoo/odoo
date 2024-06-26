@@ -92,7 +92,7 @@ test("useCommand hook", async () => {
     expect(".o_command").toHaveText("Take the throne");
 
     await contains(".o_command").click();
-    expect(["Hodor"]).toVerifySteps();
+    expect.verifySteps(["Hodor"]);
 
     componentInfo.Component = null;
     await animationFrame();
@@ -169,7 +169,7 @@ test("command with hotkey", async () => {
     await animationFrame();
 
     press("a");
-    expect([hotkey]).toVerifySteps();
+    expect.verifySteps([hotkey]);
 });
 
 test("global command with hotkey", async () => {
@@ -185,9 +185,9 @@ test("global command with hotkey", async () => {
     await animationFrame();
 
     press("a");
-    expect([globalHotkey]).toVerifySteps();
+    expect.verifySteps([globalHotkey]);
     press("b");
-    expect([hotkey]).toVerifySteps();
+    expect.verifySteps([hotkey]);
 
     class MyComponent extends Component {
         static template = xml`<div t-ref="active"><button>visible</button></div>`;
@@ -200,7 +200,7 @@ test("global command with hotkey", async () => {
 
     press("a");
     press("b");
-    expect([globalHotkey]).toVerifySteps();
+    expect.verifySteps([globalHotkey]);
 });
 
 test("command with hotkey and isAvailable", async () => {
@@ -213,12 +213,12 @@ test("command with hotkey and isAvailable", async () => {
 
     press("a");
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     isAvailable = true;
     press("a");
     await animationFrame();
-    expect([hotkey]).toVerifySteps();
+    expect.verifySteps([hotkey]);
 });
 
 test("useCommand hook with hotkey and hotkeyOptions", async () => {
@@ -252,7 +252,7 @@ test("useCommand hook with hotkey and hotkeyOptions", async () => {
     press(defaultBehaviourKey);
     await animationFrame();
 
-    expect([allowRepeatKey, disallowRepeatKey, defaultBehaviourKey]).toVerifySteps();
+    expect.verifySteps([allowRepeatKey, disallowRepeatKey, defaultBehaviourKey]);
 
     // Dispatch the three keys with repeat:
     press(allowRepeatKey, { repeat: true });
@@ -260,7 +260,7 @@ test("useCommand hook with hotkey and hotkeyOptions", async () => {
     press(defaultBehaviourKey, { repeat: true });
     await animationFrame();
 
-    expect([allowRepeatKey]).toVerifySteps();
+    expect.verifySteps([allowRepeatKey]);
 });
 
 test("useCommand hook with hotkey and isAvailable", async () => {
@@ -313,7 +313,7 @@ test("useCommand hook with hotkey and isAvailable", async () => {
         press(hotkey);
     }
     await animationFrame();
-    expect(["a", "d"]).toVerifySteps();
+    expect.verifySteps(["a", "d"]);
 
     press(["Control", "k"]);
     await animationFrame();
@@ -392,7 +392,7 @@ test("data-hotkey added to command palette", async () => {
     expect("input[title='Bran Stark']").toBeFocused();
 
     // only step should come from the first command execution
-    expect(["Hodor"]).toVerifySteps();
+    expect.verifySteps(["Hodor"]);
 });
 
 test("access to hotkeys from the command palette", async () => {
@@ -450,7 +450,7 @@ test("access to hotkeys from the command palette", async () => {
     await animationFrame();
     expect(".o_command_palette").toHaveCount(0);
 
-    expect(["A", "B", "C"]).toVerifySteps();
+    expect.verifySteps(["A", "B", "C"]);
 });
 
 test("can be searched", async () => {
@@ -1032,7 +1032,7 @@ test("openMainPalette with onClose", async () => {
 
     press("escape");
     await animationFrame();
-    expect(["onClose"]).toVerifySteps();
+    expect.verifySteps(["onClose"]);
 });
 
 test("uses openPalette to modify the config used by the command palette", async () => {
