@@ -261,7 +261,8 @@ export function watchListeners() {
     }
 
     return function unwatchAllListeners() {
-        for (const [target, args] of remaining) {
+        while (remaining.length) {
+            const [target, args] = remaining.pop();
             target.removeEventListener(...args);
         }
 
