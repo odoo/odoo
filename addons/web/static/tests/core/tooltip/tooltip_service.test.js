@@ -150,35 +150,35 @@ test.tags("desktop")("positioning", async () => {
     await advanceTime(OPEN_DELAY);
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover").toHaveText("default");
-    expect(["popover added with default positioning"]).toVerifySteps();
+    expect.verifySteps(["popover added with default positioning"]);
 
     // top
     hover("button.top");
     await advanceTime(OPEN_DELAY);
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover").toHaveText("top");
-    expect(["popover added with position: top"]).toVerifySteps();
+    expect.verifySteps(["popover added with position: top"]);
 
     // right
     hover("button.right");
     await advanceTime(OPEN_DELAY);
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover").toHaveText("right");
-    expect(["popover added with position: right"]).toVerifySteps();
+    expect.verifySteps(["popover added with position: right"]);
 
     // bottom
     hover("button.bottom");
     await advanceTime(OPEN_DELAY);
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover").toHaveText("bottom");
-    expect(["popover added with position: bottom"]).toVerifySteps();
+    expect.verifySteps(["popover added with position: bottom"]);
 
     // left
     hover("button.left");
     await advanceTime(OPEN_DELAY);
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover").toHaveText("left");
-    expect(["popover added with position: left"]).toVerifySteps();
+    expect.verifySteps(["popover added with position: left"]);
 });
 
 test.tags("desktop")("tooltip with a template, no info", async () => {

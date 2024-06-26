@@ -83,7 +83,7 @@ test(`click on create button`, async () => {
     expect(`.o_cw_popover_create`).toHaveCount(1);
 
     await contains(`.o_cw_popover_create`).click();
-    expect(["create"]).toVerifySteps();
+    expect.verifySteps(["create"]);
 });
 
 test(`group records`, async () => {
@@ -109,5 +109,5 @@ test(`click on record`, async () => {
     expect(`.o_cw_body a.o_cw_popover_link`).toHaveCount(1);
 
     await contains(`.o_cw_body a.o_cw_popover_link`).click();
-    expect(["edit"]).toVerifySteps();
+    expect.verifySteps(["edit"]);
 });

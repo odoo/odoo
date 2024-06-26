@@ -935,10 +935,10 @@ test("edit a char field should display the status indicator buttons without flic
         message: "form view is dirty",
     });
     def.resolve();
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
     await animationFrame();
     expect(".o_form_status_indicator_buttons").toBeVisible({
         message: "form view is dirty",
     });
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
 });

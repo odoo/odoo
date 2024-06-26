@@ -102,7 +102,7 @@ test("widget many2many_binary", async () => {
     expect("div.o_field_widget .oe_fileupload .o_attach").toHaveText("Pictures");
 
     expect("input.o_input_file").toHaveAttribute("accept", "image/*");
-    expect(["/web/dataset/call_kw/turtle/web_read"]).toVerifySteps();
+    expect.verifySteps(["/web/dataset/call_kw/turtle/web_read"]);
 
     // Set and trigger the change of a file for the input
     const file = new File(["fake_file"], "fake_file.tiff", { type: "text/plain" });
@@ -127,10 +127,10 @@ test("widget many2many_binary", async () => {
 
     await clickSave();
     expect("div.o_field_widget .oe_fileupload .o_attachments").toHaveCount(1);
-    expect([
+    expect.verifySteps([
         "/web/dataset/call_kw/ir.attachment/web_read",
         "/web/dataset/call_kw/turtle/web_save",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("widget many2many_binary displays notification on error", async () => {

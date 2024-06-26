@@ -196,16 +196,16 @@ test("PriorityField can write after adding a record -- kanban", async () => {
     click(".o_priority a.o_priority_star.fa-star-o");
     // wait for web_save
     await animationFrame();
-    expect(['web_save [[1],{"selection":"1"}]']).toVerifySteps();
+    expect.verifySteps(['web_save [[1],{"selection":"1"}]']);
     expect(".o_kanban_record .fa-star").toHaveCount(1);
     click(".o_control_panel_main_buttons .o-kanban-button-new");
     await animationFrame();
     click(".o_kanban_quick_create .o_kanban_add");
     await animationFrame();
-    expect(["web_save [[],{}]"]).toVerifySteps();
+    expect.verifySteps(["web_save [[],{}]"]);
     click(".o_priority a.o_priority_star.fa-star-o");
     await animationFrame();
-    expect([`web_save [[6],{"selection":"1"}]`]).toVerifySteps();
+    expect.verifySteps([`web_save [[6],{"selection":"1"}]`]);
     expect(".o_kanban_record .fa-star").toHaveCount(2);
 });
 
@@ -385,7 +385,7 @@ test("PriorityField with readonly attribute", async () => {
     expect("span.o_priority_star.fa.fa-star-o").toHaveCount(2, {
         message: "should still have two stars",
     });
-    expect(["hover", "click"]).toVerifySteps();
+    expect.verifySteps(["hover", "click"]);
 });
 
 test('PriorityField edited by the smart action "Set priority..."', async () => {
@@ -427,7 +427,7 @@ test("PriorityField - auto save record when field toggled", async () => {
     });
     click(queryLast(".o_field_widget .o_priority a.o_priority_star.fa-star-o"));
     await animationFrame();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test("PriorityField - prevent auto save with autosave option", async () => {
@@ -448,5 +448,5 @@ test("PriorityField - prevent auto save with autosave option", async () => {
 
     click(queryLast(".o_field_widget .o_priority a.o_priority_star.fa-star-o"));
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });

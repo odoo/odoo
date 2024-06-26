@@ -1163,7 +1163,7 @@ test.tags("desktop")("properties: many2one 'Search more...'", async () => {
     await animationFrame();
 
     // Checking the model loaded
-    expect(["partner"]).toVerifySteps();
+    expect.verifySteps(["partner"]);
 
     // Closing the modal
     click(".modal .btn-close");
@@ -1181,7 +1181,7 @@ test.tags("desktop")("properties: many2one 'Search more...'", async () => {
     click(".o_m2o_dropdown_option_search_more", { root: popover });
     await animationFrame();
     // Checking the model loaded
-    expect(["res.users"]).toVerifySteps();
+    expect.verifySteps(["res.users"]);
 });
 
 test("properties: date(time) property manipulations", async () => {
@@ -1232,7 +1232,7 @@ test("properties: date(time) property manipulations", async () => {
         resId: 5000,
         arch: /* xml */ `<form><field name="company_id"/><field name="properties"/></form>`,
     });
-    expect(["get_views", "web_read", "check_access_rights"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read", "check_access_rights"]);
 
     // check initial properties
     expect("[property-name=property_1] .o_property_field_value input").toHaveValue("01/01/2019");
@@ -1259,9 +1259,9 @@ test("properties: date(time) property manipulations", async () => {
     expect("[property-name=property_2] input").toHaveValue("12/31/2018 12:05:00");
 
     // save
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await clickSave();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 /**

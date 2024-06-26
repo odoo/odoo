@@ -112,7 +112,7 @@ describe.tags("desktop")("DebugMenu", () => {
             click(item);
         }
 
-        expect(["callback item_2", "callback item_1", "callback item_3"]).toVerifySteps();
+        expect.verifySteps(["callback item_2", "callback item_1", "callback item_3"]);
     });
 
     test("items are sorted by sequence regardless of category", async () => {
@@ -220,7 +220,7 @@ describe.tags("desktop")("DebugMenu", () => {
         for (const item of items) {
             click(item);
         }
-        expect(["callback item_1", "callback item_2"]).toVerifySteps();
+        expect.verifySteps(["callback item_1", "callback item_2"]);
     });
 
     test("can regenerate assets bundles", async () => {
@@ -235,7 +235,7 @@ describe.tags("desktop")("DebugMenu", () => {
         expect(item).toHaveText("Regenerate Assets Bundles");
         click(item);
         await animationFrame();
-        expect(["ir.attachment/regenerate_assets_bundles", "reloadPage"]).toVerifySteps();
+        expect.verifySteps(["ir.attachment/regenerate_assets_bundles", "reloadPage"]);
     });
 
     test("can open a view", async () => {

@@ -104,7 +104,7 @@ test("creating a field chain from scratch", async () => {
     expect(".o_model_field_selector_popover").toHaveCount(0);
     expect(getValueFromDOM()).toBe("Bar");
     expect(fieldSelector.path).toBe("bar");
-    expect(["update: bar"]).toVerifySteps();
+    expect.verifySteps(["update: bar"]);
 
     await openModelFieldSelectorPopover();
     expect(".o_model_field_selector_popover").toHaveCount(1);
@@ -126,13 +126,13 @@ test("creating a field chain from scratch", async () => {
     await contains(queryLast(".o_model_field_selector_popover_item_name")).click();
     expect(".o_model_field_selector_popover").toHaveCount(0);
     expect(getValueFromDOM()).toBe("Product -> Product Name");
-    expect(["update: product_id.name"]).toVerifySteps();
+    expect.verifySteps(["update: product_id.name"]);
 
     // Remove the current selection and recreate it again
     await openModelFieldSelectorPopover();
     await contains(".o_model_field_selector_popover_prev_page").click();
     await contains(".o_model_field_selector_popover_close").click();
-    expect(["update: product_id"]).toVerifySteps();
+    expect.verifySteps(["update: product_id"]);
 
     await openModelFieldSelectorPopover();
     expect(
@@ -145,7 +145,7 @@ test("creating a field chain from scratch", async () => {
     await contains(queryLast(".o_model_field_selector_popover_item_name")).click();
     expect(".o_model_field_selector_popover").toHaveCount(0);
     expect(getValueFromDOM()).toBe("Product -> Product Name");
-    expect(["update: product_id.name"]).toVerifySteps();
+    expect.verifySteps(["update: product_id.name"]);
 });
 
 test("default field chain should set the page data correctly", async () => {
@@ -274,7 +274,7 @@ test("cache fields_get", async () => {
             resModel: "partner",
         },
     });
-    expect(["fields_get"]).toVerifySteps();
+    expect.verifySteps(["fields_get"]);
 });
 
 test("Using back button in popover", async () => {
@@ -339,7 +339,7 @@ test("select a relational field does not follow relation", async () => {
     await contains(
         ".o_model_field_selector_popover_item:last-child .o_model_field_selector_popover_item_name"
     ).click();
-    expect(["product_id"]).toVerifySteps();
+    expect.verifySteps(["product_id"]);
     expect(".o_popover").toHaveCount(0);
 
     await openModelFieldSelectorPopover();
@@ -365,7 +365,7 @@ test("select a relational field does not follow relation", async () => {
     expect(".o_popover").toHaveCount(1);
 
     await contains(".o_model_field_selector_popover_item_name").click();
-    expect(["product_id.create_date"]).toVerifySteps();
+    expect.verifySteps(["product_id.create_date"]);
     expect(".o_popover").toHaveCount(0);
 });
 
@@ -764,7 +764,7 @@ test("support properties", async () => {
     ).click();
     expect(getModelFieldSelectorValues()).toEqual(["Properties"]);
     expect(".o_model_field_selector_warning").toHaveCount(1);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     await clickPrev();
     expect(getTitle()).toBe("");
@@ -786,7 +786,7 @@ test("support properties", async () => {
     await contains(
         '.o_model_field_selector_popover_item[data-name="xphone_prop_2"] .o_model_field_selector_popover_item_name'
     ).click();
-    expect(["properties.xphone_prop_2"]).toVerifySteps();
+    expect.verifySteps(["properties.xphone_prop_2"]);
     expect(".o_model_field_selector_value").toHaveText("PropertiesP2");
     expect(".o_model_field_selector_warning").toHaveCount(0);
 });
@@ -856,14 +856,14 @@ test("clear button (allowEmpty=true)", async () => {
     expect(getModelFieldSelectorValues()).toEqual([]);
     expect(".o_model_field_selector_warning").toHaveCount(0);
     expect(".o_model_field_selector .fa.fa-times").toHaveCount(0);
-    expect([`path is ""`]).toVerifySteps();
+    expect.verifySteps([`path is ""`]);
 
     await openModelFieldSelectorPopover();
     await contains(".o_model_field_selector_popover_item_name").click();
     expect(getModelFieldSelectorValues()).toEqual(["Bar"]);
     expect(".o_model_field_selector_warning").toHaveCount(0);
     expect(".o_model_field_selector .fa.fa-times").toHaveCount(1);
-    expect([`path is "bar"`]).toVerifySteps();
+    expect.verifySteps([`path is "bar"`]);
 
     // clear when popover is open
     await openModelFieldSelectorPopover();
@@ -871,7 +871,7 @@ test("clear button (allowEmpty=true)", async () => {
     expect(getModelFieldSelectorValues()).toEqual([]);
     expect(".o_model_field_selector_warning").toHaveCount(0);
     expect(".o_model_field_selector .fa.fa-times").toHaveCount(0);
-    expect([`path is ""`]).toVerifySteps();
+    expect.verifySteps([`path is ""`]);
 });
 
 test("Modify path in popover debug input and click away", async () => {
@@ -909,7 +909,7 @@ test("Modify path in popover debug input and click away", async () => {
 
     await contains(getFixture()).click();
     expect(getModelFieldSelectorValues()).toEqual(["foooooo"]);
-    expect(["foooooo"]).toVerifySteps();
+    expect.verifySteps(["foooooo"]);
 });
 
 test("showDebugInput = false", async () => {

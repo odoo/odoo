@@ -144,7 +144,7 @@ test("model_selector: select a model", async () => {
     });
     await contains(".o-autocomplete--input").click();
     await contains(".o_model_selector_model_2").click();
-    expect(["model selected"]).toVerifySteps();
+    expect.verifySteps(["model selected"]);
 });
 
 test("model_selector: click on start typing", async () => {

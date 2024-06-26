@@ -109,12 +109,12 @@ test("can be rendered", async () => {
     ]);
     expect(queryAllTexts(".dropdown-menu .dropdown-item")).toEqual(["Ring", "Bad", "Frodo", "Eye"]);
     queryAll(".dropdown-menu .dropdown-item").forEach((el) => click(el));
-    expect([
+    expect.verifySteps([
         "callback ring_item",
         "callback bad_item",
         "callback frodo_item",
         "callback eye_item",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("display the correct name in debug mode", async () => {
@@ -144,7 +144,7 @@ test("can execute the callback of settings", async () => {
     expect(".dropdown-menu .dropdown-item").toHaveCount(1);
     expect(".dropdown-menu .dropdown-item").toHaveText("Preferences");
     await contains(".dropdown-menu .dropdown-item").click();
-    expect(["7", "Change My Preferences"]).toVerifySteps();
+    expect.verifySteps(["7", "Change My Preferences"]);
 });
 
 test("click on odoo account item", async () => {
@@ -159,5 +159,5 @@ test("click on odoo account item", async () => {
     expect(".o-dropdown--menu .dropdown-item").toHaveCount(1);
     expect(".o-dropdown--menu .dropdown-item").toHaveText("My Odoo.com account");
     await contains(".o-dropdown--menu .dropdown-item").click();
-    expect(["/web/session/account", "open https://account-url.com"]).toVerifySteps();
+    expect.verifySteps(["/web/session/account", "open https://account-url.com"]);
 });

@@ -76,7 +76,7 @@ test("error in a client action (at rendering)", async () => {
     expect(".o_kanban_view").toHaveCount(1);
     expect(".o_breadcrumb").toHaveText("Partners Action 1");
     expect(queryAllTexts(".o_kanban_record span")).toEqual(["First record", "Second record"]);
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 
     try {
         await getService("action").doAction("Boom");
@@ -87,7 +87,7 @@ test("error in a client action (at rendering)", async () => {
     expect(".o_kanban_view").toHaveCount(1);
     expect(".o_breadcrumb").toHaveText("Partners Action 1");
     expect(queryAllTexts(".o_kanban_record span")).toEqual(["First record", "Second record"]);
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test("error in a client action (after the first rendering)", async () => {
@@ -122,7 +122,7 @@ test("error in a client action (after the first rendering)", async () => {
     await animationFrame();
     expect(".my_button").toHaveCount(1);
     expect(".o_error_dialog").toHaveCount(1);
-    expect(["Cannot read properties of undefined (reading 'b')"]).toVerifyErrors();
+    expect.verifyErrors(["Cannot read properties of undefined (reading 'b')"]);
 });
 
 test("connection lost when opening form view from kanban", async () => {
@@ -142,7 +142,7 @@ test("connection lost when opening form view from kanban", async () => {
     expect(".o_kanban_view").toHaveCount(1);
     expect(".o_notification").toHaveCount(1);
     expect(".o_notification").toHaveText("Connection lost. Trying to reconnect...");
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -150,7 +150,7 @@ test("connection lost when opening form view from kanban", async () => {
         "web_search_read",
         "/web/dataset/call_kw/partner/web_read", // from mockFetch
         "/web/dataset/call_kw/partner/web_search_read", // from mockFetch
-    ]).toVerifySteps();
+    ]);
     await animationFrame();
-    expect([]).toVerifySteps(); // doesn't indefinitely try to reload the list
+    expect.verifySteps([]); // doesn't indefinitely try to reload the list
 });
