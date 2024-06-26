@@ -366,6 +366,26 @@ class TestDiscuss(MailCommon, TestRecipients):
         self.assertFalse(msg.starred)
         self.assertTrue(msg_emp.starred)
 
+    def test_delete_starred_message(self):
+        msg = self.test_record.with_user(self.user_admin).message_post(body="Hello!", message_type="comment")
+        msg.toggle_message_starred()
+        self.assertTrue(msg.starred)
+        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
+        self.test_record._message_update_content(message=msg, body="")
+        self.assertFalse(msg.starred)
+        self.assertBusNotifications([(self.cr.dbname, "res.partner", self.partner_admin.id)], [{
+            "type": "mail.record/insert",
+            "payload": {
+                "Thread": {
+                    "id": "starred",
+                    "messages": [["DELETE", [{"id": msg.id}]]],
+                    "model": "mail.box",
+                    "counter": 0,
+                    "counter_bus_id": bus_last_id,
+                },
+            }
+        }], check_unique=False)
+
     def test_inbox_message_fetch_needaction(self):
         user1 = self.env['res.users'].create({'login': 'user1', 'name': 'User 1'})
         user1.notification_type = 'inbox'

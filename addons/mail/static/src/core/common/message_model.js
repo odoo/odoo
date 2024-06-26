@@ -231,15 +231,6 @@ export class Message extends Record {
                 !this.subtype_description
             );
         },
-        /** @this {import("models").Message} */
-        onUpdate() {
-            if (this.isEmpty && this.isStarred) {
-                this.starredPersonas.delete(this._store.self);
-                const starred = this._store.discuss.starred;
-                starred.counter--;
-                starred.messages.delete(this);
-            }
-        },
     });
     get isBodyEmpty() {
         return (

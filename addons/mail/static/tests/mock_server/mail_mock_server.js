@@ -552,6 +552,9 @@ async function mail_message_update_content(request) {
 
     const { attachment_ids, body, message_id } = await parseRequestParams(request);
     MailMessage.write([message_id], { body, attachment_ids });
+    if (body === "" && attachment_ids.length === 0) {
+        MailMessage._cleanup_side_records([message_id]);
+    }
     BusBus._sendone(MailMessage._bus_notification_target(message_id), "mail.record/insert", {
         Message: {
             id: message_id,

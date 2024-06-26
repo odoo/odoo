@@ -55,10 +55,6 @@ export class MessageService {
             body: "",
             message_id: message.id,
         });
-        if (message.isStarred) {
-            this.store.discuss.starred.counter--;
-            this.store.discuss.starred.messages.delete(message);
-        }
         message.body = "";
         message.attachments = [];
     }
