@@ -441,7 +441,6 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         problematic_account = self.env['account.account'].create({
             'code': '222221',
             'name': 'problematic_account',
-            'company_id': self.company.id,
         })
 
         # remove an xmlid to see if it gets relinked and not duplicated
@@ -538,6 +537,8 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         def get_domain(model):
             if model == 'account.account.tag':
                 return [('country_id', '=', self.company.country_id.id)]
+            elif model == 'account.account':
+                return [('company_ids', '=', self.company.id)]
             else:
                 return [('company_id', '=', self.company.id)]
 
@@ -658,7 +659,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
                     'name': 'Free Account',
                     'code': '333331',
                     'account_type': 'asset_current',
-                    'company_id': company.id,
+                    'company_ids': [Command.link(company.id)],
                 },
             },
             'account.tax': {
@@ -861,7 +862,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
 
         accounts = self.env['account.account'].search([
-            ('company_id', '=', self.company.id),
+            ('company_ids', '=', self.company.id),
             ('code', 'in', ('777777', '777778'))
         ], order='code asc')
         self.assertEqual(2, len(accounts))

@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tools
+from odoo import Command
 
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
@@ -649,10 +648,8 @@ class TestPoSProductsWithTax(TestPoSCommon):
             'name': 'Branch XX config',
             'company_id': branch_xx.id,
         })
-        xx_account_receivable = self.company_data['default_account_receivable'].copy()
-        xx_account_receivable.company_id = branch_xx
-        xx_cash_journal = self.company_data['default_journal_cash'].copy()
-        xx_cash_journal.company_id = branch_xx
+        xx_account_receivable = self.company_data['default_account_receivable'].copy({'company_ids': [Command.set(branch_xx.ids)]})
+        xx_cash_journal = self.company_data['default_journal_cash'].copy({'company_id': branch_xx.id})
         xx_cash_payment_method = self.env['pos.payment.method'].create({
             'name': 'XX Cash Payment',
             'receivable_account_id': xx_account_receivable.id,

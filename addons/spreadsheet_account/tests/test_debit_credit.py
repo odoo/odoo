@@ -16,7 +16,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
 
         cls.account_revenue_c1 = cls.env["account.account"].create(
             {
-                "company_id": cls.company_data["company"].id,
+                "company_ids": [Command.link(cls.company_data["company"].id)],
                 "name": "spreadsheet revenue Company 1",
                 "account_type": "income",
                 "code": "sp1234566",
@@ -25,25 +25,26 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
 
         cls.account_expense_c1 = cls.env["account.account"].create(
             {
-                "company_id": cls.company_data["company"].id,
+                "company_ids": [Command.link(cls.company_data["company"].id)],
                 "name": "spreadsheet expense Company 1",
                 "account_type": "expense",
                 "code": "sp1234577",
             }
         )
 
-        cls.account_revenue_c2 = cls.env["account.account"].create(
+        company_2 = cls.company_data_2["company"]
+        cls.account_revenue_c2 = cls.env["account.account"].with_company(company_2).create(
             {
-                "company_id": cls.company_data_2["company"].id,
+                "company_ids": [Command.link(company_2.id)],
                 "name": "spreadsheet revenue Company 2",
                 "account_type": "income",
                 "code": "sp99887755",
             }
         )
 
-        cls.account_expense_c2 = cls.env["account.account"].create(
+        cls.account_expense_c2 = cls.env["account.account"].with_company(company_2).create(
             {
-                "company_id": cls.company_data_2["company"].id,
+                "company_ids": [Command.link(company_2.id)],
                 "name": "spreadsheet expense Company 2",
                 "account_type": "expense",
                 "code": "sp99887766",
@@ -925,7 +926,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                     "year": 2022,
                 },
                 "codes": [self.account_revenue_c1.code],
-                "company_id": self.account_revenue_c1.company_id.id,
+                "company_id": self.account_revenue_c1.company_ids.id,
                 "include_unposted": True,
             }
         )
@@ -951,7 +952,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                     ("account_id.include_initial_balance", "=", False),
                     ("date", ">=", date(2022, 1, 1)),
                     ("date", "<=", date(2022, 12, 31)),
-                    ("company_id", "=", self.account_revenue_c1.company_id.id),
+                    ("company_id", "=", self.account_revenue_c1.company_ids.id),
                     ("move_id.state", "!=", "cancel"),
                 ],
                 "name": "Journal items for account prefix sp1234566",

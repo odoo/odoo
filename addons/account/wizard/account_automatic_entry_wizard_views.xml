@@ -30,7 +30,7 @@
                         </group>
                         <group invisible="action != 'change_account'">
                             <field name="date" string="Transfer Date"/>
-                            <field name="destination_account_id" required="action == 'change_account'" domain="[('company_id', '=', company_id)]"/>
+                            <field name="destination_account_id" required="action == 'change_account'"/>
                         </group>
                         <group>
                             <label for="total_amount" string="Adjusting Amount" invisible="action != 'change_period'"/>

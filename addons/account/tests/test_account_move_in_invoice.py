@@ -1979,19 +1979,16 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'code': 'TWAIT',
             'account_type': 'liability_current',
             'reconcile': True,
-            'company_id': self.company_data['company'].id,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
             'code': 'TDEDUCT',
             'account_type': 'asset_current',
-            'company_id': self.company_data['company'].id,
         })
         tax_base_amount_account = self.env['account.account'].create({
             'name': 'TAX_BASE',
             'code': 'TBASE',
             'account_type': 'asset_current',
-            'company_id': self.company_data['company'].id,
         })
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
         self.env.company.tax_exigibility = True
@@ -2105,20 +2102,17 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'code': 'TWAIT',
             'account_type': 'liability_current',
             'reconcile': True,
-            'company_id': self.company_data['company'].id,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
             'code': 'TDEDUCT',
             'account_type': 'asset_current',
-            'company_id': self.company_data['company'].id,
         })
         default_expense_account = self.company_data['default_account_expense']
         not_default_expense_account = self.env['account.account'].create({
             'name': 'NOT_DEFAULT_EXPENSE',
             'code': 'NDE',
             'account_type': 'expense',
-            'company_id': self.company_data['company'].id,
         })
         self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)

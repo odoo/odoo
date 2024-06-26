@@ -243,36 +243,38 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     @classmethod
     def collect_company_accounting_data(cls, company):
+        # Need to have the right company when searching accounts with limit=1, since the ordering depends on the account code.
+        AccountAccount = cls.env['account.account'].with_company(company)
         return {
             'company': company,
             'currency': company.currency_id,
-            'default_account_revenue': cls.env['account.account'].search([
-                    ('company_id', '=', company.id),
+            'default_account_revenue': AccountAccount.search([
+                    ('company_ids', '=', company.id),
                     ('account_type', '=', 'income'),
                     ('id', '!=', company.account_journal_early_pay_discount_gain_account_id.id)
                 ], limit=1),
-            'default_account_expense': cls.env['account.account'].search([
-                    ('company_id', '=', company.id),
+            'default_account_expense': AccountAccount.search([
+                    ('company_ids', '=', company.id),
                     ('account_type', '=', 'expense'),
                     ('id', '!=', company.account_journal_early_pay_discount_loss_account_id.id)
                 ], limit=1),
             'default_account_receivable': cls.env['ir.property'].with_company(company)._get(
                 'property_account_receivable_id', 'res.partner'
             ),
-            'default_account_payable': cls.env['account.account'].search([
-                    ('company_id', '=', company.id),
+            'default_account_payable': AccountAccount.search([
+                    ('company_ids', '=', company.id),
                     ('account_type', '=', 'liability_payable')
                 ], limit=1),
-            'default_account_assets': cls.env['account.account'].search([
-                    ('company_id', '=', company.id),
+            'default_account_assets': AccountAccount.search([
+                    ('company_ids', '=', company.id),
                     ('account_type', '=', 'asset_fixed')
                 ], limit=1),
-            'default_account_deferred_expense': cls.env['account.account'].search([
-                    ('company_id', '=', company.id),
+            'default_account_deferred_expense': AccountAccount.search([
+                    ('company_ids', '=', company.id),
                     ('account_type', '=', 'asset_current')
                 ], limit=1),
-            'default_account_deferred_revenue': cls.env['account.account'].search([
-                    ('company_id', '=', company.id),
+            'default_account_deferred_revenue': AccountAccount.search([
+                    ('company_ids', '=', company.id),
                     ('account_type', '=', 'liability_current')
                 ], limit=1),
             'default_account_tax_sale': company.account_sale_tax_id.mapped('invoice_repartition_line_ids.account_id'),
@@ -306,7 +308,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         suffix_nb = 1
         while True:
             new_code = '%s.%s' % (account.code, suffix_nb)
-            if account.search_count([('company_id', '=', account.company_id.id), ('code', '=', new_code)]):
+            if account.search_count([('code', '=', new_code)]):
                 suffix_nb += 1
             else:
                 return account.copy(default={'code': new_code, 'name': account.name, **(default or {})})

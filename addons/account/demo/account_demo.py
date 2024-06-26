@@ -113,9 +113,9 @@ class AccountChartTemplate(models.AbstractModel):
             ],
             limit=1,
         )
-        default_receivable = self.env.ref('base.res_partner_3').with_company(company).property_account_receivable_id
-        income_account = self.env['account.account'].search([
-            ('company_id', '=', cid),
+        default_receivable = self.env.ref('base.res_partner_3').with_company(company or self.env.company).property_account_receivable_id
+        income_account = self.env['account.account'].with_company(company or self.env.company).search([
+            ('company_ids', '=', cid),
             ('account_type', '=', 'income'),
             ('id', '!=', (company or self.env.company).account_journal_early_pay_discount_gain_account_id.id)
         ], limit=1)
@@ -500,11 +500,11 @@ class AccountChartTemplate(models.AbstractModel):
                 ('model', '=', 'account.account'),
                 ('module', '=like', 'l10n%')
             ], limit=1).res_id)
-            or self.env['account.account'].search([
+            or self.env['account.account'].with_company(company).search([
                 *self.env['account.account']._check_company_domain(company),
                 ('account_type', '=', account_type),
             ], limit=1)
-            or self.env['account.account'].search([
+            or self.env['account.account'].with_company(company).search([
                 *self.env['account.account']._check_company_domain(company),
             ], limit=1)
         )

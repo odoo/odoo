@@ -282,7 +282,7 @@ class AccountMoveLine(models.Model):
     account_root_id = fields.Many2one(
         related='account_id.root_id',
         string="Account Root",
-        store=True,
+        depends_context='company',
     )
     product_category_id = fields.Many2one(related='product_id.product_tmpl_id.categ_id')
 
@@ -576,13 +576,15 @@ class AccountMoveLine(models.Model):
                   ORDER BY property.company_id, property.name, account_id
                 ),
                 fallback AS (
-                    SELECT DISTINCT ON (account.company_id, account.account_type)
+                    SELECT DISTINCT ON (account_companies.res_company_id, account.account_type)
                            'res.company' AS model,
-                           account.company_id AS id,
+                           account_companies.res_company_id AS id,
                            account.account_type AS account_type,
                            account.id AS account_id
                       FROM account_account account
-                     WHERE account.company_id = ANY(%(company_ids)s)
+                      JOIN account_account_res_company_rel account_companies
+                           ON account_companies.account_account_id = account.id
+                     WHERE account_companies.res_company_id = ANY(%(company_ids)s)
                        AND account.account_type IN ('asset_receivable', 'liability_payable')
                        AND account.deprecated = 'f'
                 )
@@ -1812,17 +1814,27 @@ class AccountMoveLine(models.Model):
             return {}
 
         # Override in order to not read the complete move line table and use the index instead
-        query = self._search(domain, limit=1)
-        query.add_where('account.id = account_move_line.account_id')
-        id_rows = self.env.execute_query(SQL("""
-            SELECT account.root_id
-              FROM account_account account,
-                   LATERAL (%s) line
-             WHERE account.company_id IN %s
-        """, query.select(), tuple(self.env.companies.ids)))
+        query_account = self.env['account.account']._search([('company_ids', '=', self.env.companies.ids)])
+        account_code_alias = self.env['account.account']._field_to_sql('account_account', 'code', query_account)
+
+        query_line = self._search(domain, limit=1)
+        query_line.add_where('account_account.id = account_move_line.account_id')
+
+        account_codes = self.env.execute_query(SQL(
+            """
+            SELECT %(account_code_alias)s AS code
+              FROM %(account_table)s,
+                   LATERAL (%(line_select)s) line
+             WHERE %(where_clause)s
+            """,
+            account_code_alias=account_code_alias,
+            account_table=query_account.from_clause,
+            line_select=query_line.select(),
+            where_clause=query_account.where_clause,
+        ))
         return {
-            root.id: {'id': root.id, 'display_name': root.display_name}
-            for root in self.env['account.root'].browse(id_ for [id_] in id_rows)
+            (root := self.env['account.root']._from_account_code(code)).id: {'id': root.id, 'display_name': root.display_name}
+            for code, in account_codes
         }
 
     # -------------------------------------------------------------------------
@@ -2494,13 +2506,13 @@ class AccountMoveLine(models.Model):
             partials[index].exchange_move_id = exchange_move
 
         # ==== Create entries for cash basis taxes ====
-        def is_cash_basis_needed(account):
-            return account.company_id.tax_exigibility \
-                and account.account_type in ('asset_receivable', 'liability_payable')
+        def is_cash_basis_needed(amls):
+            return any(amls.company_id.mapped('tax_exigibility')) \
+                and amls.account_id.account_type in ('asset_receivable', 'liability_payable')
 
         if not self._context.get('move_reverse_cancel') and not self._context.get('no_cash_basis'):
             for plan in plan_list:
-                if is_cash_basis_needed(plan['amls'].account_id):
+                if is_cash_basis_needed(plan['amls']):
                     plan['partials']._create_tax_cash_basis_moves()
 
         # ==== Prepare full reconcile creation ====
@@ -2588,7 +2600,7 @@ class AccountMoveLine(models.Model):
                 # If we are fully reversing the entry, no need to fix anything since the journal entry
                 # is exactly the mirror of the source journal entry.
                 caba_lines_to_reconcile = None
-                if is_cash_basis_needed(involved_amls.account_id) and not self._context.get('move_reverse_cancel'):
+                if is_cash_basis_needed(involved_amls) and not self._context.get('move_reverse_cancel'):
                     caba_lines_to_reconcile = involved_amls._add_exchange_difference_cash_basis_vals(exchange_diff_values)
 
                 # Prepare the exchange difference.

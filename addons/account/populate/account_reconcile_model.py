@@ -69,7 +69,7 @@ class AccountReconcileModelLine(models.Model):
                 domain += [('account_type', '=', type)]
             if group:
                 domain += [('internal_group', '=', group)]
-            return self.env['account.account'].search(domain)
+            return self.env['account.account'].with_company(self.env['res.company'].browse(company_id)).search(domain)
 
         def get_amount(random, values, **kwargs):
             """Get an amount dending on the amount_type.

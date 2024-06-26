@@ -61,26 +61,23 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
 
         # Create stock config.
         company_data.update({
-            'default_account_stock_in': cls.env['account.account'].create({
+            'default_account_stock_in': cls.env['account.account'].with_company(company).create({
                 'name': 'default_account_stock_in',
                 'code': 'STOCKIN',
                 'reconcile': True,
                 'account_type': 'asset_current',
-                'company_id': company.id,
             }),
-            'default_account_stock_out': cls.env['account.account'].create({
+            'default_account_stock_out': cls.env['account.account'].with_company(company).create({
                 'name': 'default_account_stock_out',
                 'code': 'STOCKOUT',
                 'reconcile': True,
                 'account_type': 'asset_current',
-                'company_id': company.id,
             }),
-            'default_account_stock_valuation': cls.env['account.account'].create({
+            'default_account_stock_valuation': cls.env['account.account'].with_company(company).create({
                 'name': 'default_account_stock_valuation',
                 'code': 'STOCKVAL',
                 'reconcile': True,
                 'account_type': 'asset_current',
-                'company_id': company.id,
             }),
             'default_warehouse': cls.env['stock.warehouse'].search(
                 [('company_id', '=', company.id)],

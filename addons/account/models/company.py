@@ -91,7 +91,7 @@ class ResCompany(models.Model):
     user_hard_lock_date = fields.Date(compute='_compute_user_hard_lock_date')
     transfer_account_id = fields.Many2one('account.account',
         check_company=True,
-        domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current'), ('deprecated', '=', False)]", string="Inter-Banks Transfer Account", help="Intermediary account used when moving money from a liqity account to another")
+        domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current'), ('deprecated', '=', False)]", string="Inter-Banks Transfer Account", help="Intermediary account used when moving money from a liquidity account to another")
     expects_chart_of_accounts = fields.Boolean(string='Expects a Chart of Accounts', default=True)
     chart_template = fields.Selection(selection='_chart_template_selection')
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts')
@@ -389,7 +389,7 @@ class ResCompany(models.Model):
     def reflect_code_prefix_change(self, old_code, new_code):
         if not old_code or new_code == old_code:
             return
-        accounts = self.env['account.account'].search([
+        accounts = self.env['account.account'].with_company(self).search([
             *self.env['account.account']._check_company_domain(self),
             ('code', '=like', old_code + '%'),
             ('account_type', 'in', ('asset_cash', 'liability_credit_card')),
@@ -731,19 +731,19 @@ class ResCompany(models.Model):
         if none has yet been defined.
         """
         unaffected_earnings_type = "equity_unaffected"
-        account = self.env['account.account'].search([
+        account = self.env['account.account'].with_company(self).search([
             *self.env['account.account']._check_company_domain(self),
             ('account_type', '=', unaffected_earnings_type),
-        ])
+        ], limit=1)
         if account:
-            return account[0]
+            return account
         # Do not assume '999999' doesn't exist since the user might have created such an account
         # manually.
         code = 999999
-        while self.env['account.account'].search([
+        while self.env['account.account'].with_company(self).search_count([
             *self.env['account.account']._check_company_domain(self),
             ('code', '=', str(code)),
-        ]):
+        ], limit=1):
             code -= 1
         return self.env['account.account']._load_records([
             {
@@ -752,7 +752,7 @@ class ResCompany(models.Model):
                               'code': str(code),
                               'name': _('Undistributed Profits/Losses'),
                               'account_type': unaffected_earnings_type,
-                              'company_id': self.id,
+                              'company_ids': [Command.link(self.id)],
                           },
                 'noupdate': True,
             }

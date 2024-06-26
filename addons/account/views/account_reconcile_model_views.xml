@@ -13,7 +13,7 @@
                     <field name="rule_type" invisible="1"/>
                     <group>
                         <group>
-                            <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]"
+                            <field name="account_id" options="{'no_create': True}"
                                    required="rule_type != 'invoice_matching' or (rule_type == 'invoice_matching' and allow_payment_tolerance and payment_tolerance_param != 0.0)"/>
                             <field name="amount_type"/>
                             <field name="tax_ids"

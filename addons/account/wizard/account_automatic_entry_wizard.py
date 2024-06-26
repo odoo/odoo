@@ -240,7 +240,7 @@ class AutomaticEntryWizard(models.TransientModel):
 
         # Get the lowest child company based on accounts used to avoid access error
         accounts = self.env['account.account'].browse([line['account_id'] for line in line_vals])
-        companies = accounts.company_id | self.env.company
+        companies = accounts.company_ids.filtered(lambda c: self.env.company in c.parent_ids) | self.env.company
         lowest_child_company = max(companies, key=lambda company: len(company.parent_ids))
 
         return [{

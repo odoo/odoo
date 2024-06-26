@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.digest.tests.common import TestDigestCommon
 from odoo.tools import mute_logger
 from odoo.tests import tagged
@@ -13,8 +13,8 @@ class TestAccountDigest(TestDigestCommon):
     @mute_logger('odoo.models.unlink')
     def setUpClass(cls):
         super().setUpClass()
-        account1 = cls.env['account.account'].search([('internal_group', '=', 'income'), ('company_id', '=', cls.company_1.id)], limit=1)
-        account2 = cls.env['account.account'].search([('internal_group', '=', 'expense'), ('company_id', '=', cls.company_1.id)], limit=1)
+        account1 = cls.env['account.account'].search([('internal_group', '=', 'income'), ('company_ids', '=', cls.company_1.id)], limit=1)
+        account2 = cls.env['account.account'].search([('internal_group', '=', 'expense'), ('company_ids', '=', cls.company_1.id)], limit=1)
         cls.env['account.journal'].with_company(cls.company_2).create({
             'name': 'Test Journal',
             'code': 'code',
@@ -24,13 +24,13 @@ class TestAccountDigest(TestDigestCommon):
         comp2_account, comp2_account2 = cls.env['account.account'].create([{
             'name': 'Account 1 Company 2',
             'account_type': 'expense_depreciation',
-            'company_id': cls.company_2.id,
             'code': 'aaaaaa',
+            'company_ids': [Command.link(cls.company_2.id)],
         }, {
             'name': 'Account 2 Company 2',
             'account_type': 'income_other',
-            'company_id': cls.company_2.id,
             'code': 'bbbbbb',
+            'company_ids': [Command.link(cls.company_2.id)],
         }])
 
         cls.env['account.move'].search([]).state = 'draft'

@@ -43,7 +43,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'code': 'cash.basis.base.account',
             'name': 'cash_basis_base_account',
             'account_type': 'income',
-            'company_id': cls.company_data['company'].id,
         })
         cls.company_data['company'].account_cash_basis_base_account_id = cls.cash_basis_base_account
 
@@ -52,21 +51,18 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'name': 'cash_basis_transfer_account',
             'account_type': 'income',
             'reconcile': True,
-            'company_id': cls.company_data['company'].id,
         })
 
         cls.tax_account_1 = cls.env['account.account'].create({
             'code': 'tax.account.1',
             'name': 'tax_account_1',
             'account_type': 'income',
-            'company_id': cls.company_data['company'].id,
         })
 
         cls.tax_account_2 = cls.env['account.account'].create({
             'code': 'tax.account.2',
             'name': 'tax_account_2',
             'account_type': 'income',
-            'company_id': cls.company_data['company'].id,
         })
 
         cls.fake_country = cls.env['res.country'].create({
@@ -3424,7 +3420,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'code': '209.01.01',
             'name': 'Cash Basis Transition Account',
             'account_type': 'liability_current',
-            'company_id': self.company_data['company'].id,
             'reconcile': True,
         })
         self.cash_basis_tax_a_third_amount.write({

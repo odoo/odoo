@@ -6,7 +6,7 @@ from odoo.osv.expression import OR
 bypass_token = object()
 DOMAINS = {
     'account.move': lambda operator, value: [('company_id.check_account_audit_trail', operator, value)],
-    'account.account': lambda operator, value: [('company_id.check_account_audit_trail', operator, value)],
+    'account.account': lambda operator, value: [('company_ids.check_account_audit_trail', operator, value)],
     'account.tax': lambda operator, value: [('company_id.check_account_audit_trail', operator, value)],
     'res.partner': lambda operator, value: [
         '|', ('company_id', '=', False), ('company_id.check_account_audit_trail', operator, value),

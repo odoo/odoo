@@ -119,8 +119,8 @@ class Company(models.Model):
         if (
             self.chart_template in EU_ACCOUNT_MAP
             and (oss_account_if_exists :=
-                self.env['account.account'].search([
-                    ('company_id', '=', self.id),
+                self.env['account.account'].with_company(self).search([
+                    ('company_ids', '=', self.id),
                     ('code', '=', EU_ACCOUNT_MAP[self.chart_template])
                 ])
             )
@@ -133,15 +133,12 @@ class Company(models.Model):
                 ]).invoice_repartition_line_ids.mapped('account_id')
             if not sales_tax_accounts:
                 return False
-            new_code = self.env['account.account']._search_new_account_code(
-                sales_tax_accounts[0].code,
-                self,
-            )
+            new_code = self.env['account.account'].with_company(self)._search_new_account_code(sales_tax_accounts[0].with_company(self).code)
             oss_account = self.env['account.account'].create({
                 'name': f'{sales_tax_accounts[0].name} OSS',
                 'code': new_code,
                 'account_type': sales_tax_accounts[0].account_type,
-                'company_id': self.id,
+                'company_ids': [Command.link(self.id)],
                 'tag_ids': [(4, tag.id, 0) for tag in sales_tax_accounts[0].tag_ids],
             })
         self.env['ir.model.data'].create({

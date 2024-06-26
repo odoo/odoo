@@ -318,7 +318,6 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             'code': 'STOCKDIFF',
             'reconcile': True,
             'account_type': 'asset_current',
-            'company_id': self.env.company.id,
         })
         product_category_all.property_account_creditor_price_difference_categ = stock_price_diff_acc_id
 

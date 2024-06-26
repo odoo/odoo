@@ -36,8 +36,8 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         self.assertEqual(self.root_company.fiscalyear_last_month, self.branch_a.fiscalyear_last_month)
 
         # The accounts are shared
-        root_accounts = self.env['account.account'].search([('company_id', 'parent_of', self.root_company.id)])
-        branch_a_accounts = self.env['account.account'].search([('company_id', 'parent_of', self.branch_a.id)])
+        root_accounts = self.env['account.account'].search([('company_ids', 'parent_of', self.root_company.id)])
+        branch_a_accounts = self.env['account.account'].search([('company_ids', 'parent_of', self.branch_a.id)])
         self.assertTrue(root_accounts)
         self.assertEqual(root_accounts, branch_a_accounts)
 
@@ -185,7 +185,7 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
             'name': 'volatile',
             'code': 'vola',
             'account_type': 'income',
-            'company_id': self.branch_a.id,
+            'company_ids': [Command.link(self.branch_a.id)]
         })
         account_lines = [Command.create({
             'account_id': account.id,
@@ -199,31 +199,31 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
             'tax_ids': [Command.set(tax.ids)],
             'name': 'name',
         })]
-        for record, lines in (
-            (account, account_lines),
-            (tax, tax_lines),
+        for record, lines, company_field in (
+            (account, account_lines, 'company_ids'),
+            (tax, tax_lines, 'company_id'),
         ):
             with self.subTest(model=record._name):
                 self.env['account.move'].create({'company_id': self.branch_a.id, 'line_ids': lines})
                 # Can switch to main
-                record.company_id = self.root_company
+                record[company_field] = self.root_company
 
                 # Can switch back
-                record.company_id = self.branch_a
+                record[company_field] = self.branch_a
 
                 # Can't use in main if owned by a branch
                 with self.assertRaisesRegex(UserError, 'belongs to another company'):
                     self.env['account.move'].create({'company_id': self.root_company.id, 'line_ids': lines})
 
                 # Can still switch to main
-                record.company_id = self.root_company
+                record[company_field] = self.root_company
 
                 # Can use in main now
                 self.env['account.move'].create({'company_id': self.root_company.id, 'line_ids': lines})
 
                 # Can't switch back to branch if used in main
                 with self.assertRaisesRegex(UserError, 'journal items linked'):
-                    record.company_id = self.branch_a
+                    record[company_field] = self.branch_a
 
     def test_branch_should_keep_parent_company_currency(self):
         test_country = self.env['res.country'].create({

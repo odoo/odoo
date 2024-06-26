@@ -624,7 +624,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'TAX_BASE',
             'code': 'TBASE',
             'account_type': 'asset_current',
-            'company_id': self.env.company.id,
         })
         fixed_tax = self.env['account.tax'].create({
             'name': 'fixed amount tax',

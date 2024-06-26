@@ -152,19 +152,13 @@
     <record id="account_comp_rule" model="ir.rule">
         <field name="name">Account multi-company</field>
         <field name="model_id" ref="model_account_account"/>
-        <field name="domain_force">[('company_id', 'parent_of', company_ids)]</field>
+        <field name="domain_force">[('company_ids', 'parent_of', company_ids)]</field>
     </record>
 
     <record id="account_group_comp_rule" model="ir.rule">
         <field name="name">Account Group multi-company</field>
         <field name="model_id" ref="model_account_group"/>
         <field name="domain_force">[('company_id', 'parent_of', company_ids)]</field>
-    </record>
-
-    <record id="account_root_comp_rule" model="ir.rule">
-        <field name="name">Account Root multi-company</field>
-        <field name="model_id" ref="model_account_root"/>
-        <field name="domain_force">['|',('company_id','=',False), ('company_id', 'parent_of', company_ids)]</field>
     </record>
 
     <record id="tax_group_comp_rule" model="ir.rule">

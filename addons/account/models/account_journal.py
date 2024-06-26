@@ -583,19 +583,19 @@ class AccountJournal(models.Model):
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default)
-        codes_by_company = {
-            company: set(self.env['account.journal'].with_context(active_test=False)._read_group(
-                domain=self.env['account.journal']._check_company_domain(company),
+        code_by_company_id = {
+            company_id: set(self.env['account.journal'].with_context(active_test=False)._read_group(
+                domain=self.env['account.journal']._check_company_domain(company_id),
                 aggregates=['code:array_agg'],
             )[0][0])
-            for company in self.company_id
+            for company_id, _ in groupby(vals_list, lambda v: v['company_id'])
         }
         for journal, vals in zip(self, vals_list):
             # Find a unique code for the copied journal
-            all_journal_codes = codes_by_company[journal.company_id]
+            all_journal_codes = code_by_company_id[vals['company_id']]
 
-            copy_code = journal.code
-            code_prefix = re.sub(r'\d+', '', journal.code).strip()
+            copy_code = vals['code']
+            code_prefix = re.sub(r'\d+', '', copy_code).strip()
             counter = 1
             while counter <= len(all_journal_codes) and copy_code in all_journal_codes:
                 counter_str = str(counter)
@@ -746,7 +746,7 @@ class AccountJournal(models.Model):
             'code': code,
             'account_type': 'asset_cash',
             'currency_id': vals.get('currency_id'),
-            'company_id': company.id,
+            'company_ids': [Command.link(company.id)],
         }
 
     @api.model
@@ -765,7 +765,7 @@ class AccountJournal(models.Model):
         vals['company_id'] = company.id
 
         # Don't get the digits on 'chart_template' since the chart template could be a custom one.
-        random_account = self.env['account.account'].search(
+        random_account = self.env['account.account'].with_company(company).search(
             self.env['account.account']._check_company_domain(company),
             limit=1,
         )
@@ -787,7 +787,7 @@ class AccountJournal(models.Model):
             # === Fill missing accounts ===
             if not has_liquidity_accounts:
                 start_code = liquidity_account_prefix.ljust(digits, '0')
-                default_account_code = self.env['account.account']._search_new_account_code(start_code, company)
+                default_account_code = self.env['account.account'].with_company(company)._search_new_account_code(start_code)
                 default_account_vals = self._prepare_liquidity_account_vals(company, default_account_code, vals)
                 default_account = self.env['account.account'].create(default_account_vals)
                 self.env['ir.model.data']._update_xmlids([

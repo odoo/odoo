@@ -32,7 +32,6 @@
                                 </div>
                             </button>
                         </div>
-                        <field name="company_id" invisible="1"/>
                         <div>
                             <h1 style="font-size: 1.9rem;">
                                 <div class="row">
@@ -53,7 +52,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <field name="company_id" invisible="1"/>
                             </h1>
                         </div>
                         <notebook>
@@ -70,9 +68,17 @@
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                         <field name="deprecated"/>
                                         <field name="group_id"/>
-                                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                        <field name="company_ids" widget="many2many_tags" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     </group>
                                 </group>
+                            </page>
+                            <page name="mapping" string="Mapping" groups="base.group_multi_company">
+                                <field name="code_mapping_ids" colspan="2" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="company_id"/>
+                                        <field name="code"/>
+                                    </tree>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>
@@ -87,7 +93,6 @@
             <field name="model">account.account</field>
             <field name="arch" type="xml">
                 <tree editable="top" create="1" delete="1" multi_edit="1" string="Chart of accounts"  open_form_view="True">
-                    <field name="company_id" column_invisible="True"/>
                     <field name="code"/>
                     <field name="name"/>
                     <field name="account_type" widget="account_type_selection"/>
@@ -99,7 +104,7 @@
                     <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" optional="hide" widget="many2many_tags"/>
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
-                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    <field name="company_ids" widget="many2many_tags" options="{'no_create': True}" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -178,5 +183,29 @@
             <field name="context">{'search_default_activeacc': True}</field>
         </record>
 
+        <record model="ir.actions.server" id="action_merge_accounts">
+            <field name="name">Merge accounts</field>
+            <field name="model_id" ref="model_account_account"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
+            <field name="binding_model_id" ref="account.model_account_account" />
+            <field name="binding_view_types">tree</field>
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = records.action_merge()
+            </field>
+        </record>
+        <record model="ir.actions.server" id="action_unmerge_accounts">
+            <field name="name">Unmerge account</field>
+            <field name="model_id" ref="model_account_account"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
+            <field name="binding_model_id" ref="account.model_account_account" />
+            <field name="binding_view_types">form,tree</field>
+            <field name="state">code</field>
+            <field name="code">
+if record:
+    action = record.action_merge()
+            </field>
+        </record>
     </data>
 </odoo>
