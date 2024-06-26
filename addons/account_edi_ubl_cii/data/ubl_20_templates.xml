@@ -29,6 +29,9 @@
             <cbc:EndpointID
                     t-att="vals.get('endpoint_id_attrs', {})"
                     t-out="vals.get('endpoint_id')"/>
+            <t t-if="not partner.vat and partner.email" >
+                <cbc:EndpointID schemeID="EM" t-out="partner.email"/>
+            </t>
             <t t-foreach="vals.get('party_identification_vals', [])" t-as="party_vals">
                 <cac:PartyIdentification>
                     <cbc:ID
