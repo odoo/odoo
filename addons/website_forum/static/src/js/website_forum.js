@@ -8,7 +8,6 @@ import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFrom
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { session } from "@web/session";
 import { rpc } from "@web/core/network/rpc";
-import { escape } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -59,67 +58,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         // Initialize forum's tooltips
         this.$('[data-bs-toggle="tooltip"]').tooltip({delay: 0});
         this.$('[data-bs-toggle="popover"]').popover({offset: '8'});
-
-        $('input.js_select2').select2({
-            tags: true,
-            tokenSeparators: [',', ' ', '_'],
-            maximumInputLength: 35,
-            minimumInputLength: 2,
-            maximumSelectionSize: 5,
-            lastsearch: [],
-            createSearchChoice: function (term) {
-                if (self.lastsearch.filter(s => s.text.localeCompare(term) === 0).length === 0) {
-                    //check Karma
-                    if (parseInt($('#karma').val()) >= parseInt($('#karma_edit_retag').val())) {
-                        return {
-                            id: '_' + $.trim(term),
-                            text: $.trim(term) + ' *',
-                            isNew: true,
-                        };
-                    }
-                }
-            },
-            createSearchChoicePosition: "bottom",
-            formatResult: function (term) {
-                if (term.isNew) {
-                    return '<span class="badge bg-primary">New</span> ' + escape(term.text);
-                } else {
-                    return escape(term.text);
-                }
-            },
-            ajax: {
-                url: '/forum/get_tags',
-                dataType: 'json',
-                data: function (term) {
-                    return {
-                        query: term,
-                        limit: 50,
-                        forum_id: $('#wrapwrap').data('forum_id'),
-                    };
-                },
-                results: function (data) {
-                    var ret = [];
-                    data.forEach((x) => {
-                        ret.push({
-                            id: x.id,
-                            text: x.name,
-                            isNew: false,
-                        });
-                    });
-                    self.lastsearch = ret;
-                    return {results: ret};
-                }
-            },
-            // Take default tags from the input value
-            initSelection: function (element, callback) {
-                var data = [];
-                element.data("init-value").forEach((x) => {
-                    data.push({id: x.id, text: x.name, isNew: false});
-                });
-                element.val('');
-                callback(data);
-            },
-        });
 
         $('textarea.o_wysiwyg_loader').toArray().forEach((textarea) => {
             var $textarea = $(textarea);

@@ -28,11 +28,15 @@ registry.category("web_tour.tours").add('forum_question', {
     },
     {
         content: "Insert tags related to your question.",
-        trigger: '.select2-choices',
+        trigger: 'button.o_select_menu_toggler',
+        run:"click",
+    },
+    {
+        trigger: 'input.dropdown-item.o_select_menu_sticky',
         run: "editor Tag",
     },
     {
-        trigger: "#wrap:not(:has(input[id=s2id_autogen2]:value('')))",
+        trigger: "#wrap:not(:has(input.dropdown-item.o_select_menu_sticky:value('')))",
     },
     {
         content: "Click to post your question.",
