@@ -825,6 +825,10 @@ class SaleOrder(models.Model):
 
         return super().create(vals_list)
 
+    def _get_copiable_order_lines(self):
+        """Returns the order lines that can be copied to a new order."""
+        return self.order_line.filtered(lambda l: not l.is_downpayment)
+
     def copy_data(self, default=None):
         default = dict(default or {})
         default_has_no_order_line = 'order_line' not in default
@@ -834,7 +838,7 @@ class SaleOrder(models.Model):
             for order, vals in zip(self, vals_list):
                 vals['order_line'] = [
                     Command.create(line_vals)
-                    for line_vals in order.order_line.filtered(lambda l: not l.is_downpayment).copy_data()
+                    for line_vals in order._get_copiable_order_lines().copy_data()
                 ]
         return vals_list
 
