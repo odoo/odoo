@@ -17,7 +17,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         cls.company = cls.company_data['company']
         cls.receivable_account = cls.company_data['default_account_receivable']
         cls.payable_account = cls.company_data['default_account_payable']
-        cls.accounts = cls.env['account.account'].search([('reconcile', '=', False), ('company_id', '=', cls.company.id)], limit=5)
+        cls.accounts = cls.env['account.account'].search([('reconcile', '=', False), ('company_ids', '=', cls.company.id)], limit=5)
         cls.journal = cls.company_data['default_journal_misc']
 
         # Set rate for base currency to 1

@@ -573,7 +573,7 @@ class AccountPayment(models.Model):
                 if pay.partner_id:
                     pay.destination_account_id = pay.partner_id.with_company(pay.company_id).property_account_receivable_id
                 else:
-                    pay.destination_account_id = self.env['account.account'].search([
+                    pay.destination_account_id = self.env['account.account'].with_company(pay.company_id).search([
                         *self.env['account.account']._check_company_domain(pay.company_id),
                         ('account_type', '=', 'asset_receivable'),
                         ('deprecated', '=', False),
@@ -583,7 +583,7 @@ class AccountPayment(models.Model):
                 if pay.partner_id:
                     pay.destination_account_id = pay.partner_id.with_company(pay.company_id).property_account_payable_id
                 else:
-                    pay.destination_account_id = self.env['account.account'].search([
+                    pay.destination_account_id = self.env['account.account'].with_company(pay.company_id).search([
                         *self.env['account.account']._check_company_domain(pay.company_id),
                         ('account_type', '=', 'liability_payable'),
                         ('deprecated', '=', False),

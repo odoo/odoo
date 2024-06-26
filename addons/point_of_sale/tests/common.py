@@ -214,7 +214,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         # other basics
         cls.sale_account = cls.categ_basic.property_account_income_categ_id
         cls.other_sale_account = cls.env['account.account'].search([
-            ('company_id', '=', cls.company.id),
+            ('company_ids', '=', cls.company.id),
             ('account_type', '=', 'income'),
             ('id', '!=', cls.sale_account.id)
         ], limit=1)

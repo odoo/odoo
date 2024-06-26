@@ -198,7 +198,8 @@ class AccountChartTemplate(models.AbstractModel):
         if not reload_template and (not company.root_id._existing_accounting() or self.env.ref('base.module_account').demo):
             for model in ('account.move',) + TEMPLATE_MODELS[::-1]:
                 if not company.parent_id:
-                    self.env[model].sudo().with_context(active_test=False).search([('company_id', 'child_of', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+                    company_field = 'company_id' if 'company_id' in self.env[model] else 'company_ids'
+                    self.env[model].sudo().with_context(active_test=False).search([(company_field, 'child_of', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
 
         data = self._get_chart_template_data(template_code)
         template_data = data.pop('template_data')
@@ -217,7 +218,6 @@ class AccountChartTemplate(models.AbstractModel):
 
         # Manual sync because disable above (delay_account_group_sync)
         AccountGroup = self.env['account.group'].with_context(delay_account_group_sync=False)
-        AccountGroup._adapt_accounts_for_account_groups(company=company)
         AccountGroup._adapt_parent_account_group(company=company)
 
         # Install the demo data when the first localization is instanciated on the company
@@ -356,7 +356,8 @@ class AccountChartTemplate(models.AbstractModel):
                     normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
                     if not account or not re.match(f'^{values["code"]}0*$', account.code):
                         query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
-                        query.add_where("account_account.code SIMILAR TO %s", [f'{values["code"]}0*'])
+                        account_code = self.with_company(company).env['account.account']._field_to_sql('account_account', 'code', query)
+                        query.add_where(SQL("%s SIMILAR TO %s", account_code, f'{values["code"]}0*'))
                         accounts = self.env['account.account'].browse(query)
                         existing_account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
                         if existing_account:
@@ -796,15 +797,12 @@ class AccountChartTemplate(models.AbstractModel):
             return
 
         def create_foreign_tax_account(existing_account, additional_label):
-            new_code = self.env['account.account']._search_new_account_code(
-                existing_account.code,
-                existing_account.company_id,
-            )
+            new_code = self.env['account.account'].with_company(company)._search_new_account_code(existing_account.code)
             return self.env['account.account'].create({
                 'name': f"{existing_account.name} - {additional_label}",
                 'code': new_code,
                 'account_type': existing_account.account_type,
-                'company_id': existing_account.company_id.id,
+                'company_ids': [Command.link(company.id)],
             })
 
         existing_accounts = {'': None, None: None}  # keeps tracks of the created account by foreign xml_id
@@ -1205,19 +1203,22 @@ class AccountChartTemplate(models.AbstractModel):
             translatable_fields = translatable_model_fields[model]
             if not translatable_fields:
                 continue
+            company_id_field = 'company_ids' if model == 'account.account' else 'company_id'
 
-            self.env[model].flush_model(['id', 'company_id'] + translatable_model_fields[model])
+            self.env[model].flush_model(['id', company_id_field] + translatable_model_fields[model])
+
+            query = self.env[model]._where_calc([(company_id_field, 'in', company_ids)])
 
             # We only want records that have at least 1 missing translation in any of its translatable fields
             missing_translation_clauses = [
-                SQL("(%s ->> %s) IS NULL", SQL.identifier('model', field), lang)
+                SQL("(%s ->> %s) IS NULL", SQL.identifier(query.table, field), lang)
                 for field in translatable_fields
                 for lang in langs
             ]
 
             translatable_field_column_args = []
             for field in translatable_fields:
-                translatable_field_column_args.extend((SQL("%s", field), SQL.identifier('model', field)))
+                translatable_field_column_args.extend((SQL("%s", field), SQL.identifier(query.table, field)))
 
             queries.append(SQL(
                 """
@@ -1225,16 +1226,17 @@ class AccountChartTemplate(models.AbstractModel):
                         model_data.name AS xmlid,
                         model_data.module AS module,
                         json_build_object(%(translatable_field_column_args)s) AS fields
-                   FROM %(table)s model
+                   FROM %(from_clause)s
                    JOIN ir_model_data model_data ON model_data.model = %(model)s
-                                                AND model.id = model_data.res_id
-                  WHERE (%(missing_translation_clauses)s)
-                    AND model.company_id IN %(company_ids)s
+                                                AND %(model_id)s = model_data.res_id
+                  WHERE %(where_clause)s
+                        AND (%(missing_translation_clauses)s)
                 """,
                 model=model,
                 translatable_field_column_args=SQL(", ").join(translatable_field_column_args),
-                table=SQL.identifier(self.env[model]._table),
-                company_ids=company_ids,
+                from_clause=query.from_clause,
+                model_id=SQL.identifier(query.table, 'id'),
+                where_clause=query.where_clause or SQL("TRUE"),
                 missing_translation_clauses=SQL(" OR ").join(missing_translation_clauses),
             ))
 
