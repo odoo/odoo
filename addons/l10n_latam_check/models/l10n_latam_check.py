@@ -42,8 +42,11 @@ class l10nLatamAccountPaymentCheck(models.Model):
     payment_date = fields.Date(readonly=False, required=True)
     amount = fields.Monetary()
     liquidity_line_id = fields.Many2one('account.move.line', readonly=True, check_company=True)
-    issue_state = fields.Selection([('handed', 'Handed'), ('debited', 'Debited'), ('voided', 'Voided')],
-                                   compute='_compute_issue_state', store=True)
+    issue_state = fields.Selection(
+        selection=[('handed', 'Handed'), ('debited', 'Debited'), ('voided', 'Voided')],
+        compute='_compute_issue_state',
+        store=True
+    )
     # fields from payment
     payment_method_code = fields.Char(related='payment_id.payment_method_code')
     partner_id = fields.Many2one(related='payment_id.partner_id')

@@ -19,10 +19,10 @@ class AccountPayment(models.Model):
 
     @api.depends('l10n_latam_move_check_ids.amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
     def _compute_amount(self):
-        for rec in self.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')):
-            rec.amount = sum(rec.l10n_latam_new_check_ids.mapped('amount'))
-        for rec in self.filtered(lambda x: x._is_latam_check_payment(check_subtype='move_check')):
-            rec.amount = sum(rec.l10n_latam_move_check_ids.mapped('amount'))
+        for rec in self:
+            checks = rec.l10n_latam_new_check_ids if rec._is_latam_check_payment(check_subtype='new_check') else rec.l10n_latam_move_check_ids
+            if checks:
+                rec.amount = sum(checks.mapped('amount'))
 
     def _is_latam_check_payment(self, check_subtype=False):
         if check_subtype == 'move_check':
@@ -87,20 +87,21 @@ class AccountPayment(models.Model):
 
                     last_operation = check._get_last_operation()
                     if last_operation and last_operation[0].date > date:
-                        msgs.append(_(
-                            "It seems you're trying to move a check with a date (%s) prior to last operation done with "
-                            "the check (%s). This may be wrong, please double check it. By continue, the last operation on "
-                            "the check will remain being %s") %
-                            (format_date(self.env, date), last_operation.display_name, last_operation.display_name))
-
+                        msgs.append(
+                            _("It seems you're trying to move a check with a date (%(date)s) prior to last operation done with "
+                              "the check (%(last_operation)s). This may be wrong, please double check it. By continue, the last operation on "
+                              "the check will remain being %(last_operation)s",
+                              date=format_date(self.env, date), last_operation=last_operation.display_name)
+                        )
         return msgs
 
     def _get_reconciled_checks_error(self):
         checks_reconciled = self.l10n_latam_new_check_ids.filtered(lambda x: x.issue_state in ['debited', 'voided'])
         if checks_reconciled:
-            raise UserError(_(
-                "You can't cancel or re-open a payment with checks if some check has been debited or been voided. Checks:\n"
-                "%s") % ('\n'.join(['* %s (%s)' % (x.name, x.issue_state) for x in checks_reconciled])))
+            raise UserError(
+                _("You can't cancel or re-open a payment with checks if some check has been debited or been voided. "
+                  "Checks:\n%s", ('\n'.join(['* %s (%s)' % (x.name, x.issue_state) for x in checks_reconciled])))
+            )
 
     def action_cancel(self):
         self._get_reconciled_checks_error()
@@ -132,7 +133,7 @@ class AccountPayment(models.Model):
                 )
                 # Checks liquidity line
                 move_line = self.env['account.move.line'].with_context(check_move_validity=False).create({
-                    'name': _('Check %s - ') % check.name + liquidity_line.name,
+                    'name': _('Check %s - ', check.name + liquidity_line.name),
                     'date_maturity': check.payment_date,
                     'amount_currency': liquidity_amount_currency,
                     'currency_id': check.currency_id.id,
@@ -196,10 +197,11 @@ class AccountPayment(models.Model):
                         ('payment_id.state', '=', 'posted'),
                         ('id', '!=', check._origin.id)], limit=1)
                 if same_checks:
-                    msgs.append(_(
-                        "Other checks were found with same number, issuer and bank. Please double check you are not "
-                        "encoding the same check more than once. List of other payments/checks: %s",
-                        ", ".join(same_checks.mapped('display_name'))))
+                    msgs.append(
+                        _("Other checks were found with same number, issuer and bank. Please double check you are not "
+                          "encoding the same check more than once. List of other payments/checks: %s",
+                          ", ".join(same_checks.mapped('display_name')))
+                    )
             rec.l10n_latam_check_warning_msg = msgs and '* %s' % '\n* '.join(msgs) or False
 
     @api.depends('is_internal_transfer')
@@ -225,7 +227,7 @@ class AccountPayment(models.Model):
         # if only one check we don't create the split line, we add same data on liquidity line
         if self.payment_method_code == 'own_checks' and self.payment_type == 'outbound' and len(self.l10n_latam_new_check_ids) == 1:
             res[0].update({
-                'name': _('Check %s - ') % self.l10n_latam_new_check_ids.name + ''.join([item[1] for item in self._get_aml_default_display_name_list()]),
+                'name': _('Check %s - ', self.l10n_latam_new_check_ids.name + ''.join([item[1] for item in self._get_aml_default_display_name_list()])),
                 'date_maturity': self.l10n_latam_new_check_ids.payment_date,
             })
         # we dont check the payment method code because when deposited on bank/cash journals pay method is manual but we still change the label
