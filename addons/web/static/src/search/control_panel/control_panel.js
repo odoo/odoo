@@ -14,6 +14,7 @@ import { AccordionItem } from "@web/core/dropdown/accordion_item";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { makeContext } from "@web/core/context";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { Transition } from "@web/core/transition";
 
 import { Component, useState, onMounted, useExternalListener, useRef, useEffect } from "@odoo/owl";
 
@@ -46,6 +47,7 @@ export class ControlPanel extends Component {
         DropdownItem,
         AccordionItem,
         CheckBox,
+        Transition,
     };
     static props = {
         display: { type: Object, optional: true },

@@ -173,7 +173,7 @@ test("can display embedded actions linked to the current action", async () => {
     });
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
     expect(".o_embedded_actions").toHaveCount(1, { message: "should display the embedded" });
-    expect(".o_embedded_actions_buttons_wrapper > button > span").toHaveText("Partners Action 1", {
+    expect(".o_embedded_actions > button > span").toHaveText("Partners Action 1", {
         message:
             "The first embedded action should be the parent one and should be shown by default",
     });
@@ -184,7 +184,7 @@ test("can toggle visibility of embedded actions", async () => {
     await getService("action").doAction(1);
     browser.localStorage.clear();
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
-    await contains(".o_embedded_actions_buttons_wrapper .dropdown").click();
+    await contains(".o_embedded_actions .dropdown").click();
     expect(".o_popover.dropdown-menu .dropdown-item").toHaveCount(4, {
         message: "Three embedded actions should be displayed in the dropdown + button 'Save View'",
     });
@@ -194,7 +194,7 @@ test("can toggle visibility of embedded actions", async () => {
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
     ).click();
-    expect(".o_embedded_actions_buttons_wrapper > button").toHaveCount(3, {
+    expect(".o_embedded_actions > button").toHaveCount(3, {
         message: "Should have 2 embedded actions in the embedded + the dropdown button",
     });
 });
@@ -204,12 +204,12 @@ test("can click on a embedded action and execute the corresponding action (with 
     await getService("action").doAction(1);
     browser.localStorage.clear();
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
-    await contains(".o_embedded_actions_buttons_wrapper .dropdown").click();
+    await contains(".o_embedded_actions .dropdown").click();
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
     ).click();
     await contains(
-        ".o_embedded_actions_buttons_wrapper > button > span:contains('Embedded Action 2')"
+        ".o_embedded_actions > button > span:contains('Embedded Action 2')"
     ).click();
     await runAllTimers();
     expect(router.current.action).toBe(3, {
@@ -217,7 +217,7 @@ test("can click on a embedded action and execute the corresponding action (with 
     });
     expect(".o_list_view").toHaveCount(1, { message: "the view should be a list view" });
     expect(".o_embedded_actions").toHaveCount(1, { message: "the embedded should stay open" });
-    expect(".o_embedded_actions_buttons_wrapper > button.active").toHaveText("Embedded Action 2", {
+    expect(".o_embedded_actions > button.active").toHaveText("Embedded Action 2", {
         message: "The second embedded action should be active",
     });
 });
@@ -236,12 +236,12 @@ test("can click on a embedded action and execute the corresponding action (with 
     await getService("action").doAction(1);
     browser.localStorage.clear();
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
-    await contains(".o_embedded_actions_buttons_wrapper .dropdown").click();
+    await contains(".o_embedded_actions .dropdown").click();
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 3')"
     ).click();
     await contains(
-        ".o_embedded_actions_buttons_wrapper > button > span:contains('Embedded Action 3')"
+        ".o_embedded_actions > button > span:contains('Embedded Action 3')"
     ).click();
     await runAllTimers();
     expect(router.current.action).toBe(4, {
@@ -249,7 +249,7 @@ test("can click on a embedded action and execute the corresponding action (with 
     });
     expect(".o_kanban_view").toHaveCount(1, { message: "the view should be a kanban view" });
     expect(".o_embedded_actions").toHaveCount(1, { message: "the embedded should stay open" });
-    expect(".o_embedded_actions_buttons_wrapper > button.active").toHaveText("Embedded Action 3", {
+    expect(".o_embedded_actions > button.active").toHaveText("Embedded Action 3", {
         message: "The third embedded action should be active",
     });
 });
@@ -268,7 +268,7 @@ test("breadcrumbs are updated when clicking on embeddeds", async () => {
     await getService("action").doAction(1);
     browser.localStorage.clear();
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
-    await contains(".o_embedded_actions_buttons_wrapper .dropdown").click();
+    await contains(".o_embedded_actions .dropdown").click();
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
     ).click();
@@ -278,7 +278,7 @@ test("breadcrumbs are updated when clicking on embeddeds", async () => {
     expect(".o_control_panel .breadcrumb-item").toHaveCount(0);
     expect(".o_control_panel .o_breadcrumb .active").toHaveText("Partners Action 1");
     await contains(
-        ".o_embedded_actions_buttons_wrapper > button > span:contains('Embedded Action 2')"
+        ".o_embedded_actions > button > span:contains('Embedded Action 2')"
     ).click();
     await runAllTimers();
     expect(router.current.action).toBe(3, {
@@ -289,7 +289,7 @@ test("breadcrumbs are updated when clicking on embeddeds", async () => {
         "Favorite Ponies",
     ]);
     await contains(
-        ".o_embedded_actions_buttons_wrapper > button > span:contains('Embedded Action 3')"
+        ".o_embedded_actions > button > span:contains('Embedded Action 3')"
     ).click();
     await runAllTimers();
     expect(router.current.action).toBe(4, {
@@ -316,12 +316,12 @@ test("a view coming from a embedded can be saved in the embedded actions", async
     await getService("action").doAction(1);
     browser.localStorage.clear();
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
-    await contains(".o_embedded_actions_buttons_wrapper .dropdown").click();
+    await contains(".o_embedded_actions .dropdown").click();
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
     ).click();
     await contains(
-        ".o_embedded_actions_buttons_wrapper > button > span:contains('Embedded Action 2')"
+        ".o_embedded_actions > button > span:contains('Embedded Action 2')"
     ).click();
     await runAllTimers();
     expect(router.current.action).toBe(3, {
@@ -336,11 +336,11 @@ test("a view coming from a embedded can be saved in the embedded actions", async
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1, {
         message: "There should be one record",
     });
-    await contains(".o_embedded_actions_buttons_wrapper .dropdown").click();
+    await contains(".o_embedded_actions .dropdown").click();
     await contains(".o_save_current_view ").click();
     await contains("input.form-check-input").click();
     await contains(".o_save_favorite ").click();
-    expect(".o_embedded_actions_buttons_wrapper > button").toHaveCount(4, {
+    expect(".o_embedded_actions > button").toHaveCount(4, {
         message: "Should have 2 embedded actions in the embedded + the dropdown button",
     });
 });

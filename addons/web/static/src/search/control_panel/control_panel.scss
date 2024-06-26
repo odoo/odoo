@@ -53,12 +53,6 @@
     }
 }
 
-.o_embedded_line {
-    flex: 1 1 0%;
-    height: 1px;
-    background-color: #ddd;
-}
-
 .o_dragged_embedded_action {
     transition: transform 0.5s;
     transform: rotate(2deg);
@@ -66,20 +60,20 @@
 }
 
 .o_embedded_actions {
-    opacity: 0;
-    max-height: 0;
-    align-self: center;
-    overflow: hidden;
-    transition: opacity 0.5s, max-height 1.0s ease;
-}
-
-.o_embedded_actions_buttons_wrapper {
-    max-width: 80%;
-}
-
-.o_embedded_actions.visible {
-    opacity: 1;
     max-height: 500px;
+    transition: opacity 0.5s, max-height 0.5s ease;
+
+    &.o-fade-leave, &.o-fade-enter {
+        opacity: 0;
+        max-height: 0;
+    }
+
+    &::before, &::after {
+        flex: 1 1 0;
+        height: 1px;
+        background-color: $border-color;
+        content: "";
+    }
 }
 
 .o_save_current_view {

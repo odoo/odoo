@@ -2,27 +2,23 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ControlPanel">
-        <div class="o_control_panel d-flex flex-column gap-3 gap-lg-1 px-3 pt-2 pb-3" t-ref="root" data-command-category="actions">
-            <div class="o_embedded_actions d-flex w-100 align-items-center justify-content-center gap-2" t-attf-class="{{state.embeddedInfos.showEmbedded ? 'visible mb-2' : ''}}">
-                <div t-if="state.embeddedInfos.showEmbedded" class="d-none d-md-flex w-100 align-items-center justify-content-center gap-2">
-                    <div class="o_embedded_line" />
-                    <div class="d-none d-md-flex o_embedded_actions_buttons_wrapper gap-2 flex-wrap justify-content-center">
-                        <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
-                            <t t-if="_checkValueLocalStorage(action)">
-                                <button class="btn btn-secondary"
-                                        t-att-class="{ 'active': state.embeddedInfos.currentEmbeddedAction?.id === action.id, 'o_draggable': !!action.id}"
-                                        t-on-click="() => this.onEmbeddedActionClick(action)"
-                                        t-att-data-id="action.id"
-                                >
-                                    <span t-out="action.name"/>
-                                </button>
-                            </t>
+        <div class="o_control_panel d-flex flex-column gap-3 px-3 pt-2 pb-3" t-ref="root" data-command-category="actions">
+            <Transition t-if="!env.isSmall" visible="state.embeddedInfos.showEmbedded" name="'o-fade'" t-slot-scope="transition" leaveDuration="500">
+                <div class="o_embedded_actions overflow-hidden d-flex flex-wrap w-100 align-items-center justify-content-center gap-2" t-att-class="transition.className">
+                    <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
+                        <t t-if="_checkValueLocalStorage(action)">
+                            <button class="btn btn-secondary"
+                                    t-att-class="{ 'active': state.embeddedInfos.currentEmbeddedAction?.id === action.id, 'o_draggable': !!action.id}"
+                                    t-on-click="() => this.onEmbeddedActionClick(action)"
+                                    t-att-data-id="action.id"
+                            >
+                                <span t-out="action.name"/>
+                            </button>
                         </t>
-                        <t t-call="web.embeddedActionsDropdown" />
-                    </div>
-                    <div class="o_embedded_line" />
+                    </t>
+                    <t t-call="web.embeddedActionsDropdown" />
                 </div>
-            </div>
+            </Transition>
             <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-3 flex-grow-1">
                 <div class="o_control_panel_breadcrumbs d-flex align-items-center gap-1 order-0 h-lg-100">
                     <div class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none" t-ref="mainButtons" t-on-keydown="onMainButtonsKeydown">
@@ -61,10 +57,10 @@
                     <t t-slot="control-panel-selection-actions"/>
                 </div>
 
-                <div class="o_control_panel_navigation d-flex flex-wrap flex-md-nowrap justify-content-end gap-3 gap-lg-1 gap-xl-3 order-1 order-lg-2 flex-grow-1">
-                    <div t-if="(state.embeddedInfos.showEmbedded || env.isSmall) and state.embeddedInfos.embeddedActions?.length" class="d-flex d-md-none">
+                <div class="o_control_panel_navigation d-flex flex-wrap flex-md-nowrap justify-content-end gap-1 gap-xl-3 order-1 order-lg-2 flex-grow-1">
+                    <t t-if="state.embeddedInfos.embeddedActions?.length and env.isSmall">
                         <t t-call="web.embeddedActionsDropdown" />
-                    </div>
+                    </t>
                     <div t-if="pagerProps and pagerProps.total > 0" class="o_cp_pager text-nowrap " role="search">
                         <Pager t-props="pagerProps"/>
                     </div>
@@ -110,11 +106,8 @@
 
     <t t-name="web.embeddedActionsDropdown">
         <Dropdown>
-            <button t-if="!env.isSmall" class="btn btn-secondary">
+            <button class="btn btn-secondary">
                 <i class="fa fa-sliders"/>
-            </button>
-            <button t-else="" class="btn btn-secondary o-dropdown-caret">
-                <span t-out="state.embeddedInfos.currentEmbeddedAction?.name || state.embeddedInfos.embeddedActions[0]?.name"/>
             </button>
             <t t-set-slot="content">
                 <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
