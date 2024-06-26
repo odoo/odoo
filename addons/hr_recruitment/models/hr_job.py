@@ -19,6 +19,15 @@ class Job(models.Model):
         else:
             return self.env.company.partner_id
 
+    @api.model
+    def _default_user_id(self):
+        if self.env.user.has_group('hr_recruitment.group_hr_recruitment_user'):
+            return self.env.user
+        last_created_job = self.env['hr.job'].search([('company_id', 'in', self.env.companies.ids)], order='id desc', limit=1)
+        if last_created_job:
+            return last_created_job.user_id
+        return False
+
     def _address_id_domain(self):
         return ['|', '&', '&', ('type', '!=', 'contact'), ('type', '!=', 'private'),
                 ('id', 'in', self.sudo().env.companies.partner_id.child_ids.ids),
@@ -43,7 +52,7 @@ class Job(models.Model):
     manager_id = fields.Many2one(
         'hr.employee', related='department_id.manager_id', string="Department Manager",
         readonly=True, store=True)
-    user_id = fields.Many2one('res.users', "Recruiter", domain="[('share', '=', False), ('company_ids', 'in', company_id)]", tracking=True, help="The Recruiter will be the default value for all Applicants Recruiter's field in this job position. The Recruiter is automatically added to all meetings with the Applicant.")
+    user_id = fields.Many2one('res.users', "Recruiter", domain="[('share', '=', False), ('company_ids', 'in', company_id)]", tracking=True, help="The Recruiter will be the default value for all Applicants Recruiter's field in this job position. The Recruiter is automatically added to all meetings with the Applicant.", default=_default_user_id)
     document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents", readonly=True)
     documents_count = fields.Integer(compute='_compute_document_ids', string="Document Count")
     alias_id = fields.Many2one(help="Email alias for this job position. New emails will automatically create new applicants for this job position.")
