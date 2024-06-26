@@ -394,6 +394,7 @@ export class HtmlField extends Component {
                     toInlinePromise = this._toInline();
                 }
                 if (urgent) {
+                    // just to test
                     await this.updateValue();
                 }
                 await saveModifiedImagesPromise;
