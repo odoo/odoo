@@ -3,4 +3,8 @@
     textarea {
         resize: none;
     }
+
+    @include media-only(print) {
+        height: auto !important;
+    }
 }
