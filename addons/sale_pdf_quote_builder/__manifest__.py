@@ -14,8 +14,8 @@
         'views/product_document_views.xml',
         'views/sale_order_template_views.xml',
 
+        'wizards/dynamic_fields_wizard_views.xml',
         'wizards/res_config_settings_views.xml',
-        'wizards/sale_pdf_quote_builder_dynamic_fields_wizard_views.xml',
     ],
     'demo': [
         'data/sale_pdf_quote_builder_demo.xml',

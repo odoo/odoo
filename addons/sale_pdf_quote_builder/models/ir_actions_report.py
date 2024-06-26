@@ -154,21 +154,21 @@ class IrActionsReport(models.Model):
 
         Note: order.ensure_one()
         """
-        def _get_formatted_value(value_):
-            if field_type == 'boolean':
+        def _get_formatted_value(field_type_, value_):
+            if field_type_ == 'boolean':
                 formatted_value = _("Yes") if value_ else _("No")
-            elif field_type == 'monetary':
+            elif field_type_ == 'monetary':
                 currency_id = records[field.get_currency_field(records)]
                 formatted_value = format_amount(
                     translated_env, value_, currency_id or order.currency_id
                 )
-            elif field_type == 'date':
+            elif field_type_ == 'date':
                 formatted_value = format_date(translated_env, value_, lang_code=lang)
-            elif field_type == 'datetime':
+            elif field_type_ == 'datetime':
                 formatted_value = format_datetime(translated_env, value_, tz=tz)
-            elif field_type == 'selection' and value_:
+            elif field_type_ == 'selection' and value_:
                 formatted_value = dict(field._description_selection(translated_env))[value_]
-            elif field_type in {'one2many', 'many2one', 'many2many'}:
+            elif field_type_ in {'one2many', 'many2one', 'many2many'}:
                 formatted_value = ', '.join([v.display_name for v in value_])
             else:
                 formatted_value = value_
@@ -192,14 +192,17 @@ class IrActionsReport(models.Model):
             return ''
 
         path = path.split('.')
-        records = record.mapped('.'.join(path[:-1]))
+        # sudo to be able to follow the path set by the admin
+        records = record.sudo().mapped('.'.join(path[:-1]))
         field_name = path[-1]
         field = records._fields[field_name]
         field_type = field.type
 
         lang = order._get_lang() or self.env.user.lang
         context = {'lang': lang}
-        formatted_values = ', '.join([_get_formatted_value(value[field_name]) for value in records])
+        formatted_values = ', '.join(
+            [_get_formatted_value(field_type, value[field_name]) for value in records]
+        )
         del context
 
         return formatted_values

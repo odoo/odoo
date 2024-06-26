@@ -41,14 +41,12 @@ class ProductDocument(models.Model):
 
     # === ACTION METHODS ===#
 
-    def action_open_dynamic_fields_configurator_wizard(self):
+    def action_open_dynamic_fields_wizard(self):
         self.ensure_one()
-        default_form_fields = {'product_document': list(utils._get_form_fields_from_pdf(self.datas))}
         return {
             'name': _("Configure Dynamic Fields"),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'sale.pdf.quote.builder.dynamic.fields.wizard',
             'target': 'new',
-            'context': {'default_current_form_fields': json.dumps(default_form_fields)},
         }

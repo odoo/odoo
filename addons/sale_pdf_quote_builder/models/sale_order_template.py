@@ -34,19 +34,12 @@ class SaleOrderTemplate(models.Model):
 
     # === ACTION METHODS ===#
 
-    def action_open_dynamic_fields_configurator_wizard(self):
+    def action_open_dynamic_fields_wizard(self):
         self.ensure_one()
-        valid_form_fields = set()
-        if self.sale_header:
-            valid_form_fields.update(utils._get_form_fields_from_pdf(self.sale_header))
-        if self.sale_footer:
-            valid_form_fields.update(utils._get_form_fields_from_pdf(self.sale_footer))
-        default_form_fields = {'header_footer': list(valid_form_fields)}
         return {
             'name': _("Configure Dynamic Fields"),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'sale.pdf.quote.builder.dynamic.fields.wizard',
             'target': 'new',
-            'context': {'default_current_form_fields': json.dumps(default_form_fields)},
         }

@@ -6,6 +6,7 @@ import json
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.sale_pdf_quote_builder import utils
 from odoo.addons.sale_pdf_quote_builder.const import DEFAULT_FORM_FIELD_PATH_MAPPING
 
 
@@ -13,45 +14,57 @@ class SalePDFQuoteBuilderDynamicFieldsWizard(models.TransientModel):
     _name = 'sale.pdf.quote.builder.dynamic.fields.wizard'
     _description = "Sale PDF Quote Builder Dynamic Fields Configurator Wizard"
 
-    current_form_fields = fields.Json()
-    dynamic_fields_wizard_line_ids = fields.One2many(
-        'sale.pdf.quote.builder.dynamic.fields.wizard.line', 'dynamic_fields_wizard_id'
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        res_id = self.env.context.get('active_id')
+        res_model = self.env.context.get('active_model')
+        document = self.env[res_model].browse(res_id)
+        if res_model == 'product.document':
+            valid_form_fields = utils._get_form_fields_from_pdf(document.datas)
+            current_form_fields = {'product_document': list(valid_form_fields)}
+        else:
+            valid_form_fields = set()
+            if document.sale_header:
+                valid_form_fields.update(utils._get_form_fields_from_pdf(document.sale_header))
+            if document.sale_footer:
+                valid_form_fields.update(utils._get_form_fields_from_pdf(document.sale_footer))
+            current_form_fields = {'header_footer': list(valid_form_fields)}
+        res.update({'wizard_line_ids': self._get_wizard_lines(current_form_fields)})
+        return res
+
+    wizard_line_ids = fields.One2many(
+        'sale.pdf.quote.builder.dynamic.fields.wizard.line', 'wizard_id'
     )
 
-    @api.onchange('current_form_fields')
-    def _get_wizard_lines(self):
+    def _get_wizard_lines(self, current_form_fields):
         """ Add wizard lines containing existing mappings and form fields from the current document.
         """
-        for wizard in self:
-            wizard.dynamic_fields_wizard_line_ids = [Command.clear()]
-            form_field_path_map = json.loads(self.env['ir.config_parameter'].sudo().get_param(
-                'sale_pdf_quote_builder.form_field_path_mapping', DEFAULT_FORM_FIELD_PATH_MAPPING
-            ))
-            current_form_fields = json.loads(
-                wizard.current_form_fields
-            ) if wizard.current_form_fields else {}
+        form_field_path_map = json.loads(self.env['ir.config_parameter'].sudo().get_param(
+            'sale_pdf_quote_builder.form_field_path_mapping', DEFAULT_FORM_FIELD_PATH_MAPPING
+        ))
 
-            # Get the form fields not yet in the config parameters
-            lines_vals = []
-            for doc_type, form_fields in current_form_fields.items():
-                for form_field in form_fields:
-                    if form_field not in form_field_path_map[doc_type]:
-                        lines_vals.extend([
-                            {'document_type': doc_type, 'form_field': form_field, 'path': ''}
-                        ])
-            # Add existing values from the config parameter
-            lines_vals.extend([
-                {'document_type': doc_type, 'form_field': form_field, 'path': path}
-                for doc_type, mapping in form_field_path_map.items()
-                for form_field, path in mapping.items()
-            ])
-            # Create the wizard lines
-            wizard.dynamic_fields_wizard_line_ids = [Command.create(vals) for vals in lines_vals]
+        # Get the form fields not yet in the config parameters
+        lines_vals = []
+        for doc_type, form_fields in current_form_fields.items():
+            for form_field in form_fields:
+                if form_field not in form_field_path_map[doc_type]:
+                    lines_vals.extend([
+                        {'document_type': doc_type, 'form_field': form_field, 'path': ''}
+                    ])
+        # Add existing values from the config parameter
+        lines_vals.extend([
+            {'document_type': doc_type, 'form_field': form_field, 'path': path}
+            for doc_type, mapping in form_field_path_map.items()
+            for form_field, path in mapping.items()
+        ])
+        # Create the wizard lines
+        return [Command.create(vals) for vals in lines_vals]
 
-    def validate_dynamic_fields_configuration(self):
+    def save_configuration(self):
         """ Save this mapping configuration in the config parameters. """
         for wizard in self:
-            wizard_lines = wizard.dynamic_fields_wizard_line_ids
+            wizard_lines = wizard.wizard_line_ids
             so_wiz_line = wizard_lines.filtered(lambda line: line.document_type == 'header_footer')
             sol_wiz_line = wizard_lines - so_wiz_line
             new_mapping = {
@@ -68,7 +81,7 @@ class SalePDFQuoteBuilderDynamicFieldsWizardLine(models.TransientModel):
     _name = 'sale.pdf.quote.builder.dynamic.fields.wizard.line'
     _description = "SalePdfQuoteBuilderDynamicFieldsWizardLine transient representation"
 
-    dynamic_fields_wizard_id = fields.Many2one(
+    wizard_id = fields.Many2one(
         'sale.pdf.quote.builder.dynamic.fields.wizard', required=True, ondelete='cascade'
     )
     document_type = fields.Selection(
@@ -112,7 +125,7 @@ class SalePDFQuoteBuilderDynamicFieldsWizardLine(models.TransientModel):
         :raises: ValidationError if at least one of the paths isn't valid.
         """
         name_pattern = re.compile(r'^(\w|-|\.)+$')
-        for line in self.filtered(lambda line: line.path):
+        for line in self.filtered('path'):
             if not re.match(name_pattern, line.path):
                 raise ValidationError(_(
                     "Invalid path %(path)s. It should only contain alphanumerics, hyphens,"
@@ -123,12 +136,12 @@ class SalePDFQuoteBuilderDynamicFieldsWizardLine(models.TransientModel):
             path = line.path.split('.')
             is_header_footer = line.document_type == 'header_footer'
             Model = self.env['sale.order'] if is_header_footer else self.env['sale.order.line']
-            for elem in path:
-                if not Model._fields.get(elem):
+            for field_name in path:
+                if field_name not in Model._fields:
                     raise ValidationError(_(
                         "The field %(field_name)s doesn't exist on model %(model_name)s",
-                        field_name=elem,
+                        field_name=field_name,
                         model_name=Model._name
                     ))
-                if elem != path[-1]:
-                    Model = Model.mapped(elem)
+                if field_name != path[-1]:
+                    Model = Model.mapped(field_name)
