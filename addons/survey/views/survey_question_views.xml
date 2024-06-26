@@ -175,6 +175,9 @@
                                     <field name="value_image_filename" column_invisible="not parent.has_image_only_suggested_answer"/>
                                     <field name="value_image" width="200px" filename="value_image_filename" options="{'accepted_file_extensions': 'image/*'}"
                                            column_invisible="parent.question_type in ['matrix', 'scale']" required="not value"/>
+                                    <field name="extra_end_message_ids" options="{'no_create': True, 'sequence_field': 'sequence', 'color_field': 'color'}"
+                                           column_invisible="not parent.survey_extra_end_message_ids or parent.question_type == 'matrix'"
+                                           widget="many2many_tags_with_sequence" domain="[('survey_id', '=', parent.survey_id), ('id', 'not in', extra_end_message_ids)]"/>
                                 </list>
                             </field>
 

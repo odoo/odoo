@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="survey.Many2ManyTagsFieldWithSequence" t-inherit="web.Many2ManyTagsField" t-inherit-mode="primary">
+       <xpath expr="//TagsList" position="attributes">
+            <attribute name="tags">tags.sort((a, b) => a.sequence - b.sequence)</attribute>
+       </xpath>
+    </t>
+
+</templates>

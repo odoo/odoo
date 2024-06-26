@@ -59,6 +59,8 @@ class SurveySurvey(models.Model):
     description_done = fields.Html(
         "End Message", translate=True,
         help="This message will be displayed when survey is completed")
+    extra_end_message_ids = fields.One2many(
+        'survey.conditional.end.message', 'survey_id', string="Conditional End Messages", copy=True)
     background_image = fields.Image("Background Image")
     background_image_url = fields.Char('Background Url', compute="_compute_background_image_url")
     active = fields.Boolean("Active", default=True)

@@ -113,6 +113,9 @@ class SurveyQuestion(models.Model):
     suggested_answer_ids = fields.One2many(
         'survey.question.answer', 'question_id', string='Types of answers', copy=True,
         help='Labels used for proposed choices: simple choice, multiple choice and columns of matrix')
+    answer_extra_end_message_ids = fields.Many2many(
+        'survey.conditional.end.message', string="Extra Messages", compute="_compute_answer_extra_end_message_ids")
+    survey_extra_end_message_ids = fields.One2many(related="survey_id.extra_end_message_ids")
     # -- matrix
     matrix_subtype = fields.Selection([
         ('simple', 'One choice per row'),
@@ -394,6 +397,13 @@ class SurveyQuestion(models.Model):
                 question.is_scored_question = any(question.suggested_answer_ids.mapped('is_correct'))
             else:
                 question.is_scored_question = False
+
+    @api.depends('suggested_answer_ids.extra_end_message_ids', 'question_type')
+    def _compute_answer_extra_end_message_ids(self):
+        choice_questions = self.filtered(lambda q: q.question_type in ('simple_choice', 'multiple_choice'))
+        (self - choice_questions).answer_extra_end_message_ids = False
+        for question in choice_questions:
+            question.answer_extra_end_message_ids = question.suggested_answer_ids.extra_end_message_ids
 
     @api.onchange('question_type', 'validation_required')
     def _onchange_validation_parameters(self):

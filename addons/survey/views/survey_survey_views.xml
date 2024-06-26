@@ -87,6 +87,8 @@
                                         column_invisible="not parent.session_available"/>
                                     <field name="is_time_customized" column_invisible="True"/>
                                     <field name="constr_mandatory" optional="hide"/>
+                                    <field name="answer_extra_end_message_ids" column_invisible="not parent.extra_end_message_ids"
+                                        optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <field name="is_page" column_invisible="True"/>
                                     <field name="questions_selection" column_invisible="True"/>
                                     <field name="survey_id" column_invisible="True"/>
@@ -194,8 +196,17 @@
                         <page string="Description" name="description">
                             <field name="description" placeholder="e.g. &quot;The following Survey will help us...&quot;" nolabel="1"></field>
                         </page>
-                        <page string="End Message" name="description_done">
-                            <field name="description_done" placeholder="e.g. &quot;Thank you very much for your feedback!&quot;" nolabel="1"></field>
+                        <page string="End Messages" name="end_messages">
+                            <separator string="End Message"/>
+                            <field name="description_done" placeholder="e.g., &quot;Thank you very much for your feedback!&quot;" nolabel="1"/>
+                            <separator string="Extra End Messages"/>
+                            <field name="extra_end_message_ids" nolabel="1" widget="one2many">
+                                <list editable="bottom" open_form_view="True">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name" />
+                                    <field name="body" placeholder="e.g. &quot;You have a majority of blue answers, you are...&quot;" />
+                                </list>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>
