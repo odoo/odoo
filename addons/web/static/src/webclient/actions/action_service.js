@@ -48,6 +48,7 @@ class BlankComponent extends Component {
 
 const actionHandlersRegistry = registry.category("action_handlers");
 const actionRegistry = registry.category("actions");
+const viewInfoRegistry = registry.category("view_info");
 const viewRegistry = registry.category("views");
 
 /** @typedef {number|false} ActionId */
@@ -1067,7 +1068,9 @@ export function makeActionManager(env, router = _router) {
     async function _executeActWindowAction(action, options) {
         const views = [];
         for (const [, type] of action.views) {
-            if (type !== "search" && viewRegistry.contains(type)) {
+            if (type !== "search" && viewInfoRegistry.contains(type)) {
+                views.push(viewInfoRegistry.get(type));
+            } else if (type !== "search" && viewRegistry.contains(type)) {
                 views.push(viewRegistry.get(type));
             }
         }
