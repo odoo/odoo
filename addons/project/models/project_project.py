@@ -34,7 +34,7 @@ class Project(models.Model):
         project_and_state_counts = self.env['project.task'].with_context(
             active_test=any(project.active for project in self)
         )._read_group(
-            [('project_id', 'in', self.ids)],
+            [('project_id', 'in', self.ids), ('date_last_stage_update', '>', fields.datetime.now() - timedelta(days=365))],
             ['project_id', 'state'],
             ['__count'],
         )
@@ -47,6 +47,7 @@ class Project(models.Model):
         for project in self:
             open_task_count, closed_task_count = task_counts_per_project_id[project.id].values()
             project.open_task_count = open_task_count
+            project.closed_task_count = closed_task_count
             project.task_count = open_task_count + closed_task_count
 
     def _default_stage_id(self):
@@ -132,6 +133,8 @@ class Project(models.Model):
     allow_milestones = fields.Boolean('Milestones', default=lambda self: self.env.user.has_group('project.group_project_milestone'))
     tag_ids = fields.Many2many('project.tags', relation='project_project_project_tags_rel', string='Tags')
     task_properties_definition = fields.PropertiesDefinition('Task Properties')
+    closed_task_count = fields.Integer(compute="_compute_task_count", string="Completed tasks associated with this project")
+    task_completion_percentage = fields.Float(compute="_compute_task_completion_percentage", string="Completed tasks percentage associated with this project")
 
     # Project Sharing fields
     collaborator_ids = fields.One2many('project.collaborator', 'project_id', string='Collaborators', copy=False, export_string_translation=False)
@@ -833,6 +836,7 @@ class Project(models.Model):
             'action': 'action_view_tasks',
             'show': True,
             'sequence': 1,
+            'title': 'Number of tasks closed compared to the total number of tasks created or updated within the past 365 days.',
         }]
         if self.rating_count != 0 and self.env.user.has_group('project.group_project_rating'):
             if self.rating_avg >= rating_data.RATING_AVG_TOP:
@@ -1000,3 +1004,8 @@ class Project(models.Model):
             for follower in result['followers']:
                 follower['is_project_collaborator'] = follower['partner_id'] in collaborator_ids
         return result
+
+    @api.depends('task_count', 'open_task_count')
+    def _compute_task_completion_percentage(self):
+        for task in self:
+            task.task_completion_percentage = task.task_count and 1 - task.open_task_count / task.task_count
