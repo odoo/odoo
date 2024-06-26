@@ -10,7 +10,7 @@ from lxml import etree
 
 from odoo import api, models, _
 from odoo.exceptions import AccessError, RedirectWarning, UserError
-from odoo.tools import ustr
+from odoo.tools import str2bool
 
 _logger = logging.getLogger(__name__)
 
@@ -317,7 +317,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                         _logger.warning(WARNING_MESSAGE, value, field, icp)
                         value = 0.0
                 elif field.type == 'boolean':
-                    value = bool(value)
+                    value = str2bool(value, True)
             res[name] = value
 
         res.update(self.get_values())
