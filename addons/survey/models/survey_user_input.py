@@ -5,6 +5,7 @@ import logging
 import textwrap
 import uuid
 
+from collections import Counter
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
@@ -56,6 +57,9 @@ class SurveyUserInput(models.Model):
     # live sessions
     is_session_answer = fields.Boolean('Is in a Session', help="Is that user input part of a survey session or not.")
     question_time_limit_reached = fields.Boolean("Question Time Limit Reached", compute='_compute_question_time_limit_reached')
+    # most frequent tag associated with users answers (for conditional end message)
+    most_answered_tag = fields.Many2one('survey.question.answer.tag', string='Most Frequent Tag', compute='_compute_most_answered_tag')
+    end_message_selection = fields.Selection(related="survey_id.end_message_selection", readonly=True)
 
     _sql_constraints = [
         ('unique_token', 'UNIQUE (access_token)', 'An access token must be unique!'),
@@ -161,6 +165,15 @@ class SurveyUserInput(models.Model):
                 attempts_number_result = attempts_number_results.get(user_input.id, {})
                 user_input.attempts_number = attempts_number_result.get('attempts_number', 1)
                 user_input.attempts_count = attempts_number_result.get('attempts_count', 1)
+
+    @api.depends('user_input_line_ids.suggested_answer_id')
+    def _compute_most_answered_tag(self):
+        for user_input in self:
+            taggable_answers = [l.suggested_answer_id for l in user_input.user_input_line_ids]
+            tags = [tag_id for answer in taggable_answers for tag_id in answer.tag_ids]
+            tags_by_frequency = Counter(tags).most_common()  # e.g.: [(survey.question.answer.tag(85,), 2), (survey.question.answer.tag(84,), 1), ...]
+            user_input.most_answered_tag = None if not tags_by_frequency else \
+                min([tag for tag, count in tags_by_frequency if count == tags_by_frequency[0][1]], key=lambda r: r.sequence)
 
     @api.model_create_multi
     def create(self, vals_list):
