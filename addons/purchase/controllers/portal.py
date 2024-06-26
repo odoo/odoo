@@ -111,6 +111,8 @@ class CustomerPortal(portal.CustomerPortal):
 
     @http.route(['/my/rfq', '/my/rfq/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_requests_for_quotation(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
+        if not self._check_page_visibility("purchase.portal_my_home_purchase"):
+            return request.not_found()
         return self._render_portal(
             "purchase.portal_my_purchase_rfqs",
             page, date_begin, date_end, sortby, filterby,
@@ -125,6 +127,8 @@ class CustomerPortal(portal.CustomerPortal):
 
     @http.route(['/my/purchase', '/my/purchase/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_purchase_orders(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
+        if not self._check_page_visibility("purchase.portal_my_home_purchase"):
+            return request.not_found()
         return self._render_portal(
             "purchase.portal_my_purchase_orders",
             page, date_begin, date_end, sortby, filterby,
