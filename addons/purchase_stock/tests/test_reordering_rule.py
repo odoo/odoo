@@ -5,9 +5,17 @@ from datetime import datetime as dt, time
 from datetime import timedelta as td
 from freezegun import freeze_time
 
+<<<<<<< HEAD
 from odoo import SUPERUSER_ID, Command
+||||||| parent of 7f3327765954 (temp)
+from odoo import SUPERUSER_ID
+=======
+from odoo import Command, SUPERUSER_ID
+from odoo.fields import Date
+>>>>>>> 7f3327765954 (temp)
 from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
+from odoo.tools.date_utils import add
 from odoo.exceptions import UserError
 
 
@@ -1101,6 +1109,7 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(orderpoint.product_uom, product.uom_id, 'The orderpoint uom should be the same as the product uom')
         self.assertEqual(orderpoint.qty_to_order, 6000)
 
+<<<<<<< HEAD
     def test_tax_po_line_reordering_rule_with_branch_company(self):
         """
         Test that the parent company tax is correctly set in the purchase order line
@@ -1134,3 +1143,38 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(len(po_line), 1, 'There should be only one PO line')
         self.assertEqual(po_line.product_qty, 10, 'The PO line quantity should be 10')
         self.assertTrue(po_line.taxes_id)
+||||||| parent of 7f3327765954 (temp)
+=======
+    def test_forbid_snoozing_auto_trigger_orderpoint(self):
+        """
+        Check that you can not snooze an auto-trigger reoredering rule
+        """
+        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
+        product = self.env['product.product'].create({
+            'name': 'Super product',
+            'type': 'product',
+            'route_ids': [Command.set(buy_route.ids)],
+        })
+
+        # check that you can not create a snoozed auto-trigger reoredering rule
+        with self.assertRaises(UserError):
+            orderpoint = self.env['stock.warehouse.orderpoint'].create({
+                'name': 'Super product RR',
+                'route_id': buy_route.id,
+                'product_id': product.id,
+                'product_min_qty': 0,
+                'product_max_qty': 5,
+                'snoozed_until': add(Date.today(), days=1),
+            })
+
+        # check that you can not snooze an existing one
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Super product RR',
+            'route_id': buy_route.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+        with self.assertRaises(UserError):
+            orderpoint.snoozed_until = add(Date.today(), days=1)
+>>>>>>> 7f3327765954 (temp)
