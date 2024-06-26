@@ -44,14 +44,24 @@
                             <t t-slot="control-panel-status-indicator" />
                         </section>
                     </t>
-                    <t t-if="env.isSmall">
+                    <t t-elif="env.isSmall">
                         <Breadcrumbs breadcrumbs="breadcrumbs" t-portal="'.o_navbar_breadcrumbs'"/>
+                        <section class="o_control_panel_breadcrumbs_actions d-contents">
+                            <t t-slot="control-panel-additional-actions"/>
+                            <t t-slot="control-panel-status-indicator" />
+                        </section>
                     </t>
                     <t t-else="">
-                        <Breadcrumbs breadcrumbs="breadcrumbs"/>
+                        <Breadcrumbs breadcrumbs="breadcrumbs">
+                            <t t-set-slot="breadcrumb-status-indicator">
+                                <t t-slot="control-panel-status-indicator" />
+                            </t>
+                            <t t-set-slot="breadcrumb-additional-actions">
+                                <t t-slot="control-panel-additional-actions"/>
+                            </t>
+                        </Breadcrumbs>
                     </t>
-                    <t t-slot="control-panel-status-indicator" />
-                    <div class="me-auto"/> <!-- Spacer -->
+                    <div t-if="!env.isSmall" class="me-auto"/> <!-- Spacer -->
                 </div>
 
                 <div class="o_control_panel_actions d-empty-none d-flex align-items-center justify-content-start justify-content-lg-around order-2 order-lg-1 w-100 w-lg-auto">

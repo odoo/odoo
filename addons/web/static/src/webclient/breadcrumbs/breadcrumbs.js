@@ -8,6 +8,7 @@ export class Breadcrumbs extends Component {
     static components = { Dropdown, DropdownItem };
     static props = {
         breadcrumbs: Array,
+        slots: { type: Object, optional: true },
     };
 
     setup() {

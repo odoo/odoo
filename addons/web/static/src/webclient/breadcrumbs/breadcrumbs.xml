@@ -52,19 +52,18 @@
             <t t-call="web.Breadcrumb.Actions"/>
         </div>
 
-        <t t-slot="control-panel-status-indicator" />
+        <t t-slot="breadcrumb-status-indicator" />
     </t>
 
     <t t-name="web.Breadcrumb.Actions">
         <div class="o_control_panel_breadcrumbs_actions d-inline-flex">
-            <t t-slot="control-panel-additional-actions"/>
+            <t t-slot="breadcrumb-additional-actions"/>
         </div>
     </t>
 
     <t t-name="web.Breadcrumb.Name">
         <t t-if="breadcrumb.name" t-out="breadcrumb.name"/>
         <em t-else="" class="text-warning">Unnamed</em>
-        <t t-slot="control-panel-additional-breadcrums"/>
     </t>
 
 </templates>
