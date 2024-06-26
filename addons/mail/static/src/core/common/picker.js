@@ -24,6 +24,7 @@ export function usePicker(setting) {
         close: setting.close,
         pickers: setting.pickers,
         position: setting.position,
+        inChatter: setting.inChatter,
         state: {
             picker: PICKERS.NONE,
             searchTerm: "",
@@ -49,6 +50,7 @@ export class Picker extends Component {
         "anchor?",
         "buttons",
         "close?",
+        "inChatter?",
         "state",
         "pickers",
         "position?",
@@ -60,6 +62,7 @@ export class Picker extends Component {
         this.ui = useState(useService("ui"));
         this.popover = usePopover(PickerContent, {
             position: this.props.position,
+            popoverClass: this.ui.isSmall ? "o-mail-small-emoji-picker" : "",
             fixedPosition: true,
             onClose: () => this.close(),
             closeOnClickAway: false,
@@ -122,8 +125,8 @@ export class Picker extends Component {
     async toggle(el, ev) {
         // Let event be handled by bubbling handlers first.
         await new Promise(setTimeout);
-        // In small screen, we toggle keyboard picker.
-        if (this.ui.isSmall) {
+        // When screen is small and picker is not in the chatter, we toggle keyboard picker.
+        if (this.ui.isSmall && !this.props.inChatter) {
             if (this.props.state.picker === this.props.PICKERS.NONE) {
                 this.props.state.picker = this.props.PICKERS.EMOJI;
             } else {
@@ -131,17 +134,21 @@ export class Picker extends Component {
             }
             return;
         }
-        // In large screen, we toggle popover.
+        // When screen is large or picker is inside the chatter, we toggle popover.
         if (isEventHandled(ev, "Composer.onClickAddEmoji")) {
             if (this.popover.isOpen) {
                 if (this.props.state.picker === this.props.PICKERS.EMOJI) {
                     this.props.state.picker = this.props.PICKERS.NONE;
                     this.popover.close();
+                    this.ui.isSmall &&
+                        this.env.bus.trigger("toggle_padding_emoji_picker", { addPadding: false });
                     return;
                 }
                 this.props.state.picker = this.props.PICKERS.EMOJI;
             } else {
                 this.props.state.picker = this.props.PICKERS.EMOJI;
+                this.ui.isSmall &&
+                    this.env.bus.trigger("toggle_padding_emoji_picker", { addPadding: true });
                 this.popover.open(el, this.contentProps);
             }
         }
@@ -149,6 +156,9 @@ export class Picker extends Component {
 
     close() {
         this.props.close?.();
+        this.ui.isSmall &&
+            this.props.inChatter &&
+            this.env.bus.trigger("toggle_padding_emoji_picker", { addPadding: false });
         this.popover.close();
         this.props.state.picker = this.props.PICKERS.NONE;
         this.props.state.searchTerm = "";

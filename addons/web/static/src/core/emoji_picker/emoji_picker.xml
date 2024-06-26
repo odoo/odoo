@@ -65,7 +65,7 @@
 </t>
 
 <t t-name="web.EmojiPicker.tab">
-    <span class="o-Emoji text-center p-1 cursor-pointer" t-att-class="{'o-active': category.sortId === state.categoryId}" t-att-title="category.name" t-att-data-id="category.sortId" t-on-click="selectCategory">
+    <span class="o-Emoji text-center w-100 p-1 cursor-pointer" t-att-class="{'o-active': category.sortId === state.categoryId}" t-att-title="category.name" t-att-data-id="category.sortId" t-on-click="selectCategory">
         <t t-esc="category.title"/>
     </span>
 </t>
@@ -82,7 +82,7 @@
 </t>
 
 <t t-name="web.EmojiPicker.searchInput">
-    <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active" placeholder="Search for an emoji" t-model="localState.searchTerm" t-ref="autofocus" t-att-model="localState.searchTerm" t-on-input="() => this.state.activeEmojiIndex = 0"/>
+    <input t-att-tabindex="this.env.isSmall ? -1 : 0" class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active" placeholder="Search for an emoji" t-model="localState.searchTerm" t-ref="autofocus" t-att-model="localState.searchTerm" t-on-input="() => this.state.activeEmojiIndex = 0"/>
 </t>
 
 </templates>
