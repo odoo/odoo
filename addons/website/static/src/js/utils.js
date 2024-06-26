@@ -197,11 +197,16 @@ function prompt(options, _qweb) {
 
 function websiteDomain(self) {
     var websiteID;
-    self.trigger_up('context_get', {
-        callback: function (ctx) {
-            websiteID = ctx['website_id'];
-        },
-    });
+    // TODO: @owl-options remove the trigger_up once the refactoring is done
+    if (self.trigger_up) {
+        self.trigger_up('context_get', {
+            callback: function (ctx) {
+                websiteID = ctx['website_id'];
+            },
+        });
+    } else {
+        websiteID = self.env.services.website.currentWebsite.id;
+    }
     return ['|', ['website_id', '=', false], ['website_id', '=', websiteID]];
 }
 
@@ -405,12 +410,16 @@ export function generateGMapLink(dataset) {
  */
 function isMobile(self) {
     let isMobile;
-    self.trigger_up("service_context_get", {
-        callback: (ctx) => {
-            isMobile = ctx["isMobile"];
-        },
-    });
-
+    // TODO: @owl-options remove the trigger_up once the refactoring is done
+    if (self.trigger_up) {
+        self.trigger_up("service_context_get", {
+            callback: (ctx) => {
+                isMobile = ctx["isMobile"];
+            },
+        });
+    } else {
+        isMobile = self.env.services.website.context.isMobile;
+    }
     return isMobile;
 }
 
