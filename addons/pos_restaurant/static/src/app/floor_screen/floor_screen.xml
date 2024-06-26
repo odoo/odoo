@@ -26,10 +26,6 @@
                     <i class="fa fa-pencil-square-o" role="img" aria-label="Rename" title="Rename" />Rename</button>
                 <button t-attf-class="{{editButtonClass}}" t-on-click.stop="duplicateTableOrFloor">
                     <i class="fa fa-clone" role="img" aria-label="Copy" title="Copy" />Copy</button>
-                <button t-attf-class="{{editButtonClass}}" t-if="selectedTables.length and selectedTables.every(t=>t.parent_id)" t-on-click="unlinkTables">
-                    <i class="fa fa-unlink" role="img" aria-label="Unlink" title="Unlink" />Unlink</button>
-                <button t-attf-class="{{editButtonClass}}" t-else="" t-att-disabled="isLinkingDisabled()" t-on-click="linkTables">
-                    <i class="fa fa-link" role="img" aria-label="Link" title="Link" />Link</button>
                 <button t-attf-class="{{editButtonClass}}" t-on-click.stop="deleteFloorOrTable">
                     <i class="fa fa-trash" role="img" aria-label="Delete" title="Delete" />Delete</button>
                 <button t-attf-class="ms-auto {{editButtonClass}}" t-on-click.stop="closeEditMode">
@@ -65,19 +61,87 @@
                 <div t-on-click="onClickFloorMap" t-on-touchstart="_onPinchStart" t-on-touchmove="_onPinchMove" t-on-touchend="_onPinchEnd"
                     t-attf-class="floor-map position-relative w-100 h-100 overflow-scroll {{ pos.isEditMode ? 'floor-grid' : ''}}"
                     t-ref="floor-map-ref"
-                    t-attf-style="height: {{state.floorHeight}} !important; width: {{state.floorWidth}} !important; {{ activeFloor?.floor_background_image and pos.floorPlanStyle !== 'kanban' &amp;&amp; 'background-image: url(' + floorBackround + '); background-size: auto; background-repeat: no-repeat; background-attachment: local;' }}">
+                    t-attf-style="
+                        -webkit-touch-callout: none; // for iOS
+                        height: {{state.floorHeight}} !important;
+                        width: {{state.floorWidth}} !important;
+                        {{ activeFloor?.floor_background_image and pos.floorPlanStyle !== 'kanban' ?
+                            'background-image: url(' + floorBackround + '); background-size: auto; background-repeat: no-repeat; background-attachment: local;' :
+                            ''
+                        }}">
                     <t t-if="pos.config.floor_ids?.length > 0">
                         <div t-if="!activeTables?.length" class="empty-floor d-flex align-items-center justify-content-center h-100 fs-3 text-center text-muted" t-ref="map">
                             <span>Oops! No tables available.<br/>Add a new table to get started.</span>
                         </div>
-                        <div t-else="" t-ref="map" t-att-class="{'d-flex align-items-center justify-content-center flex-wrap': pos.floorPlanStyle == 'kanban'}">
-                            <Table t-foreach="activeTables.slice().sort((a,b)=>a.id-b.id)" t-as="table" t-key="table_index"
-                                onClick.bind="onClickTable" table="table"
-                                selectedTables="selectedTables" limit="floorMapRef"
-                                class="pos.floorPlanStyle == 'kanban' ? 'm-2 position-relative' : 'position-absolute'"
-                                style="pos.floorPlanStyle == 'kanban' ? 'width: 120px; height: 120px' :
-                                        `width: ${table.width}px; height: ${table.height}px; top: ${table.position_v}px; left: ${table.position_h}px;`" />
-                            <div t-attf-style="position: absolute; top: {{state.floorHeight}}; right: 0px; height: 1px; width: 1px; background-color: transparent"/>
+                        <div t-else="" t-ref="map" class="h-100 w-100" t-att-class="{'d-flex align-items-center justify-content-center flex-wrap': pos.floorPlanStyle == 'kanban'}">
+                            <div t-attf-style="
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                right: 0;
+                                bottom: 0;
+                                opacity: {{state.potentialLink?.child ? 1 : 0}};
+                                transition: opacity 0.3s ease-in-out;
+                                background:  radial-gradient(
+                                                    circle at {{overlayX}}px {{overlayY}}px,
+                                                    rgba(0, 0, 0, 0.1) 0%,
+                                                    rgba(0, 0, 0, 0.8) 30%
+                                            );
+                                pointer-events: none; /* Ensure the overlay doesn't block interactions with child elements */
+                            "/>
+                           <t t-foreach="activeTables.sort((a,b)=>a.id-b.id)" t-as="table" t-key="table.id" >
+                                <t t-set="isOccupied" t-value="pos.getCustomerCount(table.id) > 0 || table.uiState.orderCount > 0"/>
+                                <t t-set="isIntersecting" t-value="state.potentialLink?.child.id === table.id"/>
+                                <t t-set="hasBg" t-value="!isIntersecting and isOccupied or table.parent_id" />
+                                <div
+                                    t-on-click.stop="(ev) => this.onClickTable(table, ev)"
+                                    class="table o_draggable d-flex flex-column align-items-center justify-content-between cursor-pointer"
+                                    t-att-class="{
+                                        'm-2 position-relative': pos.floorPlanStyle == 'kanban',
+                                        'position-absolute': pos.floorPlanStyle !== 'kanban',
+                                        'selected': state.selectedTableIds.includes(table.id),
+                                    }"
+                                    t-attf-class="tableId-{{table.id}}"
+                                    t-attf-style="
+                                                border: 3px {{isIntersecting ? 'dashed' : 'solid'}} {{table.color}};
+                                                border-radius: {{table.shape === 'round' ? 1000 : 3}}px;
+                                                background: {{hasBg ? table.color || 'rgb(53, 211, 116)' : '#00000020'}};
+                                                color: {{!hasBg ? 'black' : 'white'}};
+                                                {{pos.floorPlanStyle == 'kanban' ?
+                                                    `
+                                                        width: 120px;
+                                                        height: 120px;
+                                                    ` :
+                                                    `
+                                                        width: ${table.width}px;
+                                                        height: ${table.height}px;
+                                                        top: ${table.getY()}px;
+                                                        left: ${table.getX()}px;
+                                                    `
+                                                }}
+                                                "
+                                    >
+                                    <t t-set="offset" t-value="getTableHandleOffset(table)"/>
+                                    <div class="info position-relative w-100 h-100" t-att-class="{'opacity-25': table.parent_id}">
+                                        <div t-esc="table.name" class="label fw-bolder fs-4 position-absolute top-50 start-50 translate-middle" />
+                                        <div  t-esc="getOrderCount(table)" t-if="getOrderCount(table)"
+                                            t-att-class="{
+                                                'text-bg-danger': table.uiState.changeCount,
+                                                'text-bg-info'  : !table.uiState.changeCount and table.uiState.skipCount,
+                                                'text-bg-dark'  : !table.uiState.changeCount and !table.uiState.skipCount
+                                            }"
+                                            class="order-count d-flex align-items-center justify-content-center position-absolute rounded-circle"
+                                            t-attf-style="width: 1.5rem; height: 1.5rem; top: {{offset}}px; right: {{offset}}px"/>
+                                        <div t-esc="pos.getCustomerCount(table.id) + '/' + table.seats" style="height: 2rem;" class="table-seats mb-1 position-absolute d-flex align-items-center justify-content-center bottom-0 start-50 translate-middle-x px-2 py-1 rounded text-bg-dark bg-opacity-25 fs-4" />
+                                    </div>
+                                    <t t-if="state.selectedTableIds.includes(table.id)">
+                                        <span t-attf-class="tableId-{{table.id}}" class="table-handle position-absolute top left" t-attf-style="top: {{offset}}px; left: {{offset}}px"/>
+                                        <span t-attf-class="tableId-{{table.id}}" class="table-handle position-absolute top right" t-attf-style="top: {{offset}}px; right: {{offset}}px"/>
+                                        <span t-attf-class="tableId-{{table.id}}" class="table-handle position-absolute bottom right" t-attf-style="bottom: {{offset}}px; right: {{offset}}px"/>
+                                        <span t-attf-class="tableId-{{table.id}}" class="table-handle position-absolute bottom left" t-attf-style="bottom: {{offset}}px; left: {{offset}}px"/>
+                                    </t>
+                                </div>
+                            </t>
                         </div>
                     </t>
                     <div t-else="" class="empty-floor d-flex align-items-center justify-content-center h-100 fs-3 text-center text-muted" t-ref="map">

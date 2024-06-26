@@ -6,6 +6,8 @@ import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
 import * as Utils from "@point_of_sale/../tests/tours/utils/common";
+import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
+import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import { registry } from "@web/core/registry";
 
@@ -140,5 +142,46 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.clickFloor("Second Floor"),
             FloorScreen.hasTable("3"),
             FloorScreen.clickTable("3"),
+            ProductScreen.isShown(),
+            ProductScreen.back(),
+            FloorScreen.selectedFloorIs("Second Floor"),
+
+            // Check the linking of tables
+            FloorScreen.clickFloor("Main Floor"),
+            FloorScreen.linkTables("5", "4"),
+            FloorScreen.isChildTable("5"),
+            Utils.refresh(),
+            FloorScreen.isChildTable("5"),
+
+            // Check that tables are unlinked automatically when the order is done
+            FloorScreen.clickTable("5"),
+            ProductScreen.tableNameShown("4"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
+            ReceiptScreen.clickNextOrder(),
+            Utils.negateStep(FloorScreen.isChildTable("5")),
+
+            FloorScreen.linkTables("5", "4"),
+            // Check that the tables are unlinked when the child table is dragged
+            {
+                content: "Drag table 5 to the bottom of the screen to unlink it",
+                trigger: FloorScreen.table({ name: "5" }).trigger,
+                async run(helpers) {
+                    await helpers.drag_and_drop(`div.floor-map`, {
+                        position: {
+                            bottom: 0,
+                        },
+                        relative: true,
+                    });
+                },
+            },
+            Utils.negateStep(FloorScreen.isChildTable("5")),
         ].flat(),
 });
