@@ -5,6 +5,7 @@ import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import "@website/js/editor/snippets.options";
+import { convertCanvasToDataURL } from "@web/core/utils/image_processing";
 import { renderToElement } from "@web/core/utils/render";
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
@@ -626,19 +627,20 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             ctx.fillStyle = "rgb(255, 255, 255)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(imgEl, 0, 0, imgEl.width, imgEl.height, 0, 0, canvas.width, canvas.height);
+            const { dataURL, mimetype } = convertCanvasToDataURL(canvas, "image/webp", 0.75);
             const [resizedId] = await this.orm.call("ir.attachment", "create_unique", [[{
                 name: webpName,
                 description: size === originalSize ? "" : `resize: ${size}`,
-                datas: canvas.toDataURL("image/webp", 0.75).split(",")[1],
+                datas: dataURL.split(",")[1],
                 res_id: referenceId,
                 res_model: "ir.attachment",
-                mimetype: "image/webp",
+                mimetype: mimetype,
             }]]);
             if (size === originalSize) {
                 attachment.original_id = attachment.id;
                 attachment.id = resizedId;
                 attachment.image_src = `/web/image/${resizedId}-autowebp/${attachment.name}`;
-                attachment.mimetype = "image/webp";
+                attachment.mimetype = mimetype;
             }
             referenceId = referenceId || resizedId; // Keep track of original.
             await this.orm.call("ir.attachment", "create_unique", [[{

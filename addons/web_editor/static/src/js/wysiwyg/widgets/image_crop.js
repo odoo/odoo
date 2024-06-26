@@ -199,7 +199,13 @@ export class ImageCrop extends Component {
             }
         });
         delete this.media.dataset.resizeWidth;
-        this.initialSrc = await applyModifications(this.media, {forceModification: true, mimetype: this.mimetype});
+        const { dataURL, mimetype } = await applyModifications(
+            this.media,
+            { forceModification: true, mimetype: this.mimetype },
+            true, // TODO: remove in master
+        );
+        this.initialSrc = dataURL;
+        this.media.mimetype = this.mimetype = mimetype;
         this.media.classList.toggle('o_we_image_cropped', cropped);
         this.$media.trigger('image_cropped');
         this._closeCropper();

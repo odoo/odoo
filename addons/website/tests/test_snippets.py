@@ -129,3 +129,22 @@ class TestSnippets(HttpCase):
 
     def test_dropdowns_and_header_hide_on_scroll(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'dropdowns_and_header_hide_on_scroll', login='admin')
+
+    def test_image_mimetype(self):
+        self.start_tour('/', "website_image_mimetype", login='admin')
+
+    def test_image_mimetype_no_webp(self):
+        self.start_tour('/', "website_image_mimetype_no_webp", login='admin')
+
+    def test_image_mimetype_bigger_output(self):
+        self.start_tour('/', "website_image_mimetype_bigger_output", login='admin')
+
+    def test_image_mimetype_image_gallery(self):
+        self.start_tour('/', "website_image_mimetype_image_gallery", login='admin')
+
+    def test_image_mimetype_image_gallery_no_webp(self):
+        self.start_tour('/', "website_image_mimetype_image_gallery_no_webp", login='admin')
+
+    def test_image_mimetype_image_gallery_bigger_output(self):
+        self.start_tour('/', "website_image_mimetype_image_gallery_bigger_output", login='admin')
+

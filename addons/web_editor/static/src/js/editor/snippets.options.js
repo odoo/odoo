@@ -32,6 +32,7 @@ import {
     getDataURLBinarySize,
 } from "@web_editor/js/editor/image_processing";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
+import { canExportCanvasAsWebp } from "@web/core/utils/image_processing";
 import { pick } from "@web/core/utils/objects";
 import { _t } from "@web/core/l10n/translation";
 import {
@@ -6341,23 +6342,23 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const maxWidth = img.dataset.width ? img.naturalWidth : original.naturalWidth;
         const optimizedWidth = Math.min(maxWidth, this._computeMaxDisplayWidth());
         this.optimizedWidth = optimizedWidth;
-        const widths = {
-            128: ['128px', 'image/webp'],
-            256: ['256px', 'image/webp'],
-            512: ['512px', 'image/webp'],
-            1024: ['1024px', 'image/webp'],
-            1920: ['1920px', 'image/webp'],
+        const optimizedMimetype = canExportCanvasAsWebp() ? "image/webp" : "image/jpeg";
+        const formatsByWidth = {
+            128: ["128px", optimizedMimetype],
+            256: ["256px", optimizedMimetype],
+            512: ["512px", optimizedMimetype],
+            1024: ["1024px", optimizedMimetype],
+            1920: ["1920px", optimizedMimetype],
         };
-        widths[img.naturalWidth] = [_t("%spx", img.naturalWidth), 'image/webp'];
-        widths[optimizedWidth] = [_t("%spx (Suggested)", optimizedWidth), 'image/webp'];
+        formatsByWidth[img.naturalWidth] = [_t("%spx", img.naturalWidth), optimizedMimetype];
+        formatsByWidth[optimizedWidth] = [_t("%spx (Suggested)", optimizedWidth), optimizedMimetype];
         const mimetypeBeforeConversion = img.dataset.mimetypeBeforeConversion;
-        widths[maxWidth] = [_t("%spx (Original)", maxWidth), mimetypeBeforeConversion];
-        if (mimetypeBeforeConversion !== "image/webp") {
-            // Avoid a key collision by subtracting 0.1 - putting the webp
-            // above the original format one of the same size.
-            widths[maxWidth - 0.1] = [_t("%spx", maxWidth), 'image/webp'];
+        formatsByWidth[maxWidth] = [_t("%spx (Original)", maxWidth), mimetypeBeforeConversion];
+        if (mimetypeBeforeConversion !== optimizedMimetype) {
+            // Avoid key collision and ensure the optimized format is above the original one of the same size.
+            formatsByWidth[maxWidth - 0.1] = [_t("%spx", maxWidth), optimizedMimetype];
         }
-        return Object.entries(widths)
+        return Object.entries(formatsByWidth)
             .filter(([width]) => width <= maxWidth)
             .sort(([v1], [v2]) => v1 - v2);
     },
@@ -6385,10 +6386,15 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             delete img.dataset.mimetype;
             return;
         }
-        const dataURL = await applyModifications(img, {mimetype: this._getImageMimetype(img)});
+        const { dataURL, mimetype } = await applyModifications(
+            img,
+            { mimetype: this._getImageMimetype(img) },
+            true, // TODO: remove in master
+        );
         this._filesize = getDataURLBinarySize(dataURL) / 1024;
 
         if (update) {
+            img.dataset.mimetype = mimetype;
             img.classList.add('o_modified_image_to_save');
             const loadedImg = await loadImage(dataURL, img);
             this._applyImage(loadedImg);
@@ -6723,14 +6729,19 @@ registry.ImageTools = ImageHandlerOption.extend({
             }
         } else {
             // Re-applying the modifications and deleting the shapes
-            img.src = await applyModifications(img, {mimetype: this._getImageMimetype(img)});
+            const { dataURL, mimetype } = await applyModifications(
+                img,
+                { mimetype: this._getImageMimetype(img) },
+                true, // TODO: remove in master
+            );
+            img.src = dataURL;
             delete img.dataset.shape;
             delete img.dataset.shapeColors;
             delete img.dataset.fileName;
             delete img.dataset.shapeFlip;
             delete img.dataset.shapeRotate;
             if (saveData) {
-                img.dataset.mimetype = img.dataset.originalMimetype;
+                img.dataset.mimetype = mimetype;
                 delete img.dataset.originalMimetype;
             }
             // Also apply to carousel thumbnail if applicable.
@@ -7093,7 +7104,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             imgAspectRatio: svg.dataset.imgAspectRatio || null,
             svgAspectRatio: svgAspectRatio,
         };
-        const imgDataURL = await applyModifications(img, options);
+        const { dataURL: imgDataURL } = await applyModifications(img, options, true, /* TODO: remove in master */);
         svg.removeChild(svg.querySelector('#preview'));
         svg.querySelectorAll("image").forEach(image => {
             image.setAttribute("xlink:href", imgDataURL);

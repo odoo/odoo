@@ -4,6 +4,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { convertCanvasToDataURL } from "@web/core/utils/image_processing";
 import { url } from "@web/core/utils/urls";
 import { isBinarySize } from "@web/core/utils/binary";
 import { FileUploader } from "../file_handler";
@@ -155,18 +156,29 @@ export class ImageField extends Component {
                     canvas.width,
                     canvas.height
                 );
+
+                let data, mimetype;
+                if (size === originalSize) {
+                    data = info.data;
+                    mimetype = info.type;
+                } else {
+                    const { dataURL, mimetype: outputMimetype } = convertCanvasToDataURL(
+                        canvas,
+                        info.type,
+                        0.75
+                    );
+                    data = dataURL.split(",")[1];
+                    mimetype = outputMimetype;
+                }
                 const [resizedId] = await this.orm.call("ir.attachment", "create_unique", [
                     [
                         {
                             name: info.name,
                             description: size === originalSize ? "" : `resize: ${size}`,
-                            datas:
-                                size === originalSize
-                                    ? info.data
-                                    : canvas.toDataURL("image/webp", 0.75).split(",")[1],
+                            datas: data,
                             res_id: referenceId,
                             res_model: "ir.attachment",
-                            mimetype: "image/webp",
+                            mimetype: mimetype,
                         },
                     ],
                 ]);

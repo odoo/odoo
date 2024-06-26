@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { canExportCanvasAsWebp, convertCanvasToDataURL } from "@web/core/utils/image_processing";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import options from "@web_editor/js/editor/snippets.options";
 import wUtils from '@website/js/utils';
@@ -423,6 +424,9 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
     },
 });
 
+/**
+ * TODO this should use web_editor/ImageTools somehow (_getImageMimetype) or centralized image processing service
+ */
 options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
     /**
      * @override
@@ -521,17 +525,42 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                         const imgEl = $img[0];
                         imagePromises.push(new Promise(resolve => {
                             loadImageInfo(imgEl, this.rpc).then(() => {
-                                if (imgEl.dataset.mimetype && ![
+                                const originalMimetype = imgEl.dataset.mimetype;
+                                if (originalMimetype && ![
                                     "image/gif",
                                     "image/svg+xml",
                                     "image/webp",
-                                ].includes(imgEl.dataset.mimetype)) {
+                                ].includes(originalMimetype) && canExportCanvasAsWebp()) {
                                     // Convert to webp but keep original width.
-                                    imgEl.dataset.mimetype = "image/webp";
-                                    applyModifications(imgEl, {
-                                        mimetype: "image/webp",
-                                    }).then(src => {
-                                        imgEl.src = src;
+                                    const canvas = document.createElement("canvas");
+                                    canvas.width = imgEl.width;
+                                    canvas.height = imgEl.height;
+                                    const ctx = canvas.getContext("2d");
+                                    ctx.fillStyle = "rgb(255, 255, 255)";
+                                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                                    ctx.drawImage(
+                                        imgEl,
+                                        0,
+                                        0,
+                                        imgEl.width,
+                                        imgEl.height,
+                                        0,
+                                        0,
+                                        canvas.width,
+                                        canvas.height
+                                    );
+                                    const { dataURL: convertedDataURL, mimetype: convertedMimetype } = convertCanvasToDataURL(canvas, "image/webp", 0.75);
+                                    imgEl.src = convertedDataURL;
+                                    imgEl.dataset.mimetype = convertedMimetype;
+
+                                    // Needed to keep the smallest (file size) image
+                                    applyModifications(
+                                        imgEl,
+                                        { mimetype: this._getImageMimetype(imgEl) },
+                                        true, // TODO: remove in master
+                                    ).then(({ dataURL, mimetype }) => {
+                                        imgEl.dataset.mimetype = dataURL;
+                                        imgEl.src = mimetype;
                                         imgEl.classList.add("o_modified_image_to_save");
                                         resolve();
                                     });
@@ -615,6 +644,9 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                 $el.attr('href', '#slideshow_' + uuid);
             }
         });
+    },
+    _getImageMimetype(img) {
+        return img.dataset.shape && img.dataset.originalMimetype ? img.dataset.originalMimetype : img.dataset.mimetype;
     },
 });
 

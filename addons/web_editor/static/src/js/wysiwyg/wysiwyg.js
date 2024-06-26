@@ -20,6 +20,7 @@ import weUtils from "@web_editor/js/common/utils";
 import { isSelectionInSelectors, peek } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { PeerToPeer, RequestError } from "@web_editor/js/wysiwyg/PeerToPeer";
 import { uniqueId } from "@web/core/utils/functions";
+import { canExportCanvasAsWebp } from "@web/core/utils/image_processing";
 import { groupBy } from "@web/core/utils/arrays";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
@@ -3521,7 +3522,7 @@ export class Wysiwyg extends Component {
                 altData[size] = {
                     'image/jpeg': canvas.toDataURL('image/jpeg', 0.75).split(',')[1],
                 };
-                if (size !== originalSize) {
+                if (size !== originalSize && canExportCanvasAsWebp()) {
                     altData[size]['image/webp'] = canvas.toDataURL('image/webp', 0.75).split(',')[1];
                 }
             }

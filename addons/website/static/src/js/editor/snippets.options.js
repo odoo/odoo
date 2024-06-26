@@ -4,6 +4,7 @@ import { loadCSS } from "@web/core/assets";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useChildRef } from "@web/core/utils/hooks";
+import { canExportCanvasAsWebp, convertCanvasToDataURL } from "@web/core/utils/image_processing";
 import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options";
 import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget";
@@ -2986,17 +2987,42 @@ options.registry.CoverProperties = options.Class.extend({
                 const imgEl = document.createElement("img");
                 imgEl.src = widgetValue;
                 await loadImageInfo(imgEl, this.rpc);
-                if (imgEl.dataset.mimetype && ![
+                const originalMimetype = imgEl.dataset.mimetype;
+                if (originalMimetype && ![
                     "image/gif",
                     "image/svg+xml",
                     "image/webp",
-                ].includes(imgEl.dataset.mimetype)) {
+                ].includes(originalMimetype) && canExportCanvasAsWebp()) {
                     // Convert to webp but keep original width.
-                    imgEl.dataset.mimetype = "image/webp";
-                    const base64src = await applyModifications(imgEl, {
-                        mimetype: "image/webp",
-                    });
-                    widgetValue = base64src;
+                    const canvas = document.createElement("canvas");
+                    canvas.width = imgEl.width;
+                    canvas.height = imgEl.height;
+                    const ctx = canvas.getContext("2d");
+                    ctx.fillStyle = "rgb(255, 255, 255)";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(
+                        imgEl,
+                        0,
+                        0,
+                        imgEl.width,
+                        imgEl.height,
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height
+                    );
+                    const { dataURL: convertedDataURL, mimetype: convertedMimetype } = convertCanvasToDataURL(canvas, "image/webp", 0.75);
+                    imgEl.src = convertedDataURL;
+                    imgEl.dataset.mimetype = convertedMimetype;
+
+                    // Needed to keep the smallest (file size) image
+                    const { dataURL, mimetype } = await applyModifications(
+                        imgEl,
+                        { mimetype: imgEl.dataset.mimetype },
+                        true, // TODO: remove in master
+                    );
+                    imgEl.dataset.mimetype = mimetype;
+                    widgetValue = dataURL;
                     this.$image[0].classList.add("o_b64_image_to_save");
                 }
             }
