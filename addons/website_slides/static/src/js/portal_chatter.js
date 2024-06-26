@@ -18,7 +18,10 @@ PortalChatter.include({
     _reloadChatterContent: async function (data) {
         await this._super(...arguments);
         if (this.options.res_model === "slide.channel") {
-            $('#review-tab').text(_t('Reviews (%s)', data.rating_count));
+            const reviewTabEl = this.el.querySelector("#review-tab");
+            if (reviewTabEl) {
+                reviewTabEl.textContent = _t("Reviews (%s)", data.rating_count);
+            }
         }
     },
 });

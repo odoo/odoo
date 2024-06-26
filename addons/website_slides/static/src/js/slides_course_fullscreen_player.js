@@ -11,6 +11,7 @@
     import { SlideShareDialog } from './public/components/slide_share_dialog/slide_share_dialog';
     import '@website_slides/js/slides_course_join';
     import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+    import { typeCastDataset } from "@web/core/utils/misc";
     import { rpc } from "@web/core/network/rpc";
 
     import { markup } from "@odoo/owl";
@@ -52,9 +53,10 @@
         _loadYoutubeAPI: function () {
             var self = this;
             var prom = new Promise(function (resolve, reject) {
-                if ($(document).find('script[src="' + self.youtubeUrl + '"]').length === 0) {
-                    var $youtubeElement = $('<script/>', {src: self.youtubeUrl});
-                    $(document.head).append($youtubeElement);
+                if (!document.querySelector('script[src="' + self.youtubeUrl + '"]')) {
+                    const youtubeElement = document.createElement("script");
+                    youtubeElement.src = self.youtubeUrl;
+                    document.head.append(youtubeElement);
 
                     // function called when the Youtube asset is loaded
                     // see https://developers.google.com/youtube/iframe_api_reference#Requirements
@@ -160,13 +162,9 @@
          */
         willStart: function () {
             var self = this;
-            var vimeoAPIPromise = new Promise(function (resolve, reject) {
-                if ($(document).find('script[src="' + self.vimeoScriptUrl + '"]').length === 0) {
-                    $.ajax({
-                        url: self.vimeoScriptUrl,
-                        dataType: 'script',
-                        success: function () {resolve();}
-                    });
+            const vimeoAPIPromise = new Promise((resolve, reject) => {
+                if (document.querySelector('script[src="' + self.vimeoScriptUrl + '"]').length === 0) {
+                    fetch(self.vimeoScriptUrl).then(resolve);
                 } else {
                     resolve();
                 }
@@ -187,10 +185,10 @@
          * Instantiate the Vimeo player and register the various events.
          */
         _setupVideoPlayer: async function () {
-            this.player = new Vimeo.Player(this.$('iframe')[0]);
+            this.player = new Vimeo.Player(this.el.querySelector("iframe"));
             this.videoDuration = await this.player.getDuration();
-            this.player.on('timeupdate', this._onVideoTimeUpdate.bind(this));
-            this.player.on('ended', this._onVideoEnded.bind(this));
+            this.player.addEventListener("timeupdate", this._onVideoTimeUpdate.bind(this));
+            this.player.addEventListener("ended", this._onVideoEnded.bind(this));
         },
 
         //--------------------------------------------------------------------------
@@ -248,13 +246,13 @@
         },
         start: function (){
             var self = this;
-            this.on('change:slideEntry', this, this._onChangeCurrentSlide);
+            this.on("change:slideEntry", this, this._onChangeCurrentSlide);
             return this._super.apply(this, arguments).then(function (){
-                $(document).keydown(self._onKeyDown.bind(self));
+                document.addEventListener("keydown", self._onKeyDown.bind(self));
             });
         },
         destroy: function () {
-            $(document).unbind('keydown', this._onKeyDown.bind(this));
+            document.removeEventListener("keydown", this._onKeyDown.bind(this));
             return this._super.apply(this, arguments);
         },
         //--------------------------------------------------------------------------
@@ -309,7 +307,7 @@
          * @param {*} ev
          */
         _onClickMiniQuiz: function (ev){
-            var slideID = parseInt($(ev.currentTarget).data().slide_id);
+            const slideID = parseInt(ev.currentTarget.dataset.slideId);
             this.set('slideEntry',{
                 slideID: slideID,
                 isMiniQuiz: true
@@ -324,12 +322,12 @@
          */
         _onClickTab: function (ev) {
             ev.stopPropagation();
-            const $elem = $(ev.currentTarget).closest('.o_wslides_fs_sidebar_list_item');
-            if ($elem.data('canAccess') === 'True') {
-                var isQuiz = $elem.data('isQuiz');
-                var slideID = parseInt($elem.data('id'));
-                var slide = findSlide(this.slideEntries, {id: slideID, isQuiz: isQuiz});
-                this.set('slideEntry', slide);
+            const elem = ev.currentTarget.closest(".o_wslides_fs_sidebar_list_item");
+            if (elem.dataset.canAccess === "True") {
+                const isQuiz = elem.dataset.isQuiz === "1";
+                const slideID = parseInt(elem.dataset.id);
+                const slide = findSlide(this.slideEntries, { id: slideID, isQuiz: isQuiz });
+                this.set("slideEntry", slide);
             }
         },
         /**
@@ -340,10 +338,12 @@
          */
         _onChangeCurrentSlide: function () {
             var slide = this.get('slideEntry');
-            this.$('.o_wslides_fs_sidebar_list_item.active').removeClass('active');
-            var selector = '.o_wslides_fs_sidebar_list_item[data-id='+slide.id+'][data-is-quiz!="1"]';
+            this.el.querySelector(".o_wslides_fs_sidebar_list_item.active").classList.remove("active");
+            if (slide) {
+                const selector = `.o_wslides_fs_sidebar_list_item[data-id="${slide.id}"]`;
+                this.el.querySelector(selector).classList.add("active");
+            }
 
-            this.$(selector).addClass('active');
             this.trigger_up('change_slide', this.get('slideEntry'));
         },
 
@@ -427,8 +427,8 @@
          */
         attachTo: function (){
             var defs = [this._super.apply(this, arguments)];
-            defs.push(this.sidebar.attachTo(this.$('.o_wslides_fs_sidebar')));
-            return $.when.apply($, defs);
+            defs.push(this.sidebar.attachTo(this.el.querySelector(".o_wslides_fs_sidebar")));
+            return Promise.all(defs);
         },
         //--------------------------------------------------------------------------
         // Private
@@ -456,7 +456,7 @@
         */
         _fetchSlideContent: function (){
             var slide = this.get('slide');
-            if (slide.category === 'article' && !slide.isQuiz) {
+            if (slide?.category === 'article' && !slide?.isQuiz) {
                 return this._fetchHtmlContent();
             }
             return Promise.resolve();
@@ -474,22 +474,27 @@
             slidesDataList.forEach(function (slideData, index) {
                 // compute hasNext slide
                 slideData.hasNext = index < slidesDataList.length-1;
+                const domParser = new DOMParser();
                 // compute embed url
                 if (slideData.category === 'video' && slideData.videoSourceType !== 'vimeo') {
-                    slideData.embedCode = $(slideData.embedCode).attr('src') || ""; // embedCode contains an iframe tag, where src attribute is the url (youtube or embed document from odoo)
-                    var separator = slideData.embedCode.indexOf("?") !== -1 ? "&" : "?";
-                    var scheme = slideData.embedCode.indexOf('//') === 0 ? 'https:' : '';
-                    var params = { rel: 0, enablejsapi: 1, origin: window.location.origin };
+                    const parsedDocument = domParser.parseFromString(slideData.embedCode, "text/html");
+                    const embedCode = parsedDocument.body.firstChild;
+                    slideData.embedCode = embedCode.getAttribute("src") || ""; // embedCode contains an iframe tag, where src attribute is the url (youtube or embed document from odoo)
+                    const separator = slideData.embedCode.indexOf("?") !== -1 ? "&" : "?";
+                    const scheme = slideData.embedCode.indexOf("//") === 0 ? "https:" : "";
+                    const params = { rel: 0, enablejsapi: 1, origin: window.location.origin };
                     if (slideData.embedCode.indexOf("//drive.google.com") === -1) {
                         params.autoplay = 1;
                     }
-                    slideData.embedUrl = slideData.embedCode ? scheme + slideData.embedCode + separator + $.param(params) : "";
+                    slideData.embedUrl = slideData.embedCode ? scheme + slideData.embedCode + separator + new URLSearchParams(params).toString() : "";
                 } else if (slideData.category === 'video' && slideData.videoSourceType === 'vimeo') {
                     slideData.embedCode = markup(slideData.embedCode);
                 } else if (slideData.category === 'infographic') {
                     slideData.embedUrl = `/web/image/slide.slide/${encodeURIComponent(slideData.id)}/image_1024`;
                 } else if (slideData.category === 'document') {
-                    slideData.embedUrl = $(slideData.embedCode).attr('src');
+                    const parsedDocument = domParser.parseFromString(slideData.embedCode, "text/html");
+                    const embedCode = parsedDocument.body.firstChild;
+                    slideData.embedUrl = embedCode.getAttribute("src");
                 }
                 // fill empty property to allow searching on it with list.filter(matcher)
                 slideData.isQuiz = !!slideData.isQuiz;
@@ -515,14 +520,14 @@
          */
         _pushUrlState: function (){
             var urlParts = window.location.pathname.split('/');
-            urlParts[urlParts.length-1] = this.get('slide').slug;
+            urlParts[urlParts.length-1] = this.get('slide')?.slug;
             var url =  urlParts.join('/');
-            this.$('.o_wslides_fs_exit_fullscreen').attr('href', url);
+            this.el.querySelector(".o_wslides_fs_exit_fullscreen").setAttribute("href", url);
             var params = {'fullscreen': 1 };
-            if (this.get('slide').isQuiz){
+            if (this.get('slide')?.isQuiz){
                 params.quiz = 1;
             }
-            var fullscreenUrl = `${url}?${$.param(params)}`;
+            const fullscreenUrl = `${url}?${new URLSearchParams(params).toString()}`;
             history.pushState(null, '', fullscreenUrl);
         },
         /**
@@ -540,8 +545,8 @@
             this._renderSlideRunning = true;
             try {
                 var slide = this.get('slide');
-                var $content = this.$('.o_wslides_fs_content');
-                $content.empty();
+                const content = this.el.querySelector('.o_wslides_fs_content');
+                content.innerHTML = '';
                 if (this.websiteAnimateWidget) {
                     this.websiteAnimateWidget.destroy()
                     this.websiteAnimateWidget = null;
@@ -549,31 +554,34 @@
 
                 // display quiz slide, or quiz attached to a slide
                 if (slide.category === 'quiz' || slide.isQuiz) {
-                    $content.addClass('bg-white');
+                    content.classList.add('bg-white');
                     var QuizWidget = new Quiz(this, slide, this.channel);
-                    return await QuizWidget.appendTo($content);
+                    return await QuizWidget.appendTo(content);
                 }
 
                 // render slide content
                 if (['document', 'infographic'].includes(slide.category)) {
-                    $content.empty().append(renderToElement('website.slides.fullscreen.content', {widget: this}));
+                    content.innerHTML = '';
+                    content.appendChild(renderToElement('website.slides.fullscreen.content', {widget: this}));
                 } else if (slide.category === 'video' && slide.videoSourceType === 'youtube') {
                     this.videoPlayer = new VideoPlayerYouTube(this, slide);
-                    return await this.videoPlayer.appendTo($content);
+                    return await this.videoPlayer.appendTo(content)
                 } else if (slide.category === 'video' && slide.videoSourceType === 'vimeo') {
                     this.videoPlayer = new VideoPlayerVimeo(this, slide);
-                    return await this.videoPlayer.appendTo($content);
+                    return await content.append(this.videoPlayer);
                 } else if (slide.category === 'video' && slide.videoSourceType === 'google_drive') {
-                    $content.empty().append(renderToElement('website.slides.fullscreen.video.google_drive', {widget: this}));
+                    content.innerHTML = "";
+                    content.appendChild(renderToElement("website.slides.fullscreen.video.google_drive", {widget: this}));
                 } else if (slide.category === 'article'){
                     this.websiteAnimateWidget = new publicWidget.registry.WebsiteAnimate();
-                    var $wpContainer = $('<div>').addClass('o_wslide_fs_article_content bg-white block w-100 overflow-auto p-3');
-                    $wpContainer.html(slide.htmlContent);
-                    $content.append($wpContainer);
+                    const wpContainer = document.createElement("div");
+                    wpContainer.classList.add("o_wslide_fs_article_content", "bg-white", "block", "w-100", "overflow-auto", "p-3");
+                    wpContainer.innerHTML = slide.htmlContent;
+                    content.append(wpContainer);
                     this.trigger_up('widgets_start_request', {
-                        $target: $content,
+                        $target: $(content),
                     });
-                    this.websiteAnimateWidget.attachTo($wpContainer);
+                    this.websiteAnimateWidget.attachTo(wpContainer);
                 }
                 unhideConditionalElements();
             } finally {
@@ -698,8 +706,8 @@
          * @private
          */
         _toggleSidebar: function () {
-            this.$('.o_wslides_fs_sidebar').toggleClass('o_wslides_fs_sidebar_hidden');
-            this.$('.o_wslides_fs_toggle_sidebar').toggleClass('active');
+            this.el.querySelector(".o_wslides_fs_sidebar").classList.toggle("o_wslides_fs_sidebar_hidden");
+            this.el.querySelector(".o_wslides_fs_toggle_sidebar").classList.toggle("active");
         },
     });
 
@@ -714,20 +722,20 @@
             return proms;
         },
         _extractChannelData: function (){
-            return this.$el.data();
+            return typeCastDataset(this.el.dataset);
         },
         _getCurrentSlideID: function (){
-            return parseInt(this.$('.o_wslides_fs_sidebar_list_item.active').data('id'));
+            return parseInt(this.el.querySelector('.o_wslides_fs_sidebar_list_item.active').dataset.id);
         },
         /**
          * @private
          * Creates slides objects from every slide-list-cells attributes
          */
         _getSlides: function (){
-            var $slides = this.$('.o_wslides_fs_sidebar_list_item[data-can-access="True"]');
-            var slideList = [];
-            $slides.each(function () {
-                var slideData = $(this).data();
+            const slides = this.el.querySelectorAll(".o_wslides_fs_sidebar_list_item[data-can-access='True']");
+            const slideList = [];
+            slides.forEach(function (el) {
+                const slideData = typeCastDataset(el.dataset);
                 slideList.push(slideData);
             });
             return slideList;

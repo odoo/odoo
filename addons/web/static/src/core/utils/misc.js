@@ -26,3 +26,20 @@ export function markEventHandled(ev, markName) {
     }
     eventHandledWeakMap.get(ev).push(markName);
 }
+/**
+ * Typecase values of Element Dataset, it runs on each key and typecast it.
+ *
+ * @param {Object} dataset
+ */
+export function typeCastDataset(dataset) {
+    const data = {};
+    Object.keys(dataset).forEach((key) => {
+        const val = +dataset[key];
+        if (isNaN(val)) {
+            data[key] = dataset[key];
+        } else {
+            data[key] = val;
+        }
+    });
+    return data;
+}
