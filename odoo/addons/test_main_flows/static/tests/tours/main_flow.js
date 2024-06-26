@@ -632,7 +632,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
 {
      in_modal: false,
     isActive: ["mobile"],
-    trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Organization / Contact')",
+    trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Contact')",
 },
 {
     isActive: ["mobile"],
@@ -648,7 +648,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
 {
      in_modal: false,
     isActive: ["mobile"],
-    trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Organization / Contact')",
+    trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Contact')",
 },
 {
     isActive: ["mobile"],
