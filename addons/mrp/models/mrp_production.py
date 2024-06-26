@@ -49,6 +49,10 @@ class MrpProduction(models.Model):
     def _get_default_is_locked(self):
         return not self.user_has_groups('mrp.group_unlocked_by_default')
 
+    @api.model
+    def _get_default_company_id(self):
+        return self.env.company
+
     name = fields.Char('Reference', default='New', copy=False, readonly=True)
     priority = fields.Selection(
         PROCUREMENT_PRIORITIES, string='Priority', default='0',
@@ -187,8 +191,9 @@ class MrpProduction(models.Model):
     user_id = fields.Many2one(
         'res.users', 'Responsible', default=lambda self: self.env.user,
         domain=lambda self: [('groups_id', 'in', self.env.ref('mrp.group_mrp_user').id)])
+
     company_id = fields.Many2one(
-        'res.company', 'Company', default=lambda self: self.env.company,
+        'res.company', 'Company', default=_get_default_company_id,
         index=True, required=True)
 
     qty_produced = fields.Float(compute="_get_produced_qty", string="Quantity Produced")
