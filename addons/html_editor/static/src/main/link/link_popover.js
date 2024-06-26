@@ -109,6 +109,12 @@ export class LinkPopover extends Component {
             this.props.onClose();
         }
     }
+    onKeydownEnter(ev) {
+        if (ev.key === "Enter") {
+            ev.preventDefault();
+            this.onClickApply();
+        }
+    }
 
     /**
      * @private
