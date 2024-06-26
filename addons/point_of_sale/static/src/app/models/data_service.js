@@ -224,7 +224,7 @@ export class PosData extends Reactive {
         } catch (error) {
             const skipError = error.constructor.name != "ConnectionLostError";
             if (queue && !skipError) {
-                this.network.unsyncData.push({ type, model, ids, values });
+                this.network.unsyncData.push({ type, model, ids, values, method, args });
             }
 
             this.setOffline();
