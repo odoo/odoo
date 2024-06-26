@@ -39,7 +39,6 @@ test("Error due to an automation rule", async () => {
     await animationFrame();
     expect.verifyErrors(["Message"]);
     expect.verifySteps(["error setup"]);
-    expect(".modal .fa-clipboard").toHaveCount(1);
     expect(".modal .o_disable_action_button").toHaveCount(1);
     expect(".modal .o_edit_action_button").toHaveCount(1);
 });
@@ -57,7 +56,6 @@ test("Error not due to an automation rule", async () => {
     Promise.reject(error);
     await animationFrame();
     expect.verifyErrors(["Message"]);
-    expect(".modal .fa-clipboard").toHaveCount(1);
     expect(".modal .o_disable_action_button").toHaveCount(0);
     expect(".modal .o_edit_action_button").toHaveCount(0);
 });

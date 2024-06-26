@@ -86,6 +86,8 @@ rpc._rpc = function (url, params, settings) {
                 return resolve(responseResult);
             }
             const error = makeErrorFromResponse(responseError);
+            error.id = data.id;
+            error.model = data.params.model;
             rpcBus.trigger("RPC:RESPONSE", { data, settings, error });
             reject(error);
         });

@@ -70,6 +70,9 @@ export function rpcErrorHandler(env, error, originalError) {
             subType: originalError.subType,
             code: originalError.code,
             type: originalError.type,
+            serverHost: error.event?.target?.location.host,
+            id: originalError.id,
+            model: originalError.model,
         });
         return true;
     }
@@ -149,6 +152,7 @@ export function defaultHandler(env, error) {
         traceback: error.traceback,
         message: error.message,
         name: error.name,
+        serverHost: error.event?.target?.location.host,
     });
     return true;
 }
