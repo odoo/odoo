@@ -188,8 +188,8 @@ class MrpProduction(models.Model):
         'res.users', 'Responsible', default=lambda self: self.env.user,
         domain=lambda self: [('groups_id', 'in', self.env.ref('mrp.group_mrp_user').id)])
     company_id = fields.Many2one(
-        'res.company', 'Company', default=lambda self: self.env.company,
-        index=True, required=True)
+        'res.company', 'Company', related='picking_type_id.company_id',
+        precompute=True, store=True, index=True, required=True)
 
     qty_produced = fields.Float(compute="_get_produced_qty", string="Quantity Produced")
     procurement_group_id = fields.Many2one(
