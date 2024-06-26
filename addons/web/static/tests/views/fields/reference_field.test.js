@@ -147,14 +147,15 @@ test("ReferenceField can quick create models", async () => {
 
     await clickSave();
 
-    expect([
+    // The name_create method should have been called
+    expect.verifySteps([
         "get_views",
         "onchange",
         "name_search", // for the select
         "name_search", // for the spawned many2one
         "name_create",
         "web_save",
-    ]).toVerifySteps({ message: "The name_create method should have been called" });
+    ]);
 });
 
 test("ReferenceField respects no_quick_create", async () => {
@@ -863,7 +864,7 @@ test("Change model field of a ReferenceField then select an invalid value (tree 
                         <field name="reference" required="true" options="{'model_field': 'model_id'}" class="reference_field" />
                     </tree>
                 </field>
-            </form>  
+            </form>
         `,
     });
 

@@ -287,13 +287,13 @@ describe("useBus", () => {
         await mountWithCleanup(Parent);
 
         bus.trigger("test-event");
-        expect(["callback"]).toVerifySteps();
+        expect.verifySteps(["callback"]);
 
         state.child = false;
         await animationFrame();
 
         bus.trigger("test-event");
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
     });
 });
 
@@ -407,7 +407,7 @@ describe("useService", () => {
         state.child = false;
         await animationFrame();
         def.resolve();
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
 
         // Calling the functions after the destruction rejects the promise
         await expect(objectService.asyncMethod()).rejects.toThrow("Component is destroyed");

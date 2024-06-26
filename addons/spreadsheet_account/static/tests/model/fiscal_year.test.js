@@ -33,7 +33,7 @@ test("Basic evaluation", async () => {
     setCellContent(model, "A1", `=ODOO.FISCALYEAR.START("11/11/2020")`);
     setCellContent(model, "A2", `=ODOO.FISCALYEAR.END("11/11/2020")`);
     await waitForDataLoaded(model);
-    expect(["get_fiscal_dates"]).toVerifySteps();
+    expect.verifySteps(["get_fiscal_dates"]);
     expect(getEvaluatedCell(model, "A1").formattedValue).toBe("1/1/2020");
     expect(getEvaluatedCell(model, "A2").formattedValue).toBe("12/31/2020");
 });
@@ -58,7 +58,7 @@ test("with a given company id", async () => {
     setCellContent(model, "A1", `=ODOO.FISCALYEAR.START("11/11/2020", 1)`);
     setCellContent(model, "A2", `=ODOO.FISCALYEAR.END("11/11/2020", 1)`);
     await waitForDataLoaded(model);
-    expect(["get_fiscal_dates"]).toVerifySteps();
+    expect.verifySteps(["get_fiscal_dates"]);
     expect(getEvaluatedCell(model, "A1").formattedValue).toBe("1/1/2020");
     expect(getEvaluatedCell(model, "A2").formattedValue).toBe("12/31/2020");
 });
@@ -83,7 +83,7 @@ test("with a wrong company id", async () => {
     setCellContent(model, "A1", `=ODOO.FISCALYEAR.START("11/11/2020", 100)`);
     setCellContent(model, "A2", `=ODOO.FISCALYEAR.END("11/11/2020", 100)`);
     await waitForDataLoaded(model);
-    expect(["get_fiscal_dates"]).toVerifySteps();
+    expect.verifySteps(["get_fiscal_dates"]);
     expect(getEvaluatedCell(model, "A1").message).toBe(
         "The company fiscal year could not be found."
     );

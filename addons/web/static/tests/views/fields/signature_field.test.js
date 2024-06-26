@@ -127,7 +127,7 @@ test("Set simple field in 'full_name' node option", async () => {
     expect(".o_web_sign_auto_button").toHaveClass("active", {
         message: "'Auto' panel is visible by default",
     });
-    expect(["Pop's Chock'lit"]).toVerifySteps();
+    expect.verifySteps(["Pop's Chock'lit"]);
 });
 
 test("Set m2o field in 'full_name' node option", async () => {
@@ -161,7 +161,7 @@ test("Set m2o field in 'full_name' node option", async () => {
     expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(1, {
         message: 'should open a modal with "Auto" button',
     });
-    expect(["Veggie Burger"]).toVerifySteps();
+    expect.verifySteps(["Veggie Burger"]);
 });
 
 test("Set size (width and height) in node option", async () => {
@@ -257,12 +257,12 @@ test("clicking save manually after changing signature should change the unique o
     await runAllTimers();
     await animationFrame();
     await clickSave();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
     expect(getUnique(queryFirst(".o_field_signature img"))).toBe("1659692220000");
 
     await fillSignatureField(2, 0);
     await clickSave();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
     expect(getUnique(queryFirst(".o_field_signature img"))).toBe("1659695820000");
 });
 
@@ -307,7 +307,7 @@ test("save record with signature field modified by onchange", async () => {
 
     await clickSave();
     expect(getUnique(queryFirst(".o_field_signature img"))).toBe("1659692220000");
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test("signature field should render initials", async () => {
@@ -340,5 +340,5 @@ test("signature field should render initials", async () => {
     expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(1, {
         message: 'should open a modal with "Auto" button',
     });
-    expect(["V.B."]).toVerifySteps();
+    expect.verifySteps(["V.B."]);
 });

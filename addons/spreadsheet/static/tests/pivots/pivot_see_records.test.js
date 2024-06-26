@@ -58,7 +58,7 @@ test("Can open see records on headers col", async function () {
     selectCell(model, "B1");
     await animationFrame();
     await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
-    expect(["doAction"]).toVerifySteps();
+    expect.verifySteps(["doAction"]);
 });
 
 test("Can open see records on headers row", async function () {
@@ -77,7 +77,7 @@ test("Can open see records on headers row", async function () {
     selectCell(model, "A3");
     await animationFrame();
     await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
-    expect(["doAction"]).toVerifySteps();
+    expect.verifySteps(["doAction"]);
 });
 
 test("Can open see records on measure headers", async function () {
@@ -96,7 +96,7 @@ test("Can open see records on measure headers", async function () {
     selectCell(model, "B2");
     await animationFrame();
     await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
-    expect(["doAction"]).toVerifySteps();
+    expect.verifySteps(["doAction"]);
 });
 
 test("Cannot open see records on the main PIVOT cell", async function () {
@@ -148,7 +148,7 @@ test("Can see records on PIVOT cells", async function () {
             await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
 
             expect(actions[0]).toEqual(actions[1], { message: "both actions are the same" });
-            expect(["doAction", "doAction"]).toVerifySteps();
+            expect.verifySteps(["doAction", "doAction"]);
             actions.length = 0;
         }
     }

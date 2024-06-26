@@ -78,5 +78,5 @@ test("FloatFactorField comma as decimal point", async () => {
     await contains(".o_field_widget[name='qux'] input").edit("2,3");
     await clickSave();
 
-    expect(["save"]).toVerifySteps();
+    expect.verifySteps(["save"]);
 });

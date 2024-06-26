@@ -69,7 +69,7 @@ test("can execute server actions from db ID", async () => {
     await getService("action").doAction(2, { additionalContext: { someKey: 44 } });
     expect(".o_control_panel").toHaveCount(1, { message: "should have rendered a control panel" });
     expect(".o_kanban_view").toHaveCount(1, { message: "should have rendered a kanban view" });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -77,7 +77,7 @@ test("can execute server actions from db ID", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("handle server actions returning false", async function (assert) {
@@ -113,7 +113,7 @@ test("handle server actions returning false", async function (assert) {
     // execute a server action that returns false
     await getService("action").doAction(2);
     expect(".o_technical_modal").toHaveCount(0, { message: "should have closed the modal" });
-    expect([
+    expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
@@ -122,7 +122,7 @@ test("handle server actions returning false", async function (assert) {
         "/web/action/load",
         "/web/action/run",
         "close handler",
-    ]).toVerifySteps();
+    ]);
 });
 
 test("action with html help returned by a server action", async () => {

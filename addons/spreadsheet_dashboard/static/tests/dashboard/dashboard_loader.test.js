@@ -116,11 +116,11 @@ test("load spreadsheet data only once", async () => {
     let result = loader.getDashboard(3);
     await animationFrame();
     expect(result.status).toBe(Status.Loaded);
-    expect(["spreadsheet 3 loaded"]).toVerifySteps();
+    expect.verifySteps(["spreadsheet 3 loaded"]);
     result = loader.getDashboard(3);
     await animationFrame();
     expect(result.status).toBe(Status.Loaded);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("don't return empty dashboard group", async () => {
@@ -180,16 +180,16 @@ test("load multiple spreadsheets", async () => {
         },
     });
     await loader.load();
-    expect(["load groups"]).toVerifySteps();
+    expect.verifySteps(["load groups"]);
     loader.getDashboard(1);
     await animationFrame();
-    expect(["spreadsheet 1 loaded"]).toVerifySteps();
+    expect.verifySteps(["spreadsheet 1 loaded"]);
     loader.getDashboard(2);
     await animationFrame();
-    expect(["spreadsheet 2 loaded"]).toVerifySteps();
+    expect.verifySteps(["spreadsheet 2 loaded"]);
     loader.getDashboard(1);
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("load spreadsheet data with error", async () => {
@@ -211,7 +211,8 @@ test("load spreadsheet data with error", async () => {
     await result.promise.catch(() => expect.step("error"));
     expect(result.status).toBe(Status.Error);
     expect(result.error.data.message).toBe("Bip");
-    expect(["error"]).toVerifySteps({ message: "error is thrown" });
+    // error is thrown
+    expect.verifySteps(["error"]);
 });
 
 test("async formulas are correctly evaluated", async () => {
@@ -275,7 +276,7 @@ test("Model is in dashboard mode [2]", async () => {
     await loader.load();
     loader.getDashboard(3);
     await animationFrame();
-    expect(["activate sheet"]).toVerifySteps();
+    expect.verifySteps(["activate sheet"]);
 });
 
 test("default currency format", async () => {

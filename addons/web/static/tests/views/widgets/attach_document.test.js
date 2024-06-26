@@ -74,7 +74,7 @@ test("attach document widget calls action with attachment ids", async () => {
             <field name="display_name" required="1"/>
         </form>`,
     });
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
 
     await contains("[name='display_name'] input").edit("yop");
     await animationFrame();
@@ -82,7 +82,7 @@ test("attach document widget calls action with attachment ids", async () => {
     await animationFrame();
     manuallyDispatchProgrammaticEvent(fileInput, "change");
     await animationFrame();
-    expect(["web_save", "post", "my_action", "web_read"]).toVerifySteps();
+    expect.verifySteps(["web_save", "post", "my_action", "web_read"]);
 });
 
 test("attach document widget calls action with attachment ids on a new record", async () => {
@@ -132,11 +132,11 @@ test("attach document widget calls action with attachment ids on a new record", 
             <field name="display_name" required="1"/>
         </form>`,
     });
-    expect(["get_views", "onchange"]).toVerifySteps();
+    expect.verifySteps(["get_views", "onchange"]);
     await contains("[name='display_name'] input").edit("yop");
     click(".o_attach_document");
     await animationFrame();
     manuallyDispatchProgrammaticEvent(fileInput, "change");
     await animationFrame();
-    expect(["web_save", "post", "my_action", "web_read"]).toVerifySteps();
+    expect.verifySteps(["web_save", "post", "my_action", "web_read"]);
 });

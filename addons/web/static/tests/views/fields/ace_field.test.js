@@ -82,12 +82,12 @@ test("AceEditorField on html fields works", async () => {
         arch: `<form><field name="html_field" widget="code" /></form>`,
     });
     expect(".o_field_code").toHaveText(/My little HTML Test/);
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
 
     // Modify foo and save
     await editAce("DEF");
     await clickSave();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test.tags`desktop`("AceEditorField doesn't crash when editing", async () => {
@@ -136,10 +136,10 @@ test("leaving an untouched record with an unset ace field should not write", asy
         type: "form",
         arch: `<form><field name="foo" widget="code"/></form>`,
     });
-    expect(["get_views: []", "web_read: [[1]]"]).toVerifySteps();
+    expect.verifySteps(["get_views: []", "web_read: [[1]]"]);
 
     await pagerNext();
-    expect(["web_read: [[2]]"]).toVerifySteps();
+    expect.verifySteps(["web_read: [[2]]"]);
 });
 
 test("AceEditorField only trigger onchanges when blurred", async () => {
@@ -159,12 +159,12 @@ test("AceEditorField only trigger onchanges when blurred", async () => {
         type: "form",
         arch: `<form><field name="display_name"/><field name="foo" widget="code"/></form>`,
     });
-    expect(["get_views: []", "web_read: [[1]]"]).toVerifySteps();
+    expect.verifySteps(["get_views: []", "web_read: [[1]]"]);
 
     await editAce("a");
     await contains(getFixture()).focus(); // blur ace editor
-    expect([`onchange: [[1],{"foo":"a"},["foo"],{"display_name":{},"foo":{}}]`]).toVerifySteps();
+    expect.verifySteps([`onchange: [[1],{"foo":"a"},["foo"],{"display_name":{},"foo":{}}]`]);
 
     await clickSave();
-    expect([`web_save: [[1],{"foo":"a"}]`]).toVerifySteps();
+    expect.verifySteps([`web_save: [[1],{"foo":"a"}]`]);
 });

@@ -39,7 +39,7 @@ test("Basic evaluation", async () => {
     expect(getCellValue(model, "A1")).toBe(16);
     expect(getCellValue(model, "A2")).toBe(42);
     expect(getCellValue(model, "A3")).toBe(26);
-    expect(["spreadsheet_fetch_debit_credit"]).toVerifySteps();
+    expect.verifySteps(["spreadsheet_fetch_debit_credit"]);
 });
 
 test("evaluation with reference to a month period", async () => {
@@ -72,7 +72,7 @@ test("evaluation with reference to a month period", async () => {
     expect(getCellValue(model, "A2")).toBe(42);
     expect(getCellValue(model, "A3")).toBe(26);
     expect(getCellValue(model, "B1")).toBe(44593);
-    expect(["spreadsheet_fetch_debit_credit"]).toVerifySteps();
+    expect.verifySteps(["spreadsheet_fetch_debit_credit"]);
 });
 
 test("Functions are correctly formatted", async () => {
@@ -145,7 +145,7 @@ test("Evaluation with multiple account codes", async () => {
     expect(getCellValue(model, "B1")).toBe(26);
     expect(getCellValue(model, "B2")).toBe(142);
     expect(getCellValue(model, "B3")).toBe(116);
-    expect(["spreadsheet_fetch_debit_credit"]).toVerifySteps();
+    expect.verifySteps(["spreadsheet_fetch_debit_credit"]);
 });
 
 test("Handle error evaluation", async () => {
@@ -186,7 +186,7 @@ test("Server requests", async () => {
     setCellContent(model, "A9", `=ODOO.BALANCE("100", "05/05/2022",,,TRUE)`);
     await waitForDataLoaded(model);
 
-    expect([
+    expect.verifySteps([
         JSON.stringify(
             camelToSnakeObject({
                 dateRange: parseAccountingDate("2022", locale),
@@ -251,7 +251,7 @@ test("Server requests", async () => {
                 includeUnposted: true,
             })
         ),
-    ]).toVerifySteps();
+    ]);
 });
 
 test("Server requests with multiple account codes", async () => {
@@ -271,7 +271,7 @@ test("Server requests with multiple account codes", async () => {
     setCellContent(model, "A3", `=ODOO.DEBIT("100,200","2022")`);
     await waitForDataLoaded(model);
 
-    expect([
+    expect.verifySteps([
         "spreadsheet_fetch_debit_credit",
         JSON.stringify(
             camelToSnakeObject({
@@ -281,7 +281,7 @@ test("Server requests with multiple account codes", async () => {
                 includeUnposted: false,
             })
         ),
-    ]).toVerifySteps();
+    ]);
 });
 
 test("account group formula as input to balance formula", async () => {
@@ -304,7 +304,7 @@ test("account group formula as input to balance formula", async () => {
     await waitForDataLoaded(model);
     expect(getCellValue(model, "A1")).toBe("100104,200104");
     expect(getCellValue(model, "A2")).toBe(0);
-    expect([
+    expect.verifySteps([
         "spreadsheet_fetch_debit_credit",
         JSON.stringify(
             camelToSnakeObject({
@@ -314,7 +314,7 @@ test("account group formula as input to balance formula", async () => {
                 includeUnposted: false,
             })
         ),
-    ]).toVerifySteps();
+    ]);
 });
 
 test("two concurrent requests on different accounts", async () => {
@@ -344,7 +344,7 @@ test("two concurrent requests on different accounts", async () => {
     expect(getCellValue(model, "A1")).toBe("100104,200104");
     expect(getCellValue(model, "A2")).toBe(0);
     expect(getCellValue(model, "A3")).toBe(0);
-    expect([
+    expect.verifySteps([
         "spreadsheet_fetch_debit_credit",
         JSON.stringify(
             camelToSnakeObject({
@@ -363,7 +363,7 @@ test("two concurrent requests on different accounts", async () => {
                 includeUnposted: false,
             })
         ),
-    ]).toVerifySteps();
+    ]);
 });
 
 test("parseAccountingDate", () => {

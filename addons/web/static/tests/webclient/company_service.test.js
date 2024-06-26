@@ -25,13 +25,13 @@ test("reload webclient when updating a res.company", async () => {
         },
     });
     await makeMockEnv();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await getService("orm").read("res.company", [32]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await getService("orm").unlink("res.company", [32]);
-    expect(["reload_context"]).toVerifySteps();
+    expect.verifySteps(["reload_context"]);
     await getService("orm").unlink("notacompany", [32]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("do not reload webclient when updating a res.company, but there is an error", async () => {
@@ -41,19 +41,19 @@ test("do not reload webclient when updating a res.company, but there is an error
         },
     });
     await makeMockEnv();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     rpcBus.trigger("RPC:RESPONSE", {
         data: { params: { model: "res.company", method: "write" } },
         settings: {},
         result: {},
     });
-    expect(["reload_context"]).toVerifySteps();
+    expect.verifySteps(["reload_context"]);
     rpcBus.trigger("RPC:RESPONSE", {
         data: { params: { model: "res.company", method: "write" } },
         settings: {},
         error: {},
     });
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("extract allowed company ids from cookies", async () => {

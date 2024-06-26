@@ -134,7 +134,7 @@ test("date field in form view (with positive time zone offset)", async () => {
     expect(".o_field_date input").toHaveValue("02/22/2017");
 
     await clickSave();
-    expect(["2017-02-22"]).toVerifySteps();
+    expect.verifySteps(["2017-02-22"]);
     expect(".o_field_date input").toHaveValue("02/22/2017");
 });
 
@@ -295,7 +295,7 @@ test.tags("desktop")("multi edition of date field in list view: clear date in in
 test("date field remove value", async () => {
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
     onRpc("web_save", ({ args }) => {
-        expect.step(JSON.stringify(args[1].date));
+        expect.step(args[1].date);
     });
 
     expect(".o_field_date input").toHaveValue("02/03/2017");
@@ -305,7 +305,7 @@ test("date field remove value", async () => {
 
     await clickSave();
     expect(".o_field_date").toHaveText("");
-    expect(["false"]).toVerifySteps();
+    expect.verifySteps([false]);
 });
 
 test("date field should select its content onclick when there is one", async () => {

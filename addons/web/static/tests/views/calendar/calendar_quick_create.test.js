@@ -47,7 +47,7 @@ test(`click on create button`, async () => {
         dialogOptions: { onClose: () => expect.step("close") },
     });
     await contains(`.o-calendar-quick-create--create-btn`).click();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     expect(`input[name=title]`).toHaveClass("o_field_invalid");
 });
 
@@ -66,7 +66,7 @@ test(`click on create button (with name)`, async () => {
     });
     await contains(`.o-calendar-quick-create--input`).edit("TEST", { confirm: "blur" });
     await contains(`.o-calendar-quick-create--create-btn`).click();
-    expect(["create", "close"]).toVerifySteps();
+    expect.verifySteps(["create", "close"]);
 });
 
 test(`click on edit button`, async () => {
@@ -75,7 +75,7 @@ test(`click on edit button`, async () => {
         dialogOptions: { onClose: () => expect.step("close") },
     });
     await contains(`.o-calendar-quick-create--edit-btn`).click();
-    expect(["edit", "close"]).toVerifySteps();
+    expect.verifySteps(["edit", "close"]);
 });
 
 test(`click on edit button (with name)`, async () => {
@@ -90,7 +90,7 @@ test(`click on edit button (with name)`, async () => {
     });
     await contains(`.o-calendar-quick-create--input`).edit("TEST", { confirm: "blur" });
     await contains(`.o-calendar-quick-create--edit-btn`).click();
-    expect(["edit", "close"]).toVerifySteps();
+    expect.verifySteps(["edit", "close"]);
 });
 
 test(`click on cancel button`, async () => {
@@ -98,7 +98,7 @@ test(`click on cancel button`, async () => {
         dialogOptions: { onClose: () => expect.step("close") },
     });
     await contains(`.o-calendar-quick-create--cancel-btn`).click();
-    expect(["close"]).toVerifySteps();
+    expect.verifySteps(["close"]);
 });
 
 test(`check default title`, async () => {

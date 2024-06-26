@@ -346,7 +346,7 @@ test("widget many2many_tags_avatar add/remove tags in kanban view", async () => 
     // add and directly remove an item
     await contains(".o_popover .o-autocomplete--dropdown-item:eq(0)").click();
     await contains(".o_popover .o_tag .o_delete", { visible: false }).click();
-    expect(["web_save: 4-1", "web_save: 3-1"]).toVerifySteps();
+    expect.verifySteps(["web_save: 4-1", "web_save: 3-1"]);
 });
 
 test("widget many2many_tags_avatar delete tag", async () => {
@@ -455,5 +455,5 @@ test("Many2ManyTagsAvatarField: make sure that the arch context is passed to the
     await contains(".o_m2o_dropdown_option_create_edit").click();
 
     expect(".modal .o_form_view").toHaveCount(1);
-    expect(["onchange with context given"]).toVerifySteps();
+    expect.verifySteps(["onchange with context given"]);
 });

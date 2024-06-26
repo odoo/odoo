@@ -115,7 +115,7 @@ test("Display name is correctly fetched", async () => {
 
     expect(".o_tag").toHaveCount(1);
     expect(".o_tag").toHaveText("Alice");
-    expect(["web_search_read"]).toVerifySteps();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test("Can give domain and context props for the name search", async () => {
@@ -133,10 +133,10 @@ test("Can give domain and context props for the name search", async () => {
         context: { blip: "blop" },
     });
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     click(".o_multi_record_selector input");
     await animationFrame();
-    expect(["name_search"]).toVerifySteps();
+    expect.verifySteps(["name_search"]);
 });
 
 test("Support placeholder", async () => {

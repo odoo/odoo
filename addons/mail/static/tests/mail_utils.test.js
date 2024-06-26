@@ -199,5 +199,5 @@ test("isSequential doesn't execute intermediate call.", async () => {
     };
     const result = await Promise.all([sequence(), sequence(), sequence(), sequence(), sequence()]);
     expect(result).toEqual([1, undefined, undefined, undefined, 5]);
-    expect(["1", "5"]).toVerifySteps();
+    expect.verifySteps(["1", "5"]);
 });

@@ -111,9 +111,8 @@ test("static statusbar widget on many2one field", async () => {
             </form>
         `,
     });
-    expect(["display_name"]).toVerifySteps({
-        message: "search_read should only fetch field display_name",
-    });
+    // search_read should only fetch field display_name
+    expect.verifySteps(["display_name"]);
     expect(".o_statusbar_status button:not(.dropdown-toggle)").toHaveCount(2);
     expect(".o_statusbar_status button:disabled").toHaveCount(5);
     expect('.o_statusbar_status button[data-value="4"]').toHaveClass("o_arrow_button_current");
@@ -271,9 +270,8 @@ test("statusbar with required modifier", async () => {
     await animationFrame();
 
     expect(".o_form_editable").toHaveCount(1, { message: "view should still be in edit" });
-    expect(["Show error message"]).toVerifySteps({
-        message: "should display an 'invalid fields' notification",
-    });
+    // should display an 'invalid fields' notificationaveCount(1, { message: "view should still be in edit" });
+    expect.verifySteps(["Show error message"]);
 });
 
 test("statusbar with no value in readonly", async () => {
@@ -526,7 +524,7 @@ test("auto save record when field toggled", async () => {
         ".o_statusbar_status button.btn:not(.dropdown-toggle):not(:disabled):not(.o_arrow_button_current):eq(-1)"
     );
     await animationFrame();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 });
 
 test("For the same record, a single rpc is done to recover the specialData", async () => {
@@ -561,13 +559,13 @@ test("For the same record, a single rpc is done to recover the specialData", asy
 
     click(".o_data_row .o_data_cell");
     await animationFrame();
-    expect(["search_read"]).toVerifySteps();
+    expect.verifySteps(["search_read"]);
 
     click(".o_back_button");
     await animationFrame();
     click(".o_data_row .o_data_cell");
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("open form with statusbar, leave and come back to another one with other domain", async () => {
@@ -603,14 +601,14 @@ test("open form with statusbar, leave and come back to another one with other do
     // open first record
     click(".o_data_row .o_data_cell");
     await animationFrame();
-    expect(["search_read"]).toVerifySteps();
+    expect.verifySteps(["search_read"]);
 
     // go back and open second record
     click(".o_back_button");
     await animationFrame();
     click(".o_data_row:eq(1) .o_data_cell");
     await animationFrame();
-    expect(["search_read"]).toVerifySteps();
+    expect.verifySteps(["search_read"]);
 });
 
 test("clickable statusbar with readonly modifier set to false is editable", async () => {
@@ -761,15 +759,15 @@ test.tags("desktop")("correctly load statusbar when dynamic domain changes", asy
         `,
     });
     expect(queryAllTexts(".o_statusbar_status button:not(.d-none)")).toEqual(["Stage Project 1"]);
-    expect(['["|",["id","=",1],["project_ids","in",1]]']).toVerifySteps();
+    expect.verifySteps(['["|",["id","=",1],["project_ids","in",1]]']);
     click(`[name="project_id"] .dropdown input`);
     await animationFrame();
     click(`[name="project_id"] .dropdown .dropdown-menu .ui-menu-item:contains("Project 2")`);
     await animationFrame();
 
     expect(queryAllTexts(".o_statusbar_status button:not(.d-none)")).toEqual(["Stage Project 2"]);
-    expect(['["|",["id","=",2],["project_ids","in",2]]']).toVerifySteps();
+    expect.verifySteps(['["|",["id","=",2],["project_ids","in",2]]']);
     await clickSave();
     expect(queryAllTexts(".o_statusbar_status button:not(.d-none)")).toEqual(["Stage Project 2"]);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });

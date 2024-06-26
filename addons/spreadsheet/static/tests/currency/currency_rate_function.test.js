@@ -27,7 +27,7 @@ test("Basic exchange formula", async () => {
     expect(getCellValue(model, "A1")).toBe("Loading...");
     await waitForDataLoaded(model);
     expect(getCellValue(model, "A1")).toBe(0.9);
-    expect(["rate fetched"]).toVerifySteps();
+    expect.verifySteps(["rate fetched"]);
 });
 
 test("rate formula at a given date(time)", async () => {
@@ -48,7 +48,7 @@ test("rate formula at a given date(time)", async () => {
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD", "12-31-2020")`);
     setCellContent(model, "A2", `=ODOO.CURRENCY.RATE("EUR","USD", "11-30-2020 00:00:00")`);
     await waitForDataLoaded(model);
-    expect(["rate fetched"]).toVerifySteps();
+    expect.verifySteps(["rate fetched"]);
 });
 
 test("invalid date", async () => {
@@ -93,10 +93,10 @@ test("Currency rates are only loaded once", async () => {
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD")`);
     await waitForDataLoaded(model);
-    expect(["FETCH"]).toVerifySteps();
+    expect.verifySteps(["FETCH"]);
     setCellContent(model, "A2", `=ODOO.CURRENCY.RATE("EUR","USD")`);
     await waitForDataLoaded(model);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("Currency rates are loaded once by clock", async () => {
@@ -116,5 +116,5 @@ test("Currency rates are loaded once by clock", async () => {
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD")`);
     setCellContent(model, "A2", `=ODOO.CURRENCY.RATE("EUR","SEK")`);
     await waitForDataLoaded(model);
-    expect(["FETCH:2"]).toVerifySteps();
+    expect.verifySteps(["FETCH:2"]);
 });

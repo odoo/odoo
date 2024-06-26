@@ -203,7 +203,7 @@ test.tags("desktop")("click on many2one_avatar in a list view (multi_edit='1')",
     await contains(".o_data_row .o_data_cell [name='user_id']").click();
     expect(".o_data_row:eq(0)").toHaveClass("o_selected_row");
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("click on many2one_avatar in an editable list view", async () => {
@@ -226,7 +226,7 @@ test("click on many2one_avatar in an editable list view", async () => {
     await contains(".o_data_row .o_data_cell [name='user_id']").click();
     expect(".o_selected_row").toHaveCount(0);
 
-    expect(["openRecord"]).toVerifySteps();
+    expect.verifySteps(["openRecord"]);
 });
 
 test.tags("desktop")(
@@ -252,7 +252,7 @@ test.tags("desktop")(
         await contains(".o_data_row .o_data_cell [name='user_id']").click();
         expect(".o_data_row:eq(0)").toHaveClass("o_selected_row");
 
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
     }
 );
 

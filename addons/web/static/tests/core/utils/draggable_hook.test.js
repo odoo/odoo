@@ -110,14 +110,14 @@ test("Simple dragging in single group", async () => {
 
     expect(".item").toHaveCount(3);
     expect(".o_dragged").toHaveCount(0);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // First item after 2nd item
     await dragAndDrop(".item:first-child", ".item:nth-child(2)");
 
     expect(".item").toHaveCount(3);
     expect(".o_dragged").toHaveCount(0);
-    expect(["start", "drag", "drop", "end"]).toVerifySteps();
+    expect.verifySteps(["start", "drag", "drop", "end"]);
 });
 
 test("Dynamically disable draggable feature", async () => {
@@ -147,13 +147,13 @@ test("Dynamically disable draggable feature", async () => {
 
     await mountWithCleanup(List);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // First item before last item
     await dragAndDrop(".item:first-child", ".item:last-child");
 
     // Drag should have occurred
-    expect(["start"]).toVerifySteps();
+    expect.verifySteps(["start"]);
 
     state.enableDrag = false;
     await animationFrame();
@@ -162,7 +162,7 @@ test("Dynamically disable draggable feature", async () => {
     await dragAndDrop(".item:first-child", ".item:last-child");
 
     // Drag shouldn't have occurred
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("Ignore specified elements", async () => {
@@ -193,22 +193,22 @@ test("Ignore specified elements", async () => {
 
     await mountWithCleanup(List);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // Drag root item element
     await dragAndDrop(".item:first-child", ".item:nth-child(2)");
 
-    expect(["drag"]).toVerifySteps();
+    expect.verifySteps(["drag"]);
 
     // Drag ignored element
     await dragAndDrop(".item:first-child .not-ignored", ".item:nth-child(2)");
 
-    expect(["drag"]).toVerifySteps();
+    expect.verifySteps(["drag"]);
 
     // Drag non-ignored element
     await dragAndDrop(".item:first-child .ignored", ".item:nth-child(2)");
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("Ignore specific elements in a nested draggable", async () => {
@@ -246,29 +246,29 @@ test("Ignore specific elements in a nested draggable", async () => {
 
     await mountWithCleanup(List);
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // Drag ignored under non-ignored -> block
     await dragAndDrop(
         ".not-ignored.parent .ignored.child",
         ".not-ignored.parent .not-ignored.child"
     );
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // Drag not-ignored-under not-ignored -> succeed
     await dragAndDrop(
         ".not-ignored.parent .not-ignored.child",
         ".not-ignored.parent .ignored.child"
     );
-    expect(["drag"]).toVerifySteps();
+    expect.verifySteps(["drag"]);
 
     // Drag ignored under ignored -> block
     await dragAndDrop(".ignored.parent .ignored.child", ".ignored.parent .not-ignored.child");
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // Drag not-ignored under ignored -> succeed
     await dragAndDrop(".ignored.parent .not-ignored.child", ".ignored.parent .ignored.child");
-    expect(["drag"]).toVerifySteps();
+    expect.verifySteps(["drag"]);
 });
 
 test("Dragging element with touch event", async () => {
@@ -304,14 +304,13 @@ test("Dragging element with touch event", async () => {
     }
 
     await mountWithCleanup(List);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     await dragAndDrop(".item:first-child", ".item:nth-child(2)");
     expect(".item.o_touch_bounce").toHaveCount(0, {
         message: "element no longer has the animation class applied",
     });
-    expect(["start", "drag", "drop", "end"]).toVerifySteps({
-        message: "Should DnD, if the timing value is higher then the default delay value (300ms)",
-    });
+    // Should DnD, if the timing value is higher then the default delay value (300ms)
+    expect.verifySteps(["start", "drag", "drop", "end"]);
 });
 
 test("Dragging element with touch event: initiation delay can be overrided", async () => {
@@ -338,12 +337,10 @@ test("Dragging element with touch event: initiation delay can be overrided", asy
 
     await mountWithCleanup(List);
     await dragAndDrop(".item:first-child", ".item:nth-child(2)", 700);
-    expect([]).toVerifySteps({
-        message: "Shouldn't DnD, if the timing value is below then the delay value (1000ms)",
-    });
+    // Shouldn't DnD, if the timing value is below then the delay value (1000ms)
+    expect.verifySteps([]);
 
     await dragAndDrop(".item:first-child", ".item:nth-child(2)", 1200);
-    expect(["drag"]).toVerifySteps({
-        message: "Should DnD, if the timing value is higher then the delay value (1000ms)",
-    });
+    // Should DnD, if the timing value is higher then the delay value (1000ms)
+    expect.verifySteps(["drag"]);
 });

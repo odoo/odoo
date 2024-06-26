@@ -696,22 +696,22 @@ test("unique in url doesn't change on onchange", async () => {
         `,
     });
 
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
     expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     // same unique as before
     expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
 
     click(".o_field_widget[name='foo'] input");
     edit("grrr", { confirm: "enter" });
     await animationFrame();
-    expect(["onchange"]).toVerifySteps();
+    expect.verifySteps(["onchange"]);
     // also same unique
     expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
 
     await clickSave();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 
     expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659692220000");
 });

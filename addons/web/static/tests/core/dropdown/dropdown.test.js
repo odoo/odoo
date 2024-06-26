@@ -110,7 +110,7 @@ test("can be toggled", async () => {
 
     click(DROPDOWN_TOGGLE);
     await animationFrame();
-    expect(["beforeOpen"]).toVerifySteps();
+    expect.verifySteps(["beforeOpen"]);
     expect(DROPDOWN_MENU).toHaveCount(0);
     expect(DROPDOWN_TOGGLE).toHaveAttribute("aria-expanded", "false");
     beforeOpenProm.resolve();
@@ -332,7 +332,7 @@ test.tags("desktop")("dropdowns keynav", async () => {
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 
-    expect(["1", "2"]).toVerifySteps();
+    expect.verifySteps(["1", "2"]);
 });
 
 test.tags("desktop")("dropdowns keynav is not impacted by bootstrap", async () => {
@@ -430,12 +430,12 @@ test.tags("desktop")("navigationProps changes navigation behaviour", async () =>
     expect(DROPDOWN_TOGGLE).toBeFocused();
     expect(".o-dropdown-item:nth-child(1)").toHaveClass("focus");
 
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     // Arrow up is overridden, nothing should change
     press("arrowup");
     expect(DROPDOWN_TOGGLE).toBeFocused();
     expect(".o-dropdown-item:nth-child(1)").toHaveClass("focus");
-    expect(["arrowup"]).toVerifySteps();
+    expect.verifySteps(["arrowup"]);
 });
 
 test("'o-dropdown-caret' class adds a caret", async () => {
@@ -598,11 +598,11 @@ test("onOpened callback props called after the menu has been mounted", async () 
     click(DROPDOWN_TOGGLE);
     await animationFrame();
 
-    expect(["beforeOpened"]).toVerifySteps();
+    expect.verifySteps(["beforeOpened"]);
     beforeOpenProm.resolve();
     await animationFrame();
 
-    expect(["onOpened"]).toVerifySteps();
+    expect.verifySteps(["onOpened"]);
 });
 
 test("dropdown button can be disabled", async () => {
@@ -1186,9 +1186,8 @@ test.tags("desktop")("multi-level dropdown: keynav", async () => {
         }
         if (step.selected !== undefined) {
             const verify = step.selected === false ? [] : [step.selected];
-            expect(verify).toVerifySteps({
-                message: `step ${stepIndex}: selected item is correct`,
-            });
+            // step ${stepIndex}: selected item is correct
+            expect.verifySteps(verify);
         }
     }
 });
@@ -1298,12 +1297,12 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
     }
 
     await mountWithCleanup(Parent);
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 
     // Open the menu
     click(".one");
     await animationFrame();
-    expect(["submenu mounted"]).toVerifySteps();
+    expect.verifySteps(["submenu mounted"]);
 
     // Open the submenu
     click(".two");
@@ -1311,12 +1310,12 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
     // Change submenu content
     parentState.foo = true;
     await animationFrame();
-    expect(["submenu patched"]).toVerifySteps();
+    expect.verifySteps(["submenu patched"]);
 
     // Change submenu content
     parentState.foo = false;
     await animationFrame();
-    expect(["submenu patched"]).toVerifySteps();
+    expect.verifySteps(["submenu patched"]);
 });
 
 test.tags("desktop")(

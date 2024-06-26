@@ -201,7 +201,7 @@ test("ProgressBarField: Standard readonly mode is readonly", async () => {
     expect(".o_progressbar_value .o_input").toHaveCount(0, {
         message: "no input in readonly mode",
     });
-    expect(["get_views", "web_read"]).toVerifySteps();
+    expect.verifySteps(["get_views", "web_read"]);
 });
 
 test("ProgressBarField: field is editable in kanban", async () => {

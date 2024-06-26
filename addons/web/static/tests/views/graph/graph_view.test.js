@@ -3362,7 +3362,7 @@ test("fallback on initial groupby when the groupby from control panel has 0 leng
 
 test("change mode, stacked, or order via the graph buttons does not reload datapoints, change measure does", async () => {
     onRpc("web_read_group", ({ kwargs }) => {
-        expect.step(JSON.stringify(kwargs.fields));
+        expect.step(kwargs.fields);
     });
     const view = await mountView({
         type: "graph",
@@ -3393,10 +3393,10 @@ test("change mode, stacked, or order via the graph buttons does not reload datap
     await toggleMenu("Measures");
     await toggleMenuItem("Foo");
 
-    expect([
-        `["__count"]`, // first load
-        `["__count","foo:sum"]`, // reload due to change in measure
-    ]).toVerifySteps();
+    expect.verifySteps([
+        ["__count"], // first load
+        ["__count", "foo:sum"], // reload due to change in measure
+    ]);
 });
 
 test("concurrent reloads: add a filter, and directly toggle a measure", async () => {
@@ -3737,7 +3737,7 @@ test("renders banner_route", async () => {
         `,
     });
 
-    expect(["/mybody/isacage"]).toVerifySteps();
+    expect.verifySteps(["/mybody/isacage"]);
     expect(".setmybodyfree").toHaveCount(1);
 });
 
@@ -3800,11 +3800,11 @@ test("single chart rendering on search", async () => {
         resModel: "foo",
     });
 
-    expect(["rendering"]).toVerifySteps();
+    expect.verifySteps(["rendering"]);
 
     await validateSearch();
 
-    expect(["rendering"]).toVerifySteps();
+    expect.verifySteps(["rendering"]);
 });
 
 test("apply default filter label", async () => {
