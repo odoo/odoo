@@ -1952,6 +1952,23 @@ export class Wysiwyg extends Component {
             this._updateMediaJustifyButton(justifyBtn.id);
         });
         $toolbar.find('#image-crop').click(() => this._showImageCrop());
+        $toolbar.find('#inline').click(e => {
+            const $image = $(this.lastMediaClicked)[0];
+            weUtils.updateImageWrapping($image, 'inline');
+        });
+        $toolbar.find('#wrap-text').click(e => {
+            const $image = $(this.lastMediaClicked)[0];
+            weUtils.updateImageWrapping($image, 'wrap-text');
+        });
+        $toolbar.find('#break-text').click(e => {
+            const $image = $(this.lastMediaClicked)[0];
+            weUtils.updateImageWrapping($image, 'break-text');
+        });
+        const $textWrappingButtons = $toolbar.find('#text-wrapping div');
+        $textWrappingButtons.click(e => {
+            const $image = $(this.lastMediaClicked)[0];
+            this.updateTextWrappingButtons($textWrappingButtons, $image);
+        });
         $toolbar.find('#image-transform').click(e => {
             const sel = document.getSelection();
             sel.removeAllRanges();
@@ -2217,6 +2234,7 @@ export class Wysiwyg extends Component {
             '#image-transform',
             '#image-crop',
             '#media-description',
+            '#text-wrapping',
             ].join(','))) {
             el.classList.toggle('d-none', !isInMedia || !$target.is('img'));
         }
@@ -2269,6 +2287,9 @@ export class Wysiwyg extends Component {
             for (const button of this.toolbarEl.querySelectorAll('#image-width div')) {
                 button.classList.toggle('active', e.target.style.width === button.id);
             }
+            const buttonEls = this.toolbarEl.querySelectorAll('#text-wrapping div');
+            const imageEl = this.lastMediaClicked;
+            this.updateTextWrappingButtons(buttonEls, imageEl);
             this._updateMediaJustifyButton();
             this._updateFaResizeButtons();
         }
@@ -2350,6 +2371,18 @@ export class Wysiwyg extends Component {
         const value = match && match[1] ? match[1] : '1';
         for (const button of this.toolbarEl.querySelectorAll('#fa-resize div')) {
             button.classList.toggle('active', button.dataset.value === value);
+        }
+    }
+    updateTextWrappingButtons(buttons, imageEl) {
+        if (imageEl) {
+            const inline = !(imageEl.classList.contains('float-start') || imageEl.classList.contains('float-end') ||
+                            imageEl.classList.contains('mx-auto') || imageEl.classList.contains('d-block'));
+            const wrapText = imageEl.classList.contains('float-start') || imageEl.classList.contains('float-end');
+            const breakText = imageEl.classList.contains('mx-auto') || imageEl.classList.contains('d-block');
+
+            buttons[0].classList.toggle('active', inline);
+            buttons[1].classList.toggle('active', wrapText);
+            buttons[2].classList.toggle('active', breakText);
         }
     }
     _getEditorOptions(options) {

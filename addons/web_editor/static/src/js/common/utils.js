@@ -487,6 +487,47 @@ function _isMobileView(targetEl) {
 function _getLinkLabel(linkEl) {
     return linkEl.textContent.replaceAll("\u200B", "").replaceAll("\uFEFF", "");
 }
+/**
+ * This function handles text wrapping positions for an image based on the
+ * given options.
+ * It adds or removes CSS classes to adjust the image alignment and display.
+ * The 'options' parameter determines the specific options to be taken:
+ * 'inline', 'wrap-text', or 'break-text'.
+ *
+ * @param {HTMLElement} imageEl
+ * @param {string} options
+ */
+function updateImageWrapping(imageEl, options) {
+
+    switch (options) {
+        case 'inline':
+            imageEl.classList.remove('float-start', 'float-end', 'mx-auto', 'ms-auto', 'me-auto', 'd-flex', 'd-block');
+            break;
+        case 'wrap-text':
+            const positionClasses = ['ms-auto', 'float-end'];
+            positionClasses.forEach(classToCheck => {
+                if (!imageEl.classList.contains(classToCheck)) {
+                    imageEl.classList.remove('mx-auto', 'd-block', 'ms-auto');
+                    imageEl.classList.add('float-start','me-auto');
+                } else {
+                    imageEl.classList.remove('d-block', 'me-auto');
+                    imageEl.classList.add('float-end', 'ms-auto');
+                }
+             });
+            break;
+        case 'break-text':
+            if (imageEl.classList.contains('float-start')) {
+                imageEl.classList.remove('float-start');
+                imageEl.classList.add('d-block');
+            } else if (imageEl.classList.contains('float-end')) {
+                imageEl.classList.remove('float-end');
+                imageEl.classList.add('d-block');
+            } else {
+                imageEl.classList.add('d-block', 'mx-auto');
+            }
+            break;
+    }
+}
 
 export default {
     COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
@@ -516,4 +557,5 @@ export default {
     shouldEditableMediaBeEditable: _shouldEditableMediaBeEditable,
     isMobileView: _isMobileView,
     getLinkLabel: _getLinkLabel,
+    updateImageWrapping: updateImageWrapping,
 };
