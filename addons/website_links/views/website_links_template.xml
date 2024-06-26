@@ -3,15 +3,15 @@
         <template id="create_shorten_url">
             <div class="o_website_links_create_tracked_url">
                 <div class="container">
-                    <h1 class="o_page_header">Link Tracker</h1>
-                    <div class="notification"></div>
+                    <div class="notification mb-3"/>
 
-                    <div class="row">
+                    <div t-attf-class="row mb-4 #{'' if can_generate_link_tracker else 'd-none'}">
+                        <h2 class="o_page_header">Link Tracker</h2>
                         <div class="col-md-7">
                             <form id="o_website_links_link_tracker_form">
 
                                 <div class="mb-3 row">
-                                    <label class="col-md-3 col-form-label text-start">URL</label>
+                                    <label class="col-md-3 col-form-label text-start">Target Link</label>
                                     <div class="col-md-9">
                                         <input type="text" id="url" class="form-control required-form-control"  required="True" placeholder="e.g. https://www.odoo.com/contactus" t-att-value="u"/>
                                     </div>
@@ -62,8 +62,11 @@
 
                                 <div class="mb-3 row">
                                     <div class="offset-md-3 col-md-9">
-                                        <button type="submit" class="btn btn-primary" id="btn_shorten_url" data-clipboard-text="">Get tracked link</button>
-                                        <span id="generated_tracked_link" style="display:none;" class="text-muted"></span>
+                                        <button type="submit" class="btn btn-primary" id="btn_shorten_url">Generate Link Tracker</button>
+                                        <div class="d-none link_tracked d-flex flex-wrap gap-2 align-items-center">
+                                            <span id="generated_tracked_link" class="text-muted"/>
+                                            <button type="button" class="btn_shorten_url_clipboard btn btn-success"><i class="fa fa-copy me-2"/>Copy</button>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -75,15 +78,22 @@
                         </div>
                     </div>
 
-                    <h2 class="o_page_header">Your tracked links
-                        <small class="float-end d-none d-md-block" id="filters">
-                            <ul class="nav nav-tabs nav-tabs-inline graph-tabs" role="tablist">
-                                <li class="nav-item"><a aria-controls="filter-newest-links" href="#" class="nav-link active" id="filter-newest-links" role="tab" data-bs-toggle="tab">Newest</a></li>
-                                <li class="nav-item"><a aria-controls="filter-most-clicked-links" href="#" class="nav-link" id="filter-most-clicked-links" role="tab" data-bs-toggle="tab">Most Clicked</a></li>
-                                <li class="nav-item"><a aria-controls="filter-recently-used-links" href="#" class="nav-link" id="filter-recently-used-links" role="tab" data-bs-toggle="tab">Recently Used</a></li>
-                            </ul>
+                    <div class="o_page_header d-flex justify-content-between align-items-center">
+                        <h2>Your tracked links</h2>
+                        <small class="d-none d-md-block" id="filters">
+                            <span class="text-muted me-1">Sort By:</span>
+                            <div class="btn-group">
+                                <button data-bs-toggle="dropdown" class="o_website_links_sort_by btn btn-light dropdown-toggle">
+                                    Newest
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="recent_links_sort_by">
+                                    <a class="dropdown-item active" href="#" id="filter-newest-links">Newest</a>
+                                    <a class="dropdown-item" href="#" id="filter-most-clicked-links">Number of Clicks</a>
+                                    <a class="dropdown-item" href="#" id="filter-last-clicked-links">Last Clicks</a>
+                                </div>
+                            </div>
                         </small>
-                    </h2>
+                    </div>
 
                     <div id="o_website_links_recent_links">
                         <div class="o_website_links_recent_links_notification"></div>
