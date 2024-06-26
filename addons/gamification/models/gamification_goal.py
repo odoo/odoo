@@ -45,6 +45,7 @@ class Goal(models.Model):
     closed = fields.Boolean('Closed goal')
 
     computation_mode = fields.Selection(related='definition_id.computation_mode', readonly=False)
+    color = fields.Integer("Color Index", compute='_compute_color')
     remind_update_delay = fields.Integer(
         "Remind delay", help="The number of days after which the user "
                              "assigned to a manual goal will be reminded. "
@@ -59,6 +60,17 @@ class Goal(models.Model):
     definition_condition = fields.Selection(string="Definition Condition", related='definition_id.condition', readonly=True)
     definition_suffix = fields.Char("Suffix", related='definition_id.full_suffix', readonly=True)
     definition_display = fields.Selection(string="Display Mode", related='definition_id.display_mode', readonly=True)
+
+    @api.depends('end_date', 'last_update', 'state')
+    def _compute_color(self):
+        """Set the color based on the goal's state and completion"""
+        for goal in self:
+            goal.color = 0
+            if (goal.end_date and goal.last_update):
+                if (goal.end_date < goal.last_update) and (goal.state == 'failed'):
+                    goal.color = 2
+                elif (goal.end_date < goal.last_update) and (goal.state == 'reached'):
+                    goal.color = 5
 
     @api.depends('current', 'target_goal', 'definition_id.condition')
     def _get_completion(self):

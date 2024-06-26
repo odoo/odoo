@@ -145,58 +145,44 @@
         <field name="name">Goal Kanban View</field>
         <field name="model">gamification.goal</field>
         <field name="arch" type="xml">
-            <kanban create="false">
-                <field name="definition_id"/>
-                <field name="user_id"/>
-                <field name="current"/>
-                <field name="completeness"/>
+            <kanban highlight_color="color" create="false">
                 <field name="state"/>
-                <field name="target_goal"/>
-                <field name="definition_description"/>
+                <field name="color"/>
                 <field name="definition_condition"/>
                 <field name="definition_suffix"/>
                 <field name="definition_display"/>
-                <field name="start_date"/>
-                <field name="end_date"/>
                 <field name="last_update"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_card oe_kanban_global_click o_kanban_gamification #{record.end_date.raw_value &lt; record.last_update.raw_value and record.state.raw_value == 'failed' ? 'oe_kanban_color_2' : ''} #{record.end_date.raw_value &lt; record.last_update.raw_value and record.state.raw_value == 'reached' ? 'oe_kanban_color_5' : ''}">
-                            <div class="o_kanban_content text-center">
-                                <p><strong><h4 class="oe_goal_name"><field name="definition_id" /></h4></strong></p>
-                                <img class="o_image_24_cover me-1 rounded" t-att-src="kanban_image('res.users', 'avatar_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
-                                <field name="user_id" class="fw-bold"/>
-                                <div class="o_goal_state_block pt-3 fs-1 fw-bolder">
-                                    <t t-if="record.definition_display.raw_value == 'boolean'">
-                                        <div class="o_goal_state">
-                                            <t t-if="record.state.raw_value=='reached'"><i role="img" class="text-success fa fa-check fa-3x" title="Goal Reached" aria-label="Goal Reached"/></t>
-                                            <t t-if="record.state.raw_value=='inprogress'"><i role="img" class="text-700 fa fa-clock-o fa-3x" title="Goal in Progress" aria-label="Goal in Progress"/></t>
-                                            <t t-if="record.state.raw_value=='failed'"><i role="img" class="text-danger fa fa-times fa-3x" title="Goal Failed" aria-label="Goal Failed"/></t>
-                                        </div>
-                                    </t>
-                                    <t t-if="record.definition_display.raw_value == 'progress'">
-                                        <t t-if="record.definition_condition.raw_value =='higher'">
-                                            <field name="current" widget="gauge" options="{'max_field': 'target_goal', 'label_field': 'definition_suffix', 'style': 'width:160px; height: 120px;'}" />
-                                        </t>
-                                        <t t-if="record.definition_condition.raw_value != 'higher'">
-                                            <div t-attf-class="o_goal_state #{record.current.raw_value == record.target_goal.raw_value+1 ? 'text-warning' : record.current.raw_value &gt; record.target_goal.raw_value ? 'text-danger' : 'text-success'}">
-                                                <t t-esc="record.current.raw_value" />
-                                            </div>
-                                            <em>Target: less than <t t-esc="record.target_goal.raw_value" /></em>
-                                        </t>
-                                    </t>
-
-                                </div>
-                                <p>
-                                    <t t-if="record.start_date.value">
-                                        From <t t-esc="record.start_date.value" />
-                                    </t>
-                                    <t t-if="record.end_date.value">
-                                        To <t t-esc="record.end_date.value" />
-                                    </t>
-                                </p>
-                            </div>
+                    <t t-name="kanban-card" class="text-center">
+                        <field class="fw-bold fs-4" name="definition_id" />
+                        <div class="d-flex justify-content-center mt-3">
+                            <field class="o_image_24_cover me-1 rounded" name="user_id" widget="image" options="{'preview_image': 'avatar_128'}" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
+                            <field name="user_id" class="fw-bold"/>
                         </div>
+                        <div class="pt-3 fs-1 fw-bolder">
+                            <t t-if="record.definition_display.raw_value == 'boolean'">
+                                <t t-if="record.state.raw_value=='reached'"><i role="img" class="text-success fa fa-check fa-3x" title="Goal Reached" aria-label="Goal Reached"/></t>
+                                <t t-if="record.state.raw_value=='inprogress'"><i role="img" class="text-700 fa fa-clock-o fa-3x" title="Goal in Progress" aria-label="Goal in Progress"/></t>
+                                <t t-if="record.state.raw_value=='failed'"><i role="img" class="text-danger fa fa-times fa-3x" title="Goal Failed" aria-label="Goal Failed"/></t>
+                            </t>
+                            <t t-if="record.definition_display.raw_value == 'progress'">
+                                <t t-if="record.definition_condition.raw_value =='higher'">
+                                    <field name="current" widget="gauge" options="{'max_field': 'target_goal', 'label_field': 'definition_suffix', 'style': 'width:160px; height: 120px;'}" />
+                                </t>
+                                <t t-if="record.definition_condition.raw_value != 'higher'">
+                                    <field class="#{record.current.raw_value == record.target_goal.raw_value+1 ? 'text-warning' : record.current.raw_value &gt; record.target_goal.raw_value ? 'text-danger' : 'text-success'}" name="current" />
+                                    <em>Target: less than <field name="target_goal"/></em>
+                                </t>
+                            </t>
+                        </div>
+                        <p>
+                            <t t-if="record.start_date.value">
+                                From <field name="start_date" />
+                            </t>
+                            <t t-if="record.end_date.value">
+                                To <field name="end_date" />
+                            </t>
+                        </p>
                     </t>
                 </templates>
             </kanban>

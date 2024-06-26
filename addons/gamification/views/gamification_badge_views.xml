@@ -114,50 +114,35 @@
         <field name="model">gamification.badge</field>
         <field name="arch" type="xml">
             <kanban>
-                <field name="id"/>
-                <field name="name"/>
-                <field name="description"/>
-                <field name="stat_my"/>
-                <field name="granted_count"/>
-                <field name="stat_this_month"/>
-                <field name="unique_owner_ids"/>
-                <field name="stat_my_monthly_sending"/>
                 <field name="remaining_sending" />
-                <field name="rule_max_number" />
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="o_kanban_gamification oe_kanban_global_click #{record.stat_my.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'}">
-                            <div class="o_kanban_image">
-                                <img t-att-src="kanban_image('gamification.badge', 'image_1024', record.id.raw_value)" t-att-title="record.name.value" t-att-alt="record.name.value"/>
+                    <t t-name="kanban-card" class="row g-0">
+                        <aside class="col-2">
+                            <field name="image_1024" widget="image" t-att-title="name" t-att-alt="name"/>
+                        </aside>
+                        <main class="col ps-2">
+                            <span>
+                                <field class="fw-bold fs-5" name="name"/>
+                                <t t-if="record.remaining_sending.value != -1">
+                                    <field name="stat_my_monthly_sending"/>/<field name="rule_max_number"/>
+                                </t>
+                                <t t-else="">
+                                    <field name="stat_my_monthly_sending"/>/∞
+                                </t>
+                            </span>
+                            <div t-if="record.remaining_sending.value == 0">Can not grant</div>
+                            <div>
+                                <field class="fw-bold" name="granted_count"/> granted,
+                                <field class="fw-bold" name="stat_this_month"/> this month
                             </div>
-                            <div class="oe_kanban_details">
-                                <strong class="o_kanban_record_title"><field name="name"/></strong>
-                                <span class="oe_grey">
-                                    <t t-if="record.remaining_sending.value != -1">
-                                        <t t-esc="record.stat_my_monthly_sending.value"/>/<t t-esc="record.rule_max_number.value"/>
-                                    </t>
-                                    <t t-if="record.remaining_sending.value == -1">
-                                        <t t-esc="record.stat_my_monthly_sending.value"/>/∞
-                                    </t>
-                                </span>
-                                <div t-if="record.remaining_sending.value == 0" class="oe_grey">Can not grant</div>
-                                <div>
-                                    <strong><t t-esc="record.granted_count.raw_value"/></strong> granted,
-                                    <strong><t t-esc="record.stat_this_month.raw_value"/></strong> this month
-                                </div>
-                                <div t-if="!widget.isHtmlEmpty(record.description.value)" class="o_kanban_badge_description pb-3">
-                                    <em t-out="record.description.value"/>
-                                    <div>
-                                        <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner" t-key="owner">
-                                            <img class="oe_kanban_avatar o_avatar rounded" t-att-src="kanban_image('res.users', 'avatar_128', owner)" t-att-data-member_id="owner" alt="Owner"/>
-                                        </t>
-                                    </div>
-                                </div>
-                                <div t-if="record.remaining_sending.value != 0 and !selection_mode" class="o_kanban_button">
-                                    <button type="action" name="%(action_grant_wizard)d" class="oe_highlight btn btn-primary">Grant</button>
-                                </div>
+                            <div t-if="!widget.isHtmlEmpty(record.description.value)">
+                                <field class="fst-italic" name="description"/>
+                                <field name="unique_owner_ids" widget="many2many_avatar_user"/>
                             </div>
-                        </div>
+                            <footer t-if="record.remaining_sending.value != 0 and !selection_mode">
+                                <button type="action" name="%(action_grant_wizard)d" class="btn btn-primary ms-auto">Grant</button>
+                            </footer>
+                        </main>
                     </t>
                 </templates>
             </kanban>
