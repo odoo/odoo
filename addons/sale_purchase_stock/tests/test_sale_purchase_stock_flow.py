@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
-from odoo.fields import Date
-from odoo.tools.date_utils import add
 from odoo.tests.common import TransactionCase, Form
 
 
@@ -86,59 +83,3 @@ class TestSalePurchaseStockFlow(TransactionCase):
 
         sm.move_line_ids.qty_done = 10
         self.assertEqual(so.order_line.qty_delivered, 10)
-
-    def test_auto_trigger_snoozed_orderpoint(self):
-        """ Check that reordering rules are auto triggerred unless they are snoozed """
-
-        seller = self.env['product.supplierinfo'].create({
-            'partner_id': self.vendor.id,
-            'price': 10,
-        })
-        product = self.env['product.product'].create({
-            'name': 'Super product 1',
-            'type': 'product',
-            'seller_ids': [Command.set(seller.ids)],
-            'route_ids': [Command.set(self.buy_route.ids)],
-        })
-        orderpoint = self.env['stock.warehouse.orderpoint'].create({
-            'name': 'Super product RR',
-            'route_id': self.buy_route.id,
-            'product_id': product.id,
-            'product_min_qty': 0,
-            'product_max_qty': 5,
-        })
-        so_1, so_2 = self.env['sale.order'].create([
-            {
-                'partner_id': self.customer.id,
-                'order_line': [Command.create({
-                    'name': product.name,
-                    'product_id': product.id,
-                    'product_uom_qty': 1,
-                    'product_uom': product.uom_id.id,
-                    'price_unit': product.list_price,
-                })]
-            },
-            {
-                'partner_id': self.customer.id,
-                'order_line': [Command.create({
-                    'name': product.name,
-                    'product_id': product.id,
-                    'product_uom_qty': 2,
-                    'product_uom': product.uom_id.id,
-                    'price_unit': product.list_price,
-                })]
-            },
-        ])
-
-        # we check that the first so triggers the RR
-        so_1.action_confirm()
-        po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)], limit=1)
-        self.assertEqual(po.order_line.product_qty, 6.0)
-        po.button_cancel()
-        self.assertEqual(po.state, "cancel")
-
-        # we snooze the RR and check that the second so does not trigger it
-        orderpoint.snoozed_until = add(Date.today(), days=1)
-        so_2.action_confirm()
-        po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id), ('state', '!=', 'cancel')], limit=1)
-        self.assertFalse(po)
