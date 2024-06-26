@@ -160,10 +160,36 @@ export class FontPlugin extends Plugin {
                 name: _t("Heading 3"),
                 description: _t("Small section heading"),
                 category: "format",
-
                 fontawesome: "fa-header",
                 action(dispatch) {
                     dispatch("SET_TAG", { tagName: "H3" });
+                },
+            },
+            {
+                category: "format",
+                name: _t("Text"),
+                description: _t("Paragraph block"),
+                fontawesome: "fa-paragraph",
+                action(dispatch) {
+                    dispatch("SET_TAG", { tagName: "P" });
+                },
+            },
+            {
+                category: "structure",
+                name: _t("Quote"),
+                description: _t("Add a blockquote section"),
+                fontawesome: "fa-quote-right",
+                action(dispatch) {
+                    dispatch("SET_TAG", { tagName: "blockquote" });
+                },
+            },
+            {
+                category: "structure",
+                name: _t("Code"),
+                description: _t("Add a code section"),
+                fontawesome: "fa-code",
+                action(dispatch) {
+                    dispatch("SET_TAG", { tagName: "pre" });
                 },
             },
         ],

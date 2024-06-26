@@ -68,7 +68,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(17);
+        expect(commandNames(el).length).toBe(22);
         insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -78,18 +78,20 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(17);
-        expect(".o-we-category").toHaveCount(4);
+        expect(commandNames(el).length).toBe(22);
+        expect(".o-we-category").toHaveCount(6);
         expect(queryAllTexts(".o-we-category")).toEqual([
             "STRUCTURE",
             "MEDIA",
             "FORMAT",
             "NAVIGATION",
+            "WIDGET",
+            "BASIC BLOC",
         ]);
 
         insertText(editor, "h");
         await animationFrame();
-        expect(commandNames(el).length).toBe(7);
+        expect(commandNames(el).length).toBe(8);
         expect(".o-we-category").toHaveCount(0);
     });
 
@@ -97,7 +99,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
         insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(17);
+        expect(commandNames(el).length).toBe(22);
         insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -146,7 +148,7 @@ describe("search", () => {
         insertText(editor, "/");
         await animationFrame();
         expect(".o-we-powerbox").toHaveCount(1);
-        expect(commandNames(el).length).toBe(17);
+        expect(commandNames(el).length).toBe(22);
 
         insertText(editor, "headx");
         await animationFrame();
