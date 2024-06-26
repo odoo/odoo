@@ -136,6 +136,7 @@ Var ProxyTokenPwd
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE ComponentLeave
 !insertmacro MUI_PAGE_COMPONENTS
 Page Custom ShowPostgreSQL LeavePostgreSQL
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE dir_leave
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 Page Custom ShowProxyTokenDialogPage
@@ -179,6 +180,7 @@ LangString TITLE_Odoo_Server ${LANG_ENGLISH} "Odoo Server"
 LangString TITLE_PostgreSQL ${LANG_ENGLISH} "PostgreSQL Database"
 LangString TITLE_LocalProxyMode ${LANG_ENGLISH} "Local Proxy Mode"
 LangString DESC_FinishPageText ${LANG_ENGLISH} "Start Odoo"
+LangString UnsafeDirText ${LANG_ENGLISH} "Installing outside of $PROGRAMFILES64 is not recommended.$\nDo you want to continue ?"
 
 ; French
 LangString DESC_Odoo_Server ${LANG_FRENCH} "Installation du Serveur Odoo avec tous les modules Odoo standards."
@@ -202,6 +204,7 @@ LangString TITLE_Odoo_Server ${LANG_FRENCH} "Serveur Odoo"
 LangString TITLE_PostgreSQL ${LANG_FRENCH} "Installation du serveur de base de données PostgreSQL"
 LangString TITLE_LocalProxyMode ${LANG_FRENCH} "Mode Proxy Local"
 LangString DESC_FinishPageText ${LANG_FRENCH} "Démarrer Odoo"
+LangString UnsafeDirText ${LANG_FRENCH} "Installer en dehors de $PROGRAMFILES64 n'est pas recommandé.$\nVoulez-vous continuer ?"
 
 InstType /NOCUSTOM
 InstType $(Profile_AllInOne)
@@ -510,4 +513,14 @@ Function RestartOdooService
     DetailPrint "Restarting Odoo Service"
     ExecWait "net stop ${SERVICENAME}"
     ExecWait "net start ${SERVICENAME}"
+FunctionEnd
+
+Function dir_leave
+    StrLen $0 $PROGRAMFILES64
+    StrCpy $0 $INSTDIR $0
+    StrCmp $0 $PROGRAMFILES64 continue
+    MessageBox MB_YESNO|MB_ICONEXCLAMATION "$(UnsafeDirText)" IDYES continue IDNO aborting
+    aborting:
+        Abort
+    continue:
 FunctionEnd
