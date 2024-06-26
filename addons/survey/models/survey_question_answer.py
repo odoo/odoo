@@ -36,6 +36,8 @@ class SurveyQuestionAnswer(models.Model):
                                    "or a letter representing the index of the answer otherwise.")
     is_correct = fields.Boolean('Correct')
     answer_score = fields.Float('Score', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
+    extra_end_message_ids = fields.Many2many('survey.conditional.end.message',
+        string="Extra End Messages", help="Used to display an extra end message adapted to the participant's answers.")
 
     _value_not_empty = models.Constraint(
         'CHECK (value IS NOT NULL OR value_image_filename IS NOT NULL)',

@@ -62,6 +62,12 @@
             <field name="perm_read" eval="1"/>
             <field name="perm_create" eval="1"/>
         </record>
+        <record id="survey_conditional_end_message_rule_recruitment_manager" model="ir.rule">
+            <field name="name">Survey conditional end message: recruitment manager: all recruitment</field>
+            <field name="model_id" ref="survey.model_survey_conditional_end_message"/>
+            <field name="domain_force">[('survey_id.survey_type', '=', 'recruitment')]</field>
+            <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+        </record>
         <record id="survey_invite_recruitment_manager" model="ir.rule">
             <field name="name">Survey invite: recruitment manager: all recruitment</field>
             <field name="model_id" ref="survey.model_survey_invite"/>
