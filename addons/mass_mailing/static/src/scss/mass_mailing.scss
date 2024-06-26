@@ -189,3 +189,19 @@
         min-height: 55vh;
     }
 }
+
+.o_view_no_content_mass_mailing:before {
+    content: "";
+    display: block;
+    box-shadow: 0 0 75px grey;
+    margin: 0px auto 1rem auto;
+    background: transparent url(/mass_mailing/static/src/img/mailing-helper.png) no-repeat center;
+    background-size: 320px 205px;
+    width: 320px;
+    height: 205px;
+    @include media-breakpoint-up(sm) {
+        background-size: 500px 280px;
+        width: 500px;
+        height: 280px;
+    }
+}
