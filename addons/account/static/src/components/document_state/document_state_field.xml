@@ -2,7 +2,7 @@
 <templates>
     <t t-name="account.DocumentStatePopover">
         <div class="row m-2 mt-4 justify-content-between account_document_state_popover">
-            <span class="col-10" t-out="props.message"/>
+            <span class="col-10" t-out="props.message" style="white-space: pre-wrap;"/>
             <button class="col-2 btn p-0 account_document_state_popover_clone" t-on-click="() => props.copyText()">
                 <i class="fa fa-clone"/>
             </button>
