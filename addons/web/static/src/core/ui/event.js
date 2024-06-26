@@ -1,14 +1,14 @@
 const delegateEvent = function (ev) {
     let target = ev.target;
     if (typeof this.selector === "string") {
-        while (target && !target.matches(this.selector) && target !== this.element) {
+        while (!target?.matches(this.selector) && target !== this.element) {
             target = target.parentElement;
         }
-        if (target && target.matches(this.selector)) {
+        if (target?.matches(this.selector)) {
             this.handler.call(target, ev);
         }
     } else {
-        // Selector is not provided
+        // Selector is not provided, directly use this.element as the context
         this.handler = this.selector;
         this.handler.call(this.element, ev);
     }

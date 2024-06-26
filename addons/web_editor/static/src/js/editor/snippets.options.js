@@ -3975,7 +3975,7 @@ const SnippetOptionWidget = PublicWidget.extend({
             if (hasNoVisibleElInCollapseMenu) {
                 this._toggleCollapseEl(el, false);
             }
-            el.querySelector('.o_we_collapse_toggler').classList.toggle('d-none', hasNoVisibleElInCollapseMenu);
+            el.querySelector('.o_we_collapse_toggler')?.classList.toggle('d-none', hasNoVisibleElInCollapseMenu);
         }
 
         return !this.displayOverlayOptions && showUI;

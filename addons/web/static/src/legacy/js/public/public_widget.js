@@ -265,11 +265,11 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @returns {Promise}
      */
     insertAfter: function (targetEl) {
-        // TO- remove : backward compatibility targetEl can be a jQuery object
+        // Ensure targetEl is not a jQuery object for backward compatibility
         targetEl = targetEl instanceof jQuery ? targetEl[0] : targetEl;
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
-            self.el.append(t.nextSibling);
+            t.parentNode.insertBefore(self.el, t.nextSibling);
         }, targetEl);
     },
     /**
@@ -280,11 +280,11 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @returns {Promise}
      */
     insertBefore: function (targetEl) {
-        // TO- remove : backward compatibility targetEl can be a jQuery object
+        // Ensure targetEl is not a jQuery object for backward compatibility
         targetEl = targetEl instanceof jQuery ? targetEl[0] : targetEl;
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
-            t.insertBefore(self.el);
+            t.parentNode.insertBefore(self.el, t);
         }, targetEl);
     },
     /**
@@ -294,7 +294,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @returns {Promise}
      */
     prependTo: function (targetEl) {
-        // TO- remove : backward compatibility targetEl can be a jQuery object
+        // Ensure targetEl is not a jQuery object for backward compatibility
         targetEl = targetEl instanceof jQuery ? targetEl[0] : targetEl;
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
@@ -322,8 +322,9 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @returns {Promise}
      */
     replace: function (targetEl) {
+        const self = this;
         return this._widgetRenderAndInsert((t) => {
-            t.replaceWith(this.el);
+            t.replaceWith(self.el);
         }, targetEl);
     },
     /**
