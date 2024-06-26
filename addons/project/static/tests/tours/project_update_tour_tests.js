@@ -107,7 +107,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     content: 'Open embedded actions',
     run: "click",
 }, {
-    trigger: ".o_embedded_actions_buttons_wrapper button i.fa-sliders",
+    trigger: ".o_embedded_actions button i.fa-sliders",
     content: "Open embedded actions dropdown",
     run: "click",
 }, {
@@ -115,7 +115,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     content: "Put Project Updates in the embedded actions",
     run: "click",
 }, {
-    trigger: ".o_embedded_actions_buttons_wrapper button span:contains('Project Updates')",
+    trigger: ".o_embedded_actions button span:contains('Project Updates')",
     content: "Open Project Updates",
     run: "click",
 }, {
