@@ -1,9 +1,9 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
+import { manuallyDispatchProgrammaticEvent, press, queryFirst } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
-import { tripleClick } from "./_helpers/user_actions";
-import { tick } from "@odoo/hoot-mock";
+import { insertText, tripleClick } from "./_helpers/user_actions";
+import { animationFrame, tick } from "@odoo/hoot-mock";
 
 function setTag(tagName) {
     return (editor) => editor.dispatch("SET_TAG", { tagName });
@@ -92,6 +92,16 @@ describe("to paragraph", () => {
             stepFunction: setTag("p"),
             contentAfter: '<p>[before</p><h1 contenteditable="false">noneditable</h1><p>after]</p>',
         });
+    });
+
+    test("apply 'Text' command", async () => {
+        const { el, editor } = await setupEditor("<h1>ab[]cd</h1>");
+        insertText(editor, "/text");
+        await animationFrame();
+        expect(".active .o-we-command-name").toHaveText("Text");
+
+        press("enter");
+        expect(getContent(el)).toBe("<p>ab[]cd</p>");
     });
 });
 
@@ -329,6 +339,16 @@ describe("to pre", () => {
             contentAfter: '<ul><li class="nav-item" id="test"><pre>[abcd]</pre></li></ul>',
         });
     });
+
+    test("apply 'Code' command", async () => {
+        const { el, editor } = await setupEditor("<p>ab[]cd</p>");
+        insertText(editor, "/code");
+        await animationFrame();
+        expect(".active .o-we-command-name").toHaveText("Code");
+
+        press("enter");
+        expect(getContent(el)).toBe("<pre>ab[]cd</pre>");
+    });
 });
 
 describe("to blockquote", () => {
@@ -440,5 +460,15 @@ describe("to blockquote", () => {
 
         setTag("h1")(editor);
         expect(getContent(el)).toBe("<h1>[abcd]</h1><p>Plop</p>");
+    });
+
+    test("apply 'Quote' command", async () => {
+        const { el, editor } = await setupEditor("<p>ab[]cd</p>");
+        insertText(editor, "/quote");
+        await animationFrame();
+        expect(".active .o-we-command-name").toHaveText("Quote");
+
+        press("enter");
+        expect(getContent(el)).toBe("<blockquote>ab[]cd</blockquote>");
     });
 });

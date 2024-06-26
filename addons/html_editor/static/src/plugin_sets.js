@@ -46,6 +46,8 @@ import { CollaborationSelectionAvatarPlugin } from "./others/collaboration/colla
 import { PositionPlugin } from "./main/position_plugin";
 import { LinkSelectionPlugin } from "./main/link/link_selection_plugin";
 import { OdooLinkSelectionPlugin } from "./main/link/link_selection_odoo_plugin";
+import { EmojiPlugin } from "./main/emoji_plugin";
+import { SignaturePlugin } from "./main/signature_plugin";
 
 export const CORE_PLUGINS = [
     ClipboardPlugin,
@@ -68,6 +70,7 @@ export const MAIN_PLUGINS = [
     ...CORE_PLUGINS,
     ColorPlugin,
     ColumnPlugin,
+    EmojiPlugin,
     HintPlugin,
     JustifyPlugin,
     ListPlugin,
@@ -75,6 +78,7 @@ export const MAIN_PLUGINS = [
     ShortCutPlugin,
     PowerboxPlugin,
     SearchPowerboxPlugin,
+    SignaturePlugin,
     TablePlugin,
     TableUIPlugin,
     TabulationPlugin,
