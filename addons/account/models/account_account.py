@@ -41,11 +41,11 @@ class AccountAccount(models.Model):
         for _company, account_unaffected_earnings in result:
             raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
 
-    name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True, translate=True)
-    currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True,
+    name = fields.Char(string="Account Name", required=True, tracking=True, company_dependent=True)
+    currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True, company_dependent=True,
         help="Forces all journal items in this account to have a specific currency (i.e. bank journals). If no currency is set, entries can use any currency.")
     company_currency_id = fields.Many2one(related='company_id.currency_id')
-    code = fields.Char(size=64, required=True, tracking=True, index=True)
+    code = fields.Char(size=64, required=True, tracking=True, company_dependent=True)
     deprecated = fields.Boolean(default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
     account_type = fields.Selection(
@@ -102,6 +102,7 @@ class AccountAccount(models.Model):
     note = fields.Text('Internal Notes', tracking=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=False,
         default=lambda self: self.env.company)
+    company_mapping_ids = fields.One2many(comodel_name='account.company.mapping', inverse_name='account_id')
     tag_ids = fields.Many2many(
         'account.account.tag', 'account_account_account_tag',
         compute='_compute_account_tags', readonly=False, store=True, precompute=True,
@@ -137,7 +138,9 @@ class AccountAccount(models.Model):
     @api.constrains('company_id', 'code')
     def _constrains_code(self):
         # check for duplicates in each root company
-        by_root_company = self.grouped(lambda record: record.company_id.root_id)
+        # Note: filtering on non-false codes is needed because inverses are called after stored fields are written to DB,
+        # so on CoA loading this constraint will be called first with all codes set to False.
+        by_root_company = self.filtered(lambda a: a.code).grouped(lambda record: record.company_id.root_id)
         for root_company, records in by_root_company.items():
             by_code = records.grouped('code')
             if len(by_code) < len(records):
@@ -344,6 +347,7 @@ class AccountAccount(models.Model):
         if self._cr.fetchone():
             raise ValidationError(_("You cannot change the type of an account set as Bank Account on a journal to Receivable or Payable."))
 
+    @api.depends_context('allowed_company_ids')
     @api.depends('code')
     def _compute_account_root(self):
         # this computes the first 2 digits of the account.
@@ -621,15 +625,24 @@ class AccountAccount(models.Model):
             _kind, rhs_table, condition = query._joins['account_move_line__account_id']
             query._joins['account_move_line__account_id'] = (SQL("RIGHT JOIN"), rhs_table, condition)
 
-        from_clause, where_clause, params = query.get_sql()
-        self._cr.execute(f"""
-            SELECT account_move_line__account_id.id
-              FROM {from_clause}
-             WHERE {where_clause}
-          GROUP BY account_move_line__account_id.id
-          ORDER BY COUNT(account_move_line.id) DESC, account_move_line__account_id.code
-                   {f"LIMIT {limit:d}" if limit else ""}
-        """, params)
+        company = self.env['res.company'].browse(company_id)
+        code_sql = self.with_company(company)._field_to_sql('account_move_line__account_id', 'code', query)
+
+        limit_clause = SQL('LIMIT %s', limit) if limit else SQL('')
+        self._cr.execute(SQL(
+            """
+                SELECT account_move_line__account_id.id
+                  FROM %(from_clause)s
+                 WHERE %(where_clause)s
+              GROUP BY account_move_line__account_id.id
+              ORDER BY COUNT(account_move_line.id) DESC, MAX(%(code_sql)s)
+                %(limit_clause)s
+            """,
+            from_clause=query.from_clause,
+            where_clause=query.where_clause,
+            code_sql=code_sql,
+            limit_clause=limit_clause,
+        ))
         return [r[0] for r in self._cr.fetchall()]
 
     @api.model
@@ -995,9 +1008,13 @@ class AccountGroup(models.Model):
                         agroup.id AS group_id
                    FROM account_account account
                    JOIN res_company account_company ON account_company.id = account.company_id
+              LEFT JOIN ir_property code_property
+                     ON code_property.res_id = 'account.account,' || account.id
+                        AND code_property.company_id = account.company_id
+                        AND code_property.fields_id = %s
               LEFT JOIN account_group agroup
-                     ON agroup.code_prefix_start <= LEFT(account.code, char_length(agroup.code_prefix_start))
-                    AND agroup.code_prefix_end >= LEFT(account.code, char_length(agroup.code_prefix_end))
+                     ON agroup.code_prefix_start <= LEFT(code_property.value_text, char_length(agroup.code_prefix_start))
+                    AND agroup.code_prefix_end >= LEFT(code_property.value_text, char_length(agroup.code_prefix_end))
                     AND agroup.company_id = split_part(account_company.parent_path, '/', 1)::int
                   WHERE %s
                ORDER BY account.id, char_length(agroup.code_prefix_start) DESC, agroup.id
@@ -1006,7 +1023,7 @@ class AccountGroup(models.Model):
                SET group_id = rel.group_id
               FROM relation rel
              WHERE account_account.id = rel.account_id
-        """, account_where_clause))
+        """, self.env['ir.model.fields']._get('account.account', 'code').id, account_where_clause))
         self.env['account.account'].invalidate_model(['group_id'], flush=False)
 
     def _adapt_parent_account_group(self, company=None):
@@ -1064,18 +1081,95 @@ class AccountRoot(models.Model):
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute('''
+        query = SQL(
+            """
             CREATE OR REPLACE VIEW %s AS (
-            SELECT DISTINCT ASCII(code) * 1000 + ASCII(SUBSTRING(code,2,1)) AS id,
-                   LEFT(code,2) AS name,
-                   ASCII(code) AS parent_id,
-                   company_id
-            FROM account_account WHERE code != ''
-            UNION ALL
-            SELECT DISTINCT ASCII(code) AS id,
-                   LEFT(code,1) AS name,
-                   NULL::int AS parent_id,
-                   company_id
-            FROM account_account WHERE code != ''
-            )''' % (self._table,)
+                SELECT DISTINCT ASCII(code_property.value_text) * 1000 + ASCII(SUBSTRING(code_property.value_text,2,1)) AS id,
+                                LEFT(code_property.value_text,2)    AS name,
+                                ASCII(code_property.value_text)     AS parent_id,
+                                code_property.company_id            AS company_id
+                           FROM account_account
+                           JOIN ir_property code_property
+                             ON code_property.res_id = 'account.account,' || account_account.id
+                           JOIN ir_model_fields code_field
+                             ON code_field.id = code_property.fields_id
+                                AND code_field.model = 'account.account'
+                                AND code_field.name = 'code'
+                          WHERE code_property.value_text != ''
+                UNION ALL
+                SELECT DISTINCT ASCII(code_property.value_text)     AS id,
+                                LEFT(code_property.value_text,1)    AS name,
+                                NULL::int                           AS parent_id,
+                                code_property.company_id            AS company_id
+                           FROM account_account
+                           JOIN ir_property code_property
+                             ON code_property.res_id = 'account.account,' || account_account.id
+                           JOIN ir_model_fields code_field
+                             ON code_field.id = code_property.fields_id
+                                AND code_field.model = 'account.account'
+                                AND code_field.name = 'code'
+                          WHERE code_property.value_text != ''
+            )""", SQL.identifier(self._table))
+        self.env.cr.execute(query)
+
+
+class AccountCompanyMapping(models.Model):
+    _name = 'account.company.mapping'
+    _description = 'Mapping of account names and codes per company'
+    _auto = False
+
+    account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="Account",
+    )
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        string="Company",
+    )
+    code = fields.Char(
+        string="Code",
+        inverse='_inverse_code',
+    )
+    name = fields.Char(
+        string="Account Name",
+        inverse="_inverse_name",
+    )
+
+    def init(self):
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        query = SQL(
+            """
+            CREATE OR REPLACE VIEW %s AS (
+                 SELECT account_account.id * 1000 + res_company.id  AS id,
+                        account_account.id          AS account_id,
+                        res_company.id              AS company_id,
+                        code_property.value_text    AS code,
+                        name_property.value_text    AS name
+                   FROM account_account
+             CROSS JOIN res_company
+              LEFT JOIN ir_property code_property
+                     ON code_property.res_id = 'account.account,' || account_account.id
+                        AND code_property.company_id = res_company.id
+                   JOIN ir_model_fields code_field
+                     ON code_field.id = code_property.fields_id
+                        AND code_field.model = 'account.account'
+                        AND code_field.name = 'code'
+              LEFT JOIN ir_property name_property
+                     ON name_property.res_id = 'account.account,' || account_account.id
+                        AND name_property.company_id = res_company.id
+                   JOIN ir_model_fields name_field
+                     ON name_field.id = name_property.fields_id
+                        AND name_field.model = 'account.account'
+                        AND name_field.name = 'name'
+            ) """,
+            SQL.identifier(self._table),
         )
+        self.env.cr.execute(query)
+
+    def _inverse_code(self):
+        for record in self:
+            record.account_id.with_company(record.company_id).code = record.code
+
+    def _inverse_name(self):
+        for record in self:
+            record.account_id.with_company(record.company_id).name = record.name

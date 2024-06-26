@@ -356,7 +356,9 @@ class AccountChartTemplate(models.AbstractModel):
                     normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
                     if not account or not re.match(f'^{values["code"]}0*$', account.code):
                         query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
-                        query.add_where("account_account.code SIMILAR TO %s", [f'{values["code"]}0*'])
+                        account_company_mapping_alias = query.join('account_account', 'id', 'account_company_mapping', 'account_id', 'company_mapping_ids')
+                        query.add_where("%s SIMILAR TO %s", [SQL.identifier(account_company_mapping_alias, 'code'), f'{values["code"]}0*'])
+                        query.add_where("%s = %s", [SQL.identifier(account_company_mapping_alias, 'company_id'), SQL.identifier('account_account', 'company_id')])
                         accounts = self.env['account.account'].browse(query)
                         existing_account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
                         if existing_account:
