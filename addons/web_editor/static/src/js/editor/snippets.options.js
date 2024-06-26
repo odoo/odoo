@@ -742,7 +742,7 @@ export class UserValue {
      * Opens the widget (only meaningful for widgets that can be opened).
      */
     open() {
-        this.env.userValueWidgetOpening();
+        this.env.userValueWidgetOpening(this);
         this._state.opened = true;
     }
     /**
@@ -10157,28 +10157,36 @@ export class MultipleItems extends SnippetOption {
     _removeItemCallback($target) {}
 }
 
-legacyRegistry.SelectTemplate = SnippetOptionWidget.extend({
-    custom_events: Object.assign({}, SnippetOptionWidget.prototype.custom_events, {
-        'user_value_widget_opening': '_onWidgetOpening',
-    }),
+export class SelectTemplateComponent extends SnippetOptionComponent {
+    setup() {
+        super.setup();
+        useChildSubEnv({
+            userValueWidgetOpening: (userValue) => {
+                this.env.userValueWidgetOpening(userValue);
+                this.props.snippetOption.instance.onUserValueWidgetOpening(userValue);
+            },
+        });
+    }
+}
 
+export class SelectTemplate extends SnippetOption {
     /**
-     * @constructor
+     * @override
      */
-    init() {
-        this._super(...arguments);
+    static defaultRenderingComponent = SelectTemplateComponent;
+
+    constructor() {
+        super(...arguments);
         this.containerSelector = '';
         this.selectTemplateWidgetName = '';
-        this.orm = this.bindService("orm");
-    },
-    /**
-     * @constructor
-     */
-    async start() {
+        this.orm = this.env.services.orm;
+    }
+
+    async willStart() {
+        await super.willStart(...arguments);
         this.containerEl = this.containerSelector ? this.$target.find(this.containerSelector)[0] : this.$target[0];
         this._templates = {};
-        return this._super(...arguments);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -10227,7 +10235,7 @@ legacyRegistry.SelectTemplate = SnippetOptionWidget.extend({
             // added by other options or custo).
             this.beforePreviewNodes = null;
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -10238,7 +10246,7 @@ legacyRegistry.SelectTemplate = SnippetOptionWidget.extend({
      *
      * @private
      * @param {string} xmlid
-     * @returns {string}
+     * @returns {Promise<string>}
      */
     async _getTemplate(xmlid) {
         if (!this._templates[xmlid]) {
@@ -10250,21 +10258,20 @@ legacyRegistry.SelectTemplate = SnippetOptionWidget.extend({
             );
         }
         return this._templates[xmlid];
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
     /**
-     * @private
-     * @param {OdooEvent} ev
+     * @override
      */
-    _onWidgetOpening(ev) {
-        if (this._templatesLoading || ev.target.getName() !== this.selectTemplateWidgetName) {
+    onUserValueWidgetOpening(userValue) {
+        if (this._templatesLoading || userValue.getName() !== this.selectTemplateWidgetName) {
             return;
         }
-        const templateParams = ev.target.getMethodsParams('selectTemplate');
+        const templateParams = userValue.getMethodsParams('selectTemplate');
         const proms = templateParams.possibleValues.map(async xmlid => {
             if (!xmlid) {
                 return;
@@ -10275,8 +10282,8 @@ legacyRegistry.SelectTemplate = SnippetOptionWidget.extend({
             await this._getTemplate(xmlid);
         });
         this._templatesLoading = Promise.all(proms);
-    },
-});
+    }
+}
 
 /*
  * Abstract option to be extended by the Carousel and gallery options (through
