@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website.s_masonry_block_options">
+        <WeSelect title.translate="Template"
+                  name="'masonry_template_opt'"
+                  attributeName="'masonryTemplate'"
+                  attributeDefaultValue="'default'">
+            <WeButton selectTemplate="'website.s_masonry_block_default_template'"
+                      selectContainerClass="'container'"
+                      selectDataAttribute="'default'"
+                      img="'/website/static/src/img/snippets_options/masonry_template_default.svg'">
+                Default
+            </WeButton>
+            <WeButton selectTemplate="'website.s_masonry_block_reversed_template'"
+                      selectContainerClass="'container-fluid'"
+                      selectDataAttribute="'default_reversed'"
+                      img="'/website/static/src/img/snippets_options/masonry_template_reversed.svg'">
+                Default Reversed
+            </WeButton>
+            <WeButton selectTemplate="'website.s_masonry_block_images_template'"
+                      selectContainerClass="'container'"
+                      selectDataAttribute="'images'"
+                      img="'/website/static/src/img/snippets_options/masonry_template_images.svg'">
+                Images
+            </WeButton>
+            <WeButton selectTemplate="'website.s_masonry_block_image_texts_image_template'"
+                      selectContainerClass="'container-fluid'"
+                      selectDataAttribute="'image_text_image'"
+                      img="'/website/static/src/img/snippets_options/masonry_template_image_texts_image.svg'">
+                Image Text Image
+            </WeButton>
+            <WeButton selectTemplate="'website.s_masonry_block_mosaic_template'"
+                      selectDataAttribute="'mosaic'"
+                      selectContainerClass="'container'"
+                      img="'/website/static/src/img/snippets_options/masonry_template_mosaic.svg'">
+                Mosaic
+            </WeButton>
+            <WeButton selectTemplate="'website.s_masonry_block_texts_image_texts_template'"
+                      selectContainerClass="'container'"
+                      selectDataAttribute="'text_image_text'"
+                      img="'/website/static/src/img/snippets_options/masonry_template_texts_image_texts.svg'">
+                Text Image Text
+            </WeButton>
+            <WeButton selectTemplate="'website.s_masonry_block_alternation_text_template'"
+                      selectContainerClass="'container-fluid'"
+                      selectDataAttribute="'alternate_text'"
+                      img="'/website/static/src/img/snippets_options/masonry_template_alternate_texts.svg'">
+                Alternate Text
+            </WeButton>
+            <WeButton selectTemplate="'website.s_masonry_block_alternation_text_image_template'"
+                      selectContainerClass="'container'"
+                      selectDataAttribute="'alternate_text_image'"
+                      img="'/website/static/src/img/snippets_options/masonry_template_alternate_text_image.svg'">
+                Alternate Text Image
+            </WeButton>
+            <WeButton selectTemplate="'website.s_masonry_block_alternation_image_text_template'"
+                      selectContainerClass="'container-fluid'"
+                      selectDataAttribute="'alternate_image_text'"
+                      img="'/website/static/src/img/snippets_options/masonry_template_alternate_image_text.svg'">
+                Alternate Image Text
+            </WeButton>
+            <WeButton selectTemplate="'website.s_masonry_block_alternation_text_image_text_template'"
+                      selectContainerClass="'container-fluid'"
+                      selectDataAttribute="'alternate_text_image_text'"
+                      img="'/website/static/src/img/snippets_options/masonry_template_alternate_text_image_text.svg'">
+                Alternate Text Image Text
+            </WeButton>
+        </WeSelect>
+    </t>
+
+</templates>

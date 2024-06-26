@@ -1,16 +1,12 @@
-/** @odoo-module */
+import { SelectTemplate } from "@web_editor/js/editor/snippets.options";
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
 
-import options from '@web_editor/js/editor/snippets.options.legacy';
-
-options.registry.MasonryLayout = options.registry.SelectTemplate.extend({
-    /**
-     * @constructor
-     */
-    init() {
-        this._super(...arguments);
+export class MasonryLayout extends SelectTemplate {
+    constructor() {
+        super(...arguments);
         this.containerSelector = '> .container, > .container-fluid, > .o_container_small';
         this.selectTemplateWidgetName = 'masonry_template_opt';
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -26,5 +22,11 @@ options.registry.MasonryLayout = options.registry.SelectTemplate.extend({
         const containerClasses = ["container", "container-fluid", "o_container_small"];
         containerEl.classList.remove(...containerClasses);
         containerEl.classList.add(widgetValue);
-    },
+    }
+}
+
+registerWebsiteOption("MasonryLayout", {
+    Class: MasonryLayout,
+    template: "website.s_masonry_block_options",
+    selector: ".s_masonry_block",
 });
