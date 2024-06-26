@@ -84,6 +84,7 @@
                             <field name="partner_id"/>
                             <field name="email" widget="email"/>
                             <field name="access_token" groups="base.group_no_one"/>
+                            <field name="most_answered_tag" invisible="survey_id.end_message_selection == 'unique'" widget="many2many_tags" options="{'no_create': True}" />
                         </group>
                     </group>
                     <notebook>
