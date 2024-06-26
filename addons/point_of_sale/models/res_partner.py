@@ -53,6 +53,8 @@ class ResPartner(models.Model):
             action['domain'] = [('partner_id.commercial_partner_id', '=', self.id)]
         else:
             action['domain'] = [('partner_id', '=', self.id)]
+        all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
+        action['context'] = {'search_default_partner_id': all_child.ids}
         return action
 
     def open_commercial_entity(self):

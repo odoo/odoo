@@ -61,6 +61,9 @@
                 <field name="phone_mobile_search" position="after">
                     <field name="partner_assigned_id"/>
                 </field>
+                <filter name="partner_filter" position="after">
+                    <filter name="assign_partner" string="Assigned partner" domain="[('partner_assigned_id', '=', context.get('assign_partner_id'))]" invisible="1"/>
+                </filter>
             </field>
         </record>
 

@@ -73,6 +73,11 @@ class ResPartner(models.Model):
         action_domain_origin = action.get('domain')
         action_context_origin = action.get('context') or {}
         action_domain_assign = [('partner_assigned_id', '=', self.id)]
+        action['context'] = {
+            **action.get('context', {}),
+            'assign_partner_id': self.id,
+            'search_default_assign_partner': 1,
+        }
         if not action_domain_origin:
             action['domain'] = action_domain_assign
             return action
