@@ -8,6 +8,7 @@ from . import res_lang
 from . import res_partner
 from . import survey_question
 from . import survey_question_answer
+from . import survey_question_answer_tag
 from . import survey_survey
 from . import survey_survey_template
 from . import survey_user_input
