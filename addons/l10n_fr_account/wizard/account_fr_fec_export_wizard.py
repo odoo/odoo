@@ -138,21 +138,21 @@ class FecExportWizard(models.TransientModel):
             unaffected_earnings_results = self._do_query_unaffected_earnings()
             unaffected_earnings_line = False
 
-        lang = self.env.user.lang or get_lang(self.env).code
-        aa_name = self.with_context(lang=lang).env['account.account']._field_to_sql('account_move_line__account_id', 'name')
+        aa_name = self.env['account.account']._field_to_sql('account_move_line__account_id', 'name')
 
         query = self.env['account.move.line']._search(self._get_base_domain() + [
             ('date', '<', self.date_from),
             ('account_id.include_initial_balance', '=', True),
             ('account_id.account_type', 'not in', ['asset_receivable', 'liability_payable']),
         ])
+        aa_code = self.env['account.account']._field_to_sql('account_move_line__account_id', 'code', query)
         sql_query = query.select(SQL(
             """
                 'OUV' AS JournalCode,
                 'Balance initiale' AS JournalLib,
                 'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
                 %(formatted_date_from)s AS EcritureDate,
-                MIN(account_move_line__account_id.code) AS CompteNum,
+                MIN(%(aa_code)s) AS CompteNum,
                 replace(replace(MIN(%(aa_name)s), '|', '/'), '\t', '') AS CompteLib,
                 '' AS CompAuxNum,
                 '' AS CompAuxLib,
@@ -170,6 +170,7 @@ class FecExportWizard(models.TransientModel):
             """,
             formatted_date_year=self.date_from.year,
             formatted_date_from=fields.Date.to_string(self.date_from).replace('-', ''),
+            aa_code=aa_code,
             aa_name=aa_name,
         ))
         self._cr.execute(SQL('%s GROUP BY account_move_line__account_id.id', sql_query))
@@ -217,13 +218,14 @@ class FecExportWizard(models.TransientModel):
             ('account_id.account_type', 'in', ['asset_receivable', 'liability_payable']),
         ])
         query.left_join('account_move_line', 'partner_id', 'res_partner', 'id', 'partner_id')
+        aa_code = self.env['account.account']._field_to_sql('account_move_line__account_id', 'code', query)
         sql_query = query.select(SQL(
             """
                 'OUV' AS JournalCode,
                 'Balance initiale' AS JournalLib,
                 'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
                 %(formatted_date_from)s AS EcritureDate,
-                MIN(account_move_line__account_id.code) AS CompteNum,
+                MIN(%(aa_code)s) AS CompteNum,
                 replace(MIN(%(aa_name)s), '|', '/') AS CompteLib,
                 COALESCE(NULLIF(replace(account_move_line__partner_id.ref, '|', '/'), ''), account_move_line__partner_id.id::text) AS CompAuxNum,
                 COALESCE(replace(account_move_line__partner_id.name, '|', '/'), '') AS CompAuxLib,
@@ -241,6 +243,7 @@ class FecExportWizard(models.TransientModel):
             """,
             formatted_date_year=self.date_from.year,
             formatted_date_from=fields.Date.to_string(self.date_from).replace('-', ''),
+            aa_code=aa_code,
             aa_name=aa_name,
         ))
         self._cr.execute(SQL('%s GROUP BY account_move_line__partner_id.id, account_move_line__account_id.id', sql_query))
@@ -260,15 +263,17 @@ class FecExportWizard(models.TransientModel):
             limit=query_limit + 1,
             order='date, move_name, id',
         )
+        account_alias = query.left_join('account_move_line', 'account_id', 'account_account', 'id', 'account_id')
+        aa_code = self.env['account.account']._field_to_sql(account_alias, 'code', query)
 
-        aj_name = self.with_context(lang=lang).env['account.journal']._field_to_sql('account_move_line__journal_id', 'name')
+        aj_name = self.env['account.journal']._field_to_sql('account_move_line__journal_id', 'name')
         columns = SQL(
             """
                 REGEXP_REPLACE(replace(%(journal_alias)s.code, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalCode,
                 REGEXP_REPLACE(replace(%(aj_name)s, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalLib,
                 REGEXP_REPLACE(replace(%(move_alias)s.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS EcritureNum,
                 TO_CHAR(%(move_alias)s.date, 'YYYYMMDD') AS EcritureDate,
-                %(account_alias)s.code AS CompteNum,
+                %(aa_code)s AS CompteNum,
                 REGEXP_REPLACE(replace(%(aa_name)s, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS CompteLib,
                 CASE WHEN %(account_alias)s.account_type IN ('asset_receivable', 'liability_payable')
                 THEN
@@ -307,8 +312,9 @@ class FecExportWizard(models.TransientModel):
             journal_alias=SQL.identifier(query.left_join('account_move_line', 'journal_id', 'account_journal', 'id', 'journal_id')),
             move_alias=SQL.identifier(query.left_join('account_move_line', 'move_id', 'account_move', 'id', 'move_id')),
             partner_alias=SQL.identifier(query.left_join('account_move_line', 'partner_id', 'res_partner', 'id', 'partner_id')),
-            account_alias=SQL.identifier(query.left_join('account_move_line', 'account_id', 'account_account', 'id', 'account_id')),
+            account_alias=SQL.identifier(account_alias),
             aj_name=aj_name,
+            aa_code=aa_code,
             aa_name=aa_name,
         )
         with io.StringIO() as fecfile:

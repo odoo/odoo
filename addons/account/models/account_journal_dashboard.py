@@ -84,8 +84,7 @@ class account_journal(models.Model):
         today = fields.Date.context_today(self)
         activities = defaultdict(list)
         # search activity on move on the journal
-        lang = self.env.user.lang or get_lang(self.env).code
-        act_type_name = self.with_context(lang=lang).env['mail.activity.type']._field_to_sql('act_type', 'name')
+        act_type_name = self.env['mail.activity.type']._field_to_sql('act_type', 'name')
         sql_query = SQL(
             """
             SELECT activity.id,

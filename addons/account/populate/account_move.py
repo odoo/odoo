@@ -45,7 +45,7 @@ class AccountMove(models.Model):
             ]
             if types:
                 domain += [('account_type', 'in', types)]
-            return self.env['account.account'].search(domain)
+            return self.env['account.account'].with_company(self.env['res.company'].browse(company_id)).search(domain)
 
         @lru_cache()
         def search_journals(company_id, journal_type, currency_id):
@@ -111,7 +111,7 @@ class AccountMove(models.Model):
             """
             def get_entry_line(label, balance=None):
                 account = random.choice(accounts)
-                currency = account.currency_id != account.company_id.currency_id and account.currency_id or random.choice(currencies)
+                currency = account.currency_id != company.currency_id and account.currency_id or random.choice(currencies)
                 if balance is None:
                     balance = round(random.uniform(-10000, 10000))
                 return Command.create({
@@ -120,7 +120,7 @@ class AccountMove(models.Model):
                     'account_id': account.id,
                     'partner_id': partner_id,
                     'currency_id': currency.id,
-                    'amount_currency': account.company_id.currency_id._convert(balance, currency, account.company_id, date),
+                    'amount_currency': company.currency_id._convert(balance, currency, company, date),
                 })
 
             def get_invoice_line():
@@ -134,6 +134,7 @@ class AccountMove(models.Model):
             move_type = values['move_type']
             date = values['date']
             company_id = values['company_id']
+            company = self.env['res.company'].browse(company_id)
             partner_id = values['partner_id']
 
             # Determine the right sets of accounts depending on the move_type

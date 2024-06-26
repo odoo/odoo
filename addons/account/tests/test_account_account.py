@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
@@ -17,9 +16,50 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         cls.company_data_2 = cls.setup_other_company()
         cls.other_currency = cls.setup_other_currency('EUR')
 
-    def test_changing_account_company(self):
-        ''' Ensure you can't change the company of an account.account if there are some journal entries '''
+    def test_account_company(self):
+        ''' Test that creating an account with a given company in company_ids sets the code for that company.
+        Test that copying an account creates a new account with the code set for the new account's company_ids company,
+        and that copying an account that belongs to multiple companies works, even if the copied account had
+        check_company fields that had values belonging to several companies.
+        Test that you can't have an account without a company set.
+        Test that you can't remove a company from an account if there are some journal items in the company. '''
 
+        # Test specifying company_ids in account creation.
+        account = self.env['account.account'].create({
+            'code': '180001',
+            'name': 'My Account in Company 2',
+            'account_type': 'asset_current',
+            'company_ids': [Command.link(self.company_data_2['company'].id)]
+        })
+        self.assertRecordValues(
+            account.with_company(self.company_data_2['company']),
+            [{'code': '180001', 'company_ids': self.company_data_2['company'].ids}]
+        )
+
+        # Test that adding a company to an account fails if the code is not defined for that account and that company.
+        with self.assertRaises(ValidationError):
+            account.write({'company_ids': [Command.link(self.company_data['company'].id)]})
+
+        # Test that you can add a company to an account if you add the code at the same time
+        account.write({
+            'code': '180011',
+            'company_ids': [Command.link(self.company_data['company'].id)],
+            'tax_ids': [Command.link(self.company_data['default_tax_sale'].id), Command.link(self.company_data_2['default_tax_sale'].id)],
+        })
+
+        # Test copying an account belonging to multiple companies, specifying the company the new account should belong to.
+        account_copy_1 = account.copy({'company_ids': [Command.set(self.company_data['company'].ids)]})
+        self.assertRecordValues(
+            account_copy_1,
+            [{'code': '180012', 'company_ids': self.company_data['company'].ids, 'tax_ids': self.company_data['default_tax_sale'].ids}]
+        )
+
+        # Test that at least one company is required on accounts.
+        with self.assertRaises(UserError):
+            self.company_data['default_account_revenue'].company_ids = False
+
+        # Test that unassigning a company from an account fails if there already are journal items
+        # for that company and that account.
         self.env['account.move'].create({
             'move_type': 'entry',
             'date': '2019-01-01',
@@ -35,8 +75,8 @@ class TestAccountAccount(AccountTestInvoicingCommon):
             ],
         })
 
-        with self.assertRaises(UserError), self.cr.savepoint():
-            self.company_data['default_account_revenue'].company_id = self.company_data_2['company']
+        with self.assertRaises(UserError):
+            self.company_data['default_account_revenue'].company_ids = self.company_data_2['company']
 
     def test_toggle_reconcile(self):
         ''' Test the feature when the user sets an account as reconcile/not reconcile with existing journal entries. '''
@@ -163,6 +203,9 @@ class TestAccountAccount(AccountTestInvoicingCommon):
 
         group.code_prefix_end = 401000
 
+        # Because group_id must depend on the group start and end, but there is no way of making this dependency explicit.
+        (account_1 | account_2).invalidate_recordset(fnames=['group_id'])
+
         self.assertRecordValues(account_1 + account_2, [{'group_id': group.id}, {'group_id': False}])
 
     def test_name_create(self):
@@ -180,21 +223,20 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         self.assertEqual(account.name, "Existing Account")
 
     def test_compute_account_type(self):
-        existing_account = self.env['account.account'].search([], limit=1)
+        existing_account = self.env['account.account'].search([('company_ids', '=', self.company_data['company'].id)], limit=1)
         # account_type should be computed
-        new_account_code = self.env['account.account']._search_new_account_code(
-            start_code=existing_account.code,
-            company=existing_account.company_id)
+        new_account_code = self.env['account.account']._search_new_account_code(existing_account.code)
         new_account = self.env['account.account'].create({
             'code': new_account_code,
             'name': 'A new account'
         })
         self.assertEqual(new_account.account_type, existing_account.account_type)
         # account_type should not be altered
-        alternate_account = self.env['account.account'].search([('account_type', '!=', existing_account.account_type)], limit=1)
-        alternate_code = self.env['account.account']._search_new_account_code(
-            start_code=alternate_account.code,
-            company=alternate_account.company_id)
+        alternate_account = self.env['account.account'].search([
+            ('account_type', '!=', existing_account.account_type),
+            ('company_ids', '=', self.company_data['company'].id),
+        ], limit=1)
+        alternate_code = self.env['account.account']._search_new_account_code(alternate_account.code)
         new_account.code = alternate_code
         self.assertEqual(new_account.account_type, existing_account.account_type)
 
@@ -202,7 +244,6 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         self.env['account.account'].create({
             'code': 99998,
             'name': 'This name will be transferred to the child one',
-            'company_id': self.company_data['company'].id,
             'account_type': 'expense',
             'tag_ids': [
                 Command.create({'name': 'Test tag'}),
@@ -211,7 +252,6 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         account_to_process = self.env['account.account'].create({
             'code': 99999,
             'name': 'This name will be erase',
-            'company_id': self.company_data['company'].id,
         })
 
         self.env['account.account']._get_closest_parent_account(account_to_process, "name", default_value='The name was not given by the parent')
@@ -238,7 +278,6 @@ class TestAccountAccount(AccountTestInvoicingCommon):
             start_account = self.env['account.account'].create({
                 'code': start_code,
                 'name': 'Test',
-                'company_id': self.company_data['company'].id,
                 'account_type': 'asset_receivable',
             })
             tested_codes = [start_account.copy().code for _ in expected_tested_codes]
@@ -328,7 +367,7 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         self.assertEqual(account.name, "A new account")
 
         # name split is only possible through name_create, so an error should be raised
-        with self.assertRaises(psycopg2.DatabaseError), mute_logger('odoo.sql_db'):
+        with self.assertRaises(ValidationError):
             account = self.env['account.account'].create({
                 'name': '314159 A new account',
                 'account_type': 'expense',
@@ -392,7 +431,7 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         account_form.code = False
         account_form.name = "Only letters"
         # saving a form without a code should not be possible
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValidationError):
             account_form.save()
 
     @freeze_time('2023-09-30')
@@ -506,3 +545,186 @@ class TestAccountAccount(AccountTestInvoicingCommon):
             {'account_id': account.id,              'balance': 1000.0,  'amount_currency': 2000.0},
             {'account_id': account.id,              'balance': -1000.0, 'amount_currency': -2000.0},
         ])
+
+    @freeze_time('2024-08-01')
+    def test_merge(self):
+        company_1 = self.company_data['company']
+        company_2 = self.company_data_2['company']
+        accounts = self.env['account.account']._load_records([
+            {
+                'xml_id': f'account.{company_1.id}_test_account_1',
+                'values': {
+                    'name': 'My First Account',
+                    'code': '100234',
+                    'account_type': 'asset_current',
+                    'company_ids': [Command.link(company_1.id)],
+                },
+            },
+            {
+                'xml_id': f'account.{company_1.id}_test_account_2',
+                'values': {
+                    'name': 'My Second Account',
+                    'code': '100235',
+                    'account_type': 'asset_non_current',
+                    'company_ids': [Command.link(company_1.id)],
+                },
+            },
+            {
+                'xml_id': f'account.{company_2.id}_test_account_3',
+                'values': {
+                    'name': 'My Third Account',
+                    'code': '100236',
+                    'account_type': 'asset_current',
+                    'company_ids': [Command.link(company_2.id)],
+                },
+            },
+            {
+                'xml_id': f'account.{company_2.id}_test_account_4',
+                'values': {
+                    'name': 'My Fourth Account',
+                    'code': '100237',
+                    'account_type': 'asset_current',
+                    'company_ids': [Command.link(company_2.id)],
+                },
+            }
+        ])
+
+        # 1. Check that we can't merge accounts with different types
+        with self.assertRaisesRegex(UserError, "You may only merge accounts that have the same account type"):
+            accounts.action_merge()
+        accounts[1].write({'account_type': 'asset_current'})
+
+        # 2. Check that we can't merge accounts from the same company if there are locked entries in more than one account.
+        locked_moves = self.env['account.move'].create([
+            {
+                'journal_id': self.company_data['default_journal_sale'].id,
+                'date': '2024-07-20',
+                'line_ids': [
+                    Command.create({
+                        'account_id': accounts[0].id,
+                        'balance': 10.0,
+                    }),
+                    Command.create({
+                        'account_id': self.company_data['default_account_receivable'].id,
+                        'balance': -10.0,
+                    })
+                ]
+            },
+            {
+                'journal_id': self.company_data['default_journal_misc'].id,
+                'date': '2024-07-01',
+                'line_ids': [
+                    Command.create({
+                        'account_id': accounts[1].id,
+                        'balance': 10.0,
+                    }),
+                    Command.create({
+                        'account_id': self.company_data['default_account_receivable'].id,
+                        'balance': -10.0,
+                    })
+                ]
+            },
+        ])
+        locked_moves.action_post()
+        company_1.fiscalyear_lock_date = '2024-07-31'
+
+        with self.assertRaisesRegex(UserError, "cannot merge accounts .* that both contain locked entries"):
+            accounts.action_merge()
+
+        # 3. Check that the merge fails if one account is hashed and another has locked entries in the same company
+        self.company_data['default_journal_misc'].restrict_mode_hash_table = True
+
+        company_1.fiscalyear_lock_date = None
+        locked_moves[1].button_hash()  # The second move will stay hashed - we'll check that this forces accounts[1] to be used.
+        company_1.fiscalyear_lock_date = '2024-07-31'
+
+        with self.assertRaisesRegex(
+            UserError,
+            "cannot merge account .* that contains hashed entries "
+            "with accounts .* that contain locked entries"
+        ):
+            accounts.action_merge()
+
+        # 4. Check that the merge fails if at least two accounts have hashed entries.
+        with self.assertRaisesRegex(UserError, "contain hashed entries, so cannot be merged"):
+            with self.env.cr.savepoint():
+                self.company_data['default_journal_sale'].restrict_mode_hash_table = True
+
+                company_1.fiscalyear_lock_date = None
+                locked_moves[0].button_hash()
+                company_1.fiscalyear_lock_date = '2024-07-31'
+
+                accounts.action_merge()
+
+        # Create a locked move in account 4. We'll check that this forces the code of account 4
+        # to be selected rather than the code of account 3.
+        other_locked_move = self.env['account.move'].with_company(company_2).create([
+            {
+                'journal_id': self.company_data_2['default_journal_misc'].id,
+                'date': '2024-07-20',
+                'line_ids': [
+                    Command.create({
+                        'account_id': accounts[3].id,
+                        'balance': 10.0,
+                    }),
+                    Command.create({
+                        'account_id': self.company_data_2['default_account_receivable'].id,
+                        'balance': -10.0,
+                    })
+                ]
+            }
+        ])
+        other_locked_move.action_post()
+        company_2.fiscalyear_lock_date = '2024-07-31'
+
+        # Make sure that in company_1, only the move in accounts[1] is locked and hashed.
+        company_1.fiscalyear_lock_date = '2024-07-15'
+
+        # Perform the merge.
+        accounts.with_context({
+            'account_merge_confirm': True,
+            'allowed_company_ids': [company_1.id, company_2.id]
+        }).action_merge()
+
+        # 4. Check that the accounts other than the one to merge into are deleted.
+        self.assertFalse((accounts[0] | accounts[2:4]).exists())
+
+        # 5. Check that the company_ids are correctly merged and that the codes are taken from
+        # account_2 and account_4, as they contain hashed and locked entries respectively.
+        self.assertRecordValues(accounts[1], [{
+            'company_ids': [company_1.id, company_2.id],
+            'name': 'My Second Account',
+            'code': '100235',
+        }])
+        self.assertRecordValues(accounts[1].with_company(company_2), [{'code': '100237'}])
+
+        # 6. Check that the xmlids are preserved
+        self.assertEqual(self.env['account.chart.template'].ref('test_account_1'), accounts[1])
+        self.assertEqual(self.env['account.chart.template'].ref('test_account_2'), accounts[1])
+        self.assertEqual(self.env['account.chart.template'].with_company(company_2).ref('test_account_3'), accounts[1])
+        self.assertEqual(self.env['account.chart.template'].with_company(company_2).ref('test_account_4'), accounts[1])
+
+    def test_account_code_mapping(self):
+        account = self.env['account.account'].create({
+            'code': 'test1',
+            'name': 'Test Account',
+            'account_type': 'asset_current',
+        })
+
+        # Write to DB so that the account gets an ID, and invalidate cache for code_mapping_ids so that they will be looked up
+        account.invalidate_recordset(['code_mapping_ids'])
+
+        account = account.with_context({'allowed_company_ids': [self.company_data['company'].id, self.company_data_2['company'].id]})
+
+        with Form(account) as account_form:
+            # Test that the code mapping gives correct values once the form has been opened (which should call search)
+            self.assertRecordValues(account.code_mapping_ids, [
+                {'company_id': self.company_data['company'].id, 'code': 'test1'},
+                {'company_id': self.company_data_2['company'].id, 'code': False},
+            ])
+
+            # Test that we are able to set a new code for company 2 via the company mapping
+            with account_form.code_mapping_ids.edit(1) as code_mapping_form:
+                code_mapping_form.code = 'test2'
+
+        self.assertRecordValues(account.with_company(self.company_data_2['company'].id), [{'code': 'test2'}])

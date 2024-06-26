@@ -19,7 +19,7 @@ class ProductTemplate(models.Model):
             if not self.property_account_income_id:
                 taxes = self.taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(company))
                 if not result['income'] or (result['income'].tax_ids and taxes and taxes[0] not in result['income'].tax_ids):
-                    result['income'] = self.env['account.account'].search([
+                    result['income'] = self.env['account.account'].with_company(company).search([
                         *self.env['account.account']._check_company_domain(company),
                         ('internal_group', '=', 'income'),
                         ('deprecated', '=', False),
@@ -28,7 +28,7 @@ class ProductTemplate(models.Model):
             if not self.property_account_expense_id:
                 supplier_taxes = self.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(company))
                 if not result['expense'] or (result['expense'].tax_ids and supplier_taxes and supplier_taxes[0] not in result['expense'].tax_ids):
-                    result['expense'] = self.env['account.account'].search([
+                    result['expense'] = self.env['account.account'].with_company(company).search([
                         *self.env['account.account']._check_company_domain(company),
                         ('internal_group', '=', 'expense'),
                         ('deprecated', '=', False),
