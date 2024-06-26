@@ -48,10 +48,58 @@ class TimesheetCustomerPortal(CustomerPortal):
         }
 
     def _get_search_domain(self, search_in, search):
+<<<<<<< saas-17.4
         if search_in in self._get_searchbar_inputs():
             return [(search_in, 'ilike', search)]
         else:
             return FALSE_DOMAIN
+||||||| e1c4dff709cbdb4f11df7e0a86fe1617bc344a82
+        search_domain = []
+        if search_in in ('project', 'all'):
+            search_domain = OR([search_domain, [('project_id', 'ilike', search)]])
+        if search_in in ('name', 'all'):
+            search_domain = OR([search_domain, [('name', 'ilike', search)]])
+        if search_in in ('employee', 'all'):
+            search_domain = OR([search_domain, [('employee_id', 'ilike', search)]])
+        if search_in in ('task', 'all'):
+            search_domain = OR([search_domain, [('task_id', 'ilike', search)]])
+        if search_in == 'parent_task_id':
+            search_domain = OR([search_domain, [('parent_task_id', '=', int(search))]])
+        return search_domain
+
+    def _get_groupby_mapping(self):
+        return {
+            'project': 'project_id',
+            'task': 'task_id',
+            'employee': 'employee_id',
+            'date': 'date'
+        }
+=======
+        search_domain = []
+        if search_in in ('project', 'all'):
+            search_domain = OR([search_domain, [('project_id', 'ilike', search)]])
+        if search_in in ('name', 'all'):
+            search_domain = OR([search_domain, [('name', 'ilike', search)]])
+        if search_in in ('employee', 'all'):
+            search_domain = OR([search_domain, [('employee_id', 'ilike', search)]])
+        if search_in in ('task', 'all'):
+            search_domain = OR([search_domain, [('task_id', 'ilike', search)]])
+        if search_in == 'parent_task_id':
+            parent_task_id = int(search)
+            if parent_task_id:
+                sub_task_ids = request.env['project.task'].browse(parent_task_id)._get_subtask_ids_per_task_id()[parent_task_id]
+                sub_task_ids.append(parent_task_id)
+                search_domain = OR([search_domain, [('parent_task_id', 'in', sub_task_ids)]])
+        return search_domain
+
+    def _get_groupby_mapping(self):
+        return {
+            'project': 'project_id',
+            'task': 'task_id',
+            'employee': 'employee_id',
+            'date': 'date'
+        }
+>>>>>>> 5f1c248ab50a4244a6bd833101cb2d7ba5bcf57b
 
     def _get_searchbar_sortings(self):
         return {
