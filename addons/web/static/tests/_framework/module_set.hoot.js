@@ -491,7 +491,6 @@ const WHITE_LISTED_KEYS = [
     "Chart", // Chart.js
     "L", // Leaflet
     "lamejs", // LameJS
-    "clickEverywhere", // Odoo ClickBot
 ];
 
 /** @type {Record<string, string[]} */
