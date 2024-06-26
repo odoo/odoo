@@ -139,7 +139,7 @@ patch(PosStore.prototype, {
             }
             changesPerProgram[pe.program_id].push(pe);
         }
-        for (const coupon of order.code_activated_coupon_ids) {
+        for (const coupon of order._code_activated_coupon_ids) {
             programsToCheck.add(coupon.program_id.id);
         }
         const programs = [...programsToCheck].map((programId) =>
@@ -182,8 +182,8 @@ patch(PosStore.prototype, {
             }
         }
 
-        // Also remove coupons from code_activated_coupon_ids if their program applies_on current orders and the program does not give any points
-        const toUnlink = order.code_activated_coupon_ids.filter(
+        // Also remove coupons from _code_activated_coupon_ids if their program applies_on current orders and the program does not give any points
+        const toUnlink = order._code_activated_coupon_ids.filter(
             inverted((coupon) => {
                 const program = coupon.program_id;
                 if (
@@ -195,7 +195,7 @@ patch(PosStore.prototype, {
                 return true;
             })
         );
-        order.update({ code_activated_coupon_ids: [["unlink", ...toUnlink]] });
+        order.update({ _code_activated_coupon_ids: [["unlink", ...toUnlink]] });
     },
     async activateCode(code) {
         const order = this.get_order();
@@ -229,7 +229,7 @@ patch(PosStore.prototype, {
             await this.orderUpdateLoyaltyPrograms();
             claimableRewards = order.getClaimableRewards(false, rule.program_id.id);
         } else {
-            if (order.code_activated_coupon_ids.find((coupon) => coupon.code === code)) {
+            if (order._code_activated_coupon_ids.find((coupon) => coupon.code === code)) {
                 return _t("That coupon code has already been scanned and activated.");
             }
             const customerId = order.get_partner() ? order.get_partner().id : false;
@@ -265,7 +265,7 @@ patch(PosStore.prototype, {
                     // TODO JCB: make the expiration_date work.
                     // expiration_date: payload.expiration_date,
                 });
-                order.update({ code_activated_coupon_ids: [["link", coupon]] });
+                order.update({ _code_activated_coupon_ids: [["link", coupon]] });
                 await this.orderUpdateLoyaltyPrograms();
                 claimableRewards = order.getClaimableRewards(coupon.id);
             } else {
@@ -304,7 +304,7 @@ patch(PosStore.prototype, {
                     allCoupons.push(pe.coupon_id);
                 }
             }
-            allCoupons.push(...order.code_activated_coupon_ids.map((coupon) => coupon.id));
+            allCoupons.push(...order._code_activated_coupon_ids.map((coupon) => coupon.id));
             const couponsToFetch = allCoupons.filter(
                 (elem) => !this.models["loyalty.card"].get(elem)
             );
@@ -498,7 +498,7 @@ patch(PosStore.prototype, {
                 };
             })
             .concat(
-                order.code_activated_coupon_ids.map((coupon) => {
+                order._code_activated_coupon_ids.map((coupon) => {
                     return {
                         program_id: coupon.program_id.id,
                         coupon_id: coupon.id,
@@ -696,8 +696,8 @@ patch(PosStore.prototype, {
             Object.assign(
                 this.rewardProductByLineUuidCache,
                 order.lines.reduce((agg, line) => {
-                    if (line.reward_product_id) {
-                        return { ...agg, [line.uuid]: line.reward_product_id.id };
+                    if (line._reward_product_id) {
+                        return { ...agg, [line.uuid]: line._reward_product_id.id };
                     } else {
                         return agg;
                     }
@@ -721,7 +721,7 @@ patch(PosStore.prototype, {
             for (const line of order.lines) {
                 if (line.uuid in this.rewardProductByLineUuidCache) {
                     line.update({
-                        reward_product_id: this.models["product.product"].get(
+                        _reward_product_id: this.models["product.product"].get(
                             this.rewardProductByLineUuidCache[line.uuid]
                         ),
                     });

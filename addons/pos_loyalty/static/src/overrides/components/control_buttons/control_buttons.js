@@ -53,7 +53,7 @@ patch(ControlButtons.prototype, {
                 this.pos.addLineToCurrentOrder(
                     {
                         product_id: selectedProgram.trigger_product_ids[0],
-                        e_wallet_program_id: selectedProgram,
+                        _e_wallet_program_id: selectedProgram,
                         price_unit: -orderTotal,
                     },
                     {}
