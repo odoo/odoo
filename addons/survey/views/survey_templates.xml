@@ -289,13 +289,16 @@
     <template id="survey_fill_form_done" name="Survey: finished">
         <div class="wrap">
             <div class="o_survey_finished mt32 mb32">
-                <h1 class="fs-2">
-                    <t t-if="survey.scoring_type != 'no_scoring'">
-                        You scored <t t-out="answer.scoring_percentage"/>%
-                    </t>
-                    <t t-else="">Thank you!</t>
-                </h1>
-                <div t-field="survey.description_done" class="oe_no_empty" />
+                <t t-if="survey.end_message_selection == 'unique'">
+                    <h1 class="fs-2">
+                        <t t-if="survey.scoring_type != 'no_scoring'">
+                            You scored <t t-out="answer.scoring_percentage"/>%
+                        </t>
+                        <t t-else="">Thank you!</t>
+                    </h1>
+                    <div t-field="survey.description_done" class="oe_no_empty" />
+                </t>
+                <div t-elif="survey.end_message_selection == 'most_answered'" t-field="answer.most_answered_tag.end_message" class="oe_no_empty" />
                 <div class="row">
                     <div class="col">
                         <t t-if="survey.scoring_type != 'no_scoring' and survey.scoring_success_min">

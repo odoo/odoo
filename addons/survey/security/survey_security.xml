@@ -97,6 +97,19 @@
             <field name="perm_create" eval="1"/>
         </record>
 
+        <record id="survey_question_answer_tag_rule_survey_user" model="ir.rule">
+            <field name="name">Survey question answer tag: officer: unrestricted survey or in restricted users</field>
+            <field name="model_id" ref="survey.model_survey_question_answer_tag"/>
+            <field name="domain_force">['|', ('survey_id.restrict_user_ids', 'in', user.id),
+                ('survey_id.restrict_user_ids', '=', False)]
+            </field>
+            <field name="groups" eval="[(4, ref('group_survey_user'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>       
+
         <!-- SURVEY: USER_INPUT, USER_INPUT_LINE -->
         <record id="survey_user_input_rule_survey_manager" model="ir.rule">
             <field name="name">Survey user input: manager: all non specialized surveys</field>
