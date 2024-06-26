@@ -9,7 +9,9 @@ declaration.
 Signed,
 
 Sylvain LE GAL sylvain.legal@grap.coop https://github.com/legalsylvain
+Quentin DUPONT perso@quentindupont.fr https://github.com/quentinDupont
 
 List of contributors:
 
 Sylvain LE GAL sylvain.legal@grap.coop https://github.com/legalsylvain
+Quentin DUPONT perso@quentindupont.fr https://github.com/quentinDupont
