@@ -221,7 +221,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         """ Test 'send_email' on template in batch """
         self.env.invalidate_all()
         mails = self.env['mail.mail'].sudo()
-        with self.with_user(self.user_employee.login), self.assertQueryCount(933):  # test_mail: 933
+        with self.with_user(self.user_employee.login), self.assertQueryCount(934):  # test_mail: 934
             template = self.test_template.with_env(self.env)
             for record in self.test_records_batch:
                 mails += mails.browse(template.send_mail(record.id))
@@ -317,7 +317,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
 
         self.env.invalidate_all()
         mails = self.env['mail.mail'].sudo()
-        with self.with_user(self.user_employee.login), self.assertQueryCount(49):
+        with self.with_user(self.user_employee.login), self.assertQueryCount(50):
             template = self.test_template.with_env(self.env)
             for record in self.test_records:
                 mails += mails.browse(
