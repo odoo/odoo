@@ -284,6 +284,9 @@ export class PosStore extends Reactive {
 
             product.cachedPricelistRules = applicableRules;
         }
+        if (data && data.length > 0 && data[0].model.modelName === "product.product") {
+            this._loadMissingPricelistItems(products);
+        }
     }
 
     async afterProcessServerData() {
