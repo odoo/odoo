@@ -41,6 +41,7 @@ export const odooExceptionTitleMap = new Map(
 export class ErrorDialog extends Component {
     static template = "web.ErrorDialog";
     static components = { Dialog };
+    static dialogTitle = _t(`Oops!`);
     static title = _t("Odoo Error");
     static props = { ...standardErrorDialogProps };
 

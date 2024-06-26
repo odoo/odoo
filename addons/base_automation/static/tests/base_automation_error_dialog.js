@@ -53,7 +53,7 @@ QUnit.module("base_automation", {}, function () {
     });
 
     QUnit.test("Error due to an automation rule", async function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         const errorContext = {
             exception_class: "base_automation",
@@ -91,14 +91,11 @@ QUnit.module("base_automation", {}, function () {
         });
         await unhandledRejectionCb(errorEvent);
         await nextTick();
-        assert.containsOnce(target, ".modal .fa-clipboard");
         assert.containsOnce(target, ".modal .o_disable_action_button");
         assert.containsOnce(target, ".modal .o_edit_action_button");
     });
 
     QUnit.test("Error not due to an automation rule", async function (assert) {
-        assert.expect(3);
-
         const error = makeServerError({
             subType: "Odoo Client Error",
             message: "Message",
@@ -115,7 +112,6 @@ QUnit.module("base_automation", {}, function () {
         });
         await unhandledRejectionCb(errorEvent);
         await nextTick();
-        assert.containsOnce(target, ".modal .fa-clipboard");
         assert.containsNone(target, ".modal .o_disable_action_button");
         assert.containsNone(target, ".modal .o_edit_action_button");
     });
