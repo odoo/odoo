@@ -308,7 +308,7 @@ class StockMove(models.Model):
         if wip_production:
             self.env['change.production.qty'].with_context(skip_activity=True).create({
                 'mo_id': wip_production.id,
-                'product_qty': wip_production.product_uom_qty + quantity_to_remove
+                'product_qty': wip_production.product_qty + quantity_to_remove
             }).change_prod_qty()
 
         # Cancel productions until reach new_quantity
@@ -319,7 +319,7 @@ class StockMove(models.Model):
             else:
                 self.env['change.production.qty'].with_context(skip_activity=True).create({
                     'mo_id': production.id,
-                    'product_qty': production.product_uom_qty - quantity_to_remove
+                    'product_qty': production.product_qty - quantity_to_remove
                 }).change_prod_qty()
                 break
 
