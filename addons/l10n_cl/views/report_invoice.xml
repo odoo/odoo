@@ -162,7 +162,7 @@
 
         <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
             <attribute name="t-field"></attribute>
-            <attribute t-if="not o.l10n_latam_document_type_id._is_doc_type_electronic_ticket()" name="t-out">line_amounts['price_item_document']</attribute>
+            <attribute name="t-out">line_amounts['price_item_document']</attribute>
             <attribute name="t-options">{"widget": "float", "precision": 2}</attribute>
         </xpath>
 
