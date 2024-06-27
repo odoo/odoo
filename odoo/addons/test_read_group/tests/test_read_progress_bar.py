@@ -86,7 +86,7 @@ class TestReadProgressBar(common.TransactionCase):
         c1, c2, c3 = self.env['res.country'].search([], limit=3)
 
         self.env['x_progressbar'].create([
-            # week 53 2018 / week 1 2019
+            # week 1 2019
             {'x_country_id': c1.id, 'x_date': '2019-01-01', 'x_state': 'foo'},
             {'x_country_id': c1.id, 'x_date': '2019-01-02', 'x_state': 'foo'},
             {'x_country_id': c1.id, 'x_date': '2019-01-03', 'x_state': 'foo'},
@@ -120,7 +120,7 @@ class TestReadProgressBar(common.TransactionCase):
         # check date aggregation and format
         result = self.env['x_progressbar'].read_progress_bar([], 'x_date:week', progress_bar)
         self.assertEqual(result, {
-            'W53 2018': {'foo': 3, 'bar': 1, 'baz': 1},
+            'W1 2019': {'foo': 3, 'bar': 1, 'baz': 1},
             'W2 2019': {'foo': 3, 'bar': 2, 'baz': 2},
             'W3 2019': {'foo': 0, 'bar': 0, 'baz': 3},
         })
@@ -145,4 +145,4 @@ class TestReadProgressBar(common.TransactionCase):
         }
         # It is not possible to read_progress_bar with ungroupable fields
         with self.assertRaises(ValueError):
-            result = self.env['x_progressbar'].read_progress_bar([], 'x_country_id', progress_bar)
+            self.env['x_progressbar'].read_progress_bar([], 'x_country_id', progress_bar)
