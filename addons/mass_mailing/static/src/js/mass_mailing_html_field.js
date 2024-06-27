@@ -13,7 +13,7 @@ import { HtmlField, htmlField } from "@web_editor/js/backend/html_field";
 import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { utils as uiUtils } from "@web/core/ui/ui_service";
-import { useSubEnv, status, markup } from "@odoo/owl";
+import { useSubEnv, status, markup, onWillUnmount } from "@odoo/owl";
 
 export class MassMailingHtmlField extends HtmlField {
     static props = {
@@ -25,14 +25,19 @@ export class MassMailingHtmlField extends HtmlField {
     }
 
     setup() {
-        super.setup();
-
         useSubEnv({
+            onIframeUpdated: this._updateIframe.bind(this),
             onWysiwygReset: this._resetIframe.bind(this),
         });
+        super.setup();
         this.action = useService('action');
         this.orm = useService('orm');
         this.dialog = useService('dialog');
+
+        this._resizeObserver = new ResizeObserver(() => this._resizeMailingEditorIframe());
+        onWillUnmount(() => {
+            this._resizeObserver.disconnect();
+        });
 
         useRecordObserver((record) => {
             if (record.data.mailing_model_id && this.wysiwyg) {
@@ -166,6 +171,29 @@ export class MassMailingHtmlField extends HtmlField {
         }
 
         await this._resetIframe();
+    }
+
+    _updateIframe() {
+        const iframeDoc = this.wysiwyg.$iframe[0].contentDocument.documentElement;
+        if (iframeDoc) {
+            this._resizeObserver.disconnect();
+            this._resizeObserver.observe(iframeDoc);
+        }
+    }
+
+    _resizeMailingEditorIframe() {
+        if (!this.wysiwyg) {
+            return;
+        }
+        const minHeight = $(window).height() - Math.abs(this.wysiwyg.$iframe.offset().top);
+        const iframe = this.wysiwyg.$iframe[0];
+        const iframeTarget = iframe.contentDocument.querySelector("#iframe_target");
+        const themeSelectorNew = iframe.contentDocument.querySelector(".o_mail_theme_selector_new");
+
+        const iframeElement = themeSelectorNew || iframeTarget;
+        if (iframeElement) {
+            iframe.parentNode.style.height = `${Math.max(iframeElement.scrollHeight, minHeight)}px`;
+        }
     }
 
     async _resetIframe() {
