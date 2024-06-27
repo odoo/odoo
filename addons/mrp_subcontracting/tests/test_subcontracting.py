@@ -948,6 +948,12 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_decrease_quantity_done(self):
         self.bom.consumption = 'flexible'
         supplier_location = self.env.ref('stock.stock_location_suppliers')
+        uom_duo = self.env['uom.uom'].create({
+            'category_id': self.finished.uom_id.category_id.id,
+            'name': 'Duos',
+            'uom_type': 'bigger',
+            'factor_inv': 2.0,
+        })
 
         receipt = self.env['stock.picking'].create({
             'partner_id': self.subcontractor_partner1.id,
@@ -958,7 +964,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
                 'name': self.finished.name,
                 'product_id': self.finished.id,
                 'product_uom_qty': 10.0,
-                'product_uom': self.finished.uom_id.id,
+                'product_uom': uom_duo.id,
                 'location_id': supplier_location.id,
                 'location_dest_id': self.warehouse.lot_stock_id.id,
             })],
