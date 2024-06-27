@@ -2523,7 +2523,12 @@ class BaseModel(metaclass=MetaModel):
                                 value, format=READ_GROUP_DISPLAY_FORMAT[granularity],
                                 locale=locale
                             )
-
+                        if granularity == 'week':
+                            year, week = date_utils.weeknumber(
+                                babel.Locale.parse(locale),
+                                value,
+                            )
+                            label = f"W{week} {year:04}"
                         range_start = range_start.strftime(fmt)
                         range_end = range_end.strftime(fmt)
                         row[group] = label  # TODO should put raw data
