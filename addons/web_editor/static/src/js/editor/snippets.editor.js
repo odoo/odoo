@@ -3900,7 +3900,7 @@ class SnippetsMenu extends Component {
         if (this.options.wysiwyg.isSaving()) {
             return;
         }
-
+        // TO-remove-shsa - do we need ev.originalEvent now ?
         var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;
         if (!srcElement || this.lastElement === srcElement) {
             return;

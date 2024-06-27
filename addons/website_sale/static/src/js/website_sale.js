@@ -784,7 +784,7 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      */
     _onMouseWheel: function (ev) {
         ev.preventDefault();
-        if (ev.originalEvent.deltaY > 0) {
+        if (ev.target.deltaY > 0) {
             this.$el.carousel('next');
         } else {
             this.$el.carousel('prev');

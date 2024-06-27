@@ -1861,7 +1861,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @override
      */
     _shouldIgnoreClick(ev) {
-        return ev.originalEvent.__isColorpickerClick || this._super(...arguments);
+        return ev.target.__isColorpickerClick || this._super(...arguments);
     },
     /**
      * Browses the colorpicker XML template to return all possible values of
@@ -4431,7 +4431,7 @@ const SnippetOptionWidget = PublicWidget.extend({
      */
     _toggleCollapseEl(collapseEl, show) {
         collapseEl.classList.toggle('active', show);
-        collapseEl.querySelector('we-toggler.o_we_collapse_toggler')?.classList.toggle('active', show);
+        collapseEl.querySelector('we-toggler.o_we_collapse_toggler').classList.toggle('active', show);
     },
 
     //--------------------------------------------------------------------------
@@ -8990,8 +8990,8 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         ev.preventDefault();
 
         const delta = this._getBackgroundDelta();
-        this.currentPosition.left = clamp(this.currentPosition.left + ev.originalEvent.movementX, [0, delta.x]);
-        this.currentPosition.top = clamp(this.currentPosition.top + ev.originalEvent.movementY, [0, delta.y]);
+        this.currentPosition.left = clamp(this.currentPosition.left + ev.target.movementX, [0, delta.x]);
+        this.currentPosition.top = clamp(this.currentPosition.top + ev.target.movementY, [0, delta.y]);
 
         const percentPosition = {
             left: this.currentPosition.left / delta.x * 100,
