@@ -23,7 +23,7 @@ class MailTemplateReset(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'type': 'success',
-                'message': _('Mail Templates have been reset'),
+                'message': _('The email template(s) have been restored to their original settings.'),
                 'next': next_action,
             }
         }
