@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, keyDown, queryAll } from "@odoo/hoot-dom";
+import { click, press, queryAll } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { reactive } from "@odoo/owl";
 import {
@@ -146,11 +146,11 @@ test("view switcher hotkey cycles through views", async () => {
     });
     expect(`.o_list_view`).toHaveCount(1);
 
-    keyDown("alt+shift+v");
+    press(["alt", "shift", "v"]);
     await animationFrame();
     expect(`.o_kanban_view`).toHaveCount(1);
 
-    keyDown("alt+shift+v");
+    press(["alt", "shift", "v"]);
     await animationFrame();
     expect(`.o_list_view`).toHaveCount(1);
 });

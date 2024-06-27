@@ -443,17 +443,23 @@ test("registration allows repeat if specified", async () => {
     getService("hotkey").add(defaultBehaviourKey, () => expect.step(defaultBehaviourKey));
     await animationFrame();
 
-    // Dispatch the three keys without repeat:
-    press(allowRepeatKey);
-    press(disallowRepeatKey);
-    press(defaultBehaviourKey);
-    expect.verifySteps([allowRepeatKey, disallowRepeatKey, defaultBehaviourKey]);
+    keyDown(allowRepeatKey);
+    keyDown(allowRepeatKey);
+    await animationFrame();
 
-    // Dispatch the three keys with repeat:
-    press(allowRepeatKey, { repeat: true });
-    press(disallowRepeatKey, { repeat: true });
-    press(defaultBehaviourKey, { repeat: true });
-    expect.verifySteps([allowRepeatKey]);
+    expect.verifySteps([allowRepeatKey, allowRepeatKey]);
+
+    keyDown(disallowRepeatKey);
+    keyDown(disallowRepeatKey);
+    await animationFrame();
+
+    expect.verifySteps([disallowRepeatKey]);
+
+    keyDown(defaultBehaviourKey);
+    keyDown(defaultBehaviourKey);
+    await animationFrame();
+
+    expect.verifySteps([defaultBehaviourKey]);
 });
 
 test("[data-hotkey] never allow repeat", async () => {
@@ -468,10 +474,10 @@ test("[data-hotkey] never allow repeat", async () => {
 
     await mountWithCleanup(TestComponent);
 
-    press(["alt", key]);
+    keyDown(["alt", key]);
     expect.verifySteps([key]);
 
-    press(["alt", key], { repeat: true });
+    keyDown([key]);
     expect.verifySteps([]);
 });
 

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { press, queryAllTexts } from "@odoo/hoot-dom";
+import { keyDown, press, queryAllTexts } from "@odoo/hoot-dom";
 import {
     Deferred,
     advanceFrame,
@@ -246,21 +246,23 @@ test("useCommand hook with hotkey and hotkeyOptions", async () => {
     }
     await mountWithCleanup(MyComponent);
 
-    // Dispatch the three keys without repeat:
-    press(allowRepeatKey);
-    press(disallowRepeatKey);
-    press(defaultBehaviourKey);
+    keyDown(allowRepeatKey);
+    keyDown(allowRepeatKey);
     await animationFrame();
 
-    expect.verifySteps([allowRepeatKey, disallowRepeatKey, defaultBehaviourKey]);
+    expect.verifySteps([allowRepeatKey, allowRepeatKey]);
 
-    // Dispatch the three keys with repeat:
-    press(allowRepeatKey, { repeat: true });
-    press(disallowRepeatKey, { repeat: true });
-    press(defaultBehaviourKey, { repeat: true });
+    keyDown(disallowRepeatKey);
+    keyDown(disallowRepeatKey);
     await animationFrame();
 
-    expect.verifySteps([allowRepeatKey]);
+    expect.verifySteps([disallowRepeatKey]);
+
+    keyDown(defaultBehaviourKey);
+    keyDown(defaultBehaviourKey);
+    await animationFrame();
+
+    expect.verifySteps([defaultBehaviourKey]);
 });
 
 test("useCommand hook with hotkey and isAvailable", async () => {
