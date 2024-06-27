@@ -113,6 +113,40 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
             }
         }
     }, {
+        content: "Go back to projects view.",
+        trigger: 'a[data-menu-xmlid="project.menu_projects"]',
+    }, {
+        content: "Open Test History Project Without Tasks",
+        trigger: "div span.o_text_overflow[title='Without tasks project']",
+        extra_trigger: ".o_kanban_view",
+    }, {
+        content: "Switch to list view",
+        extra_trigger: "div .o_project_task_kanban_view",
+        trigger: ".o_switch_view.o_list",
+    }, {
+        content: "Create a new task.",
+        trigger: '.o_list_button_add',
+    }, {
+        trigger: 'textarea[id="name_0"]',
+        content: 'Set task name',
+        run: 'text New task',
+    },
+        ...changeDescriptionContentAndSave("0"),
+        ...changeDescriptionContentAndSave("1"),
+        ...changeDescriptionContentAndSave("2"),
+        ...changeDescriptionContentAndSave("3"),
+    {
+        content: "Open History Dialog",
+        trigger: ".o_cp_action_menus i.fa-cog",
+        extra_trigger: ".o_form_view",
+    }, {
+        content: "Open History Dialog",
+        trigger: ".o_menu_item i.fa-history",
+        extra_trigger: ".dropdown-menu",
+    }, {
+        content: "Close History Dialog",
+        trigger: ".modal-header .btn-close",
+    }, {
         content: "Go back to projects view. this step is added because Tour can't be finished with an open form view in edition mode.",
         trigger: 'a[data-menu-xmlid="project.menu_projects"]',
     }, {
