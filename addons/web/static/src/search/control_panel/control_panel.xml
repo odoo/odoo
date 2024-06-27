@@ -82,7 +82,7 @@
         <t t-set="collapsedBreadcrumbs" t-value="breadcrumbs.slice(0, -3).reverse()"/>
         <t t-set="breadcrumb" t-value="currentBreadcrumbs[0] || {}"/>
 
-        <div t-if="collapsedBreadcrumbs.length || visiblePathBreadcrumbs.length" class="o_breadcrumb d-flex flex-row flex-md-column align-self-stretch justify-content-between min-w-0">
+        <div t-if="collapsedBreadcrumbs.length || visiblePathBreadcrumbs.length" class="o_breadcrumb d-flex flex-row flex-md-column align-self-stretch justify-content-between min-w-0" t-att-class="!env.isSmall? 'flex-column' : 'flex-row'">
             <t t-if="env.isSmall">
                 <t t-set="previousBreadcrumb" t-value="visiblePathBreadcrumbs.slice(-1)"/>
                 <button class="o_back_button btn btn-link px-1" t-on-click.prevent="() => this.onBreadcrumbClicked(previousBreadcrumb.jsId)">
