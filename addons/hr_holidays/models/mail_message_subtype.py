@@ -28,7 +28,7 @@ class MailMessageSubtype(models.Model):
                 department_subtype = self.create({
                     'name': subtype.name,
                     'res_model': 'hr.department',
-                    'default': subtype.default or False,
+                    'default': False,
                     'parent_id': subtype.id,
                     'relation_field': 'department_id',
                 })

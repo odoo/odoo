@@ -99,6 +99,11 @@ class Department(models.Model):
                 # subscribe the manager user
                 if manager.user_id:
                     self.message_subscribe(partner_ids=manager.user_id.partner_id.ids)
+            manager_to_unsubscribe = set()
+            for department in self:
+                if department.manager_id and department.manager_id.user_id:
+                    manager_to_unsubscribe.update(department.manager_id.user_id.partner_id.ids)
+            self.message_unsubscribe(partner_ids=list(manager_to_unsubscribe))
             # set the employees's parent to the new manager
             self._update_employee_manager(manager_id)
         return super(Department, self).write(vals)
