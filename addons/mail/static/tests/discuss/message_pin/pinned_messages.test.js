@@ -116,7 +116,7 @@ test("Jump to message", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Pinned Messages']");
-    await click(".o-discuss-PinnedMessagesPanel button", { text: "Jump" });
+    await click(".o-discuss-PinnedMessagesPanel a[role='button']", { text: "Jump" });
     await contains(".o-mail-Thread .o-mail-Message-body", { text: "Hello world!", visible: true });
 });
 
