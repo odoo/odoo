@@ -495,8 +495,8 @@ export class ThreadService {
     }
 
     async leaveChannel(channel) {
-        await this.orm.call("discuss.channel", "action_unfollow", [channel.id]);
         channel.delete();
+        await this.orm.call("discuss.channel", "action_unfollow", [channel.id]);
         this.setDiscussThread(
             this.store.discuss.channels.threads[0]
                 ? this.store.discuss.channels.threads[0]
