@@ -298,6 +298,24 @@ const getEventConstructor = (eventType) => {
 };
 
 /**
+ * @param {Node} a
+ * @param {Node} b
+ */
+const getFirstCommonParent = (a, b) => {
+    const range = document.createRange();
+    range.setStart(a, 0);
+    range.setEnd(b, 0);
+
+    if (range.collapsed) {
+        // Re-arranges range if the first node comes after the second
+        range.setStart(b, 0);
+        range.setEnd(a, 0);
+    }
+
+    return range.commonAncestorContainer;
+};
+
+/**
  * @param {Target} target
  * @param {QueryOptions} options
  * @returns {EventTarget}
@@ -1253,11 +1271,13 @@ const _pointerUp = (target, options) => {
 
     if (!prevented) {
         const clickEventInit = { ...eventInit, detail: runTime.currentClickCount + 1 };
-        if (target === runTime.currentPointerDownTarget) {
-            triggerClick(target, clickEventInit);
+        const currentTarget = runTime.currentPointerDownTarget;
+        const parent = currentTarget && getFirstCommonParent(target, currentTarget);
+        if (parent) {
+            triggerClick(parent, clickEventInit);
             runTime.currentClickCount++;
             if (!hasTouch() && runTime.currentClickCount % 2 === 0) {
-                dispatch(target, "dblclick", clickEventInit);
+                dispatch(parent, "dblclick", clickEventInit);
             }
         }
     }
