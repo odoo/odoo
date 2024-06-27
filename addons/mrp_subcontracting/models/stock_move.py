@@ -334,6 +334,9 @@ class StockMove(models.Model):
                 quantity_to_remove -= production.product_qty
                 production.with_context(skip_activity=True).action_cancel()
             else:
+                if float_is_zero(quantity_to_remove, precision_rounding=production.product_uom_id.rounding):
+                    # No need to do change_prod_qty for no change at all.
+                    break
                 self.env['change.production.qty'].with_context(skip_activity=True).create({
                     'mo_id': production.id,
                     'product_qty': production.product_uom_qty - quantity_to_remove
