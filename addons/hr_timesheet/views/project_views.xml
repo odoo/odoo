@@ -151,12 +151,13 @@
                         </group>
                     <field name="timesheet_ids" mode="tree,kanban" attrs="{'invisible': [('analytic_account_active', '=', False)]}" context="{'default_project_id': project_id, 'default_name':''}">
                         <tree editable="bottom" string="Timesheet Activities" default_order="date">
-                            <field name="date"/>
+                            <field name="is_readonly" invisible="1"/>
+                            <field name="date" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                             <field name="user_id" invisible="1"/>
-                            <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user"/>
-                            <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user"/>
-                            <field name="name" required="0"/>
-                            <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0"/>
+                            <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                            <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                            <field name="name" required="0" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                            <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                             <field name="project_id" invisible="1"/>
                             <field name="task_id" invisible="1"/>
                             <field name="company_id" invisible="1"/>
@@ -198,12 +199,13 @@
                         <form  string="Timesheet Activities">
                             <sheet>
                                  <group>
-                                    <field name="date"/>
-                                    <field name="user_id" invisible="1"/>
-                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user"/>
-                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user"/>
-                                    <field name="name" required="0"/>
-                                    <field name="unit_amount" string="Duration" widget="float_time" decoration-danger="unit_amount &gt; 24"/>
+                                    <field name="is_readonly" invisible="1"/>
+                                    <field name="date" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                    <field name="user_id" invisible="1" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                    <field name="name" required="0" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                    <field name="unit_amount" string="Duration" widget="float_time" decoration-danger="unit_amount &gt; 24" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                                     <field name="project_id" invisible="1"/>
                                     <field name="task_id" invisible="1"/>
                                     <field name="company_id" invisible="1"/>

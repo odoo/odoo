@@ -67,6 +67,7 @@ class AccountAnalyticLine(models.Model):
     manager_id = fields.Many2one('hr.employee', "Manager", related='employee_id.parent_id', store=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
     partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
+    is_readonly = fields.Boolean(string="Readonly", compute='_compute_is_readonly')
 
     def name_get(self):
         result = super().name_get()
@@ -89,6 +90,15 @@ class AccountAnalyticLine(models.Model):
     def _compute_encoding_uom_id(self):
         for analytic_line in self:
             analytic_line.encoding_uom_id = analytic_line.company_id.timesheet_encode_uom_id
+
+    def _is_validated(self):
+        self.ensure_one()
+        return False
+
+    def _compute_is_readonly(self):
+        readonly_timesheets = self.filtered(lambda timesheet: timesheet._is_validated())
+        readonly_timesheets.is_readonly = True
+        (self - readonly_timesheets).is_readonly = False
 
     @api.depends('task_id.partner_id', 'project_id.partner_id')
     def _compute_partner_id(self):
