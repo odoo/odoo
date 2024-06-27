@@ -65,6 +65,17 @@ export class HootConfigDropdown extends Component {
                         </t>
                     </div>
                     <label
+                        class="flex items-center gap-3 p-1 mb-1"
+                        title="Sets test timeout value (in milliseconds)"
+                    >
+                        <span>Timeout</span>
+                        <input
+                            type="text"
+                            class="outline-none border-b border-primary px-1 w-full"
+                            t-model.number="config.timeout"
+                        />
+                    </label>
+                    <label
                         class="cursor-pointer flex items-center gap-1 p-1 hover:bg-gray-300 dark:hover:bg-gray-700"
                         title="Sets the seed of the random generator"
                     >
@@ -81,7 +92,7 @@ export class HootConfigDropdown extends Component {
                             <span class="text-muted whitespace-nowrap ms-1">Seed:</span>
                             <input
                                 type="text"
-                                class="w-full outline-none border-b border-primary px-1 w-full"
+                                class="w-full outline-none border-b border-primary px-1"
                                 t-model.number="config.random"
                             />
                             <button
@@ -208,9 +219,9 @@ export class HootConfigDropdown extends Component {
     `;
 
     executionOrders = [
-        { value: "fifo", label: "First in, first out", icon: "fa-sort-numeric-asc" },
-        { value: "lifo", label: "Last in, first out", icon: "fa-sort-numeric-desc" },
-        { value: "random", label: "Random", icon: "fa-random" },
+        { value: "fifo", title: "First in, first out", icon: "fa-sort-numeric-asc" },
+        { value: "lifo", title: "Last in, first out", icon: "fa-sort-numeric-desc" },
+        { value: "random", title: "Random", icon: "fa-random" },
     ];
     logLevels = $entries(logLevels)
         .filter(([, value]) => value)
