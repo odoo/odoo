@@ -4718,37 +4718,16 @@ class AccountMove(models.Model):
         res = super()._message_post_after_hook(new_message, message_values)
 
         attachments = new_message.attachment_ids
-        if not attachments or self.env.context.get('no_new_invoice') or not self.is_invoice(include_receipts=True):
+        results = self._check_and_decode_attachment(attachments)
+        if not results:
             return res
+        attachments_in_result = self.env['ir.attachment']
 
-        odoobot = self.env.ref('base.partner_root')
-        if self.state != 'draft':
-            self.message_post(body=_('The invoice is not a draft, it was not updated from the attachment.'),
-                              message_type='comment',
-                              subtype_xmlid='mail.mt_note',
-                              author_id=odoobot.id)
-            return res
-
-        # As we are coming from the mail, we assume that ONE of the attachments
-        # will enhance the invoice thanks to EDI / OCR / .. capabilities
-        has_existing_lines = bool(self.invoice_line_ids)
-        results = self._extend_with_attachments(attachments, new=bool(self._context.get('from_alias')))
-        if has_existing_lines and not results:
-            self.message_post(body=_('The invoice already contains lines, it was not updated from the attachment.'),
-                              message_type='comment',
-                              subtype_xmlid='mail.mt_note',
-                              author_id=odoobot.id)
-            return res
-        attachments_per_invoice = defaultdict(self.env['ir.attachment'].browse)
-        attachments_in_invoices = self.env['ir.attachment']
         for attachment, invoices in results.items():
-            attachments_in_invoices += attachment
-            invoices = invoices or self
-            for invoice in invoices:
-                attachments_per_invoice[invoice] |= attachment
+            attachments_in_result += attachment
+        self._unlink_unused_attachment(attachments_in_result)
 
-        # Unlink the unused attachments
-        (attachments - attachments_in_invoices).unlink()
+        attachments_per_invoice = defaultdict(self.env['ir.attachment'].browse)
 
         for invoice, attachments in attachments_per_invoice.items():
             if invoice == self:
@@ -4766,8 +4745,42 @@ class AccountMove(models.Model):
                 invoice.attachment_ids |= attachments
                 invoice.message_ids = [Command.set(sub_new_message.id)]
                 super(AccountMove, invoice)._message_post_after_hook(sub_new_message, sub_message_values)
-
         return res
+
+    def _check_and_decode_attachment(self, attachments):
+        if not attachments or self.env.context.get('no_new_invoice') or not self.is_invoice(include_receipts=True):
+            return False
+        odoobot = self.env.ref('base.partner_root')
+        if self.state != 'draft':
+            self.message_post(body=_('The invoice is not a draft, it was not updated from the attachment.'),
+                              message_type='comment',
+                              subtype_xmlid='mail.mt_note',
+                              author_id=odoobot.id)
+            return False
+
+        # As we are coming from the mail, we assume that ONE of the attachments
+        # will enhance the invoice thanks to EDI / OCR / .. capabilities
+        has_existing_lines = bool(self.invoice_line_ids)
+        results = self._extend_with_attachments(attachments, new=bool(self._context.get('from_alias')))
+        if has_existing_lines and not results:
+            self.message_post(body=_('The invoice already contains lines, it was not updated from the attachment.'),
+                              message_type='comment',
+                              subtype_xmlid='mail.mt_note',
+                              author_id=odoobot.id)
+            return False
+        return results
+
+    def _unlink_unused_attachment(self, attachments):
+        attachments_per_invoice = defaultdict(self.env['ir.attachment'].browse)
+        attachments_in_invoices = self.env['ir.attachment']
+
+        for attachment in attachments:
+            attachments_in_invoices += attachment
+            for invoice in self:
+                attachments_per_invoice[invoice] |= attachment
+
+        # Unlink the unused attachments
+        (attachments - attachments_in_invoices).unlink()
 
     def _creation_subtype(self):
         # EXTENDS mail mail.thread

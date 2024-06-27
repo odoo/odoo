@@ -175,3 +175,11 @@ class IrAttachment(models.Model):
         # To be extended by localisations, where they can download their necessary XSD files
         # Note: they should always return super().action_download_xsd_files()
         return
+
+    def _post_add_create(self, **kwargs):
+        move_id = self.res_id
+        if self.res_model == 'account.move':
+            move = self.env['account.move'].search([('id', '=', move_id)], limit=1)
+            move._check_and_decode_attachment(self)
+            move._unlink_unused_attachment(self)
+        super()._post_add_create()
