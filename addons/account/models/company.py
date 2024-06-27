@@ -2,6 +2,7 @@
 
 from collections import defaultdict
 from datetime import timedelta, datetime, date
+from psycopg2 import OperationalError
 import calendar
 
 from odoo import fields, models, api, _, Command
@@ -734,6 +735,18 @@ class ResCompany(models.Model):
             results_by_journal['results'].append(rslt)
 
         return results_by_journal
+
+    @api.model
+    def _with_locked_records(self, records):
+        """ To avoid sending the same records multiple times from different transactions,
+        we use this generic method to lock the records passed as parameter.
+
+        :param records: The records to lock.
+        """
+        self._cr.execute(f'SELECT * FROM {records._table} WHERE id IN %s FOR UPDATE SKIP LOCKED', [tuple(records.ids)])
+        available_ids = set(r[0] for r in self._cr.fetchall())
+        if available_ids != set(records.ids):
+            raise UserError(_("Some documents are being sent by another process already."))
 
     def compute_fiscalyear_dates(self, current_date):
         """
