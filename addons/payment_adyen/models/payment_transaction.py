@@ -4,9 +4,10 @@ import logging
 import pprint
 
 from odoo import _, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tools import format_amount
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_adyen import utils as adyen_utils
 from odoo.addons.payment_adyen import const
@@ -59,7 +60,7 @@ class PaymentTransaction(models.Model):
 
         # Prepare the payment request to Adyen
         if not self.token_id:
-            raise UserError("Adyen: " + _("The transaction is not linked to a token."))
+            raise UserError(_("The transaction is not linked to a token."))
 
         converted_amount = payment_utils.to_minor_currency_units(
             self.amount, self.currency_id, const.CURRENCY_DECIMALS.get(self.currency_id.name)
@@ -248,8 +249,6 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if inconsistent data were received
-        :raise: ValidationError if the data match no transaction
         """
         tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'adyen' or len(tx) == 1:
@@ -257,7 +256,8 @@ class PaymentTransaction(models.Model):
 
         reference = notification_data.get('merchantReference')
         if not reference:
-            raise ValidationError("Adyen: " + _("Received data with missing merchant reference"))
+            logging.warning(payment_const.PAYMENT_ERRORS_MAPPING['missing_reference'])
+            return tx
 
         event_code = notification_data.get('eventCode', 'AUTHORISATION')  # Fallback on auth if S2S.
         provider_reference = notification_data.get('pspReference')
@@ -328,9 +328,7 @@ class PaymentTransaction(models.Model):
                     pass  # Don't do anything with the refund notification
 
         if not tx:
-            raise ValidationError(
-                "Adyen: " + _("No transaction found matching reference %s.", reference)
-            )
+            logging.warning(payment_const.PAYMENT_ERRORS_MAPPING['no_tx_found'] + reference)
         return tx
 
     def _adyen_create_child_tx_from_notification_data(
@@ -343,14 +341,14 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider
         :return: The newly created child transaction.
         :rtype: payment.transaction
-        :raise ValidationError: If inconsistent data were received.
         """
         provider_reference = notification_data.get('pspReference')
         amount = notification_data.get('amount', {}).get('value')
         if not provider_reference or amount is None:  # amount == 0 if success == False
-            raise ValidationError(
-                "Adyen: " + _("Received data for child transaction with missing transaction values")
+            source_tx._set_error(
+                _("Received data for child transaction with missing transaction values")
             )
+            return source_tx
 
         converted_amount = payment_utils.to_major_currency_units(amount, source_tx.currency_id)
         return source_tx._create_child_transaction(
@@ -364,7 +362,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider
         :return: None
-        :raise: ValidationError if inconsistent data were received
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'adyen':
@@ -400,7 +397,7 @@ class PaymentTransaction(models.Model):
         payment_state = notification_data.get('resultCode')
         refusal_reason = notification_data.get('refusalReason') or notification_data.get('reason')
         if not payment_state:
-            raise ValidationError("Adyen: " + _("Received data with missing payment state."))
+            self._set_error(_("Received data with missing payment state."))
         if payment_state in const.RESULT_CODES_MAPPING['pending']:
             self._set_pending()
         elif payment_state in const.RESULT_CODES_MAPPING['done']:
@@ -470,7 +467,7 @@ class PaymentTransaction(models.Model):
                 self.reference, payment_state
             )
             self._set_error(
-                "Adyen: " + _("Received data with invalid payment state: %s", payment_state)
+                _("Received data with invalid payment state: %s", payment_state)
             )
 
     def _adyen_tokenize_from_notification_data(self, notification_data):

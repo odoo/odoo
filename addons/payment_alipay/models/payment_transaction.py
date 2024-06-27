@@ -4,10 +4,9 @@ import logging
 
 from werkzeug import urls
 
-from odoo import _, api, models
-from odoo.exceptions import ValidationError
-from odoo.tools.float_utils import float_compare
+from odoo import _, models
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment_alipay.controllers.main import AlipayController
 
 _logger = logging.getLogger(__name__)
@@ -68,8 +67,6 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if inconsistent data were received
-        :raise: ValidationError if the data match no transaction
         """
         tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'alipay' or len(tx) == 1:
@@ -78,19 +75,12 @@ class PaymentTransaction(models.Model):
         reference = notification_data.get('reference') or notification_data.get('out_trade_no')
         txn_id = notification_data.get('trade_no')
         if not reference or not txn_id:
-            raise ValidationError(
-                "Alipay: " + _(
-                    "Received data with missing reference %(r)s or txn_id %(t)s.",
-                    r=reference, t=txn_id
-                )
-            )
+            logging.warning(payment_const.PAYMENT_ERRORS_MAPPING['missing_reference'])
+            return tx
 
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'alipay')])
         if not tx:
-            raise ValidationError(
-                "Alipay: " + _("No transaction found matching reference %s.", reference)
-            )
-
+            logging.warning(payment_const.PAYMENT_ERRORS_MAPPING['no_tx_found'] + reference)
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -100,7 +90,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider
         :return: None
-        :raise: ValidationError if inconsistent data were received
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'alipay':

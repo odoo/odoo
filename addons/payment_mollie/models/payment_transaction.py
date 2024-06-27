@@ -6,8 +6,8 @@ import pprint
 from werkzeug import urls
 
 from odoo import _, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_mollie import const
 from odoo.addons.payment_mollie.controllers.main import MollieController
@@ -94,9 +94,9 @@ class PaymentTransaction(models.Model):
             [('reference', '=', notification_data.get('ref')), ('provider_code', '=', 'mollie')]
         )
         if not tx:
-            raise ValidationError("Mollie: " + _(
-                "No transaction found matching reference %s.", notification_data.get('ref')
-            ))
+            logging.warning(
+                payment_const.PAYMENT_ERRORS_MAPPING['no_tx_found'] + notification_data.get('ref')
+            )
         return tx
 
     def _process_notification_data(self, notification_data):

@@ -6,8 +6,9 @@ import pprint
 import requests
 
 from odoo import _, fields, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_xendit import const
 
 
@@ -60,20 +61,21 @@ class PaymentProvider(models.Model):
         auth = (self.xendit_secret_key, '')
         url = "https://api.xendit.co/v2/invoices"
         try:
-            response = requests.post(url, json=payload, auth=auth, timeout=10)
+            response = requests.post(
+                url, json=payload, auth=auth, timeout=payment_const.TIMEOUT
+            )
             response.raise_for_status()
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError("Xendit: " + _("Could not establish the connection to the API."))
+            return payment_utils.format_error_response(
+                payment_const.PAYMENT_ERRORS_MAPPING['api_connection_error']
+            )
         except requests.exceptions.HTTPError as err:
-            error_message = err.response.json().get('message')
+            err_msg = err.response.json().get('message')
             _logger.exception(
                 "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload)
             )
-            raise ValidationError(
-                "Xendit: " + _(
-                    "The communication with the API failed. Xendit gave us the following"
-                    " information: '%s'", error_message
-                )
+            return payment_utils.format_error_response(
+                payment_const.PAYMENT_ERRORS_MAPPING["api_communication_error"] + err_msg
             )
         return response.json()

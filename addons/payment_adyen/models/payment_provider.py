@@ -89,7 +89,6 @@ class PaymentProvider(models.Model):
         :param str idempotency_key: The idempotency key to pass in the request.
         :return: The JSON-formatted content of the response
         :rtype: dict
-        :raise: ValidationError if an HTTP error occurs
         """
 
         def _build_url(prefix_, version_, endpoint_):
@@ -118,21 +117,22 @@ class PaymentProvider(models.Model):
         if method == 'POST' and idempotency_key:
             headers['idempotency-key'] = idempotency_key
         try:
-            response = requests.request(method, url, json=payload, headers=headers, timeout=60)
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "invalid API request at %s with data %s: %s", url, payload, response.text
-                )
-                msg = response.json().get('message', '')
-                return payment_utils.format_error_response(
-                    f'{ payment_const.PAYMENT_ERRORS_MAPPING["api_communication_error"]} {msg}'
-                )
-        except requests.exceptions.ConnectionError:
+            response = requests.request(
+                method, url, json=payload, headers=headers, timeout=payment_const.TIMEOUT
+            )
+            response.raise_for_status()
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             _logger.exception("unable to reach endpoint at %s", url)
             return payment_utils.format_error_response(
                 payment_const.PAYMENT_ERRORS_MAPPING['api_connection_error']
+            )
+        except requests.exceptions.HTTPError as err:
+            _logger.exception(
+                "invalid API request at %s with data %s: %s", url, payload, err.response.text
+            )
+            msg = err.response.json().get('message', '')
+            return payment_utils.format_error_response(
+                payment_const.PAYMENT_ERRORS_MAPPING["api_communication_error"] + msg
             )
         return response.json()
 

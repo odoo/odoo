@@ -13,6 +13,7 @@ from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools.misc import file_open
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_stripe import utils as stripe_utils
 from odoo.addons.payment_stripe.const import HANDLED_WEBHOOK_EVENTS
@@ -41,6 +42,8 @@ class StripeController(http.Controller):
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'stripe', data
         )
+        if not tx_sudo:
+            raise ValidationError(payment_const.PAYMENT_ERRORS_MAPPING['no_tx_found'])
 
         if tx_sudo.operation != 'validation':
             # Fetch the PaymentIntent and PaymentMethod objects from Stripe.

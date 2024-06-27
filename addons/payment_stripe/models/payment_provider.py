@@ -269,7 +269,6 @@ class PaymentProvider(models.Model):
         :param str idempotency_key: The idempotency key to pass in the request.
         :return The JSON-formatted content of the response
         :rtype: dict
-        :raise: ValidationError if an HTTP error occurs
         """
         self.ensure_one()
 
@@ -282,35 +281,34 @@ class PaymentProvider(models.Model):
         if method == 'POST' and idempotency_key:
             headers['Idempotency-Key'] = idempotency_key
         try:
-            response = requests.request(method, url, data=payload, headers=headers, timeout=60)
+            response = requests.request(
+                method, url, data=payload, headers=headers, timeout=payment_const.TIMEOUT
+            )
             # Stripe can send 4XX errors for payment failures (not only for badly-formed requests).
             # Check if an error code is present in the response content and raise only if not.
             # See https://stripe.com/docs/error-codes.
-            # If the request originates from an offline operation, don't raise to avoid a cursor
-            # rollback and return the response as-is for flow-specific handling.
             if (
                 not response.ok
                 and 400 <= response.status_code < 500
                 and response.json().get('error')
             ):  # The 'code' entry is sometimes missing
-                try:
                     response.raise_for_status()
-                except requests.exceptions.HTTPError:
-                    _logger.exception("invalid API request at %s with data %s", url, payload)
-                    error_content = response.json().get('error', {})
-                    error_response = payment_utils.format_error_response(
-                        f'{payment_const.PAYMENT_ERRORS_MAPPING["api_communication_error"]}'
-                        f' {error_content.get("message", "")}'
-                    )
-                    if intent:
-                        error_response[intent] = error_content.get('payment_intent') \
-                          or error_content.get('setup_intent')  # Get the intent from the error.
-                    return error_response
-        except requests.exceptions.ConnectionError:
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             _logger.exception("unable to reach endpoint at %s", url)
             return payment_utils.format_error_response(
                 payment_const.PAYMENT_ERRORS_MAPPING['api_connection_error']
             )
+        except requests.exceptions.HTTPError as err:
+            _logger.exception("invalid API request at %s with data %s", url, payload)
+            error_content = err.response.json().get('error', {})
+            error_response = payment_utils.format_error_response(
+                f'{payment_const.PAYMENT_ERRORS_MAPPING["api_communication_error"]}'
+                f' {error_content.get("message", "")}'
+            )
+            if intent:
+                error_response[intent] = error_content.get('payment_intent') \
+                  or error_content.get('setup_intent')  # Get the intent from the error.
+            return error_response
         return response.json()
 
     def _get_stripe_extra_request_headers(self):
@@ -423,7 +421,7 @@ class PaymentProvider(models.Model):
         }
         url = url_join(const.PROXY_URL, f'{version}/{endpoint}')
         try:
-            response = requests.post(url=url, json=proxy_payload, timeout=60)
+            response = requests.post(url=url, json=proxy_payload, timeout=payment_const.TIMEOUT)
             response.raise_for_status()
         except requests.exceptions.ConnectionError:
             _logger.exception("unable to reach endpoint at %s", url)

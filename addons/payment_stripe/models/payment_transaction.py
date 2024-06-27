@@ -6,8 +6,9 @@ import pprint
 from werkzeug.urls import url_encode, url_join
 
 from odoo import _, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_stripe import const
 from odoo.addons.payment_stripe import utils as stripe_utils
@@ -58,7 +59,7 @@ class PaymentTransaction(models.Model):
             return
 
         if not self.token_id:
-            raise UserError("Stripe: " + _("The transaction is not linked to a token."))
+            raise UserError(_("The transaction is not linked to a token."))
 
         # Make the payment request to Stripe
         payment_intent = self._stripe_create_intent()
@@ -323,8 +324,6 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if inconsistent data were received
-        :raise: ValidationError if the data match no transaction
         """
         tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'stripe' or len(tx) == 1:
@@ -342,12 +341,10 @@ class PaymentTransaction(models.Model):
                 [('provider_reference', '=', refund_id), ('provider_code', '=', 'stripe')]
             )
         else:
-            raise ValidationError("Stripe: " + _("Received data with missing merchant reference"))
-
+            logging.warning(payment_const.PAYMENT_ERRORS_MAPPING['missing_reference'])
+            return tx
         if not tx:
-            raise ValidationError(
-                "Stripe: " + _("No transaction found matching reference %s.", reference)
-            )
+            logging.warning(payment_const.PAYMENT_ERRORS_MAPPING['no_tx_found'] + reference)
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -361,7 +358,6 @@ class PaymentTransaction(models.Model):
                                        and 'payment_method' can be populated with their
                                        corresponding Stripe API objects.
         :return: None
-        :raise: ValidationError if inconsistent data were received
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'stripe':
@@ -389,9 +385,8 @@ class PaymentTransaction(models.Model):
             self.provider_reference = notification_data['payment_intent']['id']
             status = notification_data['payment_intent']['status']
         if not status:
-            raise ValidationError(
-                "Stripe: " + _("Received data with missing intent status.")
-            )
+            self._set_error(_("Received data with missing intent status."))
+            return
         if status in const.STATUS_MAPPING['draft']:
             pass
         elif status in const.STATUS_MAPPING['pending']:

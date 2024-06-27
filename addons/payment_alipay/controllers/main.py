@@ -7,9 +7,11 @@ import pprint
 import requests
 from werkzeug.exceptions import Forbidden
 
-from odoo import http
+from odoo import _, http
 from odoo.exceptions import ValidationError
 from odoo.http import request
+
+from odoo.addons.payment import const as payment_const
 
 _logger = logging.getLogger(__name__)
 
@@ -83,7 +85,7 @@ class AlipayController(http.Controller):
             'notify_id': notification_data['notify_id'],
         }
         try:
-            response = requests.post(url, data=payload, timeout=60)
+            response = requests.post(url, data=payload, timeout=payment_const.TIMEOUT)
             response.raise_for_status()
         except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as error:
             _logger.exception(

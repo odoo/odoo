@@ -12,6 +12,7 @@ from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import html_escape
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 
 
@@ -124,7 +125,7 @@ class PaypalController(http.Controller):
                 'at': tx_sudo.provider_id.paypal_pdt_token,
             }
             try:
-                response = requests.post(url, data=payload, timeout=10)
+                response = requests.post(url, data=payload, timeout=payment_const.TIMEOUT)
                 response.raise_for_status()
             except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError):
                 raise Forbidden("PayPal: Encountered an error when verifying PDT origin")
@@ -203,7 +204,7 @@ class PaypalController(http.Controller):
         url = tx_sudo.provider_id._paypal_get_api_url()
         payload = dict(notification_data, cmd='_notify-validate')
         try:
-            response = requests.post(url, payload, timeout=60)
+            response = requests.post(url, payload, timeout=payment_const.TIMEOUT)
             response.raise_for_status()
         except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as error:
             _logger.exception(

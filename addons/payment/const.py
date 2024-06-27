@@ -17,5 +17,9 @@ REPORT_REASONS_MAPPING = {
 
 PAYMENT_ERRORS_MAPPING = {
     'api_connection_error': _("Could not establish the connection to the API."),
-    'api_communication_error': _("The communication with the API failed. Details:"),
+    'api_communication_error': _("The communication with the API failed. Details: "),
+    'no_tx_found': _("No transaction found matching reference "),
+    'missing_reference': _("Received data with missing merchant reference."),
 }
+
+TIMEOUT = 60

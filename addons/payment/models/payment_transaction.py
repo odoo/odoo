@@ -683,7 +683,7 @@ class PaymentTransaction(models.Model):
         :return: The updated transactions.
         :rtype: recordset of `payment.transaction`
         """
-        allowed_states = ('draft',)
+        allowed_states = ('draft', 'error')
         target_state = 'pending'
         txs_to_process = self._update_state(
             allowed_states + extra_allowed_states, target_state, state_message
@@ -700,7 +700,7 @@ class PaymentTransaction(models.Model):
         :return: The updated transactions.
         :rtype: recordset of `payment.transaction`
         """
-        allowed_states = ('draft', 'pending')
+        allowed_states = ('draft', 'pending', 'error')
         target_state = 'authorized'
         txs_to_process = self._update_state(
             allowed_states + extra_allowed_states, target_state, state_message
@@ -735,7 +735,7 @@ class PaymentTransaction(models.Model):
         :return: The updated transactions.
         :rtype: recordset of `payment.transaction`
         """
-        allowed_states = ('draft', 'pending', 'authorized')
+        allowed_states = ('draft', 'pending', 'authorized', 'error')
         target_state = 'cancel'
         txs_to_process = self._update_state(
             allowed_states + extra_allowed_states, target_state, state_message

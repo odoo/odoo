@@ -65,22 +65,23 @@ class PaymentProvider(models.Model):
         }
 
         try:
-            response = requests.request(method, url, json=data, headers=headers, timeout=60)
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(data)
-                )
-                msg = response.json().get('detail', '')
-                return payment_utils.format_error_response(
-                    f'{payment_const.PAYMENT_ERRORS_MAPPING["api_communication_error"]} {msg}'
-                )
+            response = requests.request(
+                method, url, json=data, headers=headers, timeout=payment_const.TIMEOUT
+            )
+            response.raise_for_status()
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             _logger.exception("Unable to reach endpoint at %s", url)
 
             return payment_utils.format_error_response(
                 payment_const.PAYMENT_ERRORS_MAPPING['api_connection_error']
+            )
+        except requests.exceptions.HTTPError:
+            _logger.exception(
+                "Invalid API request at %s with data:\n%s", url, pprint.pformat(data)
+            )
+            msg = response.json().get('detail', '')
+            return payment_utils.format_error_response(
+                payment_const.PAYMENT_ERRORS_MAPPING["api_communication_error"] + msg
             )
         return response.json()
 

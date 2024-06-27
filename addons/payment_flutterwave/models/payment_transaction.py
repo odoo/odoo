@@ -6,8 +6,9 @@ import pprint
 from werkzeug import urls
 
 from odoo import _, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_flutterwave import const
 from odoo.addons.payment_flutterwave.controllers.main import FlutterwaveController
@@ -114,8 +115,6 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider.
         :return: The transaction if found.
         :rtype: recordset of `payment.transaction`
-        :raise ValidationError: If inconsistent data were received.
-        :raise ValidationError: If the data match no transaction.
         """
         tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'flutterwave' or len(tx) == 1:
@@ -123,13 +122,12 @@ class PaymentTransaction(models.Model):
 
         reference = notification_data.get('tx_ref')
         if not reference:
-            raise ValidationError("Flutterwave: " + _("Received data with missing reference."))
+            logging.warning(payment_const.PAYMENT_ERRORS_MAPPING['missing_reference'])
+            return tx
 
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'flutterwave')])
         if not tx:
-            raise ValidationError(
-                "Flutterwave: " + _("No transaction found matching reference %s.", reference)
-            )
+            logging.warning(payment_const.PAYMENT_ERRORS_MAPPING['no_tx_found'] + reference)
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -139,7 +137,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
-        :raise ValidationError: If inconsistent data were received.
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'flutterwave':

@@ -87,7 +87,6 @@ class PaymentProvider(models.Model):
         :param str method: The HTTP method of the request.
         :return The JSON-formatted content of the response.
         :rtype: dict
-        :raise ValidationError: If an HTTP error occurs.
         """
         self.ensure_one()
 
@@ -95,23 +94,26 @@ class PaymentProvider(models.Model):
         headers = {'Authorization': f'Bearer {self.flutterwave_secret_key}'}
         try:
             if method == 'GET':
-                response = requests.get(url, params=payload, headers=headers, timeout=10)
+                response = requests.get(
+                    url, params=payload, headers=headers, timeout=payment_const.TIMEOUT
+                )
             else:
-                response = requests.post(url, json=payload, headers=headers, timeout=10)
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload),
+                response = requests.post(
+                    url, json=payload, headers=headers, timeout=payment_const.TIMEOUT
                 )
-                msg = response.json().get('message', '')
-                return payment_utils.format_error_response(
-                    f'{payment_const.PAYMENT_ERRORS_MAPPING["api_communication_error"]} {msg}'
-                )
+            response.raise_for_status()
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             _logger.exception("Unable to reach endpoint at %s", url)
             return payment_utils.format_error_response(
                 payment_const.PAYMENT_ERRORS_MAPPING['api_connection_error']
+            )
+        except requests.exceptions.HTTPError as err:
+            _logger.exception(
+                "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload),
+            )
+            msg = err.response.json().get('message', '')
+            return payment_utils.format_error_response(
+                f'{payment_const.PAYMENT_ERRORS_MAPPING["api_communication_error"]} {msg}'
             )
         return response.json()
 

@@ -378,36 +378,29 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         // Create a transaction and retrieve its processing values.
-        try {
-            const processingValues = await rpc(
-                this.paymentContext['transactionRoute'],
-                this._prepareTransactionRouteParams(),
-            )
-            if (processingValues.state === 'error') {
-                throw new Error(processingValues.state_message);
-            }
-            if (flow === 'redirect') {
-                this._processRedirectFlow(
-                    providerCode, paymentOptionId, paymentMethodCode, processingValues
-                );
-            } else if (flow === 'direct') {
-                this._processDirectFlow(
-                    providerCode, paymentOptionId, paymentMethodCode, processingValues
-                );
-            } else if (flow === 'token') {
-                this._processTokenFlow(
-                    providerCode, paymentOptionId, paymentMethodCode, processingValues
-                );
-            }
+        const processingValues = await rpc(
+            this.paymentContext['transactionRoute'],
+            this._prepareTransactionRouteParams(),
+        )
+        if (processingValues.state === 'error') {
+            this._displayErrorDialog(
+                this.errorMapping['paymentProcessingError'], processingValues.state_message
+            );
+            this._enableButton(); // The button has been disabled before initiating the flow.
+            return;
         }
-        catch (error) {
-            if (error instanceof RPCError || error instanceof Error) {
-                const errorMsg = error.data?.message || error.message;
-                this._displayErrorDialog(this.errorMapping['paymentProcessingError'], errorMsg);
-                this._enableButton(); // The button has been disabled before initiating the flow.
-            } else {
-                return Promise.reject(error);
-            }
+        if (flow === 'redirect') {
+            this._processRedirectFlow(
+                providerCode, paymentOptionId, paymentMethodCode, processingValues
+            );
+        } else if (flow === 'direct') {
+            this._processDirectFlow(
+                providerCode, paymentOptionId, paymentMethodCode, processingValues
+            );
+        } else if (flow === 'token') {
+            this._processTokenFlow(
+                providerCode, paymentOptionId, paymentMethodCode, processingValues
+            );
         }
     },
 
