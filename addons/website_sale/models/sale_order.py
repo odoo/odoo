@@ -160,13 +160,6 @@ class SaleOrder(models.Model):
 
     #=== ACTION METHODS ===#
 
-    def action_confirm(self):
-        res = super().action_confirm()
-        for order in self:
-            if not order.transaction_ids and not order.amount_total and self._context.get('send_email'):
-                order._send_order_confirmation_mail()
-        return res
-
     def action_preview_sale_order(self):
         action = super().action_preview_sale_order()
         if action['url'].startswith('/'):

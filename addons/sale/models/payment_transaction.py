@@ -71,7 +71,6 @@ class PaymentTransaction(models.Model):
         for authorized_tx in self.filtered(lambda tx: tx.state == 'authorized'):
             super(PaymentTransaction, authorized_tx)._post_process()
             confirmed_orders = authorized_tx._check_amount_and_confirm_order()
-            confirmed_orders._send_order_confirmation_mail()
             (self.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
 
         super(PaymentTransaction, self.filtered(
@@ -80,7 +79,6 @@ class PaymentTransaction(models.Model):
 
         for done_tx in self.filtered(lambda tx: tx.state == 'done'):
             confirmed_orders = done_tx._check_amount_and_confirm_order()
-            confirmed_orders._send_order_confirmation_mail()
             (done_tx.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
 
             auto_invoice = str2bool(
@@ -127,7 +125,6 @@ class PaymentTransaction(models.Model):
         author = self.env.user.partner_id if self.env.uid == SUPERUSER_ID else self.partner_id
         for order in self.sale_order_ids or self.source_transaction_id.sale_order_ids:
             order.message_post(body=message, author_id=author.id)
-
 
     def _send_invoice(self):
         template_id = int(self.env['ir.config_parameter'].sudo().get_param(
