@@ -179,8 +179,9 @@ test("chat window: basic rendering", async () => {
         text: "There are no messages in this conversation.",
     });
     await click("[title='Open Actions Menu']");
-    await contains(".o-mail-ChatWindow-command", { count: 12 });
+    await contains(".o-mail-ChatWindow-command", { count: 13 });
     await contains("[title='Search Messages']");
+    await contains("[title='Notification Settings']");
     await contains("[title='Rename']");
     await contains("[title='Pinned Messages']");
     await contains("[title='Show Attachments']");
