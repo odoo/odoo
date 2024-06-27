@@ -600,7 +600,9 @@ export class Thread extends Record {
         compute() {
             return this.channelMembers.filter((member) => member.persona.im_status === "online");
         },
-        sort: (m1, m2) => this.store.Thread.sortOnlineMembers(m1, m2),
+        sort(m1, m2) {
+            return this.store.Thread.sortOnlineMembers(m1, m2);
+        },
     });
 
     static sortOnlineMembers(m1, m2) {

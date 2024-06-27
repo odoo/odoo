@@ -178,3 +178,49 @@ test("Channel member count update after user left", async () => {
     );
     await contains(".o-discuss-ChannelMember", { count: 1 });
 });
+
+test("Members are partitioned by online/offline", async () => {
+    const pyEnv = await startServer();
+    const [userId_1, userId_2] = pyEnv["res.users"].create([{ name: "Dobby" }, { name: "John" }]);
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        {
+            name: "Dobby",
+            user_ids: [userId_1],
+            im_status: "offline",
+        },
+        {
+            name: "John",
+            user_ids: [userId_2],
+            im_status: "online",
+        },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+            Command.create({ partner_id: partnerId_2 }),
+        ],
+    });
+    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "online" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Show Member List']");
+    await contains(".o-discuss-ChannelMember", { count: 3 });
+    await contains("h6", { text: "Online - 2" });
+    await contains("h6", { text: "Offline - 1" });
+    await contains(".o-discuss-ChannelMember", {
+        text: "John",
+        after: ["h6", { text: "Online - 2" }],
+        before: ["h6", { text: "Offline - 1" }],
+    });
+    await contains(".o-discuss-ChannelMember", {
+        text: "Mitchell Admin",
+        after: ["h6", { text: "Online - 2" }],
+        before: ["h6", { text: "Offline - 1" }],
+    });
+    await contains(".o-discuss-ChannelMember", {
+        text: "Dobby",
+        after: ["h6", { text: "Offline - 1" }],
+    });
+});
