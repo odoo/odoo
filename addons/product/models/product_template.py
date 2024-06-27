@@ -599,7 +599,7 @@ class ProductTemplate(models.Model):
         return {
             'name': _('Price Rules'),
             'view_mode': 'list,form',
-            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'list'), (False, 'form')],
+            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'list')],
             'res_model': 'product.pricelist.item',
             'type': 'ir.actions.act_window',
             'target': 'current',
