@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { describe, expect, test } from "@odoo/hoot";
+import { mockFetch } from "@odoo/hoot-mock";
 import { parseUrl } from "../local_helpers";
 
 describe(parseUrl(import.meta.url), () => {
@@ -17,5 +18,15 @@ describe(parseUrl(import.meta.url), () => {
     test("values are reset between test", async () => {
         expect(document.cookie).toBe("");
         expect(document.title).toBe("");
+    });
+
+    test("fetch should not mock internal URLs", async () => {
+        mockFetch(expect.step);
+
+        await fetch("http://some.url");
+        await fetch("/web");
+        await fetch(URL.createObjectURL(new Blob([""])));
+
+        expect.verifySteps(["http://some.url", "/web"]);
     });
 });
