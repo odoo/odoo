@@ -33,7 +33,7 @@ class Partner extends models.Model {
     p = fields.Many2many({ relation: "partner", relation_field: "trululu" });
     turtles = fields.One2many({ relation: "turtle", relation_field: "turtle_trululu" });
     trululu = fields.Many2one({ relation: "partner" });
-    timmy = fields.Many2many({ relation: "partnertype", string: "pokemon" });
+    timmy = fields.Many2many({ relation: "partner.type", string: "pokemon" });
     product_id = fields.Many2one({ relation: "product.product" });
     color = fields.Selection({
         selection: [
@@ -48,7 +48,7 @@ class Partner extends models.Model {
     reference = fields.Reference({
         selection: [
             ["product.product", "Product"],
-            ["partnertype", "Partner Type"],
+            ["partner.type", "Partner Type"],
             ["partner", "Partner"],
         ],
     });
@@ -188,7 +188,7 @@ defineModels([Partner, PartnerType, Product, Turtle, Users]);
 test.tags("desktop")("many2many kanban: edition", async () => {
     expect.assertions(24);
 
-    onRpc("partnertype", "web_save", ({ args }) => {
+    onRpc("partner.type", "web_save", ({ args }) => {
         if (args[0].length) {
             expect(args[1].name).toBe("new name");
         } else {
@@ -197,7 +197,7 @@ test.tags("desktop")("many2many kanban: edition", async () => {
     });
     onRpc("partner", "web_save", ({ args }) => {
         const commands = args[1].timmy;
-        const [record] = MockServer.env["partnertype"].search_read([["name", "=", "A new type"]]);
+        const [record] = MockServer.env["partner.type"].search_read([["name", "=", "A new type"]]);
         // get the created type's id
         expect(commands).toEqual([
             Command.link(3),
@@ -1164,11 +1164,11 @@ test("many2many list with x2many: add a record", async () => {
 
     expect.verifySteps([
         "web_read on partner",
-        "web_search_read on partnertype",
+        "web_search_read on partner.type",
         "has_group on res.users",
-        "web_read on partnertype",
-        "web_search_read on partnertype",
-        "web_read on partnertype",
+        "web_read on partner.type",
+        "web_search_read on partner.type",
+        "web_read on partner.type",
     ]);
 });
 
@@ -1499,7 +1499,7 @@ test("default_get, onchange, onchange on m2m", async () => {
 
 test("many2many list add *many* records, remove, re-add", async () => {
     Partner._fields.timmy = fields.Many2many({
-        relation: "partnertype",
+        relation: "partner.type",
         string: "pokemon",
         domain: [["color", "=", 2]],
         onChange: true,

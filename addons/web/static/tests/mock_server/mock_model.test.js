@@ -1,9 +1,11 @@
 import { describe, expect, test } from "@odoo/hoot";
 import {
+    MockServer,
     defineModels,
     fields,
     getService,
     makeMockEnv,
+    makeMockServer,
     models,
 } from "@web/../tests/web_test_helpers";
 
@@ -19,6 +21,28 @@ class Oui extends models.Model {
 }
 
 defineModels([Oui]);
+
+test("model name can be implicitly extracted from its constructor name", async () => {
+    const [AnonymousClass, Foo, ResCurrency, ResPartner] = defineModels([
+        class extends models.Model {},
+        class Foo extends models.Model {},
+        class ResCurrency extends models.Model {
+            _name = "project.task"; //
+        },
+        class ResPartner extends models.Model {},
+    ]);
+
+    await makeMockServer();
+
+    expect(MockServer.env["anonymous"]).toBeInstanceOf(AnonymousClass);
+    expect(MockServer.env["foo"]).toBeInstanceOf(Foo);
+    expect(MockServer.env["project.task"]).toBeInstanceOf(ResCurrency);
+    expect(MockServer.env["res.partner"]).toBeInstanceOf(ResPartner);
+
+    expect(() => MockServer.env["res.currency"]).toThrow(
+        "could not get model from server environment"
+    );
+});
 
 test("model should be defined on the mock server", async () => {
     await makeMockEnv();

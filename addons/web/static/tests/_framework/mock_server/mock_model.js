@@ -191,6 +191,13 @@ const assignArray = (target, ...arrays) => {
 };
 
 /**
+ *
+ * @param {string} name
+ * @returns
+ */
+const constructorToModelName = (name) => name.replace(/([a-z])([A-Z])/g, "$1.$2").toLowerCase();
+
+/**
  * Converts an Object representing a record to actual return Object of the
  * python `onchange` method.
  * Specifically, it reads `display_name` on many2one's and transforms raw id
@@ -639,11 +646,6 @@ const isX2MField = (field) => {
     const fieldType = typeof field === "string" ? field : field.type;
     return fieldType === "many2many" || fieldType === "one2many";
 };
-
-/**
- * @param {string} value
- */
-const onlyChars = (value) => value.toLowerCase().replace(/[^\w]/g, "");
 
 /**
  * Sorts the given list of records *IN PLACE* by the given field name. The
@@ -1274,15 +1276,7 @@ export class Model extends Array {
                 assignArray(model, model._records);
 
                 // Name
-                const constructorName = this.name.toLowerCase();
-                model._name ||= constructorName || "anonymous";
-                if (constructorName) {
-                    if (!onlyChars(model._name).includes(onlyChars(constructorName))) {
-                        console.warn(
-                            `Warning: model name "${model._name}" is not consistent with its class name "${this.name}": this may lead to typos or confusions when writing tests`
-                        );
-                    }
-                }
+                model._name ||= constructorToModelName(this.name) || "anonymous";
 
                 // Fields
                 for (const [key, value] of Object.entries(model)) {
@@ -1408,7 +1402,7 @@ export class Model extends Array {
     /** @type {string | null} */
     _inherit = null;
     /** @type {string} */
-    _name = this.constructor.name.toLowerCase();
+    _name = "";
     /** @type {Record<string, (record: ModelRecord) => any>} */
     _onChanges = {};
     /** @type {string} */

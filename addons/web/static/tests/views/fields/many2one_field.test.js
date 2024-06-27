@@ -51,7 +51,7 @@ class Partner extends models.Model {
         relation_field: "turtle_trululu",
     });
     trululu = fields.Many2one({ string: "Trululu", relation: "partner" });
-    timmy = fields.Many2many({ string: "pokemon", relation: "partnertype" });
+    timmy = fields.Many2many({ string: "pokemon", relation: "partner.type" });
     product_id = fields.Many2one({ string: "Product", relation: "product" });
     date = fields.Date({ string: "Some Date" });
     datetime = fields.Datetime({ string: "Datetime Field" });
@@ -2029,7 +2029,7 @@ test("list in form: default_get with x2many create", async () => {
 
     Partner._fields.timmy = fields.Many2many({
         string: "pokemon",
-        relation: "partnertype",
+        relation: "partner.type",
         default: [[0, 0, { name: "brandon is the new timmy" }]],
         onChange: (obj) => {
             obj.int_field = obj.timmy.length;
@@ -2203,7 +2203,7 @@ test("X2Many sequence list in modal", async () => {
     });
     Turtle._fields.type_id = fields.Many2one({
         string: "Partner Type",
-        relation: "partnertype",
+        relation: "partner.type",
     });
     Turtle._records[0].type_id = 12;
 
@@ -2227,11 +2227,11 @@ test("X2Many sequence list in modal", async () => {
             </tree>`,
     };
 
-    onRpc("partnertype", "get_formview_id", () => {
+    onRpc("partner.type", "get_formview_id", () => {
         return false;
     });
-    onRpc("partnertype", "web_save", () => {
-        expect.step("partnertype web_save");
+    onRpc("partner.type", "web_save", () => {
+        expect.step("partner.type web_save");
     });
     await mountViewInDialog({
         type: "form",
@@ -2264,7 +2264,7 @@ test("X2Many sequence list in modal", async () => {
     await contains(".modal:eq(1) .o_form_button_save").click();
     await clickSave();
 
-    expect.verifySteps(["onchange sequence", "partnertype web_save"]);
+    expect.verifySteps(["onchange sequence", "partner.type web_save"]);
 });
 
 test("autocompletion in a many2one, in form view with a domain", async () => {

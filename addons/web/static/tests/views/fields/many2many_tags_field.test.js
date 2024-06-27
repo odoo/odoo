@@ -26,7 +26,7 @@ class Partner extends models.Model {
     name = fields.Char();
     foo = fields.Char({ default: "My little Foo Value" });
     turtles = fields.One2many({ relation: "turtle" });
-    timmy = fields.Many2many({ relation: "partnertype", string: "pokemon" });
+    timmy = fields.Many2many({ relation: "partner.type", string: "pokemon" });
 
     _records = [
         {
@@ -103,7 +103,7 @@ test("Many2ManyTagsField with and without color", async () => {
     });
     Partner._fields.color = fields.Integer({ string: "Color index" });
     onRpc("web_read", ({ args, model, kwargs }) => {
-        if (model === "partnertype") {
+        if (model === "partner.type") {
             expect(args).toEqual([[12]]);
             expect(kwargs.specification).toEqual({ display_name: {} });
         } else if (model === "partner") {
@@ -165,7 +165,7 @@ test("Many2ManyTagsField with color: rendering and edition", async () => {
                 message: "Should add 13, remove 14",
             });
         }
-        if ((method === "web_read" || method === "web_save") && model === "partnertype") {
+        if ((method === "web_read" || method === "web_save") && model === "partner.type") {
             expect(kwargs.specification).toEqual(
                 { display_name: {}, color: {} },
                 { message: "should read color field" }
@@ -301,7 +301,7 @@ test("Many2ManyTagsField view a domain", async () => {
     expect.assertions(7);
 
     Partner._fields.timmy = fields.Many2many({
-        relation: "partnertype",
+        relation: "partner.type",
         string: "pokemon",
         domain: [["id", "<", 50]],
     });
@@ -377,7 +377,7 @@ test("use binary field as the domain", async () => {
 test("Domain: allow python code domain in fieldInfo", async () => {
     expect.assertions(4);
     Partner._fields.timmy = fields.Many2many({
-        relation: "partnertype",
+        relation: "partner.type",
         string: "pokemon",
         domain: "foo and [('color', '>', 3)] or [('color', '<', 3)]",
     });
@@ -519,7 +519,7 @@ test("Many2ManyTagsField in editable list", async () => {
     Partner._records[0].timmy = [12];
 
     onRpc("web_read", ({ kwargs, model }) => {
-        if (model === "partnertype") {
+        if (model === "partner.type") {
             expect(kwargs.context.take).toBe("five");
         }
     });
@@ -812,7 +812,7 @@ test("Many2ManyTagsField in one2many with name", async () => {
 
 test("many2many read, field context is properly sent", async () => {
     Partner._fields.timmy = fields.Many2many({
-        relation: "partnertype",
+        relation: "partner.type",
         string: "pokemon",
         context: { hello: "world" },
     });
@@ -822,7 +822,7 @@ test("many2many read, field context is properly sent", async () => {
             expect.step(`${args.method} ${args.model}`);
             expect(args.kwargs.specification.timmy.context.hello).toBe("world");
         }
-        if (args.model === "partnertype") {
+        if (args.model === "partner.type") {
             expect.step(`${args.method} ${args.model}`);
             expect(args.kwargs.context.hello).toBe("world");
         }
@@ -837,7 +837,7 @@ test("many2many read, field context is properly sent", async () => {
 
     expect.verifySteps(["web_read partner"]);
     await selectFieldDropdownItem("timmy", "silver");
-    expect.verifySteps(["web_read partnertype"]);
+    expect.verifySteps(["web_read partner.type"]);
 });
 
 test("Many2ManyTagsField: select multiple records", async () => {
@@ -1557,7 +1557,7 @@ test("Many2ManyTagsField with edit_tags option", async () => {
         });
         return Promise.resolve(false);
     });
-    onRpc("partnertype", "web_save", ({ args }) => {
+    onRpc("partner.type", "web_save", ({ args }) => {
         expect(args[1]).toEqual({ name: "new" });
     });
 

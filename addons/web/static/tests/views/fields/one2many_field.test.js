@@ -55,7 +55,7 @@ class Partner extends models.Model {
         relation_field: "turtle_trululu",
     });
     trululu = fields.Many2one({ relation: "partner" });
-    timmy = fields.Many2many({ relation: "partnertype", string: "pokemon" });
+    timmy = fields.Many2many({ relation: "partner.type", string: "pokemon" });
     product_id = fields.Many2one({ relation: "product" });
     color = fields.Selection({
         selection: [
@@ -70,7 +70,7 @@ class Partner extends models.Model {
     reference = fields.Reference({
         selection: [
             ["product.product", "Product"],
-            ["partnertype", "Partner Type"],
+            ["partner.type", "Partner Type"],
             ["partner", "Partner"],
         ],
     });
@@ -7237,7 +7237,7 @@ test("editable list: contexts are correctly sent", async () => {
 test("contexts of nested x2manys are correctly sent (add line)", async () => {
     expect.assertions(4);
     Partner._fields.timmy = fields.Many2many({
-        relation: "partnertype",
+        relation: "partner.type",
         string: "pokemon",
         default: [[4, 12]],
     });
@@ -8553,7 +8553,7 @@ test.tags("desktop")(
         });
         await mountView({
             type: "form",
-            resModel: "partnertype",
+            resModel: "partner.type",
             arch: `
                 <form>
                     <field name="partner_ids" widget="one2many"/>
@@ -12144,7 +12144,7 @@ test('Add a line, click on "Save & New" with an invalid form', async () => {
 
 test("field in list but not in fetched form", async () => {
     Partner._fields.o2m = fields.One2many({
-        relation: "partnertype",
+        relation: "partner.type",
         relation_field: "p_id",
     });
     PartnerType._onChanges = {
@@ -12176,11 +12176,11 @@ test("field in list but not in fetched form", async () => {
 
     expect.verifySteps(["get_views: partner", "onchange: partner"]);
     await contains(".o_field_x2many_list_row_add a").click();
-    expect.verifySteps(["get_views: partnertype", "onchange: partnertype"]);
+    expect.verifySteps(["get_views: partner.type", "onchange: partner.type"]);
     await contains(".modal .o_field_widget[name='name'] input").edit("changed", {
         confirm: "blur",
     });
-    expect.verifySteps(["onchange: partnertype"]);
+    expect.verifySteps(["onchange: partner.type"]);
     await contains(".modal .o_form_button_save").click();
     expect(".o_data_row").toHaveText("changed 5");
     await contains(".o_form_button_save").click();
