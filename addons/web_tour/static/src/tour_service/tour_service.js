@@ -49,7 +49,6 @@ import { callWithUnloadCheck } from "./tour_utils";
  * @property {number} [width]
  * @property {number} [timeout] By default, when the trigger node isn't found after 10000 milliseconds, it throws an error.
  * You can change this value to lengthen or shorten the time before the error occurs [ms].
- * @property {boolean} [consumeVisibleOnly] TODO: Still used ???
  * @property {string} [consumeEvent] Only in manual mode (onboarding tour). It's the event we want the customer to do.
  * @property {boolean} [mobile] When true, step will only trigger in mobile view.
  * @property {string} [title]
@@ -78,7 +77,6 @@ function checkTourStepKeyValues(tourStep) {
         in_modal: { type: Boolean, optional: true },
         width: { type: Number, optional: true },
         timeout: { type: Number, optional: true },
-        consumeVisibleOnly: { type: Boolean, optional: true },
         consumeEvent: { type: String, optional: true },
         title: { type: String, optional: true },
         debugHelp: { type: String, optional: true },
