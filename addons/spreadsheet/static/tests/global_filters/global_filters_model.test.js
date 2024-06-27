@@ -2003,7 +2003,10 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
     expect(relationalFilters2).toEqual([{ filterId: "42", value: [41] }]);
     const dateFilters1 = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"date:month","08/2016")');
     expect(dateFilters1).toEqual([{ filterId: "43", value: { yearOffset: -6, period: "august" } }]);
-    const dateFilters2 = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"date:year","2016")');
+    const dateFilters2 = getFiltersMatchingPivot(
+        model,
+        '=PIVOT.HEADER(1,"date:year_number","2016")'
+    );
     expect(dateFilters2).toEqual([{ filterId: "43", value: { yearOffset: -6 } }]);
 });
 
