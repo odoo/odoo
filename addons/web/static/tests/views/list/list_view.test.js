@@ -10295,6 +10295,13 @@ test(`multi edit list view: mousedown on "Discard" with invalid field`, async ()
     await animationFrame();
     expect(`.o_dialog`).toHaveCount(0, { message: "should not display an invalid field dialog" });
 
+    // FIXME: Hoot incorrectly triggers"change" events *after* the blur instead of
+    // *before*, causing the internals of the list controller/renderer to dispatch
+    // 2 dialogs. We have to catch and stop that "change" event to prevent this.
+    getFixture().addEventListener("change", (ev) => ev.stopPropagation(), {
+        capture: true,
+        once: true,
+    });
     pointerUp(".o_control_panel");
     await animationFrame();
     expect(`.o_dialog`).toHaveCount(1, { message: "should display an invalid field dialog" });
