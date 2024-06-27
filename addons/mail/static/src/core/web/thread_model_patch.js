@@ -69,7 +69,7 @@ patch(Thread.prototype, {
         await chatWindow?.close();
         super.unpin(...arguments);
     },
-    _openChatWindow(replaceNewMessageChatWindow, { openMessagingMenuOnClose } = {}) {
+    _openChatWindow(replaceNewMessageChatWindow, { autofocus = true, openMessagingMenuOnClose } = {}) {
         const chatWindow = this.store.ChatWindow.insert(
             assignDefined(
                 {
@@ -80,7 +80,9 @@ patch(Thread.prototype, {
                 { openMessagingMenuOnClose }
             )
         );
-        chatWindow.autofocus++;
+        if (autofocus) {
+            chatWindow.autofocus++;
+        }
         this.state = "open";
         chatWindow.notifyState();
     },
