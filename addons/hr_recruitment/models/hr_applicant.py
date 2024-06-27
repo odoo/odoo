@@ -33,7 +33,7 @@ class Applicant(models.Model):
     _primary_email = 'email_from'
 
     name = fields.Char("Subject / Application", required=True, help="Email subject for applications sent via email", index='trigram')
-    active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
+    active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.", index=True)
     description = fields.Html("Description")
     email_from = fields.Char("Email", size=128, compute='_compute_partner_phone_email',
         inverse='_inverse_partner_email', store=True, index='trigram')
