@@ -67,7 +67,7 @@ beforeEach(() => {
 test("Many2OneBarcode component should display the barcode icon", async () => {
     await mountView({
         type: "form",
-        resModel: "saleorderline",
+        resModel: "sale.order.line",
         arch: `
                 <form>
                     <field name="product_id" widget="many2one_barcode"/>
@@ -87,7 +87,7 @@ test("barcode button with single results", async () => {
         scanBarcode: async () => selectedRecordTest.barcode,
     });
 
-    onRpc("saleorderline", "web_save", (args) => {
+    onRpc("sale.order.line", "web_save", (args) => {
         const selectedId = args.args[1]["product_id"];
         expect(selectedId).toBe(selectedRecordTest.id, {
             message: `product id selected ${selectedId}, should be ${selectedRecordTest.id} (${selectedRecordTest.barcode})`,
@@ -97,7 +97,7 @@ test("barcode button with single results", async () => {
 
     await mountView({
         type: "form",
-        resModel: "saleorderline",
+        resModel: "sale.order.line",
         arch: `
             <form>
                 <field name="product_id" options="{'can_scan_barcode': True}"/>
@@ -121,7 +121,7 @@ test.tags("desktop")("barcode button with multiple results", async () => {
         scanBarcode: async () => "mask",
     });
 
-    onRpc("saleorderline", "web_save", (args) => {
+    onRpc("sale.order.line", "web_save", (args) => {
         const selectedId = args.args[1]["product_id"];
         expect(selectedId).toBe(selectedRecordTest.id, {
             message: `product id selected ${selectedId}, should be ${selectedRecordTest.id} (${selectedRecordTest.barcode})`,
@@ -130,7 +130,7 @@ test.tags("desktop")("barcode button with multiple results", async () => {
     });
     await mountView({
         type: "form",
-        resModel: "saleorderline",
+        resModel: "sale.order.line",
         arch: `
             <form>
                 <field name="product_id" options="{'can_scan_barcode': True}"/>
