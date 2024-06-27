@@ -229,6 +229,20 @@
             <field name="value_ids" eval="[(6, 0, [ref('product_attribute_value_s'), ref('product_attribute_value_m'), ref('product_attribute_value_l'), ref('product_attribute_value_xl')])]" />
         </record>
 
+        <record model="product.product" id="product_green_hood">
+            <field name="name">Green Hood</field>
+            <field name="list_price">15.00</field>
+            <field name="standard_price">10.0</field>
+            <field name="description_sale">Versatile cotton hoodie with an adjustable drawstring hood and front zipper closure.</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/product_hood.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product.product_category_1"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_others')])]" />
+        </record>
         <record model="product.product" id="product_classic_brown_jacket">
             <field name="name">Classic Brown Jacket</field>
             <field name="list_price">50.00</field>
