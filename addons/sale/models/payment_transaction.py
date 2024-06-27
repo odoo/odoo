@@ -93,6 +93,8 @@ class PaymentTransaction(models.Model):
     def _set_authorized(self, state_message=None, **kwargs):
         """ Override of payment to confirm the quotations automatically. """
         txs_to_process = super()._set_authorized(state_message=state_message, **kwargs)
+        # Commit transaction changes to avoid loosing it if other processes fails.
+        self.env.cr.commit()
         confirmed_orders = txs_to_process._check_amount_and_confirm_order()
         confirmed_orders._send_order_confirmation_mail()
         (txs_to_process.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
