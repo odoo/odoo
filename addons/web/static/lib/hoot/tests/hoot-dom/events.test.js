@@ -990,6 +990,52 @@ describe(parseUrl(import.meta.url), () => {
         expect.verifySteps(["input.keyup"]);
     });
 
+    test("multiple keyDown should be flagged as repeated", async () => {
+        const getKeyDownEvent = () => events.find((ev) => ev.type === "keydown");
+        let events;
+
+        await mountOnFixture(/* xml */ `<input type="text" />`);
+
+        click("input");
+
+        monitorEvents("input");
+
+        events = keyDown("Enter");
+        expect(getKeyDownEvent().repeat).toBe(false);
+
+        events = keyDown("Enter");
+        expect(getKeyDownEvent().repeat).toBe(true);
+
+        events = keyDown("Enter");
+        expect(getKeyDownEvent().repeat).toBe(true);
+
+        events = keyDown("Escape");
+        expect(getKeyDownEvent().repeat).toBe(false);
+
+        events = keyDown("Enter");
+        expect(getKeyDownEvent().repeat).toBe(false);
+
+        events = keyUp("Enter");
+        expect(getKeyDownEvent()).toBe(undefined);
+
+        events = keyDown("Enter");
+        expect(getKeyDownEvent().repeat).toBe(false);
+
+        events = keyDown("Enter");
+        expect(getKeyDownEvent().repeat).toBe(true);
+
+        expect.verifySteps([
+            "input.keydown",
+            "input.keydown",
+            "input.keydown",
+            "input.keydown",
+            "input.keydown",
+            "input.keyup",
+            "input.keydown",
+            "input.keydown",
+        ]);
+    });
+
     test("pointerDown", async () => {
         await mountOnFixture(/* xml */ `<button type="button">Click me</button>`);
         monitorEvents("button");
