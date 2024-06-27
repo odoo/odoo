@@ -94,9 +94,24 @@
                     <t t-call="website_sale_product_configurator.product_quantity_config"/>
                 </td>
                 <td class="text-center td-price" name="price">
-                    <div t-attf-class="text-danger oe_default_price oe_striked_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                    <div
+                        t-if="not combination_info.get('compare_list_price')"
+                        t-attf-class="text-danger oe_default_price oe_striked_price
+                            {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
                         t-out="combination_info['list_price']"
                         t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                    <div
+                        t-if="combination_info.get('compare_list_price')
+                            and combination_info['compare_list_price']
+                            &gt; combination_info['price']"
+                        class="text-danger oe_striked_price"
+                        t-out="combination_info['compare_list_price']"
+                        groups="website_sale.group_product_price_comparison"
+                        t-options='{
+                            "widget": "monetary",
+                            "display_currency": (pricelist or product).currency_id,
+                        }'
+                    />
                     <span class="oe_price product_id" style="white-space: nowrap;"
                         t-att-data-product-id="product.id"
                         t-out="combination_info['price']"
@@ -151,9 +166,24 @@
                         <t t-call='website_sale_product_configurator.product_quantity_config' />
                     </td>
                     <td class="text-center td-price">
-                        <div t-attf-class="text-danger oe_default_price oe_optional oe_striked_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                        <div
+                            t-if="not combination_info.get('compare_list_price')"
+                            t-attf-class="text-danger oe_default_price oe_optional oe_striked_price
+                                {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
                             t-out="combination_info['list_price']"
                             t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        <div
+                            t-if="combination_info.get('compare_list_price')
+                                and combination_info['compare_list_price']
+                                &gt; combination_info['price']"
+                            class="text-danger oe_striked_price"
+                            t-out="combination_info['compare_list_price']"
+                            groups="website_sale.group_product_price_comparison"
+                            t-options='{
+                                "widget": "monetary",
+                                "display_currency": (pricelist or product).currency_id
+                            }'
+                        />
                         <div class="oe_price" style="white-space: nowrap;"
                             t-out="combination_info['price']"
                             t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
