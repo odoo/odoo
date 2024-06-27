@@ -8,24 +8,34 @@ class AccountMoveLine(models.Model):
     def _l10n_ar_prices_and_taxes(self):
         self.ensure_one()
         invoice = self.move_id
-        included_taxes = self.tax_ids.filtered('tax_group_id.l10n_ar_vat_afip_code') if self.move_id._l10n_ar_include_vat() else False
-        if not included_taxes:
-            price_unit = self.tax_ids.compute_all(
-                self.price_unit,
-                currency=invoice.currency_id,
-                product=self.product_id,
-                partner=invoice.partner_id,
-                rounding_method="round_globally",
-            )
-            price_unit = price_unit['total_excluded']
-            price_subtotal = self.price_subtotal
+        include_vat = invoice._l10n_ar_include_vat()
+
+        AccountTax = self.env['account.tax']
+        base_line = invoice._prepare_product_base_line_for_taxes_computation(self)
+        if include_vat:
+            base_line['tax_ids'] = self.tax_ids.filtered('tax_group_id.l10n_ar_vat_afip_code')
+        AccountTax._add_tax_details_in_base_line(base_line, self.company_id, rounding_method='round_globally')
+
+        tax_details = base_line['tax_details']
+        discount = base_line['discount']
+        price_unit = base_line['price_unit']
+        quantity = base_line['quantity']
+        if include_vat:
+            raw_total = tax_details['raw_total_included_currency']
         else:
-            price_unit = included_taxes.compute_all(
-                self.price_unit, invoice.currency_id, 1.0, self.product_id, invoice.partner_id)['total_included']
-            price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
-            price_subtotal = included_taxes.compute_all(
-                price, invoice.currency_id, self.quantity, self.product_id, invoice.partner_id)['total_included']
-        price_net = price_unit * (1 - (self.discount or 0.0) / 100.0)
+            raw_total = tax_details['raw_total_excluded_currency']
+
+        if discount == 100.0:
+            price_subtotal = price_unit * quantity
+        else:
+            price_subtotal = raw_total / (1 - discount / 100.0)
+
+        if quantity:
+            price_unit = raw_total / quantity
+            price_net = price_subtotal / quantity
+        else:
+            price_unit = 0.0
+            price_net = 0.0
 
         return {
             'price_unit': price_unit,
