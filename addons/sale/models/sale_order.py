@@ -947,6 +947,9 @@ class SaleOrder(models.Model):
 
         self.filtered(lambda so: so._should_be_locked()).action_lock()
 
+        if self.env.context.get('send_email'):
+            self._send_order_confirmation_mail()
+
         return True
 
     def _should_be_locked(self):
