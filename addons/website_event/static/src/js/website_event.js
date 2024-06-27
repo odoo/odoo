@@ -86,4 +86,48 @@ publicWidget.registry.EventRegistrationFormInstance = publicWidget.Widget.extend
     },
 });
 
-export default EventRegistrationForm;
+publicWidget.registry.WebsiteEventLayout = publicWidget.Widget.extend({
+    selector: '.o_wevent_index',
+    disabledInEditableMode: false,
+    events: {
+        'change .o_wevent_apply_layout input': '_onApplyEventLayoutChange',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onApplyEventLayoutChange: async function (ev) {
+        const wysiwyg = this.options.wysiwyg;
+        if (wysiwyg) {
+            wysiwyg.odooEditor.observerUnactive('_onApplyEventLayoutChange');
+        }
+        var clickedValue = $(ev.target).val();
+        if (!this.editableMode) {
+            await rpc('/event/save_event_layout_mode', {
+                'layout_mode': clickedValue,
+            });
+        }
+
+        const activeClasses = ev.target.parentElement.dataset.activeClasses.split(' ');
+        ev.target.parentElement.querySelectorAll('.btn').forEach((btn) => {
+            activeClasses.map(c => btn.classList.toggle(c));
+        });
+
+        document.querySelector('#o_wevent_event_grid_layout').classList.toggle('d-none');
+        document.querySelector('#o_wevent_event_list_layout').classList.toggle('d-none');
+
+        if (wysiwyg) {
+            wysiwyg.odooEditor.observerActive('_onApplyShopLayoutChange');
+        }
+    },
+});
+
+export default {
+    EventRegistrationForm,
+    WebsiteEventLayout: publicWidget.registry.WebsiteEventLayout,
+};
