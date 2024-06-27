@@ -148,6 +148,7 @@ const getDefaultRunTimeValue = () => ({
 
     // Pointer
     currentClickCount: 0,
+    currentKey: null,
     currentPointerDownTarget: null,
     currentPointerDownTimeout: 0,
     currentPointerTarget: null,
@@ -933,7 +934,12 @@ const _implicitHover = (target, options) => {
 const _keyDown = (target, eventInit) => {
     registerSpecialKey(eventInit, true);
 
-    const keyDownEvent = dispatch(target, "keydown", eventInit);
+    const repeat =
+        typeof eventInit.repeat === "boolean"
+            ? eventInit.repeat
+            : runTime.currentKey === eventInit.key;
+    runTime.currentKey = eventInit.key;
+    const keyDownEvent = dispatch(target, "keydown", { ...eventInit, repeat });
 
     if (isPrevented(keyDownEvent)) {
         return;
@@ -1187,6 +1193,7 @@ const _keyDown = (target, eventInit) => {
 const _keyUp = (target, eventInit) => {
     dispatch(target, "keyup", eventInit);
 
+    runTime.currentKey = null;
     registerSpecialKey(eventInit, false);
 
     if (eventInit.key === " " && getTag(target) === "input" && target.type === "checkbox") {
