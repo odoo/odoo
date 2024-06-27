@@ -167,8 +167,7 @@ class ResourceResource(models.Model):
             # if no resource, add the company resource calendar.
             resource_calendars_within_period[False][default_calendar] = Intervals([(start, end, self.env['resource.calendar.attendance'])])
         for resource in self:
-            calendar = resource.calendar_id or resource.company_id.resource_calendar_id or default_calendar
-            resource_calendars_within_period[resource.id][calendar] = Intervals([(start, end, self.env['resource.calendar.attendance'])])
+            resource_calendars_within_period[resource.id][resource.calendar_id] = Intervals([(start, end, self.env['resource.calendar.attendance'])])
         return resource_calendars_within_period
 
     def _get_valid_work_intervals(self, start, end, calendars=None, compute_leaves=True):
