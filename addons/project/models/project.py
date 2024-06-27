@@ -2088,6 +2088,13 @@ class Task(models.Model):
                 task._portal_ensure_token()
             if current_partner not in task.message_partner_ids:
                 task.message_subscribe(current_partner.ids)
+            for follower in task.message_follower_ids:
+                if (
+                        (follower.partner_id.user_ids != task.project_id.user_id)
+                        and (follower.partner_id.user_ids.id not in task.user_ids.ids)
+                        and follower.partner_id != current_partner
+                ):
+                    task.message_unsubscribe(follower.partner_id.ids)
         return tasks
 
     def write(self, vals):
