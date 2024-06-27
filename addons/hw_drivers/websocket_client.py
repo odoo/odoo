@@ -11,7 +11,7 @@ from odoo.addons.hw_drivers import main
 from odoo.addons.hw_drivers.tools import helpers
 
 _logger = logging.getLogger(__name__)
-websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel()))
+websocket.enableTrace(True)
 
 def send_to_controller(print_id, device_identifier):
     server = helpers.get_odoo_server_url()
