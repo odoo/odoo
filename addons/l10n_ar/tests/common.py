@@ -360,8 +360,8 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_date": "2021-03-01",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
-                    {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
-                    {'product_id': self.product_iva_exento, 'price_unit': 100.0, 'quantity': 1},
+                    {'product_id': self.product_iva_105, 'price_unit': 642.1234, 'quantity': 5},
+                    {'product_id': self.product_iva_exento, 'price_unit': 100.5678, 'quantity': 1},
                 ],
             },
             'test_invoice_5': {
