@@ -74,7 +74,7 @@ class SaleOrderLine(models.Model):
         if self.event_booth_pending_ids and (not self.event_id or self.event_id != self.event_booth_pending_ids.event_id):
             self.event_booth_pending_ids = None
 
-    @api.depends('event_booth_pending_ids')
+    @api.depends('event_booth_registration_ids.event_booth_id')
     def _compute_name(self):
         """Override to add the compute dependency.
 
