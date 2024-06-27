@@ -19,6 +19,8 @@ import {
     useSubEnv,
     reactive,
 } from "@odoo/owl";
+import { loadBundle } from "@web/core/assets";
+const viewInfoRegistry = registry.category("view_info");
 const viewRegistry = registry.category("views");
 
 viewRegistry.addValidation({
@@ -222,8 +224,8 @@ export class View extends Component {
 
     async loadView(props) {
         // determine view type
-        let descr = viewRegistry.get(props.type);
-        const type = descr.type;
+        let viewInfo = viewInfoRegistry.get(props.type, null) || viewRegistry.get(props.type);
+        const type = viewInfo.type;
 
         // determine views for which descriptions should be obtained
         let { viewId, searchViewId } = props;
@@ -320,7 +322,22 @@ export class View extends Component {
             ...(props.className || "").split(" "),
         ]);
 
+        // load view bundle if needed
+        if (subType) {
+            if (viewInfoRegistry.contains(subType)) {
+                viewInfo = viewInfoRegistry.get(subType);
+            } else {
+                subType = null;
+            }
+        }
+
+        if (viewInfo.bundle) {
+            // to remove
+            await loadBundle(viewInfo.bundle);
+        }
+
         // determine ViewClass to instantiate (if not already done)
+        let descr = viewRegistry.get(props.type, null);
         if (subType) {
             if (viewRegistry.contains(subType)) {
                 descr = viewRegistry.get(subType);

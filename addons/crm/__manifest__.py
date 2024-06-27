@@ -71,7 +71,7 @@
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'crm/static/src/**/*',
+            'crm/static/src/**/!lazy/**/*',
         ],
         'web.assets_tests': [
             'crm/static/tests/tours/**/*',
@@ -79,6 +79,9 @@
         'web.qunit_suite_tests': [
             'crm/static/tests/**/*',
             ('remove', 'crm/static/tests/tours/**/*'),
+        ],
+        'web.assets_backend_lazy': [
+            'crm/static/src/**/lazy/**/*',
         ],
     },
     'license': 'LGPL-3',
