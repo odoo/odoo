@@ -165,3 +165,10 @@ class IrAttachment(models.Model):
         to_process.sort(key=lambda x: x['sort_weight'])
 
         return to_process
+
+    def _post_add_create(self, **kwargs):
+        move_attachments = self.filtered(lambda attachment: attachment.res_model == 'account.move')
+        moves_per_id = self.env['account.move'].browse([attachment.res_id for attachment in move_attachments]).grouped('id')
+        for attachment in move_attachments:
+            moves_per_id[attachment.res_id]._check_and_decode_attachment(attachment)
+        super()._post_add_create()
