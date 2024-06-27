@@ -10032,7 +10032,7 @@ legacyRegistry.DynamicSvg = SnippetOptionWidget.extend({
 /**
  * Allows to handle snippets with a list of items.
  */
-legacyRegistry.MultipleItems = SnippetOptionWidget.extend({
+export class MultipleItems extends SnippetOption {
 
     //--------------------------------------------------------------------------
     // Options
@@ -10046,22 +10046,17 @@ legacyRegistry.MultipleItems = SnippetOptionWidget.extend({
         const addBeforeItem = params.addBefore === 'true';
         if ($target.length) {
             await new Promise(resolve => {
-                this.trigger_up('clone_snippet', {
-                    $snippet: $target,
-                    onSuccess: resolve,
-                });
+                this.env.cloneSnippet($target).then(resolve);
             });
             if (addBeforeItem) {
                 $target.before($target.next());
             }
             if (params.selectItem !== 'false') {
-                this.trigger_up('activate_snippet', {
-                    $snippet: addBeforeItem ? $target.prev() : $target.next(),
-                });
+                this.env.activateSnippet(addBeforeItem ? $target.prev() : $target.next());
             }
             this._addItemCallback($target);
         }
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -10069,14 +10064,17 @@ legacyRegistry.MultipleItems = SnippetOptionWidget.extend({
         const $target = this.$(params.item);
         if ($target.length) {
             await new Promise(resolve => {
-                this.trigger_up('remove_snippet', {
-                    $snippet: $target,
-                    onSuccess: resolve,
+                this.env.removeSnippet({
+                    data: {
+                        $snippet: $target,
+                        onSuccess: resolve,
+                    },
+                    stopPropagation: (ev) => {},
                 });
             });
             this._removeItemCallback($target);
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -10089,14 +10087,14 @@ legacyRegistry.MultipleItems = SnippetOptionWidget.extend({
      * @abstract
      * @param {jQueryElement} $target
      */
-    _addItemCallback($target) {},
+    _addItemCallback($target) {}
     /**
      * @private
      * @abstract
      * @param {jQueryElement} $target
      */
-    _removeItemCallback($target) {},
-});
+    _removeItemCallback($target) {}
+}
 
 legacyRegistry.SelectTemplate = SnippetOptionWidget.extend({
     custom_events: Object.assign({}, SnippetOptionWidget.prototype.custom_events, {

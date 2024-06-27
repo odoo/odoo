@@ -2225,6 +2225,7 @@ class SnippetsMenu extends Component {
             cloneSnippet: this._cloneSnippet.bind(this),
             cleanUI: this._cleanUI.bind(this),
             requestSave: (data) => this._onSaveRequest.call(this, { data }),
+            removeSnippet: this._onRemoveSnippet.bind(this),
             isElementSelected: (data) => this._onIsElementSelected.call(this, { data }),
             hideOverlay: this._onHideOverlay.bind(this),
             unblockPreviewOverlays: this._onUnblockPreviewOverlays.bind(this),
