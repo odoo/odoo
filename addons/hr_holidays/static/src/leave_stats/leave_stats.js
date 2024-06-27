@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
-import { formatDate } from "@web/core/l10n/dates";
+import { formatDateTime } from "@web/core/l10n/dates";
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
@@ -86,13 +86,27 @@ export class LeaveStatsComponent extends Component {
                 ["date_from", "<=", dateTo],
                 ["date_to", ">=", dateFrom],
             ],
-            ["employee_id", "date_from", "date_to", "number_of_days"]
+            [
+                "employee_id",
+                "date_from",
+                "date_to",
+                "number_of_days",
+                "number_of_hours",
+                "leave_type_request_unit",
+            ]
         );
 
         this.state.departmentLeaves = departmentLeaves.map((leave) => {
+            const dateFormat =
+                leave.leave_type_request_unit === "hour" ? "MM/dd/yyyy HH:mm" : "MM/dd/yyyy";
             return Object.assign({}, leave, {
-                dateFrom: formatDate(DateTime.fromSQL(leave.date_from, { zone: "utc" }).toLocal()),
-                dateTo: formatDate(DateTime.fromSQL(leave.date_to, { zone: "utc" }).toLocal()),
+                dateFrom: formatDateTime(
+                    DateTime.fromSQL(leave.date_from, { zone: "utc" }).toLocal(),
+                    { format: dateFormat }
+                ),
+                dateTo: formatDateTime(DateTime.fromSQL(leave.date_to, { zone: "utc" }).toLocal(), {
+                    format: dateFormat,
+                }),
                 sameEmployee: leave.employee_id[0] === employee[0],
             });
         });
@@ -106,7 +120,8 @@ export class LeaveStatsComponent extends Component {
 
         const dateFrom = date.startOf("year");
         const dateTo = date.endOf("year");
-        this.state.leaves = await this.orm.readGroup(
+
+        const leaves = await this.orm.searchRead(
             "hr.leave",
             [
                 ["employee_id", "=", employee[0]],
@@ -114,9 +129,30 @@ export class LeaveStatsComponent extends Component {
                 ["date_from", "<=", dateTo],
                 ["date_to", ">=", dateFrom],
             ],
-            ["holiday_status_id", "number_of_days:sum"],
-            ["holiday_status_id"]
+            ["holiday_status_id", "number_of_days", "number_of_hours", "leave_type_request_unit"]
         );
+
+        const groupedLeaves = leaves.reduce((acc, currentLeave) => {
+            const { holiday_status_id, leave_type_request_unit, number_of_days, number_of_hours } =
+                currentLeave;
+            const currentId = holiday_status_id[0];
+
+            if (!acc[currentId]) {
+                acc[currentId] = {
+                    holiday_status_id,
+                    leave_type_request_unit,
+                    number_of_days,
+                    number_of_hours,
+                };
+            } else {
+                acc[currentId].number_of_days += number_of_days;
+                acc[currentId].number_of_hours += number_of_hours;
+            }
+
+            return acc;
+        }, {});
+
+        this.state.leaves = Object.values(groupedLeaves);
     }
 }
 
