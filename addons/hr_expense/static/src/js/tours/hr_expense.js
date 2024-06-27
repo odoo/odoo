@@ -64,10 +64,12 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
 }, ...stepUtils.statusbarButtonsSteps(_t("Attach Receipt"), _t("Attach a receipt - usually an image or a PDF file.")),
 ...stepUtils.statusbarButtonsSteps(_t("Create Report"), _t("Create a report to submit one or more expenses to your manager.")),
 ...stepUtils.statusbarButtonsSteps(_t("Submit to Manager"), markup(_t('Once your <b>Expense Report</b> is ready, you can submit it to your manager and wait for approval.'))),
+{
+    isActive: ["mobile"],
+    trigger: ".o_hr_expense_form_view_view",
+},
 ...stepUtils.goBackBreadcrumbsMobile(
     _t("Use the breadcrumbs to go back to the list of expenses."),
-    undefined,
-    ".o_hr_expense_form_view_view",
 ),
 {
     trigger: ".o_hr_expense_form_view_view",
@@ -83,7 +85,13 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     position: 'bottom',
     run: "click",
 },
-stepUtils.openBurgerMenu(),
+{
+    isActive: ["mobile"],
+    trigger: ".o_mobile_menu_toggle",
+    content: _t("Open bugger menu."),
+    position: "bottom",
+    run: "click",
+},
 {
     trigger: ".o_main_navbar",
 },

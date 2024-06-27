@@ -106,10 +106,13 @@ registry.category("web_tour.tours").add("sale_tour", {
             trigger: ".o_field_monetary[name='price_subtotal']:contains(10.00)",
             run: "click",
         },
+        {
+            isActive: ["auto", "mobile"],
+            trigger: ".o_statusbar_buttons button[name='action_quotation_send']",
+        },
         ...stepUtils.statusbarButtonsSteps(
             "Send by Email",
             markup(_t("<b>Send the quote</b> to yourself and check what the customer will receive.")),
-            ".o_statusbar_buttons button[name='action_quotation_send']",
         ),
         {
             isActive: ["body:not(:has(.modal-footer button[name='action_send_mail']))"],

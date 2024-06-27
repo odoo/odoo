@@ -103,10 +103,13 @@ registry.category("web_tour.tours").add("purchase_tour", {
             position: "right",
             run: "edit 12.0",
         },
+        {
+            isActive: ["auto", "mobile"],
+            trigger: ".o_statusbar_buttons .o_arrow_button_current[name='action_rfq_send']",
+        },
         ...stepUtils.statusbarButtonsSteps(
             "Send by Email",
-            _t("Send the request for quotation to your vendor."),
-            ".o_statusbar_buttons .o_arrow_button_current[name='action_rfq_send']"
+            _t("Send the request for quotation to your vendor.")
         ),
         {
             trigger: ".modal-content input[name='email']",

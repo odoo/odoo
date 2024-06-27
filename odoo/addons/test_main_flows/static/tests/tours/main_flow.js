@@ -12,7 +12,17 @@ registry.category("web_tour.tours").add('main_flow_tour', {
     url: "/web",
     steps: () => [
 ...stepUtils.goToAppSteps('sale.sale_menu_root', markup(_t('Organize your sales activities with the <b>Sales app</b>.'))),
-stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Quotations')"),
+{
+    isActive: ["mobile"],
+    trigger: ".o_breadcrumb .active:contains('Quotations')",
+},
+{
+    isActive: ["mobile"],
+    trigger: ".o_mobile_menu_toggle",
+    content: _t("Open bugger menu."),
+    position: "bottom",
+    run: "click",
+},
 {
     isActive: ["desktop"],
     trigger: ".o_main_navbar",
@@ -96,7 +106,10 @@ stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Quotations')"),
     position: 'bottom',
     run: "click",
 },
-stepUtils.autoExpandMoreButtons('.o_form_saved'),
+{
+    trigger: ".o_form_saved",
+},
+stepUtils.autoExpandMoreButtons(),
 {
     trigger: '.o_form_saved',
 },
@@ -856,7 +869,17 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     run: "click",
 },
 ...stepUtils.goToAppSteps('stock.menu_stock_root', _t('Go to Inventory')),
-stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Inventory Overview')"),
+{
+    isActive: ["mobile"],
+    trigger: ".o_breadcrumb .active:contains('Inventory Overview')",
+},
+{
+    isActive: ["mobile"],
+    trigger: ".o_mobile_menu_toggle",
+    content: _t("Open bugger menu."),
+    position: "bottom",
+    run: "click",
+},
 {
     isActive: ["desktop"],
     trigger: '.o_main_navbar',
@@ -973,7 +996,17 @@ stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Inventory Overview')")
     run: "click",
 },
 ...stepUtils.goToAppSteps('mrp.menu_mrp_root', _t('Go to Manufacturing')),
-stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Manufacturing Orders'), .o_breadcrumb .active:contains('Work Centers Overview')"),
+{
+    isActive: ["mobile"],
+    trigger: ".o_breadcrumb .active:contains('Manufacturing Orders'), .o_breadcrumb .active:contains('Work Centers Overview')",
+},
+{
+    isActive: ["mobile"],
+    trigger: ".o_mobile_menu_toggle",
+    content: _t("Open bugger menu."),
+    position: "bottom",
+    run: "click",
+},
 {
     isActive: ["desktop"],
     trigger: ".o_menu_sections button[data-menu-xmlid='mrp.menu_mrp_manufacturing']",
@@ -1018,7 +1051,17 @@ stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Manufacturing Orders')
     run: "click",
 },
 ...stepUtils.goToAppSteps('sale.sale_menu_root', markup(_t('Organize your sales activities with the <b>Sales app</b>.'))),
-stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Quotations')"),
+{
+    isActive: ["mobile"],
+    trigger: ".o_breadcrumb .active:contains('Quotations')",
+},
+{
+    isActive: ["mobile"],
+    trigger: ".o_mobile_menu_toggle",
+    content: _t("Open bugger menu."),
+    position: "bottom",
+    run: "click",
+},
 {
     isActive: ["desktop"],
     trigger: ".o_menu_sections button[data-menu-xmlid='sale.sale_order_menu']",
@@ -1054,7 +1097,11 @@ stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Quotations')"),
     position: "bottom",
     run: "click",
 },
-stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons('.o_control_panel .o_breadcrumb:contains("S0")')),
+{
+    isActive: ["mobile"],
+    trigger: '.o_control_panel .o_breadcrumb:contains("S0")',
+},
+stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons()),
 {
     isActive: ["desktop"],
     trigger: '.oe_stat_button:has(div[name=tasks_count])',
@@ -1117,10 +1164,12 @@ stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons('.o_control_panel .o_br
     trigger: ".o_form_button_save",
     run: "click",
 },
+{
+    isActive: ["mobile"],
+    trigger: ".o_breadcrumb .active:contains('the_flow.service')",
+},
 ...stepUtils.goBackBreadcrumbsMobile(
-        _t('Back to the sale order'),
-        undefined,
-        ".o_breadcrumb .active:contains('the_flow.service')"
+        _t('Back to the sale order')
     ),
 {
     isActive: ["desktop"],
