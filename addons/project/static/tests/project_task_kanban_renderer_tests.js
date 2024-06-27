@@ -6,6 +6,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
+import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 
 let target;
 let serverData;
@@ -40,7 +41,7 @@ QUnit.module("project", (hooks) => {
         serverData = {
             views: {
                 "project.task,false,kanban": `
-                    <kanban default_group_by="stage_id">
+                    <kanban default_group_by="stage_id" js_class="project_task_kanban">
                         <field name="name"/>
                         <templates>
                             <t t-name="kanban-box">
@@ -51,63 +52,23 @@ QUnit.module("project", (hooks) => {
                         </templates>
                     </kanban>
                 `,
-                "project.task.type.delete.wizard,false,form": `
-                    <form>
-                        <field name="tasks_count" invisible="1" />
-                        <field name="stages_active" invisible="1" />
-                        <div attrs="{'invisible': [('tasks_count', '>', 0)]}">
-                            <p>Are you sure you want to delete these stages?</p>
-                        </div>
-                        <div attrs="{'invisible': ['|', ('stages_active', '=', False), ('tasks_count', '=', 0)]}">
-                            <p>You cannot delete stages containing tasks. You can either archive them or first delete all of their tasks.</p>
-                        </div>
-                        <div attrs="{'invisible': ['|', ('stages_active', '=', True), ('tasks_count', '=', 0)]}">
-                            <p>You cannot delete stages containing tasks. You should first delete all of their tasks.</p>
-                        </div>
-                        <footer>
-                            <button string="Archive Stages" type="object" name="action_archive" class="btn btn-primary" attrs="{'invisible': ['|', ('stages_active', '=', False), ('tasks_count', '=', 0)]}" data-hotkey="q"/>
-                            <button string="Delete" type="object" name="action_unlink" class="btn btn-primary" attrs="{'invisible': [('tasks_count', '>', 0)]}" data-hotkey="w"/>
-                            <button string="Discard" special="cancel" data-hotkey="z" />
-                        </footer>
-                    </form>
-                `,
             },
         };
         target = getFixture();
         setupViewRegistries();
     });
     QUnit.test("delete a column in grouped on m2o", async function (assert) {
-        const groups = [
-            {
-                stage_id: [1, "New"],
-                __domain: [],
-            },
-        ];
-        const { openView } = await start({
-            serverData,
-            async mockRPC({ model, method }) {
-                if (method === "web_read_group") {
-                    return {
-                        groups,
-                        length: groups.length,
-                    };
-                }
-                if (model === "project.task.type" && method === "unlink_wizard") {
-                    assert.step(`${model}/${method}`);
-                    return {
-                        name: "Delete Stage",
-                        type: "ir.actions.act_window",
-                        target: "new",
-                        view_mode: "form",
-                        res_model: "project.task.type.delete.wizard",
-                        views: [[false, "form"]],
-                    };
-                }
-            },
-        });
+        patchUserWithCleanup({ hasGroup: (group) => group === "project.group_project_manager" });
+
+        const { openView } = await start({ serverData });
+
         await openView({
             res_model: "project.task",
             views: [[false, "kanban"]],
+            context: {
+                'active_model': "project.task.type.delete.wizard",
+                'default_project_id': 1,
+            },
         });
 
         assert.containsN(target, ".o_kanban_header", 1, "should have 1 column");
