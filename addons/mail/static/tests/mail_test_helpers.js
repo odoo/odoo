@@ -307,6 +307,7 @@ export async function start(options) {
     } else {
         env = getMockEnv() || (await makeMockEnv({}));
     }
+    env.testEnv = true;
     await mountWithCleanup(WebClient, { env, target });
     return Object.assign(env, { ...options?.env, target });
 }
