@@ -1,5 +1,7 @@
 import { isBlock } from "./blocks";
 
+// @todo @phoenix: consider using the wrapInlinesInParagraphs utils instead.
+
 export function initElementForEdition(element, options = {}) {
     const document = element.ownerDocument;
     // Detect if the editable base element contain orphan inline nodes. If

@@ -7,6 +7,9 @@ import {
 } from "./dom_info";
 import { prepareUpdate } from "./dom_state";
 import { boundariesOut, leftPos, nodeSize, rightPos } from "./position";
+import { callbacksForCursorUpdate } from "./selection";
+
+/** @typedef {import("@html_editor/core/selection_plugin").Cursors} Cursors */
 
 /**
  * Take a node and unwrap all of its block contents recursively. All blocks
@@ -30,6 +33,57 @@ export function makeContentsInline(node) {
             child.remove();
         }
         childIndex += 1;
+    }
+}
+
+/**
+ * Wrap inline children nodes in Paragraphs, optionally updating cursors for
+ * later selection restore.
+ *
+ * @param {HTMLElement} element - block element
+ * @param {Cursors} [cursors]
+ */
+export function wrapInlinesInParagraphs(element, cursors = { update: () => {} }) {
+    // Helpers to manipulate preserving selection.
+    const wrapInP = (node, cursors) => {
+        const p = node.ownerDocument.createElement("P");
+        cursors.update(callbacksForCursorUpdate.before(node, p));
+        node.before(p);
+        cursors.update(callbacksForCursorUpdate.append(p, node));
+        p.append(node);
+        return p;
+    };
+    const appendToCurrentP = (currentP, node, cursors) => {
+        cursors.update(callbacksForCursorUpdate.append(currentP, node));
+        currentP.append(node);
+    };
+    const removeNode = (node, cursors) => {
+        cursors.update(callbacksForCursorUpdate.remove(node));
+        node.remove();
+    };
+
+    let currentP;
+    let shouldBreakLine = true;
+    for (const node of [...element.childNodes]) {
+        if (isBlock(node)) {
+            shouldBreakLine = true;
+        } else if (!isVisible(node)) {
+            removeNode(node, cursors);
+        } else if (node.nodeName === "BR") {
+            if (shouldBreakLine) {
+                wrapInP(node, cursors);
+            } else {
+                // BR preceded by inline content: discard it and make sure
+                // next inline goes in a new P
+                removeNode(node, cursors);
+                shouldBreakLine = true;
+            }
+        } else if (shouldBreakLine) {
+            currentP = wrapInP(node, cursors);
+            shouldBreakLine = false;
+        } else {
+            appendToCurrentP(currentP, node, cursors);
+        }
     }
 }
 
@@ -179,8 +233,6 @@ export function toggleClass(node, className) {
         node.removeAttribute("class");
     }
 }
-
-/** @typedef {import("@html_editor/core/selection_plugin").Cursors} Cursors */
 
 /**
  * Remove all occurrences of a character from a text node and update cursors for

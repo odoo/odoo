@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor } from "../_helpers/editor";
-import { cleanTextNode } from "@html_editor/utils/dom";
+import { cleanTextNode, wrapInlinesInParagraphs } from "@html_editor/utils/dom";
 import { getContent } from "../_helpers/selection";
 
 describe("splitAroundUntil", () => {
@@ -107,5 +107,76 @@ describe("cleanTextNode", () => {
         cleanTextNode(el.querySelector("p").firstChild, "\uFEFF", cursors);
         cursors.restore();
         expect(getContent(el)).toBe("<p>te[]xt</p>");
+    });
+});
+
+describe("wrapInlinesInParagraphs", () => {
+    test("should wrap text node in P", async () => {
+        const div = document.createElement("div");
+        div.innerHTML = "text";
+        wrapInlinesInParagraphs(div);
+        expect(div.innerHTML).toBe("<p>text</p>");
+    });
+    test("should wrap inline element in P", async () => {
+        const div = document.createElement("div");
+        div.innerHTML = "<strong>text</strong>";
+        wrapInlinesInParagraphs(div);
+        expect(div.innerHTML).toBe("<p><strong>text</strong></p>");
+    });
+    test("should not do anything to block element", async () => {
+        const div = document.createElement("div");
+        div.innerHTML = "<p>text</p>";
+        wrapInlinesInParagraphs(div);
+        expect(div.innerHTML).toBe("<p>text</p>");
+    });
+    test("should wrap inlines in P", async () => {
+        const div = document.createElement("div");
+        div.innerHTML = "textnode<strong>inline</strong><p>p</p>";
+        wrapInlinesInParagraphs(div);
+        expect(div.innerHTML).toBe("<p>textnode<strong>inline</strong></p><p>p</p>");
+    });
+    test("should wrap inlines in P (2)", async () => {
+        const div = document.createElement("div");
+        div.innerHTML = "<strong>inline</strong><p>p</p>textnode";
+        wrapInlinesInParagraphs(div);
+        expect(div.innerHTML).toBe("<p><strong>inline</strong></p><p>p</p><p>textnode</p>");
+    });
+    test("should turn a BR into a paragraph break", async () => {
+        const div = document.createElement("div");
+        div.innerHTML = "abc<br>def";
+        wrapInlinesInParagraphs(div);
+        expect(div.innerHTML).toBe("<p>abc</p><p>def</p>");
+    });
+    test("should remove a BR that has no effect", async () => {
+        const div = document.createElement("div");
+        div.innerHTML = "abc<br>def<br>";
+        wrapInlinesInParagraphs(div);
+        expect(div.innerHTML).toBe("<p>abc</p><p>def</p>");
+    });
+    test("empty lines should become empty paragraphs", async () => {
+        const div = document.createElement("div");
+        div.innerHTML = "abc<br><br>def";
+        wrapInlinesInParagraphs(div);
+        expect(div.innerHTML).toBe("<p>abc</p><p><br></p><p>def</p>");
+    });
+    test("empty lines should become empty paragraphs (2)", async () => {
+        const div = document.createElement("div");
+        div.innerHTML = "<br>";
+        wrapInlinesInParagraphs(div);
+        expect(div.innerHTML).toBe("<p><br></p>");
+    });
+    test("empty lines should become empty paragraphs (3)", async () => {
+        const div = document.createElement("div");
+        div.innerHTML = "<br>abc";
+        wrapInlinesInParagraphs(div);
+        expect(div.innerHTML).toBe("<p><br></p><p>abc</p>");
+    });
+    test("mix: handle blocks, inlines and BRs", async () => {
+        const div = document.createElement("div");
+        div.innerHTML = "a<br><strong>b</strong><h1>c</h1><br>d<h2>e</h2><br>";
+        wrapInlinesInParagraphs(div);
+        expect(div.innerHTML).toBe(
+            "<p>a</p><p><strong>b</strong></p><h1>c</h1><p><br></p><p>d</p><h2>e</h2><p><br></p>"
+        );
     });
 });

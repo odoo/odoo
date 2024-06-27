@@ -152,12 +152,23 @@ describe("sanitize spans/fonts", () => {
     });
 });
 
-describe("sanitize should modify p within li", () => {
-    test("should convert p into span if p has classes", async () => {
+describe("list normalization", () => {
+    test("should keep P in LI (regardless of class)", async () => {
         await testEditor({
-            contentBefore: '<ul><li><p class="class-1">abc</p><p class="class-2">def</p></li></ul>',
-            contentAfter:
-                '<ul><li><span class="class-1">abc</span><span class="class-2">def</span></li></ul>',
+            contentBefore: '<ul><li><p class="class-1">abc</p><p>def</p></li></ul>',
+            contentAfter: '<ul><li><p class="class-1">abc</p><p>def</p></li></ul>',
+        });
+    });
+    test("should keep inlines in LI", async () => {
+        await testEditor({
+            contentBefore: "<ul><li>abc<strong>def</strong></li></ul>",
+            contentAfter: "<ul><li>abc<strong>def</strong></li></ul>",
+        });
+    });
+    test("should wrap inlines in P to prevent mixing block and inline in LI", async () => {
+        await testEditor({
+            contentBefore: "<ul><li>abc<strong>def</strong><p>ghi</p></li></ul>",
+            contentAfter: "<ul><li><p>abc<strong>def</strong></p><p>ghi</p></li></ul>",
         });
     });
 });

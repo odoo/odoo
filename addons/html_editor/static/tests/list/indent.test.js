@@ -355,11 +355,20 @@ describe("with selection collapsed", () => {
                         </ul>
                     </li>
                 </ul>`),
+            contentBeforeEdit: unformat(`
+                <ul>
+                    <li>
+                        <p>a</p>
+                        <ul>
+                            <li>[]b</li>
+                        </ul>
+                    </li>
+                </ul>`),
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
                     <li>
-                        a
+                        <p>a</p>
                         <ul>
                             <li class="oe-nested">
                                 <ul>
