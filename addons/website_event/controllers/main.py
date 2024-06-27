@@ -477,6 +477,7 @@ class WebsiteEventController(http.Controller):
 
             registrations_to_create.append(registration_values)
 
+        registrations_to_update.flush_recordset()  # CACL: flush to avoid access rights error, but don't know why...
         return request.env['event.registration'].sudo().create(registrations_to_create) + registrations_to_update
 
     @http.route(['''/event/<model("event.event"):event>/registration/confirm'''], type='http', auth="public", methods=['POST'], website=True)
@@ -491,7 +492,8 @@ class WebsiteEventController(http.Controller):
         if any(event_ticket.seats_limited and event_ticket.seats_available < len(registrations_data) for event_ticket in event_tickets):
             return request.redirect('/event/%s/register?registration_error_code=insufficient_seats' % event.id)
         attendees_sudo = self._create_attendees_from_registration_post(event, registrations_data)
-        request.env['event.registration'].sudo().browse(registrations_to_delete).unlink()
+        if registrations_to_delete:
+            request.env['event.registration'].sudo().browse(registrations_to_delete).unlink()
         return request.redirect(('/event/%s/registration/success?' % event.id) + werkzeug.urls.url_encode({'registration_ids': ",".join([str(id) for id in attendees_sudo.ids])}))
 
     @http.route(['/event/<model("event.event"):event>/registration/success'], type='http', auth="public", methods=['GET'], website=True, sitemap=False)
