@@ -7,11 +7,6 @@
             <field name="res_model">hr.leave</field>
             <field name="description">Time Off Request</field>
         </record>
-        <record id="mt_leave_home_working" model="mail.message.subtype">
-            <field name="name">Home Working</field>
-            <field name="res_model">hr.leave</field>
-            <field name="description">Home Working</field>
-        </record>
         <record id="mt_leave_sick" model="mail.message.subtype">
             <field name="name">Sick Time Off</field>
             <field name="res_model">hr.leave</field>
@@ -25,7 +20,7 @@
 
         <!-- Allocation-related subtypes for messaging / Chatter -->
         <record id="mt_leave_allocation" model="mail.message.subtype">
-            <field name="name">Allocation</field>
+            <field name="name">Allocation Request</field>
             <field name="res_model">hr.leave.allocation</field>
             <field name="description">Allocation Request</field>
         </record>
