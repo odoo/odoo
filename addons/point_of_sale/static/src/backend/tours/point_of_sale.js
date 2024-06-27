@@ -26,12 +26,7 @@ registry.category("web_tour.tours").add("point_of_sale_tour", {
             run: "click",
         },
         {
-            trigger: ".o_pos_kanban button.oe_kanban_action_button",
-            content: markup(
-                _t(
-                    "<p>Ready to have a look at the <b>POS Interface</b>? Let's start our first session.</p>"
-                )
-            ),
+            trigger: ".o_pos_kanban",
             position: "bottom",
             run: "click",
         },
