@@ -106,7 +106,7 @@ test("basic domain field usage is ok", async function () {
             <form>
                 <sheet>
                     <group>
-                        <field name="foo" widget="domain" options="{'model': 'partnertype'}" />
+                        <field name="foo" widget="domain" options="{'model': 'partner.type'}" />
                     </group>
                 </sheet>
             </form>`,
@@ -128,7 +128,7 @@ test("basic domain field usage is ok", async function () {
     expect(".o_model_field_selector_popover").toHaveCount(1);
     expect(".o_model_field_selector_popover_search input").toHaveCount(1);
 
-    // The popover should contain the list of partnertype fields and so
+    // The popover should contain the list of partner.type fields and so
     // there should be the "Color index" field
     expect(".o_model_field_selector_popover_item_name:first").toHaveText("Color index");
 
@@ -217,8 +217,8 @@ test("domain field is correctly reset on every view change", async function () {
         message: "field selector popover should contain 'Product Team' field",
     });
 
-    // Now change the value of the "bar" field to "partnertype"
-    await contains(".o_field_widget[name='bar'] input").edit("partnertype");
+    // Now change the value of the "bar" field to "partner.type"
+    await contains(".o_field_widget[name='bar'] input").edit("partner.type");
 
     // Refocusing the field selector input should open the popover again
     await contains(".o_model_field_selector").click();
@@ -226,7 +226,7 @@ test("domain field is correctly reset on every view change", async function () {
         message: "field selector popover should be visible",
     });
 
-    // Now the list of fields should be the ones of the "partnertype" model
+    // Now the list of fields should be the ones of the "partner.type" model
     expect(".o_model_field_selector_popover_item").toHaveCount(6, {
         message: "field selector popover should contain two non-default fields",
     });
@@ -314,7 +314,7 @@ test.tags("desktop")("basic domain field: show the selection", async function ()
             <form>
                 <sheet>
                     <group>
-                        <field name="foo" widget="domain" options="{'model': 'partnertype'}" />
+                        <field name="foo" widget="domain" options="{'model': 'partner.type'}" />
                     </group>
                 </sheet>
             </form>`,
@@ -351,7 +351,7 @@ test.tags("desktop")("field context is propagated when opening selection", async
         resId: 1,
         arch: `
             <form>
-                <field name="foo" widget="domain" options="{'model': 'partnertype'}" context="{'tree_view_ref': 3}"/>
+                <field name="foo" widget="domain" options="{'model': 'partner.type'}" context="{'tree_view_ref': 3}"/>
             </form>`,
     });
 
@@ -703,7 +703,7 @@ test.tags("desktop")("domain field in kanban view", async function () {
                 <templates>
                     <t t-name="kanban-box">
                         <div>
-                            <field name="foo" widget="domain" options="{'model': 'partnertype'}" />
+                            <field name="foo" widget="domain" options="{'model': 'partner.type'}" />
                         </div>
                     </t>
                 </templates>
@@ -874,7 +874,7 @@ test("domain field can be foldable", async function () {
             <form>
                 <sheet>
                     <group>
-                        <field name="foo" widget="domain" options="{'model': 'partnertype', 'foldable': true}" />
+                        <field name="foo" widget="domain" options="{'model': 'partner.type', 'foldable': true}" />
                     </group>
                 </sheet>
             </form>`,
@@ -900,7 +900,7 @@ test("domain field can be foldable", async function () {
     expect(".o_model_field_selector_popover").toHaveCount(1);
     expect(".o_model_field_selector_popover_search input").toHaveCount(1);
 
-    // The popover should contain the list of partnertype fields and so
+    // The popover should contain the list of partner.type fields and so
     // there should be the "Color index" field
     expect(".o_model_field_selector_popover_item_name:first").toHaveText("Color index");
 
@@ -937,7 +937,7 @@ test("add condition in empty foldable domain", async function () {
             <form>
                 <sheet>
                     <group>
-                        <field name="foo" widget="domain" options="{'model': 'partnertype', 'foldable': true}" />
+                        <field name="foo" widget="domain" options="{'model': 'partner.type', 'foldable': true}" />
                     </group>
                 </sheet>
             </form>`,
@@ -973,7 +973,7 @@ test("foldable domain field unfolds and hides caret when domain is invalid", asy
             <form>
                 <sheet>
                     <group>
-                        <field name="foo" widget="domain" options="{'model': 'partnertype', 'foldable': true}" />
+                        <field name="foo" widget="domain" options="{'model': 'partner.type', 'foldable': true}" />
                     </group>
                 </sheet>
             </form>`,

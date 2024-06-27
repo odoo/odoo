@@ -9032,7 +9032,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
         if (moves === 0) {
             expect(params).toEqual({
                 context,
-                model: "myfoo",
+                model: "my.foo",
                 ids: [4, 3],
                 offset: 13,
                 field: "int_field",
@@ -9041,7 +9041,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
         if (moves === 1) {
             expect(params).toEqual({
                 context,
-                model: "myfoo",
+                model: "my.foo",
                 ids: [4, 2],
                 offset: 12,
                 field: "int_field",
@@ -9050,7 +9050,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
         if (moves === 2) {
             expect(params).toEqual({
                 context,
-                model: "myfoo",
+                model: "my.foo",
                 ids: [2, 4],
                 offset: 12,
                 field: "int_field",
@@ -9059,7 +9059,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
         if (moves === 3) {
             expect(params).toEqual({
                 context,
-                model: "myfoo",
+                model: "my.foo",
                 ids: [4, 2],
                 offset: 12,
                 field: "int_field",
@@ -9069,7 +9069,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
     });
 
     await mountView({
-        resModel: "myfoo",
+        resModel: "my.foo",
         type: "list",
         arch: `
             <tree>
