@@ -50,8 +50,8 @@
         <field name="move_type">out_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
-            (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.1234, 'quantity': 5}),
+            (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.5678, 'quantity': 1}),
         ]"/>
     </record>
 
