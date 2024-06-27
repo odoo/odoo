@@ -152,13 +152,7 @@ export class CollaborationPlugin extends Plugin {
         }
 
         this.shared.enableObserver();
-        const isStillInEditable =
-            this.editable.contains(selection.anchorNode) &&
-            (selection.anchorNode === selection.focusNode ||
-                this.editable.contains(selection.focusNode));
-        if (selection.inEditable && isStillInEditable) {
-            this.shared.setSelection(selection);
-        }
+        this.shared.rectifySelection(selection);
 
         this.resources.onExternalHistorySteps?.forEach((cb) => cb());
 

@@ -87,6 +87,7 @@ export class SelectionPlugin extends Plugin {
         "getTraversedNodes",
         "getTraversedBlocks",
         "modifySelection",
+        "rectifySelection",
         // "collapseIfZWS",
     ];
     static resources = (p) => ({
@@ -668,6 +669,41 @@ export class SelectionPlugin extends Plugin {
             return true;
         }
         return false;
+    }
+
+    /**
+     * This function adjusts a given selection to the current nodeSize of its
+     * anchorNode and focusNode, only if they are both present in the given
+     * editable. Apply and return: a valid given selection, a modified
+     * selection if some offset needed to be adjusted. Do nothing if the given
+     * selection anchor or focus nodes are not in this.editable.
+     *
+     * @param { Object } selection
+     * @param { Node } selection.anchorNode
+     * @param { number } selection.anchorOffset
+     * @param { Node } selection.focusNode
+     * @param { number } selection.focusOffset
+     * @returns { EditorSelection|null } selection, rectified selection or null
+     */
+    rectifySelection(selection) {
+        if (
+            !this.editable.contains(selection.anchorNode) ||
+            !this.editable.contains(selection.focusNode)
+        ) {
+            return null;
+        }
+        const anchorSize = nodeSize(selection.anchorNode);
+        const focusSize = nodeSize(selection.focusNode);
+        if (anchorSize < selection.anchorOffset || focusSize < selection.focusOffset) {
+            return this.setSelection({
+                anchorNode: selection.anchorNode,
+                anchorOffset: anchorSize,
+                focusNode: selection.focusNode,
+                focusOffset: focusSize,
+            });
+        } else {
+            return this.setSelection(selection);
+        }
     }
 
     /**
