@@ -30,6 +30,7 @@ export class SignaturePlugin extends Plugin {
         );
         if (currentUser && currentUser.signature) {
             this.shared.domInsert(parseHTML(this.document, currentUser.signature));
+            this.dispatch("ADD_STEP");
         }
     }
 }
