@@ -84,7 +84,7 @@ class AccountJournal(models.Model):
         return dashboard_data
 
     def action_checks_to_print(self):
-        payment_method_line = self.outbound_payment_method_line_ids.filtered(lambda l: l.code == 'check_printing')
+        payment_method_line_id = self.outbound_payment_method_line_ids.filtered(lambda l: l.code == 'check_printing')[:1].id
         return {
             'name': _('Checks to Print'),
             'type': 'ir.actions.act_window',
@@ -96,6 +96,6 @@ class AccountJournal(models.Model):
                 journal_id=self.id,
                 default_journal_id=self.id,
                 default_payment_type='outbound',
-                default_payment_method_line_id=payment_method_line.id,
+                default_payment_method_line_id=payment_method_line_id,
             ),
         }
