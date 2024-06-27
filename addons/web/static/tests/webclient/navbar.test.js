@@ -5,9 +5,9 @@ import {
     clearRegistry,
     contains,
     defineMenus,
+    defineParams,
     getService,
     makeMockEnv,
-    makeMockServer,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
@@ -188,35 +188,42 @@ test.tags("desktop")("many sublevels in app menu items", async () => {
 });
 
 test.tags("desktop")("data-menu-xmlid attribute on AppsMenu items", async () => {
-    const server = await makeMockServer();
     // Replace all default menus and setting new one
-    server.menus = [
-        {
-            id: 1,
-            children: [
-                {
-                    id: 3,
-                    children: [],
-                    name: "Menu without children",
-                    appID: 1,
-                    xmlid: "menu_3",
-                },
-                {
-                    id: 4,
-                    children: [
-                        { id: 5, children: [], name: "Sub menu", appID: 1, xmlid: "menu_5" },
-                    ],
-                    name: "Menu with children",
-                    appID: 1,
-                    xmlid: "menu_4",
-                },
-            ],
-            name: "App0 with xmlid",
-            appID: 1,
-            xmlid: "wowl",
-        },
-        { id: 2, children: [], name: "App1 without xmlid", appID: 2 },
-    ];
+    defineParams({
+        menus: [
+            {
+                id: 1,
+                children: [
+                    {
+                        id: 3,
+                        children: [],
+                        name: "Menu without children",
+                        appID: 1,
+                        xmlid: "menu_3",
+                    },
+                    {
+                        id: 4,
+                        children: [
+                            {
+                                id: 5,
+                                children: [],
+                                name: "Sub menu",
+                                appID: 1,
+                                xmlid: "menu_5",
+                            },
+                        ],
+                        name: "Menu with children",
+                        appID: 1,
+                        xmlid: "menu_4",
+                    },
+                ],
+                name: "App0 with xmlid",
+                appID: 1,
+                xmlid: "wowl",
+            },
+            { id: 2, children: [], name: "App1 without xmlid", appID: 2 },
+        ],
+    });
     await mountWithCleanup(NavBar);
 
     // check apps
