@@ -77,6 +77,7 @@
                 <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                 <field name="product_id" optional="show"/>
                 <field name="qty_remaining" optional="show" string="Quantity Remaining"/>
+                <field name="qty_ready" optional="hide"/>
                 <field name="finished_lot_id" optional="hide" string="Lot/Serial"/>
                 <field name="date_start" optional="hide" readonly="state in ['progress', 'done', 'cancel']"/>
                 <field name="date_finished" optional="hide" readonly="state in ['progress', 'done', 'cancel']"/>
@@ -109,6 +110,9 @@
         <field name="inherit_id" ref="mrp_production_workorder_tree_editable_view"/>
         <field name="arch" type="xml">
             <xpath expr="//list/field[@name='qty_remaining']" position="attributes">
+                <attribute name="column_invisible">parent.state == 'done'</attribute>
+            </xpath>
+            <xpath expr="//list/field[@name='qty_ready']" position="attributes">
                 <attribute name="column_invisible">parent.state == 'done'</attribute>
             </xpath>
             <xpath expr="//list/field[@name='qty_remaining']" position="after">

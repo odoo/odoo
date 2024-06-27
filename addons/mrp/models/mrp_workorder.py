@@ -53,11 +53,12 @@ class MrpWorkorder(models.Model):
         string='Currently Produced Quantity', digits='Product Unit of Measure')
     qty_remaining = fields.Float('Quantity To Be Produced', compute='_compute_qty_remaining', digits='Product Unit of Measure')
     qty_produced = fields.Float(
-        'Quantity', default=0.0,
+        'Quantity Done', default=0.0,
         readonly=True,
         digits='Product Unit of Measure',
         copy=False,
         help="The number of products already handled by this work order")
+    qty_ready = fields.Float('Quantity Ready', compute='_compute_qty_ready', digits='Product Unit of Measure')
     is_produced = fields.Boolean(string="Has Been Produced",
         compute='_compute_is_produced')
     state = fields.Selection([
@@ -150,19 +151,23 @@ class MrpWorkorder(models.Model):
                                      domain="[('allow_workorder_dependencies', '=', True), ('id', '!=', id), ('production_id', '=', production_id)]",
                                      copy=False)
 
-    @api.depends('production_availability', 'blocked_by_workorder_ids.state')
+    @api.depends('production_availability', 'blocked_by_workorder_ids.state', 'blocked_by_workorder_ids.qty_producing', 'qty_ready')
     def _compute_state(self):
         # Force to compute the production_availability right away.
         # It is a trick to force that the state of workorder is computed at the end of the
         # cyclic depends with the mo.state, mo.reservation_state and wo.state and avoid recursion error
         self.mapped('production_availability')
         for workorder in self:
-            if workorder.state not in ('pending', 'waiting', 'ready'):
+            if workorder.state in ('done', 'cancel'):
                 continue
-            if workorder._are_previous_workorder_blocking():
+            blocked = any(w.state not in ('done', 'cancel') for w in workorder.blocked_by_workorder_ids)
+            if workorder.state == 'progress' and not blocked:
+                continue
+            has_qty_ready = float_compare(workorder.qty_ready, 0, precision_rounding=workorder.product_uom_id.rounding) > 0
+            if blocked and not has_qty_ready:
                 workorder.state = 'pending'
-            elif workorder.production_availability == 'assigned':
-                workorder.state = 'ready'
+            elif workorder.production_availability == 'assigned' or (has_qty_ready and workorder.blocked_by_workorder_ids):
+                workorder.state = 'ready' if not workorder._has_started() else 'progress'
             else:
                 workorder.state = 'waiting'
 
@@ -224,6 +229,48 @@ class MrpWorkorder(models.Model):
             if workorder.qty_producing != 0 and workorder.production_id.qty_producing != workorder.qty_producing:
                 workorder.production_id.qty_producing = workorder.qty_producing
                 workorder.production_id._set_qty_producing()
+
+    def register_production_qty(self, value):
+        """
+        Registers a production quantity by adding the given value to the current quantity produced.
+
+        :param value: The quantity to be added to the current quantity produced. It can be positive or negative.
+        :type value: float
+        :return: None
+        """
+        if not value:
+            return
+        self.ensure_one()
+        if float_compare(value, self.qty_ready, precision_rounding=self.product_uom_id.rounding) > 0:
+            raise UserError(_("You can't register more quantity than the quantity ready."))
+        max_produced_qty = self.qty_production
+        if self.product_tracking == 'serial':
+            if float_compare(self.qty_produced, 0, precision_rounding=self.product_uom_id.rounding) > 0:
+                raise UserError(_("You can't register more than one serial number at a time for a Manufacturing Order."))
+            if value not in [-1, 0, 1]:
+                value = float_compare(value, 0, precision_rounding=self.product_uom_id.rounding)
+                max_produced_qty = 1
+        if float_compare(value, 0, precision_rounding=self.product_uom_id.rounding) < 0 and any(float_compare(wo.qty_ready + value, 0, precision_rounding=self.product_uom_id.rounding) < 0 for wo in self.needed_by_workorder_ids):
+            raise UserError(_("You can't unregister quantity that has been consumed in a next workorder."))
+        self.qty_produced = min(max(self.qty_produced + value, 0), max_produced_qty)  # qty_produced ∈ [0, qty_production]
+        self.qty_producing = self.qty_produced
+
+    @api.depends('blocked_by_workorder_ids.qty_produced', 'blocked_by_workorder_ids.qty_reported_from_previous_wo', 'blocked_by_workorder_ids.state', 'qty_produced', 'qty_remaining', 'state', 'production_state')
+    def _compute_qty_ready(self):
+        for workorder in self:
+            if workorder.production_state not in ('confirmed', 'progress') or workorder.state in ('cancel', 'done'):
+                workorder.qty_ready = 0
+                continue
+            if not workorder.blocked_by_workorder_ids:
+                workorder.qty_ready = workorder.qty_remaining
+                continue
+            workorder_qty_ready = workorder.qty_remaining + workorder.qty_produced
+            for wo in workorder.blocked_by_workorder_ids:
+                if wo.state != 'cancel':
+                    workorder_qty_ready = min(workorder_qty_ready, wo.qty_produced + wo.qty_reported_from_previous_wo)
+                else:
+                    workorder_qty_ready = min(workorder_qty_ready, workorder.qty_remaining + workorder.qty_produced)
+            workorder.qty_ready = workorder_qty_ready - workorder.qty_produced
 
     # Both `date_start` and `date_finished` are related fields on `leave_id`. Let's say
     # we slide a workorder on a gantt view, a single call to write is made with both
@@ -295,7 +342,7 @@ class MrpWorkorder(models.Model):
         self.is_produced = False
         for order in self.filtered(lambda p: p.production_id and p.production_id.product_uom_id):
             rounding = order.production_id.product_uom_id.rounding
-            order.is_produced = float_compare(order.qty_produced, order.production_id.product_qty, precision_rounding=rounding) >= 0
+            order.is_produced = float_compare(order.qty_produced, order.qty_production, precision_rounding=rounding) >= 0
 
     @api.depends('operation_id', 'workcenter_id', 'qty_producing', 'qty_production')
     def _compute_duration_expected(self):
@@ -332,7 +379,7 @@ class MrpWorkorder(models.Model):
             delta_duration = new_order_duration - old_order_duration
 
             if delta_duration > 0:
-                if order.state not in ('progress', 'done'):
+                if order.state not in ('progress', 'done') and order._has_started():
                     order.state = 'progress'
                 enddate = datetime.now()
                 date_start = enddate - timedelta(seconds=_float_duration_to_second(delta_duration))
@@ -614,9 +661,8 @@ class MrpWorkorder(models.Model):
                 vals['date_finished'] = leave.date_to
                 vals['leave_id'] = leave.id
                 wo.write(vals)
-            else:
+            elif not wo._has_started():
                 if not wo.date_start or wo.date_start > date_start:
-                    vals['date_start'] = date_start
                     vals['date_finished'] = wo._calculate_date_finished(date_start)
                 if wo.date_finished and wo.date_finished < date_start:
                     vals['date_finished'] = date_start
@@ -891,5 +937,11 @@ class MrpWorkorder(models.Model):
     def _compute_current_operation_cost(self):
         return (self.get_duration() / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
 
-    def _are_previous_workorder_blocking(self):
-        return any(w.state not in ('done', 'cancel') for w in self.blocked_by_workorder_ids)
+    def _is_partially_produced(self, strict=False):
+        partially_produced = float_compare(self.qty_produced, 0, precision_rounding=self.product_uom_id.rounding) > 0
+        if strict:
+            partially_produced &= float_compare(self.qty_produced, self.qty_production, precision_rounding=self.product_uom_id.rounding) < 0
+        return partially_produced
+
+    def _has_started(self):
+        return self.date_start and self.time_ids
