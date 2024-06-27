@@ -475,13 +475,6 @@ class SaleOrder(models.Model):
                 access_opt['url'] = '%s/shop/cart?access_token=%s' % (self.get_base_url(), self.access_token)
         return groups
 
-    def action_confirm(self):
-        res = super().action_confirm()
-        for order in self:
-            if not order.transaction_ids and not order.amount_total and self._context.get('send_email'):
-                order._send_order_confirmation_mail()
-        return res
-
     def _action_confirm(self):
         for order in self:
             order_location = order.access_point_address

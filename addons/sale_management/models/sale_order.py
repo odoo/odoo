@@ -129,14 +129,22 @@ class SaleOrder(models.Model):
 
     #=== ACTION METHODS ===#
 
+    def _get_confirmation_template(self):
+        self.ensure_one()
+        return self.sale_order_template_id.mail_template_id or super()._get_confirmation_template()
+
     def action_confirm(self):
         res = super().action_confirm()
-        if self.env.su:
-            self = self.with_user(SUPERUSER_ID)
 
+        if self.env.context.get('send_email'):
+            # Mail already sent in super method
+            return res
+
+        # When an order is confirmed from backend (send_email=False), if the quotation template has
+        # a specified mail template, send it as it's probably meant to share additional information.
         for order in self:
-            if order.sale_order_template_id and order.sale_order_template_id.mail_template_id:
-                order.message_post_with_source(order.sale_order_template_id.mail_template_id)
+            if order.sale_order_template_id.mail_template_id:
+                order._send_order_notification_mail(order.sale_order_template_id.mail_template_id)
         return res
 
     def _recompute_prices(self):
