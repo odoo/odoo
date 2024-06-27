@@ -13,6 +13,7 @@ import {
     validateContent,
     renderTextualSelection,
 } from "./_helpers/collaboration";
+import { getContent } from "./_helpers/selection";
 import { animationFrame } from "@odoo/hoot-mock";
 
 /**
@@ -494,6 +495,32 @@ describe("sanitize", () => {
                 );
             },
         });
+    });
+});
+describe("selection", () => {
+    test("should rectify a selection offset after an external step", async () => {
+        const peerInfos = await setupMultiEditor({
+            peerIds: ["c1", "c2"],
+            contentBefore: `<p>a[c1}{c1][c2}{c2]</p>`,
+        });
+        const e1 = peerInfos.c1.editor;
+        e1.shared.domInsert(parseHTML(e1.document, `<span contenteditable="false">a</span>`));
+        e1.dispatch("ADD_STEP");
+        mergePeersSteps(peerInfos);
+        const e2 = peerInfos.c2.editor;
+        expect(getContent(e1.editable)).toBe(`<p>a<span contenteditable="false">a</span>[]</p>`);
+        expect(getContent(e2.editable)).toBe(`<p>a[]<span contenteditable="false">a</span></p>`);
+        const p = e2.editable.querySelector("p");
+        e2.shared.setSelection({
+            anchorNode: p,
+            anchorOffset: 2,
+            focusNode: p,
+            focusOffset: 2,
+        });
+        deleteBackward(e2);
+        mergePeersSteps(peerInfos);
+        expect(getContent(e1.editable)).toBe("<p>a[]</p>");
+        expect(getContent(e2.editable)).toBe("<p>a[]</p>");
     });
 });
 describe("data-oe-protected", () => {
