@@ -76,6 +76,19 @@
     -->
 </t>
 
+<t t-name="web_editor.snippet_move_option_vertical">
+    <WeOverlay target="'.o_overlay_move_options'">
+        <WeButton class="'fa fa-fw fa-angle-up'" moveSnippet="'prev'" noPreview="'true'" name="'move_up_opt'"/>
+        <WeButton class="'fa fa-fw fa-angle-down'" moveSnippet="'next'" noPreview="'true'" name="'move_down_opt'"/>
+    </WeOverlay>
+</t>
+<t t-name="web_editor.snippet_move_option_horizontal">
+    <WeOverlay target="'.o_overlay_move_options'">
+        <WeButton class="'fa fa-fw fa-angle-left'" moveSnippet="'prev'" noPreview="'true'" name="'move_left_opt'"/>
+        <WeButton class="'fa fa-fw fa-angle-right'" moveSnippet="'next'" noPreview="'true'" name="'move_right_opt'"/>
+    </WeOverlay>
+</t>
+
 <t t-name="web_editor.container_width">
     <WeButtonGroup title.translate="Content Width">
         <WeButton selectClass="'o_container_small'"

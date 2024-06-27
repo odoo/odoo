@@ -50,6 +50,7 @@ import {
     SelectTemplate,
     SelectUserValue,
     serviceCached,
+    SnippetMove,
     SnippetOption,
     SnippetOptionComponent,
     UserValue,
@@ -4459,12 +4460,12 @@ registerWebsiteOption("share_social_media", {
     selector: ".s_share, .s_social_media",
 });
 
-options.registry.SnippetMove.include({
+patch(SnippetMove.prototype, {
     /**
      * @override
      */
     _isMobile() {
-        return wUtils.isMobile(this);
+        return this.env.services.website.context.isMobile;
     },
 });
 
