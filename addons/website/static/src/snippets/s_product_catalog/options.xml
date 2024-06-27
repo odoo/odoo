@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.s_product_catalog_add_product_option">
+    <WeRow title.translate="Product">
+        <WeButton addItem="''" item="'.s_product_catalog_dish:last'" selectItem="''"
+                   noPreview="'true'" class="'o_we_bg_brand_primary'">
+            Add Product
+        </WeButton>
+    </WeRow>
+</t>
+
+<t t-name="website.s_product_catalog_option">
+    <WeCheckbox title.translate="Descriptions" toggleDescription="'true'" noPreview="'true'"/>
+    <t t-call="website.snippet_options_border_line_widgets">
+        <t t-set="label">Separator</t>
+        <t t-set="direction" t-value="'top'"/>
+        <t t-set="apply_to" t-value="'.s_product_catalog_dish_dot_leaders'"/>
+        <!-- Note: no need of extra dependency thanks to the apply-to -->
+    </t>
+</t>
+
+</templates>
