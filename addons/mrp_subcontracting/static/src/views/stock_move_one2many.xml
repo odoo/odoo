@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="stock.MovesListRenderer.RecordRow" t-inherit-mode="extension">
+        <xpath expr="//tr/t[1]/t[2]/td" position="attributes">
+            <attribute name="t-att-style">column.buttons.some(button => !this.evalInvisible(button.invisible, record)) ? 'width: 30px;' : 'width: 0px;padding: 0px;'</attribute>
+        </xpath>
         <xpath expr="//t[starts-with(@t-if, 'record.resModel') and .//button[@class='btn btn-link fa fa-list']]" position="attributes">
             <attribute name="t-if">column.type === 'opendetailsop' and !record.data.is_subcontract </attribute>
         </xpath>
