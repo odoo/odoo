@@ -358,6 +358,11 @@ class ProductProduct(models.Model):
                 'message': _("The Reference '%s' already exists.", self.default_code),
             }}
 
+    @api.onchange('type')
+    def _onchange_type(self):
+        # Do nothing but needed for inheritance
+        return {}
+
     @api.model_create_multi
     def create(self, vals_list):
         products = super(ProductProduct, self.with_context(create_product_product=False)).create(vals_list)

@@ -44,11 +44,13 @@ class ProductProduct(models.Model):
 
     @api.onchange('type')
     def _onchange_type(self):
+        res = super()._onchange_type()
         if self._origin and self.sales_count > 0:
-            return {'warning': {
+            res['warning'] = {
                 'title': _("Warning"),
                 'message': _("You cannot change the product's type because it is already used in sales orders.")
-            }}
+            }
+        return res
 
     @api.depends_context('order_id')
     def _compute_product_is_in_sale_order(self):
