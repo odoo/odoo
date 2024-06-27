@@ -1,23 +1,31 @@
 /** @odoo-module **/
 
-import options from '@web_editor/js/editor/snippets.options.legacy';
+import {
+    SnippetOption,
+} from "@web_editor/js/editor/snippets.options";
 import weUtils from '@web_editor/js/common/utils';
+import {
+    registerWebsiteOption,
+} from "@website/js/editor/snippets.registry";
+import {
+    websiteRegisterBackgroundOptions
+} from "@website/js/editor/snippets.options";
 
-options.registry.StepsConnector = options.Class.extend({
+export class StepsConnector extends SnippetOption {
     /**
      * @override
      */
     start() {
         this.$target.on('content_changed.StepsConnector', () => this._reloadConnectors());
-        return this._super(...arguments);
-    },
+        return super.start(...arguments);
+    }
     /**
      * @override
      */
     destroy() {
-        this._super(...arguments);
+        super.destroy(...arguments);
         this.$target.off('.StepsConnector');
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -26,8 +34,8 @@ options.registry.StepsConnector = options.Class.extend({
     /**
      * @override
      */
-    selectClass: function (previewMode, value, params) {
-        this._super(...arguments);
+    selectClass(previewMode, value, params) {
+        super.selectClass(...arguments);
         if (params.name === 'connector_type') {
             this._reloadConnectors();
             let markerEnd = '';
@@ -41,7 +49,7 @@ options.registry.StepsConnector = options.Class.extend({
             }
             this.$target[0].querySelectorAll('.s_process_step_connector path').forEach(path => path.setAttribute('marker-end', markerEnd));
         }
-    },
+    }
     /**
      * Changes arrow heads' fill color.
      *
@@ -51,7 +59,7 @@ options.registry.StepsConnector = options.Class.extend({
         const htmlPropColor = weUtils.getCSSVariableValue(widgetValue);
         const arrowHeadEl = this.$target[0].closest('.s_process_steps').querySelector('.s_process_steps_arrow_head');
         arrowHeadEl.querySelector('path').style.fill = htmlPropColor || widgetValue;
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -64,9 +72,9 @@ options.registry.StepsConnector = options.Class.extend({
         if (['change_column_size', 'change_container_width', 'change_columns', 'move_snippet'].includes(name)) {
             this._reloadConnectors();
         } else {
-            this._super(...arguments);
+            super.notify(...arguments);
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -80,8 +88,8 @@ options.registry.StepsConnector = options.Class.extend({
         // connectors are hidden as soon as the page is smaller than 992px
         // (the BS lg breakpoint).
         const isMobileView = weUtils.isMobileView(this.$target[0]);
-        return !isMobileView && this._super(...arguments);
-    },
+        return !isMobileView && super._computeVisibility(...arguments);
+    }
     /**
      * Width and position of the connectors should be updated when one of the
      * steps is modified.
@@ -126,7 +134,7 @@ options.registry.StepsConnector = options.Class.extend({
             connectorEl.setAttribute('viewBox', `0 0 ${width} ${height}`);
             connectorEl.querySelector('path').setAttribute('d', this._getPath(type, width, height));
         }
-    },
+    }
     /**
      * Returns the number suffixed to the class given in parameter.
      *
@@ -138,7 +146,7 @@ options.registry.StepsConnector = options.Class.extend({
     _getClassSuffixedInteger(el, classNamePrefix) {
         const className = [...el.classList].find(cl => cl.startsWith(classNamePrefix));
         return className ? parseInt(className.replace(classNamePrefix, '')) : 0;
-    },
+    }
     /**
      * Returns the step's icon or content bounding rectangle.
      *
@@ -165,7 +173,7 @@ options.registry.StepsConnector = options.Class.extend({
             });
         }
         return {};
-    },
+    }
     /**
      * Returns the svg path based on the type of connector.
      *
@@ -189,5 +197,19 @@ options.registry.StepsConnector = options.Class.extend({
             }
         }
         return '';
-    },
+    }
+}
+
+registerWebsiteOption("Steps Connector", {
+    Class: StepsConnector,
+    template: "website.s_process_steps_option",
+    selector: ".s_process_steps",
+});
+
+websiteRegisterBackgroundOptions("Steps Connector (Background)", {
+    selector: ".s_process_step .s_process_step_number",
+    withColors: true,
+    withImages: false,
+    withColorCombinations: false,
+    withGradients: true,
 });

@@ -5827,11 +5827,10 @@ export class LayoutColumn extends ColumnLayoutMixin(SnippetOption) {
         } else if (previousNbColumns === 0) {
             this.env.activateSnippet(this.$('> .row').children().first());
         }
-        // TODO: @owl-options
-        // this.trigger_up('option_update', {
-        //     optionName: 'StepsConnector',
-        //     name: 'change_columns',
-        // });
+        this.callbacks.notifyOptions({
+            optionNames: ["StepsConnector"],
+            name: "change_columns",
+        });
     }
     /**
      * Changes the layout (columns or grid).
@@ -5854,11 +5853,6 @@ export class LayoutColumn extends ColumnLayoutMixin(SnippetOption) {
                 this.env.activateSnippet(this.$target);
             }
         }
-        // TODO: @owl-options
-        // this.trigger_up('option_update', {
-        //     optionName: 'StepsConnector',
-        //     name: 'change_columns',
-        // });
     }
     /**
      * Adds an image, some text or a button in the grid.
@@ -9621,11 +9615,10 @@ class ContainerWidth extends SnippetOption {
         } else if (previewMode) {
             this.$target.addClass('o_container_preview');
         }
-        // TODO: @owl-options implement option_update
-        // this.trigger_up('option_update', {
-        //     optionName: 'StepsConnector',
-        //     name: 'change_container_width',
-        // });
+        this.callbacks.notifyOptions({
+            optionName: 'StepsConnector',
+            name: 'change_container_width',
+        });
     }
 }
 
