@@ -371,7 +371,7 @@ class TestRelativeDateGranularityWithTimezones(common.TransactionCase):
     def test_usecase_with_timezones(self):
         # Monday, it is the 5th week in UTC and the 6th in NZ
         self.Model.create({"value": "98", "datetime": "2023-02-05 23:55:00"})
-        result = (self.Model.with_context({'tz': 'NZ'})  # GMT+12
+        result = (self.Model.with_context({'tz': 'Pacific/Auckland'})  # GMT+12
                             .read_group([],
                                         fields=['datetime', 'value'],
                                         groupby=['datetime:iso_week_number']))
@@ -382,7 +382,7 @@ class TestRelativeDateGranularityWithTimezones(common.TransactionCase):
                         'value': 98,
                         '__domain': [('datetime.iso_week_number', '=', 6)]
                     }])
-        result = self.Model.with_context({'tz': 'NZ'}).search(result[0]['__domain'])
+        result = self.Model.with_context({'tz': 'Pacific/Auckland'}).search(result[0]['__domain'])
         self.assertEqual(len(result), 1)
         self.assertEqual(result.value, 98)
 

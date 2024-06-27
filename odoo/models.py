@@ -1991,8 +1991,11 @@ class BaseModel(metaclass=MetaModel):
         else:
             sql_expr = self._field_to_sql(self._table, fname, query)
 
-        if field.type == 'datetime' and self.env.context.get('tz') in pytz.all_timezones_set:
-            sql_expr = SQL("timezone(%s, timezone('UTC', %s))", self.env.context['tz'], sql_expr)
+        if field.type == 'datetime' and (tz := self.env.context.get('tz')):
+            if tz in pytz.all_timezones_set:
+                sql_expr = SQL("timezone(%s, timezone('UTC', %s))", self.env.context['tz'], sql_expr)
+            else:
+                _logger.warning("Grouping in unknown / legacy timezone %r", tz)
 
         if field.type in ('datetime', 'date') or (field.type == 'properties' and granularity):
             if not granularity:
