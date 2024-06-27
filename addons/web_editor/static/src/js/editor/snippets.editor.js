@@ -3097,6 +3097,10 @@ class SnippetsMenu extends Component {
         var self = this;
         var $html = $(html);
 
+        // TODO: Remove in master and add it back in the template.
+        const $vAlignOption = $html.find("#row_valign_snippet_option");
+        $vAlignOption[0].dataset.js = "vAlignment";
+
         this.templateOptions = [];
         var selectors = [];
         var $styles = $html.find('[data-selector]');
