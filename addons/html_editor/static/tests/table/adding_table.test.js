@@ -4,7 +4,7 @@ import { setupEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
 import { insertText } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
-import { press, waitFor } from "@odoo/hoot-dom";
+import { press, waitFor, queryOne } from "@odoo/hoot-dom";
 
 function expectContentToBe(el, html) {
     expect(getContent(el)).toBe(unformat(html));
@@ -108,3 +108,41 @@ test.tags("iframe", "desktop")(
         expect(":iframe .o_table").toHaveCount(1);
     }
 );
+
+test.tags("desktop")("Expand columns in the correct direction in 'rtl'", async () => {
+    const { editor } = await setupEditor("<p>a[]</p>", {
+        config: {
+            direction: "rtl",
+        },
+    });
+    insertText(editor, "/table");
+    press("Enter");
+    await waitFor(".o-we-tablepicker");
+
+    // Initially we have 3 columns
+    const tablePickerOverlay = queryOne(".overlay");
+    expect(tablePickerOverlay).toHaveStyle({ right: /px$/ });
+    const right = tablePickerOverlay.style.right;
+    const width3Columns = tablePickerOverlay.getBoundingClientRect().width;
+    expect(".o-we-cell.active").toHaveCount(9);
+
+    // Add one column -> we have 4 columns
+    press("ArrowLeft");
+    await animationFrame();
+    expect(tablePickerOverlay.getBoundingClientRect().width).toBeGreaterThan(width3Columns);
+    expect(tablePickerOverlay).toHaveStyle({ right });
+    expect(".o-we-cell.active").toHaveCount(12);
+
+    // Remove one column -> we have 3 columns
+    press("ArrowRight");
+    await animationFrame();
+    expect(".o-we-cell.active").toHaveCount(9);
+    expect(tablePickerOverlay).toHaveStyle({ right });
+
+    // Remove one column -> we have 2 columns
+    press("ArrowRight");
+    await animationFrame();
+    expect(tablePickerOverlay.getBoundingClientRect().width).toBeLessThan(width3Columns);
+    expect(tablePickerOverlay).toHaveStyle({ right });
+    expect(".o-we-cell.active").toHaveCount(6);
+});

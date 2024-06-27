@@ -11,6 +11,7 @@ export class TableMenu extends Component {
         overlay: Object,
         dropdownState: Object,
         target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
+        direction: String,
     };
     static components = { Dropdown, DropdownItem };
 
@@ -32,29 +33,31 @@ export class TableMenu extends Component {
     }
 
     colItems() {
+        const beforeLabel = this.props.direction === "ltr" ? "left" : "right";
+        const afterLabel = this.props.direction === "ltr" ? "right" : "left";
         return [
             !this.isFirst && {
                 name: "move_left",
                 icon: "fa-chevron-left disabled",
-                text: _t("Move left"),
+                text: _t(`Move ${beforeLabel}`),
                 action: this.moveColumn.bind(this, "left"),
             },
             !this.isLast && {
                 name: "move_right",
                 icon: "fa-chevron-right",
-                text: _t("Move right"),
+                text: _t(`Move ${afterLabel}`),
                 action: this.moveColumn.bind(this, "right"),
             },
             {
                 name: "insert_left",
                 icon: "fa-plus",
-                text: _t("Insert left"),
+                text: _t(`Insert ${beforeLabel}`),
                 action: this.insertColumn.bind(this, "before"),
             },
             {
                 name: "insert_right",
                 icon: "fa-plus",
-                text: _t("Insert right"),
+                text: _t(`Insert ${afterLabel}`),
                 action: this.insertColumn.bind(this, "after"),
             },
             {
