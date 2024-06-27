@@ -13,6 +13,7 @@ const {
     BroadcastChannel,
     document,
     EventTarget,
+    fetch,
     Headers,
     Map,
     Math: { max: $max, min: $min },
@@ -72,6 +73,7 @@ const HEADER = {
     json: "application/json",
     text: "text/plain",
 };
+const R_INTERNAL_URL = /^(blob|file):/;
 
 /** @type {Set<WebSocket>} */
 const openClientWebsockets = new Set();
@@ -128,6 +130,10 @@ export function cleanupNetwork() {
 
 /** @type {typeof fetch} */
 export async function mockedFetch(input, init) {
+    if (R_INTERNAL_URL.test(input)) {
+        // Internal URL: directly handled by the browser
+        return fetch(input, init);
+    }
     if (!mockFetchFn) {
         throw new Error("Can't make a request when fetch is not mocked");
     }
