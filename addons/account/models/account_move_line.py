@@ -1190,6 +1190,12 @@ class AccountMoveLine(models.Model):
     # INVERSE METHODS
     # -------------------------------------------------------------------------
 
+    @api.onchange('tax_ids')
+    def _onchange_tax_ids(self):
+        for record in self:
+            if not record.tax_ids:
+                record.tax_tag_ids = None
+
     @api.onchange('partner_id')
     def _inverse_partner_id(self):
         self._conditional_add_to_compute('account_id', lambda line: (
