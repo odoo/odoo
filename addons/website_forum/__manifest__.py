@@ -72,6 +72,7 @@ Ask questions, get answers, no distractions
         'web.assets_frontend': [
             'website_forum/static/src/js/tours/website_forum.js',
             'website_forum/static/src/scss/website_forum.scss',
+            'website_forum/static/src/js/select_menu_forum.js',
             'website_forum/static/src/js/website_forum.js',
             'website_forum/static/src/js/website_forum.share.js',
             'website_forum/static/src/xml/public_templates.xml',

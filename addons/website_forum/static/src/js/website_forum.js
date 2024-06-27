@@ -13,8 +13,7 @@ import { escape } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { attachComponent } from "@web/legacy/utils";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
-import { useService } from "@web/core/utils/hooks";
+import { SelectMenuForum } from "./select_menu_forum";
 
 publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',
@@ -67,7 +66,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         this.$('[data-bs-toggle="popover"]').popover({offset: '8'});
 
         const element = document.querySelector("input.js_select2");
-        const tagsSelectMenu = await attachComponent(this, element.parentNode, SelectMenu, {
+        const tagsSelectMenu = await attachComponent(this, element.parentNode, SelectMenuForum, {
             searchPlaceholder: _t("Please enter 2 or more characters"),
             placeholder: _t("Tags"),
             element: element,
@@ -81,13 +80,13 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 const choices = [
                     {
                         id: "new",
-                        name: `Create ${searchString}`,
-                        value: searchString,
+                        name: searchString.trim(),
+                        value: `_${searchString.trim()}`,
                         label: `Create ${searchString}`,
                     },
                 ];
                 if (searchString.length < 3) {
-                    return choices;
+                    return searchString.length ? choices : [];
                 }
                 const forumID = $("#wrapwrap").data("forum_id");
                 return new Promise((resolve, reject) => {
