@@ -214,6 +214,73 @@ describe(parseUrl(import.meta.url), () => {
         expect(clickEvent.detail).toBe(1);
     });
 
+    test("click on common parent", async () => {
+        await mountOnFixture(/* xml */ `
+            <main class="parent">
+                <button class="first">A</button>
+                <div>
+                    <input class="second" />
+                </div>
+            </main>
+        `);
+
+        monitorEvents(".parent");
+        monitorEvents(".first");
+        monitorEvents(".second");
+
+        pointerDown(".first");
+        pointerUp(".second");
+
+        expect.verifySteps([
+            // Move to first
+            "button.pointerover",
+            "main.pointerover",
+            "button.mouseover",
+            "main.mouseover",
+            "main.pointerenter",
+            "button.pointerenter",
+            "main.mouseenter",
+            "button.mouseenter",
+            "button.pointermove",
+            "main.pointermove",
+            "button.mousemove",
+            "main.mousemove",
+            // Pointer down on first
+            "button.pointerdown",
+            "main.pointerdown",
+            "button.mousedown",
+            "main.mousedown",
+            "button.focus",
+            // Move to second
+            "button.pointermove",
+            "main.pointermove",
+            "button.mousemove",
+            "main.mousemove",
+            "button.pointerout",
+            "main.pointerout",
+            "button.mouseout",
+            "main.mouseout",
+            "button.pointerleave",
+            "button.mouseleave",
+            "input.pointerover",
+            "main.pointerover",
+            "input.mouseover",
+            "main.mouseover",
+            "input.pointerenter",
+            "input.mouseenter",
+            "input.pointermove",
+            "main.pointermove",
+            "input.mousemove",
+            "main.mousemove",
+            // Pointer up on second
+            "input.pointerup",
+            "main.pointerup",
+            "input.mouseup",
+            "main.mouseup",
+            "main.click",
+        ]);
+    });
+
     test("click: iframe", async () => {
         await mountOnFixture(/* xml */ `
             <button>Click me</button>
