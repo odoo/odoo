@@ -763,17 +763,11 @@ test("within iframes", async () => {
 });
 
 test("callback: received context", async () => {
-    expect.assertions(2);
     class A extends Component {
         static template = xml`<button class="a">a</button>`;
         static props = ["*"];
         setup() {
-            useHotkey("a", (context) => {
-                expect(context).toEqual({
-                    area: undefined,
-                    target: document.activeElement,
-                });
-            });
+            useHotkey("a", expect.step);
         }
     }
     const fixture = getFixture();
@@ -781,25 +775,16 @@ test("callback: received context", async () => {
         static template = xml`<button class="b">b</button>`;
         static props = ["*"];
         setup() {
-            useHotkey(
-                "b",
-                (context) => {
-                    expect(context).toEqual({
-                        area: fixture,
-                        target: fixture,
-                    });
-                },
-                { area: () => fixture }
-            );
+            useHotkey("b", expect.step, { area: () => fixture });
         }
     }
 
     await mountWithCleanup(A);
     await mountWithCleanup(B);
-    await contains(".a").focus();
-    press("A");
-    await contains(".b").focus();
-    press("B");
+    await contains(".a").press("a");
+    expect.verifySteps([{ area: undefined, target: document.activeElement }]);
+    await contains(".b").press("b");
+    expect.verifySteps([{ area: fixture, target: document.activeElement }]);
 });
 
 test("operating area can be restricted", async () => {
