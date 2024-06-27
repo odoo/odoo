@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.tests import HttpCase
 from odoo.tests.common import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestUi(HttpCase):
+class TestUi(HttpCase, TestCrmCommon):
 
     def test_01_crm_tour(self):
         # TODO: The tour is raising a JS error when selecting Brandon Freeman
@@ -21,13 +22,13 @@ class TestUi(HttpCase):
             'name': "Zizizbroken",
             'type': 'opportunity',
             'partner_id': brandon.id,
-            'stage_id': self.env.ref('crm.stage_lead1').id,
+            'stage_id': self.stage_team1_1.id,
             'user_id': self.env.ref('base.user_admin').id,
         }, {
             'name': "Zizizbroken 2",
             'type': 'opportunity',
             'partner_id': brandon.id,
-            'stage_id': self.env.ref('crm.stage_lead2').id,
+            'stage_id': self.stage_gen_1.id,
             'user_id': self.env.ref('base.user_admin').id,
         }])
         self.start_tour("/odoo", 'crm_tour', login="admin")
