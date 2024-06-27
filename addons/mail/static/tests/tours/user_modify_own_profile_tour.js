@@ -23,14 +23,17 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/user_modify_own
         },
         {
             trigger: "body.modal-open",
+            in_modal: false,
         },
         {
             content: "Save the form",
             trigger: 'button[name="preference_save"]',
+            run: "click",
         },
         {
             content: "Wait until the modal is closed",
             trigger: "body:not(.modal-open)",
+            in_modal: false,
         },
     ],
 });
