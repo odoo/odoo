@@ -54,7 +54,6 @@ wTourUtils.goToTheme(),
 {
     content: "Open new page menu",
     trigger: ".o_menu_systray .o_new_content_container > a",
-    consumeVisibleOnly: true,
     run: "click",
 }, {
     content: "click on new page",
@@ -87,7 +86,6 @@ wTourUtils.goToTheme(),
 }, {
     content: "Open new page menu",
     trigger: ".o_menu_systray .o_new_content_container > a",
-    consumeVisibleOnly: true,
     run: "click",
 }, {
     content: "click on new page",
