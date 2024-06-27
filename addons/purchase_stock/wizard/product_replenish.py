@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.osv.expression import AND
 
 
 class ProductReplenish(models.TransientModel):
@@ -66,9 +65,3 @@ class ProductReplenish(models.TransientModel):
         if bool(self.env['ir.config_parameter'].sudo().get_param('purchase.use_po_lead')):
             delay += self.env.company.po_lead
         return fields.Datetime.add(date, days=delay)
-
-    def _get_route_domain(self, product_tmpl_id):
-        domain = super()._get_route_domain(product_tmpl_id)
-        if not product_tmpl_id.seller_ids:
-            domain = AND([domain, [('id', '!=', self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False).id)]])
-        return domain

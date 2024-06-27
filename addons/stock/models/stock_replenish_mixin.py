@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.osv import expression
 
 
 class ProductReplenishMixin(models.AbstractModel):
@@ -34,10 +35,13 @@ class ProductReplenishMixin(models.AbstractModel):
                     res['route_id'] = product_tmpl_id.route_ids.filtered(lambda r: r.company_id == self.env.company or not r.company_id)[0].id
         return res
 
-    # @api.depends('product_id', 'product_id.route_ids')
-    # def _compute_route(self):
-    #     for rec in self:
-    #         rec.route_id = next((r for r in rec.product_id.route_ids if r.id in rec.allowed_route_ids.ids), False)
+    def _get_route_domain(self, product_tmpl_id):
+        company = product_tmpl_id.company_id or self.env.company
+        domain = expression.AND([self._get_allowed_route_domain(), self.env['stock.route']._check_company_domain(company)])
+        domain = expression.AND([domain, [('id', 'not in', self.env['stock.warehouse'].search([]).crossdock_route_id.ids)]])
+        if product_tmpl_id.route_ids:
+            domain = expression.AND([domain, [('product_ids', '=', product_tmpl_id.id)]])
+        return domain
 
     # INHERITS in 'Drop Shipping', 'Dropship and Subcontracting Management' and 'Dropship and Subcontracting Management'
     @api.depends('product_id', 'product_tmpl_id')

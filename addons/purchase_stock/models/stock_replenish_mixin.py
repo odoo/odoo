@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.osv.expression import AND
 
 
 class ProductReplenishMixin(models.AbstractModel):
@@ -30,10 +31,11 @@ class ProductReplenishMixin(models.AbstractModel):
                 res['supplier_id'] = product_tmpl_id.seller_ids[0].id
         return res
 
-    # @api.depends('product_id', 'route_id')
-    # def _compute_supplier(self):
-    #     for rec in self:
-    #         rec.supplier_id = rec.product_id.seller_ids[:1] if rec.show_vendor else False
+    def _get_route_domain(self, product_tmpl_id):
+        domain = super()._get_route_domain(product_tmpl_id)
+        if not product_tmpl_id.seller_ids:
+            domain = AND([domain, [('id', '!=', self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False).id)]])
+        return domain
 
     @api.depends('route_id')
     def _compute_show_vendor(self):

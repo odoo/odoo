@@ -5,7 +5,6 @@ import datetime
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.osv import expression
 from odoo.tools.misc import clean_context
 
 
@@ -146,11 +145,3 @@ class ProductReplenish(models.TransientModel):
                 'sticky': False,
             }
         }
-
-    def _get_route_domain(self, product_tmpl_id):
-        company = product_tmpl_id.company_id or self.env.company
-        domain = expression.AND([self._get_allowed_route_domain(), self.env['stock.route']._check_company_domain(company)])
-        domain = expression.AND([domain, [('id', 'not in', self.env['stock.warehouse'].search([]).crossdock_route_id.ids)]])
-        if product_tmpl_id.route_ids:
-            domain = expression.AND([domain, [('product_ids', '=', product_tmpl_id.id)]])
-        return domain
