@@ -56,6 +56,7 @@ import {
     onWillUpdateProps,
     onPatched,
     onWillDestroy,
+    onWillUnmount,
     reactive,
     useEffect,
     useChildSubEnv,
@@ -3696,6 +3697,7 @@ export class SnippetOptionComponent extends Component {
     };
 
     setup() {
+        this.$overlay = this.props.snippetOption.instance.$overlay;
         this.renderContext = useState(this.props.snippetOption.instance.renderContext);
         // When a component is mounted or unmounted, the state of other
         // components might be impacted. (i.e. dependencies behaving 
@@ -6251,6 +6253,29 @@ export class vAlignment extends SnippetOption {
         return value;
     }
 }
+
+
+/**
+ * Portal component that target the overlay
+ */
+export class WeOverlay extends Component {
+    static template = "__portal__";
+
+    setup() {
+        const node = this.__owl__;
+        onMounted(() => {
+            const targetEl = this.env.snippetOption.$overlay[0].querySelector(this.props.target);
+            const portal = node.bdom;
+            portal.content.moveBeforeDOMNode(targetEl.firstChild, targetEl);
+        });
+        onWillUnmount(() => {
+            const portal = node.bdom;
+            portal.remove();
+        });
+    }
+}
+registry.category("snippet_widgets").add("WeOverlay", WeOverlay);
+
 
 /**
  * Allows snippets to be moved before the preceding element or after the following.

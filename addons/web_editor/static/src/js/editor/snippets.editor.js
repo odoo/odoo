@@ -988,6 +988,9 @@ var SnippetEditor = Widget.extend({
                 option.isOwl = true;
                 option.renderingComponent ??= (optionClass).defaultRenderingComponent;
                 option.renderingComponent.components = Object.fromEntries(registry.category("snippet_widgets").getEntries());
+                if (option.Class?.displayOverlayOptions) {
+                    option.displayOverlayOptions = true;
+                }
             } else {
                 option = new (options.registry[optionName] || options.Class)(
                     this,
