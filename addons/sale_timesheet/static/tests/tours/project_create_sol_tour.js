@@ -38,10 +38,6 @@ patch(registry.category("web_tour.tours").get("project_create_sol_tour"), {
             trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
             content: "Select the customer in the autocomplete dropdown",
             run: "click",
-        }, {
-            trigger: ".o_form_button_save",
-            content: "Save project",
-            run: "click",
         });
         return originalSteps;
     }
