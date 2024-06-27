@@ -499,7 +499,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
             await mountOnFixture(FULL_HTML_TEMPLATE);
 
             // Comma-separated selectors
-            expectSelector("p:contains(ipsum),:has(form:contains('Form title'))").toEqualNodes(
+            expectSelector(":has(form:contains('Form title')),p:contains(ipsum)").toEqualNodes(
                 "p,main"
             );
 
