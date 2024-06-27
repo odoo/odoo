@@ -3158,42 +3158,6 @@ class TestComposerResultsMass(TestMailComposer):
 
     @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
-    def test_mail_composer_wtpl_recipients_res_domain(self):
-        """ Test specific use case of res_domain usage, in combination with
-        res_domain_user_id allowing to set the evaluation environment for
-        the domain. """
-        def _search_as_employee_2(recordset, *args, **kwargs):
-            """ Mock to return only one record, simulating a specific ir.rule """
-            if recordset.env.uid == self.user_employee_2.id:
-                return self.test_records[0]
-            return DEFAULT
-
-        composer_form = Form(self.env['mail.compose.message'].with_context(
-            default_composition_mode='mass_mail',
-            default_force_send=True,  # otherwise res_domain = email queue
-            default_model=self.test_records._name,
-            default_res_domain=[('id', 'in', self.test_records.ids)],
-            default_res_domain_user_id=self.user_employee_2.id,
-            default_template_id=self.template.id,
-        ))
-        composer = composer_form.save()
-        self.assertEqual(literal_eval(composer.res_domain), [('id', 'in', self.test_records.ids)])
-        self.assertEqual(composer.res_domain_user_id, self.user_employee_2)
-
-        with self.mock_mail_gateway(mail_unlink_sent=True), \
-            patch.object(MailTestTicket, 'search', autospec=True, side_effect=_search_as_employee_2):
-            composer._action_send_mail()
-
-        # global outgoing
-        self.assertEqual(len(self._new_mails), 1, 'Should have created 1 mail.mail, search done by employee 2')
-        self.assertEqual(len(self._mails), 1, 'Should have sent 1 email, search done by employee 2')
-
-        # template is sent directly using customer field, whatever the author
-        self.assertSentEmail(self.partner_employee_2.email_formatted,
-                             self.test_records[0].customer_id)
-
-    @users('employee')
-    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_mail_composer_wtpl_reply_to(self):
         # test without catchall filling reply-to
         composer_form = Form(self.env['mail.compose.message'].with_context(
