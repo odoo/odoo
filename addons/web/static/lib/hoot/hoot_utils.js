@@ -399,6 +399,9 @@ export function deepEqual(a, b, cache = new Set()) {
     }
 
     cache.add(a);
+    if (isNode(a)) {
+        return a.isEqualNode(b);
+    }
     if (a instanceof File) {
         // Files
         return a.name === b.name && a.size === b.size && a.type === b.type;
