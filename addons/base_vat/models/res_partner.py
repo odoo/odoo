@@ -180,7 +180,7 @@ class ResPartner(models.Model):
 
         # Get check function: either simple syntactic check or call to VIES service
         eu_countries = self.env.ref('base.europe').country_ids
-        if company.vat_check_vies and default_country in eu_countries and partner_is_company:
+        if company.vat_check_vies and default_country in eu_countries and (partner_is_company or self.env.context.get('website_id')):
             check_func = self.vies_vat_check
         else:
             check_func = self.simple_vat_check
