@@ -56,11 +56,21 @@ export const localizationService = {
         translatedTerms[translationLoaded] = true;
         translationIsReady.resolve(true);
 
-        // Setup lang inside luxon. The locale codes received from the server contain "_",
-        // whereas the Intl codes use "-" (Unicode BCP 47). There's only one exception, which
-        // is locale "sr@latin", for which we manually fallback to the "sr-Latn-RS" locale.
+        // Setup lang inside luxon. The locale codes received from the server
+        // contain "_", whereas the Intl codes use "-" (Unicode BCP 47). There
+        // is one exception, Serbian, which contains a modifier (@) to specify
+        // the script to use (either @latin or @Cyrl).
         const language = lang || browser.navigator.language;
-        const locale = language === "sr@latin" ? "sr-Latn-RS" : language.replace(/_/g, "-");
+        const locale = (() => {
+            switch (language) {
+                case "sr@latin":
+                    return "sr-Latn";
+                case "sr@Cyrl":
+                    return "sr-Cyrl";
+                default:
+                    return language.replaceAll("_", "-");
+            }
+        })();
         Settings.defaultLocale = locale;
         for (const [re, numberingSystem] of NUMBERING_SYSTEMS) {
             if (re.test(locale)) {

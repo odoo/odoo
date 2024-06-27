@@ -1634,7 +1634,7 @@ def get_po_paths(module_name: str, lang: str, env: odoo.api.Environment | None =
         po_names.insert(1, 'es_419')
     po_paths = [
         join(module_name, dir_, filename + '.po')
-        for filename in po_names
+        for filename in OrderedSet(po_names)
         for dir_ in ('i18n', 'i18n_extra')
     ]
     for path in po_paths:
