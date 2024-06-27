@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
-from odoo import Command
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -12,15 +11,19 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_project_task_history(self):
         """This tour will check that the history works properly."""
-        project = self.env['project.project'].create({
+        stage = self.env['project.task.type'].create({'name': 'To Do'})
+        _dummy, project2 = self.env['project.project'].create([{
+            'name': 'Without tasks project',
+            'type_ids': stage.ids,
+        }, {
             'name': 'Test History Project',
-            'type_ids': [Command.create({'name': 'To Do'})],
-        })
+            'type_ids': stage.ids,
+        }])
 
         self.env['project.task'].create({
             'name': 'Test History Task',
-            'stage_id': project.type_ids[0].id,
-            'project_id': project.id,
+            'stage_id': stage.id,
+            'project_id': project2.id,
         })
 
         self.start_tour('/odoo', 'project_task_history_tour', login='admin')

@@ -71,7 +71,7 @@ export class ProjectTaskFormController extends FormController {
                         )
                     )}</span>`
                 ),
-                recordId: this.props.resId,
+                recordId: record.resId,
                 recordModel: this.props.resModel,
                 versionedFieldName,
                 historyMetadata,

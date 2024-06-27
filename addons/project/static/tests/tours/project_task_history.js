@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 /**
  * Project Task history tour.
  * Features tested:
@@ -141,6 +139,53 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
                 throw new Error(`Expect description to be ${expected}, got ${p}`);
             }
         }
+    }, {
+        content: "Go back to projects view.",
+        trigger: 'a[data-menu-xmlid="project.menu_projects"]',
+        run: "click",
+    }, {
+        trigger: ".o_kanban_view",
+    }, {
+        content: "Open Test History Project Without Tasks",
+        trigger: "div span.o_text_overflow[title='Without tasks project']",
+        run: "click",
+    }, {
+        trigger: ".o_kanban_project_tasks",
+    }, {
+        content: "Switch to list view",
+        trigger: ".o_switch_view.o_list",
+        run: "click",
+    }, {
+        content: "Create a new task.",
+        trigger: '.o_list_button_add',
+        run: "click",
+    }, {
+        trigger: ".o_form_view",
+    }, {
+        trigger: 'div[name="name"] .o_input',
+        content: 'Set task name',
+        run: 'edit New task',
+    },
+        ...changeDescriptionContentAndSave("0"),
+        ...changeDescriptionContentAndSave("1"),
+        ...changeDescriptionContentAndSave("2"),
+        ...changeDescriptionContentAndSave("3"),
+    {
+        trigger: ".o_form_view",
+    }, {
+        content: "Open History Dialog",
+        trigger: ".o_cp_action_menus i.fa-cog",
+        run: "click",
+    }, {
+        trigger: ".dropdown-menu",
+    }, {
+        content: "Open History Dialog",
+        trigger: ".o_menu_item i.fa-history",
+        run: "click",
+    }, {
+        content: "Close History Dialog",
+        trigger: ".modal-header .btn-close",
+        run: "click",
     }, {
         content: "Go back to projects view. this step is added because Tour can't be finished with an open form view in edition mode.",
         trigger: 'a[data-menu-xmlid="project.menu_projects"]',
