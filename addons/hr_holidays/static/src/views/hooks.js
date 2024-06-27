@@ -28,7 +28,7 @@ export function useLeaveCancelWizard() {
     return (leaveId, callback) => {
         action.doAction(
             {
-                name: _t("Delete Confirmation"),
+                name: _t("Cancel Confirmation"),
                 type: "ir.actions.act_window",
                 res_model: "hr.holidays.cancel.leave",
                 target: "new",
