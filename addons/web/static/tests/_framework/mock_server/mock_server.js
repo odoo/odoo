@@ -134,7 +134,7 @@ const getCurrentParams = createJobScopedGetter(
     (previous) => ({
         ...previous,
         actions: deepCopy(previous?.actions || {}),
-        menus: deepCopy(previous?.menus || []),
+        menus: deepCopy(previous?.menus || [DEFAULT_MENU]),
         models: [...(previous?.models || [])], // own instance getters, no need to deep copy
         routes: [...(previous?.routes || [])], // functions, no need to deep copy
     })
@@ -308,7 +308,7 @@ export class MockServer {
     /** @type {Record<string, ActionDefinition>} */
     actions = {};
     /** @type {MenuDefinition[]} */
-    menus = [DEFAULT_MENU];
+    menus = [];
     /** @type {Record<string, Model>} */
     models = {};
     /** @type {Record<string, ModelConstructor>} */
