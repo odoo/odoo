@@ -77,7 +77,7 @@ describe(parseUrl(import.meta.url), () => {
 
         const ms = await runAllTimers();
 
-        expect(ms).toBeWithin(1e6 - 1, 1e6 + 1); // more or less
+        expect(ms).toBeWithin(1e6 - 1, 1e6); // more or less
         expect.verifySteps(["animation", "timeout"]);
     });
 });
