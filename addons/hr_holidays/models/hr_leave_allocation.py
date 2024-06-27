@@ -627,6 +627,11 @@ class HolidaysAllocation(models.Model):
         if any(allocation.holiday_status_id.requires_allocation == 'yes' and allocation.leaves_taken > 0 for allocation in self):
             raise UserError(_('You cannot delete an allocation request which has some validated leaves.'))
 
+    def copy(self, default=None):
+        new_allocations = super().copy(default)
+        new_allocations.state = 'confirm'
+        return new_allocations
+
     def _get_redirect_suggested_company(self):
         return self.holiday_status_id.company_id
 
