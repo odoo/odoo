@@ -3169,7 +3169,11 @@ var SnippetsMenu = Widget.extend({
      * @private
      * @param {jQuery}
      */
-    _patchForComputeSnippetTemplates($html) {},
+    _patchForComputeSnippetTemplates($html) {
+        // TODO: Remove in master and add it back in the template.
+        const $vAlignOption = $html.find("#row_valign_snippet_option");
+        $vAlignOption[0].dataset.js = "vAlignment";
+    },
     /**
      * Creates a snippet editor to associated to the given snippet. If the given
      * snippet already has a linked snippet editor, the function only returns
