@@ -2,7 +2,12 @@
 import calendar
 import math
 from datetime import date, datetime, time
+<<<<<<< saas-17.4
 from typing import Tuple, TypeVar, Literal, Iterator
+||||||| 4726e12d55f81b7b7c077561a974421507d6e854
+=======
+from typing import Tuple
+>>>>>>> 5ed0fecb845bc35ea77848c47be702963602f185
 
 import babel
 import pytz

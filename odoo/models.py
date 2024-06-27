@@ -2545,6 +2545,7 @@ class BaseModel(metaclass=MetaModel):
                                 value, format=READ_GROUP_DISPLAY_FORMAT[granularity],
                                 locale=locale
                             )
+<<<<<<< saas-17.4
                         # special case weeks because babel is broken *and*
                         # ubuntu reverted a change so it's also inconsistent
                         if granularity == 'week':
@@ -2554,6 +2555,16 @@ class BaseModel(metaclass=MetaModel):
                             )
                             label = f"W{week} {year:04}"
 
+||||||| 4726e12d55f81b7b7c077561a974421507d6e854
+
+=======
+                        if granularity == 'week':
+                            year, week = date_utils.weeknumber(
+                                babel.Locale.parse(locale),
+                                value,
+                            )
+                            label = f"W{week} {year:04}"
+>>>>>>> 5ed0fecb845bc35ea77848c47be702963602f185
                         range_start = range_start.strftime(fmt)
                         range_end = range_end.strftime(fmt)
                         row[group] = label  # TODO should put raw data
