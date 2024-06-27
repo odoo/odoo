@@ -443,6 +443,7 @@ class WebsiteEventController(http.Controller):
 
             registrations_to_create.append(registration_values)
 
+        registrations_to_update.flush_recordset()  # CACL: flush to avoid access rights error, but don't know why...
         return request.env['event.registration'].sudo().create(registrations_to_create) + registrations_to_update
 
     @http.route(['''/event/<model("event.event"):event>/registration/confirm'''], type='http', auth="public", methods=['POST'], website=True)
