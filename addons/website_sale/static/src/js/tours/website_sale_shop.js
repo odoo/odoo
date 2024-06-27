@@ -17,7 +17,6 @@
     {
         trigger: ".o_menu_systray .o_new_content_container > a",
         content: _t("Let's create your first product."),
-        consumeVisibleOnly: true,
         position: "bottom",
         run: "click",
     }, {

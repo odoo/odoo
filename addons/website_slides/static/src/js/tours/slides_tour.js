@@ -10,7 +10,6 @@ wTourUtils.registerWebsitePreviewTour('slides_tour', {
 }, () => [{
     trigger: "body:not(.editor_has_snippets) .o_new_content_container > a",
     content: markup(_t("Welcome on your course's home page. It's still empty for now. Click on \"<b>New</b>\" to write your first course.")),
-    consumeVisibleOnly: true,
     position: 'bottom',
     run: "click",
 }, {

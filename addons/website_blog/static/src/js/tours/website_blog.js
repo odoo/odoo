@@ -10,7 +10,6 @@
     }, () => [{
         trigger: "body:not(:has(#o_new_content_menu_choices)) .o_new_content_container > a",
         content: _t("Click here to add new content to your website."),
-        consumeVisibleOnly: true,
         position: 'bottom',
         run: "click",
     }, {

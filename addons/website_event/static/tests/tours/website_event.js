@@ -11,7 +11,6 @@
     }, () => [{
         content: _t("Click here to add new content to your website."),
         trigger: ".o_menu_systray .o_new_content_container > a",
-        consumeVisibleOnly: true,
         position: 'bottom',
         run: "click",
     }, {
