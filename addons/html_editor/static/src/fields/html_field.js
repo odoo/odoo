@@ -1,4 +1,8 @@
-import { COLLABORATION_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import {
+    COLLABORATION_PLUGINS,
+    MAIN_PLUGINS,
+    DYNAMIC_PLACEHOLDER_PLUGINS,
+} from "@html_editor/plugin_sets";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { Component, useRef, useState } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
@@ -31,10 +35,15 @@ export class HtmlField extends Component {
     static props = {
         ...standardFieldProps,
         isCollaborative: { type: Boolean, optional: true },
+        dynamicPlaceholder: { type: Boolean, optional: true, default: false },
+        dynamicPlaceholderModelReferenceField: { type: String, optional: true },
         cssReadonlyAssetId: { type: String, optional: true },
         sandboxedPreview: { type: Boolean, optional: true },
         codeview: { type: Boolean, optional: true },
         editorConfig: { type: Object, optional: true },
+    };
+    static defaultProps = {
+        dynamicPlaceholder: false,
     };
     static components = {
         Wysiwyg,
@@ -68,8 +77,15 @@ export class HtmlField extends Component {
             if (!this.isDirty && this.lastValue !== record.data[this.props.name].toString()) {
                 this.state.key++;
                 this.state.containsComplexHTML = computeContainsComplexHTML(
-                    this.props.record.data[this.props.name]
+                    record.data[this.props.name]
                 );
+            }
+        });
+        useRecordObserver((record) => {
+            const value = record.data[this.props.dynamicPlaceholderModelReferenceField || "model"];
+            // update Dynamic Placeholder reference model
+            if (this.props.dynamicPlaceholder && this.editor) {
+                this.editor.shared.updateDphDefaultModel(value);
             }
         });
     }
@@ -81,7 +97,6 @@ export class HtmlField extends Component {
     get displayReadonly() {
         return this.props.readonly || (this.sandboxedPreview && !this.state.showCodeView);
     }
-
     get wysiwygKey() {
         return `${this.props.record.resId}_${this.state.key}`;
     }
@@ -154,6 +169,7 @@ export class HtmlField extends Component {
             Plugins: [
                 ...MAIN_PLUGINS,
                 ...(this.props.isCollaborative ? COLLABORATION_PLUGINS : []),
+                ...(this.props.dynamicPlaceholder ? DYNAMIC_PLACEHOLDER_PLUGINS : []),
             ],
             classList: this.classList,
             onChange: this.onChange.bind(this),
@@ -168,6 +184,9 @@ export class HtmlField extends Component {
                 peerId: this.generateId(),
             },
             dropImageAsAttachment: true, // @todo @phoenix always true ?
+            dynamicPlaceholder: this.dynamicPlaceholder,
+            dynamicPlaceholderResModel:
+                this.props.record.data[this.props.dynamicPlaceholderModelReferenceField || "model"],
             resources: {
                 toolbarGroup: [
                     {
@@ -234,6 +253,9 @@ export const htmlField = {
         return {
             editorConfig,
             isCollaborative: options.collaborative,
+            dynamicPlaceholder: options.dynamic_placeholder,
+            dynamicPlaceholderModelReferenceField:
+                options.dynamic_placeholder_model_reference_field,
             sandboxedPreview: Boolean(options.sandboxedPreview),
             cssReadonlyAssetId: options.cssReadonly,
             codeview: Boolean(odoo.debug && options.codeview),
