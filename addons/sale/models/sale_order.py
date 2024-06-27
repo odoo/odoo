@@ -1004,6 +1004,9 @@ class SaleOrder(models.Model):
             # Public user can confirm SO, so we check the group on any record creator.
             self.action_lock()
 
+        if self.env.context.get('send_email'):
+            self._send_order_confirmation_mail()
+
         return True
 
     def _should_be_locked(self):
