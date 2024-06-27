@@ -359,10 +359,6 @@ export class Record {
     /** @type {this} */
     _proxy;
 
-    constructor() {
-        this.setup();
-    }
-
     setup() {}
 
     update(data) {
