@@ -527,10 +527,23 @@ describe("with selection", () => {
                             d
                         </li>
                     </ul>`),
+            contentBeforeEdit: unformat(`
+                        <ul>
+                            <li>
+                                <p>a</p>
+                                <ul>
+                                    <li>[b</li>
+                                    <li>c]</li>
+                                </ul>
+                            </li>
+                            <li>
+                                d
+                            </li>
+                        </ul>`),
             stepFunction: keydownShiftTab,
             contentAfter: unformat(`
                     <ul>
-                        <li>a</li>
+                        <li><p>a</p></li>
                         <li>[b</li>
                         <li>c]</li>
                         <li>d</li>

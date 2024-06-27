@@ -2,18 +2,91 @@ import { describe, test } from "@odoo/hoot";
 import { testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 
-describe("Paragraph in list item", () => {
-    test("should unwrap paragraph preserving selection", async () => {
+describe("Inlines and blocks in list item", () => {
+    test("should allow paragraphs in list item", async () => {
         await testEditor({
             contentBefore: unformat(`
                 <ul>
                     <li>
-                        <h1>abc</h1>
-                        <p>abc[<i>def</i>]</p>
+                        <p>abc</p>
                     </li>
                 </ul>
             `),
             contentAfter: unformat(`
+                  <ul>
+                    <li>
+                        <p>abc</p>
+                    </li>
+                </ul>
+            `),
+        });
+    });
+    test("should allow inlines in list item, when there are no blocks", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <ul>
+                    <li>
+                        abc<strong>def</strong>
+                    </li>
+                </ul>
+            `),
+            contentAfter: unformat(`
+                  <ul>
+                    <li>
+                        abc<strong>def</strong>
+                    </li>
+                </ul>
+            `),
+        });
+    });
+    test("should wrap inlines in Ps when there are blocks in the list item", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <ul>
+                    <li>
+                        abc
+                        <p>paragraph</p>
+                        <strong>def</strong>
+                    </li>
+                </ul>
+            `),
+            contentAfter: unformat(`
+                  <ul>
+                    <li>
+                        <p>abc</p>
+                        <p>paragraph</p>
+                        <p><strong>def</strong></p>
+                    </li>
+                </ul>
+            `),
+        });
+    });
+
+    test("should wrap inlines in Ps when there are blocks in the list item (2)", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <ul>
+                    <li>
+                        abc<br>def
+                        <h1>ghi</h1>
+                    </li>
+                </ul>
+            `),
+            contentAfter: unformat(`
+                  <ul>
+                    <li>
+                        <p>abc</p>
+                        <p>def</p>
+                        <h1>ghi</h1>
+                    </li>
+                </ul>
+            `),
+        });
+    });
+
+    test("should wrap inlines in paragraph preserving selection", async () => {
+        await testEditor({
+            contentBefore: unformat(`
                 <ul>
                     <li>
                         <h1>abc</h1>
@@ -21,19 +94,19 @@ describe("Paragraph in list item", () => {
                     </li>
                 </ul>
             `),
-        });
-    });
-    test("should unwrap paragraph preserving selection (2)", async () => {
-        await testEditor({
-            contentBefore: unformat(`
+            contentAfter: unformat(`
                 <ul>
                     <li>
-                        <p>abc<i>def</i></p>
-                        [<h1>abc</h1>]
+                        <h1>abc</h1>
+                        <p>abc[<i>def</i></p>]
                     </li>
                 </ul>
             `),
-            contentAfter: unformat(`
+        });
+    });
+    test("should wrap inlines in paragraph preserving selection (2)", async () => {
+        await testEditor({
+            contentBefore: unformat(`
                 <ul>
                     <li>
                         abc<i>def</i>
@@ -41,10 +114,14 @@ describe("Paragraph in list item", () => {
                     </li>
                 </ul>
             `),
+            contentAfter: unformat(`
+                <ul>
+                    <li>
+                        <p>abc<i>def</i></p>
+                        [<h1>abc</h1>]
+                    </li>
+                </ul>
+            `),
         });
     });
 });
-
-// @todo @phoenix: write other tests about list normalization + preserve selection:
-// - paragraph with class converted to span
-// - empty paragraph gets removed

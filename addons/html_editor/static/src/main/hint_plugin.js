@@ -72,6 +72,7 @@ export class HintPlugin extends Plugin {
     makeEmptyBlockHints(root) {
         for (const { selector, hint } of this.resources.emptyBlockHints) {
             for (const el of selectElements(root, selector)) {
+                // @todo: consider using isEmptyBlock instead.
                 if (isEmpty(el) && !isProtected(el)) {
                     this.makeHint(el, hint);
                 }

@@ -54,8 +54,7 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore: "<ol><li><p>a[]</p></li></ol>",
                     stepFunction: deleteBackward,
-                    // Paragraphs in list items are treated as nonsense.
-                    contentAfter: "<ol><li>[]<br></li></ol>",
+                    contentAfter: "<ol><li><p>[]<br></p></li></ol>",
                 });
             });
 
@@ -414,8 +413,7 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore: "<ul><li><p>a[]</p></li></ul>",
                     stepFunction: deleteBackward,
-                    // Paragraphs in list items are treated as nonsense.
-                    contentAfter: "<ul><li>[]<br></li></ul>",
+                    contentAfter: "<ul><li><p>[]<br></p></li></ul>",
                 });
             });
 
@@ -803,8 +801,8 @@ describe("Selection collapsed", () => {
                     contentBefore:
                         '<ul class="o_checklist"><li class="o_checked"><p>a[]</p></li></ul>',
                     stepFunction: deleteBackward,
-                    // Paragraphs in list items are treated as nonsense.
-                    contentAfter: '<ul class="o_checklist"><li class="o_checked">[]<br></li></ul>',
+                    contentAfter:
+                        '<ul class="o_checklist"><li class="o_checked"><p>[]<br></p></li></ul>',
                 });
             });
 
@@ -1341,7 +1339,7 @@ describe("Selection collapsed", () => {
                         deleteBackward(editor);
                         deleteBackward(editor);
                     },
-                    contentAfter: "<ul><li>a[]b</li></ul>",
+                    contentAfter: "<ul><li><p>a[]b</p></li></ul>",
                 });
                 await testEditor({
                     contentBefore: "<ul><li><p>a</p></li></ul><ol><li><p>[]b</p></li></ol>",
@@ -1349,7 +1347,7 @@ describe("Selection collapsed", () => {
                         deleteBackward(editor);
                         deleteBackward(editor);
                     },
-                    contentAfter: "<ul><li>a[]b</li></ul>",
+                    contentAfter: "<ul><li><p>a[]b</p></li></ul>",
                 });
             });
 
@@ -1451,7 +1449,7 @@ describe("Selection collapsed", () => {
                         deleteBackward(editor);
                         deleteBackward(editor);
                     },
-                    contentAfter: "<ol><li>a[]b</li></ol>",
+                    contentAfter: "<ol><li><p>a[]b</p></li></ol>",
                 });
                 await testEditor({
                     contentBefore: "<ol><li><p>a</p></li></ol><ul><li><p>[]b</p></li></ul>",
@@ -1459,7 +1457,7 @@ describe("Selection collapsed", () => {
                         deleteBackward(editor);
                         deleteBackward(editor);
                     },
-                    contentAfter: "<ol><li>a[]b</li></ol>",
+                    contentAfter: "<ol><li><p>a[]b</p></li></ol>",
                 });
             });
 
@@ -1581,7 +1579,7 @@ describe("Selection collapsed", () => {
                         deleteBackward(editor);
                         deleteBackward(editor);
                     },
-                    contentAfter: "<ul><li>a[]b</li></ul>",
+                    contentAfter: "<ul><li><p>a[]b</p></li></ul>",
                 });
                 await testEditor({
                     contentBefore:
@@ -1590,7 +1588,7 @@ describe("Selection collapsed", () => {
                         deleteBackward(editor);
                         deleteBackward(editor);
                     },
-                    contentAfter: "<ul><li>a[]b</li></ul>",
+                    contentAfter: "<ul><li><p>a[]b</p></li></ul>",
                 });
             });
 
@@ -1702,7 +1700,8 @@ describe("Selection collapsed", () => {
                         deleteBackward(editor);
                     },
                     // Paragraphs in list items are kept unless empty
-                    contentAfter: '<ul class="o_checklist"><li class="o_checked">a[]b</li></ul>',
+                    contentAfter:
+                        '<ul class="o_checklist"><li class="o_checked"><p>a[]b</p></li></ul>',
                 });
                 await testEditor({
                     contentBefore:
@@ -1712,7 +1711,8 @@ describe("Selection collapsed", () => {
                         deleteBackward(editor);
                     },
                     // Paragraphs in list items are kept unless empty
-                    contentAfter: '<ul class="o_checklist"><li class="o_checked">a[]b</li></ul>',
+                    contentAfter:
+                        '<ul class="o_checklist"><li class="o_checked"><p>a[]b</p></li></ul>',
                 });
             });
 

@@ -57,22 +57,22 @@ test("should not normalize protected elements children (true)", async () => {
         contentBefore: unformat(`
                 <div>
                     <p><i class="fa"></i></p>
-                    <ul><li><p><br></p></li></ul>
+                    <ul><li>abc<p><br></p></li></ul>
                 </div>
                 <div data-oe-protected="true">
                     <p><i class="fa"></i></p>
-                    <ul><li><p><br></p></li></ul>
+                    <ul><li>abc<p><br></p></li></ul>
                 </div>
                 `),
         stepFunction: async (editor) => editor.dispatch("NORMALIZE", { node: editor.editable }),
         contentAfterEdit: unformat(`
                 <div>
                     <p><i class="fa" contenteditable="false">\u200B</i></p>
-                    <ul><li placeholder="List" class="o-we-hint"><br></li></ul>
+                    <ul><li><p>abc</p><p><br></p></li></ul>
                 </div>
                 <div data-oe-protected="true">
                     <p><i class="fa"></i></p>
-                    <ul><li><p><br></p></li></ul>
+                    <ul><li>abc<p><br></p></li></ul>
                 </div>
                 `),
     });
@@ -83,10 +83,10 @@ test("should normalize unprotected elements children (false)", async () => {
         contentBefore: unformat(`
                 <div data-oe-protected="true">
                     <p><i class="fa"></i></p>
-                    <ul><li><p><br></p></li></ul>
+                    <ul><li>abc<p><br></p></li></ul>
                     <div data-oe-protected="false">
                         <p><i class="fa"></i></p>
-                        <ul><li><p><br></p></li></ul>
+                        <ul><li>abc<p><br></p></li></ul>
                     </div>
                 </div>
                 `),
@@ -94,10 +94,10 @@ test("should normalize unprotected elements children (false)", async () => {
         contentAfterEdit: unformat(`
                 <div data-oe-protected="true">
                     <p><i class="fa"></i></p>
-                    <ul><li><p><br></p></li></ul>
+                    <ul><li>abc<p><br></p></li></ul>
                     <div data-oe-protected="false">
                         <p><i class="fa" contenteditable="false">\u200B</i></p>
-                        <ul><li placeholder="List" class="o-we-hint"><br></li></ul>
+                        <ul><li><p>abc</p><p><br></p></li></ul>
                     </div>
                 </div>
                 `),

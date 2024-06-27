@@ -1,11 +1,15 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
-import { removeClass, setTagName, toggleClass, unwrapContents } from "@html_editor/utils/dom";
+import {
+    wrapInlinesInParagraphs,
+    removeClass,
+    setTagName,
+    toggleClass,
+} from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isEmptyBlock,
     isProtected,
-    isShrunkBlock,
     isVisible,
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants, getAdjacents } from "@html_editor/utils/dom_traversal";
@@ -210,7 +214,7 @@ export class ListPlugin extends Plugin {
             }
             element = this.liWithoutParentToP(element);
             element = this.mergeSimilarLists(element);
-            element = this.removeParagraphInLI(element);
+            element = this.normalizeLI(element);
             return element;
         });
     }
@@ -365,60 +369,21 @@ export class ListPlugin extends Plugin {
         return element;
     }
 
-    removeEmptyPinLI(p) {
-        const cursors = this.shared.preserveSelection();
-        const li = p.parentElement;
-        // An empty block might contain empty inlines as children.
-        cursors.update(callbacksForCursorUpdate.remove(p));
-        p.remove();
-        if (isShrunkBlock(li)) {
-            li.append(this.document.createElement("br"));
-        }
-        cursors.restore();
-        return li;
-    }
-
-    convertPinLItoSpan(p) {
-        const cursors = this.shared.preserveSelection();
-
-        const span = this.document.createElement("span");
-        span.setAttribute("class", p.classList);
-        span.append(...p.childNodes);
-        p.replaceWith(span);
-
-        cursors.remapNode(p, span).restore();
-
-        return span;
-    }
-
-    unwrapPinLI(p) {
-        const cursors = this.shared.preserveSelection();
-        cursors.update(callbacksForCursorUpdate.unwrap(p));
-        const contents = unwrapContents(p);
-        cursors.restore();
-        // This assumes the P has at least one child.
-        return contents[0];
-    }
-
-    // @todo: this method does not preserve line breaks if there are multiple
-    // paragraphs in a list item.
-    removeParagraphInLI(element) {
-        if (
-            !(element.tagName === "P" && element.parentElement && isListItem(element.parentElement))
-        ) {
+    /**
+     * Wraps inlines in P to avoid inlines with block siblings.
+     */
+    normalizeLI(element) {
+        if (!isListItem(element) || element.classList.contains("oe-nested")) {
             return element;
         }
-        // Remove paragraph if empty.
-        if (isEmptyBlock(element)) {
-            return this.removeEmptyPinLI(element);
+
+        if ([...element.children].some(isBlock)) {
+            const cursors = this.shared.preserveSelection();
+            wrapInlinesInParagraphs(element, cursors);
+            cursors.restore();
         }
-        // Wrap contents in a span if P has classes.
-        this.dispatch("CLEAN", { root: element });
-        if (element.classList.length) {
-            return this.convertPinLItoSpan(element);
-        }
-        // Unwrap contents of P.
-        return this.unwrapPinLI(element);
+
+        return element;
     }
 
     // --------------------------------------------------------------------------
