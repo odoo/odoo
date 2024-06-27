@@ -169,6 +169,8 @@
                                 invisible="state != 'posted' or is_move_sent or payment_method_code != 'manual'"/>
                         <button name="unmark_as_sent"  string="Unmark as Sent" type="object" data-hotkey="k"
                                 invisible="state != 'posted' or not is_move_sent or payment_method_code != 'manual'"/>
+                        <button name="action_repay" string="Pay Back" type="object"
+                                invisible="state != 'posted' or payment_type == 'outbound' or is_internal_transfer or reimbursed_payment_id or is_fully_reimbursed"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
                     <div class="alert alert-warning text-center" role="alert" invisible="not is_internal_transfer or not require_partner_bank_account or partner_bank_id">
@@ -197,8 +199,27 @@
                         <field name="paired_internal_transfer_payment_id" invisible="1"/>
                         <field name="available_journal_ids" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
+                        <field name="reimbursement_payment_ids" invisible="1"/>
+                        <field name="reimbursed_payment_id" invisible="1"/>
+                        <field name="is_fully_reimbursed" invisible="1"/>
 
                         <div class="oe_button_box" name="button_box">
+                            <!-- Initial payment button -->
+                            <button name="button_open_repaid_payment" string="Initial payment" type="object"
+                                    invisible="not reimbursed_payment_id"/>
+
+                            <!-- Reimbursements button -->
+                            <button name="button_open_reimbursements" type="object"
+                                    class="oe_stat_button" icon="fa-bars"
+                                    invisible="not reimbursements_count">
+                                <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_text">
+                                        <field name="reimbursements_count"/>
+                                        <span> Reimbursements</span>
+                                    </span>
+                                </div>
+                            </button>
+
                             <!-- Invoice stat button -->
                             <button name="button_open_invoices" type="object"
                                     class="oe_stat_button" icon="fa-bars"
