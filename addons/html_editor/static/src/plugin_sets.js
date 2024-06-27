@@ -43,6 +43,7 @@ import { CollaborationPlugin } from "./others/collaboration/collaboration_plugin
 import { CollaborationOdooPlugin } from "./others/collaboration/collaboration_odoo_plugin";
 import { CollaborationSelectionPlugin } from "./others/collaboration/collaboration_selection_plugin";
 import { CollaborationSelectionAvatarPlugin } from "./others/collaboration/collaboration_selection_avatar_plugin";
+import { DynamicPlaceholderPlugin } from "@html_editor/others/dynamic_placeholder/dynamic_placeholder";
 import { PositionPlugin } from "./main/position_plugin";
 import { LinkSelectionPlugin } from "./main/link/link_selection_plugin";
 import { OdooLinkSelectionPlugin } from "./main/link/link_selection_odoo_plugin";
@@ -106,6 +107,8 @@ export const COLLABORATION_PLUGINS = [
     CollaborationSelectionPlugin,
     CollaborationSelectionAvatarPlugin,
 ];
+
+export const DYNAMIC_PLACEHOLDER_PLUGINS = [DynamicPlaceholderPlugin, QWebPlugin];
 
 export const EXTRA_PLUGINS = [
     ...COLLABORATION_PLUGINS,

@@ -32,6 +32,7 @@ export class Wysiwyg extends Component {
         copyCss: { type: Boolean, optional: true },
         onLoad: { type: Function, optional: true },
         onBlur: { type: Function, optional: true },
+        dynamicPlaceholder: { type: Boolean, optional: true },
     };
 
     static defaultProps = {
