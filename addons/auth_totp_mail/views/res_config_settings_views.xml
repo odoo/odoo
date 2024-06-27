@@ -13,6 +13,8 @@
                         <field name="auth_totp_enforce" />
                         <div class="mt16" invisible="not auth_totp_enforce">
                             <field name="auth_totp_policy" class="o_light_label" widget="radio"/>
+                            <div>Send two-factor emails to new users only</div>
+                            <field name="auth_totp_grace" class="o_light_label"/> day(s) after creation
                         </div>
                     </setting>
                 </xpath>

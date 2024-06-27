@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="icp_auth_totp_policy" model="ir.config_parameter" forcecreate="0">
+            <field name="key">auth_totp.policy</field>
+            <field name="value">all_required</field>
+        </record>
+
+        <record id="icp_auth_totp_grace" model="ir.config_parameter" forcecreate="0">
+            <field name="key">auth_totp.mfa_required_after_days</field>
+            <field name="value">1</field>
+        </record>
+    </data>
+</odoo>

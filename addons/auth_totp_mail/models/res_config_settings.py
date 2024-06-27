@@ -17,6 +17,10 @@ class ResConfigSettings(models.TransientModel):
         string="Two-factor authentication enforcing policy",
         config_parameter='auth_totp.policy',
     )
+    auth_totp_grace = fields.Integer(
+        string="Require after",
+        config_parameter='auth_totp.mfa_required_after_days',
+    )
 
     @api.onchange('auth_totp_enforce')
     def _onchange_auth_totp_enforce(self):
@@ -27,6 +31,6 @@ class ResConfigSettings(models.TransientModel):
 
     @api.model
     def get_values(self):
-        res = super(ResConfigSettings, self).get_values()
+        res = super().get_values()
         res['auth_totp_enforce'] = bool(self.env['ir.config_parameter'].sudo().get_param('auth_totp.policy'))
         return res
