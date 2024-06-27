@@ -877,3 +877,18 @@ test("Record lists methods are bound to the record list", async () => {
     expect(general.messages.length).toBe(1);
     expect(general.messages.map((msg) => msg.content)).toEqual(["1"]);
 });
+
+test("setup() has precedence over instance class field definition", async () => {
+    class Test extends Record {}
+    Test.register(localRegistry);
+    (class Test2 extends Test {
+        x = false;
+        setup() {
+            super.setup();
+            this.x = true;
+        }
+    }).register(localRegistry);
+    const store = await start();
+    const test = store.Test2.insert();
+    expect(test.x).toBe(true);
+});

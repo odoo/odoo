@@ -40,6 +40,7 @@ export function makeStore(env, { localRegistry } = {}) {
             [OgClass.name]: class extends OgClass {
                 constructor() {
                     super();
+                    this.setup();
                     const record = this;
                     record._raw = record;
                     record.Model = Model;
@@ -148,6 +149,7 @@ export function makeStore(env, { localRegistry } = {}) {
         store[name] = Model;
         // Detect fields with a dummy record and setup getter/setters on them
         const obj = new OgClass();
+        obj.setup();
         for (const [name, val] of Object.entries(obj)) {
             if (isFieldDefinition(val)) {
                 Model._.prepareField(name, val);
