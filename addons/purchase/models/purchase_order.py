@@ -185,7 +185,9 @@ class PurchaseOrder(models.Model):
     def _compute_date_planned(self):
         """ date_planned = the earliest date_planned across all order lines. """
         for order in self:
-            dates_list = order.order_line.filtered(lambda x: not x.display_type and x.date_planned).mapped('date_planned')
+            relevant_lines = order.order_line.filtered(lambda x: not x.display_type and x.date_planned)
+            relevant_lines = relevant_lines.filtered(lambda x: x._origin) or relevant_lines
+            dates_list = relevant_lines.mapped('date_planned')
             if dates_list:
                 order.date_planned = min(dates_list)
             else:
