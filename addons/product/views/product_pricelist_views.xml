@@ -94,6 +94,9 @@
                 <form string="Pricelist Rule">
                     <sheet>
                         <field name="name" invisible="1"/>
+                        <group>
+                            <field name="pricelist_id"></field>
+                        </group>
                         <group name="pricelist_rule_computation" groups="product.group_sale_pricelist" string="Price Computation">
                             <group name="pricelist_rule_method">
                                 <field name="compute_price" string="Computation" widget="radio"/>
