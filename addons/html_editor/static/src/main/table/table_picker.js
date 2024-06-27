@@ -8,6 +8,7 @@ export class TablePicker extends Component {
             validate: (el) => el.nodeType === Node.ELEMENT_NODE,
         },
         overlay: Object,
+        direction: String,
     };
 
     setup() {
@@ -21,6 +22,7 @@ export class TablePicker extends Component {
         });
         useExternalListener(this.props.editable, "keydown", (ev) => {
             const key = ev.key;
+            const isRTL = this.props.direction === "rtl";
             switch (key) {
                 case "Escape":
                     this.props.overlay.close();
@@ -41,13 +43,23 @@ export class TablePicker extends Component {
                     break;
                 case "ArrowLeft":
                     ev.preventDefault();
-                    if (this.state.cols > 1) {
-                        this.state.cols -= 1;
+                    if (isRTL) {
+                        this.state.cols += 1;
+                    } else {
+                        if (this.state.cols > 1) {
+                            this.state.cols -= 1;
+                        }
                     }
                     break;
                 case "ArrowRight":
-                    this.state.cols += 1;
                     ev.preventDefault();
+                    if (isRTL) {
+                        if (this.state.cols > 1) {
+                            this.state.cols -= 1;
+                        }
+                    } else {
+                        this.state.cols += 1;
+                    }
                     break;
             }
         });
