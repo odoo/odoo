@@ -4362,21 +4362,35 @@ class MailThread(models.AbstractModel):
 
     def message_get_followers(self, after=None, limit=100, filter_recipients=False):
         self.ensure_one()
+        store = Store()
+        self._message_followers_to_store(store, after, limit, filter_recipients)
+        return store.get_result()
+
+    def _message_followers_to_store(
+        self, store: Store, after=None, limit=100, filter_recipients=False, reset=False
+    ):
+        self.ensure_one()
         domain = [
             ("res_id", "=", self.id),
             ("res_model", "=", self._name),
             ("partner_id", "!=", self.env.user.partner_id.id),
         ]
         if filter_recipients:
-            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
-            domain = expression.AND([domain, [
-                ('subtype_ids', '=', subtype_id),
-                ('partner_id', '!=', self.env.user.partner_id.id),
+            subtype_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
+            subtype_domain = [
+                ("subtype_ids", "=", subtype_id),
                 ("partner_id.active", "=", True),
-            ]])
+            ]
+            domain = expression.AND([domain, subtype_domain])
         if after:
-            domain = expression.AND([domain, [('id', '>', after)]])
-        return self.env["mail.followers"].search(domain, limit=limit, order='id ASC')._format_for_chatter()
+            domain = expression.AND([domain, [("id", ">", after)]])
+        followers = self.env["mail.followers"].search(domain, limit=limit, order="id ASC")
+        store.add(followers)
+        followers_data = [{"id": follower.id} for follower in followers]
+        if not reset:
+            followers_data = [("ADD", followers_data)]
+        relation = "recipients" if filter_recipients else "followers"
+        store.add("Thread", {"id": self.id, "model": self._name, relation: followers_data})
 
     # ------------------------------------------------------
     # THREAD MESSAGE UPDATE
@@ -4540,9 +4554,10 @@ class MailThread(models.AbstractModel):
                 ("res_id", "=", self.id),
                 ("res_model", "=", self._name),
                 ['partner_id', '=', self.env.user.partner_id.id]
-            ])._format_for_chatter()
-            res['selfFollower'] = self_follower[0] if len(self_follower) > 0 else None
-            res['followers'] = self.message_get_followers()
+            ])
+            store.add(self_follower)
+            res["selfFollower"] = {"id": self_follower.id} if self_follower else None
+            self._message_followers_to_store(store, reset=True)
             subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
             res['recipientsCount'] = self.env['mail.followers'].search_count([
                 ("res_id", "=", self.id),
@@ -4551,7 +4566,7 @@ class MailThread(models.AbstractModel):
                 ('subtype_ids', '=', subtype_id),
                 ("partner_id.active", "=", True)
             ])
-            res['recipients'] = self.message_get_followers(filter_recipients=True)
+            self._message_followers_to_store(store, filter_recipients=True, reset=True)
         if 'suggestedRecipients' in request_list:
             res['suggestedRecipients'] = self._message_get_suggested_recipients()
         store.add("Thread", res)
