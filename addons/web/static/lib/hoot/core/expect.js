@@ -806,6 +806,29 @@ export class Matchers {
     }
 
     /**
+     * Expects the received value to be null.
+     *
+     * @param {ExpectOptions} [options]
+     * @example
+     *  expect(null).toBeNull();
+     */
+    toBeNull(options) {
+        this._saveStack();
+
+        ensureArguments([[options, ["object", null]]]);
+
+        return this._resolve({
+            name: "toBeNull",
+            acceptedType: "any",
+            predicate: (actual) => actual === null,
+            message: (pass) =>
+                options?.message ||
+                (pass ? `%actual% is[! not] null` : `expected value to be null`),
+            details: (actual) => [[Markup.red("Received:"), actual]],
+        });
+    }
+
+    /**
      * Expects the received value to be of the given type.
      *
      * @param {ArgumentType} type
@@ -836,6 +859,29 @@ export class Matchers {
                 [Markup.green("Expected type:"), type],
                 [Markup.red("Received value:"), actual],
             ],
+        });
+    }
+
+    /**
+     * Expects the received value to be undefined.
+     *
+     * @param {ExpectOptions} [options]
+     * @example
+     *  expect(undefined).toBeUndefined();
+     */
+    toBeUndefined(options) {
+        this._saveStack();
+
+        ensureArguments([[options, ["object", null]]]);
+
+        return this._resolve({
+            name: "toBeUndefined",
+            acceptedType: "any",
+            predicate: (actual) => actual === undefined,
+            message: (pass) =>
+                options?.message ||
+                (pass ? `%actual% is[! not] undefined` : `expected value to be undefined`),
+            details: (actual) => [[Markup.red("Received:"), actual]],
         });
     }
 
