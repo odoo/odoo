@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-    <t name="sale_stock.ForecastedDetails" owl="1" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
+    <t t-name="sale_stock.ForecastedDetails" owl="1" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
         <xpath expr="//tr[@name='draft_picking_out']" position="after">
             <tr t-if="props.docs.draft_sale_qty" name="draft_so_out" t-attf-class="#{props.docs.draft_sale_orders_matched and 'o_grid_match'}">
                 <td colspan="2">Quotations</td>

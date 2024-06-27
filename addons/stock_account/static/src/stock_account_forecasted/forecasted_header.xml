@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template">
-    <t name="stock_account.ForecastedHeader" owl="1" t-inherit="stock.ForecastedHeader" t-inherit-mode="extension">
+    <t t-name="stock_account.ForecastedHeader" owl="1" t-inherit="stock.ForecastedHeader" t-inherit-mode="extension">
         <xpath expr="//h6[@name='product_variants']" position="after">
             <h6 t-if="() => env.user.has_group('stock.group_stock_manager')">
                 Value On Hand:
