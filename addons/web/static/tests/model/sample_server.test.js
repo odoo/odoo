@@ -136,10 +136,10 @@ describe("Sample data", () => {
         expect(SAMPLE_TEXTS).toInclude(rec.description);
         expect(rec.birthday).toMatch(/\d{4}-\d{2}-\d{2}/);
         expect(rec.arrival_date).toMatch(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/);
-        expect(rec.height).toBeWithin(0, MAX_FLOAT + 1);
-        expect(rec.color).toBeWithin(0, MAX_COLOR_INT);
-        expect(rec.age).toBeWithin(0, MAX_INTEGER);
-        expect(rec.salary).toBeWithin(0, MAX_MONETARY);
+        expect(rec.height).toBeWithin(0, MAX_FLOAT);
+        expect(rec.color).toBeWithin(0, MAX_COLOR_INT - 1);
+        expect(rec.age).toBeWithin(0, MAX_INTEGER - 1);
+        expect(rec.salary).toBeWithin(0, MAX_MONETARY - 1);
         // check float field have 2 decimal rounding
         expect(rec.height).toBe(parseFloat(parseFloat(rec.height).toFixed(2)));
         const selectionValues = fields["res.users"].type.selection.map((sel) => sel[0]);

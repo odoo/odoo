@@ -932,18 +932,17 @@ export class Matchers {
     }
 
     /**
-     * Expects the received value to be strictly between `min` (inclusive) and
-     * `max` (exclusive).
+     * Expects the received value to be strictly between `min` and `max` (both inclusive).
      *
      * @param {number} min (inclusive)
-     * @param {number} max (exlusive)
+     * @param {number} max (inclusive)
      * @param {ExpectOptions} [options]
      * @example
      *  expect(3).toBeWithin(3, 9);
      * @example
-     *  expect(-8).toBeWithin(-20, 0);
+     *  expect(-8.5).toBeWithin(-20, 0);
      * @example
-     *  expect(100).not.toBeWithin(50, 100);
+     *  expect(100).toBeWithin(50, 100);
      */
     toBeWithin(min, max, options) {
         this._saveStack();
@@ -964,7 +963,7 @@ export class Matchers {
         return this._resolve({
             name: "toBeWithin",
             acceptedType: "number",
-            predicate: (actual) => min <= actual && actual < max,
+            predicate: (actual) => min <= actual && actual <= max,
             message: (pass) =>
                 options?.message ||
                 (pass
