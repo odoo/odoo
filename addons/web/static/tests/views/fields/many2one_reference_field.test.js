@@ -22,11 +22,11 @@ class Partner extends models.Model {
     res_id = fields.Many2oneReference({
         string: "Resource Id",
         model_field: "model",
-        relation: "partnertype",
+        relation: "partner.type",
     });
 
     _records = [
-        { id: 1, model: "partnertype", res_id: 10 },
+        { id: 1, model: "partner.type", res_id: 10 },
         { id: 2, res_id: false },
     ];
 }
@@ -71,7 +71,7 @@ test("Many2OneReferenceField in form view", async () => {
     expect(".o_field_widget[name=res_id] .o_external_button").toHaveCount(1);
 
     await contains(".o_field_widget[name=res_id] .o_external_button", { visible: false }).click();
-    expect.verifySteps(["opening partnertype 10", "doAction"]);
+    expect.verifySteps(["opening partner.type 10", "doAction"]);
 });
 
 test("Many2OneReferenceField in list view", async () => {
@@ -109,7 +109,7 @@ test.tags("desktop")("Many2OneReferenceField edition: unset", async () => {
     expect.assertions(4);
 
     onRpc("web_save", ({ args }) => {
-        expect(args).toEqual([[2], { model: "partnertype", res_id: 14 }]);
+        expect(args).toEqual([[2], { model: "partner.type", res_id: 14 }]);
     });
 
     await mountView({
@@ -125,7 +125,7 @@ test.tags("desktop")("Many2OneReferenceField edition: unset", async () => {
 
     expect(".o_field_widget[name=res_id] input").toHaveCount(0);
 
-    await contains(".o_field_widget[name=model] input").edit("partnertype");
+    await contains(".o_field_widget[name=model] input").edit("partner.type");
 
     expect(".o_field_widget[name=res_id] input").toHaveCount(1);
 

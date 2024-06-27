@@ -13,7 +13,7 @@ import {
 
 class Partner extends models.Model {
     int_field = fields.Integer({ sortable: true });
-    timmy = fields.Many2many({ string: "pokemon", relation: "partnertype" });
+    timmy = fields.Many2many({ string: "pokemon", relation: "partner.type" });
     p = fields.One2many({
         string: "one2many field",
         relation: "partner",
@@ -328,7 +328,7 @@ test("Many2ManyCheckBoxesField with default values", async () => {
 
     Partner._fields.timmy = fields.Many2many({
         string: "pokemon",
-        relation: "partnertype",
+        relation: "partner.type",
         default: [[4, 3]],
     });
     PartnerType._records.push({ id: 3, name: "bronze" });
@@ -367,7 +367,7 @@ test("Many2ManyCheckBoxesField with default values", async () => {
 test("Many2ManyCheckBoxesField batches successive changes", async () => {
     Partner._fields.timmy = fields.Many2many({
         string: "pokemon",
-        relation: "partnertype",
+        relation: "partner.type",
         onChange: () => {},
     });
     Partner._records[0].timmy = [];
@@ -403,7 +403,7 @@ test("Many2ManyCheckBoxesField batches successive changes", async () => {
 test("Many2ManyCheckBoxesField sends batched changes on save", async () => {
     Partner._fields.timmy = fields.Many2many({
         string: "pokemon",
-        relation: "partnertype",
+        relation: "partner.type",
         onChange: () => {},
     });
     Partner._records[0].timmy = [];

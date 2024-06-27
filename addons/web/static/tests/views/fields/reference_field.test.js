@@ -38,7 +38,7 @@ class Partner extends models.Model {
     reference = fields.Reference({
         selection: [
             ["product", "Product"],
-            ["partnertype", "Partner Type"],
+            ["partner.type", "Partner Type"],
             ["partner", "Partner"],
         ],
     });
@@ -119,7 +119,7 @@ class IrModel extends models.Model {
     _records = [
         { id: 17, name: "Partner", model: "partner" },
         { id: 20, name: "Product", model: "product" },
-        { id: 21, name: "Partner Type", model: "partnertype" },
+        { id: 21, name: "Partner Type", model: "partner.type" },
     ];
 }
 
@@ -305,13 +305,13 @@ test("reference in form view", async () => {
             return Promise.resolve(false);
         }
         if (method === "name_search") {
-            expect(model).toBe("partnertype", {
+            expect(model).toBe("partner.type", {
                 message: "the name_search should be done on the newly set model",
             });
         }
         if (method === "web_save") {
             expect(model).toBe("partner", { message: "should write on the current model" });
-            expect(args).toEqual([[1], { reference: "partnertype,12" }], {
+            expect(args).toEqual([[1], { reference: "partner.type,12" }], {
                 message: "should write the correct value",
             });
         }
@@ -357,7 +357,7 @@ test("reference in form view", async () => {
     });
 
     expect(queryAllValues(".o_field_widget select > option")).toEqual(
-        ["", "product", "partnertype", "partner"],
+        ["", "product", "partner.type", "partner"],
         {
             message: "the options should be correctly set",
         }
@@ -373,7 +373,7 @@ test("reference in form view", async () => {
     click(".o_dialog:not(.o_inactive_modal) .o_form_button_cancel");
     await animationFrame();
 
-    select("partnertype", { target: ".o_field_widget select" });
+    select("partner.type", { target: ".o_field_widget select" });
     await animationFrame();
 
     expect(".o_field_widget input").toHaveValue("", {
@@ -404,7 +404,7 @@ test("Many2One 'Search more...' updates on resModel change", async () => {
 
     // Selecting a relation
     click("div.o_field_reference select.o_input");
-    select("partnertype");
+    select("partner.type");
 
     // Selecting another relation
     click("div.o_field_reference select.o_input");
@@ -500,14 +500,14 @@ test("default_get and onchange with a reference field", async () => {
     Partner._fields.reference = fields.Reference({
         selection: [
             ["product", "Product"],
-            ["partnertype", "Partner Type"],
+            ["partner.type", "Partner Type"],
             ["partner", "Partner"],
         ],
         default: "product,37",
     });
     Partner._onChanges.int_field = (obj) => {
         if (obj.int_field) {
-            obj.reference = "partnertype," + obj.int_field;
+            obj.reference = "partner.type," + obj.int_field;
         }
     };
 
@@ -538,7 +538,7 @@ test("default_get and onchange with a reference field", async () => {
     edit(12, { confirm: "enter" });
     await animationFrame();
 
-    expect(".o_field_widget[name='reference'] select").toHaveValue("partnertype", {
+    expect(".o_field_widget[name='reference'] select").toHaveValue("partner.type", {
         message: "reference field model should be correctly set",
     });
     expect(".o_field_widget[name='reference'] input").toHaveValue("gold", {
