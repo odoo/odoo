@@ -5,6 +5,7 @@ from collections import defaultdict
 import itertools
 
 from odoo import api, fields, models, Command
+from odoo.addons.mail.tools.discuss import Store
 
 
 class Followers(models.Model):
@@ -511,13 +512,19 @@ GROUP BY fol.id%s%s""" % (
 
         return new, update
 
-    def _format_for_chatter(self):
-        return [{
-            'id': follower.id,
-            'partner_id': follower.partner_id.id,
-            'name': follower.name,
-            'display_name': follower.display_name,
-            'email': follower.email,
-            'is_active': follower.is_active,
-            'partner': follower.partner_id.mail_partner_format()[follower.partner_id],
-        } for follower in self]
+    def _to_store(self, store: Store):
+        store.add("Persona", list(self.partner_id.mail_partner_format().values()))
+        for follower in self:
+            store.add(
+                "Follower",
+                {
+                    "display_name": follower.display_name,
+                    "email": follower.email,
+                    "id": follower.id,
+                    "is_active": follower.is_active,
+                    "name": follower.name,
+                    "partner_id": follower.partner_id.id,
+                    "partner": {"id": follower.partner_id.id, "type": "partner"},
+                    "thread": {"id": follower.res_id, "model": follower.res_model},
+                },
+        )

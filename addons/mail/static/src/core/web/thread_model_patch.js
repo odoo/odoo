@@ -29,35 +29,20 @@ patch(Thread.prototype, {
         super.leave(...arguments);
     },
     async loadMoreFollowers() {
-        const followers = await this.store.env.services.orm.call(
-            this.model,
-            "message_get_followers",
-            [[this.id], this.followers.at(-1).id]
-        );
-        Record.MAKE_UPDATE(() => {
-            for (const data of followers) {
-                const follower = this.store.Follower.insert({
-                    thread: this,
-                    ...data,
-                });
-                if (follower.notEq(this.selfFollower)) {
-                    this.followers.add(follower);
-                }
-            }
-        });
+        const data = await this.store.env.services.orm.call(this.model, "message_get_followers", [
+            [this.id],
+            this.followers.at(-1).id,
+        ]);
+        this.store.insert(data);
     },
     async loadMoreRecipients() {
-        const recipients = await this.store.env.services.orm.call(
+        const data = await this.store.env.services.orm.call(
             this.model,
             "message_get_followers",
             [[this.id], this.recipients.at(-1).id],
             { filter_recipients: true }
         );
-        Record.MAKE_UPDATE(() => {
-            for (const data of recipients) {
-                this.recipients.add({ thread: this, ...data });
-            }
-        });
+        this.store.insert(data);
     },
     open(replaceNewMessageChatWindow, options) {
         if (!this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {

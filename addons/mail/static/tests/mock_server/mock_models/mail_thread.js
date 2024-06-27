@@ -19,13 +19,43 @@ export class MailThread extends models.ServerModel {
      * @param {number} [limit=100]
      * @param {boolean} [filter_recipients]
      */
-    message_get_followers(ids, after, limit = 100, filter_recipients) {
-        const kwargs = getKwArgs(arguments, "ids", "after", "limit");
+    message_get_followers(ids, after, limit, filter_recipients) {
+        const kwargs = getKwArgs(arguments, "ids", "after", "limit", "filter_recipients");
         ids = kwargs.ids;
-        delete kwargs.ids;
         after = kwargs.after || 0;
         limit = kwargs.limit || 100;
-        filter_recipients = kwargs.filter_recipients;
+        filter_recipients = kwargs.filter_recipients || false;
+        /** @type {import("mock_models").MailThread} */
+        const MailThread = this.env["mail.thread"];
+
+        const store = new mailDataHelpers.Store();
+        MailThread._message_followers_to_store.call(
+            this,
+            ids,
+            store,
+            after,
+            limit,
+            filter_recipients
+        );
+        return store.get_result();
+    }
+
+    _message_followers_to_store(ids, store, after, limit, filter_recipients, reset) {
+        const kwargs = getKwArgs(
+            arguments,
+            "ids",
+            "store",
+            "after",
+            "limit",
+            "filter_recipients",
+            "reset"
+        );
+        ids = kwargs.ids;
+        store = kwargs.store;
+        after = kwargs.after || 0;
+        limit = kwargs.limit || 100;
+        filter_recipients = kwargs.filter_recipients || false;
+        reset = kwargs.reset || false;
 
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
@@ -39,13 +69,19 @@ export class MailThread extends models.ServerModel {
             domain.push(["id", ">", after]);
         }
         if (filter_recipients) {
-            domain.push(["partner_id", "!=", this.env.user.partner_id]);
+            // not implemented for simplicity
         }
         const followers = MailFollowers._filter(domain).sort(
             (f1, f2) => (f1.id < f2.id ? -1 : 1) // sorted from lowest ID to highest ID (i.e. from oldest to youngest)
         );
         followers.length = Math.min(followers.length, limit);
-        return MailFollowers._format_for_chatter(followers.map((follower) => follower.id));
+        store.add(followers.map((follower) => follower.id));
+        let followers_data = followers.map((follower) => ({ id: follower.id }));
+        if (!reset) {
+            followers_data = [["ADD", followers_data]];
+        }
+        const relation = filter_recipients ? "recipients" : "followers";
+        store.add("Thread", { id: ids[0], model: this._name, [relation]: followers_data });
     }
 
     /** @param {number[]} ids */
@@ -184,12 +220,12 @@ export class MailThread extends models.ServerModel {
         if (!partner_ids.length) {
             return true;
         }
-        const followers = MailFollowers._filter([
+        const followers = MailFollowers.search([
             ["res_model", "=", this._name],
             ["res_id", "in", ids],
             ["partner_id", "in", partner_ids],
         ]);
-        MailFollowers.unlink(followers.map((follower) => follower.id));
+        MailFollowers.unlink(followers);
     }
 
     /**
@@ -608,20 +644,23 @@ export class MailThread extends models.ServerModel {
                 ["res_model", "=", this._name],
             ];
             res["followersCount"] = (thread.message_follower_ids || []).length;
-            const selfFollower = MailFollowers.search_read(
+            const selfFollowerIds = MailFollowers.search(
                 domain.concat([["partner_id", "=", this.env.user.partner_id]])
-            )[0];
-            res["selfFollower"] = selfFollower
-                ? MailFollowers._format_for_chatter(selfFollower.id)[0]
-                : false;
-            res["followers"] = MailThread.message_get_followers.call(this, [id]);
-            res["recipientsCount"] = (thread.message_follower_ids || []).length - 1;
-            res["recipients"] = MailThread.message_get_followers.call(
+            );
+            store.add(selfFollowerIds);
+            res["selfFollower"] = selfFollowerIds.length ? { id: selfFollowerIds[0] } : false;
+            MailThread._message_followers_to_store.call(
                 this,
                 [id],
-                undefined,
-                100,
-                makeKwArgs({ filter_recipients: true })
+                store,
+                makeKwArgs({ reset: true })
+            );
+            res["recipientsCount"] = (thread.message_follower_ids || []).length - 1;
+            MailThread._message_followers_to_store.call(
+                this,
+                [id],
+                store,
+                makeKwArgs({ filter_recipients: true, reset: true })
             );
         }
         if (request_list.includes("suggestedRecipients")) {

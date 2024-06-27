@@ -631,26 +631,9 @@ patch(MockServer.prototype, {
             }
         }
         if (request_list.includes("followers")) {
-            const domain = [
-                ["res_id", "=", thread.id],
-                ["res_model", "=", thread_model],
-            ];
             res["followersCount"] = (thread.message_follower_ids || []).length;
-            const selfFollower = this.pyEnv["mail.followers"].search_read(
-                domain.concat([["partner_id", "=", this.pyEnv.currentPartnerId]])
-            )[0];
-            res["selfFollower"] = selfFollower
-                ? this._mockMailFollowers_FormatForChatter(selfFollower.id)[0]
-                : false;
-            res["followers"] = this._mockMailThreadMessageGetFollowers(thread_model, [thread_id]);
+            res["selfFollower"] = false;
             res["recipientsCount"] = (thread.message_follower_ids || []).length - 1;
-            res["recipients"] = this._mockMailThreadMessageGetFollowers(
-                thread_model,
-                [thread_id],
-                undefined,
-                100,
-                { filter_recipients: true }
-            );
         }
         if (request_list.includes("suggestedRecipients")) {
             res["suggestedRecipients"] = this._mockMailThread_MessageGetSuggestedRecipients(
