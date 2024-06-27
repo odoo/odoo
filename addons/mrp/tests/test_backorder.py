@@ -937,7 +937,7 @@ class TestMrpWorkorderBackorder(TransactionCase):
         bo_1 = mo.procurement_group_id.mrp_production_ids - mo
         self.assertRecordValues(bo_1.workorder_ids, [
             {'state': 'cancel', 'qty_remaining': 0.0, 'workcenter_id': op_1.workcenter_id.id},
-            {'state': 'waiting', 'qty_remaining': 6.0, 'workcenter_id': op_2.workcenter_id.id},
+            {'state': 'ready', 'qty_remaining': 6.0, 'workcenter_id': op_2.workcenter_id.id},
         ])
         with Form(bo_1) as form_bo_1:
             form_bo_1.qty_producing = 2
@@ -951,7 +951,7 @@ class TestMrpWorkorderBackorder(TransactionCase):
         bo_2 = mo.procurement_group_id.mrp_production_ids - mo - bo_1
         self.assertRecordValues(bo_2.workorder_ids, [
             {'state': 'cancel', 'qty_remaining': 0.0, 'workcenter_id': op_1.workcenter_id.id},
-            {'state': 'waiting', 'qty_remaining': 4.0, 'workcenter_id': op_2.workcenter_id.id},
+            {'state': 'ready', 'qty_remaining': 4.0, 'workcenter_id': op_2.workcenter_id.id},
         ])
         op_6 = bo_2.workorder_ids.filtered(lambda wo: wo.state != 'cancel')
         with Form(bo_2) as form_bo_2:
