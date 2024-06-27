@@ -128,6 +128,13 @@ This module provides the core of the Odoo Web Client.
             # Don't include dark mode files in light mode
             ('remove', 'web/static/src/**/*.dark.scss'),
         ],
+        'web.assets_backend_lazy': [
+            ('include', 'web._assets_helpers'),
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
+        ],
         'web.assets_web': [
             ('include', 'web.assets_backend'),
             'web/static/src/main.js',
@@ -422,6 +429,7 @@ This module provides the core of the Odoo Web Client.
             # Assets for features to test (views, services, fields, ...)
             # Typically includes most files in 'web.web.assets_backend'
             ('include', 'web.assets_backend'),
+            ('include', 'web.assets_backend_lazy'),
 
             'web/static/src/public/public_component_service.js',
             'web/static/src/webclient/clickbot/clickbot.js',
@@ -435,6 +443,7 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.tests_assets': [
             ('include', 'web.assets_backend'),
+            ('include', 'web.assets_backend_lazy'),
 
             'web/static/src/public/public_component_service.js',
             'web/static/tests/legacy/patch_translations.js',
