@@ -10,14 +10,15 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         invoice = self.move_id
         included_taxes = self.tax_ids.filtered('tax_group_id.l10n_ar_vat_afip_code') if self.move_id._l10n_ar_include_vat() else False
+        price_digits = 10**self.env['decimal.precision'].precision_get('Product Price')
         if not included_taxes:
-            price_unit = self.tax_ids.with_context(round=False).compute_all(
-                self.price_unit, invoice.currency_id, 1.0, self.product_id, invoice.partner_id)
-            price_unit = price_unit['total_excluded']
+            price_unit = self.tax_ids.compute_all(
+                self.price_unit * price_digits, invoice.currency_id, 1.0, self.product_id, invoice.partner_id)
+            price_unit = price_unit['total_excluded'] / price_digits
             price_subtotal = self.price_subtotal
         else:
             price_unit = included_taxes.compute_all(
-                self.price_unit, invoice.currency_id, 1.0, self.product_id, invoice.partner_id)['total_included']
+                self.price_unit * price_digits, invoice.currency_id, 1.0, self.product_id, invoice.partner_id)['total_included'] / price_digits
             price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
             price_subtotal = included_taxes.compute_all(
                 price, invoice.currency_id, self.quantity, self.product_id, invoice.partner_id)['total_included']
