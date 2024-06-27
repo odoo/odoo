@@ -2152,6 +2152,15 @@ class BaseModel(metaclass=MetaModel):
                             value, format=gb['display_format'],
                             locale=locale
                         )
+                    granularity = gb['granularity']
+                    # special case weeks because babel is broken *and*
+                    # ubuntu reverted a change so it's also inconsistent
+                    if granularity == 'week':
+                        year, week = date_utils.weeknumber(
+                            babel.Locale.parse(locale),
+                            value,
+                        )
+                        label = f"W{week} {year:04}"
                     data[gb['groupby']] = ('%s/%s' % (range_start, range_end), label)
                     data.setdefault('__range', {})[gb['groupby']] = {'from': range_start, 'to': range_end}
                     d = [
