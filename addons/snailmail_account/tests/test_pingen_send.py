@@ -78,4 +78,3 @@ class TestPingenSend(HttpCase):
         self.render_and_send('external_layout_standard')
         self.render_and_send('external_layout_striped')
         self.render_and_send('external_layout_boxed')
-        self.render_and_send('external_layout_bold')
