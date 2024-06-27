@@ -829,7 +829,7 @@ test("Opening thread with needaction messages should mark all messages of thread
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]);
-    await click("button", { text: "Inbox" });
+    await click("a", { text: "Inbox" });
     await contains("h4", { text: "Your inbox is empty" });
     const messageId = pyEnv["mail.message"].create({
         author_id: partnerId,
@@ -848,10 +848,10 @@ test("Opening thread with needaction messages should mark all messages of thread
     const [formattedMessage] = pyEnv["mail.message"]._message_format(messageId, true);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", formattedMessage);
-    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
+    await contains("a", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await click("button", { text: "General" });
     await contains(".o-discuss-badge", { count: 0 });
-    await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
+    await contains("a", { text: "Inbox", contains: [".badge", { count: 0 }] });
     await assertSteps(["mark-all-messages-as-read"]);
 });
 
@@ -861,7 +861,7 @@ test("[technical] Opening thread without needaction messages should not mark all
     onRpc("mail.message", "mark_all_as_read", () => step("mark-all-messages-as-read"));
     await start();
     await openDiscuss(channelId);
-    await click("button", { text: "Inbox" });
+    await click("a", { text: "Inbox" });
     await rpc("/mail/message/post", {
         post_data: {
             body: "Hello world!",

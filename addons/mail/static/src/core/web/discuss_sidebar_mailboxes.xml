@@ -16,13 +16,11 @@
     </t>
 
     <t t-name="mail.Mailbox">
-        <button
-            class="o-mail-DiscussSidebar-item btn d-flex align-items-center py-1 px-0 mx-2 border-0 rounded-0 fw-normal text-reset"
-            t-att-class="{
-                'bg-inherit': mailbox.notEq(store.discuss.thread),
-                'o-active': mailbox.eq(store.discuss.thread),
-            }"
-            t-on-click="(ev) => this.openThread(ev, mailbox)"
+        <a
+            role="button"
+            t-att-href="mailbox.url"
+            class="o-mail-DiscussSidebar-item d-flex align-items-center py-1 px-0 mx-2 text-reset"
+            t-att-class="{ 'o-active': mailbox.eq(store.discuss.thread) }"
         >
             <ThreadIcon className="'ms-3 me-2 bg-inherit'" thread="mailbox"/>
             <div class="me-2 text-truncate" t-esc="mailbox.name"/>
@@ -33,7 +31,7 @@
                 t-att-class="{ 'o-muted': mailbox.id === 'starred' }"
                 t-esc="mailbox.counter"
             />
-        </button>
+        </a>
     </t>
 
 </templates>

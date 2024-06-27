@@ -73,7 +73,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            trigger: "button:contains(Starred)",
+            trigger: "a:contains(Starred)",
             content: _t(
                 "Once a message has been starred, you can come back and review it at any time here."
             ),

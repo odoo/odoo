@@ -838,14 +838,14 @@ test("toggle_star message", async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo']");
     await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star-o");
-    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
+    await contains("a", { text: "Starred", contains: [".badge", { count: 0 }] });
     await click(".o-mail-Message [title='Mark as Todo']");
-    await contains("button", { text: "Starred", contains: [".badge", { text: "1" }] });
+    await contains("a", { text: "Starred", contains: [".badge", { text: "1" }] });
     await assertSteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star");
     await click(".o-mail-Message [title='Mark as Todo']");
-    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
+    await contains("a", { text: "Starred", contains: [".badge", { count: 0 }] });
     await assertSteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star-o");
@@ -1176,7 +1176,7 @@ test("Toggle star should update starred counter on all tabs", async () => {
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
     await click(".o-mail-Message [title='Mark as Todo']", { target: env1 });
-    await contains("button", {
+    await contains("a", {
         target: env2,
         text: "Starred",
         contains: [".badge", { text: "1" }],
@@ -1806,9 +1806,9 @@ test("Delete starred message decrements starred counter once", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await contains("button", { count: 1, text: "Starred3" });
+    await contains("a", { count: 1, text: "Starred3" });
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Delete']");
     await click("button", { text: "Confirm" });
-    await contains("button", { count: 1, text: "Starred2" });
+    await contains("a", { count: 1, text: "Starred2" });
 });

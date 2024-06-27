@@ -378,7 +378,7 @@ test("unknown livechat can be displayed and interacted with", async () => {
     });
     const env = await start();
     await openDiscuss();
-    await contains("button.o-active", { text: "Inbox" });
+    await contains(".o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await openDiscuss(channelId);
@@ -390,7 +390,7 @@ test("unknown livechat can be displayed and interacted with", async () => {
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { text: "Hello" });
     await waitNotifications([env, "discuss.channel/new_message"]);
-    await click("button", { text: "Inbox" });
+    await click(".o-mail-DiscussSidebar a", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Jane" });
     await click("[title='Unpin Conversation']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "Jane" }],
