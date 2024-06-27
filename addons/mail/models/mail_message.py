@@ -979,15 +979,6 @@ class Message(models.Model):
             else:
                 record_name = False
                 default_subject = False
-            reactions_per_content = defaultdict(self.env['mail.message.reaction'].sudo().browse)
-            for reaction in message_sudo.reaction_ids:
-                reactions_per_content[reaction.content] |= reaction
-            reaction_groups = [{
-                'content': content,
-                'count': len(reactions),
-                'personas': [{'id': guest.id, 'name': guest.name, 'type': "guest"} for guest in reactions.guest_id] + [{'id': partner.id, 'name': partner.name, 'type': "partner"} for partner in reactions.partner_id],
-                'message': {'id': message_sudo.id},
-            } for content, reactions in reactions_per_content.items()]
             vals.update(message_sudo._message_format_extras(format_reply))
             vals.pop("starred_partner_ids", None)
             vals.update({
@@ -996,7 +987,7 @@ class Message(models.Model):
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachments': sorted(message_sudo.attachment_ids._attachment_format(), key=lambda a: a["id"]),
                 'linkPreviews': message_sudo.link_preview_ids.filtered(lambda preview: not preview.is_hidden)._link_preview_format(),
-                'reactions': reaction_groups,
+                'reactions': message_sudo.reaction_ids._reaction_groups().get(message_sudo.id, []),
                 'pinned_at': message_sudo.pinned_at,
                 'record_name': record_name,
                 'create_date': message_sudo.create_date,
