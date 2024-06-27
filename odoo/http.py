@@ -1568,7 +1568,16 @@ class Request:
         }
         return params
 
+    def get_json_params(self):
+        params = {
+            **self.httprequest.args,
+            **self.get_json_data(),
+        }
+        return params
+
     def get_json_data(self):
+        if not self.httprequest.content_length:
+            return {}
         return json.loads(self.httprequest.get_data(as_text=True))
 
     def _get_profiler_context_manager(self):
@@ -1974,6 +1983,9 @@ class HttpDispatcher(Dispatcher):
     def is_compatible_with(cls, request):
         return True
 
+    def _get_params(self, args):
+        return dict(self.request.get_http_params(), **args)
+
     def dispatch(self, endpoint, args):
         """
         Perform http-related actions such as deserializing the request
@@ -1983,7 +1995,7 @@ class HttpDispatcher(Dispatcher):
         See :meth:`~odoo.http.Response.load` method for the compatible
         endpoint return types.
         """
-        self.request.params = dict(self.request.get_http_params(), **args)
+        self.request.params = self._get_params(args)
 
         # Check for CSRF token for relevant requests
         if self.request.httprequest.method not in CSRF_FREE_METHODS and endpoint.routing.get('csrf', True):
