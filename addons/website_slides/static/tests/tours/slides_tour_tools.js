@@ -55,23 +55,34 @@ var addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
     trigger: prefix + 'div.o_w_slide_upload_modal_container',
     run: "click",
 }];
-	if (saveAsDraft) {
-		base_steps = [].concat(base_steps, [{
-    content: 'eLearning: save as draft slide',
-    extra_trigger: prefix + 'div.o_slide_preview img:not([src="/website_slides/static/src/img/document.png"])',  // wait for onchange to perform its duty
-    trigger: prefix + 'footer.modal-footer button:contains("Save as Draft")',
-    run: "click",
-}]);
-	}
-	else {
-		base_steps = [].concat(base_steps, [{
-    content: 'eLearning: create and publish slide',
-    extra_trigger: prefix + 'div.o_slide_preview img:not([src="/website_slides/static/src/img/document.png"])',  // wait for onchange to perform its duty
-    trigger: prefix + 'footer.modal-footer button:contains("Publish")',
-    run: "click",
-}]);
-	}
-	return base_steps;
+    if (saveAsDraft) {
+        base_steps = [].concat(base_steps, [
+            {
+                trigger:
+                    prefix +
+                    'div.o_slide_preview img:not([src="/website_slides/static/src/img/document.png"])', // wait for onchange to perform its duty
+            },
+            {
+                content: "eLearning: save as draft slide",
+                trigger: prefix + 'footer.modal-footer button:contains("Save as Draft")',
+                run: "click",
+            },
+        ]);
+    } else {
+        base_steps = [].concat(base_steps, [
+            {
+                trigger:
+                    prefix +
+                    'div.o_slide_preview img:not([src="/website_slides/static/src/img/document.png"])', // wait for onchange to perform its duty
+            },
+            {
+                content: "eLearning: create and publish slide",
+                trigger: prefix + 'footer.modal-footer button:contains("Publish")',
+                run: "click",
+            },
+        ]);
+    }
+    return base_steps;
 };
 
 var addArticleToSection = function (sectionName, pageName, backend) {

@@ -78,9 +78,8 @@
     {
         trigger: '.o_field_widget[name=participants] .o_data_cell:contains(/^Mitchell Admin$/)',
     },
-    ...stepUtils.saveForm({
-        content: "save discussion",
-    }), { // add message a
+    ...stepUtils.saveForm(),
+    { // add message a
         content: "Select First Tab",
         trigger: '.o_notebook_headers .nav-item a:contains(Messages)',
         run: "click",
@@ -471,9 +470,8 @@
     {
         trigger: 'body:not(:has(tr:has(td:contains(/^d$/))))',
     },
-    ...stepUtils.saveForm({ // save
-        content: "save discussion",
-    }), { // check saved data
+    ...stepUtils.saveForm(),
+    { // check saved data
         content: "check data 10",
         trigger: '.o_field_widget[name=message_concat] textarea:value([test_trigger2] Mitchell Admin:aaa\n[test_trigger2] Marc Demo:ccccc)',
     },
@@ -499,9 +497,8 @@
     {
         trigger: '.o_field_widget[name="body"] textarea:value(eee)',
     },
-    ...stepUtils.saveForm({ // save
-        content: "save discussion",
-    }), { // check saved data
+    ...stepUtils.saveForm(),
+    { // check saved data
         content: "check data 12",
         trigger: '.o_field_widget[name="message_concat"] textarea:value([test_trigger2] Mitchell Admin:aaa\n[test_trigger2] Marc Demo:ccccc\n[test_trigger2] Mitchell Admin:eee)',
     },
