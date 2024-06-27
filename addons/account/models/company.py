@@ -775,6 +775,18 @@ class ResCompany(models.Model):
             'printing_date': format_date(self.env, fields.Date.context_today(self)),
         }
 
+    @api.model
+    def _with_locked_records(self, records):
+        """ To avoid sending the same records multiple times from different transactions,
+        we use this generic method to lock the records passed as parameter.
+
+        :param records: The records to lock.
+        """
+        self._cr.execute(f'SELECT * FROM {records._table} WHERE id IN %s FOR UPDATE SKIP LOCKED', [tuple(records.ids)])
+        available_ids = {r[0] for r in self._cr.fetchall()}
+        if available_ids != set(records.ids):
+            raise UserError(_("Some documents are being sent by another process already."))
+
     def compute_fiscalyear_dates(self, current_date):
         """
         The role of this method is to provide a fallback when account_accounting is not installed.
