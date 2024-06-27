@@ -187,5 +187,10 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
 }, {
     trigger: 'button:contains("Confirm")',  // apply the matrix
     run: "click",
-}, ...stepUtils.saveForm('.o_field_cell.o_data_cell.o_list_number:contains("8.20")'),
-]});
+        },
+        {
+            trigger: ".o_field_cell.o_data_cell.o_list_number:contains(8.20)",
+        },
+        ...stepUtils.saveForm(),
+    ],
+});
