@@ -132,6 +132,11 @@ class AccountEdiFormat(models.Model):
         access_data = self._l10n_eg_eta_get_access_token(invoice)
         if access_data.get('error'):
             return access_data
+        # Check current status. It may already be cancelled or rejected.
+        if invoice.l10n_eg_submission_number:
+            document_summary = self._l10n_eg_get_einvoice_document_summary(invoice)
+            if document_summary and document_summary[0].get('status') in ('Cancelled', 'Rejected'):
+                return {'success': True}
         request_url = f'/api/v1/documents/state/{url_quote(invoice.l10n_eg_uuid)}/state'
         request_data = {
             'body': json.dumps({'status': 'cancelled', 'reason': 'Cancelled'}),
@@ -148,7 +153,7 @@ class AccountEdiFormat(models.Model):
         }
 
     @api.model
-    def _l10n_eg_get_einvoice_status(self, invoice):
+    def _l10n_eg_get_einvoice_document_summary(self, invoice):
         access_data = self._l10n_eg_eta_get_access_token(invoice)
         if access_data.get('error'):
             return access_data
@@ -162,6 +167,11 @@ class AccountEdiFormat(models.Model):
             return response_data
         response_data = response_data.get('response').json()
         document_summary = [doc for doc in response_data.get('documentSummary', []) if doc.get('uuid') == invoice.l10n_eg_uuid]
+        return document_summary
+
+    @api.model
+    def _l10n_eg_get_einvoice_status(self, invoice):
+        document_summary = self._l10n_eg_get_einvoice_document_summary(invoice)
         return_dict = {
             'Invalid': {
                 'error': _("This invoice has been marked as invalid by the ETA. Please check the ETA website for more information"),
