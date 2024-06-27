@@ -28,7 +28,7 @@ test("Width cannot exceed viewport width", async () => {
     queryOne(".o_resizable_panel").style.width = `${vw + 100}px`;
 
     const sidepanelWidth = queryOne(".o_resizable_panel").getBoundingClientRect().width;
-    expect(sidepanelWidth).toBeWithin(vw * 0.95, vw + 1);
+    expect(sidepanelWidth).toBeWithin(vw * 0.95, vw);
 });
 
 test("handles right-to-left", async () => {
