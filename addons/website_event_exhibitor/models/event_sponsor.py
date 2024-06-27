@@ -135,7 +135,7 @@ class Sponsor(models.Model):
                     room_name = "odoo-exhibitor-%s" % sponsor.name
                 else:
                     room_name = self.env['chat.room']._default_name(objname='exhibitor')
-                sponsor.room_name = self._jitsi_sanitize_name(room_name)
+                sponsor.room_name = self._sanitize_name(room_name)
             if sponsor.exhibitor_type == 'online' and not sponsor.room_max_capacity:
                 sponsor.room_max_capacity = '8'
 
