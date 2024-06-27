@@ -560,7 +560,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         # Doesn't use default logging mechanism as write on res.config create a new record
         previous_settings = self.search([], order='create_date desc', limit=1)
         res = super().create(vals_list)
-        for record, data in res._get_modified_value(self._res_config_audit_fields, vals_list, {res.id: previous_settings}):
+        for record, data in res._get_modified_value(vals_list, {res.id: previous_settings}):
             _audit_logger.getChild("write").info("Settings modified for %r by user %r (#%d)", data,
                 self.env.user.login, self.env.user.id)
         return res

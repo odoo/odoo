@@ -4414,7 +4414,7 @@ class BaseModel(metaclass=MetaModel):
             if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
                 bad_names.update(LOG_ACCESS_COLUMNS)
 
-        _log_saved_data = self._filtered_audit_records()._save_values_for_log(vals)
+        _log_saved_data = self._save_values_for_log(vals)
 
         # set magic fields
         vals = {key: val for key, val in vals.items() if key not in bad_names}
@@ -4547,8 +4547,8 @@ class BaseModel(metaclass=MetaModel):
             self._check_company()
         if self._audit or self._audit_wo_value:
             _audit_logger_temp = _audit_logger.getChild(f"{self.__class__.__name__}.write")
-            for record, data in self._filtered_audit_records()._get_modified_value(vals, _log_saved_data):
-                _audit_logger_temp.info("%r (#%d) has been modified with %r by user"
+            for record, data in self._get_logging_string(vals, _log_saved_data):
+                _audit_logger_temp.info("%r (#%d) modified with %r by user"
                             " %r (#%d) ", record.display_name, record.id, data,
                             self.env.user.login, self.env.user.id)
         return True
@@ -4768,11 +4768,11 @@ class BaseModel(metaclass=MetaModel):
 
         # logging
         if self._audit or self._audit_wo_value:
-            _temp_audit_logger = _audit_logger.getChild(f"{self.__class__.__name__}.create")
-            _temp_audit_logger.info("%s by user %r (#%d)",
-                ', '.join(f"'{record.display_name}' (#{record.id}) created with '{data}'" for record, data in
-                records._get_modified_value(vals_list, None))
-                                        , self.env.user.login, self.env.user.id)
+            string_to_log = ', '.join(f"'{record.display_name}' (#{record.id}) created with {data}" for record, data in
+                records._get_logging_string(vals_list))
+            if string_to_log:
+                _temp_audit_logger = _audit_logger.getChild(f"{self.__class__.__name__}.create")
+                _temp_audit_logger.info("%s by user %r (#%d)", string_to_log, self.env.user.login, self.env.user.id)
 
         import_module = self.env.context.get('_import_current_module')
         if not import_module: # not an import -> bail
@@ -7020,7 +7020,7 @@ class BaseModel(metaclass=MetaModel):
         """
         saved_data = {}
         if self._audit:
-            for record in self:
+            for record in self._filter_audit_records():
                 _saved_data_by_id = {}
                 fnames = values.keys()
                 if not isinstance(self._audit, bool):
@@ -7065,21 +7065,21 @@ class BaseModel(metaclass=MetaModel):
         else:
             return f"{key}: {past_object[key]!r} ==> {self[key]!r}"
 
-    def _get_modified_value(self, modified_values, before_modification=None):
-        """ For each records generate a string of the field and their values that has get some change.
-        :param dict modified_values: fields to update and the value to set on them (as on create/write)
+    def _get_logging_string(self, vals, before_modification=None):
+        """ For each record generate a string containing the change on required auditing fields.
+        :param dict vals: values for the model's fields, as a list of dictionaries (as used in create/write)
         :param dict before_modification: In order to log previous to new data, a dict {record_id:{fields:values}}
             usually returned by _save_values_for_log()
         :returns: A generator of record, data_to_log where data_to_log is a string with all the data that should be
             logged
         """
-        for index, record in enumerate(self):
+        for index, record in enumerate(self._filter_audit_records()):
             data_to_log = []
-            val = modified_values[index] if isinstance(modified_values, list) else modified_values
-            val_keys = val.keys()
+            vals = vals[index] if isinstance(vals, list) else vals
+            fname = vals.keys()
             if not isinstance(self._audit, bool):
-                val_keys = self._audit & val_keys
-            for key in val_keys:
+                fname = self._audit & fname
+            for key in fname:
                 past_value = None
                 if before_modification:
                     past_value = before_modification[record.id]
@@ -7087,13 +7087,13 @@ class BaseModel(metaclass=MetaModel):
                 if log_formated:
                     data_to_log.append(log_formated)
             if self._audit_wo_value:
-                _wo_value_intersection = self._audit_wo_value & val.keys()
+                _wo_value_intersection = self._audit_wo_value & vals.keys()
                 if _wo_value_intersection:
                     data_to_log.append(f"{', '.join(_wo_value_intersection)!r} set")
             if data_to_log:
                 yield record, ", ".join(data_to_log)
 
-    def _filtered_audit_records(self):
+    def _filter_audit_records(self):
         """This can be used to filter the audited records"""
         return self
 
