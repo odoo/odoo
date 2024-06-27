@@ -304,6 +304,7 @@ Section $(TITLE_IOT) IOT
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "server_wide_modules" "web,hw_posbox_homepage,hw_drivers"
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "list_db" "False"
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "max_cron_threads" "0"
+    CreateShortcut "$DESKTOP\Odoo IoT Box Homepage.lnk" "http://localhost:8069"
     nsExec::ExecToStack '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" genproxytoken'
     pop $0
     pop $ProxyTokenPwd
