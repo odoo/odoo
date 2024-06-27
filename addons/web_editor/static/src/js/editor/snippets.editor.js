@@ -965,7 +965,8 @@ var SnippetEditor = Widget.extend({
                 // TODO: @owl-options remove when legacy is completely converted.
                 this._hasOwlOptions = true;
                 option = Object.assign({}, registry.category("snippet_options").get(optionName));
-                option.instance = new (option.Class || SnippetOption)({
+                const optionClass = option.Class || SnippetOption;
+                option.instance = new (optionClass)({
                     editor: this,
                     $target: val.base_target ? this.$target.find(val.base_target).eq(0) : this.$target,
                     $overlay: this.$el,
@@ -982,9 +983,9 @@ var SnippetEditor = Widget.extend({
                         notifyOptions: (data) => this.trigger_up("option_update", data),
                     }
                 });
-                optionName = (option.Class || SnippetOption).name
+                optionName = (optionClass).name
                 option.isOwl = true;
-                option.renderingComponent ??= SnippetOptionComponent;
+                option.renderingComponent ??= (optionClass).defaultRenderingComponent;
                 option.renderingComponent.components = Object.fromEntries(registry.category("snippet_widgets").getEntries());
             } else {
                 option = new (options.registry[optionName] || options.Class)(

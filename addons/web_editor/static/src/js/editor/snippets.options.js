@@ -3765,6 +3765,13 @@ export class SnippetOption {
      * @type {boolean}
      */
     static forceDuplicateButton = false;
+    /**
+     * Default component to use for rendering.
+     * Can be overridden when registering a snippet option in snippet_options registry.
+     *
+     * @type {Class<SnippetOptionComponent>}
+     */
+    static defaultRenderingComponent = SnippetOptionComponent;
 
     /**
      * The option `$el` is supposed to be the associated DOM UI element.
