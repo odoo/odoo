@@ -849,7 +849,7 @@ class UnfollowUnreadableRecordTest(MailCommon):
 
 
 @tagged('mail_followers', 'post_install', '-at_install')
-class UnfollowFromInboxTest(MailCommon):
+class UnfollowFromInboxTest(MailCommon, HttpCase):
     """ Test unfollow mechanism from inbox (server part). """
 
     @classmethod
@@ -857,17 +857,6 @@ class UnfollowFromInboxTest(MailCommon):
         super().setUpClass()
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test'})
         cls.user_employee.write({'notification_type': 'inbox'})
-
-    def _fetch_inbox_message(self, message_id, user=None):
-        """Fetch the given message similarly to the controller."""
-        MailMessage = self.env["mail.message"].with_user(user) if user else self.env["mail.message"]
-        messages = MailMessage._message_fetch(domain=[("needaction", "=", True)])["messages"]
-        return list(
-            filter(
-                lambda m: m["id"] == message_id,
-                messages._message_format(for_current_user=True, add_followers=True),
-            )
-        )
 
     @users('employee')
     @mute_logger('odoo.models')
@@ -879,18 +868,21 @@ class UnfollowFromInboxTest(MailCommon):
         tested in the client part.
         """
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
-        message = test_record.with_user(self.user_admin).message_post(
+        test_record.with_user(self.user_admin).message_post(
             body='test message', subtype_id=self.env.ref('mail.mt_comment').id, partner_ids=self.partner_employee.ids)
 
         # The user doesn't follow the record
-        messages = self._fetch_inbox_message(message.id)
+        self.authenticate(self.env.user.login, self.env.user.login)
+        data = self.make_jsonrpc_request("/mail/inbox/messages")["data"]
+        messages = data["Message"]
         self.assertEqual(len(messages), 1)
         self.assertFalse(messages[0].get('thread').get('selfFollower'))
         self.assertFalse('follower_id_by_partner_id' in messages[0])
 
         # The user follows the record
         test_record._message_subscribe(partner_ids=self.partner_employee.ids)
-        messages = self._fetch_inbox_message(message.id)
+        data = self.make_jsonrpc_request("/mail/inbox/messages")["data"]
+        messages = data["Message"]
         self.assertEqual(len(messages), 1)
         follower_id = messages[0]['thread']['selfFollower']['id']
         self.assertTrue(follower_id)
@@ -902,7 +894,8 @@ class UnfollowFromInboxTest(MailCommon):
 
         # The user doesn't follow the record anymore
         test_record.message_unsubscribe(partner_ids=self.partner_employee.ids)
-        messages = self._fetch_inbox_message(message.id)
+        data = self.make_jsonrpc_request("/mail/inbox/messages")["data"]
+        messages = data["Message"]
         self.assertFalse(messages[0].get('thread').get('selfFollower'))
 
 

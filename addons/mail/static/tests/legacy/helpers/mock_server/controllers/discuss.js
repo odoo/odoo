@@ -74,7 +74,7 @@ patch(MockServer.prototype, {
             return this._mockRouteMailMessageHistory(search_term, after, before, limit);
         }
         if (route === "/mail/inbox/messages") {
-            return { count: 0, messages: [] };
+            return { count: 0, data: {}, message: [] };
         }
         if (route === "/mail/link_preview") {
             return this._mockRouteMailLinkPreview(args.message_id);
@@ -251,7 +251,12 @@ patch(MockServer.prototype, {
         }
         return {
             ...res,
-            messages: this._mockMailMessageMessageFormat(res.messages.map((message) => message.id)),
+            data: {
+                Message: this._mockMailMessageMessageFormat(
+                    res.messages.map((message) => message.id)
+                ),
+            },
+            message: res.messages.map((message) => ({ id: message.id })),
         };
     },
     /**
@@ -360,9 +365,12 @@ patch(MockServer.prototype, {
 
         return {
             ...res,
-            messages: this._mockMailMessageMessageFormat(
-                messagesWithNotification.map((message) => message.id)
-            ),
+            data: {
+                Message: this._mockMailMessageMessageFormat(
+                    messagesWithNotification.map((message) => message.id)
+                ),
+            },
+            message: res.messages.map((message) => ({ id: message.id })),
         };
     },
     /**
@@ -388,7 +396,12 @@ patch(MockServer.prototype, {
         );
         return {
             ...res,
-            messages: this._mockMailMessageMessageFormat(res.messages.map((message) => message.id)),
+            data: {
+                Message: this._mockMailMessageMessageFormat(
+                    res.messages.map((message) => message.id)
+                ),
+            },
+            message: res.messages.map((message) => ({ id: message.id })),
         };
     },
     /**
@@ -649,7 +662,12 @@ patch(MockServer.prototype, {
         this._mockMailMessageSetMessageDone(res.messages.map((message) => message.id));
         return {
             ...res,
-            messages: this._mockMailMessageMessageFormat(res.messages.map((message) => message.id)),
+            data: {
+                Message: this._mockMailMessageMessageFormat(
+                    res.messages.map((message) => message.id)
+                ),
+            },
+            message: res.messages.map((message) => ({ id: message.id })),
         };
     },
 });

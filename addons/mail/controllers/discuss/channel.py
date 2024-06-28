@@ -62,9 +62,15 @@ class ChannelController(http.Controller):
         res = request.env["mail.message"]._message_fetch(
             domain, search_term=search_term, before=before, after=after, around=around, limit=limit
         )
+        messages = res.pop("messages")
         if not request.env.user._is_public() and not around:
-            res["messages"].set_message_done()
-        return {**res, "messages": res["messages"]._message_format(for_current_user=True)}
+            messages.set_message_done()
+        return {
+            **res,
+            "data": Store("Message", messages._message_format(for_current_user=True)).get_result(),
+            "messages": [{"id": message.id} for message in messages],
+        }
+
 
     @http.route("/discuss/channel/pinned_messages", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
