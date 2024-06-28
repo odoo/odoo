@@ -100,16 +100,16 @@ export class ColorPalette extends Component {
             this.$ = $el.find.bind($el);
 
             $el.on('click', '.o_we_color_btn', this._onColorButtonClick.bind(this));
-            $el.on('mouseenter', '.o_we_color_btn', this._onColorButtonEnter.bind(this));
-            $el.on('mouseleave', '.o_we_color_btn', this._onColorButtonLeave.bind(this));
+            $el.on('mouseenter', '.o_we_color_btn:not(.o_custom_gradient_btn):not(.selected)', this._onColorButtonEnter.bind(this));
+            $el.on('mouseleave', '.o_we_color_btn:not(.o_custom_gradient_btn):not(.selected)', this._onColorButtonLeave.bind(this));
 
             $el.on('click', '.o_custom_gradient_editor .o_custom_gradient_btn', this._onGradientCustomButtonClick.bind(this));
             $el.on('click', '.o_custom_gradient_editor', this._onPanelClick.bind(this));
             $el.on('change', '.o_custom_gradient_editor input[type="text"]', this._onGradientInputChange.bind(this));
             $el.on('keypress', '.o_custom_gradient_editor input[type="text"]', this._onGradientInputKeyPress.bind(this));
             $el.on('click', '.o_custom_gradient_editor we-button:not(.o_remove_color)', this._onGradientButtonClick.bind(this));
-            $el.on('mouseenter', '.o_custom_gradient_editor we-button:not(.o_remove_color)', this._onGradientButtonEnter.bind(this));
-            $el.on('mouseleave', '.o_custom_gradient_editor we-button:not(.o_remove_color)', this._onGradientButtonLeave.bind(this));
+            $el.on('mouseenter', '.o_custom_gradient_editor we-button:not(.o_remove_color):not(.active)', this._onGradientButtonEnter.bind(this));
+            $el.on('mouseleave', '.o_custom_gradient_editor we-button:not(.o_remove_color):not(.active)', this._onGradientButtonLeave.bind(this));
 
             $el.on('click', '.o_custom_gradient_scale', this._onGradientPreviewClick.bind(this));
             // Note: _onGradientSliderClick on slider is attached at slider creation.
