@@ -7,6 +7,12 @@
     <t t-call-assets="website.assets_editor" t-js="false"/>
 </template>
 
+<template id="iframe_css_assets_edit_no_website" inherit_id="mass_mailing.iframe_css_assets_edit" name="Remove website style from mailing">
+    <xpath expr="//t[@t-call-assets='web.assets_frontend']" position="attributes">
+        <attribute name="t-exclude">/website</attribute>
+    </xpath>
+</template>
+
 <template id="remove_external_snippets" inherit_id="website.external_snippets">
     <xpath expr="//t[@id='newsletter_snippet']" position="replace"/>
     <xpath expr="//t[@id='newsletter_popup_snippet']" position="replace"/>
