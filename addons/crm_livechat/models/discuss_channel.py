@@ -18,6 +18,18 @@ class DiscussChannel(models.Model):
             msg = _('Created a new lead: %s', lead._get_html_link())
         self._send_transient_message(partner, msg)
 
+    def get_crm_lead_vals(self, partner, key, customers):
+        utm_source = self.env.ref('crm_livechat.utm_source_livechat', raise_if_not_found=False)
+        return {
+            'name': html2plaintext(key[5:]),
+            'partner_id': customers[0].id if customers else False,
+            'user_id': False,
+            'team_id': False,
+            'description': self._get_channel_history(),
+            'referred': partner.name,
+            'source_id': utm_source and utm_source.id,
+        }
+
     def _convert_visitor_to_lead(self, partner, key):
         """ Create a lead from channel /lead command
         :param partner: internal user partner (operator) that created the lead;
@@ -33,14 +45,5 @@ class DiscussChannel(models.Model):
                 break
             else:
                 customers |= customer
-
-        utm_source = self.env.ref('crm_livechat.utm_source_livechat', raise_if_not_found=False)
-        return self.env['crm.lead'].create({
-            'name': html2plaintext(key[5:]),
-            'partner_id': customers[0].id if customers else False,
-            'user_id': False,
-            'team_id': False,
-            'description': self._get_channel_history(),
-            'referred': partner.name,
-            'source_id': utm_source and utm_source.id,
-        })
+        vals = self.get_crm_lead_vals(partner, key, customers)
+        return self.env['crm.lead'].create(vals)
