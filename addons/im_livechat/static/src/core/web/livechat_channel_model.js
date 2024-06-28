@@ -13,8 +13,8 @@ export class LivechatChannel extends Record {
         compute() {
             return {
                 extraClass: "o-mail-DiscussSidebarCategory-livechat",
+                hideWhenEmpty: !this.hasSelfAsMember,
                 id: `im_livechat.category_${this.id}`,
-                livechatChannel: this,
                 name: this.name,
                 sequence: 22,
             };
