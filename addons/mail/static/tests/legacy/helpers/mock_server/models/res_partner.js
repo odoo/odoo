@@ -227,11 +227,13 @@ patch(MockServer.prototype, {
         const resultPartners = matchingPartners.filter(
             (partner) => !excluded_ids.includes(partner.id)
         );
-        return [
-            ...this._mockResPartnerMailPartnerFormat(
-                resultPartners.map((partner) => partner.id)
-            ).values(),
-        ];
+        return {
+            Persona: [
+                ...this._mockResPartnerMailPartnerFormat(
+                    resultPartners.map((partner) => partner.id)
+                ).values(),
+            ],
+        };
     },
     /**
      * Simulates `mail_partner_format` on `res.partner`.
