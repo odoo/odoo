@@ -23,7 +23,7 @@
                             <t t-call="portal.user_dropdown">
                                 <t t-set="_user_name" t-value="true"/>
                                 <t t-set="_item_class" t-value="'nav-item dropdown'"/>
-                                <t t-set="_link_class" t-value="'nav-link'"/>
+                                <t t-set="_link_class" t-value="'btn nav-link'"/>
                                 <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-end'"/>
                             </t>
                         </ul>
@@ -82,7 +82,7 @@
             <t t-set="language_selector_visible" t-value="len(frontend_languages) &gt; 1"/>
             <div t-attf-class="js_language_selector #{_div_classes} d-print-none" t-if="language_selector_visible">
                <t t-set="active_lang" t-value="frontend_languages[lang]"/>
-                <button t-attf-class="btn border-0 dropdown-toggle #{_btn_class or 'btn-sm btn-outline-secondary'}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <button t-attf-class="border-0 dropdown-toggle #{_btn_class or 'btn btn-sm btn-outline-secondary'}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <span t-if="not no_text"
                             t-attf-class="#{_txt_class}"
                             t-esc="active_lang.name.split('/').pop()"/>
@@ -117,7 +117,7 @@
            t-nocache-_dropdown_menu_class="_dropdown_menu_class">
             <t t-set="is_connected" t-value="not user_id._is_public()"/>
             <li t-if="is_connected" t-attf-class="#{_item_class} o_no_autohide_item">
-                <a href="#" role="button" data-bs-toggle="dropdown" t-attf-class="#{'' if _no_caret else 'dropdown-toggle'} btn #{_link_class}">
+                <a href="#" role="button" data-bs-toggle="dropdown" t-attf-class="#{'' if _no_caret else 'dropdown-toggle'} #{_link_class}">
                     <t t-if="_avatar">
                         <t t-set="avatar_source" t-value="image_data_uri(user_id.avatar_256)"/>
                         <img t-att-src="avatar_source" t-attf-class="rounded-circle o_object_fit_cover #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
