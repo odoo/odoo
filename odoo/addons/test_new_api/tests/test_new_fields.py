@@ -1700,14 +1700,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
                                 with self.assertQueriesContain(expected_contained_sqls):
                                     Model.search([('id', 'in', records.ids)] + domain)
 
-                    # TODO complement of dates, child_of and parent_of are not working correctly, skip for now
-                    test_complement = "date" not in field.type and operator not in ['child_of', 'parent_of']
                     with self.subTest(domain=domain, default=default):
                         self._search(
                             Model,
                             [('id', 'in', records.ids)] + domain,
                             [('id', 'in', records.ids)],
-                            test_complement=test_complement,
+                            test_complement=True,
                         )
 
         # boolean fields
