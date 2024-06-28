@@ -381,6 +381,14 @@
                         </t>
                     </ul>
                     <ul class="navbar-nav gap-2 mt-3 w-100">
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_btn_class" t-valuef="nav-link d-flex align-items-center w-100 px-2"/>
+                            <t t-set="_txt_class" t-valuef="me-auto small"/>
+                            <t t-set="_flag_class" t-valuef="me-2"/>
+                            <t t-set="_div_classes" t-valuef="dropup"/>
+                            <t t-set="_dropdown_menu_class" t-valuef="w-100"/>
+                        </t>
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
                             <t t-set="_link_class" t-valuef="btn btn-outline-secondary w-100"/>
@@ -393,14 +401,6 @@
                             <t t-set="_link_class" t-valuef="btn-outline-secondary d-flex align-items-center border-0 px-2"/>
                             <t t-set="_icon_class" t-valuef="me-2"/>
                             <t t-set="_item_class" t-valuef="dropdown dropup"/>
-                            <t t-set="_dropdown_menu_class" t-valuef="w-100"/>
-                        </t>
-                        <!-- Language Selector -->
-                        <t t-call="website.placeholder_header_language_selector">
-                            <t t-set="_btn_class" t-valuef="btn-outline-secondary d-flex align-items-center w-100 px-2"/>
-                            <t t-set="_txt_class" t-valuef="me-auto small"/>
-                            <t t-set="_flag_class" t-valuef="me-2"/>
-                            <t t-set="_div_classes" t-valuef="dropup"/>
                             <t t-set="_dropdown_menu_class" t-valuef="w-100"/>
                         </t>
                         <!-- Call To Action -->
@@ -1345,7 +1345,15 @@
                                 <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast"/>
                             </t>
                         </ul>
-                        <ul class="navbar-nav flex-column gap-2 mt-3 w-100">
+                        <ul class="navbar-nav gap-2 mt-3 w-100">
+                            <!-- Language Selector -->
+                            <t t-call="website.placeholder_header_language_selector">
+                                <t t-set="_btn_class" t-valuef="btn-outline-secondary d-flex align-items-center w-100 px-2"/>
+                                <t t-set="_txt_class" t-valuef="me-auto small"/>
+                                <t t-set="_flag_class" t-valuef="me-2"/>
+                                <t t-set="_div_classes" t-valuef="dropup"/>
+                                <t t-set="_dropdown_menu_class" t-valuef="w-100"/>
+                            </t>
                             <!-- Sign In -->
                             <t t-call="portal.placeholder_user_sign_in">
                                 <t t-set="_link_class" t-valuef="btn btn-outline-secondary w-100"/>
@@ -1358,14 +1366,6 @@
                                 <t t-set="_link_class" t-valuef="btn-outline-secondary d-flex align-items-center border-0 px-2"/>
                                 <t t-set="_icon_class" t-valuef="me-2"/>
                                 <t t-set="_item_class" t-valuef="dropdown dropup"/>
-                                <t t-set="_dropdown_menu_class" t-valuef="w-100"/>
-                            </t>
-                            <!-- Language Selector -->
-                            <t t-call="website.placeholder_header_language_selector">
-                                <t t-set="_btn_class" t-valuef="btn-outline-secondary d-flex align-items-center w-100 px-2"/>
-                                <t t-set="_txt_class" t-valuef="me-auto small"/>
-                                <t t-set="_flag_class" t-valuef="me-2"/>
-                                <t t-set="_div_classes" t-valuef="dropup"/>
                                 <t t-set="_dropdown_menu_class" t-valuef="w-100"/>
                             </t>
                             <!-- Call To Action -->
