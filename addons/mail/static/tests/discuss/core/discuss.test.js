@@ -16,15 +16,15 @@ import { mockDate } from "@odoo/hoot-mock";
 describe.current.tags("desktop");
 defineMailModels();
 
-test("Member list and settings menu are exclusive", async () => {
+test("Member list and Pinned Messages Panel menu are exclusive", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMemberList");
-    await click("[title='Show Call Settings']");
-    await contains(".o-discuss-CallSettings");
+    await click("[title='Pinned Messages']");
+    await contains(".o-discuss-PinnedMessagesPanel");
     await contains(".o-discuss-ChannelMemberList", { count: 0 });
 });
 

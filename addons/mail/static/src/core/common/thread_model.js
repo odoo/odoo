@@ -256,7 +256,6 @@ export class Thread extends Record {
      * @type {number|'bottom'}
      */
     scrollTop = "bottom";
-    showOnlyVideo = false;
     transientMessages = Record.many("Message");
     discussAppCategory = Record.one("DiscussAppCategory", {
         compute() {

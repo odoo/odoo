@@ -15,6 +15,7 @@ const StorePatch = {
                 return {};
             },
         });
+        this.allActiveRtcSessions = Record.many("RtcSession");
     },
     onStarted() {
         super.onStarted(...arguments);

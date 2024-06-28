@@ -29,7 +29,16 @@ patch(Thread, {
 const ThreadPatch = {
     setup() {
         super.setup(...arguments);
-        this.activeRtcSession = Record.one("RtcSession");
+        this.activeRtcSession = Record.one("RtcSession", {
+            /** @this {import("models").Thread} */
+            onAdd(r) {
+                this.store.allActiveRtcSessions.add(r);
+            },
+            /** @this {import("models").Thread} */
+            onDelete(r) {
+                this.store.allActiveRtcSessions.delete(r);
+            },
+        });
         this.hadSelfSession = false;
         this.lastSessionIds = new Set();
         this.rtcInvitingSession = Record.one("RtcSession", {

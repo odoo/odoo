@@ -2,36 +2,51 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallSettings">
-        <ActionPanel title="title">
-            <div class="d-flex flex-column px-3 overflow-auto">
-                <div class="mb-3 d-flex align-items-center flex-wrap">
-                    <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Input device" aria-label="Input device">
-                        <span class="me-2 text-truncate">Input device</span>
-                        <div>
-                            <select name="inputDevice" class="form-select" t-on-change="onChangeSelectAudioInput">
-                                <option value="">Browser default</option>
-                                <t t-foreach="state.userDevices" t-as="device" t-key="device_index" device="device">
-                                    <option t-if="device.kind === 'audioinput'" t-att-selected="store.settings.audioInputDeviceId === device.deviceId" t-att-value="device.deviceId"><t t-esc="device.label || 'audio device ' + device_index"/></option>
-                                </t>
-                            </select>
-                        </div>
-                    </label>
-                </div>
-                <div class="mb-3 d-flex align-items-center flex-wrap">
-                    <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Enable Push-to-talk" aria-label="Enable Push-to-talk">
-                        <input type="checkbox" aria-label="toggle push-to-talk" title="toggle push-to-talk" t-on-change="onChangePushToTalk" t-att-checked="store.settings.use_push_to_talk ? 'checked' : ''" class="form-check-input"/>
-                        <span class="ms-2 text-truncate">Enable Push-to-talk</span>
-                    </label>
-                </div>
-                <div t-if="store.settings.use_push_to_talk and !pttExtService.isEnabled" class="mb-3">
-                    <span class="small text-muted fst-italic" t-out="pttExtService.downloadText"/>
-                </div>
-                <t t-if="store.settings.use_push_to_talk">
-                    <div class="mb-3 d-flex align-items-center flex-wrap">
-                        <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Push-to-talk key" aria-label="Push-to-talk key">
-                            <span class="me-2 text-truncate">Push-to-talk key</span>
-                            <span class="d-flex">
-                                <span t-if="store.settings.push_to_talk_key" class="ms-1 px-3 border border-2 rounded fs-3" t-attf-class="{{ store.settings.isRegisteringKey ? 'border-danger' : 'border-primary' }}" t-esc="pushToTalkKeyText"/>
+        <t t-call="discuss.CallSettings.content"/>
+    </t>
+
+    <t t-name="discuss.CallSettings.content">
+        <div class="o-discuss-CallSettings d-flex flex-column p-1">
+            <h4>Voice Settings</h4>
+            <label class="d-flex align-items-baseline my-2" title="Input device" aria-label="Input device">
+                <h5 class="flex-shrink-0 pe-2">
+                    Input device
+                </h5>
+                <div class="flex-grow-1"/>
+                <select name="inputDevice" class="form-select d-flex w-auto" t-on-change="onChangeSelectAudioInput">
+                    <option value="">Browser default</option>
+                    <t t-foreach="state.userDevices" t-as="device" t-key="device_index" device="device">
+                        <option t-if="device.kind === 'audioinput'" t-att-selected="store.settings.audioInputDeviceId === device.deviceId" t-att-value="device.deviceId">
+                            <t t-esc="device.label || 'audio device ' + device_index"/>
+                        </option>
+                    </t>
+                </select>
+            </label>
+            <div class="d-flex flex-column">
+                <button class="btn d-flex my-1" t-att-class="{'bg-300' : !store.settings.use_push_to_talk }" t-on-click="()=>this.store.settings.setPushToTalk(false)">
+                    <input class="form-check-input" type="radio" t-att-checked="store.settings.use_push_to_talk ? '' : 'checked'"/>
+                    <span class="text-start flex-grow-1 mx-3">Voice Detection</span>
+                </button>
+                <button class="btn d-flex my-1" t-att-class="{'bg-300' : store.settings.use_push_to_talk }" t-on-click="()=>this.store.settings.setPushToTalk(true)">
+                    <input class="form-check-input" type="radio" t-att-checked="store.settings.use_push_to_talk ? 'checked' : ''"/>
+                    <span class="text-start flex-grow-1 mx-3">Push to Talk</span>
+                </button>
+                <span t-if="store.settings.use_push_to_talk and !pttExtService.isEnabled" class="small text-muted fst-italic mb-3" t-out="pttExtService.downloadText"/>
+            </div>
+            <div class="d-flex flex-column">
+                <label t-if="!store.settings.use_push_to_talk" class="d-flex flex-column flex-wrap flex-grow-1 align-items-start" title="Voice detection threshold" aria-label="Voice detection threshold">
+                    <span class="me-2 my-1 text-truncate text-wrap">Voice detection threshold</span>
+                    <div class="d-flex w-100 align-items-center">
+                        <input class="flex-grow-1 form-range" type="range" min="0.001" max="1" step="0.001" t-att-value="store.settings.voiceActivationThreshold" t-on-change="onChangeThreshold"/>
+                        <span class="p-1 text-end"><t t-out="Math.floor(store.settings.voiceActivationThreshold * 100)"/>%</span>
+                    </div>
+                </label>
+                <div t-if="store.settings.use_push_to_talk" class="d-flex" t-att-class="{'flex-column': props.isCompact}">
+                    <div class="d-flex flex-column align-items-center" t-att-class="{'me-1 w-50': !props.isCompact}">
+                        <label class="d-flex flex-column align-items-start flex-wrap w-100" title="Push-to-talk key" aria-label="Push-to-talk key">
+                            <span class="me-2 my-1 text-truncate text-wrap">Push-to-talk key</span>
+                            <span class="d-flex border border-2 rounded w-100" t-attf-class="{{ store.settings.isRegisteringKey ? 'border-danger' : 'border-primary' }}">
+                                <span t-if="store.settings.push_to_talk_key" class="ms-1 px-3 fs-3 flex-grow-1" t-esc="pushToTalkKeyText"/>
                                 <button class="btn btn-link px-2 py-0 text-black" t-on-click="onClickRegisterKeyButton">
                                     <i t-if="store.settings.isRegisteringKey" title="Cancel" aria-label="Cancel" class="fa fa-2x fa-times-circle"/>
                                     <i t-else="" title="Register new key" aria-label="Register new key" class="fa fa-2x fa-keyboard-o"/>
@@ -39,75 +54,80 @@
                             </span>
                         </label>
                     </div>
-                    <div t-if="store.settings.isRegisteringKey">Press a key to register it as the push-to-talk shortcut.</div>
-                    <div class="mb-3 d-flex align-items-center flex-wrap">
-                        <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Delay after releasing push-to-talk" aria-label="Delay after releasing push-to-talk">
-                            <span class="me-2 text-truncate">Delay after releasing push-to-talk</span>
+                    <div class="d-flex align-items-center" t-att-class="{'ms-1 w-50': !props.isCompact}">
+                        <label class="d-flex flex-column align-items-start flex-wrap h-100 w-100" title="Delay after releasing push-to-talk" aria-label="Delay after releasing push-to-talk">
+                            <span class="me-2 my-1 text-truncate text-wrap">Delay after releasing push-to-talk</span>
                             <div class="d-flex w-100 align-items-center">
-                                <input class="flex-grow-2 form-range" type="range" min="0" max="2000" step="1" t-att-value="store.settings.voice_active_duration" t-on-input="onChangeDelay"/>
-                                <span class="p-1 w-50 text-end"><t t-out="store.settings.voice_active_duration"/>ms</span>
+                                <input class="flex-grow-1 form-range" type="range" min="0" max="2000" step="1" t-att-value="store.settings.voice_active_duration" t-on-input="onChangeDelay"/>
+                                <span class="p-1 text-end"><t t-out="store.settings.voice_active_duration"/>ms</span>
                             </div>
                         </label>
                     </div>
-                </t>
-                <div t-else="" class="mb-3 d-flex align-items-center flex-wrap">
-                    <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Voice detection threshold" aria-label="Voice detection threshold">
-                        <span class="me-2 text-truncate">Voice detection threshold</span>
-                        <div class="d-flex w-100 align-items-center">
-                            <input class="flex-grow-2 form-range" type="range" min="0.001" max="1" step="0.001" t-att-value="store.settings.voiceActivationThreshold" t-on-input="onChangeThreshold"/>
-                            <span class="p-1 w-50 text-end"><t t-out="Math.floor(store.settings.voiceActivationThreshold * 100)"/>%</span>
-                        </div>
-                    </label>
                 </div>
+                <span t-if="store.settings.isRegisteringKey">Press a key to register it as the push-to-talk shortcut.</span>
             </div>
-            <div class="d-flex flex-column px-3 overflow-auto">
-                <div class="py-2 fw-bolder text-700 text-truncate text-uppercase">Video Settings</div>
-                <div class="mb-3 d-flex align-items-center flex-wrap">
-                    <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Show video participants only" aria-label="Show video participants only">
-                        <input type="checkbox" aria-label="toggle push-to-talk" title="Show video participants only" t-on-change="onChangeVideoFilterCheckbox" t-att-checked="props.thread.showOnlyVideo ? 'checked' : ''" class="form-check-input"/>
-                        <span class="ms-2 text-truncate">Show video participants only</span>
-                    </label>
-                </div>
-                <div t-if="store.settings.hasCanvasFilterSupport" class="mb-3 d-flex align-items-center flex-wrap">
-                    <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Blur video background" aria-label="Blur video background">
-                        <input type="checkbox" aria-label="Blur video background" title="Blur video background" t-on-change="onChangeBlur" t-att-checked="store.settings.useBlur ? 'checked' : ''" class="form-check-input"/>
-                        <span class="ms-2 text-truncate">Blur video background</span>
-                    </label>
-                </div>
-                <t t-if="store.settings.useBlur">
-                    <div class="mb-3 d-flex align-items-center flex-wrap">
-                        <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Background blur intensity" aria-label="Background blur intensity">
-                            <span class="me-2 text-truncate">Background blur intensity</span>
-                            <div class="d-flex w-100 align-items-center">
-                                <input class="flex-grow-2 form-range" type="range" min="0" max="20" step="1" t-att-value="store.settings.backgroundBlurAmount" t-on-input="onChangeBackgroundBlurAmount"/>
-                                <span class="p-1 w-50 text-end"><t t-out="Math.floor(store.settings.backgroundBlurAmount * 5)"/>%</span>
-                            </div>
-                        </label>
-                    </div>
-                    <div class="mb-3 d-flex align-items-center flex-wrap">
-                        <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Edge blur intensity" aria-label="Edge blur intensity">
-                            <span class="me-2 text-truncate">Edge blur intensity</span>
-                            <div class="d-flex w-100 align-items-center">
-                                <input class="flex-grow-2 form-range" type="range" min="0" max="20" step="1" t-att-value="store.settings.edgeBlurAmount" t-on-input="onChangeEdgeBlurAmount"/>
-                                <span class="p-1 w-50 text-end"><t t-out="Math.floor(store.settings.edgeBlurAmount * 5)"/>%</span>
-                            </div>
-                        </label>
-                    </div>
+            <hr class="o-discuss-separator my-2"/>
+            <h4>Video Settings</h4>
+            <div class="d-flex flex-column my-1">
+                <t t-call="discuss.CallSettings.textToggler">
+                    <t t-set="text">Show video participants only</t>
+                    <t t-set="value" t-value="store.settings.showOnlyVideo"/>
+                    <t t-set="onchange" t-value="onChangeShowOnlyVideo"/>
                 </t>
             </div>
-            <div t-if="env.debug" class="d-flex flex-column px-3 overflow-auto">
-                <div class="py-2 fw-bolder text-700 text-truncate text-uppercase">Technical Settings</div>
-                <div class="mb-3 d-flex align-items-center flex-wrap">
-                    <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Log RTC events" aria-label="Log RTC events">
-                        <input type="checkbox" aria-label="Log RTC events" title="Log RTC events" t-on-change="onChangeLogRtcCheckbox" t-att-checked="store.settings.logRtc ? 'checked' : ''" class="form-check-input"/>
-                        <span class="ms-2 text-truncate">Log RTC events</span>
-                    </label>
-                </div>
-                <div t-if="store.settings.logRtc" class="mb-3 d-flex align-items-center flex-wrap">
-                    <button class="btn btn-primary" t-att-disabled="rtc.state.logs.size === 0" t-on-click="onClickDownloadLogs">Download logs</button>
-                </div>
+            <div t-if="store.settings.hasCanvasFilterSupport" class="d-flex flex-column my-1">
+                <t t-call="discuss.CallSettings.textToggler">
+                    <t t-set="text">Blur video background</t>
+                    <t t-set="value" t-value="store.settings.useBlur"/>
+                    <t t-set="onchange" t-value="onChangeBlur"/>
+                </t>
             </div>
-        </ActionPanel>
+            <t t-if="store.settings.useBlur">
+                <div class="d-flex mt-1" t-att-class="{'flex-column': props.isCompact}">
+                    <div class="d-flex flex-column align-items-center" t-att-class="{'me-1 w-50': !props.isCompact}">
+                        <label class="d-flex flex-column align-items-start flex-wrap w-100" title="Background blur intensity" aria-label="Background blur intensity">
+                            <span class="me-2 text-truncate text-wrap">Background blur intensity</span>
+                            <div class="d-flex w-100 flex-grow-1 align-items-center">
+                                <input class="flex-grow-2 form-range" type="range" min="0" max="20" step="1" t-att-value="store.settings.backgroundBlurAmount" t-on-change="onChangeBackgroundBlurAmount"/>
+                                <span class="p-1 text-end o-discuss-DiscussCallSettings-width-text-percentage"><t t-out="Math.floor(store.settings.backgroundBlurAmount * 5)"/>%</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="d-flex align-items-center" t-att-class="{'ms-1 w-50': !props.isCompact}">
+                        <label class="d-flex flex-column align-items-start flex-wrap h-100 w-100" title="Edge blur intensity" aria-label="Edge blur intensity">
+                            <span class="me-2 text-truncate text-wrap">Edge blur intensity</span>
+                            <div class="d-flex w-100 flex-grow-1 align-items-center">
+                                <input class="flex-grow-2 form-range" type="range" min="0" max="20" step="1" t-att-value="store.settings.edgeBlurAmount" t-on-change="onChangeEdgeBlurAmount"/>
+                                <span class="p-1 text-end o-discuss-DiscussCallSettings-width-text-percentage"><t t-out="Math.floor(store.settings.edgeBlurAmount * 5)"/>%</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </t>
+            <t t-if="env.debug">
+                <hr class="o-discuss-separator my-2"/>
+                <h4>Technical Settings</h4>
+                <div class="d-flex flex-column my-1">
+                    <t t-call="discuss.CallSettings.textToggler">
+                        <t t-set="text">Log RTC events</t>
+                        <t t-set="value" t-value="store.settings.logRtc"/>
+                        <t t-set="onchange" t-value="onChangeLogRtc"/>
+                    </t>
+                </div>
+                <button t-if="store.settings.logRtc" class="btn btn-primary mt-1 mb-2 w-100" t-att-disabled="rtc.state.logs.size === 0" t-on-click="onClickDownloadLogs">Download logs</button>
+            </t>
+        </div>
+    </t>
+    <t t-name="discuss.CallSettings.textToggler">
+        <div class="d-flex flex-wrap align-items-center">
+            <label class="d-flex align-items-center flex-wrap mw-100" t-att-title="text" t-att-aria-label="text">
+                <span class="text-truncate text-wrap" t-out="text"></span>
+            </label>
+            <div class="flex-grow-1"/>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" t-on-change="onchange" t-att-checked="value ? 'checked' : ''" t-att-title="text" t-att-aria-label="text"/>
+            </div>
+        </div>
     </t>
 
 </templates>

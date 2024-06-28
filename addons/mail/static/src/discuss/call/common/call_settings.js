@@ -1,5 +1,3 @@
-import { ActionPanel } from "@mail/discuss/core/common/action_panel";
-
 import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -7,9 +5,8 @@ import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallSettings extends Component {
-    static components = { ActionPanel };
     static template = "discuss.CallSettings";
-    static props = ["thread", "className?"];
+    static props = ["*"];
 
     setup() {
         super.setup();
@@ -63,19 +60,12 @@ export class CallSettings extends Component {
         this.store.settings.isRegisteringKey = false;
     }
 
-    onChangeLogRtcCheckbox(ev) {
+    onChangeLogRtc(ev) {
         this.store.settings.logRtc = ev.target.checked;
     }
 
     onChangeSelectAudioInput(ev) {
         this.store.settings.setAudioInputDevice(ev.target.value);
-    }
-
-    onChangePushToTalk() {
-        if (this.store.settings.use_push_to_talk) {
-            this.store.settings.isRegisteringKey = false;
-        }
-        this.store.settings.togglePushToTalk();
     }
 
     onClickDownloadLogs() {
@@ -108,12 +98,16 @@ export class CallSettings extends Component {
         this.store.settings.useBlur = ev.target.checked;
     }
 
-    onChangeVideoFilterCheckbox(ev) {
+    onChangeShowOnlyVideo(ev) {
         const showOnlyVideo = ev.target.checked;
-        this.props.thread.showOnlyVideo = showOnlyVideo;
-        const activeRtcSession = this.props.thread.activeRtcSession;
-        if (showOnlyVideo && activeRtcSession && !activeRtcSession.videoStream) {
-            this.props.thread.activeRtcSession = undefined;
+        this.store.settings.showOnlyVideo = showOnlyVideo;
+        const activeRtcSessions = this.store.allActiveRtcSessions;
+        if (showOnlyVideo && activeRtcSessions) {
+            activeRtcSessions
+                .filter((rtcSession) => !rtcSession.videoStream)
+                .forEach((rtcSession) => {
+                    rtcSession.channel.activeRtcSession = undefined;
+                });
         }
     }
 
@@ -123,9 +117,5 @@ export class CallSettings extends Component {
 
     onChangeEdgeBlurAmount(ev) {
         this.store.settings.edgeBlurAmount = Number(ev.target.value);
-    }
-
-    get title() {
-        return _t("Voice Settings");
     }
 }

@@ -20,6 +20,7 @@ export class Settings extends Record {
         this._loadLocalSettings();
     }
     volumes = Record.many("Volume");
+    showOnlyVideo = false;
     /**
      * DeviceId of the audio input selected by the user
      */
@@ -260,8 +261,8 @@ export class Settings extends Record {
             key: key || false,
         };
     }
-    togglePushToTalk() {
-        this.use_push_to_talk = !this.use_push_to_talk;
+    setPushToTalk(value) {
+        this.use_push_to_talk = value;
         this._saveSettings();
     }
     /**
