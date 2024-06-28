@@ -333,7 +333,7 @@ def distribute_not(domain):
         if is_leaf(token):
             if negate:
                 left, operator, right = token
-                if operator in TERM_OPERATORS_NEGATION:
+                if operator in TERM_OPERATORS_NEGATION and (isinstance(left, int) or "." not in left):
                     if token in (TRUE_LEAF, FALSE_LEAF):
                         result.append(FALSE_LEAF if token == TRUE_LEAF else TRUE_LEAF)
                     else:
@@ -422,6 +422,13 @@ def _tree_from_domain(domain):
 
 def _tree_not(tree):
     """ Negate a tree node. """
+    if tree[0] == '=?':
+        # already update operator '=?' here, so that '!' is distributed correctly
+        assert len(tree) == 3
+        if tree[2]:
+            tree = ('=', tree[1], tree[2])
+        else:
+            return ('?', False)
     if tree[0] == '?':
         return ('?', not tree[1])
     if tree[0] == '!':
@@ -777,6 +784,7 @@ class expression(object):
         self.root_alias = alias or model._table
 
         # normalize and prepare the expression for parsing
+        # TODO pre-process =?
         self.expression = domain_combine_anies(domain, model)
 
         # this object handles all the joins
