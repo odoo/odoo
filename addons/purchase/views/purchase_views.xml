@@ -246,6 +246,7 @@
                                     <field name="product_qty"/>
                                     <field name="qty_received_manual" column_invisible="True"/>
                                     <field name="qty_received_method" column_invisible="True"/>
+                                    <field name="partner_reference" string="Partner Ref" column_invisible="True"/>
                                     <field name="qty_received" string="Received" column_invisible="parent.state not in ('purchase', 'done')" readonly="qty_received_method != 'manual'" optional="show"/>
                                     <field name="qty_invoiced" string="Billed" column_invisible="parent.state not in ('purchase', 'done')" optional="show"/>
                                     <field name="product_uom" string="UoM" groups="uom.group_uom"

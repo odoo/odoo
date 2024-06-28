@@ -24,6 +24,13 @@
                 <thead style="display: table-row-group">
                     <tr>
                         <th name="th_description"><strong>Description</strong></th>
+                        <t t-set="ref" t-value="false"/>
+                        <t t-foreach="o.order_line" t-as="order_line">
+                            <t t-if="order_line.partner_reference">
+                                <t t-set="ref" t-value="true"/>
+                            </t>
+                        </t>
+                        <th t-if="ref == true" name="th_partner_reference"><strong>Vendor Product Code/Name</strong></th>
                         <th name="th_expected_date" class="text-center"><strong>Expected Date</strong></th>
                         <th name="th_quantity" class="text-end"><strong>Qty</strong></th>
                     </tr>
@@ -35,6 +42,17 @@
                                 <td id="product">
                                     <span t-field="order_line.name"/>
                                 </td>
+                                <t t-if="order_line.partner_reference">
+                                    <t t-set="ref" t-value="true"/>
+                                    <td id="partner_reference">
+                                        <span t-field="order_line.partner_reference"/>
+                                    </td>
+                                </t>
+                                <t t-else="">
+                                    <td t-if="ref == true" id="partner_reference">
+                                        <span />
+                                    </td>
+                                </t>
                                 <td class="text-center">
                                     <span t-field="order_line.date_planned"/>
                                 </td>
