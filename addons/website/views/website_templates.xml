@@ -1150,10 +1150,10 @@
                         <t t-set="_link_class" t-valuef="me-4"/>
                     </t>
                     <div class="ms-auto">
-                        <ul class="navbar-nav justify-content-end align-items-center gap-2 w-100 o_header_separator">
+                        <ul class="o_header_sales_three_small_links navbar-nav justify-content-end align-items-center gap-2 w-100 o_header_separator">
                             <!-- Language Selector -->
                             <t t-call="website.placeholder_header_language_selector">
-                                <t t-set="_btn_class" t-valuef="nav-link btn-sm d-flex align-items-center fw-bold text-uppercase o_nav-link_secondary"/>
+                                <t t-set="_btn_class" t-valuef="nav-link d-flex align-items-center fw-bold text-uppercase o_nav-link_secondary"/>
                                 <t t-set="_txt_class" t-valuef="ms-1"/>
                                 <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                                 <t t-set="_item_class" t-valuef="position-relative"/>
@@ -1161,13 +1161,13 @@
                             <!-- Sign In -->
                             <t t-call="portal.placeholder_user_sign_in">
                                 <t t-set="_item_class" t-valuef="position-relative"/>
-                                <t t-set="_link_class" t-valuef="nav-link btn-sm fw-bold text-uppercase o_nav-link_secondary"/>
+                                <t t-set="_link_class" t-valuef="nav-link fw-bold text-uppercase o_nav-link_secondary"/>
                             </t>
                             <!-- User Dropdown -->
                             <t t-call="portal.user_dropdown">
                                 <t t-set="_user_name" t-value="true"/>
                                 <t t-set="_item_class" t-valuef="dropdown"/>
-                                <t t-set="_link_class" t-valuef="nav-link btn-sm d-flex align-items-center fw-bold text-uppercase o_nav-link_secondary"/>
+                                <t t-set="_link_class" t-valuef="nav-link d-flex align-items-center fw-bold text-uppercase o_nav-link_secondary"/>
                                 <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                             </t>
                         </ul>
