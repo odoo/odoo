@@ -261,7 +261,10 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         self.executeConsumptionTriggers(mo_none)
         self.executeConsumptionTriggers(mo_lot)
         for mov in mo_all.move_raw_ids:
-            self.assertTrue(mov.picked, "All components should be picked")
+            if mov.raw_material_production_id.state == 'done':
+                self.assertTrue(mov.picked, "All done productions should have picked move raws")
+            else:
+                self.assertFalse(mov.picked, "All productions with state different thant done, should have not picked move raws")
 
     def test_option_enabled_and_qty_not_available(self):
         """Option enabled, qty not available
@@ -287,7 +290,10 @@ class TestConsumeComponent(TestConsumeComponentCommon):
 
         for mov in mo_all.move_raw_ids:
             if mov.has_tracking == 'none':
-                self.assertTrue(mov.picked, "components should be picked even without no quantity reserved")
+                if mov.raw_material_production_id.state == 'done':
+                    self.assertTrue(mov.picked, "components should be picked even without no quantity reserved, just if production is done")
+                else:
+                    self.assertFalse(mov.picked, "components should be not picked even without no quantity reserved, if production is not done")
             else:
                 self.assertEqual(mov.product_qty, mov.quantity, "Done quantity shall be equal to To Consume quantity.")
 
@@ -334,7 +340,10 @@ class TestConsumeComponent(TestConsumeComponentCommon):
 
             for mov in mo.move_raw_ids:
                 if mov.has_tracking == "none":
-                    self.assertTrue(mov.picked, "non tracked components should be picked")
+                    if mov.raw_material_production_id.state == 'done':
+                        self.assertTrue(mov.picked, "non tracked components should be picked if production is done")
+                    else:
+                        self.assertFalse(mov.picked, "non tracked components should not be picked if production is not done")
                 else:
                     self.assertEqual(mov.product_qty, mov.quantity, "Done quantity shall be equal to To Consume quantity.")
             mo.action_cancel()
