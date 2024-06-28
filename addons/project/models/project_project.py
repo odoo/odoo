@@ -2,16 +2,15 @@
 
 import ast
 import json
-from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, Command, fields, models, _, _lt
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.rating.models import rating_data
 from odoo.exceptions import UserError
+from odoo.osv.expression import AND
 from odoo.tools import get_lang, SQL
 from .project_update import STATUS_COLOR
-from .project_task import CLOSED_STATES
 
 
 class Project(models.Model):
@@ -30,24 +29,27 @@ class Project(models.Model):
     _systray_view = 'activity'
     _track_duration_field = 'stage_id'
 
-    def _compute_task_count(self):
-        project_and_state_counts = self.env['project.task'].with_context(
+    def __compute_task_count(self, count_field='task_count', additional_domain=None):
+        count_fields = {fname for fname in self._fields if 'count' in fname}
+        if count_field not in count_fields:
+            raise ValueError(f"Parameter 'count_field' can only be one of {count_fields}, got {count_field} instead.")
+        domain = [('project_id', 'in', self.ids)]
+        if additional_domain:
+            domain = AND([domain, additional_domain])
+        tasks_count_by_project = dict(self.env['project.task'].with_context(
             active_test=any(project.active for project in self)
-        )._read_group(
-            [('project_id', 'in', self.ids)],
-            ['project_id', 'state'],
-            ['__count'],
-        )
-        task_counts_per_project_id = defaultdict(lambda: {
-            'open_task_count': 0,
-            'closed_task_count': 0,
-        })
-        for project, state, count in project_and_state_counts:
-            task_counts_per_project_id[project.id]['closed_task_count' if state in CLOSED_STATES else 'open_task_count'] += count
+        )._read_group(domain, ['project_id'], ['__count']))
         for project in self:
-            open_task_count, closed_task_count = task_counts_per_project_id[project.id].values()
-            project.open_task_count = open_task_count
-            project.task_count = open_task_count + closed_task_count
+            project.update({count_field: tasks_count_by_project.get(project, 0)})
+
+    def _compute_task_count(self):
+        self.__compute_task_count()
+
+    def _compute_open_task_count(self):
+        self.__compute_task_count(
+            count_field='open_task_count',
+            additional_domain=[('state', 'in', self.env['project.task'].OPEN_STATES)],
+        )
 
     def _default_stage_id(self):
         # Since project stages are order by sequence first, this should fetch the one with the lowest sequence number.
@@ -97,7 +99,7 @@ class Project(models.Model):
         'resource.calendar', string='Working Time', compute='_compute_resource_calendar_id', export_string_translation=False)
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages', export_string_translation=False)
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count", export_string_translation=False)
-    open_task_count = fields.Integer(compute='_compute_task_count', string="Open Task Count", export_string_translation=False)
+    open_task_count = fields.Integer(compute='_compute_open_task_count', string="Open Task Count", export_string_translation=False)
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks', export_string_translation=False,
                                domain=lambda self: [('is_closed', '=', False)])
     color = fields.Integer(string='Color Index', export_string_translation=False)
