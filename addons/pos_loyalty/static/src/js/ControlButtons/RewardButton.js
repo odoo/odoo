@@ -43,9 +43,12 @@ export class RewardButton extends Component {
         const discountRewards = rewards.filter(({ reward }) => reward.reward_type == "discount");
         const freeProductRewards = rewards.filter(({ reward }) => reward.reward_type == "product");
         const potentialFreeProductRewards = this.pos.getPotentialFreeProductRewards();
-        return discountRewards.concat(
+        const test = discountRewards.concat(
             this._mergeFreeProductRewards(freeProductRewards, potentialFreeProductRewards)
         );
+        console.warn(test);
+        console.warn(test.length);
+        return test;
     }
 
     _isDisabled() {}
