@@ -3,9 +3,9 @@ import { mailModels } from "@mail/../tests/mail_test_helpers";
 export class DiscussChannelMember extends mailModels.DiscussChannelMember {
     /**
      * @override
-     * @type {typeof mailModels.DiscussChannelMember["prototype"]["_get_partner_data"]}
+     * @type {typeof mailModels.DiscussChannelMember["prototype"]["_partner_data_to_store"]}
      */
-    _get_partner_data(ids) {
+    _partner_data_to_store(ids, store) {
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").ResCountry} */
@@ -40,8 +40,9 @@ export class DiscussChannelMember extends mailModels.DiscussChannelMember {
                     : false;
             }
             data["write_date"] = partner.write_date;
-            return data;
+            store.add("Persona", data);
+        } else {
+            super._partner_data_to_store(...arguments);
         }
-        return super._get_partner_data(ids);
     }
 }

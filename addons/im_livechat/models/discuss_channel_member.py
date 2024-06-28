@@ -3,6 +3,7 @@
 from datetime import datetime, timedelta
 
 from odoo import api, models, fields
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ChannelMember(models.Model):
@@ -21,7 +22,7 @@ class ChannelMember(models.Model):
         sessions_to_be_unpinned.write({'unpin_dt': fields.Datetime.now()})
         self.env['bus.bus']._sendmany([(member.partner_id, 'discuss.channel/unpin', {'id': member.channel_id.id}) for member in sessions_to_be_unpinned])
 
-    def _get_partner_data(self, fields=None):
+    def _partner_data_to_store(self, store: Store, fields=None):
         if self.channel_id.channel_type == 'livechat':
             data = {
                 'active': self.partner_id.active,
@@ -40,5 +41,6 @@ class ChannelMember(models.Model):
                     'id': self.partner_id.country_id.id,
                     'name': self.partner_id.country_id.name,
                 } if self.partner_id.country_id else False
-            return data
-        return super()._get_partner_data(fields=fields)
+            store.add("Persona", data)
+        else:
+            super()._partner_data_to_store(store, fields=fields)

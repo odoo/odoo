@@ -137,7 +137,7 @@ export class DiscussChannelMember extends models.ServerModel {
             }
             if ("persona" in fields) {
                 if (member.partner_id) {
-                    store.add("Persona", this._get_partner_data([member.id]));
+                    this._partner_data_to_store([member.id], store);
                     data.persona = { id: member.partner_id, type: "partner" };
                 }
                 if (member.guest_id) {
@@ -173,16 +173,19 @@ export class DiscussChannelMember extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _get_partner_data(ids) {
-        const kwargs = getKwArgs(arguments, "ids");
+    _partner_data_to_store(ids, store) {
+        const kwargs = getKwArgs(arguments, "ids", "store");
         ids = kwargs.ids;
-        delete kwargs.ids;
+        store = kwargs.store;
 
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
         const [member] = this._filter([["id", "in", ids]]);
-        return ResPartner.mail_partner_format([member.partner_id])[member.partner_id];
+        store.add(
+            "Persona",
+            ResPartner.mail_partner_format([member.partner_id])[member.partner_id]
+        );
     }
 
     /**
