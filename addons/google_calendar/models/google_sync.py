@@ -176,7 +176,7 @@ class GoogleSync(models.AbstractModel):
             google_ids_to_remove = [event.full_recurring_event_id() for event in rescheduled_events]
             cancelled_odoo += self.env['calendar.event'].search([('google_id', 'in', google_ids_to_remove)])
 
-        cancelled_odoo._cancel()
+        cancelled_odoo.exists()._cancel()
         synced_records = new_odoo + cancelled_odoo
         for gevent in existing - cancelled:
             # Last updated wins.
