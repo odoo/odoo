@@ -383,7 +383,7 @@
                     <ul class="navbar-nav gap-2 mt-3 w-100">
                         <!-- Language Selector -->
                         <t t-call="website.placeholder_header_language_selector">
-                            <t t-set="_btn_class" t-valuef="nav-link d-flex align-items-center w-100 px-2"/>
+                            <t t-set="_btn_class" t-valuef="btn nav-link d-flex align-items-center w-100 px-2"/>
                             <t t-set="_txt_class" t-valuef="me-auto small"/>
                             <t t-set="_flag_class" t-valuef="me-2"/>
                             <t t-set="_div_classes" t-valuef="dropup"/>
@@ -398,7 +398,7 @@
                             <t t-set="_icon" t-value="true"/>
                             <t t-set="_user_name" t-value="true"/>
                             <t t-set="_user_name_class" t-valuef="me-auto small"/>
-                            <t t-set="_link_class" t-valuef="btn-outline-secondary d-flex align-items-center border-0 px-2"/>
+                            <t t-set="_link_class" t-valuef="btn btn-outline-secondary d-flex align-items-center border-0 px-2"/>
                             <t t-set="_icon_class" t-valuef="me-2"/>
                             <t t-set="_item_class" t-valuef="dropdown dropup"/>
                             <t t-set="_dropdown_menu_class" t-valuef="w-100"/>
@@ -486,7 +486,7 @@
                     <t t-call="website.placeholder_header_social_links"/>
                     <!-- Language Selector -->
                     <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_btn_class" t-valuef="btn-outline-secondary border-0"/>
+                        <t t-set="_btn_class" t-valuef="btn btn-outline-secondary border-0"/>
                         <t t-set="_txt_class" t-valuef="small"/>
                         <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                     </t>
@@ -498,7 +498,7 @@
                     <t t-call="portal.user_dropdown">
                         <t t-set="_user_name" t-value="True"/>
                         <t t-set="_item_class" t-valuef="dropdown"/>
-                        <t t-set="_link_class" t-valuef="btn-outline-secondary border-0 fw-bold"/>
+                        <t t-set="_link_class" t-valuef="btn btn-outline-secondary border-0 fw-bold"/>
                         <t t-set="_user_name_class" t-valuef="small"/>
                         <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                     </t>
@@ -594,7 +594,7 @@
                         <ul class="navbar-nav gap-2 mt-3 w-100">
                             <!-- Language Selector -->
                             <t t-call="website.placeholder_header_language_selector">
-                                <t t-set="_btn_class" t-valuef="btn-outline-secondary d-flex align-items-center w-100"/>
+                                <t t-set="_btn_class" t-valuef="btn btn-outline-secondary d-flex align-items-center w-100"/>
                                 <t t-set="_txt_class" t-valuef="me-auto small"/>
                                 <t t-set="_flag_class" t-valuef="me-2"/>
                                 <t t-set="_div_classes" t-valuef="dropup"/>
@@ -697,7 +697,7 @@
                     <!-- Language Selector -->
                     <t t-call="website.placeholder_header_language_selector">
                         <t t-set="_div_classes" t-valuef="h-100 border-start o_border_contrast"/>
-                        <t t-set="_btn_class" t-valuef="o_navlink_background_hover h-100 rounded-0 text-reset"/>
+                        <t t-set="_btn_class" t-valuef="o_navlink_background_hover btn h-100 rounded-0 text-reset"/>
                         <t t-set="_txt_class" t-valuef="small"/>
                         <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                     </t>
@@ -710,7 +710,7 @@
                     <t t-call="portal.user_dropdown">
                         <t t-set="_icon" t-value="true"/>
                         <t t-set="_item_class" t-valuef="dropdown border-start o_border_contrast"/>
-                        <t t-set="_link_class" t-valuef="o_navlink_background_hover d-flex align-items-center h-100 rounded-0 text-reset"/>
+                        <t t-set="_link_class" t-valuef="o_navlink_background_hover btn d-flex align-items-center h-100 rounded-0 text-reset"/>
                         <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                     </t>
                     <!-- Call To Action -->
@@ -780,7 +780,7 @@
                         <!-- Language Selector -->
                         <t t-call="website.placeholder_header_language_selector">
                             <t t-set="_txt_class" t-valuef="small"/>
-                            <t t-set="_btn_class" t-valuef="o_navlink_background rounded-pill py-1 text-reset"/>
+                            <t t-set="_btn_class" t-valuef="o_navlink_background btn rounded-pill py-1 text-reset"/>
                             <t t-set="_flag_class" t-valuef="m-2"/>
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                         </t>
@@ -821,7 +821,7 @@
                             <!-- Language Selector -->
                             <t t-call="website.placeholder_header_language_selector">
                                 <t t-set="_div_classes" t-valuef="h-100 border-end o_border_contrast"/>
-                                <t t-set="_btn_class" t-valuef="o_navlink_background_hover btn-sm d-flex align-items-center h-100 rounded-0 p-2 text-reset"/>
+                                <t t-set="_btn_class" t-valuef="o_navlink_background_hover btn btn-sm d-flex align-items-center h-100 rounded-0 p-2 text-reset"/>
                             </t>
                             <!-- Text element -->
                             <t t-call="website.placeholder_header_text_element">
@@ -842,7 +842,7 @@
                             <t t-call="portal.user_dropdown">
                                 <t t-set="_user_name" t-value="true"/>
                                 <t t-set="_item_class" t-valuef="dropdown border-start o_border_contrast"/>
-                                <t t-set="_link_class" t-valuef="o_navlink_background_hover btn-sm d-flex align-items-center h-100 rounded-0 p-2 text-reset"/>
+                                <t t-set="_link_class" t-valuef="o_navlink_background_hover btn btn-sm d-flex align-items-center h-100 rounded-0 p-2 text-reset"/>
                                 <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                             </t>
                         </ul>
@@ -964,7 +964,7 @@
                         </t>
                         <!-- Language Selector -->
                         <t t-call="website.placeholder_header_language_selector">
-                            <t t-set="_btn_class" t-valuef="rounded-circle text-reset o_navlink_background"/>
+                            <t t-set="_btn_class" t-valuef="btn rounded-circle text-reset o_navlink_background"/>
                             <t t-set="_txt_class" t-valuef="small"/>
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                         </t>
@@ -1020,7 +1020,7 @@
                             <!-- Language Selector -->
                             <t t-call="website.placeholder_header_language_selector">
                                 <t t-set="_div_classes" t-valuef="d-flex align-items-center h-100"/>
-                                <t t-set="_btn_class" t-valuef="btn-sm btn-outline-secondary border-0"/>
+                                <t t-set="_btn_class" t-valuef="btn btn-sm btn-outline-secondary border-0"/>
                             </t>
                             <!-- Text element -->
                             <!-- Return empty placeholder if the element is not active to keep the right layout -->
@@ -1059,7 +1059,7 @@
                                 <t t-set="_icon" t-value="true"/>
                                 <t t-set="_icon_class" t-valuef="fa-stack"/>
                                 <t t-set="_item_class" t-valuef="dropdown"/>
-                                <t t-set="_link_class" t-valuef="d-flex align-items-center border-0 fw-bold text-reset o_navlink_background_hover"/>
+                                <t t-set="_link_class" t-valuef="btn d-flex align-items-center border-0 fw-bold text-reset o_navlink_background_hover"/>
                                 <t t-set="_icon_wrap_class" t-value="'position-relative me-2 p-2 rounded-circle border bg-o-color-3'"/>
                                 <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                             </t>
@@ -1150,10 +1150,10 @@
                         <t t-set="_link_class" t-valuef="me-4"/>
                     </t>
                     <div class="ms-auto">
-                        <ul class="navbar-nav justify-content-end align-items-center gap-2 w-100 o_header_separator">
+                        <ul class="o_header_sales_three_small_links navbar-nav justify-content-end align-items-center gap-2 w-100 o_header_separator">
                             <!-- Language Selector -->
                             <t t-call="website.placeholder_header_language_selector">
-                                <t t-set="_btn_class" t-valuef="nav-link btn-sm d-flex align-items-center fw-bold text-uppercase o_nav-link_secondary"/>
+                                <t t-set="_btn_class" t-valuef="nav-link d-flex align-items-center fw-bold text-uppercase o_nav-link_secondary"/>
                                 <t t-set="_txt_class" t-valuef="ms-1"/>
                                 <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                                 <t t-set="_item_class" t-valuef="position-relative"/>
@@ -1161,13 +1161,13 @@
                             <!-- Sign In -->
                             <t t-call="portal.placeholder_user_sign_in">
                                 <t t-set="_item_class" t-valuef="position-relative"/>
-                                <t t-set="_link_class" t-valuef="nav-link btn-sm fw-bold text-uppercase o_nav-link_secondary"/>
+                                <t t-set="_link_class" t-valuef="nav-link fw-bold text-uppercase o_nav-link_secondary"/>
                             </t>
                             <!-- User Dropdown -->
                             <t t-call="portal.user_dropdown">
                                 <t t-set="_user_name" t-value="true"/>
                                 <t t-set="_item_class" t-valuef="dropdown"/>
-                                <t t-set="_link_class" t-valuef="nav-link btn-sm d-flex align-items-center fw-bold text-uppercase o_nav-link_secondary"/>
+                                <t t-set="_link_class" t-valuef="nav-link d-flex align-items-center fw-bold text-uppercase o_nav-link_secondary"/>
                                 <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                             </t>
                         </ul>
@@ -1235,14 +1235,14 @@
                         <t t-call="portal.user_dropdown">
                             <t t-set="_user_name" t-value="true"/>
                             <t t-set="_item_class" t-valuef="dropdown position-relative d-flex align-items-center"/>
-                            <t t-set="_link_class" t-valuef="nav-link border-0"/>
+                            <t t-set="_link_class" t-valuef="btn nav-link border-0"/>
                             <t t-set="_user_name_class" t-valuef="small"/>
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                         </t>
                         <!-- Language Selector -->
                         <t t-call="website.placeholder_header_language_selector">
                             <t t-set="_div_classes" t-valuef="position-relative"/>
-                            <t t-set="_btn_class" t-valuef="nav-link"/>
+                            <t t-set="_btn_class" t-valuef="btn nav-link"/>
                             <t t-set="_txt_class" t-valuef="small"/>
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                         </t>
@@ -1348,7 +1348,7 @@
                         <ul class="navbar-nav gap-2 mt-3 w-100">
                             <!-- Language Selector -->
                             <t t-call="website.placeholder_header_language_selector">
-                                <t t-set="_btn_class" t-valuef="btn-outline-secondary d-flex align-items-center w-100 px-2"/>
+                                <t t-set="_btn_class" t-valuef="btn btn-outline-secondary d-flex align-items-center w-100 px-2"/>
                                 <t t-set="_txt_class" t-valuef="me-auto small"/>
                                 <t t-set="_flag_class" t-valuef="me-2"/>
                                 <t t-set="_div_classes" t-valuef="dropup"/>
@@ -1363,7 +1363,7 @@
                                 <t t-set="_icon" t-value="true"/>
                                 <t t-set="_user_name" t-value="true"/>
                                 <t t-set="_user_name_class" t-valuef="me-auto small"/>
-                                <t t-set="_link_class" t-valuef="btn-outline-secondary d-flex align-items-center border-0 px-2"/>
+                                <t t-set="_link_class" t-valuef="btn btn-outline-secondary d-flex align-items-center border-0 px-2"/>
                                 <t t-set="_icon_class" t-valuef="me-2"/>
                                 <t t-set="_item_class" t-valuef="dropdown dropup"/>
                                 <t t-set="_dropdown_menu_class" t-valuef="w-100"/>
@@ -1457,7 +1457,7 @@
                         <t t-call="website.placeholder_header_social_links"/>
                         <!-- Language Selector -->
                         <t t-call="website.placeholder_header_language_selector">
-                            <t t-set="_btn_class" t-valuef="btn-outline-secondary d-flex align-items-center gap-1 border-0 rounded-circle px-3"/>
+                            <t t-set="_btn_class" t-valuef="btn btn-outline-secondary d-flex align-items-center gap-1 border-0 rounded-circle px-3"/>
                             <t t-set="_txt_class" t-valuef="small"/>
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                         </t>
@@ -1471,7 +1471,7 @@
                             <t t-set="_user_name" t-value="false"/>
                             <t t-set="_user_name_class" t-valuef="me-auto small"/>
                             <t t-set="_item_class" t-valuef="dropdown"/>
-                            <t t-set="_link_class" t-valuef="btn-outline-secondary d-flex align-items-center border-0 rounded-circle px-3 fw-bold"/>
+                            <t t-set="_link_class" t-valuef="btn btn-outline-secondary d-flex align-items-center border-0 rounded-circle px-3 fw-bold"/>
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                         </t>
                         <!-- Call To Action -->
