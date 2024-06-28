@@ -45,3 +45,4 @@ from . import test_structured_reference
 from . import test_product
 from . import test_unexpected_invoice
 from . import test_mail_tracking_value
+from . import test_res_partner_merge
