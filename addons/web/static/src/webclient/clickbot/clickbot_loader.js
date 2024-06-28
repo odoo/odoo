@@ -9,14 +9,16 @@ export async function startClickEverywhere(xmlId, light, currentState) {
 }
 
 export function runClickTestItem({ env }) {
-    return {
-        type: "item",
-        description: _t("Run Click Everywhere Test"),
-        callback: () => {
-            startClickEverywhere();
-        },
-        sequence: 30,
-    };
+    if (window.location.href.includes("debug=assets")) {
+        return {
+            type: "item",
+            description: _t("Run Click Everywhere Test"),
+            callback: () => {
+                startClickEverywhere();
+            },
+            sequence: 30,
+        };
+    }
 }
 
 const currentState = JSON.parse(browser.localStorage.getItem("running.clickbot"));
