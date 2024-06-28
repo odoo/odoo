@@ -2996,6 +2996,7 @@ class BaseModel(metaclass=MetaModel):
         sql_field = self._field_to_sql(alias, fname, query)
 
         field = self._fields[fname]
+        is_number_field = field.type in ('integer', 'float', 'monetary') and field.name != 'id'
         sql_operator = expression.SQL_OPERATORS[operator]
 
         if operator in ('in', 'not in'):
@@ -3015,12 +3016,17 @@ class BaseModel(metaclass=MetaModel):
                 return SQL("(%s %s %s)", sql_field, sql_operator, value.subselect())
 
             elif isinstance(value, (list, tuple)):
-                if field.type == "boolean":
-                    params = [it for it in (True, False) if it in value]
-                    check_null = False in value
-                else:
-                    params = [it for it in value if it is not False and it is not None]
-                    check_null = len(params) < len(value)
+                params = [it for it in value if it is not False and it is not None]
+                check_null = len(params) < len(value)
+                if field.type == 'boolean':
+                    # just replace instead of casting, only truthy values remain
+                    params = [True] if any(params) else []
+                    if check_null:
+                        params.append(False)
+                elif is_number_field:
+                    if check_null and 0 not in params:
+                        params.append(0)
+                    check_null = check_null or (0 in params)
 
                 if params:
                     if fname != 'id':
@@ -3046,11 +3052,19 @@ class BaseModel(metaclass=MetaModel):
             else:
                 return SQL("(%s IS NULL OR %s = FALSE)", sql_field, sql_field)
 
-        if operator == '=' and (value is False or value is None):
-            return SQL("%s IS NULL", sql_field)
+        # comparison with null
+        # except for some basic types, where we need to check the empty value
+        if (field.relational or field.name == 'id') and operator in ('=', '!=') and not value:
+            # if we compare a relation to 0, then compare only to False
+            value = False
 
-        if operator == '!=' and (value is False or value is None):
-            return SQL("%s IS NOT NULL", sql_field)
+        if operator in ('=', '!=') and (value is False or value is None):
+            if is_number_field:
+                value = 0  # generates something like (fname = 0 OR fname IS NULL)
+            elif operator == '=':
+                return SQL("%s IS NULL", sql_field)
+            elif operator == '!=':
+                return SQL("%s IS NOT NULL", sql_field)
 
         # general case
         need_wildcard = operator in expression.WILDCARD_OPERATORS
@@ -3073,7 +3087,13 @@ class BaseModel(metaclass=MetaModel):
             return SQL("FALSE") if operator in expression.NEGATIVE_TERM_OPERATORS else SQL("TRUE")
 
         sql = SQL("(%s %s %s)", sql_left, sql_operator, sql_value)
-        if value and operator in expression.NEGATIVE_TERM_OPERATORS:
+        if (
+            bool(value) == (operator in expression.NEGATIVE_TERM_OPERATORS)
+            # exception: char is handled differently for now
+            and value != ''  # noqa: PLC1901
+            # exception: don't add for inequalities
+            and operator[:1] not in ('>', '<')
+        ):
             sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
 
         return sql
