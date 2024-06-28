@@ -1325,3 +1325,23 @@ class TestComputeOnchange2(TransactionCase):
             form.name = f"{START}->{START + 20}"
             self.assertEqual(form.start, START, "updating 'name' should recompute 'start'")
             self.assertEqual(form.end, START + 20, "updating 'name' should recompute 'end'")
+
+    def test_new_one2many_traversing_many2one_second_onchange(self):
+        discussion = self.env['test_new_api.discussion'].create({
+            'name': 'Required field',
+            'messages': [Command.create({'body': 'Msg1: Existing', 'important': True})],
+            'participants': [Command.set(self.env.user.ids)],
+        })
+
+        with Form(discussion, 'test_new_api.discussion_form_2') as discussion_form:
+            self.assertEqual(len(discussion_form.messages), 1)
+            with discussion_form.messages.new() as message_form:
+                # check that Msg1 is visible in the one2many during onchange()
+                self.assertEqual(message_form.has_important_sibling, True)
+                message_form.body = 'Msg2: New'
+
+            self.assertEqual(len(discussion_form.messages), 2)
+            with discussion_form.messages.new() as message_form:
+                # check that Msg1 is visible in the one2many during onchange()
+                self.assertEqual(message_form.has_important_sibling, True)
+                message_form.body = 'Msg3: New'
