@@ -14,7 +14,7 @@ class Users(models.Model):
         - add suggestion preference
     """
     _name = 'res.users'
-    _inherit = ['res.users']
+    _inherit = ['res.users', 'mail.thread']
 
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),
@@ -24,6 +24,7 @@ class Users(models.Model):
         help="Policy on how to handle Chatter notifications:\n"
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
+    groups_id = fields.Many2many(tracking=True)
 
     _sql_constraints = [(
         "notification_type",
@@ -61,6 +62,13 @@ class Users(models.Model):
     # CRUD
     # ------------------------------------------------------------
 
+    def _filter_tracking_x2m(self, fname):
+        if fname == 'groups_id':
+            return self.env['res.groups'].browse(
+                self.env['ir.model.data']._xmlid_to_res_model_res_id('base.group_portal', False)[1]
+            )
+        return None  # show everything
+
     @property
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS + ['notification_type']
@@ -69,31 +77,7 @@ class Users(models.Model):
     def SELF_WRITEABLE_FIELDS(self):
         return super().SELF_WRITEABLE_FIELDS + ['notification_type']
 
-    @api.model_create_multi
-    def create(self, vals_list):
-
-        users = super(Users, self).create(vals_list)
-
-        # log a portal status change (manual tracking)
-        log_portal_access = not self._context.get('mail_create_nolog') and not self._context.get('mail_notrack')
-        if log_portal_access:
-            for user in users:
-                if user._is_portal():
-                    body = user._get_portal_access_update_body(True)
-                    user.partner_id.message_post(
-                        body=body,
-                        message_type='notification',
-                        subtype_xmlid='mail.mt_note'
-                    )
-        return users
-
     def write(self, vals):
-        log_portal_access = 'groups_id' in vals and not self._context.get('mail_create_nolog') and not self._context.get('mail_notrack')
-        user_portal_access_dict = {
-            user.id: user._is_portal()
-            for user in self
-        } if log_portal_access else {}
-
         previous_email_by_user = {}
         if vals.get('email'):
             previous_email_by_user = {
@@ -105,19 +89,6 @@ class Users(models.Model):
             user_notification_type_modified = self.filtered(lambda user: user.notification_type != vals['notification_type'])
 
         write_res = super(Users, self).write(vals)
-
-        # log a portal status change (manual tracking)
-        if log_portal_access:
-            for user in self:
-                user_has_group = user._is_portal()
-                portal_access_changed = user_has_group != user_portal_access_dict[user.id]
-                if portal_access_changed:
-                    body = user._get_portal_access_update_body(user_has_group)
-                    user.partner_id.message_post(
-                        body=body,
-                        message_type='notification',
-                        subtype_xmlid='mail.mt_note'
-                    )
 
         if 'login' in vals:
             self._notify_security_setting_update(
@@ -215,12 +186,6 @@ class Users(models.Model):
             'user': self,
             'update_datetime': fields.Datetime.now(),
         }
-
-    def _get_portal_access_update_body(self, access_granted):
-        body = _('Portal Access Granted') if access_granted else _('Portal Access Revoked')
-        if self.partner_id.email:
-            return '%s (%s)' % (body, self.partner_id.email)
-        return body
 
     def _deactivate_portal_user(self, **post):
         """Blacklist the email of the user after deleting it.

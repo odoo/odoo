@@ -146,6 +146,11 @@ class BaseModel(models.AbstractModel):
             if col_name not in initial_values:
                 continue
             initial_value, new_value = initial_values[col_name], self[col_name]
+            if self._fields[col_name].type == 'many2many' and hasattr(self, '_filter_tracking_x2m'):
+                allowed_values = self._filter_tracking_x2m(col_name)
+                if allowed_values is not None:
+                    initial_value = initial_value & allowed_values
+                    new_value = new_value & allowed_values
             if new_value == initial_value or (not new_value and not initial_value):  # because browse null != False
                 continue
 
