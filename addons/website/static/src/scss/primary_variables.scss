@@ -2220,9 +2220,18 @@ $o-theme-font-configs: (
 // and resetting to theme default": ideally, we should review that system to
 // actually removing the custos in those cases instead of setting a null value
 // but this cannot be migrated at the moment).
-@function o-map-force-nulls($map) {
+// Also transforms `'True'` and `'False'` values into boolean `true`/`false`.
+// This is needed because of some options that wrongly set some CSS variables to
+// these values.
+@function o-map-normalize-website-values($map) {
     $-map: ();
     @each $key, $value in $map {
+        @if $value == 'True' {
+            $value: true;
+        }
+        @if $value == 'False' {
+            $value: false;
+        }
         $-map: map-merge($-map, (
             $key: if($value == 'NULL', null, $value),
         ));
