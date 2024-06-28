@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "technical/_layout.jinja2" %}
 {% block head %}
     <script>
         $(function () {
@@ -41,16 +41,24 @@
     </script>
 {% endblock %}
 {% block content %}
-    <h2 class="text-center">Remote Debugging</h2>
+<div class="text-center">
+    <h2>SSH</h2>
+
+    <h3>Local Access</h3>
+    <input type="text" disabled value="pi@{{ ip }}">
+    
+    <h3>Password Generator</h3>
+    <input class="password" type="text" placeholder="pi user password" disabled>
+    <a class="btn view-password" style="margin: 18px auto;"href="#">Generate password</a><br/>
+
+    <h3>Remote Access/Debugging</h3>
     <p class='text-red'>
         This allows someone who give a ngrok authtoken to gain remote access to your IoT Box, and
-        thus your entire local network. Only enable this for someone
-        you trust.
+        thus your entire local network. Only enable this for someone you trust.
     </p>
     <div class='text-center'>
-        <input class="password" type="text" placeholder="pi user password" disabled>
-        <a class="btn view-password" style="margin: 18px auto;"href="#">Generate password</a><br/>
         <input type="text" id="auth_token" size="42" placeholder="Authentication Token"/> <br/>
         <a class="btn" style="margin: 18px auto;" id="enable_debug" href="#">Enable Remote Debugging</a>
     </div>
+</div>
 {% endblock %}

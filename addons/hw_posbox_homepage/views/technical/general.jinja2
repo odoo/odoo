@@ -1,0 +1,16 @@
+{% extends "technical/_layout.jinja2" %}
+{% block content %}
+    
+    <h2 class="text-center text-green">Technical Information</h2>
+
+    {{ iot_table(infos_table) }}
+
+    <h2 class="text-center text-green">Downloads</h2>
+    <p class='text-red'>
+        These files can contain sensitive information.
+        Do not share them with untrusted persons.
+    </p>
+    <div class="text-center">
+        <a class="btn" href='/hw_drivers/download_logs'>IoT logs</a>
+    </div>
+{% endblock %}
