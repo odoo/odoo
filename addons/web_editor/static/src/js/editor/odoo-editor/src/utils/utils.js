@@ -1887,6 +1887,8 @@ export function isWhitespace(value) {
 export function isVisible(node) {
     return !!node && (
         (node.nodeType === Node.TEXT_NODE && isVisibleTextNode(node)) ||
+        (node.nodeType === Node.ELEMENT_NODE &&
+            (node.getAttribute("t-esc") || node.getAttribute("t-out"))) ||
         isSelfClosingElement(node) ||
         isIconElement(node) ||
         hasVisibleContent(node)
