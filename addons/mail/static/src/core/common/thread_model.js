@@ -655,7 +655,7 @@ export class Thread extends Record {
         }
         try {
             // ordered messages received: newest to oldest
-            const { messages: rawMessages } = await rpc(this.getFetchRoute(), {
+            const { data, messages } = await rpc(this.getFetchRoute(), {
                 ...this.getFetchParams(),
                 limit:
                     !around && around !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2,
@@ -663,9 +663,9 @@ export class Thread extends Record {
                 around,
                 before,
             });
-            const messages = this.store.Message.insert(rawMessages.reverse(), { html: true });
+            this.store.insert(data, { html: true });
             this.isLoaded = true;
-            return messages;
+            return this.store.Message.insert(messages.reverse());
         } catch (e) {
             this.hasLoadingFailed = true;
             throw e;
@@ -790,8 +790,14 @@ export class Thread extends Record {
         if (this.model === "discuss.channel") {
             return "/discuss/channel/messages";
         }
-        if (this.model === "mail.box") {
-            return `/mail/${this.id}/messages`;
+        if (this.model === "mail.box" && this.id === "inbox") {
+            return `/mail/inbox/messages`;
+        }
+        if (this.model === "mail.box" && this.id === "starred") {
+            return `/mail/starred/messages`;
+        }
+        if (this.model === "mail.box" && this.id === "history") {
+            return `/mail/history/messages`;
         }
         return "/mail/thread/messages";
     }

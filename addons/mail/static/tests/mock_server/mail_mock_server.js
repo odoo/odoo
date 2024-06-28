@@ -313,15 +313,21 @@ async function discuss_channel_messages(request) {
         ["message_type", "!=", "user_notification"],
     ];
     const res = MailMessage._message_fetch(domain, search_term, before, after, around, limit);
+    const { messages } = res;
+    delete res.messages;
     if (!around) {
-        MailMessage.set_message_done(res.messages.map((message) => message.id));
+        MailMessage.set_message_done(messages.map((message) => message.id));
     }
     return {
         ...res,
-        messages: MailMessage._message_format(
-            res.messages.map((message) => message.id),
-            true
-        ),
+        data: new mailDataHelpers.Store(
+            "Message",
+            MailMessage._message_format(
+                messages.map((message) => message.id),
+                makeKwArgs({ for_current_user: true })
+            )
+        ).get_result(),
+        messages: messages.map((message) => ({ id: message.id })),
     };
 }
 
@@ -443,7 +449,9 @@ async function discuss_history_messages(request) {
     const { after, around, before, limit = 30, search_term } = await parseRequestParams(request);
     const domain = [["needaction", "=", false]];
     const res = MailMessage._message_fetch(domain, search_term, before, after, around, limit);
-    const messagesWithNotification = res.messages.filter((message) => {
+    const { messages } = res;
+    delete res.messages;
+    const messagesWithNotification = messages.filter((message) => {
         const notifs = MailNotification.search_read([
             ["mail_message_id", "=", message.id],
             ["is_read", "=", true],
@@ -451,13 +459,16 @@ async function discuss_history_messages(request) {
         ]);
         return notifs.length > 0;
     });
-
     return {
         ...res,
-        messages: MailMessage._message_format(
-            messagesWithNotification.map((message) => message.id),
-            true
-        ),
+        data: new mailDataHelpers.Store(
+            "Message",
+            MailMessage._message_format(
+                messagesWithNotification.map((message) => message.id),
+                makeKwArgs({ for_current_user: true })
+            )
+        ).get_result(),
+        messages: messages.map((message) => ({ id: message.id })),
     };
 }
 
@@ -470,12 +481,18 @@ async function discuss_inbox_messages(request) {
     const { after, around, before, limit = 30, search_term } = await parseRequestParams(request);
     const domain = [["needaction", "=", true]];
     const res = MailMessage._message_fetch(domain, search_term, before, after, around, limit);
+    const { messages } = res;
+    delete res.messages;
     return {
         ...res,
-        messages: MailMessage._message_format(
-            res.messages.map((message) => message.id),
-            makeKwArgs({ for_current_user: true, add_followers: true })
-        ),
+        data: new mailDataHelpers.Store(
+            "Message",
+            MailMessage._message_format(
+                messages.map((message) => message.id),
+                makeKwArgs({ for_current_user: true, add_followers: true })
+            )
+        ).get_result(),
+        messages: messages.map((message) => ({ id: message.id })),
     };
 }
 
@@ -728,12 +745,18 @@ async function discuss_starred_messages(request) {
     const { after, before, limit = 30, search_term } = await parseRequestParams(request);
     const domain = [["starred_partner_ids", "in", [this.env.user.partner_id]]];
     const res = MailMessage._message_fetch(domain, search_term, before, after, false, limit);
+    const { messages } = res;
+    delete res.messages;
     return {
         ...res,
-        messages: MailMessage._message_format(
-            res.messages.map((message) => message.id),
-            true
-        ),
+        data: new mailDataHelpers.Store(
+            "Message",
+            MailMessage._message_format(
+                messages.map((message) => message.id),
+                makeKwArgs({ for_current_user: true })
+            )
+        ).get_result(),
+        messages: messages.map((message) => ({ id: message.id })),
     };
 }
 
@@ -764,13 +787,19 @@ async function mail_thread_messages(request) {
         ["message_type", "!=", "user_notification"],
     ];
     const res = MailMessage._message_fetch(domain, search_term, before, after, around, limit);
-    MailMessage.set_message_done(res.messages.map((message) => message.id));
+    const { messages } = res;
+    delete res.messages;
+    MailMessage.set_message_done(messages.map((message) => message.id));
     return {
         ...res,
-        messages: MailMessage._message_format(
-            res.messages.map((message) => message.id),
-            true
-        ),
+        data: new mailDataHelpers.Store(
+            "Message",
+            MailMessage._message_format(
+                messages.map((message) => message.id),
+                makeKwArgs({ for_current_user: true })
+            )
+        ).get_result(),
+        messages: messages.map((message) => ({ id: message.id })),
     };
 }
 

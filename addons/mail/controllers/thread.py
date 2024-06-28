@@ -26,9 +26,14 @@ class ThreadController(http.Controller):
             ("message_type", "!=", "user_notification"),
         ]
         res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
+        messages = res.pop("messages")
         if not request.env.user._is_public():
-            res["messages"].set_message_done()
-        return {**res, "messages": res["messages"]._message_format(for_current_user=True)}
+            messages.set_message_done()
+        return {
+            **res,
+            "data": Store("Message", messages._message_format(for_current_user=True)).get_result(),
+            "messages": [{"id": message.id} for message in messages],
+        }
 
     @http.route("/mail/partner/from_email", methods=["POST"], type="json", auth="user")
     def mail_thread_partner_from_email(self, emails, additional_values=None):
