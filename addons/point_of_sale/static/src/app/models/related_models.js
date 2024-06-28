@@ -693,6 +693,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                     baseData[model] = {};
                 }
 
+                if (baseData[model][record.id]) {
+                    continue;
+                }
+
                 baseData[model][record.id] = record;
                 const result = create(model, record, true);
 
