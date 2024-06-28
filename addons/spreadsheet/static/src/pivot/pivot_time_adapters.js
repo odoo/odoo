@@ -7,7 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 
 const { pivotTimeAdapterRegistry } = registries;
-const { formatValue, toNumber, toString } = helpers;
+const { formatValue, toNumber, toJsDate, toString } = helpers;
 const { DEFAULT_LOCALE } = constants;
 
 const { DateTime } = luxon;
@@ -122,14 +122,22 @@ const odooMonthAdapter = {
     },
 };
 
+const NORMALIZED_QUARTER_REGEXP = /^[1-4]\/\d{4}$/;
+
 /**
  * normalized quarter value is "quarter/year"
  * e.g. "1/2020" for Q1 2020
  */
 const odooQuarterAdapter = {
     normalizeFunctionValue(value) {
-        const [quarter, year] = toString(value).split("/");
-        return `${quarter}/${year}`;
+        // spreadsheet normally interprets "4/2020" as the 1st April
+        // but it should be understood as a quarter here.
+        if (typeof value === "string" && NORMALIZED_QUARTER_REGEXP.test(value)) {
+            return value;
+        }
+        // Any other value is interpreted as any date-like spreadsheet value
+        const dateTime = toJsDate(value, DEFAULT_LOCALE);
+        return `${dateTime.getQuarter()}/${dateTime.getFullYear()}`;
     },
     toValueAndFormat(normalizedValue) {
         const [quarter, year] = normalizedValue.split("/");
