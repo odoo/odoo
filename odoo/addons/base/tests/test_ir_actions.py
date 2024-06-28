@@ -45,6 +45,7 @@ class TestServerActionsBase(TransactionCaseWithUserDemo):
         self.res_partner_parent_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'parent_id')])
         self.res_partner_children_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'child_ids')])
         self.res_partner_category_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'category_id')])
+        self.res_partner_latitude_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'partner_latitude')])
         self.res_country_model = Model.search([('model', '=', 'res.country')])
         self.res_country_name_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'name')])
         self.res_country_code_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'code')])
@@ -315,6 +316,15 @@ class TestServerActions(TestServerActionsBase):
         # nor execute a server action on it
         with self.assertRaises(AccessError), mute_logger('odoo.addons.base.models.ir_actions'):
             self_demo.with_context(self.context).run()
+
+    def test_90_convert_to_float(self):
+        # make sure eval_value convert the value into float for float-type fields
+        self.action.write({
+            'state': 'object_write',
+            'fields_lines': [Command.create({'col1': self.res_partner_latitude_field.id, 'value': '20.99'})],
+        })
+        line = self.action.fields_lines[0]
+        self.assertEqual(line.eval_value()[line.id], 20.99)
 
 
 class TestCustomFields(common.TransactionCase):
