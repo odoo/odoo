@@ -1234,6 +1234,7 @@ describe(`new urls`, () => {
     test(`don't load controllers when load action new`, async () => {
         stepAllNetworkCalls();
         redirect("/odoo/action-3/2");
+        logHistoryInteractions();
         Partner._views["form,false"] = /* xml */ `
             <form string="Partner">
                 <sheet>
@@ -1257,6 +1258,7 @@ describe(`new urls`, () => {
             "/web/action/load",
             "get_views",
             "web_read",
+            "Update the state without updating URL, nextState: actionStack,resId,action",
         ]);
         expect(browser.location.href).toBe("http://example.com/odoo/action-3/2", {
             message: "url did not change",
@@ -1278,7 +1280,11 @@ describe(`new urls`, () => {
         await contains(`.breadcrumb-item`).click();
         await animationFrame();
         expect(`.o_list_view`).toHaveCount(1);
-        expect.verifySteps(["web_search_read", "has_group"]);
+        expect.verifySteps([
+            "web_search_read",
+            "has_group",
+            "pushState http://example.com/odoo/action-3",
+        ]);
     });
 });
 
