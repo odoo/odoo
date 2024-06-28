@@ -100,28 +100,28 @@ export class ChannelSelector extends Component {
                 return;
             }
             if (this.props.category.id === "chats") {
-                const results = await this.sequential(async () => {
+                const data = await this.sequential(async () => {
                     this.state.navigableListProps.isLoading = true;
-                    const res = await this.orm.call("res.partner", "im_search", [
+                    const data = await this.orm.call("res.partner", "im_search", [
                         cleanedTerm,
                         10,
                         this.state.selectedPartners,
                     ]);
                     this.state.navigableListProps.isLoading = false;
-                    return res;
+                    return data;
                 });
-                if (!results) {
+                if (!data) {
                     this.state.navigableListProps.options = [];
                     return;
                 }
+                const { Persona: partners = [] } = this.store.insert(data);
                 const suggestions = this.suggestionService
-                    .sortPartnerSuggestions(results, cleanedTerm)
-                    .map((data) => {
-                        this.store.Persona.insert(data);
+                    .sortPartnerSuggestions(partners, cleanedTerm)
+                    .map((suggestion) => {
                         return {
                             classList: "o-discuss-ChannelSelector-suggestion",
-                            label: data.name,
-                            partner: data,
+                            label: suggestion.name,
+                            partner: suggestion,
                         };
                     });
                 if (this.store.self.name.includes(cleanedTerm)) {

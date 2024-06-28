@@ -702,12 +702,12 @@ export class Store extends BaseStore {
             }
         }
         if (!partners.length) {
-            const partnersData = await this.env.services.orm.silent.call(
-                "res.partner",
-                "im_search",
-                [searchTerm, limit]
-            );
-            this.Persona.insert(partnersData);
+            const data = await this.env.services.orm.silent.call("res.partner", "im_search", [
+                searchTerm,
+                limit,
+            ]);
+            const { Persona = [] } = this.store.insert(data);
+            partners.push(...Persona);
         }
         return partners;
     }
