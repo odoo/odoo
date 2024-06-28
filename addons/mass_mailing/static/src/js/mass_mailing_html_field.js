@@ -245,7 +245,7 @@ export class MassMailingHtmlField extends HtmlField {
             this._themeClassNames = "";
             const displayableThemes =
                 uiUtils.isSmall() ?
-                themesEls.filter(theme => !theme.dataset.hideFromMobile) :
+                Array.from(themesEls).filter(theme => !theme.dataset.hideFromMobile) :
                 themesEls;
             this._themeParams = Array.from(displayableThemes).map((theme) => {
                 const $theme = $(theme);
