@@ -2854,36 +2854,28 @@ options.registry.HideFooter = VisibilityPageOptionUpdate.extend({
 /**
  * Handles the edition of snippet's anchor name.
  */
-options.registry.anchor = options.Class.extend({
-    isTopOption: true,
+export class Anchor extends SnippetOption {
+    /**
+     * @override
+     */
+    static isTopOption = true;
 
-    /**
-     * @override
-     */
-    init() {
-        this._super(...arguments);
-        this.notification = this.bindService("notification");
-    },
-    /**
-     * @override
-     */
-    start() {
-        // Generate anchor and copy it to clipboard on click, show the tooltip on success
-        const buttonEl = this.el.querySelector("we-button");
+    constructor() {
+        super(...arguments);
+        this.notification = this.env.services.notification;
+    }
+
+    async onBuilt() {
         this.isModal = this.$target[0].classList.contains("modal");
-        if (buttonEl && !this.isModal) {
-            this._buildClipboard(buttonEl);
-        }
+    }
 
-        return this._super(...arguments);
-    },
     /**
      * @override
      */
-    onClone: function () {
+    onClone() {
         this.$target.removeAttr('data-anchor');
         this.$target.filter(':not(.carousel)').removeAttr('id');
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -2893,11 +2885,19 @@ options.registry.anchor = options.Class.extend({
      * @override
      */
     notify(name, data) {
-        this._super(...arguments);
+        super.notify(...arguments);
         if (name === "modalAnchor") {
-            this._buildClipboard(data.buttonEl);
+            this._copyAnchorToClipboard();
         }
-    },
+    }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    copyAnchorToClipboard() {
+        this._copyAnchorToClipboard();
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -2905,25 +2905,22 @@ options.registry.anchor = options.Class.extend({
 
     /**
      * @private
-     * @param {Element} buttonEl
      */
-    _buildClipboard(buttonEl) {
-        buttonEl.addEventListener("click", async (ev) => {
-            const anchorLink = this._getAnchorLink();
-            await browser.navigator.clipboard.writeText(anchorLink);
+    _copyAnchorToClipboard() {
+        const anchorLink = this._getAnchorLink();
+        browser.navigator.clipboard.writeText(anchorLink).then(() => {
             const message = markup(_t("Anchor copied to clipboard<br>Link: %s", anchorLink));
             this.notification.add(message, {
                 type: "success",
-                buttons: [{name: _t("Edit"), onClick: () => this._openAnchorDialog(buttonEl), primary: true}],
+                buttons: [{name: _t("Edit"), onClick: () => this._openAnchorDialog(), primary: true}],
             });
         });
-    },
+    }
 
     /**
      * @private
-     * @param {Element} buttonEl
      */
-    _openAnchorDialog(buttonEl) {
+    _openAnchorDialog() {
         const anchorDialog = class extends Component {
             static template = "website.dialog.anchorName";
             static props = { close: Function, confirm: Function, delete: Function, currentAnchor: String };
@@ -2959,7 +2956,7 @@ options.registry.anchor = options.Class.extend({
                 inputEl.classList.toggle('is-invalid', alreadyExists);
                 if (!alreadyExists) {
                     this._setAnchorName(anchorName);
-                    buttonEl.click();
+                    this._copyAnchorToClipboard();
                     return true;
                 }
             },
@@ -2971,12 +2968,12 @@ options.registry.anchor = options.Class.extend({
             };
         }
         this.dialog.add(anchorDialog, props);
-    },
+    }
     /**
      * @private
      * @param {String} value
      */
-    _setAnchorName: function (value) {
+    _setAnchorName(value) {
         if (value) {
             this.$target[0].id = value;
             if (!this.isModal) {
@@ -2986,14 +2983,14 @@ options.registry.anchor = options.Class.extend({
             this.$target.removeAttr('id data-anchor');
         }
         this.$target.trigger('content_changed');
-    },
+    }
     /**
      * Returns anchor text.
      *
      * @private
      * @returns {string}
      */
-    _getAnchorLink: function () {
+    _getAnchorLink() {
         if (!this.$target[0].id) {
             const $titles = this.$target.find('h1, h2, h3, h4, h5, h6');
             const title = $titles.length > 0 ? $titles[0].innerText : this.data.snippetName;
@@ -3006,7 +3003,7 @@ options.registry.anchor = options.Class.extend({
         }
         const pathName = this.isModal ? "" : this.ownerDocument.location.pathname;
         return `${pathName}#${this.$target[0].id}`;
-    },
+    }
     /**
      * Creates a safe id/anchor from text.
      *
@@ -3014,9 +3011,20 @@ options.registry.anchor = options.Class.extend({
      * @param {string} text
      * @returns {string}
      */
-    _text2Anchor: function (text) {
+    _text2Anchor(text) {
         return encodeURIComponent(text.trim().replace(/\s+/g, '-'));
-    },
+    }
+}
+registerWebsiteOption("Anchor", {
+    Class: Anchor,
+    template: "website.anchor",
+    selector: ":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *",
+    exclude: ".modal *, .oe_structure .oe_structure *, [data-oe-type=html] .oe_structure *, .s_popup",
+});
+registerWebsiteOption("AnchorModal", {
+    Class: Anchor,
+    selector: ".s_popup",
+    target: ".modal",
 });
 
 options.registry.HeaderBox = options.registry.Box.extend({

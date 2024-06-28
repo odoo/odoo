@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { registry } from "@web/core/registry";
 import { DynamicSnippetOptions } from "@website/snippets/s_dynamic_snippet/options";
 import {
     registerWebsiteOption,
@@ -66,4 +67,10 @@ registerWebsiteOption("DynamicSnippetBlogPostsOptions", {
     Class: DynamicSnippetBlogPostsOptions,
     template: "website_blog.s_blog_posts_option",
     selector: ".s_dynamic_snippet_blog_posts, .s_blog_posts",
+});
+
+const anchorOption = registry.category("snippet_options").get("Anchor");
+anchorOption.exclude += ",.o_wblog_post_content_field > :not(div, section)";
+registry.category("snippet_options").add("Anchor", anchorOption, {
+    force: true,
 });
