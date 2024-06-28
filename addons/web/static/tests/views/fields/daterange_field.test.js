@@ -1046,3 +1046,23 @@ test.tags("desktop")("date values are selected eagerly and do not flicker", asyn
     ]);
     expect.verifySteps(["onchange"]);
 });
+
+test("update the selected input date after removing the existing date", async () => {
+    Partner._fields.date_end = fields.Date({ string: "Date end" });
+    Partner._records[0].date_end = "2017-02-08";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+       <form>
+            <field name="date" widget="daterange" options="{'start_date_field': 'date_end'}" required="1" />
+        </form>`,
+        resId: 1,
+    });
+    await contains("input[data-field=date]").click();
+    await contains("input[data-field=date]").press("Backspace");
+    await contains(getPickerCell("12")).click();
+
+    expect("input[data-field=date]").toHaveValue("02/12/2017");
+});
