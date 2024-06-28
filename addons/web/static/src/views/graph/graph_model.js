@@ -171,8 +171,11 @@ export class GraphModel extends Model {
         metaData.groupBy = groupBy.length ? groupBy : this.initialGroupBy;
         if (metaData.mode !== "pie") {
             metaData.order = "graph_order" in context ? context.graph_order : metaData.order;
-            metaData.stacked =
-                "graph_stacked" in context ? context.graph_stacked : metaData.stacked;
+            if (comparison) {
+                metaData.stacked = false;
+            } else if ("graph_stacked" in context) {
+                metaData.stacked = context.graph_stacked;
+            }
             if (metaData.mode === "line") {
                 metaData.cumulated =
                     "graph_cumulated" in context ? context.graph_cumulated : metaData.cumulated;
