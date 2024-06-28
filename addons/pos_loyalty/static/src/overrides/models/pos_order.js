@@ -769,6 +769,9 @@ patch(PosOrder.prototype, {
                 if (reward.reward_type === "product") {
                     if (!reward.multi_product) {
                         const product = reward.reward_product_id;
+                        if (!product) {
+                            continue;
+                        }
                         unclaimedQty = this._computeUnclaimedFreeProductQty(
                             reward,
                             couponProgram.coupon_id,
