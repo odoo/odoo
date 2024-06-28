@@ -555,7 +555,7 @@ function getDisplayNameFromGroupData(field, rawValue) {
     if (field.type === "selection") {
         return Object.fromEntries(field.selection)[rawValue];
     }
-    if (["many2one", "many2many", "tags"].includes(field.type)) {
+    if (["many2one", "many2many", "tags", "many2one_reference"].includes(field.type)) {
         return rawValue ? rawValue[1] : false;
     }
     return rawValue;
