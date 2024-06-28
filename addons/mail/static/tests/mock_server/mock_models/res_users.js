@@ -54,13 +54,13 @@ export class ResUsers extends webModels.ResUsers {
             });
         } else if (this.env.cookie.get("dgid")) {
             const [guest] = MailGuest.read(this.env.cookie.get("dgid"));
-            store.add("Guest", {
+            store.add("Persona", {
                 id: guest.id,
                 name: guest.name,
                 type: "guest",
                 write_date: guest.write_date,
             });
-            store.add({ self: { id: guest.id, type: "guest" }});
+            store.add({ self: { id: guest.id, type: "guest" } });
         }
     }
     systray_get_activities() {
