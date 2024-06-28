@@ -1991,6 +1991,19 @@ class EmptyChar(models.Model):
     name = fields.Char('Name')
 
 
+class EmptyInt(models.Model):
+    _name = 'test_new_api.empty_int'
+    _description = 'A model to test empty int'
+
+    num = fields.Integer('Number')
+    number = fields.Integer('Computed Number', store=True, compute='_compute_number')
+
+    @api.depends('num')
+    def _compute_number(self):
+        for r in self.filtered(lambda r: r.num >= 0):
+            r.number = r.num
+
+
 class Team(models.Model):
     _name = 'test_new_api.team'
     _description = 'Odoo Team'

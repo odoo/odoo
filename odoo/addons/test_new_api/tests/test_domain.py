@@ -7,6 +7,12 @@ from odoo.tests import common
 
 class TestDomain(common.TransactionCase):
 
+    def _search(self, model, domain, init_domain=None):
+        sql = model.search(domain, order="id")
+        fil = model.search(init_domain or [], order="id").filtered_domain(domain)
+        self.assertEqual(sql._ids, fil._ids, f"filtered_domain do not match SQL search for domain: {domain}")
+        return sql
+
     def test_00_test_bool_undefined(self):
         """
         Check that undefined/empty values in database is equal to False and different of True
@@ -28,16 +34,54 @@ class TestDomain(common.TransactionCase):
         model = self.env['domain.bool']
         all_bool = model.search([])
         for f in ['bool_true', 'bool_false', 'bool_undefined', 'x_bool_new_undefined']:
-            eq_1 = model.search([(f, '=', False)])
-            neq_1 = model.search([(f, '!=', True)])
+            eq_1 = self._search(model, [(f, '=', False)])
+            neq_1 = self._search(model, [(f, '!=', True)])
             self.assertEqual(eq_1, neq_1, '`= False` (%s) <> `!= True` (%s) ' % (len(eq_1), len(neq_1)))
 
-            eq_2 = model.search([(f, '=', True)])
-            neq_2 = model.search([(f, '!=', False)])
+            eq_2 = self._search(model, [(f, '=', True)])
+            neq_2 = self._search(model, [(f, '!=', False)])
             self.assertEqual(eq_2, neq_2, '`= True` (%s) <> `!= False` (%s) ' % (len(eq_2), len(neq_2)))
 
             self.assertEqual(eq_1+eq_2, all_bool, 'True + False != all')
             self.assertEqual(neq_1+neq_2, all_bool, 'not True + not False != all')
+
+    def test_empty_int(self):
+        EmptyInt = self.env['test_new_api.empty_int']
+        records = EmptyInt.create([
+            {'num': -1},  # number not computed (stored as null)
+            {'num': 42},
+            {'num': 0},
+            {'num': False},  # note that in python: False == 0
+        ])
+        # check read (null is returned as 0)
+        self.assertListEqual(records.mapped('num'), [-1, 42, 0, 0])
+        self.assertListEqual(records.mapped('number'), [0, 42, 0, 0])
+
+        # check database value
+        self.env.flush_all()
+        self.cr.execute('SELECT number FROM test_new_api_empty_int WHERE id = %s', [records[0].id])
+        value = self.cr.fetchone()[0]
+        self.assertEqual(value, None, "-1 computation does not run and should be stored as null in database")
+
+        self.assertListEqual(self._search(EmptyInt, [('number', '=', 42)]).mapped('number'), [42])
+        self.assertListEqual(self._search(EmptyInt, [('number', '!=', 42)]).mapped('number'), [0, 0, 0])
+
+        self.assertListEqual(self._search(EmptyInt, [('number', '=', 0)]).mapped('number'), [0, 0, 0])
+        self.assertListEqual(self._search(EmptyInt, [('number', '!=', 0)]).mapped('number'), [42])
+
+        self.assertListEqual(self._search(EmptyInt, [('number', '=', False)]).mapped('number'), [0, 0, 0])
+        self.assertListEqual(self._search(EmptyInt, [('number', '!=', False)]).mapped('number'), [42])
+
+        values = [42, 0, False]
+        for length in range(len(values) + 1):
+            for subset in combinations(values, length):
+                sublist = list(subset)
+                sublist_remained = [v for v in values if v not in subset]
+                result_in = self._search(EmptyInt, [('number', 'in', sublist)]).mapped('number')
+                result_not_in = self._search(EmptyInt, [('number', 'not in', sublist)]).mapped('number')
+                self.assertListEqual(sorted(set(result_in)), sorted(set(sublist)), f"in {sublist}")
+                self.assertListEqual(sorted(set(result_not_in)), sorted(set(sublist_remained)), f"not in {sublist}")
+                self.assertEqual(len(result_in) + len(result_not_in), len(records), f"missing records for search {sublist}")
 
     def test_empty_char(self):
         EmptyChar = self.env['test_new_api.empty_char']

@@ -1894,7 +1894,6 @@ class TestMany2many(TransactionCase):
         ''']):
             self.User.search([('groups_id', 'in', group.ids)], order='id')
 
-        group_color = group.color
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
@@ -1916,12 +1915,13 @@ class TestMany2many(TransactionCase):
                 AND "res_users__groups_id"."gid" IN (
                     SELECT "res_groups"."id"
                     FROM "res_groups"
-                    WHERE ("res_groups"."color" = %s)
+                    WHERE (("res_groups"."color" = %s) OR "res_groups"."color" IS NULL)
                 )
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('groups_id.color', '=', group_color)], order='id')
+            # note that group.color is 0
+            self.User.search([('groups_id.color', '=', group.color)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
