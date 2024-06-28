@@ -7,7 +7,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_popup_add_remove', {
     url: '/',
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         name: "Popup",
         id: "s_popup"
 }), {
@@ -19,7 +19,6 @@ wTourUtils.registerWebsitePreviewTour('snippet_popup_add_remove', {
     content: 'Check s_popup setting are loaded, wait panel is visible',
     in_modal: false,
     trigger: '.o_we_customize_panel',
-    run: () => null,
 }, {
     content: `Remove the s_popup snippet`,
     in_modal: false,
@@ -29,17 +28,15 @@ wTourUtils.registerWebsitePreviewTour('snippet_popup_add_remove', {
     content: 'Check the s_popup was removed',
     in_modal: false,
     trigger: ':iframe #wrap.o_editable:not(:has([data-snippet="s_popup"]))',
-    run: () => null,
 },
 // Test that undoing dropping the snippet removes the invisible elements panel.
-wTourUtils.dragNDrop({
+...wTourUtils.dragNDrop({
     name: "Popup",
     id: "s_popup"
 }), {
     content: "The popup should be in the invisible elements panel.",
     in_modal: false,
     trigger: '.o_we_invisible_el_panel .o_we_invisible_entry',
-    run: () => null, // It's a check.
 }, {
     content: "Click on the 'undo' button.",
     in_modal: false,
@@ -49,9 +46,7 @@ wTourUtils.dragNDrop({
     content: "Check that the s_popup was removed.",
     in_modal: false,
     trigger: ':iframe #wrap.o_editable:not(:has([data-snippet="s_popup"]))',
-    run: () => null, // It's a check.
 }, {
     content: "The invisible elements panel should also be removed.",
     trigger: '#oe_snippets:not(:has(.o_we_invisible_el_panel)',
-    run: () => null, // It's a check.
 }]);

@@ -222,13 +222,18 @@ function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") {
  */
 function clickOnSnippet(snippet, position = "bottom") {
     const trigger = snippet.id ? `#wrapwrap .${snippet.id}` : snippet;
-    return {
-        trigger: `:iframe ${trigger}`,
-        extra_trigger: "body.editor_has_snippets",
+    return [
+        {
+            trigger: "body.editor_has_snippets",
+            noPrepend: true,
+        },
+        {
+            trigger: `:iframe ${trigger}`,
         content: markup(_t("<b>Click on a snippet</b> to access its options menu.")),
-        position: position,
-        run: "click",
-    };
+            position: position,
+            run: "click",
+        },
+    ];
 }
 
 function clickOnSave(position = "bottom", timeout) {
@@ -272,13 +277,17 @@ function clickOnSave(position = "bottom", timeout) {
  * @param {*} position
  */
 function clickOnText(snippet, element, position = "bottom") {
-    return {
-        trigger: snippet.id ? `:iframe #wrapwrap .${snippet.id} ${element}` : snippet,
-        extra_trigger: ":iframe body.editor_enable",
+    return [
+        {
+            trigger: ":iframe body.editor_enable",
+        },
+        {
+            trigger: snippet.id ? `:iframe #wrapwrap .${snippet.id} ${element}` : snippet,
         content: markup(_t("<b>Click on a text</b> to start editing it.")),
-        position: position,
-        run: "click",
-    };
+            position: position,
+            run: "click",
+        },
+    ];
 }
 
 /**
@@ -287,15 +296,20 @@ function clickOnText(snippet, element, position = "bottom") {
  * @param {*} position Where the purple arrow will show up
  */
 function dragNDrop(snippet, position = "bottom") {
-    return {
-        trigger: `#oe_snippets .oe_snippet[name="${snippet.name}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
-        extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+    return [
+        {
+            trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+            noPrepend: true,
+        },
+        {
+            trigger: `#oe_snippets .oe_snippet[name="${snippet.name}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
         content: markup(_t("Drag the <b>%s</b> building block and drop it at the bottom of the page.", snippet.name)),
-        position: position,
-        // Normally no main snippet can be dropped in the default footer but
-        // targeting it allows to force "dropping at the end of the page".
-        run: "drag_and_drop :iframe #wrapwrap > footer",
-    };
+            position: position,
+            // Normally no main snippet can be dropped in the default footer but
+            // targeting it allows to force "dropping at the end of the page".
+            run: "drag_and_drop :iframe #wrapwrap > footer",
+        },
+    ];
 }
 
 function goBackToBlocks(position = "bottom") {
@@ -308,13 +322,17 @@ function goBackToBlocks(position = "bottom") {
 }
 
 function goToTheme(position = "bottom") {
-    return {
-        trigger: '.o_we_customize_theme_btn',
-        extra_trigger: '#oe_snippets.o_loaded',
-        content: _t("Go to the Theme tab"),
-        position: position,
-        run: "click",
-    };
+    return [
+        {
+            trigger: "#oe_snippets.o_loaded",
+        },
+        {
+            trigger: ".o_we_customize_theme_btn",
+            content: _t("Go to the Theme tab"),
+            position: position,
+            run: "click",
+        },
+    ];
 }
 
 function selectHeader(position = "bottom") {
@@ -435,9 +453,6 @@ function registerBackendAndFrontendTour(name, options, steps) {
             for (const step of steps()) {
                 const newStep = Object.assign({}, step);
                 newStep.trigger = `:iframe ${step.trigger}`;
-                if (step.extra_trigger) {
-                    newStep.extra_trigger = `:iframe ${step.extra_trigger}`;
-                }
                 newSteps.push(newStep);
             }
             return newSteps;

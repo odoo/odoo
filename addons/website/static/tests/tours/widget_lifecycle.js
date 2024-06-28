@@ -14,7 +14,7 @@ wTourUtils.registerWebsitePreviewTour("widget_lifecycle", {
     url: "/",
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: "s_countdown",
         name: "Countdown",
     }),

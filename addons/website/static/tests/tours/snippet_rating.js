@@ -6,8 +6,8 @@ wTourUtils.registerWebsitePreviewTour("snippet_rating", {
     url: "/",
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({ id: "s_rating", name: "Rating" }),
-    wTourUtils.clickOnSnippet({ id: "s_rating", name: "Rating" }),
+    ...wTourUtils.dragNDrop({ id: "s_rating", name: "Rating" }),
+    ...wTourUtils.clickOnSnippet({ id: "s_rating", name: "Rating" }),
     wTourUtils.changeOption("Rating", "we-select:has([data-select-class]) we-toggler"),
     wTourUtils.changeOption("Rating", 'we-button[data-select-class="s_rating_inline"]'),
     {

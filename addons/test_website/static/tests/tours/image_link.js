@@ -22,7 +22,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     url: '/',
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
     }),

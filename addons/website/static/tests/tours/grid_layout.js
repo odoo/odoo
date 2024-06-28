@@ -12,8 +12,8 @@ wTourUtils.registerWebsitePreviewTour('website_replace_grid_image', {
     url: '/',
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop(snippet),
-    wTourUtils.clickOnSnippet(snippet),
+    ...wTourUtils.dragNDrop(snippet),
+    ...wTourUtils.clickOnSnippet(snippet),
     {
         content: "Toggle to grid mode",
         trigger: '.o_we_user_value_widget[data-name="grid_mode"]',
@@ -58,11 +58,11 @@ wTourUtils.registerWebsitePreviewTour("scroll_to_new_grid_item", {
     edition: true,
 }, () => [
     // Drop enough snippets to scroll.
-    wTourUtils.dragNDrop({id: "s_text_image", name: "Text - Image"}),
-    wTourUtils.dragNDrop({id: "s_image_text", name: "Image - Text"}),
-    wTourUtils.dragNDrop({id: "s_image_text", name: "Image - Text"}),
+    ...wTourUtils.dragNDrop({id: "s_text_image", name: "Text - Image"}),
+    ...wTourUtils.dragNDrop({id: "s_image_text", name: "Image - Text"}),
+    ...wTourUtils.dragNDrop({id: "s_image_text", name: "Image - Text"}),
     // Toggle the first snippet to grid mode.
-    wTourUtils.clickOnSnippet({id: "s_text_image", name: "Text - Image"}),
+    ...wTourUtils.clickOnSnippet({id: "s_text_image", name: "Text - Image"}),
     wTourUtils.changeOption("layout_column", 'we-button[data-name="grid_mode"]'),
     // Add a new grid item.
     wTourUtils.changeOption("layout_column", 'we-button[data-add-element="image"]'),

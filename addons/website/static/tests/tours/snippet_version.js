@@ -7,11 +7,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_version_1", {
     url: "/",
     test: true,
 }, () => [
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_test_snip',
         name: 'Test snip',
     }),
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
     }),

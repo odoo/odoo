@@ -914,7 +914,10 @@ function editContactUs(steps) {
         edition: true,
     }, () => [
         {
-            ...wTourUtils.dragNDrop({id: "s_website_form", name: "Form"}),
+            trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        },
+        {
+            trigger: `#oe_snippets .oe_snippet[name="Form"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
             run: "drag_and_drop :iframe #wrap",
         },
         {
@@ -934,7 +937,7 @@ function editContactUs(steps) {
             trigger: ".o_we_add_snippet_btn",
             run: "click",
         },
-        wTourUtils.dragNDrop({id: "s_three_columns", name: "Columns"}),
+        ...wTourUtils.dragNDrop({id: "s_three_columns", name: "Columns"}),
         {
             content: "Select the first column",
             trigger: ":iframe .s_three_columns .row > :nth-child(1)",
@@ -973,7 +976,10 @@ function editContactUs(steps) {
         edition: true,
     }, () => [
         {
-            ...wTourUtils.dragNDrop({id: "s_website_form", name: "Form"}),
+            trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        },
+        {
+            trigger: `#oe_snippets .oe_snippet[name="Form"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
             run: "drag_and_drop :iframe #wrap",
         },
         {

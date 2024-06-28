@@ -15,7 +15,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     edition: true,
 }, () => [
     // 1. Create a new link from scratch.
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
     }),
@@ -129,7 +129,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     // 4. Add link on image.
     ...wTourUtils.clickOnEditAndWaitEditMode(),
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_three_columns',
         name: 'Columns',
     }),

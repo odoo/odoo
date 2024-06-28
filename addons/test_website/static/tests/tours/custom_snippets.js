@@ -26,7 +26,7 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
     edition: true,
     test: true,
 }, () => [
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_banner',
         name: 'Banner',
     }),
@@ -73,7 +73,7 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
         trigger: ".oe_snippet[name='Custom Banner'] we-button.o_we_confirm_btn",
         run: "click",
     },
-    wTourUtils.dragNDrop({ name: "Bruce Banner" }),
+    ...wTourUtils.dragNDrop({ name: "Bruce Banner" }),
     {
         content: "ensure banner section exists",
         trigger: ":iframe #wrap section[data-name='Banner']",
