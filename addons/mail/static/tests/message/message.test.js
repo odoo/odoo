@@ -13,6 +13,7 @@ import {
     startServer,
     step,
     triggerHotkey,
+    triggerEvents,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockDate, mockTimeZone, tick } from "@odoo/hoot-mock";
@@ -589,7 +590,7 @@ test("Two users reacting with the same emoji", async () => {
     await contains(".o-mail-MessageReaction", { text: "😅2" });
 });
 
-test("Reaction summary", async () => {
+test("Reaction summary and view reactions on the message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -606,10 +607,10 @@ test("Reaction summary", async () => {
     await contains(".o-mail-Message", { text: "Hello world" });
     const partnerNames = ["Foo", "Bar", "FooBar", "Bob"];
     const expectedSummaries = [
-        "Foo has reacted with 😅",
-        "Foo and Bar have reacted with 😅",
-        "Foo, Bar, FooBar have reacted with 😅",
-        "Foo, Bar, FooBar and 1 other person have reacted with 😅",
+        "😅 reacted by Foo",
+        "😅 reacted by Foo and Bar",
+        "😅 reacted by Foo, Bar and FooBar",
+        "😅 reacted by Foo, Bar, FooBar and 1 other",
     ];
     for (const [idx, name] of partnerNames.entries()) {
         const partner_id = pyEnv["res.partner"].create({ name });
@@ -621,7 +622,12 @@ test("Reaction summary", async () => {
                 after: ["span", { textContent: "Smileys & Emotion" }],
                 text: "😅",
             });
-            await contains(`.o-mail-MessageReaction[title="${expectedSummaries[idx]}"]`);
+            await contains(".o-mail-MessageReaction", { text: `😅${idx + 1}` });
+            await triggerEvents(".o-mail-MessageReaction", ["mouseover"], { text: `😅${idx + 1}` });
+            await contains(".o-mail-MessageReactionList", { text: expectedSummaries[idx] });
+            await click(".o-mail-MessageReactionList");
+            await contains(".o-mail-MessageReactionMenu", { text: `😅${idx + 1}` });
+            await click(".modal-dialog");
         });
     }
 });
@@ -1713,28 +1719,6 @@ test("Can edit a message only containing an attachment", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await contains(".o-mail-Message-editable .o-mail-Composer-input");
-});
-
-test("Click on view reactions shows the reactions on the message", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_type: "channel",
-        name: "channel1",
-    });
-    pyEnv["mail.message"].create({
-        body: "Hello world",
-        res_id: channelId,
-        message_type: "comment",
-        model: "discuss.channel",
-    });
-    await start();
-    await openDiscuss(channelId);
-    await click("[title='Add a Reaction']");
-    await click(".o-Emoji", { text: "😅" });
-    await contains(".o-mail-MessageReaction", { text: "😅1" });
-    await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='View Reactions']");
-    await contains(".o-mail-MessageReactionMenu", { text: "😅1" });
 });
 
 test("discuss - bigger font size when there is only emoji", async () => {

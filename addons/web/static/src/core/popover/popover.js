@@ -97,6 +97,7 @@ export class Popover extends Component {
         closeOnClickAway: { optional: true, type: Function },
         closeOnEscape: { optional: true, type: Boolean },
         setActiveElement: { optional: true, type: Boolean },
+        closeOnHoverAway: { optional: true, type: Boolean },
 
         // Technical props
         ref: { optional: true, type: Function },
@@ -116,6 +117,9 @@ export class Popover extends Component {
         this.position = usePosition("ref", () => this.props.target, {
             onPositioned: (el, solution) => {
                 (this.props.onPositioned || this.onPositioned.bind(this))(el, solution);
+                if (this.props.arrow && this.props.onPositioned) {
+                    this.onPositioned.bind(this)(el, solution);
+                }
 
                 // opening animation
                 if (shouldAnimate) {

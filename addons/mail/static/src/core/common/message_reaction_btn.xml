@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="mail.messageReactionBtn">
+        <Dropdown state="preview" position="'bottom-start'" arrow="true" manul="true">
+            <t t-call="mail.singleReactionBtn"/>
+            <t t-set-slot="content">
+                <t t-call="mail.messageReactionMenuList"/>
+            </t>
+        </Dropdown>    
+    </t>
+    
+    <t t-name="mail.singleReactionBtn">
+        <button class="o-mail-MessageReaction btn d-flex p-0 border rounded-1 mb-1"
+            t-on-click="() => this.onClickReaction(props.reaction)"
+            t-on-contextmenu="onContextMenu"
+            t-att-class="{
+                'o-selfReacted border-primary text-primary fw-bolder': this.hasSelfReacted(props.reaction),
+                'bg-view': !this.hasSelfReacted(props.reaction),
+                'ms-1': env.inChatWindow and env.alignedRight,
+                'me-1': !(env.inChatWindow and env.alignedRight),
+         }" t-att-title="this.getReactionSummary(props.reaction)"
+            t-ref="root"
+         >
+            <span class="mx-1" t-esc="props.reaction.content"/>
+            <span class="mx-1" t-esc="props.reaction.count"/>
+        </button>
+    </t>
+    
+    <t t-name="mail.messageReactionMenuList">
+        <div t-ref="preview">
+            <span>Here Comes and Reaction Menu...</span>
+        </div>
+    </t>
+    
+    
+</templates>
