@@ -4359,7 +4359,7 @@ class MailThread(models.AbstractModel):
 
         return True
 
-    def message_get_followers(self, after=None, limit=100, filter_recipients=False):
+    def message_get_followers(self, after=None, limit=20, offset=0, filter_recipients=False):
         self.ensure_one()
         domain = [
             ("res_id", "=", self.id),
@@ -4373,9 +4373,15 @@ class MailThread(models.AbstractModel):
                 ('partner_id', '!=', self.env.user.partner_id.id),
                 ("partner_id.active", "=", True),
             ]])
-        if after:
-            domain = expression.AND([domain, [('id', '>', after)]])
-        return self.env["mail.followers"].search(domain, limit=limit, order='id ASC')._format_for_chatter()
+
+        followers_count = self.env["mail.followers"].search_count(domain)
+        if followers_count <= 150:
+            followers = self.env["mail.followers"].search(domain, offset=offset, limit=limit, order="name ASC")._format_for_chatter()
+        else:
+            if after:
+                domain = expression.AND([domain, [('id', '>', after)]])
+            followers = self.env["mail.followers"].search(domain, limit=limit, order='id ASC')._format_for_chatter()
+        return followers
 
     # ------------------------------------------------------
     # THREAD MESSAGE UPDATE
