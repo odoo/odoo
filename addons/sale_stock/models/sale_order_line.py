@@ -41,6 +41,24 @@ class SaleOrderLine(models.Model):
             else:
                 line.display_qty_widget = False
 
+    def _reservation_moves_filter(self, move):
+        """
+        Filter of the `_reservation_move` method.
+        """
+        self.ensure_one()
+        product = self.product_id
+        stock_location = self.order_id.warehouse_id.lot_stock_id
+        return (move.state != 'cancel' and move.product_id == product
+                and (move.location_id == stock_location or move._is_dropshipped()))
+
+    def _reservation_moves(self):
+        """
+        Helper method that determines the moves relevant for the reserved qty report
+        E.g: in pick > pack > ship: determines the pick moves related to the line
+        """
+        self.ensure_one()
+        return self.order_id.picking_ids.move_ids.filtered(self._reservation_moves_filter)
+
     @api.depends(
         'product_id', 'customer_lead', 'product_uom_qty', 'product_uom', 'order_id.commitment_date',
         'move_ids', 'move_ids.forecast_expected_date', 'move_ids.forecast_availability',
@@ -77,7 +95,7 @@ class SaleOrderLine(models.Model):
             )
             line.qty_available_today = 0
             line.free_qty_today = 0
-            for move in moves:
+            for move in line._reservation_moves():
                 line.qty_available_today += move.product_uom._compute_quantity(move.quantity, line.product_uom)
                 line.free_qty_today += move.product_id.uom_id._compute_quantity(move.forecast_availability, line.product_uom)
             line.scheduled_date = line.order_id.commitment_date or line._expected_date()
