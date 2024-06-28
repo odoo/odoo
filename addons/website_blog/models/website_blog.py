@@ -168,7 +168,7 @@ class BlogPost(models.Model):
         return """
             <p class="o_default_snippet_text">%(text)s</p>
         """ % {"text": text}
-    name = fields.Char('Title', required=True, translate=True, default='')
+    name = fields.Char('Title', required=True, translate=True, default='', write_empty_string=True)
     subtitle = fields.Char('Sub Title', translate=True)
     author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id, index='btree_not_null')
     author_avatar = fields.Binary(related='author_id.image_128', string="Avatar", readonly=False)

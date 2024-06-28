@@ -1414,7 +1414,7 @@ class expression(object):
                     push_result(model._condition_to_sql(alias, left, operator, right, self.query))
 
                     if not need_wildcard:
-                        right = field.convert_to_column(right, model, validate=False)
+                        right = field.convert_to_column(right, model, validate=False) or ''
 
                     # a prefilter using trigram index to speed up '=', 'like', 'ilike'
                     # '!=', '<=', '<', '>', '>=', 'in', 'not in', 'not like', 'not ilike' cannot use this trick

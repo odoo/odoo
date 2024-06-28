@@ -219,7 +219,8 @@ class Partner(models.Model):
                 values['type'] = None
         return values
 
-    name = fields.Char(index=True, default_export_compatible=True)
+    # XXX empty as null for odoo/addons/base/tests/test_avatar_mixin.py test avatar, is this still needed?
+    name = fields.Char(index=True, default_export_compatible=True, write_empty_string=True)
     complete_name = fields.Char(compute='_compute_complete_name', store=True, index=True)
     title: PartnerTitle = fields.Many2one('res.partner.title')
     parent_id: Partner = fields.Many2one('res.partner', string='Related Company', index=True)

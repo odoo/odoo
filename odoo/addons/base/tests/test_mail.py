@@ -570,8 +570,8 @@ class TestEmailTools(BaseCase):
             'deboulonneur@example.com',
             'deboulonneur@example.com',
             'deboulonneur@example.comdéboulonneur',
-            False,
-            False,  # need fix over 'getadresses'
+            '',
+            '',  # need fix over 'getadresses'
             'deboulonneur.😊@example.com',
             'déboulonneur@examplé.com',
             'DéBoulonneur@examplé.com',

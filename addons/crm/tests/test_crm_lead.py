@@ -55,7 +55,7 @@ class TestCRMLead(TestCrmCommon):
         # classic
         self.assertEqual(lead.name, "TestMixed")
         # address
-        self.assertLeadAddress(lead, False, False, False, False, self.env['res.country.state'], self.country_ref)
+        self.assertLeadAddress(lead, '', '', '', '', self.env['res.country.state'], self.country_ref)
         # other contact fields
         for fname in set(PARTNER_FIELDS_TO_SYNC) - set(['function', 'lang']):
             self.assertEqual(lead[fname], self.contact_1[fname], 'No user input -> take from contact for field %s' % fname)
@@ -69,7 +69,7 @@ class TestCRMLead(TestCrmCommon):
 
         # update a single address fields -> only those are updated
         lead.write({'street': 'Super Street', 'city': 'Super City'})
-        self.assertLeadAddress(lead, 'Super Street', False, 'Super City', False, self.env['res.country.state'], self.country_ref)
+        self.assertLeadAddress(lead, 'Super Street', '', 'Super City', '', self.env['res.country.state'], self.country_ref)
 
         # change partner -> whole address updated
         lead.write({'partner_id': self.contact_company_1.id})
@@ -164,7 +164,7 @@ class TestCRMLead(TestCrmCommon):
             'name': 'TestLead',
             'partner_id': self.contact_company.id,
         })
-        self.assertEqual(lead.contact_name, False,
+        self.assertEqual(lead.contact_name, '',
                          "Lead contact name should be Falsy when dealing with companies")
         self.assertEqual(lead.partner_name, self.contact_company.name,
                          "Lead company name should be set to partner name if partner is a company")
@@ -208,10 +208,10 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.partner_name, empty_partner.name, "Partner name should be set as contact is a company")
         # PARTNER_ADDRESS_FIELDS_TO_SYNC
         self.assertEqual(lead.street, lead_data['street'], "Street should remain since partner has no address field set")
-        self.assertEqual(lead.street2, False, "Street2 should remain since partner has no address field set")
+        self.assertEqual(lead.street2, '', "Street2 should remain since partner has no address field set")
         self.assertEqual(lead.country_id, self.country_ref, "Country should remain since partner has no address field set")
-        self.assertEqual(lead.city, False, "City should remain since partner has no address field set")
-        self.assertEqual(lead.zip, False, "Zip should remain since partner has no address field set")
+        self.assertEqual(lead.city, '', "City should remain since partner has no address field set")
+        self.assertEqual(lead.zip, '', "Zip should remain since partner has no address field set")
         self.assertEqual(lead.state_id, self.env['res.country.state'], "State should remain since partner has no address field set")
         # PARTNER_FIELDS_TO_SYNC
         self.assertEqual(lead.lang_id, self.lang_en)
@@ -615,8 +615,8 @@ class TestCRMLead(TestCrmCommon):
         lead.unlink()
         self.assertEqual(meetings.exists(), meetings)
         self.assertFalse(meetings.opportunity_id)
-        self.assertEqual(set(meetings.mapped('res_id')), set([0]))
-        self.assertEqual(set(meetings.mapped('res_model')), set([False]))
+        self.assertEqual(set(meetings.mapped('res_id')), {0})
+        self.assertEqual(set(meetings.mapped('res_model')), {''})
 
     @users('user_sales_leads')
     def test_crm_lead_update_contact(self):

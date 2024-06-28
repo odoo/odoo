@@ -32,7 +32,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         fields_spec = self.env['test_new_api.message']._get_fields_spec()
         values = self.env['test_new_api.message'].onchange({}, [], fields_spec)['value']
         self.assertEqual(values['discussion'], False)
-        self.assertEqual(values['body'], False)
+        self.assertEqual(values['body'], '')
         self.assertEqual(values['author'], {'id': user.id, 'display_name': user.display_name})
         self.assertEqual(values['name'], f'[] {user.name}')
         self.assertEqual(values['size'], 0)
@@ -263,7 +263,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         self.assertEqual(multi.name, partner1.name)
         self.assertEqual(multi.lines, line1)
         self.assertEqual(line1.partner, partner1)
-        self.assertEqual(line1.name, False)
+        self.assertEqual(line1.name, '')
 
         fields_spec = multi._get_fields_spec()
         self.assertEqual(fields_spec, {
@@ -658,7 +658,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         # assigning 'tag_id' should modify 'move_id.tag_id' accordingly, which
         # should in turn recompute `move.tag_name` and `tag_name`
         form = Form(self.env['test_new_api.payment'], view)
-        self.assertEqual(form.tag_name, False)
+        self.assertEqual(form.tag_name, '')
         form.tag_id = foo
         self.assertEqual(form.tag_name, 'Foo')
         self.assertEqual(form.tag_string, '')
@@ -722,11 +722,11 @@ class TestOnchange(SavepointCaseWithUserDemo):
         })
 
         form = Form(self.env['test_new_api.multi.tag'])
-        self.assertEqual(form.name, False)
+        self.assertEqual(form.name, '')
         self.assertEqual(form.display_name, "")
 
         record = form.save()
-        self.assertEqual(record.name, False)
+        self.assertEqual(record.name, '')
         self.assertEqual(record.display_name, "")
 
     def test_reading_one2many_and_inverse_is_not_supported(self):
@@ -846,7 +846,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         self.assertEqual(multi.name, partner.name)
         self.assertEqual(multi.lines, line)
         self.assertEqual(line.partner, partner)
-        self.assertEqual(line.name, False)
+        self.assertEqual(line.name, '')
 
         fields_spec = {
             'name': {},
@@ -944,7 +944,7 @@ class TestComputeOnchange2(TransactionCase):
         # compute 'bar' and 'baz', but do not change its value
         record = model.create({'active': False, 'foo': "foo"})
         self.assertEqual(record.bar, "foor")
-        self.assertEqual(record.baz, False)
+        self.assertEqual(record.baz, '')
 
         # compute 'bar' but not 'baz'
         record = model.create({'active': False, 'foo': "foo", 'bar': "bar", 'baz': "baz"})
@@ -1092,7 +1092,7 @@ class TestComputeOnchange2(TransactionCase):
         # check computations of 'bar' (readonly) and 'baz' (editable)
         form = Form(self.env['test_new_api.compute.onchange'])
         self.assertEqual(form.bar, "r")
-        self.assertEqual(form.baz, False)
+        self.assertEqual(form.baz, '')
         form.active = True
         self.assertEqual(form.bar, "r")
         self.assertEqual(form.baz, "z")
@@ -1114,7 +1114,7 @@ class TestComputeOnchange2(TransactionCase):
 
         with form.line_ids.new() as line:
             # check computation of 'bar' (readonly)
-            self.assertEqual(line.foo, False)
+            self.assertEqual(line.foo, '')
             self.assertEqual(line.bar, "r")
             line.foo = "foo"
             self.assertEqual(line.foo, "foo")

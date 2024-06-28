@@ -55,7 +55,7 @@ class TestLeadEnrich(TestCrmCommon, MockIAPEnrich):
             leads.iap_enrich()
 
         for lead in leads:
-            self.assertEqual(lead.street, False)
+            self.assertEqual(lead.street, '')
 
     def test_lead_enrich_auto_setting(self):
         cron = self.env.ref('crm_iap_enrich.ir_cron_lead_enrichment')

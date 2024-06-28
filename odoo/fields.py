@@ -731,10 +731,13 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         assert operator not in ('any', 'not any')
 
         # determine whether the related field can be null
+        zero_value = None
+        if self.type in ('char', 'html', 'text'):
+            zero_value = ''
         if isinstance(value, (list, tuple)):
-            value_is_null = any(val is False or val is None for val in value)
+            value_is_null = any(val is False or val is None or val == zero_value for val in value)
         else:
-            value_is_null = value is False or value is None
+            value_is_null = value is False or value is None or value == zero_value
 
         can_be_null = (  # (..., '=', False) or (..., 'not in', [truthy vals])
             (operator not in expression.NEGATIVE_TERM_OPERATORS and value_is_null)
@@ -1741,6 +1744,7 @@ class _String(Field[str | typing.Literal[False]]):
     """ Abstract class for string fields. """
     translate = False                   # whether the field is translated
     size = None                         # maximum size of values (deprecated)
+    write_empty_string = False          # whether to write empty strings, default write "" as null - XXX use required instead?
 
     def __init__(self, string: str | Sentinel = SENTINEL, **kwargs):
         # translate is either True, False, or a callable
@@ -1792,12 +1796,11 @@ class _String(Field[str | typing.Literal[False]]):
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return None
-
         if isinstance(value, bytes):
-            s = value.decode()
+            value = value.decode()
         else:
-            s = str(value)
-        value = s[:self.size]
+            value = str(value)
+        value = value[:self.size]
         if callable(self.translate):
             # pylint: disable=not-callable
             value = self.translate(lambda t: None, value)
@@ -1805,7 +1808,7 @@ class _String(Field[str | typing.Literal[False]]):
 
     def convert_to_record(self, value, record):
         if value is None:
-            return False
+            return ''
         if callable(self.translate) and record.env.context.get('edit_translations'):
             if not self.get_trans_terms(value):
                 return value
@@ -1905,6 +1908,11 @@ class _String(Field[str | typing.Literal[False]]):
         cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
         records = cache.get_records_different_from(records, self, cache_value)
+        if records and cache_value is None:
+            # avoid storing nulls in translated fields
+            # re-check records to exclude empty strings
+            cache_value = ''
+            records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return
 
@@ -2113,7 +2121,8 @@ class Html(_String):
         return self._convert(value, record, validate)
 
     def _convert(self, value, record, validate):
-        if value is None or value is False:
+        value = super().convert_to_cache(value, record, validate)
+        if value is None:
             return None
 
         if not validate or not self.sanitize:
@@ -2962,7 +2971,7 @@ class Reference(Selection):
         if isinstance(value, BaseModel):
             if not validate or (value._name in self.get_values(record.env) and len(value) <= 1):
                 return "%s,%s" % (value._name, value.id) if value else None
-        elif isinstance(value, str):
+        elif isinstance(value, str) and value:
             res_model, res_id = value.split(',')
             if not validate or res_model in self.get_values(record.env):
                 if record.env[res_model].browse(int(res_id)).exists():

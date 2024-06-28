@@ -235,6 +235,7 @@ class SMSCase(MockSMS):
             state = recipient_info.get('state', 'pending')
             if number is None and partner:
                 number = partner._phone_format()
+            number = number or ''
 
             notif = notifications.filtered(lambda n: n.res_partner_id == partner and n.sms_number == number and n.notification_status == state)
 

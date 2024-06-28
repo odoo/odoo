@@ -233,7 +233,7 @@ class TestActivityFlow(TestActivityCommon):
             # they must be set using defaults, see `action_feedback_schedule_next`
             ActivityForm.activity_type_id = call_activity_type
             # activity summary should be empty
-            self.assertEqual(ActivityForm.summary, False)
+            self.assertEqual(ActivityForm.summary, '')
 
             ActivityForm.activity_type_id = email_activity_type
             # activity summary should be replaced with email's default summary

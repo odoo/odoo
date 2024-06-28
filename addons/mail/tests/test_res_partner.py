@@ -272,10 +272,10 @@ class TestPartner(MailCommon):
             # new (even if invalid)
             ('Invalid', 'Invalid', ''),
             # ignored, completely invalid
-            (False, False, False),
-            (None, False, False),
-            (' ', False, False),
-            ('', False, False),
+            (False, '', ''),
+            (None, '', ''),
+            (' ', '', ''),
+            ('', '', ''),
         ]
         all_emails = [item[0] for item in new_samples]
         with self.mockPartnerCalls():
@@ -370,14 +370,14 @@ class TestPartner(MailCommon):
             '"Unicode Formatted" <other.customer.😊@test.dupe.example.com>',  # duplicate of above
         ]
         expected = [
-            (False, "Another Customer", "test.different.1@test.dupe.example.com"),
+            ('', "Another Customer", "test.different.1@test.dupe.example.com"),
             (partners[0], "Formatted Customer", "test.customer@test.dupe.example.com"),
             (partners[1], "test.customer.invalid.email", "test.customer.invalid.email"),
             # multi email support
-            (False, "Another Customer", "test.different.1@test.dupe.example.com"),
-            (False, "Multi Email", "other.customer.2@test.dupe.example.com"),
-            (False, "Multi Format", "other.customer.😊@test.dupe.example.com"),
-            (False, "Multi Format", "other.customer.😊@test.dupe.example.com"),
+            ('', "Another Customer", "test.different.1@test.dupe.example.com"),
+            ('', "Multi Email", "other.customer.2@test.dupe.example.com"),
+            ('', "Multi Format", "other.customer.😊@test.dupe.example.com"),
+            ('', "Multi Format", "other.customer.😊@test.dupe.example.com"),
         ]
         with self.mockPartnerCalls():
             new_partners = self.env['res.partner'].with_context(lang='en_US')._find_or_create_from_emails(
@@ -417,9 +417,9 @@ class TestPartner(MailCommon):
         expected = [
             (new_partners[0], "Another Customer", "test.different.1@test.dupe.example.com"),
             (partners[0], "Formatted Customer", "test.customer@test.dupe.example.com"),
-            (False, '"Falsy" <falsy>', '"Falsy" <falsy>'),
-            (False, "falsy", "falsy"),
-            (False, False, False),
+            ('', '"Falsy" <falsy>', '"Falsy" <falsy>'),
+            ('', "falsy", "falsy"),
+            ('', '', ''),
         ]
         with self.mockPartnerCalls():
             no_new_partners = self.env['res.partner'].with_context(lang='en_US')._find_or_create_from_emails(
@@ -492,11 +492,11 @@ class TestPartner(MailCommon):
         ]
         expected = [
             ('Raoul', 'raoul@grosbedon.fr'),
-            ('Raoul chirurgiens-dentistes.fr', False),
-            ('invalid', False),
-            ('False', False),
-            # (simili) void values: always False
-            ('', False), ('', False), ('', False), ('', False),
+            ('Raoul chirurgiens-dentistes.fr', ''),
+            ('invalid', ''),
+            ('False', ''),
+            # (simili) void values: always ''
+            ('', ''), ('', ''), ('', ''), ('', ''),
             # email only: email used as both name and email
             ('lenny.bar@gmail.com', 'lenny.bar@gmail.com')
         ]

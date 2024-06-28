@@ -366,4 +366,6 @@ class EventRegistration(models.Model):
             return value.ids
         if isinstance(value, models.BaseModel) and self._fields[field_name].type == 'many2one':
             return value.id
+        if self._fields[field_name].type in ('char', 'html', 'text'):
+            return value or ''
         return value

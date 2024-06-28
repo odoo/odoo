@@ -146,7 +146,7 @@ class View(models.Model):
     _order = "priority,name,id"
     _allow_sudo_commands = False
 
-    name = fields.Char(string='View Name', required=True)
+    name = fields.Char(string='View Name', required=True, write_empty_string=True)
     model = fields.Char(index=True)
     key = fields.Char(index='btree_not_null')
     priority = fields.Integer(string='Sequence', default=16, required=True)

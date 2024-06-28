@@ -496,7 +496,7 @@ class AccountMoveLine(models.Model):
     @api.depends('product_id', 'move_id.ref')
     def _compute_name(self):
         term_by_move = (self.move_id.line_ids | self).filtered(lambda l: l.display_type == 'payment_term').sorted(lambda l: l.date_maturity if l.date_maturity else date.max).grouped('move_id')
-        for line in self.filtered(lambda l: l.move_id.inalterable_hash is False):
+        for line in self.filtered(lambda l: not l.move_id.inalterable_hash):
             if line.display_type == 'payment_term':
                 term_lines = term_by_move.get(line.move_id, self.env['account.move.line'])
                 n_terms = len(line.move_id.invoice_payment_term_id.line_ids)

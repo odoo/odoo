@@ -187,7 +187,7 @@ class Partner(models.Model):
             {
                 self._rec_name: name,
                 'email': name,
-                **additional_values.get(False, {}),
+                **additional_values.get('', {}),
             }
             for name in names if name not in partners.mapped('email')
         ]

@@ -840,17 +840,17 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         record = model.create({})
         with self.assertRaises(ValueError):
             record.bar
-        self.assertEqual(record.bare, False)
-        self.assertEqual(record.bars, False)
-        self.assertEqual(record.bares, False)
+        self.assertEqual(record.bare, '')
+        self.assertEqual(record.bars, '')
+        self.assertEqual(record.bares, '')
 
         # new record
         record = model.new()
         with self.assertRaises(ValueError):
             record.bar
-        self.assertEqual(record.bare, False)
-        self.assertEqual(record.bars, False)
-        self.assertEqual(record.bares, False)
+        self.assertEqual(record.bare, '')
+        self.assertEqual(record.bars, '')
+        self.assertEqual(record.bares, '')
 
     def test_16_compute_unassigned_access_error(self):
         # create two records
@@ -1565,7 +1565,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         record.with_user(user1).foo = False
         self.assertEqual(record.with_user(user0).foo, 'main')
-        self.assertEqual(record.with_user(user1).foo, False)
+        self.assertEqual(record.with_user(user1).foo, '')
         self.assertEqual(record.with_user(user2).foo, 'default')
 
         record.with_user(user0).with_company(company1).foo = 'beta'
@@ -1832,8 +1832,8 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         })
 
         self.assertEqual(record.with_user(user0).html1, some_ugly_html_0, 'Error in HTML field: content was sanitized but field has sanitize=False')
-        self.assertEqual(record.with_user(user1).html1, False)
-        self.assertEqual(record.with_user(user2).html1, False)
+        self.assertEqual(record.with_user(user1).html1, '')
+        self.assertEqual(record.with_user(user2).html1, '')
 
         # sanitize should have closed tags left open in the original html for user0
         self.assertIn('</table>', record.with_user(user0).html2, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
@@ -1848,7 +1848,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         self.assertEqual(record.with_user(user0).html1, some_ugly_html_0, 'Error in HTML field: content was sanitized but field has sanitize=False')
         self.assertEqual(record.with_user(user1).html1, some_ugly_html_1, 'Error in HTML field: content was sanitized but field has sanitize=False')
-        self.assertEqual(record.with_user(user2).html1, False)
+        self.assertEqual(record.with_user(user2).html1, '')
 
         # sanitize should have closed tags left open in the original html for user1
         self.assertIn('</table>', record.with_user(user1).html2, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
@@ -3118,7 +3118,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         # change the user's company, so we implicitly switch to company1
         user0.company_id = company1
         self.assertEqual(record.env.company, company1)
-        self.assertEqual(record.foo, False)
+        self.assertEqual(record.foo, '')
 
     def test_field_set_prefetch(self):
         records = self.env['test_new_api.prefetch'].create([
@@ -4539,7 +4539,7 @@ class TestComputeQueries(TransactionCase):
                 {},
             ]
             records = model.create(create_values)
-        self.assertEqual(records.mapped('name'), ['Foo1', 'Foo2', 'Foo3', False])
+        self.assertEqual(records.mapped('name'), ['Foo1', 'Foo2', 'Foo3', ''])
         self.assertEqual(records.mapped('value1'), [10, 0, 0, 0])
         self.assertEqual(records.mapped('value2'), [0, 12, 0, 0])
 

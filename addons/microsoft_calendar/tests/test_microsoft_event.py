@@ -114,7 +114,7 @@ class TestMicrosoftEvent(TestCommon):
         # assert
         self.assertEqual(len(mapped._events), 1)
         self.assertEqual(mapped._events[event_id]["_odoo_id"], self.simple_event.id)
-        self.assertEqual(self.simple_event.ms_universal_event_id, False)
+        self.assertEqual(self.simple_event.ms_universal_event_id, '')
 
     def test_map_a_recurrence_using_global_id(self):
 

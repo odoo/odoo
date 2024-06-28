@@ -46,7 +46,7 @@ class TestEventData(TestEventBoothCommon):
             'contact_phone': False,
         })
         self.assertEqual(booth.contact_email, '"New Emails" <new.email@test.example.com')
-        self.assertEqual(booth.contact_phone, False)
+        self.assertEqual(booth.contact_phone, '')
         self.assertEqual(customer.email, customer_email, 'No sync from booth to partner')
 
         # partial update of contact fields: we may end up with mixed contact information, is it a good idea ?

@@ -263,7 +263,7 @@ class NewLeadNotification(TestCrmCommon):
                 self.assertEqual(create_vals['comment'], description)  # description -> comment
                 # Parent company not created even if partner_name is set
                 self.assertFalse(create_vals.get('parent_id'))  # not supported, even if partner_name set
-                self.assertEqual(create_vals['company_name'], partner_name)  # partner_name -> company_name
+                self.assertEqual(create_vals['company_name'], partner_name or '')  # partner_name -> company_name
                 expected_company_type = 'company' if partner_name and not name else 'person'
                 self.assertEqual(create_vals.get('company_type', 'person'), expected_company_type)
 

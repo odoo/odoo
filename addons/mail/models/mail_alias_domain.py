@@ -17,7 +17,7 @@ class AliasDomain(models.Model):
     _order = 'sequence ASC, id ASC'
 
     name = fields.Char(
-        'Name', required=True,
+        'Name', required=True, write_empty_string=True,
         help="Email domain e.g. 'example.com' in 'odoo@example.com'")
     company_ids = fields.One2many(
         'res.company', 'alias_domain_id', string='Companies',

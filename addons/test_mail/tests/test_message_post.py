@@ -551,7 +551,7 @@ class TestMessageNotify(TestMessagePostCommon):
                     'author_id': self.partner_employee,
                     'body': '<p>You have received a notification</p>',
                     'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
-                    'model': False,
+                    'model': '',
                     'res_id': False,
                     'notified_partner_ids': self.partner_1 | self.partner_employee_2 | self.partner_admin,
                     'subtype_id': self.env.ref('mail.mt_note'),
@@ -1813,7 +1813,7 @@ class TestMessagePostLang(MailCommon, TestRecipients):
 
         self.assertEqual(self.test_records[0].lang, 'es_ES')
         self.assertEqual(self.test_records[0].customer_id.lang, False)
-        self.assertEqual(self.test_records[1].lang, False)
+        self.assertEqual(self.test_records[1].lang, '')
         self.assertEqual(self.test_records[1].customer_id.lang, 'es_ES')
 
         self.assertFalse(self.test_records[0].message_follower_ids)

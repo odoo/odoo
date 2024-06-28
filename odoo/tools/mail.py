@@ -649,12 +649,12 @@ def email_normalize(text, strict=True):
       e.g. if email is 'tony@e.com, "Tony2" <tony2@e.com>', result is either
       False (strict=True), either 'tony@e.com' (strict=False).
 
-    :return: False if no email found (or if more than 1 email found when being
+    :return: "" if no email found (or if more than 1 email found when being
       in strict mode); normalized email otherwise;
     """
     emails = email_split(text)
     if not emails or (strict and len(emails) != 1):
-        return False
+        return ""
 
     local_part, at, domain = emails[0].rpartition('@')
     try:

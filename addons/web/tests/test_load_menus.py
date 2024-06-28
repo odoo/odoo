@@ -26,7 +26,7 @@ class LoadMenusTests(HttpCase):
                 "children": [],
                 "id": self.menu.id,
                 "name": "test_menu",
-                "webIcon": False,
+                "webIcon": "",
                 "webIconData": "/web/static/img/default_icon_app.png",
                 "webIconDataMimetype": False,
                 "xmlid": ""
@@ -41,7 +41,7 @@ class LoadMenusTests(HttpCase):
                 ],
                 "id": "root",
                 "name": "root",
-                "webIcon": None,
+                "webIcon": '',
                 "webIconData": None,
                 "webIconDataMimetype": None,
                 "xmlid": "",

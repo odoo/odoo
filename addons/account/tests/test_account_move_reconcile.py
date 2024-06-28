@@ -3993,7 +3993,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         line_b.remove_move_reconcile()
         self.assertEqual(line_a.matching_number, f'P{line_a.matched_credit_ids.ids[0]}')
-        self.assertEqual(line_b.matching_number, False)
+        self.assertEqual(line_b.matching_number, '')
         self.assertEqual(line_c.matching_number, f'P{line_c.matched_debit_ids.ids[0]}')
         self.assertEqual(line_d.matching_number, line_c.matching_number)
 

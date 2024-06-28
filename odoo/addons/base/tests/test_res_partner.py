@@ -148,8 +148,8 @@ class TestPartner(TransactionCaseWithUserDemo):
                 '"Balázs" <vlad.the.dragon@example.com>'
             ),
             # falsy emails
-            (False, False),
-            ('', False),
+            (False, ''),
+            ('', ''),
             (' ', '"Balázs" <@ >'),
             ('notanemail', '"Balázs" <@notanemail>'),
         ]:
@@ -227,7 +227,7 @@ class TestPartner(TransactionCaseWithUserDemo):
                 partner_id, dummy = res_partner.name_create(text)
                 partner = res_partner.browse(partner_id)
                 self.assertEqual(expected_name or expected_mail.lower(), partner.name)
-                self.assertEqual(expected_mail.lower() or False, partner.email)
+                self.assertEqual(expected_mail.lower(), partner.email)
 
         # name_create supports default_email fallback
         partner = self.env['res.partner'].browse(

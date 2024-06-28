@@ -50,7 +50,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
-            'id': False,
+            'id': '',
             'start': {'dateTime': '2020-01-15T08:00:00+00:00', 'date': None},
             'end': {'dateTime': '2020-01-15T18:00:00+00:00', 'date': None},
             'summary': 'Event',
@@ -163,7 +163,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
-            'id': False,
+            'id': '',
             'start': {'dateTime': '2020-01-15T08:00:00+00:00', 'date': None},
             'end': {'dateTime': '2020-01-15T18:00:00+00:00', 'date': None},
             'summary': 'Event',
@@ -190,7 +190,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
-            'id': False,
+            'id': '',
             'start': {'date': '2020-01-15', 'dateTime': None},
             'end': {'date': '2020-01-16', 'dateTime': None},
             'summary': 'Event',
@@ -251,7 +251,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         recurrence._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
-            'id': False,
+            'id': '',
             'start': {'date': '2020-01-15', 'dateTime': None},
             'end': {'date': '2020-01-16', 'dateTime': None},
             'summary': 'Event',
@@ -286,7 +286,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         self.assertFalse(to_delete.active)
         self.assertFalse(event.google_id, "The google id will be set after the API call")
         self.assertGoogleEventInserted({
-            'id': False,
+            'id': '',
             'start': {'date': '2020-01-15', 'dateTime': None},
             'end': {'date': '2020-01-16', 'dateTime': None},
             'summary': 'Event',
@@ -334,7 +334,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'recurrence_update': 'future_events',
         })
         self.assertGoogleEventInserted({
-            'id': False,
+            'id': '',
             'start': {'date': str(event.start_date), 'dateTime': None},
             'end': {'date': str(event.stop_date + relativedelta(days=1)), 'dateTime': None},
             'summary': 'New name',
@@ -422,7 +422,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         new_recurrence = self.env['calendar.recurrence'].search([('id', '>', recurrence.id)])
         self.assertGoogleEventInserted({
-            'id': False,
+            'id': '',
             'start': {'date': str(event.start_date), 'dateTime': None},
             'end': {'date': str(event.stop_date + relativedelta(days=1)), 'dateTime': None},
             'summary': 'New name',
@@ -589,7 +589,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         new_recurrence = self.env['calendar.recurrence'].search([('id', '>', recurrence.id)])
         self.assertGoogleEventInserted({
-            'id': False,
+            'id': '',
             'start': {'dateTime': "2020-01-15T08:00:00+00:00", 'timeZone': 'Europe/Brussels', 'date': None},
             'end': {'dateTime': "2020-01-15T09:00:00+00:00", 'timeZone': 'Europe/Brussels', 'date': None},
             'summary': 'New name',
@@ -795,7 +795,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
-            'id': False,
+            'id': '',
             'start': {'dateTime': '2024-03-29T10:00:00+00:00', 'date': None},
             'end': {'dateTime': '2024-03-29T10:00:00+00:00', 'date': None},
             'summary': 'Event',
@@ -821,7 +821,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
-            'id': False,
+            'id': '',
             'start': {'dateTime': '2024-03-29T10:00:00+00:00', 'date': None},
             'end': {'dateTime': '2024-03-29T10:00:00+00:00', 'date': None},
             'summary': 'Event',
@@ -956,7 +956,7 @@ class TestSyncOdoo2GoogleMail(TestTokenAccess, TestSyncGoogle, MailCommon):
                     self.assertNotSentEmail()
                     self.assertGoogleEventInserted({
                         'attendees': [{'email': 'jean-luc@opoo.com', 'responseStatus': 'needsAction'}],
-                        'id': False,
+                        'id': '',
                         'start': {'dateTime': '2020-01-15T08:00:00+00:00', 'date': None},
                         'end': {'dateTime': '2020-01-15T18:00:00+00:00', 'date': None},
                         'guestsCanModify': is_public,

@@ -132,7 +132,7 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertFalse(partner.parent_id.user_id)
         self.assertIsNull(partner.parent_id.user_id, 'res.users')
 
-        self.assertIs(partner.parent_id.user_id.name, False)
+        self.assertEqual(partner.parent_id.user_id.name, '')
 
         self.assertFalse(partner.parent_id.user_id.groups_id)
         self.assertIsRecordset(partner.parent_id.user_id.groups_id, 'res.groups')

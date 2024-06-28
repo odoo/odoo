@@ -41,7 +41,7 @@ class Channel(models.Model):
         return ''.join(choice('abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ23456789') for _i in range(10))
 
     # description
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, write_empty_string=True)
     active = fields.Boolean(default=True, help="Set active to false to hide the channel without removing it.")
     channel_type = fields.Selection([
         ('chat', 'Chat'),

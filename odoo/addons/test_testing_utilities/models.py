@@ -9,7 +9,7 @@ class A(models.Model):
     _name = 'test_testing_utilities.a'
     _description = 'Testing Utilities A'
 
-    f1 = fields.Char(required=True)
+    f1 = fields.Char(required=True, write_empty_string=True)
     f2 = fields.Integer(default=42)
     f3 = fields.Integer()
     f4 = fields.Integer(compute='_compute_f4')
@@ -25,7 +25,7 @@ class A(models.Model):
     @api.depends('f1', 'f2')
     def _compute_f4(self):
         for r in self:
-            r.f4 = r.f2 / (int(r.f1) or 1)
+            r.f4 = r.f2 / (int(r.f1 or False) or 1)
 
 class B(models.Model):
     _name = 'test_testing_utilities.readonly'

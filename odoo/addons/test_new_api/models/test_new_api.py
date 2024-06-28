@@ -540,7 +540,7 @@ class MultiComputeInverse(models.Model):
     _name = 'test_new_api.multi_compute_inverse'
     _description = 'Test New API Multi Compute Inverse'
 
-    foo = fields.Char(default='', required=True)
+    foo = fields.Char(default='', required=True, write_empty_string=True)
     bar1 = fields.Char(compute='_compute_bars', inverse='_inverse_bar1', store=True)
     bar2 = fields.Char(compute='_compute_bars', inverse='_inverse_bar23', store=True)
     bar3 = fields.Char(compute='_compute_bars', inverse='_inverse_bar23', store=True)
@@ -2018,7 +2018,7 @@ class EmptyChar(models.Model):
     _name = 'test_new_api.empty_char'
     _description = 'A model to test emtpy char'
 
-    name = fields.Char('Name')
+    name = fields.Char('Name', write_empty_string=True)
 
 
 class EmptyInt(models.Model):

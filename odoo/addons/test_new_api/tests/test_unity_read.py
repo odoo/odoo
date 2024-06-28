@@ -734,8 +734,8 @@ class TestUnityRead(TransactionCase):
             {
                 'id': self.course_no_author.id,
                 'reference': False,
-                'm2o_reference_id': False,
-                'm2o_reference_model': False,
+                'm2o_reference_id': 0,
+                'm2o_reference_model': '',
             }
         ])
 

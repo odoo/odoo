@@ -106,7 +106,7 @@ class TestPhoneBlacklist(SMSCommon, TestSMSRecipients):
 
             test_record.write({'mobile_nbr': 'incorrect'})
             self.assertEqual(test_record.mobile_nbr, 'incorrect')
-            self.assertEqual(test_record.phone_sanitized, False)
+            self.assertEqual(test_record.phone_sanitized, '')
 
             test_record.write({'phone_nbr': self.test_numbers[1]})
             self.assertEqual(test_record.phone_nbr, self.test_numbers[1])

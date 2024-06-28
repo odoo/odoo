@@ -132,9 +132,7 @@ class LinkTracker(models.Model):
     def _check_unicity(self):
         """Check that the link trackers are unique."""
         def _format_value(tracker, field_name):
-            if field_name == 'label' and not tracker[field_name]:
-                return False
-            return tracker[field_name]
+            return tracker[field_name] or ('' if field_name == 'label' else False)
 
         # build a query to fetch all needed link trackers at once
         search_query = expression.OR([
@@ -143,7 +141,7 @@ class LinkTracker(models.Model):
                 [('campaign_id', '=', tracker.campaign_id.id)],
                 [('medium_id', '=', tracker.medium_id.id)],
                 [('source_id', '=', tracker.source_id.id)],
-                [('label', '=', tracker.label) if tracker.label else ('label', 'in', (False, ''))],
+                [('label', '=', tracker.label)],
             ])
             for tracker in self
         ])
@@ -207,14 +205,17 @@ class LinkTracker(models.Model):
         def _format_key(obj):
             """Generate unique 'key' of trackers, allowing to find duplicates."""
             return tuple(
-                (field_name, obj[field_name].id if isinstance(obj[field_name], models.BaseModel) else obj[field_name])
+                (field_name,
+                    obj[field_name].id if isinstance(obj[field_name], models.BaseModel) else
+                    obj[field_name] or '' if field_name == 'label' else
+                    obj[field_name]
+                )
                 for field_name in LINK_TRACKER_UNIQUE_FIELDS
             )
 
         def _format_key_domain(field_values):
-            """Handle "label" being False / '' and be defensive."""
             return expression.AND([
-                [(field_name, '=', value) if value or field_name != 'label' else ('label', 'in', (False, ''))]
+                [(field_name, '=', value)]
                 for field_name, value in field_values
             ])
 

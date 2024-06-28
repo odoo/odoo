@@ -121,6 +121,7 @@ class TestQWebTField(TransactionCase):
         })
         self.assertEqual(str(rendered.strip()), result.strip(), "")
 
+        # XXX CHANGE OF BEHAVIOUR, there is no distinction of '' and False in chars
         # record.name is empty but not False or None, we should render depending on force_display
         result = """
                 <div></div>
@@ -130,7 +131,7 @@ class TestQWebTField(TransactionCase):
         })
         self.assertEqual(str(rendered.strip()), result.strip())
 
-        # record.name is False or None, we should render field default value
+        # record is None, we should render field default value
         result = """
                 <div>
                     DEFAULT
@@ -138,7 +139,7 @@ class TestQWebTField(TransactionCase):
                 </div>
         """
         rendered = self.env['ir.qweb']._render(t.id, {
-            'record': Partner.new({})
+            'record': None
         })
         self.assertEqual(str(rendered.strip()), result.strip())
 

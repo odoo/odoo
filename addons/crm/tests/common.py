@@ -481,7 +481,8 @@ class TestCrmCommon(TestSalesCommon, MailCase):
 
         def _first_set(fname):
             values = [_find_value(lead, fname) for lead in leads]
-            return next((value for value in values if value), False)
+            default_value = '' if leads._fields[fname].type in ('char', 'text', 'html') else False
+            return next((value for value in values if value), default_value)
 
         def _get_type():
             values = [_find_value(lead, 'type') for lead in leads]
@@ -532,7 +533,8 @@ class TestCrmCommon(TestSalesCommon, MailCase):
                 else:
                     self.assertEqual(
                         opp_value if opp_value or not isinstance(opp_value, models.BaseModel) else False,
-                        _first_set(fname)
+                        _first_set(fname),
+                        f"{fname} is not correctly set",
                     )
 
 

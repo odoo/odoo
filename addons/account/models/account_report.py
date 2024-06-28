@@ -28,7 +28,7 @@ class AccountReport(models.Model):
 
     #  CORE ==========================================================================================================================================
 
-    name = fields.Char(string="Name", required=True, translate=True)
+    name = fields.Char(string="Name", required=True, translate=True, write_empty_string=True)
     sequence = fields.Integer(string="Sequence")
     active = fields.Boolean(string="Active", default=True)
     line_ids = fields.One2many(string="Lines", comodel_name='account.report.line', inverse_name='report_id')
@@ -295,7 +295,7 @@ class AccountReportLine(models.Model):
     _description = "Accounting Report Line"
     _order = 'sequence, id'
 
-    name = fields.Char(string="Name", translate=True, required=True)
+    name = fields.Char(string="Name", translate=True, required=True, write_empty_string=True)
     expression_ids = fields.One2many(string="Expressions", comodel_name='account.report.expression', inverse_name='report_line_id')
     report_id = fields.Many2one(
         string="Parent Report",

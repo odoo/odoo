@@ -39,12 +39,12 @@ class TestSMSActionsCommon(SMSCommon, TestSMSRecipients):
             self.test_phone_records.mapped('mobile_nbr'),
             ['0475000000', '0475000101', '0475000202', '0475000303', '0475000404',
              '+32475000505', '0032475000606',
-             False, False,
+             '', '',
             ]
         )
         self.assertEqual(
             self.test_phone_records.mapped('phone_nbr'),
-            [False] * 5 + ['+32475110505', '0032475110606', '0032475110707', False]
+            [''] * 5 + ['+32475110505', '0032475110606', '0032475110707', '']
         )
 
     @users('employee')

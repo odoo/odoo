@@ -1940,7 +1940,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.bom_id = self.bom_3  # product_5 (2), product_4 (8), product_2 (12)
         mo_form.date_start = now
         mo = mo_form.save()
-        self.assertEqual(mo.components_availability, False)  # no compute for draft
+        self.assertEqual(mo.components_availability, '')  # no compute for draft
         mo.action_confirm()
         self.assertEqual(mo.components_availability, 'Not Available')
 

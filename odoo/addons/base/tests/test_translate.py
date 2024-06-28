@@ -730,17 +730,17 @@ class TestTranslationWrite(TransactionCase):
         belgium.with_context(lang='fr_FR').write({'vat_label': empty_value})
         # should recover the initial value from db
         self.assertEqual(
-            empty_value,
+            '',
             belgium.with_context(lang='fr_FR').vat_label,
             "Value should be the empty_value"
         )
         self.assertEqual(
-            empty_value,
+            '',
             belgium.with_context(lang='en_US').vat_label,
             "Value should be the empty_value"
         )
         self.assertEqual(
-            empty_value,
+            '',
             belgium.with_context(lang=None).vat_label,
             "Value should be the empty_value"
         )
@@ -751,17 +751,17 @@ class TestTranslationWrite(TransactionCase):
         # remove the value
         belgium.with_context(lang='en_US').write({'vat_label': empty_value})
         self.assertEqual(
-            empty_value,
+            '',
             belgium.with_context(lang='fr_FR').vat_label,
             "Value should be the empty_value"
         )
         self.assertEqual(
-            empty_value,
+            '',
             belgium.with_context(lang='en_US').vat_label,
             "Value should be the empty_value"
         )
         self.assertEqual(
-            empty_value,
+            '',
             belgium.with_context(lang=None).vat_label,
             "Value should be the empty_value"
         )
@@ -806,8 +806,8 @@ class TestTranslationWrite(TransactionCase):
                          "Test did not started with expected languages")
 
         group = self.env['res.groups'].create({'name': 'test_group', 'comment': empty_value})
-        self.assertEqual(group.with_context(lang='en_US').comment, empty_value)
-        self.assertEqual(group.with_context(lang='fr_FR').comment, empty_value)
+        self.assertEqual(group.with_context(lang='en_US').comment, empty_value or '')
+        self.assertEqual(group.with_context(lang='fr_FR').comment, empty_value or '')
 
         group.with_context(lang='fr_FR').comment = 'French comment'
         self.assertEqual(group.with_context(lang='fr_FR').comment, 'French comment')
@@ -862,7 +862,7 @@ class TestTranslationWrite(TransactionCase):
         groupEN = group.with_context(lang='en_US')
         groupFR = group.with_context(lang='fr_FR')
         groupNL = group.with_context(lang='nl_NL')
-        self.assertEqual(groupEN.comment, False)
+        self.assertEqual(groupEN.comment, '')
         groupFR.update_field_translations('comment', {'nl_NL': 'Dutch Name', 'fr_FR': 'French Name'})
         self.assertEqual(groupEN.comment, 'French Name', 'fr_FR value as the current env.lang is chosen as the default en_US value')
         self.assertEqual(groupFR.comment, 'French Name')
@@ -1675,6 +1675,7 @@ class TestHTMLTranslation(TransactionCase):
         for html in ('<h1></h1>', '', False):
             # delay_translations only works when the written value has at least one translatable term
             company0.with_context(lang='en_US', delay_translations=True).report_footer = html
+            html = html or ''  # result is never False
             for lang in ('en_US', 'fr_FR', 'nl_NL'):
                 self.assertEqual(
                     company0.with_context(lang=lang).report_footer,

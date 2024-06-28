@@ -22,13 +22,13 @@ class SmsTracker(models.Model):
         self._update_sms_traces(error_status or 'error', failure_type=failure_type, failure_reason=failure_reason)
         return error_status, failure_type, failure_reason
 
-    def _action_update_from_sms_state(self, sms_state, failure_type=False, failure_reason=False):
+    def _action_update_from_sms_state(self, sms_state, failure_type=False, failure_reason=''):
         super()._action_update_from_sms_state(sms_state, failure_type=failure_type, failure_reason=failure_reason)
         trace_status = self.SMS_STATE_TO_TRACE_STATUS[sms_state]
         traces = self._update_sms_traces(trace_status, failure_type=failure_type, failure_reason=failure_reason)
         self._update_sms_mailings(trace_status, traces)
 
-    def _update_sms_traces(self, trace_status, failure_type=False, failure_reason=False):
+    def _update_sms_traces(self, trace_status, failure_type=False, failure_reason=''):
         if not self.mailing_trace_id:  # avoid a search below
             return self.env['mailing.trace']
         # See _update_sms_notifications

@@ -267,7 +267,7 @@ class MailMail(models.Model):
 
         return res
 
-    def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
+    def _postprocess_sent_message(self, success_pids, failure_reason='', failure_type=None):
         """Perform any post-processing necessary after sending ``mail``
         successfully, including deleting it completely along with its
         attachment if the ``auto_delete`` flag of the mail was set.
@@ -289,7 +289,7 @@ class MailMail(models.Model):
                     failed = notifications.filtered(lambda notif: notif.res_partner_id not in success_pids)
                 (notifications - failed).sudo().write({
                     'notification_status': 'sent',
-                    'failure_type': '',
+                    'failure_type': False,
                     'failure_reason': '',
                 })
                 if failed:
@@ -658,7 +658,7 @@ class MailMail(models.Model):
 
         for mail_id in self.ids:
             success_pids = []
-            failure_reason = None
+            failure_reason = ''
             failure_type = None
             mail = None
             try:

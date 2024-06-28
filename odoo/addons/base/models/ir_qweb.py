@@ -1241,7 +1241,7 @@ class IrQWeb(models.AbstractModel):
         """ Generates a text value (an instance of text_type) from an arbitrary
             source.
         """
-        if expr is None or expr is False:
+        if expr is None:
             return ''
 
         if isinstance(expr, str):
@@ -2012,7 +2012,7 @@ class IrQWeb(models.AbstractModel):
                     values['__qweb_attrs__'] = field_attrs
                 else:
                     values['__qweb_attrs__'].update(field_attrs)
-                if content is not None and content is not False:
+                if content is not None:
                     content = self._compile_to_str(content)
                 """, level))
             force_display_dependent = True
@@ -2038,7 +2038,7 @@ class IrQWeb(models.AbstractModel):
             if ttype == 't-raw':
                 # deprecated use.
                 code.append(indent_code("""
-                    if content is not None and content is not False:
+                    if content is not None:
                         content = Markup(content)
                 """, level))
 
@@ -2050,7 +2050,7 @@ class IrQWeb(models.AbstractModel):
 
         # generate code to display the tag if the value is not Falsy
 
-        code.append(indent_code("if content is not None and content is not False:", level))
+        code.append(indent_code("if content is not None:", level))
         code.extend(tag_open)
         # Use str to avoid the escaping of the other html content because the
         # yield generator MarkupSafe values will be join into an string in

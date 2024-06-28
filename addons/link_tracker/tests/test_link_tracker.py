@@ -44,14 +44,14 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
         expected_values_1, expected_values_2, expected_values_3 = [
             {
                 'campaign_id': self.env['utm.campaign'],
-                'label': False,
+                'label': '',
                 'medium_id': self.env['utm.medium'],
                 'source_id': self.env['utm.source'],
                 'title': 'Odoo',
                 'url': 'https://odoo.com',
             }, {
                 'campaign_id': self.env['utm.campaign'],
-                'label': False,
+                'label': '',
                 'medium_id': self.env['utm.medium'],
                 'source_id': self.env['utm.source'],
                 'title': 'Odoo',
@@ -136,7 +136,7 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
             'title': 'Odoo',
             'campaign_id': campaign_id.id,
         })
-        self.assertEqual(link_1.label, False)
+        self.assertEqual(link_1.label, '')
 
         with self.assertRaises(UserError):
             self.env['link.tracker'].create({

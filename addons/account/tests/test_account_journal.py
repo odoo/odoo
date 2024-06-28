@@ -282,8 +282,8 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
 
         # update alias_name, ensure a fallback on a real name when not explicit reset
         for alias_name, expected in [
-            (False, False),
-            ('', False),
+            (False, ''),
+            ('', ''),
             (' ', f'vendor-bills-{company_name}'),  # error recuperation
             ('.', f'vendor-bills-{company_name}'),  # error recuperation
             ('😊', f'vendor-bills-{company_name}'),  # resets, unicode not supported

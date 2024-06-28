@@ -40,14 +40,14 @@ class TestLeadAssignCommon(TestLeadConvertCommon):
         self.assertEqual(self.sales_team_convert.assignment_max, 90)
 
         # ensure domains
-        self.assertEqual(self.sales_team_1.assignment_domain, False)
-        self.assertEqual(self.sales_team_1_m1.assignment_domain, False)
+        self.assertEqual(self.sales_team_1.assignment_domain, '')
+        self.assertEqual(self.sales_team_1_m1.assignment_domain, '')
         self.assertEqual(self.sales_team_1_m2.assignment_domain, "[('probability', '>=', 10)]")
         self.assertEqual(self.sales_team_1_m3.assignment_domain, "[('probability', '>=', 20)]")
 
         self.assertEqual(self.sales_team_convert.assignment_domain, "[('priority', 'in', ['1', '2', '3'])]")
         self.assertEqual(self.sales_team_convert_m1.assignment_domain, "[('probability', '>=', 20)]")
-        self.assertEqual(self.sales_team_convert_m2.assignment_domain, False)
+        self.assertEqual(self.sales_team_convert_m2.assignment_domain, '')
 
         # start afresh
         self.assertEqual(self.sales_team_1_m1.lead_month_count, 0)

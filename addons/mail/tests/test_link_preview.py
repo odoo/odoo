@@ -136,14 +136,14 @@ class TestLinkPreview(MailCommon):
                                 "mail.link.preview": [
                                     {
                                         "id": message.link_preview_ids.id,
-                                        "image_mimetype": False,
+                                        "image_mimetype": "",
                                         "message": message.id,
                                         "og_description": self.og_description,
                                         "og_image": self.og_image,
-                                        "og_mimetype": False,
-                                        "og_site_name": False,
+                                        "og_mimetype": "",
+                                        "og_site_name": "",
                                         "og_title": self.og_title,
-                                        "og_type": False,
+                                        "og_type": "",
                                         "source_url": self.source_url,
                                     },
                                 ],
