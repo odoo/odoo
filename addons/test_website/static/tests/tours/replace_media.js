@@ -33,7 +33,7 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
             });
         },
     },
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         name: 'Title - Image',
         id: 's_picture'
     }),

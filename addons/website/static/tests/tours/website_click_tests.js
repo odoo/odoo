@@ -21,7 +21,6 @@ wTourUtils.registerWebsitePreviewTour('website_click_tour', {
     {
         content: "wait for the page to be loaded",
         trigger: '.o_website_preview[data-view-xmlid="website.contactus"]',
-        run: () => null, // it's a check
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
@@ -30,7 +29,7 @@ wTourUtils.registerWebsitePreviewTour('website_click_tour', {
         run: "click",
     },
     wTourUtils.goBackToBlocks(),
-    wTourUtils.dragNDrop(cover),
-    wTourUtils.clickOnSnippet(cover),
+    ...wTourUtils.dragNDrop(cover),
+    ...wTourUtils.clickOnSnippet(cover),
     ...wTourUtils.clickOnSave(),
 ]);

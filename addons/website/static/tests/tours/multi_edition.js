@@ -10,15 +10,13 @@ wTourUtils.registerWebsitePreviewTour('website_multi_edition', {
     {
         content: 'Check the current page has not the elements that will be added',
         trigger: ':iframe body:not(:has(.s_text_image)):not(:has(.s_hr))',
-        run: () => null,
     },
     // Edit the main element of the page
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
     }),
     // Edit another part in the page, like the footer
-    // TODO: use wTourUtils.dragNDrop() instead
     {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     },
@@ -31,11 +29,9 @@ wTourUtils.registerWebsitePreviewTour('website_multi_edition', {
     {
         content: 'Check that the main element of the page was properly saved',
         trigger: ':iframe main .s_text_image',
-        run: () => null,
     },
     {
         content: 'Check that the footer was properly saved',
         trigger: ':iframe footer .s_hr',
-        run: () => null,
     },
 ]);

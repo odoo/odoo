@@ -6,7 +6,7 @@ import wTourUtils from '@website/js/tours/tour_utils';
 function editAddToCartSnippet() {
     return [
         ...wTourUtils.clickOnEditAndWaitEditMode(),
-        wTourUtils.clickOnSnippet({id: 's_add_to_cart'})
+        ...wTourUtils.clickOnSnippet({id: 's_add_to_cart'})
     ]
 }
 
@@ -16,10 +16,10 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         test: true,
     },
     () => [
-        wTourUtils.dragNDrop({name: 'Add to Cart Button'}),
+        ...wTourUtils.dragNDrop({name: 'Add to Cart Button'}),
 
         // Basic product with no variants
-        wTourUtils.clickOnSnippet({id: 's_add_to_cart'}),
+        ...wTourUtils.clickOnSnippet({id: 's_add_to_cart'}),
         ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Pedal Bin', true),
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),

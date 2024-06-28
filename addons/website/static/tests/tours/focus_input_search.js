@@ -28,7 +28,7 @@ wTourUtils.registerWebsitePreviewTour(
             content: "Write something in the search box.",
             trigger: ".o_snippet_search_filter_input:value(hello)",
         },
-        wTourUtils.goToTheme(),
+        ...wTourUtils.goToTheme(),
         {
             content: "Wait for loading",
             trigger: ".o_we_customize_theme_btn.active",

@@ -7,7 +7,7 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_undraw", {
     url: '/',
     edition: true,
 }, () => [
-wTourUtils.dragNDrop({
+...wTourUtils.dragNDrop({
     id: 's_text_image',
     name: 'Text - Image',
 }),
@@ -30,7 +30,7 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_external_library", {
     url: "/",
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: "s_text_image",
         name: "Text - Image",
     }),
@@ -79,7 +79,7 @@ wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
     url: '/',
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_process_steps',
         name: 'Steps',
     }),
@@ -121,7 +121,7 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_image_shape", {
     url: "/",
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: "s_text_image",
         name: "Text - Image",
     }),

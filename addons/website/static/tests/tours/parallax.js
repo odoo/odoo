@@ -9,8 +9,8 @@ wTourUtils.registerWebsitePreviewTour("test_parallax", {
     url: "/",
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop(coverSnippet),
-    wTourUtils.clickOnSnippet(coverSnippet),
+    ...wTourUtils.dragNDrop(coverSnippet),
+    ...wTourUtils.clickOnSnippet(coverSnippet),
     wTourUtils.changeOption("BackgroundOptimize", "we-toggler"),
     wTourUtils.changeOption("BackgroundOptimize", 'we-button[data-gl-filter="blur"]'),
 {

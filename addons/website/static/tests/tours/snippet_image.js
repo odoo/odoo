@@ -7,7 +7,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image", {
     url: "/",
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({id: "s_image", name: "Image"}),
+    ...wTourUtils.dragNDrop({id: "s_image", name: "Image"}),
 {
     content: "Verify if the media dialog opens",
     trigger: ".o_select_media_dialog",
@@ -21,7 +21,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image", {
     content: "Verify if the image placeholder has been removed",
     trigger: ":iframe footer:not(:has(.s_image > svg))",
 },
-    wTourUtils.dragNDrop({id: "s_image", name: "Image"}),
+    ...wTourUtils.dragNDrop({id: "s_image", name: "Image"}),
 {
     content: "Verify that the image placeholder is within the page",
     trigger: ":iframe footer .s_image > svg",

@@ -47,7 +47,7 @@ wTourUtils.registerWebsitePreviewTour("website_style_edition", {
     url: '/',
     edition: true,
 }, () => [
-wTourUtils.goToTheme(),
+...wTourUtils.goToTheme(),
 {
     content: "Change font size",
     trigger: '[data-variable="font-size-base"] input',
@@ -124,7 +124,7 @@ wTourUtils.goToTheme(),
     run: checkBodyColor,
 },
 ...wTourUtils.clickOnEditAndWaitEditMode(),
-wTourUtils.goToTheme(),
+...wTourUtils.goToTheme(),
 {
     trigger: '[data-customize-body-bg-type="NONE"].active',
 },

@@ -9,7 +9,7 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     edition: true,
     wait_for: whenReady(),
 }, () => [
-wTourUtils.goToTheme(),
+...wTourUtils.goToTheme(),
 {
     content: "click on Add a language",
     trigger: "we-button[data-add-language]",
@@ -108,7 +108,7 @@ wTourUtils.goToTheme(),
     trigger: '.modal-dialog button.btn-primary',
     run: "click",
 },
-wTourUtils.dragNDrop({
+...wTourUtils.dragNDrop({
     id: "s_cover",
     name: "Cover"
 }), {

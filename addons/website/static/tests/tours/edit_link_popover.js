@@ -32,7 +32,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     edition: true,
 }, () => [
     // 1. Test links in page content (web_editor)
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
     }),
@@ -149,7 +149,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_2', {
     edition: true,
 }, () => [
     // 1. Test links in page content (web_editor)
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
     }),

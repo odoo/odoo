@@ -38,11 +38,11 @@ wTourUtils.registerWebsitePreviewTour("website_update_column_count", {
     url: "/",
     edition: true,
 }, () => [
-wTourUtils.dragNDrop({
+...wTourUtils.dragNDrop({
     id: "s_three_columns",
     name: "Columns",
 }),
-wTourUtils.clickOnSnippet({
+...wTourUtils.clickOnSnippet({
     id: "s_three_columns",
     name: "Columns",
 }), {
@@ -160,8 +160,8 @@ wTourUtils.registerWebsitePreviewTour("website_mobile_order_with_drag_and_drop",
     url: "/",
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({id: "s_three_columns", name: "Columns"}),
-    wTourUtils.dragNDrop({id: "s_text_image", name: "Text - Image"}),
+    ...wTourUtils.dragNDrop({id: "s_three_columns", name: "Columns"}),
+    ...wTourUtils.dragNDrop({id: "s_text_image", name: "Text - Image"}),
     ...wTourUtils.toggleMobilePreview(true),
     // Add a mobile order to the "Columns" snippet columns.
     ...changeFirstAndSecondColumnsMobileOrder(columnsSnippetRow, "Columns"),

@@ -11,11 +11,15 @@ wTourUtils.registerWebsitePreviewTour('website_start_cloned_snippet', {
         name: 'Countdown',
         id: 's_countdown',
     };
-    const dragNDropOutOfFooter = wTourUtils.dragNDrop(countdownSnippet);
-    dragNDropOutOfFooter.run = 'drag_and_drop :iframe #wrapwrap #wrap';
     return [
-        dragNDropOutOfFooter,
-        wTourUtils.clickOnSnippet(countdownSnippet),
+        {
+            trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        },
+        {
+            trigger: `#oe_snippets .oe_snippet[name="${countdownSnippet.name}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
+            run: "drag_and_drop :iframe #wrapwrap #wrap",
+        },
+        ...wTourUtils.clickOnSnippet(countdownSnippet),
         {
             content: 'Click on clone snippet',
             trigger: '.oe_snippet_clone',

@@ -44,8 +44,8 @@ wTourUtils.registerWebsitePreviewTour('conditional_visibility_1', {
     url: '/',
     test: true,
 }, () => [
-wTourUtils.dragNDrop(snippets[0]),
-wTourUtils.clickOnSnippet(snippets[0]),
+...wTourUtils.dragNDrop(snippets[0]),
+...wTourUtils.clickOnSnippet(snippets[0]),
 wTourUtils.changeOption('ConditionalVisibility', 'we-toggler'),
 {
     content: 'click on conditional visibility',
@@ -103,15 +103,15 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_3", {
 () => [
 checkEyeIcon("Text - Image", true),
 // Drag a "Banner" snippet on the website.
-wTourUtils.dragNDrop(snippets[1]),
+...wTourUtils.dragNDrop(snippets[1]),
 // Click on the "Banner" snippet.
-wTourUtils.clickOnSnippet(snippets[1]),
+...wTourUtils.clickOnSnippet(snippets[1]),
 wTourUtils.changeOption("ConditionalVisibility", "we-toggler"),
 wTourUtils.changeOption("ConditionalVisibility", '[data-name="visibility_conditional"]'),
 checkEyeIcon("Banner", true),
 wTourUtils.goBackToBlocks(),
 // Drag a "Popup" snippet on the website.
-wTourUtils.dragNDrop(snippets[2]),
+...wTourUtils.dragNDrop(snippets[2]),
 {
     content: "Toggle the visibility of the popup",
     in_modal: false,
@@ -152,7 +152,7 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_4", {
 },
 () => [
 // Click on the "Text-Image" snippet.
-wTourUtils.clickOnSnippet(snippets[0]),
+...wTourUtils.clickOnSnippet(snippets[0]),
 {
     content: "Click on the 'move down' option",
     trigger: ":iframe we-button.o_we_user_value_widget.fa-angle-down",
@@ -173,7 +173,7 @@ wTourUtils.clickOnSnippet(snippets[0]),
     trigger: ":iframe #wrapwrap footer",
 },
 // Click on the "Banner" snippet.
-wTourUtils.clickOnSnippet(snippets[1]),
+...wTourUtils.clickOnSnippet(snippets[1]),
 {
     content: "Drag the 'Banner' snippet to the end of the page",
     trigger: ":iframe .o_overlay_move_options .o_move_handle",
@@ -195,7 +195,6 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_5", {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     },
     {
-        // TODO: use wTourUtils.dragNdrop() instead
         trigger: `#oe_snippets .oe_snippet[name="Text - Image"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
         content: "Drag the Text - Image building block and drop it at the bottom of the page.",
         run: "drag_and_drop :iframe .oe_drop_zone:last",

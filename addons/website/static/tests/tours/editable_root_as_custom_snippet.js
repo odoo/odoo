@@ -7,7 +7,7 @@ wTourUtils.registerWebsitePreviewTour("editable_root_as_custom_snippet", {
     edition: true,
     url: '/custom-page',
 }, () => [
-    wTourUtils.clickOnSnippet('.s_title.custom[data-oe-model][data-oe-id][data-oe-field][data-oe-xpath]'),
+    ...wTourUtils.clickOnSnippet('.s_title.custom[data-oe-model][data-oe-id][data-oe-field][data-oe-xpath]'),
     wTourUtils.changeOption('SnippetSave', 'we-button'),
     {
         content: "Confirm modal",
@@ -29,7 +29,7 @@ wTourUtils.registerWebsitePreviewTour("editable_root_as_custom_snippet", {
         trigger: ':iframe a[href="/"].nav-link.active',
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
-    wTourUtils.dragNDrop({id: 's_title', name: 'Custom Title'}),
+    ...wTourUtils.dragNDrop({id: 's_title', name: 'Custom Title'}),
     {
         content: "Check that the custom snippet does not have branding",
         trigger: ':iframe #wrap .s_title.custom:not([data-oe-model]):not([data-oe-id]):not([data-oe-field]):not([data-oe-xpath])',

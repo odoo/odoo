@@ -8,7 +8,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_editor_panel_options', {
     url: '/',
     edition: true,
 }, () => [
-wTourUtils.dragNDrop({
+...wTourUtils.dragNDrop({
     id: 's_text_image',
     name: 'Text - Image',
 }),
@@ -79,7 +79,7 @@ wTourUtils.dragNDrop({
 },
 // Test keeping the text selection when adding columns to a snippet with none.
 wTourUtils.goBackToBlocks(),
-wTourUtils.dragNDrop({
+...wTourUtils.dragNDrop({
     id: 's_text_block',
     name: 'Text',
 }),

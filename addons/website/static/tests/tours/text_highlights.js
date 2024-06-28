@@ -7,7 +7,7 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
     url: "/",
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: "s_cover",
         name: "Cover",
     }),

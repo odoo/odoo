@@ -8,7 +8,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_newsletter_popup_edition", {
     url: "/",
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_newsletter_subscribe_popup',
         name: 'Newsletter Popup',
     }),
@@ -16,7 +16,6 @@ wTourUtils.registerWebsitePreviewTour("snippet_newsletter_popup_edition", {
         content: "Check the modal is opened for edition",
         trigger: ':iframe .o_newsletter_popup .modal:visible',
         in_modal: false,
-        run: () => null,
     },
     ...wTourUtils.clickOnSave(),
     {

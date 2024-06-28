@@ -10,10 +10,14 @@ wTourUtils.registerWebsitePreviewTour('category_page_and_products_snippet_editio
     url: `/shop/category/${PRODUCT_CATEGORY_ID}`,
     edition: true,
 }, () => [
-    Object.assign(wTourUtils.dragNDrop({id: 's_dynamic_snippet_products', name: 'Products'}), {
+    {
+        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+    },
+    {
         content: "Drag and drop the product snippet inside the category area",
-        run: 'drag_and_drop :iframe #category_header',
-    }),
+        trigger: `#oe_snippets .oe_snippet[name="Products"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
+        run: "drag_and_drop :iframe #category_header",
+    },
     {
         content: "Click on the product snippet to show its options",
         trigger: ':iframe #category_header .s_dynamic_snippet_products',

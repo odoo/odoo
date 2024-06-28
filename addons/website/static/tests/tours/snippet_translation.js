@@ -20,16 +20,14 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation', {
         }
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
-    wTourUtils.dragNDrop({name: 'Cover'}),
+    ...wTourUtils.dragNDrop({name: 'Cover'}),
     {
         content: "Check that contact us contain Parseltongue",
         trigger: ':iframe .s_cover .btn-primary:contains("Contact us in Parseltongue")',
-        run: () => null, // it's a check
     },
     {
         content: "Check that the save button contains 'in fu_GB'",
         trigger: '.btn[data-action="save"]:contains("Save in fu_GB")',
-        run: () => null, // it's a check
     },
 ]);
 wTourUtils.registerWebsitePreviewTour('snippet_translation_changing_lang', {
@@ -63,10 +61,9 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation_changing_lang', {
     },
     ...wTourUtils.clickOnSave(),
     ...wTourUtils.clickOnEditAndWaitEditModeInTranslatedPage(),
-    wTourUtils.dragNDrop({name: 'Cover'}),
+    ...wTourUtils.dragNDrop({name: 'Cover'}),
     {
         content: "Check that contact us contain Parseltongue",
         trigger: ':iframe .s_cover .btn-primary:contains("Contact us in Parseltongue")',
-        run: () => null, // it's a check
     },
 ]);

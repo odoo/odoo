@@ -31,9 +31,9 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     url: "/",
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop(snippets[1]), // Media List
-    wTourUtils.dragNDrop(snippets[1]), // Media List
-    wTourUtils.dragNDrop(snippets[2]), // Columns
+    ...wTourUtils.dragNDrop(snippets[1]), // Media List
+    ...wTourUtils.dragNDrop(snippets[1]), // Media List
+    ...wTourUtils.dragNDrop(snippets[2]), // Columns
     wTourUtils.clickOnElement("3rd columns", ":iframe .s_three_columns .row > :last-child"),
     ...setOnScrollAnim(),
     {
@@ -83,8 +83,8 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry",
         run: "click",
     },
-    wTourUtils.dragNDrop(snippets[0]), // Popup
-    wTourUtils.dragNDrop(snippets[1]), // Media List
+    ...wTourUtils.dragNDrop(snippets[0]), // Popup
+    ...wTourUtils.dragNDrop(snippets[1]), // Media List
     {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     },

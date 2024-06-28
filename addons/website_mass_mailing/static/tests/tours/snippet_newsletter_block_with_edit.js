@@ -8,14 +8,13 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     edition: true,
 }, () => [
     // Put a Newsletter block.
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_newsletter_block',
         name: 'Newsletter Block',
     }),
     {
         content: 'Wait for the list id to be set.',
         trigger: ':iframe .s_newsletter_block[data-list-id]:not([data-list-id="0"]) .s_newsletter_subscribe_form',
-        run: () => null, // it's a check
     },
     ...wTourUtils.clickOnSave(),
     // Subscribe to the newsletter.

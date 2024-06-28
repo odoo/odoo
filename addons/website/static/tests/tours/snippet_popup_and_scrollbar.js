@@ -38,8 +38,8 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     url: "/",
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop(snippets[1]), // Media List
-    wTourUtils.dragNDrop(snippets[0]), // Popup
+    ...wTourUtils.dragNDrop(snippets[1]), // Media List
+    ...wTourUtils.dragNDrop(snippets[0]), // Popup
     checkScrollbar(false),
     {
         content: 'Click on the s_popup snippet',

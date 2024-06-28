@@ -103,8 +103,8 @@ wTourUtils.registerWebsitePreviewTour('snippet_background_edition', {
     test: true,
 },
 () => [
-wTourUtils.dragNDrop(snippets[0]),
-wTourUtils.clickOnSnippet(snippets[0]),
+...wTourUtils.dragNDrop(snippets[0]),
+...wTourUtils.clickOnSnippet(snippets[0]),
 
 // Set background image and save.
 {
@@ -123,7 +123,7 @@ wTourUtils.clickOnSnippet(snippets[0]),
     trigger: `:iframe section.${snippets[0].id} img[data-original-id]`,
 },
 ...wTourUtils.clickOnEditAndWaitEditMode(),
-wTourUtils.clickOnSnippet(snippets[0]),
+...wTourUtils.clickOnSnippet(snippets[0]),
 // Remove background image.
 {
     content: "Click on camera icon",

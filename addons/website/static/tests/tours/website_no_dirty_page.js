@@ -4,7 +4,7 @@ import { browser } from '@web/core/browser/browser';
 import wTourUtils from '@website/js/tours/tour_utils';
 
 const makeSteps = (steps = []) => [
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: "s_text_image",
         name: "Text - Image",
     }), {
@@ -102,7 +102,7 @@ wTourUtils.registerWebsitePreviewTour('website_no_dirty_lazy_image', {
     url: '/',
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
     }), 
