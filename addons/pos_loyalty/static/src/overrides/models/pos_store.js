@@ -105,7 +105,7 @@ patch(PosStore.prototype, {
     async couponForProgram(program) {
         const order = this.get_order();
         if (program.is_nominative) {
-            return this.fetchLoyaltyCard(program.id, order.get_partner().id);
+            return await this.fetchLoyaltyCard(program.id, order.get_partner().id);
         }
         // This type of coupons don't need to really exist up until validating the order, so no need to cache
         return this.models["loyalty.card"].create({
