@@ -1040,4 +1040,53 @@ QUnit.module("Tour service", (hooks) => {
             "this action 3 has not been skipped",
         ]);
     });
+
+    QUnit.test("manual tour with inactive steps", async function (assert) {
+        patchWithCleanup(browser.console, {
+            log: (s) => assert.step(`log: ${s}`),
+        });
+        const env = await makeTestEnv({});
+
+        const { Component: OverlayContainer, props: overlayContainerProps } = registry
+            .category("main_components")
+            .get("OverlayContainer");
+
+        class Root extends Component {
+            static components = { OverlayContainer };
+            static template = xml/*html*/ `
+                <t>
+                    <button class="button0">Button 0</button>
+                    <button class="button1">Button 1</button>
+                    <button class="button2">Button 2</button>
+                    <OverlayContainer t-props="props.overlayContainerProps" />
+                </t>
+            `;
+            static props = ["*"];
+        }
+
+        await mount(Root, target, { env, props: { overlayContainerProps } });
+        registry.category("web_tour.tours").add("pipu_tour2", {
+            test: true,
+            steps: () => [
+                {
+                    isActive: ["auto"],
+                    trigger: ".button0",
+                },
+                {
+                    isActive: ["auto"],
+                    trigger: ".button1",
+                },
+                {
+                    isActive: ["manual"],
+                    trigger: ".button2",
+                },
+            ],
+        });
+        env.services.tour_service.startTour("pipu_tour2", { mode: "manual" });
+        await mock.advanceTime(750);
+        await mock.advanceTime(750);
+        await mock.advanceTime(750);
+        await mock.advanceTime(750);
+        assert.verifySteps(["log: .button0", "log: .button1", "log: .button2"]);
+    });
 });

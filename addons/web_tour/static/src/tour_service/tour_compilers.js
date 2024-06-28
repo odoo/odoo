@@ -329,7 +329,6 @@ export function compileStepManual(stepIndex, step, options) {
             trigger: () => {
                 removeListeners();
                 if (!isActive(step, "manual")) {
-                    step.state.canContinue = true;
                     return hoot.queryFirst("body");
                 }
                 if (proceedWith) {
@@ -372,7 +371,7 @@ export function compileStepManual(stepIndex, step, options) {
             },
             action: () => {
                 tourState.set(tour.name, "currentIndex", stepIndex + 1);
-                tourState.set(tour.name, "stepState", getStepState(step));
+                tourState.set(tour.name, "stepState", "succeeded");
                 pointer.hide();
                 proceedWith = null;
                 onStepConsummed(tour, step);
