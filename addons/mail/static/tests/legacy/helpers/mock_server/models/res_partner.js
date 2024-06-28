@@ -11,12 +11,6 @@ patch(MockServer.prototype, {
             const excluded_ids = args.args[2] || args.kwargs.excluded_ids;
             return this._mockResPartnerImSearch(name, limit, excluded_ids);
         }
-        if (args.model === "res.partner" && args.method === "search_for_channel_invite") {
-            const search_term = args.args[0] || args.kwargs.search_term;
-            const channel_id = args.args[1] || args.kwargs.channel_id;
-            const limit = args.args[2] || args.kwargs.limit;
-            return this._mockResPartnerSearchForChannelInvite(search_term, channel_id, limit);
-        }
         if (args.model === "res.partner" && args.method === "get_mention_suggestions") {
             return this._mockResPartnerGetMentionSuggestions(args);
         }
@@ -279,59 +273,6 @@ patch(MockServer.prototype, {
                 ];
             })
         );
-    },
-    /**
-     * Simulates `search_for_channel_invite` on `res.partner`.
-     *
-     * @private
-     * @param {string} [search_term='']
-     * @param {integer} [channel_id]
-     * @param {integer} [limit=30]
-     * @returns {Object[]}
-     */
-    _mockResPartnerSearchForChannelInvite(search_term, channel_id, limit = 30) {
-        if (search_term) {
-            search_term = search_term.toLowerCase(); // simulates ILIKE
-        }
-        const memberPartnerIds = new Set(
-            this.getRecords("discuss.channel.member", [["channel_id", "=", channel_id]]).map(
-                (member) => member.partner_id
-            )
-        );
-        // simulates domain with relational parts (not supported by mock server)
-        const matchingPartners = [
-            ...this._mockResPartnerMailPartnerFormat(
-                this.getRecords("res.users", [])
-                    .filter((user) => {
-                        const partner = this.getRecords("res.partner", [
-                            ["id", "=", user.partner_id],
-                        ])[0];
-                        // user must have a partner
-                        if (!partner) {
-                            return false;
-                        }
-                        // user should not already be a member of the channel
-                        if (memberPartnerIds.has(partner.id)) {
-                            return false;
-                        }
-                        // no name is considered as return all
-                        if (!search_term) {
-                            return true;
-                        }
-                        if (partner.name && partner.name.toLowerCase().includes(search_term)) {
-                            return true;
-                        }
-                        return false;
-                    })
-                    .map((user) => user.partner_id)
-            ).values(),
-        ];
-        const count = matchingPartners.length;
-        matchingPartners.length = Math.min(count, limit);
-        return {
-            count,
-            partners: matchingPartners,
-        };
     },
     /**
      * Simulates `_get_current_persona` on `res.partner`.

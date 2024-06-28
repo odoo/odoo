@@ -38,19 +38,26 @@ class ResPartner(models.Model):
                 [("user_ids.share", "=", False)],
             ]
         )
+        channel = self.env["discuss.channel"]
         if channel_id:
             channel = self.env["discuss.channel"].search([("id", "=", int(channel_id))])
             domain = expression.AND([domain, [("channel_ids", "not in", channel.id)]])
             if channel.group_public_id:
-                domain = expression.AND([domain, [("user_ids.groups_id", "in", channel.group_public_id.id)]])
-
+                domain = expression.AND(
+                    [domain, [("user_ids.groups_id", "in", channel.group_public_id.id)]]
+                )
         query = self._search(domain, limit=limit)
         # bypass lack of support for case insensitive order in search()
-        query.order = SQL('LOWER(%s), "res_partner"."id"', self._field_to_sql(self._table, 'name'))
+        query.order = SQL('LOWER(%s), "res_partner"."id"', self._field_to_sql(self._table, "name"))
+        store = Store()
+        self.env["res.partner"].browse(query)._search_for_channel_invite_to_store(store, channel)
         return {
             "count": self.env["res.partner"].search_count(domain),
-            "partners": list(self.env["res.partner"].browse(query).mail_partner_format().values()),
+            "data": store.get_result(),
         }
+
+    def _search_for_channel_invite_to_store(self, store: Store, channel):
+        store.add("Persona", list(self.mail_partner_format().values()))
 
     @api.model
     def get_mention_suggestions_from_channel(self, channel_id, search, limit=8):
