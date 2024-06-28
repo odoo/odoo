@@ -1270,22 +1270,16 @@ const _pointerUp = (target, options) => {
         return;
     }
 
-    const prevented = dispatchEventSequence(
-        target,
-        ["pointerup", hasTouch() ? "touchend" : "mouseup"],
-        eventInit
-    );
+    dispatchEventSequence(target, ["pointerup", hasTouch() ? "touchend" : "mouseup"], eventInit);
 
-    if (!prevented) {
-        const clickEventInit = { ...eventInit, detail: runTime.currentClickCount + 1 };
-        const currentTarget = runTime.currentPointerDownTarget;
-        const parent = currentTarget && getFirstCommonParent(target, currentTarget);
-        if (parent) {
-            triggerClick(parent, clickEventInit);
-            runTime.currentClickCount++;
-            if (!hasTouch() && runTime.currentClickCount % 2 === 0) {
-                dispatch(parent, "dblclick", clickEventInit);
-            }
+    const clickEventInit = { ...eventInit, detail: runTime.currentClickCount + 1 };
+    const currentTarget = runTime.currentPointerDownTarget;
+    const parent = currentTarget && getFirstCommonParent(target, currentTarget);
+    if (parent) {
+        triggerClick(parent, clickEventInit);
+        runTime.currentClickCount++;
+        if (!hasTouch() && runTime.currentClickCount % 2 === 0) {
+            dispatch(parent, "dblclick", clickEventInit);
         }
     }
 
