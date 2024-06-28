@@ -40,7 +40,10 @@ export class PowerboxPlugin extends Plugin {
             text: _t('Type "/" for commands'),
             target,
         },
-        powerboxCategory: { id: "structure", name: _t("Structure"), sequence: 10 },
+        powerboxCategory: [
+            { id: "structure", name: _t("Structure"), sequence: 10 },
+            { id: "widget", name: _t("Widget"), sequence: 60 },
+        ],
     });
 
     setup() {

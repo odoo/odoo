@@ -81,7 +81,7 @@ export class LinkPlugin extends Plugin {
                 },
             ],
         },
-        powerboxCategory: { id: "navigation", name: _t("Navigation"), sequence: 40 },
+        powerboxCategory: { id: "navigation", name: _t("Navigation"), sequence: 50 },
         powerboxCommands: [
             {
                 name: _t("Link"),

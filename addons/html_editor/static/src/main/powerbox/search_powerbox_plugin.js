@@ -10,6 +10,13 @@ export class SearchPowerboxPlugin extends Plugin {
     static name = "search_powerbox";
     static dependencies = ["powerbox", "selection", "history"];
     setup() {
+        const categoryIds = new Set();
+        for (const category of this.resources.powerboxCategory) {
+            if (categoryIds.has(category.id)) {
+                throw new Error(`Duplicate category id: ${category.id}`);
+            }
+            categoryIds.add(category.id);
+        }
         this.categories = this.resources.powerboxCategory.sort((a, b) => a.sequence - b.sequence);
         this.commands = this.resources.powerboxCommands.map((command) => ({
             ...command,

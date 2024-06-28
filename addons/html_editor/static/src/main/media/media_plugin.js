@@ -42,7 +42,7 @@ export class MediaPlugin extends Plugin {
             });
         }
         const resources = {
-            powerboxCategory: { id: "media", name: _t("Media"), sequence: 20 },
+            powerboxCategory: { id: "media", name: _t("Media"), sequence: 40 },
             powerboxCommands,
             toolbarGroup: {
                 id: "replace_image",

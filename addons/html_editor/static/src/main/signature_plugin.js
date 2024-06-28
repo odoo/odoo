@@ -8,7 +8,7 @@ export class SignaturePlugin extends Plugin {
     static dependencies = ["dom"];
     /** @type { (p: SignaturePlugin) => Record<string, any> } */
     static resources = (p) => ({
-        powerboxCategory: { id: "basic_block", name: _t("Basic Bloc"), sequence: 150 },
+        powerboxCategory: { id: "basic_block", name: _t("Basic Bloc"), sequence: 100 },
         powerboxCommands: [
             {
                 category: "basic_block",

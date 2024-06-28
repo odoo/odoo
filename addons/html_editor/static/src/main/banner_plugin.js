@@ -11,7 +11,7 @@ export class BannerPlugin extends Plugin {
     static dependencies = ["dom", "selection"];
     /** @type { (p: BannerPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        powerboxCategory: { id: "banner", name: _t("Banner"), sequence: 65 },
+        powerboxCategory: { id: "banner", name: _t("Banner"), sequence: 20 },
         powerboxCommands: [
             {
                 category: "banner",
