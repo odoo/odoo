@@ -22,12 +22,8 @@ defineMailModels();
 test("can create a new channel [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     onRpcBefore((route, args) => {
-        if (route.startsWith("/mail") || route.startsWith("/discuss")) {
-            // 'mark_as_read' order can change in last assertSteps.
-            // Removed to not deal with non-deterministic assertion
-            if (route !== "/discuss/channel/mark_as_read") {
-                step(`${route} - ${JSON.stringify(args)}`);
-            }
+        if (route.startsWith("/mail") || route.startsWith("/discuss/channel/messages")) {
+            step(`${route} - ${JSON.stringify(args)}`);
         }
     });
     onRpc((params) => {
