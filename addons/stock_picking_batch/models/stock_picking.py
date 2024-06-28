@@ -140,7 +140,7 @@ class StockPicking(models.Model):
     def _create_backorder(self, backorder_moves=None):
         for picking in self:
             # Avoid inconsistencies in states of the same batch when validating a single picking in a batch.
-            if picking.batch_id and picking.state != 'done':
+            if picking.batch_id and picking.state != 'done' and any(p not in self for p in picking.batch_id.picking_ids):
                 picking.batch_id = None
         return super()._create_backorder(backorder_moves)
 
