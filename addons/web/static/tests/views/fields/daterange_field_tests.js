@@ -1240,4 +1240,30 @@ QUnit.module("Fields", (hooks) => {
             assert.containsOnce(target, ".fa-long-arrow-right");
         }
     );
+
+    QUnit.test(
+        "update the selected input date after removing the existing date",
+        async (assert) => {
+            serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
+            serverData.models.partner.records[0].date_end = "2017-02-08";
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                        <form>
+                        <field name="date" widget="daterange" options="{'start_date_field': 'date_end'}" required="1" />
+                        </form>`,
+            });
+            await click(target, "input[data-field=date]");
+            await editInput(target, "input[data-field=date]",null);
+            await click(getPickerCell("12").at(0));
+
+            assert.equal(
+                target.querySelector("input[data-field=date]").value,
+                "02/12/2017"
+            );
+        }
+    );
 });
