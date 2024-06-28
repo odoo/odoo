@@ -1037,6 +1037,9 @@ patch(Order.prototype, {
                 if (reward.reward_type === "product") {
                     if (!reward.multi_product) {
                         const product = reward.reward_product_ids[0];
+                        if (!product) {
+                            continue;
+                        }
                         unclaimedQty = this._computeUnclaimedFreeProductQty(
                             reward,
                             couponProgram.coupon_id,
