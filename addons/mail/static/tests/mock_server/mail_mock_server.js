@@ -316,12 +316,16 @@ async function discuss_channel_messages(request) {
     if (!around) {
         MailMessage.set_message_done(res.messages.map((message) => message.id));
     }
-    return {
-        ...res,
-        messages: MailMessage._message_format(
+    const store = new mailDataHelpers.Store(
+        "Message",
+        MailMessage._message_format(
             res.messages.map((message) => message.id),
             true
-        ),
+        )
+    );
+    return {
+        ...res,
+        data: store.get_result(),
     };
 }
 
@@ -451,13 +455,16 @@ async function discuss_history_messages(request) {
         ]);
         return notifs.length > 0;
     });
-
-    return {
-        ...res,
-        messages: MailMessage._message_format(
+    const store = new mailDataHelpers.Store(
+        "Message",
+        MailMessage._message_format(
             messagesWithNotification.map((message) => message.id),
             true
-        ),
+        )
+    );
+    return {
+        ...res,
+        data: store.get_result(),
     };
 }
 
@@ -470,12 +477,11 @@ async function discuss_inbox_messages(request) {
     const { after, around, before, limit = 30, search_term } = await parseRequestParams(request);
     const domain = [["needaction", "=", true]];
     const res = MailMessage._message_fetch(domain, search_term, before, after, around, limit);
-    return {
-        ...res,
-        messages: MailMessage._message_format_personalize(
-            res.messages.map((message) => message.id)
-        ),
-    };
+    const store = new mailDataHelpers.Store(
+        "Message",
+        MailMessage._message_format_personalize(res.messages.map((message) => message.id))
+    );
+    return { ...res, data: store.get_result() };
 }
 
 registerRoute("/mail/link_preview", mail_link_preview);
@@ -727,13 +733,14 @@ async function discuss_starred_messages(request) {
     const { after, before, limit = 30, search_term } = await parseRequestParams(request);
     const domain = [["starred_partner_ids", "in", [this.env.user.partner_id]]];
     const res = MailMessage._message_fetch(domain, search_term, before, after, false, limit);
-    return {
-        ...res,
-        messages: MailMessage._message_format(
+    const store = new mailDataHelpers.Store(
+        "Message",
+        MailMessage._message_format(
             res.messages.map((message) => message.id),
             true
-        ),
-    };
+        )
+    );
+    return { ...res, data: store.get_result() };
 }
 
 registerRoute("/mail/thread/data", mail_thread_data);
@@ -764,13 +771,14 @@ async function mail_thread_messages(request) {
     ];
     const res = MailMessage._message_fetch(domain, search_term, before, after, around, limit);
     MailMessage.set_message_done(res.messages.map((message) => message.id));
-    return {
-        ...res,
-        messages: MailMessage._message_format(
+    const store = new mailDataHelpers.Store(
+        "Message",
+        MailMessage._message_format(
             res.messages.map((message) => message.id),
             true
-        ),
-    };
+        )
+    );
+    return { ...res, data: store.get_result() };
 }
 
 registerRoute("/mail/action", mail_action);

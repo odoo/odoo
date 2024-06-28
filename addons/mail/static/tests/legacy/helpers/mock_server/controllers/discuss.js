@@ -252,7 +252,11 @@ patch(MockServer.prototype, {
         }
         return {
             ...res,
-            messages: this._mockMailMessageMessageFormat(res.messages.map((message) => message.id)),
+            data: {
+                Message: this._mockMailMessageMessageFormat(
+                    res.messages.map((message) => message.id)
+                ),
+            },
         };
     },
     /**
@@ -361,9 +365,11 @@ patch(MockServer.prototype, {
 
         return {
             ...res,
-            messages: this._mockMailMessageMessageFormat(
-                messagesWithNotification.map((message) => message.id)
-            ),
+            data: {
+                Message: this._mockMailMessageMessageFormat(
+                    messagesWithNotification.map((message) => message.id)
+                ),
+            },
         };
     },
     /**
@@ -390,9 +396,11 @@ patch(MockServer.prototype, {
         );
         return {
             ...res,
-            messages: this._mockMailMessageFormatPersonalize(
-                res.messages.map((message) => message.id)
-            ),
+            data: {
+                Message: this._mockMailMessageFormatPersonalize(
+                    res.messages.map((message) => message.id)
+                ),
+            },
         };
     },
     /**
@@ -418,7 +426,11 @@ patch(MockServer.prototype, {
         );
         return {
             ...res,
-            messages: this._mockMailMessageMessageFormat(res.messages.map((message) => message.id)),
+            data: {
+                Message: this._mockMailMessageMessageFormat(
+                    res.messages.map((message) => message.id)
+                ),
+            },
         };
     },
     /**
@@ -679,7 +691,11 @@ patch(MockServer.prototype, {
         this._mockMailMessageSetMessageDone(res.messages.map((message) => message.id));
         return {
             ...res,
-            messages: this._mockMailMessageMessageFormat(res.messages.map((message) => message.id)),
+            data: {
+                Message: this._mockMailMessageMessageFormat(
+                    res.messages.map((message) => message.id)
+                ),
+            },
         };
     },
 });

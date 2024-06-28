@@ -2,6 +2,7 @@
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.mail.tools.discuss import Store
 
 
 class MailboxController(http.Controller):
@@ -10,16 +11,19 @@ class MailboxController(http.Controller):
         partner_id = request.env.user.partner_id.id
         domain = [("needaction", "=", True)]
         res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
-        return {**res, "messages": res["messages"]._message_format_personalize(partner_id)}
+        store = Store("Message", res.pop("messages")._message_format_personalize(partner_id))
+        return {**res, "data": store.get_result()}
 
     @http.route("/mail/history/messages", methods=["POST"], type="json", auth="user")
     def discuss_history_messages(self, search_term=None, before=None, after=None, limit=30, around=None):
         domain = [("needaction", "=", False)]
         res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
-        return {**res, "messages": res["messages"]._message_format(for_current_user=True)}
+        store = Store("Message", res.pop("messages")._message_format(for_current_user=True))
+        return {**res, "data": store.get_result()}
 
     @http.route("/mail/starred/messages", methods=["POST"], type="json", auth="user")
     def discuss_starred_messages(self, search_term=None, before=None, after=None, limit=30, around=None):
         domain = [("starred_partner_ids", "in", [request.env.user.partner_id.id])]
         res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
-        return {**res, "messages": res["messages"]._message_format(for_current_user=True)}
+        store = Store("Message", res.pop("messages")._message_format(for_current_user=True))
+        return {**res, "data": store.get_result()}
