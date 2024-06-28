@@ -7,6 +7,7 @@ import { isIterable, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     Callbacks,
     HootError,
+    INCLUDE_LEVEL,
     Markup,
     batch,
     createReporting,
@@ -243,6 +244,10 @@ const warnUserEvent = (ev) => {
 //-----------------------------------------------------------------------------
 
 export class Runner {
+    static URL_SPEC = 1;
+    static TAG_SPEC = 2;
+    static PRESET_SPEC = 3;
+
     // Properties
     aborted = false;
     /** @type {boolean | Test | Suite} */
@@ -266,7 +271,11 @@ export class Runner {
         done: [],
         /**
          * Dictionnary containing whether a job is included or excluded from the
-         * current run.
+         * current run. Values are numbers defining priority:
+         *  - 0: inherits inclusion status from parent object
+         *  - +1/-1: included/excluded by URL
+         *  - +2/-2: included/excluded by explicit test tag (readonly)
+         *  - +3/-3: included/excluded by preset (readonly)
          * @type {{
          *  suites: Record<string, number>;
          *  tags: Record<string, number>;
@@ -1095,7 +1104,11 @@ export class Runner {
                             `"${job.fullName}" is marked as "${tag.name}". This is not suitable for CI`
                         );
                     }
-                    this._include(job instanceof Suite ? "suites" : "tests", [job.id], 2);
+                    this._include(
+                        job instanceof Suite ? "suites" : "tests",
+                        [job.id],
+                        INCLUDE_LEVEL.tag
+                    );
                     ignoreSkip = true;
                     break;
                 case Tag.SKIP:
@@ -1200,7 +1213,7 @@ export class Runner {
      * @param {Iterable<string>} ids
      * @param {number} [priority=1]
      */
-    _include(type, ids, priority = 1) {
+    _include(type, ids, priority = INCLUDE_LEVEL.url) {
         const values = this.state.includeSpecs[type];
         for (const id of ids) {
             const nId = normalize(id);
@@ -1345,7 +1358,7 @@ export class Runner {
                 throw new HootError(`unknown preset: "${this.config.preset}"`);
             }
             if (preset.tags?.length) {
-                this._include("tags", preset.tags, 3);
+                this._include("tags", preset.tags, INCLUDE_LEVEL.preset);
             }
             if (preset.platform) {
                 mockUserAgent(preset.platform);
