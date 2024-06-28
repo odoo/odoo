@@ -59,7 +59,7 @@ test("click a menu link", async () => {
     const cell = getEvaluatedCell(model, "A1");
     expect(urlRepresentation(cell.link, model.getters)).toBe("menu with xmlid");
     openLink(cell.link, env);
-    expect.verifySteps(["action1"]);
+    expect.verifySteps(["spreadsheet.action1"]);
 });
 
 test("click a menu link [2]", async () => {

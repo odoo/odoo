@@ -1,7 +1,6 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { dblclick } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
 import {
     defineSpreadsheetDashboardModels,
@@ -10,7 +9,6 @@ import {
 import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("mobile");
-defineSpreadsheetModels();
 defineSpreadsheetDashboardModels();
 
 test("is empty with no figures", async () => {

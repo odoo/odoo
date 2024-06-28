@@ -1,16 +1,14 @@
-import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { describe, expect, test } from "@odoo/hoot";
 import { setCellContent } from "@spreadsheet/../tests/helpers/commands";
-import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { getCellValue } from "@spreadsheet/../tests/helpers/getters";
-import {
-    getAccountingData,
-    defineSpreadsheetAccountModels,
-} from "@spreadsheet_account/../tests/accounting_test_data";
+import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
+import {
+    defineSpreadsheetAccountModels,
+    getAccountingData,
+} from "@spreadsheet_account/../tests/accounting_test_data";
 
 describe.current.tags("headless");
-defineSpreadsheetModels();
 defineSpreadsheetAccountModels();
 
 const serverData = getAccountingData();

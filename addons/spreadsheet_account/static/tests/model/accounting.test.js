@@ -1,22 +1,20 @@
-import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { describe, expect, test } from "@odoo/hoot";
-import { makeServerError } from "@web/../tests/web_test_helpers";
 import { setCellContent } from "@spreadsheet/../tests/helpers/commands";
-import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
-import { parseAccountingDate } from "@spreadsheet_account/accounting_functions";
 import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/helpers/getters";
+import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
+import { camelToSnakeObject } from "@spreadsheet/helpers/helpers";
 import {
     defineSpreadsheetAccountModels,
     getAccountingData,
 } from "@spreadsheet_account/../tests/accounting_test_data";
-import { camelToSnakeObject } from "@spreadsheet/helpers/helpers";
+import { parseAccountingDate } from "@spreadsheet_account/accounting_functions";
+import { makeServerError } from "@web/../tests/web_test_helpers";
 import { sprintf } from "@web/core/utils/strings";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
 describe.current.tags("headless");
-defineSpreadsheetModels();
 defineSpreadsheetAccountModels();
 
 const { DEFAULT_LOCALE: locale } = spreadsheet.constants;
