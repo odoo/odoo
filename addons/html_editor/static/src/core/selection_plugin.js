@@ -8,7 +8,7 @@ import {
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "../plugin";
-import { DIRECTIONS, endPos, nodeSize } from "../utils/position";
+import { DIRECTIONS, endPos, nodeSize, startPos } from "../utils/position";
 import {
     normalizeCursorPosition,
     normalizeDeepCursorPosition,
@@ -89,6 +89,9 @@ export class SelectionPlugin extends Plugin {
         "modifySelection",
         // "collapseIfZWS",
     ];
+    static resources = (p) => ({
+        shortcuts: [{ hotkey: "control+a", command: "SELECT_ALL" }],
+    });
 
     setup() {
         this.resetSelection();
@@ -108,6 +111,29 @@ export class SelectionPlugin extends Plugin {
             this.isPointerDown = false;
             this.preventNextMousedownFix = false;
         });
+    }
+
+    handleCommand(command, payload) {
+        switch (command) {
+            case "SELECT_ALL":
+                {
+                    const selection = this.getEditableSelection();
+                    const containerSelector = "#wrap>*, .oe_structure>*, [contenteditable]";
+                    const container =
+                        selection && closestElement(selection.anchorNode, containerSelector);
+                    let [anchorNode, anchorOffset] = startPos(container);
+                    if (
+                        anchorNode.firstChild &&
+                        anchorNode.firstChild.getAttribute("contenteditable") === "false"
+                    ) {
+                        anchorNode = anchorNode.firstChild.nextSibling;
+                        anchorOffset = 0;
+                    }
+                    const [focusNode, focusOffset] = endPos(container);
+                    this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+                }
+                break;
+        }
     }
 
     resetSelection() {

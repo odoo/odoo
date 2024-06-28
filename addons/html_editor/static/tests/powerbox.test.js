@@ -68,7 +68,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(22);
+        expect(commandNames(el).length).toBe(26);
         insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -78,13 +78,14 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(22);
-        expect(".o-we-category").toHaveCount(6);
+        expect(commandNames(el).length).toBe(26);
+        expect(".o-we-category").toHaveCount(7);
         expect(queryAllTexts(".o-we-category")).toEqual([
             "STRUCTURE",
             "MEDIA",
             "FORMAT",
             "NAVIGATION",
+            "BANNER",
             "WIDGET",
             "BASIC BLOC",
         ]);
@@ -99,7 +100,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
         insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(22);
+        expect(commandNames(el).length).toBe(26);
         insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -148,7 +149,7 @@ describe("search", () => {
         insertText(editor, "/");
         await animationFrame();
         expect(".o-we-powerbox").toHaveCount(1);
-        expect(commandNames(el).length).toBe(22);
+        expect(commandNames(el).length).toBe(26);
 
         insertText(editor, "headx");
         await animationFrame();

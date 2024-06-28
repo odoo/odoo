@@ -48,6 +48,7 @@ import { LinkSelectionPlugin } from "./main/link/link_selection_plugin";
 import { OdooLinkSelectionPlugin } from "./main/link/link_selection_odoo_plugin";
 import { EmojiPlugin } from "./main/emoji_plugin";
 import { SignaturePlugin } from "./main/signature_plugin";
+import { BannerPlugin } from "./main/banner_plugin";
 
 export const CORE_PLUGINS = [
     ClipboardPlugin,
@@ -68,6 +69,7 @@ export const CORE_PLUGINS = [
 
 export const MAIN_PLUGINS = [
     ...CORE_PLUGINS,
+    BannerPlugin,
     ColorPlugin,
     ColumnPlugin,
     EmojiPlugin,
