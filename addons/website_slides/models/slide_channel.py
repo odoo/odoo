@@ -284,6 +284,7 @@ class Channel(models.Model):
         'website.seo.metadata',
         'website.published.multi.mixin',
         'website.searchable.mixin',
+        'website.pageoptions.mixin',
     ]
     _order = 'sequence, id'
     _partner_unfollow_enabled = True
