@@ -20,7 +20,7 @@ import { FileUploader } from "@web/views/fields/file_handler";
  */
 export class Activity extends Component {
     static components = { ActivityMailTemplate, FileUploader };
-    static props = ["activity", "onActivityChanged", "reloadParentView"];
+    static props = ["activity", "onActivityChanged", "reloadParentView", "messageSearch?"];
     static template = "mail.Activity";
 
     setup() {
@@ -40,6 +40,13 @@ export class Activity extends Component {
             return _t("“%s”", this.props.activity.summary);
         }
         return this.props.activity.display_name;
+    }
+
+    get note() {
+        return (
+            this.props.messageSearch?.highlight(this.props.activity.note) ??
+            this.props.activity.note
+        );
     }
 
     updateDelayAtNight() {
