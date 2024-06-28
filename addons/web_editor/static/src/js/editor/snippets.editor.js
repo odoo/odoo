@@ -1222,6 +1222,7 @@ var SnippetsMenu = Widget.extend({
         'click .o_we_invisible_entry': '_onInvisibleEntryClick',
         'click #snippet_custom .o_rename_btn': '_onRenameBtnClick',
         'click #snippet_custom .o_delete_btn': '_onDeleteBtnClick',
+        'click #snippet_custom .o_we_confirm_btn': '_onConfirmRename',
         'mousedown': '_onMouseDown',
         'input .o_snippet_search_filter_input': '_onSnippetSearchInput',
         'click .o_snippet_search_filter_reset': '_onSnippetSearchResetClick',
@@ -2954,6 +2955,12 @@ var SnippetsMenu = Widget.extend({
                             self.options.wysiwyg.odooEditor.unbreakableStepUnactive();
                             self.options.wysiwyg.odooEditor.historyStep();
                             self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
+
+                            // Helps to autosave the name of the custom snippet.
+                            const elementEl = document.querySelector(".o_snippet_renaming");
+                            if(elementEl){
+                                self._onConfirmRename();
+                            }
                         });
                     } else {
                         $toInsert.remove();
@@ -3439,27 +3446,35 @@ var SnippetsMenu = Widget.extend({
         const $textInput = $input.find('input');
         $textInput.focus();
         $textInput.select();
-        $snippet.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging'); // prevent drag
-        $input.find('.o_we_confirm_btn').click(async () => {
-            const name = $textInput.val();
-            if (name !== snippetName) {
-                this._execWithLoadingEffect(async () => {
-                    await this._rpc({
-                        model: 'ir.ui.view',
-                        method: 'rename_snippet',
-                        kwargs: {
-                            'name': name,
-                            'view_id': parseInt(ev.target.dataset.snippetId),
-                            'template_key': this.options.snippets,
-                        },
-                    });
-                }, true);
-            }
-            await this._loadSnippetsTemplates(name !== snippetName);
-        });
+        $snippet[0].querySelector('.oe_snippet_thumbnail').classList.add("o_snippet_renaming");
         $input.find('.o_we_cancel_btn').click(async () => {
+            this.el.classList.remove("o_snippet_renaming");
             await this._loadSnippetsTemplates(false);
         });
+    },
+
+    /**
+     * @private
+     */
+    _onConfirmRename: async function () {
+        const elementEl = document.querySelector(".o_snippet_renaming");
+        const newName = elementEl.querySelector("input").value;
+        const snippetId = elementEl.parentNode.dataset.oeSnippetId;
+        const snippetName = elementEl.parentNode.getAttribute("name");
+        if (newName !== snippetName) {
+            await this._execWithLoadingEffect(async () => {
+                await this._rpc({
+                    model: 'ir.ui.view',
+                    method: 'rename_snippet',
+                    kwargs: {
+                        'name': newName,
+                        'view_id': parseInt(snippetId),
+                        'template_key': this.options.snippets,
+                    },
+                });
+            }, true);
+        }
+        await this._loadSnippetsTemplates(newName !== snippetName);
     },
     /**
      * Prevents pointer-events to change the focus when a pointer slide from
