@@ -816,9 +816,35 @@ Please change the quantity done or the rounding precision of your unit of measur
             location_id = self.location_dest_id
         lot_names = self.env['stock.lot'].generate_lot_names(next_serial, next_serial_count or self.next_serial_count)
         field_data = [{'lot_name': lot_name['lot_name'], 'quantity': 1} for lot_name in lot_names]
+        if self.picking_type_id.use_existing_lots:
+            self._create_lot_ids_from_move_line_vals(field_data, self.product_id.id, self.company_id.id)
         move_lines_commands = self._generate_serial_move_line_commands(field_data)
         self.move_line_ids = move_lines_commands
         return True
+
+    def _create_lot_ids_from_move_line_vals(self, vals_list, default_product_id=None, default_company_id=None):
+        """ This method will search or create the lot_id from the lot_name and set it in the vals_list
+        """
+        for vals in vals_list:
+            product_id = vals.get('product_id', default_product_id)
+            company_id = vals.get('company_id', default_company_id)
+            lot_name = vals.get('lot_name', None)
+            if not lot_name or not company_id or not product_id:
+                continue
+
+            lot_id = self.env['stock.lot'].search([
+                ('product_id', '=', product_id),
+                ('name', '=', lot_name),
+                ('company_id', '=', company_id),
+            ])
+            if not lot_id:
+                lot_id = self.env['stock.lot'].create({
+                    'product_id': product_id,
+                    'name': lot_name,
+                    'company_id': company_id,
+                })
+            vals['lot_id'] = lot_id.id
+            vals['lot_name'] = False
 
     @api.model
     def split_lots(self, lots):
@@ -856,19 +882,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                     # don't try to guess and simply use the full string as the lot name.
                     move_line_vals['lot_name'] = lot_text
                     break
-            if self.picking_type_id.use_existing_lots:
-                lot_id = self.env['stock.lot'].search([
-                    ('product_id', '=', self.product_id.id),
-                    ('name', '=', lot_text),
-                    ('company_id', '=', self.company_id.id),
-                ])
-                if not lot_id:
-                    lot_id = self.env['stock.lot'].create({
-                        'product_id': self.product_id.id,
-                        'name': lot_text,
-                        'company_id': self.company_id.id,
-                    })
-                move_line_vals['lot_id'] = lot_id.id
             move_lines_vals.append(move_line_vals)
         return move_lines_vals
 
@@ -901,6 +914,9 @@ Please change the quantity done or the rounding precision of your unit of measur
                              'location_dest_id': loc_dest.id,
                              'product_uom_id': product.uom_id.id,
                             })
+        picking_type = self.env['stock.picking.type'].browse(default_vals['picking_type_id'])
+        if picking_type.use_existing_lots:
+            self._create_lot_ids_from_move_line_vals(vals_list)
         # format many2one values for webclient, id + display_name
         for values in vals_list:
             for key, value in values.items():
