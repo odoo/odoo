@@ -20,6 +20,7 @@ class ProductTemplate(models.Model):
     _order = "is_favorite desc, name"
     _check_company_domain = models.check_company_domain_parent_of
 
+
     @tools.ormcache()
     def _get_default_category_id(self):
         # Deletion forbidden (at least through unlink)
