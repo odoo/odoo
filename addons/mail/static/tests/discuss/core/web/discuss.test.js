@@ -22,7 +22,7 @@ defineMailModels();
 test("can create a new channel [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     onRpcBefore((route, args) => {
-        if (route.startsWith("/mail") || route.startsWith("/discuss")) {
+        if (route.startsWith("/mail") || route.includes("/discuss/channel/messages")) {
             step(`${route} - ${JSON.stringify(args)}`);
         }
     });
