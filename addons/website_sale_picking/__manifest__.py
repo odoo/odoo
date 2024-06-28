@@ -21,6 +21,11 @@ Allows customers to pay for their orders at a shop, instead of paying online.
     'demo': [
         'data/demo.xml',
     ],
+    'assets': {
+        'web.assets_tests': [
+            'website_sale_picking/static/tests/tours/**/*.js'
+        ]
+    },
     'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
 }
