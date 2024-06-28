@@ -73,7 +73,7 @@ class PosOrder(models.Model):
         coupon_create_vals = [{
             'program_id': p['program_id'],
             'partner_id': get_partner_id(p.get('partner_id', False)),
-            'code': p.get('barcode') or self.env['loyalty.card']._generate_code(),
+            'code': p.get('code') or p.get('barcode') or self.env['loyalty.card']._generate_code(),
             'points': 0,
             'source_pos_order_id': self.id,
         } for p in coupons_to_create.values()]

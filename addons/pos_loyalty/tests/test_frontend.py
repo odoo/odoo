@@ -1592,6 +1592,50 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user"
         )
 
+    def test_physical_gift_card_sale(self):
+        """
+        Test that the manual gift card sold has been correctly generated.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference and activate the gift_card_product_50
+        LoyaltyProgram.search([]).write({'pos_ok': False})
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+
+        # Create gift card program
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+
+        # Run the tour
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PhysicalGiftCardProgramSaleTour",
+            login="pos_user"
+        )
+
+        expected_coupons = {
+            "test-card-0000": 225,
+            "new-card-0001": 250,
+        }
+
+        # Check if the expected coupon codes are present
+        coupon_codes = {coupon.code for coupon in gift_card_program.coupon_ids}
+        for expected_code in expected_coupons:
+            self.assertIn(expected_code, coupon_codes, f"Expected coupon code '{expected_code}' not found")
+
+        # Check if the expected number of coupons are generated
+        self.assertEqual(len(gift_card_program.coupon_ids), 3, "Three coupons should be generated")
+
+        # Check if the coupon codes and points match the expected values
+        for coupon in gift_card_program.coupon_ids:
+            if coupon.code in expected_coupons:
+                self.assertEqual(coupon.points, expected_coupons[coupon.code], f"Coupon points for '{coupon.code}' should be {expected_coupons[coupon.code]}")
+            else:
+                # This is the auto-generated coupon with 50 points
+                self.assertEqual(coupon.points, 50, "Auto-generated coupon should have 50 points")
+
+        # Check if the total points of all coupons match the expected value
+        total_points = sum(coupon.points for coupon in gift_card_program.coupon_ids)
+        self.assertEqual(total_points, 525, "Total points should be 525")
+
     def test_dont_grant_points_reward_order_lines(self):
         """
         Make sure that points granted per unit are only given

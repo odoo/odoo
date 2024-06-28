@@ -91,3 +91,27 @@ registry.category("web_tour.tours").add("GiftCardProgramPriceNoTaxTour", {
             PosLoyalty.orderTotalIs("0.98"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PhysicalGiftCardProgramSaleTour", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.addOrderline("Gift Card", "1", "50", "50"),
+            PosLoyalty.createManualGiftCard("test-card-0000", 125),
+            ProductScreen.selectedOrderlineHas("Gift Card", "1.00", "125"),
+            PosLoyalty.orderTotalIs("125"),
+            PosLoyalty.finalizeOrder("Cash", "125"),
+            ProductScreen.addOrderline("Gift Card", "3", "50", "150.00"),
+            PosLoyalty.createManualGiftCard("test-card-0000", 100),
+            PosLoyalty.clickPhysicalGiftCard("test-card-0000"),
+            ProductScreen.selectedOrderlineHas("Gift Card", "1.00", "100"),
+            PosLoyalty.clickPhysicalGiftCard(),
+            PosLoyalty.createManualGiftCard("new-card-0001", 250),
+            PosLoyalty.clickPhysicalGiftCard("new-card-0001"),
+            ProductScreen.selectedOrderlineHas("Gift Card", "1.00", "250"),
+            PosLoyalty.orderTotalIs("400"),
+            PosLoyalty.finalizeOrder("Cash", "400"),
+        ].flat(),
+});
