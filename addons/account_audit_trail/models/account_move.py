@@ -22,6 +22,9 @@ class AccountMove(models.Model):
             raise UserError(_("To keep the audit trail, you can not delete journal entries once they have been posted.\nInstead, you can cancel the journal entry."))
 
     def unlink(self):
+        if self.env.context.get('soft_delete'):
+            self.button_cancel()
+            return True
         # Add logger here because in api ondelete account.move.line is deleted and we can't get total amount
         logger_msg = False
         if any(m.posted_before and m.company_id.check_account_audit_trail for m in self):
