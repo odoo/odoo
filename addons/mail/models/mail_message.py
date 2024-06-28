@@ -591,6 +591,13 @@ class Message(models.Model):
         self.sudo(False).check_access_rights(operation)
         return True
 
+    _audit = {'body', 'subject', 'date', 'attachment_ids', 'author_id'}
+
+    def _filter_audit_records(self):
+        # Logging all the message modification would bloat the logs but logs messages from different user than the
+        # author_id seems a good tradeoff
+        return self.filtered(lambda m: self.env.user.id != 1 and m.author_id.id != self.env.user.partner_id.id)
+
     @api.model_create_multi
     def create(self, values_list):
         tracking_values_list = []

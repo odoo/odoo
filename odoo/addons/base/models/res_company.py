@@ -82,6 +82,13 @@ class Company(models.Model):
         ('name_uniq', 'unique (name)', 'The company name must be unique!')
     ]
 
+    _audit = {'name', 'parent_id', 'active', 'partner_id', 'report_header', 'report_footer', 'company_details',
+                     'currency_id', 'user_ids', 'street', 'street2', 'zip', 'city', 'state_id', 'bank_ids', 'country_id'
+                     , 'email', 'phone', 'mobile', 'website', 'vat', 'company_registry', 'external_report_layout_id',
+                     'base_onboarding_company_state'}
+    _audit_wo_value = {'logo', 'logo_web', 'favicon', 'font', 'primary_color', 'secondary_color',
+                              'layout_background', 'layout_background_image'}
+
     def init(self):
         for company in self.search([('paperformat_id', '=', False)]):
             paperformat_euro = self.env.ref('base.paperformat_euro', False)
