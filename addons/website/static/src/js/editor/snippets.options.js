@@ -37,7 +37,8 @@ import {
 } from "@website/js/text_processing";
 
 import { patch } from "@web/core/utils/patch";
-import { Component, markup, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
+import { session } from "@web/session";
+import { Component, markup, onMounted, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
 
 import {
     BackgroundToggler,
@@ -49,6 +50,7 @@ import {
     SelectTemplate,
     SelectUserValue,
     SnippetOption,
+    SnippetOptionComponent,
     UserValue,
     UserValueComponent,
     vAlignment,
@@ -2727,8 +2729,8 @@ options.registry.topMenuColor = options.Class.extend({
 /**
  * Manage the visibility of snippets on mobile/desktop.
  */
-options.registry.DeviceVisibility = options.Class.extend({
-
+options.registry.DeviceVisibility = options.Class.extend({});
+export class DeviceVisibility extends SnippetOption {
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
@@ -2753,14 +2755,14 @@ options.registry.DeviceVisibility = options.Class.extend({
 
         // Update invisible elements.
         const isMobile = wUtils.isMobile(this);
-        this.trigger_up('snippet_option_visibility_update', {show: widgetValue !== (isMobile ? 'no_mobile' : 'no_desktop')});
-    },
+        this.callbacks.updateSnippetOptionVisibility(widgetValue !== (isMobile ? 'no_mobile' : 'no_desktop'));
+    }
     /**
      * @override
      */
     async onTargetHide() {
         this.$target[0].classList.remove('o_snippet_override_invisible');
-    },
+    }
     /**
      * @override
      */
@@ -2772,13 +2774,13 @@ options.registry.DeviceVisibility = options.Class.extend({
             ) && isMobilePreview === isMobileHidden) {
             this.$target[0].classList.add('o_snippet_override_invisible');
         }
-    },
+    }
     /**
      * @override
      */
     cleanForSave() {
         this.$target[0].classList.remove('o_snippet_override_invisible');
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -2799,8 +2801,8 @@ options.registry.DeviceVisibility = options.Class.extend({
             }
             return '';
         }
-        return await this._super(...arguments);
-    },
+        return await super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -2808,8 +2810,14 @@ options.registry.DeviceVisibility = options.Class.extend({
         if (this.$target[0].classList.contains('s_table_of_content_main')) {
             return false;
         }
-        return this._super(...arguments);
+        return super._computeWidgetVisibility(...arguments);
     }
+}
+registerWebsiteOption("DeviceVisibility", {
+    Class: DeviceVisibility,
+    template: "website.DeviceVisibility",
+    selector: "section .row > div",
+    exclude: ".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize",
 });
 
 /**
@@ -3413,55 +3421,65 @@ registerWebsiteOption("ScrollButton", {
 });
 
 
-options.registry.ConditionalVisibility = options.registry.DeviceVisibility.extend({
-    /**
-     * @constructor
-     */
-    init() {
-        this._super(...arguments);
+options.registry.ConditionalVisibility = options.registry.DeviceVisibility.extend({});
+class ConditionalVisibilityComponent extends SnippetOptionComponent {
+    setup() {
+        super.setup(...arguments);
+
+        onMounted(() => {
+            for (const widget of Object.values(this.props.snippetOption.instance._userValues)) {
+                const params = widget.getMethodsParams();
+                if (params.saveAttribute) {
+                    this.props.snippetOption.instance.optionsAttributes.push({
+                        saveAttribute: params.saveAttribute,
+                        attributeName: params.attributeName,
+                        // If callWith dataAttribute is not specified, the default
+                        // field to check on the record will be .value for values
+                        // coming from another widget than M2M.
+                        callWith: params.callWith || 'value',
+                    });
+                }
+            }
+        });
+    }
+}
+class ConditionalVisibility extends DeviceVisibility {
+    static defaultRenderingComponent = ConditionalVisibilityComponent;
+
+    constructor() {
+        super(...arguments);
         this.optionsAttributes = [];
-    },
+        this.orm = this.env.services.orm;
+    }
     /**
      * @override
      */
-    async start() {
-        await this._super(...arguments);
-
-        for (const widget of this._userValueWidgets) {
-            const params = widget.getMethodsParams();
-            if (params.saveAttribute) {
-                this.optionsAttributes.push({
-                    saveAttribute: params.saveAttribute,
-                    attributeName: params.attributeName,
-                    // If callWith dataAttribute is not specified, the default
-                    // field to check on the record will be .value for values
-                    // coming from another widget than M2M.
-                    callWith: params.callWith || 'value',
-                });
-            }
-        }
-    },
+    async _getRenderContext() {
+        const context = await super._getRenderContext(...arguments);
+        context.countryCode = session.geoip_country_code;
+        context.currentWebsite = (await this.orm.searchRead(
+            "website",
+            [["id", "=", this.env.services.website.currentWebsite.id]],
+            ["language_ids"]
+        ))[0];
+        return context;
+    }
     /**
      * @override
      */
     async onTargetHide() {
-        await this._super(...arguments);
+        await super.onTargetHide(...arguments);
         if (this.$target[0].classList.contains('o_snippet_invisible')) {
             this.$target[0].classList.add('o_conditional_hidden');
         }
-    },
+    }
     /**
      * @override
      */
     async onTargetShow() {
-        await this._super(...arguments);
+        await super.onTargetShow(...arguments);
         this.$target[0].classList.remove('o_conditional_hidden');
-    },
-    // Todo: remove me in master.
-    /**
-     * @override
-     */
-    cleanForSave() {},
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -3482,7 +3500,7 @@ options.registry.ConditionalVisibility = options.registry.DeviceVisibility.exten
         }
 
         this._updateCSSSelectors();
-    },
+    }
     /**
      * Selects a value for target's data-attributes.
      * Should be used instead of selectRecord if the visibility is not related
@@ -3500,21 +3518,18 @@ options.registry.ConditionalVisibility = options.registry.DeviceVisibility.exten
         }
 
         this._updateCSSSelectors();
-    },
+    }
     /**
      * Opens the toggler when 'conditional' is selected.
      *
      * @override
      */
     async selectDataAttribute(previewMode, widgetValue, params) {
-        await this._super(...arguments);
+        await super.selectDataAttribute(...arguments);
 
         if (params.attributeName === 'visibility') {
             const targetEl = this.$target[0];
-            if (widgetValue === 'conditional') {
-                const collapseEl = this.$el.children('we-collapse')[0];
-                this._toggleCollapseEl(collapseEl);
-            } else {
+            if (widgetValue !== 'conditional') {
                 // TODO create a param to allow doing this automatically for genericSelectDataAttribute?
                 delete targetEl.dataset.visibility;
 
@@ -3523,13 +3538,13 @@ options.registry.ConditionalVisibility = options.registry.DeviceVisibility.exten
                     delete targetEl.dataset[`${attribute.saveAttribute}Rule`];
                 }
             }
-            this.trigger_up('snippet_option_visibility_update', {show: true});
+            this.callbacks.updateSnippetOptionVisibility(true);
         } else if (!params.isVisibilityCondition) {
             return;
         }
 
         this._updateCSSSelectors();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -3546,8 +3561,8 @@ options.registry.ConditionalVisibility = options.registry.DeviceVisibility.exten
             const selectedValue = this.$target[0].dataset[params.saveAttribute];
             return selectedValue ? JSON.parse(selectedValue)[0].value : params.attributeDefaultValue;
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * Reads target's attributes and creates CSS selectors.
      * Stores them in data-attributes to then be reapplied by
@@ -3622,7 +3637,12 @@ options.registry.ConditionalVisibility = options.registry.DeviceVisibility.exten
         } else {
             delete this.$target[0].dataset.visibilityId;
         }
-    },
+    }
+}
+registerWebsiteOption("ConditionalVisibility", {
+    Class: ConditionalVisibility,
+    template: "website.ConditionalVisibility",
+    selector: "section, .s_hr",
 });
 
 options.registry.WebsiteAnimate = options.Class.extend({
@@ -4452,7 +4472,7 @@ export function websiteRegisterBackgroundOptions(key, options) {
     registerBackgroundOptions(key, options, (name) => name === "toggler" && "website.snippet_options_background_options");
     if (options.withVideos) {
         registerWebsiteOption(`${key}-bgVideo`, {
-            Class: BackgroundVideo, 
+            Class: BackgroundVideo,
             template: "website.BackgroundVideo",
             ...options,
         }, { sequence: 30 });
@@ -4464,7 +4484,7 @@ export function websiteRegisterBackgroundOptions(key, options) {
             ...options,
         }, { sequence: 30 });
     }
-    
+
 }
 
 export const onlyBgColorSelector = "section .row > div, .s_text_highlight, .s_mega_menu_thumbnails_footer, .s_hr, .s_cta_badge";

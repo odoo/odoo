@@ -406,4 +406,100 @@
         <t t-set="title">Columns</t>
     </t>
 </t>
+
+<t t-name="website.snippet_options_conditional_visibility">
+    <WeSelect title="option_name" class="'o_we_sublevel_1'" dependencies="'visibility_conditional'"
+               attributeName="attribute_rule" noPreview="'true'" isVisibilityCondition="'true'">
+        <WeButton selectDataAttribute="''">Visible for</WeButton>
+        <WeButton selectDataAttribute="'hide'">Hidden for</WeButton>
+    </WeSelect>
+    <WeMany2many title="' '" dependencies="'visibility_conditional'" selectRecord="''"
+                 noPreview="'true'" allowDelete="'true'" fakem2m="'true'"
+                 saveAttribute="save_attribute" attributeName="attribute_name" model="model"
+                 callWith="call_with" fields="data_fields" domain="domain">
+    </WeMany2many>
+</t>
+<t t-name="website._device_visibility_widgets">
+    <WeButton class="'o_we_device'" toggleDeviceVisibility="'no_desktop'" tooltip.translate="Show/Hide on Desktop"
+        noPreview="'true'" img="'/website/static/src/img/snippets_options/desktop_invisible.svg'"/>
+    <WeButton class="'o_we_device'" toggleDeviceVisibility="'no_mobile'" tooltip.translate="Show/Hide on Mobile"
+        noPreview="'true'" img="'/website/static/src/img/snippets_options/mobile_invisible.svg'"/>
+</t>
+<t t-name="website.ConditionalVisibility">
+    <we-collapse>
+        <WeRow title.translate="Visibility">
+            <t t-call="website._device_visibility_widgets"/>
+            <WeSelect class="'o_we_collapse_toggler'" attributeName="'visibility'" noPreview="'true'">
+                <WeButton selectDataAttribute="''">No condition</WeButton>
+                <WeButton selectDataAttribute="'conditional'" selectClass="'o_snippet_invisible'"
+                          name="'visibility_conditional'">
+                    Conditionally
+                </WeButton>
+            </WeSelect>
+        </WeRow>
+
+        <t t-if="renderContext.countryCode">
+            <t t-call="website.snippet_options_conditional_visibility">
+                <t t-set="option_name">Country</t>
+                <t t-set="attribute_rule" t-value="'visibilityValueCountryRule'"/>
+                <t t-set="save_attribute" t-value="'visibilityValueCountry'"/>
+                <t t-set="attribute_name" t-value="'data-country'"/>
+                <t t-set="model" t-value="'res.country'"/>
+                <t t-set="call_with" t-value="'code'"/>
+                <t t-set="data_fields" t-value="'[&quot;code&quot;]'"/>
+            </t>
+        </t>
+        <t t-if="renderContext.currentWebsite.language_ids.length > 1">
+            <t t-call="website.snippet_options_conditional_visibility">
+                <t t-set="option_name">Languages</t>
+                <t t-set="attribute_rule" t-value="'visibilityValueLangRule'"/>
+                <t t-set="save_attribute" t-value="'visibilityValueLang'"/>
+                <t t-set="attribute_name" t-value="'lang'"/>
+                <t t-set="model" t-value="'res.lang'"/>
+                <t t-set="call_with" t-value="'code'"/>
+                <t t-set="domain" t-value='`[["id", "in", [${renderContext.currentWebsite.language_ids}]]]`'/>
+                <t t-set="data_fields" t-value="'[&quot;code&quot;]'"/>
+            </t>
+        </t>
+        <t t-call="website.snippet_options_conditional_visibility">
+            <t t-set="option_name">UTM Campaign</t>
+            <t t-set="attribute_rule" t-value="'visibilityValueUtmCampaignRule'"/>
+            <t t-set="save_attribute" t-value="'visibilityValueUtmCampaign'"/>
+            <t t-set="attribute_name" t-value="'data-utm-campaign'"/>
+            <t t-set="model" t-value="'utm.campaign'"/>
+            <t t-set="call_with" t-value="'display_name'"/>
+        </t>
+        <t t-call="website.snippet_options_conditional_visibility">
+            <t t-set="option_name">UTM Medium</t>
+            <t t-set="attribute_rule" t-value="'visibilityValueUtmMediumRule'"/>
+            <t t-set="save_attribute" t-value="'visibilityValueUtmMedium'"/>
+            <t t-set="attribute_name" t-value="'data-utm-medium'"/>
+            <t t-set="model" t-value="'utm.medium'"/>
+            <t t-set="call_with" t-value="'display_name'"/>
+        </t>
+        <t t-call="website.snippet_options_conditional_visibility">
+            <t t-set="option_name">UTM Source</t>
+            <t t-set="attribute_rule" t-value="'visibilityValueUtmSourceRule'"/>
+            <t t-set="save_attribute" t-value="'visibilityValueUtmSource'"/>
+            <t t-set="attribute_name" t-value="'data-utm-source'"/>
+            <t t-set="model" t-value="'utm.source'"/>
+            <t t-set="call_with" t-value="'display_name'"/>
+        </t>
+        <WeSelect title.translate="Users"
+                  class="'o_we_sublevel_1'" dependencies="'visibility_conditional'"
+                  attributeName="'data-logged'" saveAttribute="'visibilityValueLogged'"
+                  noPreview="'true'" attributeDefaultValue="''">
+            <WeButton selectValue="'true'">Visible for Logged In</WeButton>
+            <WeButton selectValue="'false'">Visible for Logged Out</WeButton>
+            <WeButton selectValue="''">Visible for Everyone</WeButton>
+        </WeSelect>
+    </we-collapse>
+</t>
+<!-- Mobile/Desktop display options -->
+<t t-name="website.DeviceVisibility">
+    <WeRow title.translate="Visibility">
+        <t t-call="website._device_visibility_widgets"/>
+    </WeRow>
+</t>
+
 </templates>

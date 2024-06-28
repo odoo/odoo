@@ -413,23 +413,6 @@
     </t>
 </template>
 
-<template id="snippet_options_conditional_visibility">
-    <we-select t-att-string="option_name" class="o_we_sublevel_1"
-               data-dependencies="visibility_conditional"
-               t-att-data-attribute-name="attribute_rule"
-               data-no-preview="true"  data-is-visibility-condition="true">
-        <we-button data-select-data-attribute="">Visible for</we-button>
-        <we-button data-select-data-attribute="hide">Hidden for</we-button>
-    </we-select>
-    <we-many2many string=" "
-        data-dependencies="visibility_conditional"
-        t-att-data-save-attribute="save_attribute"
-        t-att-data-attribute-name="attribute_name"
-        data-no-preview="true"
-        t-att-data-model="model" t-att-data-call-with="call_with" data-select-record="" t-att-data-fields="data_fields" t-att-data-domain="domain"
-        data-allow-delete="true" data-fakem2m="true"/>
-</template>
-
 <template id="column_count_option">
     <we-select t-att-string="not with_grid and 'Columns'" t-att-class="with_grid and 'o_grid'" data-no-preview="true" data-name="column_count_opt" t-att-data-dependencies="with_grid and 'normal_mode'">
         <we-button data-select-count="0" data-name="zero_cols_opt">None</we-button>
@@ -1281,96 +1264,6 @@
             <we-button data-select-class="text-center">Centered</we-button>
             <we-button data-select-class="text-end">Right</we-button>
         </we-select>
-    </div>
-
-    <t t-set="_device_visibility_widgets">
-        <we-button class="o_we_device" data-toggle-device-visibility="no_desktop" title="Show/Hide on Desktop"
-            data-no-preview="true"
-            data-img="/website/static/src/img/snippets_options/desktop_invisible.svg"
-        />
-        <we-button class="o_we_device" data-toggle-device-visibility="no_mobile" title="Show/Hide on Mobile"
-            data-no-preview="true"
-            data-img="/website/static/src/img/snippets_options/mobile_invisible.svg"
-        />
-    </t>
-    <div data-js="ConditionalVisibility" data-selector="section, .s_hr">
-        <t t-set="current_website" t-value="request.env['website'].get_current_website()"/>
-        <we-collapse>
-            <we-row string="Visibility">
-                <t t-out="_device_visibility_widgets"/>
-                <we-select data-attribute-name="visibility" data-no-preview="true">
-                    <we-button data-select-data-attribute="">No condition</we-button>
-                    <we-button data-select-data-attribute="conditional" data-select-class="o_snippet_invisible" data-name="visibility_conditional">Conditionally</we-button>
-                </we-select>
-            </we-row>
-
-            <t t-if="request.geoip.country_code">
-                <t t-call="website.snippet_options_conditional_visibility">
-                    <t t-set="option_name">Country</t>
-                    <t t-set="attribute_rule" t-valuef="visibilityValueCountryRule"/>
-                    <t t-set="save_attribute" t-valuef="visibilityValueCountry"/>
-                    <t t-set="attribute_name" t-valuef="data-country"/>
-                    <t t-set="model" t-valuef="res.country"/>
-                    <t t-set="call_with" t-valuef="code"/>
-                    <t t-set="data_fields" t-valuef="[&quot;code&quot;]"/>
-                </t>
-            </t>
-            <t t-if="len(current_website.language_ids) > 1">
-                <t t-call="website.snippet_options_conditional_visibility">
-                    <t t-set="option_name">Languages</t>
-                    <t t-set="attribute_rule" t-valuef="visibilityValueLangRule"/>
-                    <t t-set="save_attribute" t-valuef="visibilityValueLang"/>
-                    <t t-set="attribute_name" t-valuef="lang"/>
-                    <t t-set="model" t-valuef="res.lang"/>
-                    <t t-set="call_with" t-valuef="code"/>
-                    <t t-set="domain" t-translation="off">[["id", "in", <t t-out="current_website.language_ids.ids"/>]]</t>
-                    <t t-set="data_fields" t-valuef="[&quot;code&quot;]"/>
-                </t>
-            </t>
-            <t t-call="website.snippet_options_conditional_visibility">
-                <t t-set="option_name">UTM Campaign</t>
-                <t t-set="attribute_rule" t-valuef="visibilityValueUtmCampaignRule"/>
-                <t t-set="save_attribute" t-valuef="visibilityValueUtmCampaign"/>
-                <t t-set="attribute_name" t-valuef="data-utm-campaign"/>
-                <t t-set="model" t-valuef="utm.campaign"/>
-                <t t-set="call_with" t-valuef="display_name"/>
-            </t>
-            <t t-call="website.snippet_options_conditional_visibility">
-                <t t-set="option_name">UTM Medium</t>
-                <t t-set="attribute_rule" t-valuef="visibilityValueUtmMediumRule"/>
-                <t t-set="save_attribute" t-valuef="visibilityValueUtmMedium"/>
-                <t t-set="attribute_name" t-valuef="data-utm-medium"/>
-                <t t-set="model" t-valuef="utm.medium"/>
-                <t t-set="call_with" t-valuef="display_name"/>
-            </t>
-            <t t-call="website.snippet_options_conditional_visibility">
-                <t t-set="option_name">UTM Source</t>
-                <t t-set="attribute_rule" t-valuef="visibilityValueUtmSourceRule"/>
-                <t t-set="save_attribute" t-valuef="visibilityValueUtmSource"/>
-                <t t-set="attribute_name" t-valuef="data-utm-source"/>
-                <t t-set="model" t-valuef="utm.source"/>
-                <t t-set="call_with" t-valuef="display_name"/>
-            </t>
-            <we-select string="Users"
-                class="o_we_sublevel_1"
-                data-dependencies="visibility_conditional"
-                data-attribute-name="data-logged"
-                data-save-attribute="visibilityValueLogged"
-                data-no-preview="true"
-                data-attribute-default-value="">
-                <we-button data-select-value="true">Visible for Logged In</we-button>
-                <we-button data-select-value="false">Visible for Logged Out</we-button>
-                <we-button data-select-value="">Visible for Everyone</we-button>
-            </we-select>
-        </we-collapse>
-    </div>
-
-    <!-- Mobile/Desktop display options -->
-    <div data-js="DeviceVisibility" data-selector="section .row > div"
-            data-exclude=".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize">
-        <we-row string="Visibility">
-            <t t-out="_device_visibility_widgets"/>
-        </we-row>
     </div>
 
     <!-- Cookies Bar -->
