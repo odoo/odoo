@@ -3432,13 +3432,11 @@ var SnippetsMenu = Widget.extend({
     _onRenameBtnClick: function (ev) {
         const $snippet = $(ev.target).closest('.oe_snippet');
         const snippetName = $snippet.attr('name');
-        const confirmText = _t('Confirm');
         const cancelText = _t('Cancel');
         const $input = $(`
             <we-input class="o_we_user_value_widget w-100 mx-1">
                 <div>
                     <input type="text" autocomplete="chrome-off" value="${snippetName}" class="text-left"/>
-                    <we-button class="o_we_confirm_btn o_we_text_success fa fa-check" title="${confirmText}"/>
                     <we-button class="o_we_cancel_btn o_we_text_danger fa fa-times" title="${cancelText}"/>
                 </div>
             </we-input>
@@ -3449,9 +3447,9 @@ var SnippetsMenu = Widget.extend({
         $textInput.focus();
         $textInput.select();
         $snippet.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging'); // prevent drag
-        $input.find('.o_we_confirm_btn').click(async () => {
-            const name = $textInput.val();
-            if (name !== snippetName) {
+        $input[0].addEventListener("focusout", async () => {
+            const name = $textInput[0].value.trim();
+            if (name && name !== snippetName) {
                 this._execWithLoadingEffect(async () => {
                     await this._rpc({
                         model: 'ir.ui.view',
@@ -3464,9 +3462,10 @@ var SnippetsMenu = Widget.extend({
                     });
                 }, true);
             }
-            await this._loadSnippetsTemplates(name !== snippetName);
+            await this._loadSnippetsTemplates(name && name !== snippetName);
         });
-        $input.find('.o_we_cancel_btn').click(async () => {
+        $input[0].querySelector(".o_we_cancel_btn").addEventListener("mousedown", async () => {
+            $textInput[0].value = snippetName;
             await this._loadSnippetsTemplates(false);
         });
     },
