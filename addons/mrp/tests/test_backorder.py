@@ -627,6 +627,39 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo.product_qty, 1)
         self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [0.5, 1])
 
+    def test_split_mo_partially_available(self):
+        """
+        Test that an MO components availability is correct after split.
+        - Create MO with BoM requiring 2 components 1:1
+        - Change components quantity to 10 and 9
+        - Split the MO and make sure that one of the MO's is not available post-split
+        """
+        mo, _, _, product_to_use_1, product_to_use_2 = self.generate_mo(qty_base_1=1, qty_final=10)
+
+        inventory_wizard_1 = self.env['stock.change.product.qty'].create({
+            'product_id': product_to_use_1.id,
+            'product_tmpl_id': product_to_use_1.product_tmpl_id.id,
+            'new_quantity': 10,
+        })
+        inventory_wizard_2 = self.env['stock.change.product.qty'].create({
+            'product_id': product_to_use_2.id,
+            'product_tmpl_id': product_to_use_2.product_tmpl_id.id,
+            'new_quantity': 9,
+        })
+        inventory_wizard_1.change_product_qty()
+        inventory_wizard_2.change_product_qty()
+
+        self.assertEqual(mo.state, 'confirmed')
+        mo.action_assign()
+        action = mo.action_split()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.counter = 10
+        action = wizard.save().action_split()
+        # check that the MO is split in 10 and exactly one of the components is not available
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 10)
+        last_move = mo.procurement_group_id.mrp_production_ids[-1].move_raw_ids.filtered(lambda m: m.product_id == product_to_use_2)
+        self.assertFalse(last_move.quantity)
+
     def test_auto_generate_backorder(self):
         mo = self.env['mrp.production'].create({
             'product_qty': 10,
