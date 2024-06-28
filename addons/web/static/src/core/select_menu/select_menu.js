@@ -157,7 +157,9 @@ export class SelectMenu extends Component {
                     const values = [...this.props.value];
                     values.splice(values.indexOf(c.value), 1);
                     this.props.onSelect(values);
-                    this.removeIds(values);
+                    if (this.props.element) {
+                        this.props.element.value = values.join(",");
+                    }
                 },
             };
         });
@@ -243,40 +245,18 @@ export class SelectMenu extends Component {
             if (valueIndex !== -1) {
                 values.splice(valueIndex, 1);
                 this.props.onSelect(values);
-                this.removeIds(values);
             } else {
                 this.props.onSelect([...this.props.value, value]);
-                this.addSelectedIds([...this.props.value, value]);
+            }
+            if (this.props.element) {
+                const values = valueIndex !== -1 ? values : [...this.props.value, value];
+                this.props.element.value = values.join(",");
             }
         } else if (!this.selectedChoice || this.selectedChoice.value !== value) {
             this.props.onSelect(value);
-            this.addSelectedIds(value);
-        }
-    }
-
-    addSelectedIds(value) {
-        if (this.props.element) {
-            if (this.props.multiSelect) {
-                this.props.element.value = value.join(",");
-            } else {
+            if (this.props.element) {
                 this.props.element.value = value;
             }
-            const changeEvent = new Event("change", { bubbles: true });
-            this.props.element.dispatchEvent(changeEvent);
-        }
-    }
-
-    removeIds(values) {
-        if (this.props.element) {
-            this.selectedIds = this.selectedIds.filter((id) => {
-                return this.props.choices.some((choice) => {
-                    return choice.id === id && values.includes(choice.value);
-                });
-            });
-
-            this.props.element.value = this.selectedIds.join(",");
-            const changeEvent = new Event("change", { bubbles: true });
-            this.props.element.dispatchEvent(changeEvent);
         }
     }
 
