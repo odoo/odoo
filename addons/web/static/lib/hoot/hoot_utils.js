@@ -60,7 +60,6 @@ const {
     Date,
     Error,
     ErrorEvent,
-    JSON: { parse: $parse, stringify: $stringify },
     Map,
     Math: { floor },
     Number: { isInteger: $isInteger, isNaN: $isNaN, parseFloat: $parseFloat },
@@ -70,6 +69,7 @@ const {
         create: $create,
         defineProperty: $defineProperty,
         entries: $entries,
+        fromEntries: $fromEntries,
         getPrototypeOf: $getPrototypeOf,
         keys: $keys,
     },
@@ -301,7 +301,7 @@ export function deepCopy(value) {
             return "<anonymous function>";
         }
     }
-    if (typeof value === "object") {
+    if (typeof value === "object" && !Markup.isMarkup(value)) {
         if (isNode(value)) {
             // Nodes
             return value.cloneNode(true);
@@ -313,16 +313,12 @@ export function deepCopy(value) {
             } else {
                 return copy;
             }
-        } else if (Markup.isMarkup(value)) {
-            // Markup helpers
-            value.content = deepCopy(value.content);
-            return value;
         } else if (value instanceof Date) {
             // Dates
             return new value.constructor(value);
         } else {
             // Other objects
-            return $parse($stringify(value));
+            return $fromEntries($entries(value).map(([key, value]) => [key, deepCopy(value)]));
         }
     }
     return value;
@@ -400,7 +396,7 @@ export function deepEqual(a, b, cache = new Set()) {
 
     cache.add(a);
     if (isNode(a)) {
-        return a.isEqualNode(b);
+        return isNode(b) && a.isEqualNode(b);
     }
     if (a instanceof File) {
         // Files
@@ -1043,7 +1039,7 @@ export class Markup {
     constructor(params) {
         this.className = params.className || "";
         this.tagName = params.tagName || "div";
-        this.content = params.content || "";
+        this.content = deepCopy(params.content) || "";
         this.technical = params.technical;
     }
 
