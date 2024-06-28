@@ -165,6 +165,8 @@ class StockMove(models.Model):
         'mrp.production', 'Production Order for finished products', check_company=True, index='btree_not_null')
     raw_material_production_id = fields.Many2one(
         'mrp.production', 'Production Order for components', check_company=True, index='btree_not_null')
+    byproduct_production_id = fields.Many2one(
+        'mrp.production', 'Production Order for byproduct', check_company=True, index='btree_not_null')
     unbuild_id = fields.Many2one(
         'mrp.unbuild', 'Disassembly Order', check_company=True)
     consume_unbuild_id = fields.Many2one(
