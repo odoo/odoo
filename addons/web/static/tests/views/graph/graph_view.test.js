@@ -1352,6 +1352,52 @@ test("line chart rendering (one groupBy, several domains with date identificatio
     );
 });
 
+test("line chart rendering (one groupBy, several domains with date identification) without stacked attribute", async () => {
+    Foo._records = [
+        { date: "2021-01-04", revenue: 12 },
+        { date: "2021-01-12", revenue: 5 },
+        { date: "2021-01-19", revenue: 15 },
+        { date: "2021-01-26", revenue: 2 },
+        { date: "2021-02-04", revenue: 14 },
+        { date: "2021-02-17", revenue: 0 },
+        { date: false, revenue: 0 },
+    ];
+
+    await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph type="line">
+                <field name="revenue" type="measure" />
+                <field name="date" interval="week" />
+            </graph>
+        `,
+        comparison: {
+            domains: [
+                {
+                    arrayRepr: [
+                        ["date", ">=", "2021-02-01"],
+                        ["date", "<=", "2021-02-28"],
+                    ],
+                    description: "February 2021",
+                },
+                {
+                    arrayRepr: [
+                        ["date", ">=", "2021-01-01"],
+                        ["date", "<=", "2021-01-31"],
+                    ],
+                    description: "January 2021",
+                },
+            ],
+            fieldName: "date",
+        },
+    });
+
+    expect(".o_graph_button[data-tooltip=Stacked]").not.toHaveClass("active", {
+        message: "The stacked mode should be disabled",
+    });
+});
+
 test("line chart rendering (two groupBy, several domains with no date identification)", async () => {
     Foo._records = [
         { date: "2021-01-04", bar: false, revenue: 12 },
