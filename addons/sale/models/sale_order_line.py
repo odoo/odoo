@@ -121,7 +121,7 @@ class SaleOrderLine(models.Model):
     name = fields.Text(
         string="Description",
         compute='_compute_name',
-        store=True, readonly=False, required=True, precompute=True)
+        store=True, readonly=False, precompute=True)
 
     product_uom_qty = fields.Float(
         string="Quantity",
