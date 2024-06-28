@@ -927,9 +927,18 @@ class ProductTemplate(models.Model):
 
     # Be aware that the exact same function exists in product.product
     def action_open_quants(self):
+<<<<<<< saas-17.4
         if 'product_variant' in self.env.context:
             return self.env['product.product'].browse(self.env.context['default_product_id']).action_open_quants()
         return self.product_variant_ids.filtered(lambda p: p.active or p.qty_available != 0).action_open_quants()
+||||||| 5970e583ccff0b1a0015af93e2b10491a5657452
+        return self.product_variant_ids.filtered(lambda p: p.active or p.qty_available != 0).action_open_quants()
+=======
+        if (self.env.context.get('default_product_id')):
+            return self.env['product.product'].browse(self.env.context['default_product_id']).action_open_quants()
+        else:
+            return self.product_variant_ids.filtered(lambda p: p.active or p.qty_available != 0).action_open_quants()
+>>>>>>> 8e40611db32360fafbe323310d32c751839f990b
 
     def action_update_quantity_on_hand(self):
         advanced_option_groups = [
