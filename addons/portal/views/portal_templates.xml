@@ -847,18 +847,19 @@
         </div>
     </template>
 
-    <template id="portal_my_addresses">
-        <t t-call="portal.portal_layout">
-            <h3>Addresses</h3>
+    <template id="portal_address">
+        <h3>Addresses</h3>
             <h5 class="mt-4">Billing address</h5>
             <div id="address_checkout" class="one_kanban all_billing_address row">
-                <t t-call="portal.address_card">
-                    <t t-set="address" t-value="partner"/>
-                    <t t-set="selected" t-value="len(partner) == 1"/>
-                </t>
-                <t t-foreach="partner.child_ids.filtered(lambda c: c.type == 'invoice')" t-as="billing_address">
+                <t t-if="partner">
                     <t t-call="portal.address_card">
-                        <t t-set="address" t-value="billing_address"/>
+                        <t t-set="address" t-value="partner"/>
+                        <t t-set="selected" t-value="partner and len(partner.child_ids.filtered(lambda c: c.type == 'invoice')) == 0"/>
+                    </t>
+                    <t t-foreach="partner.child_ids.filtered(lambda c: c.type == 'invoice')" t-as="billing_address">
+                        <t t-call="portal.address_card">
+                            <t t-set="address" t-value="billing_address"/>
+                        </t>
                     </t>
                 </t>
                 <div class="col-lg-3">
@@ -869,13 +870,15 @@
             </div>
             <h5 class="mt-4">Shipping address</h5>
             <div id="address_checkout_delivery" class="one_kanban all_delivery_address row">
-                <t t-call="portal.address_card">
-                    <t t-set="address" t-value="partner"/>
-                    <t t-set="selected" t-value="len(partner) == 1"/>
-                </t>
-                <t t-foreach="partner.child_ids.filtered(lambda c: c.type == 'delivery')" t-as="shipping_address">
+                <t t-if="partner">
                     <t t-call="portal.address_card">
-                        <t t-set="address" t-value="shipping_address"/>
+                        <t t-set="address" t-value="partner"/>
+                        <t t-set="selected" t-value="partner and len(partner.child_ids.filtered(lambda c: c.type == 'delivery')) == 0"/>
+                    </t>
+                    <t t-foreach="partner.child_ids.filtered(lambda c: c.type == 'delivery')" t-as="shipping_address">
+                        <t t-call="portal.address_card">
+                            <t t-set="address" t-value="shipping_address"/>
+                        </t>
                     </t>
                 </t>
                 <div class="col-lg-3">
@@ -884,6 +887,10 @@
                     </a>
                 </div>
             </div>
+    </template>
+    <template id="portal_my_addresses">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_address"/>
         </t>
     </template>
 
@@ -891,7 +898,7 @@
         <t t-set="partner" t-value="address"/>
         <div class="col-lg-3">
             <div class="address_card-container col-md">
-                <div t-attf-class="card position-relative h-100 {{selected and 'bg-primary border border-primary' or partner.type == 'invoice' and 'js_change_portal_billing' or 'js_change_portal_shipping'}}">
+                <div t-attf-class="card position-relative h-100 {{selected and 'bg-primary border border-primary' or partner and (partner.type == 'invoice' and 'js_change_portal_billing' or 'js_change_portal_shipping') or ''}}">
                     <div class="card-body align-items-start">
                         <span class="fw-bold">
                             <i t-if="partner.type == 'invoice'" class="fa fa-fw fa-file-text-o text-primary" role="img"/>

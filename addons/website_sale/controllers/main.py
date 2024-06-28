@@ -1546,6 +1546,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         values = self.checkout_values(order_sudo, **post)
 
+        # Add the partner data to the values
+        partner = request.env.user.partner_id
+        values.update({
+            'partner': partner,
+        })
+
         should_skip_delivery = True  # Delivery is only needed for deliverable products.
         if order_sudo._has_deliverable_products():
             available_dms = values['delivery_methods'] = order_sudo._get_delivery_methods()
