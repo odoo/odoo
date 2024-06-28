@@ -161,14 +161,16 @@ export class ImageSelector extends FileSelector {
     }
 
     async uploadUrl(url) {
-        await fetch(url).then(async result => {
+        const uploadFetchedData = async (result) => {
             const blob = await result.blob();
-            blob.id = new Date().getTime();
+            blob.id = new Date().now();
             blob.name = new URL(url, window.location.href).pathname.split("/").findLast(s => s);
             await this.uploadFiles([blob]);
+        };
+        await fetch(url).then(async result => {
+            await uploadFetchedData(result);
         }).catch(async () => {
             await new Promise(resolve => {
-                // If it works from an image, use URL.
                 const imageEl = document.createElement("img");
                 imageEl.onerror = () => {
                     // This message is about the blob fetch failure.
@@ -179,8 +181,19 @@ export class ImageSelector extends FileSelector {
                     });
                     resolve();
                 };
-                imageEl.onload = () => {
-                    super.uploadUrl(url).then(resolve);
+                imageEl.onload = async () => {
+                    // The blob fetch failed but the image can be loaded (e.g.
+                    // CORS protected image); try to fetch the data from the
+                    // server.
+                    const { mimetype, base64Data } = await rpc('/web_editor/fetch_image', {url});
+                    if (!mimetype || !base64Data) {
+                        // The server was not able to fetch the data; create an
+                        // url attachment.
+                        return super.uploadUrl(url).then(resolve);
+                    }
+                    const result = await fetch(`data:${mimetype};base64,${base64Data}`);
+                    await uploadFetchedData(result);
+                    resolve();
                 };
                 imageEl.src = url;
             });
