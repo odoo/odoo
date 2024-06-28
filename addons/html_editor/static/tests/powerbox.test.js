@@ -7,6 +7,7 @@ import {
     manuallyDispatchProgrammaticEvent,
     press,
     queryAllTexts,
+    waitFor,
 } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import {
@@ -19,7 +20,7 @@ import {
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText, redo, undo } from "./_helpers/user_actions";
-import { waitFor } from "../../../web/static/lib/hoot-dom/hoot-dom";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 function commandNames() {
     return queryAllTexts(".o-we-command-name");
@@ -68,7 +69,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(25);
+        expect(commandNames(el).length).toBe(28);
         insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -78,21 +79,22 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(25);
-        expect(".o-we-category").toHaveCount(7);
+        expect(commandNames(el).length).toBe(28);
+        expect(".o-we-category").toHaveCount(8);
         expect(queryAllTexts(".o-we-category")).toEqual([
             "STRUCTURE",
-            "MEDIA",
-            "FORMAT",
-            "NAVIGATION",
             "BANNER",
+            "FORMAT",
+            "MEDIA",
+            "NAVIGATION",
             "WIDGET",
+            "AI TOOLS",
             "BASIC BLOC",
         ]);
 
         insertText(editor, "h");
         await animationFrame();
-        expect(commandNames(el).length).toBe(8);
+        expect(commandNames(el).length).toBe(9);
         expect(".o-we-category").toHaveCount(0);
     });
 
@@ -100,7 +102,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
         insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(25);
+        expect(commandNames(el).length).toBe(28);
         insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -149,7 +151,7 @@ describe("search", () => {
         insertText(editor, "/");
         await animationFrame();
         expect(".o-we-powerbox").toHaveCount(1);
-        expect(commandNames(el).length).toBe(25);
+        expect(commandNames(el).length).toBe(28);
 
         insertText(editor, "headx");
         await animationFrame();
@@ -598,4 +600,33 @@ test("create a new <p> with press 'Enter' then apply a powerbox command", async 
     await animationFrame();
     press("Enter");
     expect(getContent(el)).toBe("<p>ab</p><h1>[]cd</h1>");
+});
+
+// @todo @phoenix Need a fix in hoot duplicate error are throw
+test.todo("add plugins with the same powerboxCategory should crash", async () => {
+    expect.errors(1);
+    patchWithCleanup(console, {
+        warn: (msg) => expect.step(msg),
+    });
+    class Plugin1 extends Plugin {
+        static resources = () => ({
+            powerboxCategory: { id: "test", name: "Test", sequence: 10 },
+        });
+    }
+    class Plugin2 extends Plugin {
+        static resources = () => ({
+            powerboxCategory: { id: "test", name: "Test", sequence: 10 },
+        });
+    }
+    await expect(
+        setupEditor("<p>ab[]cd</p>", {
+            config: { Plugins: [...MAIN_PLUGINS, Plugin1, Plugin2] },
+        })
+    ).rejects.toThrow();
+    expect(["Duplicate category id: test"]).toVerifyErrors();
+    expect([
+        "[Owl] Unhandled error. Destroying the root component",
+        "[Owl] Unhandled error. Destroying the root component",
+        "[Owl] Unhandled error. Destroying the root component",
+    ]).toVerifySteps();
 });

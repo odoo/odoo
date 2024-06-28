@@ -136,7 +136,7 @@ export class FontPlugin extends Plugin {
                 ],
             },
         ],
-        powerboxCategory: { id: "format", name: _t("Format"), sequence: 20 },
+        powerboxCategory: { id: "format", name: _t("Format"), sequence: 30 },
         powerboxCommands: [
             {
                 name: _t("Heading 1"),

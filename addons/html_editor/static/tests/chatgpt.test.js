@@ -5,10 +5,10 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { insertText } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
-import { ChatGPTPlugin } from "../src/others/chatgpt/chatgpt_plugin";
+import { ChatGPTPlugin } from "../src/main/chatgpt/chatgpt_plugin";
 
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { DEFAULT_ALTERNATIVES_MODES } from "../src/others/chatgpt/chatgpt_alternatives_dialog";
+import { DEFAULT_ALTERNATIVES_MODES } from "../src/main/chatgpt/chatgpt_alternatives_dialog";
 
 const PROMPT_DIALOG_TITLE = "Generate Text with AI";
 const ALTERNATIVES_DIALOG_TITLE = "AI Copywriter";

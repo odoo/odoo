@@ -19,7 +19,6 @@ export class EmojiPlugin extends Plugin {
     static dependencies = ["overlay", "dom", "selection"];
     /** @type { (p: EmojiPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        powerboxCategory: { id: "widget", name: _t("Widget"), sequence: 70 },
         powerboxCommands: [
             {
                 category: "widget",

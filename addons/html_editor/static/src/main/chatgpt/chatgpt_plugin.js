@@ -23,7 +23,7 @@ export class ChatGPTPlugin extends Plugin {
                 },
             ],
         },
-        powerboxCategory: { id: "ai", name: _t("AI Tools"), sequence: 50 },
+        powerboxCategory: { id: "ai", name: _t("AI Tools"), sequence: 70 },
         powerboxCommands: {
             name: _t("ChatGPT"),
             description: _t("Generate or transform content with AI."),
