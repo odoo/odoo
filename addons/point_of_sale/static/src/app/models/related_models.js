@@ -308,10 +308,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
 
             if (many) {
                 if (!indexedRecords[model][key][keyVal]) {
-                    indexedRecords[model][key][keyVal] = [];
+                    indexedRecords[model][key][keyVal] = new Map();
                 }
-
-                indexedRecords[model][key][keyVal].push(record);
+                indexedRecords[model][key][keyVal].set(record.id, record);
             } else {
                 indexedRecords[model][key][keyVal] = record;
             }
@@ -482,13 +481,14 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             }
         }
 
-        for (const [index, values] of Object.entries(indexedRecords[model])) {
-            for (const [idx, vals] of Object.entries(values)) {
-                if (Array.isArray(vals)) {
-                    indexedRecords[model][index] = vals.filter((val) => val.id !== record.id);
-                } else {
-                    delete indexedRecords[model][index][idx];
+        for (const key of indexes[model] || []) {
+            const keyVal = record.raw[key];
+            if (Array.isArray(keyVal)) {
+                for (const val of keyVal) {
+                    indexedRecords[model][key][val].delete(record.id);
                 }
+            } else {
+                delete indexedRecords[model][key][keyVal];
             }
         }
 
@@ -564,7 +564,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 if (!indexes[model].includes(key)) {
                     throw new Error(`Unable to get record by '${key}'`);
                 }
-                return this.indexedRecords[model][key][val];
+                const result = this.indexedRecords[model][key][val];
+                if (result instanceof Map) {
+                    return Array.from(result.values());
+                }
+                return result;
             },
             readAll() {
                 return this.orderedRecords[model];
