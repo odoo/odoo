@@ -126,7 +126,7 @@ describe("toNormalizedPivotValue", () => {
             expect(() => toNormalizedPivotValue(dimension, true)).toThrow();
             expect(() => toNormalizedPivotValue(dimension, "won")).toThrow();
 
-            dimension.granularity = "year";
+            dimension.granularity = "year_number";
             expect(toNormalizedPivotValue(dimension, "2020")).toBe(2020);
             expect(toNormalizedPivotValue(dimension, 2020)).toBe(2020);
             expect(toNormalizedPivotValue(dimension, "false")).toBe(false);
@@ -240,7 +240,7 @@ describe("pivot time adapters formatted value", () => {
     });
 
     test("Year adapter", () => {
-        const adapter = pivotTimeAdapter("year");
+        const adapter = pivotTimeAdapter("year_number");
         expect(adapter.toValueAndFormat("2020", DEFAULT_LOCALE)).toEqual({
             value: 2020,
             format: "0",

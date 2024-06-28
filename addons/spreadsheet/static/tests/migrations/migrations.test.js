@@ -497,6 +497,27 @@ test("Pivot formulas using pivot positions are migrated (11 to 12)", () => {
     expect(migratedData.sheets[0].cells.A4.content).toBe(`=ODOO.PIVOT.POSITION("1",14)`);
 });
 
+test("Pivot dimensions granularity year is updated (12 to 13)", () => {
+    const data = {
+        odooVersion: 12,
+        pivots: [
+            {
+                id: "1",
+                type: "ODOO",
+                columns: [
+                    { name: "date", granularity: "year", order: "asc" },
+                    { name: "date", granularity: "month", order: "asc" },
+                ],
+                rows: [{ name: "create_date", granularity: "year", order: "asc" }],
+            },
+        ],
+    };
+    const migratedData = migrate(data);
+    expect(migratedData.pivots[0].columns[0].granularity).toBe("year_number");
+    expect(migratedData.pivots[0].columns[1].granularity).toBe("month");
+    expect(migratedData.pivots[0].rows[0].granularity).toBe("year_number");
+});
+
 test("Odoo version is exported", () => {
     const model = new Model();
     expect(model.exportData().odooVersion).toBe(ODOO_VERSION);

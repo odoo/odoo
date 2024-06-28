@@ -6,7 +6,7 @@ const { load, tokenize, parse, convertAstNodes, astToFormula, helpers } = spread
 const { corePluginRegistry } = spreadsheet.registries;
 const { parseDimension } = helpers;
 
-export const ODOO_VERSION = 12;
+export const ODOO_VERSION = 13;
 
 const MAP_V1 = {
     PIVOT: "ODOO.PIVOT",
@@ -63,6 +63,9 @@ export function migrate(data) {
     }
     if (version < 12) {
         _data = migrate11to12(_data);
+    }
+    if (version < 13) {
+        _data = migrate12to13(_data);
     }
     return _data;
 }
@@ -334,7 +337,11 @@ function migrate11to12(data) {
     for (const sheet of data.sheets) {
         for (const xc in sheet.cells || []) {
             const cell = sheet.cells[xc];
-            if (cell.content && cell.content.startsWith("=") && cell.content.includes("ODOO.PIVOT.POSITION")) {
+            if (
+                cell.content &&
+                cell.content.startsWith("=") &&
+                cell.content.includes("ODOO.PIVOT.POSITION")
+            ) {
                 const tokens = tokenize(cell.content);
                 /* given that odoo.pivot.position is automatically set, we know that:
                 1) it is always on the form of ODOO.PIVOT.POSITION(1, ...)
@@ -343,10 +350,12 @@ function migrate11to12(data) {
                 4) odoo.pivot.position can only exist after the 3rd token and needs at least 7 tokens to be valid*/
                 for (let i = 2; i < tokens.length - 7; i++) {
                     const token = tokens[i];
-                    if (token.type === "SYMBOL" &&
-                        token.value.toUpperCase() === "ODOO.PIVOT.POSITION" ) {
-                        const order = tokens[i + 6]
-                        tokens[i - 2].value = '"#' + tokens[i - 2].value.slice(1) // "dimension" becomes "#dimension"
+                    if (
+                        token.type === "SYMBOL" &&
+                        token.value.toUpperCase() === "ODOO.PIVOT.POSITION"
+                    ) {
+                        const order = tokens[i + 6];
+                        tokens[i - 2].value = '"#' + tokens[i - 2].value.slice(1); // "dimension" becomes "#dimension"
                         tokens.splice(i, 7); // remove "ODOO.PIVOT.POSITION", "(", "1", ",", "dimension", ", ", order
                         // tokens[i-1] is the comma before odoo.pivot.position
                         tokens[i] = order;
@@ -354,6 +363,23 @@ function migrate11to12(data) {
                     }
                 }
             }
+        }
+    }
+    return data;
+}
+
+function convertGranularity(dimension) {
+    if (dimension.granularity === "year") {
+        dimension.granularity = "year_number";
+    }
+    return dimension;
+}
+
+function migrate12to13(data) {
+    if (data.pivots) {
+        for (const pivot of Object.values(data.pivots)) {
+            pivot.columns = pivot.columns.map(convertGranularity);
+            pivot.rows = pivot.rows.map(convertGranularity);
         }
     }
     return data;

@@ -15,12 +15,24 @@ const { parseDimension, isDateField } = helpers;
  * @typedef {import("@spreadsheet").Zone} Zone
  */
 
-function addEmptyGranularity(dimensions, fields) {
+function getGranularity(granularity) {
+    switch (granularity) {
+        case "year":
+            return "year_number";
+        case undefined:
+            return "month";
+        default:
+            return granularity;
+    }
+}
+
+function withSpreadsheetGranularity(dimensions, fields) {
     return dimensions.map((dimension) => {
         if (dimension.name !== "id" && isDateField(fields[dimension.name])) {
+            const granularity = getGranularity(dimension.granularity);
             return {
-                granularity: "month",
                 ...dimension,
+                granularity,
             };
         }
         return dimension;
@@ -51,11 +63,11 @@ export async function insertPivotInSpreadsheet(model, pivotId, params) {
             aggregator: serverData.models[resModel].fields[measure]?.aggregator,
         })),
         model: resModel,
-        columns: addEmptyGranularity(
+        columns: withSpreadsheetGranularity(
             archInfo.colGroupBys.map(parseDimension),
             serverData.models[resModel].fields
         ),
-        rows: addEmptyGranularity(
+        rows: withSpreadsheetGranularity(
             archInfo.rowGroupBys.map(parseDimension),
             serverData.models[resModel].fields
         ),

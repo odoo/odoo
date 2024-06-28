@@ -199,7 +199,10 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
                             if (value === "false") {
                                 transformedValue = undefined;
                             } else {
-                                transformedValue = pivotPeriodToFilterValue(time, value);
+                                transformedValue = pivotPeriodToFilterValue(
+                                    time === "year_number" ? "year" : time,
+                                    value
+                                );
                                 if (
                                     JSON.stringify(transformedValue) ===
                                     JSON.stringify(currentValue)
