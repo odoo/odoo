@@ -9,6 +9,7 @@ export class EditorOverlay extends Component {
 
     static props = {
         target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE, optional: true },
+        initialSelection: { type: Object, optional: true },
         config: Object,
         Component: Function,
         props: { type: Object, optional: true },
@@ -17,6 +18,7 @@ export class EditorOverlay extends Component {
     };
 
     setup() {
+        this.lastSelection = this.props.initialSelection;
         let getTarget, position;
         if (this.props.target) {
             getTarget = () => this.props.target;
@@ -28,14 +30,25 @@ export class EditorOverlay extends Component {
         }
         position = usePosition("root", getTarget, this.props.config);
     }
+
     getCurrentRect() {
         const doc = this.props.editable.ownerDocument;
         const selection = doc.getSelection();
         if (!selection || !selection.rangeCount) {
             return null;
         }
-        const focusNode = selection.focusNode;
-        const range = selection.getRangeAt(0);
+        const inEditable = this.props.editable.contains(selection.anchorNode);
+        let range, focusNode;
+        if (inEditable) {
+            range = selection.getRangeAt(0);
+            focusNode = selection.focusNode;
+        } else {
+            if (!this.lastSelection) {
+                return null;
+            }
+            range = this.lastSelection.range;
+            focusNode = this.lastSelection.focusNode;
+        }
         let rect = range.getBoundingClientRect();
         if (rect.x === 0 && rect.width === 0 && rect.height === 0) {
             const clonedRange = range.cloneRange();
@@ -46,6 +59,10 @@ export class EditorOverlay extends Component {
             shadowCaret.remove();
             clonedRange.detach();
         }
+        this.lastSelection = {
+            range,
+            focusNode,
+        };
         // not proud of this...
         if (focusNode.nodeType === Node.TEXT_NODE) {
             focusNode.getBoundingClientRect = () => rect;

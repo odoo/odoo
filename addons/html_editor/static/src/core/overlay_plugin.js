@@ -48,6 +48,14 @@ export class Overlay {
             this.updatePosition();
         } else {
             this.isOpen = true;
+            const selection = this.plugin.editable.ownerDocument.getSelection();
+            let initialSelection;
+            if (selection && selection.type !== "None") {
+                initialSelection = {
+                    range: selection.getRangeAt(0),
+                    focusNode: selection.focusNode,
+                };
+            }
             this._remove = this.plugin.services.overlay.add(
                 EditorOverlay,
                 markRaw({
@@ -56,6 +64,7 @@ export class Overlay {
                     editable: this.plugin.editable,
                     props,
                     target,
+                    initialSelection,
                     bus: this.bus,
                 }),
                 {
