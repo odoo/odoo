@@ -208,7 +208,7 @@ var QuestionFormWidget = publicWidget.Widget.extend({
                     'sequence': sequence++,
                     'text_value': value,
                     'is_correct': $(this).find('input[type=radio]').prop('checked') === true,
-                    'comment': $(this).find('.o_wslides_js_quiz_answer_comment > input[type=text]').val().trim()
+                    'comment': $(this).find('.o_wslides_js_quiz_answer_comment input[type=text]').val().trim()
                 };
                 answers.push(answer);
             }
