@@ -15,6 +15,7 @@ class Partner(models.Model):
     _mail_flat_thread = False
 
     # override to add and order tracking
+    name = fields.Char(tracking=1)
     email = fields.Char(tracking=1)
     phone = fields.Char(tracking=2)
     parent_id = fields.Many2one(tracking=3)

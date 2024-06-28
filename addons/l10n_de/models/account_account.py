@@ -8,5 +8,5 @@ class AccountAccount(models.Model):
     def write(self, vals):
         if 'code' in vals and 'DE' in self.company_id.account_fiscal_country_id.mapped('code'):
             if self.env['account.move.line'].search_count([('account_id', 'in', self.ids)], limit=1):
-                raise UserError(_("You can not change the code/name of an account if it contains hashed entries."))
+                raise UserError(_("You can not change the code/name of an account."))
         super().write(vals)
