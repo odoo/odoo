@@ -94,6 +94,7 @@ export class SelectMenu extends Component {
             searchValue: "",
         });
         if (this.props.element) {
+            this.props.element.value = this.props.value;
             this.props.element.style.display = "none";
         }
         this.buttonRef = useRef("buttonRef");

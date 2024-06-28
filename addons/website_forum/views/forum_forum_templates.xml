@@ -116,7 +116,7 @@
                 <div class="col">
                     <input type="hidden" name="karma_tag_create" t-att-value="forum.karma_tag_create" id="karma_tag_create"/>
                     <input type="hidden" name="karma_edit_retag" t-att-value="forum.karma_edit_retag" id="karma_edit_retag"/>
-                    <input type="hidden" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
+                    <input type="hidden" name="post_tags" placeholder="Tags" class="form-control js_select_menu"/>
                 </div>
             </div>
             <div class="row mb-5">
@@ -208,7 +208,7 @@
                     <input type="hidden" name="karma_edit_retag" t-att-value="forum.karma_edit_retag" id="karma_edit_retag"/>
                     <t t-set="edit_tags_karma_fail" t-value="user.karma &lt; forum.karma_edit_retag"/>
                     <t t-set="edit_tags_karma_error_message">You need to have sufficient karma to edit tags</t>
-                    <input type="text" name="post_tags" class="form-control js_select2" placeholder="Tags" t-attf-data-init-value="#{tags}" value="Tags"
+                    <input type="text" name="post_tags" class="form-control js_select_menu" placeholder="Tags" t-attf-data-init-value="#{tags}" value="Tags"
                         t-att-readonly="edit_tags_karma_fail and 'readonly'"
                         t-att-title="edit_tags_karma_fail and edit_tags_karma_error_message"/>
                </div>

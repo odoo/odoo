@@ -65,47 +65,63 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         this.$('[data-bs-toggle="tooltip"]').tooltip({delay: 0});
         this.$('[data-bs-toggle="popover"]').popover({offset: '8'});
 
-        const element = document.querySelector("input.js_select2");
-        const tagsSelectMenu = await attachComponent(this, element.parentNode, SelectMenuForum, {
-            searchPlaceholder: _t("Please enter 2 or more characters"),
-            placeholder: _t("Tags"),
-            element: element,
-            multiSelect: true,
-            onSelect: (value) => {
-                tagsSelectMenu?.update({
-                    value: value,
-                });
-            },
-            choiceFetchFunction: (searchString) => {
-                const choices = [
-                    {
-                        id: "new",
-                        name: searchString.trim(),
-                        value: `_${searchString.trim()}`,
-                        label: `Create ${searchString}`,
-                    },
-                ];
-                if (searchString.length < 3) {
-                    return searchString.length ? choices : [];
-                }
-                const forumID = $("#wrapwrap").data("forum_id");
-                return new Promise((resolve, reject) => {
-                    this.http
-                        .get(
-                            `/forum/get_tags?query=${searchString}&limit=${50}&forum_id=${forumID}`
-                        )
-                        .then((result) => {
-                            result.forEach((choice) => {
-                                choice.value = choice.name;
-                                choice.label = choice.name;
-                            });
-                            result = result.concat(choices);
-                            resolve(result);
+        const element = document.querySelector("input.js_select_menu");
+        if (element) {
+            // Take default tags from the input value
+            const defaultChoices = [];
+            JSON.parse(element.getAttribute("data-init-value")).forEach((x) => {
+                defaultChoices.push({ id: x.id, label: x.name, value: x.id, isNew: false });
+            });
+            let defaulValue = defaultChoices.map((choice) => choice.id);
+            defaulValue = defaulValue.join(",");
+
+            const tagsSelectMenu = await attachComponent(
+                this,
+                element.parentNode,
+                SelectMenuForum,
+                {
+                    searchPlaceholder: _t("Please enter 2 or more characters"),
+                    placeholder: _t("Tags"),
+                    element: element,
+                    multiSelect: true,
+                    choices: defaultChoices,
+                    onSelect: (value) => {
+                        tagsSelectMenu?.update({
+                            value: value,
                         });
-                });
-            },
-            value: "",
-        });
+                    },
+                    choiceFetchFunction: (searchString) => {
+                        const choices = [
+                            {
+                                id: "new",
+                                name: searchString.trim(),
+                                value: `_${searchString.trim()}`,
+                                label: `Create ${searchString}`,
+                            },
+                        ];
+                        if (searchString.length < 3) {
+                            return searchString.length ? choices : [];
+                        }
+                        const forumID = $("#wrapwrap").data("forum_id");
+                        return new Promise((resolve, reject) => {
+                            this.http
+                                .get(
+                                    `/forum/get_tags?query=${searchString}&limit=${50}&forum_id=${forumID}`
+                                )
+                                .then((result) => {
+                                    result.forEach((choice) => {
+                                        choice.value = choice.name;
+                                        choice.label = choice.name;
+                                    });
+                                    result = result.concat(choices);
+                                    resolve(result);
+                                });
+                        });
+                    },
+                    value: defaulValue || "",
+                }
+            );
+        }
 
         $('textarea.o_wysiwyg_loader').toArray().forEach((textarea) => {
             var $textarea = $(textarea);
