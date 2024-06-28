@@ -3,7 +3,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -51,6 +51,7 @@ class MailActivityPlanTemplate(models.Model):
         'Assigned to',
         check_company=True, compute="_compute_responsible_id", store=True, readonly=False)
     note = fields.Html('Note', compute="_compute_note", store=True, readonly=False)
+    next_activity_ids = fields.Many2many('mail.activity.type', string='Next Activities', compute='_compute_next_activity_ids', readonly=False, store=True)
 
     @api.constrains('activity_type_id', 'plan_id')
     def _check_activity_type_res_model(self):
@@ -76,6 +77,16 @@ class MailActivityPlanTemplate(models.Model):
         for template in self:
             if template.responsible_type == 'other' and not template.responsible_id:
                 raise ValidationError(_('When selecting "Default user" assignment, you must specify a responsible.'))
+
+    @api.depends('activity_type_id.triggered_next_type_id', 'activity_type_id.suggested_next_type_ids')
+    def _compute_next_activity_ids(self):
+        for template in self:
+            template.next_activity_ids = False
+            activity_type = template.activity_type_id
+            if activity_type.triggered_next_type_id:
+                template.next_activity_ids = [Command.set([activity_type.triggered_next_type_id.id])]
+            elif activity_type.suggested_next_type_ids:
+                template.next_activity_ids = [Command.set(activity_type.suggested_next_type_ids.ids)]
 
     @api.depends('activity_type_id')
     def _compute_note(self):
