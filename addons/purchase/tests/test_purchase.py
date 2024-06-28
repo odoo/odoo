@@ -728,3 +728,47 @@ class TestPurchase(AccountTestInvoicingCommon):
             {'product_id': product_no_branch_tax.id, 'taxes_id': (tax_a + tax_b).ids},
             {'product_id': product_no_tax.id, 'taxes_id': []},
         ])
+
+    def test_orderline_price_manual_set(self):
+        self.env.user.groups_id += self.env.ref('uom.group_uom')
+        uom_units = self.env.ref('uom.product_uom_unit')
+        vendor = self.env['res.partner'].create({
+            'name': 'Vendor'
+        })
+        product_01 = self.env['product.product'].create({
+            'name': 'Product-1',
+            'standard_price': 150,
+            'uom_id': uom_units.id,
+            'uom_po_id': uom_units.id,
+        })
+        product_02 = self.env['product.product'].create({
+            'name': 'Product-1',
+            'standard_price': 110,
+            'uom_id': uom_units.id,
+            'uom_po_id': uom_units.id,
+            'seller_ids': [(0, 0, {
+                'partner_id': vendor.id,
+                'min_qty': 1.0,
+                'price': 120.0,
+            })]
+        })
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = vendor
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product_01
+            po_line.price_unit = 200
+            po_line.product_qty = 1
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product_02
+            po_line.price_unit = 100
+            po_line.product_qty = 1
+        po = po_form.save()
+
+        self.assertEqual(po.order_line[0].price_unit, 200)
+        self.assertEqual(po.order_line[1].price_unit, 100)
+
+        po.order_line[0].product_qty = 2
+        po.order_line[1].product_qty = 6
+
+        self.assertEqual(po.order_line[0].price_unit, 200)
+        self.assertEqual(po.order_line[1].price_unit, 100)
