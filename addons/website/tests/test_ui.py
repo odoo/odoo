@@ -629,3 +629,6 @@ class TestUi(odoo.tests.HttpCase):
             self.env['website'].with_context(website_id=website.id).viewref(key).active = active
 
         self.start_tour('/', 'website_no_dirty_lazy_image', login='admin')
+
+    def test_custom_gradient_on_contactus_button(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'custom_gradient_on_contactus_button', login='admin')
