@@ -13,3 +13,11 @@ export function clickPartnerOptions(name) {
         run: "click",
     };
 }
+
+export function checkDropDownItemText(text) {
+    return {
+        content: `check for dropdown item containing text`,
+        trigger: `.o-dropdown-item:contains("${text}")`,
+        in_modal: false,
+    };
+}
