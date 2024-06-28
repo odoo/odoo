@@ -28,11 +28,10 @@ test("simplest layout of a followed subtype", async () => {
         subtype_ids: [subtypeId],
     });
     patchWithCleanup(MailThread.prototype, {
-        _to_store() {
+        _to_store(ids, store) {
             // mimic user with write access
-            const res = super._to_store(...arguments);
-            res["Thread"][0]["hasWriteAccess"] = true;
-            return res;
+            super._to_store(...arguments);
+            store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
     await start();
@@ -61,11 +60,10 @@ test("simplest layout of a not followed subtype", async () => {
         res_id: serverState.partnerId,
     });
     patchWithCleanup(MailThread.prototype, {
-        _to_store() {
+        _to_store(ids, store) {
             // mimic user with write access
-            const res = super._to_store(...arguments);
-            res["Thread"][0]["hasWriteAccess"] = true;
-            return res;
+            super._to_store(...arguments);
+            store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
     await start();
@@ -90,11 +88,10 @@ test("toggle follower subtype checkbox", async () => {
         res_id: serverState.partnerId,
     });
     patchWithCleanup(MailThread.prototype, {
-        _to_store() {
+        _to_store(ids, store) {
             // mimic user with write access
-            const res = super._to_store(...arguments);
-            res["Thread"][0]["hasWriteAccess"] = true;
-            return res;
+            super._to_store(...arguments);
+            store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
     await start();
