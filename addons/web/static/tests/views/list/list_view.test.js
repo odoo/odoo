@@ -2622,6 +2622,33 @@ test(`editable list: add a line and discard`, async () => {
     expect(`.o_pager_value`).toHaveText("1-1", { message: "pager should be correct" });
 });
 
+test(`grouped editable list: edit a record and click on "Add a line"`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<tree editable="bottom"><field name="foo" required="1"/><field name="bar"/></tree>`,
+        groupBy: ["foo"],
+    });
+
+    expect(".o_group_header").toHaveCount(3);
+    expect(".o_data_row").toHaveCount(0);
+
+    await contains(".o_group_header").click();
+    expect(".o_data_row").toHaveCount(2);
+
+    // edit an existing row and click on "Add a line" => edited record should not be discarded
+    await contains(".o_data_row .o_data_cell").click();
+    await contains(".o_data_row .o_data_cell .o_field_widget[name=foo] input").edit("coucou");
+    await contains(".o_group_field_row_add a").click();
+    expect(".o_data_row .o_data_cell:first").toHaveText("coucou");
+    expect(".o_data_row").toHaveCount(3);
+
+    // edit the new line, and click again on "Add a line" => created record should not be discarded
+    await contains(".o_data_row .o_data_cell .o_field_widget[name=foo] input").edit("new line");
+    await contains(".o_group_field_row_add a").click();
+    expect(".o_data_row").toHaveCount(4);
+});
+
 test(`field changes are triggered correctly`, async () => {
     Foo._onChanges = {
         foo() {
