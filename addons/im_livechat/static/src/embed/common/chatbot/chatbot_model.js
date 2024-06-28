@@ -134,6 +134,9 @@ export class Chatbot extends Record {
      * @returns {Promise<boolean>} Whether the script is ready to go to the next step.
      */
     async _processAnswerQuestionSelection(message) {
+        if (this.currentStep.selectedAnswer) {
+            return true;
+        }
         const answer = this.currentStep.answers.find(({ label }) => message.body.includes(label));
         this.currentStep.selectedAnswer = answer;
         await rpc("/chatbot/answer/save", {
