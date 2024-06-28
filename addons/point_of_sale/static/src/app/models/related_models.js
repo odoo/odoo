@@ -558,10 +558,12 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
         delete records[model][id];
 
         for (const key of indexes[model] || []) {
-            const keyVal = record[key];
-            const finds = orderedRecords[model].find((rec) => rec[key] === keyVal);
-
-            if (!finds) {
+            const keyVal = record.raw[key];
+            if (Array.isArray(keyVal)) {
+                for (const val of keyVal) {
+                    indexedRecords[model][key][val].delete(record.id);
+                }
+            } else {
                 delete indexedRecords[model][key][keyVal];
             }
         }
@@ -636,7 +638,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 if (!indexes[model].includes(key)) {
                     throw new Error(`Unable to get record by '${key}'`);
                 }
-                return this.indexedRecords[model][key][val];
+                const result = this.indexedRecords[model][key][val];
+                if (result instanceof Map) {
+                    return Array.from(result.values());
+                }
+                return result;
             },
             readAll() {
                 return this.orderedRecords[model];
@@ -645,7 +651,16 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 if (!this.indexes[model].includes(key)) {
                     throw new Error(`Unable to get record by '${key}'`);
                 }
-                return this.indexedRecords[model][key];
+                const record = this.indexedRecords[model][key];
+                if (record[Object.keys(record)[0]] instanceof Map) {
+                    return Object.fromEntries(
+                        Object.entries(record).map(([key, value]) => [
+                            key,
+                            Array.from(value.values()),
+                        ])
+                    );
+                }
+                return record;
             },
             readMany(ids) {
                 if (!(model in records)) {
@@ -909,17 +924,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                     if (Array.isArray(keyVal)) {
                         for (const keyV of keyVal) {
                             if (!indexedRecords[model][key][keyV.id]) {
-                                indexedRecords[model][key][keyV.id] = [];
+                                indexedRecords[model][key][keyV.id] = new Map();
                             }
-                            const idx = indexedRecords[model][key][keyV.id].findIndex(
-                                (rec) => rec.id === record.id
-                            );
-
-                            if (idx === -1) {
-                                indexedRecords[model][key][keyV.id].push(record);
-                            } else {
-                                indexedRecords[model][key][keyV.id][idx] = record;
-                            }
+                            indexedRecords[model][key][keyV.id].set(record.id, record);
                         }
                     } else {
                         indexedRecords[model][key][keyVal] = record;
