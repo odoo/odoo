@@ -26,6 +26,7 @@
         'views/delivery_carrier_views.xml',
         'views/delivery_form_templates.xml',
         'views/digest_views.xml',
+        'views/portal_templates.xml',
         'views/product_attribute_views.xml',
         'views/product_configurator.xml',
         'views/product_document_views.xml',

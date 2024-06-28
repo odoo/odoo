@@ -550,7 +550,11 @@
                                     <t t-if="not line.display_type">
                                         <td name="sol_name">
                                             <span t-if="line.product_id.name and line.product_id.default_code">[<t t-out="line.product_id.default_code"/>] </span>
-                                            <span t-if="line.product_id.name" t-field="line.product_id.name" t-options="{'widget': 'text'}"/>
+                                            <span
+                                                t-if="line.product_id.name"
+                                                t-field="line.product_id.name"
+                                                t-options="{'widget': 'text'}"
+                                                name="product_name"/>
                                             <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}"/>
                                         </td>
                                         <td class="text-end" id="quote_qty_td">
