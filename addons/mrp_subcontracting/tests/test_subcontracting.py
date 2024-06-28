@@ -591,7 +591,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form.partner_id = self.subcontractor_partner1
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.finished
-            move.product_uom_qty = 1
+            move.product_uom_qty = 2
         picking_receipt = picking_form.save()
         picking_receipt.action_confirm()
 
@@ -613,9 +613,27 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         action_warning = mo.subcontracting_record_component()
         warning = Form(self.env['mrp.consumption.warning'].with_context(**action_warning['context']))
         warning = warning.save()
-        warning.action_confirm()
+        action = warning.action_confirm()
 
         self.assertEqual(mo.move_raw_ids[0].move_line_ids.quantity, 2)
+
+        # Record another over-consumption for the remaining components
+        mo_2 = self.env['mrp.production'].browse(action['res_id'])
+        with Form(mo_2.with_context(**action['context']), view=action['view_id']) as mo_form:
+            mo_form.qty_producing = 1
+            with mo_form.move_line_raw_ids.edit(0) as ml:
+                self.assertEqual(ml.product_id, self.comp1)
+                self.assertEqual(ml.quantity, 1)
+                ml.quantity = 3
+            mo_2 = mo_form.save()
+
+        action_warning_2 = mo_2.subcontracting_record_component()
+        self.assertEqual(action_warning_2.get('res_model'), 'mrp.consumption.warning')
+        warning = Form(self.env['mrp.consumption.warning'].with_context(**action_warning_2['context']))
+        warning = warning.save()
+        warning.action_confirm()
+
+        self.assertEqual(mo_2.move_raw_ids[0].move_line_ids.quantity, 3)
 
         # We should not be able to call the 'record_components' button
         self.assertEqual(picking_receipt.display_action_record_components, 'hide')
@@ -623,7 +641,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt.button_validate()
         self.assertEqual(mo.state, 'done')
         avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
-        self.assertEqual(avail_qty_comp1, -2)
+        self.assertEqual(avail_qty_comp1, -5)
 
     def test_mrp_report_bom_structure_subcontracting(self):
         self.comp2_bom.write({'type': 'subcontract', 'subcontractor_ids': [Command.link(self.subcontractor_partner1.id)]})
