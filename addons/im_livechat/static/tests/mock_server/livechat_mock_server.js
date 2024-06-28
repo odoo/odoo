@@ -66,23 +66,23 @@ async function get_session(request) {
         const [operatorPartner] = ResPartner.search_read([
             ["id", "=", channelVals.livechat_operator_id],
         ]);
-        const res = ResUsers._init_store_data();
-        return Object.assign(res, {
-            Thread: [
-                {
-                    id: -1,
-                    model: "discuss.channel",
-                    isLoaded: true,
-                    name: channelVals["name"],
-                    chatbot_current_step_id: channelVals.chatbot_current_step_id,
-                    state: "open",
-                    operator: ResPartner.mail_partner_format([operatorPartner.id])[
-                        operatorPartner.id
-                    ],
-                    channel_type: "livechat",
-                },
-            ],
+        const store = new mailDataHelpers.Store();
+        ResUsers._init_store_data(store);
+        store.add(
+            "Persona",
+            ResPartner.mail_partner_format([operatorPartner.id])[operatorPartner.id]
+        );
+        store.add("Thread", {
+            id: -1,
+            model: "discuss.channel",
+            isLoaded: true,
+            name: channelVals["name"],
+            chatbot_current_step_id: channelVals.chatbot_current_step_id,
+            state: "open",
+            operator: { id: operatorPartner.id, type: "partner" },
+            channel_type: "livechat",
         });
+        return store.get_result();
     }
     const channelId = DiscussChannel.create(channelVals);
     DiscussChannel._find_or_create_persona_for_channel(channelId, "Visitor");
@@ -94,10 +94,11 @@ async function get_session(request) {
     }
     const [memberId] = DiscussChannelMember.search(memberDomain);
     DiscussChannelMember.write([memberId], { fold_state: "open" });
-    const res = ResUsers._init_store_data();
-    Object.assign(res, { Thread: DiscussChannel._channel_info([channelId]) });
-    res.Thread[0].isLoaded = true;
-    return res;
+    const store = new mailDataHelpers.Store();
+    ResUsers._init_store_data(store);
+    store.add(DiscussChannel.browse(channelId));
+    store.add("Thread", { id: channelId, model: "discuss.channel", isLoaded: true });
+    return store.get_result();
 }
 
 registerRoute("/im_livechat/visitor_leave_session", visitor_leave_session);
@@ -182,18 +183,19 @@ async function get_emoji_bundle(request) {
 
 patch(mailDataHelpers, {
     async processRequest(request) {
-        const res = await super.processRequest(...arguments);
+        const store = await super.processRequest(...arguments);
         const { livechat_channels } = await parseRequestParams(request);
         if (livechat_channels) {
             const LivechatChannel = this.env["im_livechat.channel"];
-            mailDataHelpers.addToRes(res, {
-                LivechatChannel: LivechatChannel.search_read([]).map((channel) => ({
+            store.add(
+                "LivechatChannel",
+                LivechatChannel.search_read([]).map((channel) => ({
                     id: channel.id,
                     name: channel.name,
                     hasSelfAsMember: channel.user_ids.includes(this.env.user.id),
-                })),
-            });
+                }))
+            );
         }
-        return res;
+        return store;
     },
 });

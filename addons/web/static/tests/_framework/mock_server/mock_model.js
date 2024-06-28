@@ -1489,6 +1489,11 @@ export class Model extends Array {
         return this.write(idOrIds, { active: true }, kwargs);
     }
 
+    /** @param {MaybeIterable<number>} idOrIds */
+    browse(idOrIds) {
+        return this._filter([["id", "in", ensureArray(idOrIds)]]).map((record) => record.id);
+    }
+
     /**
      * @param {MaybeIterable<number>} idOrIds
      * @param {Partial<ModelRecord>} defaultValues

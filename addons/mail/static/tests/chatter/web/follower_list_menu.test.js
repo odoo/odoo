@@ -30,11 +30,10 @@ test("base rendering editable", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     patchWithCleanup(MailThread.prototype, {
-        _to_store() {
+        _to_store(ids, store) {
             // mimic user with write access
-            const res = super._to_store(...arguments);
-            res["Thread"][0]["hasWriteAccess"] = true;
-            return res;
+            super._to_store(...arguments);
+            store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
     await start();
@@ -62,11 +61,10 @@ test('click on "add followers" button', async () => {
         res_model: "res.partner",
     });
     patchWithCleanup(MailThread.prototype, {
-        _to_store() {
+        _to_store(ids, store) {
             // mimic user with write access
-            const res = super._to_store(...arguments);
-            res["Thread"][0]["hasWriteAccess"] = true;
-            return res;
+            super._to_store(...arguments);
+            store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
     mockService("action", {
@@ -121,11 +119,10 @@ test("click on remove follower", async () => {
         res_model: "res.partner",
     });
     patchWithCleanup(MailThread.prototype, {
-        _to_store() {
+        _to_store(ids, store) {
             // mimic user with write access
-            const res = super._to_store(...arguments);
-            res["Thread"][0]["hasWriteAccess"] = true;
-            return res;
+            super._to_store(...arguments);
+            store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
     onRpc("res.partner", "message_unsubscribe", ({ args, method }) => {
@@ -163,11 +160,10 @@ test('Hide "Add follower" and subtypes edition/removal buttons except own user o
         },
     ]);
     patchWithCleanup(MailThread.prototype, {
-        _to_store() {
-            // mimic user with no write access
-            const res = super._to_store(...arguments);
-            res["Thread"][0]["hasWriteAccess"] = false;
-            return res;
+        _to_store(ids, store) {
+            // mimic user without write access
+            super._to_store(...arguments);
+            store.add("Thread", { hasWriteAccess: false, id: ids[0], model: this._name });
         },
     });
     await start();
@@ -302,11 +298,10 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
         },
     ]);
     patchWithCleanup(MailThread.prototype, {
-        _to_store() {
+        _to_store(ids, store) {
             // mimic user with write access
-            const res = super._to_store(...arguments);
-            res["Thread"][0]["hasWriteAccess"] = true;
-            return res;
+            super._to_store(...arguments);
+            store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
     await start();
@@ -325,11 +320,10 @@ test('Show "No Followers" dropdown-item if there are no followers and user does 
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     patchWithCleanup(MailThread.prototype, {
-        _to_store() {
+        _to_store(ids, store) {
             // mimic user without write access
-            const res = super._to_store(...arguments);
-            res["Thread"][0]["hasWriteAccess"] = false;
-            return res;
+            super._to_store(...arguments);
+            store.add("Thread", { hasWriteAccess: false, id: ids[0], model: this._name });
         },
     });
     await start();

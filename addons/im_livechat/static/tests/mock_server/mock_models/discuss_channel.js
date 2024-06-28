@@ -6,17 +6,18 @@ export class DiscussChannel extends mailModels.DiscussChannel {
 
     /**
      * @override
-     * @type {typeof mailModels.DiscussChannel["prototype"]["_channel_info"]}
+     * @type {typeof mailModels.DiscussChannel["prototype"]["_to_store"]}
      */
-    _channel_info(ids) {
+    _to_store(ids, store) {
         /** @type {import("mock_models").LivechatChannel} */
         const LivechatChannel = this.env["im_livechat.channel"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const channelInfos = super._channel_info(...arguments);
-        for (const channelInfo of channelInfos) {
-            const [channel] = this._filter([["id", "=", channelInfo.id]]);
+        super._to_store(...arguments);
+        const channels = this._filter([["id", "in", ids]]);
+        for (const channel of channels) {
+            const channelInfo = { id: channel.id, model: "discuss.channel" };
             channelInfo["anonymous_name"] = channel.anonymous_name;
             // add the last message date
             if (channel.channel_type === "livechat") {
@@ -25,10 +26,12 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                     const [operator] = ResPartner._filter([
                         ["id", "=", channel.livechat_operator_id],
                     ]);
+                    store.add(
+                        "Persona",
+                        ResPartner.mail_partner_format([operator.id])[operator.id]
+                    );
                     // livechat_username ignored for simplicity
-                    channelInfo.operator = ResPartner.mail_partner_format([operator.id])[
-                        operator.id
-                    ];
+                    channelInfo.operator = { id: operator.id, type: "partner" };
                 }
                 if (channel.livechat_channel_id) {
                     channelInfo.livechatChannel = LivechatChannel.search_read([
@@ -39,8 +42,8 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                     }))[0];
                 }
             }
+            store.add("Thread", channelInfo);
         }
-        return channelInfos;
     }
     /** @param {import("mock_models").DiscussChannel} channel */
     _close_livechat_session(channel) {

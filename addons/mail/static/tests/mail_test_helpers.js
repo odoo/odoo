@@ -25,7 +25,7 @@ import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
-import { DISCUSS_ACTION_ID, authenticateGuest } from "./mock_server/mail_mock_server";
+import { DISCUSS_ACTION_ID, authenticateGuest, mailDataHelpers } from "./mock_server/mail_mock_server";
 import { Base } from "./mock_server/mock_models/base";
 import { DEFAULT_MAIL_VIEW_ID } from "./mock_server/mock_models/constants";
 
@@ -291,8 +291,10 @@ export async function start(options) {
     if ("res.users" in pyEnv) {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = pyEnv["res.users"];
+        const store = new mailDataHelpers.Store();
+        ResUsers._init_store_data(store);
         patchWithCleanup(session, {
-            storeData: ResUsers._init_store_data(),
+            storeData: store.get_result(),
         });
     }
     let env;

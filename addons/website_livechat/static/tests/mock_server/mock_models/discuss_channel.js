@@ -6,9 +6,9 @@ export class DiscussChannel extends livechatModels.DiscussChannel {
 
     /**
      * @override
-     * @type {typeof mailModels.DiscussChannel["prototype"]["_channel_info"]}
+     * @type {typeof mailModels.DiscussChannel["prototype"]["_to_store"]}
      */
-    _channel_info(ids) {
+    _to_store(ids, store) {
         /** @type {import("mock_models").ResCountry} */
         const ResCountry = this.env["res.country"];
         /** @type {import("mock_models").ResLang} */
@@ -20,10 +20,11 @@ export class DiscussChannel extends livechatModels.DiscussChannel {
         /** @type {import("mock_models").WebsiteVisitor} */
         const WebsiteVisitor = this.env["website.visitor"];
 
-        const channelInfos = super._channel_info(...arguments);
-        for (const channelInfo of channelInfos) {
-            const [channel] = this._filter([["id", "=", channelInfo.id]]);
+        super._to_store(...arguments);
+        const channels = this._filter([["id", "in", ids]]);
+        for (const channel of channels) {
             if (channel.channel_type === "livechat" && channel.livechat_visitor_id) {
+                const channelInfo = { id: channel.id, model: "discuss.channel" };
                 const [visitor] = WebsiteVisitor._filter([
                     ["id", "=", channel.livechat_visitor_id],
                 ]);
@@ -44,8 +45,8 @@ export class DiscussChannel extends livechatModels.DiscussChannel {
                         ? Website.read(visitor.website_id)[0].name
                         : false,
                 };
+                store.add("Thread", channelInfo);
             }
         }
-        return channelInfos;
     }
 }

@@ -13,7 +13,7 @@ export class ResUsers extends webModels.ResUsers {
     });
 
     /** Simulates `_init_store_data` on `res.users`. */
-    _init_store_data() {
+    _init_store_data(store) {
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").MailGuest} */
@@ -23,46 +23,45 @@ export class ResUsers extends webModels.ResUsers {
         /** @type {import("mock_models").ResUsersSettings} */
         const ResUsersSettings = this.env["res.users.settings"];
 
-        const res = {
-            Store: {
-                action_discuss_id: DISCUSS_ACTION_ID,
-                channel_types_with_seen_infos: DiscussChannel._types_allowing_seen_infos(),
-                hasGifPickerFeature: true,
-                hasLinkPreviewFeature: true,
-                hasMessageTranslationFeature: true,
-                odoobot: ResPartner.mail_partner_format([serverState.odoobotId])[
-                    serverState.odoobotId
-                ],
-            },
-        };
+        store.add(
+            "Persona",
+            ResPartner.mail_partner_format([serverState.odoobotId])[serverState.odoobotId]
+        );
+        store.add({
+            action_discuss_id: DISCUSS_ACTION_ID,
+            channel_types_with_seen_infos: DiscussChannel._types_allowing_seen_infos(),
+            hasGifPickerFeature: true,
+            hasLinkPreviewFeature: true,
+            hasMessageTranslationFeature: true,
+            odoobot: { id: serverState.odoobotId, type: "partner" },
+        });
         if (!this._is_public(this.env.uid)) {
             const userSettings = ResUsersSettings._find_or_create_for_user(this.env.uid);
-            Object.assign(res.Store, {
-                self: {
-                    id: this.env.user?.partner_id,
-                    isAdmin: true, // mock server simplification
-                    active: true,
-                    isInternalUser: !this.env.user?.share,
-                    name: this.env.user?.name,
-                    notification_preference: this.env.user?.notification_type,
-                    type: "partner",
-                    userId: this.env.user?.id,
-                    write_date: this.env.user?.write_date,
-                },
+            store.add("Persona", {
+                id: this.env.user?.partner_id,
+                isAdmin: true, // mock server simplification
+                active: true,
+                isInternalUser: !this.env.user?.share,
+                name: this.env.user?.name,
+                notification_preference: this.env.user?.notification_type,
+                type: "partner",
+                userId: this.env.user?.id,
+                write_date: this.env.user?.write_date,
+            });
+            store.add({
+                self: { id: this.env.user?.partner_id, type: "partner" },
                 settings: ResUsersSettings.res_users_settings_format(userSettings.id),
             });
         } else if (this.env.cookie.get("dgid")) {
             const [guest] = MailGuest.read(this.env.cookie.get("dgid"));
-            Object.assign(res.Store, {
-                self: {
-                    id: guest.id,
-                    name: guest.name,
-                    type: "guest",
-                    write_date: guest.write_date,
-                },
+            store.add("Guest", {
+                id: guest.id,
+                name: guest.name,
+                type: "guest",
+                write_date: guest.write_date,
             });
+            store.add({ self: { id: guest.id, type: "guest" }});
         }
-        return res;
     }
     systray_get_activities() {
         /** @type {import("mock_models").MailActivity} */
@@ -106,8 +105,11 @@ export class ResUsers extends webModels.ResUsers {
         return Object.values(userActivitiesByModelName);
     }
 
-    /** @param {number[]} ids */
-    _init_messaging(ids) {
+    /**
+     * @param {number[]} ids
+     * @param {Store} store
+     **/
+    _init_messaging(ids, store) {
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").DiscussChannelMember} */
@@ -126,28 +128,25 @@ export class ResUsers extends webModels.ResUsers {
             ["partner_id", "=", user.partner_id],
         ]);
         const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
-        return {
-            Store: {
-                discuss: {
-                    inbox: {
-                        counter: ResPartner._get_needaction_count(user.partner_id),
-                        counter_bus_id: bus_last_id,
-                        id: "inbox",
-                        model: "mail.box",
-                    },
-                    starred: {
-                        counter: MailMessage._filter([
-                            ["starred_partner_ids", "in", user.partner_id],
-                        ]).length,
-                        counter_bus_id: bus_last_id,
-                        id: "starred",
-                        model: "mail.box",
-                    },
+        store.add({
+            discuss: {
+                inbox: {
+                    counter: ResPartner._get_needaction_count(user.partner_id),
+                    counter_bus_id: bus_last_id,
+                    id: "inbox",
+                    model: "mail.box",
                 },
-                initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
-                    .length,
+                starred: {
+                    counter: MailMessage._filter([["starred_partner_ids", "in", user.partner_id]])
+                        .length,
+                    counter_bus_id: bus_last_id,
+                    id: "starred",
+                    model: "mail.box",
+                },
             },
-        };
+            initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
+                .length,
+        });
     }
 
     _get_activity_groups() {
