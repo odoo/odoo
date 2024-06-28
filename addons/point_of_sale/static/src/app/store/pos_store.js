@@ -961,15 +961,6 @@ export class PosStore extends Reactive {
         return this.pushOrderMutex.exec(() => this.syncAllOrders(order));
     }
 
-    // created this hook for modularity
-    _updateOrder(ordersResponseData, orders) {
-        const order = orders.find((order) => order.name === ordersResponseData.pos_reference);
-        if (order) {
-            order.server_id = ordersResponseData.id;
-            return order;
-        }
-    }
-
     // load the partners based on the ids
     async _loadPartners(partnerIds) {
         if (partnerIds.length > 0) {
