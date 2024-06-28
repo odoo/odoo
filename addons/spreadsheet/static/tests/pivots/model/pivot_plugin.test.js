@@ -821,6 +821,25 @@ test("PIVOT.HEADER grouped by date field without value", async function () {
     }
 });
 
+test("PIVOT functions can accept spreadsheet dates", async function () {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+            <pivot>
+                <field name="date" interval="quarter" type="col"/>
+                <field name="probability" type="measure"/>
+            </pivot>`,
+    });
+    setCellContent(model, "A1", '=PIVOT.HEADER(1, "date:quarter",DATE(2016, 4, 1))');
+    expect(getCellValue(model, "A1")).toBe("Q2 2016");
+
+    setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability", "date:quarter",DATE(2016, 4, 1))');
+    expect(getCellValue(model, "A1")).toBe(10);
+
+    // not the first day of the quarter
+    setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability", "date:quarter",DATE(2016, 4, 2))');
+    expect(getCellValue(model, "A1")).toBe(10);
+});
+
 test("PIVOT formulas are correctly formatted at evaluation", async function () {
     const { model } = await createSpreadsheetWithPivot({
         arch: /* xml */ `
