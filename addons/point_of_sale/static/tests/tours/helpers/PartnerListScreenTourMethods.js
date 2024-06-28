@@ -12,6 +12,21 @@ odoo.define('point_of_sale.tour.PartnerListScreenTourMethods', function (require
                 },
             ];
         }
+        clickPartnerDetailsButton(name) {
+            return [
+                {
+                    content: `click partner details '${name}' from partner list screen`,
+                    trigger: `.partner-line:contains('${name}') .edit-partner-button`,
+                }
+            ]
+        }
+        clickBack() {
+            return [
+                {
+                    trigger: ".partnerlist-screen .button.back",
+                },
+            ];
+        }
     }
 
     class Check {
