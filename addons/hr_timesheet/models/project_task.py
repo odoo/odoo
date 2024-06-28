@@ -54,6 +54,10 @@ class Task(models.Model):
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS | PROJECT_TASK_READABLE_FIELDS
 
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        return super().SELF_WRITEABLE_FIELDS | {'timesheet_ids'}
+
     @api.constrains('project_id')
     def _check_project_root(self):
         private_tasks = self.filtered(lambda t: not t.project_id)
