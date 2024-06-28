@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
@@ -39,6 +39,7 @@ class AccountAnalyticLine(models.Model):
         ondelete='cascade',
         index=True,
         check_company=True,
+        readonly=True,
     )
     code = fields.Char(size=8)
     ref = fields.Char(string='Ref.')
@@ -78,6 +79,19 @@ class AccountAnalyticLine(models.Model):
         self.amount = result
         self.general_account_id = account
         self.product_uom_id = unit
+
+    def write(self, vals):
+        if self.move_line_id:
+            protected_fields = ['amount'] + self._get_plan_fnames()
+            if any(protected_field in vals for protected_field in protected_fields):
+                raise UserError(_("You cannot manually edit the amount/accounts of an analytic item related to a journal item, please edit the journal item's analytic distribution instead."))
+
+        return super().write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_move_line_related(self):
+        if not self._context.get('force_analytic_line_delete') and self.move_line_id:
+            raise UserError(_("You cannot manually delete an analytic item related to a journal item, please edit the journal item's analytic distribution instead."))
 
     @api.model
     def view_header_get(self, view_id, view_type):
