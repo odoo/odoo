@@ -1094,3 +1094,9 @@ export class Markup {
         return new this({ ...options, content });
     }
 }
+
+export const INCLUDE_LEVEL = {
+    url: 1,
+    tag: 2,
+    preset: 3,
+};
