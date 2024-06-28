@@ -3,6 +3,8 @@
 
 from datetime import datetime, timedelta
 
+from odoo import Command
+
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
@@ -898,3 +900,102 @@ class TestBatchPicking02(TransactionCase):
         backorder = batch.picking_ids - picking_1
         self.assertTrue(backorder)
         self.assertRecordValues(backorder.move_ids, [{'product_id': productA.id, 'quantity': 1.0}])
+
+    def test_backorder_batching_2(self):
+        """
+        Check pickings are still linked to the batch after validation.
+        """
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'Warehouse test',
+            'code': 'WHTEST',
+            'company_id': self.env.company.id,
+        })
+        productA, productB = self.productA, self.productB
+        partner = self.env['res.partner'].create({'name': 'Mr. Belougat'})
+
+        # Create and validate a batch with 3 pickings where 2 of them are to backorder
+        pickings = self.env['stock.picking'].create([
+            {
+                'picking_type_id': warehouse.in_type_id.id,
+                'company_id': self.env.company.id,
+                'partner_id': partner.id,
+            } for i in range(3)
+        ])
+        self.env['stock.move'].create([
+            {
+                'name': productA.name,
+                'product_id': productA.id,
+                'product_uom_qty': 4.0,
+                'product_uom': productA.uom_id.id,
+                'picking_id': pickings[0].id,
+                'location_id': pickings[0].location_id.id,
+                'location_dest_id': pickings[0].location_dest_id.id,
+            },
+            {
+                'name': productB.name,
+                'product_id': productB.id,
+                'product_uom_qty': 4.0,
+                'product_uom': productB.uom_id.id,
+                'picking_id': pickings[1].id,
+                'location_id': pickings[1].location_id.id,
+                'location_dest_id': pickings[1].location_dest_id.id,
+            },
+            {
+                'name': productA.name,
+                'product_id': productA.id,
+                'product_uom_qty': 1.0,
+                'product_uom': productA.uom_id.id,
+                'picking_id': pickings[2].id,
+                'location_id': pickings[2].location_id.id,
+                'location_dest_id': pickings[2].location_dest_id.id,
+            },
+        ])
+        pickings.action_confirm()
+        batch = self.env['stock.picking.batch'].create({
+            'picking_ids': [Command.link(pickings[0].id), Command.link(pickings[1].id), Command.link(pickings[2].id)],
+            'picking_type_id': warehouse.in_type_id.id,
+        })
+        pickings.move_ids.quantity = 1.0
+        batch.action_confirm()
+        backorder_wizard_dict = batch.action_done()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+        self.assertEqual(batch.state, 'done')
+        self.assertEqual(batch.picking_ids.mapped('state'), ['done', 'done', 'done'])
+        bo_1 = pickings[0].backorder_ids
+        bo_2 = pickings[1].backorder_ids
+        self.assertTrue(bo_1 and bo_2)
+        backorders = bo_1 | bo_2
+        self.assertEqual(pickings.backorder_ids, backorders)
+        bo_batch = backorders.batch_id
+        self.assertEqual(bo_batch.picking_ids, backorders)
+        self.assertEqual(backorders.move_ids.mapped('product_qty'), [3.0, 3.0])
+
+        # Validate the new batch where every picking is to backorder
+        backorders.action_confirm()
+        backorders.move_ids.quantity = 1.0
+        bo_batch.action_confirm()
+        backorder_wizard_dict = bo_batch.action_done()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+        self.assertEqual(bo_batch.state, 'done')
+        self.assertEqual(bo_batch.picking_ids.mapped('state'), ['done', 'done'])
+        bo_3 = bo_batch.picking_ids[0].backorder_ids
+        bo_4 = bo_batch.picking_ids[1].backorder_ids
+        self.assertTrue(bo_3 and bo_4)
+        backorders_2 = bo_3 | bo_4
+        self.assertEqual(bo_batch.picking_ids.backorder_ids, backorders_2)
+        bo_batch_2 = backorders_2.batch_id
+        self.assertEqual(bo_batch_2.picking_ids, backorders_2)
+        self.assertEqual(backorders_2.move_ids.mapped('product_qty'), [2.0, 2.0])
+
+        # validate the new batch where no picking is to backorder
+        backorders_2.action_confirm()
+        bo_batch_2.action_confirm()
+        bo_batch_2.action_done()
+        self.assertEqual(bo_batch_2.state, 'done')
+        self.assertEqual(bo_batch_2.picking_ids.mapped('state'), ['done', 'done'])
+        self.assertRecordValues(bo_batch_2.move_ids, [
+            {'product_id': productA.id, 'quantity': 2.0, 'picked': True},
+            {'product_id': productB.id, 'quantity': 2.0, 'picked': True},
+        ])
