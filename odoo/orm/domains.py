@@ -144,13 +144,16 @@ _INVERSE_OPERATOR = {
     '=like': 'not =like',
     '=ilike': 'not =ilike',
     '=': '!=',
-    # inequalities
+}
+"""Dict to find the inverses of the operators."""
+_INVERSE_INEQUALITY = {
     '<': '>=',
     '>': '<=',
     '>=': '<',
     '<=': '>',
 }
-"""Dict to find the inverses of the operators."""
+""" Dict to find the inverse of inequality operators.
+Handled differently because of null values."""
 
 _TRUE_LEAF = (1, '=', 1)
 _FALSE_LEAF = (0, '=', 1)
@@ -454,8 +457,20 @@ class DomainNot(Domain):
             return (~child)._optimize(model)
         # first optimize the child
         # check constant and operator negation
-        result = ~(child._optimize(model))
-        if isinstance(result, DomainNot) and result.child is child:
+        child = child._optimize(model)
+        if isinstance(child, DomainCondition):
+            # inverse of the operators in handled by construction
+            # except for inequalities for which we must know the field's type
+            if ineq_operator := _INVERSE_INEQUALITY.get(child.operator):
+                # Inverse and add a condition "or field is null"
+                # when the field does not have a falsy value.
+                # Having a falsy value is handled correctly in the SQL generation.
+                child = (
+                    Domain(child.field_expr, 'in', OrderedSet([False])) if child._field().falsy_value is None else _FALSE_DOMAIN
+                ) | Domain(child.field_expr, ineq_operator, child.value)
+                return child._optimize(model)
+        result = ~child
+        if isinstance(result, DomainNot) and result.child is self.child:
             return self
         return result
 
@@ -702,7 +717,7 @@ class DomainCondition(Domain):
 
     def __invert__(self):
         # do it only for simple fields (not expressions)
-        # TODO inverting inequality should consider null values (do when creating optimization for inequalities)
+        # inequalities are handled in the DomainNot
         if "." not in self.field_expr and (neg_op := _INVERSE_OPERATOR.get(self.operator)):
             return DomainCondition(self.field_expr, neg_op, self.value)
         return super().__invert__()
@@ -1119,6 +1134,9 @@ def _optimize_relational_name_search(condition, model):
     """Search using display_name; see _value_to_ids."""
     operator = condition.operator
     value = condition.value
+    # Inequality not supported
+    if operator[0] in ('<', '>') and isinstance(value, str):
+        condition._raise("Inequality not supported for relational field using a string", error=TypeError)
     # Handle only: like operator, equality with str values
     if not (
         operator.endswith('like')
