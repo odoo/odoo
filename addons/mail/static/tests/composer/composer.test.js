@@ -1054,3 +1054,61 @@ test("Canned response last used changes on posting", async () => {
     cannedResponse = pyEnv["mail.canned.response"].search_read([["id", "=", cannedResponseId]])[0];
     expect(cannedResponse.last_used).not.toBeEmpty();
 });
+
+test("Does not auto-select 1st canned response suggestion", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.canned.response"].create({ source: "Hello", substitution: "Hello! How are you?" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-NavigableList-active", { text: "Mitchell Admin" });
+    await insertText(".o-mail-Composer-input", ":", { replace: true });
+    await contains(".o-mail-NavigableList-item", { text: "HelloHello! How are you?" });
+    await contains(".o-mail-NavigableList-active", { count: 0 });
+});
+
+test("TAB/ARROW focuses 1st canned response suggestion", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.canned.response"].create([
+        { source: "Hello", substitution: "Hello! How are you?" },
+        { source: "Goodbye", substitution: "Goodbye! See you soon!" },
+    ]);
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", ":");
+    // Assuming the suggestions are displayed in alphabetical order
+    await contains(".o-mail-NavigableList-item", {
+        text: "GoodbyeGoodbye! See you soon!",
+        before: [".o-mail-NavigableList-item", { text: "HelloHello! How are you?" }],
+    });
+    await contains(".o-mail-NavigableList-active", { count: 0 });
+    await triggerHotkey("Tab");
+    await contains(".o-mail-NavigableList-active", { text: "GoodbyeGoodbye! See you soon!" });
+    await triggerHotkey("Escape");
+    await contains(".o-mail-NavigableList-item", { count: 0 });
+    await insertText(".o-mail-Composer-input", ":", { replace: true });
+    await contains(".o-mail-NavigableList-item", { count: 2 });
+    await triggerHotkey("ArrowDown");
+    await contains(".o-mail-NavigableList-active", { text: "GoodbyeGoodbye! See you soon!" });
+    await triggerHotkey("Escape");
+    await contains(".o-mail-NavigableList-active", { count: 0 });
+    await insertText(".o-mail-Composer-input", ":", { replace: true });
+    await contains(".o-mail-NavigableList-item", { count: 2 });
+    await triggerHotkey("ArrowUp");
+    await contains(".o-mail-NavigableList-active", { text: "GoodbyeGoodbye! See you soon!" });
+});
+
+test("ENTER closes canned response suggestions", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.canned.response"].create({ source: "Hello", substitution: "Hello! How are you?" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", ":");
+    await contains(".o-mail-NavigableList-item", { text: "HelloHello! How are you?" });
+    await contains(".o-mail-NavigableList-active", { count: 0 });
+    await triggerHotkey("Enter");
+    await contains(".o-mail-NavigableList-item", { count: 0 });
+});
