@@ -370,7 +370,7 @@ class AccountEdiFormat(models.Model):
                 'discount': discount * refund_sign,
                 'unit_price': (line.balance + discount) / line.quantity * refund_sign if line.quantity > 0 else 0,
                 'total': total,
-                'description': regex_sub(r'[^0-9a-zA-Z ]', '', line.product_id.display_name or line.name)[:250]
+                'description': regex_sub(r'[^0-9a-zA-Z ]', '', line.product_id.display_name or line.name or '')[:250]
             })
         values['invoice_lines'] = invoice_lines
         # Tax details (desglose)
