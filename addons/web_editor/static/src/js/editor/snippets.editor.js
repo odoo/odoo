@@ -981,6 +981,7 @@ var SnippetEditor = Widget.extend({
                         cover: this.cover.bind(this),
                         coverUpdate: (overlayVisible) => this.trigger_up("cover_update", { overlayVisible }),
                         notifyOptions: (data) => this.trigger_up("option_update", data),
+                        updateSnippetOptionVisibility: (show) => this.trigger_up("snippet_option_visibility_update", { show }),
                     }
                 });
                 optionName = (optionClass).name
@@ -2230,6 +2231,7 @@ class SnippetsMenu extends Component {
             isElementSelected: (data) => this._onIsElementSelected.call(this, { data }),
             hideOverlay: this._onHideOverlay.bind(this),
             unblockPreviewOverlays: this._onUnblockPreviewOverlays.bind(this),
+            updateInvisibleDOM: this._onUpdateInvisibleDom.bind(this),
             userValueWidgetOpening: this._onUserValueWidgetOpening.bind(this),
             userValueWidgetClosing: this._onUserValueWidgetClosing.bind(this),
             snippetEditionRequest: this._execWithLoadingEffect.bind(this),
