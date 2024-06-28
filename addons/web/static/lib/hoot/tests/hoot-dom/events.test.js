@@ -281,6 +281,24 @@ describe(parseUrl(import.meta.url), () => {
         ]);
     });
 
+    test("click can be dispatched with pointer events prevented", async () => {
+        await mountOnFixture(/* xml */ `<button type="button">Click me</button>`);
+
+        const prevent = (ev) => ev.preventDefault();
+
+        on("button", "pointerdown", prevent);
+        on("button", "mousedown", prevent);
+        on("button", "pointerup", prevent);
+        on("button", "mouseup", prevent);
+
+        hover("button");
+        monitorEvents("button");
+
+        click("button");
+
+        expect.verifySteps(["button.pointerdown", "button.pointerup", "button.click"]);
+    });
+
     test("click: iframe", async () => {
         await mountOnFixture(/* xml */ `
             <button>Click me</button>
