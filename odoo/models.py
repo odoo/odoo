@@ -3082,7 +3082,7 @@ class BaseModel(metaclass=MetaModel):
             sql_value = self.env.registry.unaccent(sql_value)
 
         if need_wildcard and not value:
-            return SQL("%s IS NULL", sql_field) if operator in expression.NEGATIVE_TERM_OPERATORS else SQL("TRUE")
+            return SQL("FALSE") if operator in expression.NEGATIVE_TERM_OPERATORS else SQL("TRUE")
 
         sql = SQL("(%s %s %s)", sql_left, sql_operator, sql_value)
         if value and operator in expression.NEGATIVE_TERM_OPERATORS:
@@ -6281,11 +6281,12 @@ class BaseModel(metaclass=MetaModel):
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                     if comparator.endswith('ilike'):
                         # ilike uses unaccent and lower-case comparison
+                        # we may get something which is not a string
                         def unaccent(x):
-                            return self.pool.unaccent_python(x.lower()) if x else ''
+                            return self.pool.unaccent_python(str(x).lower()) if x else ''
                     else:
                         def unaccent(x):
-                            return x or ''
+                            return str(x) if x else ''
                     value_esc = unaccent(value).replace('_', '?').replace('%', '*').replace('[', '?')
                     if not comparator.startswith('='):
                         value_esc = f'*{value_esc}*'

@@ -55,12 +55,12 @@ class TestDomain(common.TransactionCase):
         self.assertListEqual(EmptyChar.search([('name', '=', '')]).mapped('name'), [''])
         self.assertListEqual(EmptyChar.search([('name', '!=', '')]).mapped('name'), ['name'])
         self.assertListEqual(EmptyChar.search([('name', 'ilike', '')]).mapped('name'), ['name', '', False])
-        self.assertListEqual(EmptyChar.search([('name', 'not ilike', '')]).mapped('name'), [False])
+        self.assertListEqual(EmptyChar.search([('name', 'not ilike', '')]).mapped('name'), [])
 
         self.assertListEqual(EmptyChar.search([('name', '=', False)]).mapped('name'), [False])
         self.assertListEqual(EmptyChar.search([('name', '!=', False)]).mapped('name'), ['name', ''])
         self.assertListEqual(EmptyChar.search([('name', 'ilike', False)]).mapped('name'), ['name', '', False])
-        self.assertListEqual(EmptyChar.search([('name', 'not ilike', False)]).mapped('name'), [False])
+        self.assertListEqual(EmptyChar.search([('name', 'not ilike', False)]).mapped('name'), [])
 
         values = ['name', '', False]
         for length in range(len(values) + 1):
@@ -90,12 +90,12 @@ class TestDomain(common.TransactionCase):
         self.assertListEqual(records_fr.search([('name', '=', '')]).mapped('name'), [''])
         self.assertListEqual(records_fr.search([('name', '!=', '')]).mapped('name'), ['name'])
         self.assertListEqual(records_fr.search([('name', 'ilike', '')]).mapped('name'), ['name', '', False])
-        self.assertListEqual(records_fr.search([('name', 'not ilike', '')]).mapped('name'), [False])
+        self.assertListEqual(records_fr.search([('name', 'not ilike', '')]).mapped('name'), [])
 
         self.assertListEqual(records_fr.search([('name', '=', False)]).mapped('name'), [False])
         self.assertListEqual(records_fr.search([('name', '!=', False)]).mapped('name'), ['name', ''])
         self.assertListEqual(records_fr.search([('name', 'ilike', False)]).mapped('name'), ['name', '', False])
-        self.assertListEqual(records_fr.search([('name', 'not ilike', False)]).mapped('name'), [False])
+        self.assertListEqual(records_fr.search([('name', 'not ilike', False)]).mapped('name'), [])
 
         values = ['name', '', False]
         for length in range(len(values) + 1):
