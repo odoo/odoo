@@ -1002,7 +1002,16 @@ export function makeActionManager(env, router = _router) {
             );
 
             currentController.action.globalState = globalState;
-            router.pushState({ globalState }, { sync: true });
+            // Avoid pushing the globalState, if the state on the router was changed.
+            // For instance, if a link was clicked, the state of the router will be the one of the link and not the one of the currentController.
+            // Or when using the back or forward buttons on the browser.
+            if (
+                currentController.state.action === router.current.action &&
+                currentController.state.active_id === router.current.active_id &&
+                currentController.state.resId === router.current.resId
+            ) {
+                router.pushState({ globalState }, { sync: true });
+            }
         }
         if (controller.action.globalState) {
             controller.props.globalState = controller.action.globalState;
