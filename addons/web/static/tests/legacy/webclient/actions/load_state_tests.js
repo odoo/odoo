@@ -1068,6 +1068,7 @@ QUnit.module("ActionManager", (hooks) => {
             assert.step(method || route);
         };
         redirect("/odoo/action-3/2");
+        logHistoryInteractions(assert);
 
         serverData.views = {
             ...serverData.views,
@@ -1089,6 +1090,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/action/load",
             "get_views",
             "web_read",
+            "Update the state without updating URL, nextState: actionStack,resId,action",
         ]);
         assert.strictEqual(
             browser.location.href,
@@ -1112,7 +1114,7 @@ QUnit.module("ActionManager", (hooks) => {
         await click(target, ".breadcrumb-item");
         await nextTick();
         assert.containsOnce(target, ".o_list_view");
-        assert.verifySteps(["web_search_read"]);
+        assert.verifySteps(["web_search_read", "pushState http://example.com/odoo/action-3"]);
     });
 
     QUnit.module("Load State: legacy urls");
