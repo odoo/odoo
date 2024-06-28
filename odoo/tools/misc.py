@@ -821,7 +821,7 @@ def dumpstacks(sig=None, frame=None, thread_idents=None, log_level=logging.INFO)
             query_time = thread_info.get('query_time')
             perf_t0 = thread_info.get('perf_t0')
             remaining_time = None
-            if query_time and perf_t0:
+            if query_time is not None and perf_t0:
                 remaining_time = '%.3f' % (time.time() - perf_t0 - query_time)
                 query_time = '%.3f' % query_time
             # qc:query_count qt:query_time pt:python_time (aka remaining time)
