@@ -1,7 +1,5 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-
-import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
 import {
     SpreadsheetDashboard,
@@ -9,7 +7,6 @@ import {
 } from "@spreadsheet_dashboard/../tests/helpers/data";
 
 describe.current.tags("desktop");
-defineSpreadsheetModels();
 defineSpreadsheetDashboardModels();
 
 async function createDashboardActionWithData(data) {

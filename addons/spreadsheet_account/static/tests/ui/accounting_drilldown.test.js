@@ -1,18 +1,16 @@
-import { mockService } from "@web/../tests/web_test_helpers";
-import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { describe, expect, test } from "@odoo/hoot";
-import { selectCell, setCellContent } from "@spreadsheet/../tests/helpers/commands";
 import * as spreadsheet from "@odoo/o-spreadsheet";
+import { selectCell, setCellContent } from "@spreadsheet/../tests/helpers/commands";
+import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
+import { doMenuAction } from "@spreadsheet/../tests/helpers/ui";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import {
     defineSpreadsheetAccountModels,
     getAccountingData,
 } from "@spreadsheet_account/../tests/accounting_test_data";
-import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
-import { waitForDataLoaded } from "@spreadsheet/helpers/model";
-import { doMenuAction } from "@spreadsheet/../tests/helpers/ui";
+import { mockService } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("headless");
-defineSpreadsheetModels();
 defineSpreadsheetAccountModels();
 
 const { cellMenuRegistry } = spreadsheet.registries;

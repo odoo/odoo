@@ -1,6 +1,5 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { getCellValue } from "@spreadsheet/../tests/helpers/getters";
 import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
@@ -15,7 +14,6 @@ import {
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { RPCError } from "@web/core/network/rpc";
 
-defineSpreadsheetModels();
 defineSpreadsheetDashboardModels();
 
 /**
