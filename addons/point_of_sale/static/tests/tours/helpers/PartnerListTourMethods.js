@@ -13,3 +13,20 @@ export function clickPartnerDetails(name){
         trigger: `.partner-list tr:contains("${name}") button.edit-partner-button`,
     }
 }
+
+export function clickBack() {
+    return [
+        {
+            trigger: ".btn-close",
+        },
+    ];
+}
+
+export function clickPartnerDetailsButton(name) {
+    return [
+        {
+            content: `click partner details '${name}' from partner list screen`,
+            trigger: `.partner-line:contains('${name}') .edit-partner-button`,
+        },
+    ];
+}
