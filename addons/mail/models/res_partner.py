@@ -301,7 +301,7 @@ class Partner(models.Model):
             ('share', '=', False),
             ('partner_id', 'not in', excluded_ids)
         ], order='name, id', limit=limit)
-        return list(users.partner_id.mail_partner_format().values())
+        return Store("Persona", list(users.partner_id.mail_partner_format().values())).get_result()
 
     @api.model
     def _get_current_persona(self):

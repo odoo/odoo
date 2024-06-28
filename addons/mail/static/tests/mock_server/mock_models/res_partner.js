@@ -188,11 +188,15 @@ export class ResPartner extends webModels.ResPartner {
 
         name = name.toLowerCase(); // simulates ILIKE
         // simulates domain with relational parts (not supported by mock server)
-        const matchingPartners = ResUsers._filter([])
+        const matchingPartnersIds = ResUsers._filter([])
             .filter((user) => {
                 const partner = this._filter([["id", "=", user.partner_id]])[0];
                 // user must have a partner
                 if (!partner) {
+                    return false;
+                }
+                // not excluded
+                if (excluded_ids.includes(partner.id)) {
                     return false;
                 }
                 // not current partner
@@ -208,19 +212,13 @@ export class ResPartner extends webModels.ResPartner {
                 }
                 return false;
             })
-            .map((user) => {
-                const partner = this._filter([["id", "=", user.partner_id]])[0];
-                return {
-                    id: partner.id,
-                    name: partner.name,
-                };
-            })
+            .map((user) => user.partner_id)
             .sort((a, b) => (a.name === b.name ? a.id - b.id : a.name > b.name ? 1 : -1));
-        matchingPartners.length = Math.min(matchingPartners.length, limit);
-        const resultPartners = matchingPartners.filter(
-            (partner) => !excluded_ids.includes(partner.id)
-        );
-        return Object.values(this.mail_partner_format(resultPartners.map((partner) => partner.id)));
+        matchingPartnersIds.length = Math.min(matchingPartnersIds.length, limit);
+        return new mailDataHelpers.Store(
+            "Persona",
+            Object.values(this.mail_partner_format(matchingPartnersIds))
+        ).get_result();
     }
 
     /**
