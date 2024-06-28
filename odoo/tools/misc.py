@@ -13,6 +13,7 @@ import hmac as hmac_lib
 import hashlib
 import io
 import itertools
+import logging
 import os
 import pickle as pickle_
 import re
@@ -943,7 +944,7 @@ class ConstantMapping(Mapping):
         return self._value
 
 
-def dumpstacks(sig=None, frame=None, thread_idents=None):
+def dumpstacks(sig=None, frame=None, thread_idents=None, log_level=logging.INFO):
     """ Signal handler: dump a stack trace for each existing thread or given
     thread(s) specified through the ``thread_idents`` sequence.
     """
@@ -997,7 +998,7 @@ def dumpstacks(sig=None, frame=None, thread_idents=None):
             for line in extract_stack(ob.gr_frame):
                 code.append(line)
 
-    _logger.info("\n".join(code))
+    _logger.log(log_level, "\n".join(code))
 
 def freehash(arg):
     try:
