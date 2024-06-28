@@ -74,8 +74,8 @@ class SaleOrder(models.Model):
         header_footer_items = form_field_path_map.get("header_footer").items()
         product_document_items = form_field_path_map.get("product_document").items()
         custom_content_map = {
-            'header_footer': {field: '' for field, path in header_footer_items if not path},
-            'product_document': {field: '' for field, path in product_document_items if not path},
+            'header_footer': {field: "" for field, path in header_footer_items if not path},
+            'product_document': {field: "" for field, path in product_document_items if not path},
         }
         for order in self:
             if order.customizable_pdf_form_fields:
@@ -152,3 +152,19 @@ class SaleOrder(models.Model):
                 selected_pdf['lines'].get(str(line.id))
             )
             line.product_document_ids = selected_lines.ids or self.env['product.document']
+
+    def save_new_custom_content(self, document_type, form_field, content):
+        """ Modify the content link to a form field in the custom content mapping of an order.
+
+        :param str document_type: The document type where the for field is. Either 'header_footer'
+                                  or 'product_document'.
+        :param str form_field: The form field in the custom content mapping.
+        :param str content: The content of the form field in the custom content mapping.
+        :return: None
+
+        Note: self.ensure_one()
+        """
+        self.ensure_one()
+        mapping = json.loads(self.customizable_pdf_form_fields)
+        mapping[document_type][form_field] = content
+        self.customizable_pdf_form_fields = json.dumps(mapping)

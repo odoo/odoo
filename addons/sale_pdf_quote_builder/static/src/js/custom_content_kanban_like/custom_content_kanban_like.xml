@@ -3,27 +3,43 @@
 <templates xml:space="preserve">
 
     <t t-name="sale_pdf_quote_builder.CustomContentKanbanLike">
-        <t t-if="datas.header_footer">
-            <t t-foreach="datas.header_footer" t-as="formField" t-key="'hf' + formField">
+        <t t-if="this.state.datas.header_footer">
+            <t t-foreach="state.datas.header_footer" t-as="formField" t-key="'hf' + formField">
                 <div
                     class="card align-items-stretch flex-column mt-2"
-                    t-on-click="onClickEditText('headerFooter', formField)"
+                    t-on-click="() => this.onClickEditText('header_footer', formField, state.datas.header_footer[formField])"
                 >
-                    <div class="card-header justify-content-between align-items-center border-0 bg-view">
-                        <h5 class="card-title text-primary"> Header and footer / <t t-out="formField"/></h5>
-                    </div>
+                    <h5 class="card-title text-primary mt-3 mx-2">
+                        Header and footer / <t t-out="formField"/>
+                    </h5>
                     <div class="card-body">
-                        <span class="card-text"><t t-out="formField.value or 'blablabla'"/></span>
+                        <span
+                            t-attf-class="card-text #{state.datas.header_footer[formField] ? '' : 'text-muted'}"
+                        >
+                            <t t-out="state.datas.header_footer[formField] || this.placeholderLabel"/>
+                        </span>
                     </div>
-
-<!--                    <span><t t-out="datas.header_footer[formField]"/></span>-->
-
                 </div>
             </t>
         </t>
-        <br/>
-        <t t-if="datas.product_document">
-            test2
+        <t t-if="state.datas.product_document">
+            <t t-foreach="state.datas.product_document" t-as="formField" t-key="'product' + formField">
+                <div
+                    class="card align-items-stretch flex-column mt-2"
+                    t-on-click="() => this.onClickEditText('product_document', formField, state.datas.product_document[formField])"
+                >
+                    <h5 class="card-title text-primary mt-3 mx-2">
+                        Header and footer / <t t-out="formField"/>
+                    </h5>
+                    <div class="card-body">
+                        <span
+                            t-attf-class="card-text #{state.datas.product_document[formField] ? '' : 'text-muted'}"
+                        >
+                            <t t-out="state.datas.product_document[formField] || this.placeholderLabel"/>
+                        </span>
+                    </div>
+                </div>
+            </t>
         </t>
     </t>
 

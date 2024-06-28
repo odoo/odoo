@@ -15,7 +15,10 @@ export class ContentEditionDialog extends Component {
 
 
     setup() {
-        this.title = _t("Customize your Quote");
+        let name = this.props.document_type == 'header_footer'
+            ? _("Header or footer / %s", this.props.formField)
+            : _t("Product / %s", this.props.formField)
+        this.title = _t("Edit: %s", name);
         this.state = useState({
             ...this.props
         })
@@ -29,6 +32,15 @@ export class ContentEditionDialog extends Component {
      * @return {undefined}
      */
     async onConfirm() {
+        await this.orm.call(
+            'sale.order', 'save_new_custom_content', [
+                this.props.saleOrderId,
+                this.props.documentType,
+                this.props.formField,
+                this.props.content,
+            ]
+        )
+
         this.props.close();
     }
 }
