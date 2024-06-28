@@ -4,7 +4,7 @@
 from collections import defaultdict
 
 from odoo import fields, models, api, _
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import AccessError
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.tools.misc import OrderedSet
 
@@ -216,7 +216,7 @@ class StockMove(models.Model):
             bom = move._get_subcontract_bom()
             if not bom:
                 continue
-            move.write({
+            move.with_context(do_not_unreserve=True).write({
                 'is_subcontract': True,
                 'location_id': move.picking_id.partner_id.with_company(move.company_id).property_stock_subcontractor.id
             })
