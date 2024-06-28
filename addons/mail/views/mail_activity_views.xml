@@ -25,6 +25,12 @@
                             <field name="icon" groups="base.group_no_one"/>
                             <field name="decoration_type" groups="base.group_no_one"/>
                             <field name="keep_done"/>
+                            <label for="delay_count"/>
+                            <div>
+                                <field class="oe_inline pe-1 o_input_3ch" name="delay_count"/>
+                                <field class="oe_inline ps-1 pe-2" name="delay_unit"/>
+                                <field class="oe_inline" name="delay_from"/>
+                            </div>
                         </group>
                         <group name="activity_planning" string="Next Activity">
                             <field name="chaining_type" invisible="category == 'upload_file'"/>
@@ -37,12 +43,6 @@
                                 domain="[('model_id.model', '=', res_model)]"
                                 invisible="not res_model"
                                 context="{'default_model': res_model}"/>
-                            <label for="delay_count"/>
-                            <div>
-                                <field class="oe_inline pe-1 o_input_3ch" name="delay_count"/>
-                                <field class="oe_inline ps-1 pe-2" name="delay_unit"/>
-                                <field class="oe_inline" name="delay_from"/>
-                            </div>
                         </group>
                     </group>
                     <label for="default_note" class="fw-bold"/>
@@ -50,28 +50,6 @@
                     <p class="alert alert-info" role="alert" invisible="not res_model_change">Modifying the model can have an impact on existing activities using this activity type, be careful.</p>
                 </sheet>
             </form>
-        </field>
-    </record>
-
-    <record id="mail_activity_type_form_inherit" model="ir.ui.view">
-        <field name="name">mail.activity.type.form.inherit</field>
-        <field name="model">mail.activity.type</field>
-        <field name="inherit_id" ref="mail.mail_activity_type_view_form"/>
-        <field name="mode">primary</field>
-        <field name="priority">50</field>
-        <field name="arch" type="xml">
-            <xpath expr="//label[@for='delay_count']" position="attributes">
-                <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>
-            </xpath>
-            <field name="delay_count" position="attributes">
-                <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>
-            </field>
-            <field name="delay_from" position="attributes">
-                <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>
-            </field>
-            <field name="delay_unit" position="attributes">
-                <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>
-            </field>
         </field>
     </record>
 
@@ -98,6 +76,10 @@
                 <field name="delay_from" string="Type"/>
                 <field name="res_model" groups="base.group_no_one"/>
                 <field name="icon" groups="base.group_no_one"/>
+                <field name="triggered_next_type_id" optional="hide"
+                    string="Triggered Next"/>
+                <field name="suggested_next_type_ids" optional="hide" widget="many2many_tags"
+                    string="Suggested Next"/>
             </list>
         </field>
     </record>

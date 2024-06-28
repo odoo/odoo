@@ -6,7 +6,7 @@
             <field name="model">mail.activity.plan.template</field>
             <field name="arch" type="xml">
                 <list string="Activities">
-                    <field name="activity_type_id" context="{'form_view_ref': 'mail.mail_activity_type_form_inherit'}"/>
+                    <field name="activity_type_id"/>
                     <field name="summary" placeholder="e.g. Discuss Proposal"/>
                     <field name="responsible_type"/>
                     <field name="delay_count"/>
@@ -25,7 +25,7 @@
                     <field name="res_model" invisible="1"/>
                     <sheet>
                         <group>
-                            <field name="activity_type_id" context="{'form_view_ref': 'mail.mail_activity_type_form_inherit'}"/>
+                            <field name="activity_type_id"/>
                             <field name="summary" placeholder="e.g. Discuss Proposal"/>
                             <field name="responsible_type"/>
                             <field name="responsible_id" invisible="responsible_type != 'other'"/>
