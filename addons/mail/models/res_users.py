@@ -14,7 +14,7 @@ class Users(models.Model):
         - add suggestion preference
     """
     _name = 'res.users'
-    _inherit = ['res.users']
+    _inherit = ['res.users', 'mail.thread']
 
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),
@@ -24,6 +24,7 @@ class Users(models.Model):
         help="Policy on how to handle Chatter notifications:\n"
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
+    groups_id = fields.Many2many(tracking=True)
 
     _sql_constraints = [(
         "notification_type",
@@ -60,6 +61,11 @@ class Users(models.Model):
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
+
+    def _filter_tracking_x2m(self, fname):
+        if fname == 'groups_id':
+            return self.env['res.groups']  # don't track anything, can be extended
+        return None  # show everything
 
     @property
     def SELF_READABLE_FIELDS(self):
