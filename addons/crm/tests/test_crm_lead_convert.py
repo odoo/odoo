@@ -413,7 +413,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         }]
         self.lead_1.convert_opportunity(False, user_ids=self.user_sales_salesman.ids)
         self.assertNotEqual(self.lead_1.team_id, initial_team)
-        self.assertFalse(self.lead_1.lead_properties)
+        self.assertFalse(self.lead_1.read(['lead_properties'])[0]['lead_properties'])
 
     @users('user_sales_manager')
     def test_lead_merge(self):

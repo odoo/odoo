@@ -3379,7 +3379,7 @@ class Properties(Field):
         # relational like types
         'many2one', 'many2many', 'selection', 'tags',
         # UI types
-         'separator',
+        'separator',
     )
 
     def _setup_attrs(self, model_class, name):
