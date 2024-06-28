@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="send_invoice">
+        <InvoicesDoc xmlns="http://www.aade.gr/myDATA/invoice/v1.0"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns:icls="https://www.aade.gr/myDATA/incomeClassificaton/v1.0"
+                     xmlns:ecls="https://www.aade.gr/myDATA/expensesClassificaton/v1.0"
+                     xsi:schemaLocation="http://www.aade.gr/myDATA/invoice/v1.0/InvoicesDoc-v0.6.xsd">
+            <invoice t-foreach="invoices" t-as="invoice">
+                <issuer>
+                    <vatNumber t-out="invoice.get('issuer_vat')"/>
+                    <country t-out="invoice.get('issuer_country')"/>
+                    <branch t-out="invoice.get('issuer_branch')"/>
+                    <name t-out="invoice.get('issuer_name')"/>
+                    <address>
+                        <postalCode t-out="invoice.get('issuer_postal_code')"/>
+                        <city t-out="invoice.get('issuer_city')"/>
+                    </address>
+                </issuer>
+                <counterpart>
+                    <vatNumber t-out="invoice.get('counterpart_vat')"/>
+                    <country t-out="invoice.get('counterpart_country')"/>
+                    <branch t-out="invoice.get('counterpart_branch')"/>
+                    <name t-out="invoice.get('counterpart_name')"/>
+                    <address>
+                        <postalCode t-out="invoice.get('counterpart_postal_code')"/>
+                        <city t-out="invoice.get('counterpart_city')"/>
+                    </address>
+                </counterpart>
+                <invoiceHeader>
+                    <series t-out="invoice.get('header_series')"/>
+                    <aa t-out="invoice.get('header_aa')"/>
+                    <issueDate t-out="invoice.get('header_issue_date')"/>
+                    <invoiceType t-out="invoice.get('header_invoice_type')"/>
+                    <currency t-out="invoice.get('header_currency')"/>
+                    <correlatedInvoices t-out="invoice.get('header_correlate')"/>
+                </invoiceHeader>
+                <paymentMethods>
+                    <paymentMethodDetails t-foreach="invoice.get('payment_details')" t-as="payment_detail">
+                        <type t-out="payment_detail.get('type')"/>
+                        <amount t-out="payment_detail.get('amount')"/>
+                    </paymentMethodDetails>
+                </paymentMethods>
+                <invoiceDetails t-foreach="invoice.get('details')" t-as="detail">
+                    <lineNumber t-out="detail.get('line_number')"/>
+                    <quantity t-out="detail.get('quantity')"/>
+                    <invoiceDetailType t-out="detail.get('detail_type')"/>
+                    <netValue t-out="detail.get('net_value')"/>
+                    <vatCategory t-out="detail.get('vat_category')"/>
+                    <vatAmount t-out="detail.get('vat_amount')"/>
+                    <vatExemptionCategory t-out="detail.get('vat_exemption_category')"/>
+                    <incomeClassification t-foreach="detail.get('icls')" t-as="icls">
+                        <icls:classificationType t-out="icls.get('type')"/>
+                        <icls:classificationCategory t-out="icls.get('category')"/>
+                        <icls:amount t-out="icls.get('amount')"/>
+                    </incomeClassification>
+                    <expensesClassification t-foreach="detail.get('ecls')" t-as="ecls">
+                        <ecls:classificationType t-out="ecls.get('type')"/>
+                        <ecls:classificationCategory t-out="ecls.get('category')"/>
+                        <ecls:amount t-out="ecls.get('amount')"/>
+                    </expensesClassification>
+                </invoiceDetails>
+                <invoiceSummary>
+                    <totalNetValue t-out="invoice.get('summary_total_net_value')"/>
+                    <totalVatAmount t-out="invoice.get('summary_total_vat_amount')"/>
+                    <totalWithheldAmount t-out="invoice.get('summary_total_withheld_amount')"/>
+                    <totalFeesAmount t-out="invoice.get('summary_total_fees_amount')"/>
+                    <totalStampDutyAmount t-out="invoice.get('summary_total_stamp_duty_amount')"/>
+                    <totalOtherTaxesAmount t-out="invoice.get('summary_total_other_taxes_amount')"/>
+                    <totalDeductionsAmount t-out="invoice.get('summary_total_deductions_amount')"/>
+                    <totalGrossValue t-out="invoice.get('summary_total_gross_value')"/>
+                    <incomeClassification t-foreach="invoice.get('summary_icls')" t-as="icls">
+                        <icls:classificationType t-out="icls.get('type')"/>
+                        <icls:classificationCategory t-out="icls.get('category')"/>
+                        <icls:amount t-out="icls.get('amount')"/>
+                    </incomeClassification>
+                    <expensesClassification t-foreach="invoice.get('summary_ecls')" t-as="ecls">
+                        <ecls:classificationType t-out="ecls.get('type')"/>
+                        <ecls:classificationCategory t-out="ecls.get('category')"/>
+                        <ecls:amount t-out="ecls.get('amount')"/>
+                    </expensesClassification>
+                </invoiceSummary>
+            </invoice>
+        </InvoicesDoc>
+    </template>
+
+    <template id="send_expense_classification">
+        <ecls:ExpensesClassificationsDoc xmlns:ecls="https://www.aade.gr/myDATA/expensesClassificaton/v1.0">
+            <ecls:expensesInvoiceClassification t-foreach="invoices" t-as="invoice">
+                <ecls:invoiceMark t-out="invoice.get('mark')"/>
+                <ecls:transactionMode t-out="invoice.get('transaction_mode')"/>
+                <ecls:invoicesExpensesClassificationDetails t-foreach="invoice.get('details')" t-as="detail">
+                    <ecls:lineNumber t-out="detail.get('line_number')"/>
+                    <ecls:expensesClassificationDetailData t-foreach="detail.get('ecls')" t-as="ecls">
+                        <ecls:classificationType t-out="ecls.get('type')"/>
+                        <ecls:classificationCategory t-out="ecls.get('category')"/>
+                        <ecls:amount t-out="ecls.get('amount')"/>
+                    </ecls:expensesClassificationDetailData>
+                </ecls:invoicesExpensesClassificationDetails>
+            </ecls:expensesInvoiceClassification>
+        </ecls:ExpensesClassificationsDoc>
+    </template>
+
+</odoo>

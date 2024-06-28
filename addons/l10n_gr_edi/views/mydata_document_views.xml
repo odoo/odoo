@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="l10n_gr_edi_document_form" model="ir.ui.view">
+        <field name="name">l10n_gr_edi.document.form</field>
+        <field name="model">l10n_gr_edi.document</field>
+        <field name="arch" type="xml">
+            <form string="MyDATA Document Info">
+                <sheet>
+                    <group>
+                        <field name="attachment_id" invisible="1"/>
+                        <field name="state" readonly="1"/>
+                        <field name="datetime" readonly="1"/>
+                        <field name="message" readonly="1" widget="text"/>
+                        <button name="action_download"
+                                type="object"
+                                string="Download XML"
+                                invisible="not attachment_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
