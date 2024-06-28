@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form
+from odoo.tests import Form, HttpCase, tagged
 from odoo.tests import common
 from odoo.exceptions import ValidationError
 
@@ -493,3 +493,49 @@ class TestMrpByProduct(common.TransactionCase):
         self.assertEqual(picking.state, 'assigned')
         byproduct_move = picking.move_ids.filtered(lambda m: m.product_id == self.bom_byproduct.byproduct_ids.product_id)
         self.assertEqual(byproduct_move.product_qty, 1.0)
+
+
+@tagged('post_install', '-at_install')
+class TestMrpByProductSmToSmlSynchronization(HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+
+    def test_by_product_sm_to_sml_synchronization(self):
+        """synchronization between stock.move and stock.move.line in the detailed operation modal for by-product """
+
+        self.env['res.config.settings'].create({'group_stock_multi_locations': True}).execute()
+        self.env['res.config.settings'].create({'group_mrp_byproducts': True}).execute()
+
+        Product = self.env['product.product']
+        product_finish = Product.create({
+            'name': 'product1',
+            'type': 'product',
+            'tracking': 'none',
+        })
+        by_product = Product.create({
+            'name': 'product2',
+            'type': 'product',
+            'tracking': 'none',
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_finish
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+
+        byproduct_1 = self.env['stock.move'].create({
+            'product_id': by_product.id,
+            'production_id': mo.id,
+            'location_dest_id': self.ref('stock.stock_location_stock'),
+            'quantity': 2,
+        })
+        mo.write({'move_byproduct_ids': [(4, byproduct_1.id)]})
+
+        action_id = self.env.ref('mrp.menu_mrp_production_action').action
+        url = "/web#model=mrp.production&view_type=form&action=%s&id=%s" % (str(action_id.id), str(mo.id))
+        self.start_tour(url, "test_by_product_sm_to_sml_synchronization", login="admin", timeout=100)
+        self.assertEqual(mo.move_byproduct_ids.quantity, 7)
+        self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 2)

@@ -6,7 +6,7 @@ from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
-from odoo.tests import Form
+from odoo.tests import Form, HttpCase, tagged
 from odoo.tools.misc import format_date
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
@@ -4090,3 +4090,53 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(wo.duration_expected, 30.0)
         self.assertEqual(wo.date_start, dt)
         self.assertEqual(wo.date_finished, dt + timedelta(hours=0, minutes=30))
+
+
+@tagged('post_install', '-at_install')
+class TestMrpSynchronization(HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+
+    def test_manufacturing_sm_to_sml_synchronization(self):
+        """synchronization between stock.move and stock.move.line in the detailed operation modal for manufacturings """
+
+        self.env['res.config.settings'].create({'group_stock_multi_locations': True}).execute()
+
+        Product = self.env['product.product']
+        product_finish = Product.create({
+            'name': 'product1',
+            'type': 'product',
+            'tracking': 'none',
+        })
+        Component = Product.create({
+            'name': 'product2',
+            'type': 'product',
+            'tracking': 'none',
+        })
+
+        self.env['stock.quant']._update_available_quantity(Component, self.stock_location, 100)
+
+        bom = self.env['mrp.bom'].create({
+            'product_id': product_finish.id,
+            'product_tmpl_id': product_finish.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': Component.id, 'product_qty': 5}),
+            ],
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_finish
+        mo_form.product_qty = 1
+        mo_form.bom_id = bom
+        mo = mo_form.save()
+
+        action_id = self.env.ref('mrp.menu_mrp_production_action').action
+        url = "/web#model=mrp.production&view_type=form&action=%s&id=%s" % (str(action_id.id), str(mo.id))
+        self.start_tour(url, "test_manufacturing_sm_to_sml_synchronization", login="admin", timeout=100)
+        self.assertEqual(mo.move_raw_ids.quantity, 7)
+        self.assertEqual(mo.move_raw_ids.move_line_ids.quantity, 7)

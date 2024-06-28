@@ -363,6 +363,10 @@ class StockMove(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
+        if 'move_line_ids' in vals:
+            vals['move_line_ids'] = [val for val in vals['move_line_ids'] if val[2]]
+            if not vals['move_line_ids']:
+                vals.pop('move_line_ids')
         if 'product_id' in vals:
             move_to_unlink = self.filtered(lambda m: m.product_id.id != vals.get('product_id'))
             other_move = self - move_to_unlink
