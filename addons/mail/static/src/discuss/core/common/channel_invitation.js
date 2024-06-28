@@ -51,7 +51,7 @@ export class ChannelInvitation extends Component {
         if (!results) {
             return;
         }
-        const selectablePartners = this.store.Persona.insert(results.partners);
+        const { Persona: selectablePartners = [] } = this.store.insert(results.data);
         this.state.selectablePartners = this.suggestionService.sortPartnerSuggestions(
             selectablePartners,
             this.searchStr,

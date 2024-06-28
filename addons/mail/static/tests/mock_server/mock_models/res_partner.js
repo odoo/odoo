@@ -1,6 +1,7 @@
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+
 import { fields, getKwArgs, webModels } from "@web/../tests/web_test_helpers";
 import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
-import { mailDataHelpers } from "../mail_mock_server";
 
 /** @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord */
 
@@ -285,37 +286,36 @@ export class ResPartner extends webModels.ResPartner {
             )
         );
         // simulates domain with relational parts (not supported by mock server)
-        const matchingPartners = Object.values(
-            this.mail_partner_format(
-                ResUsers._filter([])
-                    .filter((user) => {
-                        const partner = this._filter([["id", "=", user.partner_id]])[0];
-                        // user must have a partner
-                        if (!partner) {
-                            return false;
-                        }
-                        // user should not already be a member of the channel
-                        if (memberPartnerIds.has(partner.id)) {
-                            return false;
-                        }
-                        // no name is considered as return all
-                        if (!search_term) {
-                            return true;
-                        }
-                        if (partner.name && partner.name.toLowerCase().includes(search_term)) {
-                            return true;
-                        }
-                        return false;
-                    })
-                    .map((user) => user.partner_id)
-            )
-        );
-        const count = matchingPartners.length;
-        matchingPartners.length = Math.min(count, limit);
-        return {
-            count,
-            partners: matchingPartners,
-        };
+        const matchingPartnersIds = ResUsers._filter([])
+            .filter((user) => {
+                const partner = this._filter([["id", "=", user.partner_id]])[0];
+                // user must have a partner
+                if (!partner) {
+                    return false;
+                }
+                // user should not already be a member of the channel
+                if (memberPartnerIds.has(partner.id)) {
+                    return false;
+                }
+                // no name is considered as return all
+                if (!search_term) {
+                    return true;
+                }
+                if (partner.name && partner.name.toLowerCase().includes(search_term)) {
+                    return true;
+                }
+                return false;
+            })
+            .map((user) => user.partner_id);
+        const count = matchingPartnersIds.length;
+        matchingPartnersIds.length = Math.min(count, limit);
+        const store = new mailDataHelpers.Store();
+        this._search_for_channel_invite_to_store(matchingPartnersIds, store, channel_id);
+        return { count, data: store.get_result() };
+    }
+
+    _search_for_channel_invite_to_store(ids, store, channel_id) {
+        store.add("Persona", Object.values(this.mail_partner_format(ids)));
     }
 
     /**
