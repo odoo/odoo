@@ -57,6 +57,20 @@ VariantMixin._onChangeCombination = function (ev, $parent, combination) {
         contactUsButton.removeClass('d-flex').addClass('d-none');
         product_unavailable.removeClass('d-flex').addClass('d-none')
     }
+
+    // Dynamically render extra fields
+    let $extras = $('#product-extra-fields');
+    $('[data-variant-field]').remove();
+    if (combination.variant_extra_fields && $extras.length) {
+        $extras.show();
+        $extras.append(combination.variant_extra_fields.map((item) => {
+            const [label, val] = item;
+            return `<b data-variant-field>${label}: </b><span data-variant-field>${val}</span>`;
+        }).join('</br data-variant-field>'));
+    } else if (!combination.any_template_extra_field) {
+        $extras.hide();
+    }
+
     originalOnChangeCombination.apply(this, [ev, $parent, combination]);
 };
 
