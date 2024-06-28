@@ -267,6 +267,8 @@
             'website/static/src/snippets/s_masonry_block/options.js',
             'website/static/src/snippets/s_masonry_block/options.xml',
             'website/static/src/snippets/s_popup/options.js',
+            'website/static/src/snippets/s_popup/options.legacy.js',
+            'website/static/src/snippets/s_popup/options.xml',
             'website/static/src/snippets/s_product_catalog/options.js',
             'website/static/src/snippets/s_product_catalog/options.xml',
             'website/static/src/snippets/s_chart/options.js',

@@ -1,29 +1,21 @@
-import { SnippetOption } from "@web_editor/js/editor/snippets.options";
-import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
+/** @odoo-module **/
 
-export class SnippetPopup extends SnippetOption {
-    constructor({ callbacks }) {
-        super(...arguments);
-        this.$bsTarget = this.ownerDocument.defaultView.$(this.$target[0]);
-        this.website = this.env.services.website;
-        this.notifyOptions = callbacks.notifyOptions;
-        this.updateSnippetOptionVisibility = callbacks.updateSnippetOptionVisibility;
-    }
+import options from "@web_editor/js/editor/snippets.options.legacy";
+
+options.registry.SnippetPopup = options.Class.extend({
     /**
      * @override
      */
-    async willStart() {
-        await super.willStart();
-
+    start: function () {
         // Note: the link are excluded here so that internal modal buttons do
         // not close the popup as we want to allow edition of those buttons.
         this.$bsTarget.on('click.SnippetPopup', '.js_close_popup:not(a, .btn)', ev => {
             ev.stopPropagation();
             this.onTargetHide();
-            this.updateSnippetOptionVisibility(false);
+            this.trigger_up('snippet_option_visibility_update', {show: false});
         });
         this.$bsTarget.on('shown.bs.modal.SnippetPopup', () => {
-            this.updateSnippetOptionVisibility(true);
+            this.trigger_up('snippet_option_visibility_update', {show: true});
             // TODO duplicated code from the popup public widget, this should
             // be moved to a *video* public widget and be reviewed in master
             this.$target[0].querySelectorAll('.media_iframe_video').forEach(media => {
@@ -32,28 +24,38 @@ export class SnippetPopup extends SnippetOption {
             });
         });
         this.$bsTarget.on('hide.bs.modal.SnippetPopup', () => {
-            this.updateSnippetOptionVisibility(false);
+            this.trigger_up('snippet_option_visibility_update', {show: false});
             this._removeIframeSrc();
         });
         // The video might be playing before entering edit mode (possibly with
         // sound). Stop the video, as the user can't do it (no button on video
         // in edit mode).
         this._removeIframeSrc();
-    }
+        if (!this.$target[0].parentElement.matches("#website_cookies_bar")) {
+            this.trigger_up("option_update", {
+                optionName: "anchor",
+                name: "modalAnchor",
+                data: {
+                    buttonEl: this._requestUserValueWidgets("onclick_opt")[0].el,
+                },
+            });
+        }
+        return this._super(...arguments);
+    },
     /**
      * @override
      */
-    async onRemove() {
-        await super.onRemove();
+    destroy: function () {
+        this._super(...arguments);
         // The video should not start before the modal opens, remove it from the
         // DOM. It will be added back on modal open to start the video.
         this._removeIframeSrc();
         this.$bsTarget.off('.SnippetPopup');
-    }
+    },
     /**
      * @override
      */
-    async onBuilt() {
+    onBuilt: function () {
         this._assignUniqueID();
         // Fix in stable to convert the data-focus bootstrap option from version 4.0 to
         // 5.1 (renamed to data-bs-focus).
@@ -62,25 +64,25 @@ export class SnippetPopup extends SnippetOption {
             popup.attr('data-bs-focus', popup.attr('data-focus'));
             popup[0].removeAttribute('data-focus');
         }
-    }
+    },
     /**
      * @override
      */
-    onClone() {
+    onClone: function () {
         this._assignUniqueID();
-    }
+    },
     /**
      * @override
      */
-    async onTargetShow() {
+    onTargetShow: async function () {
         this.$bsTarget.modal('show');
         $(this.$target[0].ownerDocument.body).children('.modal-backdrop:last').addClass('d-none');
-    }
+    },
     /**
      * @override
      */
-    async onTargetHide() {
-        await new Promise(resolve => {
+    onTargetHide: async function () {
+        return new Promise(resolve => {
             const timeoutID = setTimeout(() => {
                 this.$bsTarget.off('hidden.bs.modal.popup_on_target_hide');
                 resolve();
@@ -94,44 +96,32 @@ export class SnippetPopup extends SnippetOption {
             this.$target[0].closest('.s_popup').classList.add('d-none');
             this.$bsTarget.modal('hide');
         });
-    }
+    },
 
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
 
     /**
-     * @override
-     */
-    async selectDataAttribute(previewMode, widgetValue, params) {
-        await super.selectDataAttribute(...arguments);
-        if (!previewMode && params.attributeName === "display" && widgetValue === "onClick") {
-            this.notifyOptions({
-                optionName: "Anchor",
-                name: "modalAnchor",
-            });
-        }
-    }
-    /**
      * Moves the snippet in #o_shared_blocks to be common to all pages or inside
      * the first editable oe_structure in the main to be on current page only.
      *
      * @see this.selectClass for parameters
      */
-    moveBlock(previewMode, widgetValue, params) {
+    moveBlock: function (previewMode, widgetValue, params) {
         const selector = widgetValue === 'allPages' ?
             '#o_shared_blocks' : 'main .oe_structure:o_editable';
         const whereEl = $(this.$target[0].ownerDocument).find(selector)[0];
         const popupEl = this.$target[0].closest('.s_popup');
         whereEl.prepend(popupEl);
-    }
+    },
     /**
      * @see this.selectClass for parameters
      */
     setBackdrop(previewMode, widgetValue, params) {
         const color = widgetValue ? 'var(--black-50)' : '';
         this.$target[0].style.setProperty('background-color', color, 'important');
-    }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -142,19 +132,19 @@ export class SnippetPopup extends SnippetOption {
      *
      * @private
      */
-    _assignUniqueID() {
+    _assignUniqueID: function () {
         this.$target.closest('.s_popup').attr('id', 'sPopup' + Date.now());
-    }
+    },
     /**
      * @override
      */
-    async _computeWidgetState(methodName, params) {
+    _computeWidgetState: function (methodName, params) {
         switch (methodName) {
             case 'moveBlock':
                 return this.$target[0].closest('#o_shared_blocks') ? 'allPages' : 'currentPage';
         }
-        return super._computeWidgetState(...arguments);
-    }
+        return this._super(...arguments);
+    },
     /**
      * Removes the iframe `src` attribute (a copy of the src is already on the
      * parent `oe-expression` attribute).
@@ -165,21 +155,5 @@ export class SnippetPopup extends SnippetOption {
         this.$target.find('.media_iframe_video iframe').each((i, iframe) => {
             iframe.src = '';
         });
-    }
-}
-
-registerWebsiteOption("SnippetPopup", {
-    Class: SnippetPopup,
-    template: "website.s_popup_options",
-    selector: ".s_popup",
-    exclude: "#website_cookies_bar",
-    target: ".modal",
-    dropIn: ":not(p).oe_structure:not(.oe_structure_solo):not([data-snippet] *), :not(.o_mega_menu):not(p)[data-oe-type=html]:not([data-snippet] *)",
-});
-
-registerWebsiteOption("SnippetPopupCookieBar", {
-    Class: SnippetPopup,
-    template: "website.s_popup_cookie_bar_options",
-    selector: ".s_popup#website_cookies_bar",
-    target: ".modal",
+    },
 });

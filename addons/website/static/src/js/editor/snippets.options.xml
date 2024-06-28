@@ -308,6 +308,26 @@
     <!-- Compatibility, keep reverse logical, don't use `icon_color` -->
     <WeCheckbox title.translate="Color" selectClass="'no_icon_color|'"/>
 </t>
+<t t-name="website.cookie_bar_options">
+    <WeSelect title.translate="Layout" class="'o_we_inline'">
+        <WeButton selectClass="'o_cookies_discrete'"
+                  selectLayout="'discrete'"
+                  trigger="'position_bottom,s_popup_size_full'">
+            Discrete
+        </WeButton>
+        <WeButton selectClass="'o_cookies_classic'"
+                  selectLayout="'classic'"
+                  trigger="'position_bottom,s_popup_size_full'">
+            Classic
+        </WeButton>
+        <WeButton name="'layout_popup_opt'"
+                  selectClass="'o_cookies_popup'"
+                  selectLayout="'popup'"
+                  trigger="'position_middle,s_popup_size_md'">
+            Popup
+        </WeButton>
+    </WeSelect>
+</t>
 <t t-name="website.s_google_map_option">
     <WeGpsPicker title.translate="Address"
         selectDataAttribute="''" attributeName="'mapGps'"

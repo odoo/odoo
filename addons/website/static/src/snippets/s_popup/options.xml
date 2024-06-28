@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website.s_popup_options.base">
+        <WeSelect title.translate="Position" dependencies="'layout_popup_opt'"> <!-- When cookie configuration only display this for popup mode -->
+            <WeButton selectClass="'s_popup_top'" name="'position_top'">Top</WeButton>
+            <WeButton selectClass="'s_popup_middle'" name="'position_middle'">Middle</WeButton>
+            <WeButton selectClass="'s_popup_bottom'" name="'position_bottom'">Bottom</WeButton>
+        </WeSelect>
+        <WeSelect title.translate="Size" applyTo="'.modal-dialog'" name="'s_popup_size_opt'">
+            <WeButton selectClass="'modal-sm'">Small</WeButton>
+            <WeButton selectClass="''" name="'s_popup_size_md'">Medium</WeButton>
+            <WeButton selectClass="'modal-lg'">Large</WeButton>
+            <WeButton selectClass="'modal-xl'">Extra Large</WeButton>
+            <WeButton selectClass="'s_popup_size_full'" name="'s_popup_size_full'">Full</WeButton>
+        </WeSelect>
+        <WeRow title.translate="Backdrop">
+            <WeCheckbox name="'popup_backdrop_opt'"
+                        selectClass="'s_popup_no_backdrop|'"
+                        setBackdrop="'true'"
+                        noPreview="'true'"/>
+            <WeColorpicker dependencies="'popup_backdrop_opt'"
+                           selectStyle="'true'"
+                           cssProperty="'background-color'"
+                           colorPrefix="'bg-'"
+                           cssCompatible="'true'"/>
+        </WeRow>
+    </t>
+
+    <t t-name="website.s_popup_options.extra">
+        <WeColorpicker title.translate="Close Button Color"
+                       selectStyle="'true'"
+                       cssProperty="'color'"
+                       colorPrefix="'text-'"
+                       applyTo="'.s_popup_close'"/>
+        <WeSelect title.translate="Display" attributeName="'display'" attributeDefaultValue="always">
+            <WeButton selectDataAttribute="'afterDelay'" name="'show_delay'">Delay</WeButton>
+            <WeButton selectDataAttribute="'mouseExit'">On Exit</WeButton>
+            <WeButton selectDataAttribute="'onClick'" name="'onclick_opt'">On Click (via link)</WeButton>
+        </WeSelect>
+        <WeInput title.translate="&#8985; Delay"
+                 tooltip.translate="Automatically opens the pop-up if the user stays on a page longer than the specified time."
+                 selectDataAttribute="''"
+                 attributeName="'showAfter'"
+                 unit="'s'"
+                 saveUnit="'ms'"
+                 dependencies="'show_delay'"/>
+        <t t-set="unit_popup_duration">days</t>
+        <WeInput title.translate="Hide For"
+                 tooltip.translate="Once the user closes the popup, it won't be shown again for that period of time."
+                 selectDataAttribute="`7${unit_popup_duration}`"
+                 attributeName="'consentsDuration'"
+                 unit="unit_popup_duration"
+                 dependencies="'!onclick_opt'"/>
+        <WeSelect title.translate="Show on" noPreview="'true'">
+            <WeButton moveBlock="'currentPage'">This page</WeButton>
+            <WeButton moveBlock="'allPages'">All pages</WeButton>
+        </WeSelect>
+    </t>
+
+    <t t-name="website.s_popup_options">
+        <t t-call="website.s_popup_options.base"/>
+        <t t-call="website.s_popup_options.extra"/>
+    </t>
+
+    <t t-name="website.s_popup_cookie_bar_options">
+        <t t-call="website.s_popup_options.base"/>
+    </t>
+
+</templates>
