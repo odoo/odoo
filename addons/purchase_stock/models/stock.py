@@ -96,6 +96,7 @@ class Orderpoint(models.Model):
         domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
     vendor_id = fields.Many2one(related='supplier_id.partner_id', string="Vendor", store=True)
     purchase_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the purchase routes.")
+    vendor_has_warning = fields.Boolean(compute='_compute_vendor_has_warning', store=False)
 
     @api.depends('product_id.purchase_order_line_ids.product_qty', 'product_id.purchase_order_line_ids.state')
     def _compute_qty(self):
@@ -205,6 +206,17 @@ class Orderpoint(models.Model):
                 continue
             orderpoint.route_id = route_id[0].id
         return super()._set_default_route_id()
+
+    def _compute_vendor_has_warning(self):
+        for record in self:
+            if record.vendor_id:
+                record.vendor_has_warning = record.vendor_id.purchase_warn == 'warning'
+            else:
+                seller_ids = record.product_id._prepare_sellers()
+                if len(seller_ids):
+                    record.vendor_has_warning = seller_ids[0].partner_id.purchase_warn
+                else:
+                    record.vendor_has_warning = False
 
 
 class StockLot(models.Model):

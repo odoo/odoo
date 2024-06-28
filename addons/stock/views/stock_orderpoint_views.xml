@@ -64,8 +64,12 @@
                 <field name="company_id" optional="hide" readonly="1" groups="base.group_multi_company"/>
                 <button name="action_replenish" string="Order Once" type="object" class="o_replenish_buttons" icon="fa-truck"
                     invisible="qty_to_order &lt;= 0.0"/>
+                <button name="action_replenish_confirm" string="Order Once" type="object" class="o_replenish_buttons" icon="fa-truck"
+                    invisible="qty_to_order &lt;= 0.0" confirm="Supplier for this product has a warning message. Are you sure you want to proceed?"/>
                 <button name="action_replenish_auto" string="Automate" type="object" class="o_replenish_buttons" icon="fa-refresh"
                     invisible="qty_to_order &lt;= 0.0 or trigger == 'auto'"/>
+                <button name="action_replenish_auto_confirm" string="Automate" type="object" class="o_replenish_buttons" icon="fa-refresh"
+                    invisible="qty_to_order &lt;= 0.0 or trigger == 'auto'" confirm="Supplier for this product has a warning message. Are you sure you want to proceed?"/>
                 <button name="%(action_orderpoint_snooze)d" string="Snooze" type="action" class="text-warning" icon="fa-bell-slash"
                     invisible="trigger != 'manual'" context="{'default_orderpoint_ids': [id]}"/>
             </tree>

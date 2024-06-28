@@ -83,9 +83,15 @@ class ProductProduct(models.Model):
 class ProductSupplierinfo(models.Model):
     _inherit = "product.supplierinfo"
 
+    is_vendor_blocked = fields.Boolean(compute='_compute_is_vendor_blocked')
+
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
+
+    def _compute_is_vendor_blocked(self):
+        for record in self:
+            record.is_vendor_blocked = record.partner_id.purchase_warn == 'block'
 
 
 class ProductPackaging(models.Model):
