@@ -232,7 +232,7 @@ class SaleOrderLine(models.Model):
         if self.product_id.service_type not in ['milestones', 'manual']:
             allocated_hours = self._convert_qty_company_hours(self.company_id)
         title = self._get_short_description()
-        description = '<br/>'.join(self.name.splitlines())
+        description = '<br/>'.join(self.name.splitlines()) if self.name else ''
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
             'analytic_account_id': project.analytic_account_id.id,
