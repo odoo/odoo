@@ -977,6 +977,7 @@ var SnippetEditor = Widget.extend({
                         requestUserValue: this._requestUserValue.bind(this),
                         cover: this.cover.bind(this),
                         coverUpdate: (overlayVisible) => this.trigger_up("cover_update", { overlayVisible }),
+                        notifyOptions: (data) => this.trigger_up("option_update", data),
                     }
                 });
                 optionName = (option.Class || SnippetOption).name
@@ -1776,6 +1777,13 @@ var SnippetEditor = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onOptionUpdate: function (ev) {
+        // TODO: @owl-options: when removing trigger_up, adapt calls to this.
+        if (ev._stopped) {
+            return;
+        }
+        if (!ev.stopPropagation) {
+            ev.stopPropagation = () => ev._stopped = true;
+        }
         var self = this;
 
         // If multiple option names are given, we suppose it should not be
