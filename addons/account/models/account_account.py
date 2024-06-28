@@ -103,11 +103,13 @@ class AccountAccount(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=False,
         default=lambda self: self.env.company)
     tag_ids = fields.Many2many(
-        'account.account.tag', 'account_account_account_tag',
+        comodel_name='account.account.tag',
+        relation='account_account_account_tag',
         compute='_compute_account_tags', readonly=False, store=True, precompute=True,
         string='Tags',
         help="Optional tags you may want to assign for custom reporting",
         ondelete='restrict',
+        tracking=True,
     )
     group_id = fields.Many2one('account.group', compute='_compute_account_group', store=True, readonly=True,
                                help="Account prefixes can determine account groups.")

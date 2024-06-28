@@ -2870,11 +2870,12 @@ class AccountMove(models.Model):
             )
             moves_details.append(f"{entry_details}\n{account_details}")
 
-        return "\nForce deleted Journal Entries by {user_name} ({user_id})\nEntries\n{moves_details}".format(
-            user_name=self.env.user.name,
-            user_id=self.env.user.id,
-            moves_details="\n".join(moves_details),
-        )
+        if moves_details:
+            return "\nForce deleted Journal Entries by {user_name} ({user_id})\nEntries\n{moves_details}".format(
+                user_name=self.env.user.name,
+                user_id=self.env.user.id,
+                moves_details="\n".join(moves_details),
+            )
 
     @api.ondelete(at_uninstall=False)
     def _unlink_forbid_parts_of_chain(self):
