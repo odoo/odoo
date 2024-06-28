@@ -13,7 +13,9 @@ export class NavigableList extends Component {
     static template = "mail.NavigableList";
     static props = {
         anchorRef: { optional: true },
+        autoSelectFirst: { type: Boolean, optional: true },
         class: { type: String, optional: true },
+        hint: { type: String, optional: true },
         onSelect: { type: Function },
         options: { type: Array },
         optionTemplate: { type: String, optional: true },
@@ -21,7 +23,7 @@ export class NavigableList extends Component {
         position: { type: String, optional: true },
         isLoading: { type: Boolean, optional: true },
     };
-    static defaultProps = { position: "bottom", isLoading: false };
+    static defaultProps = { position: "bottom", isLoading: false, autoSelectFirst: true };
 
     setup() {
         super.setup();
@@ -66,7 +68,9 @@ export class NavigableList extends Component {
     open() {
         this.state.open = true;
         this.state.activeIndex = null;
-        this.navigate("first");
+        if (this.props.autoSelectFirst) {
+            this.navigate("first");
+        }
     }
 
     close() {
@@ -87,6 +91,9 @@ export class NavigableList extends Component {
     }
 
     navigate(direction) {
+        if (this.props.options.length === 0) {
+            return;
+        }
         const activeOptionId = this.state.activeIndex !== null ? this.state.activeIndex : 0;
         let targetId = undefined;
         switch (direction) {
@@ -123,10 +130,11 @@ export class NavigableList extends Component {
         const hotkey = getActiveHotkey(ev);
         switch (hotkey) {
             case "enter":
-                if (!this.show || this.state.activeIndex === null) {
+                markEventHandled(ev, "NavigableList.select");
+                if (this.state.activeIndex === null) {
+                    this.close();
                     return;
                 }
-                markEventHandled(ev, "NavigableList.select");
                 this.selectOption(ev, this.state.activeIndex);
                 break;
             case "escape":
@@ -134,13 +142,13 @@ export class NavigableList extends Component {
                 this.close();
                 break;
             case "tab":
-                this.navigate("next");
+                this.navigate(this.state.activeIndex === null ? "first" : "next");
                 break;
             case "arrowup":
-                this.navigate("previous");
+                this.navigate(this.state.activeIndex === null ? "first" : "previous");
                 break;
             case "arrowdown":
-                this.navigate("next");
+                this.navigate(this.state.activeIndex === null ? "first" : "next");
                 break;
             default:
                 return;

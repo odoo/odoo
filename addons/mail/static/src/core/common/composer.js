@@ -367,6 +367,8 @@ export class Composer extends Component {
             case "CannedResponse":
                 return {
                     ...props,
+                    autoSelectFirst: false,
+                    hint: _t("Tab to select"),
                     optionTemplate: "mail.Composer.suggestionCannedResponse",
                     options: suggestions.map((suggestion) => {
                         return {
