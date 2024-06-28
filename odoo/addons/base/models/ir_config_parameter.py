@@ -4,6 +4,7 @@
 Store database-specific configuration parameters
 """
 
+import json
 import uuid
 import logging
 
@@ -35,11 +36,21 @@ class IrConfigParameter(models.Model):
     _allow_sudo_commands = False
 
     key = fields.Char(required=True)
-    value = fields.Text(required=True)
+    value = fields.Json()
+    value_edit = fields.Text(compute='_compute_value_edit', inverse='_inverse_value_edit')
 
     _sql_constraints = [
         ('key_uniq', 'unique (key)', 'Key must be unique.')
     ]
+
+    @api.depends('value')
+    def _compute_value_edit(self):
+        for param in self:
+            param.value_edit = json.dumps(param.value)
+
+    def _inverse_value_edit(self):
+        for param in self:
+            param.value = json.loads(param.value_edit)
 
     @mute_logger('odoo.addons.base.models.ir_config_parameter')
     def init(self, force=False):
@@ -57,6 +68,23 @@ class IrConfigParameter(models.Model):
                 params.set_param(key, func())
 
     @api.model
+    def get(self, key):
+        self.check_access_rights('read')
+        return self._get(key)
+
+    @api.model
+    def set(self, key, value):
+        param = self.search([('key', '=', key)])
+        if param:
+            old = self._get(key)
+            if value != old:
+                param.write({'value': value})
+            return old
+        if value is not False and value is not None:
+            self.create({'key': key, 'value': value})
+        return False
+
+    @api.model
     def get_param(self, key, default=False):
         """Retrieve the value for a given key.
 
@@ -66,17 +94,24 @@ class IrConfigParameter(models.Model):
         :rtype: string
         """
         self.check_access_rights('read')
-        return self._get_param(key) or default
+        result = self._get(key)
+        if result is False:
+            return default
+        return str(result) or default
 
     @api.model
     @ormcache('key')
-    def _get_param(self, key):
+    def _get(self, key):
         # we bypass the ORM because get_param() is used in some field's depends,
         # and must therefore work even when the ORM is not ready to work
         self.flush_model(['key', 'value'])
         self.env.cr.execute("SELECT value FROM ir_config_parameter WHERE key = %s", [key])
         result = self.env.cr.fetchone()
-        return result and result[0]
+        if result is not None:
+            result = result[0]
+        if result is None:
+            return False
+        return result
 
     @api.model
     def set_param(self, key, value):
@@ -90,15 +125,17 @@ class IrConfigParameter(models.Model):
         """
         param = self.search([('key', '=', key)])
         if param:
-            old = param.value
+            old = self.get_param(key)
             if value is not False and value is not None:
-                if str(value) != old:
+                value = str(value)
+                if value != old:
                     param.write({'value': value})
             else:
                 param.unlink()
             return old
         else:
             if value is not False and value is not None:
+                value = str(value)
                 self.create({'key': key, 'value': value})
             return False
 
@@ -106,6 +143,18 @@ class IrConfigParameter(models.Model):
     def create(self, vals_list):
         self.env.registry.clear_cache()
         return super(IrConfigParameter, self).create(vals_list)
+
+    def _load_records_create(self, vals_list):
+        key_to_vals = {vals['key']: vals for vals in vals_list}
+        key_to_id = dict.fromkeys(key_to_vals, False)
+        existing_params = self.search([('key', 'in', list(key_to_vals))])
+        for param in existing_params:
+            param.write(key_to_vals.pop(param.key))
+            key_to_id[param.key] = param.id
+        new_params = self.create(key_to_vals.values())
+        for param in new_params:
+            key_to_id[param.key] = param.id
+        return self.browse(key_to_id.values())
 
     def write(self, vals):
         if 'key' in vals:

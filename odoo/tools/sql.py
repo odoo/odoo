@@ -342,6 +342,17 @@ def convert_column_translatable(cr, tablename, columnname, columntype):
     _convert_column(cr, tablename, columnname, columntype, using)
 
 
+def convert_column_jsonb(cr, tablename, columnname, fromcolumntype):
+    if fromcolumntype in ('text', 'varchar'):
+        using = SQL(
+            """to_jsonb(%s::text)""",
+            SQL.identifier(columnname),
+        )
+    else:
+        raise Exception('not supported for now')
+    _convert_column(cr, tablename, columnname, 'jsonb', using)
+
+
 def _convert_column(cr, tablename, columnname, columntype, using: SQL):
     query = SQL(
         "ALTER TABLE %s ALTER COLUMN %s DROP DEFAULT, ALTER COLUMN %s TYPE %s USING %s",
