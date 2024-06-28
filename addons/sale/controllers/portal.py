@@ -166,6 +166,9 @@ class CustomerPortal(payment_portal.PaymentPortal):
             'report_type': 'html',
             'backend_url': backend_url,
             'res_company': order_sudo.company_id,  # Used to display correct company logo
+            'is_payment_provider_active': request.env['payment.provider'].sudo().search([
+                ('state', 'in', ['test', 'enabled'])
+                ], limit=1),
         }
 
         # Payment values
