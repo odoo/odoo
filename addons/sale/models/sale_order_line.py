@@ -295,6 +295,9 @@ class SaleOrderLine(models.Model):
             return self.name.splitlines()[0]
         return ""
 
+    def _get_full_description(self):
+        return "\n".join(val for val in (self.product_id.display_name, self.name) if val)
+
     @api.depends('order_partner_id', 'order_id', 'product_id')
     def _compute_display_name(self):
         name_per_id = self._additional_name_per_id()
