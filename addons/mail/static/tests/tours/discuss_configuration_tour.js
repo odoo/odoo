@@ -1,4 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -8,44 +7,77 @@ registry.category("web_tour.tours").add("discuss_configuration_tour", {
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
-            content: "Open Disucss app",
             trigger: '.o_app[data-menu-xmlid="mail.menu_root_discuss"]',
             run: "click",
         },
         {
             trigger: ".o_main_navbar button:contains('Configuration')",
-            content: _t("Click to see the setting options"),
             run: "click",
         },
         {
             trigger: ".dropdown-menu a:contains('Notification')",
-            content: _t("Open the Notification settings"),
             run: "click",
         },
         {
             trigger: ".o-mail-DiscussNotificationSettings label:contains('Mute')",
-            content: _t("Click to mute the notifications"),
             run: "click",
         },
         {
             trigger: "button:contains('All Messages')",
-            content: _t("Server notification settings"),
             run: "click",
         },
         {
             trigger: "button:contains('Mentions Only')",
-            content: _t("Server notification settings"),
             run: "click",
         },
         {
             trigger: "button:contains('Nothing')",
-            content: _t("Server notification settings"),
             run: "click",
         },
         {
             trigger: ".modal-header button[aria-label='Close']",
-            content: _t("Click to close"),
             run: "click",
+        },
+        {
+            trigger: ".o_main_navbar button:contains('Configuration')",
+            run: "click",
+        },
+        {
+            trigger: ".dropdown-menu a:contains('Voice & Video')",
+            run: "click",
+        },
+        {
+            trigger: "select[name='inputDevice']",
+        },
+        {
+            trigger: "button:contains('Voice Detection')",
+            run: "click",
+        },
+        {
+            trigger: "label:contains('Voice detection threshold')",
+        },
+        {
+            trigger: "button:contains('Push to Talk')",
+            run: "click",
+        },
+        {
+            trigger: "label:contains('Push-to-talk key')",
+        },
+        {
+            trigger: "label:contains('Delay after releasing push-to-talk')",
+        },
+        {
+            trigger: "input[aria-label='Show video participants only']",
+        },
+        {
+            trigger: "input[aria-label='Blur video background']",
+            run: "click",
+        },
+        {
+            trigger: "label:contains('Background blur intensity')",
+        },
+        {
+            trigger: "label:contains('Edge blur intensity')",
         },
     ],
 });

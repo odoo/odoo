@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="discuss.CallSettings" t-inherit-mode="extension">
+        <xpath expr="//t[@t-call='discuss.CallSettings.content']" position="replace">
+            <ActionPanel>
+                <t t-call="discuss.CallSettings.content"/>
+            </ActionPanel>
+        </xpath>
+    </t>
+</templates>

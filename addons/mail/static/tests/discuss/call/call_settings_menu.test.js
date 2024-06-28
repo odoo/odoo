@@ -2,7 +2,8 @@ import {
     click,
     contains,
     defineMailModels,
-    openDiscuss,
+    patchUiSize,
+    SIZES,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
@@ -33,58 +34,49 @@ test("Renders the call settings", async () => {
         },
     });
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    pyEnv["discuss.channel"].create({ name: "test" });
+    patchUiSize({ size: SIZES.SM });
     await start();
-    await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header .fa-gear");
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "test" });
+    await click("[title='Open Actions Menu']");
+    await click(".o-mail-ChatWindow-command", { text: "Show Call Settings" });
     await contains(".o-discuss-CallSettings");
     await contains("label[aria-label='Input device']");
     await contains("option[value=mockAudioDeviceId]");
     await contains("option[value=mockVideoDeviceId]", { count: 0 });
-    await contains("input[title='toggle push-to-talk']");
-    await contains("label[aria-label='Voice detection threshold']");
-    await contains("input[title='Show video participants only']");
-    await contains("input[title='Blur video background']");
+    await contains("button", { text: "Voice Detection" });
+    await contains("button", { text: "Push to Talk" });
+    await contains("label", { text: "Voice detection threshold" });
+    await contains("label", { text: "Show video participants only" });
+    await contains("label", { text: "Blur video background" });
 });
 
 test("activate push to talk", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    pyEnv["discuss.channel"].create({ name: "test" });
+    patchUiSize({ size: SIZES.SM });
     await start();
-    await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header .fa-gear");
-    await click("input[title='toggle push-to-talk']");
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "test" });
+    await click("[title='Open Actions Menu']");
+    await click(".o-mail-ChatWindow-command", { text: "Show Call Settings" });
+    await click("button", { text: "Push to Talk" });
     await contains("i[aria-label='Register new key']");
-    await contains("label[aria-label='Delay after releasing push-to-talk']");
-    await contains("label[aria-label='Voice detection threshold']", { count: 0 });
+    await contains("label", { text: "Delay after releasing push-to-talk" });
+    await contains("label", { text: "Voice detection threshold", count: 0 });
 });
 
 test("activate blur", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    pyEnv["discuss.channel"].create({ name: "test" });
+    patchUiSize({ size: SIZES.SM });
     await start();
-    await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header .fa-gear");
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "test" });
+    await click("[title='Open Actions Menu']");
+    await click(".o-mail-ChatWindow-command", { text: "Show Call Settings" });
     await click("input[title='Blur video background']");
-    await contains("label[aria-label='Background blur intensity']");
-    await contains("label[aria-label='Edge blur intensity']");
-});
-
-test("Inbox should not have any call settings menu", async () => {
-    await startServer();
-    await start();
-    await openDiscuss("mail.box_inbox");
-    await contains(".o-mail-Thread");
-    await contains("button[title='Show Call Settings']", { count: 0 });
-});
-
-test("Call settings menu should not be visible on selecting a mailbox (from being open)", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
-    await openDiscuss(channelId);
-    await click("button[title='Show Call Settings']");
-    await click("button", { text: "Inbox" });
-    await contains("button[title='Hide Call Settings']", { count: 0 });
-    await contains(".o-discuss-CallSettings", { count: 0 });
+    await contains("label", { text: "Blur video background" });
+    await contains("label", { text: "Edge blur intensity" });
 });
