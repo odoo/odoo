@@ -141,7 +141,7 @@ const afterTest = (test, options) => {
                 label: "step",
                 message: `unverified steps`,
                 pass: false,
-                info: [[Markup.red("Steps:"), Markup.diff([], deepCopy(currentResult.steps))]],
+                info: [[Markup.red("Steps:"), Markup.diff([], currentResult.steps)]],
             })
         );
     }
@@ -457,7 +457,7 @@ const step = (value) => {
     }
     ensureArguments([[value, "any"]]);
 
-    currentResult.steps.push(value);
+    currentResult.steps.push(deepCopy(value));
 };
 
 /**
@@ -1893,7 +1893,7 @@ export class Matchers {
         if (!pass) {
             const formattedStack = formatStack(currentStack);
             const stackContent = Markup.text(formattedStack, { technical: true });
-            assertion.info = [...deepCopy(details(actual)), [Markup.red("Source:"), stackContent]];
+            assertion.info = [...details(actual), [Markup.red("Source:"), stackContent]];
         }
 
         registerAssertion(assertion);
