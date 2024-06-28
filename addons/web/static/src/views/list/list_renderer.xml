@@ -24,6 +24,7 @@
                                 t-on-pointerup="onColumnTitleMouseUp"
                                 t-on-click="() => this.onClickSortColumn(column)"
                                 t-on-keydown="(ev) => this.onCellKeydown(ev)"
+                                t-att-data-tooltip="!isDebugMode ? column.label : false"
                                 t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false"
                                 t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false"
                                 data-tooltip-delay="1000"
