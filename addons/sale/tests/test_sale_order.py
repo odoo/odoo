@@ -896,8 +896,6 @@ class TestSalesTeam(SaleCommon):
                     'product_id': self.product.id,
                 })],
         })
-        # As we want to determine if the value is set in the DB we need to perform a search
-        self.assertFalse(self.env['sale.order.line'].search(['&', ('order_id', '=', sale_order.id), ('qty_delivered', '=', False)]))
         self.assertEqual(self.env['sale.order.line'].search(['&', ('order_id', '=', sale_order.id), ('qty_delivered', '=', 0.0)]), sale_order.order_line)
 
     def test_action_recompute_taxes(self):

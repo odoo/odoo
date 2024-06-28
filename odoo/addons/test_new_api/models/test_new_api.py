@@ -1991,6 +1991,13 @@ class EmptyChar(models.Model):
     name = fields.Char('Name')
 
 
+class EmptyInt(models.Model):
+    _name = 'test_new_api.empty_int'
+    _description = 'A model to test empty int'
+
+    number = fields.Integer('Number')
+
+
 class Team(models.Model):
     _name = 'test_new_api.team'
     _description = 'Odoo Team'
