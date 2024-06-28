@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { evaluateExpr } from "@web/core/py_js/py";
-import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchDate, patchWithCleanup, patchTimeZone } from "@web/../tests/helpers/utils";
 import { PyDate, PyTimeDelta } from "@web/core/py_js/py_date";
 
 QUnit.module("py", {}, () => {
@@ -456,8 +456,36 @@ QUnit.module("py", {}, () => {
 
         QUnit.module("misc");
 
-        QUnit.test("context_today", (assert) => {
-            assert.ok(check("context_today().strftime('%Y-%m-%d')", formatDate));
+        QUnit.test("context_today 1", (assert) => {
+            patchTimeZone(60);
+            patchDate(2022, 10, 17, 0, 0, 0); // local datetime
+            patchWithCleanup(Date.prototype, {
+                getTimezoneOffset() {
+                    return -60;
+                },
+            });
+
+            const expr1 = "datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')";
+            assert.strictEqual(evaluateExpr(expr1), "2022-11-16 23:00:00");
+
+            const expr2 = "context_today().strftime('%Y-%m-%d')";
+            assert.strictEqual(evaluateExpr(expr2), "2022-11-17");
+        });
+
+        QUnit.test("context_today 2", (assert) => {
+            patchTimeZone(60);
+            patchDate(2022, 10, 17, 23, 59, 0);
+            patchWithCleanup(Date.prototype, {
+                getTimezoneOffset() {
+                    return -60;
+                },
+            });
+
+            const expr1 = "datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')";
+            assert.strictEqual(evaluateExpr(expr1), "2022-11-17 22:59:00");
+
+            const expr = "context_today().strftime('%Y-%m-%d')";
+            assert.strictEqual(evaluateExpr(expr), "2022-11-17");
         });
 
         QUnit.test("today", (assert) => {
