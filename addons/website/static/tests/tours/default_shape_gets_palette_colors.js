@@ -8,11 +8,11 @@ wTourUtils.registerWebsitePreviewTour("default_shape_gets_palette_colors", {
     url: '/',
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
     }),
-    wTourUtils.clickOnSnippet({
+    ...wTourUtils.clickOnSnippet({
         id: 's_text_image',
         name: 'Text - Image',
     }),

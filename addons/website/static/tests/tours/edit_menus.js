@@ -192,7 +192,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     // Drag a block to be able to scroll later.
-    wTourUtils.dragNDrop({id: 's_media_list', name: 'Media List'}),
+    ...wTourUtils.dragNDrop({id: 's_media_list', name: 'Media List'}),
     ...wTourUtils.clickOnSave(),
     wTourUtils.clickOnExtraMenuItem({}, true),
     {

@@ -7,7 +7,7 @@ wTourUtils.registerWebsitePreviewTour("website_snippets_menu_tabs", {
     url: "/",
     edition: true,
 }, () => [
-    wTourUtils.goToTheme(),
+    ...wTourUtils.goToTheme(),
     {
         trigger: "we-customizeblock-option.snippet-option-ThemeColors",
     },
@@ -16,21 +16,19 @@ wTourUtils.registerWebsitePreviewTour("website_snippets_menu_tabs", {
         trigger: ':iframe main > .oe_structure.oe_empty',
         run: 'click',
     },
-    wTourUtils.goToTheme(),
+    ...wTourUtils.goToTheme(),
     {
         content: "Verify that the customize panel is not empty.",
         trigger: '.o_we_customize_panel > we-customizeblock-options',
-        run: () => null, // it's a check
     },
     {
         content: "Click on the style tab.",
         trigger: '#snippets_menu .o_we_customize_snippet_btn',
         run: "click",
     },
-    wTourUtils.goToTheme(),
+    ...wTourUtils.goToTheme(),
     {
         content: "Verify that the customize panel is not empty.",
         trigger: '.o_we_customize_panel > we-customizeblock-options',
-        run: () => null, // it's a check
     },
 ]);

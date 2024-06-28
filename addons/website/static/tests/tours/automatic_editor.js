@@ -8,7 +8,7 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
     url: '/',
 },
 () => [
-    wTourUtils.goToTheme(),
+    ...wTourUtils.goToTheme(),
     {
         content: "click on Add a language",
         trigger: "we-button[data-add-language]",

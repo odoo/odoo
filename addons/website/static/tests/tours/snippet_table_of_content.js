@@ -24,10 +24,10 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
     url: '/',
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({id: 's_table_of_content', name: 'Table of Content'}),
-    wTourUtils.dragNDrop({id: 's_table_of_content', name: 'Table of Content'}),
+    ...wTourUtils.dragNDrop({id: 's_table_of_content', name: 'Table of Content'}),
+    ...wTourUtils.dragNDrop({id: 's_table_of_content', name: 'Table of Content'}),
     // To make sure that the public widgets of the two previous ones started.
-    wTourUtils.dragNDrop({id: 's_banner', name: 'Banner'}),
+    ...wTourUtils.dragNDrop({id: 's_banner', name: 'Banner'}),
     ...wTourUtils.clickOnSave(),
     checkTOCNavBar(0, 0),
     checkTOCNavBar(1, 0),

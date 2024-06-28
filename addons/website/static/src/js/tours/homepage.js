@@ -38,17 +38,17 @@ const snippets = [
 ];
 
 wTourUtils.registerThemeHomepageTour('homepage', () => [
-    wTourUtils.dragNDrop(snippets[0], 'top'),
-    wTourUtils.clickOnText(snippets[0], 'h1'),
+    ...wTourUtils.dragNDrop(snippets[0], "top"),
+    ...wTourUtils.clickOnText(snippets[0], "h1"),
     wTourUtils.goBackToBlocks(),
-    wTourUtils.dragNDrop(snippets[1]),
-    wTourUtils.dragNDrop(snippets[2]),
-    wTourUtils.clickOnSnippet(snippets[2], 'top'),
+    ...wTourUtils.dragNDrop(snippets[1]),
+    ...wTourUtils.dragNDrop(snippets[2]),
+    ...wTourUtils.clickOnSnippet(snippets[2], "top"),
     wTourUtils.changeBackgroundColor(),
     wTourUtils.goBackToBlocks(),
-    wTourUtils.dragNDrop(snippets[3]),
-    wTourUtils.dragNDrop(snippets[4], 'top'),
-    wTourUtils.dragNDrop(snippets[5]),
-    wTourUtils.dragNDrop(snippets[6]),
-    wTourUtils.dragNDrop(snippets[7]),
+    ...wTourUtils.dragNDrop(snippets[3]),
+    ...wTourUtils.dragNDrop(snippets[4], "top"),
+    ...wTourUtils.dragNDrop(snippets[5]),
+    ...wTourUtils.dragNDrop(snippets[6]),
+    ...wTourUtils.dragNDrop(snippets[7]),
 ]);

@@ -36,7 +36,7 @@ function checkComputedFontSize(fontSizeClass, stage) {
 
 function getFontSizeTestSteps(fontSizeClass) {
     return [
-        wTourUtils.dragNDrop({id: "s_text_block", name: "Text"}),
+        ...wTourUtils.dragNDrop({id: "s_text_block", name: "Text"}),
         {
             content: `[${fontSizeClass}] Click on the text block first paragraph (to auto select)`,
             trigger: ":iframe .s_text_block p",
@@ -51,7 +51,7 @@ function getFontSizeTestSteps(fontSizeClass) {
             run: "click",
         },
         checkComputedFontSize(fontSizeClass, "start"),
-        wTourUtils.goToTheme(),
+        ...wTourUtils.goToTheme(),
         {
             content: `Open the collapse to see the font size of ${fontSizeClass}`,
             trigger: `we-collapse:has(we-input[data-variable="` +
@@ -75,7 +75,7 @@ function getFontSizeTestSteps(fontSizeClass) {
             trigger: ".o_we_add_snippet_btn.active",
             run: "click",
         },
-        wTourUtils.goToTheme(),
+        ...wTourUtils.goToTheme(),
         {
             content: `Check that the setting of ${fontSizeClass} has been updated`,
             trigger: `we-input[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"]`

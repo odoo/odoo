@@ -8,8 +8,8 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     url: "/",
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({id: "s_text_image", name: "Image - Text"}),
-    wTourUtils.dragNDrop({id: "s_popup", name: "Popup"}),
+    ...wTourUtils.dragNDrop({id: "s_text_image", name: "Image - Text"}),
+    ...wTourUtils.dragNDrop({id: "s_popup", name: "Popup"}),
     {
         content: "Click inside the popup to access its options menu.",
         in_modal: false,
@@ -68,7 +68,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
         run: () => null, // it"s a check
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
-    wTourUtils.dragNDrop({id: "s_text_image", name: "Image - Text"}),
+    ...wTourUtils.dragNDrop({id: "s_text_image", name: "Image - Text"}),
     wTourUtils.clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         content: "Add a link to the homepage in the URL input",

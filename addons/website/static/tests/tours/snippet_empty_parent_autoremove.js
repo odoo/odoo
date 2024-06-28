@@ -16,7 +16,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     edition: true,
 }, () => [
     // Base case: remove both columns from text - image
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
     }),
@@ -38,11 +38,11 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     },
 
     // Cover: test that parallax, bg-filter and shape are not treated as content
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_cover',
         name: 'Cover',
     }),
-    wTourUtils.clickOnSnippet({
+    ...wTourUtils.clickOnSnippet({
         id: 's_cover',
         name: 'Cover',
     }),
@@ -51,17 +51,14 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     {
         content: "Check that the parallax element is present",
         trigger: ':iframe #wrap .s_cover .s_parallax_bg',
-        run: () => null,
     },
     {
         content: "Check that the filter element is present",
         trigger: ':iframe #wrap .s_cover .o_we_bg_filter',
-        run: () => null,
     },
     {
         content: "Check that the shape element is present",
         trigger: ':iframe #wrap .s_cover .o_we_shape',
-        run: () => null,
     },
     // Add a column
     wTourUtils.changeOption('layout_column', 'we-toggler'),
@@ -75,6 +72,5 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     {
         content: "Check that #wrap is empty",
         trigger: ':iframe #wrap:empty',
-        run: () => null,
     },
 ]);

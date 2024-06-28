@@ -18,7 +18,7 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
         run: "click",
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
-    wTourUtils.clickOnSnippet('#o_wblog_post_top .o_wblog_post_page_cover'),
+    ...wTourUtils.clickOnSnippet('#o_wblog_post_top .o_wblog_post_page_cover'),
     {
         content: "Open tag dropdown",
         trigger: "we-customizeblock-option:contains(Tags) .o_we_m2m we-toggler",
@@ -42,7 +42,7 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
         trigger: ":iframe #o_wblog_post_content .badge:contains(testtag)",
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
-    wTourUtils.clickOnSnippet('#o_wblog_post_top .o_wblog_post_page_cover'),
+    ...wTourUtils.clickOnSnippet('#o_wblog_post_top .o_wblog_post_page_cover'),
     {
         content: "Remove tag",
         trigger: "we-customizeblock-option:contains(Tags) we-list tr:has(input[data-name=testtag]) we-button.fa-minus",

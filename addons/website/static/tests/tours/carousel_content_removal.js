@@ -7,7 +7,7 @@ wTourUtils.registerWebsitePreviewTour("carousel_content_removal", {
     url: '/',
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({
+    ...wTourUtils.dragNDrop({
         id: 's_carousel',
         name: 'Carousel',
 }), {

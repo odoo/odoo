@@ -9,7 +9,7 @@ wTourUtils.registerWebsitePreviewTour('website_text_edition', {
     url: '/',
     edition: true,
 }, () => [
-    wTourUtils.goToTheme(),
+    ...wTourUtils.goToTheme(),
     {
         content: "Open colorpicker to change website main color",
         trigger: 'we-select[data-color="o-color-1"] .o_we_color_preview',
@@ -21,7 +21,7 @@ wTourUtils.registerWebsitePreviewTour('website_text_edition', {
         run: `edit ${WEBSITE_MAIN_COLOR} && click body`,
     },
     wTourUtils.goBackToBlocks(),
-    wTourUtils.dragNDrop({id: 's_text_block', name: 'Text'}),
+    ...wTourUtils.dragNDrop({id: 's_text_block', name: 'Text'}),
     {
         content: "Click on the text block first paragraph (to auto select)",
         trigger: ':iframe .s_text_block p',

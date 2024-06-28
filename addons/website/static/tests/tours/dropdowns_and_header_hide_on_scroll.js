@@ -29,7 +29,7 @@ wTourUtils.registerWebsitePreviewTour("dropdowns_and_header_hide_on_scroll", {
     url: "/",
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({id: "s_media_list", name: "Media List"}),
+    ...wTourUtils.dragNDrop({id: "s_media_list", name: "Media List"}),
     wTourUtils.selectHeader(),
     wTourUtils.changeOption("undefined", 'we-select[data-variable="header-scroll-effect"]'),
     wTourUtils.changeOption("undefined", 'we-button[data-name="header_effect_fixed_opt"]'),
