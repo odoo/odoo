@@ -33,6 +33,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': '4920',
                 'account_journal_early_pay_discount_loss_account_id': '7065',
                 'account_journal_early_pay_discount_gain_account_id': '8065',
+                'l10n_nl_rounding_difference_loss_account_id': '4960',
+                'l10n_nl_rounding_difference_profit_account_id': '4950',
                 'account_sale_tax_id': 'btw_21',
                 'account_purchase_tax_id': 'btw_21_buy',
             },
