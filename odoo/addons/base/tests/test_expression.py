@@ -803,26 +803,26 @@ class TestExpression(SavepointCaseWithUserDemo):
         Model = self.env['res.partner.category']
         record = Model.create({'name': 'XY', 'color': 42})
 
-        self.assertIn(record, Model.search([('name', 'like', 'X')]))
-        self.assertIn(record, Model.search([('name', 'ilike', 'X')]))
-        self.assertIn(record, Model.search([('name', 'not like', 'Z')]))
-        self.assertIn(record, Model.search([('name', 'not ilike', 'Z')]))
+        self.assertIn(record, self._search(Model, [('name', 'like', 'X')]))
+        self.assertIn(record, self._search(Model, [('name', 'ilike', 'X')]))
+        self.assertIn(record, self._search(Model, [('name', 'not like', 'Z')]))
+        self.assertIn(record, self._search(Model, [('name', 'not ilike', 'Z')]))
 
-        self.assertNotIn(record, Model.search([('name', 'like', 'Z')]))
-        self.assertNotIn(record, Model.search([('name', 'ilike', 'Z')]))
-        self.assertNotIn(record, Model.search([('name', 'not like', 'X')]))
-        self.assertNotIn(record, Model.search([('name', 'not ilike', 'X')]))
+        self.assertNotIn(record, self._search(Model, [('name', 'like', 'Z')]))
+        self.assertNotIn(record, self._search(Model, [('name', 'ilike', 'Z')]))
+        self.assertNotIn(record, self._search(Model, [('name', 'not like', 'X')]))
+        self.assertNotIn(record, self._search(Model, [('name', 'not ilike', 'X')]))
 
         # like, ilike, not like, not ilike convert their lhs to str
-        self.assertIn(record, Model.search([('color', 'like', '4')]))
-        self.assertIn(record, Model.search([('color', 'ilike', '4')]))
-        self.assertIn(record, Model.search([('color', 'not like', '3')]))
-        self.assertIn(record, Model.search([('color', 'not ilike', '3')]))
+        self.assertIn(record, self._search(Model, [('color', 'like', '4')]))
+        self.assertIn(record, self._search(Model, [('color', 'ilike', '4')]))
+        self.assertIn(record, self._search(Model, [('color', 'not like', '3')]))
+        self.assertIn(record, self._search(Model, [('color', 'not ilike', '3')]))
 
-        self.assertNotIn(record, Model.search([('color', 'like', '3')]))
-        self.assertNotIn(record, Model.search([('color', 'ilike', '3')]))
-        self.assertNotIn(record, Model.search([('color', 'not like', '4')]))
-        self.assertNotIn(record, Model.search([('color', 'not ilike', '4')]))
+        self.assertNotIn(record, self._search(Model, [('color', 'like', '3')]))
+        self.assertNotIn(record, self._search(Model, [('color', 'ilike', '3')]))
+        self.assertNotIn(record, self._search(Model, [('color', 'not like', '4')]))
+        self.assertNotIn(record, self._search(Model, [('color', 'not ilike', '4')]))
 
         # =like and =ilike don't work on non-character fields
         with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.Error):
