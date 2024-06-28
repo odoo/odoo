@@ -8686,6 +8686,7 @@ test.tags("desktop")(`do not display unset attributes in debug field tooltip`, a
     hover(`[name='product_id']`);
     await runAllTimers();
     expect(queryAllTexts`.o-tooltip--technical > li`).toEqual([
+        "Label:Product",
         "Field:product_id",
         "Type:many2one",
         "Context:{}",
