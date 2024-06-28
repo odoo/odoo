@@ -438,6 +438,36 @@ patch(PosOrder.prototype, {
         }
         return points;
     },
+<<<<<<< HEAD:addons/pos_loyalty/static/src/overrides/models/pos_order.js
+||||||| parent of 37fc1136cc28 (temp):addons/pos_loyalty/static/src/overrides/models/loyalty.js
+    /**
+     * Depending on the program type returns a new (local) instance of coupon or tries to retrieve the coupon in case of loyalty cards.
+     * Existing coupons are put in a cache which is also used to fetch the coupons.
+     *
+     * @param {object} program
+     */
+    async _couponForProgram(program) {
+        if (program.is_nominative) {
+            return this.pos.fetchLoyaltyCard(program.id, this.get_partner().id);
+        }
+        // This type of coupons don't need to really exist up until validating the order, so no need to cache
+        return new PosLoyaltyCard(null, null, program.id, (this.get_partner() || { id: -1 }).id, 0);
+    },
+=======
+    /**
+     * Depending on the program type returns a new (local) instance of coupon or tries to retrieve the coupon in case of loyalty cards.
+     * Existing coupons are put in a cache which is also used to fetch the coupons.
+     *
+     * @param {object} program
+     */
+    async _couponForProgram(program) {
+        if (program.is_nominative) {
+            return await this.pos.fetchLoyaltyCard(program.id, this.get_partner().id);
+        }
+        // This type of coupons don't need to really exist up until validating the order, so no need to cache
+        return new PosLoyaltyCard(null, null, program.id, (this.get_partner() || { id: -1 }).id, 0);
+    },
+>>>>>>> 37fc1136cc28 (temp):addons/pos_loyalty/static/src/overrides/models/loyalty.js
     _programIsApplicable(program) {
         if (
             program.trigger === "auto" &&
