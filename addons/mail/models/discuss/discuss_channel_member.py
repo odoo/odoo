@@ -238,13 +238,20 @@ class ChannelMember(models.Model):
                 data['create_date'] = odoo.fields.Datetime.to_string(member.create_date)
             if 'persona' in fields:
                 if member.partner_id:
-                    # sudo: res.partner - reading _get_partner_data related to a member is considered acceptable
-                    persona = member.sudo()._get_partner_data(fields=fields.get('persona', {}).get('partner'))
+                    # sudo: res.partner - calling _partner_data_to_store related to a member is considered acceptable
+                    member.sudo()._partner_data_to_store(
+                        store, fields=fields.get("persona", {}).get("partner")
+                    )
+                    data["persona"] = {"id": member.partner_id.id, "type": "partner"}
                 if member.guest_id:
                     # sudo: mail.guest - reading _guest_format related to a member is considered acceptable
-                    persona = member.guest_id.sudo()._guest_format(fields=fields.get('persona', {}).get('guest')).get(member.guest_id)
-                store.add("Persona", persona)
-                data['persona'] = {"id": persona["id"], "type": persona["type"]}
+                    store.add(
+                        "Persona",
+                        member.guest_id.sudo()
+                        ._guest_format(fields=fields.get("persona", {}).get("guest"))
+                        .get(member.guest_id),
+                    )
+                    data["persona"] = {"id": member.guest_id.id, "type": "guest"}
             if 'custom_notifications' in fields:
                 data['custom_notifications'] = member.custom_notifications
             if 'mute_until_dt' in fields:
@@ -262,9 +269,11 @@ class ChannelMember(models.Model):
                 data['last_interest_dt'] = odoo.fields.Datetime.to_string(member.last_interest_dt)
             store.add("ChannelMember", data)
 
-    def _get_partner_data(self, fields=None):
+    def _partner_data_to_store(self, store: Store, fields=None):
         self.ensure_one()
-        return self.partner_id.mail_partner_format(fields=fields).get(self.partner_id)
+        store.add(
+            "Persona", self.partner_id.mail_partner_format(fields=fields).get(self.partner_id)
+        )
 
     def _channel_fold(self, state, state_count):
         """Update the fold_state of the given member. The change will be
