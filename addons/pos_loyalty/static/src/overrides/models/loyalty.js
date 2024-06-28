@@ -695,7 +695,7 @@ patch(Order.prototype, {
      */
     async _couponForProgram(program) {
         if (program.is_nominative) {
-            return this.pos.fetchLoyaltyCard(program.id, this.get_partner().id);
+            return await this.pos.fetchLoyaltyCard(program.id, this.get_partner().id);
         }
         // This type of coupons don't need to really exist up until validating the order, so no need to cache
         return new PosLoyaltyCard(null, null, program.id, (this.get_partner() || { id: -1 }).id, 0);
