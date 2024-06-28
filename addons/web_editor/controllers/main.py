@@ -302,27 +302,38 @@ class Web_Editor(http.Controller):
         """ Removes a web-based image attachment if it is used by no view (template)
 
         Returns a dict mapping attachments which would not be removed (if any)
-        mapped to the views preventing their removal
+        mapped to a dict about what prevents their removal containing:
+        - matches: list of records that reference the attachment
+        - accessModels: list of names of models that contain records that reference the attachment
+            but cannot be accessed by the user
         """
         self._clean_context()
         Attachment = attachments_to_remove = request.env['ir.attachment']
-        Views = request.env['ir.ui.view']
 
         # views blocking removal of the attachment
         removal_blocked_by = {}
 
         for attachment in Attachment.browse(ids):
-            # in-document URLs are html-escaped, a straight search will not
-            # find them
-            url = tools.html_escape(attachment.local_url)
-            views = Views.search([
-                "|",
-                ('arch_db', 'like', '"%s"' % url),
-                ('arch_db', 'like', "'%s'" % url)
-            ])
-
-            if views:
-                removal_blocked_by[attachment.id] = views.read(['name'])
+            referrers = None if kwargs.get('force') else attachment._is_used_in_html_field()
+            if referrers:
+                matches = []
+                unique_url = set()
+                for items in referrers['matches']:
+                    fields = ['name', 'website_url'] if 'website_url' in items._fields else ['name']
+                    records = items.read(fields)
+                    if 'website_url' not in items._fields:
+                        # Fallback to backend url
+                        for record in records:
+                            record['website_url'] = f'/web#model={items._name}&id={record["id"]}'
+                    for record in records:
+                        if record['website_url'] in unique_url:
+                            continue
+                        unique_url.add(record['website_url'])
+                        matches.append(record)
+                removal_blocked_by[attachment.id] = {
+                    'matches': matches,
+                    'accessModels': [{'name': request.env[model_name]._description} for model_name in referrers['sudo_models']],
+                }
             else:
                 attachments_to_remove += attachment
         if attachments_to_remove:

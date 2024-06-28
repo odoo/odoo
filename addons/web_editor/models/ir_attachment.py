@@ -84,3 +84,13 @@ class IrAttachment(models.Model):
         - Non admin user uploading an unsplash image (bypass binary/url check)
         """
         return False
+
+    def _is_used_in_html_field(self):
+        """Returns a model where this attachment is used, or a dict with model names or False."""
+        self.ensure_one()
+        # Keep significant part of attachment url
+        url = self.local_url
+        is_default_local_url = url.startswith(f'/web/image/{self.id}?')
+        if is_default_local_url:
+            url = f'/web/image/{self.id}' if self.image_src else f'/web/content/{self.id}'
+        return self.env['web_editor.edited']._find_url(url, is_default_local_url)
