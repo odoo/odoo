@@ -1,7 +1,7 @@
 import { describe, expect, getFixture, onError as onErrorHoot, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { defineSpreadsheetModels, getBasicData } from "@spreadsheet/../tests/helpers/data";
+import { getBasicData } from "@spreadsheet/../tests/helpers/data";
 import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
 import {
     defineSpreadsheetDashboardModels,
@@ -13,7 +13,6 @@ import { RPCError } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
 
 describe.current.tags("desktop");
-defineSpreadsheetModels();
 defineSpreadsheetDashboardModels();
 
 function getServerData(spreadsheetData) {

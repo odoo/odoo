@@ -1,12 +1,12 @@
 import { Model } from "@odoo/o-spreadsheet";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { animationFrame } from "@odoo/hoot-mock";
-import { defineActions, defineMenus, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
-import { addRecordsFromServerData } from "./data";
+import { defineActions, defineParams, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
+import { addRecordsFromServerData, addViewsFromServerData } from "./data";
 import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
 
 /**
- * @typedef {import("@spreadsheet/../tests/legacy/utils/data").ServerData} ServerData
+ * @typedef {import("@spreadsheet/../tests/helpers/data").ServerData} ServerData
  * @typedef {import("@spreadsheet/helpers/model").OdooSpreadsheetModel} OdooSpreadsheetModel
  * @typedef {import("@web/../tests/_framework/mock_server/mock_server").MockServerEnvironment} MockServerEnvironment
  */
@@ -59,16 +59,22 @@ export async function createModelWithDataSource(params = {}) {
  */
 export async function makeSpreadsheetMockEnv(params = {}) {
     if (params.mockRPC) {
+        // Note: calling onRpc with only a callback only works for routes such as orm routes that have a default listener
+        // For arbitrary rpc request (eg. /web/domain/validate) we need to call onRpc("/my/route", callback)
         onRpc((args) => params.mockRPC(args.route, args)); // separate route from args for legacy (& forward ports) compatibility
     }
     if (params.serverData?.menus) {
-        defineMenus(Object.values(params.serverData.menus));
+        const menus = Object.values(params.serverData.menus);
+        defineParams({ menus }, "replace");
     }
     if (params.serverData?.actions) {
         defineActions(Object.values(params.serverData.actions));
     }
     if (params.serverData?.models) {
         addRecordsFromServerData(params.serverData);
+    }
+    if (params.serverData?.views) {
+        addViewsFromServerData(params.serverData);
     }
     const env = getMockEnv() || (await makeMockEnv());
     return env;

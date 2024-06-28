@@ -54,10 +54,10 @@ test("List export", async () => {
 
 test("Return display name of selection field", async () => {
     const { model } = await createSpreadsheetWithList({
-        model: "documents.document",
-        columns: ["handler"],
+        model: "res.currency",
+        columns: ["position"],
     });
-    expect(getCellValue(model, "A2")).toBe("Spreadsheet");
+    expect(getCellValue(model, "A2")).toBe("A");
 });
 
 test("Return display_name of many2one field", async () => {

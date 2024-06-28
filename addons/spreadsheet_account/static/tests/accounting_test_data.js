@@ -1,5 +1,9 @@
-import { getBasicData } from "@spreadsheet/../tests/helpers/data";
-import { defineModels, fields, models } from "@web/../tests/web_test_helpers";
+import {
+    SpreadsheetModels,
+    defineSpreadsheetModels,
+    getBasicData,
+} from "@spreadsheet/../tests/helpers/data";
+import { fields, models } from "@web/../tests/web_test_helpers";
 
 export class AccountMoveLine extends models.Model {
     _name = "account.move.line";
@@ -59,5 +63,7 @@ export function getAccountingData() {
 }
 
 export function defineSpreadsheetAccountModels() {
-    defineModels([AccountMoveLine, AccountAccount]);
+    const SpreadsheetAccountModels = [AccountMoveLine, AccountAccount];
+    Object.assign(SpreadsheetModels, SpreadsheetAccountModels);
+    defineSpreadsheetModels();
 }

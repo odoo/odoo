@@ -1,6 +1,6 @@
-import { defineModels, fields, models } from "@web/../tests/web_test_helpers";
+import { SpreadsheetModels, defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
+import { fields, models } from "@web/../tests/web_test_helpers";
 import { RPCError } from "@web/core/network/rpc";
-import { SpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 
 export function getDashboardServerData() {
     return {
@@ -75,7 +75,7 @@ export class SpreadsheetDashboardGroup extends models.Model {
 }
 
 export function defineSpreadsheetDashboardModels() {
-    defineModels([SpreadsheetDashboard, SpreadsheetDashboardGroup]);
-    SpreadsheetModels["SpreadsheetDashboard"] = SpreadsheetDashboardGroup;
-    SpreadsheetModels["SpreadsheetDashboardGroup"] = SpreadsheetDashboard;
+    const SpreadsheetDashboardModels = [SpreadsheetDashboard, SpreadsheetDashboardGroup];
+    Object.assign(SpreadsheetModels, SpreadsheetDashboardModels);
+    defineSpreadsheetModels();
 }

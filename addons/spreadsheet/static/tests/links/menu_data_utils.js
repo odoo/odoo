@@ -4,23 +4,34 @@ import { serverState } from "@web/../tests/web_test_helpers";
 export function getMenuServerData() {
     const serverData = {};
     serverData.menus = {
-        root: { id: "root", children: [1], name: "root", appID: "root" },
-        1: {
-            id: 1,
-            children: [11, 12],
-            name: "App_1",
-            appID: 1,
-            xmlid: "app_1",
+        root: {
+            id: "root",
+            name: "root",
+            appID: "root",
+            children: [
+                {
+                    id: 1,
+                    name: "App_1",
+                    appID: 1,
+                    xmlid: "app_1",
+                    children: [
+                        {
+                            id: 11,
+                            name: "menu with xmlid",
+                            appID: 1,
+                            xmlid: "test_menu",
+                            actionID: "spreadsheet.action1",
+                        },
+                        {
+                            id: 12,
+                            name: "menu without xmlid",
+                            actionID: "spreadsheet.action1",
+                            appID: 1,
+                        },
+                    ],
+                },
+            ],
         },
-        11: {
-            id: 11,
-            children: [],
-            name: "menu with xmlid",
-            appID: 1,
-            xmlid: "test_menu",
-            actionID: "action1",
-        },
-        12: { id: 12, children: [], name: "menu without xmlid", actionID: "action1", appID: 1 },
     };
     serverData.actions = {
         action1: {

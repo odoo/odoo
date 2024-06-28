@@ -11,7 +11,10 @@ import { mailModels } from "@mail/../tests/mail_test_helpers";
 
 /**
  * @typedef {object} ServerData
- * @property {object} models
+ * @property {object} [models]
+ * @property {object} [views]
+ * @property {object} [menus]
+ * @property {object} [actions]
  */
 
 /**
@@ -60,7 +63,7 @@ export function getBasicListArch() {
 
 export function getBasicGraphArch() {
     return /* xml */ `
-        <graph>
+        <graph string="PartnerGraph">
             <field name="bar" />
         </graph>
     `;
@@ -72,6 +75,7 @@ export function getBasicGraphArch() {
 export function getBasicServerData() {
     return {
         models: getBasicData(),
+        views: {},
     };
 }
 
@@ -139,54 +143,6 @@ export function defineSpreadsheetActions() {
     ]);
 }
 
-export class DocumentsDocument extends models.Model {
-    _name = "documents.document";
-
-    name = fields.Char({ string: "Name" });
-    spreadsheet_data = fields.Binary({ string: "Data" });
-    thumbnail = fields.Binary({ string: "Thumbnail" });
-    favorited_ids = fields.Many2many({ string: "Name", relation: "res.users" });
-    is_favorited = fields.Boolean({ string: "Name" });
-    is_multipage = fields.Boolean({ string: "Is multipage" });
-    mimetype = fields.Char({ string: "Mimetype" });
-    partner_id = fields.Many2one({ string: "Related partner", relation: "partner" });
-    owner_id = fields.Many2one({ string: "Owner", relation: "partner" });
-    handler = fields.Selection({
-        string: "Handler",
-        selection: [["spreadsheet", "Spreadsheet"]],
-    });
-    previous_attachment_ids = fields.Many2many({
-        string: "History",
-        relation: "ir.attachment",
-    });
-    tag_ids = fields.Many2many({ string: "Tags", relation: "documents.tag" });
-    folder_id = fields.Many2one({ string: "Workspaces", relation: "documents.folder" });
-    res_model = fields.Char({ string: "Model (technical)" });
-    available_rule_ids = fields.Many2many({
-        string: "Rules",
-        relation: "documents.workflow.rule",
-    });
-
-    _records = [
-        {
-            id: 1,
-            name: "My spreadsheet",
-            spreadsheet_data: "{}",
-            is_favorited: false,
-            folder_id: 1,
-            handler: "spreadsheet",
-        },
-        {
-            id: 2,
-            name: "",
-            spreadsheet_data: "{}",
-            is_favorited: true,
-            folder_id: 1,
-            handler: "spreadsheet",
-        },
-    ];
-}
-
 export class IrModel extends webModels.IrModel {
     display_name_for(models) {
         const records = this.env["ir.model"].search_read([["model", "in", models]]);
@@ -236,66 +192,6 @@ export class ResUsers extends mailModels.ResUsers {
 
     name = fields.Char({ string: "Name" });
     groups_id = fields.Many2many({ string: "Groups", relation: "res.group" });
-
-    staticRecords = [
-        {
-            id: serverState.userId,
-            active: true,
-            company_id: serverState.companies[0]?.id,
-            company_ids: serverState.companies.map((company) => company.id),
-            login: "admin",
-            partner_id: serverState.partnerId,
-            password: "admin",
-        },
-    ];
-}
-
-export class DocumentsFolder extends models.Model {
-    _name = "documents.folder";
-
-    name = fields.Char({ string: "Name" });
-    parent_folder_id = fields.Many2one({
-        string: "Parent Workspace",
-        relation: "documents.folder",
-    });
-    description = fields.Text({ string: "Description" });
-
-    _records = [
-        {
-            id: 1,
-            name: "Workspace1",
-            description: "Workspace",
-            parent_folder_id: false,
-        },
-    ];
-}
-
-export class DocumentsTag extends models.Model {
-    _name = "documents.tag";
-    get_tags() {
-        return [];
-    }
-}
-
-export class DocumentsWorkflowRule extends models.Model {
-    _name = "documents.workflow.rule";
-}
-
-export class DocumentsShare extends models.Model {
-    _name = "documents.share";
-}
-
-export class SpreadsheetTemplate extends models.Model {
-    _name = "spreadsheet.template";
-
-    name = fields.Char({ string: "Name", type: "char" });
-    spreadsheet_data = fields.Binary({ string: "Spreadsheet Data" });
-    thumbnail = fields.Binary({ string: "Thumbnail", type: "binary" });
-
-    _records = [
-        { id: 1, name: "Template 1", spreadsheet_data: "" },
-        { id: 2, name: "Template 2", spreadsheet_data: "" },
-    ];
 }
 
 export class SpreadsheetMixin extends models.Model {
@@ -312,6 +208,16 @@ export class SpreadsheetMixin extends models.Model {
             result.push(record?.display_name ?? null);
         }
         return result;
+    }
+
+    get_selector_spreadsheet_models() {
+        return [
+            {
+                model: "documents.document",
+                display_name: "Spreadsheets",
+                allow_create: true,
+            },
+        ];
     }
 }
 
@@ -393,7 +299,12 @@ export class Partner extends models.Model {
         sortable: true,
         groupable: true,
     });
-    active = fields.Boolean({ string: "Active", default: true, searchable: true });
+    active = fields.Boolean({
+        string: "Active",
+        default: true,
+        searchable: true,
+        groupable: false,
+    });
     product_id = fields.Many2one({
         string: "Product",
         relation: "product",
@@ -415,10 +326,12 @@ export class Partner extends models.Model {
         searchable: true,
         store: true,
         aggregator: "avg",
+        groupable: false,
     });
     field_with_array_agg = fields.Integer({
         string: "field_with_array_agg",
         searchable: true,
+        groupable: false,
         aggregator: "array_agg",
     });
     currency_id = fields.Many2one({
@@ -447,8 +360,13 @@ export class Partner extends models.Model {
         definition_record: "product_id",
         definition_record_field: "properties_definitions",
     });
-    jsonField = fields.Json({ string: "Json Field", store: true });
-    user_ids = fields.Many2many({ relation: "res.users", string: "Users", searchable: true });
+    jsonField = fields.Json({ string: "Json Field", store: true, groupable: false });
+    user_ids = fields.Many2many({
+        relation: "res.users",
+        string: "Users",
+        searchable: true,
+        groupable: false,
+    });
 
     _records = [
         {
@@ -574,17 +492,11 @@ export function getBasicData() {
 export const SpreadsheetModels = {
     ...webModels,
     ...mailModels,
-    DocumentsDocument,
     IrModel,
     IrUIMenu,
     IrActions,
     ResGroup,
     ResUsers,
-    DocumentsFolder,
-    DocumentsTag,
-    DocumentsShare,
-    DocumentsWorkflowRule,
-    SpreadsheetTemplate,
     SpreadsheetMixin,
     ResCurrency,
     Partner,
@@ -603,12 +515,37 @@ export function addRecordsFromServerData(serverData) {
         if (!records) {
             continue;
         }
-        const PyModel = Object.values(SpreadsheetModels).find((model) => model._name === modelName);
+        const PyModel = getSpreadsheetModel(modelName);
         if (!PyModel) {
             throw new Error(`Model ${modelName} not found inside SpreadsheetModels`);
         }
         checkRecordsValidity(modelName, records);
         PyModel._records = records;
+    }
+}
+
+/**
+ * Add the views inside serverData in the MockServer
+ *
+ * @param {ServerData} serverData
+ *
+ * @example
+ * addViewsFromServerData({ "partner,false,search": "<search/>" });
+ * Will set the default search view for the partner model
+ */
+export function addViewsFromServerData(serverData) {
+    for (const fullViewKey of Object.keys(serverData.views)) {
+        const viewArch = serverData.views[fullViewKey];
+        const splitted = fullViewKey.split(",");
+        const modelName = splitted[0];
+        const viewType = splitted[2];
+        const recordId = splitted[1];
+        const PyModel = getSpreadsheetModel(modelName);
+        if (!PyModel) {
+            throw new Error(`Model ${modelName} not found inside SpreadsheetModels`);
+        }
+        const viewKey = viewType + "," + recordId;
+        PyModel._views[viewKey] = viewArch;
     }
 }
 
@@ -642,4 +579,8 @@ export function getPyEnv() {
         throw new Error("No mock server found");
     }
     return mockServer.env;
+}
+
+export function getSpreadsheetModel(modelName) {
+    return Object.values(SpreadsheetModels).find((model) => model._name === modelName);
 }
