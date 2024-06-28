@@ -1,5 +1,6 @@
 import { fields, getKwArgs, webModels } from "@web/../tests/web_test_helpers";
 import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
+import { mailDataHelpers } from "../mail_mock_server";
 
 /** @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord */
 
@@ -47,47 +48,46 @@ export class ResPartner extends webModels.ResPartner {
          * @param {number} limit
          */
         const mentionSuggestionsFilter = (partners, search, limit) => {
-            const matchingPartners = Object.values(
-                this.mail_partner_format(
-                    partners
-                        .filter((partner) => {
-                            // no search term is considered as return all
-                            if (!search) {
-                                return true;
-                            }
-                            // otherwise name or email must match search term
-                            if (partner.name && partner.name.toLowerCase().includes(search)) {
-                                return true;
-                            }
-                            if (partner.email && partner.email.toLowerCase().includes(search)) {
-                                return true;
-                            }
-                            return false;
-                        })
-                        .map((partner) => partner.id)
-                )
-            );
+            const matchingPartnerIds = partners
+                .filter((partner) => {
+                    // no search term is considered as return all
+                    if (!search) {
+                        return true;
+                    }
+                    // otherwise name or email must match search term
+                    if (partner.name && partner.name.toLowerCase().includes(search)) {
+                        return true;
+                    }
+                    if (partner.email && partner.email.toLowerCase().includes(search)) {
+                        return true;
+                    }
+                    return false;
+                })
+                .map((partner) => partner.id);
             // reduce results to max limit
-            matchingPartners.length = Math.min(matchingPartners.length, limit);
-            return matchingPartners;
+            matchingPartnerIds.length = Math.min(matchingPartnerIds.length, limit);
+            return matchingPartnerIds;
         };
 
         // add main suggestions based on users
         const partnersFromUsers = ResUsers._filter([])
             .map((user) => this._filter([["id", "=", user.partner_id]])[0])
             .filter((partner) => partner);
-        const mainMatchingPartners = mentionSuggestionsFilter(partnersFromUsers, search, limit);
+        const mainMatchingPartnerIds = mentionSuggestionsFilter(partnersFromUsers, search, limit);
 
-        let extraMatchingPartners = [];
+        let extraMatchingPartnerIds = [];
         // if not enough results add extra suggestions based on partners
-        const remainingLimit = limit - mainMatchingPartners.length;
-        if (mainMatchingPartners.length < limit) {
-            const partners = this._filter([
-                ["id", "not in", mainMatchingPartners.map((partner) => partner.id)],
-            ]);
-            extraMatchingPartners = mentionSuggestionsFilter(partners, search, remainingLimit);
+        const remainingLimit = limit - mainMatchingPartnerIds.length;
+        if (mainMatchingPartnerIds.length < limit) {
+            const partners = this._filter([["id", "not in", mainMatchingPartnerIds]]);
+            extraMatchingPartnerIds = mentionSuggestionsFilter(partners, search, remainingLimit);
         }
-        return { Persona: mainMatchingPartners.concat(extraMatchingPartners) };
+        return new mailDataHelpers.Store(
+            "Persona",
+            Object.values(
+                this.mail_partner_format(mainMatchingPartnerIds.concat(extraMatchingPartnerIds))
+            )
+        ).get_result();
     }
 
     /**
@@ -119,41 +119,26 @@ export class ResPartner extends webModels.ResPartner {
          * @returns {Object[]}
          */
         const mentionSuggestionsFilter = (partners, search, limit) => {
-            const matchingPartners = Object.values(
-                this.mail_partner_format(
-                    partners
-                        .filter((partner) => {
-                            const [member] = DiscussChannelMember._filter([
-                                ["channel_id", "=", channel_id],
-                                ["partner_id", "=", partner.id],
-                            ]);
-                            if (!member) {
-                                return false;
-                            }
-                            // no search term is considered as return all
-                            if (!search) {
-                                return true;
-                            }
-                            // otherwise name or email must match search term
-                            if (partner.name && partner.name.toLowerCase().includes(search)) {
-                                return true;
-                            }
-                            if (partner.email && partner.email.toLowerCase().includes(search)) {
-                                return true;
-                            }
-                            return false;
-                        })
-                        .map((partner) => partner.id)
-                )
-            ).map((partnerFormat) => {
+            const matchingPartners = partners.filter((partner) => {
                 const [member] = DiscussChannelMember._filter([
                     ["channel_id", "=", channel_id],
-                    ["partner_id", "=", partnerFormat.id],
+                    ["partner_id", "=", partner.id],
                 ]);
-                partnerFormat["channelMembers"] = [
-                    ["ADD", DiscussChannelMember._discuss_channel_member_format([member.id])[0]],
-                ];
-                return partnerFormat;
+                if (!member) {
+                    return false;
+                }
+                // no search term is considered as return all
+                if (!search) {
+                    return true;
+                }
+                // otherwise name or email must match search term
+                if (partner.name && partner.name.toLowerCase().includes(search)) {
+                    return true;
+                }
+                if (partner.email && partner.email.toLowerCase().includes(search)) {
+                    return true;
+                }
+                return false;
             });
             // reduce results to max limit
             matchingPartners.length = Math.min(matchingPartners.length, limit);
@@ -174,7 +159,16 @@ export class ResPartner extends webModels.ResPartner {
             ]);
             extraMatchingPartners = mentionSuggestionsFilter(partners, search, remainingLimit);
         }
-        return { Persona: mainMatchingPartners.concat(extraMatchingPartners) };
+        const store = new mailDataHelpers.Store();
+        for (const partner of mainMatchingPartners.concat(extraMatchingPartners)) {
+            store.add("Persona", this.mail_partner_format(partner.id)[partner.id]);
+            const [member] = DiscussChannelMember._filter([
+                ["channel_id", "=", channel_id],
+                ["partner_id", "=", partner.id],
+            ]);
+            store.add(DiscussChannelMember.browse(member.id));
+        }
+        return store.get_result();
     }
 
     /**

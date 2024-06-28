@@ -550,10 +550,10 @@ export class MailThread extends models.ServerModel {
         return false;
     }
 
-    _to_store(id, request_list) {
-        const kwargs = getKwArgs(arguments, "id", "request_list");
-        id = kwargs.id;
-        delete kwargs.id;
+    _to_store(ids, store, request_list) {
+        const kwargs = getKwArgs(arguments, "ids", "store", "request_list");
+        const id = kwargs.ids[0];
+        store = kwargs.store;
         request_list = kwargs.request_list;
 
         /** @type {import("mock_models").IrAttachment} */
@@ -627,6 +627,6 @@ export class MailThread extends models.ServerModel {
                 id,
             ]);
         }
-        return { Thread: [res] };
+        store.add("Thread", res);
     }
 }

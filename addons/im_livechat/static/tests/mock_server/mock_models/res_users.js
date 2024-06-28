@@ -5,11 +5,10 @@ export class ResUsers extends mailModels.ResUsers {
     /**
      * @override
      */
-    _init_store_data() {
-        const res = super._init_store_data(...arguments);
-        res.Store.has_access_livechat = this.env.user?.groups_id.includes(
-            serverState.groupLivechatId
-        );
-        return res;
+    _init_store_data(store) {
+        super._init_store_data(...arguments);
+        store.add({
+            has_access_livechat: this.env.user?.groups_id.includes(serverState.groupLivechatId),
+        });
     }
 }

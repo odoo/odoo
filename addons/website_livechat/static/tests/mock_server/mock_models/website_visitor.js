@@ -1,3 +1,5 @@
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+
 import { Command, fields, models, serverState } from "@web/../tests/web_test_helpers";
 
 export class WebsiteVisitor extends models.ServerModel {
@@ -46,9 +48,11 @@ export class WebsiteVisitor extends models.ServerModel {
             }
             const [partner] = ResPartner.read(serverState.partnerId);
             // notify operator
-            const store = {};
-            Object.assign(store, { Thread: DiscussChannel._channel_info([livechatId]) });
-            BusBus._sendone(partner, "website_livechat.send_chat_request", store);
+            BusBus._sendone(
+                partner,
+                "website_livechat.send_chat_request",
+                new mailDataHelpers.Store(DiscussChannel.browse(livechatId)).get_result()
+            );
         }
     }
 }
