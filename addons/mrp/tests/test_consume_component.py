@@ -384,3 +384,33 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         testUnit(self.mo_lot_tmpl)
         testUnit(self.mo_serial_tmpl, 1)
         testUnit(self.mo_serial_tmpl, 2)
+
+    def test_component_consumed_in_op_and_not_available(self):
+        """
+        Test to ensure that the quantity done is not set for the component consumed in an operation:
+        - BoM:
+            - Components: 3 products
+            - Operation: “Super operation”
+            - One component consumed in the operation
+        """
+        workcenter_1 = self.env['mrp.workcenter'].create({
+            'name': 'wc1',
+            'time_efficiency': 100,
+        })
+        operation = self.env['mrp.routing.workcenter'].create({
+            'name': 'Super Operation',
+            'bom_id': self.bom_none.id,
+            'workcenter_id': workcenter_1.id,
+        })
+        self.bom_none.bom_line_ids[0].operation_id = operation
+        # mo_1
+        self.assertEqual
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_none
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.move_raw_ids.product_id.mapped('qty_available'), [0, 0, 0])
+        mo.workorder_ids.button_start()
+        self.assertEqual(mo.workorder_ids[0].state, 'progress')
+        self.assertEqual(mo.move_raw_ids.mapped('quantity'), [0, self.bom_none.bom_line_ids[1].product_qty, self.bom_none.bom_line_ids[2].product_qty])

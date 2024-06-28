@@ -567,7 +567,7 @@ class StockMove(models.Model):
         # Do not update extra product quantities
         if float_is_zero(self.product_uom_qty, precision_rounding=self.product_uom.rounding):
             return True
-        return False
+        return bool(self.operation_id)
 
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()
