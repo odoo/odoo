@@ -453,10 +453,11 @@ class MrpBom(models.Model):
         return {'price': product.standard_price}
 
     def _get_product_catalog_record_lines(self, product_ids, child_field=False, **kwargs):
-        if not child_field:
-            return {}
-        lines = self[child_field].filtered(lambda line: line.product_id.id in product_ids)
-        return lines.grouped('product_id')
+        grouped_lines = defaultdict(lambda: self.env['mrp.bom.line'])
+        for line in self.bom_line_ids:
+            if line.product_id.id in product_ids:
+                grouped_lines[line.product_id] |= line
+        return grouped_lines
 
     def _update_order_line_info(self, product_id, quantity, child_field=False, **kwargs):
         if not child_field:
