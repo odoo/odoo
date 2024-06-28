@@ -13,3 +13,4 @@ def _configure_journals(env):
         if 'property_stock_account_production_cost_id' in template_data:
             data = {'property_stock_account_production_cost_id': template_data['property_stock_account_production_cost_id']}
             ChartTemplate._post_load_data(template_code, company, data)
+        ChartTemplate._load_wip_accounts(company, ChartTemplate._get_chart_template_data(template_code)['res.company'])
