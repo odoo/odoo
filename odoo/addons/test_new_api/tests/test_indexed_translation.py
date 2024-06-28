@@ -62,7 +62,7 @@ class TestIndexedTranslation(odoo.tests.TransactionCase):
         """, """
             SELECT "test_new_api_indexed_translation"."id"
             FROM "test_new_api_indexed_translation"
-            WHERE "test_new_api_indexed_translation"."name" IS NULL
+            WHERE FALSE
             ORDER BY "test_new_api_indexed_translation"."id"
         """]):
             record_en.search([('name', 'ilike', 'foo')])
