@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestBlock } from "@html_editor/utils/blocks";
 import { Component, xml } from "@odoo/owl";
 import { EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
@@ -45,7 +44,6 @@ export class EmojiPlugin extends Plugin {
 
     showEmojiPicker() {
         this.overlay.open({
-            target: closestBlock(this.shared.getEditableSelection().anchorNode),
             props: {
                 close: () => {
                     this.overlay.close();
