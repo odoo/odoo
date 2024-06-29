@@ -169,7 +169,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
                     'product_id': self.product_a.id,
                     'product_uom_qty': 1,
                     'price_unit': 10000.0,
-                    'tax_id': [Command.set(self.tax_vat.ids)],
+                    'tax_ids': [Command.set(self.tax_vat.ids)],
                 })
             ]
         })
@@ -187,13 +187,13 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'fixed_amount': 6350.0,
         })
         downpayment_1.create_invoices()
-        advance_invoice = sale_order.invoice_ids
+        advance_invoice = sale_order.account_move_ids
 
         downpayment_2 = self.env['sale.advance.payment.inv'].with_context(context).create({
             'advance_payment_method': 'delivered',
         })
         downpayment_2.create_invoices()
-        final_invoice = sale_order.invoice_ids - advance_invoice
+        final_invoice = sale_order.account_move_ids - advance_invoice
 
         return advance_invoice, final_invoice
 

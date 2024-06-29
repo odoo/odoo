@@ -28,7 +28,7 @@ class PurchaseTestTaxTotals(TestTaxTotals):
                 'product_qty': 1,
                 'product_uom': self.po_product.uom_po_id.id,
                 'price_unit': amount,
-                'taxes_id': [(6, 0, taxes.ids)],
+                'tax_ids': [(6, 0, taxes.ids)],
             })
         for amount, taxes in lines_data]
 
@@ -54,7 +54,7 @@ class PurchaseTestTaxTotals(TestTaxTotals):
                     'product_id': self.po_product.id,
                     'product_qty': 1.0,
                     'price_unit': 100.0,
-                    'taxes_id': [Command.set(tax_purchase.ids)],
+                    'tax_ids': [Command.set(tax_purchase.ids)],
                 }),
             ],
         })
@@ -76,7 +76,7 @@ class PurchaseTestTaxTotals(TestTaxTotals):
         po.order_line.qty_received = 1
         po.action_create_invoice()
 
-        invoice = po.invoice_ids
+        invoice = po.account_move_ids
         invoice.invoice_date = '2020-01-01'
         invoice.action_post()
 

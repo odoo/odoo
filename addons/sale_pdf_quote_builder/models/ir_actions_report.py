@@ -144,7 +144,7 @@ class IrActionsReport(models.Model):
             f'{line.id}_product_sale_price': format_amount(
                 env, line.product_id.lst_price, line.product_id.currency_id
             ),
-            f'{line.id}_taxes': ', '.join(tax.name for tax in line.tax_id),
+            f'{line.id}_taxes': ', '.join(tax.name for tax in line.tax_ids),
             f'{line.id}_tax_excl_price': format_amount(env, line.price_subtotal, line.currency_id),
             f'{line.id}_tax_incl_price': format_amount(env, line.price_total, line.currency_id),
         }

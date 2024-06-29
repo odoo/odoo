@@ -17,6 +17,7 @@
         'data/purchase_data.xml',
         'data/ir_cron_data.xml',
         'report/purchase_reports.xml',
+        'wizard/purchase_make_bill_advance_views.xml',
         'views/purchase_views.xml',
         'views/res_config_settings_views.xml',
         'views/product_views.xml',

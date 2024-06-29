@@ -55,7 +55,7 @@ class SaleOrderDiscount(models.TransientModel):
             'product_id': product.id,
             'sequence': 999,
             'price_unit': -amount,
-            'tax_id': [Command.set(taxes.ids)],
+            'tax_ids': [Command.set(taxes.ids)],
         }
         if description:
             # If not given, name will fallback on the standard SOL logic (cf. _compute_name)
@@ -93,7 +93,7 @@ class SaleOrderDiscount(models.TransientModel):
                 if not line.product_uom_qty or not line.price_unit:
                     continue
 
-                total_price_per_tax_groups[line.tax_id] += line.price_subtotal
+                total_price_per_tax_groups[line.tax_ids] += line.price_subtotal
 
             if not total_price_per_tax_groups:
                 # No valid lines on which the discount can be applied

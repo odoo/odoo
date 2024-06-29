@@ -75,6 +75,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'data/account_reports_data.xml',
         'views/uom_uom_views.xml',
         'views/product_views.xml',
+        'wizard/account_advance_payments_views.xml',
         'views/tests_shared_js_python.xml',
         'views/base_document_layout_views.xml',
         'views/report_templates.xml'

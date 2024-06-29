@@ -91,7 +91,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 1.0,
                     'product_uom': self.kit_a.uom_id.id,
                     'price_unit': 1,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -192,7 +192,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
             pick.button_validate()
             # Create the invoice
             so._create_invoices()
-            invoice = so.invoice_ids
+            invoice = so.account_move_ids
             invoice.action_post()
             return invoice
 
@@ -254,7 +254,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 3.0,
                     'product_uom': kit.uom_id.id,
                     'price_unit': 100,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -358,7 +358,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 3.0,
                     'product_uom': kit.uom_id.id,
                     'price_unit': 100,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -404,7 +404,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
         create_invoice_wizard = self.env['sale.advance.payment.inv'].with_context(ctx).create(
             {'advance_payment_method': 'delivered'})
         create_invoice_wizard.create_invoices()
-        reverse_invoice = so.invoice_ids[-1]
+        reverse_invoice = so.account_move_ids[-1]
         with Form(reverse_invoice) as reverse_invoice_form:
             with reverse_invoice_form.invoice_line_ids.edit(0) as line:
                 line.quantity = 1
@@ -451,7 +451,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 1.0,
                     'product_uom': kit.uom_id.id,
                     'price_unit': 5,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -504,7 +504,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 2.0,
                     'product_uom': kit.uom_id.id,
                     'price_unit': 5,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()

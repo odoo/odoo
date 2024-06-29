@@ -33,6 +33,6 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
         if search_in == 'sale_order':
             return ['|', ('sale_order_id.name', 'ilike', search), ('sale_line_id.name', 'ilike', search)]
         elif search_in == 'invoice':
-            return [('sale_order_id.invoice_ids.name', 'ilike', search)]
+            return [('sale_order_id.account_move_ids.name', 'ilike', search)]
         else:
             return super()._task_get_search_domain(search_in, search, milestones_allowed, project)

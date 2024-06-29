@@ -49,7 +49,7 @@ class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
             })],
         })
 
-        sale_order.invoice_ids += rslt
+        sale_order.account_move_ids += rslt
         return rslt
 
     def _set_initial_stock_for_product(self, product):

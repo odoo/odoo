@@ -19,6 +19,6 @@ class StockMove(models.Model):
         if line_id := self.sale_line_id:
             return {
                 'is_from_order': True,
-                'taxes': line_id.tax_id,
+                'taxes': line_id.tax_ids,
             }
         return super()._l10n_in_get_product_tax()
