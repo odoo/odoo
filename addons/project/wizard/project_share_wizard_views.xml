@@ -28,8 +28,9 @@
                     <li>Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow.</li>
                 </ul>
                 <footer>
-                    <button string="Share Project" name="action_share_record" type="object" class="btn-primary" data-hotkey="q"/>
-                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                    <button string="Share Project" name="action_share_record" type="object" class="btn-primary" data-hotkey="q" invisible="not collaborator_ids" />
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" invisible="not collaborator_ids" />
+                    <button string="Close" class="btn-secondary" special="cancel" invisible="collaborator_ids" />
                 </footer>
             </form>
         </field>
