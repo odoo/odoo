@@ -299,10 +299,14 @@ const getEventConstructor = (eventType) => {
 };
 
 /**
- * @param {Node} a
- * @param {Node} b
+ * @param {Node} [a]
+ * @param {Node} [b]
  */
 const getFirstCommonParent = (a, b) => {
+    if (!a || !b || a.ownerDocument !== b.ownerDocument) {
+        return null;
+    }
+
     const range = document.createRange();
     range.setStart(a, 0);
     range.setEnd(b, 0);
@@ -1274,12 +1278,17 @@ const _pointerUp = (target, options) => {
 
     const clickEventInit = { ...eventInit, detail: runTime.currentClickCount + 1 };
     const currentTarget = runTime.currentPointerDownTarget;
-    const parent = currentTarget && getFirstCommonParent(target, currentTarget);
-    if (parent) {
-        triggerClick(parent, clickEventInit);
+    let actualTarget;
+    if (hasTouch()) {
+        actualTarget = currentTarget === target && target;
+    } else {
+        actualTarget = getFirstCommonParent(target, currentTarget);
+    }
+    if (actualTarget) {
+        triggerClick(actualTarget, clickEventInit);
         runTime.currentClickCount++;
         if (!hasTouch() && runTime.currentClickCount % 2 === 0) {
-            dispatch(parent, "dblclick", clickEventInit);
+            dispatch(actualTarget, "dblclick", clickEventInit);
         }
     }
 
