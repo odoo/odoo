@@ -160,24 +160,27 @@ class HolidaysAllocation(models.Model):
     def _compute_description(self):
         self.check_access_rights('read')
         self.check_access_rule('read')
-
-        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-
         for allocation in self:
-            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
-                title = allocation.sudo().private_name
-                if allocation.env.context.get('is_employee_allocation'):
-                    if allocation.holiday_status_id:
-                        allocation_duration = allocation.number_of_days_display if allocation.type_request_unit != 'hour' else allocation.number_of_hours_display
-                        title = _("%s allocation request (%s %s)",
-                            allocation.holiday_status_id.name,
-                            allocation_duration,
-                            allocation.type_request_unit)
-                    else:
-                        title = _("Allocation Request")
-                allocation.name = title
+            if not allocation.env.context.get('is_employee_allocation'):
+                allocation.name = allocation.sudo().private_name
+            elif not allocation.holiday_status_id:
+                allocation.name = _("Allocation Request")
+            elif allocation.type_request_unit == 'hour':
+                allocation.name = _(
+                    '%(name)s (%(duration)s hour(s))',
+                    name=allocation.holiday_status_id.name,
+                    duration=allocation.number_of_days * (
+                        allocation.employee_id.sudo().resource_calendar_id.hours_per_day
+                        or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day
+                        or HOURS_PER_DAY
+                    ),
+                )
             else:
-                allocation.name = '*****'
+                allocation.name = _(
+                    '%(name)s (%(duration)s day(s))',
+                    name=allocation.holiday_status_id.name,
+                    duration=allocation.number_of_days,
+                )
 
     def _inverse_description(self):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
