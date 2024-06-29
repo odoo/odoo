@@ -39,6 +39,7 @@ configuration of their taxes and fiscal positions manually.
         'data/account_chart_template_data.xml',
         'data/account_data.xml',
         'data/tax_report_data.xml',
+        'views/report_invoice.xml',
         'views/res_partner_views.xml',
         'wizard/account_fr_fec_export_wizard_view.xml',
         'security/ir.model.access.csv',
