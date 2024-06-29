@@ -118,6 +118,10 @@ class PurchaseOrder(models.Model):
         self._create_picking()
         return result
 
+    def _prepare_grouped_data(self, rfq):
+        match_fields = super()._prepare_grouped_data(rfq)
+        return match_fields + (rfq.picking_type_id.id,)
+
     def button_cancel(self):
         order_lines_ids = OrderedSet()
         pickings_to_cancel_ids = OrderedSet()
