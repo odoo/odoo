@@ -8067,7 +8067,7 @@ msgstr "Órdenes de desecho"
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
 msgid "Scrap Products"
-msgstr "Deshacer productos"
+msgstr "Desechar productos"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_id
@@ -8090,8 +8090,8 @@ msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
-"Desechar un producto lo removerá de sus existencias. El producto\n"
-"                terminará en una ubicación de desecho que se puede utilizar para fines de reportes."
+"Desechar un producto lo quitará de sus existencias y este\n"
+"                pasará a una ubicación de desecho útil para elaborar reportes."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -8311,9 +8311,9 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
-"El número de serie (%(serial_number)s) no está en%(source_location)s, pero está en las siguientes ubicaciones: %(other_locations)s.\n"
+"El número de serie (%(serial_number)s) no está en %(source_location)s, pero sí en las siguientes ubicaciones: %(other_locations)s.\n"
 "\n"
-"Se cambiará la ubicación de origen para este movimiento a %(recommended_location)s"
+"La ubicación de origen para este movimiento cambiará a %(recommended_location)s"
 
 #. module: stock
 #. odoo-javascript
@@ -9239,7 +9239,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "The product is not available in sufficient quantity"
-msgstr "El producto no está disponible en cantidad suficiente"
+msgstr "No hay suficiente producto disponible"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_quantity
@@ -11077,8 +11077,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot split a draft move. It needs to be confirmed first."
-msgstr ""
-"No puede dividir un movimiento en borrador. Necesita confirmarlo primero."
+msgstr "No puede dividir un movimiento en borrador, primero debe confirmarlo."
 
 #. module: stock
 #. odoo-python

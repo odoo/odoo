@@ -49,13 +49,13 @@ msgstr "# Lead chưa được phân công"
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid "%(assigned)s leads allocated among %(team_count)s teams."
-msgstr "%(assigned)s lead được phân bổ giữa %(team_count)s đội ngũ."
+msgstr "%(assigned)s lead được phân bổ giữa %(team_count)s bộ phận."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid "%(assigned)s leads allocated to %(team_name)s team."
-msgstr "%(assigned)s lead được phân bổ cho đội ngũ %(team_name)s."
+msgstr "%(assigned)s lead được phân bổ cho bộ phận %(team_name)s."
 
 #. module: crm
 #. odoo-python
@@ -75,8 +75,8 @@ msgstr "%(duplicates)s lead trùng lặp đã được hợp nhất."
 msgid ""
 "%(members_assigned)s leads assigned among %(member_count)s salespersons."
 msgstr ""
-"%(members_assigned)s lead được phân công cho %(member_count)s nhân viên bán "
-"hàng."
+"%(members_assigned)s lead được phân công cho %(member_count)s chuyên viên "
+"sales."
 
 #. module: crm
 #. odoo-python
@@ -430,13 +430,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A new lead has been created and is not assigned to any team."
-msgstr ""
+msgstr "Lead mới đã được tạo và chưa được phân công cho bộ phận nào."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A new lead has been created for the team \"%(team_name)s\"."
-msgstr ""
+msgstr "Lead mới đã được tạo cho bộ phận \"%(team_name)s\"."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -654,8 +654,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
-"Vì bạn không phải là thành viên của Đội ngũ kinh doanh nào, nên bạn sẽ được xem Chu trình của <b>đội ngũ đầu tiên theo mặc định.</b>\n"
-"                                        Để làm việc với CRM, bạn nên <a name=\"%d\" type=\"action\" tabindex=\"-1\">tham gia một đội ngũ.</a> "
+"Vì bạn không phải là thành viên của Bộ phận sales nào, nên bạn sẽ được xem Chu trình của <b>bộ phận đầu tiên theo mặc định.</b>\n"
+"                                        Để làm việc với CRM, bạn nên <a name=\"%d\" type=\"action\" tabindex=\"-1\">tham gia một bộ phận.</a> "
 
 #. module: crm
 #. odoo-python
@@ -664,8 +664,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should join a team."
 msgstr ""
-"Vì bạn không phải là thành viên của Đội ngũ kinh doanh nào, nên bạn sẽ được xem Chu trình của <b>đội ngũ đầu tiên theo mặc định.</b>\n"
-"                                        Để làm việc với CRM, bạn nên tham gia một đội ngũ."
+"Vì bạn không phải là thành viên của Bộ phận sales nào, nên bạn sẽ được xem Chu trình của <b>bộ phận đầu tiên theo mặc định.</b>\n"
+"                                        Để làm việc với CRM, bạn nên tham gia một bộ phận."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -680,7 +680,7 @@ msgstr "Phân công cơ hội cho"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Assign salespersons into multiple Sales Teams."
-msgstr "Phân công nhân viên kinh doanh vào nhiều Đội ngũ kinh doanh."
+msgstr "Phân công chuyên viên sales vào nhiều Bộ phận sales."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -718,7 +718,7 @@ msgstr "Quy tắc phân công"
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid "Assignment domain for team %(team)s is incorrectly formatted"
-msgstr "Miền phân công cho đội ngũ %(team)s được định dạng không chính xác"
+msgstr "Miền phân công cho bộ phận %(team)s được định dạng không chính xác"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
@@ -780,7 +780,7 @@ msgstr "Số điện thoại bị hạn chế là số điện thoại bàn"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Boom! Team record for the past 30 days."
-msgstr "Yeah! Số liệu của đội ngũ trong 30 ngày qua."
+msgstr "Yeah! Số liệu của bộ phận trong 30 ngày qua."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_bounce
@@ -817,7 +817,7 @@ msgstr "CRM: Phân công lead"
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
 msgid "Calendar Event"
-msgstr "Sự kiện theo lịch"
+msgstr "Sự kiện trên lịch"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
@@ -858,7 +858,7 @@ msgid ""
 "converting them into opportunities and assigning them to a salesperson."
 msgstr ""
 "Chọn ô này để lọc và đánh giá các yêu cầu gửi đến dưới dạng lead trước khi "
-"chuyển đổi thành cơ hội và giao cho nhân viên bán hàng."
+"chuyển đổi thành cơ hội và giao cho chuyên viên sales."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__use_opportunities
@@ -1293,8 +1293,8 @@ msgid ""
 "Did you know emails sent to a Sales Team alias generate opportunities in "
 "your pipeline?"
 msgstr ""
-"Bạn có biết rằng email được gửi đến bí danh đội ngũ kinh doanh tạo ra cơ hội"
-" trong chu trình của bạn không?"
+"Bạn có biết rằng email được gửi đến bí danh bộ phận sales tạo ra cơ hội "
+"trong chu trình của bạn không?"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_4
@@ -1591,10 +1591,10 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 200 credits for free."
 msgstr ""
-"Đối với một đội ngũ kinh doanh, không có gì tệ hơn là cạn nguồn lead. May "
-"mắn thay, chỉ với vài cú nhấp chuột, bạn có thể tạo lead dựa theo nhu cầu "
-"của mình: quy mô công ty, ngành nghề,... Để giúp bạn kiểm thử tính năng này,"
-" chúng tôi cung cấp cho bạn 200 tín dụng miễn phí."
+"Đối với một bộ phận sales, không có gì tệ hơn là cạn nguồn lead. May mắn "
+"thay, chỉ với vài cú nhấp chuột, bạn có thể tạo lead dựa theo nhu cầu của "
+"mình: quy mô công ty, ngành nghề,... Để giúp bạn kiểm thử tính năng này, "
+"chúng tôi cung cấp cho bạn 200 tín dụng miễn phí."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1650,7 +1650,7 @@ msgstr "Xem lý do mất"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Give your team the requirements to move an opportunity to this stage."
-msgstr "Đưa yêu cầu cho đội ngũ để chuyển một cơ hội sang giai đoạn này. "
+msgstr "Đưa yêu cầu cho bộ phận để chuyển một cơ hội sang giai đoạn này. "
 
 #. module: crm
 #. odoo-python
@@ -1723,8 +1723,8 @@ msgid ""
 "If checked, forces salesman to be updated on updated opportunities even if "
 "already set."
 msgstr ""
-"Nếu được chọn, buộc nhân viên kinh doanh phải nắm bắt thông tin các cơ hội "
-"được cập nhật ngay cả khi đã được thiết lập."
+"Nếu được chọn, buộc chuyên viên sales phải nắm bắt thông tin các cơ hội được"
+" cập nhật ngay cả khi đã được thiết lập."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
@@ -2034,6 +2034,8 @@ msgstr "Thẻ lead"
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_day_count
 msgid "Lead assigned to this member this last day (lost one excluded)"
 msgstr ""
+"Lead được phân công cho thành viên này trong từng đó ngày qua (không bao gồm"
+" lead đã mất)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
@@ -2091,7 +2093,7 @@ msgstr "Lead (30 ngày)"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_day_count
 msgid "Leads (last 24h)"
-msgstr ""
+msgstr "Lead (24h qua)"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -2292,9 +2294,9 @@ msgid ""
 "action button. Automatic configures a cron running repeatedly assignment in "
 "all teams."
 msgstr ""
-"Phân công thủ công cho phép kích hoạt phân công từ chế độ xem biểu mẫu đội "
-"ngũ bằng nút hành động. Tự động cấu hình cron chạy phân công lặp lại trong "
-"tất cả các đội ngũ."
+"Phân công thủ công cho phép kích hoạt phân công từ chế độ xem biểu mẫu bộ "
+"phận bằng nút hành động. Tự động cấu hình cron chạy phân công lặp lại trong "
+"tất cả các bộ phận."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__manual
@@ -2382,7 +2384,7 @@ msgid ""
 "Member assignment domain for user %(user)s and team %(team)s is incorrectly "
 "formatted"
 msgstr ""
-"Miền phân công thành viên cho người dùng %(user)s và đội ngũ %(team)s được "
+"Miền phân công thành viên cho người dùng %(user)s và bộ phận %(team)s được "
 "định dạng không chính xác"
 
 #. module: crm
@@ -2447,13 +2449,13 @@ msgstr "Hàng tháng"
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_max
 msgid "Monthly average leads capacity for all salesmen belonging to the team"
 msgstr ""
-"Dung lượng lead trung bình hàng tháng cho tất cả nhân viên kinh doanh của "
-"đội ngũ"
+"Dung lượng lead trung bình hàng tháng cho tất cả nhân viên kinh doanh của bộ"
+" phận"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__is_membership_multi
 msgid "Multi Teams"
-msgstr "Nhiều đội ngũ"
+msgstr "Nhiều bộ phận"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_my_activities
@@ -2513,7 +2515,7 @@ msgstr "Cơ hội mới"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Sự kiện theo lịch cho hoạt động tiếp theo"
+msgstr "Sự kiện trên lịch cho hoạt động tiếp theo"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_date_deadline
@@ -2566,8 +2568,8 @@ msgid ""
 "No allocated leads to %(team_name)s team and its salespersons because no "
 "unassigned lead matches its domain."
 msgstr ""
-"Không có lead nào được phân bổ đến đội ngũ %(team_name)s và nhân viên kinh "
-"doanh của đội ngũ này vì không có lead chưa được phân công nào phù hợp với "
+"Không có lead nào được phân bổ đến bộ phận %(team_name)s và chuyên viên "
+"sales của bộ phận này vì không có lead chưa được phân công nào phù hợp với "
 "miền của đội."
 
 #. module: crm
@@ -2577,8 +2579,8 @@ msgid ""
 "No allocated leads to %(team_name)s team because it has no capacity. Add "
 "capacity to its salespersons."
 msgstr ""
-"Không có lead nào được phân bổ đến đội ngũ %(team_name)s vì không đủ dung "
-"lượng. Thêm dung lượng cho nhân viên kinh doanh của đội."
+"Không có lead nào được phân bổ đến bộ phận %(team_name)s vì không đủ dung "
+"lượng. Thêm dung lượng cho chuyên viên sales của đội."
 
 #. module: crm
 #. odoo-python
@@ -2587,9 +2589,9 @@ msgid ""
 "No allocated leads to any team or salesperson. Check your Sales Teams and "
 "Salespersons configuration as well as unassigned leads."
 msgstr ""
-"Không có lead được phân bổ tới bất kỳ đội ngũ hay nhân viên kinh doanh nào. "
-"Kiểm tra cấu hình đội ngũ kinh doanh và nhân viên kinh doanh cũng như lead "
-"chưa được phân công. "
+"Không có lead được phân bổ tới bất kỳ bộ phận hay chuyên viên sales nào. "
+"Kiểm tra cấu hình bộ phận sales và chuyên viên sales cũng như lead chưa được"
+" phân công. "
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -2610,7 +2612,7 @@ msgid ""
 "No lead assigned to salespersons because no unassigned lead matches their "
 "domains."
 msgstr ""
-"Không có lead được phân công cho nhân viên kinh doanh vì không có lead chưa "
+"Không có lead được phân công cho chuyên viên sales vì không có lead chưa "
 "được phân công khớp với miền của họ. "
 
 #. module: crm
@@ -2620,7 +2622,7 @@ msgid ""
 "No new lead allocated to %(team_name)s team because no unassigned lead "
 "matches its domain."
 msgstr ""
-"Không có lead mới nào được phân công cho đội ngũ %(team_name)s vì không có "
+"Không có lead mới nào được phân công cho bộ phận %(team_name)s vì không có "
 "lead chưa được phân công nào phù hợp với miền của đội."
 
 #. module: crm
@@ -2629,7 +2631,7 @@ msgstr ""
 msgid ""
 "No new lead allocated to the teams because no lead match their domains."
 msgstr ""
-"Không có lead mới được phân bổ tới các đội ngũ vì không có lead khớp với "
+"Không có lead mới được phân bổ tới các bộ phận vì không có lead khớp với "
 "miền của họ. "
 
 #. module: crm
@@ -2640,7 +2642,7 @@ msgstr "Không có cơ hội để hiển thị!"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "No salesperson"
-msgstr "Không có nhân viên kinh doanh"
+msgstr "Không có chuyên viên sales"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_normalized
@@ -3243,22 +3245,22 @@ msgstr "Bán hàng"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Sales Team"
-msgstr "Đội ngũ kinh doanh"
+msgstr "Bộ phận sales"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team_member
 msgid "Sales Team Member"
-msgstr "Thành viên đội ngũ kinh doanh"
+msgstr "Thành viên bộ phận sales"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Sales Team:"
-msgstr "Đội ngũ kinh doanh:"
+msgstr "Bộ phận sales:"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_config
 msgid "Sales Teams"
-msgstr "Đội ngũ kinh doanh"
+msgstr "Bộ phận sales"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__user_id
@@ -3271,17 +3273,17 @@ msgstr "Đội ngũ kinh doanh"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Salesperson"
-msgstr "Nhân viên kinh doanh"
+msgstr "Chuyên viên sales"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Salesperson:"
-msgstr "Nhân viên kinh doanh:"
+msgstr "Chuyên viên sales:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__user_ids
 msgid "Salespersons"
-msgstr "Nhân viên kinh doanh"
+msgstr "Chuyên viên sales"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized
@@ -3409,7 +3411,7 @@ msgid ""
 "Specific team that uses this stage. Other teams will not be able to see or "
 "use this stage."
 msgstr ""
-"Đội ngũ cụ thể sử dụng giai đoạn này. Các đội khác sẽ không thể nhìn thấy "
+"Bộ phận cụ thể sử dụng giai đoạn này. Các đội khác sẽ không thể nhìn thấy "
 "hoặc sử dụng giai đoạn này."
 
 #. module: crm
@@ -3462,7 +3464,7 @@ msgid ""
 "Stages allow salespersons to easily track how a specific opportunity\n"
 "            is positioned in the sales cycle."
 msgstr ""
-"Các giai đoạn cho phép nhân viên kinh doanh dễ dàng theo dõi một cơ hội\n"
+"Các giai đoạn cho phép chuyên viên sales dễ dàng theo dõi một cơ hội\n"
 "            đang ở đâu trong chu kỳ bán hàng."
 
 #. module: crm
@@ -3552,12 +3554,12 @@ msgstr "Thẻ:"
 #. module: crm
 #: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
 msgid "Teams"
-msgstr "Đội ngũ"
+msgstr "Bộ phận"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_member_config
 msgid "Teams Members"
-msgstr "Thành viên đội ngũ"
+msgstr "Thành viên bộ phận"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -4065,7 +4067,7 @@ msgstr "Đạt trong mục tiêu cơ hội"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Yeah! Deal of the last 7 days for the team."
-msgstr "Tuyệt vời! Các giao dịch của đội ngũ trong 7 ngày qua. "
+msgstr "Tuyệt vời! Các giao dịch của bộ phận trong 7 ngày qua. "
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_yearly
@@ -4194,8 +4196,8 @@ msgstr "để kiểm thử cổng email."
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "to your CRM. This email address is configurable by sales team members."
 msgstr ""
-"cho CRM của bạn. Các thành viên trong đội ngũ kinh doanh có thể cấu hình địa"
-" chỉ email này."
+"cho CRM của bạn. Các thành viên trong bộ phận sales có thể cấu hình địa chỉ "
+"email này."
 
 #. module: crm
 #. odoo-python

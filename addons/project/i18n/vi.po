@@ -99,6 +99,60 @@ msgid ""
 "                noContentHelper: markup(\n"
 "                    "
 msgstr ""
+"\n"
+");\n"
+"\n"
+"export class ProjectTaskFormController extends FormController {\n"
+"    setup() {\n"
+"        super.setup();\n"
+"        this.notifications = useService(\"notification\");\n"
+"    }\n"
+"\n"
+"    /**\n"
+"     * @override\n"
+"     */\n"
+"    getStaticActionMenuItems() {\n"
+"        return {\n"
+"            ...super.getStaticActionMenuItems(),\n"
+"            openHistoryDialog: {\n"
+"                sequence: 50,\n"
+"                icon: \"fa fa-history\",\n"
+"                description: _t(\"Restore History\"),\n"
+"                callback: () => this.openHistoryDialog(),\n"
+"            },\n"
+"        };\n"
+"    }\n"
+"\n"
+"    get deleteConfirmationDialogProps() {\n"
+"        const deleteConfirmationDialogProps = super.deleteConfirmationDialogProps;\n"
+"        if (!this.model.root.data.subtask_count) {\n"
+"            return deleteConfirmationDialogProps;\n"
+"        }\n"
+"        return {\n"
+"            ...deleteConfirmationDialogProps,\n"
+"            body: subTaskDeleteConfirmationMessage,\n"
+"        }\n"
+"    }\n"
+"\n"
+"    async openHistoryDialog() {\n"
+"        const record = this.model.root;\n"
+"        const versionedFieldName = 'description';\n"
+"        const historyMetadata = record.data[\"html_field_history_metadata\"]?.[versionedFieldName];\n"
+"        if (!historyMetadata) {\n"
+"            this.notifications.add(\n"
+"                escape(_t(\n"
+"                    \"The task description lacks any past content that could be restored at the moment.\"\n"
+"                ))\n"
+"            );\n"
+"            return;\n"
+"        }\n"
+"\n"
+"        this.dialogService.add(\n"
+"            HistoryDialog,\n"
+"            {\n"
+"                title: _t(\"Task Description History\"),\n"
+"                noContentHelper: markup(\n"
+"                    "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -1122,7 +1176,7 @@ msgstr "Số lượng tệp đính kèm"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Attachments"
-msgstr ""
+msgstr "Tệp đính kèm"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__user_id
@@ -2626,18 +2680,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Last 30 Days"
-msgstr ""
+msgstr "30 ngày qua"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Last 365 Days"
-msgstr ""
+msgstr "365 ngày qua"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Last 7 Days"
-msgstr ""
+msgstr "7 ngày qua"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -3070,7 +3124,7 @@ msgstr "Hoạt động tiếp theo"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
 #: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Sự kiện lịch hoạt động tiếp theo"
+msgstr "Sự kiện trên lịch cho hoạt động tiếp theo"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
@@ -3329,7 +3383,7 @@ msgstr "Khác"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Overdue"
-msgstr ""
+msgstr "Quá hạn"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -4201,7 +4255,7 @@ msgstr "Gửi email"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__send_invitation
 msgid "Send Invitation"
-msgstr ""
+msgstr "Gửi lời mời "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
@@ -5821,7 +5875,7 @@ msgstr "trạng thái để đánh dấu nhiệm vụ là hoàn thành."
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 msgid "state.message"
-msgstr ""
+msgstr "state.message"
 
 #. module: project
 #. odoo-javascript

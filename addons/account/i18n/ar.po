@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# ahmedmalsawi, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
@@ -511,7 +512,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid ""
 "<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
-msgstr ""
+msgstr "<b>تم تطبيق خصم الدفع المبكر لـ %(payment_reference).</b> "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1491,7 +1492,7 @@ msgstr "يمكن وضع تحذير خاص بالشريك (الحساب) "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
 msgid "Abnormal Amount Partner"
-msgstr ""
+msgstr "الشريك لديه مبلغ غير معتاد "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_amount_warning
@@ -1503,7 +1504,7 @@ msgstr "تحذير المبلغ غير المعتاد "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_date_partner_ids
 msgid "Abnormal Date Partner"
-msgstr ""
+msgstr "الشريك لديه تاريخ غير معتاد "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_date_warning
@@ -3623,7 +3624,7 @@ msgstr "خسائر الفروقات النقدية"
 #: model:account.account,name:account.1_cash_discount_gain
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid "Early Discount Gain"
-msgstr ""
+msgstr "أرباح خصم الدفع المبكر "
 
 #. module: account
 #. odoo-python
@@ -3631,7 +3632,7 @@ msgstr ""
 #: model:account.account,name:account.1_cash_discount_loss
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid "Early Discount Loss"
-msgstr ""
+msgstr "خصائص خصم الدفع المبكر "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__early_pay_discount_computation
@@ -5572,7 +5573,7 @@ msgstr "عرض أيام الشهر التالي "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
 msgid "Display Force Post"
-msgstr ""
+msgstr "عرض فرض الترحيل "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_inactive_currency_warning
@@ -7022,7 +7023,7 @@ msgstr "مسار HTTP"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__half-up
 msgid "Half-up (away from 0)"
-msgstr ""
+msgstr "التقريب للأعلى بعد النصف (بعيداً عن 0) "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
@@ -7130,7 +7131,7 @@ msgstr "أعلى اسم"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
 msgid "Horizontal Split Side"
-msgstr ""
+msgstr "تقسيم الشاشة أفقياً "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7841,6 +7842,8 @@ msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
 " for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
+"\"نطاق الرمز البريدي\" غير صالح، عليك تهيئة قِيَم \"من\" و \"إلى\" الخاصة "
+"بالرمز البريدي، ويجب أن تكون قيمة \"إلى\" أكبر من قيمة \"من\". "
 
 #. module: account
 #. odoo-python
@@ -8860,7 +8863,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Late"
-msgstr ""
+msgstr "متأخر"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8915,6 +8918,7 @@ msgstr "مدفوعات أقل"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Let artificial intelligence scan your bill. Pay easily."
 msgstr ""
+"دع الذكاء الاصطناعي يتولى أمر مسح الفواتير الخاصة بك. قم بالدفع بكل سهولة. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9390,7 +9394,7 @@ msgstr "لم يتم العثور على 'active_model' في السياق. "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__missing_account_partners
 msgid "Missing Account Partners"
-msgstr ""
+msgstr "الحساب غير موجود للشركاء "
 
 #. module: account
 #. odoo-python
@@ -11111,7 +11115,7 @@ msgstr "ترحيل الفرق في"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Exchange difference entries:"
-msgstr ""
+msgstr "قيود فروقات سعر الصرف: "
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
@@ -11121,12 +11125,12 @@ msgstr "ترحيل الدفعات "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank transactions and payments:"
-msgstr ""
+msgstr "المعاملات البنكية والمدفوعات "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Early payment discounts:"
-msgstr ""
+msgstr "خصومات الدفع المبكر: "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
@@ -12157,7 +12161,7 @@ msgstr "مندوب المبيعات "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Same Account as product"
-msgstr ""
+msgstr "نفس الحساب الذي لدى المنتج "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_same_currency
@@ -12583,7 +12587,7 @@ msgstr "حساب منفصل لخصم الدخل "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Invoice line discounts:"
-msgstr ""
+msgstr "خصومات بند الفاتورة: "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__9
@@ -15113,12 +15117,12 @@ msgstr "بانتظار الفوترة"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "To Pay"
-msgstr ""
+msgstr "بانتظار الدفع "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "To Validate"
-msgstr ""
+msgstr "بانتظار التصديق "
 
 #. module: account
 #. odoo-python
@@ -15331,7 +15335,7 @@ msgstr "معايير نوعية المعاملة "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Transactions"
-msgstr ""
+msgstr "المعاملات "
 
 #. module: account
 #. odoo-python
@@ -16157,7 +16161,7 @@ msgstr "اكتب <b>عنوان بريدك الإلكتروني</b> هنا لاخ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
 msgid "Writeoff Is Exchange Account"
-msgstr ""
+msgstr "الشطب عبارة عن حساب صرف العملة "
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit

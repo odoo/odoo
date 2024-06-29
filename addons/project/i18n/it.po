@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-03 08:43+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,6 +99,60 @@ msgid ""
 "                noContentHelper: markup(\n"
 "                    "
 msgstr ""
+"\n"
+");\n"
+"\n"
+"export class ProjectTaskFormController extends FormController {\n"
+"    setup() {\n"
+"        super.setup();\n"
+"        this.notifications = useService(\"notification\");\n"
+"    }\n"
+"\n"
+"    /**\n"
+"     * @override\n"
+"     */\n"
+"    getStaticActionMenuItems() {\n"
+"        return {\n"
+"            ...super.getStaticActionMenuItems(),\n"
+"            openHistoryDialog: {\n"
+"                sequence: 50,\n"
+"                icon: \"fa fa-history\",\n"
+"                description: _t(\"Restore History\"),\n"
+"                callback: () => this.openHistoryDialog(),\n"
+"            },\n"
+"        };\n"
+"    }\n"
+"\n"
+"    get deleteConfirmationDialogProps() {\n"
+"        const deleteConfirmationDialogProps = super.deleteConfirmationDialogProps;\n"
+"        if (!this.model.root.data.subtask_count) {\n"
+"            return deleteConfirmationDialogProps;\n"
+"        }\n"
+"        return {\n"
+"            ...deleteConfirmationDialogProps,\n"
+"            body: subTaskDeleteConfirmationMessage,\n"
+"        }\n"
+"    }\n"
+"\n"
+"    async openHistoryDialog() {\n"
+"        const record = this.model.root;\n"
+"        const versionedFieldName = 'description';\n"
+"        const historyMetadata = record.data[\"html_field_history_metadata\"]?.[versionedFieldName];\n"
+"        if (!historyMetadata) {\n"
+"            this.notifications.add(\n"
+"                escape(_t(\n"
+"                    \"La descrizione dell'attività non presenta nessun contenuto passato da poter. ripristinare al momento\".\n"
+"                ))\n"
+"            );\n"
+"            return;\n"
+"        }\n"
+"\n"
+"        this.dialogService.add(\n"
+"            HistoryDialog,\n"
+"            {\n"
+"                title: _t(\"Task Description History\"),\n"
+"                noContentHelper: markup(\n"
+"                    "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -130,7 +185,7 @@ msgstr "#{task.stage_id.name}"
 #. odoo-javascript
 #: code:addons/project/static/src/views/widget/subtask_counter.js:0
 msgid "%(closedCount)s sub-tasks closed out of %(totalCount)s"
-msgstr ""
+msgstr "%(closedCount)s sotto-attività chiuse di %(totalCount)s"
 
 #. module: project
 #. odoo-python
@@ -148,7 +203,7 @@ msgstr "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
 #. odoo-javascript
 #: code:addons/project/static/src/views/widget/subtask_counter.js:0
 msgid "%(count1)s/%(count2)s"
-msgstr ""
+msgstr "%(count1)s/%(count2)s"
 
 #. module: project
 #. odoo-python
@@ -651,12 +706,13 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created and is not part of any project."
 msgstr ""
+"È stata creata una nuova attività che non fa parte di nessun progetto."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created in the \"%(project_name)s\" project."
-msgstr ""
+msgstr "È stata creata una nuova attività nel progetto \"%(project_name)s\"."
 
 #. module: project
 #. odoo-python
@@ -961,6 +1017,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
 msgid "Anyone with this link can access the project in read-only mode."
 msgstr ""
+"Chiunque abbia il link può accedere al progetto in modalità di sola lettura."
 
 #. module: project
 #. odoo-javascript
@@ -980,13 +1037,13 @@ msgstr "Architettura"
 #. odoo-javascript
 #: code:addons/project/static/src/views/analytic_account_form/analytic_account_form_controller.js:0
 msgid "Archive Account"
-msgstr ""
+msgstr "Archivia conto"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/analytic_account_list/analytic_account_list_controller.js:0
 msgid "Archive Accounts"
-msgstr ""
+msgstr "Archivia conti"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -1124,7 +1181,7 @@ msgstr "Numero allegati"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Attachments"
-msgstr ""
+msgstr "Allegati"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__user_id
@@ -1320,7 +1377,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Choose one of the following access modes for your collaborators:"
-msgstr ""
+msgstr "Scegli una delle seguenti modalità di accesso per i collaboratori:"
 
 #. module: project
 #. odoo-javascript
@@ -2010,7 +2067,7 @@ msgstr "Modifica"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit_limited
 msgid "Edit with limited access"
-msgstr ""
+msgstr "Modifica con accesso limitato"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2018,6 +2075,8 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow "
 "in the Kanban view."
 msgstr ""
+"Modifica con accesso limitato: i collaboratori possono visualizzare e "
+"modificare le attività che seguono nella vista Kanban."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2025,6 +2084,9 @@ msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"Modifica: i collaboratori possono visualizzare e modificare tutte le "
+"attività nella vista Kanban. Per di più, possono scegliere quali attività "
+"seguire."
 
 #. module: project
 #. odoo-javascript
@@ -2157,7 +2219,7 @@ msgstr "Minimizzata nel kanban"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_container.xml:0
 msgid "Follow"
-msgstr ""
+msgstr "Segui"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
@@ -2216,7 +2278,7 @@ msgstr "Frequenza"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Future"
-msgstr ""
+msgstr "Futuro"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2623,18 +2685,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Last 30 Days"
-msgstr ""
+msgstr "Ultimi 30 giorni"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Last 365 Days"
-msgstr ""
+msgstr "Ultimi 365 giorni"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Last 7 Days"
-msgstr ""
+msgstr "Ultimi 7 giorni"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -3328,7 +3390,7 @@ msgstr "Altri"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Overdue"
-msgstr ""
+msgstr "In ritardo"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -3638,7 +3700,7 @@ msgstr "Condivisione Progetto"
 #. module: project
 #: model:ir.model,name:project.model_project_share_collaborator_wizard
 msgid "Project Sharing Collaborator Wizard"
-msgstr ""
+msgstr "Procedura guidata condivisione progetto collaboratore"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
@@ -3719,7 +3781,7 @@ msgstr "Descrizione progetto..."
 #. odoo-python
 #: code:addons/project/wizard/project_share_wizard.py:0
 msgid "Project shared with your collaborators."
-msgstr ""
+msgstr "Progetto condiviso con i collaboratori."
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
@@ -3802,7 +3864,7 @@ msgstr "Proprietà"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
 msgid "Public Link"
-msgstr ""
+msgstr "Link pubblico"
 
 #. module: project
 #. odoo-javascript
@@ -3922,6 +3984,8 @@ msgstr "Sola lettura"
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Read-only: collaborators can view tasks but cannot edit them."
 msgstr ""
+"Di sola lettura: i collaboratori possono visualizzare le attività ma non "
+"possono modificarle."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
@@ -3930,6 +3994,9 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
 "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"Di sola lettura: i collaboratori possono visualizzare le attività ma non possono modificarle.\n"
+"Modifica con accesso limitato: i collaboratori possono visualizzare e modificare le attività che seguono dalla vista Kanban.\n"
+"Modifica: i collaboratori possono visualizzare e modificare tutte le attività dalla vista Kanban. Inoltre, possono scegliere quali attività seguire."
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -3999,7 +4066,7 @@ msgstr "Modello documento correlato"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_chatter/project_follower_list.js:0
 msgid "Remove Collaborator"
-msgstr ""
+msgstr "Rimuovi collaboratore"
 
 #. module: project
 #. odoo-javascript
@@ -4176,7 +4243,7 @@ msgstr "Cerca in stato"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Search%(left)s Tasks%(right)s"
-msgstr ""
+msgstr "Ricerca%(left)s attività%(right)s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -4199,7 +4266,7 @@ msgstr "Invia e-mail"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__send_invitation
 msgid "Send Invitation"
-msgstr ""
+msgstr "Invia invito"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
@@ -4315,6 +4382,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"Alcuni dei conti analitici selezionati sono associati ad un progetto:\n"
+"%(accountList)s\n"
+"\n"
+"L'archiviazione dei conti eliminerà l'opzione per registrare i fogli ore nei rispettivi progetti.\n"
+"\n"
+"Sei sicuro di voler procedere?"
 
 #. module: project
 #. odoo-javascript
@@ -4826,6 +4899,7 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 msgid "The search does not support operator %(operator)s or value %(value)s."
 msgstr ""
+"La ricerca non supporta l'operatore %(operator)s o il valore %(value)s."
 
 #. module: project
 #. odoo-python
@@ -4852,7 +4926,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "The task description was empty at the time."
-msgstr ""
+msgstr "La descrizione dell'attività era vuota in quel momento."
 
 #. module: project
 #. odoo-python
@@ -4932,6 +5006,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"Il conto analitico è associato ai seguenti progetti:\n"
+"%(projectList)s\n"
+"\n"
+"L'archiviazione del conto eliminerà l'opzione per la registrazione dei fogli ore nei rispettivi progetti.\n"
+"\n"
+"Sei sicuro di voler procedere?"
 
 #. module: project
 #. odoo-javascript
@@ -4940,6 +5020,9 @@ msgid ""
 "This follower is currently a project collaborator. Removing them will revoke"
 " their portal access to the project. Are you sure you want to proceed?"
 msgstr ""
+"La persona che segue il progetto è un collaboratore al momento. "
+"L'eliminazione comporterà la revoca dell'accesso al portale del progetto. "
+"Sei sicuro di voler procedere?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -5229,7 +5312,7 @@ msgstr "Non assegnati"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_container.xml:0
 msgid "Unfollow"
-msgstr ""
+msgstr "Non seguire"
 
 #. module: project
 #. odoo-python
@@ -5828,7 +5911,7 @@ msgstr "per contrassegnare l'attività come completata."
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 msgid "state.message"
-msgstr ""
+msgstr "state.message"
 
 #. module: project
 #. odoo-javascript

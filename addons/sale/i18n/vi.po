@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-27 04:55+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -958,7 +959,7 @@ msgstr "<strong>Ghi chú vị trí tài chính:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong><br/>"
-msgstr "<strong>Nhân viên kinh doanh:</strong><br/>"
+msgstr "<strong>Chuyên viên sales:</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1163,7 +1164,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "Add"
-msgstr ""
+msgstr "Thêm"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1184,7 +1185,7 @@ msgstr "Thêm phần"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "Add one"
-msgstr ""
+msgstr "Thêm một "
 
 #. module: sale
 #. odoo-javascript
@@ -3579,7 +3580,7 @@ msgstr "Xem trước"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_list/product_list.xml:0
 msgid "Price"
-msgstr ""
+msgstr "Giá"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
@@ -3683,7 +3684,7 @@ msgstr "Tài liệu sản phẩm"
 #: code:addons/sale/static/src/js/product/product.xml:0
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "Product Image"
-msgstr ""
+msgstr "Hình ảnh sản phẩm"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_packaging
@@ -3981,7 +3982,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "Remove product"
-msgstr ""
+msgstr "Xoá sản phẩm"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__render_model
@@ -4064,7 +4065,7 @@ msgstr "SO0000"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
 msgid "Sale"
-msgstr ""
+msgstr "Bán hàng"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -4166,7 +4167,7 @@ msgstr "Phân tích bán hàng theo khách hàng"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
-msgstr "Phân tích bán hàng theo nhân viên kinh doanh"
+msgstr "Phân tích bán hàng theo chuyên viên sales"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4279,13 +4280,13 @@ msgstr "Đơn bán hàng"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Team"
-msgstr "Đội ngũ kinh doanh"
+msgstr "Bộ phận sales"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.report_sales_team
 #: model:ir.ui.menu,name:sale.sales_team_config
 msgid "Sales Teams"
-msgstr "Đội ngũ kinh doanh"
+msgstr "Bộ phận sales"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn
@@ -4332,12 +4333,12 @@ msgstr "Doanh số: Tổng trước thuế"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Salesperson"
-msgstr "Nhân viên kinh doanh"
+msgstr "Chuyên viên sales"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_salespeople
 msgid "Salespersons"
-msgstr "Nhân viên kinh doanh"
+msgstr "Chuyên viên sales"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -5033,9 +5034,9 @@ msgid ""
 msgstr ""
 "Báo cáo này thực hiện việc phân tích báo giá và đơn bán hàng của bạn. Kiểm "
 "tra phân tích doanh số bán hàng và sắp xếp nó theo tiêu chí nhóm khác nhau "
-"(nhân viên bán hàng, đối tác, sản phẩm,...). Sử dụng báo cáo này để thực "
-"hiện phân tích trên đơn hàng chưa xuất hoá đơn. Nếu bạn muốn phân tích doanh"
-" thu, bạn nên sử dụng báo cáo Phân tích hoá đơn trong ứng dụng Kế toán."
+"(chuyên viên sales, đối tác, sản phẩm,...). Sử dụng báo cáo này để thực hiện"
+" phân tích trên đơn hàng chưa xuất hoá đơn. Nếu bạn muốn phân tích doanh "
+"thu, bạn nên sử dụng báo cáo Phân tích hoá đơn trong ứng dụng Kế toán."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -5047,8 +5048,8 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "Báo cáo này thực hiện việc phân tích báo giá của bạn. Kiểm tra phân tích "
-"doanh số bán hàng và sắp xếp nó theo tiêu chí nhóm khác nhau (nhân viên bán "
-"hàng, đối tác, sản phẩm,...). Sử dụng báo cáo này để thực hiện phân tích "
+"doanh số bán hàng và sắp xếp nó theo tiêu chí nhóm khác nhau (chuyên viên "
+"sales, đối tác, sản phẩm,...). Sử dụng báo cáo này để thực hiện phân tích "
 "trên đơn hàng chưa xuất hoá đơn. Nếu bạn muốn phân tích doanh thu, bạn nên "
 "sử dụng báo cáo Phân tích hoá đơn trong ứng dụng Kế toán."
 
@@ -5062,8 +5063,8 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "Báo cáo này thực hiện việc phân tích đơn bán hàng của bạn. Kiểm tra phân "
-"tích doanh số bán hàng và sắp xếp nó theo tiêu chí nhóm khác nhau (nhân viên"
-" bán hàng, đối tác, sản phẩm,...). Sử dụng báo cáo này để thực hiện phân "
+"tích doanh số bán hàng và sắp xếp nó theo tiêu chí nhóm khác nhau (chuyên "
+"viên sales, đối tác, sản phẩm,...). Sử dụng báo cáo này để thực hiện phân "
 "tích trên đơn hàng chưa xuất hoá đơn. Nếu bạn muốn phân tích doanh thu, bạn "
 "nên sử dụng báo cáo Phân tích hoá đơn trong ứng dụng Kế toán."
 
@@ -5144,7 +5145,7 @@ msgstr "Tổng đã gồm thuế"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_list/product_list.xml:0
 msgid "Total:"
-msgstr ""
+msgstr "Tổng:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type

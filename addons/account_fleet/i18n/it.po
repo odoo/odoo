@@ -26,6 +26,8 @@ msgid ""
 "<span class=\"o_stat_text text-success\" invisible=\"account_move_state != 'posted'\" title=\"Service's Bill\">Service's Bill</span>\n"
 "                            <span class=\"o_stat_text text-warning\" invisible=\"account_move_state == 'posted'\" title=\"Service's Bill\">Service's Bill</span>"
 msgstr ""
+"<span class=\"o_stat_text text-success\" invisible=\"account_move_state != 'posted'\" title=\"Service's Bill\">Fattura servizio</span>\n"
+"                            <span class=\"o_stat_text text-warning\" invisible=\"account_move_state == 'posted'\" title=\"Service's Bill\">Fattura servizio</span>"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
@@ -35,13 +37,13 @@ msgstr "Movimento contabile"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_line_id
 msgid "Account Move Line"
-msgstr ""
+msgstr "Riga movimento contabile"
 
 #. module: account_fleet
 #. odoo-python
 #: code:addons/account_fleet/models/fleet_vehicle_log_services.py:0
 msgid "Bill"
-msgstr ""
+msgstr "Fattura"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
@@ -56,12 +58,12 @@ msgstr "Numero fatture"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__amount
 msgid "Cost"
-msgstr ""
+msgstr "Costo"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_automatic_entry_wizard
 msgid "Create Automatic Entries"
-msgstr ""
+msgstr "Crea registrazioni automatiche"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.account_move_view_tree
@@ -92,7 +94,7 @@ msgstr "Fattura fornitore servizio: %s"
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_fleet_vehicle_log_services
 msgid "Services for vehicles"
-msgstr ""
+msgstr "Servizi per veicoli"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_state
@@ -118,6 +120,8 @@ msgid ""
 "You cannot delete log services records because one or more of them were bill"
 " created."
 msgstr ""
+"Non è possibile eliminare record relativi a servizi registrati perché sono "
+"state già generate una o più fatture."
 
 #. module: account_fleet
 #. odoo-python
@@ -126,6 +130,9 @@ msgid ""
 "You cannot modify amount of services linked to an account move line. Do it "
 "on the related accounting entry instead."
 msgstr ""
+"Non è possibile modificare l'importo di servizi collegati alla riga di un "
+"movimento contabile. Effettua l'operazione per la registrazione contabile "
+"corrispondente."
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
