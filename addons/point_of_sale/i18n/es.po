@@ -930,8 +930,8 @@ msgid ""
 "At the session closing: A picking is created for the entire session when it's closed\n"
 " In real time: Each order sent to the server create its own picking"
 msgstr ""
-"Al cierre de la sesión: se crea una recolección para la sesión entera cuando se cierra\n"
-" En tiempo real: cada pedido enviado al servidor crea su propia recolección"
+"Al cierre de la sesión: se crea un albarán de picking para la sesión entera cuando se cierra\n"
+" En tiempo real: cada pedido enviado al servidor crea su propio albarán"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_attachment_count
@@ -3096,7 +3096,7 @@ msgstr "Mejore la navegación en pantallas táctiles industriales imprecisas"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__opened
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "In Progress"
-msgstr "En progreso"
+msgstr "En proceso"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4818,25 +4818,25 @@ msgstr "Elija las categorías de productos disponibles"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__picking_ids
 msgid "Picking"
-msgstr "Recolección"
+msgstr "Recogida"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_count
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__picking_count
 msgid "Picking Count"
-msgstr "Número de recolecciones"
+msgstr "Número de recogidas"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #, python-format
 msgid "Picking POS"
-msgstr "Recolecciones del PdV"
+msgstr "Recogida del TPV"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Tipo de recolección"
+msgstr "Tipo de recogida"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4846,7 +4846,7 @@ msgstr "Tipo de recolección"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 #, python-format
 msgid "Pickings"
-msgstr "Recolecciones"
+msgstr "Recogidas"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6360,7 +6360,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
 #, python-format
 msgid "Sending in progress."
-msgstr "Envío en progreso."
+msgstr "Envío en proceso."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -7500,7 +7500,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "There is already an electronic payment in progress."
-msgstr "Ya hay un pago electrónico en progreso."
+msgstr "Ya hay un pago electrónico en proceso."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -7521,9 +7521,9 @@ msgid ""
 "\n"
 " Please pay the exact amount or add a cash payment method in the point of sale configuration"
 msgstr ""
-"No hay ningún método de pago de caja disponible en este TPV para manejar el cambio.\n"
+"No hay ningún método de pago de caja disponible en este TPV para gestionar el cambio.\n"
 "\n"
-"Pague el importe exacto o añada un método de pago de caja en la configuración del TPV"
+"Pague el importe exacto o agregue un método de pago de caja en la configuración del TPV"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7974,7 +7974,7 @@ msgid ""
 "%s"
 msgstr ""
 "No se puede cerrar y validar la sesión.\n"
-"Configure la cuenta de impuestos correspondiente en cada línea de reparto de los siguientes impuestos:\n"
+"Configure la cuenta de impuestos correspondiente en cada línea de repartición de los siguientes impuestos:\n"
 "%s"
 
 #. module: point_of_sale
@@ -8129,8 +8129,8 @@ msgid ""
 "Used to record product pickings. Products are consumed from its default "
 "source location."
 msgstr ""
-"Se utiliza para registrar la recolección de productos. Los productos se "
-"consumen de su ubicación de origen predeterminada."
+"Se utiliza para registrar la selección de productos. Los productos se "
+"consumen de su ubicación de origen por defecto."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__user_id

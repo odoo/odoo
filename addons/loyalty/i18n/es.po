@@ -54,7 +54,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Mostrar en el portal web, factura del cliente en PdV, proceso de pago de comercio electrónico, el número de puntos disponibles y usados por recompensa.\n"
+"        Mostrar en el portal web, factura del cliente en TPV, proceso de pago de comercio electrónico, el número de puntos disponibles y usados por recompensa.\n"
 "        "
 
 #. module: loyalty
@@ -88,7 +88,7 @@ msgstr "%s por orden"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%s per order on "
-msgstr "%s por orden sobre "
+msgstr "%s por pedido sobre "
 
 #. module: loyalty
 #. odoo-python
@@ -676,7 +676,7 @@ msgstr "Cancelar"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 msgid "Card expires"
-msgstr "La tarjeta caduca"
+msgstr "La tarjeta expira"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_category_id
@@ -1037,7 +1037,8 @@ msgid ""
 "Each rule can grant points to the customer he will be able to exchange "
 "against rewards"
 msgstr ""
-"Cada regla puede otorgar puntos al cliente que podrá canjear por recompensas"
+"Cada regla le otorgará puntos al cliente que después podrá intercambiar por "
+"recompensas."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__mail_template_id
@@ -1052,7 +1053,7 @@ msgstr "Plantillas de correo electrónico"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__date_to
 msgid "End date"
-msgstr "Fecha límite"
+msgstr "Fecha de finalización"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__excl
@@ -1816,7 +1817,7 @@ msgid ""
 "Set up conditional rules on the order that will give access to rewards for "
 "customers"
 msgstr ""
-"Configurar reglas condicionales en la orden que le dará acceso a las "
+"Configurar reglas condicionales en el pedido que le dará acceso a las "
 "recompensas para clientes"
 
 #. module: loyalty
@@ -2024,9 +2025,9 @@ msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid.."
 msgstr ""
-"Si se separan los cupones de recompensa por unidad igualada, sólo se aplica "
-"a los programas \"futuros\" y al modo de activación por dinero gastado o "
-"unidad pagada."
+"Si separar los cupones de recompensa por unidad emparejada solo se aplica "
+"para programas 'futuros' y activar el modo por dinero gastado o unidad "
+"pagada."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
@@ -2192,7 +2193,7 @@ msgstr "productos específicos"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "spent"
-msgstr "gastado"
+msgstr "gastado(s)"
 
 #. module: loyalty
 #. odoo-python

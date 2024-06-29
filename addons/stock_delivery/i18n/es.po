@@ -58,7 +58,7 @@ msgstr "<strong>Transportista:</strong>"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>HS Code</strong>"
-msgstr "<strong>Código SA</strong>"
+msgstr "<strong>Código HS</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
@@ -110,7 +110,7 @@ msgstr "Aplicable a los métodos de envío"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_bulk
 msgid "Bulk Weight"
-msgstr "Peso a granel"
+msgstr "Peso aparente"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -241,7 +241,7 @@ msgstr "Política de facturación"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__is_return_picking
 msgid "Is Return Picking"
-msgstr "Es recolección de devolución"
+msgstr "Es albarán de devolución"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_uid
@@ -297,7 +297,7 @@ msgstr "Paquetes"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__picking_id
 msgid "Picking"
-msgstr "Recolección"
+msgstr "Albarán"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
@@ -333,7 +333,7 @@ msgstr "Etiqueta de devolución"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Recolección de devolución"
+msgstr "Albarán de devolución"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__route_ids
@@ -465,7 +465,8 @@ msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
 msgstr ""
-"No se puede crear el paquete porque el peso total de los productos es 0.0 %s"
+"No se puede crear el paquete porque el peso total de los productos en el "
+"albarán es 0.0 %s"
 
 #. module: stock_delivery
 #. odoo-python
@@ -522,7 +523,7 @@ msgstr "Peso total del paquete."
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight
 msgid "Total weight of the products in the picking."
-msgstr "Peso total de los productos en la recolección."
+msgstr "Peso total de los productos en el albarán."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
