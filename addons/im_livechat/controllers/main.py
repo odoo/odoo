@@ -19,7 +19,7 @@ class LivechatController(http.Controller):
     # Note: the `cors` attribute on many routes is meant to allow the livechat
     # to be embedded in an external website.
 
-    @http.route('/im_livechat/external_lib.<any(css,js):ext>', type='http', auth='public', cors='*')
+    @http.route('/im_livechat/external_lib.<any(css,js,xml.js):ext>', type='http', auth='public', cors='*')
     def external_lib(self, ext, **kwargs):
         """ Preserve compatibility with legacy livechat imports. Only
         serves javascript since the css will be fetched by the shadow
@@ -29,7 +29,7 @@ class LivechatController(http.Controller):
             raise request.not_found()
         return self.assets_embed(ext, **kwargs)
 
-    @http.route('/im_livechat/assets_embed.<any(css, js):ext>', type='http', auth='public', cors='*')
+    @http.route('/im_livechat/assets_embed.<any(css,js,xml.js):ext>', type='http', auth='public', cors='*')
     def assets_embed(self, ext, **kwargs):
         # If the request comes from a different origin, we must provide the CORS
         # assets to enable the redirection of routes to the CORS controller.
@@ -39,7 +39,8 @@ class LivechatController(http.Controller):
         if origin_url.netloc != headers.get('host') or origin_url.scheme != request.httprequest.scheme:
             bundle = 'im_livechat.assets_embed_cors'
         asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
-        if ext not in ('css', 'js'):
+        ext = 'xml' if ext == 'xml.js' else ext
+        if ext not in ('css', 'js', 'xml'):
             raise request.not_found()
         stream = request.env['ir.binary']._get_stream_from(getattr(asset, ext)())
         return stream.get_response()
