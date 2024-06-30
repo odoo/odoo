@@ -6,14 +6,15 @@
 # Triine Aavik <triine@avalah.ee>, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Anna, 2023
+# Tairi Tiimann, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Anna, 2023\n"
+"Last-Translator: Tairi Tiimann, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,22 +37,25 @@ msgstr "Minimaalne parooli pikkus"
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
 msgstr ""
+"Miinimum tähemärkide arv, mida parool peab sisaldama. Määra 0, et mitte "
+"defineerida."
 
 #. module: auth_password_policy
-#. openerp-web
+#. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_field.js:0
 #, python-format
 msgid "Password"
 msgstr "Salasõna"
 
 #. module: auth_password_policy
+#. odoo-python
 #: code:addons/auth_password_policy/models/res_users.py:0
 #, python-format
 msgid "Passwords must have at least %d characters, got %d."
-msgstr ""
+msgstr "Parool peab sisaldaba vähemalt %d tähemärki, hetkel on %d."
 
 #. module: auth_password_policy
-#. openerp-web
+#. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_meter.js:0
 #, python-format
 msgid ""
@@ -59,6 +63,9 @@ msgid ""
 "\n"
 "Hint: to increase password strength, increase length, use multiple words, and use non-letter characters."
 msgstr ""
+"Nõutud: %s\n"
+"\n"
+"Vihje: parooli tugevuse suurendamiseks looge pikem parool, kasutage mitut sõna, numbreid ja sümboleid."
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
@@ -66,28 +73,28 @@ msgid "User"
 msgstr "Kasutaja"
 
 #. module: auth_password_policy
-#. openerp-web
+#. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
 msgid "at least %s character classes"
-msgstr ""
+msgstr "vähemalt %s tähemärgiklassi"
 
 #. module: auth_password_policy
-#. openerp-web
+#. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
 msgid "at least %s characters"
 msgstr "vähemalt %s tähemärki"
 
 #. module: auth_password_policy
-#. openerp-web
+#. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
 msgid "at least %s words"
 msgstr "vähemalt %s sõna"
 
 #. module: auth_password_policy
-#. openerp-web
+#. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_meter.js:0
 #, python-format
 msgid "no requirements"

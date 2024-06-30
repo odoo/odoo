@@ -722,13 +722,6 @@ msgid "Assign Serial Numbers"
 msgstr "Asignar números de serie"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/product.py:0
-#, python-format
-msgid "At least one component can not be resupplied."
-msgstr ""
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Manufacturing Order."
 msgstr "En la creación de una orden de fabricación."
@@ -1150,6 +1143,17 @@ msgstr "Cancelar"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Cancelled"
 msgstr "Cancelado"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Cannot compute days to prepare due to missing route info for at least 1 "
+"component or for the final product."
+msgstr ""
+"No es posible calcular los días necesarios de preparación. Falta información"
+" sobre la ruta para al menos 1 componente o para el producto final."
 
 #. module: mrp
 #. odoo-python
@@ -4548,7 +4552,7 @@ msgstr "Establecer cantidades y validar"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
 msgid "Set duration manually"
-msgstr "Establecer la duración manualmente"
+msgstr "Establecer la duración de forma manual"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
