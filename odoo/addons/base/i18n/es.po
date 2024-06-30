@@ -6777,6 +6777,13 @@ msgid ""
 "To print UPI Qr code add UPI id in company and tick \"QR Codes\" in configuration\n"
 "  "
 msgstr ""
+"\n"
+"Factura con código QR UPI\n"
+"=========================\n"
+"Este módulo agrega el código QR en el informe de factura para el pago UPI que permite realizar el pago a través de cualquier aplicación UPI.\n"
+"\n"
+"Para imprimir el código QR UPI, agregue el id UPI a la empresa y seleccione \"Códigos QR\" en la configuración\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -8973,6 +8980,30 @@ msgid ""
 "    - Clicking the 'Send by mail' button will attach three files to your draft mail: the invoice, the ISR and the QR-bill.\n"
 "    "
 msgstr ""
+"\n"
+"Localización suiza\n"
+"==================\n"
+"Este módulo define un plan contable para Suiza (PME/KMU suiza de 2015). También define impuestos, habilita la generación de ISR y la QR-bill al imprimir una factura o enviarla por correo.\n"
+"\n"
+"Se generará un ISR si especifica la información que necesita:\n"
+"    - La cuenta bancaria que espera que se pague debe estar configurada y tener una referencia postal válida.\n"
+"    - Su factura debe tener una cuenta bancaria asignada para recibir su pago\n"
+"      (esto se puede usar manualmente, pero un valor se asigna de manera automática si tiene una cuenta bancaria definida).\n"
+"    - Debe haber definido las referencias postales de su banco.\n"
+"    - Su factura debe ser en EUR o en CHF (ya que los ISR no aceptan otras divisas)\n"
+"\n"
+"Se generará una QR-bill si\n"
+"    - El partner que está definido en su factura tiene una dirección completa (calle, ciudad, código postal y país) en Suiza\n"
+"    - Seleccionó la opción para generar un código QR suizo en la facturación (se hace automáticamente)\n"
+"    - Un número de cuenta correcto/QR IBAN está definido en su diario bancario\n"
+"    - (al usar un QR-IBAN): la referencia de pago de la factura es un QR de referencia\n"
+"\n"
+"El ISR y la QR-bill se generan automáticamente si cumple con estos criterios.\n"
+"\n"
+"Funciona de esta manera:\n"
+"    - Al imprimir su factura se descargarán tres archivos automáticamente: la factura, su ISR y la QR-bill\n"
+"    - De clic en el botón de \"enviar por correo\" para adjuntar tres archivos al borrador de su correo: la factura, el ISR y la QR-bill.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr
@@ -10041,6 +10072,10 @@ msgid ""
 "The actual till still requires one user but an unlimited number of employees can log on to that till and complete manufacturing tasks.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo permite que los empleados (no los usuarios) ingresen a una orden de trabajo usando un código de barras, un número PIN o ambos.\n"
+"La caja real todavía requiere un usuario, pero un número ilimitado de empleados puede iniciar sesión en esa caja y procesar las ventas.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_hr
@@ -12792,6 +12827,8 @@ msgid ""
 "<span>Private addresses are only visible by authorized users and contain "
 "sensitive data (employee home addresses, ...).</span>"
 msgstr ""
+"<span>Las direcciones privadas solo son visibles para usuarios autorizados y"
+" contienen información sensible (direcciones de los empleados, ...).</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -19793,7 +19830,7 @@ msgstr "Empleados en citas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_hr
 msgid "Employees time registration on Work Orders"
-msgstr ""
+msgstr "Registro del tiempo de los empleados en órdenes de trabajo"
 
 #. module: base
 #. odoo-python
@@ -23097,7 +23134,7 @@ msgstr "India - Informe de existencias (GST)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_upi
 msgid "Indian - UPI"
-msgstr ""
+msgstr "India - UPI "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -24499,7 +24536,7 @@ msgstr "Enlace entre voip y crm"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_hr
 msgid "Link module between Mrp II and HR employees"
-msgstr ""
+msgstr "Módulo de enlace entre Mrp II y empleados de RR. HH."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr
@@ -35213,6 +35250,8 @@ msgid ""
 "specific access. They'll have access thanks to their interviewer "
 "assignation."
 msgstr ""
+"El usuario que interactúe con la aplicación como entrevistador no necesita "
+"acceso específico. Tendrán acceso gracias a su asignación de entrevistador."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__user_id
@@ -37656,6 +37695,8 @@ msgid ""
 "What are my short and long-term goals with the company, and for my\n"
 "            carreer?"
 msgstr ""
+"¿Cuáles son mis metas a corto y largo plazo en la empresa y para mi\n"
+"            trayectoria profesional?"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
