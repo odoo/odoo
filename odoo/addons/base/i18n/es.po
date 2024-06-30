@@ -5515,6 +5515,11 @@ msgid ""
 "We should also consider that there may be users without the inventory application installed and keep a less\n"
 "complex logic.\n"
 msgstr ""
+"\n"
+"Incluso cuando la cantidad de paquetes parece ser inherente solo a la manera en que se distribuye el stock, necesitamos un campo para esto \n"
+"en la factura ya que esa información también podría depender de la declaración DUS.\n"
+"También debemos considerar que puede haber usuarios que no tengan la aplicación Inventario instalada y mantienen una lógica \n"
+"menos compleja.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_extended
@@ -6585,6 +6590,13 @@ msgid ""
 "To print UPI Qr code add UPI id in company and tick \"QR Codes\" in configuration\n"
 "  "
 msgstr ""
+"\n"
+"Factura con código QR UPI\n"
+"=========================\n"
+"Este módulo agrega el código QR en el informe de factura para el pago UPI que permite realizar el pago a través de cualquier aplicación UPI.\n"
+"\n"
+"Para imprimir el código QR UPI, agregue el id UPI a la empresa y seleccione \"Códigos QR\" en la configuración\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -8183,6 +8195,35 @@ msgid ""
 "    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
 "    "
 msgstr ""
+"\n"
+"Propósito del módulo:\n"
+"======================\n"
+"\n"
+"Como parte de los requisitos SII (requisitos legales en Chile), \n"
+"a partir de marzo 2021 las transacciones de boletas se deben enviar al SII como \n"
+"flujo de trabajo electrónico usando un servicio web diferente al que usó para las facturas electrónicas. \n"
+"Antes no era necesario enviar las boletas al SII, solo un informe diario.\n"
+"\n"
+"El requisito de enviar el \"Libro de ventas diarias\"\n"
+"(antes \"reporte de consumo de folios\" o RCOF) se eliminó desde el \n"
+"1 de agosto 2022. Por eso se eliminó de esta versión de Odoo.\n"
+"\n"
+"Diferencias entre el flujo de trabajo de las boletas electrónicas y el de la facturación electrónica:\n"
+"=========================================================================\n"
+"\n"
+"Estos flujos de trabajo tienen diferencias importantes que nos llevaron a realizar este PR con cambios específicos.\n"
+"Estas son las diferencias:\n"
+"\n"
+"* El mecanismo para enviar información de las boletas electrónicas necesita de servidores dedicados, a diferencia de aquellos usados al recibir facturas electrónicas (\"Palena\" para un entorno de producción - palena.sii.cl y \"Maullin\" para un entorno de prueba - maullin.sii.cl).\n"
+"* Los servicios de autenticación que solicitan el estado de una entrega y el estado de un documento serán diferentes.\n"
+"* Token de autenticación obtenido\n"
+"* El esquema XML para enviar boletas electrónicas se actualizó con la incorporación de nuevas etiquetas\n"
+"* La validación del diagnóstico de boletas electrónicas se entregará a a través de un servicio web \"REST\" que tiene como entrada el identificador de envío de la entrega. Las facturas electrónicas continuarán recibiendo los diagnósticos a través de correo electrónico.\n"
+"* El identificador de envío asociado a las boletas electrónicas será de 15 dígitos (las facturas electrónicas son de 10)\n"
+"\n"
+"Puntos importantes de la guía del SII:\n"
+"    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality
@@ -8698,6 +8739,12 @@ msgid ""
 "This module adds TCS and TDS Tax Report and load related Taxes in Indian Company.\n"
 "    "
 msgstr ""
+"\n"
+"Informe de impuestos TCS/TDS para India\n"
+"====================================\n"
+"\n"
+"Este módulo agrega informes de impuestos TCS y TDS y carga los impuestos relacionados en empresas indias.\n"
+"   "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_product_expiry
@@ -8934,6 +8981,18 @@ msgid ""
 "Set the payment reference type from the Sales Journal.\n"
 "    "
 msgstr ""
+"\n"
+"Este es un módulo de Odoo para gestionar la contabilidad en Finlandia.\n"
+"============================================================\n"
+"\n"
+"Después de instalar este módulo tendrá acceso a:\n"
+"    * Plan contable de Finlandia\n"
+"    * Posiciones fiscales\n"
+"    * Tipos de referencias de pago en las facturas (referencia estándar de Finlandia y referencia financiera de Finlandia (RF))\n"
+"    * Formato de la referencia de Finlandia para pedidos de venta\n"
+"\n"
+"Configure el tipo de referencia de pago del diario de ventas.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_uom
@@ -9190,6 +9249,15 @@ msgid ""
 "L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable\n"
 "Seddik au cours du troisième trimestre 2010."
 msgstr ""
+"\n"
+"Módulo base para gestionar el plan contable para Marruecos.\n"
+"====================================================================\n"
+"\n"
+"Ce Module charge le modèle du plan de comptes standard Marocain et permet de\n"
+"générer les états comptables aux normes marocaines (Bilan, CPC (comptes de\n"
+"produits et charges), balance générale à 6 colonnes, Grand livre cumulatif...).\n"
+"L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable\n"
+"Seddik au cours du troisième trimestre 2010."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tw
@@ -9749,6 +9817,10 @@ msgid ""
 "The actual till still requires one user but an unlimited number of employees can log on to that till and complete manufacturing tasks.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo permite que los empleados (no los usuarios) ingresen a una orden de trabajo usando un código de barras, un número PIN o ambos.\n"
+"La caja real todavía requiere un usuario, pero un número ilimitado de empleados puede iniciar sesión en esa caja y procesar las ventas.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_hr
@@ -10917,6 +10989,11 @@ msgid ""
 "This module adds the price difference account. Used in standard perpetual valuation.\n"
 "    "
 msgstr ""
+"\n"
+"Módulo de contabilidad de WMS\n"
+"======================\n"
+"Este módulo agrega la cuenta de diferencia de precios. Se utiliza en la valoración perpetua estándar.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -11070,7 +11147,7 @@ msgstr " Módulo base para los informes de Eslovenia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock_40
 msgid " Electronic Delivery Guide for Mexico CFDI 4.0"
-msgstr ""
+msgstr "Guía de entrega electrónica para CFDI 4.0 de México"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_delivery_mondialrelay
@@ -12243,6 +12320,8 @@ msgid ""
 "<span>Private addresses are only visible by authorized users and contain "
 "sensitive data (employee home addresses, ...).</span>"
 msgstr ""
+"<span>Las direcciones privadas solo son visibles para usuarios autorizados y"
+" contienen información sensible (direcciones de los empleados, ...).</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -13176,12 +13255,12 @@ msgstr "Reportes contables del recordatorio de impuestos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sequence
 msgid "Accounting Sequence"
-msgstr ""
+msgstr "Secuencia contable"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_latam_account_sequence
 msgid "Accounting Sequence - Latam Documents"
-msgstr ""
+msgstr "Secuencia contable - Documentos de Latinoamérica"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_account_budget
@@ -13852,7 +13931,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_extended_40
 msgid "Adds the CommercioExterior Complement to CFDI v4.0"
-msgstr ""
+msgstr "Agrega el complemento ComercioExterior a CFDI v4.0"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_administration
@@ -14111,6 +14190,8 @@ msgstr "Permite enlazar el foro en un curso"
 #: model:ir.module.module,summary:base.module_website_sale_loyalty_delivery
 msgid "Allows to offer free shippings in loyalty program rewards on eCommerce"
 msgstr ""
+"Permite ofrecer envíos gratis en las recompensas del programa de "
+"fidelización desde Comercio electrónico"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sms
@@ -16166,6 +16247,8 @@ msgstr "Cambiar contraseña"
 #: model:ir.module.module,description:base.module_l10n_latam_account_sequence
 msgid "Change the way `sequence.mixin` works to reduce concurrency errors"
 msgstr ""
+"Modifique la forma en que `sequence.mixin` funciona para reducir los errores"
+" de concurrencia"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
@@ -17121,7 +17204,7 @@ msgstr "Convierta correos electrónicos en tickets del servicio de asistencia"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_40
 msgid "Converts the Mexican EDI CFDI documents to version 4.0"
-msgstr ""
+msgstr "Convierte los documentos mexicanos EDI CFDI a la versión 4.0"
 
 #. module: base
 #: model:res.country,name:base.ck
@@ -17911,7 +17994,7 @@ msgstr "DLE 26 110 x 220 mm"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_daily_sales_reports
 msgid "Daily X and Z sales reports of a Point of Sale session"
-msgstr ""
+msgstr "Informes de ventas de X y Z diarios desde una sesión de TPV"
 
 #. module: base
 #. odoo-python
@@ -17988,6 +18071,9 @@ msgid ""
 "Database fetch misses ids (%(missing)s) and has extra ids (%(extra)s), may "
 "be caused by a type incoherence in a previous request"
 msgstr ""
+"La obtención de la base de datos no tiene los ID (%(missing)s) y tiene ID "
+"adicionales (%(extra)s), puede que una incoherencia de tipo en una solicitud"
+" anterior esté causando esto."
 
 #. module: base
 #. odoo-python
@@ -18967,12 +19053,12 @@ msgstr "EDI para Perú"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_40
 msgid "EDI v4.0 for Mexico"
-msgstr ""
+msgstr "EDI v4.0 para México"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_extended_40
 msgid "EDI v4.0 for Mexico (COMEX)"
-msgstr ""
+msgstr "EDI v4.0 para México (COMEX)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
@@ -19170,7 +19256,7 @@ msgstr "Nota electrónica de entrega para Perú (método OSE) y UBL 2.1"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe_edi_stock_20
 msgid "Electronic Delivery Note for Peru (REST API method)"
-msgstr ""
+msgstr "Nota electrónica de entrega para Perú (método REST API)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_edi_exports
@@ -19306,7 +19392,7 @@ msgstr "Empleados en citas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_hr
 msgid "Employees time registration on Work Orders"
-msgstr ""
+msgstr "Registro del tiempo de los empleados en órdenes de trabajo"
 
 #. module: base
 #. odoo-python
@@ -20783,7 +20869,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_loyalty_delivery
 msgid "Free Delivery with Coupon & Loyalty on eCommerce"
-msgstr ""
+msgstr "Entrega gratis con cupones y fidelización en Comercio electrónico"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -21813,7 +21899,7 @@ msgstr "Hong Kong - Nómina "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll_hsbc_autopay
 msgid "Hong Kong - Payroll HSBC AutoPay"
-msgstr ""
+msgstr "Hong Kong - Nómina HSBC AutoPay"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll_account
@@ -22610,12 +22696,12 @@ msgstr "India - Informe de existencias (GST)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_tcs_tds
 msgid "Indian - TCS/TDS Accounting Report and Taxes"
-msgstr ""
+msgstr "India - Informe contable TCS/TDS e impuestos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_upi
 msgid "Indian - UPI"
-msgstr ""
+msgstr "India - UPI "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -24031,7 +24117,7 @@ msgstr "Enlace entre voip y crm"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_hr
 msgid "Link module between Mrp II and HR employees"
-msgstr ""
+msgstr "Módulo de enlace entre Mrp II y empleados de RR. HH."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr
@@ -24223,7 +24309,7 @@ msgstr "Luxemburgo - Nómina y contabilidad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_peppol_id
 msgid "Luxembourg - Peppol Identifier"
-msgstr ""
+msgstr "Luxemburgo - Identificador Peppol "
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_M
@@ -25058,7 +25144,7 @@ msgstr "México - Guía de entrega electrónica Comex"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock_extended_40
 msgid "Mexico - Electronic Delivery Guide Comex 4.0"
-msgstr ""
+msgstr "México - Guía para el intercambio electrónico Comex 4.0"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_reports_closing
@@ -29128,7 +29214,7 @@ msgstr "Impresora Epson del PdV"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_epson_printer_restaurant
 msgid "POS Epson Printer Restaurant"
-msgstr ""
+msgstr "Impresora Epson del TPV para restaurante"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_hr_restaurant
@@ -29444,7 +29530,7 @@ msgstr "Pago - Cuenta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment_invoice_online_payment_patch
 msgid "Payment - Account / Invoice Online Payment Patch"
-msgstr ""
+msgstr "Pago - Contabilidad / Parche de pago de factura en línea"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
@@ -29615,7 +29701,7 @@ msgstr "Perú - Nota de entrega electrónica"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pe_edi_stock_20
 msgid "Peruvian - Electronic Delivery Note 2.0"
-msgstr ""
+msgstr "Perú - Nota de entrega electrónica 2.0"
 
 #. module: base
 #: model:res.country,name:base.ph
@@ -29773,7 +29859,7 @@ msgstr "Punto de venta - Cupones y lealtad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_daily_sales_reports
 msgid "Point of Sale Daily Sales Reports"
-msgstr ""
+msgstr "Informes diarios del punto de venta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -33482,7 +33568,7 @@ msgstr "Argumentos suplementarios"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_stock_40
 msgid "Support CFDI version 4.0"
-msgstr ""
+msgstr "Soporte para CFDI versión 4.0"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live
@@ -34753,6 +34839,8 @@ msgid ""
 "specific access. They'll have access thanks to their interviewer "
 "assignation."
 msgstr ""
+"El usuario que interactúe con la aplicación como entrevistador no necesita "
+"acceso específico. Tendrán acceso gracias a su asignación de entrevistador."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__user_id

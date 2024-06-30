@@ -246,6 +246,32 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <!-- Usamos el logotipo de la compañía que realizó la encuesta (para gestionar casos de multiempresas) -->\n"
+"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    Certificación: <t t-out=\"object.survey_id.display_name or ''\">Formulario de retroalimentación</t>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>Estimado/a <span t-out=\"object.partner_id.name or 'participant'\">participante</span></p>\n"
+"                <p>\n"
+"                    A continuación encontrará adjunta su certificación de\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\">Creación de mobiliario</strong>\n"
+"                    .\n"
+"                </p>\n"
+"                <p>¡Enhorabuena por aprobar el cuestionario con una puntuación de <strong t-out=\"object.scoring_percentage\"></strong> %!</p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -1146,7 +1172,7 @@ msgstr "Abejas"
 #. module: survey
 #: model:survey.question,question_placeholder:survey.vendor_certification_page_3_question_3
 msgid "Beware of leap years !"
-msgstr ""
+msgstr "Tenga en cuenta los años bisiestos."
 
 #. module: survey
 #. odoo-python
@@ -1326,7 +1352,7 @@ msgstr "Opciones"
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_burger_quiz
 msgid "Choose your favourite subject and show how good you are. Ready ?"
-msgstr ""
+msgstr "Elija su tema favorito y demuestre lo bueno que es. ¿Listo?"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic_blue
@@ -2734,7 +2760,7 @@ msgstr "Número limitado de intentos"
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 #, python-format
 msgid "Live Presentation"
-msgstr ""
+msgstr "Presentación en vivo"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -3060,7 +3086,7 @@ msgstr "No quedan intentos."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "No one answered this question."
-msgstr ""
+msgstr "Nadie ha respondido a esta pregunta."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
@@ -3710,7 +3736,7 @@ msgstr "¿Está listo para cambiar su forma de <b>recopilar datos</b>?"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Ready to test? Pick a sample..."
-msgstr ""
+msgstr "¿Está listo? Empiece con un modelo prueba..."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__partner_ids
@@ -4425,7 +4451,7 @@ msgstr "Gracias por su participación, espero lo haya disfrutado."
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Thank you very much for your feedback. We highly value your opinion !"
-msgstr ""
+msgstr "Muchas gracias por su retroalimentación. Valoramos mucho su opinión."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -4744,6 +4770,8 @@ msgstr ""
 msgid ""
 "This small quiz will test your knowledge about our Company. Be prepared !"
 msgstr ""
+"Este pequeño cuestionario pondrá a prueba su conocimiento acerca de nuestra "
+"Empresa. ¡Prepárese!"
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_feedback

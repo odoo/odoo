@@ -9,8 +9,8 @@
 # Martin Trigaux, 2023
 # Iran Villalobos López, 2023
 # David Ramia, 2023
-# Larissa Manderfeld, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 11:04+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,6 +90,18 @@ msgid ""
 "                        Are you sure you want to delete these employees ?\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('has_timesheet', '=', False)]}\">\n"
+"                        No puede eliminar empleados con hojas de asistencia.\n"
+"                        <span attrs=\"{'invisible': [('has_active_employee', '=', False)]}\">\n"
+"                            Puede archivar estos empleados o eliminar antes todas sus hojas de asistencia.\n"
+"                        </span>\n"
+"                        <span attrs=\"{'invisible': [('has_active_employee', '=', True)]}\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            Primero elimine todas sus hojas de asistencia.\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('has_timesheet', '=', True)]}\">\n"
+"                        ¿Está seguro de que desea eliminar a estos empleados?\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
@@ -1274,7 +1286,7 @@ msgstr "Control de partes de horas"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_project_project_filter_inherit_timesheet
 msgid "Timesheets Exceeded"
-msgstr ""
+msgstr "Hojas de asistencia excedidas"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
