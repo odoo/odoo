@@ -47,15 +47,15 @@ class ChannelController(http.Controller):
 
     @http.route("/discuss/channel/messages", methods=["POST"], type="json", auth="public")
     def discuss_channel_messages(self, channel_id, before=None, after=None, limit=30, around=None):
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
-            request=request, channel_id=int(channel_id)
-        )
+        channel = request.env["discuss.channel"].sudo().browse(channel_id)
+        has_channel_access = not channel.group_public_id or channel.group_public_id in request.env.user.groups_id
         domain = [
             ("res_id", "=", channel_id),
             ("model", "=", "discuss.channel"),
             ("message_type", "!=", "user_notification"),
         ]
-        messages = channel_member_sudo.env["mail.message"]._message_fetch(domain, before, after, around, limit)
+        if has_channel_access:
+            messages = request.env["mail.message"]._message_fetch(domain, before, after, around, limit)
         if not request.env.user._is_public() and not around:
             messages.set_message_done()
         return messages.message_format()
@@ -76,7 +76,8 @@ class ChannelController(http.Controller):
 
     @http.route("/discuss/channel/notify_typing", methods=["POST"], type="json", auth="public")
     def discuss_channel_notify_typing(self, channel_id, is_typing):
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
-            request=request, channel_id=int(channel_id)
-        )
-        channel_member_sudo._notify_typing(is_typing)
+        channel = request.env["discuss.channel"].sudo().browse(channel_id)
+        has_channel_access = not channel.group_public_id or channel.group_public_id in request.env.user.groups_id
+        if has_channel_access:
+            channel_member = channel.add_members(request.env.user.partner_id.id)
+            channel_member._notify_typing(is_typing)

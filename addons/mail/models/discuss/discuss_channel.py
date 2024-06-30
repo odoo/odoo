@@ -435,6 +435,8 @@ class Channel(models.Model):
                 if current_channel_member and current_channel_member.rtc_session_ids:
                     current_channel_member._rtc_invite_members(member_ids=new_members.ids)
         self.env['bus.bus']._sendmany(notifications)
+        members = new_members + existing_members
+        return members
 
     def _can_invite(self, partner_id):
         """Return True if the current user can invite the partner to the channel.
