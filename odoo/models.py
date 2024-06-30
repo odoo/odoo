@@ -4858,7 +4858,7 @@ class BaseModel(metaclass=MetaModel):
                         qualifield_name = "COALESCE(%s, false)" % qualifield_name
                     elif field.type == 'properties' and property_name:
                         qualifield_name = f"({qualifield_name} -> '{property_name}')"
-                    order_by_elements.append(f"{qualifield_name} {order_direction} {order_nulls}")
+                    order_by_elements.append(f"{qualifield_name} {order_direction} {order_nulls}".strip())
                 else:
                     _logger.warning("Model %r cannot be sorted on field %r (not a column)", self._name, order_field)
                     continue  # ignore non-readable or "non-joinable" fields
