@@ -9,12 +9,14 @@ import pytz
 
 from odoo import _, _lt, api, fields, models
 from odoo.fields import Command
-from odoo.models import BaseModel, NewId
-from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
+from odoo.models import READ_GROUP_DISPLAY_FORMAT, READ_GROUP_TIME_GRANULARITY, BaseModel, NewId, parse_read_group_spec, regex_order
+from odoo.osv.expression import AND, OR, TRUE_DOMAIN, normalize_domain
 from odoo.tools import date_utils, unique
-from odoo.tools.misc import OrderedSet, get_lang
+from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, OrderedSet, get_lang
 from odoo.exceptions import AccessError, UserError
 from collections import defaultdict
+
+from odoo.tools.sql import SQL
 
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
 
@@ -220,6 +222,431 @@ class Base(models.AbstractModel):
                             }
 
         return values_list
+
+    @api.readonly
+    @api.model
+    def web_read_group_unity(
+        self,
+        domain: list,
+        groupby_level : list[str],  # Groupby one by one, == _read_group, TODO what about kanban 2D (multi group)
+        aggregates: list[str],
+        extra_order: str = '',  # Extra order force by client or the view
+        limit: int | None = None,  # Root limit
+        offset: int = 0,  # Root offset
+        open_auto: dict | None = None,  # {'nb': 10, 'limit': 80}
+        open_groups: list | None = None,  # Manually unfolded groups [[<raw_values>,], <limit>, <offset>}]
+        search_read_specification: dict[str, dict] | None = None,
+    ):
+        # labeled_value = [<raw_value>, <label>]
+        # result = {
+        #     '__groups': [{
+        #         '__domain': [...],
+        #         groupby[0]: <labeled_value>,
+        #         aggregates: {
+        #             <name_agg>: <labeled_value>,
+        #         },
+        #         ...
+        #         '__subresult': {
+        #             'length':  <length>
+        #             '__groups': <'groups':....>
+        #             OR
+        #             '__records': [<record_dict>]
+        #         }
+        #     }],
+        #     '__length': <length>,
+        # }
+        # For the kanban view, groupby_level = ['stage_id'], unfolded_groups = {'':{}, ....}
+        # For the list view, groupby_level = ['stage_id', 'city'], unfolded_groups = {'':{'':{}}, ....}
+        root_groupby = groupby_level[0]
+        group_order = self._order_clean(extra_order, groupby, aggregates) + ','.join(groupby)
+
+        aggregates_root = aggregates
+        if len(groupby_level) > 1:  # In order to avoid refetching all groups in sub-groupby
+            aggregates_root += [f'{groupby_level[1]}:count_distinct']
+        groups = self._read_group(domain, root_groupby, aggregates_root, offset=offset, limit=limit, order=group_order)
+
+        if not groups:
+            length = 0
+        elif limit and len(groups) == limit:
+            length = limit + len(self._read_group(
+                domain,
+                groupby=groupby,
+                offset=limit,
+            ))
+        else:
+            length = len(groups) + offset
+
+        # Note: group_expand is only done if the limit isn't reached and when the offset == 0
+        # to avoid inconsistency in the web client pager. Anyway, in practice, this feature should
+        # be used only when there are few groups possible (or without limit for the kanban view).
+        if not offset and (not limit or length < limit):
+            expand_groups = self._read_group_expand_groups(domain, groups, groupby, aggregates_root)
+            if not limit or len(expand_groups) < limit:
+                # TODO: should I change the length ?
+                groups = expand_groups
+
+        group_by_value = {
+            (group_value,): {
+                '__domain': [(root_groupby, '=', group_value)],  # TODO
+                'aggregates': {
+                    # TODO
+                },
+            } for group_value, *aggregate_values in groups
+        }
+
+        open_groups_by_level = defaultdict(list)
+        for open_group_row, limit, offset in open_groups:
+            open_groups_by_level[len(open_group_row)].append((open_group_row, limit, offset))
+
+        for i_group, level_open_groups in open_groups_by_level.items():
+            assert i_group < len(groupby_level), f'Manual open groups {level_open_groups} but {groupby_level=}'
+
+            groupby = groupby_level[:i_group + 1]
+            group_order = self._order_clean(extra_order, groupby, aggregates) + ','.join(groupby)
+            sub_aggregates = aggregates
+            if open_groups_by_level[i_group + 1]:  # In order to avoid prefetching nb groups in sub-group
+                sub_aggregates += [f'{groupby_level[i_group + 1]}:count_distinct']
+
+            for open_group_row, sub_limit, sub_offset in level_open_groups:
+                if open_group_row not in group_by_value:
+                    # Group doesn't exist anymore, ignore it
+                    continue
+                parent_group = group_by_value[open_group_row]
+                sub_groups = self._read_group(
+                    parent_group['__domain'], groupby, sub_aggregates,
+                    limit=sub_limit, offset=sub_offset, order=group_order)
+
+                if parent_group['aggregates']
+
+                for sub_group in sub_groups:
+
+
+                parent_group['__sub_result'] = {
+                    'length': parent_group['aggregates'][f'{groupby[-1]}:count_distinct'][0],
+                    '__groups': sub_groups  # TODO.
+                }
+
+
+        to_check_to_open = groups
+
+        result = {
+            '__groups': [
+                {
+
+                    '__domain'
+                    '__sub_result': {
+
+                    }
+                } for group in groups
+            ],
+            '__length': length,
+        }
+
+        # TODO: add empty groups from group_expand, normally, we should also check that it is unfold
+        # Idea: can use the _read_group done for the len(groups) to take in account limit and offset for group_extand
+        # TODO: Having method call _get_groups_domain(groupby_spec, value)
+        # TODO: what about fill_temporal ?
+
+        if search_read_specification and open_auto:
+            nb_open_auto = open_auto.get('nb', 10)
+            search_limit = open_auto.get('limit', 10)
+            search_order = f'{extra_order},{self._order}' if extra_order else self._order
+            is_relational = groupby_level[-1] in self._fields and self._fields[groupby_level[-1]].relational
+            unfolded_groups = list(itertools.islice(
+                # Falsy groups should be fold by default for relational field
+                # unfolded_limit groups are opened by default
+                filter(
+                    lambda g: (
+                        not (g.get('__fold', False) and (not is_relational or g.get(groupby_level[-1])))
+                        and g[f'__count'] > 0
+                    ),
+                    groups,
+                ),
+                nb_open_auto,
+            ))
+            if unfolded_groups:
+                self._groups_multi_search(
+                    unfolded_groups, groupby_level[-1], domain,
+                    search_read_specification, search_limit, search_order
+                )
+
+        # groups = [{
+        #     '__domain': <leaf_domain or all the domain?>,
+        #     <groupby[0]>: [<raw value groupby[0]>, <label value groupby[0]>],
+        #     ...,
+        #     <aggregates[0]>: <value aggregate[0]>,  # At least the __count ?
+        #     ...,
+        #
+        #
+        #     '__records': [<dict_record>, ...],  # If unfold
+        #     OR
+        #     '__groups': <groups>
+        # },]
+        return {
+            '__groups': groups,
+            '__length': length,
+        }
+
+    def _read_group_format_groups(self, groupby, aggregates, groups):
+        # [{
+        #     '__domain_part': [(root_groupby, '=', group_value)],  # TODO
+        #     <aggregates[0]>: [<raw value aggregates[0]>, <label value aggregates[0]>]
+        #     ...
+        #     <groupby[0]>: [<raw value groupby[0]>, <label value groupby[0]>]
+        #     ...
+        # }]
+        result = [{'domain_parts': []} for __ in groups]
+
+        column_values = zip(*groups)
+        for groupby_spec, values in zip(groupby, column_values):
+            for (value_label, additional_domain), dict_group in zip(
+                self._read_group_format_groups_groupby(self, groupby_spec, values),
+                result,
+            ):
+                dict_group[groupby_spec] = value_label
+                dict_group['domain_parts'].append(additional_domain)
+
+        for dict_group in result:
+            dict_group['__domain_part'] = AND(dict_group.pop('domain_parts'))
+
+        for aggregate_spec, values in zip(aggregates, column_values):
+            for value_label, dict_group in zip(
+                self._read_group_format_groups_aggregates(self, groupby_spec, values),
+                result,
+            ):
+                dict_group[aggregate_spec] = value_label
+
+    def _read_group_format_groups_groupby(self, groupby_spec, values):
+        # return [((raw_value, label), domain_part)]
+        field_name = groupby_spec.split(':')[0].split('.')[0]
+        field = self._fields[field_name]
+
+        if field.type == "properties":
+            if '.' not in groupby_spec:
+                raise ValueError('You must choose the property you want to group by.')
+
+            fullname, __, func = groupby_spec.partition(':')
+            definition = self.get_property_definition(fullname)
+            property_type = definition.get('type')
+            if property_type == 'selection':
+                options = definition.get('selection') or []
+                options = tuple(option[0] for option in options)
+                for raw_value in values:
+                    if not raw_value:
+                        # can not do ('selection', '=', False) because we might have
+                        # option in database that does not exist anymore
+                        additional_domain = OR([
+                            [(fullname, '=', False)],
+                            [(fullname, 'not in', options)],
+                        ])
+                    else:
+                        additional_domain = [(fullname, '=', raw_value)]
+                    yield (raw_value, raw_value), additional_domain
+            elif property_type == 'many2one':
+                comodel = definition.get('comodel')
+                # TODO: into _read_group ?
+                all_groups = tuple(raw_value for raw_value in values if raw_value)
+                for raw_value in values:
+                    if not raw_value:
+                        # can not only do ('many2one', '=', False) because we might have
+                        # record in database that does not exist anymore
+                        yield (raw_value, raw_value), OR([
+                            [(fullname, '=', False)],
+                            [(fullname, 'not in', all_groups)],
+                        ])
+                    else:
+                        record = self.env[comodel].browse(raw_value).with_prefetch(all_groups)
+                        yield (raw_value, record.display_name), [(fullname, '=', raw_value)]
+
+            elif property_type == 'many2many':
+                all_groups = tuple(raw_value for raw_value in values if raw_value)
+                # TODO
+
+            return
+
+        if field.type in ('date', 'datetime'):
+            locale = get_lang(self.env).code
+            granularity = groupby_spec.split(':')[1]
+            interval = READ_GROUP_TIME_GRANULARITY[granularity]
+
+        for raw_value in values:
+            label = raw_value
+            if raw_value and isinstance(raw_value, BaseModel):
+                label = raw_value.sudo().display_name
+                raw_value = raw_value.id
+
+            if not raw_value and field.type == 'many2many':
+                other_values = [other_value.id for other_value in values if other_value]
+                additional_domain = [(field_name, 'not in', other_values)]
+            elif field.type in ('date', 'datetime') and raw_value:
+                range_start = raw_value
+                range_end = raw_value + interval
+                if field.type == 'datetime':
+                    tzinfo = None
+                    if self.env.context.get('tz') in pytz.all_timezones_set:
+                        tzinfo = pytz.timezone(self._context['tz'])
+                        range_start = tzinfo.localize(range_start).astimezone(pytz.utc)
+                        # take into account possible hour change between start and end
+                        range_end = tzinfo.localize(range_end).astimezone(pytz.utc)
+
+                    label = babel.dates.format_datetime(
+                        range_start, format=READ_GROUP_DISPLAY_FORMAT[granularity],
+                        tzinfo=tzinfo, locale=locale,
+                    )
+                else:
+                    label = babel.dates.format_date(
+                        raw_value, format=READ_GROUP_DISPLAY_FORMAT[granularity],
+                        locale=locale,
+                    )
+
+                additional_domain = [
+                    '&',
+                        (field_name, '>=', range_start),
+                        (field_name, '<', range_end),
+                ]
+            else:
+                additional_domain = [(field_name, '=', raw_value)]
+            yield ((raw_value, label), additional_domain)
+
+    def _read_group_format_groups_aggregates(self, aggregate_spec, values):
+        # return [(raw_value, label)]
+        for value in values:
+            yield value, value
+
+
+    def _read_group_expand_groups(self, domain, groups, groupby_spec, aggregates):
+        field_name = groupby_spec.split('.')[0].split(':')[0]
+        field = self._fields[field_name]
+        if not field or not field.group_expand:
+            return groups
+        # field.group_expand is a callable or the name of a method, that returns
+        # the groups that we want to display for this field, in the form of a
+        # recordset or a list of values (depending on the type of the field).
+        # This is useful to implement kanban views for instance, where some
+        # columns should be displayed even if they don't contain any record.
+        group_expand = field.group_expand
+        if isinstance(group_expand, str):
+            group_expand = getattr(self.env.registry[self._name], group_expand)
+        assert callable(group_expand)
+
+        # determine all groups that should be returned
+        values = [group_value for group_value, *__ in groups if group_value]
+
+        if field.relational:
+            # groups is a recordset; determine order on groups's model
+            values = self.env[field.comodel_name].browse([value.id for value in values])
+            # Merge https://github.com/odoo/odoo/pull/139294 before
+            expand_values = group_expand(self, values, domain, groups._order)
+            # TODO: recreate the prefetch for display_name/fold ?
+        else:
+            # groups is a list of values
+            expand_values = group_expand(self, values, domain, None)
+
+        empty_aggregates = tuple(self._read_group_empty_value(spec) for spec in aggregates)
+        result = dict.fromkeys(expand_values, empty_aggregates)
+        result.update({
+            group_value: aggregate_values
+            for group_value, *aggregate_values in groups
+        })
+        return [(value,) + aggregate_values for value, aggregate_values in result.items()]
+
+    def _read_group_dict_values(self, domain, groups, groupby, aggregates):
+        # {
+        #   raw_value: {
+        #     '__domain': ...,
+        #     'group': <labeled_value> of groupby[-1],
+        #     'aggregates': {<aggregate[0]>: <labeled_value>}
+        # }...}
+
+        # TODO: group_expand
+        if len(groupby) == 1:
+            groups = self._read_group_expand_groups(domain, groups, groupby, aggregates)
+
+        return {
+
+        }
+
+
+
+    def _order_clean(self, order, groupby, aggregates):
+        spec_by_field = {}
+        for spec in aggregates + groupby:
+            if spec == '__count':
+                continue
+            fname, property_name, __ = parse_read_group_spec(spec)
+            complete_fname = fname + (f'->{property_name}' if property_name else '')
+            spec_by_field[complete_fname] = spec
+
+        parts = []
+        for order_part in order.split(','):
+            order_match = regex_order.match(order_part)
+            if not order_match:
+                continue
+            fname = order_match['field']
+            property_name = order_match['property']
+            complete_fname = fname + (f'->{property_name}' if property_name else '')
+            if complete_fname not in spec_by_field:
+                continue
+            # TODO: avoid duplicate ?
+            direction = (order_match['direction'] or 'ASC').upper()
+            nulls = (order_match['nulls'] or '').upper()
+            parts.append(f'{complete_fname} {direction} {nulls}')
+        return ','.join(parts)
+
+    def _get_domain_group(self, groupby_spec, values):
+        pass
+
+    def _groups_multi_search(self, unfolded_groups, groupby_spec, base_domain, read_specification, search_limit, search_order):
+        # TODO: OR domain
+        all_values = [
+            (group[groupby_spec][0] if isinstance(group[groupby_spec], tuple) else group[groupby_spec])
+            for group in unfolded_groups
+        ]
+        base_domain = base_domain + [(groupby_spec, 'in', all_values)]
+        main_query = self._search(base_domain, order=search_order or self._order)
+        group_by_sql = self._read_group_groupby(groupby_spec, main_query)
+
+        cte_name = self._table + '_cte'
+        cte_sql = SQL(
+            'WITH %s AS (%s)', SQL.identifier(cte_name),
+            main_query.select(
+                SQL.identifier(self._table, 'id'),
+                SQL('%s AS "__groupby_key__"', group_by_sql),
+            ),
+        )
+
+        # TODO not correct for date
+        def group_value_to_sql(value):
+            if not value:
+                return SQL('IS NULL')
+            if isinstance(value, tuple):
+                value = value[0]
+            return SQL('= %s', value)
+
+        subqueries = [
+            SQL(
+                '(SELECT %s, %s FROM %s WHERE %s %s LIMIT %s)',
+                SQL.identifier(cte_name, 'id'), SQL('%s', i),
+                SQL.identifier(cte_name),
+                SQL.identifier(cte_name, '__groupby_key__'), group_value_to_sql(group[groupby_spec]),
+                search_limit,
+            )
+            for i, group in enumerate(unfolded_groups)
+        ]
+        sql_result = self.env.execute_query(SQL('%s %s', cte_sql, SQL('UNION ALL').join(subqueries)))
+        all_records = self.browse(OrderedSet(id_ for id_, __ in sql_result))
+
+        map_read = {
+            record_dict['id']: record_dict
+            for record_dict in all_records.web_read(read_specification)
+        }
+        for group in unfolded_groups:
+            group['__records'] = []
+        for id_, group_i in sql_result:
+            unfolded_groups[group_i]['__records'].append(id_)
+
+        for group in unfolded_groups:
+            group['__records'] = [map_read[id_] for id_ in group['__records']]
 
     @api.model
     @api.readonly

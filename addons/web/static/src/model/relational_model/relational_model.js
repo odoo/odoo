@@ -679,12 +679,66 @@ export class RelationalModel extends Model {
         }
     }
 
+    getUnfoldedInfo(groups) {
+        // return opened groups
+        if (!groups){
+            return {}
+        }
+        const mapped_group = Object.values(groups)
+            .filter((group) => group.isFolded)
+            .map((group) => [
+                group.value,
+                group.list?.groups ? this.getUnfoldedInfo(group.list.groups) : {}
+            ]);
+        return Object.fromEntries(mapped_group);
+    }
+
     async _webReadGroup(config, orderBy) {
         const aggregates = Object.values(config.fields).filter(
             (field) => field.aggregator && field.name in config.activeFields
         ).map(
             (field) => `${field.name}:${field.aggregator}`
         )
+        
+        // def web_read_group_unity(
+        //     self,
+        //     domain: list,
+        //     groupby_level : list[str],  # Groupby one by one, == _read_group
+        //     aggregates: list[str],
+        //     order: str | None = None,
+        //     limit: int | None = None,  # count_limit of group, not sure that it is usefull at all
+        //     offset: int = 0,
+        //     unfolded_auto: int = 0,
+        //     unfolded_groups: dict = None,  # Unfold group by level, key is the group value: value is the `unfolded_groups`of the next level
+        //     search_read_specification: dict[str, dict] | None = None,
+        //     search_limit: int=80,
+        //     search_order: str | None = None,
+        // ):
+
+        // const unfoldInfo = this.getUnfoldedInfo(config);
+        debugger;
+
+        // this.orm.webReadGroupUnity(
+        //     // TODO: what about group extand:
+        //     // It bypass the order (list view) and the limit (list view too)
+
+        //     // TODO: order should be only available 
+        //     config.resModel,
+        //     {
+        //         domain: config.domain,
+        //         groupby: config.groupBy,
+        //         aggregates: aggregates,
+        //         extra_order: orderByToString(orderBy),
+        //         limit: config.limit,
+        //         offset: config.offset,
+        //         unfolded_auto: config.openGroupsByDefault ? this.constructor.MAX_NUMBER_OPENED_GROUPS : 0,
+        //         unfolded_groups: this.getUnfoldedInfo(config),
+        //         search_read_specification: getFieldsSpec(config.activeFields, config.fields, config.context),
+        //         search_limit: this.constructor.DEFAULT_OPEN_GROUP_LIMIT || config.limit,
+        //     }
+        // )
+
+
         return this.orm.webReadGroup(
             config.resModel,
             config.domain,

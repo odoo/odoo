@@ -247,6 +247,26 @@ export class ORM {
 
     /**
      * @param {string} model
+     * @param {import("@web/core/domain").DomainListRepr} domain
+     * @param {string[]} groupby
+     * @param {string[]} aggregates
+     * @param {any} [kwargs={}]
+     * @returns {Promise<any[]>}
+     */
+    webReadGroupUnity(model, domain, groupby, aggregates, kwargs = {}) {
+        validateArray("domain", domain);
+        validatePrimitiveList("groupby", "string", groupby);
+        validatePrimitiveList("aggregates", "string", aggregates);
+        return this.call(model, "web_read_group_unity", [], {
+            domain,
+            groupby,
+            aggregates,
+            ...kwargs,
+        });
+    }
+
+    /**
+     * @param {string} model
      * @param {number[]} ids
      * @param {any} [kwargs={}]
      * @param {Object} [kwargs.specification]
