@@ -703,6 +703,8 @@ class AccountMove(models.Model):
                 self.env.add_to_compute(move.line_ids._fields['date'], move.line_ids)
                 # might be protected because `_get_accounting_date` requires the `name`
                 self.env.add_to_compute(self._fields['name'], move)
+            # Highest name should be changed as the sequence date (date field) changes
+            move._compute_highest_name()
 
     @api.depends('auto_post')
     def _compute_auto_post_until(self):
