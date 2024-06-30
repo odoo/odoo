@@ -971,12 +971,15 @@ class SaleOrder(models.Model):
         :return: True
         :rtype: bool
         :raise: UserError if trying to confirm cancelled SO's
+        :raise: UserError if it contains no order lines
         """
         if not all(order._can_be_confirmed() for order in self):
             raise UserError(_(
                 "The following orders are not in a state requiring confirmation: %s",
                 ", ".join(self.mapped('display_name')),
             ))
+        if not self.order_line:
+            raise UserError(_("You need to add a line before confirm."))
 
         self.order_line._validate_analytic_distribution()
 
