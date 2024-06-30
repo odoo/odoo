@@ -184,6 +184,11 @@ msgid "Cannot cancel an entry that has already been sent to PEPPOL"
 msgstr "Nelze zrušit záznam, který již byl poslán skrze PEPPOL"
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
+msgid "Cannot receive this format"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Cannot register a user with a %s application"
@@ -241,8 +246,8 @@ msgstr "Detaily kontaktu byly aktualizovány."
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-msgid "Contact email and phone number are required."
-msgstr "Email a telefon kontaktu jsou vyžadovány."
+msgid "Contact email and mobile number are required."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -512,14 +517,14 @@ msgstr "Peppol aktualizace stavu: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Phone Number"
-msgstr "Telefonní číslo"
+msgid "Mobile Number"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_phone_number
-msgid "Phone number (for validation)"
-msgstr "Telefonní číslo (pro ověření)"
+msgid "Mobile number (for validation)"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -532,8 +537,8 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-msgid "Please enter a phone number to verify your application."
-msgstr "Vložte telefonní číslo pro ověření vaší přihlášky."
+msgid "Please enter a mobile number to verify your application."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -545,13 +550,10 @@ msgstr "Prosím zadejte primární kontaktní e-mail pro ověření vaši žádo
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid ""
-"Please enter the phone number in the correct international format.\n"
+"Please enter the mobile number in the correct international format.\n"
 "For example: +32123456789, where +32 is the country code.\n"
 "Currently, only European countries are supported."
 msgstr ""
-"Vložte telefonní číslo ve správném mezinárodním formátu.\n"
-"Například: +420234567890, kde +420 je předčíslí země.\n"
-"V současnosti jsou podporovány pouze země Evropské unie."
 
 #. module: account_peppol
 #. odoo-python
@@ -676,6 +678,13 @@ msgstr "Identifikační číslo Peppol endpointu není správné."
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "The Peppol service that is used is likely to be %s."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 msgid "The document has been sent to the Peppol Access Point for processing"
 msgstr "Dokument byl odeslán na zpracování skrze Peppol přístupový bod."
@@ -761,6 +770,20 @@ msgid "This verification code has expired. Please request a new one."
 msgstr "Platnost tohoto ověřovacího kódu vypršela. Vyžádejte si prosím nový."
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
+msgid ""
+"To generate complete electronic invoices, also set a country for this "
+"partner."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
+msgid ""
+"To generate electronic invoices, also set a country and a bank account for "
+"this partner."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Too many attempts to request an SMS code. Please try again later."
@@ -843,8 +866,8 @@ msgstr "Ověřit PEPPOL endpoint partnera"
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
-msgid "Verify phone number"
-msgstr "Ověřit telefonní číslo"
+msgid "Verify mobile number"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__peppol_warning
@@ -870,8 +893,8 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
-msgid "You will receive a verification code to this phone number"
-msgstr "Obdržíte ověřovací kód na toto telefonní číslo"
+msgid "You will receive a verification code to this mobile number"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
