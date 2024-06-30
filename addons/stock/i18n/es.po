@@ -18,9 +18,9 @@
 # Jolien De Paepe, 2023
 # Ana Sanjuán, 2023
 # Francisco Santos, 2023
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1416,7 +1416,7 @@ msgstr "Movimientos cancelados"
 #: code:addons/stock/wizard/stock_quant_reserve.py:0
 #, python-format
 msgid "Cannot reserve more quantity than available!"
-msgstr ""
+msgstr "No puede reservar una cantidad mayor a la disponible"
 
 #. module: stock
 #. odoo-python
@@ -1596,11 +1596,14 @@ msgstr "Escoja la ubicación de destino"
 msgid ""
 "Choose from the following available stock and enter the quantity to reserve."
 msgstr ""
+"Elija entre las estrategias disponibles que se mencionan a continuación e "
+"introduzca la cantidad a reservar."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_reserve_line
 msgid "Choose quantity to reserve from each stock quant"
 msgstr ""
+"Elegir cantidad a reservar de las cantidades que quedan en existencia "
 
 #. module: stock
 #: model:ir.model,name:stock.model_lot_label_layout
@@ -2521,7 +2524,7 @@ msgstr "Demanda"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_reserve__demand_qty
 msgid "Demand Qty"
-msgstr ""
+msgstr "Cantidad en demanda"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_packaging__route_ids
@@ -4701,7 +4704,7 @@ msgstr "Manualmente"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_reserve
 msgid "Manually reserve stock"
-msgstr ""
+msgstr "Reservar stock manualmente "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -6480,7 +6483,7 @@ msgstr "Quant"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_reserve__quant_line_ids
 msgid "Quant Line"
-msgstr ""
+msgstr "Línea del cuanto"
 
 #. module: stock
 #. odoo-python
@@ -6658,7 +6661,7 @@ msgstr "Cantidad para imprimir"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_reserve__qty_to_reserve
 msgid "Quantity to reserve"
-msgstr ""
+msgstr "Cantidad a reservar"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant
@@ -7051,14 +7054,14 @@ msgstr "Reservar antes de la fecha programada"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Reserve stock"
-msgstr ""
+msgstr "Reservar stock"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "Reserve stock: %(product)s"
-msgstr ""
+msgstr "Reservar stock: %(product)s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__reserved_uom_qty
@@ -8966,7 +8969,7 @@ msgstr "Para reponer"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_reserve_line__qty_to_reserve
 msgid "To reserve"
-msgstr ""
+msgstr "A reservar"
 
 #. module: stock
 #. odoo-javascript
