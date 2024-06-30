@@ -156,7 +156,7 @@ msgstr "%s使用将要归档的仓库%s中的默认源或目标位置。"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "%s: Can't split: quantities done can't be above demand"
-msgstr ""
+msgstr "%s：不能拆分：已完成的数量不能超过需求量"
 
 #. module: stock
 #. odoo-python
@@ -164,7 +164,7 @@ msgstr ""
 msgid ""
 "%s: Nothing to split, all demand is done. For split you need at least one "
 "line not fully fulfilled"
-msgstr ""
+msgstr "%s：无需拆分，所有需求都已满足。若要拆分，至少需要一行未完全满足的需求"
 
 #. module: stock
 #. odoo-python
@@ -172,7 +172,7 @@ msgstr ""
 msgid ""
 "%s: Nothing to split. Fill the quantities you want in a new transfer in the "
 "done quantities"
-msgstr ""
+msgstr "%s：没有要分割的内容。请在已完成的数量中填写新转账中需要的数量"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
@@ -430,6 +430,7 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
+"<br>这些产品将会移至 <b>%(destination)s</b>，<br/>即 <b>%(operation)s</b>操作指定的目的地。"
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -7736,7 +7737,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Serial numbers"
-msgstr ""
+msgstr "序号"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -8424,7 +8425,7 @@ msgstr "模板"
 msgid ""
 "The %s location is required by the Inventory app and cannot be deleted, but "
 "you can archive it."
-msgstr ""
+msgstr "位置%s是应用程序所必须，无法删除，但可以将其存档。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__auto
@@ -8539,7 +8540,7 @@ msgid ""
 "The operation brings the products to the intermediate location.But this "
 "operation is part of a chain of operations targeting the destination "
 "location."
-msgstr ""
+msgstr "此操作会将产品移至中间位置。但此操作是针对目的地位置的操作中的一部分。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
@@ -8756,7 +8757,7 @@ msgid ""
 "This is the default destination location when you create a picking manually "
 "with this operation type. It is possible however to change it or that the "
 "routes put another location."
-msgstr ""
+msgstr "当您使用此操作类型手动创建拣货时，这是默认目的地位置。但也可以更改，或将路线放在其他位置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_return_id
@@ -8771,7 +8772,7 @@ msgid ""
 "This is the default source location when you create a picking manually with "
 "this operation type. It is possible however to change it or that the routes "
 "put another location."
-msgstr ""
+msgstr "当您使用此操作类型手动创建采样时，这是默认的源位置。但也可以更改，或将路径放在其他位置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -10201,7 +10202,7 @@ msgstr "您不能在同一调拨中多次调拨同一包裹内容，或将同一
 msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types."
-msgstr ""
+msgstr "如果产品来自不同的转移，且操作类型不同，则不能将产品装入同一包裹。"
 
 #. module: stock
 #. odoo-python

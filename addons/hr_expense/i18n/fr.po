@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Jolien De Paepe, 2024
-# Wil Odoo, 2024
 # Manon Rondou, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -376,6 +376,11 @@ msgid "Attachments of expenses"
 msgstr "Pièces jointes de dépenses"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "Employé de base"
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
 msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
@@ -438,6 +443,11 @@ msgstr "Catégorie :"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Category: not found"
 msgstr "Catégorie : introuvable"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_checksum
+msgid "Checksum/SHA1"
+msgstr "Somme de contrôle/SHA1"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_communication_product_template
@@ -987,6 +997,8 @@ msgstr "Notes de frais à traiter"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_base__filter_for_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__filter_for_expense
 msgid "Filter For Expense"
 msgstr "Filtre pour les notes de frais"
 
@@ -1474,6 +1486,12 @@ msgid "Number of messages with delivery error"
 msgstr "Nombre de messages avec des erreurs d'envoi"
 
 #. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
+msgid "Numbers computed from your personal expenses."
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
 msgid "Odoo"
 msgstr "Odoo"
@@ -1792,7 +1810,6 @@ msgstr "Scanner"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/components/qrcode_action.xml:0
-#, python-format
 msgid "Scan this QR code to get the Odoo app:"
 msgstr "Scannez ce QR code pour obtenir l'application Odoo :"
 
@@ -2356,6 +2373,12 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas approuver :\n"
 " %s"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid "You cannot cancel an expense sheet linked to a journal entry"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python

@@ -3,8 +3,8 @@
 # 	* hr_expense
 # 
 # Translators:
-# Wil Odoo, 2024
 # Daye Jeong, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -368,6 +368,11 @@ msgid "Attachments of expenses"
 msgstr "경비 첨부 파일"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "기본 직원"
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
 msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
@@ -428,6 +433,11 @@ msgstr "카테고리:"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Category: not found"
 msgstr "카테고리: 찾을 수 없음"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_checksum
+msgid "Checksum/SHA1"
+msgstr "체크섬/SHA1"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_communication_product_template
@@ -958,6 +968,8 @@ msgstr "처리할 경비"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_base__filter_for_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__filter_for_expense
 msgid "Filter For Expense"
 msgstr "경비에 대한 필터"
 
@@ -1440,6 +1452,12 @@ msgid "Number of messages with delivery error"
 msgstr "전송 오류가 발생한 메시지 수입니다."
 
 #. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
+msgid "Numbers computed from your personal expenses."
+msgstr "개인 경비로 계산된 수치입니다."
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
 msgid "Odoo"
 msgstr "Odoo"
@@ -1749,7 +1767,6 @@ msgstr "스캔"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/components/qrcode_action.xml:0
-#, python-format
 msgid "Scan this QR code to get the Odoo app:"
 msgstr "QR 코드를 스캔하여 Odoo 앱을 다운로드하세요:"
 
@@ -2285,6 +2302,12 @@ msgid ""
 msgstr ""
 "승인할 수 없습니다:\n"
 " %s"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid "You cannot cancel an expense sheet linked to a journal entry"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python

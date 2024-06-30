@@ -741,6 +741,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Progress Report\", \"Stand-up Meeting\", ...)"
 msgstr ""
+"Activiteitenplannen worden gebruikt om een lijst met activiteiten toe te wijzen in slechts een paar klikken\n"
+"                    (bijv. 'Voortgangsrapport', 'Stand-up-meeting', ...)"
 
 #. module: project
 #. odoo-javascript
@@ -784,7 +786,7 @@ msgstr "Voeg extra inhoud toe om weer te geven in de e-mail"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add the contacts you would like to share the project with..."
-msgstr ""
+msgstr "Voeg de contactpersonen toe met wie je het project wilt delen ..."
 
 #. module: project
 #. odoo-javascript
@@ -1123,6 +1125,9 @@ msgid ""
 "Automatically send an email to customers when a task reaches a specific "
 "stage in a project by setting this template on that stage"
 msgstr ""
+"Stuur automatisch een e-mail naar klanten wanneer een taak zich in een "
+"bepaalde fase van een project bevindt door deze sjabloon op de betreffende "
+"fase in te stellen."
 
 #. module: project
 #. odoo-javascript
@@ -1146,7 +1151,7 @@ msgstr "Gemiddelde score (%)"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating (1-5)"
-msgstr ""
+msgstr "Gemiddelde score (1-5)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1333,7 +1338,7 @@ msgstr "Gesloten taken"
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__is_closed
 msgid "Closed state"
-msgstr ""
+msgstr "Gesloten fase"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__closed
@@ -1515,7 +1520,7 @@ msgstr "Maak project aan"
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_task_plan
 msgid "Create a Task Activity Plan"
-msgstr ""
+msgstr "Maak een activiteitenplan voor taken"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -1615,7 +1620,7 @@ msgstr "Valuta"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__current_user_same_company_partner
 msgid "Current User Same Company Partner"
-msgstr ""
+msgstr "Huidige gebruiker met dezelfde bedrijfspartner"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -2150,6 +2155,10 @@ msgid ""
 "project with them. Collaborators will have the ability to edit tasks, send "
 "messages, and access the Kanban view of tasks."
 msgstr ""
+"Maak efficiënte samenwerking met belangrijke belanghebbenden mogelijk door "
+"het project met hen te delen. Medewerkers hebben de mogelijkheid om taken te"
+" bewerken, berichten te versturen en toegang te krijgen tot de Kanban-"
+"weergave van taken."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project
@@ -2285,6 +2294,9 @@ msgid ""
 "tasks of the project are not included). To grant access to tasks to a portal"
 " user, add them as followers for these tasks."
 msgstr ""
+"Geef portaalgebruikers toegang tot je project door ze toe te voegen als "
+"volgers (de taken van het project zijn niet inbegrepen). Voeg een "
+"portaalgebruiker toe als volger om hem toegang te geven tot deze taken."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2690,7 +2702,7 @@ msgstr "Vorige maand"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 msgid "Last Rating (1-5)"
-msgstr ""
+msgstr "Laatste score (1-5)"
 
 #. module: project
 #. odoo-python
@@ -2898,19 +2910,19 @@ msgstr "Markeren als gereed"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as incomplete"
-msgstr ""
+msgstr "Markeren als niet voltooid"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as reached"
-msgstr ""
+msgstr "Markeren als behaald"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Mark the task as <b>Cancelled</b>"
-msgstr ""
+msgstr "Markeer de taak als <b>geannuleerd</b>"
 
 #. module: project
 #. odoo-javascript
@@ -3227,7 +3239,7 @@ msgstr "Geen activiteitensoorten gevonden. Laten we er een maken!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
 msgid "No collaborators found. Let's invite them!"
-msgstr ""
+msgstr "Geen medewerkers gevonden. Zullen we ze uitnodigen?"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -3512,7 +3524,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 msgid "Partner's Tasks"
-msgstr ""
+msgstr "Taken van partners"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -3541,6 +3553,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Mensen voor wie dit project en deze taken zichtbaar zullen zijn.\n"
+"\n"
+"- Uitgenodigde interne gebruikers: bij het volgen van een project krijgen interne gebruikers zonder beperking toegang tot alle taken. Anders krijgen ze alleen toegang tot de specifieke taken die ze volgen.\n"
+" Een gebruiker met het project > beheerders toegangsrechtniveau heeft nog steeds toegang tot dit project en zijn taken, zelfs als hij niet expliciet deel uitmaakt van de volgers.\n"
+"\n"
+"- Alle interne gebruikers: alle interne gebruikers hebben zonder onderscheid toegang tot het project en alle taken.\n"
+"\n"
+"- Uitgenodigde portaalgebruikers en alle interne gebruikers: alle interne gebruikers hebben zonder beperking toegang tot het project en al de taken.\n"
+"Bij het volgen van een project krijgen portaalgebruikers alleen toegang tot de specifieke taken die ze volgen.\n"
+"\n"
+"Wanneer een project in alleen-lezen wordt gedeeld, wordt de portalgebruiker doorgestuurd naar zijn portaal. De persoon kan de taken bekijken, maar niet bewerken.\n"
+"Wanneer een project in bewerken wordt gedeeld, wordt de portaalgebruiker omgeleid naar de kanban- en lijstweergaven van de taken. De persoon kan een geselecteerd aantal velden op de taken wijzigen.\n"
+"\n"
+"Een interne gebruiker kan in ieder geval zonder projecttoegangsrechten nog steeds toegang krijgen tot een taak, op voorwaarde dat hij de bijhorende URL krijgt (en dat hij deel uitmaakt van de volgers als het project privé is)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3787,7 +3813,7 @@ msgstr "Gedeeld project"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
 msgid "Project Sharing Recurrence"
-msgstr ""
+msgstr "Herhaling delen project"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -4102,7 +4128,7 @@ msgstr "Terugkerend"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 msgid "Recurrent tasks"
-msgstr ""
+msgstr "Terugkerende taken"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
@@ -4361,7 +4387,7 @@ msgstr "Verzenden per e-mail"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Send invitation"
-msgstr ""
+msgstr "Uitnodiging versturen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__sequence
@@ -4445,7 +4471,7 @@ msgstr "Taak delen"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
 msgid "Share a Project"
-msgstr ""
+msgstr "Project delen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -4483,6 +4509,10 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"Sorteer je taken per sprint met behulp van mijlpalen, tags of een speciale "
+"eigenschap. Aan het einde van elke sprint kies je gewoon de resterende taken"
+" in je lijst en verplaats je ze allemaal in één keer naar de volgende sprint"
+" door de mijlpaal, tag of eigenschap te bewerken."
 
 #. module: project
 #. odoo-javascript
@@ -4714,13 +4744,13 @@ msgstr "Taak geannuleerd"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Cancelled"
-msgstr ""
+msgstr "Taak geannuleerd"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Converted from To-Do"
-msgstr ""
+msgstr "Taak omgezet van To-Do"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
@@ -4746,7 +4776,7 @@ msgstr "Taakafhankelijkheden"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "Task Description History"
-msgstr ""
+msgstr "Geschiedenis van de taakomschrijving"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_done
@@ -4822,7 +4852,7 @@ msgstr "Titel taak..."
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Transferred from Project %s"
-msgstr ""
+msgstr "Taak overgenomen van Project %s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4839,7 +4869,7 @@ msgstr "Taak goedgekeurd"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
 msgid "Task cancelled"
-msgstr ""
+msgstr "Taak geannuleerd"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -5054,6 +5084,8 @@ msgid ""
 "The task description lacks any past content that could be restored at the "
 "moment."
 msgstr ""
+"De taakomschrijving bevat geen vroegere inhoud die op dit moment hersteld "
+"zou kunnen worden."
 
 #. module: project
 #. odoo-python
@@ -5865,7 +5897,7 @@ msgstr "Je managers beslissen welke feedback aanvaard is"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "alias"
-msgstr ""
+msgstr "alias"
 
 #. module: project
 #. odoo-javascript
@@ -5949,7 +5981,7 @@ msgstr "bijv. To Do"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "bijv. mycompany.com"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -6113,6 +6145,8 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
+"{{ object.project_id.company_id.name of user.env.company.name }}: "
+"Tevredenheidsonderzoek"
 
 #. module: project
 #. odoo-javascript

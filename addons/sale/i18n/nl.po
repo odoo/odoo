@@ -832,7 +832,7 @@ msgstr "<i class=\"fa fa-print\"/> Bekijk details"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-times\"/> Reject"
-msgstr "<i class=\"fa fa-times\"/> Weigeren"
+msgstr "<i class=\"fa fa-times\"/> Weiger"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -885,6 +885,9 @@ msgid ""
 "                                                By paying,\n"
 "                                            </span>"
 msgstr ""
+"<span id=\"o_sale_portal_use_amount_total\">\n"
+"                                                Door te betalen,\n"
+"                                            </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1078,6 +1081,8 @@ msgid ""
 "The company is required, please select one before making any other changes "
 "to the sale order."
 msgstr ""
+"Je dient het bedrijf te selecteren voordat je andere wijzigingen aanbrengt "
+"in de verkooporder."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1162,6 +1167,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                (e.g. \"Delivery scheduling\", \"Order Payment Follow-up\", ...)"
 msgstr ""
+"Activiteitenplannen worden gebruikt om een lijst met activiteiten toe te wijzen in slechts een paar klikken\n"
+"                (bijv. 'Planning levering', 'Follow-up betaling bestelling', ...)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1203,6 +1210,11 @@ msgid ""
 "On order confirmation: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
 msgstr ""
+"Maakt het mogelijk om het document binnen een verkoop te delen met je klanten.\n"
+"Voor een offerte: het document wordt verstuurd naar klanten en is te allen tijde toegankelijk voor hen.\n"
+"Deze optie kan bijvoorbeeld handig zijn om bestanden met een productomschrijving te delen.\n"
+"Na bevestiging van de bestelling: het document wordt verzonden naar klanten en is toegankelijk voor hen.\n"
+"Deze optie kan bijvoorbeeld nuttig zijn voor het delen van gebruikershandleidingen of digitale inhoud die via E-commerce is aangekocht. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1417,17 +1429,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying a <u>down payment</u> of"
-msgstr ""
+msgstr "Door een <u>aanbetaling</u> te betalen van"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying,"
-msgstr ""
+msgstr "Door te betalen,"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By signing, you confirm acceptance on behalf of"
-msgstr ""
+msgstr "Door te ondertekenen bevestig je de goedkeuring namens"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1618,7 +1630,7 @@ msgstr "Verzendkosten berekenen en verzenden met Shiprocket"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Starshipit"
-msgstr ""
+msgstr "Bereken verzendkosten en verzend met Starshipit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1724,7 +1736,7 @@ msgstr "Facturen maken"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
 msgid "Create a Sale Order Activity Plan"
-msgstr ""
+msgstr "Maak een activiteitenplan voor verkooporders"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -3138,12 +3150,12 @@ msgstr "Op alle orderregels"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on__sale_order
 msgid "On confirmed order"
-msgstr ""
+msgstr "Voor een bevestigde order"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on__quotation
 msgid "On quote"
-msgstr ""
+msgstr "Voor een offerte"
 
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding
@@ -3969,6 +3981,8 @@ msgstr "Verantwoordelijke gebruiker"
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
 msgid "Revenue Target for the current month (untaxed total of paid invoices)."
 msgstr ""
+"Omzet doelstelling voor de huidige maand (onbelast totaal van betaalde "
+"facturen)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -4562,7 +4576,7 @@ msgstr "Fase"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr ""
+msgstr "Starshipit-connector"
 
 #. module: sale
 #. odoo-javascript
@@ -5502,7 +5516,7 @@ msgstr "Je referentie:"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback..."
-msgstr "Jouw feedback..."
+msgstr "Jouw feedback ..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5571,7 +5585,7 @@ msgstr "voor deze verkooporder."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "quote."
-msgstr ""
+msgstr "offerte."
 
 #. module: sale
 #. odoo-python
@@ -5596,7 +5610,7 @@ msgstr "eenheden"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "you confirm acceptance on the behalf of"
-msgstr ""
+msgstr "bevestig je de goedkeuring namens"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation

@@ -9180,7 +9180,7 @@ msgstr "Boekingen handmatig vergrendelen"
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_payment__restrict_mode_hash_table
 msgid "Lock Sent Invoices with Hash"
-msgstr ""
+msgstr "Vergrendel verzonden facturen met hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
@@ -12721,7 +12721,7 @@ msgstr "Verzend facturen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "Sending these invoices will create a gap in the sequence."
-msgstr ""
+msgstr "Het verzenden van deze facturen zal een gat maken in de nummering."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__move_sent_values
@@ -12802,7 +12802,7 @@ msgstr "Reeks"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__sequence_gap_warning
 msgid "Sequence Gap Warning"
-msgstr ""
+msgstr "Waarschuwing gat in de nummering"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sequence_number
@@ -12969,7 +12969,7 @@ msgstr "Toon forceer inclusief BTW"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show Journal Entries to Hash"
-msgstr ""
+msgstr "Bekijk te hashen boekingen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -13048,6 +13048,8 @@ msgid ""
 "Some journal entries have not been hashed yet. You should hash them before "
 "locking the fiscal year."
 msgstr ""
+"Sommige boekingen zijn nog niet gehasht. Gelieve deze te hashen alvorens je "
+"het boekjaar afsluit."
 
 #. module: account
 #. odoo-python
@@ -14908,6 +14910,8 @@ msgstr ""
 msgid ""
 "There is no journal entry flagged for accounting data inalterability yet."
 msgstr ""
+"Momenteel is er nog geen boeking dat voor boekhoudkundige waardering "
+"onveranderlijk wordt beschouwd."
 
 #. module: account
 #. odoo-python
@@ -15055,6 +15059,8 @@ msgid ""
 "This document is protected by a hash. Therefore, you cannot edit the "
 "following fields: %s."
 msgstr ""
+"Dit document is beveiligd met een hash. Je kunt de volgende velden niet "
+"wijzigen: %s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -15148,7 +15154,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "This journal is not restricted"
-msgstr ""
+msgstr "Dit dagboek is niet beperkt"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -15175,12 +15181,15 @@ msgid ""
 "- some move with the same sequence prefix has a higher number. You may need to resequence it.\n"
 "- the move's date is anterior to the lock date"
 msgstr ""
+"Deze boeking kon niet vergrendeld worden omdat:\n"
+"- een boeking met hetzelfde reeksvoorvoegsel een hoger nummer heeft. Het kan zijn dat je de volgorde moet veranderen.\n"
+"- de datum van de boeking voorafgaat aan de datum van de vergrendeling"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This move has been locked."
-msgstr ""
+msgstr "Deze boeking is vergrendeld."
 
 #. module: account
 #. odoo-python
@@ -15683,12 +15692,12 @@ msgstr "Allemaal uitvouwen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_unhashed_entries
 msgid "Unhashed Entries"
-msgstr ""
+msgstr "Ongehashte boekingen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unhashed entries"
-msgstr ""
+msgstr "Ongehashte boekingen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
@@ -16916,6 +16925,8 @@ msgstr "Je kunt geen rekeningen samenvoegen."
 msgid ""
 "You cannot modify a sent entry of this journal because it is in strict mode."
 msgstr ""
+"Je kunt een verzonden boeking van dit dagboek niet wijzigen omdat het "
+"dagboek zich in de strikte modus bevind."
 
 #. module: account
 #. odoo-python
@@ -17230,7 +17241,7 @@ msgstr "activeer de valuta van de factuur"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "alias"
-msgstr ""
+msgstr "alias"
 
 #. module: account
 #. odoo-javascript
@@ -17349,7 +17360,7 @@ msgstr "bv. Betaalvoorwaarden: 30 dagen na factuurdatum"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "bijv. mycompany.com"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view

@@ -8,6 +8,7 @@
 # Martin Trigaux, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
+# Betty Keresztesi, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2024\n"
+"Last-Translator: Betty Keresztesi, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgstr "<strong>Nume Etaj: </strong>"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Point of Sales: </strong>"
-msgstr ""
+msgstr "<strong>Punct de vânzare (POS): </strong>"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -67,13 +68,13 @@ msgstr "Adaugă"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Add Floor"
-msgstr ""
+msgstr "Adaugă etaj"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Add a new floor to get started."
-msgstr ""
+msgstr "Adăugați un etaj nou pentru a începe."
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -84,7 +85,7 @@ msgstr "Adăugați un nou etaj de restaurant"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Add a new table to get started."
-msgstr ""
+msgstr "Adăugați o masă nouă pentru a începe."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -95,7 +96,7 @@ msgstr "Adăugați un bacșiș"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Add tip after payment"
-msgstr ""
+msgstr "Adăugați bacșiș după plată"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -119,11 +120,13 @@ msgid ""
 "Adjust the tax rate based on whether customers are dining in or opting for "
 "takeout."
 msgstr ""
+"Ajustați rata de impozitare în funcție de: clienții iau masa la restaurant "
+"sau optează pentru mâncare la pachet."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow Bill Splitting"
-msgstr ""
+msgstr "Permiteți defalcarea facturilor"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__takeaway
@@ -134,7 +137,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow to print receipt before payment"
-msgstr ""
+msgstr "Permiteți imprimarea bonului fiscal înainte de plată"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_printbill
@@ -146,7 +149,7 @@ msgstr "Permite să imprimați factura înainte de efectuarea plății"
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_takeaway_fp_id
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Alternative Fiscal Position"
-msgstr ""
+msgstr "Poziție fiscală alternativă"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__name
@@ -168,7 +171,7 @@ msgstr "Arhivat"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Are you sure?"
-msgstr ""
+msgstr "Sunteți sigur?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -225,7 +228,7 @@ msgstr "Divizare Nota de plată"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/product_screen/order_summary/order_summary.xml:0
 msgid "Book table"
-msgstr ""
+msgstr "Rezervați o masă"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -238,7 +241,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.burger_drink_combo_product_template
 msgid "Burger Menu Combo"
-msgstr ""
+msgstr "Meniu Burger Combo"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -250,7 +253,7 @@ msgstr "Coș"
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_config.py:0
 msgid "Cash Restaurant"
-msgstr ""
+msgstr "Numerar Restaurant"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
@@ -331,7 +334,7 @@ msgstr "Șterge"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Delete Error"
-msgstr ""
+msgstr "Ștergere eroare"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -358,18 +361,18 @@ msgstr "Băuturi"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Early Receipt Printing"
-msgstr ""
+msgstr "Tipărirea rapidă a bonurilor fiscale"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Eat in / Take out"
-msgstr ""
+msgstr "Mănâncă în / Ia la pachet"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 msgid "Edit Plan"
-msgstr ""
+msgstr "Editare plan"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
@@ -386,7 +389,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.espresso_product_template
 msgid "Espresso"
-msgstr ""
+msgstr "Espresso"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.fanta_product_template
@@ -429,7 +432,7 @@ msgstr "Nume Etaj"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Floor Name ?"
-msgstr ""
+msgstr "Nume etaj ?"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
@@ -441,7 +444,7 @@ msgstr "Planuri Etaj"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Floor name"
-msgstr ""
+msgstr "Nume etaj"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -457,7 +460,7 @@ msgstr "Etaje"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors & Tables Map"
-msgstr ""
+msgstr "Harta etajelor & meselor"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.food
@@ -478,7 +481,7 @@ msgstr "Funghi"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.green_tea_product_template
 msgid "Green Tea"
-msgstr ""
+msgstr "Green Tea"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -491,7 +494,7 @@ msgstr "Vizitatori"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.js:0
 msgid "Guests?"
-msgstr ""
+msgstr "Vizitatori?"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__height
@@ -512,7 +515,7 @@ msgstr "ID"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.ice_tea_product_template
 msgid "Ice Tea"
-msgstr ""
+msgstr "Ice Tea"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
@@ -603,7 +606,7 @@ msgstr "Îmbină"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.milkshake_banana_product_template
 msgid "Milkshake Banana"
-msgstr ""
+msgstr "Milkshake Banană"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.minute_maid_product_template
@@ -625,7 +628,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "New Floor"
-msgstr ""
+msgstr "Etaj nou"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -637,24 +640,24 @@ msgstr "Fără Bacșiș"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Number of Seats?"
-msgstr ""
+msgstr "Număr de locuri?"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
 msgid "Odoo Point of Sale"
-msgstr ""
+msgstr "Punct de vânzare Odoo"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
 msgid "Odoo Restaurant"
-msgstr ""
+msgstr "Odoo Restaurant"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Online reservation for restaurant"
-msgstr ""
+msgstr "Rezervare online pentru restaurant"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -668,13 +671,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Oops! No floors available."
-msgstr ""
+msgstr "Oops! Nu există etaje disponibile."
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Oops! No tables available."
-msgstr ""
+msgstr "Oops! Nu sunt mese disponibile."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -760,17 +763,17 @@ msgstr "Punct de Vânzare"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
-msgstr ""
+msgstr "Pos Iface Factură tipărită"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
 msgid "Pos Iface Splitbill"
-msgstr ""
+msgstr "Pos Iface Factură defalcată"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
 msgid "Pos Set Tip After Payment"
-msgstr ""
+msgstr "Pos setați bacșișul după plată"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -789,6 +792,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Removing a floor cannot be undone. Do you still want to remove %s?"
 msgstr ""
+"Îndepărtarea unui etaj nu poate fi anulată. Mai doriți să eliminați %s?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -866,7 +870,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.schweppes_product_template
 msgid "Schweppes"
-msgstr ""
+msgstr "Schweppes"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -892,7 +896,7 @@ msgstr "Trimite bacșiș după plată"
 #: code:addons/pos_restaurant/static/src/app/tip_screen/tip_screen.xml:0
 #: code:addons/pos_restaurant/static/src/overrides/components/ticket_screen/ticket_screen.xml:0
 msgid "Settle"
-msgstr ""
+msgstr "Stabiliți"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -945,7 +949,7 @@ msgstr "Subtotal"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 msgid "Switch Floor View"
-msgstr ""
+msgstr "Schimbă afișarea etajelor"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -963,7 +967,7 @@ msgstr "Tabel"
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_module_pos_restaurant_appointment
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Table Booking"
-msgstr ""
+msgstr "Rezervare masă"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__name
@@ -985,7 +989,7 @@ msgstr "Tabele"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__takeaway
 msgid "Take Away"
-msgstr ""
+msgstr "De luat la pachet"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -997,7 +1001,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__takeaway
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_takeaway
 msgid "Takeaway"
-msgstr ""
+msgstr "De luat la pachet"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__customer_count
@@ -1007,7 +1011,7 @@ msgstr "Valoare nr. clienți care au fost prestați prin această comandă."
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
 msgid "The background color of the floor in a html-compatible format"
-msgstr ""
+msgstr "Culoarea de fundal a etajului într-un format compatibil html"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
@@ -1080,6 +1084,8 @@ msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
 msgstr ""
+"Această comandă nu este încă sincronizată cu serverul. Asigurați-vă că este "
+"sincronizată, apoi încercați din nou."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1151,7 +1157,7 @@ msgstr "Format fișier neacceptat"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/tip_screen/tip_screen.js:0
 msgid "Unsynced order"
-msgstr ""
+msgstr "Comandă nesincronizată"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1185,6 +1191,8 @@ msgstr "Lățime"
 msgid ""
 "You cannot delete a floor when orders are still in draft for this floor."
 msgstr ""
+"Nu puteți șterge un etaj atunci când sunt încă în stare ciornă comenzi "
+"pentru acest etaj."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1203,7 +1211,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "You cannot delete a table with orders still in draft for this table."
-msgstr ""
+msgstr "Nu puteți șterge o masă cu comenzi încă în stare de ciornă."
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1212,6 +1220,8 @@ msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
 msgstr ""
+"Nu puteți elimina un etaj care este utilizată într-o sesiune PoS, închideți "
+"mai întâi sesiunea (sesiunile): \n"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1220,6 +1230,8 @@ msgid ""
 "You cannot remove a table that is used in a PoS session, close the "
 "session(s) first."
 msgstr ""
+"Nu puteți elimina o masă care este utilizată într-o sesiune PoS, închideți "
+"mai întâi sesiunea (sesiunile)."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1238,7 +1250,7 @@ msgstr "______________________________________________"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/product_screen/product_screen.xml:0
 msgid "changes"
-msgstr ""
+msgstr "modificări"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1250,4 +1262,4 @@ msgstr "articole"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/order_widget/order_widget.js:0
 msgid "or book the table for later"
-msgstr ""
+msgstr "sau rezervați o masă pentru mai târziu"

@@ -34,7 +34,7 @@ msgstr "BHARATQR"
 #. odoo-python
 #: code:addons/pos_razorpay/models/razorpay_pos_request.py:0
 msgid "Cannot decode Razorpay POS response"
-msgstr ""
+msgstr "Kan het antwoord van Razorpay in Kassa niet ontcijferen"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -53,6 +53,8 @@ msgid ""
 "Choose allow payment mode: \n"
 " All/Card/UPI or QR"
 msgstr ""
+"Betaalwijze aanvaarden: \n"
+" alle/kaart/UPI of QR-code"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -70,6 +72,8 @@ msgid ""
 "Device Serial No \n"
 " ex: 7000012300"
 msgstr ""
+"Serienummer van apparaat \n"
+" bijv.: 7000012300"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -78,6 +82,9 @@ msgid ""
 "Payment has been queued. You may choose to wait for the payment to initiate "
 "on terminal or proceed to cancel this transaction"
 msgstr ""
+"De betaling is in de wachtrij geplaatst. Je kunt ervoor kiezen om te wachten"
+" totdat de betaling wordt uitgevoerd in de terminal of om deze transactie te"
+" annuleren."
 
 #. module: pos_razorpay
 #: model:ir.model,name:pos_razorpay.model_pos_order
@@ -97,7 +104,7 @@ msgstr "Kassa betalingen"
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_api_key
 msgid "Razorpay API Key"
-msgstr ""
+msgstr "Razorpay API-sleutel"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_authcode
@@ -122,7 +129,7 @@ msgstr "Razorpay-kaartschema"
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_tid
 msgid "Razorpay Device Serial No"
-msgstr ""
+msgstr "Razorpay serienummer van apparaat"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -133,17 +140,17 @@ msgstr "Razorpay-foutmelding"
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_issuer_card_no
 msgid "Razorpay Issue Card No Last 4 digits"
-msgstr ""
+msgstr "Razorpay laatste 4 cijfers van kaartnummer"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_issuer_bank
 msgid "Razorpay Issuer Bank"
-msgstr ""
+msgstr "Razorpay uitgevende bank"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_reference_no
 msgid "Razorpay Merchant Reference No."
-msgstr ""
+msgstr "Razorpay handelaar referentie nr."
 
 #. module: pos_razorpay
 #. odoo-python
@@ -152,6 +159,8 @@ msgid ""
 "Razorpay POS payment cancel request expected errorCode not found in the "
 "response"
 msgstr ""
+"Verwachte errorCode van het annuleringsverzoek van de Razorpay-betaling "
+"binnen Kassa niet gevonden in het antwoord"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -159,6 +168,8 @@ msgstr ""
 msgid ""
 "Razorpay POS payment request expected errorCode not found in the response"
 msgstr ""
+"Verwachte errorCode van het verzoek van de Razorpay-betaling binnen Kassa "
+"niet gevonden in het antwoord"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -167,33 +178,35 @@ msgid ""
 "Razorpay POS payment status request expected errorCode not found in the "
 "response"
 msgstr ""
+"Verwachte errorCode van het statusverzoek van de Razorpay-betaling binnen "
+"Kassa niet gevonden in het antwoord"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid "Razorpay POS transaction canceled successfully"
-msgstr ""
+msgstr "Razorpay-betaling binnen Kassa succesvol geannuleerd"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid "Razorpay POS transaction failed"
-msgstr ""
+msgstr "Razorpay-betaling binnen Kassa mislukt"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_payment_method
 msgid "Razorpay Payment Method"
-msgstr ""
+msgstr "Razorpay-betaalmethode"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_reverse_ref_no
 msgid "Razorpay Reverse Reference No."
-msgstr ""
+msgstr "Razorpay omgekeerd referentienr."
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_test_mode
 msgid "Razorpay Test Mode"
-msgstr ""
+msgstr "Testmodus Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_username
@@ -216,17 +229,17 @@ msgstr "Deze betaalterminal is alleen geldig voor de valuta INR"
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
 msgid "Transaction failed due to inactivity"
-msgstr ""
+msgstr "Transactie mislukt wegens inactiviteit"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_test_mode
 msgid "Turn it on when in Test Mode"
-msgstr ""
+msgstr "Inschakelen in de testmodus"
 
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__upi
 msgid "UPI"
-msgstr ""
+msgstr "UPI"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_api_key
@@ -234,6 +247,8 @@ msgid ""
 "Used when connecting to Razorpay: "
 "https://razorpay.com/docs/payments/dashboard/account-settings/api-keys/"
 msgstr ""
+"Gebruikt bij het verbinden met Razorpay: "
+"https://razorpay.com/docs/payments/dashboard/account-settings/api-keys/"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_username
@@ -241,3 +256,5 @@ msgid ""
 "Username(Device Login) \n"
 " ex: 1234500121"
 msgstr ""
+"Gebruikersnaam (Login Toestel) \n"
+" bijv.: 1234500121"

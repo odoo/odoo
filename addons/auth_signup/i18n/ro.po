@@ -10,6 +10,7 @@
 # Martin Trigaux, 2024
 # Claudia Baisan, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Simonel Criste <info@erpsystems.solutions>, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:05+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2024\n"
+"Last-Translator: Simonel Criste <info@erpsystems.solutions>, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "+1 650-123-4567"
-msgstr ""
+msgstr "+1 650-123-4567"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -37,6 +38,9 @@ msgid ""
 "                                A password reset was requested for the Odoo account linked to this email.\n"
 "                                You may change your password by following this link which will remain valid during 24 hours:<br/>"
 msgstr ""
+",<br/><br/>\n"
+"                                O resetare a parolei a fost solicitată pentru contul Odoo legat de acest e-mail.\n"
+"                                Vă puteți schimba parola urmând acest link care va rămâne valabil timp de 24 de ore:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -45,21 +49,24 @@ msgid ""
 "                        A new device was used to sign in to your account. <br/><br/>\n"
 "                        Here are some details about the connection:<br/>"
 msgstr ""
+",<br/><br/>\n"
+"                        A fost utilizat un dispozitiv nou pentru a vă conecta la cont.<br/><br/>\n"
+"                        Iată câteva detalii despre conexiune:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "--<br/>Mitchell Admin"
-msgstr ""
+msgstr "--<br/>Mitchell Admin"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "111.222.333.444"
-msgstr ""
+msgstr "111.222.333.444"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "<span style=\"font-size: 10px;\">Your Account</span><br/>"
-msgstr ""
+msgstr "<span style=\"font-size: 10px;\">Contul dvs.</span><br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -67,6 +74,8 @@ msgid ""
 "<span style=\"font-weight: bold;\">\n"
 "                                    Browser:</span>"
 msgstr ""
+"<span style=\"font-weight: bold;\">\n"
+"                                    Browser:</span>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -74,6 +83,8 @@ msgid ""
 "<span style=\"font-weight: bold;\">\n"
 "                                    Location:</span>"
 msgstr ""
+"<span style=\"font-weight: bold;\">\n"
+"                                    Locație:</span>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -81,6 +92,8 @@ msgid ""
 "<span style=\"font-weight: bold;\">\n"
 "                                    Platform:</span>"
 msgstr ""
+"<span style=\"font-weight: bold;\">\n"
+"                                    Platformă:</span>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -88,6 +101,8 @@ msgid ""
 "<span style=\"font-weight: bold;\">\n"
 "                                Date:</span>"
 msgstr ""
+"                                    Browser<span style=\"font-weight: bold;\">\n"
+"                                :</span>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -95,6 +110,8 @@ msgid ""
 "<span style=\"font-weight: bold;\">\n"
 "                                IP Address:</span>"
 msgstr ""
+"Adresa <span style=\"font-weight: bold;\">\n"
+"                                IP:</span>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -157,6 +174,45 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <t t-set=\"invited_users\" t-value=\"ctx.get('invited_users', [])\"></t>\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        Invitații în așteptare\n"
+"                    </span><br><br>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Dragă <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br> <br>\n"
+"                        Ați adăugat următorul (următorii) utilizator(i) în baza dvs. de date, dar aceștia nu s-au înregistrat încă:\n"
+"                        <ul>\n"
+"                            <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
+"                                <li t-out=\"invited_user or ''\">demo@example.com</li>\n"
+"                            </t>\n"
+"                        </ul>\n"
+"                        Urmăriți-i astfel încât să poată accesa baza dvs. de date și să înceapă să lucreze cu dvs.\n"
+"                        <br><br>\n"
+"                        Să aveți o zi frumoasă!<br>\n"
+"                        --<br>În<t t-out=\"object.company_id.name or ''\">Compania dumneavoastră</t> Echipa\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -331,6 +387,88 @@ msgid ""
 "</td></tr>\n"
 "</table>"
 msgstr ""
+"|||UNTRANSLATED_CONTENT_START|||<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Your Account</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-out=\"object.name or ''\">Marc Demo</t>\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not object.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Dear <t t-out=\"object.name or ''\">Marc Demo</t>,<br><br>\n"
+"                        Your account has been successfully created!<br>\n"
+"                        Your login is <strong><t t-out=\"object.email or ''\">mark.brown23@example.com</t></strong><br>\n"
+"                        To gain access to your account, you can use the following link:\n"
+"                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            <a t-attf-href=\"/web/login?auth_login={{object.email}}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                Go to My Account\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        Thanks,<br>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"object.company_id.email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #454748;\"><t t-out=\"object.company_id.email or ''\">info@yourcompany.com</t></a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                            <t t-out=\"object.company_id.website or ''\">http://www.example.com</t>\n"
+"                        </a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>|||UNTRANSLATED_CONTENT_END|||"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -357,7 +495,7 @@ msgstr "Înapoi la autentificare"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "Browser"
-msgstr ""
+msgstr "Browser"
 
 #. module: auth_signup
 #. odoo-python
@@ -373,7 +511,7 @@ msgstr "Schimbă parola"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "City, Region, Country"
-msgstr ""
+msgstr "Oraș, regiune, țară"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -407,6 +545,8 @@ msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration"
 msgstr ""
+"Serverul de e-mail nu a putut fi contactat, verificați configurația "
+"serverului de e-mail de ieșire"
 
 #. module: auth_signup
 #. odoo-python
@@ -463,6 +603,8 @@ msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "                                Thanks,"
 msgstr ""
+"Dacă nu te aștepți la acest lucru, poți ignora în siguranță acest e-mail.<br/><br/>\n"
+"                                Mulțumim,"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -470,12 +612,14 @@ msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
 msgstr ""
+"Dacă nu o recunoașteți, ar trebui să vă schimbați imediat parola prin "
+"intermediul acestui link:<br/>"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "In %(country)s"
-msgstr ""
+msgstr "%(country)s"
 
 #. module: auth_signup
 #. odoo-python
@@ -498,19 +642,19 @@ msgstr "Marc Demo"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Multiple accounts found for this login"
-msgstr ""
+msgstr "S-au găsit mai multe conturi pentru această autentificare"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Near %(city)s, %(region)s, %(country)s"
-msgstr ""
+msgstr "Lângă %(city)s, %(region)s, %(country)s"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Near %(region)s, %(country)s"
-msgstr ""
+msgstr "În apropiere %(region)s, %(country)s"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
@@ -521,7 +665,7 @@ msgstr "Niciodată conectat"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "New Connection to your Account"
-msgstr ""
+msgstr "Conexiune nouă la contul dvs."
 
 #. module: auth_signup
 #. odoo-python
@@ -538,7 +682,7 @@ msgstr "Nu s-a furnizat niciun Login"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "OS"
-msgstr ""
+msgstr "OS"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -554,7 +698,7 @@ msgstr "Cu invitație"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "Otherwise, you can safely ignore this email."
-msgstr ""
+msgstr "În caz contrar, poți gnora acest e-mail."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -746,6 +890,8 @@ msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration"
 msgstr ""
+"A apărut o eroare la încercarea de a vă trimite e-mailul, vă rugăm să "
+"verificați configurația"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -793,12 +939,12 @@ msgstr "Nume dvs."
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "YourCompany"
-msgstr ""
+msgstr "compania ta"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
-msgstr ""
+msgstr "zi, lună zz, aaaa - hh:mm:ss (GMT)"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -808,7 +954,7 @@ msgstr "ex. John Doe"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "http://www.example.com"
-msgstr ""
+msgstr "http://www.example.com"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email

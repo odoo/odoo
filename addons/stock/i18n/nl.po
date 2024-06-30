@@ -167,6 +167,8 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 msgid "%s: Can't split: quantities done can't be above demand"
 msgstr ""
+"%s: Kan niet splitsen: uitgevoerde hoeveelheden kunnen niet boven de vraag "
+"liggen"
 
 #. module: stock
 #. odoo-python
@@ -175,6 +177,9 @@ msgid ""
 "%s: Nothing to split, all demand is done. For split you need at least one "
 "line not fully fulfilled"
 msgstr ""
+"%s: Er valt niets te splitsen, de volledige opdracht is uitgevoerd. Om te "
+"splitsen heb je op zijn minst één regel nodig die niet volledig is "
+"uitgevoerd"
 
 #. module: stock
 #. odoo-python
@@ -183,6 +188,8 @@ msgid ""
 "%s: Nothing to split. Fill the quantities you want in a new transfer in the "
 "done quantities"
 msgstr ""
+"%s: Er valt niets te splitsen. Vul de hoeveelheden in een nieuwe transfer in"
+" onder de uitgevoerde hoeveelheden."
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
@@ -446,6 +453,8 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
+"<br>De producten worden verplaatst naar <b>%(destination)s</b>, <br/> zoals "
+"gespecificeerd in de bestemming van <b>%(operation)s</b>."
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -1803,7 +1812,7 @@ msgstr "Verzendkosten berekenen en verzenden met Shiprocket"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Starshipit"
-msgstr ""
+msgstr "Bereken verzendkosten en verzend met Starshipit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2821,7 +2830,7 @@ msgstr "Bestemmingslocatie"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_dest_from_rule
 msgid "Destination location origin from rule"
-msgstr ""
+msgstr "Bestemmingslocatie van regel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
@@ -3086,7 +3095,7 @@ msgstr "E-mail verzonden naar de klant zodra de order is voltooid."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Empty Locations"
-msgstr ""
+msgstr "Lege locaties"
 
 #. module: stock
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
@@ -3213,18 +3222,18 @@ msgstr "First In First Out (FIFO)"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Lot Number"
-msgstr ""
+msgstr "Eerste partijnummer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
 msgid "First SN/Lot"
-msgstr ""
+msgstr "Eerste SN/partijnummer"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Serial Number"
-msgstr ""
+msgstr "Eerste serienummer"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
@@ -3480,13 +3489,13 @@ msgstr "Genereren"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Lot numbers"
-msgstr ""
+msgstr "Partijnummers genereren"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Serial numbers"
-msgstr ""
+msgstr "Serienummers genereren"
 
 #. module: stock
 #. odoo-javascript
@@ -3969,7 +3978,7 @@ msgstr "Importeer partijen"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Serials"
-msgstr ""
+msgstr "Importeer serienummers"
 
 #. module: stock
 #. odoo-javascript
@@ -4069,7 +4078,7 @@ msgstr "Transit tussen magazijnen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_dest_id
 msgid "Intermediate Location"
-msgstr ""
+msgstr "Tussenlocatie"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.int_picking
@@ -4288,7 +4297,7 @@ msgstr "Voorraad op datum"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
 msgid "Is Empty"
-msgstr ""
+msgstr "Is leeg"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_is_follower
@@ -4806,7 +4815,7 @@ msgstr "Eigenschappen partij"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Lot numbers"
-msgstr ""
+msgstr "Partijnummers"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
@@ -5506,7 +5515,7 @@ msgstr "Aantal serienummers"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
 msgid "Number of SN/Lots"
-msgstr ""
+msgstr "Aantal SN/partijnummers"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_error_counter
@@ -6861,7 +6870,7 @@ msgstr "Beschikbare voorraad"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Quantity Received"
-msgstr ""
+msgstr "Ontvangen hoeveelheid"
 
 #. module: stock
 #. odoo-python
@@ -6958,7 +6967,7 @@ msgstr "Aantal of Gereserveerde hoeveelheid moet worden ingesteld."
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Quantity per Lot"
-msgstr ""
+msgstr "Hoeveelheid per partij"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_positive_quantity
@@ -7949,7 +7958,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Serial numbers"
-msgstr ""
+msgstr "Serienummers"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -7977,6 +7986,13 @@ msgid ""
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting).\n"
 "Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product."
 msgstr ""
+"Stel een specifieke verwijderingsstrategie in die wordt gebruikt, ongeacht de bronlocatie voor deze productcategorie.\n"
+"\n"
+"FIFO: producten/partijen die het eerst op voorraad waren, gaan als eerste de deur uit.\n"
+"LIFO: producten/partijen die het laatst op voorraad waren, gaan als eerste de deur uit.\n"
+"Dichtstbijzijnde locatie: producten/partijen die zich het dichtst bij de doellocatie bevinden, worden als eerste verplaatst.\n"
+"FEFO: producten/partijen met de dichtstbijzijnde verwijderdatum worden als eerste verplaatst (de beschikbaarheid van deze methode hangt af van de instelling 'Vervaldatums').\n"
+"Minst aantal verpakkingen: FIFO, maar met het kleinst mogelijke aantal verpakkingen als er meerdere verpakkingen zijn die hetzelfde product bevatten."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8292,7 +8308,7 @@ msgstr "Producten met ster"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr ""
+msgstr "Starshipit-connector"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -8648,6 +8664,8 @@ msgid ""
 "The %s location is required by the Inventory app and cannot be deleted, but "
 "you can archive it."
 msgstr ""
+"De %s ocatie is vereist door de Voorraad-app en kan niet worden verwijderd. "
+"Je kunt de locatie wel archiveren."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__auto
@@ -8690,6 +8708,8 @@ msgid ""
 "The combination of serial number and product must be unique across a company and no company defined.\n"
 "Following combination contains duplicates:\n"
 msgstr ""
+"De combinatie van serienummer en product moet uniek zijn binnen een bedrijf en niet per bedrijf worden ingesteld.\n"
+"De volgende combinatie bevat duplicaten:\n"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -8768,11 +8788,14 @@ msgid ""
 "operation is part of a chain of operations targeting the destination "
 "location."
 msgstr ""
+"De operatie levert de producten op de tussenlocatie af. Maar deze operatie "
+"maakt deel uit van een reeks operaties die uiteindelijk tot de eindlocatie "
+"leiden."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
-msgstr ""
+msgstr "De operatie neemt en biedt producten aan vanuit deze locatie."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -8790,7 +8813,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "The operations brings product to this location"
-msgstr ""
+msgstr "De operaties leveren producten aan deze locatie"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__package_id
@@ -8812,6 +8835,8 @@ msgid ""
 "The procurement quantity will be rounded up to a multiple of this field "
 "quantity. If it is 0, it is not rounded."
 msgstr ""
+"De aan te vullen hoeveelheid wordt naar boven afgerond op een veelvoud van "
+"deze veldhoeveelheid. Als het 0 is, wordt het niet afgerond."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -8848,7 +8873,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "The quantity per lot should always be a positive value."
-msgstr ""
+msgstr "De hoeveelheid per partij moet altijd positief zijn."
 
 #. module: stock
 #. odoo-python
@@ -8866,6 +8891,8 @@ msgstr ""
 msgid ""
 "The search does not support the %(operator)s operator or %(value)s value."
 msgstr ""
+"De zoekopdracht ondersteunt de %(operator)s operator of %(value)s waarde "
+"niet."
 
 #. module: stock
 #. odoo-python
@@ -9015,6 +9042,9 @@ msgid ""
 "with this operation type. It is possible however to change it or that the "
 "routes put another location."
 msgstr ""
+"Dit is de standaard bestemmingslocatie wanneer je handmatig een levering "
+"aanmaakt met dit bewerkingstype. Het is mogelijk om dit te wijzigen of om de"
+" routes via een andere locatie te laten gaan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_return_id
@@ -9032,6 +9062,9 @@ msgid ""
 "this operation type. It is possible however to change it or that the routes "
 "put another location."
 msgstr ""
+"Dit is de standaard bronlocatie wanneer je handmatig een levering aanmaakt "
+"met dit bewerkingstype. Het is mogelijk om dit te wijzigen of om de routes "
+"via een andere locatie te laten gaan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -9542,7 +9575,7 @@ msgstr "Handmatig activeren"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_scrap__should_replenish
 msgid "Trigger replenishment for scrapped products"
-msgstr ""
+msgstr "Activeer de anvulling voor afgekeurde producten"
 
 #. module: stock
 #. odoo-javascript
@@ -9598,7 +9631,7 @@ msgstr "Toewijzing ongedaan maken"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "Unavailable Serial numbers. Please correct the serial numbers encoded:"
-msgstr ""
+msgstr "Serienummers niet beschikbaar. Pas de gecodeerde serienummers aan:"
 
 #. module: stock
 #. odoo-javascript
@@ -10186,6 +10219,8 @@ msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
 msgstr ""
+"De bestemmingslocatie van de stock.move geldt als de regel als deze is "
+"ingesteld op True. Anders geldt de regel van het pickingtype."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -10204,6 +10239,9 @@ msgid ""
 " Odoo generates a procurement to bring the forecasted quantity above of this"
 " Min Quantity."
 msgstr ""
+"Zodra de virtuele voorraad onder de minimale hoeveelheid ligt die voor dit "
+"veld is opgegeven, genereert Odoo een aanbesteding om de verwachte "
+"hoeveelheid boven deze minimale hoeveelheid te brengen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -10212,6 +10250,10 @@ msgid ""
 "procurement to bring the forecasted quantity up to (or near to) the Max "
 "Quantity specified for this field (or to Min Quantity, whichever is bigger)."
 msgstr ""
+"Zodra de virtuele voorraad onder de minimale hoeveelheid ligt, genereert "
+"Odoo een aanbesteding om de verwachte hoeveelheid te verhogen tot (of dicht "
+"bij) de maximale hoeveelheid die is opgegeven voor dit veld (of tot de "
+"minimale hoeveelheid, afhankelijk van welke waarde groter is)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
@@ -10518,6 +10560,8 @@ msgid ""
 "You cannot change the company of a lot/serial number currently in a location"
 " belonging to another company."
 msgstr ""
+"Je kunt het bedrijf van een partij/serienummer dat zich momenteel op een "
+"locatie van een ander bedrijf bevindt, niet wijzigen."
 
 #. module: stock
 #. odoo-python
@@ -10899,7 +10943,7 @@ msgstr "bijv. Centraal magazijn"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "e.g. LOT-PR-00012"
-msgstr ""
+msgstr "bijv. LOT-PR-00012"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
