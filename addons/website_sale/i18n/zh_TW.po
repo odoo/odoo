@@ -53,7 +53,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "&amp;nbsp;(<i>Your delivery address will be requested later)</i>"
-msgstr ""
+msgstr "（稍後將詢問你的送貨地址）<i></i>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
@@ -114,13 +114,13 @@ msgstr "<b>通訊狀態:</b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 msgid "<b>Deliver to pickup point: </b>"
-msgstr ""
+msgstr "<b>送往提貨點</b>："
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Delivery: </b>"
-msgstr ""
+msgstr "<b>送貨</b>："
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
@@ -434,7 +434,7 @@ msgstr "<span>影片預覽</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
 msgid "<strong>No suitable delivery method could be found.</strong>"
-msgstr ""
+msgstr "<strong>找不到合適的送貨或交付方式。</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
@@ -813,7 +813,7 @@ msgstr "套用"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
 msgid "Are you sure you want to delete this ribbon?"
-msgstr ""
+msgstr "確定刪除此絲帶嗎？"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -845,7 +845,7 @@ msgstr "自動發送遺棄結賬電郵"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
 msgid "Available Options:"
-msgstr ""
+msgstr "可用選項："
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg
@@ -1782,7 +1782,7 @@ msgstr "Easypost 送貨方法"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__ecommerce_access
 #: model:ir.model.fields,field_description:website_sale.field_website__ecommerce_access
 msgid "Ecommerce Access"
-msgstr ""
+msgstr "電子商務存取"
 
 #. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_cart_recovery
@@ -1819,7 +1819,7 @@ msgstr "嵌入代碼"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Enforce a customer to be logged in to access 'Shop'"
-msgstr ""
+msgstr "強制客戶登入才可存取「商店」"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2537,6 +2537,13 @@ msgid ""
 msgstr "您目前的訂單上沒有可供的送貨方式及送貨地址，請聯繫我們獲取更多資訊。"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "No shipping method is selected."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "None"
@@ -2663,7 +2670,7 @@ msgstr "選項： %s"
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
 #: model_terms:ir.ui.view,arch_db:website_sale.optional_product_items
 msgid "Option not available"
-msgstr ""
+msgstr "選項不可用"
 
 #. module: website_sale
 #. odoo-python
@@ -2815,7 +2822,7 @@ msgstr "請繼續使用目前購物車。"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/checkout.js:0
 msgid "Please select a pick-up point"
-msgstr ""
+msgstr "請選擇一個提貨點"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3246,7 +3253,7 @@ msgstr "評分數"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_ids
 msgid "Ratings"
-msgstr "點評"
+msgstr "評分"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3331,7 +3338,7 @@ msgstr "更換"
 #: model:ir.model.fields,help:website_sale.field_product_tag__website_id
 #: model:ir.model.fields,help:website_sale.field_product_template__website_id
 msgid "Restrict to a specific website."
-msgstr ""
+msgstr "只限特定網站使用。"
 
 #. module: website_sale
 #. odoo-python
@@ -3589,7 +3596,7 @@ msgstr "商店預設排序"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shop, products, cart and wishlist visibility"
-msgstr ""
+msgstr "商店, 網店, 產品, 購物車, 願望清單可見度"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_add_to_cart
@@ -4411,7 +4418,7 @@ msgstr "購物車是空的"
 #. odoo-python
 #: code:addons/website_sale/controllers/delivery.py:0
 msgid "Your cart is empty."
-msgstr ""
+msgstr "購物車是空的"
 
 #. module: website_sale
 #. odoo-python

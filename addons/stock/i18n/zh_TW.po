@@ -28,6 +28,9 @@ msgid ""
 "\n"
 "Transfers %(transfer_list)s: You need to supply a Lot/Serial number for products %(product_list)s."
 msgstr ""
+"\n"
+"\n"
+"轉移 %(transfer_list)s：你需要提供產品 %(product_list)s 的批次/序號。"
 
 #. module: stock
 #. odoo-python
@@ -78,7 +81,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 msgid " - Product: %(product)s, Lot/Serial Number: %(lot)s"
-msgstr ""
+msgstr " - 產品：%(product)s，批次/序號：%(lot)s"
 
 #. module: stock
 #. odoo-python
@@ -98,7 +101,7 @@ msgstr " 當不為 0 時，儲存在此位置的產品的庫存盤點日期將�
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 msgid " You manage the inventory level."
-msgstr ""
+msgstr "你負責管理庫存水平。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_count
@@ -432,6 +435,8 @@ msgid ""
 "<br/>\n"
 "                Want to speed up operations?"
 msgstr ""
+"<br/>\n"
+"                想加快營運速度嗎？"
 
 #. module: stock
 #. odoo-python
@@ -1072,7 +1077,7 @@ msgstr "進階: 套用補貨規則"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "After"
-msgstr ""
+msgstr "之後"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -1087,7 +1092,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "All Products"
-msgstr ""
+msgstr "所有產品"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
@@ -1408,7 +1413,7 @@ msgstr "可用數量"
 #: code:addons/stock/models/product.py:0
 msgid ""
 "Available quantity should be set to zero before changing inventory tracking"
-msgstr ""
+msgstr "更改庫存追蹤前，可用數量應設為零"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
@@ -2129,7 +2134,7 @@ msgstr "建立新的上架規則，以便在接收時自動將特定產品發送
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Create products easily by scanning using"
-msgstr ""
+msgstr "輕鬆掃瞄資料建立產品，只需使用："
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_stock_view
@@ -2509,7 +2514,7 @@ msgstr "預設名稱"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default OBTRETU Barcode"
-msgstr ""
+msgstr "預設 OBTRETU 條碼"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
@@ -4096,12 +4101,12 @@ msgstr "入庫位置"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "Install"
-msgstr ""
+msgstr "安裝"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_install_barcode
 msgid "Install Barcode"
-msgstr ""
+msgstr "安裝條碼"
 
 #. module: stock
 #. odoo-python
@@ -4170,7 +4175,7 @@ msgstr "後續之間的內部位置"
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid "Internal locations having stock can't be converted"
-msgstr ""
+msgstr "內部位置若有庫存，便不可轉換"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__ref
@@ -5986,7 +5991,7 @@ msgstr "包裝條碼 (ZPL)"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode
 msgid "Package Barcode with Contents"
-msgstr ""
+msgstr "有內容物的包裝條碼"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__package_capacity_ids
@@ -6581,7 +6586,7 @@ msgstr "補料"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenish_mixin
 msgid "Product Replenish Mixin"
-msgstr ""
+msgstr "產品補貨混入程式"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_stock_rule
@@ -6627,7 +6632,7 @@ msgstr "產品變體"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Product barcode"
-msgstr ""
+msgstr "產品條碼"
 
 #. module: stock
 #. odoo-python
@@ -7364,7 +7369,7 @@ msgstr "補貨資訊"
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Information for %(product)s in %(warehouse)s"
-msgstr ""
+msgstr "補貨資訊（產品：%(product)s，倉庫：%(warehouse)s）"
 
 #. module: stock
 #. odoo-python
@@ -7660,7 +7665,7 @@ msgstr "將會為這些補充倉庫建立路線，而且您可以在產品和產
 msgid ""
 "Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
 "%(route_company)s."
-msgstr ""
+msgstr "規則 %(rule)s 屬於 %(rule_company)s 公司，但途程/路徑屬於 %(route_company)s 公司。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8433,7 +8438,7 @@ msgstr "庫存"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_barcode_barcodelookup
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Stock Barcode Database"
-msgstr ""
+msgstr "庫存條碼資料庫"
 
 #. module: stock
 #. odoo-javascript
@@ -10487,7 +10492,7 @@ msgstr "您不能禁用位置 %s，因為它們仍然包含產品。"
 msgid ""
 "You cannot archive location %(location)s because it is used by warehouse "
 "%(warehouse)s"
-msgstr ""
+msgstr "你不可封存位置 %(location)s，因為倉庫 %(warehouse)s 正使用它"
 
 #. module: stock
 #. odoo-python
@@ -10734,7 +10739,7 @@ msgstr "您應該更新此文件以反映您的 T&amp;C."
 msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
-msgstr ""
+msgstr "倉庫仍有 %(operations)s 類型的操作正在進行。相關倉庫：%(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -10933,7 +10938,7 @@ msgstr "在"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "in barcode."
-msgstr ""
+msgstr "在條碼內。"
 
 #. module: stock
 #. odoo-javascript
@@ -11019,7 +11024,7 @@ msgstr "stock.putaway.rule"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "the barcode app"
-msgstr ""
+msgstr "條碼應用程式"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__warehouse_id
