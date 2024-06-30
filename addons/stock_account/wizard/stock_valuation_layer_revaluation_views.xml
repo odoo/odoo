@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="action_revalue_layers" model="ir.actions.act_window">
+        <field name="name">Adjust Valuation</field>
+        <field name="res_model">stock.valuation.layer.revaluation</field>
+        <field name="view_mode">form</field>
+        <field name="binding_model_id" ref="stock_account.model_stock_valuation_layer"/>
+        <!-- Not available in form view because clicking a layer only opens its form view if it's already an adjustment layer, the action would always fail with a UserError because the quantity is 0 -->
+        <field name="binding_view_types">list</field>
+        <field name="target">new</field>
+    </record>
+
     <record id="stock_valuation_layer_revaluation_form_view" model="ir.ui.view">
         <field name="name">stock.valuation.layer.revaluation.form</field>
         <field name="model">stock.valuation.layer.revaluation</field>
