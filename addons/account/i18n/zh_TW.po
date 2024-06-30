@@ -891,7 +891,7 @@ msgstr "<span> 從 </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "<span> To </span>"
-msgstr "<span> 到 </span>"
+msgstr "<span> 至 </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1333,7 +1333,7 @@ msgstr "會計項目現金捨入"
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "項目表模版"
+msgstr "賬目總表範本"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -3618,12 +3618,12 @@ msgstr "會計項目列表"
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_tree
 msgid "Chart of Accounts Template"
-msgstr "會計項目表模版"
+msgstr "賬目總表範本"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_chart_template_form
 msgid "Chart of Accounts Templates"
-msgstr "會計項目表模版"
+msgstr "賬目總表範本"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_list
@@ -9877,7 +9877,7 @@ msgstr "付款條件"
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
 msgid "Payment Terms Line"
-msgstr "付款條件項目"
+msgstr "付款條款資料行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__allow_payment_tolerance
@@ -10026,7 +10026,7 @@ msgstr "對帳單明細百分比"
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "Percentages on the Payment Terms lines must be between 0 and 100."
-msgstr "付款條件明細的百分比必須介於0到100之間."
+msgstr "付款條款資料行的百分比，須在 0 至 100 之間。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -11314,7 +11314,7 @@ msgstr "搜尋銀行對帳單明細"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Search Chart of Account Templates"
-msgstr "搜尋項目表模板"
+msgstr "搜尋賬目總表範本"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
@@ -11474,7 +11474,7 @@ msgstr "選擇第一個合作夥伴"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
 msgid "Select here the kind of valuation related to this payment terms line."
-msgstr "在這裡選擇與此付款條件相關的值."
+msgstr "請在此處選擇與此付款條件資料行相關的估值類型。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__model_object_field
@@ -13564,7 +13564,7 @@ msgstr "如果所選日期不存在，將使用該月的最後一天."
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The last line of a Payment Term should have the Balance type."
-msgstr "付款期限的最後明細應該有餘額類型."
+msgstr "付款條款的最後一行資料行，類型應為「結餘」。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -15386,7 +15386,7 @@ msgstr "您僅能發送應收憑單."
 msgid ""
 "You can only set an account having the payable type on payment terms lines "
 "for vendor bill."
-msgstr "您只能在供應商帳單的付款條件明細上設定具有應付類型的項目."
+msgstr "你只可對供應商賬單的付款條款資料行，設定一個類型為「應付」的賬戶。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15394,7 +15394,7 @@ msgstr "您只能在供應商帳單的付款條件明細上設定具有應付類
 msgid ""
 "You can only set an account having the receivable type on payment terms "
 "lines for customer invoice."
-msgstr "您只能為客戶應收憑單的付款條件明細設定具有應收款類型的項目."
+msgstr "你只可對客戶發票的付款條款資料行，設定一個類型為「應收」的賬戶。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -15475,7 +15475,7 @@ msgstr "您不能手動更改日記帳分錄 %s 的狀態，因為它是由銀�
 msgid ""
 "You can't open the register payment wizard without at least one "
 "receivable/payable line."
-msgstr ""
+msgstr "若未有最少一行應收/應付資料行，便無法開啟登記付款精靈。"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -15832,7 +15832,7 @@ msgstr "您不能在此日記帳中使用此項目(%s)，請檢查相關日計�
 msgid ""
 "You cannot use this wizard on journal entries belonging to different "
 "companies."
-msgstr ""
+msgstr "此精靈不可用於其他公司的日記賬記項。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

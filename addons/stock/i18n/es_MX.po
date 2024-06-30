@@ -4944,7 +4944,7 @@ msgstr "A la mano"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "On Hand Quantity"
-msgstr "Cantidad a la mano"
+msgstr "Cantidad disponible"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__available_quantity
@@ -4952,13 +4952,13 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer, in the default "
 "unit of measure of the product"
 msgstr ""
-"Cantidad a la mano que no se ha reservado en un traslado, en la unidad de "
+"Cantidad disponible que no se ha reservado en un traslado, en la unidad de "
 "medida predeterminada del producto"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
 msgid "On hand:"
-msgstr "A la mano:"
+msgstr "Disponible:"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -6843,8 +6843,8 @@ msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
-"Desechar un producto lo removerá de sus existencias. El producto\n"
-"                terminará en una ubicación de desecho que se puede utilizar para fines de reportes."
+"Desechar un producto lo quitará de sus existencias y este\n"
+"                pasará a una ubicación de desecho útil para elaborar reportes."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6997,9 +6997,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
-"El número de serie (%s) no se encuentra en %s, pero se encuentra en las ubicaciones: %s.\n"
+"El número de serie (%s) no está en %s, pero sí en las siguientes ubicaciones: %s.\n"
 "\n"
-"Corrija esto para prevenir datos inconsistentes."
+"Corrija esto para evitar que haya datos inconsistentes."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7009,9 +7009,9 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %s"
 msgstr ""
-"El número de serie (%s) no se encuentra en %s, pero se encuentra en las ubicaciones: %s.\n"
+"El número de serie (%s) no está en %s, pero sí en las siguientes ubicaciones: %s.\n"
 "\n"
-"Se cambiará la ubicación de origen para este movimiento a %s"
+"La ubicación de origen para este movimiento cambiará a %s"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
@@ -7074,8 +7074,8 @@ msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
-"Establece una ubicación si se producen en una ubicación fija. Puede ser una "
-"ubicación de partner si subcontrata las operaciones de fabricación."
+"Establece una ubicación si fabrica en una ubicación fija. Puede ser la "
+"ubicación de un contacto si subcontrata las operaciones de fabricación."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -7931,7 +7931,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "The product is not available in sufficient quantity"
-msgstr "El producto no está disponible en cantidad suficiente"
+msgstr "No hay suficiente producto disponible"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_quantity
@@ -9429,8 +9429,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
-msgstr ""
-"No puede dividir un movimiento en borrador. Necesita confirmarlo primero."
+msgstr "No puede dividir un movimiento en borrador, primero debe confirmarlo."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0

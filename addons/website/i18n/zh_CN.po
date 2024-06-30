@@ -21,16 +21,16 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # liAnGjiA <liangjia@qq.com>, 2022
 # diaojiaolou <124412206@qq.com>, 2022
-# E L, 2022
+# Decentrastates, 2022
 # Martin Trigaux, 2022
 # digitalliuzg8888, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Emily Jia <eji@odoo.com>, 2023
 # Wil Odoo, 2023
-# Chloe Wang, 2023
 # Yazi Tian, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -38,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 06:07+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5244,6 +5244,13 @@ msgstr "隐藏"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Hide the cookies bar"
+msgstr "隐藏 cookies 通知列"
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/xml/website.pageProperties.xml:0
 #, python-format
 msgid "Hide this page from search results"
@@ -8819,6 +8826,13 @@ msgid "Show reCaptcha Policy"
 msgstr "显示验证码政策"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Show the cookies bar"
+msgstr "显示 Cookies 通知栏"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Sidebar"
 msgstr "侧边栏"
@@ -9425,6 +9439,14 @@ msgstr "所选名称已存在"
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "The company this website belongs to"
 msgstr "该网站所属的公司"
+
+#. module: website
+#: code:addons/website/wizard/portal_wizard.py:0
+#, python-format
+msgid ""
+"The contact \"%s\" has the same email as an existing user (%s) and has "
+"access to the same website."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -11183,6 +11205,14 @@ msgstr "您无法删除表单的提交按钮"
 msgid ""
 "You cannot delete default website %s. Try to change its settings instead"
 msgstr "无法删除默认网站%s。尝试更改默认网站的设置"
+
+#. module: website
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr "不能删除此网站菜单，因为它用作新网站（例如 /shop、/event...）的默认上级菜单。"
 
 #. module: website
 #: code:addons/website/controllers/backend.py:0
