@@ -72,5 +72,5 @@ class AccrualPlan(models.Model):
         ]
         if self.env['hr.leave.allocation'].search_count(domain):
             raise ValidationError(_(
-                "Some of the accrual plans you're trying to delete are linked to an existing allocation. Delete or cancel those first."
+                "Some of the accrual plans you're trying to delete are linked to an existing allocation. Delete or cancel them first."
             ))
