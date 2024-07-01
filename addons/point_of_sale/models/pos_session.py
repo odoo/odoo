@@ -2115,6 +2115,7 @@ class PosSession(models.Model):
         return str2bool(self.env['ir.config_parameter'].sudo().get_param('point_of_sale.capture_unprocessed_order', True))
 
     def _handle_order_process_fail(self, order: dict, exception: Exception, draft: bool):
+        self.env.cr.rollback()  # It would have rollback anyway as it was raising an exception
         if not self._is_capture_system_activated():
             return
 
@@ -2125,7 +2126,6 @@ class PosSession(models.Model):
             _logger.info("order '%s' was not captured as it is draft", order['data']['name'])
             return
 
-        self.env.cr.rollback()  # It would have rollback anyway as it was raising an exception
         self.sudo()._process_order_process_fail(order, exception, self.env.user.id)
         self.env.cr.commit()  # Make sure that our created records are stored
 
