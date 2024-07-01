@@ -4,45 +4,47 @@
 // Global
 //-----------------------------------------------------------------------------
 
-const { Map, StorageEvent, String } = globalThis;
+const { StorageEvent, String } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
 export class MockStorage {
-    constructor() {
-        this.items = new Map();
-    }
-
     get length() {
-        return this.items.size;
+        return Object.keys(this).length;
     }
 
     /** @type {typeof Storage.prototype.clear} */
     clear() {
-        this.items.clear();
+        for (const key in this) {
+            delete this[key];
+        }
     }
 
     /** @type {typeof Storage.prototype.getItem} */
     getItem(key) {
-        return this.items.get(key) ?? null;
+        key = String(key);
+        return this[key] ?? null;
     }
 
     /** @type {typeof Storage.prototype.key} */
     key(index) {
-        return [...this.items.keys()].at(index);
+        return Object.keys(this).at(index);
     }
 
     /** @type {typeof Storage.prototype.removeItem} */
     removeItem(key) {
-        this.items.delete(key);
+        key = String(key);
+        delete this[key];
         window.dispatchEvent(new StorageEvent("storage", { key, newValue: null }));
     }
 
     /** @type {typeof Storage.prototype.setItem} */
     setItem(key, value) {
-        this.items.set(key, String(value));
+        key = String(key);
+        value = String(value);
+        this[key] = value;
         window.dispatchEvent(new StorageEvent("storage", { key, newValue: value }));
     }
 }
