@@ -160,9 +160,16 @@ class PaymentProvider(models.Model):
         string="Express Checkout Supported", compute='_compute_feature_support_fields'
     )
     support_refund = fields.Selection(
-        string="Type of Refund Supported",
-        selection=[('full_only', "Full Only"), ('partial', "Partial")],
-        compute='_compute_feature_support_fields',
+        selection=[
+            ('none', "Unsupported"),
+            ('full_only', "Full Only"),
+            ('partial', "Full & Partial"),
+        ],
+        string="Refund",
+        default='none',
+        help="Refund is a feature allowing to refund customers directly from the payment in Odoo.",
+        required=True,
+        readonly=True,
     )
 
     # Kanban view fields
@@ -235,7 +242,6 @@ class PaymentProvider(models.Model):
         self.update(dict.fromkeys((
             'support_express_checkout',
             'support_manual_capture',
-            'support_refund',
             'support_tokenization',
         ), None))
 
