@@ -138,4 +138,4 @@ class ThreadController(http.Controller):
         guest.env[message_sudo.model].browse([message_sudo.res_id])._message_update_content(
             message_sudo, body, attachment_ids=attachment_ids, partner_ids=partner_ids
         )
-        return message_sudo._message_format(for_current_user=True)[0]
+        return Store("Message", message_sudo._message_format(for_current_user=True)).get_result()
