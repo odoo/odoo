@@ -5,8 +5,8 @@ import datetime
 from freezegun import freeze_time
 
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.tests import Form
 from odoo.exceptions import UserError
+from odoo.tests import Form
 
 
 class StockMoveLine(TestStockCommon):
@@ -137,9 +137,6 @@ class StockMoveLine(TestStockCommon):
         )
 
     def test_put_in_pack_with_several_move_lines(self):
-        """
-        Testing putting several move lines with different pickings into a pack should trigger a ValueError.
-        """
         picking1 = self.env['stock.picking'].create({
             'name': 'Picking 1',
             'location_id': self.env.ref('stock.stock_location_stock').id,
@@ -157,8 +154,10 @@ class StockMoveLine(TestStockCommon):
             'product_id': self.productA.id,
             'quantity': 1,
         })
-        with self.assertRaises(UserError):
-            (move_line1 | move_line2).action_put_in_pack()
+        (move_line1 | move_line2).action_put_in_pack()
+        self.assertEqual(move_line1.result_package_id, move_line2.result_package_id)
+        self.assertEqual(len(picking1.package_level_ids), 0)
+        self.assertEqual(len(picking2.package_level_ids), 0)
 
     def test_multi_edit_quant_and_lot(self):
         """

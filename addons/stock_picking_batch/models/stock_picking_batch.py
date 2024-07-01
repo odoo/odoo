@@ -262,14 +262,7 @@ class StockPickingBatch(models.Model):
         """
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
-            move_line_ids = self.picking_ids[0]._package_move_lines(batch_pack=True)
-            if move_line_ids:
-                res = move_line_ids.picking_id[0]._pre_put_in_pack_hook(move_line_ids)
-                if res:
-                    return res
-                package = move_line_ids.picking_id._put_in_pack(move_line_ids)
-                return move_line_ids.picking_id[0]._post_put_in_pack_hook(package)
-            raise UserError(_("Please add 'Done' quantities to the batch picking to create a new pack."))
+            return self.move_line_ids.action_put_in_pack()
 
     def action_view_reception_report(self):
         action = self.picking_ids[0].action_view_reception_report()

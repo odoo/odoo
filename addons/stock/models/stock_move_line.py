@@ -4,6 +4,7 @@
 from collections import Counter, defaultdict
 
 from odoo import _, api, fields, tools, models, Command
+from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import OrderedSet, format_list, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
@@ -949,10 +950,84 @@ class StockMoveLine(models.Model):
             'res_id': self.id,
         }
 
-    def action_put_in_pack(self):
-        if len(self.picking_id) > 1:
-            raise UserError(_("You cannot directly pack quantities from different transfers into the same package through this view. Try adding them to a batch picking and pack it there."))
-        return self.picking_id.action_put_in_pack(move_lines_to_pack=self)
+    def _pre_put_in_pack_hook(self, **kwargs):
+        return self._check_destinations()
+
+    def _check_destinations(self):
+        if len(self.location_dest_id) > 1:
+            view_id = self.env.ref('stock.stock_package_destination_form_view').id
+            wiz = self.env['stock.package.destination'].create({
+                'move_line_ids': self.ids,
+                'location_dest_id': self[0].location_dest_id.id,
+            })
+            return {
+                'name': _('Choose destination location'),
+                'view_mode': 'form',
+                'res_model': 'stock.package.destination',
+                'view_id': view_id,
+                'views': [(view_id, 'form')],
+                'type': 'ir.actions.act_window',
+                'res_id': wiz.id,
+                'target': 'new'
+            }
+
+    def _put_in_pack(self):
+        package = self.env['stock.quant.package'].create({})
+        package_type = self.move_id.product_packaging_id.package_type_id
+        if len(package_type) == 1:
+            package.package_type_id = package_type
+        if len(self) == 1:
+            default_dest_location = self._get_default_dest_location()
+            self.location_dest_id = default_dest_location._get_putaway_strategy(
+                product=self.product_id,
+                quantity=self.quantity,
+                package=package
+            )
+        self.write({'result_package_id': package.id})
+        if len(self.picking_id) == 1:
+            self.env['stock.package_level'].create({
+                'package_id': package.id,
+                'picking_id': self.picking_id.id,
+                'location_id': False,
+                'location_dest_id': self.location_dest_id.id,
+                'move_line_ids': [Command.set(self.ids)],
+                'company_id': self.company_id.id,
+            })
+        return package
+
+    def _post_put_in_pack_hook(self, package, **kwargs):
+        if package and self.picking_type_id.auto_print_package_label:
+            if self.picking_type_id.package_label_to_print == 'pdf':
+                action = self.env.ref("stock.action_report_quant_package_barcode_small").report_action(package.id, config=False)
+            elif self.picking_type_id.package_label_to_print == 'zpl':
+                action = self.env.ref("stock.label_package_template").report_action(package.id, config=False)
+            if action:
+                action.update({'close_on_report_download': True})
+                clean_action(action, self.env)
+                return action
+        return package
+
+    def _to_pack(self):
+        if len(self.picking_type_id) > 1:
+            raise UserError(_('You cannot pack products into the same package when they are from different transfers with different operation types'))
+        quantity_move_line_ids = self.filtered(
+            lambda ml: float_compare(ml.quantity, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0 and not ml.result_package_id
+            and ml.state not in ('done', 'cancel')
+        )
+        move_line_ids = quantity_move_line_ids.filtered(lambda ml: ml.picked)
+        if not move_line_ids:
+            move_line_ids = quantity_move_line_ids
+        return move_line_ids
+
+    def action_put_in_pack(self, **kwargs):
+        move_lines_to_pack = self._to_pack()
+        if move_lines_to_pack:
+            res = move_lines_to_pack._pre_put_in_pack_hook(**kwargs)
+            if not res:
+                package = move_lines_to_pack._put_in_pack()
+                return move_lines_to_pack._post_put_in_pack_hook(package, **kwargs)
+            return res
+        raise UserError(_("There is nothing eligible to put in a pack. Either there are no quantities to put in a pack or all products are already in a pack."))
 
     def _get_revert_inventory_move_values(self):
         self.ensure_one()

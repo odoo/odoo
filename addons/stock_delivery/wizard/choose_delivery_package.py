@@ -1,17 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools import float_compare
 
 
 class ChooseDeliveryPackage(models.TransientModel):
     _name = 'choose.delivery.package'
     _description = 'Delivery Package Selection Wizard'
 
-    picking_id = fields.Many2one('stock.picking', 'Picking')
+    move_line_ids = fields.Many2many('stock.move.line')
     delivery_package_type_id = fields.Many2one('stock.package.type', 'Delivery Package Type', check_company=True)
     shipping_weight = fields.Float('Shipping Weight', compute='_compute_shipping_weight', store=True, readonly=False)
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
-    company_id = fields.Many2one(related='picking_id.company_id')
+    company_id = fields.Many2one(related='move_line_ids.company_id')
 
     @api.depends('delivery_package_type_id')
     def _compute_weight_uom_name(self):
@@ -22,9 +23,7 @@ class ChooseDeliveryPackage(models.TransientModel):
     @api.depends('delivery_package_type_id')
     def _compute_shipping_weight(self):
         for rec in self:
-            move_line_ids = rec.picking_id._package_move_lines(
-                batch_pack=self.env.context.get('batch_pack')
-            )
+            move_line_ids = rec.move_line_ids._to_pack()
             # Add package weights to shipping weight, package base weight is defined in package.type
             total_weight = rec.delivery_package_type_id.base_weight or 0.0
             for ml in move_line_ids:
@@ -42,11 +41,4 @@ class ChooseDeliveryPackage(models.TransientModel):
             return {'warning': warning_mess}
 
     def action_put_in_pack(self):
-        move_line_ids = self.picking_id._package_move_lines(batch_pack=self.env.context.get("batch_pack"))
-        delivery_package = self.picking_id._put_in_pack(move_line_ids)
-        # write shipping weight and package type on 'stock_quant_package' if needed
-        if self.delivery_package_type_id:
-            delivery_package.package_type_id = self.delivery_package_type_id
-        if self.shipping_weight:
-            delivery_package.shipping_weight = self.shipping_weight
-        return self.picking_id._post_put_in_pack_hook(delivery_package)
+        return self.move_line_ids.action_put_in_pack(weight=self.shipping_weight, package_type=self.delivery_package_type_id, from_package_wizard=True)
