@@ -9,7 +9,8 @@ import requests
 
 from stdnum.eu.vat import check_vies
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
+from odoo.tools.image import base64_to_image
 
 _logger = logging.getLogger(__name__)
 
@@ -72,7 +73,7 @@ class ResPartner(models.Model):
             # avoid keeping falsy images (may happen that a blank page is returned that leads to an incorrect image)
             if iap_data['image_1920']:
                 try:
-                    tools.base64_to_image(iap_data['image_1920'])
+                    base64_to_image(iap_data['image_1920'])
                 except Exception:
                     iap_data.pop('image_1920')
         return iap_data

@@ -6,7 +6,7 @@ import base64
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import ImageProcess
+from odoo.tools.image import ImageProcess
 from odoo.tools.translate import _
 
 

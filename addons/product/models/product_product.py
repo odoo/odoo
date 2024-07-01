@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-from collections import defaultdict
 from operator import itemgetter
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, format_list, groupby
+from odoo.tools.image import is_image_size_above
 from odoo.tools.misc import unique
 
 
@@ -107,7 +107,7 @@ class ProductProduct(models.Model):
     @api.depends('image_variant_1920', 'image_variant_1024')
     def _compute_can_image_variant_1024_be_zoomed(self):
         for record in self:
-            record.can_image_variant_1024_be_zoomed = record.image_variant_1920 and tools.is_image_size_above(record.image_variant_1920, record.image_variant_1024)
+            record.can_image_variant_1024_be_zoomed = record.image_variant_1920 and is_image_size_above(record.image_variant_1920, record.image_variant_1024)
 
     def _set_template_field(self, template_field, variant_field):
         for record in self:

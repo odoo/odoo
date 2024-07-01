@@ -24,6 +24,7 @@ from odoo.addons.base_import.models.base_import import ImportValidationError
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
+from odoo.tools.image import ImageProcess
 
 _logger = logging.getLogger(__name__)
 
@@ -1365,7 +1366,7 @@ class MassMailing(models.Model):
                                 # responsive cropping behavior).
                                 pass
                             else:
-                                image_processor = tools.ImageProcess(image)
+                                image_processor = ImageProcess(image)
                                 image = image_processor.crop_resize(target_width, target_height, 0, 0)
                                 conversion_info.append((base64.b64encode(image.source), node, url))
 
