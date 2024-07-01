@@ -3,11 +3,10 @@
 
 import base64
 import io
-import binascii
 
 from PIL import Image, ImageDraw, PngImagePlugin
 
-from odoo import tools
+from odoo.tools import image as tools
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
 
@@ -363,4 +362,4 @@ class TestImage(TransactionCase):
         """converts to RGB when saving as JPEG"""
         image1 = Image.new('P', (1, 1), color='red')
         image2 = Image.new('RGB', (1, 1), color='red')
-        self.assertEqual(tools.image.image_apply_opt(image1, 'JPEG'), tools.image.image_apply_opt(image2, 'JPEG'))
+        self.assertEqual(tools.image_apply_opt(image1, 'JPEG'), tools.image_apply_opt(image2, 'JPEG'))

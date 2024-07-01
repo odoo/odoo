@@ -19,6 +19,9 @@ from odoo.tools.misc import DotDict
 from odoo.tools.translate import _
 
 
+__all__ = ["image_process"]
+
+
 # Preload PIL with the minimal subset of image formats we need
 Image.preinit()
 Image._initialized = 2
