@@ -49,7 +49,7 @@
                                         <td>
                                             <div class="flex d-flex flex-row">
                                                 <div class="cash-sign me-1" t-esc="_totalAmount &lt; 0 ? '-' : '+'"/>
-                                                Total Moves
+                                                Cash in/out
                                             </div>
                                         </td>
                                         <td class="align-top" t-esc="env.utils.formatCurrency(Math.abs(_totalAmount))"/>
@@ -66,8 +66,8 @@
                                 </tr>
                             </tbody>
                         </t>
-                        <tbody t-if="props.other_payment_methods.length > 0">
-                            <tr t-foreach="props.other_payment_methods" t-as="pm" t-key="pm.id">
+                        <tbody t-if="props.non_cash_payment_methods.length > 0">
+                            <tr t-foreach="props.non_cash_payment_methods" t-as="pm" t-key="pm.id">
                                 <td t-esc="pm.name" t-att-class="{ 'pt-2': pm_index === 0 }" />
                                 <td t-esc="env.utils.formatCurrency(pm.amount)"/>
                                 <t t-set="_showDiff" t-value="pm.type === 'bank' and pm.number !== 0" />
