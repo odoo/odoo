@@ -1,5 +1,6 @@
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import { CashierName } from "@point_of_sale/app/navbar/cashier_name/cashier_name";
 import { ProxyStatus } from "@point_of_sale/app/navbar/proxy_status/proxy_status";
@@ -53,6 +54,9 @@ export class Navbar extends Component {
             this.pos.mobile_pane = "right";
         }
         this.pos.scanning = !this.pos.scanning;
+    }
+    get customerFacingDisplayButtonIsShown() {
+        return this.pos.config.customer_display_type !== "none" && !isMobileOS();
     }
     get showCashMoveButton() {
         return Boolean(this.pos.config.cash_control && this.pos.session._has_cash_move_perm);
