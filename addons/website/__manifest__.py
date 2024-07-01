@@ -207,6 +207,7 @@
             'web/static/src/core/autocomplete/*',
             'website/static/src/components/autocomplete_with_pages/*',
             'website/static/src/xml/website.xml',
+            'website/static/src/scss/website_controller_page_kanban.scss',
 
             # Don't include dark mode files in light mode
             ('remove', 'website/static/src/client_actions/*/*.dark.scss'),
