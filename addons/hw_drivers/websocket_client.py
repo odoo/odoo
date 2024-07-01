@@ -39,15 +39,28 @@ def on_message(ws, messages):
     """
         When a message is receive, this function is triggered
         The message is load and if its type is 'iot_action', is sent to the device
+        If the message type is 'iot_command', a command is executed (see on_command_message)
     """
     messages = json.loads(messages)
     for message in messages:
         if (message['message']['type'] == 'iot_action'):
-            payload = message['message']['payload']
-            if helpers.get_mac_address() in payload['iotDevice']['iotIdentifiers']:
-                for device in payload['iotDevice']['identifiers']:
-                    if device['identifier'] in main.iot_devices:
-                        main.iot_devices[device["identifier"]].action(payload)
+            on_action_message(message)
+        if (message['message']['type'] == 'iot_command'):
+            on_command_message(message)
+
+def on_action_message(message):
+    payload = message['message']['payload']
+    if helpers.get_mac_address() in payload['iotDevice']['iotIdentifiers']:
+        for device in payload['iotDevice']['identifiers']:
+            if device['identifier'] in main.iot_devices:
+                main.iot_devices[device["identifier"]].action(payload)
+
+def on_command_message(message):
+    command = message['message']['payload']['command']
+    if command == 'reboot_box':
+        helpers.restart_iot_box()
+    if command == 'restart_odoo':
+        helpers.odoo_restart()
 
 
 def on_error(ws, error):
