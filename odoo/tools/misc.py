@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import base64
 import collections
-import contextlib
 import datetime
 import hashlib
 import hmac as hmac_lib
@@ -19,6 +18,7 @@ import re
 import sys
 import tempfile
 import threading
+import time
 import traceback
 import unicodedata
 from collections import OrderedDict
@@ -1143,10 +1143,6 @@ class Reverse(object):
     def __gt__(self, other): return self.val < other.val
     def __le__(self, other): return self.val >= other.val
     def __lt__(self, other): return self.val > other.val
-
-def ignore(*exc):
-    warnings.warn("Since 16.0 `odoo.tools.ignore` is replaced by `contextlib.suppress`.", DeprecationWarning, stacklevel=2)
-    return contextlib.suppress(*exc)
 
 class replace_exceptions(ContextDecorator):
     """
