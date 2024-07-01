@@ -983,6 +983,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_GS1_pos_barcodes_scan(self):
         barcodes_gs1_nomenclature = self.env.ref("barcodes_gs1_nomenclature.default_gs1_nomenclature")
+        default_nomenclature_id = self.env.ref("barcodes.default_barcode_nomenclature")
         self.main_pos_config.company_id.write({
             'nomenclature_id': barcodes_gs1_nomenclature.id
         })
@@ -1013,6 +1014,11 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'GS1BarcodeScanningTourFallback', login="pos_user")
+        self.main_pos_config.write({
+            'fallback_nomenclature_id': default_nomenclature_id
+        })
+
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'GS1BarcodeScanningTour', login="pos_user")
 
     def test_refund_order_with_fp_tax_included(self):
