@@ -17,7 +17,7 @@ from . import pycompat
 from . import win32
 from .parse_version import parse_version
 from .barcode import *
-from .cache import get_cache_key_counter, log_ormcache_stats, ormcache, ormcache_context
+from .cache import ormcache, ormcache_context
 from .config import config
 from .date_utils import *
 from .float_utils import *
