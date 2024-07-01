@@ -23,7 +23,6 @@ class SaleOrder(models.Model):
         readonly=True,
     )
 
-    access_point_address = fields.Json(string="Delivery Point Address")
     cart_recovery_email_sent = fields.Boolean(string="Cart recovery email already sent")
     shop_warning = fields.Char(string="Warning")
 
@@ -168,56 +167,6 @@ class SaleOrder(models.Model):
                 order._send_order_confirmation_mail()
         return res
 
-    def _action_confirm(self):
-        for order in self:
-            order_location = order.access_point_address
-
-            if not order_location:
-                continue
-
-            # retrieve all the data :
-            # name, street, city, state, zip, country
-            name = order.partner_shipping_id.name
-            street = order_location['pick_up_point_address']
-            city = order_location['pick_up_point_town']
-            zip_code = order_location['pick_up_point_postal_code']
-            country = order.env['res.country'].search([('code', '=', order_location['pick_up_point_country'])]).id
-            state = order.env['res.country.state'].search([
-                ('code', '=', order_location['pick_up_point_state']),
-                ('country_id', '=', country),
-            ]).id if (order_location['pick_up_point_state'] and country) else None
-            parent_id = order.partner_shipping_id.id
-            email = order.partner_shipping_id.email
-            phone = order.partner_shipping_id.phone
-
-            # we can check if the current partner has a partner of type "delivery" that has the same address
-            existing_partner = order.env['res.partner'].search([
-                ('street', '=', street),
-                ('city', '=', city),
-                ('state_id', '=', state),
-                ('country_id', '=', country),
-                ('parent_id', '=', parent_id),
-                ('type', '=', 'delivery'),
-            ], limit=1)
-
-            if existing_partner:
-                order.partner_shipping_id = existing_partner
-            else:
-                # if not, we create that res.partner
-                order.partner_shipping_id = order.env['res.partner'].create({
-                    'parent_id': parent_id,
-                    'type': 'delivery',
-                    'name': name,
-                    'street': street,
-                    'city': city,
-                    'state_id': state,
-                    'zip': zip_code,
-                    'country_id': country,
-                    'email': email,
-                    'phone': phone,
-                })
-        return super()._action_confirm()
-
     def action_preview_sale_order(self):
         action = super().action_preview_sale_order()
         if action['url'].startswith('/'):
@@ -287,18 +236,43 @@ class SaleOrder(models.Model):
             order_line = self.env['sale.order.line'].sudo().create(order_line_values)
         return order_line
 
-    def _cart_update_pricelist(self, pricelist_id=None, update_pricelist=False):
+    def _cart_update_address(self, partner_id, fnames=None):
+        if not fnames:
+            return
+
+        fpos_before = self.fiscal_position_id
+        pricelist_before = self.pricelist_id
+
+        self.write({fname: partner_id for fname in fnames})
+
+        fpos_changed = fpos_before != self.fiscal_position_id
+        if fpos_changed:
+            # Recompute taxes on fpos change
+            self._recompute_taxes()
+
+        if self.pricelist_id != pricelist_before or fpos_changed:
+            # Pricelist may have been recomputed by the `partner_id` field update
+            # we need to recompute the prices to match the new pricelist if it changed
+            self._recompute_prices()
+
+            request.session['website_sale_current_pl'] = self.pricelist_id.id
+            self.website_id.invalidate_recordset(['pricelist_id'])
+
+        if self.carrier_id and 'partner_shipping_id' in fnames and self._has_deliverable_products():
+            # Update the delivery method on shipping address change.
+            delivery_methods = self._get_delivery_methods()
+            delivery_method = self._get_preferred_delivery_method(delivery_methods)
+            self._set_delivery_method(delivery_method)
+
+        if 'partner_id' in fnames:
+            # Only add the main partner as follower of the order
+            self._message_subscribe([partner_id])
+
+    def _cart_update_pricelist(self, pricelist_id=None):
         self.ensure_one()
 
-        previous_pricelist_id = self.pricelist_id.id
-
-        if pricelist_id:
+        if self.pricelist_id.id != pricelist_id:
             self.pricelist_id = pricelist_id
-
-        if update_pricelist:
-            self._compute_pricelist_id()
-
-        if update_pricelist or previous_pricelist_id != self.pricelist_id.id:
             self._recompute_prices()
 
     def _cart_update(self, product_id, line_id=None, add_qty=0, set_qty=0, **kwargs):
@@ -642,7 +616,7 @@ class SaleOrder(models.Model):
 
     def _remove_delivery_line(self):
         super()._remove_delivery_line()
-        self.access_point_address = {}  # Reset the pickup point address.
+        self.pickup_location_data = {}  # Reset the pickup location data.
 
     def _get_preferred_delivery_method(self, available_delivery_methods):
         """ Get the preferred delivery method based on available delivery methods for the order.

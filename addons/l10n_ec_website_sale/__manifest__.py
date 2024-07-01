@@ -11,7 +11,9 @@
     'data': [
         'data/ir_model_fields.xml',
         'data/payment_method_data.xml',
-        'views/website_sales_templates.xml',
+
+        'views/portal_templates.xml',
+        'views/website_sale_templates.xml',
         'views/payment_method_views.xml',
     ],
     'demo': [
