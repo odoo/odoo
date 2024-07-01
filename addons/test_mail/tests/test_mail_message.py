@@ -5,6 +5,7 @@ from markupsafe import Markup
 from unittest.mock import patch
 
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
+from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.exceptions import AccessError, UserError
 from odoo.tests.common import tagged, users
@@ -104,10 +105,15 @@ class TestMessageValues(MailCommon):
         } for record in [record1, record2]])
         for message, record in zip(messages, [record1, record2]):
             with self.subTest(record=record):
-                formatted = message._message_format(for_current_user=True)[0]
+                formatted = Store(
+                    "Message", message._message_format(for_current_user=True)
+                ).get_result()["Message"][0]
                 self.assertEqual(formatted['record_name'], record.name)
                 record.write({'name': 'Just Test'})
-                formatted = message._message_format(for_current_user=True)[0]
+                formatted = Store(
+                    "Message",
+                    message._message_format(for_current_user=True)
+                ).get_result()["Message"][0]
                 self.assertEqual(formatted['record_name'], 'Just Test')
 
     @mute_logger('odoo.models.unlink')
@@ -127,8 +133,10 @@ class TestMessageValues(MailCommon):
         # message_format.
         self.env.flush_all()
         self.env.invalidate_all()
-        res = message.with_user(self.user_employee)._message_format(for_current_user=True)
-        self.assertEqual(res[0].get('record_name'), 'Test1')
+        res = Store(
+            "Message", message.with_user(self.user_employee)._message_format(for_current_user=True)
+        ).get_result()
+        self.assertEqual(res["Message"][0].get("record_name"), "Test1")
 
     def test_mail_message_values_body_base64_image(self):
         msg = self.env['mail.message'].with_user(self.user_employee).create({
