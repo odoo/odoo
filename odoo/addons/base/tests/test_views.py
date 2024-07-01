@@ -17,7 +17,8 @@ from psycopg2.extras import Json
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import common, tagged
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tools import get_cache_key_counter, mute_logger, view_validation, safe_eval
+from odoo.tools import mute_logger, view_validation, safe_eval
+from odoo.tools.cache import get_cache_key_counter
 from odoo.addons.base.models import ir_ui_view
 
 _logger = logging.getLogger(__name__)

@@ -1,30 +1,25 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from __future__ import annotations
-
 """
 Miscellaneous tools used by OpenERP.
 """
+from __future__ import annotations
+
 import base64
-import cProfile
 import collections
-import contextlib
 import datetime
-import hmac as hmac_lib
 import hashlib
-import io
+import hmac as hmac_lib
 import itertools
 import json
+import logging
 import os
 import re
-import socket
-import subprocess
 import sys
 import tempfile
 import threading
 import time
 import traceback
-import types
 import unicodedata
 import warnings
 from collections import OrderedDict
@@ -39,22 +34,69 @@ from typing import TYPE_CHECKING
 import babel
 import babel.dates
 import markupsafe
-import passlib.utils
 import pytz
-import werkzeug.utils
 from lxml import etree, objectify
 
 import odoo
 import odoo.addons
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
-from odoo.loglevels import get_encodings, ustr, exception_to_unicode     # noqa
-from odoo.tools.float_utils import float_round
+from odoo.loglevels import exception_to_unicode, get_encodings, ustr  # noqa: F401
+
 from . import pycompat
-from .cache import *
 from .config import config
-from .parse_version import parse_version
+from .float_utils import float_round
 from .which import which
+
+__all__ = [
+    'DEFAULT_SERVER_DATETIME_FORMAT',
+    'DEFAULT_SERVER_DATE_FORMAT',
+    'DEFAULT_SERVER_TIME_FORMAT',
+    'NON_BREAKING_SPACE',
+    'SKIPPED_ELEMENT_TYPES',
+    'DotDict',
+    'OrderedSet',
+    'Reverse',
+    'babel_locale_parse',
+    'clean_context',
+    'consteq',
+    'discardattr',
+    'exception_to_unicode',
+    'file_open',
+    'file_open_temporary_directory',
+    'file_path',
+    'find_in_path',
+    'formatLang',
+    'format_amount',
+    'format_date',
+    'format_datetime',
+    'format_duration',
+    'format_time',
+    'frozendict',
+    'get_encodings',
+    'get_iso_codes',
+    'get_lang',
+    'groupby',
+    'hmac',
+    'html_escape',
+    'human_size',
+    'is_list_of',
+    'merge_sequences',
+    'mod10r',
+    'mute_logger',
+    'parse_date',
+    'partition',
+    'posix_to_ldml',
+    'remove_accents',
+    'replace_exceptions',
+    'reverse_enumerate',
+    'split_every',
+    'str2bool',
+    'street_split',
+    'topological_sort',
+    'unique',
+    'ustr',
+]
 
 if TYPE_CHECKING:
     from odoo.addons.base.models.res_lang import LangData
@@ -249,6 +291,11 @@ def flatten(list):
     >>> flatten(t)
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     """
+    warnings.warn(
+        "deprecated since 18.0",
+        category=DeprecationWarning,
+        stacklevel=2,
+    )
     r = []
     for e in list:
         if isinstance(e, (bytes, str)) or not isinstance(e, collections.abc.Iterable):
@@ -1105,7 +1152,7 @@ def groupby(iterable, key=None):
     """
     if key is None:
         key = lambda arg: arg
-    groups = defaultdict(list)
+    groups = collections.defaultdict(list)
     for elem in iterable:
         groups[key(elem)].append(elem)
     return groups.items()
@@ -1153,10 +1200,6 @@ class Reverse(object):
     def __gt__(self, other): return self.val < other.val
     def __le__(self, other): return self.val >= other.val
     def __lt__(self, other): return self.val > other.val
-
-def ignore(*exc):
-    warnings.warn("Since 16.0 `odoo.tools.ignore` is replaced by `contextlib.suppress`.", DeprecationWarning, stacklevel=2)
-    return contextlib.suppress(*exc)
 
 class replace_exceptions(ContextDecorator):
     """

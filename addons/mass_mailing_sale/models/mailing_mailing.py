@@ -90,7 +90,7 @@ class MassMailing(models.Model):
 
         self_with_company = self.with_company(self.user_id.company_id)
         currency = self.user_id.company_id.currency_id
-        formated_amount = tools.format_decimalized_amount(self_with_company.sale_invoiced_amount, currency)
+        formated_amount = tools.misc.format_decimalized_amount(self_with_company.sale_invoiced_amount, currency)
 
         values['kpi_data'][1]['kpi_col2'] = {
             'value': self.sale_quotation_count,

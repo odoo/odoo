@@ -30,6 +30,7 @@ import odoo
 from . import tools
 from .tools import SQL
 from .tools.func import frame_codeinfo, locked
+from .tools.misc import Callbacks
 
 def undecimalize(value, cr):
     if value is None:
@@ -136,10 +137,10 @@ class BaseCursor:
     """ Base class for cursors that manage pre/post commit hooks. """
 
     def __init__(self):
-        self.precommit = tools.Callbacks()
-        self.postcommit = tools.Callbacks()
-        self.prerollback = tools.Callbacks()
-        self.postrollback = tools.Callbacks()
+        self.precommit = Callbacks()
+        self.postcommit = Callbacks()
+        self.prerollback = Callbacks()
+        self.postrollback = Callbacks()
         # By default a cursor has no transaction object.  A transaction object
         # for managing environments is instantiated by registry.cursor().  It
         # is not done here in order to avoid cyclic module dependencies.

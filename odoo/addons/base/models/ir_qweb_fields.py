@@ -158,7 +158,7 @@ class IntegerConverter(models.AbstractModel):
     @api.model
     def value_to_html(self, value, options):
         if options.get('format_decimalized_number'):
-            return tools.format_decimalized_number(value, options.get('precision_digits', 1))
+            return tools.misc.format_decimalized_number(value, options.get('precision_digits', 1))
         return pycompat.to_text(self.user_lang().format('%d', value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}'))
 
 

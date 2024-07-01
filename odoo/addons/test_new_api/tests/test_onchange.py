@@ -6,7 +6,7 @@ from unittest.mock import patch
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tests import TransactionCase, Form
 from odoo import Command
-from odoo.tools import submap
+from odoo.tools.misc import submap
 
 
 def strip_prefix(prefix, names):

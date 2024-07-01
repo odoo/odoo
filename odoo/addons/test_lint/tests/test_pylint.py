@@ -3,6 +3,7 @@
 
 import logging
 import platform
+
 try:
     import pylint
 except ImportError:
@@ -11,9 +12,10 @@ import subprocess
 import os
 from os.path import join
 
-from odoo.tests.common import TransactionCase
 from odoo import tools
 from odoo.modules import get_modules, get_module_path
+from odoo.tests import TransactionCase
+from odoo.tools.which import which
 
 HERE = os.path.dirname(os.path.realpath(__file__))
 
@@ -88,7 +90,7 @@ class TestPyLint(TransactionCase):
             preexec = None
 
         try:
-            pylint_bin = tools.which('pylint')
+            pylint_bin = which('pylint')
             process = subprocess.Popen(
                 [pylint_bin] + options + paths,
                 stdout=subprocess.PIPE,

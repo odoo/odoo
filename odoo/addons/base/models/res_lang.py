@@ -52,7 +52,7 @@ class Lang(models.Model):
     _order = "active desc,name"
     _allow_sudo_commands = False
 
-    _disallowed_datetime_patterns = list(tools.DATETIME_FORMATS_MAP)
+    _disallowed_datetime_patterns = list(tools.misc.DATETIME_FORMATS_MAP)
     _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
 
     name = fields.Char(required=True)
@@ -193,7 +193,7 @@ class Lang(models.Model):
             # For some locales, nl_langinfo returns a D_FMT/T_FMT that contains
             # unsupported '%-' patterns, e.g. for cs_CZ
             format = format.replace('%-', '%')
-            for pattern, replacement in tools.DATETIME_FORMATS_MAP.items():
+            for pattern, replacement in tools.misc.DATETIME_FORMATS_MAP.items():
                 format = format.replace(pattern, replacement)
             return str(format)
 

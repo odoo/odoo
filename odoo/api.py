@@ -30,8 +30,9 @@ except ImportError:
     from decorator import decorator
 
 from .exceptions import AccessError, UserError, CacheMiss
-from .tools import clean_context, frozendict, lazy_property, OrderedSet, Query, SQL, StackMap
+from .tools import clean_context, frozendict, lazy_property, OrderedSet, Query, SQL
 from .tools.translate import _
+from odoo.tools.misc import StackMap
 
 if TYPE_CHECKING:
     from odoo.sql_db import Cursor, TestCursor
