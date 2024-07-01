@@ -6,6 +6,9 @@
 // Contrast ratio
 $o-frontend-min-contrast-ratio: 2.9 !default;
 
+// Media
+$o-webclient-media: screen !default;
+
 // Color-scheme
 $o-webclient-color-scheme: bright !default;
 
@@ -16,6 +19,8 @@ $o-font-size-base-touch: o-to-rem(16px) !default;
 $o-font-size-base-small: o-to-rem(13px) !default;
 $o-font-size-base-smaller: o-to-rem(12px) !default;
 $o-line-height-base: 1.5 !default; // This is BS default
+$o-line-height-sm : 1.25 !default;
+$o-line-height-lg : 2 !default;
 
 // Global sans-serif fonts stack, defined here as we need to process
 // it before actually using it (to add more unicode support with the special
@@ -119,6 +124,10 @@ $o-main-link-color: darken($o-brand-primary, 5%) !default;
 $o-main-favorite-color: #f3cc00 !default;
 $o-main-code-color: #d2317b !default;
 
+// Tables
+$o-table-cell-padding-x-sm: .3rem !default;
+$o-table-cell-padding-y-sm: .5rem !default;
+
 // Components colors
 $o-component-active-color:  $o-gray-900 !default;
 $o-component-active-bg: mix($o-action, $o-gray-100, 20%) !default;
@@ -203,6 +212,10 @@ $o-label-font-size-factor: 0.8 !default;
 
 $o-list-group-active-color: $o-gray-900 !default;
 $o-list-group-active-bg: lighten(saturate(adjust-hue($o-info, 15), 1.8), 50) !default;
+
+// Breadcrumbs
+
+$o-breadcrumb-item-padding-x: .5rem !default;
 
 
 // == Badges

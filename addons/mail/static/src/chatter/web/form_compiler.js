@@ -106,7 +106,7 @@ patch(FormCompiler.prototype, {
             "t-if": `${
                 tIf ? tIf : "true"
             } and (!["COMBO", "NONE"].includes(__comp__.mailLayout(${hasPreview})))`, // opposite of sheetBgChatterContainerHookXml
-            "t-attf-class": `{{ ["SIDE_CHATTER", "EXTERNAL_COMBO_XXL"].includes(__comp__.mailLayout(${hasPreview})) ? "o-aside" : "mt-4 mt-md-0" }}`,
+            "t-attf-class": `{{ ["SIDE_CHATTER", "EXTERNAL_COMBO_XXL"].includes(__comp__.mailLayout(${hasPreview})) ? "o-aside w-print-100" : "mt-4 mt-md-0" }}`,
         });
         append(parentXml, chatterContainerHookXml);
         return res;
