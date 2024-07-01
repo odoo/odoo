@@ -60,18 +60,19 @@ export class Chatbot extends Record {
         if (!this.currentStep || this.currentStep.completed || !this.thread) {
             return;
         }
-        this.currentStep.message = this.store.Message.insert(
-            this.currentStep.message ?? {
-                id: this.store.getNextTemporaryId(),
-                author: this.script.partner,
-                body: this.currentStep.scriptStep.message,
-                thread: this.thread,
-            },
-            { html: true }
-        );
-        if (this.currentStep.message) {
-            this.thread.messages.add(this.currentStep.message);
-        }
+        const { Message: messages = [] } = this.store.insert(this.currentStep.data, { html: true });
+        this.currentStep.message =
+            messages[0] ??
+            this.store.Message.insert(
+                {
+                    id: this.store.getNextTemporaryId(),
+                    author: this.script.partner,
+                    body: this.currentStep.scriptStep.message,
+                    thread: this.thread,
+                },
+                { html: true }
+            );
+        this.thread.messages.add(this.currentStep.message);
     }
 
     get completed() {
