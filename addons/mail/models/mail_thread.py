@@ -3189,12 +3189,15 @@ class MailThread(models.AbstractModel):
                     (
                         user.partner_id,
                         "mail.message/inbox",
-                        message.with_user(user)._message_format(
-                            msg_vals=msg_vals,
-                            for_current_user=True,
-                            add_followers=True,
-                            followers=followers,
-                        )[0]
+                        Store(
+                            "Message",
+                            message.with_user(user)._message_format(
+                                msg_vals=msg_vals,
+                                for_current_user=True,
+                                add_followers=True,
+                                followers=followers,
+                            )
+                        ).get_result(),
                     )
                 )
         self.env["bus.bus"].sudo()._sendmany(bus_notifications)
