@@ -221,11 +221,19 @@
                 <t t-foreach="[...state.enabledEditorHierarchy].reverse()" t-as="editor" t-key="editor.key">
                     <t t-set="snippetOptions" t-value="editor.getOptions()"/>
                     <we-customizeblock-options t-if="snippetOptions.length > 0">
-                        <we-title><span>[OWL] <t t-out="editor.getName()"/></span></we-title>
+                        <we-title><span>[OWL] <t t-out="editor.getName()"/></span>
+                            <we-top-button-group>
+                                <t t-foreach="snippetOptions" t-as="option" t-key="option_index">
+                                    <t t-if="option.isTopOption" t-component="option.renderingComponent"
+                                        snippetOption="option"
+                                        onOptionMounted.bind="onOptionMounted"/>
+                                </t>
+                            </we-top-button-group>
+                        </we-title>
                         <t t-foreach="snippetOptions" t-as="option" t-key="option_index">
                             <!-- todo: @owl-options this div encapsulation is
                             there so solve a weird crash -->
-                            <div>
+                            <div t-if="!option.isTopOption">
                                 <t t-component="option.renderingComponent"
                                     snippetOption="option"
                                     onOptionMounted.bind="onOptionMounted"/>
