@@ -130,7 +130,7 @@ class SaleOrder(models.Model):
                     'price_subtotal': sum(lines.mapped('price_subtotal')),
                     'price_total': sum(lines.mapped('price_total')),
                     'discount': 0.0,
-                    'name': lines[0].name_short if lines.reward_id.reward_type != 'product' else lines[0].name,
+                    'name': lines[0]._get_short_description() if lines.reward_id.reward_type != 'product' else lines[0].name,
                     'product_uom_qty': 1,
                     'product_uom': lines[0].product_uom.id,
                     'order_id': order.id,

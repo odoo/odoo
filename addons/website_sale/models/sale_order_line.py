@@ -1,28 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import fields, models
 
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    name_short = fields.Char(compute='_compute_name_short')
     shop_warning = fields.Char(string="Warning")
-
-    #=== COMPUTE METHODS ===#
-
-    @api.depends('product_id.display_name')
-    def _compute_name_short(self):
-        """ Compute a short name for this sale order line, to be used on the website where we don't have much space.
-            To keep it short, instead of using the first line of the description, we take the product name without the internal reference.
-        """
-        for record in self:
-            record.name_short = record.product_id.with_context(display_default_code=False).display_name
 
     #=== BUSINESS METHODS ===#
 
     def get_description_following_lines(self):
-        return self.name.splitlines()[1:]
+        return self.name.splitlines()
 
     def _get_pricelist_price_before_discount(self):
         """On ecommerce orders, the base price must always be the sales price."""

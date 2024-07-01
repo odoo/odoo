@@ -24,6 +24,12 @@ class SaleOrderLine(models.Model):
                 raise ValidationError(
                     _("The sale order line with the product %(product_name)s needs an event and a ticket.", product_name=so_line.product_id.name))
 
+    def _get_short_description(self):
+        self.ensure_one()
+        if self.event_ticket_id:
+            return self.event_ticket_id.display_name
+        return super()._get_short_description()
+
     @api.depends('state', 'event_id')
     def _compute_product_uom_readonly(self):
         event_lines = self.filtered(lambda line: line.event_id)

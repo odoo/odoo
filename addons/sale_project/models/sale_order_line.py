@@ -231,9 +231,8 @@ class SaleOrderLine(models.Model):
         allocated_hours = 0.0
         if self.product_id.service_type not in ['milestones', 'manual']:
             allocated_hours = self._convert_qty_company_hours(self.company_id)
-        sale_line_name_parts = self.name.split('\n')
-        title = sale_line_name_parts[0] or self.product_id.name
-        description = '<br/>'.join(sale_line_name_parts[1:])
+        title = self._get_short_description()
+        description = '<br/>'.join(self.name.splitlines()) if self.name else ''
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
             'analytic_account_id': project.analytic_account_id.id,
@@ -341,7 +340,7 @@ class SaleOrderLine(models.Model):
             })
         else:
             milestone = self.env['project.milestone'].create({
-                'name': self.name,
+                'name': self._get_full_description(),
                 'project_id': self.project_id.id or self.order_id.project_id.id,
                 'sale_line_id': self.id,
                 'quantity_percentage': 1,

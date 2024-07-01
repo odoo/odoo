@@ -92,17 +92,3 @@ class SaleOrder(models.Model):
                 ('event_ticket_id', '=', order_line.event_ticket_id.id),
             ], offset=new_qty, limit=(old_qty - new_qty), order='create_date asc')
             attendees.action_cancel()
-
-
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
-
-    @api.depends('product_id.display_name', 'event_ticket_id.display_name')
-    def _compute_name_short(self):
-        """ If the sale order line concerns a ticket, we don't want the product name, but the ticket name instead.
-        """
-        super(SaleOrderLine, self)._compute_name_short()
-
-        for record in self:
-            if record.event_ticket_id:
-                record.name_short = record.event_ticket_id.display_name

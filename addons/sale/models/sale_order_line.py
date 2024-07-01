@@ -121,7 +121,7 @@ class SaleOrderLine(models.Model):
     name = fields.Text(
         string="Description",
         compute='_compute_name',
-        store=True, readonly=False, required=True, precompute=True)
+        store=True, readonly=False, precompute=True)
 
     product_uom_qty = fields.Float(
         string="Quantity",
@@ -287,11 +287,22 @@ class SaleOrderLine(models.Model):
 
     #=== COMPUTE METHODS ===#
 
+    def _get_short_description(self):
+        self.ensure_one()
+        if self.product_id:
+            return self.product_id.with_context(display_default_code=False).display_name
+        if self.name:
+            return self.name.splitlines()[0]
+        return ""
+
+    def _get_full_description(self):
+        return "\n".join(val for val in (self.product_id.display_name, self.name) if val)
+
     @api.depends('order_partner_id', 'order_id', 'product_id')
     def _compute_display_name(self):
         name_per_id = self._additional_name_per_id()
         for so_line in self.sudo():
-            name = '{} - {}'.format(so_line.order_id.name, so_line.name and so_line.name.split('\n')[0] or so_line.product_id.name)
+            name = f'{so_line.order_id.name} - {so_line._get_short_description()}'
             additional_name = name_per_id.get(so_line.id)
             if additional_name:
                 name = f'{name} {additional_name}'
@@ -367,7 +378,9 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         description = (
-            self.product_id.get_product_multiline_description_sale()
+            self.product_id.with_context(
+                product_description_with_display_name=False
+            ).get_product_multiline_description_sale()
             + self._get_sale_order_line_multiline_description_variants()
         )
         if self.linked_line_id:
@@ -1179,17 +1192,10 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
 
-        # Compatibility fix for creating invoices from a SO since the computation of the line name has been changed in the account module.
-        # Has to be removed as soon as the new behavior for the line name has been implemented in the sale module.
-        line_name = self.name
-        if self.product_id.display_name:
-            line_name = re.sub(re.escape(self.product_id.display_name), '', line_name)
-            line_name = re.sub(r'^\n', '', line_name)
-            line_name = re.sub(r'(?<=\n) ', '', line_name)
         res = {
             'display_type': self.display_type or 'product',
             'sequence': self.sequence,
-            'name': line_name,
+            'name': self.name,
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
             'quantity': self.qty_to_invoice,

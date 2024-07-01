@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="sale_order_portal_content_inherit_website_sale" name="Orders Followup Products Links" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//section[@id='details']//div[hasclass('table-responsive')]" position="attributes">
+            <attribute name="class" remove="table-responsive" separator=" "/>
+        </xpath>
+        <xpath expr="//section[@id='details']//span[@name='product_name']" position="replace">
+            <a t-if="line.product_id.website_published" t-att-href="line.product_id.website_url" class="d-block text-wrap" style="max-width: 35vw">
+                $0
+            </a>
+            <t t-else="">
+                $0
+            </t>
+        </xpath>
+    </template>
+
+    <template id="sale_order_re_order_btn" inherit_id="sale.sale_order_portal_template" name="Sale Order Order Again">
+        <xpath expr="//t[@t-set='entries']//div[hasclass('o_download_pdf')]" position="before">
+            <t t-if="sale_order.website_id.enabled_portal_reorder_button and sale_order.with_user(request.env.user).sudo()._is_reorder_allowed()">
+                <button class="btn btn-primary o_wsale_reorder_button" t-att-data-sale-order-id="sale_order.id">
+                    <i class="fa fa-rotate-right me-1"/>
+                    Order Again
+                </button>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

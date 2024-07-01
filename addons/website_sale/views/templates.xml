@@ -1527,16 +1527,17 @@
                  t-attf-class="o_cart_product d-flex align-items-stretch gap-3 #{line.linked_line_id and 'optional_product info'} #{not line_last and 'border-bottom pb-4'} #{line_index &gt; 0 and 'pt-4'}"
                  t-attf-data-product-id="#{line.product_id and line.product_id.id}">
                 <t t-if="line.product_id">
+                    <t t-set="line_desc" t-value="line._get_short_description()"/>
                     <img t-if="line._is_not_sellable_line() and line.product_id.image_128"
                          t-att-src="image_data_uri(line.product_id.image_128)"
                          class="o_image_64_max  img rounded"
-                         t-att-alt="line.name_short"/>
+                         t-att-alt="line_desc"/>
                     <div t-else=""
                          t-field="line.product_id.image_128"
                          t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max rounded'}"/>
                     <div class="flex-grow-1">
                         <t t-call="website_sale.cart_line_product_link">
-                            <h6 t-field="line.name_short" class="d-inline align-top h6 fw-bold"/>
+                            <h6 t-out="line_desc" class="d-inline align-top h6 fw-bold"/>
                         </t>
                         <t t-call="website_sale.cart_line_description_following_lines">
                             <t t-set="div_class" t-valuef="d-none d-md-block"/>
@@ -2278,9 +2279,10 @@
                                                         t-value="'pt-3' if line_size &gt; 1 and not line_first else 'pt-0'"/>
                                                         <td t-if="not line.product_id" colspan="2"/>
                                                         <t t-else="">
+                                                            <t t-set="line_desc" t-value="line._get_short_description()"/>
                                                             <td t-attf-class="td-img ps-0 #{o_cart_sum_padding_top}">
                                                                 <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
-                                                                    <img t-att-src="image_data_uri(line.product_id.image_128)" class="o_image_64_max img rounded" t-att-alt="line.name_short"/>
+                                                                    <img t-att-src="image_data_uri(line.product_id.image_128)" class="o_image_64_max img rounded" t-att-alt="line_desc"/>
                                                                 </span>
                                                                 <span t-else=""
                                                                     t-field="line.product_id.image_128"
@@ -2298,7 +2300,7 @@
                                                                         aria-label="Warning"/>
                                                                     </t>
                                                                     x
-                                                                    <t t-out="line.name_short"/>
+                                                                    <t t-out="line_desc"/>
                                                                 </h6>
                                                             </td>
                                                         </t>
@@ -2559,20 +2561,6 @@
         </xpath>
     </template>
 
-    <template id="sale_order_portal_content_inherit_website_sale" name="Orders Followup Products Links" inherit_id="sale.sale_order_portal_content">
-        <xpath expr="//section[@id='details']//div[hasclass('table-responsive')]" position="attributes">
-            <attribute name="class" remove="table-responsive" separator=" "/>
-        </xpath>
-        <xpath expr="//section[@id='details']//td[@id='product_name']/*" position="replace">
-            <a t-if="line.product_id.website_published" t-att-href="line.product_id.website_url" class="d-block text-wrap" style="max-width: 35vw">
-                <span t-field="line.name" />
-            </a>
-            <t t-if="not line.product_id.website_published">
-                <span t-field="line.name" class="d-block text-wrap" style="max-width: 35vw"/>
-            </t>
-        </xpath>
-    </template>
-
     <!-- Product page images -->
     <template id="website_sale.shop_product_images" name="Shop Product Images">
         <t t-set="product_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
@@ -2730,14 +2718,4 @@
         </t>
     </template>
 
-    <template id="sale_order_re_order_btn" inherit_id="sale.sale_order_portal_template" name="Sale Order Order Again">
-        <xpath expr="//t[@t-set='entries']/div/div/div[hasclass('o_download_pdf')]" position="before">
-            <t t-if="request.website.enabled_portal_reorder_button and sale_order.with_user(request.env.user).sudo()._is_reorder_allowed()">
-                <button class="btn btn-primary o_wsale_reorder_button" t-att-data-sale-order-id="sale_order.id">
-                    <i class="fa fa-rotate-right me-1"/>
-                    Order Again
-                </button>
-            </t>
-        </xpath>
-    </template>
 </odoo>
