@@ -21,6 +21,13 @@ function isUnremovableColumn(element, root) {
     return !root.contains(closestColumnContainer);
 }
 
+function columnIsDisabled(numberOfColumns) {
+    return (node) => {
+        const row = closestElement(node, ".o_text_columns .row");
+        return row && row.childElementCount === numberOfColumns;
+    };
+}
+
 export class ColumnPlugin extends Plugin {
     static name = "column";
     static dependencies = ["selection"];
@@ -32,6 +39,7 @@ export class ColumnPlugin extends Plugin {
                 description: _t("Convert into 2 columns"),
                 category: "structure",
                 fontawesome: "fa-columns",
+                isDisabled: columnIsDisabled(2),
                 action(dispatch) {
                     dispatch("COLUMNIZE", { numberOfColumns: 2 });
                 },
@@ -41,6 +49,7 @@ export class ColumnPlugin extends Plugin {
                 description: _t("Convert into 3 columns"),
                 category: "structure",
                 fontawesome: "fa-columns",
+                isDisabled: columnIsDisabled(3),
                 action(dispatch) {
                     dispatch("COLUMNIZE", { numberOfColumns: 3 });
                 },
@@ -50,6 +59,7 @@ export class ColumnPlugin extends Plugin {
                 description: _t("Convert into 4 columns"),
                 category: "structure",
                 fontawesome: "fa-columns",
+                isDisabled: columnIsDisabled(4),
                 action(dispatch) {
                     dispatch("COLUMNIZE", { numberOfColumns: 4 });
                 },
@@ -59,6 +69,10 @@ export class ColumnPlugin extends Plugin {
                 description: _t("Back to one column"),
                 category: "structure",
                 fontawesome: "fa-columns",
+                isDisabled(node) {
+                    const row = closestElement(node, ".o_text_columns .row");
+                    return !row;
+                },
                 action(dispatch) {
                     dispatch("COLUMNIZE", { numberOfColumns: 0 });
                 },

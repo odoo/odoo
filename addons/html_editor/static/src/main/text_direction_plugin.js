@@ -5,7 +5,7 @@ import { closestElement } from "../utils/dom_traversal";
 
 export class TextDirectionPlugin extends Plugin {
     static name = "text_direction";
-    static dependencies = ["selection", "split", "format", "powerbox"];
+    static dependencies = ["selection", "split", "format"];
     /** @type { (p: TextDirectionPlugin) => Record<string, any> } */
     static resources = (p) => ({
         powerboxCommands: [

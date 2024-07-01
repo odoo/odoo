@@ -52,7 +52,7 @@ export class SearchPowerboxPlugin extends Plugin {
         }
         const searchTerm = this.searchNode.nodeValue.slice(this.offset + 1, selection.endOffset);
         if (!searchTerm) {
-            this.shared.updatePowerbox(this.commands, this.categories);
+            this.shared.updatePowerbox(this.enabledCommands, this.categories);
             return;
         }
         if (searchTerm.includes(" ")) {
@@ -71,7 +71,7 @@ export class SearchPowerboxPlugin extends Plugin {
      * @param {string} searchTerm
      */
     filterCommands(searchTerm) {
-        return fuzzyLookup(searchTerm.toLowerCase(), this.commands, (cmd) =>
+        return fuzzyLookup(searchTerm.toLowerCase(), this.enabledCommands, (cmd) =>
             (cmd.name + cmd.description + cmd.categoryName).toLowerCase()
         );
     }
@@ -89,8 +89,11 @@ export class SearchPowerboxPlugin extends Plugin {
     openPowerbox() {
         const selection = this.shared.getEditableSelection();
         this.offset = selection.startOffset - 1;
+        this.enabledCommands = this.commands.filter(
+            (cmd) => !cmd.isDisabled?.(selection.anchorNode)
+        );
         this.shared.openPowerbox({
-            commands: this.commands,
+            commands: this.enabledCommands,
             categories: this.categories,
             onApplyCommand: this.historySavePointRestore,
             onClose: () => {
