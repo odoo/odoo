@@ -23,7 +23,7 @@
                         t-if="pos.showSearchButton()" />
                     <CashierName />
                     <ProxyStatus t-if="pos.config.use_proxy" />
-                    <button t-if="pos.config.customer_display_type !== 'none'" t-on-click="openCustomerDisplay" class="btn btn-light fa fa-fw fa-desktop text-success pe-4" title="Customer Display" />
+                    <button t-if="customerFacingDisplayButtonIsShown" t-on-click="openCustomerDisplay" class="btn btn-light fa fa-fw fa-desktop text-success pe-4" title="Customer Display" />
                     <SyncNotification />
                 </div>
                 <Dropdown>
