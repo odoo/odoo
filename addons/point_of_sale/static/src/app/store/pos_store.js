@@ -923,11 +923,282 @@ export class PosStore extends Reactive {
             this.env.services.pos.showScreen("PaymentScreen");
         }
     }
+<<<<<<< HEAD
     async getServerOrders() {
         return await this.data.searchRead("pos.order", [
             ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
             ["state", "=", "draft"],
         ]);
+||||||| parent of c5f8188a0eb7 (temp)
+    _postRemoveFromServer(serverIds, data) {
+        this.db.set_ids_removed_from_server(serverIds);
+    }
+    _replaceOrders(ordersToReplace, newOrdersJsons) {
+        ordersToReplace.forEach((order) => {
+            // We don't remove the validated orders because we still want to see them in the ticket screen.
+            // Orders in 'ReceiptScreen' or 'TipScreen' are validated orders.
+            if (this._shouldRemoveOrder(order)) {
+                this.removeOrder(order, false);
+            }
+        });
+        let removeSelected = true;
+        newOrdersJsons.forEach((json) => {
+            const isSelectedOrder = this._createOrder(json);
+            if (removeSelected && isSelectedOrder) {
+                removeSelected = false;
+            }
+        });
+        if (this._shouldRemoveSelectedOrder(removeSelected)) {
+            this._removeSelectedOrder();
+        }
+    }
+    _shouldRemoveOrder(order) {
+        return (
+            (!this.selectedOrder || this.selectedOrder.uid != order.uid) &&
+            order.server_id &&
+            !order.finalized
+        );
+    }
+    _shouldRemoveSelectedOrder(removeSelected) {
+        return removeSelected && this.selectedOrder.server_id && !this.selectedOrder.finalized;
+    }
+    _shouldCreateOrder(json) {
+        return json.uid != this.selectedOrder.uid;
+    }
+    _isSelectedOrder(json) {
+        return json.uid == this.selectedOrder.uid;
+    }
+    _createOrder(json) {
+        if (this._shouldCreateOrder(json)) {
+            const order = this.createReactiveOrder(json);
+            this.orders.push(order);
+        }
+        return this._isSelectedOrder(json);
+    }
+    _removeSelectedOrder() {
+        this.removeOrder(this.selectedOrder, false);
+        const orderList = this.get_order_list();
+        if (orderList.length != 0) {
+            this.set_order(orderList[0]);
+        }
+    }
+    async _syncAllOrdersFromServer() {
+        await this._removeOrdersFromServer();
+        const ordersJson = await this._getOrdersJson();
+        let message = null;
+        message = await this._addPricelists(ordersJson);
+        let messageFp = null;
+        messageFp = await this._addFiscalPositions(ordersJson);
+        if (messageFp) {
+            if (message) {
+                message += "\n" + messageFp;
+            } else {
+                message = messageFp;
+            }
+        }
+        await this._getMissingProducts(ordersJson);
+        const allOrders = [...this.get_order_list()];
+        this._replaceOrders(allOrders, ordersJson);
+        this.sortOrders();
+        return message;
+    }
+    async _getOrdersJson() {
+        return await this.data.call("pos.order", "export_for_ui_shared_order", [], {
+            config_id: this.config.id,
+        });
+    }
+    async _addPricelists(ordersJson) {
+        const pricelistsToGet = [];
+        ordersJson.forEach((order) => {
+            let found = false;
+            for (const pricelist of this.models["product.pricelist"].getAll()) {
+                if (pricelist.id === order.pricelist_id) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found && order.pricelist_id) {
+                pricelistsToGet.push(order.pricelist_id);
+            }
+        });
+        let message = null;
+        if (pricelistsToGet.length > 0) {
+            const data = this.loadProductPricelist(pricelistsToGet);
+            message = _t(
+                "%s pricelist(s) added to the configuration.",
+                data["product.pricelist"].map((p) => p.name).join(", ")
+            );
+        }
+        return message;
+    }
+    async _getMissingProducts(ordersJson) {
+        const productIds = [];
+        for (const order of ordersJson) {
+            for (const orderline of order.lines) {
+                if (!this.models["product.product"].get(orderline[2].product_id)) {
+                    productIds.push(orderline[2].product_id);
+                }
+            }
+        }
+
+        await this.loadProducts(productIds);
+    }
+    async _addFiscalPositions(ordersJson) {
+        const fiscalPositionToGet = [];
+        ordersJson.forEach((order) => {
+            let found = false;
+            for (const fp of this.models["account.fiscal.position"].getAll()) {
+                if (fp.id === order.fiscal_position_id) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found && order.fiscal_position_id) {
+                fiscalPositionToGet.push(order.fiscal_position_id);
+            }
+        });
+        let message = null;
+        if (fiscalPositionToGet.length > 0) {
+            const data = await this.data.read("account.fiscal.position", fiscalPositionToGet);
+            message = _t(
+                "%s fiscal position(s) added to the configuration.",
+                data.map((p) => p.name).join(", ")
+            );
+        }
+        return message;
+    }
+    sortOrders() {
+        this.orders.sort((a, b) => (a.name > b.name ? 1 : -1));
+=======
+    _postRemoveFromServer(serverIds, data) {
+        this.db.set_ids_removed_from_server(serverIds);
+    }
+    _replaceOrders(ordersToReplace, newOrdersJsons) {
+        ordersToReplace.forEach((order) => {
+            // We don't remove the validated orders because we still want to see them in the ticket screen.
+            // Orders in 'ReceiptScreen' or 'TipScreen' are validated orders.
+            if (this._shouldRemoveOrder(order)) {
+                this.removeOrder(order, false);
+            }
+        });
+        let removeSelected = true;
+        newOrdersJsons.forEach((json) => {
+            const isSelectedOrder = this._createOrder(json);
+            if (removeSelected && isSelectedOrder) {
+                removeSelected = false;
+            }
+        });
+        if (this._shouldRemoveSelectedOrder(removeSelected)) {
+            this._removeSelectedOrder();
+        }
+    }
+    _shouldRemoveOrder(order) {
+        return (
+            (!this.selectedOrder || this.selectedOrder.uid != order.uid) &&
+            order.server_id &&
+            !order.finalized
+        );
+    }
+    _shouldRemoveSelectedOrder(removeSelected) {
+        return removeSelected && this.selectedOrder.server_id && !this.selectedOrder.finalized;
+    }
+    _shouldCreateOrder(json) {
+        return json.uid != this.selectedOrder.uid;
+    }
+    _isSelectedOrder(json) {
+        return json.uid == this.selectedOrder.uid;
+    }
+    _createOrder(json) {
+        if (this._shouldCreateOrder(json)) {
+            const order = this.createReactiveOrder(json);
+            this.orders.push(order);
+        }
+        return this._isSelectedOrder(json);
+    }
+    _removeSelectedOrder() {
+        this.removeOrder(this.selectedOrder, false);
+        const orderList = this.get_order_list();
+        if (orderList.length != 0) {
+            this.set_order(orderList[0]);
+        }
+    }
+    async _syncAllOrdersFromServer() {
+        await this._removeOrdersFromServer();
+        const ordersJson = await this._getOrdersJson();
+        let message = null;
+        message = await this._addPricelists(ordersJson);
+        let messageFp = null;
+        messageFp = await this._addFiscalPositions(ordersJson);
+        if (messageFp) {
+            if (message) {
+                message += "\n" + messageFp;
+            } else {
+                message = messageFp;
+            }
+        }
+        await this._loadMissingProducts(ordersJson);
+        await this._loadMissingPartners(ordersJson);
+        const allOrders = [...this.get_order_list()];
+        this._replaceOrders(allOrders, ordersJson);
+        this.sortOrders();
+        return message;
+    }
+    async _getOrdersJson() {
+        return await this.data.call("pos.order", "export_for_ui_shared_order", [], {
+            config_id: this.config.id,
+        });
+    }
+    async _addPricelists(ordersJson) {
+        const pricelistsToGet = [];
+        ordersJson.forEach((order) => {
+            let found = false;
+            for (const pricelist of this.models["product.pricelist"].getAll()) {
+                if (pricelist.id === order.pricelist_id) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found && order.pricelist_id) {
+                pricelistsToGet.push(order.pricelist_id);
+            }
+        });
+        let message = null;
+        if (pricelistsToGet.length > 0) {
+            const data = this.loadProductPricelist(pricelistsToGet);
+            message = _t(
+                "%s pricelist(s) added to the configuration.",
+                data["product.pricelist"].map((p) => p.name).join(", ")
+            );
+        }
+        return message;
+    }
+    async _addFiscalPositions(ordersJson) {
+        const fiscalPositionToGet = [];
+        ordersJson.forEach((order) => {
+            let found = false;
+            for (const fp of this.models["account.fiscal.position"].getAll()) {
+                if (fp.id === order.fiscal_position_id) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found && order.fiscal_position_id) {
+                fiscalPositionToGet.push(order.fiscal_position_id);
+            }
+        });
+        let message = null;
+        if (fiscalPositionToGet.length > 0) {
+            const data = await this.data.read("account.fiscal.position", fiscalPositionToGet);
+            message = _t(
+                "%s fiscal position(s) added to the configuration.",
+                data.map((p) => p.name).join(", ")
+            );
+        }
+        return message;
+    }
+    sortOrders() {
+        this.orders.sort((a, b) => (a.name > b.name ? 1 : -1));
+>>>>>>> c5f8188a0eb7 (temp)
     }
     async getProductInfo(product, quantity) {
         const order = this.get_order();
