@@ -1,22 +1,28 @@
 /** @odoo-module **/
 
-import options from "@web_editor/js/editor/snippets.options.legacy";
+import { _t } from "@web/core/l10n/translation";
+import {
+    SnippetOption,
+} from "@web_editor/js/editor/snippets.options";
 import { rpc } from "@web/core/network/rpc";
+import {
+    registerWebsiteOption,
+} from "@website/js/editor/snippets.registry";
 
 const mainObjectRe = /website\.controller\.page\(((\d+,?)*)\)/;
 
-options.registry.WebsiteControllerPageListingLayout = options.Class.extend({
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
+export class WebsiteControllerPageListingLayoutOption extends SnippetOption {
+
+    constructor() {
+        super(...arguments);
+        this.orm = this.env.services.orm;
         this.resModel = "website.controller.page";
-    },
+    }
 
     /**
      * @override
      */
     async willStart() {
-        const _super = this._super.bind(this);
         const mainObjectRepr = this.$target[0].ownerDocument.documentElement.getAttribute("data-main-object");
         const match = mainObjectRe.exec(mainObjectRepr);
         if (match && match[1]) {
@@ -31,8 +37,8 @@ options.registry.WebsiteControllerPageListingLayout = options.Class.extend({
 
         const results = await this.orm.read(this.resModel, this.resIds, ["default_layout"]);
         this.layout = results[0]["default_layout"];
-        return _super(...arguments);
-    },
+        return super.willStart(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -48,7 +54,7 @@ options.registry.WebsiteControllerPageListingLayout = options.Class.extend({
             this.orm.write(this.resModel, this.resIds, { default_layout: widgetValue }),
             rpc("/website/save_session_layout_mode", params),
         ]);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -68,5 +74,17 @@ options.registry.WebsiteControllerPageListingLayout = options.Class.extend({
             }
         }
         return this._super(...arguments);
-   },
+   }
+}
+
+registerWebsiteOption("WebsiteControllerPageListingLayout", {
+    Class: WebsiteControllerPageListingLayoutOption,
+    template: "website.s_website_controller_page_listing_layout_option",
+    selector: ".listing_layout_switcher",
+    noCheck: true,
+    data: {
+        string: _t("Layout"),
+        pageOptions:true,
+        groups: ["website.group_website_designer"]
+    },
 });
