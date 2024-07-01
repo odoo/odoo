@@ -355,6 +355,27 @@ test("test next action on display_notification client action", async () => {
     expect.verifySteps(["onClose"]);
 });
 
+test("test next icon on display_notification client action", async () => {
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        type: "ir.actions.client",
+        tag: "display_notification",
+        params: {
+            title: "title",
+            message: "message",
+            icon: "fa fa-fw fa-check",
+            sticky: true,
+            next: {
+                type: "ir.actions.act_window_close",
+            },
+        },
+    });
+    await animationFrame(); // wait for the notification to be displayed
+    expect(".o_notification_manager .o_notification .o_notification_content span").toHaveClass(
+        "fa fa-fw fa-check"
+    );
+});
+
 test("test reload client action", async () => {
     redirect("/odoo?test=42");
     browser.location.search = "?test=42";
