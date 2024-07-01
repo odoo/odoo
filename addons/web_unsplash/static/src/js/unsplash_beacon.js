@@ -11,7 +11,7 @@ publicWidget.registry.UnsplashBeacon = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        var unsplashImages = Array.from(this.$('img[src*="/unsplash/"]')).map((img) => {
+        const unsplashImages = Array.from(this.el.querySelectorAll('img[src*="/unsplash/"]')).map((img) => {
             // get image id from URL (`http://www.domain.com:1234/unsplash/xYdf5feoI/lion.jpg` -> `xYdf5feoI`)
             return img.src.split('/unsplash/')[1].split('/')[0];
         });
@@ -20,7 +20,8 @@ publicWidget.registry.UnsplashBeacon = publicWidget.Widget.extend({
                 if (!appID) {
                     return;
                 }
-                $.get('https://views.unsplash.com/v', {
+                //TODO: VISP/MSH: remove this when we find replacement of $.get
+                $.get("https://views.unsplash.com/v", {
                     'photo_id': unsplashImages.join(','),
                     'app_id': appID,
                 });

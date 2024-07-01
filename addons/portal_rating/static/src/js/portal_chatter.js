@@ -162,7 +162,10 @@ PortalChatter.include({
      * @private
      */
     _renderRatingCard: function () {
-        this.$('.o_website_rating_card_container').replaceWith(renderToElement("portal_rating.rating_card", {widget: this}));
+        this.el.querySelector(".o_website_rating_card_container").innerHTML = renderToElement(
+            "portal_rating.rating_card",
+            { widget: this }
+        );
     },
     /**
      * Default rating data for publisher comment qweb template
@@ -205,20 +208,27 @@ PortalChatter.include({
      * Only available from a source in a publisher_comment or publisher_comment_form template
      */
 
-    _getCommentContainer: function ($source) {
-        return $source.parents(".o_wrating_publisher_container").first().find(".o_wrating_publisher_comment").first();
+    _getCommentContainer: function (source) {
+        const parentElements = source.closest(".o_wrating_publisher_container");
+        return parentElements && parentElements.querySelector(".o_wrating_publisher_comment");
     },
 
-    _getCommentButton: function ($source) {
-        return $source.parents(".o_wrating_publisher_container").first().find(".o_wrating_js_publisher_comment_btn").first();
+    _getCommentButton: function (source) {
+        const parentElements = source.closest(".o_wrating_publisher_container");
+        return (
+            parentElements && parentElements.querySelector(".o_wrating_js_publisher_comment_btn")
+        );
     },
 
-    _getCommentTextarea: function ($source) {
-        return $source.parents(".o_wrating_publisher_container").first().find(".o_portal_rating_comment_input").first();
+    _getCommentTextarea: function (source) {
+        const parentElements = source.closest(".o_wrating_publisher_container");
+        return (
+            parentElements.length && parentElements.querySelector(".o_portal_rating_comment_input")
+        );
     },
 
-    _focusTextComment: function ($source) {
-        this._getCommentTextarea($source).focus();
+    _focusTextComment: function (source) {
+        this._getCommentTextarea(source).focus();
     },
 
     //--------------------------------------------------------------------------
@@ -233,14 +243,18 @@ PortalChatter.include({
      */
     _onChangeDomain: function () {
         const spinnerDelayed = setTimeout(()=> {
-            this.$('.o_portal_chatter_messages_loading').removeClass('d-none');
-            this.$('.o_portal_chatter_messages').addClass('d-none');
+            this.el.querySelector(".o_portal_chatter_messages_loading").classList.remove("d-none");
+            this.el
+                .querySelectorAll(".o_portal_chatter_messages")
+                .forEach((message) => message.classList.add("d-none"));
         }, 500);
         return this._super.apply(this, arguments).finally(()=>{
             clearTimeout(spinnerDelayed);
             // Hide spinner and show messages
-            this.$('.o_portal_chatter_messages_loading').addClass('d-none');
-            this.$('.o_portal_chatter_messages').removeClass('d-none');
+            this.el.querySelector(".o_portal_chatter_messages_loading").classList.add("d-none");
+            this.el
+                .querySelectorAll(".o_portal_chatter_messages")
+                .forEach((message) => message.classList.remove("d-none"));
         });
     },
 
@@ -249,8 +263,8 @@ PortalChatter.include({
      * @param {MouseEvent} ev
      */
     _onClickStarDomain: function (ev) {
-        var $tr = this.$(ev.currentTarget);
-        var num = $tr.data('star');
+        const tr = ev.currentTarget;
+        const num = tr.getAttribute("data-star");
         this.set('rating_value', num);
     },
     /**
@@ -268,20 +282,24 @@ PortalChatter.include({
      * @param {MouseEvent} ev
      */
     _onClickPublisherComment: function (ev) {
-        var $source = this.$(ev.currentTarget);
+        const source = ev.currentTarget;
         // If the form is already present => like cancel remove the form
-        if (this._getCommentTextarea($source).length === 1) {
-            this._getCommentContainer($source).empty();
+        if (this._getCommentTextarea(source).length === 1) {
+            this._getCommentContainer(source).replaceChild();
             return;
         }
-        var messageIndex = $source.data("mes_index");
+        var messageIndex = source.getAttribute("data-mes_index");
         var data = {is_publisher: this.options['is_user_publisher']};
         data.rating = this._newPublisherCommentData(messageIndex);
 
         var oldRating = this.messages[messageIndex].rating;
         data.rating.publisher_comment = oldRating.publisher_comment ? oldRating.publisher_comment : '';
-        this._getCommentContainer($source).empty().append(renderToElement("portal_rating.chatter_rating_publisher_form", data));
-        this._focusTextComment($source);
+        const commentContainer = this._getCommentContainer(source);
+        commentContainer.replaceChild();
+        commentContainer.appendChild(
+            renderToElement("portal_rating.chatter_rating_publisher_form", data)
+        );
+        this._focusTextComment(source);
     },
 
     /**
@@ -290,9 +308,9 @@ PortalChatter.include({
      */
     _onClickPublisherCommentDelete: function (ev) {
         var self = this;
-        var $source = this.$(ev.currentTarget);
+        const source = ev.currentTarget;
 
-        var messageIndex = $source.data("mes_index");
+        const messageIndex = source.getAttribute("data-mes_index");
         var ratingId = this.messages[messageIndex].rating.id;
 
         this.call("dialog", "add", ConfirmationDialog, {
@@ -304,8 +322,8 @@ PortalChatter.include({
                     "publisher_comment": "" // Empty publisher comment means no comment
                 }).then(function (res) {
                     self.messages[messageIndex].rating = self._preprocessCommentData(res, messageIndex);
-                    self._getCommentButton($source).removeClass("d-none");
-                    self._getCommentContainer($source).empty();
+                    self._getCommentButton(source).classList.remove("d-none");
+                    self._getCommentContainer(source).replaceChild();
                 });
             },
             confirmLabel: _t("Delete"),
@@ -320,10 +338,10 @@ PortalChatter.include({
      */
     _onClickPublisherCommentSubmit: function (ev) {
         var self = this;
-        var $source = this.$(ev.currentTarget);
+        const source = ev.currentTarget;
 
-        var messageIndex = $source.data("mes_index");
-        var comment = this._getCommentTextarea($source).val();
+        const messageIndex = source.getAttribute("data-mes_index");
+        const comment = this._getCommentTextarea(source).value;
         var ratingId = this.messages[messageIndex].rating.id;
 
         rpc('/website/rating/comment', {
@@ -335,15 +353,18 @@ PortalChatter.include({
             self.messages[messageIndex].rating = self._preprocessCommentData(res, messageIndex);
             if (self.messages[messageIndex].rating.publisher_comment !== '') {
                 // Remove the button comment if exist and render the comment
-                self._getCommentButton($source).addClass('d-none');
-                self._getCommentContainer($source).empty().append(renderToElement("portal_rating.chatter_rating_publisher_comment", {
-                    rating: self.messages[messageIndex].rating,
-                    is_publisher: self.options.is_user_publisher
-                }));
+                self._getCommentButton(source).classList.add("d-none");
+                const commentContainer = self._getCommentContainer(source).replaceChild();
+                commentContainer.appendChild(
+                    renderToElement("portal_rating.chatter_rating_publisher_comment", {
+                        rating: self.messages[messageIndex].rating,
+                        is_publisher: self.options.is_user_publisher,
+                    })
+                );
             } else {
                 // Empty string or false considers as no comment
-                self._getCommentButton($source).removeClass("d-none");
-                self._getCommentContainer($source).empty();
+                self._getCommentButton(source).classList.remove("d-none");
+                self._getCommentContainer(source).replaceChild();
             }
         });
     },
@@ -353,18 +374,20 @@ PortalChatter.include({
      * @param {MouseEvent} ev
      */
     _onClickPublisherCommentCancel: function (ev) {
-        var $source = this.$(ev.currentTarget);
-        var messageIndex = $source.data("mes_index");
+        const source = ev.currentTarget;
+        const messageIndex = source.getAttribute("data-mes_index");
 
         var comment = this.messages[messageIndex].rating.publisher_comment;
-        const $commentContainer = this._getCommentContainer($source);
-        $commentContainer.empty();
+        const commentContainer = this._getCommentContainer(source);
+        commentContainer.replaceChild();
         if (comment) {
             var data = {
                 rating: this.messages[messageIndex].rating,
                 is_publisher: this.options.is_user_publisher,
             };
-            $commentContainer.append(renderToElement("portal_rating.chatter_rating_publisher_comment", data));
+            commentContainer.appendChild(
+                renderToElement("portal_rating.chatter_rating_publisher_comment", data)
+            );
         }
     },
 

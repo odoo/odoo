@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { renderToElement } from "@web/core/utils/render";
+import { getElementData } from "@web/core/utils/ui";
 import dom from "@web/legacy/js/core/dom";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import portalComposer from "@portal/js/portal_composer";
@@ -165,7 +166,7 @@ var PortalChatter = publicWidget.Widget.extend({
         }
         if (this.options.display_composer) {
             this._composer = this._createComposerWidget();
-            await this._composer.appendTo(this.$('.o_portal_chatter_composer'));
+            await this._composer.appendTo(this.el.querySelector(".o_portal_chatter_composer"));
         }
     },
     /**
@@ -260,13 +261,28 @@ var PortalChatter = publicWidget.Widget.extend({
         };
     },
     _renderMessages: function () {
-        this.$('.o_portal_chatter_messages').empty().append(renderToElement("portal.chatter_messages", {widget: this}));
+        const chatterMessageParentEl = this.el.querySelector(".o_portal_chatter_messages");
+        chatterMessageParentEl.replaceChildren();
+        const chatterMessage = renderToElement("portal.chatter_messages", { widget: this });
+        chatterMessageParentEl.appendChild(chatterMessage);
     },
     _renderMessageCount: function () {
-        this.$('.o_message_counter').replaceWith(renderToElement("portal.chatter_message_count", {widget: this}));
+        const messageCounterEL = this.el.querySelector(".o_message_counter");
+        if (messageCounterEL) {
+            messageCounterEL.parentNode.replaceChild(
+                renderToElement("portal.chatter_message_count", { widget: this }),
+                messageCounterEL
+            );
+        }
     },
     _renderPager: function () {
-        this.$('.o_portal_chatter_pager').replaceWith(renderToElement("portal.pager", {widget: this}));
+        const chatterPagerEl = this.el.querySelector(".o_portal_chatter_pager");
+        if (chatterPagerEl) {
+            chatterPagerEl.parentNode.replaceChild(
+                renderToElement("portal.pager", { widget: this }),
+                chatterPagerEl
+            );
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -286,8 +302,8 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     _onClickPager: function (ev) {
         ev.preventDefault();
-        var page = $(ev.currentTarget).data('page');
-        this._changeCurrentPage(page);
+        const page = ev.currentTarget.getAttribute("data-page");
+        this._changeCurrentPage(parseInt(page));
     },
 
     /**
@@ -298,19 +314,18 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     _onClickUpdateIsInternal: function (ev) {
         ev.preventDefault();
-
-        var $elem = $(ev.currentTarget);
+        const elem = ev.currentTarget;
         return rpc('/mail/update_is_internal', {
-            message_id: $elem.data('message-id'),
-            is_internal: ! $elem.data('is-internal'),
+            message_id: parseInt(elem.getAttribute("data-message-id")),
+            is_internal: !JSON.parse(elem.getAttribute("data-is-internal")),
         }).then(function (result) {
-            $elem.data('is-internal', result);
+            elem.setAttribute("data-is-internal", result);
             if (result === true) {
-                $elem.addClass('o_portal_message_internal_on');
-                $elem.removeClass('o_portal_message_internal_off');
+                elem.classList.add("o_portal_message_internal_on");
+                elem.classList.remove("o_portal_message_internal_off");
             } else {
-                $elem.addClass('o_portal_message_internal_off');
-                $elem.removeClass('o_portal_message_internal_on');
+                elem.classList.add("o_portal_message_internal_off");
+                elem.classList.remove("o_portal_message_internal_on");
             }
         });
     },
@@ -324,8 +339,9 @@ publicWidget.registry.portalChatter = publicWidget.Widget.extend({
      */
     async start() {
         const proms = [this._super.apply(this, arguments)];
-        const chatter = new PortalChatter(this, this.$el.data());
-        proms.push(chatter.appendTo(this.$el));
+        const data = Object.assign({}, getElementData(this.el));
+        const chatter = new PortalChatter(this, data);
+        proms.push(chatter.appendTo(this.el));
         await Promise.all(proms);
         // scroll to the right place after chatter loaded
         if (window.location.hash === `#${this.el.id}`) {
