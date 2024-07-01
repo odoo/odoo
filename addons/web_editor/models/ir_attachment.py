@@ -3,7 +3,8 @@
 
 from werkzeug.urls import url_quote
 
-from odoo import api, models, fields, tools
+from odoo import api, models, fields
+from odoo.tools.image import base64_to_image
 
 SUPPORTED_IMAGE_MIMETYPES = {
     'image/gif': '.gif',
@@ -64,7 +65,7 @@ class IrAttachment(models.Model):
     def _compute_image_size(self):
         for attachment in self:
             try:
-                image = tools.base64_to_image(attachment.datas)
+                image = base64_to_image(attachment.datas)
                 attachment.image_width = image.width
                 attachment.image_height = image.height
             except Exception:

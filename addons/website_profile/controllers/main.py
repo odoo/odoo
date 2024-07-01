@@ -83,7 +83,7 @@ class WebsiteProfile(http.Controller):
             return werkzeug.exceptions.Forbidden()
 
         if (int(width), int(height)) == (0, 0):
-            width, height = tools.image_guess_size_from_field_name(field)
+            width, height = tools.image.image_guess_size_from_field_name(field)
 
         can_sudo = self._check_avatar_access(int(user_id), **post)
         return request.env['ir.binary']._get_image_stream_from(
