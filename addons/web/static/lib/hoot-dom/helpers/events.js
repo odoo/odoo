@@ -286,10 +286,15 @@ const getEventConstructor = (eventType) => {
         case "wheel":
             return [WheelEvent, mapWheelEvent];
 
-        case "beforeunload":
-            // BeforeUnloadEvent cannot be constructed.
-            return [Event, mapNonBubblingCancelableEvent];
+        // Error events
+        case "error":
+            return [ErrorEvent, mapNonBubblingEvent];
+        case "unhandledrejection":
+            return [PromiseRejectionEvent, mapNonBubblingCancelableEvent];
 
+        // Unload events (BeforeUnloadEvent cannot be constructed)
+        case "beforeunload":
+            return [Event, mapNonBubblingCancelableEvent];
         case "unload":
             return [Event, mapNonBubblingEvent];
 

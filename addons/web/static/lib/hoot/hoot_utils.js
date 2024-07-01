@@ -562,7 +562,7 @@ export function formatTechnical(
             cache.add(value);
             const startIndent = " ".repeat((depth + 1) * 2);
             const endIndent = " ".repeat(depth * 2);
-            if (value instanceof RegExp) {
+            if (value instanceof RegExp || value instanceof Error) {
                 return `${baseIndent}${value.toString()}`;
             } else if (value instanceof Date) {
                 return `${baseIndent}${value.toISOString()}`;

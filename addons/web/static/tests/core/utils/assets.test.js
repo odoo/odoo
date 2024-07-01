@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { assets, loadCSS, loadJS } from "@web/core/assets";
@@ -22,7 +23,7 @@ test("loadJS: load invalid JS lib", async () => {
         expect(node).toHaveAttribute("src", "/some/invalid/file.js");
 
         // Simulates a failed request to an invalid file.
-        node.dispatchEvent(new ErrorEvent("error"));
+        manuallyDispatchProgrammaticEvent(node, "error");
     });
 
     await expect(loadJS("/some/invalid/file.js")).rejects.toThrow(
@@ -43,7 +44,7 @@ test("loadCSS: load invalid CSS lib", async () => {
         expect(node).toHaveAttribute("href", "/some/invalid/file.css");
 
         // Simulates a failed request to an invalid file.
-        node.dispatchEvent(new ErrorEvent("error"));
+        manuallyDispatchProgrammaticEvent(node, "error");
     });
 
     await expect(loadCSS("/some/invalid/file.css")).rejects.toThrow(
