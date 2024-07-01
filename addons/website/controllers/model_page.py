@@ -68,7 +68,7 @@ class ModelPageController(Controller):
                 "record": record,
                 "listing": {
                     'href': '.',
-                    'name': listing.page_name
+                    'name': listing.name
                 } if listing else False
             }
             return request.render(view.key, render_context)
