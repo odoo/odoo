@@ -120,7 +120,7 @@ export class LinkPlugin extends Plugin {
             }
         });
         this.services.command.add(
-            "togglelink",
+            "Create link",
             () => {
                 this.toggleLinkTools();
             },
