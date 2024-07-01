@@ -78,7 +78,8 @@ class ChannelController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
-        return channel.pinned_message_ids.sorted(key="pinned_at", reverse=True)._message_format(for_current_user=True)
+        messages = channel.pinned_message_ids.sorted(key="pinned_at", reverse=True)
+        return Store("Message", messages._message_format(for_current_user=True)).get_result()
 
     @http.route("/discuss/channel/mute", methods=["POST"], type="json", auth="user")
     def discuss_channel_mute(self, channel_id, minutes):
