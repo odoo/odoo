@@ -67,6 +67,41 @@
     </field>
 </record>
 
+<record id="website_controller_pages_kanban_view" model="ir.ui.view">
+    <field name="name">website.controller.page.kanban</field>
+    <field name="model">website.controller.page</field>
+    <field name="arch" type="xml">
+        <kanban class="o_kanban_full_width">
+            <t t-name="kanban-box">
+                <div class="oe_kanban_global_click">
+                    <div class="d-flex flex-column flex-md-row gap-3 flex-grow-1">
+
+                            <div class="d-flex flex-column col-3">
+                                <div class="fw-bold"><field name="page_name"/></div>
+                                <div>
+                                    <span class="me-1">Exposes</span>
+                                    <field name="model_id" widget="many2one"/>
+                                </div>
+                                <div invisible="website_id">On all websites</div>
+                                <div invisible="not website_id">On <field name="website_id"/></div>
+                            </div>
+
+                            <div class="d-md-flex d-xs-none d-sm-none align-items-center gap-3" data-name="more-info">
+                                <i class="fa fa-2x fa-arrow-right text-primary" title="URL" />
+                            </div>
+
+                            <div class="d-flex align-items-center ms-auto">
+                                <label class="me-2" for="website_published">Publish</label>
+                                <field name="website_published" widget="boolean_toggle" />
+                            </div>
+                    </div>
+                </div>
+            </t>
+        </kanban>
+    </field>
+</record>
+
+
 <record id="action_website_controller_pages_list" model="ir.actions.act_window">
     <field name="name">Website Model Pages</field>
     <field name="res_model">website.controller.page</field>

@@ -7,6 +7,21 @@
             display: none;
         }
     }
+    &.o_kanban_full_width {
+        .o_kanban_ungrouped {
+            padding: 0;
+    
+            .o_kanban_record {
+                width: 100%;
+                margin: 0;
+    
+                &.o_kanban_ghost {
+                    display: none;
+                }
+    
+            }
+        }
+    }
 }
 
 // ------- Kanban renderer -------

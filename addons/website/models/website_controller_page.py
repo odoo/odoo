@@ -45,6 +45,7 @@ class WebsiteControllerPage(models.Model):
     def _compute_name_slugified(self):
         for rec in self:
             if not rec.model_id or not rec.page_type:
+                rec.name_slugified = False
                 continue
             rec.name_slugified = slugify(rec.page_name or '')
 
