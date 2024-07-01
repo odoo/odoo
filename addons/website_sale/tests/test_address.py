@@ -498,7 +498,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             self.WebsiteSaleController.update_cart_address(
                 partner_id=bad_invoicing.id, mode='billing')
             self.assertEqual(so.partner_invoice_id, bad_invoicing)
-            redirection = self.WebsiteSaleController._checkout_check_address(so)
+            redirection = self.WebsiteSaleController._check_addresses(so)
             self.assertTrue(redirection is not None)
             self.assertEqual(redirection.location, f'/shop/address?partner_id={bad_invoicing.id}&mode=billing')
 
@@ -508,7 +508,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             self.WebsiteSaleController.update_cart_address(
                 partner_id=bad_shipping.id, mode='shipping')
             self.assertEqual(so.partner_shipping_id, bad_shipping)
-            redirection = self.WebsiteSaleController._checkout_check_address(so)
+            redirection = self.WebsiteSaleController._check_addresses(so)
             self.assertTrue(redirection is not None)
             self.assertEqual(redirection.location, f'/shop/address?partner_id={bad_shipping.id}&mode=shipping')
 

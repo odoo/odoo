@@ -8,26 +8,26 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 class L10nPEWebsiteSale(WebsiteSale):
 
-    def _get_mandatory_fields_billing(self, country):
-        mandatory_fields = super()._get_mandatory_fields_billing(country)
+    def _get_mandatory_billing_address_fields(self, country_sudo):
+        mandatory_fields = super()._get_mandatory_billing_address_fields(country_sudo)
         if request.website.sudo().company_id.country_id.code != 'PE':
             return mandatory_fields
 
         # For Peruvian company, the VAT is required for all the partners
         mandatory_fields.add('vat')
-        if country.code == 'PE':
+        if country_sudo.code == 'PE':
             mandatory_fields |= {
                 'state_id', 'city_id', 'l10n_pe_district', 'l10n_latam_identification_type_id',
             }
             mandatory_fields.remove('city')
         return mandatory_fields
 
-    def _get_mandatory_fields_shipping(self, country):
-        mandatory_fields = super()._get_mandatory_fields_billing(country)
+    def _get_mandatory_delivery_address_fields(self, country_sudo):
+        mandatory_fields = super()._get_mandatory_billing_address_fields(country_sudo)
         if request.website.sudo().company_id.country_id.code != 'PE':
             return mandatory_fields
 
-        if country.code == 'PE':
+        if country_sudo.code == 'PE':
             mandatory_fields |= {'state_id', 'city_id', 'l10n_pe_district'}
             mandatory_fields.remove('city')
         return mandatory_fields

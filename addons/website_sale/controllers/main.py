@@ -8,7 +8,7 @@ from datetime import datetime
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 
-from odoo import SUPERUSER_ID, _, _lt, fields
+from odoo import _, _lt, fields
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request, route
@@ -762,9 +762,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     @route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
     def cart_update(
-        self, product_id, add_qty=1, set_qty=0,
-        product_custom_attribute_values=None, no_variant_attribute_value_ids=None,
-        express=False, **kwargs
+        self, product_id, add_qty=1, set_qty=0, product_custom_attribute_values=None,
+        no_variant_attribute_value_ids=None, **kwargs
     ):
         """This route is called when adding a product to cart (no options)."""
         sale_order = request.website.sale_get_order(force_create=True)
@@ -793,9 +792,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         )
 
         request.session['website_sale_cart_quantity'] = sale_order.cart_quantity
-
-        if express:
-            return request.redirect("/shop/checkout?express=1")
 
         return request.redirect("/shop/cart")
 
@@ -930,71 +926,30 @@ class WebsiteSale(payment_portal.PaymentPortal):
     # Checkout
     # ------------------------------------------------------
 
-    def _checkout_check_cart_and_address(self, order_sudo):
-        """Check whether there is a valid cart, with a valid address.
+    # === CHECKOUT FLOW - ADDRESS METHODS === #
 
-        :param order_sudo: the current cart, as a sudoed `sale.order` recordset
-        :returns: redirection to a checkout step if the cart or address still needs to be updated.
+    @route(
+        '/shop/checkout', type='http', methods=['GET'], auth='public', website=True, sitemap=False
+    )
+    def shop_checkout(self, try_skip_step=None, **query_params):  # TODO ANV was checkout
+        """ Display the checkout page.
+
+        :param str try_skip_step: Whether the user should immediately be redirected to the next step
+                                  if no additional information (i.e., address or delivery method) is
+                                  required on the checkout page.
+        :param dict query_params: The additional query string parameters.
+        :return: The rendered checkout page.
+        :rtype: str
         """
-        if redirection := self._checkout_redirection(order_sudo):
-            return redirection
-
-        if redirection := self._checkout_check_address(order_sudo):
-            return redirection
-
-    def _checkout_redirection(self, order_sudo):
-        """Check whether there is a valid cart.
-
-        :param order_sudo: the current cart, as a sudoed `sale.order` recordset
-        :returns: redirection needed according to the cart state, None otherwise
-        """
-        # must have a draft sales order with lines at this point, otherwise reset
-        if not order_sudo or order_sudo.state != 'draft':
-            request.session['sale_order_id'] = None
-            request.session['sale_transaction_id'] = None
-            return request.redirect('/shop')
-
-        if not order_sudo.order_line:  # If cart is empty
-            return request.redirect('/shop/cart')
-
-        if order_sudo._is_public_order() and request.website.account_on_checkout == 'mandatory':
-            return request.redirect('/web/login?redirect=/shop/checkout')
-
-        # if transaction pending / done: redirect to confirmation
-        tx = request.env.context.get('website_sale_transaction')
-        if tx and tx.state != 'draft':
-            return request.redirect('/shop/payment/confirmation/%i' % order_sudo.id)
-
-    def _checkout_check_address(self, order_sudo):
-        """Check whether the cart addresses are complete and valid.
-
-        :param order_sudo: the current cart, as a sudoed `sale.order` recordset
-        :returns: redirection to update the incomplete/invalid address, None otherwise
-        """
-        if order_sudo._is_public_order():
-            return request.redirect('/shop/address')
-
-        partner_invoice = order_sudo.partner_invoice_id
-        if not self._check_billing_partner_mandatory_fields(partner_invoice):
-            return request.redirect(f'/shop/address?partner_id={partner_invoice.id}&mode=billing')
-
-        partner_shipping = order_sudo.partner_shipping_id
-        if (
-            not order_sudo.only_services
-            and not self._check_shipping_partner_mandatory_fields(partner_shipping)
-        ):
-            return request.redirect(f'/shop/address?partner_id={partner_shipping.id}&mode=shipping')
-
-    @route('/shop/checkout', type='http', auth='public', website=True, sitemap=False)
-    def checkout(self, **post):
+        try_skip_step = bool(try_skip_step)
         order_sudo = request.website.sale_get_order()
 
-        if redirection := self._checkout_check_cart_and_address(order_sudo):
+        if redirection := self._check_cart_and_addresses(order_sudo):
             return redirection
 
-        values = self.checkout_values(order_sudo, **post)
+        values = self.checkout_values(order_sudo, **query_params)
 
-        should_skip_delivery = True  # Delivery is only needed for deliverable products.
+        can_skip_delivery = True  # Delivery is only needed for deliverable products.
         if order_sudo._has_deliverable_products():
             available_dms = values['delivery_methods'] = order_sudo._get_delivery_methods()
             delivery_method = order_sudo._get_preferred_delivery_method(available_dms)
@@ -1005,18 +960,20 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 or order_sudo.amount_delivery != rate['price']
             ):
                 order_sudo._set_delivery_method(delivery_method, rate=rate)
-            should_skip_delivery = self.should_skip_delivery_step(order_sudo, available_dms)
+            can_skip_delivery = self.can_skip_delivery_step(order_sudo, available_dms)
 
-        if post.get('express') and should_skip_delivery:
+        if try_skip_step and can_skip_delivery:
             return request.redirect('/shop/confirm_order')
 
         return request.render('website_sale.checkout', values)
 
-    def checkout_values(self, order, **kw):
+    def checkout_values(self, order, **_kwargs):  # TODO ANV was checkout_values # TODO ANV rename
+        """ TODO ANV.
+        """
         order = order or request.website.sale_get_order(force_create=True)
         bill_partners = []
         ship_partners = []
-        if not order._is_public_order():
+        if not order._is_anonymous_cart():
             Partner = order.partner_id.with_context(show_address=1).sudo()
             commercial_partner = order.partner_id.commercial_partner_id
             bill_partners = Partner.search([
@@ -1031,10 +988,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             # do not show commercial_partner_id if its mandatory fields are not complete to children
             # as children can not edit (fill) the commercial_partner_id
             if commercial_partner != order.partner_id:
-                if not self._check_billing_partner_mandatory_fields(commercial_partner):
+                if not self._check_billing_address(commercial_partner):
                     bill_partners = bill_partners.filtered(lambda p: p.id != commercial_partner.id)
 
-                if not self._check_shipping_partner_mandatory_fields(commercial_partner):
+                if not self._check_delivery_address(commercial_partner):
                     ship_partners = ship_partners.filtered(lambda p: p.id != commercial_partner.id)
 
         return {
@@ -1045,7 +1002,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'only_services': order and order.only_services or False
         }
 
-    def should_skip_delivery_step(self, order_sudo, delivery_methods):
+    def can_skip_delivery_step(self, order_sudo, delivery_methods):
         """Check if the delivery step should be skipped based on the available delivery methods.
 
         A delivery method not being set on the order means that either `get_rate` failed, or no dms
@@ -1053,7 +1010,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         :param sale.order order_sudo: The sales order being paid.
         :param delivery.carrier delivery_methods: The available delivery methods.
-        :return: Whether the delivery step should be skipped.
+        :return: Whether the delivery step can be skipped.
         :rtype: bool
         """
         if not order_sudo.carrier_id or len(delivery_methods) > 1:
@@ -1069,9 +1026,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return True
 
     @route(
-        '/shop/address', type='http', methods=['GET'], auth='public', website=True, sitemap=False,
+        '/shop/address', type='http', methods=['GET'], auth='public', website=True, sitemap=False
     )
-    def shop_address(self, partner_id=None, mode='billing', **kwargs):
+    def shop_address(self, partner_id=None, mode='billing', **kwargs):  # TODO ANV was address
         """Display the form to create or update a billing/shipping address.
 
         :param int partner_id: if specified, the address that the customer wants to update
@@ -1080,7 +1037,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         order_sudo = request.website.sale_get_order()
 
-        if redirection := self._checkout_redirection(order_sudo):
+        if redirection := self._check_cart(order_sudo):
             return redirection
 
         partner_sudo, mode = self._check_address_update(order_sudo, partner_id, mode)
@@ -1091,14 +1048,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order_sudo=order_sudo,
                 partner_sudo=partner_sudo,
                 mode=mode,
-                use_same=order_sudo._is_public_order(),
+                use_same=order_sudo._is_anonymous_cart(),
                 **kwargs,
             )
         )
 
     def _prepare_address_rendering_values(
         self, order_sudo, partner_sudo, mode, use_same, callback='', **kwargs
-    ):
+    ):  # TODO ANV was in part _get_country_related_render_values
         """Prepare the rendering values for the `website_sale.address` template.
 
         :param order_sudo: the current cart, as a sudoed `sale.order` recordset
@@ -1110,7 +1067,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         can_edit_vat = mode == 'billing' and (not partner_sudo or partner_sudo.can_edit_vat())
 
-        is_public_order = order_sudo._is_public_order()
+        is_public_order = order_sudo._is_anonymous_cart()
         ResCountry = request.env['res.country'].sudo()
 
         country = partner_sudo.country_id
@@ -1162,7 +1119,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def shop_address_submit(
         self, partner_id=None, mode='billing', use_same=False, callback='', field_required='',
         **kwargs,
-    ):
+    ):  # TODO ANV was in part in address
         """Create or update an address with the given values.
 
         If successful, return the url to redirect to (client-side).
@@ -1181,7 +1138,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         order_sudo = request.website.sale_get_order()
 
-        if redirection := self._checkout_redirection(order_sudo):
+        if redirection := self._check_cart(order_sudo):
             return redirection
 
         partner_sudo, mode = self._check_address_update(order_sudo, partner_id, mode)
@@ -1226,7 +1183,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             partner_sudo.write(address_values)
 
         partner_id = partner_sudo.id
-        is_public_order = order_sudo._is_public_order()
+        is_public_order = order_sudo._is_anonymous_cart()
 
         partner_fnames = set()
         if is_public_order or order_sudo.partner_id.id == partner_id:
@@ -1253,7 +1210,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order_sudo.message_unsubscribe(order_sudo.website_id.partner_id.ids)
 
         if new_address or order_sudo.only_services:
-            callback = callback or '/shop/checkout?express=1'
+            callback = callback or '/shop/checkout?try_skip_step=true'
         else:
             callback = callback or '/shop/checkout'
 
@@ -1265,7 +1222,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'successUrl': callback,
         })
 
-    def _values_preprocess(self, form_values):
+    def _values_preprocess(self, form_values):  # TODO ANV: was values_preprocess
         ResPartner = request.env['res.partner']
         partner_fields = ResPartner._fields
         authorized_fields = self._get_writeable_partner_fields()
@@ -1298,41 +1255,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return partner_values, other_form_values
 
-    def _get_writeable_partner_fields(self):
+    def _get_writeable_partner_fields(self):  # TODO ANV new method # TODO ANV remove method
         return set(request.env['ir.model']._get('res.partner')._get_form_writable_fields().keys())
 
-    def _get_wsale_mandatory_fields(self, country):
-        fnames = {'name', 'street', 'city', 'country_id'}
-
-        if country.state_required:
-            fnames.add('state_id')
-        if country.zip_required:
-            fnames.add('zip')
-
-        return fnames
-
-    def _check_billing_partner_mandatory_fields(self, partner):
-        """Verify that all mandatory billing fields are filled for the given partner."""
-        billing_fields_required = self._get_mandatory_fields_billing(partner.country_id)
-        return all(partner.read(billing_fields_required)[0].values())
-
-    def _get_mandatory_fields_billing(self, country):
-        fnames = self._get_wsale_mandatory_fields(country)
-        # Also add required billing fields from portal logic to the e-commerce mandatory fields
-        fnames |= set(self._get_mandatory_fields())
-        return fnames
-
-    def _check_shipping_partner_mandatory_fields(self, partner):
-        """Verify that all mandatory shipping fields are filled for the given partner."""
-        shipping_fields_required = self._get_mandatory_fields_shipping(partner.country_id)
-        return all(partner.read(shipping_fields_required)[0].values())
-
-    def _get_mandatory_fields_shipping(self, country):
-        fnames = self._get_wsale_mandatory_fields(country)
-        fnames.add('phone')
-        return fnames
-
-    def _validate_address_values(
+    def _validate_address_values(  # TODO ANV was checkout_form_validate
         self, partner_sudo, mode, use_same, field_required, data, **kwargs
     ):
         """Validate the values submitted by the customer.
@@ -1395,10 +1321,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         country = request.env['res.country'].browse(country_id)
 
         if mode == 'shipping' or use_same:
-            required_fields |= self._get_mandatory_fields_shipping(country)
+            required_fields |= self._get_mandatory_delivery_address_fields(country)
 
         if mode == 'billing' or use_same:
-            required_fields |= self._get_mandatory_fields_billing(country)
+            required_fields |= self._get_mandatory_billing_address_fields(country)
 
         # error message for empty required fields
         for field_name in required_fields:
@@ -1429,10 +1355,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return invalid_fields, missing_fields, error_messages
 
-    def _get_vat_validation_fields(self):
+    def _get_vat_validation_fields(self):  # TODO ANV was _get_vat_validation_fields
         return {'country_id', 'vat'}
 
-    def _fill_partner_creation_values(self, order_sudo, mode, use_same, address_values):
+    def _fill_partner_creation_values(self, order_sudo, mode, use_same, address_values):  # TODO ANV rename to complete_... TODO ANV was values_postprocess
         new_values = dict(address_values)
 
         lang = request.lang.code if request.lang.code in request.website.mapped('language_ids.code') else None
@@ -1447,7 +1373,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         commercial_partner = order_sudo.partner_id.commercial_partner_id
         if mode == 'billing':
-            if order_sudo._is_public_order():
+            if order_sudo._is_anonymous_cart():
                 # New billing address of public customer will be their contact address.
                 new_values['type'] = 'contact'
             elif use_same:
@@ -1464,7 +1390,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return new_values
 
-    def _check_address_update(self, order_sudo, partner_id, mode):
+    def _check_address_update(self, order_sudo, partner_id, mode):  # TODO ANV part new, part was 'edit' of address
         """Make sure the cart customer is allowed to edit the given address.
 
         :param order_sudo: the current cart, as a sudoed `sale.order` recordset
@@ -1477,7 +1403,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         Partner = request.env['res.partner'].with_context(show_address=1).sudo()
 
-        if order_sudo._is_public_order():
+        if order_sudo._is_anonymous_cart():
             partner_sudo = Partner
         else:
             partner_id = self._cast_as_int(partner_id)
@@ -1503,7 +1429,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return partner_sudo, mode
 
-    def _are_address_identical(self, address_values, partner):
+    def _are_address_identical(self, address_values, partner):  # TODO ANV new method
         ResPartner = request.env['res.partner']
 
         for key, new_val in address_values.items():
@@ -1514,10 +1440,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return True
 
-    def _post_process_additional_values(self, address_values, form_values):
+    def _post_process_additional_values(self, address_values, form_values):  # TODO ANV new method?
         """Hook for modules providing additional features on address page."""
 
-    def _billing_extra_info_step(self, order_sudo):
+    def _billing_extra_info_step(self, order_sudo):  # TODO ANV new method?
         """ Hook for localizations to request additional billing details in a specific page
         :param order_sudo: the current cart, as a sudoed `sale.order` recordset
 
@@ -1530,7 +1456,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         _express_checkout_route, type='json', methods=['POST'], auth="public", website=True,
         sitemap=False
     )
-    def process_express_checkout(
+    def process_express_checkout(  # TODO ANV was process_express_checkout
         self, billing_address, shipping_address=None, shipping_option=None, **kwargs
     ):
         """ Records the partner information on the order when using express checkout flow.
@@ -1548,7 +1474,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # Update the partner with all the information
         self._include_country_and_state_in_address(billing_address)
-        if order_sudo._is_public_order():
+        if order_sudo._is_anonymous_cart():
             billing_partner_id = self._create_or_edit_partner(billing_address, type='invoice')
             order_sudo.partner_id = billing_partner_id
             # Pricelist are recomputed every time the partner is changed. We don't want to recompute
@@ -1607,7 +1533,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return order_sudo.partner_id.id
 
-    def _find_child_partner(self, commercial_partner_id, address):
+    def _find_child_partner(self, commercial_partner_id, address):  # TODO ANV was _find_child_partner
         """ Find a child partner for a specified address
 
         Compare all keys in the `address` dict with the same keys on the partner object and return
@@ -1625,7 +1551,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 return partner_sudo.id
         return False
 
-    def _include_country_and_state_in_address(self, address):
+    def _include_country_and_state_in_address(self, address):  # TODO ANV was _include_country_and_state_in_address
         """ This function is used to include country_id and state_id in address.
 
         Fetch country and state and include the records in address. The object is included to
@@ -1694,7 +1620,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return partner_id
 
     @route('/shop/cart/update_address', type='json', auth='public', website=True)
-    def update_cart_address(self, partner_id, mode='billing', **kw):
+    def update_cart_address(self, partner_id, mode='billing', **kw):  # TODO ANV was update_cart_address
         partner_id = int(partner_id)
 
         order_sudo = request.website.sale_get_order()
@@ -1729,10 +1655,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         order_sudo._cart_update_address(partner_id, partner_fnames)
 
     @route(['/shop/confirm_order'], type='http', auth="public", website=True, sitemap=False)
-    def confirm_order(self, **post):
+    def confirm_order(self, **post):  # TODO ANV was confirm_order
         order_sudo = request.website.sale_get_order()
 
-        if redirection := self._checkout_check_cart_and_address(order_sudo):
+        if redirection := self._check_cart_and_addresses(order_sudo):
             return redirection
 
         order_sudo.order_line._compute_tax_id()
@@ -1744,9 +1670,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return request.redirect("/shop/payment")
 
-    # ------------------------------------------------------
-    # Extra step
-    # ------------------------------------------------------
+    # === CHECKOUT FLOW - EXTRA STEP METHODS === #
+
     @route(['/shop/extra_info'], type='http', auth="public", website=True, sitemap=False)
     def extra_info(self, **post):
         # Check that this option is activated
@@ -1756,7 +1681,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # check that cart is valid
         order = request.website.sale_get_order()
-        redirection = self._checkout_redirection(order)
+        redirection = self._check_cart(order)
         open_editor = request.params.get('open_editor') == 'true'
         # Do not redirect if it is to edit
         # (the information is transmitted via the "open_editor" parameter in the url)
@@ -1772,9 +1697,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         }
         return request.render("website_sale.extra_info", values)
 
-    # ------------------------------------------------------
-    # Payment
-    # ------------------------------------------------------
+    # === CHECKOUT FLOW - PAYMENT/CONFIRMATION METHODS === #
 
     def _get_express_shop_payment_values(self, order, **kwargs):
         payment_form_values = sale_portal.CustomerPortal._get_payment_values(
@@ -1846,7 +1769,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         order_sudo = request.website.sale_get_order()
 
-        if redirection := self._checkout_check_cart_and_address(order_sudo):
+        if redirection := self._check_cart_and_addresses(order_sudo):
             return redirection
 
         render_values = self._get_shop_payment_values(order_sudo, **post)
@@ -1939,6 +1862,150 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return request.make_response(pdf, headers=pdfhttpheaders)
         return request.redirect('/shop')
 
+    # === CHECK METHODS === #
+
+    def _check_cart_and_addresses(self, order_sudo):
+        """ Check whether the cart and its addresses are valid, and redirect to the appropriate page
+        if not.
+
+        :param sale.order order_sudo: The cart to check.
+        :return: None if both the cart and its addresses are valid; otherwise, a redirection to the
+                 appropriate page.
+        """
+        if redirection := self._check_cart(order_sudo):
+            return redirection
+
+        if redirection := self._check_addresses(order_sudo):
+            return redirection
+
+    def _check_cart(self, order_sudo):
+        """ Check whether the cart is a valid, and redirect to the appropriate page if not.
+
+        The cart is only valid if:
+
+        - it exists and is in the draft state;
+        - it contains products (i.e., order lines);
+        - either the user is logged in, or public orders are allowed;
+        - there is no ongoing payment for the cart.
+
+        :param sale.order order_sudo: The cart to check.
+        :return: None if the cart is valid; otherwise, a redirection to the appropriate page.
+        """
+        # Check that the cart exists and is in the draft state.
+        if not order_sudo or order_sudo.state != 'draft':
+            request.session['sale_order_id'] = None
+            request.session['sale_transaction_id'] = None
+            return request.redirect('/shop')
+
+        # Check that the cart is not empty.
+        if not order_sudo.order_line:
+            return request.redirect('/shop/cart')
+
+        # Check that public orders are allowed.
+        if request.env.user._is_public() and request.website.account_on_checkout == 'mandatory':
+            return request.redirect('/web/login?redirect=/shop/checkout')
+
+        # Check that there is no ongoing payment.
+        tx = request.env.context.get('website_sale_transaction')
+        if tx and tx.state != 'draft':
+            return request.redirect(f'/shop/payment/confirmation/{order_sudo.id}')
+
+    def _check_addresses(self, order_sudo):
+        """ Check whether the cart's addresses are complete and valid.
+
+        The addresses are complete and valid if:
+
+        - at least one address has been added;
+        - the billing address is complete;
+        - the delivery address is complete.
+
+        :param sale.order order_sudo: The cart whose addresses to check.
+        None if the cart is valid; otherwise, a redirection to the appropriate page.
+        :return: None if the cart's addresses are complete and valid; otherwise, a redirection to
+                 the appropriate page.
+        """
+        # Check that an address has been added.
+        if order_sudo._is_anonymous_cart():
+            return request.redirect('/shop/address')
+
+        # Check that the billing address is complete.
+        invoice_partner_sudo = order_sudo.partner_invoice_id
+        if not self._check_billing_address(invoice_partner_sudo):
+            return request.redirect(
+                f'/shop/address?partner_id={invoice_partner_sudo.id}&mode=billing'
+            )
+
+        # Check that the delivery address is complete.
+        delivery_partner_sudo = order_sudo.partner_shipping_id
+        if (
+            not order_sudo.only_services
+            and not self._check_delivery_address(delivery_partner_sudo)
+        ):
+            return request.redirect(
+                f'/shop/address?partner_id={delivery_partner_sudo.id}&mode=shipping'
+            )
+
+    def _check_billing_address(self, partner_sudo):
+        """ Check that all mandatory billing fields are filled for the given partner.
+
+        :param res.partner: The partner whose billing address to check.
+        :return: Whether all mandatory fields are filled.
+        :rtype: bool
+        """
+        mandatory_billing_fields = self._get_mandatory_billing_address_fields(
+            partner_sudo.country_id
+        )
+        return all(partner_sudo.read(mandatory_billing_fields)[0].values())
+
+    def _get_mandatory_billing_address_fields(self, country_sudo):
+        """ Return the set of mandatory billing field names.
+
+        :param res.country country_sudo: The country to use to build the set of mandatory fields.
+        :return: The set of mandatory billing field names.
+        :rtype: set
+        """
+        field_names = self._get_mandatory_address_fields(country_sudo)
+        # Also add required billing fields from portal logic to the e-commerce mandatory fields
+        field_names |= set(self._get_mandatory_fields())
+        return field_names
+
+    def _check_delivery_address(self, partner_sudo):
+        """ Check that all mandatory shipping fields are filled for the given partner.
+
+        :param res.partner: The partner whose delivery address to check.
+        :return: Whether all mandatory fields are filled.
+        :rtype: bool
+        """
+        mandatory_delivery_fields = self._get_mandatory_delivery_address_fields(
+            partner_sudo.country_id
+        )
+        return all(partner_sudo.read(mandatory_delivery_fields)[0].values())
+
+    def _get_mandatory_delivery_address_fields(self, country_sudo):
+        """ Return the set of mandatory delivery field names.
+
+        :param res.country country_sudo: The country to use to build the set of mandatory fields.
+        :return: The set of mandatory delivery field names.
+        :rtype: set
+        """
+        field_names = self._get_mandatory_address_fields(country_sudo)
+        field_names.add('phone')
+        return field_names
+
+    def _get_mandatory_address_fields(self, country_sudo):
+        """ Return the set of common mandatory address fields.
+
+        :param res.country country_sudo: The country to use to build the set of mandatory fields.
+        :return: The set of common mandatory address field names.
+        :rtype: set
+        """
+        field_names = {'name', 'street', 'city', 'country_id'}
+        if country_sudo.state_required:
+            field_names.add('state_id')
+        if country_sudo.zip_required:
+            field_names.add('zip')
+        return field_names
+
     # ------------------------------------------------------
     # Edit
     # ------------------------------------------------------
@@ -2024,12 +2091,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return tracking_cart_dict
 
     @route(['/shop/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
-    def country_infos(self, country, mode, **kw):
+    def country_infos(self, country, mode, **kw):  # TODO ANV was country_infos
         address_fields = country.get_address_fields()
         if mode == 'billing':
-            required_fields = self._get_mandatory_fields_billing(country)
+            required_fields = self._get_mandatory_billing_address_fields(country)
         else:
-            required_fields = self._get_mandatory_fields_shipping(country)
+            required_fields = self._get_mandatory_delivery_address_fields(country)
         return {
             'fields': address_fields,
             'zip_before_city': address_fields.index('zip') < address_fields.index('city'),

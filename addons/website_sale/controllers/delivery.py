@@ -161,7 +161,7 @@ class Delivery(WebsiteSale):
         public_partner = request.website.partner_id
 
         self._include_country_and_state_in_address(partial_delivery_address)
-        if order_sudo._is_public_order():
+        if order_sudo._is_anonymous_cart():
             # The partner_shipping_id and partner_invoice_id will be automatically computed when
             # changing the partner_id of the SO. This avoids website_sale creating duplicates.
             partial_delivery_address['name'] = _(

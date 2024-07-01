@@ -8,9 +8,9 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 class L10nARWebsiteSale(WebsiteSale):
 
-    def _get_mandatory_fields_billing(self, country):
+    def _get_mandatory_billing_address_fields(self, country_sudo):
         """Extend mandatory fields to add new identification and responsibility fields when company is argentina"""
-        mandatory_fields = super()._get_mandatory_fields_billing(country)
+        mandatory_fields = super()._get_mandatory_billing_address_fields(country_sudo)
         if request.website.sudo().company_id.country_id.code == 'AR':
             mandatory_fields |= {
                 'l10n_latam_identification_type_id',

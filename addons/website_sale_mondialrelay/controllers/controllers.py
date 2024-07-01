@@ -53,11 +53,11 @@ class WebsiteSaleMondialrelay(WebsiteSale):
 
         return partner_sudo, mode
 
-    def _check_shipping_partner_mandatory_fields(self, partner_id):
+    def _check_delivery_address(self, partner_sudo):
         # skip check for mondialrelay partners as the customer can not edit them
-        if partner_id.is_mondialrelay:
+        if partner_sudo.is_mondialrelay:
             return True
-        return super()._check_shipping_partner_mandatory_fields(partner_id)
+        return super()._check_delivery_address(partner_sudo)
 
 
 class WebsiteSaleDeliveryMondialrelay(Delivery):
