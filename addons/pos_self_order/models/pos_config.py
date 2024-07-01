@@ -39,7 +39,7 @@ class PosConfig(models.Model):
     )
     self_ordering_service_mode = fields.Selection(
         [("counter", "Pickup zone"), ("table", "Table")],
-        string="Service",
+        string="Self Ordering Service Mode",
         default="counter",
         help="Choose the kiosk mode",
         required=True,
