@@ -83,6 +83,10 @@ class AccountMove(models.Model):
             elif len(refs) > 1:
                 self.payment_reference = refs[-1]
 
+        # Copy company_id (only changes if the id is of a child company (branch))
+        if self.company_id != self.purchase_id.company_id:
+            self.company_id = self.purchase_id.company_id
+
         self.purchase_id = False
 
     @api.onchange('partner_id', 'company_id')
