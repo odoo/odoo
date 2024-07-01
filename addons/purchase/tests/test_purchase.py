@@ -43,8 +43,13 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         # Set an even earlier date planned on the other PO line and check that the PO expected date matches it.
         new_date_planned = orig_date_planned - timedelta(hours=72)
-        po.order_line[1].date_planned = new_date_planned
+        po_form = Form(po)
+        with po_form.order_line.edit(1) as line_form:
+            line_form.date_planned = new_date_planned
+        po = po_form.save()
         self.assertAlmostEqual(po.order_line[1].date_planned, po.date_planned, delta=timedelta(seconds=10))
+        # Updating a PO line's date planned to the earliest one, should not affect the planned dates of other lines
+        self.assertNotEqual(po.order_line[0].date_planned, po.order_line[1].date_planned)
 
     def test_purchase_order_sequence(self):
         PurchaseOrder = self.env['purchase.order'].with_context(tracking_disable=True)
