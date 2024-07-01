@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
-
+import { browser } from "@web/core/browser/browser";
 import { Component, onMounted, useExternalListener, useState } from "@odoo/owl";
 
 export class WebClient extends Component {
@@ -30,9 +30,14 @@ export class WebClient extends Component {
             );
         }
         this.localization = localization;
+        let isWebsiteConfiguration = false;
+        if(browser.sessionStorage && (this.currentAction = browser.sessionStorage.getItem("current_action"))){
+            isWebsiteConfiguration = this.currentAction.includes("action_website_configuration");
+        }
         this.state = useState({
-            fullscreen: false,
+            fullscreen: isWebsiteConfiguration
         });
+
         this.title.setParts({ zopenerp: "Odoo" }); // zopenerp is easy to grep
         useBus(this.env.bus, "ROUTE_CHANGE", this.loadRouterState);
         useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", ({ detail: mode }) => {
