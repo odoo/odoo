@@ -95,10 +95,8 @@ QUnit.module("M2XAvatarUser", ({ beforeEach }) => {
             "m2x.avatar.user,false,kanban": `
                     <kanban>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <field name="user_id" widget="many2one_avatar_user"/>
-                                </div>
+                            <t t-name="kanban-card">
+                                <field name="user_id" widget="many2one_avatar_user"/>
                             </t>
                         </templates>
                     </kanban>`,
