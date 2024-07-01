@@ -294,3 +294,19 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
                          'Journal alias owned by journal itself')
         self.assertEqual(journal_alias_2.alias_parent_thread_id, journal.id,
                          'Journal alias owned by journal itself')
+
+    def test_alias_create_unique(self):
+        """ Make auto-generated alias_name unique when needed """
+        company_name = self.company_data['company'].name
+        journal = self.env['account.journal'].create({
+            'name': 'Test Journal',
+            'type': 'sale',
+            'code': 'A',
+        })
+        journal2 = self.env['account.journal'].create({
+            'name': 'Test Journal',
+            'type': 'sale',
+            'code': 'B',
+        })
+        self.assertEqual(journal.alias_name, f'test-journal-{company_name}')
+        self.assertEqual(journal2.alias_name, f'test-journal-{company_name}-b')
