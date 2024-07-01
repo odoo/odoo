@@ -489,7 +489,7 @@ const verifyErrors = (errors) => {
             : "no errors"
         : `expected the following errors`;
     const assertion = new Assertion({
-        label: "verifySteps",
+        label: "verifyErrors",
         message,
         pass,
     });
@@ -1841,32 +1841,46 @@ export class Matcher {
      * @returns {Async extends true ? Promise<void> : void}
      */
     _resolve(specs) {
+        unconsumedMatchers.delete(this);
         if (this._modifiers.rejects || this._modifiers.resolves) {
             return Promise.resolve(this._received).then(
                 /** @param {PromiseFulfilledResult<R>} reason */
                 (result) => {
                     if (this._modifiers.rejects) {
-                        throw new HootError(
-                            `expected promise to reject, instead resolved with: ${result}`
+                        registerAssertion(
+                            new Assertion({
+                                label: "rejects",
+                                message: `expected promise to reject, instead resolved with: ${formatHumanReadable(
+                                    result
+                                )}`,
+                                pass: false,
+                            })
                         );
+                    } else {
+                        this._received = result;
+                        this._resolveFinalResult(specs);
                     }
-                    this._received = result;
-                    return this._resolveFinalResult(specs);
                 },
                 /** @param {PromiseRejectedResult} reason */
                 (reason) => {
                     if (this._modifiers.resolves) {
-                        throw new HootError(
-                            `expected promise to resolve, instead rejected with: ${reason}`,
-                            { cause: reason }
+                        registerAssertion(
+                            new Assertion({
+                                label: "resolves",
+                                message: `expected promise to resolve, instead rejected with: ${formatHumanReadable(
+                                    reason
+                                )}`,
+                                pass: false,
+                            })
                         );
+                    } else {
+                        this._received = reason;
+                        this._resolveFinalResult(specs);
                     }
-                    this._received = reason;
-                    return this._resolveFinalResult(specs);
                 }
             );
         } else {
-            return this._resolveFinalResult(specs);
+            this._resolveFinalResult(specs);
         }
     }
 
@@ -1914,7 +1928,6 @@ export class Matcher {
      * @private
      */
     _saveStack() {
-        unconsumedMatchers.delete(this);
         if (!this._headless) {
             currentStack = new Error().stack;
         }
