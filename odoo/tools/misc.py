@@ -1095,7 +1095,7 @@ def groupby(iterable, key=None):
     """
     if key is None:
         key = lambda arg: arg
-    groups = defaultdict(list)
+    groups = collections.defaultdict(list)
     for elem in iterable:
         groups[key(elem)].append(elem)
     return groups.items()
