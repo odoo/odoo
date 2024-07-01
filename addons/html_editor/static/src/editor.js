@@ -216,6 +216,7 @@ export class Editor {
     getElContent() {
         const el = this.editable.cloneNode(true);
         this.dispatch("CLEAN", { root: el });
+        this.dispatch("CLEAN_FOR_SAVE", { root: el });
         this.dispatch("MERGE_ADJACENT_NODE", { node: el });
         return el;
     }

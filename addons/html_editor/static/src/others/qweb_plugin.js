@@ -39,6 +39,7 @@ export class QWebPlugin extends Plugin {
                 this.normalize(payload.node);
                 break;
             case "CLEAN":
+                // TODO @phoenix: evaluate if this should be cleanforsave instead
                 for (const node of payload.root.querySelectorAll(
                     "[data-oe-t-group], [data-oe-t-inline], [data-oe-t-selectable], [data-oe-t-group-active]"
                 )) {
@@ -47,6 +48,8 @@ export class QWebPlugin extends Plugin {
                     node.removeAttribute("data-oe-t-inline");
                     node.removeAttribute("data-oe-t-selectable");
                 }
+                break;
+            case "CLEAN_FOR_SAVE":
                 for (const element of payload.root.querySelectorAll(
                     "[t-esc], [t-raw], [t-out], [t-field]"
                 )) {

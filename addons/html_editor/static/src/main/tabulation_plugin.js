@@ -57,7 +57,7 @@ export class TabulationPlugin extends Plugin {
                 this.alignTabs(payload.node);
                 break;
             }
-            case "CLEAN":
+            case "CLEAN_FOR_SAVE":
                 for (const tab of payload.root.querySelectorAll("span.oe-tabs")) {
                     tab.removeAttribute("contenteditable");
                 }

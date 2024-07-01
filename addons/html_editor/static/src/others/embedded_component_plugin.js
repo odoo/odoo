@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { App } from "@odoo/owl";
+import { memoize } from "@web/core/utils/functions";
 
 /**
  * This plugin is responsible with providing the API to manipulate/insert
@@ -7,10 +8,7 @@ import { App } from "@odoo/owl";
  */
 export class EmbeddedComponentPlugin extends Plugin {
     static name = "embedded_components";
-    static dependencies = ["history"];
-    static resources = (p) => ({
-        handle_before_remove: p.handleBeforeRemove.bind(p),
-    });
+    static dependencies = ["history", "protected_node"];
 
     setup() {
         this.components = new Set();
@@ -18,45 +16,83 @@ export class EmbeddedComponentPlugin extends Plugin {
         this.nodeMap = new WeakMap();
         this.app = this.config.embeddedComponentInfo.app;
         this.env = this.config.embeddedComponentInfo.env;
-        this.mountComponents(this.editable);
+        this.embeddedComponents = memoize((embeddedComponents = []) => {
+            const result = {};
+            for (const embedding of embeddedComponents) {
+                result[embedding.name] = embedding;
+            }
+            return result;
+        });
+        // First mount is done during HISTORY_RESET which happens during START_EDITION
     }
 
     handleCommand(command, payload) {
         switch (command) {
+            case "NORMALIZE": {
+                this.normalize(payload.node);
+                break;
+            }
+            case "CLEAN_FOR_SAVE": {
+                this.cleanForSave(payload.root);
+                break;
+            }
+            case "RESTORE_SAVEPOINT":
+            case "ADD_EXTERNAL_STEP":
+            case "HISTORY_RESET_FROM_STEPS":
+            case "HISTORY_RESET": {
+                this.handleComponents(this.editable);
+                break;
+            }
             case "STEP_ADDED": {
-                this.mountComponents(payload.stepCommonAncestor);
+                this.handleComponents(payload.stepCommonAncestor);
+                break;
+            }
+            case "BEFORE_SERIALIZE_ELEMENT": {
+                this.beforeSerializeElement(payload);
                 break;
             }
         }
     }
 
-    handleBeforeRemove(host) {
-        const info = this.nodeMap.get(host);
-        if (info) {
-            this.destroyComponent(info);
+    handleComponents(elem) {
+        this.destroyRemovedComponents([...this.components]);
+        this.forEachEmbeddedComponentHost(elem, (host, embedding) => {
+            const info = this.nodeMap.get(host);
+            if (!info) {
+                this.mountComponent(host, embedding);
+            }
+        });
+    }
+
+    forEachEmbeddedComponentHost(elem, callback) {
+        const selector = `[data-embedded]`;
+        const targets = [...elem.querySelectorAll(selector)];
+        if (elem.matches(selector)) {
+            targets.unshift(elem);
+        }
+        for (const host of targets) {
+            const embedding = this.getEmbedding(host);
+            if (!embedding) {
+                continue;
+            }
+            callback(host, embedding);
         }
     }
 
-    mountComponents(node) {
-        for (const embedding of this.resources.embeddedComponents || []) {
-            const selector = `[data-embedded="${embedding.name}"]`;
-            const targets = node.querySelectorAll(selector);
-            if (node.matches(selector)) {
-                if (!this.nodeMap.has(node)) {
-                    this.mountComponent(node, embedding);
-                }
-            }
-            for (const target of targets) {
-                if (!this.nodeMap.has(target)) {
-                    this.mountComponent(target, embedding);
-                }
-            }
+    getEmbedding(host) {
+        return this.embeddedComponents(this.resources.embeddedComponents)[host.dataset.embedded];
+    }
+
+    beforeSerializeElement({ element, childrenToSerialize }) {
+        const embedding = this.getEmbedding(element);
+        if (!embedding) {
+            return;
         }
+        childrenToSerialize.splice(0, childrenToSerialize.length);
     }
 
     mountComponent(host, { Component, getProps }) {
         const props = getProps ? getProps(host) : {};
-        this.setupAttributes(host);
         const { dev, translateFn, getRawTemplate } = this.app;
         const app = new App(Component, {
             test: dev,
@@ -86,8 +122,52 @@ export class EmbeddedComponentPlugin extends Plugin {
         this.nodeMap.set(host, info);
     }
 
+    destroyRemovedComponents(infos) {
+        for (const info of infos) {
+            if (!this.editable.contains(info.host)) {
+                const host = info.host;
+                const display = host.style.display;
+                const parentNode = host.parentNode;
+                const clone = host.cloneNode(false);
+                if (parentNode) {
+                    parentNode.replaceChild(clone, host);
+                }
+                host.style.display = "none";
+                this.editable.after(host);
+                this.destroyComponent(info);
+                if (parentNode) {
+                    parentNode.replaceChild(host, clone);
+                } else {
+                    host.remove();
+                }
+                host.style.display = display;
+                if (!host.getAttribute("style")) {
+                    host.removeAttribute("style");
+                }
+            }
+        }
+    }
+
+    deepDestroyComponent({ host }) {
+        const removed = [];
+        this.forEachEmbeddedComponentHost(host, (containedHost) => {
+            const info = this.nodeMap.get(containedHost);
+            if (info) {
+                if (this.editable.contains(containedHost)) {
+                    this.destroyComponent(info);
+                } else {
+                    removed.push(info);
+                }
+            }
+        });
+        this.destroyRemovedComponents(removed);
+    }
+
+    /**
+     * Should not be called directly as it will not handle recursivity and
+     * removed components @see deepDestroyComponent
+     */
     destroyComponent({ app, host }) {
-        this.cleanupAttributes(host);
         app.destroy();
         this.components.delete(arguments[0]);
         this.nodeMap.delete(host);
@@ -95,26 +175,30 @@ export class EmbeddedComponentPlugin extends Plugin {
 
     destroy() {
         super.destroy();
-        for (const comp of [...this.components]) {
-            this.destroyComponent(comp);
+        // TODO @phoenix: is it reliable that the Set iterator is able to properly
+        // ignore deleted elements from the set without skipping items, across
+        // browsers ? Because deepDestroyComponent can remove multiple items at
+        // once from this.components.
+        const iterator = this.components[Symbol.iterator]();
+        let cur = iterator.next();
+        while (!cur.done) {
+            this.deepDestroyComponent(cur.value);
+            cur = iterator.next();
         }
     }
 
-    setupAttributes(host) {
-        this.shared.disableObserver();
-        // Technical mutations that should not be part of a step, every client
-        // will independently set these values.
-        host.dataset.oeProtected = true;
-        host.dataset.oeTransientContent = true;
-        host.dataset.oeHasRemovableHandler = true;
-        host.setAttribute("contenteditable", "false");
-        this.shared.enableObserver();
+    normalize(elem) {
+        this.forEachEmbeddedComponentHost(elem, (host) => {
+            this.shared.setProtectingNode(host, true);
+        });
     }
 
-    cleanupAttributes(host) {
-        this.shared.disableObserver();
-        delete host.dataset.oeHasRemovableHandler;
-        host.removeAttribute("contenteditable");
-        this.shared.enableObserver();
+    cleanForSave(clone) {
+        this.forEachEmbeddedComponentHost(clone, (host) => {
+            // In this case, host is a cloned element, there is no
+            // live app attached to it.
+            host.replaceChildren();
+            delete host.dataset.oeProtected;
+        });
     }
 }

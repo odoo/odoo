@@ -188,6 +188,7 @@ export class HistoryPlugin extends Plugin {
         this.resources.historyResetFromSteps?.forEach((cb) => cb());
 
         this.enableObserver();
+        this.dispatch("HISTORY_RESET_FROM_STEPS");
     }
     makeSnapshotStep() {
         return {
@@ -292,10 +293,6 @@ export class HistoryPlugin extends Plugin {
                 if (record.target === this.editable) {
                     continue;
                 }
-                if (record.attributeName === "contenteditable") {
-                    continue;
-                }
-
                 // @todo @phoenix test attributeCache
                 attributeCache.set(record.target, attributeCache.get(record.target) || {});
                 // @todo @phoenix add test for renderingClasses.
@@ -635,6 +632,9 @@ export class HistoryPlugin extends Plugin {
      * @param { number } index
      */
     addExternalStep(newStep, index) {
+        // The last step is an uncommited draft, revert it first
+        this.revertMutations(this.currentStep.mutations);
+
         const stepsAfterNewStep = this.steps.slice(index);
 
         for (const stepToRevert of stepsAfterNewStep.slice().reverse()) {
@@ -645,6 +645,9 @@ export class HistoryPlugin extends Plugin {
         for (const stepToApply of stepsAfterNewStep) {
             this.applyMutations(stepToApply.mutations);
         }
+        // Reapply the uncommited draft, since this is not an operation which should cancel it
+        this.applyMutations(this.currentStep.mutations);
+        this.dispatch("ADD_EXTERNAL_STEP");
     }
     /**
      * @param { HistoryMutation[] } mutations
@@ -813,6 +816,7 @@ export class HistoryPlugin extends Plugin {
                 this.revertStepsUntil(savePointIndex);
                 this.applyMutations(currentMutations);
             }
+            this.dispatch("RESTORE_SAVEPOINT");
         };
     }
     /**
@@ -953,27 +957,23 @@ export class HistoryPlugin extends Plugin {
         if (node.nodeType === Node.TEXT_NODE) {
             result.textValue = node.nodeValue;
         } else if (node.nodeType === Node.ELEMENT_NODE) {
+            const childrenToSerialize = [...node.childNodes];
+            this.dispatch("BEFORE_SERIALIZE_ELEMENT", {
+                element: node,
+                childrenToSerialize,
+            });
             result.tagName = node.tagName;
             result.children = [];
             result.attributes = {};
             for (let i = 0; i < node.attributes.length; i++) {
                 result.attributes[node.attributes[i].name] = node.attributes[i].value;
             }
-            let child = node.firstChild;
-            // Don't serialize transient nodes
-            // @todo @phoenix move logic into it's own transient plugin ?
-            if (!["true", ""].includes(node.dataset.oeTransientContent)) {
-                while (child) {
-                    if (!nodesToStripFromChildren.has(child.nodeId)) {
-                        const serializedChild = this._serializeNode(
-                            child,
-                            nodesToStripFromChildren
-                        );
-                        if (serializedChild) {
-                            result.children.push(serializedChild);
-                        }
+            for (const child of childrenToSerialize) {
+                if (!nodesToStripFromChildren.has(child.nodeId)) {
+                    const serializedChild = this._serializeNode(child, nodesToStripFromChildren);
+                    if (serializedChild) {
+                        result.children.push(serializedChild);
                     }
-                    child = child.nextSibling;
                 }
             }
         }

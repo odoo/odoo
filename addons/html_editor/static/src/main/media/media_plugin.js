@@ -73,7 +73,11 @@ export class MediaPlugin extends Plugin {
                 this.normalizeMedia(payload.node);
                 break;
             case "CLEAN":
+                // TODO @phoenix: evaluate if this should be cleanforsave instead
                 this.clean(payload.root);
+                break;
+            case "CLEAN_FOR_SAVE":
+                this.cleanForSave(payload.root);
                 break;
             case "REPLACE_IMAGE": {
                 const selectedNodes = this.shared.getSelectedNodes();
@@ -108,10 +112,15 @@ export class MediaPlugin extends Plugin {
 
     clean(root) {
         for (const el of root.querySelectorAll(MEDIA_SELECTOR)) {
-            el.removeAttribute("contenteditable");
             if (isIconElement(el)) {
                 el.textContent = "";
             }
+        }
+    }
+
+    cleanForSave(root) {
+        for (const el of root.querySelectorAll(MEDIA_SELECTOR)) {
+            el.removeAttribute("contenteditable");
         }
     }
 
