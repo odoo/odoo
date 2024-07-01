@@ -14,6 +14,17 @@ except ImportError:
     _logger.warning("num2words is not available, Arabic number to words conversion will not work")
     num2words = None
 
+try:
+    import babel.messages.extract
+except ImportError:
+    pass
+else:
+    # Patch the babel library to also extract deeply nested gettext calls.
+    # e.g. _("Text %s", other_function(_("Deeply Nested")))
+    from .babel_patch import extract_python, extract_javascript
+    babel.messages.extract.extract_python = extract_python
+    babel.messages.extract.extract_javascript = extract_javascript
+
 from werkzeug.datastructures import FileStorage
 from werkzeug.routing import Rule
 from werkzeug.wrappers import Request, Response
