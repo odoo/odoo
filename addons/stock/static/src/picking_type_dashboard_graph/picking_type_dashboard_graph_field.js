@@ -1,5 +1,5 @@
 import { cookie } from "@web/core/browser/cookie";
-import { getColor } from "@web/core/colors/colors";
+import { getColor, getCustomColor } from "@web/core/colors/colors";
 import { registry } from "@web/core/registry";
 import { JournalDashboardGraphField } from "@web/views/fields/journal_dashboard_graph/journal_dashboard_graph_field";
 
@@ -10,9 +10,9 @@ export class PickingTypeDashboardGraphField extends JournalDashboardGraphField {
         const labels = [];
         const backgroundColor = [];
 
-        const colorPast = getColor(13, cookie.get("color_scheme"));
-        const colorPresent = getColor(19, cookie.get("color_scheme"));
-        const colorFuture = getColor(5, cookie.get("color_scheme"));
+        const colorPast = getColor(8, cookie.get("color_scheme"));
+        const colorPresent = getColor(16, cookie.get("color_scheme"));
+        const colorFuture = getColor(12, cookie.get("color_scheme"));
         this.data[0].values.forEach((pt) => {
             data.push(pt.value);
             labels.push(pt.label);
@@ -23,7 +23,7 @@ export class PickingTypeDashboardGraphField extends JournalDashboardGraphField {
             } else if (pt.type === "future") {
                 backgroundColor.push(colorFuture);
             } else {
-                backgroundColor.push("#ebebeb");
+                backgroundColor.push(getCustomColor(cookie.get("color_scheme"), "#ebebeb", "#3C3E4B"));
             }
         });
         return {
