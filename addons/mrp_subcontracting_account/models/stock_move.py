@@ -55,10 +55,10 @@ class StockMove(models.Model):
 
     def _get_dest_account(self, account_data):
         if self.raw_material_production_id.subcontractor_id:
-            return account_data['production'].id
+            return account_data['production'].id or account_data['stock_output'].id
         return super()._get_dest_account(account_data)
 
     def _get_src_account(self, account_data):
         if self.production_id.subcontractor_id:
-            return account_data['production'].id
+            return account_data['production'].id or account_data['stock_input'].id
         return super()._get_src_account(account_data)
