@@ -297,6 +297,9 @@ class PickingType(models.Model):
             record.show_picking_type = record.code in ['incoming', 'outgoing', 'internal']
 
 
+    def _is_incoming(self):
+        return self.code == "incoming"
+
 class Picking(models.Model):
     _name = "stock.picking"
     _inherit = ['mail.thread', 'mail.activity.mixin']
