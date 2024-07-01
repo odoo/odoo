@@ -25,7 +25,7 @@
     <t t-set="code" t-value="code_expiration[0]"/>
     <t t-set="expiration" t-value="code_expiration[1]"/>
     <div style="margin: 16px 0px 16px 0px; text-align: center;">
-        <span t-out="code" style="background-color:#faf9fa; border: 1px solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-radius: 5px;"/>
+        <span t-out="code" t-attf-style="background-color:#faf9fa; border: 1px solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: {{object.company_id.email_secondary_color or '#875A7B'}}; border-radius: 5px;"/>
     </div>
     <small>Please note that this code expires in <t t-out="expiration"/>.</small>
 
@@ -40,7 +40,7 @@
 
     <p style="margin: 16px 0px 16px 0px; text-align: center;">
         <a t-att-href="object.get_totp_invite_url()"
-            style="background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">
+            t-attf-style="background-color:{{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">
             Activate my two-factor authentication
         </a>
     </p>
