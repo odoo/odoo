@@ -27,8 +27,7 @@ class AccountJournal(models.Model):
             return
         field_list = [
             "hr_expense_sheet.journal_id",
-            # todo master: "hr_expense_sheet.amount_residual AS amount_total_company",
-            "hr_expense_sheet.total_amount AS amount_total_company",
+            "hr_expense_sheet.amount_residual AS amount_total_company",
             "hr_expense_sheet.currency_id AS currency",
         ]
         query, params = sale_purchase_journals._get_expense_to_pay_query().select(*field_list)

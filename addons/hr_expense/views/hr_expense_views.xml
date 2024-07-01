@@ -718,7 +718,7 @@
                     <field name="company_id" optional="show" groups="base.group_multi_company" readonly="state != 'draft'"/>
                     <field name="activity_ids" widget="list_activity" optional="show" readonly="True"/>
                     <field name="journal_id" optional="hide" readonly="not is_editable"/>
-                    <field name="total_amount" sum="Total Amount" decoration-bf="1" widget="monetary"/>
+                    <field name="amount_residual" sum="Residual Amount" decoration-bf="1" widget="monetary"/>
                     <field name="state" optional="show"
                            decoration-info="state == 'draft'"
                            decoration-success="state in ['approve', 'post', 'done']"
