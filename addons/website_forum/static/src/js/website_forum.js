@@ -53,6 +53,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         const _super = this._super.bind(this);
 
         this.lastsearch = [];
+        this.choice = [];
 
         // float-start class messes up the post layout OPW 769721
         $('span[data-oe-model="forum.post"][data-oe-field="content"]').find('img.float-start').removeClass('float-start');
@@ -69,7 +70,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         if (element) {
             // Take default tags from the input value
             const defaultChoices = [];
-            JSON.parse(element.getAttribute("data-init-value")).forEach((x) => {
+            JSON.parse(element.getAttribute("data-init-value"))?.forEach((x) => {
                 defaultChoices.push({ id: x.id, label: x.name, value: x.id, isNew: false });
             });
             let defaulValue = defaultChoices.map((choice) => choice.id);
@@ -91,17 +92,16 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                         });
                     },
                     choiceFetchFunction: (searchString) => {
-                        const choices = [
-                            {
+                        if (searchString.length > 3) {
+                            const newchoice = {
                                 id: "new",
                                 name: searchString.trim(),
                                 value: `_${searchString.trim()}`,
                                 label: `Create ${searchString}`,
-                            },
-                        ];
-                        if (searchString.length < 3) {
-                            return searchString.length ? choices : [];
+                            };
+                            this.choice.push(newchoice);
                         }
+
                         const forumID = $("#wrapwrap").data("forum_id");
                         return new Promise((resolve, reject) => {
                             this.http
@@ -113,7 +113,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                                         choice.value = choice.name;
                                         choice.label = choice.name;
                                     });
-                                    result = result.concat(choices);
+                                    result = this.choice.length
+                                        ? result.concat(this.choice)
+                                        : result;
                                     resolve(result);
                                 });
                         });
