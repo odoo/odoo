@@ -31,7 +31,7 @@ export class WebClient extends Component {
         }
         this.localization = localization;
         this.state = useState({
-            fullscreen: false,
+            fullscreen: true,
         });
         this.title.setParts({ zopenerp: "Odoo" }); // zopenerp is easy to grep
         useBus(this.env.bus, "ROUTE_CHANGE", this.loadRouterState);
