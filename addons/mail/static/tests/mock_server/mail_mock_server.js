@@ -396,7 +396,10 @@ async function discuss_channel_pins(request) {
         ["res_id", "=", channel_id],
         ["pinned_at", "!=", false],
     ]);
-    return MailMessage._message_format(messageIds, true);
+    return new mailDataHelpers.Store(
+        "Message",
+        MailMessage._message_format(messageIds, makeKwArgs({ for_current_user: true }))
+    ).get_result();
 }
 
 registerRoute("/discuss/channel/mark_as_read", discuss_channel_mark_as_read);
