@@ -543,7 +543,7 @@ class IrMailServer(models.Model):
         msg = EmailMessage(policy=email.policy.SMTP)
         if not message_id:
             if object_id:
-                message_id = tools.generate_tracking_message_id(object_id)
+                message_id = tools.mail.generate_tracking_message_id(object_id)
             else:
                 message_id = make_msgid()
         msg['Message-Id'] = message_id

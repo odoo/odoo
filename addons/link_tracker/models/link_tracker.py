@@ -11,7 +11,7 @@ from odoo import tools, models, fields, api, _
 from odoo.addons.mail.tools import link_preview
 from odoo.exceptions import UserError
 from odoo.osv import expression
-
+from odoo.tools.mail import validate_url
 
 LINK_TRACKER_UNIQUE_FIELDS = ('url', 'campaign_id', 'medium_id', 'source_id', 'label')
 
@@ -166,7 +166,7 @@ class LinkTracker(models.Model):
 
             if vals['url'].startswith(('?', '#')):
                 raise UserError(_("“%s” is not a valid link, links cannot redirect to the current page.", vals['url']))
-            vals['url'] = tools.validate_url(vals['url'])
+            vals['url'] = validate_url(vals['url'])
 
             if not vals.get('title'):
                 vals['title'] = self._get_title_from_url(vals['url'])
@@ -216,7 +216,7 @@ class LinkTracker(models.Model):
                 raise ValueError(_('Creating a Link Tracker without URL is not possible'))
             if vals['url'].startswith(('?', '#')):
                 errors.add(_("“%s” is not a valid link, links cannot redirect to the current page.", vals['url']))
-            vals['url'] = tools.validate_url(vals['url'])
+            vals['url'] = validate_url(vals['url'])
             # fill vals to use direct accessor in _format_key
             self._add_missing_default_values(vals)
             vals.update({key: False for key in LINK_TRACKER_UNIQUE_FIELDS if not vals.get(key)})

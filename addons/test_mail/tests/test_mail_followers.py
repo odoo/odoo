@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from markupsafe import Markup
 import copy
 import re
 from unittest.mock import patch
 from urllib.parse import urlparse, urlencode, parse_qsl
 
-from odoo import fields, tools
+from markupsafe import Markup
+
+from odoo import fields
 from odoo.addons.mail.models.mail_mail import _UNFOLLOW_REGEX
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, users
 from odoo.tests.common import HttpCase
-from odoo.tools import mute_logger, email_normalize, parse_contact_from_email
+from odoo.tools import email_normalize, mail, mute_logger, parse_contact_from_email
 
 
 @tagged('mail_followers')
@@ -1006,7 +1006,7 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
         for partner in partner_ids:
             mail_body = mail_by_email[email_normalize(partner.email)]['body']
 
-            urls = list({link_url for _, link_url, _, _ in re.findall(tools.HTML_TAG_URL_REGEX, mail_body)
+            urls = list({link_url for _, link_url, _, _ in re.findall(mail.HTML_TAG_URL_REGEX, mail_body)
                          if '/mail/unfollow' in link_url})
             n_url = len(urls)
             self.assertLessEqual(n_url, 1)

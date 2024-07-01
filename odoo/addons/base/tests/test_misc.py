@@ -15,8 +15,8 @@ from odoo.tools import (
     merge_sequences,
     misc,
     remove_accents,
-    validate_url,
 )
+from odoo.tools.mail import validate_url
 from odoo.tests.common import TransactionCase, BaseCase
 
 

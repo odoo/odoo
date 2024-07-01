@@ -3,10 +3,12 @@
 
 import logging
 
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
-from odoo.tools import email_normalize, append_content_to_html, ustr
+from odoo.tools.mail import email_normalize, append_content_to_html
 
 _logger = logging.getLogger(__name__)
 
@@ -235,7 +237,7 @@ class MailGroupMessage(models.Model):
             if not message.email_from:
                 continue
 
-            body_html = append_content_to_html('<div>%s</div>' % ustr(comment), message.body, plaintext=False)
+            body_html = append_content_to_html(Markup('<div>%s</div>') % comment, message.body, plaintext=False)
             body_html = self.env['mail.render.mixin']._replace_local_links(body_html)
             self.env['mail.mail'].sudo().create({
                 'author_id': self.env.user.partner_id.id,

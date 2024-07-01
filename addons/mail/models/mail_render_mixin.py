@@ -15,7 +15,7 @@ from odoo import _, api, fields, models, tools
 from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, AccessError
-from odoo.tools import is_html_empty
+from odoo.tools.mail import is_html_empty, prepend_html_content
 from odoo.tools.rendering_tools import convert_inline_template_to_qweb, parse_inline_template, render_inline_template, template_env_globals
 
 _logger = logging.getLogger(__name__)
@@ -201,7 +201,7 @@ class MailRenderMixin(models.AbstractModel):
                     {}
                 </div>
             """).format(preview_markup)
-            return tools.prepend_html_content(html, html_preview)
+            return prepend_html_content(html, html_preview)
         return html
 
     # ------------------------------------------------------------

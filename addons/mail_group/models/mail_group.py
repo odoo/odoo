@@ -16,7 +16,8 @@ from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.mail.tools.alias_error import AliasError
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
-from odoo.tools import email_normalize, hmac, generate_tracking_message_id
+from odoo.tools import hmac
+from odoo.tools.mail import email_normalize, generate_tracking_message_id, append_content_to_html
 
 _logger = logging.getLogger(__name__)
 
@@ -454,7 +455,7 @@ class MailGroup(models.Model):
                     'unsub_url':  unsubscribe_url,
                 }
                 footer = self.env['ir.qweb']._render('mail_group.mail_group_footer', template_values, minimal_qcontext=True)
-                member_body = tools.append_content_to_html(body, footer, plaintext=False)
+                member_body = append_content_to_html(body, footer, plaintext=False)
 
                 mail_values.append({
                     'auto_delete': True,

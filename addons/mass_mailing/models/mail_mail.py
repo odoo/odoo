@@ -43,7 +43,7 @@ class MailMail(models.Model):
         body = super()._prepare_outgoing_body()
 
         if body and self.mailing_id and self.mailing_trace_ids:
-            for match in set(re.findall(tools.URL_REGEX, body)):
+            for match in set(re.findall(tools.mail.URL_REGEX, body)):
                 href = match[0]
                 url = match[1]
 
@@ -55,7 +55,7 @@ class MailMail(models.Model):
 
             # generate tracking URL
             tracking_url = self._get_tracking_url()
-            body = tools.append_content_to_html(
+            body = tools.mail.append_content_to_html(
                 body,
                 f'<img src="{tracking_url}"/>',
                 plaintext=False,
