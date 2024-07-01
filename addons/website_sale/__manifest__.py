@@ -101,6 +101,9 @@
             'website_sale/static/src/js/notification/warning_notification/warning_notification.js',
             'website_sale/static/src/js/notification/warning_notification/warning_notification.xml',
             'website_sale/static/src/js/notification/notification_service.js',
+
+            'website_sale/static/src/js/website_sale_service.js',
+            'website_sale/static/src/js/components/cart_icon/**/*',
         ],
         'web._assets_primary_variables': [
             'website_sale/static/src/scss/primary_variables.scss',
