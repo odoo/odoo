@@ -10,7 +10,7 @@ class AccountMoveSend(models.TransientModel):
     _inherit = 'account.move.send'
 
     checkbox_send_peppol = fields.Boolean(
-        string='Send via PEPPOL',
+        string='PEPPOL',
         compute='_compute_checkbox_send_peppol', store=True, readonly=False,
     )
     enable_peppol = fields.Boolean(compute='_compute_enable_peppol')

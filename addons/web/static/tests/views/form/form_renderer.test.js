@@ -55,12 +55,13 @@ test("compile notebook with modifiers", async () => {
     expect(queryAllTexts`.o_notebook_headers .nav-item`).toEqual(["p1", "p2"]);
 });
 
-test("compile header and buttons", async () => {
+test.tags("desktop")("compile header and buttons", async () => {
     Partner._views = {
         form: /*xml*/ `
             <form>
                 <header>
                     <button string="ActionButton" class="oe_highlight" name="action_button" type="object"/>
+                    <button string="DisabledActionButton" class="oe_highlight" name="disabled_action_button" type="object" disabled="disabled"/>
                 </header>
             </form>
         `,
@@ -72,6 +73,7 @@ test("compile header and buttons", async () => {
         resId: 1,
     });
     expect(`.o_statusbar_buttons button[name=action_button]:contains(ActionButton)`).toHaveCount(1);
+    expect(`button[name=disabled_action_button]:disabled`).toHaveCount(1);
 });
 
 test("render field with placeholder", async () => {

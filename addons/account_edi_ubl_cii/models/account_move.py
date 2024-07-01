@@ -55,7 +55,6 @@ class AccountMove(models.Model):
 
     def _need_ubl_cii_xml(self):
         self.ensure_one()
-        return not self.invoice_pdf_report_id \
-            and not self.ubl_cii_xml_id \
+        return not self.ubl_cii_xml_id \
             and self.is_sale_document() \
             and bool(self.partner_id.commercial_partner_id.ubl_cii_format)
