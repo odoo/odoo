@@ -157,9 +157,7 @@ export class SelectMenu extends Component {
                     const values = [...this.props.value];
                     values.splice(values.indexOf(c.value), 1);
                     this.props.onSelect(values);
-                    if (this.props.element) {
-                        this.props.element.value = values.join(",");
-                    }
+                    this.setValues(values);
                 },
             };
         });
@@ -245,18 +243,27 @@ export class SelectMenu extends Component {
             if (valueIndex !== -1) {
                 values.splice(valueIndex, 1);
                 this.props.onSelect(values);
+                this.setValues(values);
             } else {
                 this.props.onSelect([...this.props.value, value]);
-            }
-            if (this.props.element) {
-                const values = valueIndex !== -1 ? values : [...this.props.value, value];
-                this.props.element.value = values.join(",");
+                this.setValues([...this.props.value, value]);
             }
         } else if (!this.selectedChoice || this.selectedChoice.value !== value) {
             this.props.onSelect(value);
-            if (this.props.element) {
-                this.props.element.value = value;
-            }
+            this.setValues([value]);
+        }
+    }
+
+    setValues(values) {
+        if (this.props.element) {
+            this.props.choices.forEach((choice) => {
+                if (!values.includes(choice.value) && this.selectedIds.includes(choice.id)) {
+                    this.selectedIds.splice(this.selectedIds.indexOf(choice.id), 1);
+                } else if (values.includes(choice.value) && !this.selectedIds.includes(choice.id)) {
+                    this.selectedIds.push(choice.id);
+                }
+            });
+            this.props.element.value = this.selectedIds;
         }
     }
 
