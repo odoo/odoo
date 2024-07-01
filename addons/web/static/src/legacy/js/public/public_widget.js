@@ -10,8 +10,6 @@ import { loadBundle, loadCSS, loadJS } from '@web/core/assets';
 import { renderToElement } from "@web/core/utils/render";
 import { makeAsyncHandler, makeButtonHandler } from "@web/legacy/js/core/minimal_dom";
 
-// TODO: MSH: Need to convert dom methods in core/dom.js to convert it in vanillaJS
-
 /**
  * Base class for all visual components. Provides a lot of functions helpful
  * for the management of a part of the DOM.

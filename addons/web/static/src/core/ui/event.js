@@ -1,7 +1,8 @@
 const delegateEvent = function (ev) {
     let target = ev.target;
     if (typeof this.selector === "string") {
-        while (!target?.matches(this.selector) && target !== this.element) {
+        // Failed to execute 'matches' on 'Element' 'form .js_product:first input[name="add_qty"]' is not a valid selector
+        while (target !== this.element && !target?.matches(this.selector)) {
             target = target.parentElement;
         }
         if (target?.matches(this.selector)) {

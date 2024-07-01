@@ -274,8 +274,8 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @private
      */
     _onWebsiteFormSubmit: function (ev) {
-        var buttonEls = ev.currentTarget.querySelectorAll("button[type='submit'], .a-submit").toArray();
-        buttonEls.forEach((btnEl) => {
+        var buttonEls = ev.currentTarget?.querySelectorAll("button[type='submit'], .a-submit").toArray();
+        buttonEls?.forEach((btnEl) => {
             btnEl.prepend("<i class='fa fa-circle-o-notch fa-spin'></i> ");
             btnEl.disabled = true;
         });
