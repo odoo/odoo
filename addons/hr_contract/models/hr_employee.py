@@ -293,6 +293,9 @@ class Employee(models.Model):
         if not self.contract_ids:
             action['context'] = {
                 'default_employee_id': self.id,
+                # display current resource_calendar_id as the default one if it exists
+                'default_resource_calendar_id': self.resource_calendar_id.id,
+                'from_action_open_contract': True,
             }
             action['target'] = 'current'
             return action
