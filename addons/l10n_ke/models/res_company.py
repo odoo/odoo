@@ -14,4 +14,5 @@ class ResCompany(models.Model):
     )
 
     def _compute_l10n_ke_oscu_is_active(self):
+        """ Overridden in enterprise when the OSCU module is used in the company"""
         self.l10n_ke_oscu_is_active = False

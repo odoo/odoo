@@ -19,7 +19,7 @@ class AccountMove(models.Model):
     l10n_ke_cu_qrcode = fields.Char(string='CU QR Code', copy=False)
     l10n_ke_cu_show_send_button = fields.Boolean(string='Show Send to Tremol button', compute='_compute_l10n_ke_cu_show_send_button')
 
-    @api.depends('country_code', 'l10n_ke_cu_qrcode', 'state', 'move_type')
+    @api.depends('country_code', 'l10n_ke_cu_qrcode', 'state', 'move_type', 'company_id')
     def _compute_l10n_ke_cu_show_send_button(self):
         for move in self:
             move.l10n_ke_cu_show_send_button = (
@@ -95,10 +95,7 @@ class AccountMove(models.Model):
     def _l10n_ke_fiscal_device_details_filled(self):
         self.ensure_one()
         # If the company is configured for OSCU, don't block the Send & Print.
-        if (
-            'l10n_ke_oscu_is_active' in self.company_id
-            and self.company_id.l10n_ke_oscu_is_active
-        ):
+        if self.company_id.l10n_ke_oscu_is_active:
             return True
         return all([
             self.country_code == 'KE',
@@ -251,7 +248,7 @@ class AccountMove(models.Model):
             invoice(s) to the control unit (the fiscal device).
         """
         # If l10n_ke_edi_oscu is configured for the company, disable sending via TREMOL.
-        if 'l10n_ke_oscu_is_active' in self.company_id and self.company_id.l10n_ke_oscu_is_active:
+        if self.company_id.l10n_ke_oscu_is_active:
             raise UserError(
                 _('An OSCU has been initialized for this company. Please send the e-invoice via Send and Print -> Send to eTIMS instead.')
             )
