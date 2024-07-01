@@ -9,6 +9,7 @@ from odoo import exceptions
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
+from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import Form, tagged, users
 from odoo.tools import mute_logger
 
@@ -471,12 +472,16 @@ class TestNoThread(MailCommon, TestRecipients):
             'record_name': 'Not used in message_format',
             'res_id': test_record.id,
         })
-        formatted = message._message_format(for_current_user=True)[0]
+        formatted = Store("Message", message._message_format(for_current_user=True)).get_result()[
+            "Message"
+        ][0]
         self.assertEqual(formatted['default_subject'], test_record.name)
         self.assertEqual(formatted['record_name'], test_record.name)
 
         test_record.write({'name': 'Just Test'})
-        formatted = message._message_format(for_current_user=True)[0]
+        formatted = Store("Message", message._message_format(for_current_user=True)).get_result()[
+            "Message"
+        ][0]
         self.assertEqual(formatted['default_subject'], 'Just Test')
         self.assertEqual(formatted['record_name'], 'Just Test')
 
