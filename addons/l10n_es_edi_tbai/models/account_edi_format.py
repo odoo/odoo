@@ -22,10 +22,10 @@ from odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_agencies import get_ke
 from odoo.addons.l10n_es_edi_tbai.models.xml_utils import (
     NS_MAP, bytes_as_block, calculate_references_digests,
     cleanup_xml_signature, fill_signature, int_as_bytes)
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 from odoo.tools import get_lang
 from odoo.tools.float_utils import float_repr, float_round
-from odoo.tools.xml_utils import cleanup_xml_node, validate_xml_from_attachment
+from odoo.tools.xml_utils import cleanup_xml_node
 
 
 class AccountEdiFormat(models.Model):
@@ -138,8 +138,6 @@ class AccountEdiFormat(models.Model):
 
             # Generate the XML values.
             inv_dict = self._get_l10n_es_tbai_invoice_xml(invoice)
-            if 'error' in inv_dict[invoice]:
-                return inv_dict  # XSD validation failed, return result dict
 
             # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
             inv_xml = inv_dict[invoice]['xml_file']
@@ -192,8 +190,6 @@ class AccountEdiFormat(models.Model):
         else:
             # Generate the XML values.
             cancel_dict = self._get_l10n_es_tbai_invoice_xml(invoice, cancel=True)
-            if 'error' in cancel_dict[invoice]:
-                return cancel_dict  # XSD validation failed, return result dict
 
             # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
             cancel_xml = cancel_dict[invoice]['xml_file']
@@ -232,14 +228,6 @@ class AccountEdiFormat(models.Model):
     # -------------------------------------------------------------------------
     # XML DOCUMENT
     # -------------------------------------------------------------------------
-
-    def _l10n_es_tbai_validate_xml_with_xsd(self, xml_doc, cancel, tax_agency):
-        xsd_name = get_key(tax_agency, 'xsd_name')['cancel' if cancel else 'post']
-        try:
-            validate_xml_from_attachment(self.env, xml_doc, xsd_name, prefix='l10n_es_edi_tbai')
-        except UserError as e:
-            return {'error': escape(str(e)), 'blocking_level': 'error'}
-        return {}
 
     def _l10n_es_tbai_get_invoice_content_edi(self, invoice):
         cancel = invoice.edi_state in ('to_cancel', 'cancelled')
@@ -280,8 +268,6 @@ class AccountEdiFormat(models.Model):
         xml_doc = self._l10n_es_tbai_sign_invoice(invoice, xml_doc)
         res = {invoice: {'xml_file': xml_doc}}
 
-        # Optional check using the XSD
-        res[invoice].update(self._l10n_es_tbai_validate_xml_with_xsd(xml_doc, cancel, invoice.company_id.l10n_es_tbai_tax_agency))
         return res
 
     def _l10n_es_tbai_get_header_values(self, invoice):
