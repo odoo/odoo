@@ -212,13 +212,13 @@
             <small class="text-muted">Add to calendar:</small>
             <div t-attf-class="d-flex align-items-center flex-shrink-0 flex-grow-1 {{'gap-1 gap-md-2' if event.is_one_day else 'gap-2'}}">
                 <a t-att-href="iCal_url" class="btn btn-light" title="Add to iCal">
-                    <i role="img" class="fa fa-apple"/>
+                    <i role="img" class="fa fa-apple" style="scale: 1.4;"/>
                 </a>
-                <a t-att-href="iCal_url" class="btn btn-light" title="Add to Outlook">
-                    <i role="img" class="fa fa-windows"/>
+                <a t-att-href="iCal_url" class="btn btn-light" title="Add to Outlook" style="--btn-padding-x: 0.7rem;">
+                    <img src="/event/static/src/img/outlook-calendar.svg" alt="Outlook" loading="lazy"/>
                 </a>
-                <a t-att-href="google_url" class="btn btn-light" title="Add to Google" target="_blank">
-                    <i role="img" class="fa fa-google"/>
+                <a t-att-href="google_url" class="btn btn-light" title="Add to Google" target="_blank" style="--btn-padding-x: 0.7rem;">
+                    <img src="/event/static/src/img/google-calendar.svg" alt="Google Agenda" loading="lazy"/>
                 </a>
             </div>
         </div>
@@ -316,10 +316,38 @@
             </div>
             <div t-if="attendees" class="row mb-3">
                 <div class="col-12 mb-2">
-                    <a class="btn btn-primary" title="Download All Tickets" target="_blank"
+                    <h5>Get your Tickets</h5>
+                </div>
+                <div class="col-12 mb-2 d-flex flex-column flex-md-row align-items-stretch align-items-md-baseline justify-content-md-start">
+                    <a class="btn btn-primary" title="Download All Tickets" target="_blank" style="min-width: 9rem;"
                         t-attf-href="/event/{{ event.id }}/my_tickets?registration_ids={{ attendees.ids }}&amp;tickets_hash={{ event._get_tickets_access_hash(attendees.ids) }}">
-                        Download Tickets <i class="ms-1 fa fa-download"/>
+                        Download <i class="ms-1 fa fa-download"/>
                     </a>
+                    <span class="mx-3 d-flex justify-content-center">or</span>
+                    <div class="o_wevent_send_by_email_widget ms-md-2 mt-2 mt-md-0" style="max-width: 32rem;">
+                        <div class="has-validation">
+                            <div class="input-group">
+                                <input id="o_wevent_send_by_email_input" type="text"
+                                    placeholder="john@doe.com" class="form-control"/>
+                                <button class="o_wevent_js_send_email btn btn-primary"
+                                    type="button"
+                                    t-att-data-event-id="event.id"
+                                    t-att-data-attendees-ids="attendees.ids"
+                                    t-att-data-tickets-hash="event._get_tickets_access_hash(attendees.ids)">
+                                    Send by Email
+                                </button>
+                            </div>
+                            <div class="invalid-feedback">
+                                Please enter valid email(s)
+                            </div>
+                        </div>
+                        <div class="o_wevent_send_by_email_info alert alert-info ms-md-2 mt-2 mt-md-0 mb-0 px-3 py-1 d-inline-flex align-items-center justify-content-center d-none" role="alert">
+                            <span class="d-flex">
+                                <span><strong>See you soon!</strong> Your tickets have been sent.</span>
+                                <button aria-label="Close" class="btn-close ms-2" type="button" style="scale: 0.8"/>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row mb-3 o_wereg_confirmed_attendees">
@@ -380,12 +408,14 @@
                             "fields": ["phone", "mobile", "email"]
                             }'/>
                     </div>
-                    <div id="add_to_calendar" class="mt-4 d-flex flex-column flex-md-row">
-                        <a role="button" class="btn btn-primary" t-att-href="iCal_url">
-                            <i class="fa fa-fw fa-calendar"/> Add to iCal/Outlook
+                    <div id="add_to_calendar" class="o_event_add_to_calendar_btns d-flex flex-wrap gap-3 mt-4">
+                        <a role="button" class="o_outlook_calendar btn btn-block bg-white" t-att-href="iCal_url">
+                            <img src="/event/static/src/img/outlook-calendar.svg" alt="Outlook" loading="lazy"/>
+                            Add to iCal/Outlook
                         </a>
-                        <a role="button" class="btn btn-primary ms-md-2 mt-2 mt-md-0" t-att-href="google_url" target='_blank'>
-                            <i class="fa fa-fw fa-calendar"/> Add to Google Calendar
+                        <a role="button" class="o_google_calendar btn btn-block bg-white" t-att-href="google_url">
+                            <img src="/event/static/src/img/google-calendar.svg" alt="Google Agenda" loading="lazy"/>
+                            Add to Google Agenda
                         </a>
                     </div>
                 </div>

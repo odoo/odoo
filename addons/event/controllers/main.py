@@ -76,6 +76,20 @@ class EventController(Controller):
         ]
         return request.make_response(pdf, headers=pdfhttpheaders)
 
+    @route(['/event/<int:event_id>/my_tickets_by_email'], type='json', auth='public', website=True)
+    def event_my_tickets_by_email(self, event_id, registration_ids, tickets_hash, emails):
+        event = request.env['event.event'].browse(event_id).exists()
+        hash_truth = event and event._get_tickets_access_hash(registration_ids)
+        if not consteq(tickets_hash, hash_truth):
+            raise NotFound()
+        if template := request.env.ref('event.event_subscription', raise_if_not_found=False):
+            template.sudo().with_context(registration_ids=registration_ids).send_mail(
+                registration_ids[0],
+                force_send=True,
+                email_values={'email_to': emails})
+        else:
+            raise NotFound()
+
     @http.route(['/event/init_barcode_interface'], type='json', auth="user")
     def init_barcode_interface(self, event_id):
         event = request.env['event.event'].browse(event_id).exists() if event_id else False

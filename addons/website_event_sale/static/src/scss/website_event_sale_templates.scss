@@ -11,3 +11,21 @@
         text-decoration: underline;
     }
 }
+
+.o_wevent_sale_event {
+    .o_record_cover_container {
+        overflow: hidden;
+        // Ensure the cover elements are on top of the cover image
+        z-index: 0;
+        color: white;
+
+        // Ensure the cover image is in the background
+        .o_record_cover_component {
+            z-index: -1;
+        }
+
+        &.o_wevent_event_main_cover {
+            min-height: 12rem;
+        }
+    }
+}
