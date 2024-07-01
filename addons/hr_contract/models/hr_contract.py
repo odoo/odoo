@@ -260,6 +260,17 @@ class Contract(models.Model):
     def _assign_open_contract(self):
         for contract in self:
             contract.employee_id.sudo().write({'contract_id': contract.id})
+            contract_start_message = "The new contract starts today"
+            if contract.job_id:
+                contract_start_message = _(
+                    "The new contract starts today, the job position has been updated accordingly to %s.") % contract.job_id.name
+                contract.employee_id.sudo().write({
+                    'job_id': contract.job_id,
+                    'department_id': contract.department_id.id,
+                })
+            else:
+                contract_start_message = _("The new contract starts today.")
+            contract.employee_id.message_post(body=contract_start_message)
 
     @api.depends('wage')
     def _compute_contract_wage(self):
