@@ -27,7 +27,7 @@ class StockPickingType(models.Model):
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    sequence = fields.Integer(string='Sequence', compute='_compute_sequence', store=True, readonly=False)
+    sequence = fields.Integer(string='Sequence', readonly=False)
     zip_code = fields.Char(string="Zip", related='partner_id.zip')
     weight = fields.Float(string="Max Weight", compute='_compute_total_weight')
     volume = fields.Float(string="Max Volume", compute='_compute_total_volume')
@@ -43,9 +43,3 @@ class StockPicking(models.Model):
         for picking in self:
             max_volume = sum((move.product_qty * move.product_id.volume) or 0.0 for move in picking.move_ids)
             picking.volume = max_volume
-
-    @api.depends('batch_id.picking_ids.zip_code')
-    def _compute_sequence(self):
-        sorted_pickings = self.batch_id.picking_ids.sorted(key=lambda r: r.zip_code or '0')
-        for idx, record in enumerate(sorted_pickings):
-            record.sequence = idx
