@@ -516,7 +516,7 @@ test("Embed video by pasting video URL", async () => {
     // Paste a video URL.
     pasteText(htmlEditor, "https://www.youtube.com/watch?v=qxb74CMR748");
     await animationFrame();
-    expect(anchorNode.outerHTML).toBe("<p>https://www.youtube.com/watch?v=qxb74CMR748<br></p>");
+    expect(anchorNode.outerHTML).toBe("<p>https://www.youtube.com/watch?v=qxb74CMR748</p>");
     expect(".o-we-powerbox").toHaveCount(1);
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Embed Youtube Video", "Paste as URL"]);
 
@@ -1608,7 +1608,7 @@ describe("save image", () => {
         onRpc("partner", "web_save", ({ args }) => {
             expect.step("web_save");
             expect(args[1].txt).toBe(
-                `<p class="test_target"><img class="img-fluid" data-file-name="test_image.png" src="/test_image_url.png?access_token=1234"><br></p>`
+                `<p class="test_target"><img class="img-fluid" data-file-name="test_image.png" src="/test_image_url.png?access_token=1234"></p>`
             );
         });
 
@@ -1676,7 +1676,7 @@ describe("save image", () => {
         onRpc("partner", "web_save", ({ args }) => {
             expect.step("web_save");
             expect(args[1].txt).toBe(
-                `<p class="test_target"><img class="img-fluid" data-file-name="test_image.png" src="/test_image_url.png?access_token=1234"><br></p>`
+                `<p class="test_target"><img class="img-fluid" data-file-name="test_image.png" src="/test_image_url.png?access_token=1234"></p>`
             );
         });
 

@@ -354,7 +354,7 @@ test.tags("desktop")("should insert a 3x3 table on type `/table`", async () => {
     press("Enter");
     await tick();
     expect(getContent(el)).toBe(
-        `<table class="table table-bordered o_table"><tbody><tr><td><p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p></p><br>`
+        `<table class="table table-bordered o_table"><tbody><tr><td><p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`
     );
 });
 

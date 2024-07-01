@@ -370,11 +370,21 @@ export function isMediaElement(node) {
  * @returns {boolean}
  */
 export function isProtected(node) {
-    const closestProtectedElement = closestElement(node, "[data-oe-protected]");
-    if (closestProtectedElement) {
-        return ["", "true"].includes(closestProtectedElement.dataset.oeProtected);
+    const closestProtectingCandidate = closestElement(node, "[data-oe-protected]");
+    if (closestProtectingCandidate) {
+        return isProtecting(closestProtectingCandidate);
     }
     return false;
+}
+
+/**
+ * A "protecting" element contains childNodes that are protected.
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isProtecting(node) {
+    return node.nodeType === Node.ELEMENT_NODE && ["", "true"].includes(node.dataset.oeProtected);
 }
 
 // This is a list of "paragraph-related elements", defined as elements that
@@ -419,11 +429,20 @@ export function isEmptyBlock(blockEl) {
     if (blockEl.querySelectorAll("br").length >= 2) {
         return false;
     }
+    if (isProtecting(blockEl)) {
+        // Protecting nodes should never be considered empty for editor
+        // operations, as their content is a "black box". Their content should
+        // be managed by a specialized plugin.
+        return false;
+    }
     const nodes = blockEl.querySelectorAll("*");
     for (const node of nodes) {
         // There is no text and no double BR, the only thing that could make
         // this visible is a "visible empty" node like an image.
-        if (node.nodeName != "BR" && (isSelfClosingElement(node) || isIconElement(node))) {
+        if (
+            node.nodeName != "BR" &&
+            (isSelfClosingElement(node) || isIconElement(node) || isProtecting(node))
+        ) {
             return false;
         }
     }

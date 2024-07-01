@@ -191,10 +191,10 @@ describe("collaborative makeSavePoint", () => {
             peerInfos.c2.editor.dispatch("CLEAN", { root: peerInfos.c2.editor.editable });
             renderTextualSelection(peerInfos);
             expect(peerInfos.c1.editor.editable.innerHTML).toBe(
-                `<p>[c1}{c1]<br></p><p>ab[c2}{c2]<br></p>`
+                `<p>[c1}{c1]<br></p><p>ab[c2}{c2]</p>`
             );
             expect(peerInfos.c2.editor.editable.innerHTML).toBe(
-                `<p>[c1}{c1]<br></p><p>ab[c2}{c2]<br></p>`
+                `<p>[c1}{c1]<br></p><p>ab[c2}{c2]</p>`
             );
         }
     );
@@ -527,7 +527,7 @@ describe("data-oe-protected", () => {
     test("should not share protected mutations and share unprotected ones", async () => {
         await testMultiEditor({
             peerIds: ["c1", "c2"],
-            contentBefore: "<p>[c1}{c1][c2}{c2]</p>",
+            contentBefore: "<p>[c1}{c1][c2}{c2]<br></p>",
             afterCreate: (peerInfos) => {
                 peerInfos.c1.editor.editable.prepend(
                     ...parseHTML(
@@ -568,10 +568,10 @@ describe("data-oe-protected", () => {
                         <div data-oe-protected="true">
                             <p id="true">a<br></p>
                             <div data-oe-protected="false">
-                                <p id="false">a[c1}{c1]<br></p>
+                                <p id="false">a[c1}{c1]</p>
                             </div>
                         </div>
-                        <p>[c2}{c2]</p>
+                        <p>[c2}{c2]<br></p>
                     `)
                 );
                 expect(peerInfos.c2.editor.editable.innerHTML).toBe(
@@ -579,10 +579,10 @@ describe("data-oe-protected", () => {
                         <div data-oe-protected="true">
                             <p id="true"><br></p>
                             <div data-oe-protected="false">
-                                <p id="false">a[c1}{c1]<br></p>
+                                <p id="false">a[c1}{c1]</p>
                             </div>
                         </div>
-                        <p>[c2}{c2]</p>
+                        <p>[c2}{c2]<br></p>
                     `)
                 );
             },
@@ -593,7 +593,7 @@ describe("data-oe-transient-content", () => {
     test("should send an empty transient-content element", async () => {
         await testMultiEditor({
             peerIds: ["c1", "c2"],
-            contentBefore: "<p>[c1}{c1][c2}{c2]</p>",
+            contentBefore: "<p>[c1}{c1][c2}{c2]<br></p>",
             afterCreate: (peerInfos) => {
                 peerInfos.c1.editor.editable.prepend(
                     ...parseHTML(
@@ -618,13 +618,13 @@ describe("data-oe-transient-content", () => {
                         <div data-oe-transient-content="true">
                             <p>secret</p>
                         </div>
-                        <p>[c1}{c1][c2}{c2]</p>
+                        <p>[c1}{c1][c2}{c2]<br></p>
                     `)
                 );
                 expect(peerInfos.c2.editor.editable.innerHTML).toBe(
                     unformat(`
                         <div data-oe-transient-content="true"></div>
-                        <p>[c1}{c1][c2}{c2]</p>
+                        <p>[c1}{c1][c2}{c2]<br></p>
                     `)
                 );
             },

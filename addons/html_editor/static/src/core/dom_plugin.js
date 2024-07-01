@@ -1,12 +1,19 @@
 import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
-import { makeContentsInline, moveNodes, setTagName } from "../utils/dom";
+import {
+    cleanTrailingBR,
+    fillShrunkPhrasingParent,
+    makeContentsInline,
+    moveNodes,
+    setTagName,
+} from "../utils/dom";
 import {
     allowsParagraphRelatedElements,
     areSimilarElements,
     getDeepestPosition,
     isEditorTab,
+    isProtecting,
     isSelfClosingElement,
     isShrunkBlock,
     isUnbreakable,
@@ -262,7 +269,20 @@ export class DomPlugin extends Plugin {
                             offset
                         );
                         currentNode = insertBefore ? right : left;
+                        const otherNode = insertBefore ? left : right;
+                        if (isBlock(otherNode)) {
+                            fillShrunkPhrasingParent(otherNode);
+                        }
+                        if (otherNode.nodeType === Node.ELEMENT_NODE) {
+                            cleanTrailingBR(otherNode);
+                        }
                     } else {
+                        if (isBlock(currentNode)) {
+                            fillShrunkPhrasingParent(currentNode);
+                        }
+                        if (currentNode.nodeType === Node.ELEMENT_NODE) {
+                            cleanTrailingBR(currentNode);
+                        }
                         currentNode = currentNode.parentElement;
                     }
                 }
@@ -273,10 +293,23 @@ export class DomPlugin extends Plugin {
             } else {
                 currentNode.after(nodeToInsert);
             }
+            if (
+                nodeToInsert.nodeType !== Node.ELEMENT_NODE ||
+                nodeToInsert.tagName !== "BR" ||
+                nodeToInsert.nextSibling
+            ) {
+                // Avoid cleaning the trailing BR if it is nodeToInsert
+                cleanTrailingBR(currentNode.parentElement);
+            }
             if (currentNode.tagName !== "BR" && isShrunkBlock(currentNode)) {
                 currentNode.remove();
             }
             currentNode = nodeToInsert;
+        }
+        const previousNode = currentNode.previousSibling;
+        if (cleanTrailingBR(currentNode.parentElement)) {
+            // Clean the last inserted trailing BR if any
+            currentNode = previousNode;
         }
         currentNode = lastChildNode || currentNode;
         let lastPosition = rightPos(currentNode);
@@ -426,7 +459,8 @@ export class DomPlugin extends Plugin {
                 node.attributes?.length === 1 &&
                 node.hasAttribute("data-oe-zws-empty-inline") &&
                 (node.textContent === "\u200B" || node.previousSibling.textContent === "\u200B")
-            )
+            ) &&
+            !isProtecting(node)
         ) {
             const selection = this.shared.getEditableSelection({ deep: true });
             // Merge identical elements together.

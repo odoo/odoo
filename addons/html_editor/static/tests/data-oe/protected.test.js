@@ -1,10 +1,10 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { setSelection, setContent } from "../_helpers/selection";
+import { setSelection, setContent, getContent } from "../_helpers/selection";
 import { insertText } from "../_helpers/user_actions";
 import { waitFor, waitForNone } from "@odoo/hoot-dom";
+import { parseHTML } from "@html_editor/utils/html";
 
 test("should ignore protected elements children mutations (true)", async () => {
     await testEditor({
@@ -74,6 +74,20 @@ test("should not normalize protected elements children (true)", async () => {
                 </div>
                 `),
     });
+});
+
+test("should not remove/merge empty (identical) protecting nodes", async () => {
+    const { el, editor } = await setupEditor(`<p><span data-oe-protected="true"></span>[]</p>`);
+    editor.shared.domInsert(parseHTML(editor.document, `<span data-oe-protected="true"></span>`));
+    editor.dispatch("ADD_STEP");
+    expect(getContent(el)).toBe(
+        unformat(
+            `<p>
+                <span data-oe-protected="true"></span>
+                <span data-oe-protected="true"></span>[]
+            </p>`
+        )
+    );
 });
 
 test("should normalize unprotected elements children (false)", async () => {
@@ -195,7 +209,6 @@ test("should protect disconnected nodes", async () => {
     protectedP.remove();
     div.remove();
     editor.dispatch("ADD_STEP");
-    await animationFrame();
     const lastStep = editor.shared.getHistorySteps().at(-1);
     expect(lastStep.mutations.length).toBe(1);
     expect(lastStep.mutations[0].type).toBe("remove");
@@ -212,7 +225,6 @@ test("should not crash when changing attributes and removing a protecting anchor
     div.dataset.attr = "other";
     div.remove();
     editor.dispatch("ADD_STEP");
-    await animationFrame();
     const lastStep = editor.shared.getHistorySteps().at(-1);
     expect(lastStep.mutations.length).toBe(2);
     expect(lastStep.mutations[0].type).toBe("attributes");
