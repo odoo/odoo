@@ -158,6 +158,7 @@ class StockPicking(models.Model):
         context = dict(
             self.env.context,
             current_package_carrier_type=self.carrier_id.delivery_type,
+            default_delivery_package_type_id=self.carrier_id._get_default_package_type_id(),
             default_picking_id=self.id,
             batch_pack=batch_pack,
         )

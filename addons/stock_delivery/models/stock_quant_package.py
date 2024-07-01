@@ -51,3 +51,11 @@ class StockQuantPackage(models.Model):
     weight_is_kg = fields.Boolean("Technical field indicating whether weight uom is kg or not (i.e. lb)", compute="_compute_weight_is_kg")
     weight_uom_rounding = fields.Float("Technical field indicating weight's number of decimal places", compute="_compute_weight_is_kg")
     shipping_weight = fields.Float(string='Shipping Weight', help="Total weight of the package.")
+    
+    def create(self, vals):
+        picking_id = self.env.context.get('active_picking_id', False)
+        if picking_id:
+            picking = self.env['stock.picking'].browse(picking_id)
+            vals['package_type_id'] = picking.carrier_id._get_default_package_type_id()
+        return super().create(vals)
+    

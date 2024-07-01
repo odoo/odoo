@@ -99,6 +99,14 @@ class DeliveryCarrier(models.Model):
     # get default packages/commodities #
     # -------------------------------- #
 
+    def _get_default_package_type_id(self):
+        """ Provide the default_package_type_id of the current carrier. """
+        self.ensure_one()
+        if hasattr(self, '%s_default_package_type_id' % self.delivery_type):
+            return getattr(self, '%s_default_package_type_id' % self.delivery_type).id
+        else:
+            return False
+
     def _get_packages_from_order(self, order, default_package_type):
         packages = []
 
