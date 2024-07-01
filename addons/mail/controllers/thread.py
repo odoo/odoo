@@ -115,10 +115,14 @@ class ThreadController(http.Controller):
         post_data["partner_ids"] = list(set((post_data.get("partner_ids", [])) + new_partners))
         if "everyone" in special_mentions:
             post_data["partner_ids"] = [channel_member.partner_id.id for channel_member in thread.channel_member_ids if channel_member.partner_id]
-        message_data = thread.message_post(
-            **{key: value for key, value in post_data.items() if key in self._get_allowed_message_post_params()}
-        )._message_format(for_current_user=True)[0]
-        return message_data
+        message = thread.message_post(
+            **{
+                key: value
+                for key, value in post_data.items()
+                if key in self._get_allowed_message_post_params()
+            }
+        )
+        return Store("Message", message._message_format(for_current_user=True)).get_result()
 
     @http.route("/mail/message/update_content", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
