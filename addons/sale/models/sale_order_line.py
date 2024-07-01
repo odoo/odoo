@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from __future__ import annotations
 import re
 from collections import defaultdict
 from datetime import timedelta
@@ -19,6 +20,7 @@ from odoo.addons import (
 
 
 class SaleOrderLine(models.Model, analytic.models.AnalyticMixin):
+    """ Sales Order Line (model name: 'sale.order.line')"""
     _description = "Sales Order Line"
     _name = 'sale.order.line'
     _rec_names_search = ['name', 'order_id.name']
@@ -39,13 +41,13 @@ class SaleOrderLine(models.Model, analytic.models.AnalyticMixin):
     # This reduces execution stacks depth when precomputing fields
     # on record creation (and is also a good ordering logic imho)
 
-    order_id: 'sale.SaleOrder' = fields.Many2one(
+    order_id: sale.SaleOrder = fields.Many2one(
         string="Order Reference",
         required=True, ondelete='cascade', index=True, copy=False)
     sequence = fields.Integer(string="Sequence", default=10)
 
     # Order-related fields
-    company_id = fields.Many2one(
+    company_id: sale.Company = fields.Many2one(
         related='order_id.company_id',
         store=True, index=True, precompute=True)
     currency_id = fields.Many2one(
@@ -136,14 +138,14 @@ class SaleOrderLine(models.Model, analytic.models.AnalyticMixin):
         compute='_compute_product_uom',
         store=True, readonly=False, precompute=True, ondelete='restrict',
         domain="[('category_id', '=', product_uom_category_id)]")
-    linked_line_id: 'sale.SaleOrderLine' = fields.Many2one(
+    linked_line_id: sale.SaleOrderLine = fields.Many2one(
         string="Linked Order Line",
         ondelete='cascade',
         domain="[('order_id', '=', order_id)]",
         copy=False,
         index=True,
     )
-    linked_line_ids: 'sale.SaleOrderLine' = fields.One2many(
+    linked_line_ids: sale.SaleOrderLine = fields.One2many(
         string="Linked Order Lines",
         inverse_name='linked_line_id',
     )

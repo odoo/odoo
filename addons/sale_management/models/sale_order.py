@@ -12,6 +12,7 @@ from odoo.addons import sale, sale_management
 class SaleOrder(sale.SaleOrder):
 
     order_line: 'sale_management.SaleOrderLine'
+    company_id: 'sale_management.ResCompany'
 
     sale_order_template_id: 'sale_management.SaleOrderTemplate' = fields.Many2one(
         string="Quotation Template",
