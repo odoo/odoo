@@ -51,7 +51,7 @@ class ProductTemplate(models.Model):
         neg = ''
         if (operator == '=' and not value) or (operator == '!=' and value):
             neg = 'not '
-        return [('id', neg + 'inselect', bom_tmpl_query.subselect('product_tmpl_id'))]
+        return [('id', neg + 'in', bom_tmpl_query.subselect('product_tmpl_id'))]
 
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()
@@ -158,8 +158,8 @@ class ProductProduct(models.Model):
         if (operator == '=' and not value) or (operator == '!=' and value):
             neg = 'not '
             op = '&'
-        return [op, ('product_tmpl_id', neg + 'inselect', bom_tmpl_query.subselect('product_tmpl_id')),
-                ('id', neg + 'inselect', bom_product_query.subselect('product_id'))]
+        return [op, ('product_tmpl_id', neg + 'in', bom_tmpl_query.subselect('product_tmpl_id')),
+                ('id', neg + 'in', bom_product_query.subselect('product_id'))]
 
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()

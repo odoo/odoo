@@ -143,7 +143,7 @@ class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
 
         self.env['ir.config_parameter'].sudo().set_param('website.visitor.live.days', 7)
 
-        # ensure we keep a single query by correct usage of "not inselect"
+        # ensure we keep a single query by correct usage of "not in"
         # (+1 query to fetch the 'ir.config_parameter')
         with self.assertQueryCount(2):
             WebsiteVisitor.search(WebsiteVisitor._inactive_visitors_domain())
