@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class AccrualPlan(models.Model):
@@ -68,3 +69,15 @@ class AccrualPlan(models.Model):
         default = dict(default or {},
                        name=_("%s (copy)", self.name))
         return super().copy(default=default)
+
+    @api.ondelete(at_uninstall=False)
+    def _prevent_used_plan_unlink(self):
+        domain = [
+            ('allocation_type', '=', 'accrual'),
+            ('accrual_plan_id', 'in', self.ids),
+            ('state', 'not in', ('cancel', 'refuse')),
+        ]
+        if self.env['hr.leave.allocation'].search_count(domain):
+            raise ValidationError(_(
+                "Some of the accrual plans you're trying to delete are linked to an existing allocation. Delete or cancel them first."
+            ))
