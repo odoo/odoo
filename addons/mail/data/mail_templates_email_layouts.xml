@@ -8,6 +8,7 @@
 </head>
 <body style="font-family:Verdana, Arial,sans-serif; color: #454748;">
 <t t-set="subtype_internal" t-value="subtype and subtype.internal"/>
+<t t-set="subtype_default" t-value="subtype and subtype.default"/>
 <!-- HEADER -->
 <t t-call="mail.notification_preview"/>
 <div style="max-width: 900px; width: 100%;">
@@ -52,42 +53,63 @@
                                         &amp;nbsp;&amp;nbsp;
                                     </t>
                                 </td>
-                                <td t-if="subtitles" style="font-size: 12px;">
-                                     <t t-foreach="subtitles" t-as="subtitle">
-                                        <span t-attf-style="{{ 'font-weight:bold;' if subtitle_first else '' }}"
-                                              t-out="subtitle"/>
-                                        <br t-if="not subtitle_last"/>
-                                    </t>
+                                <td t-if="subtitles" style="font-size:12px;display:flex;">
+                                    🔑<div style="margin-end:2px;">
+                                        <t t-foreach="subtitles" t-as="subtitle">
+                                            <span t-if="subtitle_first" style="font-weight:bold;">
+                                                <t t-out="subtitle"/>
+                                            </span>
+                                            <span t-else="" t-out="subtitle"/>
+                                            <br t-if="not subtitle_last"/>
+                                        </t>
+                                    </div>
                                 </td>
-                                <td t-else=""><span style="font-weight:bold;" t-out="record_name"/><br/></td>
+                                <td t-else="">🔑 <span style="font-weight:bold;" t-out="record_name"/><br/></td>
 
                             </tr>
                         </tbody>
                     </table>
                 </td>
             </tr>
-            <tr>
-                <td valign="center">
-                    <hr width="100%"
-                        style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin: 10px 0px;"/>
-                    <p t-if="subtype_internal" style="background-color: #f2dede; padding: 5px; margin-bottom: 16px; font-size: 13px;">
-                        <strong>Internal communication</strong>: Replying will post an internal note. Followers won't receive any email notification.
-                    </p>
-                </td>
-            </tr>
         </tbody>
     </table>
 </div>
+<hr width="100%"
+    style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin: 10px 0px;"/>
 <!-- CONTENT -->
-<div t-out="message.body" style="font-size: 13px;"/>
+<div t-out="message.body" style="font-size:13px;display:flex;align-items:flex-start;"/>
+<t class="o_signature">
+    <div t-if="email_add_signature and not is_html_empty(signature)" t-out="signature" style="font-size: 13px;"/>
+</t>
+<div style="font-size:13px;border:1px solid black;border-radius:5px;padding:5px;width:fit-content">
+    <span>
+        🔑 <t t-out="record_name"/> (<t t-out="model_description"/>)
+        <br/>
+        <t t-if="len(record) > 0">
+            📅 Created on <span t-out="record.create_date" t-options="{'widget': 'date'}"/>,
+             by <t t-out="record.create_uid.display_name"/>
+        </t>
+    </span>
+</div>
 <ul t-if="tracking_values">
     <t t-foreach="tracking_values" t-as="tracking">
         <li><t t-out="tracking[0]"/>: <t t-out="tracking[1]"/> &#8594; <t t-out="tracking[2]"/></li>
     </t>
 </ul>
-<t class="o_signature">
-    <div t-if="email_add_signature and not is_html_empty(signature)" t-out="signature" style="font-size: 13px;"/>
-</t>
+<div valign="center">
+    <p t-if="subtype_internal" style="font-size: 13px;">
+       Replying will post an internal note. Followers won't receive any email notification.
+    </p>
+    <p t-if="subtype_default" style="font-size: 13px;">
+       Reply to this email to join the conversation
+    </p>
+</div>
+<!-- UNSUBSCRIBE -->
+<div style="font-size: 13px;">
+    <span id="mail_unfollow">
+       Not interested by this? <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
+    </span>
+</div>
 <!-- FOOTER -->
 <div style="margin-top:32px;">
     <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
@@ -103,9 +125,6 @@
 <div style="color: #555555; font-size:11px;">
     Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email"
                   t-att-style="'color: ' + (company.email_secondary_color or '#875A7B') + ';'">Odoo</a>
-    <span id="mail_unfollow">
-        | <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
-    </span>
 </div>
 </div>
 </body></html>
