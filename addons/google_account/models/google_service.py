@@ -24,6 +24,37 @@ class GoogleService(models.AbstractModel):
     _name = 'google.service'
     _description = 'Google Service'
 
+    def has_setup_credentials(self):
+        """ Checks if both Client ID and Client Secret are defined in the database. """
+        sudo_get_param = self.env['ir.config_parameter'].sudo().get_param
+        client_id = sudo_get_param('google_calendar_client_id')
+        client_secret = sudo_get_param('google_calendar_client_secret')
+        return client_id and client_secret and client_id != '' and client_secret != ''
+
+    def has_external_credentials_provider(self):
+        """ Overridable method that indicates if external credentials are being used for the synchronization. """
+        return False
+
+    def _get_google_base_url(self):
+        return self._context.get('base_url') or self.env.user.get_base_url()
+
+    def _get_google_redirect_uri(self):
+        return self.env['ir.config_parameter'].sudo().get_param(
+            'google_redirect_uri'
+        )
+
+    def _get_google_client_id(self, service):
+        return self.env['ir.config_parameter'].sudo().get_param(
+            'google_%s_client_id' % (service),
+            default=False
+        )
+
+    def _get_google_client_secret(self, service):
+        return self.env['ir.config_parameter'].sudo().get_param(
+            'google_%s_client_secret' % (service),
+            default=False
+        )
+
     @api.model
     def generate_refresh_token(self, service, authorization_code):
         """ Call Google API to refresh the token, with the given authorization code
@@ -31,10 +62,9 @@ class GoogleService(models.AbstractModel):
             :param authorization_code : the code to exchange against the new refresh token
             :returns the new refresh token
         """
-        Parameters = self.env['ir.config_parameter'].sudo()
-        client_id = Parameters.get_param('google_%s_client_id' % service)
-        client_secret = Parameters.get_param('google_%s_client_secret' % service)
-        redirect_uri = Parameters.get_param('google_redirect_uri')
+        client_id = self._get_google_client_id(service)
+        client_secret = self._get_google_client_secret(service)
+        redirect_uri = self._get_google_redirect_uri()
 
         # Get the Refresh Token From Google And store it in ir.config_parameter
         headers = {"Content-type": "application/x-www-form-urlencoded"}
@@ -57,11 +87,10 @@ class GoogleService(models.AbstractModel):
 
     @api.model
     def _get_google_token_uri(self, service, scope):
-        get_param = self.env['ir.config_parameter'].sudo().get_param
         encoded_params = urls.url_encode({
             'scope': scope,
-            'redirect_uri': get_param('google_redirect_uri'),
-            'client_id': get_param('google_%s_client_id' % service),
+            'redirect_uri': self._get_google_redirect_uri(),
+            'client_id': self._get_google_client_id(service),
             'response_type': 'code',
         })
         return '%s?%s' % (GOOGLE_AUTH_ENDPOINT, encoded_params)
@@ -77,9 +106,8 @@ class GoogleService(models.AbstractModel):
             'f': from_url
         }
 
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        base_url = self._context.get('base_url') or self.env.user.get_base_url()
-        client_id = get_param('google_%s_client_id' % (service,), default=False)
+        base_url = self._get_google_base_url()
+        client_id = self._get_google_client_id(service)
 
         encoded_params = urls.url_encode({
             'response_type': 'code',
@@ -90,6 +118,7 @@ class GoogleService(models.AbstractModel):
             'approval_prompt': 'force',
             'access_type': 'offline'
         })
+        print('authorize uri', base_url + '/google_account/authentication')
         return "%s?%s" % (GOOGLE_AUTH_ENDPOINT, encoded_params)
 
     @api.model
@@ -97,10 +126,9 @@ class GoogleService(models.AbstractModel):
         """ Call Google API to exchange authorization code against token, with POST request, to
             not be redirected.
         """
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        base_url = self._context.get('base_url') or self.env.user.get_base_url()
-        client_id = get_param('google_%s_client_id' % (service,), default=False)
-        client_secret = get_param('google_%s_client_secret' % (service,), default=False)
+        base_url = self._get_google_base_url()
+        client_id = self._get_google_client_id(service)
+        client_secret = self._get_google_client_secret(service)
 
         headers = {"content-type": "application/x-www-form-urlencoded"}
         data = {
@@ -123,9 +151,8 @@ class GoogleService(models.AbstractModel):
     @api.model
     def _get_access_token(self, refresh_token, service, scope):
         """Fetch the access token thanks to the refresh token."""
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        client_id = get_param('google_%s_client_id' % service, default=False)
-        client_secret = get_param('google_%s_client_secret' % service, default=False)
+        client_id = self._get_google_client_id(service)
+        client_secret = self._get_google_client_secret(service)
 
         if not client_id or not client_secret:
             raise UserError(_('Google %s is not yet configured.', service.title()))

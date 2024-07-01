@@ -22,9 +22,10 @@ class GoogleCalendarController(http.Controller):
             GoogleCal = GoogleCalendarService(request.env['google.service'].with_context(base_url=base_url))
 
             # Checking that admin have already configured Google API for google synchronization !
-            client_id = request.env['ir.config_parameter'].sudo().get_param('google_calendar_client_id')
+            has_setup_credentials = request.env['google.service'].has_setup_credentials()
+            has_external_credentials_provider = not has_setup_credentials and request.env['google.service'].has_external_credentials_provider()
 
-            if not client_id or client_id == '':
+            if not has_setup_credentials and not has_external_credentials_provider:
                 action_id = ''
                 if GoogleCal._can_authorize_google(request.env.user):
                     action_id = request.env.ref('base_setup.action_general_configuration').id

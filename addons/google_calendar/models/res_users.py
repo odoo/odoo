@@ -100,8 +100,12 @@ class User(models.Model):
 
     def restart_google_synchronization(self):
         self.ensure_one()
-        if not self.google_cal_account_id:
-            self.google_cal_account_id = self.env['google.calendar.credentials'].sudo().create([{'user_ids': [Command.set(self.ids)]}])
+        self._create_google_credentials()
         self.google_synchronization_stopped = False
         self.env['calendar.recurrence']._restart_google_sync()
         self.env['calendar.event']._restart_google_sync()
+
+    def _create_google_credentials(self):
+        """ Create Google Calendar Credentials object when it is not defined. """
+        if not self.google_cal_account_id:
+            self.google_cal_account_id = self.env['google.calendar.credentials'].sudo().create([{'user_ids': [Command.set(self.ids)]}])
