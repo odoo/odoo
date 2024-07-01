@@ -19,8 +19,6 @@ from odoo.osv import expression
 from odoo.tools import (
     create_index,
     date_utils,
-    email_re,
-    email_split,
     float_compare,
     float_is_zero,
     float_repr,
@@ -31,10 +29,11 @@ from odoo.tools import (
     get_lang,
     groupby,
     index_exists,
-    is_html_empty,
     OrderedSet,
     SQL,
 )
+from odoo.tools.mail import email_re, email_split, is_html_empty
+
 
 _logger = logging.getLogger(__name__)
 

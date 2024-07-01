@@ -7,7 +7,6 @@ import logging
 import random
 import re
 import socket
-import threading
 import time
 from email.utils import getaddresses
 from urllib.parse import urlparse
@@ -19,9 +18,25 @@ from lxml import etree, html
 from lxml.html import clean, defs
 from werkzeug import urls
 
-import odoo
 from odoo.loglevels import ustr
 from odoo.tools import misc
+
+__all__ = [
+    "email_domain_extract",
+    "email_domain_normalize",
+    "email_normalize",
+    "email_normalize_all",
+    "email_split",
+    "encapsulate_email",
+    "formataddr",
+    "html2plaintext",
+    "html_normalize",
+    "html_sanitize",
+    "is_html_empty",
+    "parse_contact_from_email",
+    "plaintext2html",
+    "single_email_re",
+]
 
 _logger = logging.getLogger(__name__)
 

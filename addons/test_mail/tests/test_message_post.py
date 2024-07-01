@@ -55,7 +55,7 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
             'body': '<p>Notify Body <span>Woop Woop</span></p>',
             'email_from': cls.partner_employee.email_formatted,
             'is_internal': False,
-            'message_id': tools.generate_tracking_message_id('dummy-generate'),
+            'message_id': tools.mail.generate_tracking_message_id('dummy-generate'),
             'message_type': 'comment',
             'model': cls.test_record._name,
             'record_name': False,

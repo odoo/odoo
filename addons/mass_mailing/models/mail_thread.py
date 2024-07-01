@@ -22,7 +22,7 @@ class MailThread(models.AbstractModel):
             # even if 'reply_to' in ref (cfr mail/mail_thread) that indicates a new thread redirection
             # (aka bypass alias configuration in gateway) consider it as a reply for statistics purpose
             thread_references = message_dict['references'] or message_dict['in_reply_to']
-            msg_references = tools.mail_header_msgid_re.findall(thread_references)
+            msg_references = tools.mail.mail_header_msgid_re.findall(thread_references)
             if msg_references:
                 self.env['mailing.trace'].set_opened(domain=[('message_id', 'in', msg_references)])
                 self.env['mailing.trace'].set_replied(domain=[('message_id', 'in', msg_references)])
@@ -84,7 +84,7 @@ class MailThread(models.AbstractModel):
 
         if isinstance(self, self.pool['utm.mixin']):
             thread_references = msg_dict.get('references', '') or msg_dict.get('in_reply_to', '')
-            msg_references = tools.mail_header_msgid_re.findall(thread_references)
+            msg_references = tools.mail.mail_header_msgid_re.findall(thread_references)
             if msg_references:
                 traces = self.env['mailing.trace'].search([('message_id', 'in', msg_references)], limit=1)
                 if traces:
