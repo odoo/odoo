@@ -1,5 +1,8 @@
-import { describe, test } from "@odoo/hoot";
-import { testEditor } from "./_helpers/editor";
+import { describe, expect, test } from "@odoo/hoot";
+import { press, queryAllTexts } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+import { setupEditor, testEditor } from "./_helpers/editor";
+import { getContent } from "./_helpers/selection";
 import { insertText, redo, undo } from "./_helpers/user_actions";
 
 function columnsContainer(contents) {
@@ -95,6 +98,26 @@ describe("2 columns", () => {
             ),
         });
     });
+
+    test("apply '2 columns' powerbox command", async () => {
+        const { el, editor } = await setupEditor("<p>ab[]cd</p>");
+        insertText(editor, "/2columns");
+        await animationFrame();
+        expect(".active .o-we-command-name").toHaveText("2 columns");
+
+        press("enter");
+        expect(getContent(el)).toBe(
+            `<div class="container o_text_columns"><div class="row"><div class="col-6"><p>ab[]cd</p></div><div class="col-6"><p placeholder="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
+        );
+
+        insertText(editor, "/columns");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toEqual([
+            "3 columns",
+            "4 columns",
+            "Remove columns",
+        ]);
+    });
 });
 describe("3 columns", () => {
     test("should do nothing", async () => {
@@ -168,6 +191,26 @@ describe("3 columns", () => {
             ),
         });
     });
+
+    test("apply '3 columns' powerbox command", async () => {
+        const { el, editor } = await setupEditor("<p>ab[]cd</p>");
+        insertText(editor, "/3columns");
+        await animationFrame();
+        expect(".active .o-we-command-name").toHaveText("3 columns");
+
+        press("enter");
+        expect(getContent(el)).toBe(
+            `<div class="container o_text_columns"><div class="row"><div class="col-4"><p>ab[]cd</p></div><div class="col-4"><p placeholder="Empty column" class="o-we-hint"><br></p></div><div class="col-4"><p placeholder="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
+        );
+
+        insertText(editor, "/columns");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toEqual([
+            "2 columns",
+            "4 columns",
+            "Remove columns",
+        ]);
+    });
 });
 
 describe("4 columns", () => {
@@ -234,6 +277,26 @@ describe("4 columns", () => {
             ),
         });
     });
+
+    test("apply '4 columns' powerbox command", async () => {
+        const { el, editor } = await setupEditor("<p>ab[]cd</p>");
+        insertText(editor, "/4columns");
+        await animationFrame();
+        expect(".active .o-we-command-name").toHaveText("4 columns");
+
+        press("enter");
+        expect(getContent(el)).toBe(
+            `<div class="container o_text_columns"><div class="row"><div class="col-3"><p>ab[]cd</p></div><div class="col-3"><p placeholder="Empty column" class="o-we-hint"><br></p></div><div class="col-3"><p placeholder="Empty column" class="o-we-hint"><br></p></div><div class="col-3"><p placeholder="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
+        );
+
+        insertText(editor, "/columns");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toEqual([
+            "2 columns",
+            "3 columns",
+            "Remove columns",
+        ]);
+    });
 });
 
 describe("remove columns", () => {
@@ -278,6 +341,29 @@ describe("remove columns", () => {
             stepFunction: columnize(0),
             contentAfter: "<p>abcd</p><h1>ef</h1><ul><li>gh</li></ul><p>ij</p><p>[]<br></p>",
         });
+    });
+
+    test("apply 'remove columns' powerbox command", async () => {
+        const { el, editor } = await setupEditor("<p>ab[]cd</p>");
+        insertText(editor, "/columns");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toEqual([
+            "2 columns",
+            "3 columns",
+            "4 columns",
+        ]);
+
+        // add 2 columns
+        press("enter");
+        expect(getContent(el)).toBe(
+            `<div class="container o_text_columns"><div class="row"><div class="col-6"><p>ab[]cd</p></div><div class="col-6"><p placeholder="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
+        );
+
+        insertText(editor, "/removecolumns");
+        await animationFrame();
+        expect(".active .o-we-command-name").toHaveText("Remove columns");
+        press("enter");
+        expect(getContent(el)).toBe(`<p>ab[]cd</p><p><br></p><p><br></p>`);
     });
 });
 

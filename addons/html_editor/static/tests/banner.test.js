@@ -20,6 +20,16 @@ test("should insert a banner with focus inside followed by a paragraph", async (
                 </div>
             </div><p></p>`
     );
+
+    insertText(editor, "/");
+    await animationFrame();
+    expect(".o-we-powerbox").toHaveCount(1);
+
+    insertText(editor, "banner");
+    await animationFrame();
+    expect(".o-we-powerbox").toHaveCount(0, {
+        message: "shouldn't be possible to add a banner inside a banner",
+    });
 });
 
 test.todo(
