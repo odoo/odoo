@@ -6,7 +6,9 @@ from collections import defaultdict
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, RedirectWarning
+from odoo.tools import SQL
 from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING
+
 
 PROJECT_TASK_READABLE_FIELDS = {
     'allow_timesheets',
@@ -116,14 +118,14 @@ class Task(models.Model):
     def _search_remaining_hours_percentage(self, operator, value):
         if operator not in OPERATOR_MAPPING:
             raise NotImplementedError(_('This operator %s is not supported in this search method.', operator))
-        query = f"""
+        sql = SQL("""(
             SELECT id
-              FROM {self._table}
+              FROM %s
              WHERE remaining_hours > 0
                AND allocated_hours > 0
-               AND remaining_hours / allocated_hours {operator} %s
-            """
-        return [('id', 'inselect', (query, (value,)))]
+               AND remaining_hours / allocated_hours %s %s
+        )""", SQL.identifier(self._table), SQL(operator), value)
+        return [('id', 'in', sql)]
 
     @api.depends('effective_hours', 'subtask_effective_hours', 'allocated_hours')
     def _compute_remaining_hours(self):

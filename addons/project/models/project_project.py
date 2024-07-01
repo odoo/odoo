@@ -312,19 +312,19 @@ class Project(models.Model):
         if operator not in ['=', '!=']:
             raise ValueError(_('Invalid operator: %s', operator))
 
-        query = """
+        sql = SQL("""(
             SELECT P.id
               FROM project_project P
          LEFT JOIN project_milestone M ON P.id = M.project_id
              WHERE M.is_reached IS false
                AND P.allow_milestones IS true
                AND M.deadline <= CAST(now() AS date)
-        """
+        )""")
         if (operator == '=' and value is True) or (operator == '!=' and value is False):
-            operator_new = 'inselect'
+            operator_new = 'in'
         else:
-            operator_new = 'not inselect'
-        return [('id', operator_new, (query, ()))]
+            operator_new = 'not in'
+        return [('id', operator_new, sql)]
 
     @api.depends('collaborator_ids', 'privacy_visibility')
     def _compute_collaborator_count(self):

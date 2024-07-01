@@ -3,6 +3,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
+from odoo.tools import SQL
 
 
 class ProjectTask(models.Model):
@@ -161,16 +162,16 @@ class ProjectTask(models.Model):
 
     @api.model
     def _search_task_to_invoice(self, operator, value):
-        query = """
+        sql = SQL("""(
             SELECT so.id
             FROM sale_order so
             WHERE so.invoice_status != 'invoiced'
                 AND so.invoice_status != 'no'
-        """
-        operator_new = 'inselect'
+        )""")
+        operator_new = 'in'
         if (bool(operator == '=') ^ bool(value)):
-            operator_new = 'not inselect'
-        return [('sale_order_id', operator_new, (query, ()))]
+            operator_new = 'not in'
+        return [('sale_order_id', operator_new, sql)]
 
     @api.onchange('sale_line_id')
     def _onchange_partner_id(self):
