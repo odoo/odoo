@@ -308,38 +308,6 @@ export class DiscussChannel extends models.ServerModel {
         }
     }
 
-    /** @param {number[]} ids */
-    channel_fetch_preview(ids) {
-        const kwargs = getKwArgs(arguments, "ids");
-        ids = kwargs.ids;
-        delete kwargs.ids;
-
-        /** @type {import("mock_models").MailMessage} */
-        const MailMessage = this.env["mail.message"];
-
-        const channels = this._filter([["id", "in", ids]]);
-        return channels
-            .map((channel) => {
-                const channelMessages = MailMessage._filter([
-                    ["model", "=", "discuss.channel"],
-                    ["res_id", "=", channel.id],
-                ]);
-                const lastMessage = channelMessages.reduce((lastMessage, message) => {
-                    if (message.id > lastMessage.id) {
-                        return message;
-                    }
-                    return lastMessage;
-                }, channelMessages[0]);
-                return {
-                    id: channel.id,
-                    last_message: lastMessage
-                        ? MailMessage._message_format([lastMessage.id], true)[0]
-                        : false,
-                };
-            })
-            .filter((preview) => preview.last_message);
-    }
-
     /**
      * @param {number[]} partners_to
      * @param {boolean} [pin=true]
