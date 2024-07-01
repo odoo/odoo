@@ -5,6 +5,7 @@ from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
 
 from odoo.tests import tagged
+from odoo.exceptions import ValidationError
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -30,6 +31,26 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                        SET create_date = '%s'
                        WHERE id = %s
                        """ % (date, allocation_id))
+
+    def test_accrual_unlink(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+        })
+
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            'name': 'Accrual allocation for employee',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'number_of_days': 0,
+            'allocation_type': 'accrual',
+        })
+
+        with self.assertRaises(ValidationError):
+            accrual_plan.unlink()
+
+        allocation.unlink()
+        accrual_plan.unlink()
 
     def test_frequency_daily(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
