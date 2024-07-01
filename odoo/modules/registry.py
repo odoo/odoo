@@ -26,11 +26,12 @@ from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
 from odoo.tools import (
     config, existing_tables, lazy_classproperty,
-    lazy_property, sql, Collector, OrderedSet, SQL,
-    format_frame, remove_accents,
+    lazy_property, sql, OrderedSet, SQL,
+    remove_accents,
 )
 from odoo.tools.func import locked
 from odoo.tools.lru import LRU
+from odoo.tools.misc import Collector, format_frame
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger('odoo.schema')

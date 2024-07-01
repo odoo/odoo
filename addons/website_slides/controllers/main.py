@@ -1124,8 +1124,8 @@ class WebsiteSlides(WebsiteProfile):
         # hence calling format_decimalized_number
         return {
             'user_vote': slide.user_vote,
-            'likes': tools.format_decimalized_number(slide.likes),
-            'dislikes': tools.format_decimalized_number(slide.dislikes),
+            'likes': tools.misc.format_decimalized_number(slide.likes),
+            'dislikes': tools.misc.format_decimalized_number(slide.dislikes),
         }
 
     @http.route('/slides/slide/archive', type='json', auth='user', website=True)

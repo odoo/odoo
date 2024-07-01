@@ -58,8 +58,9 @@ from odoo.fields import Command
 from odoo.modules.registry import Registry
 from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
-from odoo.tools import float_compare, single_email_re, profiler, lower_logging, SQL, DotDict
-from odoo.tools.misc import find_in_path, mute_logger
+from odoo.tools import float_compare, mute_logger, profiler, SQL, DotDict
+from odoo.tools.mail import single_email_re
+from odoo.tools.misc import find_in_path, lower_logging
 from odoo.tools.xml_utils import _validate_xml
 
 from . import case

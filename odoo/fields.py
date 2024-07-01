@@ -31,10 +31,10 @@ from .netsvc import ColoredFormatter, GREEN, RED, DEFAULT, COLOR_PATTERN
 from .tools import (
     float_repr, float_round, float_compare, float_is_zero, human_size,
     pg_varchar, ustr, OrderedSet, pycompat, sql, SQL, date_utils, unique,
-    image_process, merge_sequences, SQL_ORDER_BY_TYPE, is_list_of, has_list_types,
+    image_process, merge_sequences, SQL_ORDER_BY_TYPE, is_list_of,
     html_normalize, html_sanitize,
 )
-from .tools.misc import unquote
+from .tools.misc import unquote, has_list_types
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _

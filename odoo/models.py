@@ -55,13 +55,14 @@ from . import api
 from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .tools import (
-    clean_context, config, CountingStream, date_utils, discardattr,
+    clean_context, config, date_utils, discardattr,
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, format_list,
-    frozendict, get_lang, LastOrderedSet, lazy_classproperty, OrderedSet,
-    ormcache, partition, populate, Query, ReversedIterable, split_every, unique,
+    frozendict, get_lang, lazy_classproperty, OrderedSet,
+    ormcache, partition, populate, Query, split_every, unique,
     SQL, pycompat,
 )
 from .tools.lru import LRU
+from .tools.misc import CountingStream, LastOrderedSet, ReversedIterable
 from .tools.translate import _, _lt
 
 _logger = logging.getLogger(__name__)

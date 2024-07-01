@@ -27,7 +27,7 @@ import odoo.sql_db
 import odoo.tools
 from odoo.sql_db import db_connect
 from odoo.release import version_info
-from odoo.tools import find_pg_tool, exec_pg_environ
+from odoo.tools.misc import find_pg_tool, exec_pg_environ
 
 _logger = logging.getLogger(__name__)
 
@@ -454,7 +454,7 @@ def exp_list(document=False):
     return list_dbs()
 
 def exp_list_lang():
-    return odoo.tools.scan_languages()
+    return odoo.tools.misc.scan_languages()
 
 def exp_list_countries():
     list_countries = []

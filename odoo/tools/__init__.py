@@ -15,7 +15,9 @@ from . import constants
 from . import pdf
 from . import pycompat
 from . import win32
+from .parse_version import parse_version
 from .barcode import *
+from .cache import ormcache, ormcache_context
 from .config import config
 from .date_utils import *
 from .float_utils import *
