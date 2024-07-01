@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="sale_pdf_quote_builder.SalePdfHeaderFooterKanbanRenderer" t-inherit-mode="primary" t-inherit="web.KanbanRenderer">
+    <t t-name="sale_pdf_quote_builder.QuotationDocumentKanbanRenderer" t-inherit-mode="primary" t-inherit="web.KanbanRenderer">
         <!-- Before the first t-foreach -->
         <xpath expr="//t[@t-key='groupOrRecord.key']" position="before">
             <FileUploadProgressContainer fileUploads="fileUploadService.uploads" Component="constructor.components.FileUploadProgressKanbanRecord"/>

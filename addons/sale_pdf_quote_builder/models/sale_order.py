@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
     is_pdf_quote_builder_active = fields.Boolean(string="Use PDF Quote Builder")
     sale_header_ids = fields.Many2many(
         string="Headers",
-        comodel_name='sale.pdf.header.footer',
+        comodel_name='quotation.document',
         relation='sale_header_sale_order_rel',
         domain=[('document_type', '=', 'header')],
         compute='_compute_sale_header_and_sale_footer_ids',
@@ -22,7 +22,7 @@ class SaleOrder(models.Model):
     )
     sale_footer_ids = fields.Many2many(
         string="Footers",
-        comodel_name='sale.pdf.header.footer',
+        comodel_name='quotation.document',
         relation='sale_footer_sale_order_rel',
         domain=[('document_type', '=', 'footer')],
         compute='_compute_sale_header_and_sale_footer_ids',
@@ -44,24 +44,24 @@ class SaleOrder(models.Model):
     def _compute_sale_header_and_sale_footer_ids(self):
         for order in self:
             if not order.is_pdf_quote_builder_active:
-                order.sale_header_ids = order.sale_footer_ids = self.env['sale.pdf.header.footer']
+                order.sale_header_ids = order.sale_footer_ids = self.env['quotation.document']
             elif order.sale_order_template_id:
                 order.sale_header_ids = order.sale_order_template_id.sale_header_ids
                 order.sale_footer_ids = order.sale_order_template_id.sale_footer_ids
             else:
-                sale_headers_footers = self.env['sale.pdf.header.footer'].search(
+                quotation_documents = self.env['quotation.document'].search(
                     [('quotation_template_ids', "=", False)]
                 )
-                headers = sale_headers_footers.filtered(lambda doc: doc.document_type == 'header')
+                headers = quotation_documents.filtered(lambda doc: doc.document_type == 'header')
                 if headers:
                     order.sale_header_ids = [headers[0].id]
                 else:
-                    order.sale_header_ids = self.env['sale.pdf.header.footer']
-                footers = sale_headers_footers - headers
+                    order.sale_header_ids = self.env['quotation.document']
+                footers = quotation_documents - headers
                 if footers:
                     order.sale_footer_ids = [footers[0].id]
                 else:
-                    order.sale_header_ids = self.env['sale.pdf.header.footer']
+                    order.sale_header_ids = self.env['quotation.document']
 
     @api.depends('sale_header_ids', 'sale_footer_ids', 'order_line.product_document_ids')
     def _compute_custom_content_lines(self):
@@ -100,9 +100,9 @@ class SaleOrder(models.Model):
 
     def action_update_included_pdf(self):
         self.ensure_one()
-        all_headers_footers = self.env['sale.pdf.header.footer'].search([])
-        headers_available = all_headers_footers.filtered(lambda doc: doc.document_type == 'header')
-        footers_available = all_headers_footers.filtered(lambda doc: doc.document_type == 'footer')
+        quotation_documents = self.env['quotation.document'].search([])
+        headers_available = quotation_documents.filtered(lambda doc: doc.document_type == 'header')
+        footers_available = quotation_documents.filtered(lambda doc: doc.document_type == 'footer')
         lines_params = []
         for line in self.order_line:
             if line.available_product_document_ids:
@@ -143,9 +143,9 @@ class SaleOrder(models.Model):
         Note: self.ensure_one()
         """
         self.ensure_one()
-        selected_headers = self.env['sale.pdf.header.footer'].browse(selected_pdf['header'])
+        selected_headers = self.env['quotation.document'].browse(selected_pdf['header'])
         self.sale_header_ids = selected_headers.ids
-        selected_footers = self.env['sale.pdf.header.footer'].browse(selected_pdf['footer'])
+        selected_footers = self.env['quotation.document'].browse(selected_pdf['footer'])
         self.sale_footer_ids = selected_footers.ids
         for line in self.order_line:
             selected_lines = self.env['product.document'].browse(

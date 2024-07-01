@@ -1,2 +1,2 @@
 from . import sale_pdf_quote_builder_dynamic_fields_wizard
-from . import sale_pdf_quote_builder_set_custom_content_wizard
+from . import set_custom_content_wizard

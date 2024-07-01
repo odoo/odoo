@@ -5,9 +5,9 @@
         <field name="active" eval="True"/>
     </record>
 
-    <record id="sale_pdf_header_footer_action" model="ir.actions.act_window">
+    <record id="quotation_document_action" model="ir.actions.act_window">
         <field name="name">Headers/Footers</field>
-        <field name="res_model">sale.pdf.header.footer</field>
+        <field name="res_model">quotation.document</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -16,9 +16,9 @@
         </field>
     </record>
 
-    <menuitem id="sale_menu_pdf_header_footer_action"
+    <menuitem id="sale_menu_quotation_document_action"
         name="Headers/Footers"
-        action="sale_pdf_header_footer_action"
+        action="quotation_document_action"
         parent="sale.menu_sales_config"
         sequence="2"/>
 

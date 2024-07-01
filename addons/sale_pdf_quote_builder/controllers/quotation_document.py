@@ -9,10 +9,10 @@ from odoo.http import request, route, Controller
 logger = logging.getLogger(__name__)
 
 
-class SalePdfHeaderFooterController(Controller):
+class QuotationDocumentController(Controller):
 
     @route(
-        '/sale_pdf_quote_builder/header_footer/upload', type='http', methods=['POST'], auth='user'
+        '/sale_pdf_quote_builder/quotation_document/upload', type='http', methods=['POST'], auth='user'
     )
     def upload_document(self):
         files = request.httprequest.files.getlist('ufile')
@@ -20,7 +20,7 @@ class SalePdfHeaderFooterController(Controller):
         for ufile in files:
             try:
                 mimetype = ufile.content_type
-                request.env['sale.pdf.header.footer'].create({
+                request.env['quotation.document'].create({
                     'name': ufile.filename, 'mimetype': mimetype, 'raw': ufile.read()
                 })
             except Exception as e:

@@ -4,7 +4,7 @@ import { CANCEL_GLOBAL_CLICK, KanbanRecord } from "@web/views/kanban/kanban_reco
 import { useService } from "@web/core/utils/hooks";
 import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 
-export class SalePdfHeaderFooterKanbanRecord extends KanbanRecord {
+export class QuotationDocumentKanbanRecord extends KanbanRecord {
     setup() {
         super.setup();
         this.store = useService("mail.store");

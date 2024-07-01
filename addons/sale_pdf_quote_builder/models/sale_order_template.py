@@ -10,14 +10,14 @@ from odoo.addons.sale_pdf_quote_builder import utils
 class SaleOrderTemplate(models.Model):
     _inherit = 'sale.order.template'
 
-    sale_header_footer_ids = fields.Many2many(
+    quotation_document_ids = fields.Many2many(
         string="Headers and footers",
-        comodel_name='sale.pdf.header.footer',
+        comodel_name='quotation.document',
         relation='header_footer_quotation_template_rel',
     )
     sale_header_ids = fields.Many2many(
         string="Headers",
-        comodel_name='sale.pdf.header.footer',
+        comodel_name='quotation.document',
         domain=[('document_type', '=', 'header')],
         compute='_compute_sale_header_and_sale_footer_ids',
         inverse='_inverse_sale_header_and_sale_footer_ids',
@@ -26,7 +26,7 @@ class SaleOrderTemplate(models.Model):
     )
     sale_footer_ids = fields.Many2many(
         string="Footers",
-        comodel_name='sale.pdf.header.footer',
+        comodel_name='quotation.document',
         domain=[('document_type', '=', 'footer')],
         compute='_compute_sale_header_and_sale_footer_ids',
         inverse='_inverse_sale_header_and_sale_footer_ids',
@@ -37,24 +37,24 @@ class SaleOrderTemplate(models.Model):
 
     def _compute_sale_header_and_sale_footer_ids(self):
         for template in self:
-            template.sale_header_ids = template.sale_header_footer_ids.filtered(
+            template.sale_header_ids = template.quotation_document_ids.filtered(
                 lambda doc: doc.document_type == 'header'
             ).ids
-            template.sale_footer_ids = template.sale_header_footer_ids.filtered(
+            template.sale_footer_ids = template.quotation_document_ids.filtered(
                 lambda doc: doc.document_type == 'footer'
             ).ids
 
     def _inverse_sale_header_and_sale_footer_ids(self):
         for template in self:
-            headers_footers = template.sale_header_ids + template.sale_footer_ids
-            template.sale_header_footer_ids = headers_footers.ids
+            quotation_documents = template.sale_header_ids + template.sale_footer_ids
+            template.quotation_document_ids = quotation_documents.ids
 
     # === ACTION METHODS === #
 
     def action_open_dynamic_fields_configurator_wizard(self):
         self.ensure_one()
         valid_form_fields = set()
-        for doc in self.sale_header_footer_ids:
+        for doc in self.quotation_document_ids:
             valid_form_fields.update(utils._get_valid_form_fields(doc.datas))
         default_form_fields = {'header_footer': list(valid_form_fields)}
         return {

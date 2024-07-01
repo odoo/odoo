@@ -2,18 +2,18 @@
 
 import { useService } from "@web/core/utils/hooks";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
-import { SalePdfHeaderFooterKanbanRecord } from "@sale_pdf_quote_builder/js/sale_pdf_header_footer_kanban/sale_pdf_header_footer_kanban_record";
+import { QuotationDocumentKanbanRecord } from "@sale_pdf_quote_builder/js/quotation_document_kanban/quotation_document_kanban_record";
 import { FileUploadProgressContainer } from "@web/core/file_upload/file_upload_progress_container";
 import { FileUploadProgressKanbanRecord } from "@web/core/file_upload/file_upload_progress_record";
 
-export class SalePdfHeaderFooterKanbanRenderer extends KanbanRenderer {
+export class QuotationDocumentKanbanRenderer extends KanbanRenderer {
     static components = {
         ...KanbanRenderer.components,
         FileUploadProgressContainer,
         FileUploadProgressKanbanRecord,
-        KanbanRecord: SalePdfHeaderFooterKanbanRecord,
+        KanbanRecord: QuotationDocumentKanbanRecord,
     };
-    static template = "sale_pdf_quote_builder.SalePdfHeaderFooterKanbanRenderer";
+    static template = "sale_pdf_quote_builder.QuotationDocumentKanbanRenderer";
     setup() {
         super.setup();
         this.fileUploadService = useService("file_upload");

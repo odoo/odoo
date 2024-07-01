@@ -12,13 +12,13 @@
         'security/ir.model.access.csv',
 
         'views/product_document_views.xml',
+        'views/quotation_document_views.xml',
         'views/sale_management_menus.xml',
         'views/sale_order_template_views.xml',
         'views/sale_order_views.xml',
-        'views/sale_pdf_header_footer_views.xml',
 
         'wizards/sale_pdf_quote_builder_dynamic_fields_wizard_views.xml',
-        'wizards/sale_pdf_quote_builder_set_custom_content_wizard_views.xml',
+        'wizards/set_custom_content_wizard_views.xml',
     ],
     'demo': [
         'data/sale_pdf_quote_builder_demo.xml',

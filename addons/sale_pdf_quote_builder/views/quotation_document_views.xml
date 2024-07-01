@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <record id="sale_pdf_header_footer_form" model="ir.ui.view">
-        <field name="name">sale.pdf.header.footer.form</field>
-        <field name="model">sale.pdf.header.footer</field>
+    <record id="quotation_document_form" model="ir.ui.view">
+        <field name="name">quotation.document.form</field>
+        <field name="model">quotation.document</field>
         <field name="arch" type="xml">
             <form>
                 <sheet>
@@ -49,11 +49,11 @@
         </field>
     </record>
 
-    <record id="sale_pdf_header_footer_kanban" model="ir.ui.view">
-        <field name="name">sale.pdf.header.footer.kanban</field>
-        <field name="model">sale.pdf.header.footer</field>
+    <record id="quoation_document_kanban" model="ir.ui.view">
+        <field name="name">quotation.document.kanban</field>
+        <field name="model">quotation.document</field>
         <field name="arch" type="xml">
-            <kanban js_class="sale_pdf_headers_footers_kanban">
+            <kanban js_class="quotation_document_kanban">
                 <field name="sequence" widget="handle"/>
                 <field name="ir_attachment_id"/>
                 <field name="mimetype"/>
@@ -99,9 +99,9 @@
         </field>
     </record>
 
-    <record id="sale_pdf_header_footer_list" model="ir.ui.view">
-        <field name="name">sale.pdf.header.footer.list</field>
-        <field name="model">sale.pdf.header.footer</field>
+    <record id="quotation_document_list" model="ir.ui.view">
+        <field name="name">quotation.document.list</field>
+        <field name="model">quotation.document</field>
         <field name="arch" type="xml">
             <tree editable="top" multi_edit="true">
                 <field name="sequence" widget="handle"/>
@@ -112,9 +112,9 @@
         </field>
     </record>
 
-    <record id="sale_pdf_header_footer_search" model="ir.ui.view">
-        <field name="name">sale.pdf.header.footer.search</field>
-        <field name="model">sale.pdf.header.footer</field>
+    <record id="quotation_document_search" model="ir.ui.view">
+        <field name="name">quotation.document.search</field>
+        <field name="model">quotation.document</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
