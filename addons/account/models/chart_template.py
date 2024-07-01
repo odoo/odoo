@@ -652,6 +652,8 @@ class AccountChartTemplate(models.AbstractModel):
             **additional_properties,
             'property_account_receivable_id': 'res.partner',
             'property_account_payable_id': 'res.partner',
+            'property_account_expense_company_id': 'res.company',
+            'property_account_income_company_id': 'res.company',
             'property_account_expense_categ_id': 'product.category',
             'property_account_income_categ_id': 'product.category',
             'property_stock_journal': 'product.category',

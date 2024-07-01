@@ -59,8 +59,12 @@ class ProductTemplate(models.Model):
 
     def _get_product_accounts(self):
         return {
-            'income': self.property_account_income_id or self.categ_id.property_account_income_categ_id,
-            'expense': self.property_account_expense_id or self.categ_id.property_account_expense_categ_id
+            'income': self.property_account_income_id
+                or self.categ_id.property_account_income_categ_id
+                or self.env.company.property_account_income_company_id,
+            'expense': self.property_account_expense_id
+                or self.categ_id.property_account_expense_categ_id
+                or self.env.company.property_account_expense_company_id
         }
 
     def _get_asset_accounts(self):
