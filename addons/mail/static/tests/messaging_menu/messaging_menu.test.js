@@ -1,3 +1,4 @@
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import {
     SIZES,
     assertSteps,
@@ -16,6 +17,7 @@ import {
     triggerEvents,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockUserAgent } from "@odoo/hoot-mock";
 import {
@@ -1068,9 +1070,15 @@ test("messaging menu should show new needaction messages from chatter", async ()
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    const [formattedMessage] = pyEnv["mail.message"]._message_format(messageId, true);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", formattedMessage);
+    pyEnv["bus.bus"]._sendone(
+        partner,
+        "mail.message/inbox",
+        new mailDataHelpers.Store(
+            "Message",
+            pyEnv["mail.message"]._message_format(messageId, true)
+        ).get_result()
+    );
     await contains(".o-mail-NotificationItem-text", { text: "Frodo Baggins: @Mitchel Admin" });
 });
 

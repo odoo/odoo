@@ -488,7 +488,12 @@ export class MailThread extends models.ServerModel {
                         notifications.push([
                             partner,
                             "mail.message/inbox",
-                            MailMessage._message_format_personalize([message_id])[0],
+                            new mailDataHelpers.Store()
+                                .add(
+                                    "Message",
+                                    MailMessage._message_format_personalize([message_id])
+                                )
+                                .get_result(),
                         ]);
                     }
                 }

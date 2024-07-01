@@ -3174,9 +3174,16 @@ class MailThread(models.AbstractModel):
                 message._message_format(msg_vals=msg_vals, for_current_user=True), partner_ids=inbox_pids)
             for partner_id in inbox_pids:
                 bus_notifications.append(
-                    (self.env['res.partner'].browse(partner_id),
-                     'mail.message/inbox',
-                     MailMessage._message_format_personalize(partner_id, messages_format_prepared)[0])
+                    (
+                        self.env["res.partner"].browse(partner_id),
+                        "mail.message/inbox",
+                        Store(
+                            "Message",
+                            MailMessage._message_format_personalize(
+                                partner_id, messages_format_prepared
+                            ),
+                        ).get_result(),
+                    )
                 )
         self.env['bus.bus'].sudo()._sendmany(bus_notifications)
 

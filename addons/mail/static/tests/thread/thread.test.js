@@ -1,3 +1,4 @@
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import {
     assertSteps,
     click,
@@ -17,6 +18,7 @@ import {
     step,
     triggerEvents,
 } from "@mail/../tests/mail_test_helpers";
+
 import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
@@ -845,9 +847,15 @@ test("Opening thread with needaction messages should mark all messages of thread
         res_partner_id: serverState.partnerId,
     });
     // simulate receiving a new needaction message
-    const [formattedMessage] = pyEnv["mail.message"]._message_format(messageId, true);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", formattedMessage);
+    pyEnv["bus.bus"]._sendone(
+        partner,
+        "mail.message/inbox",
+        new mailDataHelpers.Store(
+            "Message",
+            pyEnv["mail.message"]._message_format(messageId, true)
+        ).get_result()
+    );
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await click("button", { text: "General" });
     await contains(".o-discuss-badge", { count: 0 });
