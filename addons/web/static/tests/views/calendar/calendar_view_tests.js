@@ -5668,4 +5668,43 @@ QUnit.module("Views", ({ beforeEach }) => {
             "should have correct stop date"
         );
     });
+
+    QUnit.test(`update time while drag and drop on month mode`, async (assert) => {
+        assert.expect(2);
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" mode="month" event_open_popup="1" quick_create="0">
+                    <field name="name" />
+                </calendar>
+            `,
+        });
+
+        // Create event (on 20 december)
+        await clickDate(target, "2016-12-20");
+        await editInput(target, ".modal-body .o_field_widget[name=name] input", "An event");
+        await click(target, ".form-check-input");
+        await editInput(
+            target,
+            ".modal-body .o_field_widget[name=start] input",
+            "2016-12-20 08:00:00"
+        );
+        await editInput(
+            target,
+            ".modal-body .o_field_widget[name=stop] input",
+            "2016-12-22 10:00:00"
+        );
+        await click(target, ".modal .o_form_button_save");
+
+        await moveEventToDate(target, 8, "2016-12-29");
+        await clickEvent(target, 8);
+        await click(target, ".o_cw_popover .o_cw_popover_edit");
+
+        const input_start = target.querySelector(".o_field_widget[name='start'] input");
+        assert.strictEqual(input_start.value, "12/28/2016 08:00:00", "should display the datetime");
+        const input_stop = target.querySelector(".o_field_widget[name='stop'] input");
+        assert.strictEqual(input_stop.value, "12/30/2016 10:00:00", "should display the datetime");
+    });
 });
