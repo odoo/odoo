@@ -1695,11 +1695,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         })
         if request.website.is_public_user():
             payment_form_values['partner_id'] = -1
-        if request.website.enabled_delivery:
-            payment_form_values.update({
+        payment_form_values.update(
+            {
                 'shipping_info_required': not order.only_services,
                 'shipping_address_update_route': self._express_checkout_shipping_route,
-            })
+            }
+        )
         return payment_form_values
 
     def _get_shop_payment_values(self, order, **kwargs):
