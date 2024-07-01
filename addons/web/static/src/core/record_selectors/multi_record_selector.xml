@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.MultiRecordSelector" >
-        <div class="o_input d-flex flex-wrap gap-1 o_multi_record_selector" t-ref="multiRecordSelector">
+        <div class="o_field_many2many_selection o_input d-flex flex-wrap gap-1 o_multi_record_selector" t-ref="multiRecordSelector">
             <TagsList tags="tags"/>
             <RecordAutocomplete
                 resModel="props.resModel"
@@ -16,6 +16,7 @@
                 getIds.bind="getIds"
                 update.bind="update"
             />
+            <span class="o_dropdown_button"/>
         </div>
     </t>
 
