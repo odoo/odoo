@@ -95,9 +95,9 @@ class TestMessageController(HttpCaseWithUserDemo):
             headers={"Content-Type": "application/json"},
         )
         self.assertEqual(res2.status_code, 200)
-        message_format1 = res2.json()["result"]
+        data1 = res2.json()["result"]
         self.assertEqual(
-            message_format1["attachments"],
+            data1["Message"][0]["attachments"],
             json.loads(json.dumps(self.attachments[0]._attachment_format(), default=date_utils.json_default)),
             "guest should be allowed to add attachment with token when posting message",
         )
@@ -107,7 +107,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             data=json.dumps(
                 {
                     "params": {
-                        "message_id": message_format1["id"],
+                        "message_id": data1["Message"][0]["id"],
                         "body": "test",
                         "attachment_ids": [self.attachments[1].id],
                         "attachment_tokens": ["wrong token"],
@@ -128,7 +128,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             data=json.dumps(
                 {
                     "params": {
-                        "message_id": message_format1["id"],
+                        "message_id": data1["Message"][0]["id"],
                         "body": "test",
                         "attachment_ids": [self.attachments[1].id],
                         "attachment_tokens": [self.attachments[1].access_token],
@@ -393,14 +393,14 @@ class TestMessageController(HttpCaseWithUserDemo):
         archived_partner = self.env["res.partner"].create({"name": "partner", "active": False})
 
         # 1. posting a message
-        response = self.make_jsonrpc_request("/mail/message/post", {
+        data = self.make_jsonrpc_request("/mail/message/post", {
             "thread_model": "res.partner",
             "thread_id": archived_partner.id,
             "post_data": {
                 "body": "A great message",
             }
         })
-        self.assertIn("A great message", response['body'])
+        self.assertIn("A great message", data["Message"][0]["body"])
 
         # 2. attach a file
         response = self.url_open(

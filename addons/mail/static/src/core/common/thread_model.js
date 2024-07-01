@@ -1083,7 +1083,8 @@ export class Thread extends Record {
         if (!data) {
             return;
         }
-        const message = this.store.Message.insert(data, { html: true });
+        const { Message: messages = [] } = this.store.insert(data, { html: true });
+        const [message] = messages;
         this.addOrReplaceMessage(message, tmpMsg);
         if (this.selfMember?.seen_message_id?.id < message.id) {
             this.selfMember.seen_message_id = message;
@@ -1093,7 +1094,7 @@ export class Thread extends Record {
         // to avoid flickering.
         tmpMsg?.delete();
         if (message.hasLink && this.store.hasLinkPreviewFeature) {
-            rpc("/mail/link_preview", { message_id: data.id }, { silent: true });
+            rpc("/mail/link_preview", { message_id: message.id }, { silent: true });
         }
         return message;
     }
