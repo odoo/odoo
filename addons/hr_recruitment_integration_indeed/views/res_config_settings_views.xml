@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.hr.recruitment</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="75"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <block name="hr_recruitment_job_board" position="inside">
+                    <setting id="indeed_credentials" string="Indeed Credentials" company_dependent="1" title="Indeed Credentials">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="hr_recruitment_indeed_client_id" string="Client ID" class="col-lg-3"/>
+                                <field name="hr_recruitment_indeed_client_id"/>
+                            </div>
+                            <div class="row mt16">
+                                <label for="hr_recruitment_indeed_secret" string="Secret" class="col-lg-3"/>
+                                <field name="hr_recruitment_indeed_secret" password="True"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </field>
+        </record>
+    </data>
+</odoo>
