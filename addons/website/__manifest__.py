@@ -271,6 +271,7 @@
             'website/static/src/snippets/s_chart/options.js',
             'website/static/src/snippets/s_chart/options.xml',
             'website/static/src/snippets/s_rating/options.js',
+            'website/static/src/snippets/s_rating/options.xml',
             'website/static/src/snippets/s_tabs/options.js',
             'website/static/src/snippets/s_tabs/options.xml',
             'website/static/src/snippets/s_progress_bar/options.js',
