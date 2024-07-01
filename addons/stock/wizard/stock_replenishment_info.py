@@ -8,8 +8,8 @@ from datetime import datetime, time
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv.expression import AND
-from odoo.tools import get_month, subtract, format_date
-from odoo.tools.misc import get_lang
+from odoo.tools.date_utils import get_month, subtract
+from odoo.tools.misc import get_lang, format_date
 
 
 class StockReplenishmentInfo(models.TransientModel):
