@@ -314,7 +314,7 @@
                 <field name="pos_reference"/>
                 <field name="tracking_number" optional="hide"/>
                 <field name="partner_id"/>
-                <field string="Cashier" name="user_id" widget="many2one_avatar_user" readonly="state in ['done', 'invoiced']"/>
+                <field name="user_id" widget="many2one_avatar_user" readonly="state in ['done', 'invoiced']"/>
                 <field name="amount_total" sum="Amount total" widget="monetary" decoration-bf="1"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state not in ('draft','cancel')"/>
             </tree>

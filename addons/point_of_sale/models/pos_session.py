@@ -666,8 +666,11 @@ class PosSession(models.Model):
         payments = orders.payment_ids.filtered(lambda p: p.payment_method_id.type != "pay_later")
         cash_payment_method_ids = self.payment_method_ids.filtered(lambda pm: pm.type == 'cash')
         default_cash_payment_method_id = cash_payment_method_ids[0] if cash_payment_method_ids else None
-        total_default_cash_payment_amount = sum(payments.filtered(lambda p: p.payment_method_id == default_cash_payment_method_id).mapped('amount')) if default_cash_payment_method_id else 0
-        other_payment_method_ids = self.payment_method_ids - default_cash_payment_method_id if default_cash_payment_method_id else self.payment_method_ids
+        default_cash_payments = payments.filtered(lambda p: p.payment_method_id == default_cash_payment_method_id) if default_cash_payment_method_id else []
+        total_default_cash_payment_amount = sum(default_cash_payments.mapped('amount')) if default_cash_payment_method_id else 0
+        non_cash_payment_method_ids = self.payment_method_ids - default_cash_payment_method_id if default_cash_payment_method_id else self.payment_method_ids
+        non_cash_payments_grouped_by_method_id = {pm: orders.payment_ids.filtered(lambda p: p.payment_method_id == pm) for pm in non_cash_payment_method_ids}
+
         cash_in_count = 0
         cash_out_count = 0
         cash_in_out_list = []
@@ -699,13 +702,13 @@ class PosSession(models.Model):
                 'moves': cash_in_out_list,
                 'id': default_cash_payment_method_id.id
             } if default_cash_payment_method_id else None,
-            'other_payment_methods': [{
+            'non_cash_payment_methods': [{
                 'name': pm.name,
-                'amount': sum(orders.payment_ids.filtered(lambda p: p.payment_method_id == pm).mapped('amount')),
-                'number': len(orders.payment_ids.filtered(lambda p: p.payment_method_id == pm)),
+                'amount': sum(non_cash_payments_grouped_by_method_id[pm].mapped('amount')),
+                'number': len(non_cash_payments_grouped_by_method_id[pm]),
                 'id': pm.id,
                 'type': pm.type,
-            } for pm in other_payment_method_ids],
+            } for pm in non_cash_payment_method_ids],
             'is_manager': self.env.user.has_group("point_of_sale.group_pos_manager"),
             'amount_authorized_diff': self.config_id.amount_authorized_diff if self.config_id.set_maximum_difference else None
         }
@@ -1671,22 +1674,27 @@ class PosSession(models.Model):
             ))
         return True
 
+    def _prepare_account_bank_statement_line_vals(self, session, sign, amount, reason, extras):
+        return {
+            'pos_session_id': session.id,
+            'journal_id': session.cash_journal_id.id,
+            'amount': sign * amount,
+            'date': fields.Date.context_today(self),
+            'payment_ref': '-'.join([session.name, extras['translatedType'], reason]),
+        }
+
     def try_cash_in_out(self, _type, amount, reason, extras):
         sign = 1 if _type == 'in' else -1
         sessions = self.filtered('cash_journal_id')
         if not sessions:
             raise UserError(_("There is no cash payment method for this PoS Session"))
 
-        self.env['account.bank.statement.line'].create([
-            {
-                'pos_session_id': session.id,
-                'journal_id': session.cash_journal_id.id,
-                'amount': sign * amount,
-                'date': fields.Date.context_today(self),
-                'payment_ref': '-'.join([session.name, extras['translatedType'], reason]),
-            }
+        vals_list = [
+            self._prepare_account_bank_statement_line_vals(session, sign, amount, reason, extras)
             for session in sessions
-        ])
+        ]
+
+        self.env['account.bank.statement.line'].create(vals_list)
 
     def _get_attributes_by_ptal_id(self):
         # performance trick: prefetch fields with search_fetch() and fetch()

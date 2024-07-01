@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_hr.ClosePosPopup" t-inherit="point_of_sale.ClosePosPopup" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('payment-methods-overview')]/table" position="attributes">
+            <attribute name="t-if">!pos.config.module_pos_hr</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('payment-methods-overview')]" position="inside">
+            <table t-else="" class="text-start">
+                <thead>
+                    <tr class="text-dark">
+                        <th>Payment Method</th>
+                        <th>Expected</th>
+                        <th style="width:20%">Counted</th>
+                        <th>Difference</th>
+                    </tr>
+                </thead>
+                <t t-if="pos.config.cash_control">
+                    <tbody>
+                        <tr>
+                            <td colspan="2" class="pe-3">
+                                <AccordionItem disabled="props.total_amount === 0">
+                                    <t t-set-slot="header">
+                                        <div class="name-amount">
+                                            <div t-esc="props.default_cash_details.name"/>
+                                            <div class="d-flex">
+                                                <div class="cash-sign me-1" t-esc="props.default_cash_details.amount &lt; 0 ? '-' : '+'"/>
+                                                <div t-esc="env.utils.formatCurrency(Math.abs(props.default_cash_details.amount))"/>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    <t t-set-slot="content">
+                                        <div class="border-start small text-muted d-flex flex-column ps-2 ms-1">
+                                            <div class="name-amount ">
+                                                <div>Opening</div>
+                                                <div t-esc="env.utils.formatCurrency(props.default_cash_details.opening)"/>
+                                            </div>
+                                            <t t-set="_totalAmount" t-value="getMovesTotalAmount()" />
+                                            <div t-if="_totalAmount != 0">
+                                                <PaymentMethodBreakdown title="'Cash in/out'" total_amount="_totalAmount" transactions="props.default_cash_details.moves_per_employee"/>
+                                            </div>
+                                            <div t-if="props.default_cash_details.payment_amount">
+                                                <PaymentMethodBreakdown title="`Payments in ${props.default_cash_details.name}`" total_amount="props.default_cash_details.payment_amount" transactions="props.default_cash_details.amount_per_employee"/>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </AccordionItem>
+                            </td>
+                            <td class="d-flex">
+                                <Input tModel="[state.payments[props.default_cash_details.id], 'counted']"
+                                    callback.bind="(value) =>  this.setManualCashInput(value)"
+                                    isValid.bind="env.utils.isValidFloat" class="'cash-input'"/>
+                                <button class="icon fa fa-money fa-lg btn btn-secondary" t-on-click="openDetailsPopup" />
+                            </td>
+                            <t t-set="diff" t-value="getDifference(props.default_cash_details.id)" />
+                            <td t-esc="env.utils.isValidFloat(diff) ? env.utils.formatCurrency(diff) : ''"
+                                style="vertical-align: top;"
+                                class="text-end"
+                                t-att-class="{'warning text-danger fw-bolder': !env.utils.floatIsZero(getDifference(props.default_cash_details.id))}"/>
+                        </tr>
+                    </tbody>
+                </t>
+                <tbody t-if="props.non_cash_payment_methods.length > 0">
+                    <tr t-foreach="props.non_cash_payment_methods" t-as="pm" t-key="pm.id">
+                        <td colspan="2" class="pe-3">
+                            <PaymentMethodBreakdown title="pm.name" total_amount="pm.amount" transactions="pm.amount_per_employee"/>
+                        </td>
+                        <t t-set="_showDiff" t-value="pm.type === 'bank' and pm.number !== 0" />
+                        <td t-if="_showDiff" class="d-flex">
+                            <Input tModel="[state.payments[pm.id], 'counted']"
+                                isValid.bind="env.utils.isValidFloat" />
+                        </td>
+                        <td t-if="_showDiff" t-esc="env.utils.formatCurrency(getDifference(pm.id))"
+                            style="vertical-align: top;"
+                            class="text-end"
+                            t-att-class="{'warning text-danger fw-bolder': getDifference(pm.id)}"/>
+                    </tr>
+                </tbody>
+            </table>
+        </xpath>
+    </t>
+</templates>
