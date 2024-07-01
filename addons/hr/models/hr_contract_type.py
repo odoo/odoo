@@ -13,7 +13,9 @@ class ContractType(models.Model):
     code = fields.Char(compute='_compute_code', store=True, readonly=False)
     sequence = fields.Integer()
     country_id = fields.Many2one('res.country')
+    test = fields.Integer()
 
+    test2 = fields.Integer()
     @api.depends('name')
     def _compute_code(self):
         for contract_type in self:
