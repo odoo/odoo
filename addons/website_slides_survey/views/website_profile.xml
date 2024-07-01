@@ -21,9 +21,10 @@
             <div t-if="show_certification_tab" role="tabpanel" t-attf-class="tab-pane #{ 'show active' if active_tab == 'certification' else '' }" id="profile_tab_content_certification">
                 <h5 class="d-flex justify-content-between align-items-end border-bottom pb-1">
                     Certification Attempts
-                    <form method="get">
+                    <form method="post">
                         <div class="input-group" role="search">
                             <input type="text" class="form-control" name="certification_search" t-att-value="certification_search_terms or ''" placeholder="Search Attempts..."/>
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-primary" aria-label="Search" title="Search">
                                     <i class="fa fa-search"/>
@@ -35,7 +36,7 @@
                 <t t-if="not user_inputs">
                     <p t-if="certification_search_terms">No certification found for the given search term.</p>
                     <p t-else="">You have not taken any certification yet.</p>
-                    <a href="/slides/all?slide_category=certification">
+                    <a href="/slides?my=0&amp;slide_category=certification">
                         <i class="oi oi-arrow-right"/> See Certifications
                     </a>
                 </t>
@@ -96,7 +97,7 @@
          <t t-elif="my_profile">
             <div class="text-muted d-inline-block">
                 Certifications are exams that you successfully passed. <br />
-                <a href="/slides/all?slide_type=certification" class="btn-link">
+                <a href="/slides?my=0&amp;slide_type=certification" class="btn-link">
                     <i class="fa fa-arrow-right"></i> Get Certified
                 </a>
             </div>
@@ -104,7 +105,7 @@
         <t t-else="">
             <div class="text-muted d-inline-block">No certifications yet!</div>
             <div class="text-end d-inline-block pull-right">
-                <a href="/slides/all?slide_category=certification" class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Certifications</a>
+                <a href="/slides?slide_category=certification" class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Certifications</a>
             </div>
         </t>
     </template>
