@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.s_progress_bar_option">
+    <WeRow title.translate="Value">
+        <WeInput progressBarValue="''" unit="'%'"/>
+    </WeRow>
+    <WeRow title.translate="Display">
+        <WeSelect>
+            <WeButton display="'inline'" selectClass="'s_progress_bar_label_inline'">Display Inside</WeButton>
+            <WeButton display="'below'" selectClass="'s_progress_bar_label_below'">Display Below</WeButton>
+            <WeButton display="'after'" selectClass="'s_progress_bar_label_after'">Display After</WeButton>
+            <WeButton display="'none'" selectClass="'s_progress_bar_label_hidden'">Hide</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Colors">
+        <WeColorpicker applyTo="'.progress-bar'"
+            selectStyle="'true'"
+            cssProperty="'background-color'"
+            colorPrefix="'bg-'"/>
+    </WeRow>
+    <WeCheckbox title.translate="Striped" name="'progress_striped_opt'" selectClass="'progress-bar-striped'" applyTo="'.progress-bar'" noPreview="'true'"/>
+    <WeCheckbox title.translate="Animated" class="'o_we_sublevel_1'" dependencies="'progress_striped_opt'" selectClass="'progress-bar-animated'" applyTo="'.progress-bar'" noPreview="'true'"/>
+</t>
+
+</templates>

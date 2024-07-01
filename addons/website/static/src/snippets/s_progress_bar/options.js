@@ -1,9 +1,14 @@
 /** @odoo-module **/
 
 import { clamp } from "@web/core/utils/numbers";
-import options from "@web_editor/js/editor/snippets.options.legacy";
+import {
+    SnippetOption,
+} from "@web_editor/js/editor/snippets.options";
+import {
+    registerWebsiteOption,
+} from "@website/js/editor/snippets.registry";
 
-options.registry.progress = options.Class.extend({
+export class ProgressBarOption extends SnippetOption {
 
     //--------------------------------------------------------------------------
     // Options
@@ -14,7 +19,7 @@ options.registry.progress = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    display: function (previewMode, widgetValue, params) {
+    display(previewMode, widgetValue, params) {
         // retro-compatibility
         if (this.$target.hasClass('progress')) {
             this.$target.removeClass('progress');
@@ -43,13 +48,13 @@ options.registry.progress = options.Class.extend({
         // Temporary hide the label. It's effectively removed in cleanForSave
         // if the option is confirmed
         progressLabel.classList.toggle('d-none', widgetValue === 'none');
-    },
+    }
     /**
      * Sets the progress bar value.
      *
      * @see this.selectClass for parameters
      */
-    progressBarValue: function (previewMode, widgetValue, params) {
+    progressBarValue(previewMode, widgetValue, params) {
         let value = parseInt(widgetValue);
         value = clamp(value, 0, 100);
         const $progressBar = this.$target.find('.progress-bar');
@@ -60,7 +65,7 @@ options.registry.progress = options.Class.extend({
         $progressBarText.text($progressBarText.text().replace(/[0-9]+%/, value + '%'));
         progressMain.setAttribute('aria-valuenow', value);
         $progressBar.css("width", value + "%");
-    },
+    }
     /**
      * @override
      */
@@ -75,7 +80,7 @@ options.registry.progress = options.Class.extend({
         if (progressLabel && progressLabel.classList.contains('d-none')) {
             progressLabel.remove();
         }
-    },
+    }
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -83,12 +88,18 @@ options.registry.progress = options.Class.extend({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'progressBarValue': {
                 return this.$target[0].querySelector(".progress").getAttribute("aria-valuenow") + "%";
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
+}
+
+registerWebsiteOption("ProgressBar", {
+    Class: ProgressBarOption,
+    template: "website.s_progress_bar_option",
+    selector: ".s_progress_bar",
 });
