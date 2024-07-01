@@ -975,20 +975,6 @@ class Channel(models.Model):
             ]
             store.add("Thread", info)
 
-    def _channel_fetch_message(self, last_id=False, limit=20):
-        """ Return message values of the current channel.
-            :param last_id : last message id to start the research
-            :param limit : maximum number of messages to fetch
-            :returns list of messages values
-            :rtype : list(dict)
-        """
-        self.ensure_one()
-        domain = ["&", ("model", "=", "discuss.channel"), ("res_id", "in", self.ids)]
-        if last_id:
-            domain.append(("id", "<", last_id))
-        res = self.env['mail.message']._message_fetch(domain=domain, limit=limit)
-        return res["messages"]._message_format()
-
     def _channel_format(self, fields=None):
         if not fields:
             fields = {'id': True}

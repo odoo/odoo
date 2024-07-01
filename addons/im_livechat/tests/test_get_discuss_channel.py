@@ -274,24 +274,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         channel_ids = [channel["id"] for channel in operator_channels]
         self.assertIn(channel_id, channel_ids, "channel should be fetched by operator on new page")
 
-    def test_operator_livechat_username(self):
-        """Ensures the operator livechat_username is returned by `_channel_fetch_message`, which is
-        the method called by the public route displaying chat history."""
-        operator = self.operators[0]
-        operator.write({
-            'email': 'michel@example.com',
-            'livechat_username': 'Michel at your service',
-        })
-        data = self.make_jsonrpc_request('/im_livechat/get_session', {'anonymous_name': 'whatever', 'channel_id': self.livechat_channel.id})
-        channel = self.env['discuss.channel'].browse(data["Thread"][0]['id'])
-        channel.with_user(operator).message_post(body='Hello', message_type='comment', subtype_xmlid='mail.mt_comment')
-        message_formats = channel.with_user(None).sudo()._channel_fetch_message()
-        self.assertEqual(len(message_formats), 1)
-        self.assertNotIn('name', message_formats[0]['author'])
-        self.assertEqual(message_formats[0]['author']['id'], operator.partner_id.id)
-        self.assertEqual(message_formats[0]['author']['user_livechat_username'], operator.livechat_username)
-        self.assertFalse(message_formats[0].get('email_from'), "should not send email_from to livechat user")
-
     def test_read_channel_unpined_for_operator_after_one_day(self):
         data = self.make_jsonrpc_request('/im_livechat/get_session', {'anonymous_name': 'visitor', 'channel_id': self.livechat_channel.id})
         member_of_operator = self.env['discuss.channel.member'].search([('channel_id', '=', data["Thread"][0]['id']), ('partner_id', 'in', self.operators.partner_id.ids)])
