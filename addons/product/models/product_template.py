@@ -7,6 +7,7 @@ from collections import defaultdict
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
+from odoo.tools.image import is_image_size_above
 
 _logger = logging.getLogger(__name__)
 PRICE_CONTEXT_KEYS = ['pricelist', 'quantity', 'uom', 'date']
@@ -190,7 +191,7 @@ class ProductTemplate(models.Model):
     @api.depends('image_1920', 'image_1024')
     def _compute_can_image_1024_be_zoomed(self):
         for template in self:
-            template.can_image_1024_be_zoomed = template.image_1920 and tools.is_image_size_above(template.image_1920, template.image_1024)
+            template.can_image_1024_be_zoomed = template.image_1920 and is_image_size_above(template.image_1920, template.image_1024)
 
     @api.depends(
         'attribute_line_ids',

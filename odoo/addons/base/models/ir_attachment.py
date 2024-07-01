@@ -15,12 +15,11 @@ import uuid
 import werkzeug
 
 from collections import defaultdict
-from PIL import Image
 
 from odoo import api, fields, models, SUPERUSER_ID, tools, _
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.http import Stream, root, request
-from odoo.tools import config, human_size, ImageProcess, str2bool, consteq
+from odoo.tools import config, human_size, image, str2bool, consteq
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.osv import expression
 
@@ -332,11 +331,10 @@ class IrAttachment(models.Model):
             max_resolution = ICP('base.image_autoresize_max_px', '1920x1920')
             if str2bool(max_resolution, True):
                 try:
-                    img = False
                     if is_raw:
-                        img = ImageProcess(values['raw'], verify_resolution=False)
+                        img = image.ImageProcess(values['raw'], verify_resolution=False)
                     else:  # datas
-                        img = ImageProcess(base64.b64decode(values['datas']), verify_resolution=False)
+                        img = image.ImageProcess(base64.b64decode(values['datas']), verify_resolution=False)
 
                     if not img.image:
                         _logger.info('Post processing ignored : Empty source, SVG, or WEBP')
