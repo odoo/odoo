@@ -1145,7 +1145,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      * @param {Event} ev
      */
     _shouldIgnoreClick(ev) {
-        return !!ev.target.closest('[role="button"]');
+        return !!ev.target?.closest('[role="button"]');
     },
     /**
      * Decides whether the dropdown should be positioned below or above the

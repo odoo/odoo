@@ -9,7 +9,6 @@ import ServicesMixin from "@web/legacy/js/core/service_mixins";
 import { loadBundle, loadCSS, loadJS } from '@web/core/assets';
 import { renderToElement } from "@web/core/utils/render";
 import { makeAsyncHandler, makeButtonHandler } from "@web/legacy/js/core/minimal_dom";
-import { getjQuery } from "@web/core/utils/misc";
 
 // TODO: MSH: Need to convert dom methods in core/dom.js to convert it in vanillaJS
 

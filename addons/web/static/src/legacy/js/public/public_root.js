@@ -140,7 +140,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
         var self = this;
 
         if (fromEl === undefined) {
-            fromEl = this.el.querySelectorAll('#wrapwrap');
+            fromEl = this.el?.querySelectorAll("#wrapwrap");
             if (!fromEl.length) {
                 // TODO Remove this once all frontend layouts possess a
                 // #wrapwrap element (which is necessary for those pages to be
@@ -274,9 +274,9 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @private
      */
     _onWebsiteFormSubmit: function (ev) {
-        var buttonEls = ev.currentTarget.querySelectorAll('button[type="submit"], a.a-submit').toArray();
+        var buttonEls = ev.currentTarget.querySelectorAll("button[type='submit'], .a-submit").toArray();
         buttonEls.forEach((btnEl) => {
-            btnEl.prepend('<i class="fa fa-circle-o-notch fa-spin"></i> ');
+            btnEl.prepend("<i class='fa fa-circle-o-notch fa-spin'></i> ");
             btnEl.disabled = true;
         });
     },
@@ -288,7 +288,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @param {Event} ev
      */
     _onDisableOnClick: function (ev) {
-        ev.currentTarget.classList.add('disabled');
+        ev.currentTarget.classList.add("disabled");
     },
     /**
      * Library clears the wrong date format so just ignore error
