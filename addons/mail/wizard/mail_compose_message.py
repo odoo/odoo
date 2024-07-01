@@ -4,12 +4,11 @@
 import ast
 import base64
 import datetime
-import logging
 
-from odoo import _, api, fields, models, tools, Command
+from odoo import _, api, fields, models, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import is_html_empty
+from odoo.tools.mail import is_html_empty, email_normalize, email_split_and_format
 from odoo.addons.mail.tools.parser import parse_res_ids
 
 
@@ -983,13 +982,13 @@ class MailComposer(models.TransientModel):
         if self.template_id:
             template_values = self._generate_template_for_composer(
                 res_ids,
-                ('attachment_ids',
+                ['attachment_ids',
                  'email_to',
                  'email_cc',
                  'partner_ids',
                  'report_template_ids',
                  'scheduled_date',
-                )
+                ]
             )
             for res_id in res_ids:
                 # remove attachments from template values as they should not be rendered
@@ -1306,7 +1305,7 @@ class MailComposer(models.TransientModel):
         for record_id, mail_values in mail_values_dict.items():
             # add email from email_to; if unrecognized email in email_to keep
             # it as used for further processing
-            mail_to = tools.email_split_and_format(mail_values.get('email_to'))
+            mail_to = email_split_and_format(mail_values.get('email_to'))
             if not mail_to and mail_values.get('email_to'):
                 mail_to.append(mail_values['email_to'])
             # add email from recipients (res.partner)
@@ -1321,9 +1320,9 @@ class MailComposer(models.TransientModel):
             recipients_info[record_id] = {
                 'mail_to': mail_to,
                 'mail_to_normalized': [
-                    tools.email_normalize(mail, strict=False)
+                    email_normalize(mail, strict=False)
                     for mail in mail_to
-                    if tools.email_normalize(mail, strict=False)
+                    if email_normalize(mail, strict=False)
                 ]
             }
         return recipients_info

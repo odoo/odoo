@@ -18,7 +18,8 @@ from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE, THAI_EMAIL_
 from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
 from odoo.sql_db import Cursor
 from odoo.tests import tagged, RecordCapturer
-from odoo.tools import email_split_and_format, formataddr, mute_logger
+from odoo.tools import mute_logger
+from odoo.tools.mail import email_split_and_format, formataddr
 
 
 @tagged('mail_gateway')

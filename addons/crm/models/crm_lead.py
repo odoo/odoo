@@ -2063,7 +2063,7 @@ class Lead(models.Model):
             if partner_info.get('partner_id') or not email:
                 continue
             # reformat email if no name information
-            name_emails = tools.email_split_tuples(email)
+            name_emails = tools.mail.email_split_tuples(email)
             name_from_email = name_emails[0][0] if name_emails else False
             if name_from_email:
                 continue  # already containing name + email
