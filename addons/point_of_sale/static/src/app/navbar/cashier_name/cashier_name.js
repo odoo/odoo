@@ -21,6 +21,6 @@ export class CashierName extends Component {
         return `/web/image/res.users/${id}/avatar_128`;
     }
     get cssClass() {
-        return { "not-clickable": true };
+        return { "not-clickable pe-none": true };
     }
 }

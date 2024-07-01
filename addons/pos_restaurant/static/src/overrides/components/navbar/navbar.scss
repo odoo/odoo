@@ -1,0 +1,26 @@
+@include media-breakpoint-up(sm) {
+    .navbar-menu {
+        grid-auto-columns: minmax(100px, 1fr);
+        grid-auto-flow: column;
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .navbar-menu button {
+        min-width: 52px;
+    }
+}
+
+.btn {
+    &-primary {
+        .icon-plan {
+            filter: invert(1);
+        }
+    }
+
+    &-light {
+        .icon-plan {
+            filter: invert(0);
+        }
+    }
+}

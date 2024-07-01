@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
-        <xpath expr="//OrderlineNoteButton" position="after">
+        <xpath expr="//t[@t-if='props.showRemainingButtons']/div/OrderlineNoteButton" position="after">
             <t t-if="pos.config.module_pos_restaurant">
                 <!-- All buttons always displayed -->
                 <button t-att-class="buttonClass"
@@ -15,22 +15,25 @@
                 </button>
             </t>
         </xpath>
-        <xpath expr="//t[@t-if='props.showRemainingButtons']/OrderlineNoteButton" position="after">
+        <xpath expr="//t[@t-if='props.showRemainingButtons']/div/OrderlineNoteButton" position="after">
             <!-- All these buttons will only be displayed in a dialog -->
             <t t-if="pos.config.module_pos_restaurant">
-                <button class="btn btn-secondary rounded fw-bolder"
+                <button class="btn btn-secondary btn-lg py-5"
                     t-att-disabled="pos.get_order()?.get_orderlines()?.reduce((sum, line) => sum + line.qty, 0) lt 2"
                     t-on-click="() => pos.showScreen('SplitBillScreen')">
                     <i class="fa fa-files-o me-1"/>Split
                 </button>
-                <button class="btn btn-secondary rounded fw-bolder" t-on-click="clickTransferOrder">
+                <button class="btn btn-secondary btn-lg py-5" t-on-click="clickTransferOrder">
                     <i class="oi oi-arrow-right me-1" />Transfer / Merge
+                </button>
+                <button class="btn btn-secondary btn-lg py-5" t-on-click="() => this.editOrderNote(this.pos.get_order())">
+                    <i class="fa fa-pencil-square-o me-1" />Edit Order Note
                 </button>
             </t>
         </xpath>
         <xpath expr="//button[hasclass('o_fiscal_position_button')]" position="after">
             <button t-if="pos.config.takeaway and !props.showRemainingButtons"
-                t-attf-class="{{ currentOrder.takeaway ? 'btn-primary' : 'btn-light'}} btn rounded-0 fw-bolder"
+                t-attf-class="{{ currentOrder.takeaway ? 'btn-primary' : 'btn-light'}} btn btn-lg lh-lg"
                 t-on-click="clickTakeAway">
                 <i t-attf-class="{{ currentOrder.takeaway ? 'fa fa-car' : 'fa fa-cutlery'}} me-1"></i>
                 <span t-if="currentOrder.takeaway">Takaway</span>

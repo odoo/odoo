@@ -5,25 +5,26 @@
         <xpath expr="//button[hasclass('validation')]" position="after">
             <button
                 t-if="this.swapButton"
-                t-attf-class="submit-order h-100 {{getMainButtonClasses()}} position-relative border-top"
+                t-attf-class="submit-order h-100 {{getMainButtonClasses()}} position-relative px-3"
                 t-att-class="swapButtonClasses"
                 t-on-click="submitOrder">
                 <div t-if="this.uiState.clicked and displayCategoryCount.length" class="h-100 w-100 position-absolute top-0 start-0 d-flex align-items-center justify-content-center" style="backdrop-filter: blur(7px);">
                     <img src="/web/static/img/spin.svg" style="height:35px; width:35px" alt="Loading..."/>
                 </div>
-                <i class="fa fa-cutlery"></i>
-                Order
-                <div t-if="displayCategoryCount.length" class="break-line fw-normal fs-6 w-100  border-top mt-1 pt-1">
-                    <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">
-                        <div class="d-flex justify-content-start g-0 my-1 w-100">
-                            <label class="rounded px-2 py-0 me-1" style="background-color:rgba(0, 0, 0, 0.3);"><t t-esc="categoryCountLine.count"/></label>
-                            <label class="text-truncate ps-0" ><t t-esc="categoryCountLine.name"/></label>
-                        </div>
+                <t t-if="!(displayCategoryCount.length > 2)">Order</t>
+                <div t-attf-class="{{ !(displayCategoryCount.length > 2) ? 'd-flex flex-column align-items-end gap-1' : 'row row-cols-2 g-1 gx-2' }} {{ isCategoryCountOverflow ? 'mt-n3' : ''}}">
+                    <t t-if="displayCategoryCount.length">
+                        <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">
+                            <div class="d-flex align-items-center justify-content-between small" t-att-class="{ 'gap-2' : !(displayCategoryCount.length > 2) }">
+                                <label class="text-truncate"><t t-esc="categoryCountLine.name"/></label>
+                                <label class="rounded px-2 py-0" style="background-color:rgba(0, 0, 0, 0.3);"><t t-esc="categoryCountLine.count"/></label>
+                            </div>
+                        </t>
+                    </t>
+                    <t t-if="isCategoryCountOverflow">
+                        <div class="position-absolute bottom-0 start-50 translate-middle-x">...</div>
                     </t>
                 </div>
-                <t t-if="isCategoryCountOverflow">
-                    <div class="position-absolute bottom-0">...</div>
-                </t>
             </button>
         </xpath>
         <xpath expr="//button[hasclass('validation')]" position="attributes">
@@ -34,10 +35,9 @@
         <xpath expr="//button[hasclass('validation')]" position="before">
             <button t-if="this.swapButton"
                 t-on-click="() => pos.pay()" 
-                class="button pay-order-button btn btn-lg rounded-0 py-3 fs-6 border-top border-bottom"
-                t-attf-class="{{ this.highlightPay ? 'highlight btn-primary' : 'btn-secondary' }}" 
+                class="button pay-order-button btn btn-lg w-50"
+                t-attf-class="{{ this.highlightPay ? 'highlight btn-primary' : 'btn-light' }}" 
                 >
-                <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
                 Payment
             </button>
         </xpath>

@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_hr.LoginScreen">
-        <div class="login-overlay o_attendance_background fixed-top w-100 h-100">
-            <div class="screen-login-header d-flex justify-content-between px-4 pt-4 mb-0 w-100">
-                <div t-if="!ui.isSmall" class="screen-login-timer d-flex align-items-center">
-                    <div class="timer-hours d-flex align-items-center fs-1" t-esc="state.hours"> </div>
-                    <div class="timer-date-container flex-column justify-content-center ms-2 d-none d-lg-flex fs-6">
-                        <div class="timer-day d-flex align-items-center" t-esc="state.day"> </div>
-                        <div class="timer-date d-flex align-items-center" t-esc="state.date"> </div>
+        <div class="login-overlay o_attendance_background fixed-top w-100 h-100 p-4">
+            <div class="screen-login-header d-flex justify-content-between">
+                <div t-if="!ui.isSmall" class="screen-login-timer d-flex align-items-center gap-2 bg-transparent">
+                    <div class="timer-hours fs-1" t-esc="state.hours"> </div>
+                    <div class="timer-date-container d-flex flex-column smaller">
+                        <div class="timer-day" t-esc="state.day"> </div>
+                        <div class="timer-date" t-esc="state.date"> </div>
                     </div>
                 </div>
-                <div class="screen-login-logo ms-auto">
+                <div t-attf-class="screen-login-logo {{ ui.isSmall ? 'mx-auto' : 'ms-auto'}}">
                     <img t-attf-src="/web/image?model=res.company&amp;id={{pos.company.id}}&amp;field=logo" alt="Logo"/>
                 </div>
             </div>
-            <div class="screen-login position-absolute top-0 start-0 bottom-0 end-0 d-flex flex-column py-4 m-auto w-100 rounded text-center fw-bolder">
-                <div class="login-body d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
-                    <span class="login-element d-flex flex-column justify-content-center align-items-center bg-white rounded-4 mobile-scanner gap-0 pt-4">
-                        <i class="fa fa-barcode" aria-hidden="true" style="font-size: 4em;"></i>
-                        <p class="login-barcode-text mt-3">Scan your badge</p>
-                    </span>
-                    <span class="login-element select-cashier d-flex flex-column justify-content-center align-items-center bg-white rounded-4 gap-0 pt-4" t-on-click="() => this.selectCashier()">
-                        <i class="fa fa-user" aria-hidden="true" style="font-size: 4em;"></i>
-                        <p class="mt-3">Identify Manually</p>
-                    </span>
-                    <span class="login-element d-flex flex-column justify-content-center align-items-center bg-white rounded-4 gap-0 pt-4" t-on-click="displayEnterPinPopup">
-                        <i class="fa fa-unlock-alt" aria-hidden="true" style="font-size: 4em;"></i>
-                        <p class="mt-3">Enter Pin</p>
-                    </span>
+            <div class="screen-login position-absolute top-0 start-0 bottom-0 end-0 d-flex flex-column">
+                <div class="login-body d-flex flex-column flex-md-row gap-3 m-auto">
+                    <button class="login-element btn btn-light btn-lg d-flex flex-column align-items-center flex-grow-1 flex-basis-100 gap-2 p-5 rounded-4 lh-lg mobile-scanner">
+                        <i class="fa fa-barcode fa-3x" aria-hidden="true"></i>
+                        <span class="login-barcode-text d-flex flex-grow-1 align-items-center">Scan your badge</span>
+                    </button>
+                    <button class="login-element select-cashier btn btn-light btn-lg d-flex flex-column align-items-center flex-grow-1 flex-basis-100 gap-2 p-5 rounded-4 lh-lg" t-on-click="() => this.selectCashier()">
+                        <i class="fa fa-user fa-3x" aria-hidden="true"></i>
+                        <span class="d-flex flex-grow-1 align-items-center">Identify Manually</span>
+                    </button>
+                    <button class="login-element btn btn-light btn-lg d-flex flex-column align-items-center flex-grow-1 flex-basis-100 gap-2 p-5 rounded-4 lh-lg" t-on-click="displayEnterPinPopup">
+                        <i class="fa fa-unlock-alt fa-3x" aria-hidden="true"></i>
+                        <span class="d-flex flex-grow-1 align-items-center">Enter Pin</span>
+                    </button>
                 </div>
             </div>
         </div>

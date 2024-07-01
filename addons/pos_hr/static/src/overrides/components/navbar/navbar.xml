@@ -13,7 +13,14 @@
             </attribute>
         </xpath>
         <xpath expr="//CashierName" position="after">
-            <button t-if="pos.config.module_pos_hr" class="btn btn-light fa fa-lg fa-lock text-success px-3" title="Lock" t-on-click="showLoginScreen"/>
+            <button t-if="pos.config.module_pos_hr and !ui.isSmall" class="lock-screen btn btn-light btn-lg" title="Lock" t-on-click="showLoginScreen">
+                <i class="fa fa-fw fa-unlock"/>
+            </button>
+        </xpath>
+        <xpath expr="//Dropdown//div[contains(@class, 'pos-burger-menu-items')]" position="inside">
+            <DropdownItem t-if="pos.config.module_pos_hr and ui.isSmall" onSelected="() => this.showLoginScreen()">
+                Lock
+            </DropdownItem>
         </xpath>
     </t>
 

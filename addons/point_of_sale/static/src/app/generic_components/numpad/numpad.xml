@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
   <t t-name="point_of_sale.Numpad">
-    <div t-attf-class="{{props.class}} numpad row row-cols-{{buttons.length / 4}} gx-0">
+    <div t-attf-class="d-grid numpad-{{buttons.length / 4}}-cols m-n1 {{props.class}}">
       <button t-foreach="buttons.map((b) => typeof b === 'object' ? b : { value: b })" t-as="button" t-key="button.value"
-        t-attf-class="col btn btn-light py-3 border fw-bolder rounded-0 {{ button.class  or '' }}"
+        t-attf-class="numpad-button btn btn-light btn-lg fs-3 lh-lg m-1 {{ button.class  or '' }}"
         t-att-value="button.text or button.value"
         t-on-click="() => this.onClick(button.value)"
         t-att-disabled="button.disabled"

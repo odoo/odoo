@@ -5,10 +5,10 @@
         <Dialog header="false">
             <div class="input-amount d-flex mb-2 gap-2">
                 <div class="input-group">
-                    <button t-on-click="() => this.onClickButton('in')" class="input-type btn btn-secondary flex-fill py-2 fw-bolder" t-att-class="{ 'highlight btn-success': state.type === 'in' }">
+                    <button t-on-click="() => this.onClickButton('in')" class="input-type btn btn-secondary btn-lg lh-lg" t-att-class="{ 'highlight btn-success': state.type === 'in' }">
                         Cash In
                     </button>
-                    <button t-on-click="() => this.onClickButton('out')" class="input-type btn btn-secondary flex-fill py-2 fw-bolder" t-att-class="{ 'red-highlight btn-danger': state.type === 'out' }">
+                    <button t-on-click="() => this.onClickButton('out')" class="input-type btn btn-secondary btn-lg lh-lg" t-att-class="{ 'red-highlight btn-danger': state.type === 'out' }">
                         Cash Out
                     </button>
                 </div>
@@ -24,16 +24,14 @@
                 <label for="reason">Reason</label>
             </div>
             <t t-set-slot="footer">
-                <div class="d-flex w-100 justify-content-start gap-2">
-                    <button class="button confirm btn btn-lg btn-primary"
-                        t-on-click="confirm"
-                        t-att-disabled="!env.utils.isValidFloat(state.amount)">
-                        Confirm <span t-esc="format(state.amount)"/>
-                    </button>
-                    <button class="button cancel btn btn-lg btn-secondary" t-on-click="props.close">
-                        Discard
-                    </button>
-                </div>
+                <button class="button confirm btn btn-lg lh-lg btn-primary"
+                    t-on-click="confirm"
+                    t-att-disabled="!env.utils.isValidFloat(state.amount)">
+                    Confirm <span t-esc="format(state.amount)"/>
+                </button>
+                <button class="button cancel btn btn-lg lh-lg btn-secondary" t-on-click="props.close">
+                    Discard
+                </button>
             </t>
         </Dialog>
     </t>

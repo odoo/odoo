@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductScreen">
-        <div class="product-screen d-flex h-100 bg-100">
-            <div t-att-class="{'flex-grow-1': ui.isSmall, 'd-none': ui.isSmall and pos.mobile_pane !== 'left'}"
-                class="leftpane d-flex flex-column border-end bg-200" >
+        <div class="product-screen d-flex gap-3 h-100 p-2">
+            <div t-att-class="{'flex-grow-1 w-100 mw-100': ui.isSmall, 'd-none': ui.isSmall and pos.mobile_pane !== 'left'}"
+                class="leftpane d-flex flex-column">
                 <OrderSummary />
-                <div class="pads border-top">
-                    <ControlButtons t-if="!ui.isSmall" onClickMore.bind="displayAllControlPopup"/>
-                    <div class="subpads d-flex">
-                        <ActionpadWidget
-                            partner="currentOrder?.get_partner()"
-                            actionName="constructor.numpadActionName"
-                            actionType="'payment'"
-                            onClickMore.bind="displayAllControlPopup" />
-                        <Numpad t-if="pos.get_order().uiState.selected_orderline_uuid" buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>
+                <div class="pads">
+                    <div class="d-flex justify-content-between gap-2 w-100 py-2">
+                        <ControlButtons t-if="!ui.isSmall" onClickMore.bind="displayAllControlPopup"/>
+                    </div>
+                    <div class="subpads d-flex flex-column gap-2">
+                        <t t-if="currentOrder.lines.length != 0">
+                            <Numpad t-if="pos.get_order().uiState.selected_orderline_uuid" class="'d-grid m-n1'" buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>
+                            <ActionpadWidget
+                                partner="currentOrder?.get_partner()"
+                                actionName="constructor.numpadActionName"
+                                actionType="'payment'"
+                                onClickMore.bind="displayAllControlPopup" />
+                        </t>
                     </div>
                 </div>
             </div>
-            <div class="rightpane d-flex flex-grow-1 flex-column bg-view w-60 bg-100" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
-                <div class="overflow-y-auto flex-grow-1">
-                    <CategorySelector class="'d-grid p-1 gap-1'" style="'grid-template-columns: repeat(4, 1fr);'"
-                        categories="getCategoriesAndSub()" onClick="(id) => this.pos.setSelectedCategory(id)"/>
+            <div class="rightpane d-flex flex-grow-1 flex-column" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
+                <div class="d-flex flex-column flex-grow-1 overflow-y-auto">
+                    <CategorySelector class="'product-categories sticky-top d-flex gap-1 flex-wrap pb-2'" 
+                    categories="getCategoriesAndSub()" onClick="(id) => this.pos.setSelectedCategory(id)"/>
                     <CameraBarcodeScanner t-if="pos.scanning"/>
-                    <div t-elif="productsToDisplay.length != 0 and pos.session._has_available_products" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
+                    <div t-elif="productsToDisplay.length != 0 and pos.session._has_available_products" t-attf-class="product-list {{this.pos.productListViewMode}} overflow-y-auto">
                         <ProductCard
                             t-foreach="productsToDisplay" t-as="product" t-key="product.id"
                             productId="product.id"
@@ -41,24 +45,24 @@
                         <p t-elif="pos.session._has_available_products">There are no products in this category.</p>
                     </div>
                     <div t-if="searchWord" class="search-more-button d-flex justify-content-center m-2">
-                        <button class="btn btn-primary btn-lg" t-on-click="onPressEnterKey">Search more</button>
+                        <button class="btn btn-primary btn-lg lh-lg" t-on-click="onPressEnterKey">Search more</button>
                     </div>
                 </div>
                 <t t-if="ui.isSmall">
-                    <div class="product-reminder d-flex justify-content-center align-items-center py-1 text-bg-warning bg-opacity-50 fw-bolder" t-if="pos.get_order().get_selected_orderline() and pos.hasJustAddedProduct" t-key="animationKey" >
+                    <div class="product-reminder d-flex justify-content-center align-items-center p-2 rounded-3 text-bg-info fw-bolder" t-if="pos.get_order().get_selected_orderline() and pos.hasJustAddedProduct" t-key="animationKey" >
                         <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/> <t t-esc="selectedOrderlineTotal"/></span>
                     </div>
-                    <div class="switchpane d-flex">
-                        <button t-if="!pos.scanning" class="btn-switchpane pay-button btn w-50 rounded-0 fw-bolder" t-attf-class="{{ currentOrder.is_empty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => this.pos.pay()">
-                            <span class="fs-1 d-block">Pay</span>
+                    <div class="switchpane d-flex gap-2 mt-2">
+                        <button t-if="!pos.scanning" class="btn-switchpane pay-button btn btn-lg w-50" t-attf-class="{{ currentOrder.is_empty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => this.pos.pay()">
+                            <span class="d-block">Pay</span>
                             <span t-esc="total" />
                         </button>
-                        <button class="btn-switchpane btn w-50 btn-secondary rounded-0 fw-bolder review-button" t-on-click="switchPane">
-                            <span class="fs-1 d-block">Cart</span>
+                        <button class="btn-switchpane btn btn-light review-button w-50" t-on-click="switchPane">
+                            <span class="d-block">Cart</span>
                             <span><t t-esc="items"/> items</span>
                         </button>
-                        <button t-if="pos.scanning" class="btn-switchpane btn w-50 btn-secondary rounded-0 fw-bolder" t-on-click="() => this.pos.scanning = false">
-                            <span class="fs-1 d-block">Products</span>
+                        <button t-if="pos.scanning" class="btn-switchpane btn btn-secondar btn-lg w-50" t-on-click="() => this.pos.scanning = false">
+                            <span class="d-block">Products</span>
                         </button>
                     </div>
                 </t>

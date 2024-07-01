@@ -4,8 +4,8 @@
     <t t-name="point_of_sale.PartnerList">
         <Dialog bodyClass="'partner-list overflow-y-auto'" contentClass="'h-100'">
             <t t-set-slot="header">
-                <button t-if="!ui.isSmall" class="btn btn-primary" role="img" aria-label="Add a customer"
-                        t-on-click="() => this.editPartner()"
+                <button t-if="!ui.isSmall" class="btn btn-primary btn-lg lh-lg" role="img" aria-label="Add a customer"
+                        t-on-click="() => this.pos.editPartner()"
                         title="Add a customer">
                 Create 
                 </button>
@@ -17,7 +17,7 @@
                     autofocus="true"
                     debounceMillis="100" />
             </t>
-            <table class="table">
+            <table class="table table-hover">
                 <thead t-if="!ui.isSmall">
                     <tr>
                         <th class="py-2">Name</th>
@@ -46,12 +46,12 @@
             </div>
             <t t-set-slot="footer">
                 <div class="d-flex justify-content-start flex-wrap gap-2 w-100">
-                    <button t-if="ui.isSmall" class="btn btn-primary" role="img" aria-label="Add a customer"
+                    <button t-if="ui.isSmall" class="btn btn-primary btn-lg lh-lg" role="img" aria-label="Add a customer"
                         t-on-click="() => this.editPartner()"
                         title="Add a customer">
                     New 
                     </button>
-                    <button class="btn btn-secondary o-default-button" t-on-click="() => this.clickPartner(this.props.partner)">Discard</button>
+                    <button class="btn btn-secondary btn-lg lh-lg o-default-button" t-on-click="() => this.clickPartner(this.props.partner)">Discard</button>
                 </div>
             </t>
         </Dialog>

@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.ProductCard">
         <article tabindex="0"
-            t-attf-class="{{props.class}} {{props.color ? `o_colorlist_item_color_transparent_${props.color}` : ''}} border-0 product position-relative btn btn-light d-flex align-items-stretch p-0 m-0 text-start cursor-pointer overflow-hidden transition-base"
+            t-attf-class="{{props.class}} {{props.color ? `o_colorlist_item_color_transparent_${props.color}` : ''}} product position-relative btn btn-light d-flex align-items-stretch p-0 m-0 rounded-3 text-start cursor-pointer transition-base"
             t-on-keypress="(event) => event.code === 'Space' ? props.onClick(event) : ()=>{}"
             t-on-click="props.onClick"
             t-att-data-product-id="props.productId"
@@ -11,16 +11,14 @@
             <div t-if="props.productInfo" class="product-information-tag" t-on-click.stop="props.onProductInfoClick" t-att-class="{'red-tag' : !props.showWarning}">
                 <i class="product-information-tag-logo fa fa-info" role="img" aria-label="Product Information" title="Product Information" />
             </div>
-            <div t-if="props.imageUrl" class="product-img">
-                <img class="w-100" t-att-src="props.imageUrl" t-att-alt="props.name" />
+            <div t-if="props.imageUrl" class="product-img rounded-top rounded-3">
+                <img class="w-100 bg-100" t-att-src="props.imageUrl" t-att-alt="props.name" />
             </div>
-            <div class="product-content d-flex flex-column justify-content-between h-100 mx-2 py-1">
+            <div class="product-content d-flex flex-column justify-content-between p-2 rounded-bottom rounded-3 flex-shrink-1">
                 <div class="overflow-hidden lh-sm product-name"
-                    t-att-class="{'no-image': !props.imageUrl}"
+                    t-att-class="{'no-image d-flex justify-content-center align-items-center text-center fs-4': !props.imageUrl}"
                     t-attf-id="article_product_{{props.productId}}"
                     t-esc="props.name" />
-                <span t-if="props.price" class="price-tag py-1"
-                    t-esc="props.price" />
             </div>
         </article>
     </t>

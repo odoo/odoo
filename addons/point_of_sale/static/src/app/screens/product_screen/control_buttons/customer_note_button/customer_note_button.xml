@@ -2,10 +2,12 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.OrderlineNoteButton">
-        <button class="fw-bolder"
-            t-attf-class="{{this.props.class}}"
+        <button
+            t-attf-class="{{this.props.class}} flex-shrink-0"
             t-att-disabled="!pos.get_order()?.get_selected_orderline()" t-on-click="onClick">
-            <i t-attf-class="{{this.props.icon}} me-1" />
+            <t t-if="this.props.icon">
+                <i t-attf-class="{{this.props.icon}} me-1"/>
+            </t>
             <span t-esc="this.props.label"/>
         </button>
     </t>

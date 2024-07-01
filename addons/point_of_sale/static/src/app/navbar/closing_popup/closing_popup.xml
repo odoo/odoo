@@ -27,11 +27,11 @@
                                 <tr>
                                     <td t-esc="props.default_cash_details.name"/>
                                     <td t-esc="env.utils.formatCurrency(props.default_cash_details.amount)"/>
-                                    <td class="d-flex">
+                                    <td class="d-flex gap-1">
                                         <Input tModel="[state.payments[props.default_cash_details.id], 'counted']"
                                             callback.bind="(value) =>  this.setManualCashInput(value)"
                                             isValid.bind="env.utils.isValidFloat" class="'cash-input'"/>
-                                        <button class="icon fa fa-money fa-lg btn btn-secondary ms-1" t-on-click="openDetailsPopup" />
+                                        <button class="icon fa fa-money fa-lg btn btn-secondary btn-lg lh-lg" t-on-click="openDetailsPopup" />
                                     </td>
                                     <t t-set="diff" t-value="getDifference(props.default_cash_details.id)" />
                                     <td t-esc="env.utils.isValidFloat(diff) ? env.utils.formatCurrency(diff) : ''"

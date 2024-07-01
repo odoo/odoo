@@ -2,30 +2,18 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.TicketScreen">
+        <t t-set="_filteredOrderList" t-value="getFilteredOrderList()" />
         <div class="ticket-screen screen h-100 bg-100">
             <div class="screen-full-width d-flex w-100 h-100">
-                <div t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'left'" class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 bg-300 overflow-y-auto">
-                    <div class="controls d-flex align-items-center justify-content-between mt-1 mt-lg-0 p-2 bg-400">
-                        <t t-if="!ui.isSmall">
-                            <div class="buttons d-flex gap-2">
-                                <button t-if="!ui.isSmall" class="discard btn btn-lg btn-light" t-on-click="() => this.closeTicketScreen()">
-                                    <span class="search-icon">
-                                        <i class="fa fa-angle-double-left"/>
-                                    </span>
-                                    <t t-if="!ui.isSmall">
-                                        Back
-                                    </t>
-                                </button>
-                                <button t-if="allowNewOrders" class="highlight btn btn-lg btn-primary" t-on-click="() => this.onCreateNewOrder()">New Order</button>
-                            </div>
-                        </t>
-                        <t t-if="ui.isSmall and allowNewOrders">
-                            <button class="highlight btn btn-lg btn-primary" t-on-click="() => this.onCreateNewOrder()">
-                                <span class="search-icon">
-                                    <i class="fa fa-plus" aria-hidden="true"/>
-                                </span>
+                <div t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'left'" class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 bg-200 overflow-y-auto">
+                    <div class="controls d-flex align-items-center justify-content-between flex-wrap gap-2 p-2 bg-300">
+                        <div class="buttons d-flex gap-2">
+                            <button class="discard btn btn-lg btn-light" t-on-click="() => this.closeTicketScreen()">
+                                <i class="oi oi-chevron-left"/>
+                                Back
                             </button>
-                        </t>
+                            <button t-if="allowNewOrders" class="highlight btn btn-lg btn-light" t-on-click="() => this.onCreateNewOrder()">New Order</button>
+                        </div>
                         <SearchBar
                             config="getSearchBarConfig()"
                             placeholder="constructor.searchPlaceholder"
@@ -46,7 +34,6 @@
                         </div>
                     </div>
                     <div class="orders overflow-y-auto flex-grow-1">
-                        <t t-set="_filteredOrderList" t-value="getFilteredOrderList()" />
                         <t t-if="_filteredOrderList.length !== 0">
                             <div class="header-row d-flex text-bg-700 fw-bolder" t-att-class="{ 'd-none': ui.isSmall }">
                                 <div class="col wide p-2">Date</div>
@@ -115,23 +102,26 @@
                         <CenteredIcon
                             t-else=""
                             icon="this.pos.data.network.loading ? 'fa-spinner fa-spin' : 'fa-shopping-cart fa-4x'"
-                            text="this.pos.data.network.loading ? 'Loading...' : 'No orders found'"/>
+                            text="this.pos.data.network.loading ? 'Loading...' : 'No orders found'"
+                            class="'h-100'"/>
                     </div>
-                    <div class="switchpane d-flex w-100" t-if="ui.isSmall">
+                    <div class="switchpane d-flex w-100 gap-2 p-2 mt-2" t-if="ui.isSmall">
                         <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />
-                        <button class="btn-switchpane load-order-button primary btn btn-primary rounded-0 w-50 fw-bolder py-3" t-if="!isOrderSynced" t-on-click="() => this._setOrder(_selectedSyncedOrder)">
-                            <span class="fs-1 d-block">Load Order</span>
+                        <button class="btn-switchpane load-order-button primary btn btn-primary btn-lg lh-lg w-50 py-3" t-if="!isOrderSynced" t-on-click="() => this._setOrder(_selectedSyncedOrder)">
+                            <span class="d-block">Load Order</span>
                         </button>
-                        <button class="btn-switchpane flex-fill btn rounded-0 fw-bolder secondary review-button" t-att-class="{'btn-primary': isOrderSynced, 'btn-secondary': !isOrderSynced}" t-on-click="switchPane">
-                            <span class="fs-1 d-block">Review</span>
+                        <button class="btn-switchpane btn btn-lg lh-lg w-50 py-3 secondary review-button" t-att-class="{'btn-primary': isOrderSynced, 'btn-light': !isOrderSynced}" t-on-click="switchPane">
+                            <span class="d-block">Review</span>
                         </button>
                     </div>
                 </div>
-                <div class="leftpane d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 bg-200" t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'right'">
+                <!-- Hide the cart pane if no orders to list after having a search term -->
+                <t t-set="_shouldHideCart" t-value="_filteredOrderList.length === 0 and !this.state.search.searchTerm" />
+                <div t-if="(!ui.isSmall || pos.ticket_screen_mobile_pane === 'right') and !_shouldHideCart" class="leftpane d-flex flex-column flex-grow-1 gap-2 w-100 h-100 h-lg-100 bg-200 p-2">
                     <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />
                     <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />
                     <t t-if="_selectedSyncedOrder?.get_orderlines()?.length" > 
-                        <div t-if="isOrderSynced" t-att-class="{ 'highlight text-danger': !getHasItemsToRefund() }" class="py-2 px-3 border-bottom" >
+                        <div t-if="isOrderSynced" t-att-class="{ 'highlight text-danger': !getHasItemsToRefund() }" class="py-2 px-3 rounded-3 bg-100 text-center">
                             Select the product(s) to refund and set the quantity
                         </div>
                         <OrderWidget lines="_selectedSyncedOrder.lines" t-slot-scope="scope"
@@ -162,32 +152,32 @@
                                 </li>
                             </Orderline>
                         </OrderWidget>
-                        <div class="pads border-top">
+                        <div class="pads">
                             <t t-if="isOrderSynced">
-                                <div class="control-buttons d-flex flex-wrap border-bottom overflow-hidden bg-300">
+                                <div class="control-buttons d-flex gap-2 pb-2">
                                     <InvoiceButton
                                         onInvoiceOrder.bind="onInvoiceOrder"
                                         order="_selectedSyncedOrder" />
                                     <ReprintReceiptButton order="_selectedSyncedOrder" />
                                 </div>
-                                <div class="subpads d-flex">
+                                <div class="subpads d-flex flex-column">
+                                    <Numpad class="'pb-2'" buttons="getNumpadButtons()"/>
                                     <ActionpadWidget
                                         partner="getSelectedOrder()?.get_partner()"
                                         actionName="constructor.numpadActionName"
                                         actionType="'refund'"
                                         actionToTrigger.bind="onDoRefund"
                                         isActionButtonHighlighted="getHasItemsToRefund()" />
-                                    <Numpad buttons="getNumpadButtons()" class="'max-width-325px'"/>
                                 </div>
                             </t>
                             <div t-else="" class="pads border-top" >
-                                <button class="button validation load-order-button w-100 btn btn-lg btn-primary rounded-0 fw-bolder py-3" t-on-click="() => this._setOrder(_selectedSyncedOrder)">
-                                    <span class="fs-1 d-block">Load Order</span>
+                                <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3" t-on-click="() => this._setOrder(_selectedSyncedOrder)">
+                                    <span class="d-block">Load Order</span>
                                 </button>
                             </div>
                         </div>
                     </t>
-                    <CenteredIcon t-else="" icon="'fa-shopping-cart fa-4x'" text.translate="Select an order" class="'bg-100'"/>
+                    <CenteredIcon t-else="" icon="'fa-shopping-cart fa-4x'" text.translate="'Select an order'" class="'bg-100 h-100'"/>
                 </div>
             </div>
         </div>

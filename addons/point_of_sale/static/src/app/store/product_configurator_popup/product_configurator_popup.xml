@@ -31,7 +31,7 @@
                         <input class="form-check-input d-none" type="radio" t-model="state.attribute_value_ids" t-att-name="value.attribute_id.id"
                             t-attf-id="{{ value.attribute_id.id }}_{{ value.id }}" t-att-value="value.id"/>
                         <label
-                            t-attf-class="btn btn-lg d-flex {{ value.id == state.attribute_value_ids ? 'btn-primary' : 'btn-secondary' }}"
+                            t-attf-class="btn btn-secondary btn-lg lh-lg d-flex {{ value.id == state.attribute_value_ids ? 'active' : '' }}"
                             t-att-name="value.name"
                             t-attf-for="{{ value.attribute_id.id }}_{{ value.id }}">
                             <span t-esc="value.name"/>
@@ -105,7 +105,7 @@
                     t-attf-name="multi-{{value.id}}"
                     t-model="state.attribute_value_ids[value.id]"/>
                 <label
-                    t-attf-class="form-check-label btn d-flex {{ state.attribute_value_ids[value.id] === true ? 'btn-primary' : 'btn-secondary' }}"
+                    t-attf-class="form-check-label btn btn-secondary btn-lg lh-lg d-flex {{ state.attribute_value_ids[value.id] === true ? 'active' : '' }}"
                     t-attf-name="multi-{{value.id}}"
                     t-attf-for="multi-{{value.id}}">
                     <span t-esc="value.name"/>
@@ -132,10 +132,8 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <div class="d-flex w-100 justify-content-start gap-2">
-                    <button class="btn btn-primary o-default-button" t-on-click="confirm">Ok</button>
-                    <button class="btn btn-secondary o-default-button" t-on-click="close">Discard</button>
-                </div>
+                <button class="btn btn-primary btn-lg lh-lg o-default-button" t-on-click="confirm">Ok</button>
+                <button class="btn btn-secondary btn-lg lh-lg o-default-button" t-on-click="close">Discard</button>
             </t>
         </Dialog>
     </t>

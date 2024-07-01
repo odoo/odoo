@@ -29,8 +29,6 @@ import { computeComboItems } from "../models/utils/compute_combo_items";
 import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
 import { getTaxesAfterFiscalPosition, getTaxesValues } from "../models/utils/tax_utils";
 import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
-import { ReceiptScreen } from "../screens/receipt_screen/receipt_screen";
-import { PaymentScreen } from "../screens/payment_screen/payment_screen";
 
 const { DateTime } = luxon;
 
@@ -407,7 +405,7 @@ export class PosStore extends Reactive {
     get productListViewMode() {
         const viewMode = this.productListView && this.ui.isSmall ? this.productListView : "grid";
         if (viewMode === "grid") {
-            return "d-grid gap-1";
+            return "d-grid gap-2";
         } else {
             return "";
         }
@@ -1560,16 +1558,6 @@ export class PosStore extends Reactive {
                 }
             },
             false
-        );
-    }
-
-    showBackButton() {
-        const screenWoBackBtn = [ProductScreen, ReceiptScreen, PaymentScreen, TicketScreen];
-        const screenWoBackBtnMobile = [ProductScreen, ReceiptScreen];
-        return (
-            !screenWoBackBtn.includes(this.mainScreen.component) ||
-            (this.ui.isSmall && !screenWoBackBtnMobile.includes(this.mainScreen.component)) ||
-            (this.mobile_pane === "left" && this.mainScreen.component === ProductScreen)
         );
     }
 

@@ -1,16 +1,17 @@
-.pos-topheader {
-    height: $navbar-height;
+.pos-leftheader, .pos-rightheader {
+    width: 45%;
+    &.pos-nav-small {
+        width: auto;
+    }
+}
+
+.pos-centerheader {
+    width: 10%;
 }
 
 .status-buttons {
-    > div {
-        display: flex;
-        align-items: center;
-        padding: $o-horizontal-padding * 0.75;
-    }
-
     .avatar {
-        width: 25px;
+        height: 24px;
     }
 }
 
@@ -21,4 +22,21 @@
 .sub-menu {
     top: $navbar-height * 2/3;
     right: $navbar-height * -1/3 ;
+}
+
+.dropdown-menu {
+    padding: 0;
+}
+
+.o-dropdown-item {
+    padding: map-get($spacers, 2);
+    border-radius: $border-radius;
+
+    &:hover {
+        background-color: $o-gray-200;
+    }
+}
+
+.o-dropdown--menu .dropdown-item.focus {
+    background-color: $o-gray-200;
 }

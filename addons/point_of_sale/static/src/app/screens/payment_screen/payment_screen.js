@@ -66,7 +66,7 @@ export class PaymentScreen extends Component {
 
         return enhancedButtons().map((button) => ({
             ...button,
-            class: `fs-4 ${colorClassMap[button.value] || ""}`,
+            class: `${colorClassMap[button.value] || ""}`,
         }));
     }
 

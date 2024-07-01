@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.SearchBar">
-        <div class="pos-search-bar d-flex align-items-center flex-grow-1 h-100 ms-3 rounded">
+        <div class="pos-search-bar d-flex align-items-center rounded">
             <div class="search position-relative h-100 d-flex flex-grow-1">
                 <div class="input-group">
-                    <input class="form-control bg-view border-light ps-5" t-ref="autofocus"
+                    <input class="form-control form-control-lg bg-view border-light ps-2 ps-lg-5" t-ref="autofocus"
                     t-model="state.searchInput" t-on-keydown="onSearchInputKeydown" t-on-keyup="onSearchInputKeyup" type="text" t-att-placeholder="props.placeholder" />
                     <div t-if="state.showSearchFields and state.searchInput" class="fields">
                         <ul class="py-1 bg-view small">

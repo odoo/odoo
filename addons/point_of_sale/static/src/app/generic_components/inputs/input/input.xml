@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.input">
-        <div t-attf-class="{{props.class}} d-flex align-items-center gap-1">
+        <div t-attf-class="{{props.class}} d-flex">
             <button t-if="props.isSmall"
                 class="p-2 rounded btn btn-secondary"
                 t-on-click="() => state.isOpen = !state.isOpen">
@@ -9,8 +9,8 @@
                 <t t-else="props.iconOnLeftSide" t-call="point_of_sale.inputIcon" />
             </button>
             <div t-if="!props.isSmall || state.isOpen"
-                class="input-group h-100">
-                <div class="form-control input-container d-flex align-items-center py-1 bg-view"
+                class="input-group">
+                <div class="form-control form-control-lg input-container d-flex align-items-center bg-view"
                     t-att-class="{'is-invalid': !props.isValid(getValue())}">
                     <t t-if="props.iconOnLeftSide" t-call="point_of_sale.inputIcon" />
                     <input class="border-0 mx-2" type="text" style="min-width: 60px;"

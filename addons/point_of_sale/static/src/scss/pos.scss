@@ -9,6 +9,11 @@ button {
     transition: all 150ms linear;
 }
 
+.btn-light {
+    --btn-hover-bg: #{$o-gray-100};
+    --btn-hover-border-color: #{$o-gray-100};
+}
+
 [type="text"], [type="password"], [type="number"], [type="email"], [type="tel"], textarea, select {
     width: 100%;
     display: block;
@@ -54,9 +59,15 @@ button {
 }
 
 .leftpane {
-    max-width: $left-pane-width;
     width: $left-pane-width;
+    max-width: $left-pane-width;
+
+    @include media-breakpoint-down(xl) {
+        width: $left-pane-width-tablet;
+        max-width: $left-pane-width-tablet;
+    }
 }
+
 
 @media screen and (max-width: 992px) {
     .order,
@@ -173,6 +184,7 @@ button {
 }
 
 // Set all the colors but the "no-color" one
+
 @for $size from 2 through length($o-colors) {
     .o_colorlist_item_color_transparent_#{$size - 1} {
         $-bg: adjust-color(nth($o-colors, $size), $lightness: 35%, $saturation: 15%);

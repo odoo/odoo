@@ -13,14 +13,15 @@
                 </div>
                 <div class="default-view d-flex flex-lg-row flex-column overflow-hidden flex-grow-1">
                     <div class="actions d-flex flex-column justify-content-between flex-lg-grow-1 flex-grow-0 flex-shrink-1 flex-basis-0">
-                        <div class="o_payment_successful d-flex flex-column m-4">
+                        <div class="o_payment_successful d-flex flex-column p-3">
                             <h1>Payment Successful</h1>
-                            <div class="buttons my-3">
+                            <div class="buttons mt-3">
                                 <button class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="() => doPrint.call()">
                                     <i t-attf-class="fa {{doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Receipt
                                 </button>
                             </div>
-                            <div class="d-flex gap-1" t-att-class="{'flex-column-reverse': this.ui.isSmall}">
+                            <small class="text-muted text-center my-2">OR</small>
+                            <div class="d-flex gap-1" t-att-class="{'flex-column': this.ui.isSmall}">
                                 <div class="flex-grow-1 p-0 border-0 position-relative send-receipt-input">
                                     <input type="text" class="border p-3 bg-view w-100 pe-5" t-attf-placeholder="{{ state.mode === 'email' ? 'e.g. john.doe@mail.com' : 'e.g. 0123456789' }}" t-model="state.input" />
                                     <div t-att-class="{'opacity-25': !isValidInput}"  t-on-click="() => this.actionSendReceipt()" class="position-absolute end-0 top-0 h-100 d-flex align-items-center text-primary cursor-pointer">
@@ -28,7 +29,7 @@
                                     </div>
                                 </div>
                                 <div t-att-class="{'mt-1': this.ui.isSmall}" class="gap-1 d-flex sending-receipt-management justify-content-center">
-                                    <button t-att-class="{'opacity-50': state.mode !== 'email', 'py-3': this.ui.isSmall, 'px-5': !this.ui.isSmall}" t-on-click="() => this.changeMode('email')" class="btn btn-primary flex-grow-1 d-flex align-items-center justify-content-center" >
+                                    <button t-att-class="{'opacity-50': state.mode !== 'email', 'py-3': this.ui.isSmall, 'px-5': !this.ui.isSmall}" t-on-click="() => this.changeMode('email')" class="btn btn-primary btn-lg lh-lg d-flex align-items-center justify-content-center w-100" >
                                         <i t-attf-class="fa {{sendReceipt.status === 'loading' and sendReceipt.lastArgs?.[0]?.name === 'Email' ?  'fa-fw fa-spin fa-circle-o-notch' : 'fa-envelope'}}" aria-hidden="true" />
                                     </button>
                                 </div>
@@ -41,13 +42,11 @@
                             </div>
                         </div>
                         <t t-set="splittedOrder" t-value="this.currentOrder.originalSplittedOrder and !this.currentOrder.originalSplittedOrder.finalized"/>
-                        <div id="action_btn_desktop" t-if="!ui.isSmall" class="validation-buttons d-flex w-100 gap-1 sticky-bottom">
-                            <button class="button next validation btn btn-primary w-100 py-5 rounded-0 fs-2" t-att-class="{ highlight: !locked }" t-if="!splittedOrder" t-on-click="orderDone" name="done">
-                                <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
+                        <div id="action_btn_desktop" t-if="!ui.isSmall" class="validation-buttons d-flex w-100 gap-2 p-2 sticky-bottom">
+                            <button class="button next validation btn btn-primary btn-lg w-100 py-4 lh-lg" t-att-class="{ highlight: !locked }" t-if="!splittedOrder" t-on-click="orderDone" name="done">
                                 New Order
                             </button>
-                            <button t-if="isResumeVisible()" class="button next validation btn btn-primary w-100 py-5 rounded-0 fs-2" t-att-class="{ highlight: !locked }" t-on-click="resumeOrder" name="resume">
-                                <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
+                            <button t-if="isResumeVisible()" class="button next validation btn btn-secondary btn-lg w-100 py-4 lh-lg" t-att-class="{ highlight: !locked }" t-on-click="resumeOrder" name="resume">
                                 Resume Order
                             </button>
                         </div>
@@ -58,11 +57,11 @@
                         </div>
                     </div>
                 </div>
-                <div  id="action_btn_mobile" t-if="ui.isSmall" class="switchpane d-flex h-12 gap-1">
-                    <div class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }" t-if="!splittedOrder" t-on-click="orderDone" name="done">
+                <div  id="action_btn_mobile" t-if="ui.isSmall" class="switchpane d-flex gap-2 p-2">
+                    <div class="btn-switchpane validation-button btn btn-primary btn-lg py-3 w-50 lh-lg" t-att-class="{ highlight: !locked }" t-if="!splittedOrder" t-on-click="orderDone" name="done">
                                 New Order
                     </div>
-                    <div t-if="isResumeVisible() and !splittedOrder" class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }" t-on-click="resumeOrder" name="resume">
+                    <div t-if="isResumeVisible() and !splittedOrder" class="btn-switchpane validation-button btn btn-secondary btn-lg w-50 py-3 lh-lg" t-att-class="{ highlight: !locked }" t-on-click="resumeOrder" name="resume">
                                 Resume Order
                     </div>
                 </div>

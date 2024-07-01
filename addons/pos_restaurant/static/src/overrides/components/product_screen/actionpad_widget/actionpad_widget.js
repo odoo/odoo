@@ -24,8 +24,8 @@ patch(ActionpadWidget.prototype, {
     },
     get swapButtonClasses() {
         return {
-            "highlight btn-primary": this.displayCategoryCount.length,
-            "pe-none": !this.displayCategoryCount.length,
+            "highlight btn-primary justify-content-between": this.displayCategoryCount.length,
+            "btn-light pe-none disabled justify-content-center": !this.displayCategoryCount.length,
             altlight: !this.hasChangesToPrint && this.currentOrder?.hasSkippedChanges(),
         };
     },
@@ -54,10 +54,10 @@ patch(ActionpadWidget.prototype, {
         );
     },
     get displayCategoryCount() {
-        return this.pos.categoryCount.slice(0, 3);
+        return this.pos.categoryCount.slice(0, 4);
     },
     get isCategoryCountOverflow() {
-        if (this.pos.categoryCount.length > 3) {
+        if (this.pos.categoryCount.length > 4) {
             return true;
         }
         return false;

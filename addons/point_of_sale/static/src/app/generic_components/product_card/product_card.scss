@@ -1,10 +1,16 @@
-.product:hover {
-    border: 1px solid $o-gray-100;
+.product {
+    --btn-border-color: #{$o-gray-200};
+
+    &:hover {
+        border: 1px solid $o-gray-100;
+    }
 }
 
 .product-img img {
-    height: 100px;
-    object-fit: contain;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-top-right-radius: $border-radius-lg;
+    border-top-left-radius: $border-radius-lg;
 }
 
 .product-name {
@@ -16,7 +22,7 @@
 
     &.no-image {
         -webkit-line-clamp: 7;
-        min-height: 4rem;
+        aspect-ratio: 4 / 3;
     }
 }
 
@@ -37,6 +43,7 @@
     right: 0;
     color: white;
     text-align: center;
+    border-top-right-radius: $border-radius-lg;
 }
 
 .product-information-tag-logo {

@@ -2,22 +2,21 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.ActionpadWidget">
-        <div class="actionpad d-flex flex-column flex-grow-1 p-0 border-end">
-            <button class="button mobile-more-button btn btn-secondary flex-fill border-bottom" t-if="ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
-                <span>More...</span>
-            </button>
-            <t t-if="ui.isSmall">
+        <div class="actionpad d-flex flex-column gap-2">
+            <div t-if="ui.isSmall" class="d-flex gap-2">
                 <SelectPartnerButton partner="props.partner"/>
-            </t>
-            <button class="pay validation pay-order-button"
-                t-attf-class="{{getMainButtonClasses()}}"
-                t-att-class="{'btn-secondary': !props.isActionButtonHighlighted, 'btn-primary': props.isActionButtonHighlighted,'with-more-button': props.onClickMore and ui.isSmall}"
-                t-on-click="props.actionToTrigger ? this.props.actionToTrigger : () => pos.pay()">
-                <div class="pay-circle d-flex align-items-center justify-content-center py-2 mb-2">
-                    <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
-                </div>
-                <t class="text-white" t-esc="props.actionName" />
-            </button>
+                <button class="button mobile-more-button btn btn-light btn-lg flex-fill" t-if="props.onClickMore" t-on-click="props.onClickMore">
+                    <span>Actions</span>
+                </button>
+            </div>
+            <div class="d-flex flex-row-reverse gap-2">
+                <button class="pay validation pay-order-button justify-content-center lh-lg flex-fill py-3"
+                    t-attf-class="{{getMainButtonClasses()}}"
+                    t-att-class="{'btn-primary py-3': !props.isActionButtonHighlighted, 'btn-primary': props.isActionButtonHighlighted, 'with-more-button': props.onClickMore and ui.isSmall}"
+                    t-on-click="props.actionToTrigger ? this.props.actionToTrigger : () => pos.pay()">
+                    <t t-esc="props.actionName" />
+                </button>
+            </div>
         </div>
     </t>
 

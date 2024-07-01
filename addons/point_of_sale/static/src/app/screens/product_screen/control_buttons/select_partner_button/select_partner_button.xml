@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.SelectPartnerButton">
-        <button class="btn btn-light set-partner py-2 rounded-0 fw-bolder d-flex align-items-center justify-content-center" t-on-click="() => this.pos.selectPartner()">
-            <i class="fa fa-user me-1" role="img" aria-label="Customer" title="Customer" />
-            <div t-if="props.partner" t-esc="props.partner.name" class="text-truncate fw-bolder text-action" />
+        <button class="set-partner btn btn-light btn-lg lh-lg text-truncate w-auto" t-on-click="() => this.pos.selectPartner()">
+            <div t-if="props.partner" t-esc="props.partner.name" class="text-truncate text-action" />
             <t t-else="">Customer</t>
         </button>
     </t>

@@ -64,7 +64,7 @@ export class Numpad extends Component {
         buttons: { type: buttonsType, optional: true },
     };
     static defaultProps = {
-        class: "",
+        class: "numpad",
     };
     get buttons() {
         return this.props.buttons || getButtons([DECIMAL, ZERO, BACKSPACE]);

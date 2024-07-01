@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_loyalty.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
-        <xpath expr="//OrderlineNoteButton" position="after">
+        <xpath expr="//t[@t-if='props.showRemainingButtons']/div/OrderlineNoteButton" position="after">
             <t t-if="pos.models['loyalty.program'].some((p) => p.program_type == 'ewallet')">
                 <t t-set="_orderTotal" t-value="pos.get_order().get_total_with_tax()" />
                 <t t-set="_eWalletPrograms" t-value="_getEWalletPrograms()" />
@@ -30,9 +30,9 @@
                 </button>
             </t>
         </xpath>
-        <xpath expr="//t[@t-if='props.showRemainingButtons']/OrderlineNoteButton" position="after">
+        <xpath expr="//t[@t-if='props.showRemainingButtons']/div/OrderlineNoteButton" position="after">
             <t t-if="pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type))">
-                <button class="btn btn-secondary rounded fw-bolder" t-att-class="{'disabled': !pos.get_order().isProgramsResettable()}"
+                <button class="btn btn-secondary btn-lg py-5" t-att-class="{'disabled': !pos.get_order().isProgramsResettable()}"
                     t-on-click="() => this.pos.resetPrograms()">
                     <i class="fa fa-star me-1"/>Reset Programs
                 </button>

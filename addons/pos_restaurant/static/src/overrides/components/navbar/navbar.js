@@ -1,6 +1,4 @@
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
-import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
-import { TipScreen } from "@pos_restaurant/app/tip_screen/tip_screen";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
@@ -12,32 +10,16 @@ import {
     ZERO,
     BACKSPACE,
 } from "@point_of_sale/app/generic_components/numpad/numpad";
+import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 
 patch(Navbar.prototype, {
-    async onClickBackButton() {
-        if (this.pos.orderToTransferUuid) {
-            const order = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
-            this.pos.set_order(order);
-            if (order.table_id) {
-                this.pos.setTable(order.table_id);
-            }
-            this.pos.orderToTransferUuid = false;
-            this.pos.showScreen("ProductScreen");
-            return;
+    onClickPlanButton() {
+        if (this.pos.config.module_pos_restaurant) {
+            this.pos.showScreen("FloorScreen", { floor: this.floor });
         }
-        if (this.pos.mainScreen.component && this.pos.config.module_pos_restaurant) {
-            if (
-                (this.pos.mainScreen.component === ProductScreen &&
-                    this.pos.mobile_pane == "right") ||
-                this.pos.mainScreen.component === TipScreen
-            ) {
-                this.pos.showScreen("FloorScreen", { floor: this.floor });
-            } else {
-                super.onClickBackButton(...arguments);
-            }
-            return;
-        }
-        super.onClickBackButton(...arguments);
+    },
+    isFloorScreenActive() {
+        return this.pos.mainScreen.component && this.pos.mainScreen.component === FloorScreen;
     },
     /**
      * If no table is set to pos, which means the current main screen
@@ -59,8 +41,11 @@ patch(Navbar.prototype, {
     showTabs() {
         return !this.pos.selectedTable;
     },
-    get showTableIcon() {
-        return typeof this.getTable()?.table_number === "number" && this.pos.showBackButton();
+    get showTableNumber() {
+        return typeof this.getTable()?.table_number === "number";
+    },
+    get showSwitchTableButton() {
+        return this.pos.mainScreen.component.name === "FloorScreen";
     },
     onSwitchButtonClick() {
         const mode = this.pos.floorPlanStyle === "kanban" ? "default" : "kanban";
@@ -105,5 +90,9 @@ patch(Navbar.prototype, {
         } else {
             this.selectFloatingOrder(floating_order);
         }
+    },
+    getFloatingOrders() {
+        const result = super.getFloatingOrders();
+        return result.filter((o) => !o.table_id);
     },
 });

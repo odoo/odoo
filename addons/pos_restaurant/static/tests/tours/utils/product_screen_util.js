@@ -16,7 +16,7 @@ export function orderlinesHaveNoChange() {
 export function orderlineIsToOrder(name) {
     return Order.hasLine({
         productName: name,
-        withClass: ".has-change.text-success.border-start.border-success.border-4",
+        withClass: ".has-change.border-start.border-primary.border-4",
     });
 }
 export function orderlineIsToSkip(name) {

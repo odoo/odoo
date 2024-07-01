@@ -3,10 +3,10 @@
 
     <t t-name="point_of_sale.PaymentScreen">
         <t t-if="ui.isSmall">
-            <div class="payment-screen screen d-flex flex-column h-100 bg-100">
+            <div class="payment-screen screen d-flex flex-column h-100 p-2 bg-200">
                 <t t-call="point_of_sale.PaymentScreenDue" />
                 <t t-call="point_of_sale.PaymentScreenMethods" />
-                <div class="d-flex flex-grow-1 flex-column overflow-y-auto border-top">
+                <div class="d-flex flex-grow-1 flex-column overflow-y-auto gap-1">
                     <PaymentScreenStatus order="currentOrder" />
                     <PaymentScreenPaymentLines
                         paymentLines="paymentLines"
@@ -19,23 +19,27 @@
                         updateSelectedPaymentline.bind="updateSelectedPaymentline" />
                 </div>
                 <t t-call="point_of_sale.PaymentScreenButtons" />
-                <div t-attf-class="d-flex switchpane">
-                    <t t-call="point_of_sale.PaymentScreenValidate" />
+                <div t-attf-class="d-flex switchpane gap-2 mt-2">
                     <t t-call="point_of_sale.PaymentScreenBack" />
+                    <t t-call="point_of_sale.PaymentScreenValidate" />
                 </div>
             </div>
         </t>
         <t t-else="">
-            <div class="payment-screen screen d-flex flex-column h-100 bg-100">
-                <div class="main-content d-flex overflow-auto h-100">
-                    <div class="left-content d-flex flex-column col-md-4 bg-400">
+            <div class="payment-screen screen d-flex flex-column h-100 ">
+                <div class="main-content d-flex gap-3 h-100 p-2 bg-200 overflow-auto">
+                    <div class="left-content d-flex flex-column col-md-4">
                         <t t-call="point_of_sale.PaymentScreenMethods" />
                         <t t-call="point_of_sale.PaymentScreenButtons" />
-                        <Numpad class="'flex-grow-1 border-top'"  buttons="getNumpadButtons()"/>
+                        <Numpad class="'py-2'"  buttons="getNumpadButtons()"/>
+                        <div t-attf-class="d-flex flex-row gap-2">
+                            <t t-call="point_of_sale.PaymentScreenBack" />
+                            <t t-call="point_of_sale.PaymentScreenValidate" />
+                        </div>
                     </div>
-                    <div class="center-content d-flex flex-column col-md-8 border-start border-end bg-300">
+                    <div class="center-content d-flex flex-column flex-grow-1 gap-2">
                         <t t-call="point_of_sale.PaymentScreenDue" />
-                        <div class="payment-summary d-flex flex-grow-1 flex-column mb-2 overflow-y-auto justify-content-center">
+                        <div class="payment-summary d-flex flex-grow-1 flex-column gap-2 overflow-y-auto justify-content-center rounded-3 bg-view">
                             <PaymentScreenStatus order="currentOrder" />
                             <PaymentScreenPaymentLines
                                 paymentLines="paymentLines"
@@ -47,10 +51,6 @@
                                 selectLine.bind="selectPaymentLine"
                                 updateSelectedPaymentline.bind="updateSelectedPaymentline" />
                         </div>
-                        <div t-attf-class="d-flex flex-row">
-                            <t t-call="point_of_sale.PaymentScreenValidate" />
-                            <t t-call="point_of_sale.PaymentScreenBack" />
-                        </div>
                     </div>
                 </div>
             </div>
@@ -58,9 +58,9 @@
     </t>
 
     <t t-name="point_of_sale.PaymentScreenDue">
-        <section class="paymentlines-container bg-view p-3 border"
+        <section class="paymentlines-container rounded-3 bg-view"
             t-att-class="{'paymentlines-empty': paymentLines.length === 0 }">
-            <div class="total text-center py-2 text-success">
+            <div class="total text-center py-2 py-lg-4 text-success">
                 <t t-esc="this.env.utils.formatCurrency(currentOrder.getTotalDue())" />
             </div>
         </section>
@@ -68,48 +68,42 @@
 
     <t t-name="point_of_sale.PaymentScreenValidate">
         <t t-if="ui.isSmall">
-            <button class="btn-switchpane validation-button btn btn-primary flex-fill py-4 rounded-0 fw-bolder fs-1 w-50"
+            <button class="btn-switchpane validation-button btn btn-primary btn-lg w-50 py-3 lh-lg"
                 t-att-class="{ secondary: !(currentOrder.is_paid() and currentOrder._isValidEmptyOrder()) }"
                 t-on-click="() => this.validateOrder()">
                 <span>Validate</span>
             </button>
         </t>
         <t t-else="">
-            <div class="button next validation btn btn-primary btn-lg py-5 rounded-0 d-flex flex-column align-items-center justify-content-center fw-bolder flex-grow-1 w-50"
+            <button class="button next validation btn btn-primary btn-lg w-50 py-3 lh-lg"
                 t-attf-class="{{currentOrder.is_paid() and currentOrder._isValidEmptyOrder() ? 'highlight' : 'disabled'}}"
                 t-on-click="() => this.validateOrder()">
-                <div class="pay-circle d-flex align-items-center justify-content-center mb-2">
-                    <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
-                </div>
                 <span class="next_text">Validate</span>
-            </div>
+            </button>
         </t>
     </t>
 
     <t t-name="point_of_sale.PaymentScreenBack">
         <t t-if="ui.isSmall">
-            <button class="btn-switchpane validation-button btn btn-secondary flex-fill py-4 rounded-0 fw-bolder fs-1 w-50"
+            <button class="btn-switchpane validation-button btn btn-light btn-lg w-50 py-3 lh-lg "
                 t-on-click="() => pos.showScreen('ProductScreen')">
                 <span>Back</span>
             </button>
         </t>
         <t t-else="">
-            <div class="button back back-button validation btn btn-light btn-lg py-5 rounded-0 d-flex flex-column align-items-center justify-content-center fw-bolder flex-grow-1 w-50"
+            <button class="button back back-button validation btn btn-light btn-lg w-50 py-3 lh-lg "
                 t-on-click="() => pos.showScreen('ProductScreen')">
-                <div class="pay-circle d-flex align-items-center justify-content-center mb-2">
-                    <i class="fa fa-angle-double-left me-2" />
-                </div>
                 <span class="back_text">Back</span>
-            </div>
+            </button>
         </t>
     </t>
 
     <t t-name="point_of_sale.PaymentScreenButtons">
-        <div class="payment-buttons container-fluid mt-1">
-            <div class="row">
+        <div class="payment-buttons d-flex flex-column gap-2">
+            <div class="d-flex flex-column flex-sm-row gap-2 w-100">
                 <t t-set="hasOptionalButtons" t-value="pos.config.iface_tipproduct and pos.config.tip_product_id or pos.config.iface_cashdrawer or pos.config.ship_later" />
-                <button class="button col partner-button btn btn-light py-3 text-start rounded-0 border-top border-start border-end"
-                    t-att-class="{ 'highlight text-bg-primary': currentOrder.get_partner(), 'border-bottom': hasOptionalButtons }"
+                <button class="button partner-button btn btn-light btn-lg w-100 w-md-50 lh-lg text-truncate"
+                    t-att-class="{ 'highlight text-action': currentOrder.get_partner() }"
                     t-on-click="() => this.pos.selectPartner()">
                     <i class="fa fa-user me-2" role="img" title="Customer" />
                     <span class="partner-name">
@@ -117,28 +111,29 @@
                         <t t-else="">Customer</t>
                     </span>
                 </button>
-                <button class="button col js_invoice btn btn-light py-3 text-start rounded-0 border-top border-start border-end" t-att-class="{ 'highlight text-bg-primary': currentOrder.is_to_invoice(), 'border-bottom': hasOptionalButtons }"
+                <button class="button js_invoice btn btn-light btn-lg d-flex justify-content-between align-items-baseline w-100 w-md-50 lh-lg" t-att-class="{ 'highlight active': currentOrder.is_to_invoice() }"
                     t-on-click="toggleIsToInvoice">
-                    <i class="fa fa-file-text-o me-2" />Invoice 
+                    <span><i class="fa fa-file-text-o me-2" />Invoice</span>
+                    <i class="fa me-2" t-attf-class="{{ currentOrder.is_to_invoice() ? 'fa-check-square text-action' : 'fa-square-o' }}" /> 
                 </button>
             </div>
-            <div class="row">
-                <button t-if="pos.config.iface_tipproduct and pos.config.tip_product_id" class="button col js_tip btn btn-light py-3 text-start rounded-0 border-top border-start border-end" t-att-class="{ 'highlight text-bg-primary': currentOrder.get_tip() }"
+            <div t-if="(pos.config.iface_tipproduct and pos.config.tip_product_id) or pos.config.iface_cashdrawer" class="d-flex flex-column gap-2 w-100">
+                <button t-if="pos.config.iface_tipproduct and pos.config.tip_product_id" class="button btn btn-light btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.get_tip() }"
                     t-on-click="addTip">
-                    <i class="fa fa-heart me-2" />Tip 
+                    <span t-attf-class="{{currentOrder.get_tip() ? 'me-auto' : 'mx-auto' }}"><i class="fa fa-heart me-2" />Tip</span>
                     <t t-if="currentOrder.get_tip() != 0">
-                        (<t t-esc="env.utils.formatCurrency(currentOrder.get_tip())" />)
+                        <t t-esc="env.utils.formatCurrency(currentOrder.get_tip())" />
                     </t>
                 </button>
                 <button t-if="pos.config.iface_cashdrawer" class="button col js_cashdrawer btn btn-light py-3 text-start rounded-0 border-top border-start border-end"
                     t-on-click="openCashbox">
                     <i class="fa fa-archive me-2" />Open Cashbox 
                 </button>
-                <button t-if="pos.config.ship_later" class="button col btn btn-light py-3 text-start rounded-0 border-top border-start border-end" t-att-class="{ 'highlight text-bg-primary': currentOrder.getShippingDate() }"
+                <button t-if="pos.config.ship_later" class="button btn btn-light btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.getShippingDate() }"
                     t-on-click="toggleShippingDatePicker">
-                    <i class="fa fa-clock-o me-2" />Ship Later 
+                    <span t-attf-class="{{currentOrder.getShippingDate() ? 'me-auto' : 'mx-auto' }}"><i class="fa fa-clock-o me-2" />Ship Later</span>
                     <span t-if="currentOrder.getShippingDate()">
-                        (<t t-esc="currentOrder.getShippingDate()" />)
+                        <t t-esc="currentOrder.getShippingDate()" />
                     </span>
                 </button>
             </div>
@@ -146,15 +141,13 @@
     </t>
 
     <t t-name="point_of_sale.PaymentScreenMethods">
-        <div class="paymentmethods-container overflow-y-auto" t-att-class="ui.isSmall ? 'mh-25' : 'flex-grow-1'">
-            <div class="paymentmethods d-flex" t-att-class="{ 'flex-wrap': ui.isSmall, 'flex-column': !ui.isSmall }">
+        <div class="paymentmethods-container" t-att-class="ui.isSmall ? 'my-2 rounded-3' : 'flex-grow-1'">
+            <div class="paymentmethods d-flex gap-1 gap-lg-2" t-att-class="{ 'p-1 overflow-y-auto flex-wrap rounded-3 bg-view': ui.isSmall, 'flex-column': !ui.isSmall }">
                 <t t-foreach="payment_methods_from_config" t-as="paymentMethod" t-key="paymentMethod.id">
-                    <div class="button paymentmethod btn btn-light rounded-0" t-att-class="ui.isSmall ? 'd-flex flex-grow-1 border' : 'border-top border-bottom'" t-on-click="() => this.addNewPaymentLine(paymentMethod)" t-att-style="ui.isSmall ? 'min-width: 50%; box-sizing: border-box;' : ''">
-                        <div class="payment-method-display d-flex align-items-center flex-grow-1">
-                            <div>
-                                <img class="payment-method-icon" t-att-src="paymentMethodImage(paymentMethod.id)" />
-                            </div>
-                            <span class="payment-name" t-esc="paymentMethod.name" />
+                    <div class="button paymentmethod btn btn-light btn-lg lg-lh" t-att-class="ui.isSmall ? 'd-flex flex-grow-1 justify-content-center border' : ''" t-on-click="() => this.addNewPaymentLine(paymentMethod)">
+                        <div class="payment-method-display d-flex align-items-center">
+                            <img class="payment-method-icon" t-att-src="paymentMethodImage(paymentMethod.id)" />
+                            <span class="payment-name d-none d-lg-inline-block" t-esc="paymentMethod.name" />
                         </div>
                     </div>
                 </t>
