@@ -39,6 +39,7 @@ HANDLED_WEBHOOK_EVENTS = [
     'payment_intent.amount_capturable_updated',
     'payment_intent.succeeded',
     'payment_intent.payment_failed',
+    'payment_intent.canceled',
     'setup_intent.succeeded',
     'charge.refunded',  # A refund has been issued.
     'charge.refund.updated',  # The refund status has changed, possibly from succeeded to failed.
