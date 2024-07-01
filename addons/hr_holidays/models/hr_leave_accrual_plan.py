@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 from odoo.addons.hr_holidays.models.hr_leave_accrual_plan_level import _get_selection_days
 
@@ -139,3 +140,15 @@ class AccrualPlan(models.Model):
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
         return [dict(vals, name=_("%s (copy)", plan.name)) for plan, vals in zip(self, vals_list)]
+
+    @api.ondelete(at_uninstall=False)
+    def _prevent_used_plan_unlink(self):
+        domain = [
+            ('allocation_type', '=', 'accrual'),
+            ('accrual_plan_id', 'in', self.ids),
+            ('state', 'not in', ('cancel', 'refuse')),
+        ]
+        if self.env['hr.leave.allocation'].search_count(domain):
+            raise ValidationError(_(
+                "Some of the accrual plans you're trying to delete are linked to an existing allocation. Delete or cancel them first."
+            ))

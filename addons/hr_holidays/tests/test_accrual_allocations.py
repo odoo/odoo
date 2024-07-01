@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
+from odoo.exceptions import ValidationError
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -62,6 +63,26 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         level.cap_accrued_time = False
         self.assertEqual(accrual_plan.level_ids.maximum_leave, 0)
+
+    def test_accrual_unlink(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+        })
+
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            'name': 'Accrual allocation for employee',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'number_of_days': 0,
+            'allocation_type': 'accrual',
+        })
+
+        with self.assertRaises(ValidationError):
+            accrual_plan.unlink()
+
+        allocation.unlink()
+        accrual_plan.unlink()
 
     def test_frequency_hourly_calendar(self):
         with freeze_time("2017-12-5"):
