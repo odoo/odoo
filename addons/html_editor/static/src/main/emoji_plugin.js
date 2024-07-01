@@ -4,7 +4,7 @@ import { EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 
 class EditorEmojiPicker extends Component {
-    static template = xml`<div class="popover" t-on-click.stop="() => {}">
+    static template = xml`<div class="popover" t-on-mousedown.stop="() => {}">
             <EmojiPicker t-props="props"/>
         </div>`;
     static components = { EmojiPicker };
@@ -37,7 +37,7 @@ export class EmojiPlugin extends Plugin {
         this.overlay = this.shared.createOverlay(EditorEmojiPicker, {
             position: "bottom-start",
         });
-        this.addDomListener(this.document, "click", () => {
+        this.addDomListener(this.document, "mousedown", () => {
             this.overlay.close();
         });
     }
