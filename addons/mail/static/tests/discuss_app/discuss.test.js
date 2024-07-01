@@ -1790,10 +1790,23 @@ test("Message shows up even if channel data is incomplete", async () => {
         ],
         channel_type: "chat",
     });
+<<<<<<< HEAD:addons/mail/static/tests/discuss_app/discuss.test.js
     getService("bus_service").forceUpdateChannels();
     await waitUntilSubscribe();
     await withUser(correspondentUserId, () =>
         rpc("/discuss/channel/notify_typing", {
+||||||| parent of 7f45b337e365 (temp):addons/mail/static/tests/discuss_app/discuss_tests.js
+    env.services["bus_service"].forceUpdateChannels();
+    await waitUntilSubscribe();
+    await pyEnv.withUser(correspondentUserId, () =>
+        env.services.rpc("/discuss/channel/notify_typing", {
+=======
+    const subscribeProm = waitUntilSubscribe();
+    env.services["bus_service"].forceUpdateChannels();
+    await subscribeProm;
+    await pyEnv.withUser(correspondentUserId, () =>
+        env.services.rpc("/discuss/channel/notify_typing", {
+>>>>>>> 7f45b337e365 (temp):addons/mail/static/tests/discuss_app/discuss_tests.js
             is_typing: true,
             channel_id: channelId,
         })
