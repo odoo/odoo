@@ -84,7 +84,9 @@
                            readonly="not is_editable or not is_multiple_currency or product_has_cost"
                            options="{'currency_field': 'currency_id'}" optional="hide" decoration-bf="1"
                            groups="base.group_multi_currency"/>
-                    <field name="currency_id" optional="hide" readonly="True" groups="base.group_multi_currency"/>
+                    <field name="currency_id" optional="hide"
+                           readonly="not is_editable or product_has_cost"
+                           groups="base.group_multi_currency"/>
                     <field name="state" optional="show" readonly="True" decoration-info="state in ['draft', 'reported']"
                            decoration-success="state in ['approved', 'done']"
                            decoration-warning="state == 'submitted'" decoration-danger="state == 'refused'" widget="badge"/>
