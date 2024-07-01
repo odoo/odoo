@@ -44,7 +44,7 @@ describe("qweb picker", () => {
         await setupEditor(`<div><t t-if="test">yes</t><t t-else="">no</t></div>`, {
             config: { ...config, resources },
         });
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
     });
 
     test("switch selected value to the same value ", async () => {

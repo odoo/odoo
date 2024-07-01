@@ -47,9 +47,9 @@ test("plugin destruction is reverse of instantiation order", async () => {
     }
     const Plugins = [...MAIN_PLUGINS, makeTestPlugin("first"), makeTestPlugin("second", ["first"])];
     const { editor } = await setupEditor(`<p>[]</p>`, { config: { Plugins } });
-    expect(["setup: first", "setup: second"]).toVerifySteps();
+    expect.verifySteps(["setup: first", "setup: second"]);
     editor.destroy();
-    expect(["destroy: second", "destroy: first"]).toVerifySteps();
+    expect.verifySteps(["destroy: second", "destroy: first"]);
 });
 
 test("Remove odoo-editor-editable class after every plugin is destroyed", async () => {
@@ -65,5 +65,5 @@ test("Remove odoo-editor-editable class after every plugin is destroyed", async 
     const Plugins = [...MAIN_PLUGINS, TestPlugin];
     const { editor } = await setupEditor(`<div><p>a</p></div>`, { config: { Plugins } });
     editor.destroy();
-    expect(["operation"]).toVerifySteps();
+    expect.verifySteps(["operation"]);
 });

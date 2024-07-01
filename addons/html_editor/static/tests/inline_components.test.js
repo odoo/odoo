@@ -181,9 +181,9 @@ test("inline component plugin does not try to destroy the same app twice", async
         config: getConfig("counter", Test),
     });
     deleteBackward(editor);
-    expect(["destroy from plugin", "willdestroy"]).toVerifySteps();
+    expect.verifySteps(["destroy from plugin", "willdestroy"]);
     editor.destroy();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("select content of a component shouldn't open the toolbar", async () => {
@@ -390,7 +390,7 @@ describe("Inline component Owl lifecycle editor integration", () => {
                 })),
             }
         );
-        expect(["willstart"]).toVerifySteps();
+        expect.verifySteps(["willstart"]);
         delayedWillStart.resolve();
         await animationFrame();
         expect(getContent(el)).toBe(
@@ -408,10 +408,10 @@ describe("Inline component Owl lifecycle editor integration", () => {
                 </div>
             `)
         );
-        expect([
+        expect.verifySteps([
             "html prop suppression",
             "html prop insertion",
             "minimal asynchronous time",
-        ]).toVerifySteps();
+        ]);
     });
 });

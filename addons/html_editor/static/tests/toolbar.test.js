@@ -347,10 +347,10 @@ test("toolbar does not evaluate isFormatApplied when namespace does not match", 
             config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
         }
     );
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
     click("img");
     await waitFor(".o-we-toolbar");
-    expect(["image format evaluated"]).toVerifySteps();
+    expect.verifySteps(["image format evaluated"]);
 });
 
 test("plugins can create buttons with text in toolbar", async () => {
