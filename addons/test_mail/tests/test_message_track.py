@@ -101,14 +101,18 @@ class TestTracking(MailCommon):
             )
         # first record: tracking value should be hidden
         message_0 = records[0].message_ids[0]
-        formatted = message_0._message_format(for_current_user=True)[0]
+        formatted = Store("Message", message_0._message_format(for_current_user=True)).get_result()[
+            "Message"
+        ][0]
         self.assertEqual(formatted['trackingValues'], [], 'Hidden values should not be formatted')
         mail_render = records[0]._notify_by_email_prepare_rendering_context(message_0, {})
         self.assertEqual(mail_render['tracking_values'], [])
 
         # second record: all values displayed
         message_1 = records[1].message_ids[0]
-        formatted = message_1._message_format(for_current_user=True)[0]
+        formatted = Store("Message", message_1._message_format(for_current_user=True)).get_result()[
+            "Message"
+        ][0]
         self.assertEqual(len(formatted['trackingValues']), 1)
         self.assertDictEqual(
             formatted['trackingValues'][0],
