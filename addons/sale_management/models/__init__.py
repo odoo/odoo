@@ -7,5 +7,5 @@ from .sale_order_line import SaleOrderLine
 from .sale_order_option import SaleOrderOption
 from .sale_order_template import SaleOrderTemplate
 from .sale_order_template_line import SaleOrderTemplateLine
-from .sale_order_template_option import SaleOrderTemplate
+from .sale_order_template_option import SaleOrderTemplateOption
 from .res_company import ResCompany

@@ -219,8 +219,7 @@ class SaleOrder(models.Model, portal.models.PortalMixin, product_.models.Product
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
     # Lines and line based computes
-    order_line = fields.One2many(
-        comodel_name=SaleOrderLine,
+    order_line = fields.One2many[SaleOrderLine](
         inverse_name='order_id',
         string="Order Lines",
         copy=True, auto_join=True)

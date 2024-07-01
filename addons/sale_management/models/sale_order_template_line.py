@@ -1,17 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from __future__ import annotations
-from typing import TYPE_CHECKING
-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.addons import base
-from odoo.addons import product, uom
-
-if TYPE_CHECKING:
-    from .sale_order_template import SaleOrderTemplate
-else:
-    SaleOrderTemplate = "sale.order.template"
+from odoo.addons import product, uom, sale_management
 
 
 class SaleOrderTemplateLine(models.Model):
@@ -29,7 +21,7 @@ class SaleOrderTemplateLine(models.Model):
             "Forbidden product, quantity and UoM on non-accountable sale quote line"),
     ]
 
-    sale_order_template_id = fields.Many2one[SaleOrderTemplate](
+    sale_order_template_id: 'sale_management.SaleOrderTemplate' = fields.Many2one(
         string='Quotation Template Reference',
         index=True, required=True,
         ondelete='cascade')
@@ -38,11 +30,9 @@ class SaleOrderTemplateLine(models.Model):
         help="Gives the sequence order when displaying a list of sale quote lines.",
         default=10)
 
-    company_id = fields.Many2one[base.models.Company](
+    company_id = fields.Many2one[base.Company](
         related='sale_order_template_id.company_id', store=True, index=True)
-
-    product_id = fields.Many2one(
-        comodel_name=product.models.ProductProduct,
+    product_id = fields.Many2one[product.ProductProduct](
         check_company=True,
         domain=lambda self: self._product_id_domain())
 
@@ -53,13 +43,12 @@ class SaleOrderTemplateLine(models.Model):
         required=True,
         translate=True)
 
-    product_uom_id = fields.Many2one(
-        comodel_name=uom.models.UoM,
+    product_uom_id = fields.Many2one[uom.UoM](
         string="Unit of Measure",
         compute='_compute_product_uom_id',
         store=True, readonly=False, precompute=True,
         domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one[uom.models.UoMCategory](related='product_id.uom_id.category_id')
+    product_uom_category_id = fields.Many2one[uom.UoMCategory](related='product_id.uom_id.category_id')
     product_uom_qty = fields.Float(
         string='Quantity',
         required=True,

@@ -13,24 +13,19 @@ from odoo.tools import float_round, lazy
 
 from odoo.addons import base
 from odoo.addons import sale, loyalty
-
-from .sale_order_line import SaleOrderLine
 from .sale_order_coupon_points import SaleOrderCouponPoints
+from .sale_order_line import SaleOrderLine
 
 
-def _generate_random_reward_code():
-    return str(random.getrandbits(32))
-
-
-class SaleOrder(sale.models.SaleOrder):
+class SaleOrder(sale.SaleOrder):
 
     # Contains how much points should be given to a coupon upon validating the order
-    applied_coupon_ids = fields.Many2many(
-        comodel_name=loyalty.models.LoyaltyCard, string="Manually Applied Coupons", copy=False)
-    code_enabled_rule_ids = fields.Many2many(
-        comodel_name=loyalty.models.LoyaltyRule, string="Manually Triggered Rules", copy=False)
-    coupon_point_ids = fields.One2many(
-        comodel_name=SaleOrderCouponPoints, inverse_name='order_id', copy=False)
+    applied_coupon_ids = fields.Many2many[loyalty.LoyaltyCard](
+        string="Manually Applied Coupons", copy=False)
+    code_enabled_rule_ids = fields.Many2many[loyalty.LoyaltyRule](
+        string="Manually Triggered Rules", copy=False)
+    coupon_point_ids = fields.One2many[SaleOrderCouponPoints](
+        inverse_name='order_id', copy=False)
     reward_amount = fields.Float(compute='_compute_reward_total')
 
     @api.depends('order_line')
@@ -108,10 +103,10 @@ class SaleOrder(sale.models.SaleOrder):
                 return True
         elif not claimable_rewards:
             return True
-        return base.models.IrActions(self.env)._for_xml_id('sale_loyalty.sale_loyalty_reward_wizard_action')
+        return base.IrActions(self.env)._for_xml_id('sale_loyalty.sale_loyalty_reward_wizard_action')
 
     def _send_reward_coupon_mail(self):
-        coupons = loyalty.models.LoyaltyCard(self.env)
+        coupons = loyalty.LoyaltyCard(self.env)
         for order in self:
             coupons |= order._get_reward_coupons()
         if coupons:
@@ -528,7 +523,7 @@ class SaleOrder(sale.models.SaleOrder):
         # Make sure domain always complies with the order's domain rules
         domain = expression.AND([self._get_program_domain(), domain])
         # No other way than to test all programs to the order
-        programs = loyalty.models.LoyaltyProgram(self.env).search(domain)
+        programs = loyalty.LoyaltyProgram(self.env).search(domain)
         all_status = self._program_check_compute_points(programs)
         program_points = {p: status['points'][0] for p, status in all_status.items() if 'points' in status}
         return program_points
@@ -772,7 +767,7 @@ class SaleOrder(sale.models.SaleOrder):
         discountable = lazy(lambda: self._discountable_amount(global_discount_reward))
 
         total_is_zero = self.currency_id.is_zero(discountable)
-        result = defaultdict(lambda: loyalty.models.LoyaltyReward(self.env))
+        result = defaultdict(lambda: loyalty.LoyaltyReward(self.env))
         for coupon in all_coupons:
             points = self._get_real_points_for_coupon(coupon)
             for reward in coupon.program_id.reward_ids:
@@ -813,7 +808,7 @@ class SaleOrder(sale.models.SaleOrder):
 
         # Automatically load in eWallet coupons
         if self._allow_nominative_programs():
-            ewallet_coupons = loyalty.models.LoyaltyCard(self.env).search(
+            ewallet_coupons = loyalty.LoyaltyCard(self.env).search(
                 [('id', 'not in', self.applied_coupon_ids.ids), ('partner_id', '=', self.partner_id.id),
                 ('points', '>', 0), ('program_id.program_type', '=', 'ewallet')])
             if ewallet_coupons:
@@ -825,7 +820,7 @@ class SaleOrder(sale.models.SaleOrder):
         # Programs that are automatic and not yet applied
         program_domain = self._get_program_domain()
         domain = expression.AND([program_domain, [('id', 'not in', points_programs.ids), ('trigger', '=', 'auto'), ('rule_ids.mode', '=', 'auto')]])
-        automatic_programs = loyalty.models.LoyaltyProgram(self.env).search(domain).filtered(lambda p:
+        automatic_programs = loyalty.LoyaltyProgram(self.env).search(domain).filtered(lambda p:
             not p.limit_usage or p.total_order_count < p.max_usage)
 
         all_programs_to_check = points_programs | coupon_programs | automatic_programs
@@ -838,7 +833,7 @@ class SaleOrder(sale.models.SaleOrder):
         all_programs_status.update(self._program_check_compute_points(domain_matching_programs))
         # Delay any unlink to the end of the function since they cause a full cache invalidation
         lines_to_unlink = SaleOrderLine(self.env)
-        coupons_to_unlink = loyalty.models.LoyaltyCard(self.env)
+        coupons_to_unlink = loyalty.LoyaltyCard(self.env)
         point_entries_to_unlink = SaleOrderCouponPoints(self.env)
         # Remove any coupons that are expired
         self.applied_coupon_ids = self.applied_coupon_ids.filtered(lambda c:
@@ -888,7 +883,7 @@ class SaleOrder(sale.models.SaleOrder):
                 if len(program_point_entries) < len(all_point_changes):
                     new_coupon_points = all_point_changes[len(program_point_entries):]
                     # NOTE: Maybe we could batch the creation of coupons across multiple programs but this really only applies to gift cards
-                    new_coupons = loyalty.models.LoyaltyCard(self.env).with_context(loyalty_no_mail=True, tracking_disable=True).create([{
+                    new_coupons = loyalty.LoyaltyCard(self.env).with_context(loyalty_no_mail=True, tracking_disable=True).create([{
                         'program_id': program.id,
                         'partner_id': False,
                         'points': 0,
@@ -902,7 +897,7 @@ class SaleOrder(sale.models.SaleOrder):
                     point_ids_to_unlink.points = 0
 
         # Programs applied using a coupon
-        applied_coupon_per_program = defaultdict(lambda: loyalty.models.LoyaltyCard(self.env))
+        applied_coupon_per_program = defaultdict(lambda: loyalty.LoyaltyCard(self.env))
         for coupon in self.applied_coupon_ids:
             applied_coupon_per_program[coupon.program_id] |= coupon
         for program in coupon_programs:
@@ -1094,14 +1089,14 @@ class SaleOrder(sale.models.SaleOrder):
         self.ensure_one()
         all_points = status['points']
         points = all_points[0]
-        coupons = coupon or loyalty.models.LoyaltyCard(self.env)
+        coupons = coupon or loyalty.LoyaltyCard(self.env)
         if coupon:
             if program.is_nominative:
                 self._add_points_for_coupon({coupon: points})
         elif not coupon:
             # If the program only applies on the current order it does not make sense to fetch already existing coupons
             if program.is_nominative:
-                coupon = loyalty.models.LoyaltyCard(self.env).search(
+                coupon = loyalty.LoyaltyCard(self.env).search(
                     [('partner_id', '=', self.partner_id.id), ('program_id', '=', program.id)], limit=1)
                 # Do not apply 'nominative' programs if no point is given and no coupon exists
                 if not points and not coupon:
@@ -1115,7 +1110,7 @@ class SaleOrder(sale.models.SaleOrder):
                 # Loyalty programs and ewallets are nominative
                 if program.is_nominative:
                     partner = self.partner_id.id
-                coupons = loyalty.models.LoyaltyCard(self.env).sudo().with_context(loyalty_no_mail=True, tracking_disable=True).create([{
+                coupons = loyalty.LoyaltyCard(self.env).sudo().with_context(loyalty_no_mail=True, tracking_disable=True).create([{
                     'program_id': program.id,
                     'partner_id': partner,
                     'points': 0,
@@ -1176,7 +1171,7 @@ class SaleOrder(sale.models.SaleOrder):
 
         base_domain = self._get_trigger_domain()
         domain = expression.AND([base_domain, [('mode', '=', 'with_code'), ('code', '=', code)]])
-        rule = loyalty.models.LoyaltyRule(self.env).search(domain)
+        rule = loyalty.LoyaltyRule(self.env).search(domain)
         program = rule.program_id
         coupon = False
 
@@ -1185,7 +1180,7 @@ class SaleOrder(sale.models.SaleOrder):
 
         # No trigger was found from the code, try to find a coupon
         if not program:
-            coupon = loyalty.models.LoyaltyCard(self.env).search([('code', '=', code)])
+            coupon = loyalty.LoyaltyCard(self.env).search([('code', '=', code)])
             if not coupon or\
                 not coupon.program_id.active or\
                 not coupon.program_id.reward_ids or\
@@ -1225,5 +1220,5 @@ class SaleOrder(sale.models.SaleOrder):
                 if coupon and not apply_result.get('already_applied', False):
                     self.applied_coupon_ids -= coupon
                 return apply_result
-            coupon = apply_result.get('coupon', loyalty.models.LoyaltyCard(self.env))
+            coupon = apply_result.get('coupon', loyalty.LoyaltyCard(self.env))
         return self._get_claimable_rewards(forced_coupons=coupon)

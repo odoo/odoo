@@ -1,34 +1,27 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from __future__ import annotations
-
 from datetime import timedelta
-from typing import TYPE_CHECKING
 
 from odoo import SUPERUSER_ID, api, fields, _
 from odoo.exceptions import ValidationError
 from odoo.tools import is_html_empty
 
-from odoo.addons import sale
-from .sale_order_line import SaleOrderLine
-from .sale_order_template import SaleOrderTemplate
-from .sale_order_option import SaleOrderOption
+from odoo.addons import sale, sale_management
 
 
-class SaleOrder(sale.models.SaleOrder):
+class SaleOrder(sale.SaleOrder):
 
-    order_line: fields.One2many[SaleOrderLine]
+    order_line: 'sale_management.SaleOrderLine'
 
-    sale_order_template_id = fields.Many2one[SaleOrderTemplate](
+    sale_order_template_id: 'sale_management.SaleOrderTemplate' = fields.Many2one(
         string="Quotation Template",
         compute='_compute_sale_order_template_id',
         store=True, readonly=False, check_company=True, precompute=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    sale_order_option_ids = fields.One2many[SaleOrderOption](
+    sale_order_option_ids: 'sale_management.SaleOrderOption' = fields.One2many(
         inverse_name='order_id',
         string="Optional Products Lines",
         copy=True)
-
 
     #=== COMPUTE METHODS ===#
 

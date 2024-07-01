@@ -1,7 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from __future__ import annotations
-from typing import TYPE_CHECKING
-
 import re
 from collections import defaultdict
 from datetime import timedelta
@@ -17,14 +14,8 @@ from odoo.addons import (
     uom,
     account,
     analytic,
+    sale,
 )
-
-if TYPE_CHECKING:
-    from .sale_order import SaleOrder
-    from .sale_order_line import SaleOrderLine
-else:
-    SaleOrder = 'sale.order'  # to define SaleOrderLine without cycle import
-    SaleOrderLine = 'sale.order.line'
 
 
 class SaleOrderLine(models.Model, analytic.models.AnalyticMixin):
@@ -48,8 +39,7 @@ class SaleOrderLine(models.Model, analytic.models.AnalyticMixin):
     # This reduces execution stacks depth when precomputing fields
     # on record creation (and is also a good ordering logic imho)
 
-    order_id = fields.Many2one(
-        comodel_name=SaleOrder,
+    order_id: 'sale.SaleOrder' = fields.Many2one(
         string="Order Reference",
         required=True, ondelete='cascade', index=True, copy=False)
     sequence = fields.Integer(string="Sequence", default=10)
@@ -146,14 +136,14 @@ class SaleOrderLine(models.Model, analytic.models.AnalyticMixin):
         compute='_compute_product_uom',
         store=True, readonly=False, precompute=True, ondelete='restrict',
         domain="[('category_id', '=', product_uom_category_id)]")
-    linked_line_id = fields.Many2one[SaleOrderLine](
+    linked_line_id: 'sale.SaleOrderLine' = fields.Many2one(
         string="Linked Order Line",
         ondelete='cascade',
         domain="[('order_id', '=', order_id)]",
         copy=False,
         index=True,
     )
-    linked_line_ids = fields.One2many[SaleOrderLine](
+    linked_line_ids: 'sale.SaleOrderLine' = fields.One2many(
         string="Linked Order Lines",
         inverse_name='linked_line_id',
     )
@@ -483,7 +473,7 @@ class SaleOrderLine(models.Model, analytic.models.AnalyticMixin):
 
     @api.depends('product_id', 'company_id')
     def _compute_tax_id(self):
-        lines_by_company = defaultdict(lambda: SaleOrderLine(self.env))
+        lines_by_company = defaultdict(lambda: sale.SaleOrderLine(self.env))
         cached_taxes = {}
         for line in self:
             lines_by_company[line.company_id] += line
@@ -1155,7 +1145,7 @@ class SaleOrderLine(models.Model, analytic.models.AnalyticMixin):
     #=== ACTION METHODS ===#
 
     def action_add_from_catalog(self):
-        order = SaleOrder(self.env).browse(self.env.context.get('order_id'))
+        order = sale.SaleOrder(self.env).browse(self.env.context.get('order_id'))
         return order.with_context(child_field='order_line').action_add_from_catalog()
 
     #=== BUSINESS METHODS ===#
@@ -1359,5 +1349,3 @@ class SaleOrderLine(models.Model, analytic.models.AnalyticMixin):
 
     def has_valued_move_ids(self):
         return self.move_ids
-
-from .sale_order import SaleOrder
