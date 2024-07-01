@@ -19,14 +19,19 @@ function loadAnchors(url, body) {
         if (url === window.location.pathname || url[0] === '#') {
             resolve(body ? body : document.body.outerHTML);
         } else if (url.length && !url.startsWith("http")) {
+            // TODO discuss $.get replacment with msh
             $.get(window.location.origin + url).then(resolve, reject);
         } else { // avoid useless query
             resolve();
         }
     }).then(function (response) {
-        const anchors = $(response).find('[id][data-anchor=true], .modal[id][data-display="onClick"]').toArray().map((el) => {
-            return '#' + el.id;
-        });
+        if (typeof response === "string") {
+            const parser = new DOMParser();
+            response = parser.parseFromString(response, "text/html").body;
+        }
+        const anchors = Array.from(response.querySelectorAll("[id][data-anchor=true], .modal[id][data-display='onClick']"))
+            .map((el) => {return '#' + el.id;});
+
         // Always suggest the top and the bottom of the page as internal link
         // anchor even if the header and the footer are not in the DOM. Indeed,
         // the "scrollTo" function handles the scroll towards those elements
@@ -74,12 +79,19 @@ function autocompleteWithPages(input, options= {}) {
 }
 
 /**
- * @param {jQuery} $element
- * @param {jQuery} [$excluded]
+ * @param {HTMLElement} element
+ * @param {HTMLElement} [excluded]
  */
-function onceAllImagesLoaded($element, $excluded) {
-    var defs = Array.from($element.find("img").addBack("img")).map((img) => {
-        if (img.complete || $excluded && ($excluded.is(img) || $excluded.has(img).length)) {
+function onceAllImagesLoaded(element, excluded) {
+    element = element instanceof jQuery ? element[0] : element;
+    excluded = excluded instanceof jQuery ? excluded[0] : excluded;
+    const imgs = Array.from(element.querySelectorAll("img"));
+    if (element.matches("img")) {
+        imgs.push(element);
+    }
+    const defs = imgs.map((img) => {
+        const isExcluded = excluded && (excluded === img || excluded.contains(img));
+        if (img.complete || isExcluded) {
             return; // Already loaded
         }
         var def = new Promise(function (resolve, reject) {
@@ -147,19 +159,19 @@ function prompt(options, _qweb) {
     options.field_type = type;
     options.field_name = options.field_name || options[type];
 
-    var def = new Promise(function (resolve, reject) {
-        var dialog = $(renderToElement(_qweb, options)).appendTo('body');
-        options.$dialog = dialog;
-        var field = dialog.find(options.field_type).first();
-        field.val(options['default']); // dict notation for IE<9
+    const def = new Promise(function (resolve, reject) {
+        const dialog = document.body.appendChild(renderToElement(_qweb, options));
+        options.dialog = dialog;
+        let field = dialog.querySelectorAll(options.field_type)[0];
+        field.value = options['default']; // dict notation for IE<9
         field.fillWith = function (data) {
-            if (field.is('select')) {
-                var select = field[0];
+            if (field.tagName === "SELECT") {
+                let select = field;
                 data.forEach(function (item) {
                     select.options[select.options.length] = new window.Option(item[1], item[0]);
                 });
             } else {
-                field.val(data);
+                field.value = data;
             }
         };
         var init = options.init(field, dialog);
@@ -167,26 +179,33 @@ function prompt(options, _qweb) {
             if (fill) {
                 field.fillWith(fill);
             }
-            dialog.modal('show');
+            Modal.getOrCreateInstance(dialog).show();
             field.focus();
-            dialog.on('click', '.btn-primary', function () {
-                var backdrop = $('.modal-backdrop');
-                resolve({ val: field.val(), field: field, dialog: dialog });
-                dialog.modal('hide').remove();
-                    backdrop.remove();
+            $(dialog).on('click', '.btn-primary', function () {
+                const backdrop = document.querySelectorAll('.modal-backdrop');
+                resolve({ val: field.value, field: field, dialog: dialog });
+                Modal.getOrCreateInstance(dialog).hide();
+                dialog.remove();
+                backdrop.forEach((el) => {
+                    el.remove();
+                });
             });
         });
-        dialog.on('hidden.bs.modal', function () {
-                var backdrop = $('.modal-backdrop');
+        $(dialog).on('hidden.bs.modal', function () {
+            const backdrop = document.querySelectorAll('.modal-backdrop');
             reject();
             dialog.remove();
-                backdrop.remove();
+            backdrop.forEach((el) => {
+                el.remove();
+            });
         });
-        if (field.is('input[type="text"], select')) {
-            field.keypress(function (e) {
+        if ((field.tagName === "INPUT" && field.type === "text") || field.tagName === "SELECT") {
+            field.addEventListener("keypress", function (e) {
                 if (e.key === "Enter") {
                     e.preventDefault();
-                    dialog.find('.btn-primary').trigger('click');
+                    dialog
+                        .querySelector(".btn-primary")
+                        ?.dispatchEvent(new Event("click", { bubbles: true }));
                 }
             });
         }

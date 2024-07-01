@@ -38,7 +38,9 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      */
     start: function () {
         // Enable magnify on zommable img
-        this.$('.zoomable img[data-zoom]').zoomOdoo();
+        this.el.querySelectorAll(".zoomable img[data-zoom]").forEach((img) => {
+            window.zoomOdoo(img);
+        });
 
         return this._super.apply(this, arguments);
     },
@@ -62,7 +64,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
     _getExtraContext: function (context) {
         var html = document.documentElement;
         return Object.assign({
-            'editable': !!(html.dataset.editable || $('[data-oe-model]').length), // temporary hack, this should be done in python
+            'editable': !!(html.dataset.editable || document.querySelectorAll("[data-oe-model]")), // temporary hack, this should be done in python
             'translatable': !!html.dataset.translatable,
             'edit_translations': !!html.dataset.edit_translations,
         }, this._super.apply(this, arguments));
@@ -158,12 +160,14 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         if (document.body.classList.contains('editor_enable')) {
             return;
         }
-        var $target = $(ev.currentTarget);
+        const target = ev.currentTarget;
         // retrieve the hash before the redirect
         var redirect = {
-            lang: encodeURIComponent($target.data('url_code')),
-            url: encodeURIComponent($target.attr('href').replace(/[&?]edit_translations[^&?]+/, '')),
-            hash: encodeURIComponent(window.location.hash)
+            lang: encodeURIComponent(target.getAttribute("url_code")),
+            url: encodeURIComponent(
+                target.getAttribute("href").replace(/[&?]edit_translations[^&?]+/, "")
+            ),
+            hash: encodeURIComponent(window.location.hash),
         };
         window.location.href = `/website/lang/${redirect.lang}?r=${redirect.url}${redirect.hash}`;
     },
@@ -205,7 +209,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      * if not found
      */
     _unslugHtmlDataObject: function (dataAttr) {
-        var repr = $('html').data(dataAttr);
+        const repr = document.documentElement.getAttribute(dataAttr);
         var match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
         if (!match) {
             return null;
@@ -244,7 +248,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      * @param {Event} ev
      */
     _onModalShown: function (ev) {
-        $(ev.target).addClass('modal_shown');
+        ev.target.classList.add("modal_shown");
     },
 });
 
