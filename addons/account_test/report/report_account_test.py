@@ -14,7 +14,7 @@ class ReportAssertAccount(models.AbstractModel):
     _description = 'Account Test Report'
 
     @api.model
-    def execute_code(self, code_exec):
+    def _execute_code(self, code_exec):
         def reconciled_inv():
             """
             returns the list of invoices that are set as reconciled = True
@@ -70,6 +70,6 @@ class ReportAssertAccount(models.AbstractModel):
             'doc_model': report.model,
             'docs': records,
             'data': data,
-            'execute_code': self.execute_code,
+            'execute_code': self._execute_code,
             'datetime': datetime
         }

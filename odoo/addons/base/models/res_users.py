@@ -21,7 +21,7 @@ import babel.core
 import pytz
 from lxml import etree
 from lxml.builder import E
-from passlib.context import CryptContext
+from passlib.context import CryptContext as _CryptContext
 from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
@@ -33,6 +33,44 @@ from odoo.service.db import check_super
 from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property
 
 _logger = logging.getLogger(__name__)
+
+class CryptContext:
+    def __init__(self, *args, **kwargs):
+        self.__obj__ = _CryptContext(*args, **kwargs)
+
+    @property
+    def encrypt(self):
+        # deprecated alias
+        return self.hash
+
+    @property
+    def copy(self):
+        return self.__obj__.copy
+
+    @property
+    def hash(self):
+        return self.__obj__.hash
+
+    @property
+    def identify(self):
+        return self.__obj__.identify
+
+    @property
+    def verify(self):
+        return self.__obj__.verify
+
+    @property
+    def verify_and_update(self):
+        return self.__obj__.verify_and_update
+
+    def schemes(self):
+        return self.__obj__.schemes()
+
+    def update(self, **kwargs):
+        if kwargs.get("schemes"):
+            assert isinstance(kwargs["schemes"], str) or all(isinstance(s, str) for s in kwargs["schemes"])
+        return self.__obj__.update(**kwargs)
+
 
 # Only users who can modify the user (incl. the user herself) see the real contents of these fields
 USER_PRIVATE_FIELDS = []
