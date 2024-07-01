@@ -7,9 +7,9 @@ patch(PosStore.prototype, {
     async setup() {
         await super.setup(...arguments);
         this.onNotified("ADYEN_LATEST_RESPONSE", () => {
-            this.pos
-                .getPendingPaymentLine("adyen")
-                .payment_method.payment_terminal.handleAdyenStatusResponse();
+            this.getPendingPaymentLine(
+                "adyen"
+            ).payment_method.payment_terminal.handleAdyenStatusResponse();
         });
     },
 });
