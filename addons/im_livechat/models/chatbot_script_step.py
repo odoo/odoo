@@ -328,7 +328,7 @@ class ChatbotScriptStep(models.Model):
         (e.g: ask for the visitor's email and create a lead). """
 
         human_operator = False
-        posted_message = False
+        posted_message = self.env["mail.message"]
 
         if discuss_channel.livechat_channel_id:
             # sudo: res.users - visitor can access operator of their channel
