@@ -367,14 +367,18 @@ export class CalendarController extends Component {
 
     onWillStartModel() {}
 
-    async setDate(move) {
+    async setDate(move, numberDaysToMove = false) {
         let date = null;
         switch (move) {
             case "next":
-                date = this.model.date.plus({ [`${this.model.scale}s`]: 1 });
+                date = this.model.date.plus({
+                    [`${this.model.scale}s`]: numberDaysToMove ? numberDaysToMove : 1,
+                });
                 break;
             case "previous":
-                date = this.model.date.minus({ [`${this.model.scale}s`]: 1 });
+                date = this.model.date.minus({
+                    [`${this.model.scale}s`]: numberDaysToMove ? numberDaysToMove : 1,
+                });
                 break;
             case "today":
                 date = luxon.DateTime.local().startOf("day");
