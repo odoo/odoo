@@ -1,4 +1,6 @@
 import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import {
     assertSteps,
     click,
@@ -22,6 +24,7 @@ import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import {
     Command,
     getService,
+    makeKwArgs,
     mockService,
     onRpc,
     serverState,
@@ -455,9 +458,18 @@ test("receive new needaction messages", async () => {
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    const [message1] = pyEnv["mail.message"]._message_format(messageId_1, true);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", message1);
+    pyEnv["bus.bus"]._sendone(
+        partner,
+        "mail.message/inbox",
+        new mailDataHelpers.Store(
+            "Message",
+            pyEnv["mail.message"]._message_format(
+                messageId_1,
+                makeKwArgs({ for_current_user: true, add_followers: true })
+            )
+        ).get_result()
+    );
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-content", { text: "not empty 1" });
@@ -475,8 +487,17 @@ test("receive new needaction messages", async () => {
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    const [message2] = pyEnv["mail.message"]._message_format(messageId_2, true);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", message2);
+    pyEnv["bus.bus"]._sendone(
+        partner,
+        "mail.message/inbox",
+        new mailDataHelpers.Store(
+            "Message",
+            pyEnv["mail.message"]._message_format(
+                messageId_2,
+                makeKwArgs({ for_current_user: true, add_followers: true })
+            )
+        ).get_result()
+    );
     await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Message-content", { text: "not empty 1" });
