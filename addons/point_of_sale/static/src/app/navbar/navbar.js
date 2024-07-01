@@ -46,7 +46,7 @@ export class Navbar extends Component {
     }
 
     get customerFacingDisplayButtonIsShown() {
-        return this.pos.config.iface_customer_facing_display;
+        return this.pos.config.iface_customer_facing_display && !this.ui.isSmall;
     }
     get showCashMoveButton() {
         return Boolean(this.pos?.config?.cash_control && this.pos?.config?.has_cash_move_permission);
