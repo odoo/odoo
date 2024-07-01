@@ -185,7 +185,7 @@ export class SaleOrderLineProductField extends Many2OneField {
         }
     }
 
-    async _openProductConfigurator(edit=false) {
+    async ProductConfiguratorDialogValues(edit=false) {
         const saleOrderRecord = this.props.record.model.root;
         let ptavIds = this.props.record.data.product_template_attribute_value_ids.records.map(
             record => record.resId
@@ -216,8 +216,7 @@ export class SaleOrderLineProductField extends Many2OneField {
                     ["custom_product_template_attribute_value_id", "custom_value"]
                 )
         }
-
-        this.dialog.add(ProductConfiguratorDialog, {
+        return {
             productTemplateId: this.props.record.data.product_template_id[0],
             ptavIds: ptavIds,
             customAttributeValues: customAttributeValues.map(
@@ -251,7 +250,11 @@ export class SaleOrderLineProductField extends Many2OneField {
             discard: () => {
                 saleOrderRecord.data.order_line.delete(this.props.record);
             },
-        });
+        };
+    }
+
+    async _openProductConfigurator(edit=false) {
+        this.dialog.add(ProductConfiguratorDialog, await this.ProductConfiguratorDialogValues(edit));
     }
 }
 

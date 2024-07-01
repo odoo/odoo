@@ -72,8 +72,8 @@ export class ProductConfiguratorDialog extends Component {
     // Data Exchanges
     //--------------------------------------------------------------------------
 
-    async _loadData(onlyMainProduct) {
-        return rpc('/sale_product_configurator/get_values', {
+    _loadDataValues(onlyMainProduct) {
+        return {
             product_template_id: this.props.productTemplateId,
             quantity: this.props.quantity,
             currency_id: this.props.currencyId,
@@ -83,7 +83,11 @@ export class ProductConfiguratorDialog extends Component {
             pricelist_id: this.props.pricelistId,
             ptav_ids: this.props.ptavIds,
             only_main_product: onlyMainProduct,
-        });
+        };
+    }
+
+    async _loadData(onlyMainProduct) {
+        return rpc('/sale_product_configurator/get_values', this._loadDataValues(onlyMainProduct));
     }
 
     async _createProduct(product) {
@@ -94,7 +98,11 @@ export class ProductConfiguratorDialog extends Component {
     }
 
     async _updateCombination(product, quantity) {
-        return rpc('/sale_product_configurator/update_combination', {
+        return rpc('/sale_product_configurator/update_combination', this._updateCombinationValues(product, quantity));
+    }
+
+    _updateCombinationValues(product, quantity) {
+        return {
             product_template_id: product.product_tmpl_id,
             combination: this._getCombination(product),
             currency_id: this.props.currencyId,
@@ -103,7 +111,7 @@ export class ProductConfiguratorDialog extends Component {
             product_uom_id: this.props.productUOMId,
             company_id: this.props.companyId,
             pricelist_id: this.props.pricelistId,
-        });
+        };
     }
 
     async _getOptionalProducts(product) {

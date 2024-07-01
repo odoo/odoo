@@ -19,6 +19,7 @@ class ProductConfiguratorController(Controller):
         pricelist_id=None,
         ptav_ids=None,
         only_main_product=False,
+        **kwargs,
     ):
         """ Return all product information needed for the product configurator.
 
@@ -68,6 +69,7 @@ class ProductConfiguratorController(Controller):
                         quantity=quantity,
                         product_uom_id=product_uom_id,
                         pricelist_id=pricelist_id,
+                        **kwargs,
                     ),
                     parent_product_tmpl_ids=[],
                 )
@@ -85,6 +87,7 @@ class ProductConfiguratorController(Controller):
                         parent_combination=product_template.attribute_line_ids.\
                             product_template_value_ids,
                         pricelist_id=pricelist_id,
+                        **kwargs,
                     ),
                     parent_product_tmpl_ids=[product_template.id],
                 ) for optional_product_template in product_template.optional_product_ids
@@ -118,6 +121,7 @@ class ProductConfiguratorController(Controller):
         product_uom_id=None,
         company_id=None,
         pricelist_id=None,
+        **kwargs
     ):
         """ Return the updated combination information.
 
@@ -152,6 +156,7 @@ class ProductConfiguratorController(Controller):
             uom=product_uom,
             currency=currency,
             date=datetime.fromisoformat(so_date),
+            **kwargs,
         )
 
     @route('/sale_product_configurator/get_optional_products', type='json', auth='user')
@@ -213,6 +218,7 @@ class ProductConfiguratorController(Controller):
         product_uom_id=None,
         pricelist_id=None,
         parent_combination=None,
+        **kwargs
     ):
         """ Return complete information about a product.
 
@@ -277,6 +283,7 @@ class ProductConfiguratorController(Controller):
                 uom=product_uom,
                 currency=currency,
                 date=datetime.fromisoformat(so_date),
+                **kwargs,
             ),
             quantity=quantity,
             attribute_lines=[dict(
