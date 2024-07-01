@@ -148,7 +148,8 @@ export class CalendarCommonRenderer extends Component {
         return Object.values(this.props.model.records).map((r) => this.convertRecordToEvent(r));
     }
     convertRecordToEvent(record) {
-        const allDay = record.isAllDay || record.end.diff(record.start, "hours").hours >= 24;
+        const hours = record.end.diff(record.start, "hours").hours;
+        const allDay = record.isAllDay || (hours >= 24 && hours % 24 === 0)
         return {
             id: record.id,
             title: record.title,
