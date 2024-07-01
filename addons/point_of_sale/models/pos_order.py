@@ -258,8 +258,8 @@ class PosOrder(models.Model):
     last_order_preparation_change = fields.Char(string='Last preparation change', help="Last printed state of the order")
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
-        comodel_name='res.users', string='Responsible',
-        help="Person who uses the cash register. It can be a reliever, a student or an interim employee.",
+        comodel_name='res.users', string='Employee',
+        help="Employee who uses the cash register.",
         default=lambda self: self.env.uid,
     )
     amount_tax = fields.Float(string='Taxes', digits=0, readonly=True, required=True)

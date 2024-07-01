@@ -6,8 +6,8 @@
         <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='user_id']" position='replace'>
-                <field string='Cashier' name="employee_id" readonly="1" invisible="not employee_id"/>
-                <field string='Cashier' name="user_id" readonly="1" invisible="employee_id"/>
+                <field name="employee_id" readonly="1" invisible="not employee_id"/>
+                <field name="user_id" readonly="1" invisible="employee_id"/>
             </xpath>
         </field>
     </record>
