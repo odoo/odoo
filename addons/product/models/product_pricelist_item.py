@@ -531,19 +531,23 @@ class PricelistItem(models.Model):
         :param uom: unit of measure (uom.uom record)
         :param datetime date: date to use for price computation and currency conversions
         :param currency: currency in which the returned price must be expressed
+        :param show_discount: force show discount regardless of is_percentage 
 
         :returns: base price, expressed in provided pricelist currency
         :rtype: float
         """
         pricelist_rule = self
-        if pricelist_rule and pricelist_rule._is_percentage():
+        show_discount = kwargs.pop('show_discount')
+        pricelist_show_discount = pricelist_rule._is_percentage() or show_discount
+        if pricelist_rule and pricelist_show_discount:
             pricelist_item = pricelist_rule
             # Find the lowest pricelist rule whose pricelist is configured to show the discount
             # to the customer.
             while pricelist_item.base == 'pricelist':
                 rule_id = pricelist_item.base_pricelist_id._get_product_rule(*args, **kwargs)
                 rule_pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
-                if rule_pricelist_item and rule_pricelist_item._is_percentage():
+                rule_show_discount = rule_pricelist_item._is_percentage() or show_discount
+                if rule_pricelist_item and rule_show_discount:
                     pricelist_item = rule_pricelist_item
 
             pricelist_rule = pricelist_item

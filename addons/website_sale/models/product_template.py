@@ -286,20 +286,20 @@ class ProductTemplate(models.Model):
             }
             if rule_id:
                 pricelist_rule = template.env['product.pricelist.item'].browse(rule_id)
-                if pricelist_rule._is_percentage():
-                    combination = template._get_first_possible_combination()
-                    base_price = pricelist_rule._compute_price_before_discount(
-                        product=template.with_context(
-                            **template._get_product_price_context(combination),
-                        ),
-                        quantity= 1.0,
-                        date=date,
-                        uom=self.uom_id,
-                        currency=currency,
-                    )
-                    template_price_vals['base_price'] = self._apply_taxes_to_price(
-                        base_price, currency, product_taxes, taxes, self, website=website,
-                    )
+                combination = template._get_first_possible_combination()
+                base_price = pricelist_rule._compute_price_before_discount(
+                    product=template.with_context(
+                        **template._get_product_price_context(combination),
+                    ),
+                    quantity= 1.0,
+                    date=date,
+                    uom=self.uom_id,
+                    currency=currency,
+                    show_discount=True,
+                )
+                template_price_vals['base_price'] = self._apply_taxes_to_price(
+                    base_price, currency, product_taxes, taxes, self, website=website,
+                )
 
             if not base_price and comparison_prices_enabled and template.compare_list_price:
                 template_price_vals['base_price'] = template.currency_id._convert(
@@ -471,21 +471,21 @@ class ProductTemplate(models.Model):
         price_before_discount = pricelist_price
         if pricelist_rule_id:
             pricelist_rule = self.env['product.pricelist.item'].browse(pricelist_rule_id)
-            if pricelist_rule._is_percentage():
-                if product_or_template._name == 'product.template':
-                    combination = product_or_template._get_first_possible_combination()
-                else:
-                    combination = product_or_template.product_template_attribute_value_ids
+            if product_or_template._name == 'product.template':
+                combination = product_or_template._get_first_possible_combination()
+            else:
+                combination = product_or_template.product_template_attribute_value_ids
 
-                price_before_discount = pricelist_rule._compute_price_before_discount(
-                    product=product_or_template.with_context(
-                        **product_or_template._get_product_price_context(combination),
-                    ),
-                    quantity=quantity or 1.0,
-                    date=date,
-                    uom=self.uom_id,
-                    currency=currency,
-                )
+            price_before_discount = pricelist_rule._compute_price_before_discount(
+                product=product_or_template.with_context(
+                    **product_or_template._get_product_price_context(combination),
+                ),
+                quantity=quantity or 1.0,
+                date=date,
+                uom=self.uom_id,
+                currency=currency,
+                show_discount=True,
+            )
 
         combination_info = {
             'list_price': price_before_discount,
