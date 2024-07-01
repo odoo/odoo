@@ -5,6 +5,7 @@ import { AttendeeCalendarCommonPopover } from "@calendar/views/attendee_calendar
 
 export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
     static eventTemplate = "calendar.AttendeeCalendarCommonRenderer.event";
+    static headerTemplate = "calendar.AttendeeCalendarCommonRenderer.HeaderTemplate";
     static components = {
         ...CalendarCommonRenderer.components,
         Popover: AttendeeCalendarCommonPopover,
