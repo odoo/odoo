@@ -8,69 +8,6 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { attachComponent } from "@web/legacy/utils";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 
-var SelectBox = publicWidget.Widget.extend({
-    events: {
-        'change': '_onChange',
-    },
-
-    /**
-     * @constructor
-     * @param {Object} parent
-     * @param {Object} obj
-     * @param {String} placeholder
-     */
-    init: function (parent, obj, placeholder) {
-        this._super.apply(this, arguments);
-        this.obj = obj;
-        this.placeholder = placeholder;
-
-        this.orm = this.bindService("orm");
-        this.keepLast = new KeepLast();
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {String} query
-     */
-    _objectExists: function (query) {
-        return this.objects.find(val => val.text.toLowerCase() === query.toLowerCase()) !== undefined;
-    },
-    /**
-     * @private
-     * @param {String} name
-     */
-    _createObject: function (name) {
-        var args = {
-            name: name
-        };
-        if (this.obj === "utm.campaign") {
-            args.is_auto_campaign = true;
-        }
-        return this.orm.create(this.obj, [args]).then(record => {
-            this.$el.attr('value', record);
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Object} ev
-     */
-    _onChange: function (ev) {
-        if (!ev.added || typeof ev.added.id !== "string") {
-            return;
-        }
-        this._createObject(ev.added.id);
-    },
-});
-
 var RecentLinkBox = publicWidget.Widget.extend({
     template: 'website_links.RecentLink',
     events: {
@@ -591,7 +528,6 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
 });
 
 export default {
-    SelectBox: SelectBox,
     RecentLinkBox: RecentLinkBox,
     RecentLinks: RecentLinks,
 };
