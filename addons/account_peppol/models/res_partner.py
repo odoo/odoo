@@ -10,21 +10,25 @@ from odoo import api, fields, models
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
 TIMEOUT = 10
+VERIFICATION_STATES = [
+    ('not_verified', 'Not verified yet'),
+    ('not_valid', 'Not valid'),  # does not exist on Peppol at all
+    ('not_valid_format', 'Cannot receive this format'),  # registered on Peppol but cannot receive the selected document type
+    ('valid', 'Valid'),
+]
+
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    peppol_eas = fields.Selection(inverse='_inverse_peppol_fields')
-    peppol_endpoint = fields.Char(inverse='_inverse_peppol_fields')
-    ubl_cii_format = fields.Selection(inverse='_inverse_peppol_fields')
-
-    account_peppol_verification_state = fields.Selection(
-        selection=[
-            ('not_verified', 'Not verified yet'),
-            ('not_valid', 'Not valid'),  # does not exist on Peppol at all
-            ('not_valid_format', 'Cannot receive this format'),  # registered on Peppol but cannot receive the selected document type
-            ('valid', 'Valid'),
-        ],
+    peppol_verification_state = fields.Selection(
+        selection=VERIFICATION_STATES,
+        string='Peppol endpoint verification',
+        compute="_compute_peppol_verification_state", store=True, precompute=True,
+        inverse="_inverse_peppol_verification_state",
+    )
+    peppol_verification_company_dependent = fields.Selection(
+        selection=VERIFICATION_STATES,
         string='Peppol endpoint validity',
         default='not_verified',
         company_dependent=True,
@@ -99,9 +103,14 @@ class ResPartner(models.Model):
         for partner in self:
             partner.is_peppol_edi_format = partner.ubl_cii_format not in (False, 'facturx', 'oioubl_201', 'ciusro')
 
-    def _inverse_peppol_fields(self):
+    @api.depends('peppol_eas', 'peppol_endpoint', 'ubl_cii_format')
+    def _compute_peppol_verification_state(self):
         for partner in self:
             partner.button_account_peppol_check_partner_endpoint()
+
+    def _inverse_peppol_verification_state(self):
+        for partner in self:
+            partner.peppol_verification_company_dependent = partner.peppol_verification_state
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
@@ -123,19 +132,19 @@ class ResPartner(models.Model):
             not (self.peppol_eas and self.peppol_endpoint)
             or not self.is_peppol_edi_format
         ):
-            self.account_peppol_verification_state = 'not_verified'
+            self.peppol_verification_state = 'not_verified'
             return False
 
         edi_identification = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
         participant_info = self._get_participant_info(edi_identification)
         if participant_info is None:
-            self.account_peppol_verification_state = 'not_valid'
+            self.peppol_verification_state = 'not_valid'
         else:
             is_participant_on_network = self._check_peppol_participant_exists(participant_info, edi_identification)
             if is_participant_on_network:
                 is_valid_format = self._check_document_type_support(participant_info, self.ubl_cii_format)
-                self.account_peppol_verification_state = 'valid' if is_valid_format else 'not_valid_format'
+                self.peppol_verification_state = 'valid' if is_valid_format else 'not_valid_format'
             else:
-                self.account_peppol_verification_state = 'not_valid'
+                self.peppol_verification_state = 'not_valid'
 
         return False
