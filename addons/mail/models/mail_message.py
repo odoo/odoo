@@ -194,7 +194,7 @@ class Message(models.Model):
         at 100 chars with a ' [...]' suffix if applicable. It is the longest
         known mail client preview length (Outlook 2013)."""
         for message in self:
-            plaintext_ct = tools.html_to_inner_content(message.body)
+            plaintext_ct = tools.mail.html_to_inner_content(message.body)
             message.preview = textwrap.shorten(plaintext_ct, 190)
 
     @api.depends('author_id', 'author_guest_id')
@@ -1277,11 +1277,11 @@ class Message(models.Model):
     @api.model
     def _get_message_id(self, values):
         if values.get('reply_to_force_new', False) is True:
-            message_id = tools.generate_tracking_message_id('reply_to')
+            message_id = tools.mail.generate_tracking_message_id('reply_to')
         elif self.is_thread_message(values):
-            message_id = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
+            message_id = tools.mail.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         else:
-            message_id = tools.generate_tracking_message_id('private')
+            message_id = tools.mail.generate_tracking_message_id('private')
         return message_id
 
     def is_thread_message(self, vals=None):
