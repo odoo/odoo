@@ -29,8 +29,9 @@ function loadAnchors(url, body) {
             const parser = new DOMParser();
             response = parser.parseFromString(response, "text/html").body;
         }
-        const elements = response.querySelectorAll("[id][data-anchor=true], .modal[id][data-display='onClick']");
-        const anchors = Array.from(elements).map((el) => `#${el.id}`);
+        const anchors = Array.from(response.querySelectorAll("[id][data-anchor=true], .modal[id][data-display='onClick']"))
+            .map((el) => {return '#' + el.id;});
+
         // Always suggest the top and the bottom of the page as internal link
         // anchor even if the header and the footer are not in the DOM. Indeed,
         // the "scrollTo" function handles the scroll towards those elements
@@ -89,14 +90,14 @@ function onceAllImagesLoaded(element, excluded) {
         imgs.push(element);
     }
     const defs = imgs.map((img) => {
-        const isExcluded = excluded && (excluded.contains(img) || Array.from(excluded.querySelectorAll('*')).includes(img));
+        const isExcluded = excluded && (excluded === img || excluded.contains(img));
         if (img.complete || isExcluded) {
             return; // Already loaded
         }
-        const def = new Promise(function (resolve, reject) {
-            img.addEventListener("load", function () {
+        var def = new Promise(function (resolve, reject) {
+            $(img).one('load', function () {
                 resolve();
-            }, { once: true });
+            });
         });
         return def;
     });
@@ -159,14 +160,15 @@ function prompt(options, _qweb) {
     options.field_name = options.field_name || options[type];
 
     const def = new Promise(function (resolve, reject) {
-        const dialog = document.body.append(renderToElement(_qweb, options));
+        const dialog = document.body.appendChild(renderToElement(_qweb, options));
         options.dialog = dialog;
         let field = dialog.querySelectorAll(options.field_type)[0];
         field.value = options['default']; // dict notation for IE<9
         field.fillWith = function (data) {
             if (field.tagName === "SELECT") {
+                let select = field;
                 data.forEach(function (item) {
-                    field.options[field.options.length] = new window.Option(item[1], item[0]);
+                    select.options[select.options.length] = new window.Option(item[1], item[0]);
                 });
             } else {
                 field.value = data;
@@ -179,22 +181,26 @@ function prompt(options, _qweb) {
             }
             Modal.getOrCreateInstance(dialog).show();
             field.focus();
-            dialog.querySelectorAll(".btn-primary").addEventListener("click", function () {
-                const backdrop = document.querySelector(".modal-backdrop");
+            $(dialog).on('click', '.btn-primary', function () {
+                const backdrop = document.querySelectorAll('.modal-backdrop');
                 resolve({ val: field.value, field: field, dialog: dialog });
                 Modal.getOrCreateInstance(dialog).hide();
-                dialog.parentNode.removeChild(dialog);
-                backdrop.parentNode.removeChild(backdrop);
+                dialog.remove();
+                backdrop.forEach((el) => {
+                    el.remove();
+                });
             });
         });
-        dialog.addEventListener("hidden.bs.modal", function () {
-            const backdrop = document.querySelector(".modal-backdrop");
+        $(dialog).on('hidden.bs.modal', function () {
+            const backdrop = document.querySelectorAll('.modal-backdrop');
             reject();
             dialog.remove();
-            backdrop.remove();
+            backdrop.forEach((el) => {
+                el.remove();
+            });
         });
         if ((field.tagName === "INPUT" && field.type === "text") || field.tagName === "SELECT") {
-            field.keypress(function (e) {
+            field.addEventListener("keypress", function (e) {
                 if (e.key === "Enter") {
                     e.preventDefault();
                     dialog

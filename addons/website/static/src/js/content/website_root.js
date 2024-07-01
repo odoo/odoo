@@ -209,7 +209,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      * if not found
      */
     _unslugHtmlDataObject: function (dataAttr) {
-        const repr = window.getAttribute("data=" + dataAttr);
+        const repr = document.documentElement.getAttribute(dataAttr);
         var match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
         if (!match) {
             return null;
