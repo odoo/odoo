@@ -4818,7 +4818,8 @@ registry.sizing = SnippetOptionWidget.extend({
                             .elementsFromPoint(ev.pageX, ev.pageY);
                         const toBeClickedEl = sameCoordinatesEls
                             .find(el => !el.closest("#oe_manipulators"));
-                        if (toBeClickedEl) {
+                        // Check toBeClickEl has native JS `click` function
+                        if (toBeClickedEl && typeof toBeClickedEl.click === "function") {
                             toBeClickedEl.click();
                         }
                     }
