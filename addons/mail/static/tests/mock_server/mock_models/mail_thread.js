@@ -488,10 +488,15 @@ export class MailThread extends models.ServerModel {
                         notifications.push([
                             partner,
                             "mail.message/inbox",
-                            MailMessage._message_format(
-                                [message_id],
-                                makeKwArgs({ for_current_user: true, add_followers: true })
-                            )[0],
+                            new mailDataHelpers.Store()
+                                .add(
+                                    "Message",
+                                    MailMessage._message_format(
+                                        [message_id],
+                                        makeKwArgs({ for_current_user: true, add_followers: true })
+                                    )
+                                )
+                                .get_result(),
                         ]);
                     }
                 }

@@ -31,7 +31,8 @@ export class MailCoreWeb {
             }
         });
         this.busService.subscribe("mail.message/inbox", (payload, { id: notifId }) => {
-            const message = this.store.Message.insert(payload, { html: true });
+            const { Message: messages = [] } = this.store.insert(payload, { html: true });
+            const [message] = messages;
             const inbox = this.store.discuss.inbox;
             if (notifId > inbox.counter_bus_id) {
                 inbox.counter++;
