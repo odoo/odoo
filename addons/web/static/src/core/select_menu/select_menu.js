@@ -156,7 +156,7 @@ export class SelectMenu extends Component {
                     const values = [...this.props.value];
                     values.splice(values.indexOf(c.value), 1);
                     this.props.onSelect(values);
-                    this.removeIds(values);
+                    this.setValues(values);
                 },
             };
         });
@@ -242,40 +242,27 @@ export class SelectMenu extends Component {
             if (valueIndex !== -1) {
                 values.splice(valueIndex, 1);
                 this.props.onSelect(values);
-                this.removeIds(values);
+                this.setValues(values);
             } else {
                 this.props.onSelect([...this.props.value, value]);
-                this.addSelectedIds([...this.props.value, value]);
+                this.setValues([...this.props.value, value]);
             }
         } else if (!this.selectedChoice || this.selectedChoice.value !== value) {
             this.props.onSelect(value);
-            this.addSelectedIds(value);
+            this.setValues([value]);
         }
     }
 
-    addSelectedIds(value) {
+    setValues(values) {
         if (this.props.element) {
-            if (this.props.multiSelect) {
-                this.props.element.value = value.join(",");
-            } else {
-                this.props.element.value = value;
-            }
-            const changeEvent = new Event("change", { bubbles: true });
-            this.props.element.dispatchEvent(changeEvent);
-        }
-    }
-
-    removeIds(values) {
-        if (this.props.element) {
-            this.selectedIds = this.selectedIds.filter((id) => {
-                return this.props.choices.some((choice) => {
-                    return choice.id === id && values.includes(choice.value);
-                });
+            this.props.choices.forEach((choice) => {
+                if (!values.includes(choice.value) && this.selectedIds.includes(choice.id)) {
+                    this.selectedIds.splice(this.selectedIds.indexOf(choice.id), 1);
+                } else if (values.includes(choice.value) && !this.selectedIds.includes(choice.id)) {
+                    this.selectedIds.push(choice.id);
+                }
             });
-
-            this.props.element.value = this.selectedIds.join(",");
-            const changeEvent = new Event("change", { bubbles: true });
-            this.props.element.dispatchEvent(changeEvent);
+            this.props.element.value = this.selectedIds;
         }
     }
 
