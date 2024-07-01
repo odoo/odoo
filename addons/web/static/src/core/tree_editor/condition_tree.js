@@ -1,7 +1,6 @@
 import { Domain } from "@web/core/domain";
 import { formatAST, parseExpr } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
-const { DateTime } = luxon;
 
 /** @typedef { import("@web/core/py_js/py_parser").AST } AST */
 /** @typedef {import("@web/core/domain").DomainRepr} DomainRepr */
@@ -747,6 +746,22 @@ function createBetweenOperators(tree) {
  * @param {Tree} tree
  * @returns {Tree}
  */
+function createWithinOperators(tree) {
+    if (tree.type !== "condition" || tree.operator !== ">") {
+        return tree;
+    }
+    const regex = /relativedelta\((\w+)=(\d+)\)/;
+    const matches = regex.exec(tree.value);
+    if (matches) {
+        tree.value = condition(tree.path, "within", normalizeValue([parseInt(matches[2]), matches[1]]))
+    }
+    return tree;
+}
+
+/**
+ * @param {Tree} tree
+ * @returns {Tree}
+ */
 export function removeBetweenOperators(tree) {
     if (tree.type === "complex_condition") {
         return tree;
@@ -783,10 +798,9 @@ export function removeWithinOperators(tree) {
             return tree;
         }
         const { negate, path, value } = tree;
-
         return connector(
             "&",
-            [condition(path, ">=", DateTime.local().toFormat("yyyy-MM-dd")), condition(path, "<=", DateTime.local().plus({ [value[1]]: value[0] }).toFormat("yyyy-MM-dd"))],
+            [condition(path, ">", `(context_today() - relativedelta(${value[1]}=${value[0]})).strftime('%Y-%m-%d')`)],
             negate
         );
     }
@@ -910,7 +924,7 @@ function removeComplexConditions(tree) {
 export function treeFromExpression(expression, options = {}) {
     const ast = parseExpr(expression);
     const tree = _treeFromAST(ast, options);
-    return createVirtualOperators(createBetweenOperators(tree), options);
+    return createVirtualOperators(createBetweenOperators(createWithinOperators(tree)), options);
 }
 
 /**
@@ -948,8 +962,9 @@ export function treeFromDomain(domain, options = {}) {
     domain = new Domain(domain);
     const domainAST = domain.ast;
     const tree = construcTree(domainAST.value, options); // a simple tree
-    return createVirtualOperators(createBetweenOperators(tree), options);
+    return createVirtualOperators(createBetweenOperators(createWithinOperators(tree)), options);
 }
+
 
 /**
  * @param {DomainRepr} domain a string representation of a domain
