@@ -26,7 +26,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     trigger: ".o-kanban-button-new",
     content: _t("Create your first Job Position."),
     position: "bottom",
-    width: 195,
     run: "click",
 }, 
 {
@@ -47,7 +46,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     trigger: ".o_job_alias",
     content: _t("Choose an application email."),
     position: "right",
-    width: 195,
     run: "click",
 }, {
     trigger: '.o_create_job',
@@ -68,7 +66,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     trigger: ".breadcrumb-item:not(.active):last",
     content: _t("Let’s go back to the dashboard."),
     position: "bottom",
-    width: 195,
     run: "click",
 }, 
 {
@@ -99,7 +96,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     trigger: ".oe_kanban_card",
     content: markup(_t("<b>Click to view</b> the application.")),
     position: "bottom",
-    width: 195,
     run: "click",
 }, 
 {
@@ -140,7 +136,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     trigger: ".o_create_employee",
     content: _t("Let’s create this new employee now."),
     position: "bottom",
-    width: 225,
     run: "click",
 }, 
 {
@@ -151,6 +146,5 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     trigger: ".o_form_button_save",
     content: _t("Save it!"),
     position: "bottom",
-    width: 80,
     run: "click",
 }]});

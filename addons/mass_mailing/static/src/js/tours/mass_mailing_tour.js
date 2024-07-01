@@ -16,7 +16,6 @@
         isActive: ["enterprise"],
         trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
         content: _t("Let's try the Email Marketing app."),
-        width: 225,
         position: 'bottom',
         run: "click",
     }, {

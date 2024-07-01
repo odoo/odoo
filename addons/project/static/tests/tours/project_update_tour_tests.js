@@ -15,7 +15,6 @@ registry.category("web_tour.tours").add('project_update_tour', {
 },
 {
     trigger: '.o-kanban-button-new',
-    width: 200,
     run: "click",
 }, {
     trigger: '.o_project_name input',
