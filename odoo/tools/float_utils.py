@@ -3,6 +3,15 @@
 import builtins
 import math
 
+__all__ = [
+    "float_compare",
+    "float_is_zero",
+    "float_repr",
+    "float_round",
+    "float_split",
+    "float_split_str",
+]
+
 
 def round(f):
     # P3's builtin round differs from P2 in the following manner:
