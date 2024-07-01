@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 
 @tagged('-at_install', 'post_install')
@@ -27,6 +27,30 @@ class TestExpensesAccessRights(TestExpenseCommon):
                 'unit_amount': 1,
             })
 
+        expense = self.env['hr.expense'].with_user(self.expense_user_employee).create({
+            'name': 'expense_1',
+            'date': '2016-01-01',
+            'product_id': self.product_a.id,
+            'unit_amount': 10.0,
+            'employee_id': self.expense_employee.id,
+        })
+
+        # The expense employee shouldn't be able to bypass the submit state.
+        with self.assertRaises(UserError):
+            expense.with_user(self.expense_user_employee).write({'state': 'approve'})
+        self.assertEqual(expense['state'], 'draft')
+
+        # Employee can report & submit their expense
+        expense_sheet = self.env['hr.expense.sheet'].with_user(self.expense_user_employee).create({
+            'name': 'expense sheet for employee',
+            'expense_line_ids': expense,
+            'payment_mode': expense.payment_mode,
+        })
+        expense_sheet.with_user(self.expense_user_employee).action_submit_sheet()
+        
+        # Expense state should be impacted by Sheet state change
+        self.assertEqual(expense['state'], 'reported')
+
     def test_expense_sheet_access_rights_approve(self):
 
         # The expense employee is able to a create an expense sheet.
@@ -49,6 +73,11 @@ class TestExpensesAccessRights(TestExpenseCommon):
         })
         self.assertRecordValues(expense_sheet, [{'state': 'draft'}])
 
+        # The expense employee shouldn't be able to bypass the submit state.
+        with self.assertRaises(UserError):
+            expense_sheet.with_user(self.expense_user_employee).write({'state': 'approve'})
+        self.assertEqual(expense_sheet['state'], 'draft')
+
         # The expense employee is able to submit the expense sheet.
 
         expense_sheet.with_user(self.expense_user_employee).action_submit_sheet()
@@ -64,6 +93,10 @@ class TestExpensesAccessRights(TestExpenseCommon):
 
         expense_sheet.with_user(self.expense_user_manager).approve_expense_sheets()
         self.assertRecordValues(expense_sheet, [{'state': 'approve'}])
+
+         # The expense employee shouldn't be able to modify an approved expense.
+        with self.assertRaises(UserError):
+            expense_sheet.expense_line_ids[0].with_user(self.expense_user_employee).write({'total_amount': 1000.0})
 
         # An expense manager is not able to create the journal entry.
 
