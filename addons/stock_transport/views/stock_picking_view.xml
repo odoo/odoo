@@ -5,9 +5,6 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.vpicktree"/>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
-                    <attribute name="default_order">sequence</attribute>
-                </xpath>
                 <xpath expr="//field[@name='origin']" position="replace">
                     <field name="partner_id" string="Partner"/>
                     <field name="zip_code"/>
@@ -16,6 +13,9 @@
                 </xpath>
                 <xpath expr="//field[@name='company_id'][2]" position="attributes">
                     <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="before">
+                    <field name="sequence" widget="handle"/>
                 </xpath>
             </field>
         </record>

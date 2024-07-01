@@ -192,5 +192,15 @@
         </field>
     </record>
 
+    <record id="update_sequence" model="ir.actions.server">
+        <field name="name">Update Transfers Sequence</field>
+        <field name="model_id" ref="stock_transport.model_stock_picking_batch"/>
+        <field name="binding_model_id" ref="stock_transport.model_stock_picking_batch"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records._update_sequences()</field>
+    </record>
    </data>
 </odoo>

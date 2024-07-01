@@ -39,9 +39,10 @@ class StockPickingBatch(models.Model):
         'Properties',
         definition='picking_type_id.picking_properties_definition')
 
-    def write(self, vals):
-        res = super().write(vals)
-        self._update_sequences()
+    @api.model_create_multi
+    def create(self, vals):
+        res = super().create(vals)
+        res._update_sequences()
         return res
 
     def _update_sequences(self):
