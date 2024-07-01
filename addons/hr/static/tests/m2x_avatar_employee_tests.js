@@ -155,10 +155,8 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         const views = {
             "m2x.avatar.employee,false,kanban": `<kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="employee_id" widget="many2one_avatar_employee"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="employee_id" widget="many2one_avatar_employee"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -230,10 +228,8 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             const views = {
                 "m2x.avatar.employee,false,kanban": `<kanban>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="employee_id" widget="many2one_avatar_employee"/>
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="employee_id" widget="many2one_avatar_employee"/>
                         </t>
                     </templates>
                 </kanban>`,
@@ -271,10 +267,8 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         const views = {
             "m2x.avatar.employee,false,kanban": `<kanban>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="employee_id" widget="many2one_avatar_employee" options="{'relation': 'hr.employee.public'}"/>
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="employee_id" widget="many2one_avatar_employee" options="{'relation': 'hr.employee.public'}"/>
                         </t>
                     </templates>
                 </kanban>`,
@@ -625,16 +619,10 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         const views = {
             "m2x.avatar.employee,false,kanban": `<kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <div class="oe_kanban_footer">
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_right">
-                                        <field name="employee_ids" widget="many2many_avatar_employee"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <footer>
+                            <field name="employee_ids" widget="many2many_avatar_employee"/>
+                        </footer>
                     </t>
                 </templates>
             </kanban>`,

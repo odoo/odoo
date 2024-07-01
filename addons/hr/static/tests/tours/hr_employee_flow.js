@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add('hr_employee_tour', {
     },
     {
         content: "Open an Employee Profile",
-        trigger: ".o_kanban_record_title:contains('Johnny H.')",
+        trigger: ".o_kanban_record:contains('Johnny H.')",
         run: 'click',
     },
     {
