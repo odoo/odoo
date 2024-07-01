@@ -3,6 +3,7 @@
 
 import binascii
 import contextlib
+import collections
 import datetime
 import hmac
 import ipaddress
@@ -29,7 +30,7 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request, DEFAULT_LANG
 from odoo.osv import expression
-from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property, SetDefinitions
+from odoo.tools import is_html_empty, partition, frozendict, lazy_property, SetDefinitions
 
 _logger = logging.getLogger(__name__)
 

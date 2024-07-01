@@ -7,7 +7,7 @@ from contextlib import contextmanager
 from subprocess import run, PIPE
 from textwrap import dedent
 
-from odoo import tools
+from odoo.tools.which import which
 from odoo.tests.common import TransactionCase
 
 from . import _odoo_checker_sql_injection
@@ -19,7 +19,7 @@ except ImportError:
     pylint = None
     PyLinter = object
 try:
-    pylint_bin = tools.which('pylint')
+    pylint_bin = which('pylint')
 except IOError:
     pylint_bin = None
 

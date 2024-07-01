@@ -6,7 +6,7 @@ import json
 from werkzeug.urls import url_encode
 
 from odoo import tests
-from odoo.tools import mute_logger, submap
+from odoo.tools.misc import mute_logger, submap
 
 
 @tests.tagged('post_install', '-at_install')

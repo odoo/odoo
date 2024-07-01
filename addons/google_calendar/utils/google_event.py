@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo.tools import email_normalize, ReadonlyDict
 import logging
-from typing import Iterator, Mapping
-from collections import abc
 import re
+from collections import abc
+from typing import Iterator, Mapping
+
+from odoo.tools import email_normalize
+from odoo.tools.misc import ReadonlyDict
 
 _logger = logging.getLogger(__name__)
 

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.api import model
-from typing import Iterator, Mapping
 from collections import abc
-from odoo.tools import ReadonlyDict, email_normalize
+from typing import Iterator, Mapping
+
+from odoo.tools import email_normalize
+from odoo.tools.misc import ReadonlyDict
 
 
 class MicrosoftEvent(abc.Set):
