@@ -8,13 +8,6 @@
 
 <data noupdate="1">
 
-    <record model="ir.rule" id="project.task_visibility_rule">
-        <field name="perm_create" eval="False"/>
-        <field name="perm_unlink" eval="False"/>
-        <field name="perm_write" eval="False"/>
-        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
-    </record>
-
     <record model="ir.rule" id="task_edition_rule_internal">
         <field name="name">Project/Task: employees: Full access to own private task only</field>
         <field name="model_id" ref="project.model_project_task"/>
