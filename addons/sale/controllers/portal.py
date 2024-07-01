@@ -283,8 +283,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             return {'error': _('Invalid signature data.')}
 
         if not order_sudo._has_to_be_paid():
-            order_sudo.action_confirm()
-            order_sudo._send_order_confirmation_mail()
+            order_sudo.with_context(send_email=True).action_confirm()
 
         pdf = request.env['ir.actions.report'].sudo()._render_qweb_pdf('sale.action_report_saleorder', [order_sudo.id])[0]
 
