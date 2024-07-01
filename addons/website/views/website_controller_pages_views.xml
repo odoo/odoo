@@ -71,31 +71,31 @@
     <field name="name">website.controller.page.kanban</field>
     <field name="model">website.controller.page</field>
     <field name="arch" type="xml">
-        <kanban class="o_kanban_full_width">
-            <t t-name="kanban-box">
-                <div class="oe_kanban_global_click">
-                    <div class="d-flex flex-column flex-md-row gap-3 flex-grow-1">
-
-                            <div class="d-flex flex-column col-3">
-                                <div class="fw-bold"><field name="page_name"/></div>
-                                <div>
-                                    <span class="me-1">Exposes</span>
-                                    <field name="model_id" widget="many2one"/>
-                                </div>
-                                <div invisible="website_id">On all websites</div>
-                                <div invisible="not website_id">On <field name="website_id"/></div>
-                            </div>
-
-                            <div class="d-md-flex d-xs-none d-sm-none align-items-center gap-3" data-name="more-info">
-                                <i class="fa fa-2x fa-arrow-right text-primary" title="URL" />
-                            </div>
-
-                            <div class="d-flex align-items-center ms-auto">
-                                <label class="me-2" for="website_published">Publish</label>
-                                <field name="website_published" widget="boolean_toggle" />
-                            </div>
+        <kanban class="">
+            <t t-name="kanban-card" class="w-100 flex-row flex-wrap gap-1">
+                <div class="d-flex flex-row col-10 me-auto">
+                    <div class="d-flex flex-column col-3">
+                        <div class="fw-bold"><field name="page_name"/></div>
+                        <div>
+                            <span class="me-1">Exposes</span>
+                            <field name="model_id" widget="many2one"/>
+                        </div>
+                        <div invisible="website_id">On all websites</div>
+                        <div invisible="not website_id">On <field name="website_id"/></div>
                     </div>
+                     <div class="d-md-flex d-xs-none d-sm-none align-items-center gap-3" data-name="more-info">
+                            <i class="fa fa-2x fa-arrow-right text-primary" title="URL" />
+                            <div><span>/model/</span><field name="name_slugified" /></div>
+                        </div>
                 </div>
+
+                    <div class="d-flex align-items-center ms-auto flex-shrink-0 flex-grow-0">
+                        <div t-att-class="record.website_published ? 'bg-success' : 'bg-danger'" class="rounded p-2 text-white">
+                            <span invisible="website_published">Unpublished</span>
+                            <span invisible="not website_published">Published</span>
+                        </div>
+                        <field name="website_published" invisible="1" />
+                    </div>
             </t>
         </kanban>
     </field>
