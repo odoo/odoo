@@ -200,7 +200,7 @@ patch(MockServer.prototype, {
             ["res_id", "=", channel_id],
             ["pinned_at", "!=", false],
         ]);
-        return this._mockMailMessageMessageFormat(messageIds);
+        return { Message: this._mockMailMessageMessageFormat(messageIds) };
     },
     /**
      * Simulates the `/mail/attachment/delete` route.
