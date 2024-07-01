@@ -36,21 +36,15 @@
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" sample="1">
-                <field name="employee_id"/>
                 <field name="check_in"/>
                 <field name="check_out"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_global_click">
-                            <div class="o_kanban_record_title">
-                                <field name="employee_id" widget="many2one_avatar_user" options="{'display_avatar_name': True}" class="fs-5 fw-bold"/>
-                            </div>
-                            <hr class="mt4 mb8"/>
-                            <div class="o_kanban_record_subtitle">
-                                <i class="fa fa-calendar" aria-label="Period" role="img" title="Period"></i>
-                                <t t-esc="record.check_in.value"/>
-                                - <t t-esc="record.check_out.value"/>
-                            </div>
+                    <t t-name="kanban-card">
+                        <field name="employee_id" widget="many2one_avatar_user" options="{'display_avatar_name': True}" class="fs-5 fw-bold mb-2"/>
+                        <hr class="mt4 mb8"/>
+                        <div>
+                            <i class="fa fa-calendar me-1" aria-label="Period" role="img" title="Period"></i>
+                            <field name="check_in" /> - <field name="check_out" />
                         </div>
                     </t>
                 </templates>

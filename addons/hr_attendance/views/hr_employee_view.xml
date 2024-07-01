@@ -111,35 +111,26 @@
         <field name="arch" type="xml">
             <kanban create="false">
                 <field name="attendance_state"/>
-                <field name="hours_today"/>
-                <field name="total_overtime"/>
-                <field name="id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                    <div class="oe_kanban_global_click">
-                        <div class="o_kanban_image">
-                            <img t-att-src="kanban_image('hr.employee.public', 'avatar_128', record.id.raw_value)" alt="Employee"/>
-                        </div>
-                        <div class="oe_kanban_details">
-                            <div id="textbox">
+                    <t t-name="kanban-card" class="flex-row">
+                        <aside>
+                            <field name="avatar_128" widget="image" alt="Employee" class="mb-0"/>
+                        </aside>
+                        <main class="w-100 ms-2">
+                            <div>
                                 <div class="float-end" t-if="record.attendance_state.raw_value == 'checked_in'">
-                                    <span id="oe_hr_attendance_status" class="fa fa-circle text-success me-1" role="img" aria-label="Available" title="Available"></span>
+                                    <span class="fa fa-circle text-success me-1" role="img" aria-label="Available" title="Available"></span>
                                 </div>
                                 <div class="float-end" t-if="record.attendance_state.raw_value == 'checked_out'">
-                                    <span id="oe_hr_attendance_status" class="fa fa-circle text-warning me-1"
+                                    <span class="fa fa-circle text-warning me-1"
                                           role="img" aria-label="Not available" title="Not available">
                                     </span>
                                 </div>
-                                <strong>
-                                    <field name="name"/>
-                                </strong>
+                                <field class="fw-bolder" name="name"/>
                             </div>
-                            <ul>
-                                <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
-                                <li t-if="record.work_location_id.raw_value"><field name="work_location_id"/></li>
-                            </ul>
-                        </div>
-                    </div>
+                            <field t-if="record.job_id.raw_value" name="job_id"/>
+                            <field t-if="record.work_location_id.raw_value" name="work_location_id"/>
+                        </main>
                     </t>
                 </templates>
             </kanban>
