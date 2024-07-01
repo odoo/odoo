@@ -280,6 +280,7 @@
             'website/static/src/snippets/s_showcase/options.js',
             'website/static/src/snippets/s_table_of_content/options.js',
             'website/static/src/snippets/s_timeline/options.js',
+            'website/static/src/snippets/s_timeline/options.xml',
             'website/static/src/snippets/s_media_list/options.js',
             'website/static/src/snippets/s_media_list/options.xml',
             'website/static/src/snippets/s_google_map/options.js',
