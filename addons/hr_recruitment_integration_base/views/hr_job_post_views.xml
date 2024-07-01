@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_job_post_tree" model="ir.ui.view">
+        <field name="name">hr.job.post.tree</field>
+        <field name="model">hr.job.post</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="job_id"/>
+                <field name="provider"/>
+                <field name="status"/>
+                <field name="valid_until"/>
+                <field name="url"/>
+            </tree>
+        </field>
+    </record>
+</odoo>
