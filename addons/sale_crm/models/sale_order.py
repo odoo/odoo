@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields
-from odoo.addons import (sale, crm)
+from odoo.addons import sale, crm
 
 
-class SaleOrder(sale.models.SaleOrder):
+class SaleOrder(sale.SaleOrder):
 
-    opportunity_id = fields.Many2one(
-        crm.models.Lead, string='Opportunity', check_company=True,
+    opportunity_id = fields.Many2one[crm.Lead](
+        string='Opportunity', check_company=True,
         domain="[('type', '=', 'opportunity'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
     def action_confirm(self):

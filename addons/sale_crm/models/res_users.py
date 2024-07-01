@@ -5,6 +5,6 @@ from odoo import fields
 from odoo.addons import base
 
 
-class ResUsers(base.models.Users):
+class ResUsers(base.Users):
 
     target_sales_invoiced = fields.Integer('Invoiced in Sales Orders Target')

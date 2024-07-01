@@ -6,7 +6,7 @@ from odoo.addons import base
 from odoo.addons import sale
 
 
-class CrmLead(sale.models.Lead):
+class Team(sale.Team):
 
     def _compute_dashboard_button_name(self):
         super()._compute_dashboard_button_name()

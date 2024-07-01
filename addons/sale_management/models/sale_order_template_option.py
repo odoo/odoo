@@ -1,16 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from __future__ import annotations
-from typing import TYPE_CHECKING
-
 from odoo import api, fields, models
 from odoo.addons import base as base
-from odoo.addons import product, uom
-
-if TYPE_CHECKING:
-    from .sale_order_template import SaleOrderTemplate
-else:
-    SaleOrderTemplate = 'sale.order.template'
+from odoo.addons import product, uom, sale_management
 
 
 class SaleOrderTemplateOption(models.Model):
@@ -18,7 +10,7 @@ class SaleOrderTemplateOption(models.Model):
     _description = "Quotation Template Option"
     _check_company_auto = True
 
-    sale_order_template_id = fields.Many2one[SaleOrderTemplate](
+    sale_order_template_id: 'sale_management.SaleOrderTemplate' = fields.Many2one(
         string="Quotation Template Reference",
         index=True, required=True,
         ondelete='cascade')
