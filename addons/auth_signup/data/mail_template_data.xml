@@ -286,7 +286,7 @@
                         Your login is <strong><t t-out="object.email or ''">mark.brown23@example.com</t></strong><br/>
                         To gain access to your account, you can use the following link:
                         <div style="margin: 16px 0px 16px 0px;">
-                            <a t-attf-href="/web/login?auth_login={{object.email}}"
+                            <a t-attf-href="{{object.get_base_url()}}/web/login?auth_login={{object.email}}"
                                 style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
                                 Go to My Account
                             </a>
