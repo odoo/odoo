@@ -49,19 +49,17 @@ patch(ActionpadWidget.prototype, {
         const orderChange = this.currentOrder.getOrderChanges().orderlines;
 
         const categories = Object.values(orderChange).reduce((acc, curr) => {
-            const categories =
-                this.pos.models["product.product"].get(curr.product_id)?.pos_categ_ids || [];
+            const category =
+                this.pos.models["product.product"].get(curr.product_id)?.pos_categ_ids[0];
 
-            for (const category of categories) {
-                if (category) {
-                    if (!acc[category.id]) {
-                        acc[category.id] = {
-                            count: curr.quantity,
-                            name: category.name,
-                        };
-                    } else {
-                        acc[category.id].count += curr.quantity;
-                    }
+            if (category) {
+                if (!acc[category.id]) {
+                    acc[category.id] = {
+                        count: curr.quantity,
+                        name: category.name,
+                    };
+                } else {
+                    acc[category.id].count += curr.quantity;
                 }
             }
 
