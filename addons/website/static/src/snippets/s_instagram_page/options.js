@@ -20,7 +20,7 @@ export class InstagramPage extends SnippetOption {
     async onBuilt() {
         // First we check if the user has changed his instagram during the
         // current edition (via the social media options).
-        const dbSocialValuesCache = SocialMediaOption.getDbSocialValuesCache();
+        const dbSocialValuesCache = SocialMediaOption.getDbSocialValuesCache().dbSocialValues;
         let socialInstagram = dbSocialValuesCache && dbSocialValuesCache["social_instagram"];
         // If not, we check the value in the DB.
         if (!socialInstagram) {
