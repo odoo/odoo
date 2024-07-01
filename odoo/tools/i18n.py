@@ -9,6 +9,8 @@ from odoo.tools.misc import babel_locale_parse, get_lang
 if TYPE_CHECKING:
     import odoo.api
 
+__all__ = ["format_list"]
+
 
 def format_list(
     env: odoo.api.Environment,
