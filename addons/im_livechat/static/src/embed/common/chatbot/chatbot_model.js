@@ -1,6 +1,5 @@
 import { AND, Record } from "@mail/core/common/record";
 import { rpc } from "@web/core/network/rpc";
-import { markup } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
 
@@ -168,11 +167,13 @@ export class Chatbot extends Record {
      * @returns {Promise<boolean>} Whether the script is ready to go to the next step.
      */
     async _processAnswerQuestionEmail() {
-        const { success, posted_message: message } = await rpc("/chatbot/step/validate_email", {
+        const { success, data } = await rpc("/chatbot/step/validate_email", {
             channel_id: this.thread.id,
         });
+        const { Message: messages = [] } = this.store.insert(data, { html: true });
+        const [message] = messages;
         if (message) {
-            this.thread.messages.add({ ...message, body: markup(message.body) });
+            this.thread.messages.add(message);
         }
         return success;
     }
