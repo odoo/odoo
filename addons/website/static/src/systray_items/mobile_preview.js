@@ -15,6 +15,7 @@ MobilePreviewSystray.template = "website.MobilePreviewSystray";
 
 export const systrayItem = {
     Component: MobilePreviewSystray,
+    isDisplayed: (env) => env.services.website.isRestrictedEditor,
 };
 
 registry.category("website_systray").add("MobilePreview", systrayItem, { sequence: 12 });
