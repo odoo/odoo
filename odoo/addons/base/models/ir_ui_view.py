@@ -537,6 +537,12 @@ actual arch.
         self.env.registry.clear_cache('templates')
         return super(View, self).unlink()
 
+    def bulk_delete(self):
+        """ Deletes the given views and all their children views, including
+        inactive ones.
+        """
+        return self.with_context(active_test=False, _force_unlink=True).unlink()
+
     def _update_field_translations(self, fname, translations, digest=None):
         return super(View, self.with_context(no_save_prev=True))._update_field_translations(fname, translations, digest)
 

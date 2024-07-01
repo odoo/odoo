@@ -142,6 +142,20 @@
             <field name="binding_view_types">form,list</field>
         </record>
 
+        <!-- Bulk Delete -->
+        <!-- TODO instead of 'main', would need to replace current breadcrumb entry (or just erase previous) -->
+        <record id="bulk_delete_views_action" model="ir.actions.server">
+            <field name="name">Bulk Delete</field>
+            <field name="model_id" ref="model_ir_ui_view"/>
+            <field name="state">code</field>
+            <field name="code">
+records.bulk_delete()
+action_view = env.ref('base.action_ui_view').read()[0]
+action_view['target'] = 'main'
+action = action_view
+            </field>
+        </record>
+
         <!-- View customizations -->
         <record id="view_view_custom_form" model="ir.ui.view">
             <field name="model">ir.ui.view.custom</field>

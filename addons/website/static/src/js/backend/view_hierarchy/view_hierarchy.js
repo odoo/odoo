@@ -21,10 +21,10 @@ export class ViewHierarchy extends Component {
         this.hideGenericViewByWebsite = {};
 
         onWillStart(async () => {
-            ({
-                sibling_views: this.siblingViews,
-                hierarchy: this.state.viewTree,
-            } = await this.orm.call("ir.ui.view", "get_view_hierarchy", [this.viewId], {}));
+            const result = await this.orm.call("ir.ui.view", "get_view_hierarchy", [this.viewId], {});
+            this.siblingViews = result.sibling_views;
+            this.state.viewTree = result.hierarchy;
+            this.topLevelViewId = result.hierarchy.id;
 
             this.setupWebsiteNames();
             this.setupHideGenericViewByWebsite();
@@ -246,6 +246,24 @@ export class ViewHierarchy extends Component {
                 active_id: viewId,
             },
         });
+    }
+
+    /**
+     * @param {Number} viewId
+     */
+    async bulkDelete(deletedViewId) {
+        await this.orm.call('ir.ui.view', 'bulk_delete', [deletedViewId], {});
+        if (deletedViewId === this.topLevelViewId) {
+            this.action.doAction('base.action_ui_view');
+        } else {
+            this.action.doAction({
+                type: 'ir.actions.client',
+                tag: 'website_view_hierarchy',
+                context: {
+                    'active_id': this.topLevelViewId,
+                },
+            });
+        }
     }
 }
 

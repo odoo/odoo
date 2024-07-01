@@ -40,8 +40,11 @@
         <a href="#" t-on-click.stop.prevent="() => this.openFormView(viewTree.id)">
             <i class="fa fa-eye ms-2 text-muted" title="Go to View"/>
         </a>
-        <a class="o_show_diff" href="#" t-on-click.stop.prevent="() => this.onShowDiffClick(viewTree.id)">
+        <a href="#" t-on-click.stop.prevent="() => this.onShowDiffClick(viewTree.id)">
             <i class="fa fa-files-o ms-2 text-muted" title="Show Arch Diff"/>
+        </a>
+        <a href="#" t-on-click.stop.prevent="() => this.bulkDelete(viewTree.id)">
+            <i class="fa fa-trash-o ms-2 text-muted" title="Bulk Delete"/>
         </a>
         <t t-if="state.searchedView.id === viewTree.id">
             <span class="o_tab_hint text-info ms-auto small fst-italic pe-2">Press &lt;Tab&gt; for next [<t t-esc="state.searchedView.index+1"/>/<t t-esc="state.searchedView.total"/>]</span>
