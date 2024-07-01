@@ -222,7 +222,7 @@ test("edit and save a html field", async () => {
     expect(".o_form_button_save").toBeVisible();
 
     await contains(".o_form_button_save").click();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
     expect(".odoo-editor-editable p").toHaveText("testfirst");
     expect(`.o_form_button_save`).not.toBeVisible();
 });
@@ -279,13 +279,13 @@ test("edit html field and blur multiple time should apply 1 onchange", async () 
     expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>Hello first </p>");
 
     await contains("[name='name'] input").click();
-    expect(["onchange: <p>Hello first</p>"]).toVerifySteps();
+    expect.verifySteps(["onchange: <p>Hello first</p>"]);
 
     await contains("[name='txt'] .odoo-editor-editable").focus();
     await contains("[name='name'] input").click();
     def.resolve();
     await animationFrame();
-    expect([]).toVerifySteps();
+    expect.verifySteps([]);
 });
 
 test("edit an html field during an onchange", async () => {
@@ -315,7 +315,7 @@ test("edit an html field during an onchange", async () => {
     expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>Hello first </p>");
 
     await contains(".o_form_view").click();
-    expect(["onchange: <p>Hello first</p>"]).toVerifySteps();
+    expect.verifySteps(["onchange: <p>Hello first</p>"]);
 
     setSelectionInHtmlField();
     insertText(htmlEditor, "Yop ");
@@ -376,7 +376,7 @@ test("edit and switch page", async () => {
     await animationFrame();
     expect(".odoo-editor-editable p").toHaveText("second");
     expect(`.o_form_button_save`).not.toBeVisible();
-    expect(["web_save"]).toVerifySteps();
+    expect.verifySteps(["web_save"]);
 
     await contains(`.o_pager_previous`).click();
     expect(".odoo-editor-editable p").toHaveText("testfirst");
@@ -483,7 +483,7 @@ test("A new MediaDialog after switching record in a Form view should have the co
 
     press("Enter");
     await animationFrame();
-    expect(["partner : 2"]).toVerifySteps();
+    expect.verifySteps(["partner : 2"]);
 });
 
 test("Embed video by pasting video URL", async () => {
@@ -732,7 +732,7 @@ test("Pasted/dropped images are converted to attachments on save", async () => {
     await contains(".o_form_button_save").click();
     expect(img.getAttribute("src")).toBe("/test_image_url.png?access_token=1234");
     expect(img.classList.contains("o_b64_image_to_save")).not.toBe(true);
-    expect(["add_data: partner 1"]).toVerifySteps();
+    expect.verifySteps(["add_data: partner 1"]);
 });
 
 test("isDirty should be false when the content is being transformed by the editor", async () => {
@@ -1281,7 +1281,7 @@ describe("sandbox", () => {
         );
 
         await contains(".o_form_button_save").click();
-        expect(["web_save"]).toVerifySteps();
+        expect.verifySteps(["web_save"]);
     });
 
     test("switch page after editing html with code editor", async () => {
@@ -1331,7 +1331,7 @@ describe("sandbox", () => {
         );
 
         await contains(`.o_pager_next`).click();
-        expect(["web_save"]).toVerifySteps();
+        expect.verifySteps(["web_save"]);
         expect(`.o_form_button_save`).not.toBeVisible();
         expect('.o_field_html[name="txt"] textarea').toHaveValue(
             htmlDocumentTextTemplate("Bye", "green")
@@ -1505,7 +1505,7 @@ describe("sandbox", () => {
         expect(readonlyIframe.contentDocument.body).toHaveInnerHTML(
             `<div id="iframe_target"> <p> Hello </p> </div>`
         );
-        expect(["template.assets"]).toVerifySteps();
+        expect.verifySteps(["template.assets"]);
     });
 
     test("click on next/previous page when readonly with cssReadonly ", async () => {

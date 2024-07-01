@@ -450,15 +450,15 @@ describe("shortcut", () => {
         const { editor } = await setupEditor(`<p>[]</p>`, {
             config: { onChange, resources },
         });
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
         insertText(editor, "a");
-        expect([
+        expect.verifySteps([
             "handleNewRecords",
             "CONTENT_UPDATED",
             "handleNewRecords",
             "CONTENT_UPDATED",
             "onchange",
-        ]).toVerifySteps();
+        ]);
     });
 });
 
@@ -496,9 +496,9 @@ describe("destroy", () => {
         // Ensure dispatch when plugins are alive.
         editor.shared.domInsert(parseHTML(editor.document, `<div class="test">destroyed</div>`));
         await animationFrame();
-        expect(["dispatch"]).toVerifySteps();
+        expect.verifySteps(["dispatch"]);
         editor.destroy();
         await animationFrame();
-        expect([]).toVerifySteps();
+        expect.verifySteps([]);
     });
 });
