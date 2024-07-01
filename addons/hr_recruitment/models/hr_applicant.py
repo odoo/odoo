@@ -296,7 +296,7 @@ class Applicant(models.Model):
         if stages:
             search_domain = ['|', ('id', 'in', stages.ids)] + search_domain
 
-        stage_ids = stages._search(search_domain, order=stages._order, grant_access=True)
+        stage_ids = stages.sudo()._search(search_domain, order=stages._order)
         return stages.browse(stage_ids)
 
     @api.depends('job_id', 'department_id')

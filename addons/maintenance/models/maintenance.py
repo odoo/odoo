@@ -190,7 +190,8 @@ class MaintenanceEquipment(models.Model):
         """ Read group customization in order to display all the categories in
             the kanban view, even if they are empty.
         """
-        category_ids = categories._search([], order=categories._order, grant_access=True)
+        # TODO: missing ir.rule [('company_id', 'in', company_ids + [False])]
+        category_ids = categories.sudo()._search([], order=categories._order)
         return categories.browse(category_ids)
 
 
@@ -383,7 +384,7 @@ class MaintenanceRequest(models.Model):
         """ Read group customization in order to display all the stages in the
             kanban view, even if they are empty
         """
-        stage_ids = stages._search([], order=stages._order, grant_access=True)
+        stage_ids = stages.sudo()._search([], order=stages._order)
         return stages.browse(stage_ids)
 
 

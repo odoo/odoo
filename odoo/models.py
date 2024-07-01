@@ -5443,20 +5443,11 @@ class BaseModel(metaclass=MetaModel):
             self.env[model_name].flush_model(field_names)
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, grant_access=False) -> Query:
+    def _search(self, domain, offset=0, limit=None, order=None) -> Query:
         """
-        Private implementation of search() method, allowing to behave as if the
-        current user was granted 'read' access.  This is useful, for example,
-        when filling in the selection list for a drop-down and avoiding access
-        rights errors, by specifying ``grant_access=True`` to bypass access
-        rights check, but not ir.rules!
-        This is ok at the security level because this method is
-        private and not callable through XML-RPC.
+        Private implementation of search() method.
 
         No default order is applied when the method is invoked without parameter ``order``.
-
-        :param grant_access: optional boolean to bypass access rights check
-            (not for ir.rules, this is only for ir.model.access)
 
         :return: a :class:`Query` object that represents the matching records
 
@@ -5466,8 +5457,7 @@ class BaseModel(metaclass=MetaModel):
         default the returned query object is not actually executed, and it can
         be injected as a value in a domain in order to generate sub-queries.
         """
-        if not grant_access:
-            self.check_access_rights('read')
+        self.check_access_rights('read')
 
         if expression.is_false(self, domain):
             # optimization: no need to query, as no record satisfies the domain

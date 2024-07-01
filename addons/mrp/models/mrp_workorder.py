@@ -19,7 +19,8 @@ class MrpWorkorder(models.Model):
     def _read_group_workcenter_id(self, workcenters, domain):
         workcenter_ids = self.env.context.get('default_workcenter_id')
         if not workcenter_ids:
-            workcenter_ids = workcenters._search([], order=workcenters._order, grant_access=True)
+            # TODO: missing ir.rule [('company_id', 'in', company_ids + [False])]
+            workcenter_ids = workcenters.sudo()._search([], order=workcenters._order)
         return workcenters.browse(workcenter_ids)
 
     name = fields.Char(

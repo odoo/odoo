@@ -56,5 +56,5 @@ class UtmCampaign(models.Model):
         """Read group customization in order to display all the stages in the
         Kanban view, even if they are empty.
         """
-        stage_ids = stages._search([], order=stages._order, grant_access=True)
+        stage_ids = stages.sudo()._search([], order=stages._order)
         return stages.browse(stage_ids)

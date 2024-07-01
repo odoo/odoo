@@ -30,7 +30,7 @@ class test_model(models.Model):
 
     @api.model
     def _gbf_m2o(self, subs, domain):
-        sub_ids = subs._search([], order=subs._order, grant_access=True)
+        sub_ids = subs.sudo()._search([], order=subs._order)
         return subs.browse(sub_ids)
 
 

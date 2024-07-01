@@ -35,7 +35,7 @@ class ProductTemplate(models.Model):
     def _read_group_categ_id(self, categories, domain):
         category_ids = self.env.context.get('default_categ_id')
         if not category_ids and self.env.context.get('group_expand'):
-            category_ids = categories._search([], order=categories._order, grant_access=True)
+            category_ids = categories.sudo()._search([], order=categories._order)
         return categories.browse(category_ids)
 
     name = fields.Char('Name', index='trigram', required=True, translate=True)

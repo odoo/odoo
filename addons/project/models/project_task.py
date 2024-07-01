@@ -135,7 +135,7 @@ class Task(models.Model):
         if 'default_project_id' in self.env.context and not self._context.get('subtask_action'):
             search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id'])] + search_domain
 
-        stage_ids = stages._search(search_domain, order=stages._order, grant_access=True)
+        stage_ids = stages.sudo()._search(search_domain, order=stages._order)
         return stages.browse(stage_ids)
 
     @api.model
