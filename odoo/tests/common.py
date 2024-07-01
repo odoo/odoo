@@ -60,6 +60,7 @@ from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
 from odoo.tools import float_compare, single_email_re, profiler, lower_logging, SQL, DotDict
 from odoo.tools.misc import find_in_path, mute_logger
+from odoo.tools.xml_utils import _validate_xml
 
 from . import case
 
@@ -142,6 +143,16 @@ def standalone(*tags):
         return func
 
     return register
+
+
+def test_xsd(url=None, path=None, skip=False):
+    def decorator(func):
+        def wrapped_f(self, *args, **kwargs):
+            if not skip:
+                xmls = func(self, *args, **kwargs)
+                _validate_xml(self.env, url, path, xmls)
+        return wrapped_f
+    return decorator
 
 
 # For backwards-compatibility - get_db_name() should be used instead
