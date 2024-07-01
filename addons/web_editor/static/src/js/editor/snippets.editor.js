@@ -990,6 +990,7 @@ var SnippetEditor = Widget.extend({
                 option.isOwl = true;
                 option.renderingComponent ??= (optionClass).defaultRenderingComponent;
                 option.renderingComponent.components = Object.fromEntries(registry.category("snippet_widgets").getEntries());
+                option.forceNoDeleteButton = option.instance.forceNoDeleteButton ?? (optionClass).forceNoDeleteButton;
                 if (option.Class?.displayOverlayOptions) {
                     option.displayOverlayOptions = true;
                 }
