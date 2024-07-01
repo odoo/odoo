@@ -472,6 +472,14 @@ def read_file_first_line(filename):
         with path.open('r') as f:
             return f.readline().strip('\n')
 
+
+def restart_odoo_or_reboot(action, delay=3):
+    _logger.info("restart_odoo_or_reboot called with %s as action", action)
+    if action == "restart_odoo":
+        odoo_restart(delay)
+    else:
+        subprocess.call(["sudo", "reboot"])
+
 def unlink_file(filename):
     with writable():
         path = path_file(filename)

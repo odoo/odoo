@@ -8,11 +8,13 @@ import websocket
 
 from threading import Thread
 
-from odoo.addons.hw_drivers import main
 from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.websocket_handlers import websocket_handlers
+
 
 _logger = logging.getLogger(__name__)
 websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel()))
+
 
 def send_to_controller(device_type, params):
     """
@@ -45,23 +47,12 @@ def on_message(ws, messages):
     """
     messages = json.loads(messages)
     _logger.debug("websocket received a message: %s", pprint.pformat(messages))
-    iot_mac = helpers.get_mac_address()
     for message in messages:
         message_type = message['message']['type']
-        if message_type == 'iot_action':
-            payload = message['message']['payload']
-            if iot_mac in payload['iotDevice']['iotIdentifiers']:
-                for device in payload['iotDevice']['identifiers']:
-                    device_identifier = device['identifier']
-                    if device_identifier in main.iot_devices:
-                        start_operation_time = time.perf_counter()
-                        _logger.debug("device '%s' action started with: %s", device_identifier, pprint.pformat(payload))
-                        main.iot_devices[device_identifier].action(payload)
-                        _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
-            else:
-                # likely intended as IoT share the same channel
-                _logger.debug("message ignored due to different iot mac: %s", iot_mac)
-        elif message_type != 'print_confirmation':  # intended to be ignored
+        handler = websocket_handlers.get(message_type, None)
+        if handler:
+            handler(message)
+        else:
             _logger.warning("message type not supported: %s", message_type)
 
 
