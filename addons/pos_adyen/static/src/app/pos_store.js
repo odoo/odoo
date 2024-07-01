@@ -7,7 +7,15 @@ patch(PosStore.prototype, {
         this.onNotified("ADYEN_LATEST_RESPONSE", () => {
             this.getPendingPaymentLine(
                 "adyen"
+<<<<<<< HEAD
             ).payment_method_id.payment_terminal.handleAdyenStatusResponse();
+||||||| parent of c1e42cb32d2f (temp)
+            this.pos
+                .getPendingPaymentLine("adyen")
+                .payment_method.payment_terminal.handleAdyenStatusResponse();
+=======
+            ).payment_method.payment_terminal.handleAdyenStatusResponse();
+>>>>>>> c1e42cb32d2f (temp)
         });
     },
 });
