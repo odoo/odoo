@@ -1862,8 +1862,9 @@ QUnit.test("Message shows up even if channel data is incomplete", async () => {
         ],
         channel_type: "chat",
     });
+    const subscribeProm = waitUntilSubscribe();
     env.services["bus_service"].forceUpdateChannels();
-    await waitUntilSubscribe();
+    await subscribeProm;
     await pyEnv.withUser(correspondentUserId, () =>
         rpc("/discuss/channel/notify_typing", {
             is_typing: true,
