@@ -4019,3 +4019,28 @@ test("save selected date during view switching", async () => {
     await getService("action").switchView("calendar");
     expect(`th .fc-timegrid-axis-cushion:eq(0)`).toHaveText(weekNumber);
 });
+
+test("update time while drag and drop on month mode", async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" mode="month" event_open_popup="1" quick_create="0">
+                <field name="name"/>
+                <field name="partner_id"/>
+            </calendar>
+        `,
+    });
+
+    await clickDate("2016-12-20");
+    await contains(".modal-body .o_field_widget[name=name] input").edit("An event");
+    await contains(".modal-body .o_field_widget[name=start] input").edit("2016-12-20 08:00:00");
+    await contains(".modal-body .o_field_widget[name=stop] input").edit("2016-12-23 10:00:00");
+    await contains(".modal .o_form_button_save").click();
+    await moveEventToDate(8, "2016-12-27");
+    await clickEvent(8);
+    await contains(".o_cw_popover .o_cw_popover_edit").click();
+
+    expect(".o_field_widget[name='start'] input").toHaveValue("12/26/2016 08:00:00");
+    expect(".o_field_widget[name='stop'] input").toHaveValue("12/29/2016 10:00:00");
+});
