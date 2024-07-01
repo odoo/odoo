@@ -142,7 +142,7 @@ patch(MockServer.prototype, {
                     },
                 }
             );
-            return this._mockMailMessageMessageFormat([args.message_id])[0];
+            return { Message: this._mockMailMessageMessageFormat([args.message_id]) };
         }
         if (route === "/mail/partner/from_email") {
             return this._mockRouteMailPartnerFromEmail(args.emails, args.additional_values);

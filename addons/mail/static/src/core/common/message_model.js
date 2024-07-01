@@ -354,7 +354,7 @@ export class Message extends Record {
             mentionedChannels,
             mentionedPartners,
         });
-        const messageData = await rpc("/mail/message/update_content", {
+        const data = await rpc("/mail/message/update_content", {
             attachment_ids: attachments.concat(this.attachments).map((attachment) => attachment.id),
             attachment_tokens: attachments
                 .concat(this.attachments)
@@ -363,7 +363,7 @@ export class Message extends Record {
             message_id: this.id,
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
         });
-        this.store.Message.insert(messageData, { html: true });
+        this.store.insert(data, { html: true });
         if (this.hasLink && this.store.hasLinkPreviewFeature) {
             rpc("/mail/link_preview", { message_id: this.id }, { silent: true });
         }
