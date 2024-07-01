@@ -47,6 +47,11 @@ export class WebClient extends Component {
                 document.body.style.pointerEvents = "auto";
             }
         });
+        useBus(this.env.bus, "ACTION_MANAGER:BEFORE-UI-UPDATE", ({ detail: mode }) => {
+            if (mode !== "new") {
+                this.state.fullscreen = mode === "fullscreen";
+            }
+        });
         useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", ({ detail: mode }) => {
             if (mode !== "new") {
                 this.state.fullscreen = mode === "fullscreen";
@@ -77,9 +82,7 @@ export class WebClient extends Component {
 
             if (matchingMenus.length > 0) {
                 // Use sessionStorage context to determine the correct menu
-                menuId = matchingMenus.find(m => 
-                    m.appID === storedMenuId
-                )?.appID;
+                menuId = matchingMenus.find((m) => m.appID === storedMenuId)?.appID;
                 if (!menuId) {
                     menuId = matchingMenus[0]?.appID;
                 }

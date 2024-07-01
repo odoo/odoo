@@ -930,6 +930,7 @@ export function makeActionManager(env, router = _router) {
                         pushState(nextStack);
                     },
                 });
+                env.bus.trigger("ACTION_MANAGER:BEFORE-UI-UPDATE", _getActionMode(action));
                 if (action.target !== "new") {
                     this.__beforeLeave__ = new CallbackRecorder();
                     this.__getGlobalState__ = new CallbackRecorder();
