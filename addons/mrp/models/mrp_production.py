@@ -13,7 +13,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_round, float_is_zero, format_datetime
-from odoo.tools.misc import OrderedSet, format_date, groupby as tools_groupby
+from odoo.tools.misc import OrderedSet, format_date, groupby as tools_groupby, topological_sort
 
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 
@@ -2342,3 +2342,9 @@ class MrpProduction(models.Model):
         if self.lot_producing_id:
             return {'lot_id' : self.lot_producing_id.id}
         return {}
+
+    def _track_get_fields(self):
+        res = super()._track_get_fields()
+        if res:
+            res = OrderedSet(topological_sort(self.fields_get(res, ('depends'))))
+        return res
