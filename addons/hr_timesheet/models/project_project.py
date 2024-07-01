@@ -291,9 +291,3 @@ class Project(models.Model):
         action = super().action_view_tasks()
         action['context']['allow_timesheets'] = self.allow_timesheets
         return action
-
-    def action_project_sharing(self):
-        # Using the timesheet filter hide context
-        action = super().action_project_sharing()
-        action['context']['allow_timesheets'] = self.allow_timesheets
-        return action
