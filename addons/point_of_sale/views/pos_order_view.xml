@@ -153,8 +153,12 @@
                         <field name="payment_ids" colspan="4" nolabel="1">
                             <tree string="Payments">
                                 <field name="currency_id" column_invisible="True" />
-                                <field name="payment_date" optional="hide"/>
+                                <field name="payment_date"/>
                                 <field name="payment_method_id"/>
+                                <field name="payment_method_payment_mode" optional="hide"/>
+                                <field name="card_no" invisible="not card_no"/>
+                                <field name="card_brand" string="Card's Brand" invisible="not card_brand or not card_no"/>
+                                <field name="cardholder_name" invisible="not cardholder_name or not card_no"/>
                                 <field name="amount"/>
                             </tree>
                         </field>
