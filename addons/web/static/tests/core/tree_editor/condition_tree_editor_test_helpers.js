@@ -125,7 +125,7 @@ export function get(selector, index, root) {
 
 function getValue(root) {
     if (root) {
-        const el = queryOne("input,select,span:not(.o_tag)", { root });
+        const el = queryOne("input,select,span:not(.o_tag):not(.o_dropdown_button)", { root });
         switch (el.tagName) {
             case "INPUT":
                 return el.value;
