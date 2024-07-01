@@ -148,6 +148,7 @@ class MailTemplate(models.Model):
         return self
 
     def _check_abstract_models(self, vals_list):
+        # to remove in master
         model_names = self.sudo().env['ir.model'].browse(filter(None, (
             vals.get('model_id') for vals in vals_list
         ))).mapped('model')
@@ -155,14 +156,24 @@ class MailTemplate(models.Model):
             if self.env[model]._abstract:
                 raise ValidationError(_('You may not define a template on an abstract model: %s', model))
 
+    def _check_models(self, vals_list):
+        model_ids = self.sudo().env['ir.model'].browse(filter(None, (
+            vals.get('model_id') for vals in vals_list
+        )))
+        for model in model_ids:
+            if not model.is_mail_thread:
+                raise ValidationError(_('You may only define a template on a mail.thread model: %s', model))
+            if self.env[model.model]._abstract:
+                raise ValidationError(_('You may not define a template on an abstract model: %s', model))
+
     @api.model_create_multi
     def create(self, vals_list):
-        self._check_abstract_models(vals_list)
+        self._check_models(vals_list)
         return super().create(vals_list)\
             ._fix_attachment_ownership()
 
     def write(self, vals):
-        self._check_abstract_models([vals])
+        self._check_models([vals])
         super().write(vals)
         self._fix_attachment_ownership()
         return True

@@ -9,6 +9,7 @@ from unittest.mock import patch
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail.tests.common import TestRecipients
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged, users
 from odoo.tools import mute_logger, safe_eval
 
@@ -130,6 +131,28 @@ class TestMailTemplate(TestMailTemplateCommon):
 
         self.assertEqual(mail.body_html, body_result)
         self.assertEqual(mail.body, body_result)
+
+    def test_mail_template_non_mail_thread_model(self):
+        """Check only mail.thread models can be set on templates."""
+        # create
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            self.env['mail.template'].create({
+                'name': 'Test non thread template',
+                'model_id': self.env['ir.model']._get('mail.test.nothread').id,  # non mail thread model
+            })
+
+        template = self.env['mail.template'].create({
+            'name': 'Test non thread template',
+            'model_id': self.env['ir.model']._get('res.partner').id,
+        })
+
+        # write
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            template.write({
+                'name': 'Test non thread template',
+                'model_id': self.env['ir.model']._get('mail.test.nothread').id,
+            })
+
 
 @tagged('mail_template', 'multi_lang')
 class TestMailTemplateLanguages(TestMailTemplateCommon):
