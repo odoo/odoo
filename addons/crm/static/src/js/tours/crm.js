@@ -77,7 +77,6 @@ registry.category("web_tour.tours").add('crm_tour', {
     trigger: ".o-mail-ActivityListPopover button:contains(Schedule an activity)",
     content: markup(_t("Let's <b>Schedule an Activity.</b>")),
     position: "bottom",
-    width: 200,
     run: "click",
 }, {
     trigger: '.modal-footer button[name="action_schedule_activities"]',

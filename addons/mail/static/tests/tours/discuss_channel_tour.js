@@ -44,7 +44,6 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
                 )
             ),
             position: "top",
-            width: 350,
             run: `edit SomeText_${new Date().getTime()}`,
         },
         {

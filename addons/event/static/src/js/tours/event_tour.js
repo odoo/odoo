@@ -31,7 +31,6 @@ registry.category("web_tour.tours").add('event_tour', {
     trigger: '.o-kanban-button-new',
     content: markup(_t("Let's create your first <b>event</b>.")),
     position: 'bottom',
-    width: 175,
     run: "click",
 }, {
     trigger: '.o_event_form_view div[name="name"] textarea',

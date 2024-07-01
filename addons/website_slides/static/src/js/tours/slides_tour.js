@@ -16,19 +16,16 @@ wTourUtils.registerWebsitePreviewTour('slides_tour', {
     trigger: 'a[data-module-xml-id="base.module_website_slides"]',
     content: markup(_t("Select <b>Course</b> to create it and manage it.")),
     position: 'bottom',
-    width: 210,
     run: "click",
 }, {
     trigger: 'input#name_0',
     content: markup(_t("Give your course an engaging <b>Title</b>.")),
     position: 'bottom',
-    width: 280,
     run: "edit My New Course",
 }, {
     trigger: 'div[name="description"] div[contenteditable=true]',
     content: markup(_t("Give your course a helpful <b>Description</b>.")),
     position: 'bottom',
-    width: 300,
     run: "edit This course is for advanced users.",
 }, {
     trigger: 'button.btn-primary',
@@ -48,7 +45,6 @@ wTourUtils.registerWebsitePreviewTour('slides_tour', {
     trigger: ':iframe button.btn-primary',
     content: markup(_t("Click <b>Save</b> to create it.")),
     position: 'bottom',
-    width: 260,
     run: "click",
 }, {
     trigger: ':iframe a.btn-primary.o_wslides_js_slide_upload',
@@ -76,7 +72,6 @@ wTourUtils.registerWebsitePreviewTour('slides_tour', {
     trigger: ':iframe button.o_w_slide_upload_published',
     content: markup(_t("<b>Save & Publish</b> your lesson to make it available to your attendees.")),
     position: 'bottom',
-    width: 285,
     run: "click",
 }, {
     trigger: ':iframe span.badge:contains("New")',
@@ -91,19 +86,16 @@ wTourUtils.registerWebsitePreviewTour('slides_tour', {
     trigger: ':iframe input[name="question-name"]',
     content: markup(_t("Enter your <b>Question</b>. Be clear and concise.")),
     position: 'left',
-    width: 330,
     run: "click",
 }, {
     trigger: ':iframe input.o_wslides_js_quiz_answer_value',
     content: markup(_t("Enter at least two possible <b>Answers</b>.")),
     position: 'left',
-    width: 290,
     run: "click",
 }, {
     trigger: ':iframe a.o_wslides_js_quiz_is_correct',
     content: markup(_t("Mark the correct answer by checking the <b>correct</b> mark.")),
     position: 'right',
-    width: 230,
     run: "click",
 }, {
     trigger: ':iframe i.o_wslides_js_quiz_comment_answer:last',
@@ -114,7 +106,6 @@ wTourUtils.registerWebsitePreviewTour('slides_tour', {
     trigger: ':iframe a.o_wslides_js_quiz_validate_question',
     content: markup(_t("<b>Save</b> your question.")),
     position: 'left',
-    width: 170,
     run: "click",
 }, {
     trigger: ':iframe li.breadcrumb-item:nth-child(2)',

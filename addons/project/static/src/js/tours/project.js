@@ -31,7 +31,6 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: '.o-kanban-button-new',
     content: markup(_t('Let\'s create your first <b>project</b>.')),
     position: 'bottom',
-    width: 200,
     run: "click",
 }, {
     trigger: '.o_project_name input',
@@ -77,7 +76,6 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: '.o-kanban-button-new',
     content: markup(_t("Let's create your first <b>task</b>.")),
     position: 'bottom',
-    width: 200,
     run: "click",
 }, 
 {
@@ -127,7 +125,6 @@ registry.category("web_tour.tours").add('project_tour', {
 {
     trigger: ".o-mail-Chatter-topbar button:contains(Send message)",
     content: markup(_t("Use the chatter to <b>send emails</b> and communicate efficiently with your customers. Add new people to the followers' list to make them aware of the main changes about this task.")),
-    width: 350,
     position: "bottom",
     run: "click",
 }, 
@@ -138,7 +135,6 @@ registry.category("web_tour.tours").add('project_tour', {
 {
     trigger: "button:contains(Log note)",
     content: markup(_t("<b>Log notes</b> for internal communications <i>(the people following this task won't be notified of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # <b>mentions</b> to reach an entire team.")),
-    width: 350,
     position: "bottom",
     run: "click",
 }, 
