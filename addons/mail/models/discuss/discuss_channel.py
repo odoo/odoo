@@ -632,14 +632,16 @@ class Channel(models.Model):
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         # link message to channel
         rdata = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
-        message_format = message._message_format()[0]
-        if "temporary_id" in self.env.context:
-            message_format["temporary_id"] = self.env.context["temporary_id"]
+        payload = {"data": Store("Message", message._message_format()).get_result(), "id": self.id}
+        if temporary_id := self.env.context.get("temporary_id"):
+            payload["temporary_id"] = temporary_id
         bus_notifications = [
-            ((self, "members"), "mail.record/insert", {
-                "Thread": {"id": self.id, "is_pinned": True, "model": "discuss.channel"}
-            }),
-            (self, "discuss.channel/new_message", {"id": self.id, "message": message_format}),
+            (
+                (self, "members"),
+                "mail.record/insert",
+                {"Thread": {"id": self.id, "is_pinned": True, "model": "discuss.channel"}},
+            ),
+            (self, "discuss.channel/new_message", payload),
         ]
         # sudo: bus.bus - sending on safe channel (discuss.channel)
         self.env["bus.bus"].sudo()._sendmany(bus_notifications)

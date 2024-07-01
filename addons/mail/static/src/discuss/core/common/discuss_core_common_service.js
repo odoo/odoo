@@ -156,7 +156,7 @@ export class DiscussCoreCommon {
     }
 
     async _handleNotificationNewMessage(payload, { id: notifId }) {
-        const { id: channelId, message: messageData } = payload;
+        const { data, id: channelId, temporary_id } = payload;
         const channel = await this.store.Thread.getOrFetch({
             model: "discuss.channel",
             id: channelId,
@@ -164,12 +164,11 @@ export class DiscussCoreCommon {
         if (!channel) {
             return;
         }
-        const temporaryId = messageData.temporary_id;
-        delete messageData.temporary_id;
-        const message = this.store.Message.insert(messageData, { html: true });
+        const { Message: messages = [] } = this.store.insert(data, { html: true });
+        const message = messages[0];
         if (message.notIn(channel.messages)) {
             if (!channel.loadNewer) {
-                channel.addOrReplaceMessage(message, this.store.Message.get(temporaryId));
+                channel.addOrReplaceMessage(message, this.store.Message.get(temporary_id));
             } else if (channel.status === "loading") {
                 channel.pendingNewMessages.push(message);
             }
