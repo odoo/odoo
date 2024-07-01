@@ -79,17 +79,17 @@ export class ChatBotService {
         if (!this.chatbot?.completed) {
             return;
         }
-        const message = this.store.Message.insert(
-            await rpc("/chatbot/restart", {
-                channel_id: this.chatbot.thread.id,
-                chatbot_script_id: this.chatbot.script.id,
-            }),
-            { html: true }
-        );
+        const data = await rpc("/chatbot/restart", {
+            channel_id: this.chatbot.thread.id,
+            chatbot_script_id: this.chatbot.script.id,
+        });
+        const { Message: messages = [] } = this.store.insert(data, { html: true });
         if (!this.livechatService.thread) {
             return;
         }
-        this.livechatService.thread.messages.add(message);
+        for (const message of messages) {
+            this.livechatService.thread.messages.add(message);
+        }
         this.chatbot.restart();
         this._triggerNextStep();
     }
