@@ -66,20 +66,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
     _get_visitor_leave_message() {
         return "Visitor left the conversation.";
     }
-    _channel_fetch_message(channelId, lastId, limit) {
-        /** @type {import("mock_models").MailMessage} */
-        const MailMessage = this.env["mail.message"];
 
-        const domain = [
-            ["model", "=", "discuss.channel"],
-            ["res_id", "=", channelId],
-        ];
-        if (lastId) {
-            domain.push(["id", "<", lastId]);
-        }
-        const messages = MailMessage._message_fetch(domain, limit);
-        return MailMessage._message_format(messages.map(({ id }) => id));
-    }
     /**
      * @override
      * @type {typeof mailModels.DiscussChannel["prototype"]["_types_allowing_seen_infos"]}

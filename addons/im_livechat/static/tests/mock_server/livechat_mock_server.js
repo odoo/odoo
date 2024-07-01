@@ -145,20 +145,6 @@ async function feedback(request) {
     return channel.rating_ids[0];
 }
 
-registerRoute("/im_livechat/chat_history", chat_history);
-/** @type {RouteCallback} */
-async function chat_history(request) {
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-
-    const { channel_id, last_id, limit = 20 } = await parseRequestParams(request);
-    const [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
-    if (!channel) {
-        return [];
-    }
-    return DiscussChannel._channel_fetch_message(channel.id, last_id, limit);
-}
-
 registerRoute("/im_livechat/init", livechat_init);
 /** @type {RouteCallback} */
 async function livechat_init(request) {
