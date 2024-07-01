@@ -11,7 +11,7 @@ from odoo.addons.rating.models import rating_data
 from odoo.addons.web_editor.tools import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv import expression
-from odoo.tools import format_list
+from odoo.tools import format_list, SQL
 from odoo.addons.resource.models.utils import filter_domain_leaf
 
 
@@ -638,14 +638,14 @@ class Task(models.Model):
         if operator != 'ilike' and not isinstance(value, str):
             raise ValidationError(_('Not Implemented.'))
 
-        query = """
+        sql = SQL("""(
             SELECT task_user.task_id
               FROM project_task_user_rel task_user
         INNER JOIN res_users users ON task_user.user_id = users.id
         INNER JOIN res_partner partners ON partners.id = users.partner_id
              WHERE partners.name ILIKE %s
-        """
-        return [('id', 'inselect', (query, [f'%{value}%']))]
+        )""", f"%{value}%")
+        return [('id', 'in', sql)]
 
     def _compute_display_parent_task_button(self):
         accessible_parent_tasks = self.parent_id.with_user(self.env.user)._filter_access_rules('read')

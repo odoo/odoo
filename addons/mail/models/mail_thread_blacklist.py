@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError
+from odoo.tools import SQL
 
 
 class MailBlackListMixin(models.AbstractModel):
@@ -61,25 +62,26 @@ class MailBlackListMixin(models.AbstractModel):
                 raise NotImplementedError()
 
         if value:
-            query = """
+            sql = SQL("""
                 SELECT m.id
                     FROM mail_blacklist bl
                     JOIN %s m
                     ON m.email_normalized = bl.email AND bl.active
-            """
+            """, SQL.identifier(self._table))
         else:
-            query = """
+            sql = SQL("""
                 SELECT m.id
                     FROM %s m
                     LEFT JOIN mail_blacklist bl
                     ON m.email_normalized = bl.email AND bl.active
                     WHERE bl.id IS NULL
-            """
-        self._cr.execute((query + " FETCH FIRST ROW ONLY") % self._table)
+            """, SQL.identifier(self._table))
+
+        self._cr.execute(SQL("%s FETCH FIRST ROW ONLY", sql))
         res = self._cr.fetchall()
         if not res:
             return [(0, '=', 1)]
-        return [('id', 'inselect', (query % self._table, []))]
+        return [('id', 'in', SQL("(%s)", sql))]
 
     @api.depends('email_normalized')
     def _compute_is_blacklisted(self):

@@ -138,8 +138,6 @@ DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 # for consistency. This list doesn't contain '<>' as it is simplified to '!='
 # by the normalize_operator() function (so later part of the code deals with
 # only one representation).
-# Internals (i.e. not available to the user) 'inselect' and 'not inselect'
-# operators are also used. In this case its right operand has the form (subselect, params).
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
                   'child_of', 'parent_of', 'any', 'not any')
@@ -706,7 +704,7 @@ def is_operator(element):
     return isinstance(element, str) and element in DOMAIN_OPERATORS
 
 
-def is_leaf(element, internal=False):
+def is_leaf(element):
     """ Test whether an object is a valid domain term:
 
         - is a list or tuple
@@ -714,14 +712,10 @@ def is_leaf(element, internal=False):
         - second element if a valid op
 
         :param tuple element: a leaf in form (left, operator, right)
-        :param bool internal: allow or not the 'inselect' internal operator
-            in the term. This should be always left to False.
 
         Note: OLD TODO change the share wizard to use this function.
     """
     INTERNAL_OPS = TERM_OPERATORS + ('<>',)
-    if internal:
-        INTERNAL_OPS += ('inselect', 'not inselect')
     return (isinstance(element, tuple) or isinstance(element, list)) \
         and len(element) == 3 \
         and element[1] in INTERNAL_OPS \
@@ -733,8 +727,8 @@ def is_boolean(element):
     return element == TRUE_LEAF or element == FALSE_LEAF
 
 
-def check_leaf(element, internal=False):
-    if not is_operator(element) and not is_leaf(element, internal):
+def check_leaf(element):
+    if not is_operator(element) and not is_leaf(element):
         raise ValueError("Invalid leaf %s" % str(element))
 
 
@@ -932,10 +926,10 @@ class expression(object):
             """ Pop a leaf to process. """
             return stack.pop()
 
-        def push(leaf, model, alias, internal=False):
+        def push(leaf, model, alias):
             """ Push a leaf to be processed right after. """
             leaf = normalize_leaf(leaf)
-            check_leaf(leaf, internal)
+            check_leaf(leaf)
             stack.append((leaf, model, alias))
 
         def pop_result():
@@ -1156,7 +1150,7 @@ class expression(object):
                     domain = field.determine_domain(model, operator, right)
 
                 for elem in domain_combine_anies(domain, model):
-                    push(elem, model, alias, internal=True)
+                    push(elem, model, alias)
 
             # -------------------------------------------------
             # RELATIONAL FIELDS

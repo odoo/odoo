@@ -144,8 +144,8 @@ class MailThread(models.AbstractModel):
             ('res_model', '=', self._name),
             ('partner_id', operator, operand),
         ])
-        # use inselect to avoid reading thousands of potentially followed objects
-        return [('id', neg + 'inselect', followers.subselect('res_id'))]
+        # use `in` query to avoid reading thousands of potentially followed objects
+        return [('id', neg + 'in', followers.subselect('res_id'))]
 
     @api.depends('message_follower_ids')
     def _compute_message_is_follower(self):
@@ -183,10 +183,10 @@ class MailThread(models.AbstractModel):
 
     def _search_has_message(self, operator, value):
         if (operator == '=' and value is True) or (operator == '!=' and value is False):
-            operator_new = 'inselect'
+            operator_new = 'in'
         else:
-            operator_new = 'not inselect'
-        return [('id', operator_new, ("SELECT res_id FROM mail_message WHERE model=%s", [self._name]))]
+            operator_new = 'not in'
+        return [('id', operator_new, SQL("(SELECT res_id FROM mail_message WHERE model = %s)", self._name))]
 
     def _compute_message_needaction(self):
         res = dict.fromkeys(self.ids, 0)

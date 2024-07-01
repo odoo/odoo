@@ -4,6 +4,8 @@ from collections import defaultdict
 
 from odoo import models, fields, api, _, _lt
 from odoo.exceptions import ValidationError, RedirectWarning
+from odoo.tools import SQL
+
 
 class Project(models.Model):
     _inherit = "project.project"
@@ -59,16 +61,15 @@ class Project(models.Model):
         if operator not in ['=', '!=']:
             raise ValueError(_('Invalid operator: %s', operator))
 
-        query = """
-            SELECT C.internal_project_id
-            FROM res_company C
-            WHERE C.internal_project_id IS NOT NULL
-        """
+        Company = self.env['res.company']
+        sql = Company._where_calc(
+            [('internal_project_id', '!=', False)], active_test=False
+        ).subselect("internal_project_id")
         if (operator == '=' and value is True) or (operator == '!=' and value is False):
-            operator_new = 'inselect'
+            operator_new = 'in'
         else:
-            operator_new = 'not inselect'
-        return [('id', operator_new, (query, ()))]
+            operator_new = 'not in'
+        return [('id', operator_new, sql)]
 
     @api.depends('allow_timesheets', 'timesheet_ids.unit_amount', 'allocated_hours')
     def _compute_remaining_hours(self):
@@ -90,7 +91,7 @@ class Project(models.Model):
         if operator not in ['=', '!=']:
             raise ValueError(_('Invalid operator: %s', operator))
 
-        query = """
+        sql = SQL("""(
             SELECT Project.id
               FROM project_project AS Project
               JOIN project_task AS Task
@@ -101,12 +102,12 @@ class Project(models.Model):
                AND Task.state IN ('01_in_progress', '02_changes_requested', '03_approved', '04_waiting_normal')
           GROUP BY Project.id
             HAVING Project.allocated_hours - SUM(Task.effective_hours) < 0
-        """
+        )""")
         if (operator == '=' and value is True) or (operator == '!=' and value is False):
-            operator_new = 'inselect'
+            operator_new = 'in'
         else:
-            operator_new = 'not inselect'
-        return [('id', operator_new, (query, ()))]
+            operator_new = 'not in'
+        return [('id', operator_new, sql)]
 
     @api.constrains('allow_timesheets', 'analytic_account_id')
     def _check_allow_timesheet(self):

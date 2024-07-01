@@ -826,7 +826,7 @@ class AccountMove(models.Model):
             ids_domain = SQL("AND this.id = ANY(%s)", ids)
         elif irregular_domain := self.env.context.get('irregular_sequence_domain'):
             ids_domain = SQL("AND this.id IN %s", self._where_calc(irregular_domain).subselect())
-        return SQL("""
+        return SQL("""(
                 SELECT this.id
                   FROM account_move this
                   JOIN res_company company ON company.id = this.company_id
@@ -837,20 +837,20 @@ class AccountMove(models.Model):
                    AND this.sequence_number != 1
                    AND this.name != '/'
                    %s
-        """, ids_domain)
+        )""", ids_domain)
 
     @api.depends('name', 'journal_id')
     def _compute_made_sequence_hole(self):
-        query, params = self._get_query_made_hole(self.ids)
-        self.env.cr.execute(query, params)
+        sql = self._get_query_made_hole(self.ids)
+        self.env.cr.execute(sql)
         made_sequence_hole = set(r[0] for r in self.env.cr.fetchall())
         for move in self:
             move.made_sequence_hole = move.id in made_sequence_hole
 
     def _search_made_sequence_hole(self, operator, value):
-        query, params = self._get_query_made_hole()
-        operator = 'inselect' if (operator == '=') ^ (value is False) else 'not inselect'
-        return [('id', operator, (query, params))]
+        sql = self._get_query_made_hole()
+        operator = 'in' if (operator == '=') ^ (value is False) else 'not in'
+        return [('id', operator, sql)]
 
     @api.depends('move_type')
     def _compute_type_name(self):

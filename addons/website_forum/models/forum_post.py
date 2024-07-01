@@ -280,24 +280,21 @@ class Post(models.Model):
         if self.env.is_admin():
             return [(1, '=', 1)]
 
-        req = """
+        sql = SQL("""(
             SELECT p.id
             FROM forum_post p
                    LEFT JOIN res_users u ON p.create_uid = u.id
                    LEFT JOIN forum_forum f ON p.forum_id = f.id
             WHERE
-                (p.create_uid = %s and f.karma_close_own <= %s)
-                or (p.create_uid != %s and f.karma_close_all <= %s)
+                (p.create_uid = %(user_id)s and f.karma_close_own <= %(karma)s)
+                or (p.create_uid != %(user_id)s and f.karma_close_all <= %(karma)s)
                 or (
                     u.karma > 0
-                    and (p.active or p.create_uid = %s)
+                    and (p.active or p.create_uid = %(user_id)s)
                 )
-        """
-
-        op = 'inselect' if operator == '=' else "not inselect"
-
-        # don't use param named because orm will add other param (test_active, ...)
-        return [('id', op, (req, (user.id, user.karma, user.id, user.karma, user.id)))]
+        )""", user_id=user.id, karma=user.karma)
+        op = 'in' if operator == '=' else "not in"
+        return [('id', op, sql)]
 
     # EXTENDS WEBSITE.SEO.METADATA
 
