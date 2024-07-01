@@ -55,6 +55,7 @@ export class HintPlugin extends Plugin {
                 break;
             }
             case "CLEAN":
+                // TODO @phoenix: evaluate if this should be cleanforsave instead
                 this.clearHints(payload.root);
                 break;
         }

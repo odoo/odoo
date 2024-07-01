@@ -106,6 +106,7 @@ export class CollaborationOdooPlugin extends Plugin {
                 this.ptp?.notifyAllPeers("oe_history_step", payload.step, { transport: "rtc" });
                 break;
             case "CLEAN":
+                // TODO @phoenix: evaluate if this should be cleanforsave instead
                 this.attachHistoryIds(payload.root);
                 break;
             case "HISTORY_RESET":

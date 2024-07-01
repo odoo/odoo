@@ -60,12 +60,16 @@ export class DomPlugin extends Plugin {
                         node.removeAttribute("style");
                     }
                 }
+                break;
+            }
+            case "CLEAN_FOR_SAVE": {
                 for (const el of payload.root.querySelectorAll("hr[contenteditable]")) {
                     el.removeAttribute("contenteditable");
                 }
                 break;
             }
             case "NORMALIZE": {
+                // TODO @phoenix: payload.node is expected to be an Element, rename ?
                 if (payload.node.tagName === "HR") {
                     const node = payload.node;
                     node.setAttribute(

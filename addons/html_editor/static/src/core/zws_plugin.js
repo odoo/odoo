@@ -31,6 +31,7 @@ export class ZwsPlugin extends Plugin {
     handleCommand(command, payload) {
         switch (command) {
             case "CLEAN":
+                // TODO @phoenix: evaluate if this should be cleanforsave instead
                 this.clean(payload.root);
                 break;
             case "NORMALIZE":

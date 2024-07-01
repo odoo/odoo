@@ -144,6 +144,7 @@ export class LinkPlugin extends Plugin {
                 this.normalizeLink();
                 break;
             case "CLEAN":
+                // TODO @phoenix: evaluate if this should be cleanforsave instead
                 this.removeEmptyLinks(payload.root);
                 break;
             case "REMOVE_LINK_FROM_SELECTION":

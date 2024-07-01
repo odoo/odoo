@@ -63,6 +63,7 @@ export class LinkSelectionPlugin extends Plugin {
                 this.normalize(payload.root || this.editable);
                 break;
             case "CLEAN":
+                // TODO @phoenix: evaluate if this should be cleanforsave instead
                 this.clean(payload.root);
                 break;
         }

@@ -12,7 +12,6 @@ import { SanitizePlugin } from "./core/sanitize_plugin";
 import { SelectionPlugin } from "./core/selection_plugin";
 import { ShortCutPlugin } from "./core/shortcut_plugin";
 import { SplitPlugin } from "./core/split_plugin";
-import { TransientNodePlugin } from "./core/transient_node_plugin";
 import { ZwsPlugin } from "./core/zws_plugin";
 import { BannerPlugin } from "./main/banner_plugin";
 import { ChatGPTPlugin } from "./main/chatgpt/chatgpt_plugin";
@@ -62,7 +61,6 @@ export const CORE_PLUGINS = [
     LineBreakPlugin,
     OverlayPlugin,
     ProtectedNodePlugin,
-    TransientNodePlugin,
     SanitizePlugin,
     SelectionPlugin,
     SplitPlugin,

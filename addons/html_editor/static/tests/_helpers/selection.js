@@ -1,14 +1,20 @@
-export function getContent(node) {
+/**
+ * @param {Node} node
+ * @param {Object} options
+ * @param {boolean} [options.sortAttrs]
+ * @returns {String}
+ */
+export function getContent(node, options = {}) {
     const selection = node.ownerDocument.getSelection();
-    return _getElemContent(node, selection);
+    return _getElemContent(node, selection, options);
 }
 
-function _getContent(node, selection) {
+function _getContent(node, selection, options) {
     switch (node.nodeType) {
         case Node.TEXT_NODE:
-            return getTextContent(node, selection);
+            return getTextContent(node, selection, options);
         case Node.ELEMENT_NODE:
-            return getElemContent(node, selection);
+            return getElemContent(node, selection, options);
         case Node.COMMENT_NODE:
             return `<!--${node.textContent}-->`;
         default:
@@ -16,7 +22,7 @@ function _getContent(node, selection) {
     }
 }
 
-function getTextContent(node, selection) {
+function getTextContent(node, selection, options) {
     let text = node.textContent;
     if (selection.focusNode === node) {
         text = text.slice(0, selection.focusOffset) + "]" + text.slice(selection.focusOffset);
@@ -33,7 +39,7 @@ function getTextContent(node, selection) {
 
 const VOID_ELEMS = new Set(["BR", "IMG", "INPUT", "HR"]);
 
-function _getElemContent(el, selection) {
+function _getElemContent(el, selection, options) {
     let result = "";
     function addTextSelection() {
         if (selection.anchorNode === el && index === selection.anchorOffset) {
@@ -46,23 +52,32 @@ function _getElemContent(el, selection) {
     let index = 0;
     for (const child of el.childNodes) {
         addTextSelection();
-        result += _getContent(child, selection);
+        result += _getContent(child, selection, options);
         index++;
     }
     addTextSelection();
     return result;
 }
 
-function getElemContent(el, selection) {
+function getElemContent(el, selection, options) {
     const tag = el.tagName.toLowerCase();
+    const attributes = [...el.attributes];
+    if (options.sortAttrs) {
+        attributes.sort((attr1, attr2) => {
+            if (attr1.name === attr2.name) {
+                return 0;
+            }
+            return attr1.name > attr2.name ? 1 : -1;
+        });
+    }
     const attrs = [];
-    for (const attr of el.attributes) {
+    for (const attr of attributes) {
         attrs.push(`${attr.name}="${attr.value}"`);
     }
     const attrStr = (attrs.length ? " " : "") + attrs.join(" ");
     return VOID_ELEMS.has(el.tagName)
         ? `<${tag + attrStr}>`
-        : `<${tag + attrStr}>${_getElemContent(el, selection)}</${tag}>`;
+        : `<${tag + attrStr}>${_getElemContent(el, selection, options)}</${tag}>`;
 }
 
 function getTextNodesIterator(el) {

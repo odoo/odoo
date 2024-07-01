@@ -1,9 +1,11 @@
+import { Counter, embedding } from "@html_editor/../tests/_helpers/embedded_component";
+import { EmbeddedComponentPlugin } from "@html_editor/others/embedded_component_plugin";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred } from "@web/core/utils/concurrency";
 import { Plugin } from "@html_editor/plugin";
 import { parseHTML } from "@html_editor/utils/html";
 import { unformat } from "./_helpers/format";
-import { addStep, undo } from "./_helpers/user_actions";
+import { addStep, deleteBackward, undo } from "./_helpers/user_actions";
 import {
     applyConcurrentActions,
     mergePeersSteps,
@@ -14,7 +16,10 @@ import {
     renderTextualSelection,
 } from "./_helpers/collaboration";
 import { getContent } from "./_helpers/selection";
+import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { onMounted, onWillDestroy } from "@odoo/owl";
 
 /**
  * @param {Editor} editor
@@ -23,12 +28,6 @@ import { animationFrame } from "@odoo/hoot-mock";
 function insert(editor, value) {
     editor.shared.domInsert(value);
     editor.dispatch("ADD_STEP");
-}
-/**
- * @param {Editor} editor
- */
-function deleteBackward(editor) {
-    editor.dispatch("DELETE_BACKWARD");
 }
 
 describe("Conflict resolution", () => {
@@ -198,6 +197,25 @@ describe("collaborative makeSavePoint", () => {
             );
         }
     );
+});
+describe("history addExternalStep", () => {
+    test("should revert and re-apply local mutations that are not part of a finished step", async () => {
+        const peerInfos = await setupMultiEditor({
+            peerIds: ["c1", "c2"],
+            contentBefore: `<p>i[c1}{c1][c2}{c2]</p>`,
+        });
+        peerInfos.c1.editor.shared.domInsert("b");
+        insert(peerInfos.c2.editor, "a");
+        mergePeersSteps(peerInfos);
+        peerInfos.c1.editor.dispatch("ADD_STEP");
+        mergePeersSteps(peerInfos);
+        peerInfos.c1.editor.dispatch("CLEAN", { root: peerInfos.c1.editor.editable });
+        peerInfos.c2.editor.dispatch("CLEAN", { root: peerInfos.c2.editor.editable });
+        // TODO @phoenix c1 editable should be `<p>iab[]</p>`, but its selection
+        // was not adjusted properly when receiving the external step
+        expect(getContent(peerInfos.c1.editor.editable)).toBe(`<p>ia[]b</p>`);
+        expect(getContent(peerInfos.c2.editor.editable)).toBe(`<p>ia[]b</p>`);
+    });
 });
 test("should reset from snapshot", async () => {
     await testMultiEditor({
@@ -471,7 +489,7 @@ describe("sanitize", () => {
                 expect(peerInfos.c1.editor.editable.innerHTML).toBe(
                     unformat(`
                         <p>sanitycheckc1</p>
-                        <div class="content" data-oe-protected="true" onclick="javascript:badStuff?.()" data-info="43">
+                        <div class="content" data-oe-protected="true" contenteditable="false" onclick="javascript:badStuff?.()" data-info="43">
                             <p>base</p>
                         </div>
                         <p>sanitycheckc2</p>
@@ -485,7 +503,7 @@ describe("sanitize", () => {
                 expect(peerInfos.c2.editor.editable.innerHTML).toBe(
                     unformat(`
                         <p>sanitycheckc1</p>
-                        <div class="content" data-oe-protected="true" data-info="43">
+                        <div class="content" data-oe-protected="true" contenteditable="false" data-info="43">
                             <p>base</p>
                             <p>mysecretcode</p>
                             <script>secretStuff?.();</script>
@@ -563,68 +581,26 @@ describe("data-oe-protected", () => {
             },
             afterCursorInserted: async (peerInfos) => {
                 await animationFrame();
-                expect(peerInfos.c1.editor.editable.innerHTML).toBe(
+                expect(getContent(peerInfos.c1.editor.editable, { sortAttrs: true })).toBe(
                     unformat(`
-                        <div data-oe-protected="true">
+                        <div contenteditable="false" data-oe-protected="true">
                             <p id="true">a<br></p>
-                            <div data-oe-protected="false">
-                                <p id="false">a[c1}{c1]</p>
+                            <div contenteditable="true" data-oe-protected="false">
+                                <p id="false">a[][c1}{c1]</p>
                             </div>
                         </div>
                         <p>[c2}{c2]<br></p>
                     `)
                 );
-                expect(peerInfos.c2.editor.editable.innerHTML).toBe(
+                expect(getContent(peerInfos.c2.editor.editable, { sortAttrs: true })).toBe(
                     unformat(`
-                        <div data-oe-protected="true">
+                        <div contenteditable="false" data-oe-protected="true">
                             <p id="true"><br></p>
-                            <div data-oe-protected="false">
+                            <div contenteditable="true" data-oe-protected="false">
                                 <p id="false">a[c1}{c1]</p>
                             </div>
                         </div>
-                        <p>[c2}{c2]<br></p>
-                    `)
-                );
-            },
-        });
-    });
-});
-describe("data-oe-transient-content", () => {
-    test("should send an empty transient-content element", async () => {
-        await testMultiEditor({
-            peerIds: ["c1", "c2"],
-            contentBefore: "<p>[c1}{c1][c2}{c2]<br></p>",
-            afterCreate: (peerInfos) => {
-                peerInfos.c1.editor.editable.prepend(
-                    ...parseHTML(
-                        peerInfos.c1.editor.document,
-                        unformat(`
-                        <div data-oe-transient-content="true">
-                            <p>secret</p>
-                        </div>
-                    `)
-                    ).children
-                );
-                addStep(peerInfos.c1.editor);
-                peerInfos.c2.collaborationPlugin.onExternalHistorySteps(
-                    peerInfos.c1.historyPlugin.steps
-                );
-                validateSameHistory(peerInfos);
-            },
-            afterCursorInserted: async (peerInfos) => {
-                await animationFrame();
-                expect(peerInfos.c1.editor.editable.innerHTML).toBe(
-                    unformat(`
-                        <div data-oe-transient-content="true">
-                            <p>secret</p>
-                        </div>
-                        <p>[c1}{c1][c2}{c2]<br></p>
-                    `)
-                );
-                expect(peerInfos.c2.editor.editable.innerHTML).toBe(
-                    unformat(`
-                        <div data-oe-transient-content="true"></div>
-                        <p>[c1}{c1][c2}{c2]<br></p>
+                        <p>[][c2}{c2]<br></p>
                     `)
                 );
             },
@@ -707,5 +683,171 @@ describe("post process external steps", () => {
                 validateSameHistory(peerInfos);
             },
         });
+    });
+});
+
+describe("Collaboration with embedded components", () => {
+    test("should send an empty embedded element", async () => {
+        const peerInfos = await setupMultiEditor({
+            peerIds: ["c1", "c2"],
+            contentBefore: "<p>[c1}{c1][c2}{c2]<br></p>",
+            Plugins: [EmbeddedComponentPlugin],
+            resources: {
+                embeddedComponents: [embedding("counter", Counter)],
+            },
+        });
+        const e1 = peerInfos.c1.editor;
+        const e2 = peerInfos.c2.editor;
+        e1.shared.domInsert(
+            parseHTML(
+                e1.document,
+                unformat(`
+                    <div data-embedded="counter">
+                        <p>secret</p>
+                    </div>`)
+            )
+        );
+        addStep(e1);
+        peerInfos.c2.collaborationPlugin.onExternalHistorySteps(peerInfos.c1.historyPlugin.steps);
+        validateSameHistory(peerInfos);
+        e2.dispatch("CLEAN", { root: e2.editable });
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            `<div contenteditable="false" data-embedded="counter" data-oe-protected="true"></div><p>[]<br></p>`
+        );
+        await animationFrame();
+        e1.dispatch("CLEAN", { root: e1.editable });
+        e2.dispatch("CLEAN", { root: e2.editable });
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+            unformat(`
+                <div contenteditable="false" data-embedded="counter" data-oe-protected="true">
+                    <span class="counter">Counter:0</span>
+                </div>
+                <p>[]<br></p>
+            `)
+        );
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            unformat(`
+                <div contenteditable="false" data-embedded="counter" data-oe-protected="true">
+                    <span class="counter">Counter:0</span>
+                </div>
+                <p>[]<br></p>
+            `)
+        );
+    });
+    test("components are mounted and destroyed during addExternalStep", async () => {
+        let index = 1;
+        patchWithCleanup(Counter.prototype, {
+            setup() {
+                super.setup();
+                this.index = index++;
+                onMounted(() => {
+                    expect.step(`${this.index} mounted`);
+                });
+                onWillDestroy(() => {
+                    expect.step(`${this.index} destroyed`);
+                });
+            },
+        });
+        const peerInfos = await setupMultiEditor({
+            peerIds: ["c1", "c2"],
+            contentBefore: `<p>a[c1}{c1][c2}{c2]</p>`,
+            Plugins: [EmbeddedComponentPlugin],
+            resources: {
+                embeddedComponents: [embedding("counter", Counter)],
+            },
+        });
+        const e1 = peerInfos.c1.editor;
+        const e2 = peerInfos.c2.editor;
+        e1.shared.domInsert(parseHTML(e1.document, `<span data-embedded="counter"></span>`));
+        e1.dispatch("ADD_STEP");
+        mergePeersSteps(peerInfos);
+        await animationFrame();
+        expect.verifySteps(["1 mounted", "2 mounted"]);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+            `<p>a<span contenteditable="false" data-embedded="counter" data-oe-protected="true"><span class="counter">Counter:0</span></span>[]</p>`
+        );
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            `<p>a[]<span contenteditable="false" data-embedded="counter" data-oe-protected="true"><span class="counter">Counter:0</span></span></p>`
+        );
+        click(e2.editable.querySelector(".counter"));
+        await animationFrame();
+        // e1 counter was not clicked, no change
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+            `<p>a<span contenteditable="false" data-embedded="counter" data-oe-protected="true"><span class="counter">Counter:0</span></span>[]</p>`
+        );
+        // e2 counter was incremented
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            `<p>a[]<span contenteditable="false" data-embedded="counter" data-oe-protected="true"><span class="counter">Counter:1</span></span></p>`
+        );
+        const p = e2.editable.querySelector("p");
+        e2.shared.setSelection({
+            anchorNode: p,
+            anchorOffset: 2,
+            focusNode: p,
+            focusOffset: 2,
+        });
+        deleteBackward(e2);
+        mergePeersSteps(peerInfos);
+        expect.verifySteps(["2 destroyed", "1 destroyed"]);
+    });
+
+    test("components are mounted and destroyed during resetFromSteps", async () => {
+        let index = 1;
+        patchWithCleanup(Counter.prototype, {
+            setup() {
+                super.setup();
+                this.index = index++;
+                onMounted(() => {
+                    expect.step(`${this.index} mounted`);
+                });
+                onWillDestroy(() => {
+                    expect.step(`${this.index} destroyed`);
+                });
+            },
+        });
+        const peerInfos = await setupMultiEditor({
+            peerIds: ["c1", "c2"],
+            contentBefore: `<p>a[c1}{c1][c2}{c2]</p>`,
+            Plugins: [EmbeddedComponentPlugin],
+            resources: {
+                embeddedComponents: [embedding("counter", Counter)],
+            },
+        });
+        const e1 = peerInfos.c1.editor;
+        const e2 = peerInfos.c2.editor;
+        e1.shared.domInsert(parseHTML(e1.document, `<span data-embedded="counter"></span>`));
+        e1.dispatch("ADD_STEP");
+        await animationFrame();
+        e2.shared.domInsert(parseHTML(e2.document, `<span data-embedded="counter"></span>`));
+        e2.dispatch("ADD_STEP");
+        await animationFrame();
+        e2.shared.domInsert(parseHTML(e2.document, `<span data-embedded="counter"></span>`));
+        e2.dispatch("ADD_STEP");
+        await animationFrame();
+        expect.verifySteps(["1 mounted", "2 mounted", "3 mounted"]);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+            `<p>a<span contenteditable="false" data-embedded="counter" data-oe-protected="true"><span class="counter">Counter:0</span></span>[]</p>`
+        );
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            unformat(
+                `<p>a
+                    <span contenteditable="false" data-embedded="counter" data-oe-protected="true"><span class="counter">Counter:0</span></span>
+                    <span contenteditable="false" data-embedded="counter" data-oe-protected="true"><span class="counter">Counter:0</span></span>
+                []</p>`
+            )
+        );
+        const { steps } = peerInfos.c1.collaborationPlugin.getSnapshotSteps();
+        peerInfos.c2.collaborationPlugin.resetFromSteps(steps);
+        const p = e2.editable.querySelector("p");
+        e2.shared.setSelection({ anchorNode: p, anchorOffset: 0 });
+        expect.verifySteps(["2 destroyed", "3 destroyed"]);
+        await animationFrame();
+        expect.verifySteps(["4 mounted"]);
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            `<p>[]a<span contenteditable="false" data-embedded="counter" data-oe-protected="true"><span class="counter">Counter:0</span></span></p>`
+        );
+        e1.destroy();
+        e2.destroy();
+        expect.verifySteps(["1 destroyed", "4 destroyed"]);
     });
 });

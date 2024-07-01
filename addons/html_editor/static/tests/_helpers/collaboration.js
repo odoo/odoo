@@ -94,6 +94,7 @@ export const setupMultiEditor = async (spec) => {
                     ...(spec.Plugins || []),
                 ],
                 collaboration: { peerId },
+                resources: spec.resources,
             },
         });
         peerInfo.editor = base.editor;
