@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
-from odoo.tools import check_barcode_encoding, get_barcode_check_digit
+from odoo.tools.barcode import check_barcode_encoding, get_barcode_check_digit
 
 
 class TestBarcode(TransactionCase):
