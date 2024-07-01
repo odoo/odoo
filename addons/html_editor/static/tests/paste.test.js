@@ -209,7 +209,7 @@ describe("Simple text", () => {
                     '<p style="margin-bottom: 0px;">a</p>' +
                     '<p style="margin-bottom: 0px;">b</p>' +
                     '<p style="margin-bottom: 0px;">c</p>' +
-                    "<p>d[]<br></p>",
+                    "<p>d[]</p>",
             });
         });
 
@@ -224,7 +224,7 @@ describe("Simple text", () => {
                     '<p style="margin-bottom: 0px;">a</p>' +
                     '<p style="margin-bottom: 0px;">b</p>' +
                     '<p style="margin-bottom: 0px;">c</p>' +
-                    "<p>d[]<br></p>",
+                    "<p>d[]</p>",
             });
         });
 
@@ -234,7 +234,7 @@ describe("Simple text", () => {
                 stepFunction: async (editor) => {
                     pasteText(editor, "a\nb\nc\nd");
                 },
-                contentAfter: "<div>a<br>b<br>c<br>d[]<br></div>",
+                contentAfter: "<div>a<br>b<br>c<br>d[]</div>",
             });
         });
 
@@ -244,7 +244,7 @@ describe("Simple text", () => {
                 stepFunction: async (editor) => {
                     pasteText(editor, "b\nc\nd");
                 },
-                contentAfter: '<div><span style="font-size: 9px;">ab<br>c<br>d[]<br></span></div>',
+                contentAfter: '<div><span style="font-size: 9px;">ab<br>c<br>d[]</span></div>',
             });
         });
     });
@@ -629,7 +629,7 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<h1>abc<br>def<br>ghi<br>jkl</h1>");
                 },
-                contentAfter: "<p>abc</p><h1>def</h1><h1>ghi</h1><p>jkl[]<br></p>",
+                contentAfter: "<p>abc</p><h1>def</h1><h1>ghi</h1><p>jkl[]</p>",
             });
         });
 
@@ -639,7 +639,7 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<h2>abc<br>def<br>ghi<br>jkl</h2>");
                 },
-                contentAfter: "<p>abc</p><h2>def</h2><h2>ghi</h2><p>jkl[]<br></p>",
+                contentAfter: "<p>abc</p><h2>def</h2><h2>ghi</h2><p>jkl[]</p>",
             });
         });
 
@@ -649,7 +649,7 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<h3>abc<br>def<br>ghi<br>jkl</h3>");
                 },
-                contentAfter: "<p>abc</p><h3>def</h3><h3>ghi</h3><p>jkl[]<br></p>",
+                contentAfter: "<p>abc</p><h3>def</h3><h3>ghi</h3><p>jkl[]</p>",
             });
         });
 
@@ -659,7 +659,7 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<h4>abc<br>def<br>ghi<br>jkl</h4>");
                 },
-                contentAfter: "<p>abc</p><h4>def</h4><h4>ghi</h4><p>jkl[]<br></p>",
+                contentAfter: "<p>abc</p><h4>def</h4><h4>ghi</h4><p>jkl[]</p>",
             });
         });
 
@@ -669,7 +669,7 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<h5>abc<br>def<br>ghi<br>jkl</h5>");
                 },
-                contentAfter: "<p>abc</p><h5>def</h5><h5>ghi</h5><p>jkl[]<br></p>",
+                contentAfter: "<p>abc</p><h5>def</h5><h5>ghi</h5><p>jkl[]</p>",
             });
         });
 
@@ -679,7 +679,7 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<h6>abc<br>def<br>ghi<br>jkl</h6>");
                 },
-                contentAfter: "<p>abc</p><h6>def</h6><h6>ghi</h6><p>jkl[]<br></p>",
+                contentAfter: "<p>abc</p><h6>def</h6><h6>ghi</h6><p>jkl[]</p>",
             });
         });
 
@@ -689,28 +689,28 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<p>abc<br>def<br>ghi<br>jkl</p>");
                 },
-                contentAfter: "<p>abc</p><p>def</p><p>ghi</p><p>jkl[]<br></p>",
+                contentAfter: "<p>abc</p><p>def</p><p>ghi</p><p>jkl[]</p>",
             });
             await testEditor({
                 contentBefore: "<p>[]<br></p>",
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<p>abc<br>def<br>ghi<br>jkl</p><p>mno</p>");
                 },
-                contentAfter: "<p>abc</p><p>def</p><p>ghi</p><p>jkl</p><p>mno[]<br></p>",
+                contentAfter: "<p>abc</p><p>def</p><p>ghi</p><p>jkl</p><p>mno[]</p>",
             });
             await testEditor({
                 contentBefore: "<p>[]<br></p>",
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<p>abc<br>def<br>ghi<br>jkl</p><p><br></p><p>mno</p>");
                 },
-                contentAfter: "<p>abc</p><p>def</p><p>ghi</p><p>jkl</p><p><br></p><p>mno[]<br></p>",
+                contentAfter: "<p>abc</p><p>def</p><p>ghi</p><p>jkl</p><p><br></p><p>mno[]</p>",
             });
             await testEditor({
                 contentBefore: "<p>[]<br></p>",
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<p>abc<br>def<br><br><br>ghi</p>");
                 },
-                contentAfter: "<p>abc</p><p>def</p><p><br></p><p><br></p><p>ghi[]<br></p>",
+                contentAfter: "<p>abc</p><p>def</p><p><br></p><p><br></p><p>ghi[]</p>",
             });
         });
 
@@ -724,7 +724,7 @@ describe("Simple html elements containing <br>", () => {
                     );
                 },
                 contentAfter:
-                    "<p>abc</p><p>def</p><h1>ghi</h1><h1>jkl</h1><h2><br></h2><h3>mno</h3><p>pqr[]<br></p>",
+                    "<p>abc</p><p>def</p><h1>ghi</h1><h1>jkl</h1><h2><br></h2><h3>mno</h3><p>pqr[]</p>",
             });
         });
 
@@ -1718,7 +1718,7 @@ describe("link", () => {
                 },
                 contentAfter:
                     '<p style="margin-bottom: 0px;"><a href="http://odoo.com">odoo.com</a></p>' +
-                    '<p><a href="http://google.com">google.com</a>[]<br></p>',
+                    '<p><a href="http://google.com">google.com</a>[]</p>',
             });
         });
 
@@ -1878,42 +1878,42 @@ describe("link", () => {
         });
 
         test("should paste and transform URL among text (not collapsed)", async () => {
-            const { el, editor } = await setupEditor("<p>[xyz]<br></p>");
+            const { el, editor } = await setupEditor("<p>[xyz]</p>");
             pasteText(editor, `abc ${url} def`);
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>abc <a href="${url}">${url}</a> def[]<br></p>`
+                `<p>abc <a href="${url}">${url}</a> def[]</p>`
             );
         });
 
         test("should paste and transform image URL among text (not collapsed)", async () => {
-            const { el, editor } = await setupEditor("<p>[xyz]<br></p>");
+            const { el, editor } = await setupEditor("<p>[xyz]</p>");
             pasteText(editor, `abc ${imgUrl} def`);
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>abc <a href="${imgUrl}">${imgUrl}</a> def[]<br></p>`
+                `<p>abc <a href="${imgUrl}">${imgUrl}</a> def[]</p>`
             );
         });
 
         test("should paste and transform video URL among text (not collapsed)", async () => {
-            const { el, editor } = await setupEditor("<p>[xyz]<br></p>");
+            const { el, editor } = await setupEditor("<p>[xyz]</p>");
             pasteText(editor, `abc ${videoUrl} def`);
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>abc <a href="${videoUrl}">${videoUrl}</a> def[]<br></p>`
+                `<p>abc <a href="${videoUrl}">${videoUrl}</a> def[]</p>`
             );
         });
 
         test("should paste and transform multiple URLs among text (not collapsed)", async () => {
-            const { el, editor } = await setupEditor("<p>[xyz]<br></p>");
+            const { el, editor } = await setupEditor("<p>[xyz]</p>");
             pasteText(editor, `${url} ${videoUrl} ${imgUrl}`);
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p><a href="${url}">${url}</a> <a href="${videoUrl}">${videoUrl}</a> <a href="${imgUrl}">${imgUrl}</a>[]<br></p>`
+                `<p><a href="${url}">${url}</a> <a href="${videoUrl}">${videoUrl}</a> <a href="${imgUrl}">${imgUrl}</a>[]</p>`
             );
         });
 
@@ -2651,7 +2651,7 @@ describe("Paste HTML tables", () => {
     
 
     
-[]</p>`,
+[]<br></p>`,
         });
     });
 
@@ -2763,7 +2763,7 @@ describe("Paste HTML tables", () => {
             </tr>
         </tbody>
     </table><p>
-[]</p>`,
+[]<br></p>`,
         });
     });
 
@@ -2895,7 +2895,7 @@ describe("Paste HTML tables", () => {
     </tbody></table><p>
 
 
-[]</p>`,
+[]<br></p>`,
         });
     });
 });

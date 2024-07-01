@@ -56,7 +56,7 @@ test.tags("desktop")("can add a table using the powerbox and keyboard", async ()
                 </tr>
             </tbody>
         </table>
-        <p></p>`
+        <p><br></p>`
     );
 });
 

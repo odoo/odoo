@@ -8,6 +8,7 @@ import {
 import { prepareUpdate } from "./dom_state";
 import { boundariesOut, leftPos, nodeSize, rightPos } from "./position";
 import { callbacksForCursorUpdate } from "./selection";
+import { isEmptyBlock } from "../utils/dom_info";
 
 /** @typedef {import("@html_editor/core/selection_plugin").Cursors} Cursors */
 
@@ -145,13 +146,7 @@ export function removeClass(element, ...classNames) {
  */
 export function fillEmpty(el) {
     const document = el.ownerDocument;
-    const fillers = {};
-    const blockEl = closestBlock(el);
-    if (isShrunkBlock(blockEl)) {
-        const br = document.createElement("br");
-        blockEl.appendChild(br);
-        fillers.br = br;
-    }
+    const fillers = { ...fillShrunkPhrasingParent(el) };
     if (!isVisible(el) && !el.hasAttribute("data-oe-zws-empty-inline")) {
         // As soon as there is actual content in the node, the zero-width space
         // is removed by the sanitize function.
@@ -166,6 +161,47 @@ export function fillEmpty(el) {
     }
     return fillers;
 }
+
+/**
+ * Add a BR in a shrunk phrasing parent to make it visible.
+ * A shrunk block is assumed to be a phrasing parent, and the inserted
+ * <br> must be wrapped in a paragraph by the caller if necessary.
+ *
+ * @param {HTMLElement} el
+ * @returns {Object} { br: the inserted <br> if any }
+ */
+export function fillShrunkPhrasingParent(el) {
+    const document = el.ownerDocument;
+    const fillers = {};
+    const blockEl = closestBlock(el);
+    if (isShrunkBlock(blockEl)) {
+        const br = document.createElement("br");
+        blockEl.appendChild(br);
+        fillers.br = br;
+    }
+    return fillers;
+}
+
+/**
+ * Removes a trailing BR if it is unnecessary:
+ * in a non-empty block, if the last childNode is a BR and its previous sibling
+ * is not a BR, remove the BR.
+ *
+ * @param {HTMLElement} el
+ * @returns {HTMLElement|undefined} the removed br, if any
+ */
+export function cleanTrailingBR(el) {
+    let br;
+    if (!isEmptyBlock(el) && el.childNodes.length) {
+        const candidate = el.childNodes[nodeSize(el) - 1];
+        if (candidate.tagName === "BR" && candidate.previousSibling?.tagName !== "BR") {
+            br = candidate;
+            candidate.remove();
+        }
+    }
+    return br;
+}
+
 /**
  * Moves the given subset of nodes of a source element to the given destination.
  * If the source element is left empty it is removed. This ensures the moved
