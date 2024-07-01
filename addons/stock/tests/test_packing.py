@@ -1531,8 +1531,8 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(quantB.quantity, 4, "All 4 units of product B should be in location B")
         self.assertEqual(quantB.package_id.id, pack.id, "Product B should still be in the initial package.")
 
-    def test_expected_package_move_lines(self):
-        """ Test direct calling of `_package_move_lines` since it doesn't handle all multi-record cases
+    def test_expected_to_pack(self):
+        """ Test direct calling of `_to_pack` since it doesn't handle all multi-record cases
         It's unlikely this situations will occur, but in case it is for customizations/future features,
         ensure that we don't have unexpected behavior """
 
@@ -1589,9 +1589,9 @@ class TestPacking(TestPackingCommon):
 
         # can't mix operation types
         with self.assertRaises(UserError):
-            move_lines_to_pack = (internal_picking_1 | in_picking_1)._package_move_lines()
+            move_lines_to_pack = (internal_picking_1 | in_picking_1).move_line_ids._to_pack()
 
-        move_lines_to_pack = (internal_picking_1 | internal_picking_2)._package_move_lines()
+        move_lines_to_pack = (internal_picking_1 | internal_picking_2).move_line_ids._to_pack()
         self.assertEqual(len(move_lines_to_pack), 2, "all move lines in pickings should have been selected to pack")
 
     def test_package_selection(self):
@@ -1798,7 +1798,7 @@ class TestPacking(TestPackingCommon):
         picking.move_line_ids[0].location_dest_id = sub_location
 
         destination_wizard_dict = picking.move_line_ids[0:2].action_put_in_pack()
-        destination_wizard = self.env[destination_wizard_dict['res_model']].with_context(destination_wizard_dict['context']).browse(destination_wizard_dict['res_id'])
+        destination_wizard = self.env[destination_wizard_dict['res_model']].browse(destination_wizard_dict['res_id'])
         self.assertEqual(len(destination_wizard.move_line_ids), 2)
         destination_wizard.action_done()
 

@@ -39,7 +39,7 @@ class TestPacking(TestPackingCommon):
 
     def test_put_in_pack_weight_wizard(self):
         """ Check that de default weight is correctly set by default when using the 'choose.delivery.package' wizard.
-        This purpose of this wizard is
+        This purpose of this wizard is to set the delivery package type and weight before validating the package.
         """
         self.env['stock.quant']._update_available_quantity(self.product_aw, self.stock_location, 20.0)
         self.env['stock.quant']._update_available_quantity(self.product_bw, self.stock_location, 20.0)
@@ -197,17 +197,17 @@ class TestPacking(TestPackingCommon):
         ml_1.copy({'picking_id': delivery_2.id, 'quantity': 1})
         # recreate the `action_put_in_pack`` steps so we don't have to add test to new module for batch pickings
         # to use batch version of method (which bypass the ensure_one() check in the stock_picking action)
-        move_lines_to_pack = (delivery_1 | delivery_2)._package_move_lines()
+        move_lines_to_pack = (delivery_1 | delivery_2).move_line_ids._to_pack()
         self.assertEqual(len(move_lines_to_pack), 2, 'There should be move lines that can be "put in pack"')
         with self.assertRaises(UserError):
-            delivery_1._pre_put_in_pack_hook(move_lines_to_pack)
+            move_lines_to_pack._pre_put_in_pack_hook()
 
         # Test that same carrier + put in pack = OK!
         delivery_2.carrier_id = delivery_1.carrier_id
-        move_lines_to_pack = (delivery_1 | delivery_2)._package_move_lines()
+        move_lines_to_pack = (delivery_1 | delivery_2).move_line_ids._to_pack()
         self.assertEqual(len(move_lines_to_pack), 2, 'There should be move lines that can be "put in pack"')
-        delivery_1._pre_put_in_pack_hook(move_lines_to_pack)
-        package = delivery_1._put_in_pack(move_lines_to_pack)
+        move_lines_to_pack._pre_put_in_pack_hook()
+        package = move_lines_to_pack._put_in_pack()
         self.assertEqual(delivery_1.move_line_ids.result_package_id, package, 'Delivery 1 moves should have been put in package.')
         self.assertEqual(delivery_2.move_line_ids.result_package_id, package, 'Delivery 2 moves should have been put in package.')
 

@@ -67,50 +67,6 @@ class StockPicking(models.Model):
             pick._check_carrier_details_compliance()
         return super(StockPicking, self)._send_confirmation_email()
 
-    def _pre_put_in_pack_hook(self, move_line_ids):
-        res = super(StockPicking, self)._pre_put_in_pack_hook(move_line_ids)
-        if not res:
-            if move_line_ids.carrier_id:
-                if len(move_line_ids.carrier_id) > 1 or any(not ml.carrier_id for ml in move_line_ids):
-                    # avoid (duplicate) costs for products
-                    raise UserError(_("You cannot pack products into the same package when they have different carriers (i.e. check that all of their transfers have a carrier assigned and are using the same carrier)."))
-                return self._set_delivery_package_type(batch_pack=len(move_line_ids.picking_id) > 1)
-        else:
-            return res
-
-    def _set_delivery_package_type(self, batch_pack=False):
-        """ This method returns an action allowing to set the package type and the shipping weight
-        on the stock.quant.package.
-        """
-        self.ensure_one()
-        view_id = self.env.ref('stock_delivery.choose_delivery_package_view_form').id
-        context = dict(
-            self.env.context,
-            current_package_carrier_type=self.carrier_id.delivery_type,
-            default_picking_id=self.id,
-            batch_pack=batch_pack,
-        )
-        # As we pass the `delivery_type` ('fixed' or 'base_on_rule' by default) in a key who
-        # correspond to the `package_carrier_type` ('none' to default), we make a conversion.
-        # No need conversion for other carriers as the `delivery_type` and
-        #`package_carrier_type` will be the same in these cases.
-        if context['current_package_carrier_type'] in ['fixed', 'base_on_rule']:
-            context['current_package_carrier_type'] = 'none'
-        # Update the context 'default_package_type_id' passed from JS
-        # to populate the scanned package type in the package wizard opened from the barcode.
-        if self.env.context.get('default_package_type_id'):
-            context['default_delivery_package_type_id'] = self.env.context.get('default_package_type_id')
-        return {
-            'name': _('Package Details'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'choose.delivery.package',
-            'view_id': view_id,
-            'views': [(view_id, 'form')],
-            'target': 'new',
-            'context': context,
-        }
-
     def send_to_shipper(self):
         self.ensure_one()
         res = self.carrier_id.send_shipping(self)[0]
