@@ -103,8 +103,10 @@ class LivechatChatbotScriptController(http.Controller):
             user_answer = user_messages.sorted(lambda message: message.id)[-1]
             result = chatbot._validate_email(user_answer.body, discuss_channel)
 
-            if result['posted_message']:
-                result['posted_message'] = result['posted_message']._message_format(for_current_user=True)[0]
+            if posted_message := result.pop("posted_message"):
+                store = Store()
+                store.add("Message", posted_message._message_format(for_current_user=True))
+                result["data"] = store.get_result()
 
         return result
 
