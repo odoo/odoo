@@ -4,10 +4,7 @@
 __all__ = ['synchronized', 'lazy_classproperty', 'lazy_property',
            'classproperty', 'conditional', 'lazy']
 
-import warnings
 from inspect import getsourcefile, Parameter, signature
-from functools import wraps
-from json import JSONEncoder
 
 from decorator import decorator
 
