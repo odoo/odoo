@@ -239,6 +239,8 @@ const warnUserEvent = (ev) => {
     removeEventListener(ev.type, warnUserEvent);
 };
 
+const handledErrors = new WeakSet();
+
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
@@ -1383,6 +1385,10 @@ export class Runner {
      */
     _handleError(ev) {
         const error = ensureError(ev);
+        if (handledErrors.has(error)) {
+            return;
+        }
+        handledErrors.add(error);
         if (!(ev instanceof Event)) {
             ev = new ErrorEvent("error", { error });
         }
