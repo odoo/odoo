@@ -710,6 +710,12 @@ class ResPartner(models.Model):
             [('partner_id', 'child_of', self.commercial_partner_id.id)]
         )
 
+    def can_edit_company(self):
+        """ `company_name` can be edited if the vat number is not set and there are no invoices linked."""
+        self.ensure_one()
+        result = super().can_edit_company() or self._has_invoice([('partner_id', '=', self.id)])
+        return result
+
     @api.model_create_multi
     def create(self, vals_list):
         search_partner_mode = self.env.context.get('res_partner_search_mode')

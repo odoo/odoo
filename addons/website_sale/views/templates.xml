@@ -1797,91 +1797,33 @@
         </div>
     </template>
 
-    <!-- /shop/checkout route -->
+    <!-- <template id="portal_my_addresses_inherit" inherit_id="portal.portal_my_addresses">
+        <xpath expr="//div[@id='address_checkout']" position="after">
+            <div>
+                <p>This is a new section added to the inherited template.</p>
+            </div>
+        </xpath>
+    </template>-->
+
+    <template id="portal_my_details_inherit" inherit_id="portal.portal_my_details">
+        <xpath expr="//form" position="attributes">
+            <attribute name="t-attf-action">/shop/checkout</attribute>
+        </xpath>
+    </template>
+
     <template id="checkout">
         <t t-call="website_sale.checkout_layout">
-            <t t-set="additional_title">Shop - Checkout</t>
-            <t t-set="redirect" t-valuef="/shop/checkout"/>
-            <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
-            <div id="shop_checkout">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h4 class="text-uppercase small fs-6 fw-bold">Billing address</h4>
-                    </div>
-                </div>
-                <t t-call="website_sale.row_addresses">
-                    <t t-set="order" t-value="order"/>
-                    <t t-set="is_invoice" t-value="True"/>
-                    <t t-set="addresses" t-value="billings"/>
-                    <t t-set="selected_address" t-value="order.partner_invoice_id"/>
-                </t>
-                <t t-if="order._has_deliverable_products()">
-                    <t groups="account.group_delivery_invoice_address">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <h4 class="text-uppercase small fs-6 fw-bold">Delivery address</h4>
-                            </div>
-                        </div>
-                        <t t-call="website_sale.row_addresses">
-                            <t t-set="order" t-value="order"/>
-                            <t t-set="is_invoice" t-value="False"/>
-                            <t t-set="addresses" t-value="shippings"/>
-                            <t t-set="selected_address" t-value="order.partner_shipping_id"/>
-                        </t>
-                    </t>
-                    <t t-call="website_sale.delivery_form">
-                        <t t-set="selected_dm_id" t-value="order.carrier_id.id"/>
-                    </t>
-                </t>
-            </div>
+            <t t-if="partner">
+                <t t-call="portal.portal_address"/>
+            </t>
+            <t t-call="website_sale.delivery_form">
+                <t t-set="selected_dm_id" t-value="order.carrier_id.id"/>
+            </t>
         </t>
     </template>
 
-    <template id="row_addresses">
-        <div t-attf-class="{{'all_billing' if is_invoice else 'all_delivery'}} row row-cols-md-2 row-cols-lg-3 g-3 flex-nowrap flex-md-wrap mb32">
-            <div t-foreach="addresses" t-as="addr"
-                    class="one_kanban col-md">
-                <t t-call="website_sale.address_kanban">
-                    <t t-set="contact" t-value="addr"/>
-                    <t t-set="selected" t-value="len(addresses) == 1 or addr == selected_address"/>
-                </t>
-            </div>
-            <div t-if="not is_invoice or not order.website_id.is_public_user()" class="one_kanban col-md">
-                <!-- We do not allow public users to have multiple billing addresses -->
-                <t t-if="is_invoice">
-                    <t t-set="new_address_href" t-valuef="/shop/address?mode=billing"/>
-                </t>
-                <t t-else="">
-                    <t t-set="new_address_href" t-valuef="/shop/address?mode=shipping"/>
-                </t>
-                <a role="button" t-att-href="new_address_href" class="o_wsale_add_address d-flex align-items-center justify-content-center h-100 px-4 border rounded mx-auto no-decoration">
-                    <i class="fa fa-plus me-md-2"/><span class="d-none d-md-inline">Add address</span>
-                </a>
-            </div>
-        </div>
-    </template>
-
-    <!-- Card view of addresses. Called in `website_sale.checkout`. -->
-    <template id="address_kanban" name="Kanban address">
-        <t t-set="mode" t-value="is_invoice and 'billing' or 'shipping'"/>
-        <div t-attf-class="card position-relative h-100 #{selected and 'bg-primary border border-primary' or is_invoice and 'js_change_billing' or 'js_change_delivery'}"
-             t-att-data-mode="mode"
-             t-att-data-partner-id="contact.id">
-            <div class="card-body d-flex flex-column align-items-start">
-                <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
-                <t t-if="contact._can_be_edited_by_current_customer(website_sale_order, mode)">
-                    <t t-set="new_address_href" t-value="'/shop/address?mode=' + mode"/>
-                    <a
-                        t-att-href="new_address_href + '&amp;partner_id=' + str(contact.id)"
-                        class="js_edit_address btn btn-link p-0 mt-auto"
-                        role="button"
-                        title="Edit this address"
-                        aria-label="Edit this address">
-                        <i class="fa fa-pencil me-1"/>Edit
-                    </a>
-                </t>
-            </div>
-        </div>
+    <template id="address_kanban">
+        <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
     </template>
 
     <!-- /shop/address route -->
