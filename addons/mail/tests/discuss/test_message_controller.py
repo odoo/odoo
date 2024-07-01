@@ -138,9 +138,9 @@ class TestMessageController(HttpCaseWithUserDemo):
             headers={"Content-Type": "application/json"},
         )
         self.assertEqual(res4.status_code, 200)
-        message_format2 = res4.json()["result"]
+        data2 = res4.json()["result"]
         self.assertEqual(
-            message_format2["attachments"],
+            data2["Message"][0]["attachments"],
             json.loads(json.dumps(self.attachments.sorted("id")._attachment_format(), default=date_utils.json_default)),
             "guest should be allowed to add attachment with token when updating message",
         )
@@ -150,7 +150,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             data=json.dumps(
                 {
                     "params": {
-                        "message_id": message_format2["id"],
+                        "message_id": data2["Message"][0]["id"],
                         "body": "test",
                         "attachment_ids": [self.attachments[1].id],
                     },
@@ -159,9 +159,9 @@ class TestMessageController(HttpCaseWithUserDemo):
             headers={"Content-Type": "application/json"},
         )
         self.assertEqual(res5.status_code, 200)
-        message_format3 = res5.json()["result"]
+        data3 = res5.json()["result"]
         self.assertEqual(
-            message_format3["attachments"],
+            data3["Message"][0]["attachments"],
             json.loads(json.dumps(self.attachments.sorted("id")._attachment_format(), default=date_utils.json_default)),
             "guest should be allowed to add own attachment without token when updating message",
         )

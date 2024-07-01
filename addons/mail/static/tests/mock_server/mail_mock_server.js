@@ -650,7 +650,10 @@ async function mail_message_update_content(request) {
             pinned_at: message.pinned_at,
         },
     });
-    return MailMessage._message_format([message_id], true)[0];
+    return new mailDataHelpers.Store(
+        "Message",
+        MailMessage._message_format([message_id], true)
+    ).get_result();
 }
 
 registerRoute("/discuss/channel/:cid/partner/:pid/avatar_128", partnerAvatar128);
