@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import Form, users, warmup, tagged
 from odoo.tools import mute_logger, formataddr
 
@@ -1269,10 +1270,10 @@ class TestMailFormattersPerformance(BaseMailPerformance):
         messages_all = self.messages_all.with_env(self.env)
 
         with self.assertQueryCount(employee=26):
-            res = messages_all._message_format(for_current_user=True)
+            res = Store("Message", messages_all._message_format(for_current_user=True)).get_result()
 
-        self.assertEqual(len(res), 2*2)
-        for message in res:
+        self.assertEqual(len(res["Message"]), 2 * 2)
+        for message in res["Message"]:
             self.assertEqual(len(message['attachments']), 2)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -1282,10 +1283,10 @@ class TestMailFormattersPerformance(BaseMailPerformance):
         message = self.messages_all[0].with_env(self.env)
 
         with self.assertQueryCount(employee=23):
-            res = message._message_format(for_current_user=True)
+            res = Store("Message", message._message_format(for_current_user=True)).get_result()
 
-        self.assertEqual(len(res), 1)
-        self.assertEqual(len(res[0]['attachments']), 2)
+        self.assertEqual(len(res["Message"]), 1)
+        self.assertEqual(len(res["Message"][0]["attachments"]), 2)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
@@ -1303,15 +1304,15 @@ class TestMailFormattersPerformance(BaseMailPerformance):
         } for record in records])
 
         with self.assertQueryCount(employee=7):
-            res = messages._message_format(for_current_user=True)
-            self.assertEqual(len(res), 6)
+            res = Store("Message", messages._message_format(for_current_user=True)).get_result()
+            self.assertEqual(len(res["Message"]), 6)
 
         self.env.flush_all()
         self.env.invalidate_all()
 
         with self.assertQueryCount(employee=15):
-            res = messages._message_format(for_current_user=True)
-            self.assertEqual(len(res), 6)
+            res = Store("Message", messages._message_format(for_current_user=True)).get_result()
+            self.assertEqual(len(res["Message"]), 6)
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
