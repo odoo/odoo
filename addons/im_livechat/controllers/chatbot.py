@@ -64,6 +64,9 @@ class LivechatChatbotScriptController(http.Controller):
 
         posted_message = next_step._process_step(discuss_channel)
         return {
+            "data": Store(
+                "Message", posted_message._message_format(for_current_user=True)
+            ).get_result(),
             'scriptStep': {
                 'id': next_step.id,
                 'answers': [{
@@ -75,7 +78,6 @@ class LivechatChatbotScriptController(http.Controller):
                 'message': plaintext2html(next_step.message) if not is_html_empty(next_step.message) else False,
                 'type': next_step.step_type,
             },
-            'message': posted_message._message_format(for_current_user=True)[0] if posted_message else None,
             'operatorFound': next_step.step_type == 'forward_operator' and len(
                 discuss_channel.channel_member_ids) > 2,
         }
