@@ -780,7 +780,7 @@ export class DiscussChannel extends models.ServerModel {
         this.write([id], {
             last_interest_dt: serializeDateTime(today()),
         });
-        const messageData = MailThread.message_post.call(this, [id], kwargs);
+        const messageId = MailThread.message_post.call(this, [id], kwargs);
         // simulate compute of message_unread_counter
         const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
         const otherMembers = DiscussChannelMember._filter([
@@ -792,7 +792,7 @@ export class DiscussChannel extends models.ServerModel {
                 message_unread_counter: member.message_unread_counter + 1,
             });
         }
-        return messageData;
+        return messageId;
     }
 
     /**

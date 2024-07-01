@@ -557,6 +557,8 @@ registerRoute("/mail/message/post", mail_message_post);
 export async function mail_message_post(request) {
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
+    /** @type {import("mock_models").MailMessage} */
+    const MailMessage = this.env["mail.message"];
     /** @type {import("mock_models").MailThread} */
     const MailThread = this.env["mail.thread"];
     /** @type {import("mock_models").ResPartner} */
@@ -606,11 +608,20 @@ export async function mail_message_post(request) {
         }
     }
     const kwargs = makeKwArgs({ ...finalData, context });
+    let messageId;
     if (thread_model === "discuss.channel") {
-        return DiscussChannel.message_post(thread_id, kwargs);
+        messageId = DiscussChannel.message_post(thread_id, kwargs);
+    } else {
+        const model = this.env[thread_model];
+        messageId = MailThread.message_post.call(model, [thread_id], {
+            ...kwargs,
+            model: thread_model,
+        });
     }
-    const model = this.env[thread_model];
-    return MailThread.message_post.call(model, [thread_id], { ...kwargs, model: thread_model });
+    return new mailDataHelpers.Store(
+        "Message",
+        MailMessage._message_format([messageId], true)
+    ).get_result();
 }
 
 registerRoute("/mail/message/reaction", mail_message_add_reaction);
