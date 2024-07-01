@@ -33,10 +33,10 @@ class TestStockValuation(TransactionCase):
             'name': 'Large Desk',
             'standard_price': 1299.0,
             'list_price': 1799.0,
-            'categ_id': cls.cat.id,
             # Ignore tax calculations for these tests.
             'supplier_taxes_id': False,
             'is_storable': True,
+            'categ_id': cls.cat.id,
         })
         Account = cls.env['account.account']
         cls.stock_input_account = Account.create({

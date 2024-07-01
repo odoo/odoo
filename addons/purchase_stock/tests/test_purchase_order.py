@@ -19,16 +19,8 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.product_id_1 = cls.env['product.product'].create({
-            'name': 'Large Desk',
-            'purchase_method': 'purchase',
-            'categ_id': cls.stock_account_product_categ.id,
-        })
-        cls.product_id_2 = cls.env['product.product'].create({
-            'name': 'Conference Chair',
-            'purchase_method': 'purchase',
-            'categ_id': cls.env.ref('product.product_category_office').id,
-        })
+        cls.product_id_1 = cls.env['product.product'].create({'name': 'Large Desk', 'purchase_method': 'purchase'})
+        cls.product_id_2 = cls.env['product.product'].create({'name': 'Conference Chair', 'purchase_method': 'purchase'})
 
         cls.po_vals = {
             'partner_id': cls.partner_a.id,
@@ -693,6 +685,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         Receive the products.
         """
         self.product_id_1.is_storable = True
+        self.product_id_1.categ_id = self.env.ref('product.product_category_services').id
         self.product_id_1.categ_id.property_cost_method = 'average'
         po = self.env['purchase.order'].create(self.po_vals)
         po.button_confirm()

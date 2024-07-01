@@ -1239,13 +1239,13 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'SuperProduct Tracked',
             'is_storable': True,
             'tracking': 'lot',
-            'available_in_pos': True,
+            'available_in_pos': True
         })
         tracked_product_2 = self.env['product.product'].create({
             'name': 'SuperProduct Tracked 2',
             'is_storable': True,
             'tracking': 'lot',
-            'available_in_pos': True,
+            'available_in_pos': True
         })
         tracked_product_2_lot = self.env['stock.lot'].create({
             'name': '80085',
@@ -1635,6 +1635,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'property_account_income_id': False,
             'property_account_expense_id': False,
         })
+        self.env.company.property_account_income_company_id = False
+        self.env.company.property_account_expense_company_id = False
         account = self.env['account.account'].create({
             'name': 'Account for category without account',
             'code': 'X1111',

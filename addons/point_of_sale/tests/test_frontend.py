@@ -366,9 +366,10 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             })],
         })
 
-        product_category_office = env['product.category'].create({
-            'name': 'Office',
-            'parent_id': env.ref('product.product_category_services').id,
+        product_category = env['product.category'].create({'name': 'Categoryy'})
+        product_category_3 = env['product.category'].create({
+            'name': 'Services',
+            'parent_id': product_category.id,
         })
 
         env['product.pricelist'].create({
@@ -378,7 +379,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 'compute_price': 'fixed',
                 'fixed_price': 1,
                 'applied_on': '2_product_category',
-                'categ_id': product_category_office.id,
+                'categ_id': product_category_3.id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
@@ -391,7 +392,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '2_product_category',
-                'categ_id': env.ref('product.product_category_services').id,
+                'categ_id': product_category.id,
             })],
         })
 
@@ -633,6 +634,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
             'list_price': 0,
             'taxes_id': [(6, 0, [fixed_tax.id])],
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         # Make an order with the zero-amount product from the frontend.

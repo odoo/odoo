@@ -87,10 +87,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         picking_landed_cost_3.action_assign()
         picking_landed_cost_3._action_done()
 
-        virtual_interior_design = self.env['product.product'].create({
-            'name': 'Virtual Interior Design',
-            'categ_id': self.product_category.id,
-        })
+        virtual_interior_design = self.env['product.product'].create({'name': 'Virtual Interior Design'})
 
         # I create a landed cost for picking 3
         default_vals = self.env['stock.landed.cost'].default_get(list(self.env['stock.landed.cost'].fields_get()))
