@@ -101,5 +101,13 @@
             <field name="name">Retenciones 35%</field>
             <field name="country_id" ref="base.es"/>
         </record>
+        <record id="tax_group_irnr_no_ue" model="account.tax.group">
+            <field name="name">Retenciones no residentes no-UE</field>
+            <field name="country_id" ref="base.es" />
+        </record>
+        <record id="tax_group_irnr_ue" model="account.tax.group">
+            <field name="name">Retenciones no residentes UE</field>
+            <field name="country_id" ref="base.es" />
+        </record>
     </data>
 </odoo>
