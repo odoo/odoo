@@ -14,18 +14,5 @@
     </div>
 </template>
 
-<template id="s_progress_bar_options" inherit_id="website.snippet_options">
-    <xpath expr="//div[@id='so_content_addition']" position="attributes">
-        <attribute name="data-selector" add=".s_progress_bar" separator=","/>
-        <attribute name="data-drop-near" add=".s_progress_bar" separator=","/>
-    </xpath>
-</template>
-
-
-<record id="website.s_progress_bar_001_scss" model="ir.asset">
-    <field name="name">Progress bar 001 SCSS</field>
-    <field name="bundle">web.assets_frontend</field>
-    <field name="path">website/static/src/snippets/s_progress_bar/001.scss</field>
-</record>
-
+<!-- No related CSS but there is some in theme overrides -->
 </odoo>
