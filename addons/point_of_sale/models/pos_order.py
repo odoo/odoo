@@ -1409,7 +1409,7 @@ class PosOrderLine(models.Model):
         return {
             'id': orderline.id,
             'qty': orderline.qty,
-            'attribute_value_ids': orderline.attribute_value_ids.ids,
+            'attribute_value_ids': orderline.attribute_value_ids.filtered(lambda av: av.ptav_active).ids,
             'custom_attribute_value_ids': orderline.custom_attribute_value_ids.read(['id', 'name', 'custom_product_template_attribute_value_id', 'custom_value'], load=False),
             'price_unit': orderline.price_unit,
             'skip_change': orderline.skip_change,
