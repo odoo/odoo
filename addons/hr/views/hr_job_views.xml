@@ -60,18 +60,10 @@
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" sample="1">
                     <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click">
-                                <div>
-                                    <strong><field name="name"/></strong>
-                                </div>
-                                <div>
-                                    <span><field name="department_id"/>&amp;nbsp;</span>
-                                </div>
-                                <div t-if="!selection_mode">
-                                    <span>Vacancies: <field name="expected_employees"/></span>
-                                </div>
-                            </div>
+                        <t t-name="kanban-card">
+                            <field class="fw-bold" name="name"/>
+                            <field name="department_id"/>
+                            <span t-if="!selection_mode">Vacancies: <field name="expected_employees"/></span>
                         </t>
                     </templates>
                 </kanban>
