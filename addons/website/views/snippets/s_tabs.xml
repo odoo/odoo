@@ -52,48 +52,6 @@
     </section>
 </template>
 
-<template id="s_tabs_options" inherit_id="website.snippet_options">
-    <xpath expr="." position="inside">
-        <div data-js="NavTabs" data-selector="section.s_tabs">
-            <we-button data-add-item="" data-item=".tab-content:first > .tab-pane.active" data-no-preview="true" class="o_we_text_success ms-0" title="Add Tab" aria-label="Add Tab">
-                <i class="fa fa-fw fa-plus"/>
-            </we-button>
-            <we-button data-remove-item="" data-item=".tab-content:first > .tab-pane.active" data-name="remove_tab_opt" data-no-preview="true" class="o_we_text_danger me-3" title="Remove Tab" aria-label="Remove Tab">
-                <i class="fa fa-fw fa-minus"/>
-            </we-button>
-        </div>
-        <div data-js="NavTabsStyle" data-selector="section" data-target=".s_tabs_main">
-            <we-select string="Style">
-                <we-button data-set-style="tabs" data-name="tabs_opt" data-trigger="horizontal_opt">Tabs</we-button>
-                <we-button data-set-style="pills" data-name="pills_opt" data-trigger="tabs_color_opt" data-trigger-value="">Buttons</we-button>
-            </we-select>
-            <we-colorpicker string="Tabs Color" data-dependencies="tabs_opt" data-name="tabs_color_opt" data-select-style="true" data-css-property="background-color" data-color-prefix="bg-"/>
-            <we-select string="Direction" data-dependencies="pills_opt">
-                <we-button data-set-direction="horizontal" data-name="horizontal_opt">Horizontal</we-button>
-                <we-button data-set-direction="vertical" data-trigger="left_alignment_opt">Vertical</we-button>
-            </we-select>
-            <we-select string="Alignment" data-apply-to=".s_tabs_nav:first .nav" data-dependencies="horizontal_opt">
-                <we-button data-select-class="" data-name="left_alignment_opt">Left</we-button>
-                <we-button data-select-class="justify-content-center">Center</we-button>
-                <we-button data-select-class="justify-content-end">Right</we-button>
-            </we-select>
-            <we-select string="Fill and Justify" data-apply-to=".s_tabs_nav:first .nav" data-dependencies="horizontal_opt">
-                <we-button data-select-class="">Regular</we-button>
-                <we-button data-select-class="nav-fill">Full Width</we-button>
-                <we-button data-select-class="nav-justified">Equal Widths</we-button>
-            </we-select>
-            <we-divider/>
-            <we-button-group string="Slide" data-apply-to=".s_tabs_content:first">
-                <we-button class="fa fa-fw fa-long-arrow-left" title="Slide Left" data-select-class="s_tabs_slide_left"/>
-                <we-button class="fa fa-fw fa-long-arrow-up" title="Slide Up" data-select-class="s_tabs_slide_up"/>
-                <we-button class="fa fa-fw fa-long-arrow-down" title="Slide Down" data-select-class="s_tabs_slide_down"/>
-                <we-button class="fa fa-fw fa-long-arrow-right" title="Slide Right" data-select-class="s_tabs_slide_right"/>
-                <we-button class="fa fa-fw fa-ban" title="No Slide Effect" data-select-class=""/>
-            </we-button-group>
-        </div>
-    </xpath>
-</template>
-
 <record id="website.s_tabs_001_scss" model="ir.asset">
     <field name="name">Tabs 001 SCSS</field>
     <field name="bundle">web.assets_frontend</field>

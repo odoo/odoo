@@ -1,30 +1,36 @@
 /** @odoo-module **/
 
 import { uniqueId } from "@web/core/utils/functions";
-import options from "@web_editor/js/editor/snippets.options.legacy";
+import {
+    MultipleItems,
+    SnippetOption,
+} from "@web_editor/js/editor/snippets.options";
+import {
+    registerWebsiteOption,
+} from "@website/js/editor/snippets.registry";
 
-options.registry.NavTabs = options.registry.MultipleItems.extend({
-    isTopOption: true,
+export class TabsOption extends MultipleItems {
+    static isTopOption = true;
 
     /**
      * @override
      */
-    start: function () {
+    willStart() {
         this._findLinksAndPanes();
-        return this._super.apply(this, arguments);
-    },
+        return super.willStart(...arguments);
+    }
     /**
      * @override
      */
-    onBuilt: function () {
+    onBuilt() {
         this._generateUniqueIDs();
-    },
+    }
     /**
      * @override
      */
-    onClone: function () {
+    onClone() {
         this._generateUniqueIDs();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -33,23 +39,23 @@ options.registry.NavTabs = options.registry.MultipleItems.extend({
     /**
      * @override
      */
-    _computeWidgetVisibility: async function (widgetName, params) {
+    async _computeWidgetVisibility(widgetName, params) {
         if (widgetName === 'remove_tab_opt') {
             return (this.$tabPanes.length > 2);
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * @private
      */
-    _findLinksAndPanes: function () {
+    _findLinksAndPanes() {
         this.$navLinks = this.$target.find('.nav:first .nav-link');
         this.$tabPanes = this.$target.find(".tab-content:first > .tab-pane");
-    },
+    }
     /**
      * @private
      */
-    _generateUniqueIDs: function () {
+    _generateUniqueIDs() {
         for (var i = 0; i < this.$navLinks.length; i++) {
             var id = uniqueId(new Date().getTime() + "_");
             var idLink = 'nav_tabs_link_' + id;
@@ -64,7 +70,7 @@ options.registry.NavTabs = options.registry.MultipleItems.extend({
                 'aria-labelledby': idLink,
             });
         }
-    },
+    }
     /**
      * @override
      */
@@ -77,7 +83,7 @@ options.registry.NavTabs = options.registry.MultipleItems.extend({
         this._findLinksAndPanes();
         this._generateUniqueIDs();
         $navLink.tab('show');
-    },
+    }
     /**
      * @override
      */
@@ -87,9 +93,17 @@ options.registry.NavTabs = options.registry.MultipleItems.extend({
         $targetNavLink.parent().remove();
         this._findLinksAndPanes();
         $navLinkToShow.tab('show');
-    },
+    }
+}
+
+registerWebsiteOption("Tabs", {
+    Class: TabsOption,
+    template: "website.s_tabs_option",
+    selector: "section.s_tabs",
 });
-options.registry.NavTabsStyle = options.Class.extend({
+
+
+export class TabsStyleOption extends SnippetOption {
 
     //--------------------------------------------------------------------------
     // Options
@@ -100,7 +114,7 @@ options.registry.NavTabsStyle = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    setStyle: function (previewMode, widgetValue, params) {
+    setStyle(previewMode, widgetValue, params) {
         const $nav = this.$target.find('.s_tabs_nav:first .nav');
         const isPills = widgetValue === 'pills';
         $nav.toggleClass('nav-tabs card-header-tabs', !isPills);
@@ -108,20 +122,20 @@ options.registry.NavTabsStyle = options.Class.extend({
         this.$target.find('.s_tabs_nav:first').toggleClass('card-header', !isPills).toggleClass('mb-3', isPills);
         this.$target.toggleClass('card', !isPills);
         this.$target.find('.s_tabs_content:first').toggleClass('card-body', !isPills);
-    },
+    }
     /**
      * Horizontal/vertical nav.
      *
      * @see this.selectClass for parameters
      */
-    setDirection: function (previewMode, widgetValue, params) {
+    setDirection(previewMode, widgetValue, params) {
         const isVertical = widgetValue === 'vertical';
         this.$target.toggleClass('row s_col_no_resize s_col_no_bgcolor', isVertical);
         this.$target.find('.s_tabs_nav:first .nav').toggleClass('flex-column', isVertical);
         this.$target.find('.s_tabs_nav:first > .nav-link').toggleClass('py-2', isVertical);
         this.$target.find('.s_tabs_nav:first').toggleClass('col-md-3', isVertical);
         this.$target.find('.s_tabs_content:first').toggleClass('col-md-9', isVertical);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -130,13 +144,20 @@ options.registry.NavTabsStyle = options.Class.extend({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'setStyle':
                 return this.$target.find('.s_tabs_nav:first .nav').hasClass('nav-pills') ? 'pills' : 'tabs';
             case 'setDirection':
                 return this.$target.find('.s_tabs_nav:first .nav').hasClass('flex-column') ? 'vertical' : 'horizontal';
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
+}
+
+registerWebsiteOption("TabsStyle", {
+    Class: TabsStyleOption,
+    template: "website.s_tabs_style_option",
+    selector: "section",
+    target: ".s_tabs_main",
 });
