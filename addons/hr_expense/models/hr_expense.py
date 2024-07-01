@@ -236,6 +236,15 @@ class HrExpense(models.Model):
         for expense in self:
             expense.name = expense.name or expense.product_id.display_name
 
+    def _set_expense_currency_rate(self, date_today):
+        for expense in self:
+            expense.currency_rate = expense.env['res.currency']._get_conversion_rate(
+                from_currency=expense.currency_id,
+                to_currency=expense.company_currency_id,
+                company=expense.company_id,
+                date=expense.date or date_today,
+            )
+
     @api.depends('currency_id', 'total_amount_currency', 'date')
     def _compute_currency_rate(self):
         """
@@ -254,12 +263,7 @@ class HrExpense(models.Model):
                         or expense.total_amount_currency != expense._origin.total_amount_currency
                         or expense.date != expense._origin.date
                 ):
-                    expense.currency_rate = self.env['res.currency']._get_conversion_rate(
-                        from_currency=expense.currency_id,
-                        to_currency=expense.company_currency_id,
-                        company=expense.company_id,
-                        date=expense.date or date_today,
-                    )
+                    expense._set_expense_currency_rate(date_today=date_today)
                 else:
                     expense.currency_rate = expense.total_amount / expense.total_amount_currency if expense.total_amount_currency else 1.0
             else:  # Mono-currency case computation shortcut, no need for the label if there is no conversion
@@ -618,6 +622,11 @@ class HrExpense(models.Model):
                 raise UserError("\n".join(error_msgs))
 
         res = super().write(vals)
+
+        if 'currency_id' in vals:
+            self._set_expense_currency_rate(date_today=fields.Date.context_today(self))
+            for expense in self:
+                expense.total_amount = expense.total_amount_currency * expense.currency_rate
 
         if 'employee_id' in vals:
             # In case expense has sheet which has only one expense_line_ids,
