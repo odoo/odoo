@@ -153,16 +153,16 @@ export class PaymentRazorpay extends PaymentInterface {
             ) {
                 return this._razorpay_handle_response({ error: _t("Reference number mismatched") });
             } else if (resultCode === "AUTHORIZED") {
-                paymentLine.razorpay_authcode = response?.authCode;
-                paymentLine.razorpay_issuer_card_no = response?.cardLastFourDigit;
-                paymentLine.razorpay_issuer_bank = response?.acquirerCode;
-                paymentLine.razorpay_payment_method = response?.paymentMode;
+                paymentLine.payment_method_authcode = response?.authCode;
+                paymentLine.card_no = response?.cardLastFourDigit || "";
+                paymentLine.payment_method_issuer_bank = response?.acquirerCode;
+                paymentLine.payment_method_payment_mode = response?.paymentMode;
                 paymentLine.card_type = response?.paymentCardType;
-                paymentLine.razorpay_card_scheme = response?.paymentCardBrand;
-                paymentLine.razorpay_card_owner_name = response?.nameOnCard;
-                paymentLine.razorpay_reference_no = response?.externalRefNumber;
+                paymentLine.card_brand = response?.paymentCardBrand || "";
+                paymentLine.cardholder_name = response?.nameOnCard;
+                paymentLine.payment_ref_no = response?.externalRefNumber;
                 paymentLine.razorpay_reverse_ref_no = response?.reverseReferenceNumber;
-                paymentLine.transactionId = response?.txnId;
+                paymentLine.transaction_id = response?.txnId;
                 // `createdTime` is provided in milliseconds in local GMT+5.5 timezone.
                 // Thus, we need to subtract 19800000 to get the correct time in milliseconds.
                 paymentLine.payment_date = this._getPaymentDate(response?.createdTime - 19800000);
