@@ -377,7 +377,7 @@ class Warehouse(models.Model):
         return warehouse_data
 
     def _create_or_update_global_routes_rules(self):
-        """ Some rules are not specific to a warehouse(e.g MTO, Buy, ...)
+        """ Some routes are not specific to a warehouse(e.g MTO, Manufacture, ...)
         however they contain rule(s) for a specific warehouse. This method will
         update the rules contained in global routes in order to make them match
         with the wanted reception, delivery,... steps.

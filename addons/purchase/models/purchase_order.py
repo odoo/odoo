@@ -92,7 +92,7 @@ class PurchaseOrder(models.Model):
     date_order = fields.Datetime('Order Deadline', required=True, index=True, copy=False, default=fields.Datetime.now,
         help="Depicts the date within which the Quotation should be confirmed and converted into a purchase order.")
     date_approve = fields.Datetime('Confirmation Date', readonly=True, index=True, copy=False)
-    partner_id = fields.Many2one('res.partner', string='Vendor', required=True, change_default=True, tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="You can find a vendor by its Name, TIN, Email or Internal Reference.")
+    partner_id = fields.Many2one('res.partner', string='Vendor', change_default=True, tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="You can find a vendor by its Name, TIN, Email or Internal Reference.")
     dest_address_id = fields.Many2one('res.partner', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Dropship Address',
         help="Put an address if you want to deliver directly from the vendor to the customer. "
              "Otherwise, keep empty to deliver to your own company.")
@@ -171,6 +171,14 @@ class PurchaseOrder(models.Model):
                     quote_company=order.company_id.display_name,
                     bad_products=', '.join(bad_products.mapped('display_name')),
                 ))
+
+    @api.constrains('state', 'partner_id')
+    def _check_partner_id(self):
+        for order in self:
+            if order.state in ['draft', 'cancel']:
+                continue
+            if not order.partner_id:
+                raise ValidationError(_('A vendor is required for a non-draft RFQ.'))
 
     def _compute_access_url(self):
         super(PurchaseOrder, self)._compute_access_url()
@@ -428,6 +436,8 @@ class PurchaseOrder(models.Model):
         This function opens a window to compose an email, with the edi purchase template message loaded by default
         '''
         self.ensure_one()
+        if not self.partner_id:
+            raise UserError(_('A vendor is required to send RFQ by email.'))
         ir_model_data = self.env['ir.model.data']
         try:
             if self.env.context.get('send_rfq', False):
@@ -495,6 +505,8 @@ class PurchaseOrder(models.Model):
         for order in self:
             if order.state not in ['draft', 'sent']:
                 continue
+            if not order.partner_id:
+                raise UserError(_("You cannot confirm a RFQ that doesn't have a vendor"))
             order.order_line._validate_analytic_distribution()
             order._add_supplier_to_product()
             # Deal with double validation process

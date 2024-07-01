@@ -38,9 +38,11 @@ class TestSubcontractingBasic(TransactionCase):
             "reception_route_id",
             "delivery_route_id"
         ]
+
+        buy_route = self.env['stock.route'].search([]).filtered(lambda r: set(r.rule_ids.mapped('action')) == {'buy'})  # Buy route is reused for all warehouses and should be excluded from this check
         for route_type in route_types:
-            original_route_set = wh_original[route_type]
-            copy_route_set = wh_copy[route_type]
+            original_route_set = wh_original[route_type] - buy_route
+            copy_route_set = wh_copy[route_type] - buy_route
             error_message = f"At least one {route_type} (route) got reused on duplication (should have been recreated)"
             self.assertEqual(len(original_route_set & copy_route_set), 0, error_message)
 

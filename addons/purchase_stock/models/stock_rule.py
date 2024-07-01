@@ -71,7 +71,7 @@ class StockRule(models.Model):
                 lambda s: not s.company_id or s.company_id == procurement.company_id
             )[:1]
 
-            if not supplier:
+            if not supplier and self.env.context.get('from_orderpoint'):
                 msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.', procurement.product_id.display_name)
                 errors.append((procurement, msg))
 
@@ -94,8 +94,10 @@ class StockRule(models.Model):
 
             # Get the set of procurement origin for the current domain.
             origins = set([p.origin for p in procurements])
+            po = self.env['purchase.order']
             # Check if a PO exists for the current domain.
-            po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
+            if partner:
+                po = self.env['purchase.order'].sudo().search(list(domain), limit=1)
             company_id = procurements[0].company_id
             if not po:
                 positive_values = [p.values for p in procurements if float_compare(p.product_qty, 0.0, precision_rounding=p.product_uom.rounding) >= 0]

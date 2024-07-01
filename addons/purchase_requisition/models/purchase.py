@@ -4,6 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, _, Command
+from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, get_lang
 
 
@@ -29,7 +30,7 @@ class PurchaseOrder(models.Model):
     purchase_group_id = fields.Many2one('purchase.order.group')
     alternative_po_ids = fields.One2many(
         'purchase.order', related='purchase_group_id.order_ids', readonly=False,
-        domain="[('id', '!=', id), ('state', 'in', ['draft', 'sent', 'to approve'])]",
+        domain="[('id', '!=', id), ('state', 'in', ['draft', 'sent', 'to approve']), ('partner_id', '!=', False)]",
         string="Alternative POs", check_company=True,
         help="Other potential purchase orders for purchasing products")
     has_alternatives = fields.Boolean(
@@ -127,6 +128,9 @@ class PurchaseOrder(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if self.env.context.get('vendor_required', False):
+            if any(not vals.get('partner_id', False) for vals in vals_list):
+                raise UserError(_('A vendor is required for alternative purchase orders.'))
         orders = super().create(vals_list)
         if self.env.context.get('origin_po_id'):
             # po created as an alt to another PO:
@@ -157,6 +161,8 @@ class PurchaseOrder(models.Model):
                     subtype_xmlid='mail.mt_note',
                 )
         if vals.get('alternative_po_ids', False):
+            if any(not alt_po.partner_id for alt_po in self.alternative_po_ids):
+                raise UserError(_('A vendor is required for alternative purchase orders.'))
             if not self.purchase_group_id and len(self.alternative_po_ids + self) > len(self):
                 # this can create a new group + delete an existing one (or more) when linking to already linked PO(s), but this is
                 # simplier than additional logic checking if exactly 1 exists or merging multiple groups if > 1

@@ -1266,7 +1266,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         self.pos_config.ship_later = True
         self.pos_config.warehouse_id = warehouse_id
-        self.pos_config.route_id = warehouse_id.route_ids[-1]
+        self.pos_config.route_id = warehouse_id.route_ids.filtered(lambda r: "Deliver in 2 steps" in r.name)
         self.pos_config.open_ui()
         self.pos_config.current_session_id.update_stock_at_closing = False
 

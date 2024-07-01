@@ -66,3 +66,17 @@ class TestRoutes(TransactionCase):
 
         wh.reception_steps = 'two_steps'
         self.assertEqual(wh.reception_steps, 'two_steps')
+
+    def test_buy_route(self):
+        """ Test that the buy route is added automatically to any newly
+         created warehouse """
+        all_warehouses = self.env['stock.warehouse'].search([])
+        buy_route = self.env['stock.route'].search([]).filtered(lambda r: set(r.rule_ids.mapped('action')) == {'buy'})
+        self.assertEqual(buy_route.warehouse_ids, all_warehouses, 'The buy route should be added to all warehouses')
+
+        new_warehouse = self.env['stock.warehouse'].create({
+            'name': 'New Warehouse',
+            'code': 'NEW',
+            'reception_steps': 'one_step',
+        })
+        self.assertIn(new_warehouse, buy_route.warehouse_ids, 'The buy route should be applied to the new warehouse')
