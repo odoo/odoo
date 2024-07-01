@@ -46,7 +46,6 @@ import { callWithUnloadCheck } from "./tour_utils";
  allows that trigger node can be disabled. run() {} does not allow this behavior.
  * @property {boolean} [auto]
  * @property {boolean} [in_modal] When true, check that trigger node is present in the last visible .modal.
- * @property {number} [width]
  * @property {number} [timeout] By default, when the trigger node isn't found after 10000 milliseconds, it throws an error.
  * You can change this value to lengthen or shorten the time before the error occurs [ms].
  * @property {string} [consumeEvent] Only in manual mode (onboarding tour). It's the event we want the customer to do.
@@ -75,7 +74,6 @@ function checkTourStepKeyValues(tourStep) {
         allowInvisible: { type: Boolean, optional: true },
         allowDisabled: { type: Boolean, optional: true },
         in_modal: { type: Boolean, optional: true },
-        width: { type: Number, optional: true },
         timeout: { type: Number, optional: true },
         consumeEvent: { type: String, optional: true },
         title: { type: String, optional: true },
