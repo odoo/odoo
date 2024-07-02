@@ -4454,6 +4454,44 @@ test.tags("desktop")(`buttons with attr "special" in dialog close the dialog`, a
     expect(`.o_form_status_indicator_buttons.invisible`).toHaveCount(1);
 });
 
+test.tags("desktop")(`Add custom buttons to default buttons (replace="0")`, async () => {
+    Product._views = {
+        form: `
+            <form>
+                <sheet>
+                    <field name="name" />
+                </sheet>
+                <footer replace="0">
+                    <button class="btn btn-primary">Custom 1</button>
+                    <button class="btn btn-secondary">Custom 2</button>
+                </footer>
+            </form>
+        `,
+    };
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="product_id"/>
+                    </group>
+                </sheet>
+            </form>
+        `,
+        resId: 2,
+    });
+    await contains(`[name="product_id"] input`).edit("ABC", { confirm: false });
+    await runAllTimers(); // skip debounce
+    await contains(`.o_m2o_dropdown_option_create_edit`).click();
+
+    expect(".o_dialog .o_form_button_save").toHaveCount(1);
+    expect(".o_dialog .o_form_button_cancel").toHaveCount(1);
+    expect(".o_dialog button:contains(Custom 1)").toHaveCount(1);
+    expect(".o_dialog button:contains(Custom 2)").toHaveCount(1);
+});
+
 test(`missing widgets do not crash`, async () => {
     Partner._fields.foo = fields.Generic({ type: "new field type without widget" });
 

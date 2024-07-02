@@ -14,7 +14,11 @@
                     <t t-set-slot="layout-buttons">
                         <t t-if="env.inDialog">
                             <t t-if="footerArchInfo">
-                                <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="footerArchInfo"/>
+                                <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="footerArchInfo">
+                                    <t t-set-slot="default_buttons">
+                                        <t t-call="{{ props.buttonTemplate }}"/>
+                                    </t>
+                                </t>
                             </t>
                             <t t-else="">
                                 <t t-call="{{ props.buttonTemplate }}"/>
@@ -52,23 +56,25 @@
     </t>
 
     <t t-name="web.FormView.Buttons">
-        <div class="o_cp_buttons d-flex align-items-baseline w-100" role="toolbar" aria-label="Main actions" t-ref="cpButtons">
-            <div t-if="model.root.isInEdition" class="o_form_buttons_edit d-flex gap-1">
-                <button type="button" class="btn btn-primary o_form_button_save" data-hotkey="s" t-on-click.stop="() => this.saveButtonClicked({closable: true})">
-                    Save
-                </button>
-                <button type="button" class="btn btn-secondary o_form_button_cancel" data-hotkey="j" t-on-click.stop="discard">
-                    Discard
-                </button>
-                <button t-if="props.removeRecord" class="btn btn-secondary o_form_button_remove" t-on-click="props.removeRecord" data-hotkey="x">
-                    Remove
-                </button>
-            </div>
-            <div t-elif="canCreate" class="o_form_buttons_view">
-                <button type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">
-                    New
-                </button>
-            </div>
+        <div t-if="model.root.isInEdition" class="o_form_buttons_edit d-flex gap-1">
+            <button type="button" class="btn btn-primary o_form_button_save" data-hotkey="s" t-on-click.stop="() => this.saveButtonClicked({closable: true})">
+                Save
+            </button>
+            <button type="button" class="btn btn-secondary o_form_button_cancel" data-hotkey="j" t-on-click.stop="discard">
+                Discard
+            </button>
+            <button t-if="props.removeRecord" class="btn btn-secondary o_form_button_remove" t-on-click="props.removeRecord" data-hotkey="x">
+                Remove
+            </button>
         </div>
+        <div t-elif="canCreate" class="o_form_buttons_view">
+            <button type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">
+                New
+            </button>
+        </div>
+    </t>
+
+    <t t-name="web.DefaultButtonsSlot">
+        <t t-slot="default_buttons"></t>
     </t>
 </templates>
