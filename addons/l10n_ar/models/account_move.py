@@ -367,3 +367,9 @@ class AccountMove(models.Model):
     def _l10n_ar_include_vat(self):
         self.ensure_one()
         return self.l10n_latam_document_type_id.l10n_ar_letter in ['B', 'C', 'X', 'R']
+
+    @api.model
+    def format_monetary(self, value, currency_id):
+        currency = self.env['res.currency'].browse(currency_id)
+        res = currency.symbol + ' ' + str(value)
+        return res
