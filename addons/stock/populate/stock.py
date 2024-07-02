@@ -227,6 +227,9 @@ class StockWarehouseOrderpoint(models.Model):
         }
 
         all_product_ids = set(self.env.registry.populated_models['product.product'])
+        all_products = self.env['product.product'].browse(all_product_ids)
+        all_products = all_products.filtered(lambda p: p.type == 'product')
+        all_product_ids = set(all_products.ids)
 
         supplierinfos = self.env['product.supplierinfo'].browse(self.env.registry.populated_models['product.supplierinfo'])
 
