@@ -37,6 +37,7 @@ class PickingType(models.Model):
         compute='_compute_is_repairable', store=True, readonly=False, default=False,
         help="If ticked, you will be able to directly create repair orders from a return.")
     return_type_of_ids = fields.One2many('stock.picking.type', 'return_picking_type_id')
+    repair_properties_definition = fields.PropertiesDefinition('Repair Properties')
 
     def _compute_count_repair(self):
         repair_picking_types = self.filtered(lambda picking: picking.code == 'repair_operation')
@@ -145,6 +146,14 @@ class PickingType(models.Model):
         )
         repair_records = [(r[0], r[1], _('Confirmed')) for r in repair_records]
         return records + repair_records
+
+    def action_repair_overview(self):
+        routing_count = self.env['stock.picking.type'].search_count([('code', '=', 'repair_operation')])
+        if routing_count == 1:
+            action = self.env['ir.actions.actions']._for_xml_id('repair.action_repair_order_tree')
+            return action
+        action = self.env['ir.actions.actions']._for_xml_id('repair.stock_repair_type_action_kanban')
+        return action
 
 
 class Picking(models.Model):

@@ -65,6 +65,7 @@ class Repair(models.Model):
         'Under Warranty',
         help='If ticked, the sales price will be set to 0 for all products transferred from the repair order.')
     schedule_date = fields.Datetime("Scheduled Date", default=fields.Datetime.now, index=True, required=True, copy=False)
+    repair_properties = fields.Properties('Properties', definition='picking_type_id.repair_properties_definition', copy=True)
 
     # Product To Repair
     move_id = fields.Many2one(  # Generated in 'action_repair_done', needed for traceability
