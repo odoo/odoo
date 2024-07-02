@@ -77,7 +77,7 @@ class ViewCustom(models.Model):
     arch = fields.Text(string='View Architecture', required=True)
 
     def _auto_init(self):
-        res = super(ViewCustom, self)._auto_init()
+        res = super()._auto_init()
         tools.create_index(self._cr, 'ir_ui_view_custom_user_id_ref_id',
                            self._table, ['user_id', 'ref_id'])
         return res
@@ -142,7 +142,7 @@ TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(TRANSLATED_ATTRS))
 WRONGCLASS = re.compile(r"(@class\s*=|=\s*@class|contains\(@class)")
 
 
-class View(models.Model):
+class IrUiView(models.Model):
     _name = 'ir.ui.view'
     _description = 'View'
     _order = "priority,name,id"
@@ -444,7 +444,7 @@ actual arch.
     ]
 
     def _auto_init(self):
-        res = super(View, self)._auto_init()
+        res = super()._auto_init()
         tools.create_index(self._cr, 'ir_ui_view_model_type_inherit_id',
                            self._table, ['model', 'inherit_id'])
         return res
@@ -496,7 +496,7 @@ actual arch.
             values.update(self._compute_defaults(values))
 
         self.env.registry.clear_cache('templates')
-        result = super(View, self.with_context(ir_ui_view_partial_validation=True)).create(vals_list)
+        result = super(IrUiView, self.with_context(ir_ui_view_partial_validation=True)).create(vals_list)
         return result.with_env(self.env)
 
     def write(self, vals):
@@ -515,7 +515,7 @@ actual arch.
         if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
             vals['arch_prev'] = self.arch_db
 
-        res = super(View, self).write(self._compute_defaults(vals))
+        res = super().write(self._compute_defaults(vals))
 
         # Check the xml of the view if it gets re-activated.
         # Ideally, `active` shoud have been added to the `api.constrains` of `_check_xml`,
@@ -535,10 +535,10 @@ actual arch.
         if self.env.context.get('_force_unlink', False) and self.inherit_children_ids:
             self.inherit_children_ids.unlink()
         self.env.registry.clear_cache('templates')
-        return super(View, self).unlink()
+        return super().unlink()
 
     def _update_field_translations(self, fname, translations, digest=None):
-        return super(View, self.with_context(no_save_prev=True))._update_field_translations(fname, translations, digest)
+        return super(IrUiView, self.with_context(no_save_prev=True))._update_field_translations(fname, translations, digest)
 
     def copy_data(self, default=None):
         has_default_without_key = default and 'key' not in default
@@ -2259,7 +2259,7 @@ actual arch.
                     self._load_records_write_on_cow(cow_view, inherit_id, authorized_vals)
                 else:
                     cow_view.with_context(no_cow=True).write(authorized_vals)
-        super(View, self)._load_records_write(values)
+        super()._load_records_write(values)
 
     def _load_records_write_on_cow(self, cow_view, inherit_id, values):
         # for modules updated before `website`, we need to

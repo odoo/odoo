@@ -2,10 +2,10 @@
 
 from . import assetsbundle
 
-from .ir_model import IrModelData
+from .ir_model import IrModelData, IrModelAccess
 from .ir_sequence import IrSequence
-from . import ir_ui_menu
-from . import ir_ui_view
+from .ir_ui_menu import IrUiMenu
+from .ir_ui_view import IrUiView
 from . import ir_asset
 from .ir_actions import IrActions
 from . import ir_embedded_actions
@@ -16,7 +16,7 @@ from . import ir_cron
 from . import ir_filters
 from . import ir_default
 from . import ir_exports
-from . import ir_rule
+from .ir_rule import IrRule
 from .ir_config_parameter import IrConfigParameter
 from . import ir_autovacuum
 from . import ir_mail_server
@@ -26,7 +26,7 @@ from . import ir_qweb_fields
 from . import ir_http
 from . import ir_logging
 from . import ir_property
-from . import ir_module
+from .ir_module import IrModuleCategory
 from . import ir_demo
 from . import ir_demo_failure
 from . import report_layout
@@ -43,7 +43,7 @@ from . import res_bank
 from .res_config import ResConfigSettings
 from .res_currency import Currency
 from .res_company import Company
-from .res_users import Users
+from .res_users import ResUsers
 from . import res_users_settings
 from . import res_users_deletion
 

@@ -201,7 +201,7 @@ class SaleOrder(models.Model, portal.models.PortalMixin, product_.models.Product
         digits=0,
         store=True, precompute=True)
     user_id = fields.Many2one(
-        comodel_name=base.models.Users,
+        comodel_name=base.models.ResUsers,
         string="Salesperson",
         compute='_compute_user_id',
         store=True, readonly=False, precompute=True, index=True,

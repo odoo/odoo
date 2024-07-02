@@ -75,7 +75,7 @@ def assert_log_admin_access(method):
         return method(self, *args, **kwargs)
     return decorator(check_and_log, method)
 
-class ModuleCategory(models.Model):
+class IrModuleCategory(models.Model):
     _name = "ir.module.category"
     _description = "Application"
     _order = 'name'

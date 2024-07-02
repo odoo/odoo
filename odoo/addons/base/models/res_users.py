@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import binascii
 import contextlib
 import datetime
@@ -17,7 +16,6 @@ from hashlib import sha256
 from itertools import chain, repeat
 from markupsafe import Markup
 
-import babel.core
 import pytz
 from lxml import etree
 from lxml.builder import E
@@ -26,6 +24,7 @@ from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+from odoo.addons import base
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request, DEFAULT_LANG
 from odoo.osv import expression
@@ -163,7 +162,7 @@ def check_identity(fn):
 # Basic res.groups and res.users
 #----------------------------------------------------------
 
-class Groups(models.Model):
+class ResGroups(models.Model):
     _name = "res.groups"
     _description = "Access Groups"
     _rec_name = 'full_name'
@@ -171,14 +170,13 @@ class Groups(models.Model):
     _allow_sudo_commands = False
 
     name = fields.Char(required=True, translate=True)
-    users = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid')
-    model_access = fields.One2many('ir.model.access', 'group_id', string='Access Controls', copy=True)
-    rule_groups = fields.Many2many('ir.rule', 'rule_group_rel',
-        'group_id', 'rule_group_id', string='Rules', domain="[('global', '=', False)]")
-    menu_access = fields.Many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', string='Access Menu')
-    view_access = fields.Many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', string='Views')
+    users: 'base.ResUsers' = fields.Many2many(relation='res_groups_users_rel', column1='gid', column2='uid')
+    model_access: 'base.IrModelAccess' = fields.One2many(inverse_name='group_id', string='Access Controls', copy=True)
+    rule_groups: 'base.IrRule' = fields.Many2many(relation='rule_group_rel', column1='group_id', column2='rule_group_id', string='Rules', domain="[('global', '=', False)]")
+    menu_access: 'base.IrUiMenu' = fields.Many2many(relation='ir_ui_menu_group_rel', column1='gid', column2='menu_id', string='Access Menu')
+    view_access: 'base.IrUiView' = fields.Many2many(relation='ir_ui_view_group_rel', column1='group_id', column2='view_id', string='Views')
     comment = fields.Text(translate=True)
-    category_id = fields.Many2one('ir.module.category', string='Application', index=True)
+    category_id: 'base.IrModuleCategory' = fields.Many2one(string='Application', index=True)
     color = fields.Integer(string='Color Index')
     full_name = fields.Char(compute='_compute_full_name', string='Group Name', search='_search_full_name')
     share = fields.Boolean(string='Share Group', help="Group created to set access rights for sharing data with some users.")
@@ -261,7 +259,7 @@ class Groups(models.Model):
         # DLE P139
         if self.ids:
             self.env['ir.model.access'].call_cache_clearing_methods()
-        return super(Groups, self).write(vals)
+        return super().write(vals)
 
     def _ensure_xml_id(self):
         """Return the groups external identifiers, creating the external identifier for groups missing one"""
@@ -303,7 +301,7 @@ class ResUsersLog(models.Model):
         _logger.info("GC'd %d user log entries", self._cr.rowcount)
 
 
-class Users(models.Model):
+class ResUsers(models.Model):
     """ User class. A res.users record models an OpenERP user and is different
         from an employee.
 
@@ -350,7 +348,7 @@ class Users(models.Model):
         default_user = self.env.ref('base.default_user', raise_if_not_found=False)
         return default_user.sudo().groups_id if default_user else []
 
-    partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True, index=True,
+    partner_id: 'base.Partner' = fields.Many2one(required=True, ondelete='restrict', auto_join=True, index=True,
         string='Related Partner', help='Partner-related data of the user')
     login = fields.Char(required=True, help="Used to log into the system")
     password = fields.Char(
@@ -610,7 +608,7 @@ class Users(models.Model):
         for user in self:
             if not user.active and not user.partner_id.active:
                 user.partner_id.toggle_active()
-        super(Users, self).toggle_active()
+        super().toggle_active()
 
     def onchange(self, values, field_names, fields_spec):
         # Hacky fix to access fields in `SELF_READABLE_FIELDS` in the onchange logic.
@@ -624,7 +622,7 @@ class Users(models.Model):
         if fields and self == self.env.user and all(key in readable or key.startswith('context_') for key in fields):
             # safe fields only, so we read as super-user to bypass access rights
             self = self.sudo()
-        return super(Users, self).read(fields=fields, load=load)
+        return super().read(fields=fields, load=load)
 
     @api.model
     def check_field_access_rights(self, operation, field_names):
@@ -632,7 +630,7 @@ class Users(models.Model):
         if field_names and self == self.env.user and all(key in readable or key.startswith('context_') for key in field_names):
             # safe fields only, so we read as super-user to bypass access rights
             self = self.sudo()
-        return super(Users, self).check_field_access_rights(operation, field_names)
+        return super().check_field_access_rights(operation, field_names)
 
     @api.model
     def _read_group_select(self, aggregate_spec, query):
@@ -662,7 +660,7 @@ class Users(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        users = super(Users, self).create(vals_list)
+        users = super().create(vals_list)
         setting_vals = []
         for user in users:
             if not user.res_users_settings_ids and user._is_internal():
@@ -715,7 +713,7 @@ class Users(models.Model):
             # the new ones to other existing users
             old_groups = self._default_groups()
 
-        res = super(Users, self).write(values)
+        res = super().write(values)
 
         if old_groups:
             # new elements in _default_groups() means new groups for default users
@@ -1377,12 +1375,11 @@ class Users(models.Model):
 # to the implied groups (transitively).
 #
 
-class GroupsImplied(models.Model):
-    _inherit = 'res.groups'
+class ResGroups(ResGroups):
 
-    implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
+    implied_ids: ResGroups = fields.Many2many(relation='res_groups_implied_rel', column1='gid', column2='hid',
         string='Inherits', help='Users of this group automatically inherit those groups')
-    trans_implied_ids = fields.Many2many('res.groups', string='Transitively inherits',
+    trans_implied_ids = fields.Many2many[ResGroups](string='Transitively inherits',
         compute='_compute_trans_implied', recursive=True)
 
     @api.depends('implied_ids.trans_implied_ids')
@@ -1396,7 +1393,7 @@ class GroupsImplied(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         user_ids_list = [vals.pop('users', None) for vals in vals_list]
-        groups = super(GroupsImplied, self).create(vals_list)
+        groups = super().create(vals_list)
         for group, user_ids in zip(groups, user_ids_list):
             if user_ids:
                 # delegate addition of users to add implied groups
@@ -1405,7 +1402,7 @@ class GroupsImplied(models.Model):
         return groups
 
     def write(self, values):
-        res = super(GroupsImplied, self).write(values)
+        res = super().write(values)
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
             for group in self:
@@ -1493,8 +1490,7 @@ class GroupsImplied(models.Model):
         return SetDefinitions(data)
 
 
-class UsersImplied(models.Model):
-    _inherit = 'res.users'
+class UsersImplied(ResUsers):
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1505,13 +1501,13 @@ class UsersImplied(models.Model):
                 gs = user.groups_id._origin
                 gs = gs | gs.trans_implied_ids
                 values['groups_id'] = self._fields['groups_id'].convert_to_write(gs, user)
-        return super(UsersImplied, self).create(vals_list)
+        return super().create(vals_list)
 
     def write(self, values):
         if not values.get('groups_id'):
-            return super(UsersImplied, self).write(values)
+            return super().write(values)
         users_before = self.filtered(lambda u: u._is_internal())
-        res = super(UsersImplied, self).write(values)
+        res = super().write(values)
         demoted_users = users_before.filtered(lambda u: not u._is_internal())
         if demoted_users:
             # demoted users are restricted to the assigned groups only
@@ -1549,8 +1545,7 @@ class UsersImplied(models.Model):
 #       ID is in 'groups_id' and ID is maximal in the set {ID1, ..., IDk}
 #
 
-class GroupsView(models.Model):
-    _inherit = 'res.groups'
+class ResGroups(ResGroups):
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1564,7 +1559,7 @@ class GroupsView(models.Model):
         # determine which values the "user groups view" depends on
         VIEW_DEPS = ('category_id', 'implied_ids')
         view_values0 = [g[name] for name in VIEW_DEPS if name in values for g in self]
-        res = super(GroupsView, self).write(values)
+        res = super().write(values)
         # update the "user groups view" only if necessary
         view_values1 = [g[name] for name in VIEW_DEPS if name in values for g in self]
         if view_values0 != view_values1:
@@ -1574,7 +1569,7 @@ class GroupsView(models.Model):
         return res
 
     def unlink(self):
-        res = super(GroupsView, self).unlink()
+        res = super().unlink()
         self._update_user_groups_view()
         # actions.get_bindings() depends on action records
         self.env.registry.clear_cache()
@@ -1804,7 +1799,7 @@ class UsersView(models.Model):
         new_vals_list = []
         for values in vals_list:
             new_vals_list.append(self._remove_reified_groups(values))
-        users = super(UsersView, self).create(new_vals_list)
+        users = super().create(new_vals_list)
         group_multi_company_id = self.env['ir.model.data']._xmlid_to_res_id(
             'base.group_multi_company', raise_if_not_found=False)
         if group_multi_company_id:
@@ -1817,7 +1812,7 @@ class UsersView(models.Model):
 
     def write(self, values):
         values = self._remove_reified_groups(values)
-        res = super(UsersView, self).write(values)
+        res = super().write(values)
         if 'company_ids' not in values:
             return res
         group_multi_company = self.env.ref('base.group_multi_company', False)
@@ -1918,7 +1913,7 @@ class UsersView(models.Model):
     def default_get(self, fields):
         group_fields, fields = partition(is_reified_group, fields)
         fields1 = (fields + ['groups_id']) if group_fields else fields
-        values = super(UsersView, self).default_get(fields1)
+        values = super().default_get(fields1)
         self._add_reified_groups(group_fields, values)
         return values
 
@@ -1969,7 +1964,7 @@ class UsersView(models.Model):
         else:
             other_fields = fields
 
-        res = super(UsersView, self).read(other_fields, load=load)
+        res = super().read(other_fields, load=load)
 
         # post-process result to add reified group fields
         if group_fields:
@@ -2001,7 +1996,7 @@ class UsersView(models.Model):
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
-        res = super(UsersView, self).fields_get(allfields, attributes=attributes)
+        res = super().fields_get(allfields, attributes=attributes)
         # add reified groups fields
         for app, kind, gs, category_name in self.env['res.groups'].sudo().get_groups_by_application():
             if kind == 'selection':
