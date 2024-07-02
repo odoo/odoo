@@ -27,7 +27,6 @@ class TestWebsiteEventPriceList(TestWebsiteEventSaleCommon):
             'product_uom_qty': 1,
         })
         # set pricelist to 0 - currency: company
-        # TODO LINA with_discount
         self.pricelist.write({
             'currency_id': self.env.company.currency_id.id,
             'item_ids': [(5, 0, 0), (0, 0, {
@@ -36,14 +35,14 @@ class TestWebsiteEventPriceList(TestWebsiteEventSaleCommon):
                 'price_discount': 0,
             })],
             'website_ids': [(6, 0, [self.current_website.id])],
-            'name': 'With Discount Included',
+            'name': 'No discount',
         })
         with MockRequest(self.env, sale_order_id=self.so.id, website=self.current_website):
             self.WebsiteSaleController.pricelist(promo=None)
             self.so._cart_update(line_id=so_line.id, product_id=self.ticket.product_id.id, set_qty=1)
         self.assertEqual(so_line.price_reduce_taxexcl, 100)
 
-        # set pricelist to 10% - without discount
+        # set pricelist to 10% - percentage
         self.pricelist.write({
             'currency_id': self.currency_test.id,
             'item_ids': [(5, 0, 0), (0, 0, {
@@ -52,14 +51,14 @@ class TestWebsiteEventPriceList(TestWebsiteEventSaleCommon):
                 'percent_price': 10,
             })],
             'website_ids': [(6, 0, [self.current_website.id])],
-            'name': 'Without Discount Included',
+            'name': 'Percentage',
         })
         with MockRequest(self.env, sale_order_id=self.so.id, website=self.current_website):
             self.WebsiteSaleController.pricelist(promo=None)
             self.so._cart_update(line_id=so_line.id, product_id=self.ticket.product_id.id, set_qty=1)
         self.assertEqual(so_line.price_reduce_taxexcl, 900, 'Incorrect amount based on the pricelist and its currency.')
 
-        # set pricelist to 10% - with discount
+        # set pricelist to 10% - formula
         self.pricelist.write({
             'item_ids': [(5, 0, 0), (0, 0, {
                 'applied_on': '3_global',
@@ -67,7 +66,7 @@ class TestWebsiteEventPriceList(TestWebsiteEventSaleCommon):
                 'price_discount': 10,
             })],
             'website_ids': [(6, 0, [self.current_website.id])],
-            'name': 'With Discount Included',
+            'name': 'Formula',
         })
         with MockRequest(self.env, sale_order_id=self.so.id, website=self.current_website):
             self.WebsiteSaleController.pricelist(promo=None)

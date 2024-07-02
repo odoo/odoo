@@ -537,7 +537,7 @@ class PricelistItem(models.Model):
         :rtype: float
         """
         pricelist_rule = self
-        show_discount = kwargs.pop('show_discount')
+        show_discount = kwargs.pop('show_discount', False)
         pricelist_show_discount = pricelist_rule._is_percentage() or show_discount
         if pricelist_rule and pricelist_show_discount:
             pricelist_item = pricelist_rule
@@ -555,7 +555,7 @@ class PricelistItem(models.Model):
         return pricelist_rule._compute_base_price(*args, **kwargs)
 
     def _is_percentage(self):
-        self.ensure_one()
+        self and self.ensure_one()
         return self.compute_price == 'percentage' or (
             self.compute_price == 'formula'
             and self.price_discount

@@ -619,7 +619,7 @@ class SaleOrderLine(models.Model):
 
             if not (
                 line.order_id.pricelist_id
-                and line.pricelist_item_id.compute_price == 'percentage'
+                and line.pricelist_item_id._is_percentage()
             ):
                 continue
 
