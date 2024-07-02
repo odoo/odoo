@@ -13,4 +13,38 @@
         </xpath>
     </template>
 
+<template id="project_update_default_description" inherit_id="project.project_update_default_description">
+<!-- As this template is rendered in an html field, the spaces may be interpreted as nbsp while editing. -->
+<xpath expr="//div[@name='activities']" position="after">
+<div t-if="show_sold" class="mt-4">
+<br/>
+<h3 style="font-weight: bolder"><u>Sales</u></h3>
+<table class="table table-striped">
+<thead class="border-2 border-start-0 border-end-0">
+<tr>
+<td class="w-50" style="font-weight: bolder">Sales Order Items</td>
+<td style="font-weight: bolder; text-align: right;">Sold</td>
+<td style="font-weight: bolder; text-align: right;">Delivered</td>
+<td style="font-weight: bolder; text-align: right;">Invoiced</td>
+</tr>
+</thead>
+<tbody>
+<tr t-foreach="services['data']" t-as="service">
+<td t-attf-class="#{ 'fst-italic' if service['is_unit'] else ''}"><t t-out="service['name']"/></td>
+<td t-attf-class="#{ 'fst-italic' if service['is_unit'] else ''}" style="text-align: right; vertical-align: middle;">
+<t t-out="service['sold_value']"/> <t t-out="service['unit']"/>
+</td>
+<td t-attf-class="#{ 'fst-italic' if service['is_unit'] else ''}" style="text-align: right; vertical-align: middle;">
+<t t-out="service['effective_value']"/> <t t-out="service['unit']"/>
+</td>
+<td t-attf-class="#{ 'fst-italic' if service['is_unit'] else ''}" style="text-align: right; vertical-align: middle;">
+<t t-out="service['invoiced_value']"/> <t t-out="service['unit']"/>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</xpath>
+</template>
+
 </odoo>
