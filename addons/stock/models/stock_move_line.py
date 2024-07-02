@@ -477,6 +477,11 @@ class StockMoveLine(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done_or_cancel(self):
         for ml in self:
+            rounding = ml.product_uom_id.rounding
+            # it's ok to delete move lines with 0 qty_done and 0 quantity reserved
+            if float_is_zero(ml.product_uom_qty, precision_rounding=rounding) and float_is_zero(ml.qty_done, precision_rounding=rounding):
+                continue
+
             if ml.state in ('done', 'cancel'):
                 raise UserError(_('You can not delete product moves if the picking is done. You can only correct the done quantities.'))
 

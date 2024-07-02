@@ -777,12 +777,14 @@ class MrpProduction(models.Model):
                 if production in production_to_replan:
                     production._plan_workorders(replan=True)
             if production.state == 'done' and ('lot_producing_id' in vals or 'qty_producing' in vals):
-                finished_move_lines = production.move_finished_ids.filtered(
-                    lambda move: move.product_id == production.product_id and move.state == 'done').mapped('move_line_ids')
-                if 'lot_producing_id' in vals:
-                    finished_move_lines.write({'lot_id': vals.get('lot_producing_id')})
+                finished_move = production.move_finished_ids.filtered(
+                    lambda move: move.product_id == production.product_id and move.state == 'done')
                 if 'qty_producing' in vals:
-                    finished_move_lines.write({'qty_done': vals.get('qty_producing')})
+                    finished_move.write({'quantity_done': vals.get('qty_producing')})
+                    # If a new line is created, make sure we add the lot on it.
+                    vals.setdefault('lot_producing_id', self.lot_producing_id.id)
+                if 'lot_producing_id' in vals:
+                    finished_move.move_line_ids.write({'lot_id': vals.get('lot_producing_id')})
             elif production.state not in ['draft', 'done', 'cancel'] and 'lot_producing_id' in vals:
                 production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id).move_line_ids.write({'lot_id': production.lot_producing_id.id})
 
