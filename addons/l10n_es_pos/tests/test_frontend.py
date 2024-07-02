@@ -37,3 +37,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         num_of_regular_invoices = get_number_of_regular_invoices() - initial_number_of_regular_invoices
         self.assertEqual(num_of_simp_invoices, 3)
         self.assertEqual(num_of_regular_invoices, 1)
+
+    def test_unlink_simplified_partner(self):
+        """automatically create a simplified partner when user deletes it"""
+        simplified_partner = self.env.ref("l10n_es.partner_simplified", raise_if_not_found=False)
+        if simplified_partner:
+            simplified_partner.unlink()
+        self.assertFalse(self.env.ref("l10n_es.partner_simplified", raise_if_not_found=False))
+        self.assertTrue(self.main_pos_config.simplified_partner_id)
+        self.assertTrue(self.env.ref("l10n_es.partner_simplified", raise_if_not_found=False))
