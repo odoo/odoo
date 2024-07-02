@@ -16,8 +16,8 @@ export class SearchPowerboxPlugin extends Plugin {
             categoryName: this.categories.find((category) => category.id === command.category).name,
         }));
 
-        this.addDomListener(this.editable, "keydown", (ev) => {
-            if (ev.key === "/") {
+        this.addDomListener(this.editable, "beforeinput", (ev) => {
+            if (ev.data === "/") {
                 this.historySavePointRestore = this.shared.makeSavePoint();
             }
         });
