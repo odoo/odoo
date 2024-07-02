@@ -71,19 +71,19 @@ const FIELD_COLUMN_WIDTHS = {
  *
  * @params {Element} table
  * @params {Object} state
+ * @params {Number} allowedWidth
+ * @params {Number[]} startingWidths
  * @returns {Number[]}
  */
-function computeWidths(table, state) {
+function computeWidths(table, state, allowedWidth, startingWidths) {
     let _columnWidths;
     const headers = [...table.querySelectorAll("thead th")];
     const columns = state.columns;
 
-    const { paddingLeft, paddingRight } = getComputedStyle(table.parentNode);
-    const padding = parseFloat(paddingLeft) + parseFloat(paddingRight);
-    const allowedWidth = table.parentNode.clientWidth - padding;
-
-    // Starting point: compute widths (2 cases: with or without data)
-    if (state.isEmpty) {
+    // Starting point: compute widths
+    if (startingWidths) {
+        _columnWidths = startingWidths.slice();
+    } else if (state.isEmpty) {
         // Table is empty => uniform distribution as starting point
         _columnWidths = headers.map(() => allowedWidth / headers.length);
     } else {
@@ -241,6 +241,7 @@ function getWidthSpecs(columns) {
 export function useMagicColumnWidths(tableRef, getState) {
     const renderer = useComponent();
     let columnWidths = null;
+    let allowedWidth = 0;
     let hash;
     let _resizing = false;
 
@@ -266,8 +267,17 @@ export function useMagicColumnWidths(tableRef, getState) {
             resetWidths();
         }
 
-        if (!columnWidths) {
-            columnWidths = computeWidths(table, state);
+        // When a vertical scrollbar appears/disappears, it may (depending on the browser/os) change
+        // the available width. When it does, we want to keep the current widths, but tweak them a
+        // little bit s.t. the table fits in the new available space.
+        const { paddingLeft, paddingRight } = getComputedStyle(table.parentNode);
+        const padding = parseFloat(paddingLeft) + parseFloat(paddingRight);
+        const nextAllowedWidth = table.parentNode.clientWidth - padding;
+        const allowedWidthDiff = Math.abs(allowedWidth - nextAllowedWidth);
+        allowedWidth = nextAllowedWidth;
+
+        if (!columnWidths || allowedWidthDiff > 0) {
+            columnWidths = computeWidths(table, state, allowedWidth, columnWidths);
         }
 
         // Set the computed widths in the DOM.
