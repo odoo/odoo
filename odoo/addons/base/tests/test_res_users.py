@@ -334,6 +334,13 @@ class TestUsers2(TransactionCase):
         with self.assertRaises(ValueError):
             User.read_group([], fnames + [reified_fname], [reified_fname])
 
+    def test_get_email_domain(self):
+        """ Check that _get_email_domain escapes wildcards """
+        User = self.env['res.users']
+        self.assertIn(('email', '=ilike', '\\\\bobs@example.com'), User._get_email_domain('\\bobs@example.com'), "backslashes should be escaped")
+        self.assertIn(('email', '=ilike', '\\%your@example.com'), User._get_email_domain('%your@example.com'), "percents should be escaped")
+        self.assertIn(('email', '=ilike', '\\_uncle@example.com'), User._get_email_domain('_uncle@example.com'), "underscores should be escaped")
+
     def test_reified_groups_on_change(self):
         """Test that a change on a reified fields trigger the onchange of groups_id."""
         group_public = self.env.ref('base.group_public')
