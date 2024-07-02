@@ -2976,7 +2976,7 @@ class BaseModel(metaclass=MetaModel):
         SQL query.
         """
         # sanity checks - should never fail
-        assert operator in (expression.TERM_OPERATORS + ('inselect', 'not inselect')), \
+        assert operator in expression.TERM_OPERATORS, \
             f"Invalid operator {operator!r} in domain term {(fname, operator, value)!r}"
         assert fname in self._fields, \
             f"Invalid field {fname!r} in domain term {(fname, operator, value)!r}"
@@ -2993,18 +2993,6 @@ class BaseModel(metaclass=MetaModel):
 
         sql_field = self._field_to_sql(alias, fname, query)
 
-        if operator == 'inselect':
-            if not isinstance(value, SQL):
-                subquery, subparams = value
-                value = SQL(subquery, *subparams)
-            return SQL("(%s IN (%s))", sql_field, value)
-
-        if operator == 'not inselect':
-            if not isinstance(value, SQL):
-                subquery, subparams = value
-                value = SQL(subquery, *subparams)
-            return SQL("(%s NOT IN (%s))", sql_field, value)
-
         field = self._fields[fname]
         sql_operator = expression.SQL_OPERATORS[operator]
 
@@ -3019,6 +3007,13 @@ class BaseModel(metaclass=MetaModel):
                     return SQL("(%s IS NULL)", sql_field)
 
             elif isinstance(value, SQL):
+                sql_code = value.code
+                if not (sql_code.startswith('(') and sql_code.endswith(')')):
+                    # We need to add parentheses around the query provided by the caller.
+                    # In the future, we will also minimize the number of queries.
+                    # However, we should not add them if they are already added,
+                    # because the function can be called with a list of ids (from `Query.subselect(...)`).
+                    value = SQL("(%s)", value)
                 return SQL("(%s %s %s)", sql_field, sql_operator, value)
 
             elif isinstance(value, Query):

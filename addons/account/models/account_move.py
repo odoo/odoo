@@ -848,9 +848,9 @@ class AccountMove(models.Model):
             move.made_sequence_hole = move.id in made_sequence_hole
 
     def _search_made_sequence_hole(self, operator, value):
-        query, params = self._get_query_made_hole()
-        operator = 'inselect' if (operator == '=') ^ (value is False) else 'not inselect'
-        return [('id', operator, (query, params))]
+        sql = self._get_query_made_hole()
+        operator = 'in' if (operator == '=') ^ (value is False) else 'not in'
+        return [('id', operator, sql)]
 
     @api.depends('move_type')
     def _compute_type_name(self):
