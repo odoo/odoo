@@ -51,6 +51,7 @@ export class MassMailingHtmlField extends HtmlField {
                 this.commitChanges();
                 this.wysiwyg.odooEditor.toolbarHide();
             },
+            waitForSnippets: true,
             ...this.props.wysiwygOptions,
         };
     }
@@ -441,6 +442,7 @@ export class MassMailingHtmlField extends HtmlField {
         if (this.env.mailingFilterTemplates && this.wysiwyg) {
             this._hideIrrelevantTemplates();
         }
+        this.wysiwyg.setReadyForEdition();
     }
     _getCodeViewEl() {
         const codeView = this.wysiwyg &&

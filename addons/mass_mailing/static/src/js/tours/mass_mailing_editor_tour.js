@@ -185,6 +185,11 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
             run: () => null,
         },
         {
+            content: "Wait for the editor to be ready for edit",
+            trigger: 'iframe .odoo-editor-editable[contenteditable]',
+            run: () => null,
+        },
+        {
             content: "Select content",
             trigger: 'iframe p:contains(content)',
             run() {
