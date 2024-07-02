@@ -45,6 +45,7 @@ QUnit.test('mark as read', async function (assert) {
 
     this.data['mail.message'].records.push({
         id: 21,
+        body: "Test",
         model: 'res.partner',
         needaction: true,
         needaction_partner_ids: [this.data.currentPartnerId],
@@ -107,6 +108,7 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
 
     this.data['mail.message'].records.push({
         id: 21,
+        body: "Test",
         model: 'res.partner',
         needaction: true,
         needaction_partner_ids: [this.data.currentPartnerId],
@@ -188,6 +190,7 @@ QUnit.test('click on expand from chat window should close the chat window and op
     });
     this.data['mail.message'].records.push({
         id: 21,
+        body: "Test",
         model: 'res.partner',
         needaction: true,
         needaction_partner_ids: [this.data.currentPartnerId],
@@ -252,6 +255,7 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
 
     this.data['mail.message'].records.push({
         id: 21,
+        body: "Test",
         model: 'res.partner',
         needaction: true,
         needaction_partner_ids: [this.data.currentPartnerId],
