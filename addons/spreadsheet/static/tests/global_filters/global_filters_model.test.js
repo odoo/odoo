@@ -2007,14 +2007,16 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
     expect(dateFilters2).toEqual([{ filterId: "43", value: { yearOffset: -6 } }]);
 });
 
-test("getFiltersMatchingPivot works with date=false", async function () {
+test("getFiltersMatchingPivot works with multiple inputs", async function () {
+    mockDate("2022-06-14 00:00:00");
+
     const { model } = await createSpreadsheetWithPivot({
         arch: /*xml*/ `
-                <pivot>
-                    <field name="product_id" type="row"/>
-                    <field name="probability" type="measure"/>
-                    <field name="date" interval="month" type="col"/>
-                </pivot>`,
+            <pivot>
+                <field name="product_id" type="row"/>
+                <field name="probability" type="measure"/>
+                <field name="date" interval="month" type="col"/>
+            </pivot>`,
     });
 
     await addGlobalFilter(
@@ -2024,7 +2026,6 @@ test("getFiltersMatchingPivot works with date=false", async function () {
             type: "date",
             label: "date filter 1",
             rangeType: "fixedPeriod",
-            defaultValue: "this_month",
         },
         {
             pivot: { "PIVOT#1": { chain: "date", type: "date" } },
@@ -2032,6 +2033,31 @@ test("getFiltersMatchingPivot works with date=false", async function () {
     );
     const dateFilters1 = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"date:month","false")');
     expect(dateFilters1).toEqual([{ filterId: "43", value: undefined }]);
+
+    const matchingYearForMonthGranularity = getFiltersMatchingPivot(
+        model,
+        '=PIVOT.HEADER(1,"date:month",2024)'
+    );
+    expect(matchingYearForMonthGranularity).toEqual([
+        { filterId: "43", value: { period: undefined, yearOffset: 2 } },
+    ]);
+
+    const matchingYearForQuarterGranularity = getFiltersMatchingPivot(
+        model,
+        '=PIVOT.HEADER(1,"date:month","Q2/2024")'
+    );
+    expect(matchingYearForQuarterGranularity).toEqual([
+        { filterId: "43", value: { period: undefined, yearOffset: 2 } },
+    ]);
+
+    const errorStrings = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"date:month","/2024")');
+    expect(errorStrings).toEqual([{ filterId: "43", value: { period: undefined, yearOffset: 2 } }]);
+
+    const emptyString = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"date:month","")');
+    expect(emptyString).toEqual([{ filterId: "43", value: undefined }]);
+
+    const booleanValue = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"date:month",true)');
+    expect(booleanValue).toEqual([{ filterId: "43", value: undefined }]);
 });
 
 test("getFiltersMatchingPivot return an empty array if there is no pivot formula", async function () {
