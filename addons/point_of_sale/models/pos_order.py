@@ -1314,6 +1314,64 @@ class PosOrderLine(models.Model):
         for line in self:
             line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids)
 
+<<<<<<< HEAD
+||||||| parent of b691661588b1 (temp)
+    def _export_for_ui(self, orderline):
+        return {
+            'id': orderline.id,
+            'qty': orderline.qty,
+            'attribute_value_ids': orderline.attribute_value_ids.ids,
+            'custom_attribute_value_ids': orderline.custom_attribute_value_ids.read(['id', 'name', 'custom_product_template_attribute_value_id', 'custom_value'], load=False),
+            'price_unit': orderline.price_unit,
+            'skip_change': orderline.skip_change,
+            'uuid': orderline.uuid,
+            'price_subtotal': orderline.price_subtotal,
+            'price_subtotal_incl': orderline.price_subtotal_incl,
+            'product_id': orderline.product_id.id,
+            'discount': orderline.discount,
+            'tax_ids': [[6, False, orderline.tax_ids.mapped(lambda tax: tax.id)]],
+            'pack_lot_ids': [[0, 0, lot] for lot in orderline.pack_lot_ids.export_for_ui()],
+            'customer_note': orderline.customer_note,
+            'refunded_qty': orderline.refunded_qty,
+            'price_extra': orderline.price_extra,
+            'full_product_name': orderline.full_product_name,
+            'refunded_orderline_id': orderline.refunded_orderline_id.id,
+            'combo_parent_id': orderline.combo_parent_id.id,
+            'combo_line_ids': orderline.combo_line_ids.mapped('id'),
+        }
+
+    def export_for_ui(self):
+        return self.mapped(self._export_for_ui) if self else []
+
+=======
+    def _export_for_ui(self, orderline):
+        return {
+            'id': orderline.id,
+            'qty': orderline.qty,
+            'attribute_value_ids': orderline.attribute_value_ids.filtered(lambda av: av.ptav_active).ids,
+            'custom_attribute_value_ids': orderline.custom_attribute_value_ids.read(['id', 'name', 'custom_product_template_attribute_value_id', 'custom_value'], load=False),
+            'price_unit': orderline.price_unit,
+            'skip_change': orderline.skip_change,
+            'uuid': orderline.uuid,
+            'price_subtotal': orderline.price_subtotal,
+            'price_subtotal_incl': orderline.price_subtotal_incl,
+            'product_id': orderline.product_id.id,
+            'discount': orderline.discount,
+            'tax_ids': [[6, False, orderline.tax_ids.mapped(lambda tax: tax.id)]],
+            'pack_lot_ids': [[0, 0, lot] for lot in orderline.pack_lot_ids.export_for_ui()],
+            'customer_note': orderline.customer_note,
+            'refunded_qty': orderline.refunded_qty,
+            'price_extra': orderline.price_extra,
+            'full_product_name': orderline.full_product_name,
+            'refunded_orderline_id': orderline.refunded_orderline_id.id,
+            'combo_parent_id': orderline.combo_parent_id.id,
+            'combo_line_ids': orderline.combo_line_ids.mapped('id'),
+        }
+
+    def export_for_ui(self):
+        return self.mapped(self._export_for_ui) if self else []
+
+>>>>>>> b691661588b1 (temp)
     def _get_procurement_group(self):
         return self.order_id.procurement_group_id
 
