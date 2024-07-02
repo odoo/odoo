@@ -1,29 +1,23 @@
 /** @odoo-module **/
 
-import options from '@web_editor/js/editor/snippets.options.legacy';
 import { _t } from "@web/core/l10n/translation";
+import { SnippetOption } from "@web_editor/js/editor/snippets.options";
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
 
-options.registry.AddToCart = options.Class.extend({
-    events: Object.assign({}, options.Class.prototype.events || {}, {
-        'click .reset-variant-picker': '_onClickResetVariantPicker',
-        'click .reset-product-picker': '_onClickResetProductPicker',
-    }),
+export class AddToCart extends SnippetOption {
+    constructor() {
+        super(...arguments);
+        this.orm = this.env.services.orm;
+    }
+    /**
+     * @override
+     */
+    async willStart() {
+        await super.willStart(...arguments);
+        this._updateVariantDomain();
+    }
 
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-    },
-
-    async updateUI() {
-        if (this.rerender) {
-            this.rerender = false;
-            await this._rerenderXML();
-            return;
-        }
-        return this._super.apply(this, arguments);
-    },
-
-    _setButtonDisabled: function (isDisabled) {
+    _setButtonDisabled(isDisabled) {
         const buttonEl = this._buttonEl();
 
         if (isDisabled) {
@@ -31,7 +25,11 @@ options.registry.AddToCart = options.Class.extend({
         } else {
             buttonEl.classList.remove('disabled');
         }
-    },
+    }
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
 
     async setProductTemplate(previewMode, widgetValue, params) {
         this.$target[0].dataset.productTemplate = widgetValue;
@@ -40,37 +38,40 @@ options.registry.AddToCart = options.Class.extend({
         this._setButtonDisabled(false);
 
         await this._fetchVariants(widgetValue);
-        this.rerender = true;
         this._updateButton();
 
-    },
+    }
 
     setProductVariant(previewMode, widgetValue, params) {
         this.$target[0].dataset.productVariant = widgetValue;
         this._updateButton();
-    },
+    }
 
     setAction(previewMode, widgetValue, params) {
         this.$target[0].dataset.action = widgetValue;
         this._updateButton();
-    },
+    }
+    /**
+     * @see this.selectClass for parameters
+     */
+    resetProductPicker(previewMode, widgetValue, params) {
+       this._resetProductChoice();
+       this._resetVariantChoice();
+       this._resetAction();
+       this._updateButton();
+    }
+    /**
+     * @see this.selectClass for parameters
+     */
+    resetVariantPicker(previewMode, widgetValue, params) {
+        this._resetVariantChoice();
+        this._resetAction();
+        this._updateButton();
+    }
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
-    _onClickResetVariantPicker() {
-        this._resetVariantChoice();
-        this._resetAction();
-        this._updateButton();
-    },
-
-    _onClickResetProductPicker() {
-        this._resetProductChoice();
-        this._resetVariantChoice();
-        this._resetAction();
-        this._updateButton();
-    },
 
     /**
      * Fetches the variants ids from the server
@@ -80,29 +81,29 @@ options.registry.AddToCart = options.Class.extend({
             "product.product", [["product_tmpl_id", "=", parseInt(productTemplateId)]], ["id"]
         );
         this.$target[0].dataset.variants = response.map(variant => variant.id);
-    },
+    }
 
 
     _resetProductChoice() {
         this.$target[0].dataset.productTemplate = '';
         this._buttonEl().classList.add('disabled');
-    },
-
+    }
 
     _resetVariantChoice() {
         this.$target[0].dataset.productVariant = '';
-    },
+        this._updateVariantDomain();
+    }
 
-    _resetAction: function () {
+    _resetAction() {
         this.$target[0].dataset.action = "add_to_cart";
-    },
+    }
 
     /**
      * Returns an array of variant ids from the dom
      */
     _variantIds() {
         return this.$target[0].dataset.variants.split(',').map(stringId => parseInt(stringId));
-    },
+    }
 
     _buttonEl() {
         const buttonEl = this.$target[0].querySelector('.s_add_to_cart_btn');
@@ -111,14 +112,14 @@ options.registry.AddToCart = options.Class.extend({
             return this._buildButtonEl();
         }
         return buttonEl;
-    },
+    }
 
     _buildButtonEl() {
         const buttonEl = document.createElement('button');
         buttonEl.classList.add("s_add_to_cart_btn", "btn", "btn-secondary", "mb-2");
         this.$target[0].append(buttonEl);
         return buttonEl;
-    },
+    }
 
     /**
      * Updates the button's html
@@ -134,7 +135,7 @@ options.registry.AddToCart = options.Class.extend({
             variantIds.length > 1 ? this.$target[0].dataset.productVariant : variantIds[0];
         buttonEl.dataset.action = this.$target[0].dataset.action;
         this._updateButtonContent();
-    },
+    }
 
     _updateButtonContent() {
         let iconEl = document.createElement('i');
@@ -147,18 +148,19 @@ options.registry.AddToCart = options.Class.extend({
         iconEl.classList = buttonContentElement.classList;
 
         this._buttonEl().replaceChildren(iconEl, buttonContentElement.text);
-    },
-
+    }
     /**
-     * Called when the template is chosen and that we want to update the m2o variant widget with the right variants.
+     * @private
      */
-    async _renderCustomXML(uiFragment) {
+    _updateVariantDomain() {
         if (this.$target[0].dataset.productTemplate) {
-            // That means that a template was selected and we want to update the content of the variant picker based on the template id
-            const productVariantPickerEl = uiFragment.querySelector('we-many2one[data-name="product_variant_picker_opt"]');
-            productVariantPickerEl.dataset.domain = `[["product_tmpl_id", "=", ${this.$target[0].dataset.productTemplate}]]`;
+            // That means that a template was selected and we want to update the
+            // content of the variant picker based on the template id.
+            this.renderContext.variantDomain = `[["product_tmpl_id", "=", ${this.$target[0].dataset.productTemplate}]]`;
+        } else {
+            this.renderContext.variantDomain = "[]";
         }
-    },
+    }
 
     /**
      * @override
@@ -175,8 +177,8 @@ options.registry.AddToCart = options.Class.extend({
                 return this.$target[0].dataset.action;
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
 
     /**
      * @override
@@ -203,9 +205,11 @@ options.registry.AddToCart = options.Class.extend({
                 return false;
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
+}
+registerWebsiteOption("AddToCart", {
+    Class: AddToCart,
+    template: "website_sale.s_add_to_cart_options",
+    selector: ".s_add_to_cart",
 });
-export default {
-    AddToCart: options.registry.AddToCart,
-};

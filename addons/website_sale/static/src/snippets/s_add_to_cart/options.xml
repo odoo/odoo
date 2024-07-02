@@ -1,0 +1,31 @@
+<templates id="template" xml:space="preserve">
+<t t-name="website_sale.s_add_to_cart_options">
+    <WeRow title.translate="Product">
+        <WeMany2one model="'product.template'"
+                    setProductTemplate="''"
+                    name="'product_template_picker_opt'"
+                    noPreview="'true'"
+                    domain='`[["is_published", "=", true], ["sale_ok", "=", true]]`'/>
+        <WeButton name="'product_template_reset_opt'"
+                  class="'reset-product-picker align-self-end fa fa-fw fa-times'"
+                  resetProductPicker="''"/>
+    </WeRow>
+    <WeRow title.translate="Variant">
+        <t t-set="defaultMessage">Visitor's Choice</t>
+        <WeMany2one class="'o_we_sublevel_1'"
+                    model="'product.product'"
+                    setProductVariant="''"
+                    name="'product_variant_picker_opt'"
+                    noPreview="'true'"
+                    defaultMessage="defaultMessage"
+                    domain="renderContext.variantDomain"/>
+        <WeButton name="'product_variant_reset_opt'"
+                  class="'reset-variant-picker align-self-end fa fa-fw fa-times'"
+                  resetVariantPicker="''"/>
+    </WeRow>
+    <WeSelect title.translate="Action" name="'action_picker_opt'" noPreview="'true'">
+        <WeButton setAction="'add_to_cart'">Add to Cart</WeButton>
+        <WeButton setAction="'buy_now'">Buy Now</WeButton>
+    </WeSelect>
+</t>
+</templates>
