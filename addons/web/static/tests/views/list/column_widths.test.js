@@ -9,6 +9,7 @@ import {
     models,
     mountView,
     pagerNext,
+    removeFacet,
     serverState,
     toggleMenuItem,
     toggleSearchBarMenu,
@@ -922,7 +923,7 @@ test(`freeze widths: toggle a filter`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree limit="2">
+            <tree>
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="text"/>
@@ -930,7 +931,7 @@ test(`freeze widths: toggle a filter`, async () => {
         `,
         searchViewArch: `
             <search>
-                <filter string="My Filter" name="my_filter" domain="[['id', '>', '2']]"/>
+                <filter string="My Filter" name="my_filter" domain="[['id', '>', 2]]"/>
             </search>
         `,
         limit: 2,
@@ -940,6 +941,41 @@ test(`freeze widths: toggle a filter`, async () => {
     await toggleSearchBarMenu();
     await toggleMenuItem("My Filter");
     expect(getColumnWidths()).toEqual(initialWidths);
+});
+
+test(`freeze widths: toggle a filter, vertical scrollbar appears`, async () => {
+    resize({ height: 500 });
+
+    for (let i = 10; i < 20; i++) {
+        Foo._records.push({ id: i, bar: true, foo: `Foo ${i}` });
+    }
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree>
+                <field name="bar"/>
+                <field name="foo"/>
+            </tree>
+        `,
+        searchViewArch: `
+            <search>
+                <filter string="My Filter" name="my_filter" domain="[['id', '>', 16]]"/>
+            </search>
+        `,
+        context: {
+            search_default_my_filter: true,
+        },
+    });
+
+    expect(".o_data_row").toHaveCount(3);
+    const renderer = queryOne(".o_list_renderer");
+    expect(renderer.scrollHeight).toBe(renderer.clientHeight);
+
+    await removeFacet("My Filter");
+    expect(".o_data_row").toHaveCount(14);
+    expect(renderer.scrollHeight).toBeGreaterThan(renderer.clientHeight); // there must be a vertical scrollbar
+    expect(renderer.scrollWidth).toBe(renderer.clientWidth); // there must be no horizontal scrollbar
 });
 
 test(`freeze widths: add a record in empty list with handle widget`, async () => {
