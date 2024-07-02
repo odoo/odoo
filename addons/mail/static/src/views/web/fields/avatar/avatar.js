@@ -5,17 +5,21 @@ import { Component } from "@odoo/owl";
 export class Avatar extends Component {
     static template = "mail.Avatar";
     static props = {
-        resModel: { type: String },
-        resId: { type: Number },
-        displayName: { type: String },
+        resModel: { type: String, optional: true },
+        resId: { type: Number, optional: true },
+        displayName: { type: String, optional: true },
         noSpacing: { type: Boolean, optional: true },
     };
 
     setup() {
-        this.openChat = useOpenChat(this.props.resModel);
+        if (this.props.resModel === "res.users") {
+            this.openChat = useOpenChat(this.props.resModel);
+        }
     }
 
     onClickAvatar() {
-        this.openChat(this.props.resId);
+        if (this.props.resModel === "res.users") {
+            this.openChat(this.props.resId);
+        }
     }
 }
