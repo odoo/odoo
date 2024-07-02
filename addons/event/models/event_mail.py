@@ -303,7 +303,8 @@ class EventMailRegistration(models.Model):
             }
             if not reg_mail.scheduler_id.template_ref.email_from:
                 email_values['email_from'] = author.email_formatted
-            reg_mail.scheduler_id.template_ref.send_mail(reg_mail.registration_id.id, email_values=email_values)
+            template = reg_mail.scheduler_id.template_ref.with_context(tpl_partners_only=True)
+            template.send_mail(reg_mail.registration_id.id, email_values=email_values)
         todo.write({'mail_sent': True})
 
     @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
