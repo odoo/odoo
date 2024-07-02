@@ -32,6 +32,7 @@ class ResConfigSettings(models.TransientModel):
     module_stock_sms = fields.Boolean("SMS Confirmation")
     module_delivery = fields.Boolean("Delivery Methods")
     module_delivery_dhl = fields.Boolean("DHL Express Connector")
+    module_delivery_dhl_rest = fields.Boolean("DHL Express REST Connector", compute='_compute_module_delivery_dhl_rest', store=True)
     module_delivery_fedex = fields.Boolean("FedEx Connector")
     module_delivery_ups = fields.Boolean("UPS Connector")
     module_delivery_usps = fields.Boolean("USPS Connector")
@@ -47,6 +48,11 @@ class ResConfigSettings(models.TransientModel):
     annual_inventory_day = fields.Integer(related='company_id.annual_inventory_day', readonly=False)
     group_stock_reception_report = fields.Boolean("Reception Report", implied_group='stock.group_reception_report')
     group_stock_auto_reception_report = fields.Boolean("Show Reception Report at Validation", implied_group='stock.group_auto_reception_report')
+
+    @api.depends('module_delivery_dhl')
+    def _compute_module_delivery_dhl_rest(self):
+        for config in self:
+            config.module_delivery_dhl_rest = config.module_delivery_dhl
 
     @api.onchange('group_stock_multi_locations')
     def _onchange_group_stock_multi_locations(self):
