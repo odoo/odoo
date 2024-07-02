@@ -2775,6 +2775,9 @@ class WeList extends UserValueComponent {
         if (this.props.newElementsNotToggleable === "true") {
             recordData.notToggleable = true;
         }
+        if (this.props.newRecordId) {
+            recordData.id = this.props.newRecordId;
+        }
         this.state._updateListRecords(recordData);
         this._notifyCurrentState();
         this.scrollToLast = true;
