@@ -5,32 +5,14 @@ import base64
 
 from odoo import Command
 from odoo.tests import tagged
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.l10n_ph.tests.common import TestPhCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestBIR2307Generation(AccountTestInvoicingCommon):
+class TestBIR2307Generation(TestPhCommon):
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('ph')
     def setUpClass(cls):
         super().setUpClass()
-
-        cls.company_data['company'].write({
-            'name': 'Test Company',
-            'street': '8 Super Street',
-            'city': 'Super City',
-            'zip': '8888',
-            'country_id': cls.env.ref('base.ph').id,
-            'vat': '123-456-789-123',
-        })
-        cls.partner_a.write({
-            'name': 'Test Partner',
-            'street': '9 Super Street',
-            'city': 'Super City',
-            'zip': '8888',
-            'country_id': cls.env.ref('base.ph').id,
-            'vat': '789-456-123-789',
-        })
 
         # 1% Withholding Tax
         vat_purchase_wc640 = cls.env.ref(f'account.{cls.company_data["company"].id}_l10n_ph_tax_purchase_wc640')
@@ -57,22 +39,20 @@ class TestBIR2307Generation(AccountTestInvoicingCommon):
         wizard = self.env['l10n_ph_2307.wizard'].with_context(context).create({})
         wizard.action_generate()
 
-        bir_2307 = base64.b64decode(wizard.generate_xls_file)
+        bir_2307 = base64.b64decode(wizard.xls_file)
 
         # 2: Build the expected values
-        expected_row_values = {
+        expected_values = {
             # Header
             0: ['Reporting_Month', 'Vendor_TIN', 'branchCode', 'companyName', 'surName', 'firstName', 'middleName', 'address', 'nature', 'ATC', 'income_payment', 'ewt_rate', 'tax_amount'],
             # Row
-            1: ['01/15/2020', '789456123', '789', 'Test Partner', '', '', '', '9 Super Street, Super City, Philippines', 'Test line', 'WC640', 100.0, -1.0, -1.0],
+            1: ['01/15/2020', '789456123', '789', 'Test Partner', '', '', '', '9 Super Street, Super City, Philippines', 'Test line', 'WC640', 100.0, 1.0, 1.0],
         }
 
-        # 3. Test the file
         report_file = io.BytesIO(bir_2307)
         xls = xlrd.open_workbook(file_contents=report_file.read())
         sheet = xls.sheet_by_index(0)
-
-        for row, values in expected_row_values.items():
+        for row, values in expected_values.items():
             row_values = sheet.row_values(row)
             for row_value, expected_value in zip(row_values, values):
                 self.assertEqual(row_value, expected_value)
