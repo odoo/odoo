@@ -23,6 +23,9 @@ def migrate(cr, version):
     services_taxes = env['account.tax'].browse(_get_tax_ids_for_xml_id(cr, 'btw_X0_diensten'))
 
     old_tax_tags = env['account.account.tag']._get_tax_tags('3bl (omzet)', 'nl')
+    if not old_tax_tags:
+        return
+
     goods_tax_tags = env['account.account.tag']._get_tax_tags('3bg (omzet)', 'nl')
     services_tax_tags = env['account.account.tag']._get_tax_tags('3bs (omzet)', 'nl')
 
