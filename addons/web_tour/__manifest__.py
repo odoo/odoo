@@ -26,7 +26,7 @@ Odoo Web tours.
             'web_tour/static/src/tour_service/**/*',
             'web/static/lib/hoot-dom/**/*',
         ],
-        'web.qunit_suite_tests': [
+        'web.assets_unit_tests': [
             'web_tour/static/tests/**/*',
         ],
     },
