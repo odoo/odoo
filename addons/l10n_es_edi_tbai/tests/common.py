@@ -2,18 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-from datetime import datetime
+from datetime import date, datetime
 
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import misc
 from pytz import timezone
 
 
-class TestEsEdiTbaiCommon(AccountEdiTestCommon):
+class TestEsEdiTbaiCommon(AccountTestInvoicingCommon):
 
     @classmethod
-    @AccountEdiTestCommon.setup_edi_format('l10n_es_edi_tbai.edi_es_tbai')
-    @AccountEdiTestCommon.setup_country('es')
+    @AccountTestInvoicingCommon.setup_country('es')
     def setUpClass(cls):
         super().setUpClass()
 
@@ -99,6 +98,51 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                 **line_vals,
             }) for line_vals in kwargs.get('invoice_line_ids', [])],
         })
+
+    @classmethod
+    def _create_posted_invoice(cls):
+        out_invoice = cls.env['account.move'].create({
+                'move_type': 'out_invoice',
+                'invoice_date': date(2022, 1, 1),
+                'partner_id': cls.partner_a.id,
+                'invoice_line_ids': [(0, 0, {
+                    'product_id': cls.product_a.id,
+                    'price_unit': 1000.0,
+                    'quantity': 5,
+                    'discount': 20.0,
+                    'tax_ids': [(6, 0, cls._get_tax_by_xml_id('s_iva21b').ids)],
+            })],
+        })
+        out_invoice.action_post()
+        return out_invoice
+
+    @classmethod
+    def _get_invoice_send_wizard(cls, invoice):
+        option_vals = cls.env['account.move.send']._get_wizard_vals_restrict_to({
+            'l10n_es_tbai_checkbox_send': True,
+        })
+        out_invoice_send_wizard = cls.env['account.move.send']\
+                                        .with_context(active_model='account.move', active_ids=invoice.ids)\
+                                        .create(option_vals)
+        return out_invoice_send_wizard
+
+    @classmethod
+    def _create_posted_bill(cls):
+        bill = cls.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': date.today(),
+            'partner_id': cls.partner_a.id,
+            'ref': "A reference",
+            'invoice_line_ids': [(0, 0, {
+                'product_id': cls.product_a.id,
+                'price_unit': 1000.0,
+                'quantity': 5,
+                'discount': 20.0,
+                'tax_ids': [(6, 0, cls._get_tax_by_xml_id('p_iva21_bc').ids)],
+            })],
+        })
+        bill.action_post()
+        return bill
 
     L10N_ES_TBAI_SAMPLE_XML_POST = """<?xml version='1.0' encoding='UTF-8'?>
 <T:TicketBai xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" xmlns:T="urn:ticketbai:emision" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
