@@ -696,7 +696,6 @@ class TestRepair(common.TransactionCase):
         repair_order = self.env['repair.order'].create({
             'product_id': self.product_product_3.id,
             'product_uom': self.product_product_3.uom_id.id,
-            'picking_type_id': self.stock_warehouse.repair_type_id.id,
             'partner_id': self.res_partner_12.id,
             'move_ids': [
                 Command.create({
