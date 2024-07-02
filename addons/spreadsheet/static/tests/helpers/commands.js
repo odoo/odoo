@@ -226,3 +226,26 @@ export function undo(model) {
 export function redo(model) {
     model.dispatch("REQUEST_REDO");
 }
+
+/**
+ * Copy a zone
+ */
+export function copy(model, xc) {
+    setSelection(model, xc);
+    return model.dispatch("COPY");
+}
+
+/**
+ * Cut a zone
+ */
+export function cut(model, xc) {
+    setSelection(model, xc);
+    return model.dispatch("CUT");
+}
+
+/**
+ * Paste on a zone
+ */
+export function paste(model, range, pasteOption) {
+    return model.dispatch("PASTE", { target: [toZone(range)], pasteOption });
+}
