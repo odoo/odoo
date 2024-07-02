@@ -119,7 +119,7 @@ options.registry.gallery = options.Class.extend({
             dialog.on('save', this, function (attachments) {
                 for (var i = 0; i < attachments.length; i++) {
                     $('<img/>', {
-                        class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block ',
+                        class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block o_editable_media',
                         src: attachments[i].image_src,
                         'data-index': ++index,
                         alt: attachments[i].description || '',
