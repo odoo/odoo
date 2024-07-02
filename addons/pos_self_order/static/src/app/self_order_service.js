@@ -298,11 +298,20 @@ export class SelfOrder extends Reactive {
         }
     }
 
+    filterPaymentMethods(pms) {
+        //based on _load_pos_self_data_domain from pos_payment_method.py
+        return this.config.self_ordering_mode === "kiosk"
+            ? pms.filter((rec) => ["adyen", "stripe"].includes(rec.use_payment_terminal))
+            : [];
+    }
+
     async confirmOrder() {
         const payAfter = this.config.self_ordering_pay_after; // each, meal
         const device = this.config.self_ordering_mode; // kiosk, mobile
         const service = this.config.self_ordering_service_mode; // table, counter
-        const paymentMethods = this.models["pos.payment.method"].getAll(); // Stripe, Adyen, Online
+        const paymentMethods = this.filterPaymentMethods(
+            this.models["pos.payment.method"].getAll()
+        ); // Stripe, Adyen, Online
         const order = this.currentOrder;
 
         // Stand number page will recall this function after the stand number is set
