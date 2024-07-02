@@ -171,7 +171,7 @@ class SaleOrderLine(models.Model):
         for line in self:  # TODO: maybe one day, this should be done in SQL for performance sake
             if line.qty_delivered_method == 'stock_move':
                 qty = 0.0
-                outgoing_moves, incoming_moves = line._get_outgoing_incoming_moves()
+                outgoing_moves, incoming_moves = line._get_outgoing_incoming_moves(strict=True)
                 for move in outgoing_moves:
                     if move.state != 'done':
                         continue
@@ -288,7 +288,7 @@ class SaleOrderLine(models.Model):
                (not strict and move.rule_id.id in triggering_rule_ids and move.location_final_id.usage == "customer"):
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
                     outgoing_moves |= move
-            elif move.location_id.usage == "customer" and move.to_refund:
+            elif move.location_dest_id.usage != "customer" and move.location_id.usage == "customer" and move.to_refund:
                 incoming_moves |= move
 
         return outgoing_moves, incoming_moves
