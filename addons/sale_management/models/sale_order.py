@@ -141,6 +141,7 @@ class SaleOrder(models.Model):
         return res
 
     def _recompute_prices(self):
+        self.sale_order_option_ids.is_price_set_manually = False
         super()._recompute_prices()
         # Special case: we want to overwrite the existing discount on _recompute_prices call
         # i.e. to make sure the discount is correctly reset

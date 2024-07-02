@@ -48,6 +48,9 @@ class SaleOrderOption(models.Model):
         compute='_compute_price_unit',
         store=True, readonly=False,
         required=True, precompute=True)
+
+    is_price_set_manually = fields.Boolean(default=False)
+
     discount = fields.Float(
         string="Discount (%)",
         digits='Discount',
@@ -81,7 +84,7 @@ class SaleOrderOption(models.Model):
     @api.depends('product_id', 'uom_id', 'quantity')
     def _compute_price_unit(self):
         for option in self:
-            if not option.product_id:
+            if not option.product_id or option.is_price_set_manually:
                 continue
             # To compute the price_unit a so line is created in cache
             values = option._get_values_to_add_to_order()
@@ -133,6 +136,13 @@ class SaleOrderOption(models.Model):
     def _product_id_domain(self):
         """ Returns the domain of the products that can be added as a sale order option. """
         return [('sale_ok', '=', True)]
+
+    # === ONCHANGE METHODS === #
+
+    @api.onchange('price_unit')
+    def _onchange_price_unit(self):
+        if self.price_unit and self.price_unit != self.product_id.lst_price:
+            self.is_price_set_manually = True
 
     #=== ACTION METHODS ===#
 

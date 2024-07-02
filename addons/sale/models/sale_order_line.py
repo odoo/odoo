@@ -166,6 +166,8 @@ class SaleOrderLine(models.Model):
         digits='Product Price',
         store=True, readonly=False, required=True, precompute=True)
 
+    is_price_set_manually = fields.Boolean(default=False)
+
     discount = fields.Float(
         string="Discount (%)",
         compute='_compute_discount',
@@ -515,9 +517,13 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_price_unit(self):
         for line in self:
-            # check if there is already invoiced amount. if so, the price shouldn't change as it might have been
-            # manually edited
-            if line.qty_invoiced > 0 or (line.product_id.expense_policy == 'cost' and line.is_expense):
+            # if pricelist item is set, then is_price_set_manually flag should be false.
+            if line.pricelist_item_id:
+                line.is_price_set_manually = False
+            # check if the price has been manually set, if there is already invoiced amount.
+            # if so, the price shouldn't change
+            if line.is_price_set_manually or line.qty_invoiced > 0 or (
+                line.product_id.expense_policy == 'cost' and line.is_expense):
                 continue
             if not line.product_uom or not line.product_id:
                 line.price_unit = 0.0
@@ -1028,6 +1034,11 @@ class SaleOrderLine(models.Model):
                         ),
                     },
                 }
+
+    @api.onchange('price_unit')
+    def _onchange_price_unit(self):
+        if self.price_unit and self.price_unit != self.product_id.lst_price:
+            self.is_price_set_manually = True
 
     #=== CRUD METHODS ===#
 
