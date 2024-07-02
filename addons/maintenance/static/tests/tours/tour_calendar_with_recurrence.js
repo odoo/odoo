@@ -20,6 +20,10 @@ registry.category("web_tour.tours").add("test_dblclick_event_from_calendar", {
             trigger: ".o_back_button",
         },
         {
+            content: "Next week",
+            trigger: ".o_calendar_button_next"
+        },
+        {
             content: "Access recurrence",
             trigger: 'a[data-event-id="2"]',
             run: "dblclick",
@@ -34,7 +38,7 @@ registry.category("web_tour.tours").add("test_dblclick_event_from_calendar", {
             trigger: ".o_back_button",
         },
         {
-            trigger: 'a[data-event-id="1"]',
+            trigger: 'a[data-event-id="2"]',
             isCheck: true,
         }
     ],
