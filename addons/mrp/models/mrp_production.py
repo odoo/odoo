@@ -575,6 +575,7 @@ class MrpProduction(models.Model):
                 continue
             workorders_list = [Command.link(wo.id) for wo in production.workorder_ids.filtered(lambda wo: not wo.operation_id)]
             workorders_list += [Command.delete(wo.id) for wo in production.workorder_ids.filtered(lambda wo: wo.operation_id and wo.operation_id.bom_id != production.bom_id)]
+            deleted_workorders_ids = [command[1] for command in workorders_list if command[0] == Command.DELETE]
             if not production.bom_id and not production._origin.product_id:
                 production.workorder_ids = workorders_list
             if production.product_id != production._origin.product_id:
@@ -600,7 +601,8 @@ class MrpProduction(models.Model):
                             'operation_id': operation.id,
                             'state': 'pending',
                         }]
-                workorders_dict = {wo.operation_id.id: wo for wo in production.workorder_ids.filtered(lambda wo: wo.operation_id)}
+                workorders_dict = {wo.operation_id.id: wo for wo in production.workorder_ids.filtered(
+                    lambda wo: wo.operation_id and wo.id not in deleted_workorders_ids)}
                 for workorder_values in workorders_values:
                     if workorder_values['operation_id'] in workorders_dict:
                         # update existing entries
