@@ -428,6 +428,7 @@ def list_file_by_os(file_list):
     elif platform_os == 'Windows':
         return [x.name for x in Path(file_list).glob('*[!L].*')]
 
+
 def odoo_restart(delay=3):
     IR = IoTRestart(delay)
     IR.start()
@@ -444,6 +445,7 @@ def read_file_first_line(filename):
     if path.exists():
         with path.open('r') as f:
             return f.readline().strip('\n')
+
 
 def restart_iot_box():
     subprocess.call(['sudo', 'reboot'])

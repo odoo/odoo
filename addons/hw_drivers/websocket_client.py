@@ -48,12 +48,14 @@ def on_message(ws, messages):
         if (message['message']['type'] == 'iot_command'):
             on_command_message(message)
 
+
 def on_action_message(message):
     payload = message['message']['payload']
     if helpers.get_mac_address() in payload['iotDevice']['iotIdentifiers']:
         for device in payload['iotDevice']['identifiers']:
             if device['identifier'] in main.iot_devices:
                 main.iot_devices[device["identifier"]].action(payload)
+
 
 def on_command_message(message):
     command = message['message']['payload']['command']
