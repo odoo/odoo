@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <!-- probably should extend the previous template instead of creating a new one -->
+    <div t-name="mrp.mrpLeadDays">
+        <h2>Lead Times</h2>
+        <hr/>
+        <table t-if="jsonValue.lead_days_description" class="table table-borderless table-sm">
+            <tbody>
+                <tr>
+                    <td>Today</td>
+                    <td class="text-end" t-out="jsonValue.today"/>
+                </tr>
+                <tr t-foreach="jsonValue.lead_days_description" t-key="descr" t-as="descr">
+                    <td t-out="descr[0]"/>
+                    <td class="text-end" t-out="descr[1]"/>
+                </tr>
+                <tr class="table-info">
+                    <td>Forecasted Date</td>
+                    <td class="text-end text-nowrap">
+                        = <t t-out="jsonValue.lead_days_date"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</templates>

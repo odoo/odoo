@@ -25,8 +25,8 @@
                             <th class="text-end" t-if="showAvailabilities">Reserved</th>
                             <th class="text-end" t-if="showReceipts">Receipt</th>
                             <th class="text-end" t-if="showUnitCosts">Unit Cost</th>
-                            <th class="text-end" t-if="showMoCosts" title="Cost based on related replenishments. Otherwise cost from product form">MO Cost</th>
-                            <th class="text-end" t-if="showRealCosts" title="Cost from product form">Real Cost</th>
+                            <th class="text-end" t-if="showMoCosts" t-attf-title="Cost based on related replenishments.">MO Cost <i class="fa fa-info-circle"/></th>
+                            <th class="text-end" t-if="showRealCosts" t-attf-title="Cost based on actual product costs.">Real Cost <i class="fa fa-info-circle"/></th>
                         </tr>
                     </thead>
                     <tbody>

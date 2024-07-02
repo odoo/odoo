@@ -33,6 +33,7 @@ export class BomOverviewTable extends Component {
 
     setup() {
         this.actionService = useService("action");
+        this.orm = useService("orm");
         this.formatFloat = formatFloat;
         this.formatMonetary = (val) => formatMonetary(val, { currencyId: this.data.currency_id });
     }
@@ -50,6 +51,22 @@ export class BomOverviewTable extends Component {
                 active_id: this.data.link_id,
             },
         });
+    }
+
+    async goToLeadTime() {
+        const resultAction = await this.orm.call(
+            "stock.warehouse",
+            "action_stock_replenishment_info_mixin",
+            [undefined],
+            {
+                context: {
+                    active_id: this.props.currentWarehouseId,
+                    product_id: this.props.data.product_id,
+                    route_id: this.props.data.route_id
+                },
+            }
+        );
+        this.actionService.doAction(resultAction);
     }
 
     //---- Getters ----
