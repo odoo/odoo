@@ -528,6 +528,15 @@ class PickingType(models.Model):
             }]
         return graph_data
 
+    def _get_code_report_name(self):
+        self.ensure_one()
+        code_names = {
+            'outgoing': _('Delivery Note'),
+            'incoming': _('Goods Receipt Note'),
+            'internal': _('Internal Move'),
+        }
+        return code_names.get(self.code)
+
 
 class Picking(models.Model):
     _name = "stock.picking"
