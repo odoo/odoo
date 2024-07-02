@@ -35,8 +35,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_payment_credit_account_id': 'account_common_411',
                 'default_cash_difference_income_account_id': 'account_common_778',
                 'default_cash_difference_expense_account_id': 'account_common_678',
-                'account_sale_tax_id': 'account_tax_template_s_iva21b',
-                'account_purchase_tax_id': 'account_tax_template_p_iva21_bc',
             },
         }
 

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data auto_sequence="1">
+        <record id="mod_420" model="account.report">
+            <field name="name">Tax Report (Mod 420) Canary Islands</field>
+            <field name="sequence">420</field>
+            <field name="filter_analytic" eval="False"/>
+            <field name="filter_date_range" eval="True"/>
+            <field name="filter_period_comparison" eval="True"/>
+            <field name="filter_unfold_all" eval="True"/>
+            <field name="filter_journals" eval="False"/>
+            <field name="country_id" ref="base.es"/>
+            <field name="filter_multi_company">tax_units</field>
+            <field name="root_report_id" ref="account.generic_tax_report"/>
+            <field name="column_ids">
+                <record id="mod_420_column_base" model="account.report.column">
+                    <field name="name">Base</field>
+                    <field name="expression_label">base</field>
+                </record>
+				<record id="mod_420_column_tax_amount" model="account.report.column">
+                    <field name="name">Tax Amount</field>
+                    <field name="expression_label">tax</field>
+                </record>
+            </field>
+			<field name="line_ids">
+				<record id="mod_420_casilla_1_3" model="account.report.line">
+					<field name="name">0%</field>
+					<field name="code">ate_mod_420_1_3</field>
+					<field name="groupby">account_id</field>
+					<field name="foldable" eval="True"/>
+					<field name="expression_ids">
+						<record id="mod_420_casilla_1_base" model="account.report.expression">
+							<field name="label">base</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[1]</field>
+						</record>
+					</field>
+				</record>
+				<record id="mod_420_casilla_4_6" model="account.report.line">
+					<field name="name">3%</field>
+					<field name="code">ate_mod_420_4_6</field>
+					<field name="groupby">account_id</field>
+					<field name="foldable" eval="True"/>
+					<field name="expression_ids">
+						<record id="mod_420_casilla_4" model="account.report.expression">
+							<field name="label">base</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[4]</field>
+						</record>
+						<record id="mod_420_casilla_6" model="account.report.expression">
+							<field name="label">tax</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[6]</field>
+						</record>
+					</field>
+				</record>
+				<record id="mod_420_casilla_7_9" model="account.report.line">
+					<field name="name">7%</field>
+					<field name="code">ate_mod_420_7_9</field>
+					<field name="groupby">account_id</field>
+					<field name="foldable" eval="True"/>
+					<field name="expression_ids">
+						<record id="mod_420_casilla_7" model="account.report.expression">
+							<field name="label">base</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[7]</field>
+						</record>
+						<record id="mod_420_casilla_9" model="account.report.expression">
+							<field name="label">tax</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[9]</field>
+						</record>
+					</field>
+				</record>
+				<record id="mod_420_casilla_10_12" model="account.report.line">
+					<field name="name">9.5%</field>
+					<field name="code">ate_mod_420_10_12</field>
+					<field name="groupby">account_id</field>
+					<field name="foldable" eval="True"/>
+					<field name="expression_ids">
+						<record id="mod_420_casilla_10" model="account.report.expression">
+							<field name="label">base</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[10]</field>
+						</record>
+						<record id="mod_420_casilla_12" model="account.report.expression">
+							<field name="label">tax</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[12]</field>
+						</record>
+					</field>
+				</record>
+				<record id="mod_420_casilla_13_15" model="account.report.line">
+					<field name="name">15%</field>
+					<field name="code">ate_mod_420_13_15</field>
+					<field name="groupby">account_id</field>
+					<field name="foldable" eval="True"/>
+					<field name="expression_ids">
+						<record id="mod_420_casilla_13" model="account.report.expression">
+							<field name="label">base</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[13]</field>
+						</record>
+						<record id="mod_420_casilla_15" model="account.report.expression">
+							<field name="label">tax</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[15]</field>
+						</record>
+					</field>
+				</record>
+				<record id="mod_420_casilla_16_18" model="account.report.line">
+					<field name="name">20%</field>
+					<field name="code">ate_mod_420_16_18</field>
+					<field name="groupby">account_id</field>
+					<field name="foldable" eval="True"/>
+					<field name="expression_ids">
+						<record id="mod_420_casilla_16" model="account.report.expression">
+							<field name="label">base</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[16]</field>
+						</record>
+						<record id="mod_420_casilla_18" model="account.report.expression">
+							<field name="label">tax</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[18]</field>
+						</record>
+					</field>
+				</record>
+				<record id="mod_420_casilla_isp" model="account.report.line">
+					<field name="name">ISP</field>
+					<field name="code">ate_mod_420_isp</field>
+					<field name="groupby">account_id</field>
+					<field name="foldable" eval="True"/>
+					<field name="expression_ids">
+						<record id="mod_420_casilla_19" model="account.report.expression">
+							<field name="label">base</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[19]</field>
+						</record>
+						<record id="mod_420_casilla_20" model="account.report.expression">
+							<field name="label">tax</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[20]</field>
+						</record>
+					</field>
+				</record>
+				<record id="mod_420_casilla_igic_deductible" model="account.report.line">
+					<field name="name">IGIC Deductible internal operations</field>
+					<field name="code">ate_mod_420_deduc</field>
+					<field name="groupby">account_id</field>
+					<field name="foldable" eval="True"/>
+					<field name="expression_ids">
+						<record id="mod_420_casilla_26" model="account.report.expression">
+							<field name="label">base</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[26]</field>
+						</record>
+						<record id="mod_420_casilla_27" model="account.report.expression">
+							<field name="label">tax</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[27]</field>
+						</record>
+					</field>
+				</record>
+				<record id="mod_420_casilla_igic_deductible_inv" model="account.report.line">
+					<field name="name">IGIC Deductible Internal Operations Investment Goods</field>
+					<field name="code">ate_mod_420_deduc_inv</field>
+					<field name="groupby">account_id</field>
+					<field name="foldable" eval="True"/>
+					<field name="expression_ids">
+						<record id="mod_420_casilla_28" model="account.report.expression">
+							<field name="label">base</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[28]</field>
+						</record>
+						<record id="mod_420_casilla_29" model="account.report.expression">
+							<field name="label">tax</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[29]</field>
+						</record>
+					</field>
+				</record>
+				<record id="mod_420_casilla_igic_deductible_imp" model="account.report.line">
+					<field name="name">IGIC Deductible for Imports</field>
+					<field name="code">ate_mod_420_deduc_imp</field>
+					<field name="groupby">account_id</field>
+					<field name="foldable" eval="True"/>
+					<field name="expression_ids">
+						<record id="mod_420_casilla_30" model="account.report.expression">
+							<field name="label">base</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[30]</field>
+						</record>
+						<record id="mod_420_casilla_31" model="account.report.expression">
+							<field name="label">tax</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[31]</field>
+						</record>
+					</field>
+				</record>
+				<record id="mod_420_casilla_igic_deductible_imp_inv" model="account.report.line">
+					<field name="name">IGIC Deductible for Imports of Investment Goods</field>
+					<field name="code">ate_mod_420_deduc_imp_inv</field>
+					<field name="groupby">account_id</field>
+					<field name="foldable" eval="True"/>
+					<field name="expression_ids">
+						<record id="mod_420_casilla_32" model="account.report.expression">
+							<field name="label">base</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[32]</field>
+						</record>
+						<record id="mod_420_casilla_33" model="account.report.expression">
+							<field name="label">tax</field>
+							<field name="engine">tax_tags</field>
+							<field name="formula">mod420[33]</field>
+						</record>
+					</field>
+				</record>
+
+			</field>
+        </record>
+    </data>
+</odoo>
