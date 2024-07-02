@@ -15,7 +15,7 @@
         <field name="line_ids">
             <record id="tax_report_sale_and_income" model="account.report.line">
                 <field name="name">Sales and Income</field>
-                <field name="aggregation_formula">NZBOX5.balance + NZBOX6.balance + NZBOX9.balance</field>
+                <field name="aggregation_formula">NZBOX5.balance + NZBOX9.balance</field>
                 <field name="sequence">100</field>
                 <field name="children_ids">
                     <record id="tax_report_box5" model="account.report.line">
