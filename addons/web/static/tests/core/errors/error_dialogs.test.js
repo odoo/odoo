@@ -33,20 +33,19 @@ test("ErrorDialog with traceback", async () => {
         },
     });
     expect(".o_dialog").toHaveCount(1);
-    expect("header .modal-title").toHaveText("Odoo Error");
-    expect("main button").toHaveText("See details");
-    expect(queryAllTexts("footer button")).toEqual(["Close", "Copy error to clipboard"]);
-    expect(queryAllTexts("main p > p")).toEqual([
-        "An error occurred",
-        "Please use the copy button to report the error to your support service.",
-    ]);
+    expect("header .modal-title").toHaveText("Oops!");
+    expect("main button").toHaveText("See technical details");
+    expect(queryAllTexts("footer button")).toEqual(["Close"]);
+    expect("main p").toHaveText(
+        "Something went wrong... If you really are stuck, share the report with your friendly support service"
+    );
     expect("div.o_error_detail").toHaveCount(0);
     click("main button");
     await animationFrame();
-    expect("main .clearfix p").toHaveText("Something bad happened");
+    expect(queryAllTexts("main .clearfix p")).toEqual(["Odoo Error", "Something bad happened"]);
     expect("main .clearfix code").toHaveText("ERROR_NAME");
     expect("div.o_error_detail").toHaveCount(1);
-    expect("div.o_error_detail").toHaveText("This is a traceback string");
+    expect("div.o_error_detail pre").toHaveText("This is a traceback string");
 });
 
 test("Client ErrorDialog with traceback", async () => {
@@ -62,20 +61,22 @@ test("Client ErrorDialog with traceback", async () => {
         },
     });
     expect(".o_dialog").toHaveCount(1);
-    expect("header .modal-title").toHaveText("Odoo Client Error");
-    expect("main button").toHaveText("See details");
-    expect(queryAllTexts("footer button")).toEqual(["Close", "Copy error to clipboard"]);
-    expect(queryAllTexts("main p > p")).toEqual([
-        "An error occurred",
-        "Please use the copy button to report the error to your support service.",
-    ]);
+    expect("header .modal-title").toHaveText("Oops!");
+    expect("main button").toHaveText("See technical details");
+    expect(queryAllTexts("footer button")).toEqual(["Close"]);
+    expect("main p").toHaveText(
+        "Something went wrong... If you really are stuck, share the report with your friendly support service"
+    );
     expect("div.o_error_detail").toHaveCount(0);
     click("main button");
     await animationFrame();
-    expect("main .clearfix p").toHaveText("Something bad happened");
+    expect(queryAllTexts("main .clearfix p")).toEqual([
+        "Odoo Client Error",
+        "Something bad happened",
+    ]);
     expect("main .clearfix code").toHaveText("ERROR_NAME");
     expect("div.o_error_detail").toHaveCount(1);
-    expect("div.o_error_detail").toHaveText("This is a traceback string");
+    expect("div.o_error_detail pre").toHaveText("This is a traceback string");
 });
 
 test("button clipboard copy error traceback", async () => {
@@ -99,15 +100,16 @@ test("button clipboard copy error traceback", async () => {
             close() {},
         },
     });
-    click(".fa-clipboard");
+    click("main button");
+    await animationFrame();
+    click(".fa-clone");
     await tick();
 });
 
 test("Display a tooltip on clicking Copy error to clipboard button", async () => {
-    expect.assertions(2);
+    expect.assertions(1);
     mockService("popover", () => ({
         add(el, comp, params) {
-            expect(el).toHaveText("Copy error to clipboard");
             expect(params).toEqual({ tooltip: "Copied" });
             return () => {};
         },
@@ -123,7 +125,9 @@ test("Display a tooltip on clicking Copy error to clipboard button", async () =>
             close() {},
         },
     });
-    click(".fa-clipboard");
+    click("main button");
+    await animationFrame();
+    click(".fa-clone");
 });
 
 test("WarningDialog", async () => {
