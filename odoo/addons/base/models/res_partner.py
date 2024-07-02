@@ -338,6 +338,7 @@ class Partner(models.Model):
     def _get_complete_name(self):
         self.ensure_one()
 
+<<<<<<< HEAD
         displayed_types = self._complete_name_displayed_types
         type_description = dict(self._fields['type']._description_selection(self.env))
 
@@ -351,6 +352,17 @@ class Partner(models.Model):
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name', 'commercial_company_name')
     def _compute_complete_name(self):
+||||||| parent of 2bf61669a487 (temp)
+    @api.depends_context('lang')
+    @api.depends('display_name')
+    def _compute_translated_display_name(self):
+        names = dict(self.with_context({'lang': self.env.lang}).name_get())
+=======
+    @api.depends_context('lang')
+    @api.depends('display_name')
+    def _compute_translated_display_name(self):
+        names = dict(self.with_context(lang=self.env.lang).name_get())
+>>>>>>> 2bf61669a487 (temp)
         for partner in self:
             partner.complete_name = partner.with_context({})._get_complete_name()
 
