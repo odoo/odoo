@@ -4,6 +4,7 @@
     <record id="product_product_quote_despacho" model="product.product">
         <field name="name">Import Clearance</field>
         <field name="type">service</field>
+        <field name="categ_id" ref="product.product_category_office"/>
         <field name="default_code">AFIP_DESPACHO</field>
         <field name="sale_ok" eval="False"/>
         <field name="uom_id" ref="uom.product_uom_unit"/>
@@ -14,6 +15,7 @@
     <record id="product_product_tasa_estadistica" model="product.product">
         <field name="name">Statistics Rate</field>
         <field name="type">service</field>
+        <field name="categ_id" ref="product.product_category_office"/>
         <field name="default_code">AFIP_TASA_EST</field>
         <field name="sale_ok" eval="False"/>
         <field name="uom_id" ref="uom.product_uom_unit"/>
@@ -24,6 +26,7 @@
     <record id="product_product_arancel" model="product.product">
         <field name="name">Tariff</field>
         <field name="type">service</field>
+        <field name="categ_id" ref="product.product_category_office"/>
         <field name="default_code">AFIP_ARANCEL</field>
         <field name="sale_ok" eval="False"/>
         <field name="uom_id" ref="uom.product_uom_unit"/>
@@ -34,6 +37,7 @@
     <record id="product_product_servicio_de_guarda" model="product.product">
         <field name="name">Guard Service</field>
         <field name="type">service</field>
+        <field name="categ_id" ref="product.product_category_office"/>
         <field name="default_code">AFIP_SERV_GUARDA</field>
         <field name="sale_ok" eval="False"/>
         <field name="uom_id" ref="uom.product_uom_unit"/>
@@ -43,7 +47,7 @@
 
     <record id="product_product_exento" model="product.product">
         <field name="name">Book "Development in Odoo" (VAT Exempt)</field>
-        <field name="categ_id" ref="product.product_category_5"/>
+        <field name="categ_id" ref="product.product_category_office"/>
         <field name="standard_price">100.0</field>
         <field name="list_price">80.0</field>
         <field name="type">consu</field>
@@ -56,7 +60,7 @@
 
     <record id="product_product_cero" model="product.product">
         <field name="name">Non-industrialized animals and vegetables (VAT Zero)</field>
-        <field name="categ_id" ref="product.product_category_5"/>
+        <field name="categ_id" ref="product.product_category_office"/>
         <field name="standard_price">200.0</field>
         <field name="list_price">160.0</field>
         <field name="type">consu</field>
@@ -68,7 +72,7 @@
     </record>
     <record id="product_product_no_gravado" model="product.product">
         <field name="name">Untaxed concepts (VAT NT)</field>
-        <field name="categ_id" ref="product.product_category_5"/>
+        <field name="categ_id" ref="product.product_category_office"/>
         <field name="standard_price">50.0</field>
         <field name="list_price">40.0</field>
         <field name="type">consu</field>
@@ -80,7 +84,7 @@
     </record>
     <record id="product_product_telefonia" model="product.product">
         <field name="name">Telephone service (VAT 27)</field>
-        <field name="categ_id" ref="product.product_category_5"/>
+        <field name="categ_id" ref="product.product_category_office"/>
         <field name="standard_price">250.0</field>
         <field name="list_price">130.0</field>
         <field name="type">service</field>

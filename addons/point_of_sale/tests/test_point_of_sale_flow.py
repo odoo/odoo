@@ -35,7 +35,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             product = self.env['product.product'].create({
                 'name': 'Dummy product',
                 'is_storable': True,
-                'categ_id': self.env.ref('product.product_category_all').id,
                 'taxes_id': self.tax_sale_a.ids,
             })
             self.pos_config.open_ui()
@@ -292,7 +291,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'Product A',
             'is_storable': True,
             'tracking': 'serial',
-            'categ_id': self.env.ref('product.product_category_all').id,
         })
 
         lot1 = self.env['stock.lot'].create({
@@ -1174,7 +1172,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         product5 = self.env['product.product'].create({
             'name': 'product5',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
             'taxes_id': dummy_50_perc_tax.ids
         })
 
@@ -1392,7 +1389,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         product5 = self.env['product.product'].create({
             'name': 'product5',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
         })
 
         # sell product thru pos
@@ -1569,7 +1565,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.product2 = self.env['product.product'].create({
             'name': 'Product A',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
         })
 
         self.env['stock.quant'].with_context(inventory_mode=True).create({
@@ -1640,6 +1635,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'property_account_income_id': False,
             'property_account_expense_id': False,
         })
+        self.env.company.property_account_income_company_id = False
+        self.env.company.property_account_expense_company_id = False
         account = self.env['account.account'].create({
             'name': 'Account for category without account',
             'code': 'X1111',
@@ -1692,7 +1689,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'Product A',
             'is_storable': True,
             'tracking': 'serial',
-            'categ_id': self.env.ref('product.product_category_all').id,
         })
 
         lot1 = self.env['stock.lot'].create({

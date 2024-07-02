@@ -57,7 +57,6 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'name': 'analytic_account_2',
             'plan_id': cls.analytic_plan.id,
         })
-
         # Create product without cost
         cls.product_c = cls.env['product.product'].create({
             'name': 'product_c with no cost',

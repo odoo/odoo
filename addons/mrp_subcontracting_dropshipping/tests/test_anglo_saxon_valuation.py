@@ -14,7 +14,6 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
 
         categ_form = Form(cls.env['product.category'])
         categ_form.name = 'fifo auto'
-        categ_form.parent_id = cls.env.ref('product.product_category_all')
         categ_form.property_cost_method = 'fifo'
         categ_form.property_valuation = 'real_time'
         cls.categ_fifo_auto = categ_form.save()

@@ -21,6 +21,8 @@ class AccountChartTemplate(models.AbstractModel):
             'country': None,
             'property_account_receivable_id': 'receivable',
             'property_account_payable_id': 'payable',
+            'property_account_expense_company_id': 'expense',
+            'property_account_income_company_id': 'income',
             'property_account_expense_categ_id': 'expense',
             'property_account_income_categ_id': 'income',
             'property_stock_account_input_categ_id': 'stock_in',

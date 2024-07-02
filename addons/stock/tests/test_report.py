@@ -21,7 +21,6 @@ class TestReportsCommon(TransactionCase):
         cls.product1 = cls.env['product.product'].create({
             'name': 'Mellohi"',
             'is_storable': True,
-            'categ_id': cls.env.ref('product.product_category_all').id,
             'tracking': 'lot',
             'default_code': 'C4181234""154654654654',
             'barcode': 'scan""me'
@@ -76,7 +75,6 @@ class TestReports(TestReportsCommon):
         product_test = self.env['product.product'].create({
             'name': 'Mellohi"',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
             'tracking': 'lot',
             'default_code': 'C4181234""154654654654',
             'barcode': '9745213796142'
@@ -1308,13 +1306,11 @@ class TestReports(TestReportsCommon):
         product2 = self.env['product.product'].create({
             'name': 'Extra Product',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
         })
 
         product3 = self.env['product.product'].create({
             'name': 'Unpopular Product',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
         })
 
         # Creates some deliveries for reception report to match against

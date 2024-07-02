@@ -34,6 +34,7 @@ PEPPOL_LIST = [
 ]
 
 INTEGRITY_HASH_BATCH_SIZE = 1000
+ACCOUNT_DOMAIN = "['&', ('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
 
 
 class ResCompany(models.Model):
@@ -196,6 +197,19 @@ class ResCompany(models.Model):
 
     # Audit trail
     check_account_audit_trail = fields.Boolean(string='Audit Trail')
+
+    property_account_income_company_id = fields.Many2one('account.account', company_dependent=True,
+        string="Income Account",
+        domain=ACCOUNT_DOMAIN,
+        help="This account will be used when validating a customer invoice.",
+        tracking=True,
+    )
+    property_account_expense_company_id = fields.Many2one('account.account', company_dependent=True,
+        string="Expense Account",
+        domain=ACCOUNT_DOMAIN,
+        help="The expense is accounted for when a vendor bill is validated, except in anglo-saxon accounting with perpetual inventory valuation in which case the expense (Cost of Goods Sold account) is recognized at the customer invoice validation.",
+        tracking=True,
+    )
 
     def _get_company_root_delegated_field_names(self):
         return super()._get_company_root_delegated_field_names() + [
