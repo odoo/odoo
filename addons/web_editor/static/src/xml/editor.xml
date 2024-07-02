@@ -225,6 +225,17 @@
                     <span class="fa fa-magic fa-fw"></span>
                 </div>
             </div>
+            <div t-if="state.languages.length > 1" id="translate" t-attf-class="btn-group {{ props.dropDirection }}">
+                <button type="button" class="btn dropdown-toggle"
+                    data-bs-toggle="dropdown" data-bs-original-title="Translate with AI" tabindex="-1" aria-expanded="false">
+                    <span title="Translate with AI">Translate</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <t t-foreach="state.languages" t-as="language" t-key="language[0]">
+                        <li><a class="dropdown-item" t-att-data-value="language[1]" href="#">to <t t-out="language[1]" /></a></li>
+                    </t>
+                </ul>
+            </div>
 
             <div  t-if="props.showImageShape" id="image-shape" class="btn-group">
                 <div id="rounded" title="Shape: Rounded" class="fa fa-square fa-fw btn editor-ignore"></div>

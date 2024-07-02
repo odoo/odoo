@@ -506,11 +506,13 @@
                 "typo typo style style colors"
                 "size align list list link"
                 "ai animate animate hilight hilight"
+                "translate translate . . ."
                 "options options options options options"
                 "options2 options2 options2 options2 options2"
                 "options3 options3 options3 options3 options3";
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
             grid-template-rows:
+                minmax($o-we-sidebar-content-field-height, auto)
                 minmax($o-we-sidebar-content-field-height, auto)
                 minmax($o-we-sidebar-content-field-height, auto)
                 minmax($o-we-sidebar-content-field-height, auto)
@@ -761,6 +763,9 @@
 
             #chatgpt {
                 grid-area: ai;
+            }
+            #translate {
+                grid-area: translate;
             }
             #animate {
                 grid-area: animate;
