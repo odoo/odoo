@@ -14,26 +14,33 @@ const { DateTime } = luxon;
  * Convert pivot period to the related filter value
  *
  * @param {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").RangeType} timeRange
- * @param {string} value
+ * @param {string|number} value
  * @returns {object}
  */
 function pivotPeriodToFilterValue(timeRange, value) {
     // reuse the same logic as in `parseAccountingDate`?
-    const yearOffset = (value.split("/").pop() | 0) - DateTime.now().year;
+    if (typeof value === "number") {
+        value = `${value}`;
+    }
+    const yearValue = value.split("/").at(-1);
+    if (!yearValue) {
+        return undefined;
+    }
+    const yearOffset = yearValue - DateTime.now().year;
     switch (timeRange) {
         case "year":
             return {
                 yearOffset,
             };
         case "month": {
-            const month = value.split("/")[0] | 0;
+            const month = value.includes("/") ? value.split("/")[0] : 1;
             return {
                 yearOffset,
                 period: monthsOptions[month - 1].id,
             };
         }
         case "quarter": {
-            const quarter = value.split("/")[0] | 0;
+            const quarter = value.includes("/") ? value.split("/")[0] : 1;
             return {
                 yearOffset,
                 period: FILTER_DATE_OPTION.quarter[quarter - 1],
