@@ -6,9 +6,12 @@ from types import CodeType
 
 _logger = logging.getLogger(__name__)
 
+from stdnum import util
 from werkzeug.datastructures import FileStorage
 from werkzeug.routing import Rule
 from werkzeug.wrappers import Request, Response
+from zeep import CachingClient
+from zeep.transports import Transport
 
 from .json import scriptsafe
 
@@ -65,3 +68,19 @@ def literal_eval(expr):
     return orig_literal_eval(expr)
 
 ast.literal_eval = literal_eval
+
+_soap_clients = {}
+
+def new_get_soap_client(wsdlurl, timeout=30):
+    # stdnum library does not set the timeout for the zeep Transport class correctly
+    # (timeout is is to fetch the wsdl and operation_timeout is to perform the call),
+    # requiring us to monkey patch the get_soap_client function.
+    # Can be removed when https://github.com/arthurdejong/python-stdnum/issues/444 is
+    # resolved and the version of the dependency is updated
+    if (wsdlurl, timeout) not in _soap_clients:
+        transport = Transport(operation_timeout=timeout, timeout=timeout)
+        client = CachingClient(wsdlurl, transport=transport).service
+        _soap_clients[(wsdlurl, timeout)] = client
+    return _soap_clients[(wsdlurl, timeout)]
+
+util.get_soap_client = new_get_soap_client

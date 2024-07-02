@@ -135,7 +135,7 @@ class ResPartner(models.Model):
         else:
             vies_result = None
             try:
-                vies_result = check_vies(vat)
+                vies_result = check_vies(vat, timeout=timeout)
             except Exception:
                 _logger.exception("Failed VIES VAT check.")
             if vies_result:
