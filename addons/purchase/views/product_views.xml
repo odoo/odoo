@@ -160,6 +160,10 @@
             <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="js_class">purchase_product_kanban_catalog</attribute>
+                    <attribute name="sample">1</attribute> 
+                </xpath>
                 <field name="default_code" position="after">
                     <field name="uom_po_id" invisible="1"/>
                 </field>
