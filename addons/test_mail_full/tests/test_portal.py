@@ -83,17 +83,17 @@ class TestPortalControllers(TestPortal):
             'model': self.record_portal._name,
             'res_id': self.record_portal.id,
         })
-        response = self.url_open(f'/mail/avatar/mail.message/{mail_record.id}/author_avatar/50x50?access_token={self.record_portal.access_token}')
+        response = self.url_open(f'/mail/avatar/mail.message/{mail_record.model}/{mail_record.res_id}/{mail_record.id}/author_avatar/50x50?access_token={self.record_portal.access_token}')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers.get('Content-Type'), 'image/png')
         self.assertRegex(response.headers.get('Content-Disposition', ''), r'mail_message-\d+-author_avatar\.png')
 
-        placeholder_response = self.url_open(f'/mail/avatar/mail.message/{mail_record.id}/author_avatar/50x50?access_token={self.record_portal.access_token + "a"}') # false token
+        placeholder_response = self.url_open(f'/mail/avatar/mail.message/{mail_record.model}/{mail_record.res_id}/{mail_record.id}/author_avatar/50x50?access_token={self.record_portal.access_token + "a"}')  # false token
         self.assertEqual(placeholder_response.status_code, 200)
         self.assertEqual(placeholder_response.headers.get('Content-Type'), 'image/png')
         self.assertRegex(placeholder_response.headers.get('Content-Disposition', ''), r'placeholder\.png')
 
-        no_token_response = self.url_open(f'/mail/avatar/mail.message/{mail_record.id}/author_avatar/50x50')
+        no_token_response = self.url_open(f'/mail/avatar/mail.message/{mail_record.model}/{mail_record.res_id}/{mail_record.id}/author_avatar/50x50')
         self.assertEqual(no_token_response.status_code, 200)
         self.assertEqual(no_token_response.headers.get('Content-Type'), 'image/png')
         self.assertRegex(no_token_response.headers.get('Content-Disposition', ''), r'placeholder\.png')
@@ -117,13 +117,13 @@ class TestPortalControllers(TestPortal):
         self.assertNotIn("error", res.json())
         message = self.record_portal.message_ids[0]
         response = self.url_open(
-            f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={self.record_portal._sign_token(self.partner_2.id)}&pid={self.partner_2.id}')
+            f'/mail/avatar/mail.message/{message.model}/{message.res_id}/{message.id}/author_avatar/50x50?_hash={self.record_portal._sign_token(self.partner_2.id)}&pid={self.partner_2.id}')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers.get('Content-Type'), 'image/png')
         self.assertRegex(response.headers.get('Content-Disposition', ''), r'mail_message-\d+-author_avatar\.png')
 
         placeholder_response = self.url_open(
-            f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={self.record_portal._sign_token(self.partner_2.id) + "a"}&pid={self.partner_2.id}')  # false hash
+            f'/mail/avatar/mail.message/{message.model}/{message.res_id}/{message.id}/author_avatar/50x50?_hash={self.record_portal._sign_token(self.partner_2.id) + "a"}&pid={self.partner_2.id}')  # false hash
         self.assertEqual(placeholder_response.status_code, 200)
         self.assertEqual(placeholder_response.headers.get('Content-Type'), 'image/png')
         self.assertRegex(placeholder_response.headers.get('Content-Disposition', ''), r'placeholder\.png')
