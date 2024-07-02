@@ -9,7 +9,7 @@ from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.exceptions import AccessDenied
 from odoo.service import common as auth, model
-from odoo.tests import tagged, get_db_name, loaded_demo_data
+from odoo.tests import tagged, get_db_name
 
 from ..controllers.home import Home
 
@@ -47,10 +47,6 @@ class TestTOTP(HttpCaseWithUserDemo):
             self.env['ir.http']._clear_routing_map()
 
     def test_totp(self):
-        # TODO: Make this work if no demo data + hr installed
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         # 1. Enable 2FA
         self.start_tour('/web', 'totp_tour_setup', login='demo')
 
@@ -90,10 +86,6 @@ class TestTOTP(HttpCaseWithUserDemo):
 
 
     def test_totp_administration(self):
-        # TODO: Make this work if no demo data + hr installed
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         self.start_tour('/web', 'totp_tour_setup', login='demo')
         self.start_tour('/web', 'totp_admin_disables', login='admin')
         self.start_tour('/', 'totp_login_disabled', login=None)
@@ -103,11 +95,6 @@ class TestTOTP(HttpCaseWithUserDemo):
         Ensure that JSON-RPC authentication works and don't return the user id
         without TOTP check
         """
-        # TODO: Make this work if no demo data + hr installed
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
-
         self.start_tour('/web', 'totp_tour_setup', login='demo')
         self.url_open('/web/session/logout')
 
