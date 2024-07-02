@@ -789,6 +789,10 @@ export class Thread extends Record {
         if (this.model === "mail.box") {
             return `/mail/${this.id}/messages`;
         }
+        return this.chatterFetchRoute;
+    }
+
+    get chatterFetchRoute() {
         return "/mail/thread/messages";
     }
 
