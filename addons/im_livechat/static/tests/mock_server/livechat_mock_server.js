@@ -96,7 +96,7 @@ async function get_session(request) {
     DiscussChannelMember.write([memberId], { fold_state: "open" });
     const store = new mailDataHelpers.Store();
     ResUsers._init_store_data(store);
-    store.add(DiscussChannel.browse(channelId));
+    store.add(DiscussChannel.browse(channelId).map((record) => record.id));
     store.add("Thread", { id: channelId, model: "discuss.channel", isLoaded: true });
     return store.get_result();
 }
