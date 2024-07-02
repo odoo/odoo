@@ -11,9 +11,9 @@
 <!--TEMPLATES-->
 
 <template id="dynamic_filter_template_event_event_picture" name="Picture Layout" priority="5">
-    <figure t-foreach="records" t-as="data" class="w-100 s_events_event">
+    <figure t-foreach="records" t-as="data" class="s_events_event w-100" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4">
         <t t-set="record" t-value="data['_record']._set_tz_context()"/>
-        <a class="s_events_event_cover position-relative d-flex flex-column shadow-sm overflow-hidden rounded text-decoration-none"
+        <a class="s_events_event_cover position-relative d-flex align-items-center rounded overflow-hidden text-decoration-none ratio ratio-1x1"
            t-att-href="data['call_to_action_url']">
             <t t-call="website.record_cover">
                 <t t-set="_record" t-value="record"/>
@@ -25,14 +25,14 @@
 
             <figcaption class="text-center w-100 h-100 px-3 d-flex flex-column flex-grow-1">
                 <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                <div class="s_events_event_title text-white" t-field="record.name"/>
+                <h3 class="text-white" t-field="record.name"/>
                 <time itemprop="startDate" t-att-datetime="record.date_begin" class="text-white">
                     <span t-out="record.date_begin"
                           t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/>
-                    -
-                    <span t-out="record.date_begin"
-                          t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/>
-                    (<span t-out="record.date_tz"/>)
+                    <span class="s_events_event_time">
+                        - <span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/>
+                        (<span t-out="record.date_tz"/>)
+                    </span>
                 </time>
             </figcaption>
         </a>
@@ -40,39 +40,37 @@
 </template>
 
 <template id="dynamic_filter_template_event_event_card" name="Card Layout" priority="10">
-    <div t-foreach="records" t-as="data" class="pb32 w-100 s_events_event">
+    <t t-foreach="records" t-as="data" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4 col-xxl-3">
         <t t-set="record" t-value="data['_record']._set_tz_context()"/>
-        <div class="card shadow-sm">
-            <a class="s_events_event_cover" t-att-href="data['call_to_action_url']">
+        <a t-att-href="data['call_to_action_url']" class="s_events_event card h-100 text-decoration-none">
+            <div class="s_events_event_cover">
                 <t t-call="website.record_cover">
                     <t t-set="_record" t-value="record"/>
                     <t t-set="_resize_height" t-value="512"/>
                     <t t-set="_resize_width" t-value="512"/>
 
-                    <div class="s_events_event_date position-absolute shadow-sm text-dark">
+                    <div class="s_events_event_date position-absolute bg-white shadow-sm text-dark">
                         <span t-field="record.date_begin" t-options="{'format': 'LLL', 'tz_name': record.date_tz}"
-                              class="s_events_event_month"/>
+                            class="s_events_event_month fw-bold text-uppercase"/>
                         <span t-field="record.date_begin" t-options="{'format': 'dd', 'tz_name': record.date_tz}"
-                              class="s_events_event_day"/>
+                            class="s_events_event_day fw-light lh-1"/>
                     </div>
                 </t>
-            </a>
-            <div class="card-body p-3">
-                <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                <h5 class="mb-0 text-truncate" t-field="record.name"/>
-                <time itemprop="startDate" t-att-datetime="record.date_begin">
-                    <span t-field="record.date_begin"
-                          t-options="{'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/>
-                    -
-                    <span t-field="record.date_begin"
-                          t-options="{'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/>
-                    (<span t-out="record.date_tz"/>)
-                </time>
-                <div itemprop="location" t-field="record.address_id"
-                     t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
             </div>
-        </div>
-    </div>
+            <div class="card-body d-flex flex-column gap-2 justify-content-between">
+                <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                <div>
+                    <div class="s_events_event_time mb-1 small fw-bold">
+                        <span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/>
+                        (<span t-out="record.date_tz"/>)
+                    </div>
+                    <h5 class="text-truncate" t-field="record.name"/>
+                    <small class="text-muted" t-field="record.subtitle"/>
+                </div>
+                <div itemprop="location" class="mt-2 fw-bold" t-field="record.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
+            </div>
+        </a>
+    </t>
 </template>
 
 <!--SNIPPET OPTIONS -->
@@ -99,6 +97,15 @@
                       data-fields="[&quot;category_id&quot;]"
                       data-select-data-attribute=""
                       data-no-preview="true"/>
+    </xpath>
+    <xpath expr="//we-select[@data-name='template_opt']" position="after">
+        <we-checkbox t-if="snippet_name == 'event_upcoming_snippet'"
+            data-name="time_opt"
+            string="Show time"
+            data-no-widget-refresh="true"
+            data-reset-view-arch="true"
+            data-apply-to=".s_events_event_time"
+            data-select-class="d-inline"/>
     </xpath>
 </template>
 
