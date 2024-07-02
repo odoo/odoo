@@ -2095,6 +2095,14 @@ export class ListRenderer extends Component {
         await this.props.list.leaveEditMode();
         element.classList.remove("o_row_draggable");
         const refId = previous ? previous.dataset.id : null;
+        try {
+            this.resequencePromise = this.props.list.resequence(dataRowId, refId, {
+                handleField: this.props.list.handleField,
+            });
+            await this.resequencePromise;
+        } finally {
+            element.classList.add("o_row_draggable");
+        }
         this.resequencePromise = this.props.list.resequence(dataRowId, refId, {
             handleField: this.props.list.handleField,
         });
