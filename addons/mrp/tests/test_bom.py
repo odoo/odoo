@@ -2402,6 +2402,63 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(len(mo_order.move_raw_ids), 3)
         self.assertEqual(mo_order.move_raw_ids.product_id, self.product_2 + product + self.product_8)
 
+    def test_workorders_on_bom_changes(self):
+        """
+        Check that the workorders of the MO are changed according to the bom
+        and that bom free workorders are not reset on bom changes.
+        """
+        product = self.product_4
+        bom_1, bom_2, bom_3 = self.env['mrp.bom'].create([
+            {
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'operation_ids': [
+                    Command.create({'name': 'op1', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 1.0}),
+                    Command.create({'name': 'op2', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 1.0}),
+                ],
+            },
+            {
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'operation_ids': [
+                    Command.create({'name': 'op3', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 1.0}),
+                    Command.create({'name': 'op4', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 1.0}),
+                ],
+            },
+            {
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'operation_ids': [
+                    Command.create({'name': 'op5', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 1.0}),
+                    Command.create({'name': 'op6', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 1.0}),
+                ],
+            },
+        ])
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product
+        mo_form.product_qty = 1.0
+        mo_form.bom_id = bom_1
+        mo = mo_form.save()
+        self.assertEqual(mo.workorder_ids.mapped('name'), ['op1', 'op2'])
+        # test simple on change
+        with Form(mo) as mo_form:
+            mo_form.bom_id = bom_2
+        self.assertEqual(mo.workorder_ids.mapped('name'), ['op3', 'op4'])
+        # test double onchange
+        with Form(mo) as mo_form:
+            mo_form.bom_id = bom_1
+            mo_form.bom_id = bom_3
+        self.assertEqual(mo.workorder_ids.mapped('name'), ['op5', 'op6'])
+        # add a new operation and check that it is not removed on bom change
+        with Form(mo) as mo_form:
+            with mo_form.workorder_ids.new() as wo_form:
+                wo_form.name = 'new op'
+                wo_form.workcenter_id = self.workcenter_2
+        self.assertEqual(mo.workorder_ids.mapped('name'), ['op5', 'op6', 'new op'])
+        with Form(mo) as mo_form:
+            mo_form.bom_id = bom_2
+        self.assertEqual(set(mo.workorder_ids.mapped('name')), {'op3', 'op4', 'new op'})
+
 
 @tagged('-at_install', 'post_install')
 class TestTourBoM(HttpCase):
