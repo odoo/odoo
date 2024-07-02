@@ -294,6 +294,12 @@ class MetaModel(api.Meta):
                 add_default('write_date', fields.Datetime(
                     string='Last Updated on', automatic=True, readonly=True))
 
+        annotations = getattr(self, '__annotations__', {})
+        if annotations:
+            for key, val in attrs.items():
+                if key in annotations:
+                    if isinstance(val, Field):
+                        val._model_annotation = annotations[key]
 
 class NewId(object):
     """ Pseudo-ids for new records, encapsulating an optional origin id (actual
@@ -723,6 +729,7 @@ class BaseModel(metaclass=MetaModel):
         setattr(cls, name, field)
         field._toplevel = True
         field.__set_name__(cls, name)
+
         # add field as an attribute and in cls._fields (for reflection)
         cls._fields[name] = field
 
@@ -3502,6 +3509,10 @@ class BaseModel(metaclass=MetaModel):
         # 2. add manual fields
         if self.pool._init_modules:
             self.env['ir.model.fields']._add_manual_fields(self)
+
+        for field in cls._fields.values():
+            if field.relational:
+                field.setup_comodel_name()
 
         # 3. make sure that parent models determine their own fields, then add
         # inherited fields to cls

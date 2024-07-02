@@ -301,6 +301,7 @@ class Field(MetaField('DummyField', (object,), {}), Generic[_T]):
 
     name = None                         # name of the field
     model_name = None                   # name of the model of this field
+    _model_annotation = None
     comodel_name = None                 # name of the model of values (if relational)
 
     store = True                        # whether the field is stored in database
@@ -416,6 +417,8 @@ class Field(MetaField('DummyField', (object,), {}), Generic[_T]):
                 # free memory, self.args and self._base_fields are no longer useful
                 self.__dict__.pop('args', None)
                 self.__dict__.pop('_base_fields', None)
+
+        self._model_annotation = getattr(owner, '__annotations__', {}).get(name)
 
     #
     # Setup field parameter attributes
@@ -2983,37 +2986,42 @@ class _Relational(Field[_T]):
         return super().__set__(records, value)
 
     def setup(self, model):
+        self.setup_comodel_name()
+        return super().setup(model)
+
+    def setup_comodel_name(self):
+        if self.comodel_name:
+            return
+
         error = None
         class_name = "ClassModel"
         module_name = self._module
         comodel_by_attribute = self.args and self.args.get('comodel_name')
         comodel_by_annotation = None
         comodel_by_typing = None
-
-        for base in model.__class__.__bases__:
-            annotation = getattr(base, '__annotations__', {}).get(self.name)
-            if annotation:
-                break
+        annotation = self._model_annotation
 
         if annotation:
             class_name = None
             if isinstance(annotation, str):
+                annotation = annotation.strip('"').strip("'")  # to remove double quote if use __future__ and quote
                 if '.' in annotation:
                     module_name, class_name = annotation.split('.')
                 else:
                     class_name = annotation
                 try:
                     command_module = __import__(f'odoo.addons.{module_name}', fromlist=['odoo', 'addons', module_name, 'models'])
+                    ClassModel = getattr(command_module, class_name, None)
                 except ModuleNotFoundError:
-                    raise ValueError("Can not import the annotation %r from the field %r." % (annotation, self,))
-                ClassModel = getattr(command_module, class_name, None)
+                    error = "Can not import the annotation %r." % (annotation,)
             else:
                 ClassModel = annotation
                 class_name = ClassModel.__name__
-            try:
-                comodel_by_annotation = ClassModel._name
-            except AttributeError:
-                error = "Can not found the model name of %(class_name)r\n"
+            if not error:
+                try:
+                    comodel_by_annotation = ClassModel._name
+                except AttributeError:
+                    error = "Can not found the model name of '%s.%s'." % (module_name, class_name)
 
         # Auto initialize the comodel name from the generic type's var if used
         # This allows to get the comodel from the type when the field is declared
@@ -3072,8 +3080,6 @@ class _Relational(Field[_T]):
             self.comodel_name = comodel_by_annotation
         elif comodel_by_attribute:
             self.comodel_name = comodel_by_attribute
-
-        return super().setup(model)
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)

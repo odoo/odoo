@@ -389,8 +389,7 @@ def load_openerp_module(module_name):
                     "ModelClass": class_name,
                     "ttype": ttype,
                 }).with_traceback(err.__traceback__) from None
-        else:
-            raise
+        raise
     except Exception:
         _logger.critical("Couldn't load module %s", module_name)
         raise
