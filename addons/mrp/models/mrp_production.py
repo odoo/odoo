@@ -821,14 +821,6 @@ class MrpProduction(models.Model):
                 return {'warning': {'title': _('Warning'), 'message': message}}
         return True
 
-    @api.onchange('product_id', 'move_raw_ids')
-    def _onchange_product_id(self):
-        for move in self.move_raw_ids:
-            if self.product_id == move.product_id:
-                message = _("The component %s should not be the same as the product to produce.", self.product_id.display_name)
-                self.move_raw_ids = self.move_raw_ids - move
-                return {'warning': {'title': _('Warning'), 'message': message}}
-
     @api.constrains('move_finished_ids')
     def _check_byproducts(self):
         for order in self:
@@ -2637,8 +2629,10 @@ class MrpProduction(models.Model):
                 ('location_id.scrap_location', '=', True),
                 ('location_dest_id.scrap_location', '=', False),
             ])
-            # Either removed or unbuild
-            if not ((duplicates_unbuild or removed) and duplicates - duplicates_unbuild - removed + unremoved == 0):
+            is_final_product = (lot == self.lot_producing_id)
+            # Either removed, unbuild or the final product is the same of some components
+            if not ((duplicates_unbuild or removed or is_final_product) and \
+                    duplicates - duplicates_unbuild - removed + unremoved - is_final_product == 0):
                 return True
         # Check presence of same sn in current production
         duplicates = co_prod_move_lines.filtered(lambda ml: ml.quantity and ml.lot_id == lot)

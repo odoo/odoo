@@ -503,6 +503,51 @@ class StockMoveLine(models.Model):
             # which is clear by the unlink of move line
             moves.with_prefetch()._recompute_state()
         return res
+    '''
+    notes about final product:
+
+when we doing a validation, the process is:
+
+PROD -> Production
+then
+PROD -> Stock
+
+when we do it on a first time:
+
+location   | quantity
+--------------------
+Production | -1
+Stock      | +1
+--------------------
+
+When we re-produce:
+
+location   | quantity
+----------------------
+Production | -2
+Stock      | +2 (?)
+----------------------
+
+the issue:
+
+tracked products can't have
+abs(quantity) > 1. because it's no make sense.
+
+what to do:
+
+create a specific scenario that avoid the more then 1 transfer.
+
+    '''
+    def _is_reproducing(self):
+        quant = self.env['stock.quant'].search([
+            ('lot_id', '=', self.lot_id.id),
+            ('location_id', '=', self.location_id.id),
+            ('product_id', '=', self.product_id.id)
+        ], limit=1)
+        final_product_as_component = (self.lot_id in self.move_id.production_id.move_raw_ids.lot_ids)
+        if self.lot_id and float_compare(quant.quantity, -1, 2) == 0 and final_product_as_component:
+            return True
+        return False
 
     def _action_done(self):
         """ This method is called during a move's `action_done`. It'll actually move a quant from
@@ -594,6 +639,8 @@ class StockMoveLine(models.Model):
         ml_ids_to_ignore = OrderedSet()
 
         for ml in mls_todo:
+            if ml._is_reproducing():
+                continue
             # if this move line is force assigned, unreserve elsewhere if needed
             ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
             available_qty, in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id)
