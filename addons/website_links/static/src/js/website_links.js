@@ -5,159 +5,8 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
-
-var SelectBox = publicWidget.Widget.extend({
-    events: {
-        'change': '_onChange',
-    },
-
-    /**
-     * @constructor
-     * @param {Object} parent
-     * @param {Object} obj
-     * @param {String} placeholder
-     */
-    init: function (parent, obj, placeholder) {
-        this._super.apply(this, arguments);
-        this.obj = obj;
-        this.placeholder = placeholder;
-
-        this.orm = this.bindService("orm");
-        this.keepLast = new KeepLast();
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        var self = this;
-        this.$el.select2({
-            placeholder: self.placeholder,
-            allowClear: true,
-            createSearchChoice: function (term) {
-                if (self._objectExists(term)) {
-                    return null;
-                }
-                return { id: term, text: `Create '${term}'` };
-            },
-            createSearchChoicePosition: 'bottom',
-            multiple: false,
-            ajax: {
-                dataType: 'json',
-                data: term => term,
-                transport: (params, success, failure) => {
-                    // Do not search immediately: wait for the user to stop
-                    // typing (basically, this is a debounce).
-                    clearTimeout(this._loadDataTimeout);
-                    this._loadDataTimeout = setTimeout(() => {
-                        // We want to search with a limit and not care about any
-                        // pagination implementation. To make this work, we
-                        // display the exact match first though, which requires
-                        // an extra RPC (could be refactored into a new
-                        // controller in master but... see TODO).
-                        // TODO at some point this whole app will be moved as a
-                        // backend screen, with real m2o fields etc... in which
-                        // case the "exact match" feature should be handled by
-                        // the ORM somehow ?
-                        const limit = 100;
-                        const searchReadParams = [
-                            ['id', 'name'],
-                            {
-                                limit: limit,
-                                order: 'name, id desc', // Allows to have exact match first
-                            },
-                        ];
-                        const proms = [];
-                        proms.push(this.orm.searchRead(
-                            this.obj,
-                            // Exact match + results that start with the search
-                            [['name', '=ilike', `${params.data}%`]],
-                            ...searchReadParams
-                        ));
-                        proms.push(this.orm.searchRead(
-                            this.obj,
-                            // Results that contain the search but do not start
-                            // with it
-                            [['name', '=ilike', `%_${params.data}%`]],
-                            ...searchReadParams
-                        ));
-                        // Keep last is there in case a RPC takes longer than
-                        // the debounce delay + next rpc delay for some reason.
-                        this.keepLast.add(Promise.all(proms)).then(([startingMatches, endingMatches]) => {
-                            // We loaded max a 2 * limit amount of records but
-                            // ensure that we do not display "ending matches" if
-                            // we may not have loaded all "starting matches".
-                            if (startingMatches.length < limit) {
-                                const startingMatchesId = startingMatches.map((value) => value.id);
-                                const extraEndingMatches = endingMatches.filter(
-                                    (value) => !startingMatchesId.includes(value.id)
-                                );
-                                return startingMatches.concat(extraEndingMatches);
-                            }
-                            // In that case, we made one RPC too much but this
-                            // was chosen over not making them go in parallel.
-                            // We don't want to display "ending matches" if not
-                            // all "starting matches" have been loaded.
-                            return startingMatches;
-                        })
-                        .then(params.success)
-                        .catch(params.error);
-                    }, 400);
-                },
-                results: data => {
-                    this.objects = data.map(x => ({
-                        id: x.id,
-                        text: x.name,
-                    }));
-                    return {
-                        results: this.objects,
-                    };
-                },
-            },
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {String} query
-     */
-    _objectExists: function (query) {
-        return this.objects.find(val => val.text.toLowerCase() === query.toLowerCase()) !== undefined;
-    },
-    /**
-     * @private
-     * @param {String} name
-     */
-    _createObject: function (name) {
-        var args = {
-            name: name
-        };
-        if (this.obj === "utm.campaign") {
-            args.is_auto_campaign = true;
-        }
-        return this.orm.create(this.obj, [args]).then(record => {
-            this.el.attr('value', record);
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Object} ev
-     */
-    _onChange: function (ev) {
-        if (!ev.added || typeof ev.added.id !== "string") {
-            return;
-        }
-        this._createObject(ev.added.id);
-    },
-});
+import { attachComponent } from "@web/legacy/utils";
+import { SelectMenu } from "@web/core/select_menu/select_menu";
 
 var RecentLinkBox = publicWidget.Widget.extend({
     template: 'website_links.RecentLink',
@@ -283,7 +132,8 @@ var RecentLinkBox = publicWidget.Widget.extend({
             self.el.querySelector("#o_website_links_code").innerHTML = newCode;
 
             // Update button copy to clipboard
-            self.el.querySelector(".btn_shorten_url_clipboard")
+            self.el
+                .querySelector(".btn_shorten_url_clipboard")
                 .setAttribute("data-clipboard-text", host + newCode);
 
             // Show action again
@@ -414,6 +264,13 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         'submit #o_website_links_link_tracker_form': '_onFormSubmit',
     },
 
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+        this.keepLast = new KeepLast();
+        this.selectMenu = {};
+    },
+
     /**
      * @override
      */
@@ -421,14 +278,40 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         const defs = [this._super.apply(this, arguments)];
 
         // UTMS selects widgets
-        const campaignSelect = new SelectBox(this, "utm.campaign", _t("e.g. June Sale, Paris Roadshow, ..."));
-        defs.push(campaignSelect.attachTo(document.querySelector("#campaign-select")));
+        async function attachSelectComponent(selectorId, utmKey, placeholderText, el) {
+            const props = this.prepareProps(selectorId, utmKey, {
+                placeholder: _t(placeholderText),
+                el: el,
+            });
+            this.selectMenu[props.name] = await attachComponent(
+                this,
+                this.el.querySelector(`#${selectorId}`).parentNode,
+                SelectMenu,
+                props
+            );
+        }
 
-        const mediumSelect = new SelectBox(this, "utm.medium", _t("e.g. InMails, Ads, Social, ..."));
-        defs.push(mediumSelect.attachTo(document.querySelector("#channel-select")));
-
-        const sourceSelect = new SelectBox(this, "utm.source", _t("e.g. LinkedIn, Facebook, Leads, ..."));
-        defs.push(sourceSelect.attachTo(document.querySelector("#source-select")));
+        attachSelectComponent.call(
+            this,
+            "campaign-select",
+            "utm.campaign",
+            "e.g. June Sale, Paris Roadshow, ...",
+            this.el.querySelector("#campaign-select")
+        );
+        attachSelectComponent.call(
+            this,
+            "channel-select",
+            "utm.medium",
+            "e.g. InMails, Ads, Social, ...",
+            this.el.querySelector("#channel-select")
+        );
+        attachSelectComponent.call(
+            this,
+            "source-select",
+            "utm.source",
+            "e.g. LinkedIn, Facebook, Leads, ...",
+            this.el.querySelector("#source-select")
+        );
 
         // Recent Links Widgets
         this.recentLinks = new RecentLinks(this.el);
@@ -442,6 +325,86 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         });
 
         return Promise.all(defs);
+    },
+
+    prepareProps(name, model, options) {
+        return {
+            name: name,
+            placeholder: options.placeholder,
+            element: options.el,
+            onSelect: (value) => {
+                const selectMenuInst = this.selectMenu[name];
+                selectMenuInst?.update({
+                    value: value,
+                });
+            },
+            choiceFetchFunction: (searchString) => {
+                return new Promise((resolve, reject) => {
+                    // We want to search with a limit and not care about any
+                    // pagination implementation. To make this work, we
+                    // display the exact match first though, which requires
+                    // an extra RPC (could be refactored into a new
+                    // controller in master but... see TODO).
+                    // TODO at some point this whole app will be moved as a
+                    // backend screen, with real m2o fields etc... in which
+                    // case the "exact match" feature should be handled by
+                    // the ORM somehow ?
+                    const limit = 100;
+                    const searchReadParams = [
+                        ["id", "name"],
+                        {
+                            limit: limit,
+                            order: "name, id desc", // Allows to have exact match first
+                        },
+                    ];
+                    const proms = [];
+                    proms.push(this.orm.searchRead(
+                            model,
+                            // Exact match + results that start with the search
+                            [["name", "=ilike", `${searchString}%`]],
+                            ...searchReadParams
+                        )
+                    );
+                    proms.push(
+                        this.orm.searchRead(
+                            model,
+                            // Results that contain the search but do not start
+                            // with it
+                            [["name", "=ilike", `%_${searchString}%`]],
+                            ...searchReadParams
+                        )
+                    );
+                    // Keep last is there in case a RPC takes longer than
+                    // the debounce delay + next rpc delay for some reason.
+                    this.keepLast
+                        .add(Promise.all(proms))
+                        .then(([startingMatches, endingMatches]) => {
+                            // We loaded max a 2 * limit amount of records but
+                            // ensure that we do not display "ending matches" if
+                            // we may not have loaded all "starting matches".
+                            if (startingMatches.length < limit) {
+                                const startingMatchesId = startingMatches.map((value) => value.id);
+                                const extraEndingMatches = endingMatches.filter(
+                                    (value) => !startingMatchesId.includes(value.id)
+                                );
+                                startingMatches.forEach((choice) => {
+                                    choice.value = choice.name;
+                                    choice.label = choice.name;
+                                });
+                                return startingMatches.concat(extraEndingMatches);
+                            }
+                            // In that case, we made one RPC too much but this
+                            // was chosen over not making them go in parallel.
+                            // We don't want to display "ending matches" if not
+                            // all "starting matches" have been loaded.
+                            return startingMatches;
+                        })
+                        .then(resolve)
+                        .catch(reject);
+                });
+            },
+            value: "",
+        };
     },
 
     //--------------------------------------------------------------------------
@@ -603,9 +566,12 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
                 self.recentLinks._addLink(link);
 
                 // Clean URL and UTM selects
-                document.querySelector("#campaign-select").value = "";
-                document.querySelector("#channel-select").value = "";
-                document.querySelector("#source-select").value = "";
+                const names = ["campaign-select", "channel-select", "source-select"];
+                names.forEach((name) => {
+                    self.selectMenu[name].update({
+                        value: "",
+                    });
+                });
                 label.value = "";
                 document.querySelector(".o_website_links_utm_forms").style.display = "none";
             }
@@ -614,7 +580,6 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
 });
 
 export default {
-    SelectBox: SelectBox,
     RecentLinkBox: RecentLinkBox,
     RecentLinks: RecentLinks,
 };
