@@ -20,7 +20,7 @@ _logger = logging.getLogger(__name__)
 
 class PosOrder(models.Model):
     _name = "pos.order"
-    _inherit = ["portal.mixin", "pos.bus.mixin", "pos.load.mixin"]
+    _inherit = ["portal.mixin", "pos.bus.mixin", "pos.load.mixin", 'mail.thread']
     _description = "Point of Sale Orders"
     _order = "date_order desc, name desc, id desc"
 
@@ -316,6 +316,9 @@ class PosOrder(models.Model):
     ticket_code = fields.Char(help='5 digits alphanumeric code to be used by portal user to request an invoice')
     tracking_number = fields.Char(string="Order Number", compute='_compute_tracking_number', search='_search_tracking_number')
     uuid = fields.Char(string='Uuid', readonly=True, copy=False)
+    is_edited = fields.Boolean(string='Edited', compute='_compute_is_edited')
+    has_deleted_line = fields.Boolean(string='Has Deleted Line')
+    order_edit_tracking = fields.Boolean(related="config_id.order_edit_tracking", readonly=True)
 
     def _search_tracking_number(self, operator, value):
         #search is made over the pos_reference field
@@ -431,6 +434,11 @@ class PosOrder(models.Model):
                 'amount_total': order.currency_id.round(amounts[order.id]['taxed'])
             })
 
+    @api.depends('lines.is_edited', 'has_deleted_line')
+    def _compute_is_edited(self):
+        for order in self:
+            order.is_edited = any(order.lines.mapped('is_edited')) or order.has_deleted_line
+
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         if self.partner_id:
@@ -461,6 +469,8 @@ class PosOrder(models.Model):
         for order in self:
             if vals.get('state') and vals['state'] == 'paid' and order.name == '/':
                 vals['name'] = self._compute_order_name()
+            if (vals.get('has_deleted_line')) is not None and self.has_deleted_line:
+                del vals['has_deleted_line']
         return super(PosOrder, self).write(vals)
 
     def _compute_order_name(self):
@@ -1143,6 +1153,9 @@ class PosOrder(models.Model):
         # This function is made to be overriden by pos_self_order_preparation_display
         pass
 
+    def _post_chatter_message(self, body):
+        self.message_post(body=body)
+
 class PosOrderLine(models.Model):
     _name = "pos.order.line"
     _description = "Point of Sale Order Lines"
@@ -1194,6 +1207,7 @@ class PosOrderLine(models.Model):
     combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines') # FIXME rename to child_line_ids
 
     combo_line_id = fields.Many2one('pos.combo.line', string='Combo Line')
+    is_edited = fields.Boolean('Edited', default=False)
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -1259,6 +1273,14 @@ class PosOrderLine(models.Model):
                 if pl[2].get('server_id'):
                     pl[2]['id'] = pl[2]['server_id']
                     del pl[2]['server_id']
+        if self.order_id.config_id.order_edit_tracking and values.get('qty') and values.get('qty') < self.qty:
+            self.is_edited = True
+            body = Markup(_("%(product_name)s: Ordered quantity: %(old_qty)s &rarr; %(new_qty)s")) % {
+                'product_name': self.full_product_name,
+                'old_qty': str(self.qty),
+                'new_qty': values.get('qty'),
+            }
+            self.order_id._post_chatter_message(body)
         return super().write(values)
 
     @api.model
@@ -1480,6 +1502,15 @@ class PosOrderLine(models.Model):
                 }
             )
         return base_line_vals_list
+
+    def unlink(self):
+        for line in self:
+            if line.order_id.config_id.order_edit_tracking:
+                line.order_id.has_deleted_line = True
+                body = Markup(_("%s: Deleted line")) % line.full_product_name
+                line.order_id._post_chatter_message(body)
+        res = super().unlink()
+        return res
 
 
 class PosOrderLineLot(models.Model):
