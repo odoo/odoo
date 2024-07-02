@@ -98,7 +98,7 @@ class AccountMove(models.Model):
         invoice_time = xpath_ns('//cbc:IssueTime')
         invoice_datetime = datetime.strptime(invoice_date + ' ' + invoice_time, '%Y-%m-%d %H:%M:%S')
 
-        if invoice_datetime and journal_id.company_id.vat and x509_cert:
+        if invoice_datetime and journal_id.company_id.vat and x509_cert and signature:
             prehash_content = etree.tostring(root)
             invoice_hash = edi_format._l10n_sa_generate_invoice_xml_hash(prehash_content, 'digest')
 
@@ -134,7 +134,7 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda m: m.is_invoice() and m.country_code == 'SA'):
             move.edi_show_cancel_button = False
 
-    def _l10n_sa_generate_unsigned_data(self):
+    def _l10n_sa_generate_unsigned_data(self, xml_content=None):
         """
             Generate UUID and digital signature to be used during both Signing and QR code generation.
             It is necessary to save the signature as it changes everytime it is generated and both the signing and the
@@ -144,13 +144,14 @@ class AccountMove(models.Model):
         edi_format = self.env.ref('l10n_sa_edi.edi_sa_zatca')
         # Build the dict of values to be used for generating the Invoice XML content
         # Set Invoice field values required for generating the XML content, hash and signature
-        self.l10n_sa_uuid = uuid.uuid4()
+        self.l10n_sa_uuid = self.l10n_sa_uuid or uuid.uuid4()
         # We generate the XML content
-        xml_content = edi_format._l10n_sa_generate_zatca_template(self)
+        xml_content = xml_content or edi_format._l10n_sa_generate_zatca_template(self)
         # Once the required values are generated, we hash the invoice, then use it to generate a Signature
         invoice_hash_hex = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_generate_invoice_xml_hash(xml_content).decode()
-        self.l10n_sa_invoice_signature = edi_format._l10n_sa_get_digital_signature(self.journal_id.company_id,
-                                                                                   invoice_hash_hex).decode()
+        self.l10n_sa_invoice_signature = edi_format._l10n_sa_get_digital_signature(
+            self.journal_id.company_id, invoice_hash_hex
+        ).decode()
         return xml_content
 
     def _l10n_sa_log_results(self, xml_content, response_data=None, error=False):
@@ -197,6 +198,13 @@ class AccountMove(models.Model):
         """
         zatca_doc_ids = self.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca')
         return len(zatca_doc_ids) > 0 and not any(zatca_doc_ids.filtered(lambda d: d.state == 'to_send'))
+
+    def _post(self, soft=True):
+        res = super()._post(soft)
+        for record in self:
+            if record.country_code == 'SA' and record.move_type in ('out_invoice', 'out_refund'):
+                record._l10n_sa_generate_unsigned_data()
+        return res
 
 
 class AccountMoveLine(models.Model):
