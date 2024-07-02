@@ -265,8 +265,8 @@ class AccountMove(models.Model):
     def _l10n_hu_get_currency_rate(self):
         """ Get the invoice currency / HUF rate.
 
-        If the company currency is HUF, we estimate this based on the invoice lines,
-        using a MMSE estimator.
+        If the company currency is HUF, we estimate this based on the invoice lines
+        (or if this is not an invoice, based on the AMLs), using a MMSE estimator.
 
         If the company currency is not HUF (e.g. Hungarian companies that do their accounting in euro),
         we get the rate from the currency rates.
@@ -274,7 +274,7 @@ class AccountMove(models.Model):
         if self.currency_id.name == 'HUF':
             return 1
         if self.company_id.currency_id.name == 'HUF':
-            squared_amount_currency = sum(line.amount_currency ** 2 for line in self.invoice_line_ids)
+            squared_amount_currency = sum(line.amount_currency ** 2 for line in (self.invoice_line_ids or self.line_ids))
             squared_balance = sum(line.balance ** 2 for line in self.invoice_line_ids)
             return math.sqrt(squared_balance / squared_amount_currency)
         return self.env['res.currency']._get_conversion_rate(
@@ -317,6 +317,9 @@ class AccountMove(models.Model):
     def _l10n_hu_edi_check_invoices(self):
         errors = []
         hu_vat_regex = re.compile(r'\d{8}-[1-5]-\d{2}')
+
+        # This contains all the advance invoices that correspond to final invoices in `self`.
+        advance_invoices = self.filtered(lambda m: not m._is_downpayment()).invoice_line_ids._get_downpayment_lines().mapped('move_id')
 
         checks = {
             'company_vat_missing': {
@@ -389,6 +392,16 @@ class AccountMove(models.Model):
                 ]),
                 'message': _('The following invoices appear to be earlier in the chain, but have not yet been sent. Please send them first.'),
                 'action_text': _('View invoice(s)'),
+            },
+            'invoice_advance_not_paid': {
+                'records': advance_invoices.filtered(
+                    lambda m: (
+                        m.payment_state not in ['in_payment', 'paid', 'partial']
+                        or m.l10n_hu_edi_state in [False, 'rejected', 'cancelled'] and m not in self
+                    )
+                ),
+                'message': _('All advance invoices must be paid and sent to NAV before the final invoice is issued.'),
+                'action_text': _('View advance invoice(s)'),
             },
             'invoice_line_not_one_vat_tax': {
                 'records': self.filtered(
@@ -859,19 +872,30 @@ class AccountMove(models.Model):
             }
 
             if 'is_downpayment' in line and line.is_downpayment:
-                advance_invoices = line._get_downpayment_lines().mapped('move_id').filtered(lambda m: m.state == 'posted') - self
-
                 # Advance invoices case 1: this is an advance invoice
-                if not advance_invoices:
+                if self._is_downpayment():
                     line_values['advanceIndicator'] = True
 
-                # Advance invoices case 2: this is a final invoice that deducts an advance invoice
+                # Advance invoices case 2: this is a final invoice that deducts one or more advance invoices.
+                # In this case, we put a reference to the *last-paid* advance invoice (NAV only allows us to report one).
                 else:
+                    advance_invoices = line._get_downpayment_lines().mapped('move_id').filtered(lambda m: m.state == 'posted')
+
+                    if advance_payments := advance_invoices._get_reconciled_payments():
+                        advance_invoice = advance_invoices.filtered(lambda m: advance_payments[0] in m._get_reconciled_payments())
+                        advance_payment_date = advance_payments[0].date
+                    elif advance_statement_lines := advance_invoices._get_reconciled_statement_lines():
+                        advance_invoice = advance_invoices.filtered(lambda m: advance_statement_lines[0] in m._get_reconciled_statement_lines())
+                        advance_payment_date = advance_statement_lines[0].date
+                    else:
+                        advance_invoice = advance_invoices[0]
+                        advance_payment_date = advance_invoices[0].invoice_date
+
                     line_values.update({
                         'advanceIndicator': True,
-                        'advanceOriginalInvoice': advance_invoices[0].name,
-                        'advancePaymentDate': advance_invoices[0].invoice_date,
-                        'advanceExchangeRate': advance_invoices[0]._l10n_hu_get_currency_rate(),
+                        'advanceOriginalInvoice': advance_invoice.name,
+                        'advancePaymentDate': advance_payment_date,
+                        'advanceExchangeRate': advance_payments[0].move_id._l10n_hu_get_currency_rate(),
                     })
 
             if line.display_type == 'product':
@@ -926,7 +950,7 @@ class AccountMove(models.Model):
                 'vatRateVatAmount': -line.amount_currency,
                 'vatRateVatAmountHUF': -line.balance if is_company_huf else currency_huf.round(-line.amount_currency * currency_rate),
             }
-            for line in self.line_ids.filtered(lambda l: l.tax_line_id.l10n_hu_tax_type)
+            for line in self.line_ids.filtered(lambda l: l.tax_line_id and l.tax_line_id.l10n_hu_tax_type)
         }
 
         invoice_values['tax_summary'] = [
