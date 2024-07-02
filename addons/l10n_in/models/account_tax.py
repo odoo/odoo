@@ -119,3 +119,34 @@ class AccountTax(models.Model):
             'display_uom': display_uom,
             'items': items,
         }
+
+
+class AccountTaxGroup(models.Model):
+    _inherit = 'account.tax.group'
+
+    l10n_in_tax_source_type = fields.Selection([
+            ('tds', 'TDS'),
+            ('tcs', 'TCS'),
+        ], string="Tax Source Type")
+    l10_in_is_threshold = fields.Boolean("TCS/TDS Threshold Limit")
+    l10n_in_consider_tax = fields.Selection([
+            ('untaxed_amount', 'Untaxed Amount'),
+            ('total_amount', 'Total Amount'),
+        ], string="Consider", default='untaxed_amount', required=True)
+    l10n_in_is_per_transaction_limit = fields.Boolean("Per Transaction")
+    l10n_in_per_transaction_limit = fields.Float("Per Transaction limit")
+    l10n_in_is_aggregate_limit = fields.Boolean("Aggregate")
+    l10n_in_aggregate_limit = fields.Float("Aggregate limit")
+    l10n_in_per_transaction_units = fields.Selection([
+            ('total', 'Total'),
+            ('per_unit', 'Per Unit'),
+        ], string="Per Transaction Units", default='total')
+    l10n_in_aggregate_period = fields.Selection([
+            ('month', 'Monthly'),
+            ('fiscal_year', 'Financial Yearly'),
+        ], string="Aggregate Period", default='fiscal_year')
+
+    _sql_constraints = [
+        ('l10n_in_per_transaction_limit', 'CHECK(l10n_in_per_transaction_limit >= 0)', 'Per transaction limit must be positive'),
+        ('l10n_in_aggregate_limit', 'CHECK(l10n_in_aggregate_limit >= 0)', 'Aggregate limit must be positive'),
+    ]

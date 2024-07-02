@@ -243,6 +243,26 @@
                     </record>
                 </field>
             </record>
+            <record id="tds_report_line_section_194lba2" model="account.report.line">
+                <field name="name">Section 194LBA(2): Dividend income of a business trust from SPV, in which it holds the entire share capital exempt the capital held by the government, and distribution to its unitholders</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_194lba2_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">194LBA(2)</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_194lba3" model="account.report.line">
+                <field name="name">Section 194LBA(3): Rental income payment of assets owned by the business trust to the unitholders of such business trust.</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_194lba3_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">194LBA(3)</field>
+                    </record>
+                </field>
+            </record>
             <record id="tds_report_line_section_194lb" model="account.report.line">
                 <field name="name">Section 194LB: Payment of interest on infrastructure debt fund</field>
                 <field name="expression_ids">
@@ -270,6 +290,26 @@
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">194LBC</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_194lc" model="account.report.line">
+                <field name="name">Section 194LC: Payment of interest for the loan borrowed in foreign currency by an Indian company or business trust against the issue of long-term bonds listed in IFSC</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_194lc_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">194LC</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_194ld" model="account.report.line">
+                <field name="name">Section 194LD: Payment of interest on bond (rupee-denominated) to FII or a QFI</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_194ld_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">194LD</field>
                     </record>
                 </field>
             </record>
@@ -313,6 +353,26 @@
                     </record>
                 </field>
             </record>
+            <record id="tds_report_line_section_194r" model="account.report.line">
+                <field name="name">Section 194R: Benefits Or Perquisites Arising From Business Or Profession</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_194r_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">194R</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_194S" model="account.report.line">
+                <field name="name">Section 194S: Payment Consideration For Transfer of Virtual Digital Assets Of Crypto Currency</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_194s_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">194S</field>
+                    </record>
+                </field>
+            </record>
             <record id="tds_report_line_section_195" model="account.report.line">
                 <field name="name">Section 195: Payment of any other sum to a Non -resident</field>
                 <field name="expression_ids">
@@ -320,6 +380,35 @@
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">195</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_196b" model="account.report.line">
+                <field name="name">Section 196B: Income (including LTCG) from units of an offshore fund</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_196b_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">196B</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_196c" model="account.report.line">
+                <field name="name">Section 196C: Income (including LTCG) from foreign currency bonds or GDR of an Indian company</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_196c_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">196C</field>
+                    </record>
+                </field>
+            </record><record id="tds_report_line_section_196d" model="account.report.line">
+                <field name="name">Section 196D: Income (excluding dividend and capital gain) from Foreign Institutional Investors</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_196d_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">196D</field>
                     </record>
                 </field>
             </record>
