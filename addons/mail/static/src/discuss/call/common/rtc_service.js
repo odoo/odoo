@@ -965,7 +965,7 @@ export class Rtc extends Record {
                 );
             },
             3000,
-            true
+            { leading: true, trailing: true }
         );
         this.state.channel.rtcInvitingSession = undefined;
         await this.loadSfuClient();
