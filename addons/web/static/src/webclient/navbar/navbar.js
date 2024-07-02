@@ -149,6 +149,7 @@ export class NavBar extends Component {
             ...sectionsMenu.querySelectorAll(":scope > *:not(.o_menu_sections_more)"),
         ];
         for (const section of sections) {
+            section.classList.remove("text-truncate");
             section.classList.remove("d-none");
         }
         this.currentAppSectionsExtra = [];

@@ -66,4 +66,5 @@ a.o_mail_redirect, a.o_channel_redirect {
 .o-mail-systrayFullscreenDropdownMenu {
     top: $o-navbar-height !important;
     height: calc(100% - #{$o-navbar-height}); // no bottom-0 otherwise performance issue
+    max-width: 100vw !important;
 }

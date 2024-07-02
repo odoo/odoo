@@ -71,7 +71,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         await mount(Parent, target, { env });
         assert.strictEqual(
             target.querySelector(".dropdown-item").outerHTML,
-            '<span class="dropdown-item" role="menuitem" tabindex="0">coucou</span>'
+            '<span class="dropdown-item text-truncate" role="menuitem" tabindex="0">coucou</span>'
         );
     });
 
@@ -83,7 +83,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         await mount(Parent, target, { env });
         assert.strictEqual(
             target.querySelector(".dropdown-item").outerHTML,
-            '<a class="dropdown-item" role="menuitem" tabindex="0" href="#">coucou</a>'
+            '<a class="dropdown-item text-truncate" role="menuitem" tabindex="0" href="#">coucou</a>'
         );
     });
 
@@ -1409,12 +1409,12 @@ QUnit.module("Components", ({ beforeEach }) => {
         await click(target, ".dropdown-toggle");
         assert.strictEqual(
             target.querySelector(".dropdown-item").outerHTML,
-            `<span class="dropdown-item" role="menuitemcheckbox" tabindex="0" aria-checked="false"> My checkbox item </span>`
+            `<span class="dropdown-item text-truncate" role="menuitemcheckbox" tabindex="0" aria-checked="false"> My checkbox item </span>`
         );
         await click(target, ".dropdown-item");
         assert.strictEqual(
             target.querySelector(".dropdown-item").outerHTML,
-            `<span class="dropdown-item selected" role="menuitemcheckbox" tabindex="0" aria-checked="true"> My checkbox item </span>`
+            `<span class="dropdown-item text-truncate selected" role="menuitemcheckbox" tabindex="0" aria-checked="true"> My checkbox item </span>`
         );
     });
 
