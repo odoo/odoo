@@ -269,7 +269,7 @@ class StockMove(models.Model):
         valued_moves = {value_type: moves.exists() for value_type, moves in valued_moves.items()}
 
         # '_action_done' might have created an extra move to be valued
-        for move in res - self:
+        for move in (res - self).sudo():
             for valued_type in self._get_valued_types():
                 if getattr(move, '_is_%s' % valued_type)():
                     valued_moves[valued_type] |= move
