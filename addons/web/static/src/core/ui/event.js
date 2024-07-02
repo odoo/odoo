@@ -1,7 +1,23 @@
 const delegateEvent = function (ev) {
     let target = ev.target;
     if (typeof this.selector === "string") {
-        // Failed to execute 'matches' on 'Element' 'form .js_product:first input[name="add_qty"]' is not a valid selector
+        // To -remove the comments and evaluate this code
+        // Failed to execute 'matches' on 'Element' 'form .js_product:first input[name="add_qty"]'
+        // is not a valid selector
+        // validSelectors now contains selectors that are not simple tag names
+        // and do not include pseudo-classes/elements
+
+        const multipleSelectors = this.selector.split(" ");
+        const tagNamePattern = /^[a-zA-Z]+(-[a-zA-Z]+)?$/;
+        if (tagNamePattern.test(multipleSelectors[0])) {
+            const validSelectors = multipleSelectors.filter((selector) => {
+                // Regular expression to match tag names (including custom elements with hyphens)
+                // Exclude if it's a tag name or contains a colon (for pseudo-classes/elements)
+                return !tagNamePattern.test(selector) && !selector.includes(":");
+            });
+            this.selector = multipleSelectors.length > 1 ? validSelectors[0] : this.selector;
+        }
+
         while (target !== this.element && !target?.matches(this.selector)) {
             target = target.parentElement;
         }

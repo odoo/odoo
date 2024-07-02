@@ -274,11 +274,13 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @private
      */
     _onWebsiteFormSubmit: function (ev) {
-        var buttonEls = ev.currentTarget?.querySelectorAll("button[type='submit'], .a-submit").toArray();
-        buttonEls?.forEach((btnEl) => {
-            btnEl.prepend("<i class='fa fa-circle-o-notch fa-spin'></i> ");
-            btnEl.disabled = true;
-        });
+        const buttonEl = ev.currentTarget.querySelector("button[type='submit']");
+        if (buttonEl) {
+            const icon = document.createElement('i');
+            icon.className = "fa fa-circle-o-notch fa-spin";
+            buttonEl.prepend(icon);
+            buttonEl.disabled = true;
+        }
     },
     /**
      * Called when the root is notified that the button should be
