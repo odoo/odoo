@@ -10,7 +10,7 @@
                 <button name="action_record_components" class="oe_highlight" invisible="display_action_record_components != 'mandatory'" string="Record components" type="object" data-hotkey="shift+x"/>
                 <button name="action_record_components" invisible="display_action_record_components != 'facultative'" string="Record components" type="object" data-hotkey="shift+x"/>
             </xpath>
-            <xpath expr="//field[@name='move_ids_without_package']//tree" position="inside">
+            <xpath expr="//field[@name='move_ids_without_package']//tree//button[@name='action_show_details']" position="after">
                 <field name="show_subcontracting_details_visible" column_invisible="True"/>
                 <button name="action_show_subcontract_details" string="Subcontracting" type="object" icon="fa-pencil"
                     invisible="not show_subcontracting_details_visible"/>
