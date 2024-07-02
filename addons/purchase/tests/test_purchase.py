@@ -42,9 +42,43 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertAlmostEqual(po.order_line[0].date_planned, po.date_planned, delta=timedelta(seconds=10))
 
         # Set an even earlier date planned on the other PO line and check that the PO expected date matches it.
-        new_date_planned = orig_date_planned - timedelta(hours=72)
-        po.order_line[1].date_planned = new_date_planned
+        # Also check that the other PO line's date planned is not modified.
+        new_date_planned_2 = orig_date_planned - timedelta(hours=72)
+        po_form = Form(po)
+        with po_form.order_line.edit(1) as po_line:
+            po_line.date_planned = new_date_planned_2
+        po = po_form.save()
         self.assertAlmostEqual(po.order_line[1].date_planned, po.date_planned, delta=timedelta(seconds=10))
+        self.assertAlmostEqual(po.order_line[0].date_planned, new_date_planned, delta=timedelta(seconds=10))
+
+    def test_date_planned_2(self):
+        """
+        Check that the date_planned of the onchange is correctly applied:
+        Create a PO, change its date_planned to tommorow and check that the date_planned of the lines are updated.
+        Create a new line (this will update the date_planned of the PO but should not alter the other lines).
+        """
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom_qty': 10,
+                'product_uom': self.product_a.uom_id.id,
+                'price_unit': 1,
+            })],
+        })
+        with Form(po) as po_form:
+            po_form.date_planned = fields.Datetime.now() + timedelta(days=1)
+        self.assertEqual(po.order_line.date_planned, po.date_planned)
+
+        with Form(po) as po_form:
+            with po_form.order_line.new() as new_line:
+                new_line.product_id = self.product_b
+                new_line.product_qty = 10
+                new_line.price_unit = 200
+        self.assertEqual(po.order_line[1].date_planned, po.date_planned)
+        self.assertNotEqual(po.order_line[0].date_planned, po.date_planned)
 
     def test_purchase_order_sequence(self):
         PurchaseOrder = self.env['purchase.order'].with_context(tracking_disable=True)
