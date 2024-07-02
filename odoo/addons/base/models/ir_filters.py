@@ -28,19 +28,6 @@ class IrFilters(models.Model):
     embedded_parent_res_id = fields.Integer(help="id of the record the filter should be applied to. Only used in combination with embedded actions")
     active = fields.Boolean(default=True)
 
-    # The embedded_parent_res_id can only be defined when the embedded_action_id field is set.
-    # As the embedded model is linked to only one res_model, It ensure the unicity of the filter regarding the
-    # embedded_parent_res_model and the embedded_parent_res_id
-    _sql_constraints = [
-        (
-            'check_res_id_only_when_embedded_action',
-            """CHECK(
-                NOT (embedded_parent_res_id IS NOT NULL AND embedded_action_id IS NULL)
-            )""",
-            'Constraint to ensure that the embedded_parent_res_id is only defined when a top_action_id is defined.'
-        ),
-    ]
-
     @api.model
     def _list_all_models(self):
         lang = self.env.lang or 'en_US'
@@ -171,6 +158,17 @@ class IrFilters(models.Model):
         # violation occurs, as it shares the same prefix as the unique index.
         ('name_model_uid_unique', 'unique (model_id, user_id, action_id, embedded_action_id, embedded_parent_res_id, name)',
             'Filter names must be unique'),
+
+        # The embedded_parent_res_id can only be defined when the embedded_action_id field is set.
+        # As the embedded model is linked to only one res_model, It ensure the unicity of the filter regarding the
+        # embedded_parent_res_model and the embedded_parent_res_id
+        (
+            'check_res_id_only_when_embedded_action',
+            """CHECK(
+                NOT (embedded_parent_res_id IS NOT NULL AND embedded_action_id IS NULL)
+            )""",
+            'Constraint to ensure that the embedded_parent_res_id is only defined when a top_action_id is defined.'
+        ),
     ]
 
     def _auto_init(self):
