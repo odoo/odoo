@@ -121,7 +121,8 @@ odoo.define('website_hr_recruitment.tour', function(require) {
         content: 'Verify that the job_id field has kept its default value',
         trigger: 'button[data-action="save"]',
         run: () => {
-            if (!document.querySelector('input[name="job_id"][value="FAKE_JOB_ID_DEFAULT_VAL"]')) {
+            const id = document.querySelector('[data-oe-model="hr.job"]').dataset.oeId;
+            if (!document.querySelector(`input[name="job_id"][value="${id}"]`)) {
                 console.error('The job_id field has lost its default value');
             }
         }

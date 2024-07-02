@@ -228,8 +228,18 @@ odoo.define('website.s_website_form', function (require) {
             // All 'hidden if' fields start with d-none
             this.$target[0].querySelectorAll('.s_website_form_field_hidden_if:not(.d-none)').forEach(el => el.classList.add('d-none'));
 
+            // Prevent "data-for" values removal on destroy, they are still used
+            // in edit mode to keep the form linked to its predefined server
+            // values (e.g., the default `job_id` value on the application form
+            // for a given job).
+            const dataForValues = wUtils.getParsedDataFor(this.$target[0].id) || {};
+            const initialValuesToReset = new Map(
+                [...this.initialValues.entries()].filter(
+                    ([input, value]) => !dataForValues[input.name] || input.name === "email_to"
+                )
+            );
             // Reset the initial default values.
-            for (const [fieldEl, initialValue] of this.initialValues.entries()) {
+            for (const [fieldEl, initialValue] of initialValuesToReset.entries()) {
                 if (initialValue) {
                     fieldEl.setAttribute('value', initialValue);
                 } else {
