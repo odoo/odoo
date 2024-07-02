@@ -385,22 +385,9 @@ patch(MockServer.prototype, {
         around = false,
         limit = 30
     ) {
-        const domain = [["needaction", "=", true]];
-        const res = this._mockMailMessage_MessageFetch(
-            domain,
-            search_term,
-            before,
-            after,
-            around,
-            limit
-        );
         return {
-            ...res,
-            data: {
-                Message: this._mockMailMessageFormatPersonalize(
-                    res.messages.map((message) => message.id)
-                ),
-            },
+            count: 0,
+            data: {},
         };
     },
     /**

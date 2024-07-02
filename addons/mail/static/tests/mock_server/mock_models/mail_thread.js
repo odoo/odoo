@@ -488,13 +488,23 @@ export class MailThread extends models.ServerModel {
                 if (partner.user_ids.length > 0) {
                     const [user] = ResUsers.search_read([["id", "=", partner.user_ids[0]]]);
                     if (user.notification_type === "inbox") {
+                        const follower_by_message_user = ResUsers._get_follower_by_message_user(
+                            [user.id],
+                            [message]
+                        );
                         notifications.push([
                             partner,
                             "mail.message/inbox",
                             new mailDataHelpers.Store()
                                 .add(
                                     "Message",
-                                    MailMessage._message_format_personalize([message_id])
+                                    MailMessage._message_format(
+                                        [message.id],
+                                        makeKwArgs({
+                                            for_current_user: true,
+                                            follower_by_message_user,
+                                        })
+                                    )
                                 )
                                 .get_result(),
                         ]);

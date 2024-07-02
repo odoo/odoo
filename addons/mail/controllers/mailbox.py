@@ -8,10 +8,16 @@ from odoo.addons.mail.tools.discuss import Store
 class MailboxController(http.Controller):
     @http.route("/mail/inbox/messages", methods=["POST"], type="json", auth="user")
     def discuss_inbox_messages(self, search_term=None, before=None, after=None, limit=30, around=None):
-        partner_id = request.env.user.partner_id.id
         domain = [("needaction", "=", True)]
         res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
-        store = Store("Message", res.pop("messages")._message_format_personalize(partner_id))
+        messages = res.pop("messages")
+        follower_by_message_user = request.env.user.sudo(False)._get_follower_by_message_user(messages)
+        store = Store(
+            "Message",
+            messages._message_format(
+                for_current_user=True, follower_by_message_user=follower_by_message_user
+            ),
+        )
         return {**res, "data": store.get_result()}
 
     @http.route("/mail/history/messages", methods=["POST"], type="json", auth="user")
