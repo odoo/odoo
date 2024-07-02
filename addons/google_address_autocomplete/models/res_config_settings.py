@@ -1,3 +1,5 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import fields, models
 
 
@@ -6,5 +8,5 @@ class ResConfigSettings(models.TransientModel):
 
     google_places_api_key = fields.Char(
         string='Google Places API Key',
-        related='website_id.google_places_api_key',
-        readonly=False)
+        readonly=False,
+        config_parameter='google_address_autocomplete.google_places_api_key')
