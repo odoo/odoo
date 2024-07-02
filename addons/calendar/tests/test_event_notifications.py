@@ -9,10 +9,10 @@ from freezegun import freeze_time
 from odoo import fields
 from odoo.tests.common import TransactionCase, new_test_user
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
-from odoo.addons.mail.tests.common import MailCase
+from odoo.addons.mail.tests.common import MailCase, MockEmail
 
 
-class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
+class TestEventNotifications(TransactionCase, MailCase, MockEmail, CronMixinCase):
 
     @classmethod
     def setUpClass(cls):
@@ -418,3 +418,34 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         with freeze_time('2023-11-15 19:00:00'):    # 14:00 the day before event
             self.assertEqual(len(search_event()), 0)
         event.unlink()
+
+    def test_calendar_event_delete_notification(self):
+        """
+            Check that we can delete event notification and decline events.
+        """
+        user_admin = self.env.ref('base.user_admin')
+        user_demo = self.env.ref('base.user_admin')
+        start = datetime.combine(date.today(), datetime.min.time()).replace(hour=9)
+        stop = datetime.combine(date.today(), datetime.min.time()).replace(hour=12)
+        event = self.env['calendar.event'].with_user(user_admin).create({
+            'name': 'Test Event Delete Notification',
+            'description': 'Test Description',
+            'start': start.strftime("%Y-%m-%d %H:%M:%S"),
+            'stop': stop.strftime("%Y-%m-%d %H:%M:%S"),
+            'duration': 3,
+            'location': 'Odoo S.A.',
+            'privacy': 'public',
+            'show_as': 'busy',
+        })
+
+        event.unlink_event()
+        wizard = self.env['calendar.popover.delete.wizard'].create({
+            'record': event.id,
+            'subject': 'Event Cancellation',
+            'body': 'The event has been cancelled.',
+            'recipient_ids': [(6, 0, [user_demo.partner_id.id])],
+        })
+
+        with self.mock_mail_gateway():
+            wizard.action_send_mail_and_delete()
+        self.assertEqual(len(self._new_mails), 1)
