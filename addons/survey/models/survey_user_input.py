@@ -779,9 +779,23 @@ class SurveyUserInputLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for vals in vals_list:
+        # Setup prefetching
+        all_suggested_answer_ids = self.env['survey.question.answer'].browse(
+            vals.get('suggested_answer_id', False) for vals in vals_list)
+        all_question_ids = self.env['survey.question'].browse(
+            vals.get('question_id', False) for vals in vals_list)
+        all_user_input_ids = self.env['survey.user_input'].browse(
+            vals.get('user_input_id', False) for vals in vals_list)
+
+        for vals, suggested_answer_id, question_id, user_input_id in zip(
+                vals_list, all_suggested_answer_ids, all_question_ids, all_user_input_ids):
             if not vals.get('answer_score'):
-                score_vals = self._get_answer_score_values(vals)
+                score_vals = self._get_answer_score_values({
+                    **vals,
+                    'question_id': question_id,
+                    'user_input_id': user_input_id,
+                    **({'suggested_answer_id': suggested_answer_id} if suggested_answer_id else {})
+                })
                 vals.update(score_vals)
         return super(SurveyUserInputLine, self).create(vals_list)
 
@@ -789,13 +803,13 @@ class SurveyUserInputLine(models.Model):
         res = True
         for line in self:
             vals_copy = {**vals}
-            getter_params = {
-                'user_input_id': line.user_input_id.id,
-                'answer_type': line.answer_type,
-                'question_id': line.question_id.id,
-                **vals_copy
-            }
             if not vals_copy.get('answer_score'):
+                getter_params = {
+                    'user_input_id': line.user_input_id,
+                    'answer_type': line.answer_type,
+                    'question_id': line.question_id,
+                    **vals_copy
+                }
                 score_vals = self._get_answer_score_values(getter_params, compute_speed_score=False)
                 vals_copy.update(score_vals)
             res = super(SurveyUserInputLine, line).write(vals_copy) and res
@@ -850,7 +864,10 @@ class SurveyUserInputLine(models.Model):
         question_id = vals.get('question_id')
         if not question_id:
             raise ValueError(_('Computing score requires a question in arguments.'))
-        question = self.env['survey.question'].browse(int(question_id))
+        question = (
+            question_id if isinstance(question_id, self.env['survey.question'].__class__)
+            else self.env['survey.question'].browse(int(question_id))
+        )
 
         # default and non-scored questions
         answer_is_correct = False
@@ -861,7 +878,11 @@ class SurveyUserInputLine(models.Model):
             if answer_type == 'suggestion':
                 suggested_answer_id = vals.get('suggested_answer_id')
                 if suggested_answer_id:
-                    question_answer = self.env['survey.question.answer'].browse(int(suggested_answer_id))
+                    question_answer = (
+                        suggested_answer_id
+                        if isinstance(suggested_answer_id, self.env['survey.question.answer'].__class__)
+                        else self.env['survey.question.answer'].browse(int(suggested_answer_id))
+                    )
                     answer_score = question_answer.answer_score
                     answer_is_correct = question_answer.is_correct
         # for all other scored question cases, record question answer_score (can be: pos or 0)
@@ -878,8 +899,9 @@ class SurveyUserInputLine(models.Model):
                 answer_score = question.answer_score
 
         if compute_speed_score and answer_score > 0:
-            user_input = self.env['survey.user_input'].browse(user_input_id)
-            session_speed_rating = user_input.exists() and user_input.is_session_answer and user_input.survey_id.session_speed_rating
+            user_input = user_input_id if isinstance(user_input_id, self.env['survey.user_input'].__class__) \
+                else self.env['survey.user_input'].browse(user_input_id).exists()
+            session_speed_rating = user_input and user_input.is_session_answer and user_input.survey_id.session_speed_rating
             if session_speed_rating:
                 max_score_delay = 2
                 time_limit = question.time_limit

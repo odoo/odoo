@@ -29,15 +29,17 @@ class Survey(http.Controller):
         """ Check that given token matches an answer from the given survey_id.
         Returns a sudo-ed browse record of survey in order to avoid access rights
         issues now that access is granted through token. """
-        survey_sudo = request.env['survey.survey'].with_context(active_test=False).sudo().search([('access_token', '=', survey_token)])
+        if not survey_token:
+            return request.env['survey.survey'].sudo(), request.env['survey.user_input'].sudo()
+
         if not answer_token:
-            answer_sudo = request.env['survey.user_input'].sudo()
-        else:
-            answer_sudo = request.env['survey.user_input'].sudo().search([
-                ('survey_id', '=', survey_sudo.id),
-                ('access_token', '=', answer_token)
-            ], limit=1)
-        return survey_sudo, answer_sudo
+            survey_sudo = request.env['survey.survey'].sudo().search([('access_token', '=', survey_token)], limit=1)
+            return survey_sudo, request.env['survey.user_input'].sudo()
+
+        answer_sudo = request.env['survey.user_input'].sudo().search([
+            ('survey_id.access_token', '=', survey_token), ('access_token', '=', answer_token)
+        ], limit=1)
+        return answer_sudo.survey_id, answer_sudo
 
     def _check_validity(self, survey_token, answer_token, ensure_token=True, check_partner=True):
         """ Check survey is open and can be taken. This does not checks for
@@ -62,7 +64,11 @@ class Survey(http.Controller):
         """
         survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
 
-        if not survey_sudo.exists():
+        return self._check_validity_from_records(survey_sudo, answer_sudo, answer_token, ensure_token, check_partner)
+
+    def _check_validity_from_records(self, survey_sudo, answer_sudo, answer_token, ensure_token=True, check_partner=True):
+        """ See _check_validity."""
+        if not survey_sudo:
             return 'survey_wrong'
 
         if answer_token and not answer_sudo:
@@ -102,12 +108,11 @@ class Survey(http.Controller):
          : param ensure_token: whether user input existence should be enforced or not(see ``_check_validity``)
          : param check_partner: whether the partner of the target answer should be checked (see ``_check_validity``)
         """
-        survey_sudo, answer_sudo = request.env['survey.survey'].sudo(), request.env['survey.user_input'].sudo()
+        survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
         has_survey_access, can_answer = False, False
-
-        validity_code = self._check_validity(survey_token, answer_token, ensure_token=ensure_token, check_partner=check_partner)
+        validity_code = self._check_validity_from_records(
+            survey_sudo, answer_sudo, answer_token, ensure_token=ensure_token, check_partner=check_partner)
         if validity_code != 'survey_wrong':
-            survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
             try:
                 survey_user = survey_sudo.with_user(request.env.user)
                 survey_user.check_access_rights(self, 'read', raise_exception=True)
