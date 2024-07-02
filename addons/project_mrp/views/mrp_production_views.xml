@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_production_form_project_mrp" model="ir.ui.view">
+        <field name="name">production.form.inherit.mrp.project</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <t groups="project_mrp.group_project_mrp">
+                    <button name="action_view_linked_projects" type="object" class="oe_stat_button" icon="fa-puzzle-piece" invisible="not project_ids" groups="project.group_project_user">
+                        <field name="project_count" widget="statinfo" string="Projects"/>
+                    </button>
+                    <button type="object" name="action_view_tasks" class="oe_stat_button" icon="fa-tasks" invisible="not project_ids" groups="project.group_project_user">
+                        <field name="task_count" widget="statinfo" string="Tasks"/>
+                    </button>
+                </t>
+            </xpath>
+            <xpath expr="//page[@name='miscellaneous']//field[@name='picking_type_id']" position="after">
+                <field name="project_ids" widget="many2many_tags" groups="project_mrp.group_project_mrp"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="model_mrp_production_action_create_project" model="ir.actions.server">
+        <field name="name">Create Project</field>
+        <field name="model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_create_project()</field>
+        <field name="groups_id" eval="[(4, ref('project_mrp.group_project_mrp'))]"/>
+    </record>
+</odoo>
