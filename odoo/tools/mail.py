@@ -645,6 +645,9 @@ def formataddr(pair, charset='utf-8'):
     If the first element of pair is falsy then only the email address
     is returned.
 
+    All "@" characters found in ``realname`` are replaced by "-" for
+    better compatibility with email softwares (including ours).
+
     Set the charset to ascii to get a RFC-2822 compliant email. The
     realname will be base64 encoded (if necessary) and the domain part
     of the email will be punycode encoded (if necessary). The local part
@@ -667,6 +670,7 @@ def formataddr(pair, charset='utf-8'):
         domain = idna.encode(domain).decode('ascii')
 
     if name:
+        name = name.replace('@', '-')
         try:
             name.encode(charset)
         except UnicodeEncodeError:
