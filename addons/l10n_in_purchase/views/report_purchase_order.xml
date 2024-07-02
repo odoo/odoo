@@ -4,7 +4,12 @@
     <template id="gst_report_purchaseorder_document_inherit" inherit_id="purchase.report_purchaseorder_document">
         <xpath expr="//t[@t-foreach='o.order_line']//td[@id='product']" position="replace">
             <td>
-                <span t-field="line.name"/>
+                <ul class="list-unstyled">
+                    <li><span t-field="line.product_id"/></li>
+                    <li t-if="line.product_id.display_name != line.name">
+                        <span t-field="line.name"/>
+                    </li>
+                </ul>
                 <t t-if="line.product_id.l10n_in_hsn_code and o.company_id.account_fiscal_country_id.code == 'IN'">
                     <h6>
                         <strong class="ml16">HSN/SAC Code:</strong>
@@ -18,7 +23,12 @@
     <template id="gst_report_purchasequotation_document_inherit" inherit_id="purchase.report_purchasequotation_document">
         <xpath expr="//t[@t-foreach='o.order_line']//td[@id='product']" position="replace">
             <td>
-                <span t-field="order_line.name"/>
+                <ul class="list-unstyled">
+                    <li><span t-field="order_line.product_id"/></li>
+                    <li t-if="order_line.product_id.display_name != order_line.name">
+                        <span t-field="order_line.name"/>
+                    </li>
+                </ul>
                 <t t-if="order_line.product_id.l10n_in_hsn_code and o.company_id.account_fiscal_country_id.code == 'IN'">
                     <h6>
                         <strong class="ml16">HSN/SAC Code:</strong>

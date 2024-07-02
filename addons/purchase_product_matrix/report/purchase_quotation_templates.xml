@@ -6,5 +6,15 @@
                 <t t-set="order" t-value="o"/>
             </t>
         </xpath>
+        <xpath expr="//td[@id='product']" position="replace">
+            <td id="product">
+                <ul class="list-unstyled">
+                    <li><span t-field="order_line.product_template_id"/></li>
+                    <li t-if="order_line.product_template_id.display_name != order_line.name">
+                        <span t-field="order_line.name"/>
+                    </li>
+                </ul>
+            </td>
+        </xpath>
     </template>
 </odoo>
