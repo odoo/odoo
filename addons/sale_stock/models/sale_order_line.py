@@ -14,7 +14,7 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     qty_delivered_method = fields.Selection(selection_add=[('stock_move', 'Stock Moves')])
-    route_id = fields.Many2one('stock.route', string='Route', domain=[('sale_selectable', '=', True)], ondelete='restrict', check_company=True)
+    route_ids = fields.Many2many('stock.route', string='Routes', domain=[('sale_selectable', '=', True)], ondelete='restrict', check_company=True)
     move_ids = fields.One2many('stock.move', 'sale_line_id', string='Stock Moves')
     virtual_available_at_date = fields.Float(compute='_compute_qty_at_date', digits='Product Unit of Measure')
     scheduled_date = fields.Datetime(compute='_compute_qty_at_date')
@@ -30,19 +30,19 @@ class SaleOrderLine(models.Model):
         compute='_compute_customer_lead', store=True, readonly=False, precompute=True,
         inverse='_inverse_customer_lead')
 
-    @api.depends('route_id', 'order_id.warehouse_id', 'product_packaging_id', 'product_id')
+    @api.depends('route_ids', 'order_id.warehouse_id', 'product_packaging_id', 'product_id')
     def _compute_warehouse_id(self):
         for line in self:
             line.warehouse_id = line.order_id.warehouse_id
-            if line.route_id:
+            if line.route_ids:
                 domain = [
-                    ('location_dest_id', '=', line.order_id.partner_shipping_id.property_stock_customer.id),
+                    ('location_dest_id', 'in', line.order_id.partner_shipping_id.property_stock_customer.ids),
                     ('action', '!=', 'push'),
                 ]
                 # prefer rules on the route itself even if they pull from a different warehouse than the SO's
                 rules = sorted(
                     self.env['stock.rule'].search(
-                        domain=expression.AND([[('route_id', '=', line.route_id.id)], domain]),
+                        domain=expression.AND([[('route_id', 'in', line.route_ids.ids)], domain]),
                         order='route_sequence, sequence'
                     ),
                     # if there are multiple rules on the route, prefer those that pull from the SO's warehouse
@@ -149,7 +149,7 @@ class SaleOrderLine(models.Model):
         remaining.free_qty_today = False
         remaining.qty_available_today = False
 
-    @api.depends('product_id', 'route_id', 'order_id.warehouse_id', 'product_id.route_ids')
+    @api.depends('product_id', 'route_ids', 'order_id.warehouse_id', 'product_id.route_ids')
     def _compute_is_mto(self):
         """ Verify the route of the product based on the warehouse
             set 'is_available' at True if the product availability in stock does
@@ -160,7 +160,7 @@ class SaleOrderLine(models.Model):
             if not line.display_qty_widget:
                 continue
             product = line.product_id
-            product_routes = line.route_id or (product.route_ids + product.categ_id.total_route_ids)
+            product_routes = line.route_ids or (product.route_ids + product.categ_id.total_route_ids)
 
             # Check MTO
             mto_route = line.order_id.warehouse_id.mto_pull_id.route_id
@@ -262,7 +262,7 @@ class SaleOrderLine(models.Model):
             'sale_line_id': self.id,
             'date_planned': date_planned,
             'date_deadline': date_deadline,
-            'route_ids': self.route_id,
+            'route_ids': self.route_ids,
             'warehouse_id': self.warehouse_id,
             'partner_id': self.order_id.partner_shipping_id.id,
             'location_final_id': self.order_id.partner_shipping_id.property_stock_customer,
