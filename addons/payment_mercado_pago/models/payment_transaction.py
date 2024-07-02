@@ -40,7 +40,7 @@ class PaymentTransaction(models.Model):
         )
         api_url = self.provider_id._mercado_pago_make_request(
             '/checkout/preferences', payload=payload
-        )['init_point' if self.provider_id.state == 'enabled' else 'sandbox_init_point']
+        )['init_point']
 
         # Extract the payment link URL and embed it in the redirect form.
         rendering_values = {
