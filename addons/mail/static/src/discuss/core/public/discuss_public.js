@@ -1,4 +1,4 @@
-import { Discuss } from "@mail/core/common/discuss";
+import { Discuss } from "@mail/core/public_web/discuss";
 import { WelcomePage } from "@mail/discuss/core/public/welcome_page";
 
 import { Component, useEffect, useState } from "@odoo/owl";
