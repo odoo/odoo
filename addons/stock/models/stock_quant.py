@@ -126,10 +126,13 @@ class StockQuant(models.Model):
         for quant in quants:
             quant.inventory_date = date_by_location[quant.location_id]
 
-    @api.depends('inventory_quantity')
+    @api.depends('inventory_quantity', 'inventory_quantity_set')
     def _compute_inventory_diff_quantity(self):
-        for quant in self:
+        has_inventory = self.filtered(lambda q: q.inventory_quantity_set or q.inventory_quantity)
+        for quant in has_inventory:
             quant.inventory_diff_quantity = quant.inventory_quantity - quant.quantity
+
+        (self - has_inventory).inventory_diff_quantity = 0
 
     @api.depends('inventory_quantity')
     def _compute_inventory_quantity_set(self):
@@ -327,6 +330,8 @@ class StockQuant(models.Model):
         return action
 
     def action_apply_inventory(self):
+        # Compute `inventory_diff_quantity` if quantity was not set manually
+        self.filtered(lambda quant: not quant.inventory_quantity_set).inventory_quantity_set = True
         products_tracked_without_lot = []
         for quant in self:
             rounding = quant.product_uom_id.rounding
@@ -638,7 +643,6 @@ class StockQuant(models.Model):
         for quant in self:
             quant.inventory_date = date_by_location[quant.location_id]
         self.write({'inventory_quantity': 0, 'user_id': False})
-        self.write({'inventory_diff_quantity': 0})
 
     @api.model
     def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None):
