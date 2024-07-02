@@ -416,7 +416,7 @@ class Project(models.Model):
                 new_project.milestone_ids = self.milestone_ids.copy().ids
             if 'tasks' not in default:
                 old_project.map_tasks(new_project.id)
-            if not self.active:
+            if not old_project.active:
                 new_project.with_context(active_test=False).tasks.active = True
         return new_projects
 
