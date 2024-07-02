@@ -185,7 +185,7 @@ class MassMailController(http.Controller):
         ).list_id.filtered('active')
         lists_optout = contacts.subscription_ids.filtered(
             lambda sub: sub.opt_out and sub.list_id not in lists_optin
-        ).list_id.filtered('active')
+        ).list_id.filtered('active').filtered('is_public')
         lists_public = request.env['mailing.list'].sudo().search(
             [('is_public', '=', True),
              ('id', 'not in', (lists_optin + lists_optout).ids)
