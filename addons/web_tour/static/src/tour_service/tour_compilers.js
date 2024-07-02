@@ -51,12 +51,12 @@ function findTrigger(selector, inModal) {
 /**
  * @param {Tour} tour
  * @param {TourStep} step
- * @param {"trigger"|"extra_trigger"|"alt_trigger"} elKey
+ * @param {"trigger"|"alt_trigger"} elKey
  * @returns {HTMLElement|null}
  */
 function tryFindTrigger(tour, step, elKey) {
     const selector = step[elKey];
-    const in_modal = elKey === "extra_trigger" ? false : step.in_modal;
+    const in_modal = step.in_modal;
     try {
         const nodes = findTrigger(selector, in_modal);
         //TODO : change _legacyIsVisible by isVisible (hoot lib)
@@ -70,15 +70,10 @@ function tryFindTrigger(tour, step, elKey) {
 function findStepTriggers(tour, step) {
     const triggerEl = tryFindTrigger(tour, step, "trigger");
     const altEl = tryFindTrigger(tour, step, "alt_trigger");
-    const extraEl = tryFindTrigger(tour, step, "extra_trigger");
     step.state = step.state || {};
     step.state.triggerFound = !!triggerEl;
     step.state.altTriggerFound = !!altEl;
-    step.state.extraTriggerFound = step.extra_trigger ? !!extraEl : true;
-    // `extraTriggerOkay` should be true when `step.extra_trigger` is undefined.
-    // No need for it to be in the modal.
-    const extraTriggerOkay = step.state.extraTriggerFound;
-    return { triggerEl, altEl, extraEl, extraTriggerOkay };
+    return { triggerEl, altEl };
 }
 
 /**
@@ -97,9 +92,7 @@ function describeFailedStepSimple(tour, step) {
 
 function describeWhyStepFailed(step) {
     const stepState = step.state || {};
-    if (step.extra_trigger && !stepState.extraTriggerFound) {
-        return `The cause is that extra trigger (${step.extra_trigger}) element cannot be found in DOM.`;
-    } else if (!stepState.triggerFound) {
+    if (!stepState.triggerFound) {
         return `The cause is that trigger (${step.trigger}) element cannot be found in DOM.`;
     } else if (step.alt_trigger && !stepState.altTriggerFound) {
         return `The cause is that alt(ernative) trigger (${step.alt_trigger}) element cannot be found in DOM.`;
@@ -335,9 +328,9 @@ export function compileStepManual(stepIndex, step, options) {
                     return proceedWith;
                 }
 
-                const { triggerEl, altEl, extraTriggerOkay } = findStepTriggers(tour, step);
+                const { triggerEl, altEl } = findStepTriggers(tour, step);
 
-                const stepEl = extraTriggerOkay && (triggerEl || altEl);
+                const stepEl = triggerEl || altEl;
 
                 if (stepEl && canContinue(stepEl, step)) {
                     const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
@@ -434,8 +427,8 @@ export function compileStepAuto(stepIndex, step, options) {
                     step.state.canContinue = true;
                     return true;
                 }
-                const { triggerEl, altEl, extraTriggerOkay } = findStepTriggers(tour, step);
-                const stepEl = extraTriggerOkay && (triggerEl || altEl);
+                const { triggerEl, altEl } = findStepTriggers(tour, step);
+                const stepEl = triggerEl || altEl;
                 if (!stepEl) {
                     return false;
                 }
