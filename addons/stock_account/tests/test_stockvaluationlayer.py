@@ -3,6 +3,7 @@
 
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.tests import Form, tagged
@@ -31,7 +32,7 @@ class TestStockValuationCommon(TransactionCase):
         # Counter automatically incremented by `_make_in_move` and `_make_out_move`.
         self.days = 0
 
-    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False, loc_dest=None, pick_type=None):
+    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False, loc_dest=None, pick_type=None, lot_ids=False):
         """ Helper to create and validate a receipt move.
         """
         unit_cost = unit_cost or product.standard_price
@@ -57,14 +58,25 @@ class TestStockValuationCommon(TransactionCase):
             in_move.write({'picking_id': picking.id})
 
         in_move._action_confirm()
-        in_move._action_assign()
+        if lot_ids:
+            in_move.move_line_ids.unlink()
+            in_move.move_line_ids = [Command.create({
+                'location_id': self.supplier_location.id,
+                'location_dest_id': loc_dest.id,
+                'quantity': quantity / len(lot_ids),
+                'product_id': product.id,
+                'lot_id': lot.id,
+            }) for lot in lot_ids]
+        else:
+            in_move._action_assign()
+
         in_move.picked = True
         in_move._action_done()
 
         self.days += 1
         return in_move.with_context(svl=True)
 
-    def _make_out_move(self, product, quantity, force_assign=None, create_picking=False, loc_src=None, pick_type=None):
+    def _make_out_move(self, product, quantity, force_assign=None, create_picking=False, loc_src=None, pick_type=None, lot_ids=False):
         """ Helper to create and validate a delivery move.
         """
         loc_src = loc_src or self.stock_location
@@ -97,14 +109,24 @@ class TestStockValuationCommon(TransactionCase):
                 'location_id': out_move.location_id.id,
                 'location_dest_id': out_move.location_dest_id.id,
             })
-        out_move.move_line_ids.quantity = quantity
+        if lot_ids:
+            out_move.move_line_ids.unlink()
+            out_move.move_line_ids = [Command.create({
+                'location_id': loc_src.id,
+                'location_dest_id': self.customer_location.id,
+                'quantity': quantity / len(lot_ids),
+                'product_id': product.id,
+                'lot_id': lot.id,
+            }) for lot in lot_ids]
+        else:
+            out_move.move_line_ids.quantity = quantity
         out_move.picked = True
         out_move._action_done()
 
         self.days += 1
         return out_move.with_context(svl=True)
 
-    def _make_dropship_move(self, product, quantity, unit_cost=None):
+    def _make_dropship_move(self, product, quantity, unit_cost=None, lot_ids=False):
         dropshipped = self.env['stock.move'].create({
             'name': 'dropship %s units' % str(quantity),
             'product_id': product.id,
@@ -118,7 +140,17 @@ class TestStockValuationCommon(TransactionCase):
             dropshipped.price_unit = unit_cost
         dropshipped._action_confirm()
         dropshipped._action_assign()
-        dropshipped.move_line_ids.quantity = quantity
+        if lot_ids:
+            dropshipped.move_line_ids = [Command.clear()]
+            dropshipped.move_line_ids = [Command.create({
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.customer_location.id,
+                'quantity': quantity / len(lot_ids),
+                'product_id': product.id,
+                'lot_id': lot.id,
+            }) for lot in lot_ids]
+        else:
+            dropshipped.move_line_ids.quantity = quantity
         dropshipped.picked = True
         dropshipped._action_done()
         return dropshipped
