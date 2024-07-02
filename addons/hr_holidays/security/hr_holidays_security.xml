@@ -138,11 +138,14 @@
     <record id="hr_leave_allocation_rule_multicompany" model="ir.rule">
         <field name="name">Time Off: multi company global rule</field>
         <field name="model_id" ref="model_hr_leave_allocation"/>
+        <!-- holiday_status_id is required, but may not be set when creating a new record -->
         <field name="domain_force">[
             '|',
                 ('employee_id', '=', False),
                 ('employee_id.company_id', 'in', company_ids),
-            ('holiday_status_id.company_id', 'in', company_ids + [False])
+            '|',
+                ('holiday_status_id', '=', False),
+                ('holiday_status_id.company_id', 'in', company_ids + [False])
         ]</field>
     </record>
 
