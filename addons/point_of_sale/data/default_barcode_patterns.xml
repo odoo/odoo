@@ -4,35 +4,73 @@
             <field name="name">Cashier Barcodes</field>
             <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
             <field name="sequence">50</field>
-            <field name="type">cashier</field>
-            <field name="encoding">any</field>
-            <field name="pattern">041</field>
+            <field name="rule_part_ids">
+                <record id="barcode_rule_group_cashier_prefix" model="barcode.rule.part">
+                    <field name="sequence" eval="1"/>
+                    <field name="type">prefix</field>
+                    <field name="pattern">(041)</field>
+                </record>
+                <record id="barcode_rule_group_cashier" model="barcode.rule.part">
+                    <field name="sequence" eval="2"/>
+                    <field name="type">cashier</field>
+                    <field name="pattern">([!"%-/0-9:-?A-Z_a-z]+)</field>
+                </record>
+            </field>
         </record>
 
         <record id="barcode_rule_client" model="barcode.rule">
             <field name="name">Customer Barcodes</field>
             <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
             <field name="sequence">40</field>
-            <field name="type">client</field>
-            <field name="encoding">any</field>
-            <field name="pattern">042</field>
+            <field name="rule_part_ids">
+                <record id="barcode_rule_group_client_prefix" model="barcode.rule.part">
+                    <field name="sequence" eval="1"/>
+                    <field name="type">prefix</field>
+                    <field name="pattern">(042)</field>
+                </record>
+                <record id="barcode_rule_group_client" model="barcode.rule.part">
+                    <field name="sequence" eval="2"/>
+                    <field name="type">client</field>
+                    <field name="pattern">([!"%-/0-9:-?A-Z_a-z]+)</field>
+                </record>
+            </field>
         </record>
 
         <record id="barcode_rule_discount" model="barcode.rule">
             <field name="name">Discount Barcodes</field>
             <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
             <field name="sequence">20</field>
-            <field name="type">discount</field>
-            <field name="encoding">any</field>
-            <field name="pattern">22{NN}</field>
+            <field name="rule_part_ids">
+                <record id="barcode_rule_group_discount_prefix" model="barcode.rule.part">
+                    <field name="sequence" eval="1"/>
+                    <field name="type">prefix</field>
+                    <field name="pattern">(22)</field>
+                </record>
+                <record id="barcode_rule_group_discount" model="barcode.rule.part">
+                    <field name="sequence" eval="2"/>
+                    <field name="type">discount</field>
+                    <field name="pattern">(\d{2})</field>
+                </record>
+            </field>
         </record>
 
         <record id="barcode_rule_price_two_dec" model="barcode.rule">
             <field name="name">Price Barcodes 2 Decimals</field>
             <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
             <field name="sequence">14</field>
-            <field name="type">price</field>
             <field name="encoding">ean13</field>
-            <field name="pattern">23.....{NNNDD}</field>
+            <field name="rule_part_ids">
+                <record id="barcode_rule_group_price_product" model="barcode.rule.part">
+                    <field name="sequence" eval="1"/>
+                    <field name="type">product</field>
+                    <field name="pattern">(23\d{5})</field>
+                </record>
+                <record id="barcode_rule_group_price" model="barcode.rule.part">
+                    <field name="sequence" eval="2"/>
+                    <field name="type">price</field>
+                    <field name="pattern">(\d{5})\d</field>
+                    <field name="decimal_position" eval="2"/>
+                </record>
+            </field>
         </record>
 </odoo>

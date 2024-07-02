@@ -152,7 +152,7 @@ export class ProductScreen extends Component {
         return productTmplValIds.length > 1 ? product.name : product.display_name;
     }
     async _getProductByBarcode(code) {
-        let product = this.pos.models["product.product"].getBy("barcode", code.base_code);
+        let product = this.pos.models["product.product"].getBy("barcode", code.value);
 
         if (!product) {
             const productPackaging = this.pos.models["product.packaging"].getBy(

@@ -1365,7 +1365,7 @@ class StockQuant(models.Model):
         gs1_quantity_rules = self.env['barcode.rule'].search([
             ('associated_uom_id', '!=', False),
             ('associated_uom_id', '!=', uom_unit_id),
-            ('is_gs1_nomenclature', '=', True)]
+            ('is_combined', '=', True)]
         )
         gs1_quantity_rules_ai_by_uom = {}
 
