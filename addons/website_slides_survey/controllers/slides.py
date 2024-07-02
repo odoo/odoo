@@ -75,6 +75,9 @@ class WebsiteSlidesSurvey(WebsiteSlides):
         # Then create the slide
         result = super(WebsiteSlidesSurvey, self).create_slide(*args, **post)
 
+        if result.get('error'):
+            return result
+
         if post['slide_category'] == "certification":
             # Set the url to redirect the user to the survey
             result['url'] = '/slides/slide/%s?fullscreen=1' % (slug(request.env['slide.slide'].browse(result['slide_id']))),
