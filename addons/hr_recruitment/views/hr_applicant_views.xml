@@ -313,23 +313,15 @@
         <field name="name">Hr Applicants kanban</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="stage_id" class="o_kanban_applicant o_search_matching_applicant" quick_create_view="hr_recruitment.quick_create_applicant_form" sample="1">
+            <kanban highlight_color="color" default_group_by="stage_id" class="o_kanban_applicant o_search_matching_applicant" quick_create_view="hr_recruitment.quick_create_applicant_form" sample="1">
                 <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Requirements"}}'/>
+                <field name="legend_normal"/>
+                <field name="legend_blocked"/>
+                <field name="legend_done"/>
                 <field name="date_closed"/>
                 <field name="color"/>
-                <field name="priority"/>
                 <field name="user_id"/>
-                <field name="user_email"/>
-                <field name="partner_name"/>
-                <field name="type_id"/>
-                <field name="partner_id"/>
-                <field name="job_id"/>
-                <field name="department_id"/>
-                <field name="attachment_number"/>
                 <field name="active"/>
-                <field name="activity_ids" />
-                <field name="activity_state" />
-                <field name="refuse_reason_id" />
                 <field name="application_status" />
                 <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
                 <templates>
@@ -340,63 +332,33 @@
                         <a t-if="!record.active.raw_value" role="menuitem" type="unarchive" class="dropdown-item">Unarchive</a>
                         <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
                         <div role="separator" class="dropdown-divider"></div>
-                        <ul class="oe_kanban_colorpicker text-center" data-field="color"/>
+                        <field name="color" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
-                            <field name="date_closed" invisible="1"/>
-                            <field name="company_id" invisible="1"/>
-                            <div class="ribbon ribbon-top-right" invisible="not date_closed">
-                                <span class="text-bg-success">Hired</span>
-                            </div>
-                            <div class="ribbon ribbon-top-right" invisible="application_status != 'refused'">
-                                <span class="text-bg-danger">Refused</span>
-                            </div>
-                            <div class="ribbon ribbon-top-right" invisible="application_status != 'archived'">
-                                <span class="text-bg-secondary">Archived</span>
-                            </div>
-                            <div class="oe_kanban_content">
-                                <div class="o_kanban_record_top">
-                                    <div class="o_kanban_record_headings">
-                                        <b class="o_kanban_record_title mt8" t-if="record.partner_name.raw_value">
-                                            <field name="partner_name"/><br/>
-                                        </b><t t-else="1">
-                                            <i class="o_kanban_record_title"><field name="name"/></i><br/>
-                                        </t>
-                                        <div class="o_kanban_record_subtitle" invisible="context.get('search_default_job_id', False)">
-                                            <field name="job_id"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4" role="img" aria-label="Mobile" title="Mobile"/><field name="partner_mobile" widget="phone"/><br/></t>
-                                <field name="applicant_properties" widget="properties"/>
-                                <div class="o_kanban_record_bottom mt4">
-                                    <div class="oe_kanban_bottom_left">
-                                        <div class="float-start mr4" groups="base.group_user">
-                                            <field name="priority" widget="priority"/>
-                                        </div>
-                                        <div class="o_kanban_inline_block mr8">
-                                            <field name="activity_ids" widget="kanban_activity"/>
-                                        </div>
-                                    </div>
-                                    <div class="oe_kanban_bottom_right">
-                                        <a name="action_open_attachments" type="object">
-                                            <span title='Documents'><i class='fa fa-paperclip' role="img" aria-label="Documents"/>
-                                                <t t-esc="record.attachment_number.raw_value"/>
-                                            </span>
-                                        </a>
-                                        <field name="kanban_state" widget="state_selection"/>
-                                        <field name="legend_normal" invisible="1"/>
-                                        <field name="legend_blocked" invisible="1"/>
-                                        <field name="legend_done" invisible="1"/>
-                                        <field name="user_id" widget="many2one_avatar_user"/>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
+                    <t t-name="kanban-card">
+                        <widget name="web_ribbon" title="Hired" bg_color="text-bg-success" invisible="not date_closed"/>
+                        <widget name="web_ribbon" title="Refused" bg_color="text-bg-danger" invisible="application_status != 'refused'"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-secondary" invisible="application_status != 'archived'"/>
+                        <field t-if="record.partner_name.raw_value" class="fw-bold fs-5" name="partner_name"/>
+                        <field t-else="" class="fw-bold fs-5" name="name"/>
+                        <field name="job_id" invisible="context.get('search_default_job_id', False)"/>
+                        <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <div t-if="record.partner_mobile.raw_value" class="d-flex align-items-center">
+                            <i class="fa fa-mobile mr4" role="img" aria-label="Mobile" title="Mobile"/>
+                            <field name="partner_mobile" widget="phone"/>
                         </div>
+                        <field name="applicant_properties" widget="properties"/>
+                        <footer class="fs-6">
+                            <field name="priority" widget="priority"/>
+                            <field class="ms-1 align-items-center" name="activity_ids" widget="kanban_activity"/>
+                            <div class="d-flex ms-auto align-items-center">
+                                <a name="action_open_attachments" type="object">
+                                    <i class='fa fa-paperclip' role="img" aria-label="Documents"/>
+                                    <field name="attachment_number"/>
+                                </a>
+                                <field name="kanban_state" class="mx-1" widget="state_selection"/>
+                                <field name="user_id" widget="many2one_avatar_user"/>
+                            </div>
+                        </footer>
                     </t>
                 </templates>
             </kanban>

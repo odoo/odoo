@@ -6,30 +6,16 @@
             <field name="model">hr.recruitment.source</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" create="0" sample="1">
-                    <field name="job_id"/>
-                    <field name="email"/>
                     <field name="has_domain"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_kanban_card oe_kanban_global_click">
-                                <div class="oe_kanban_content">
-                                    <div class="o_kanban_record_top">
-                                        <div class="o_kanban_record_headings row">
-                                            <div class="col-4">
-                                                <h3 class="o_kanban_record_title"><field name="source_id"/></h3>
-                                            </div>
-                                            <div class="col-8 text-end">
-                                                <div><field name="job_id"/></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="o_kanban_record_body mt-3">
-                                        <div class="text-end">
-                                            <field name="email" invisible="not has_domain" widget="email"/>
-                                            <button name="create_alias" class="btn btn-primary mb-2" type="object" invisible="not has_domain or email">Generate Email</button>
-                                        </div>
-                                    </div>
-                                </div>
+                        <t t-name="kanban-card">
+                            <div class="row mb-3">
+                                <field name="source_id" class="col-5 fw-bold fs-5"/>
+                                <field name="job_id" class="col-7 text-end"/>
+                            </div>
+                            <div>
+                                <field name="email" invisible="not has_domain" widget="email"/>
+                                <button name="create_alias" class="btn btn-primary mb-2 float-end" type="object" invisible="not has_domain or email">Generate Email</button>
                             </div>
                         </t>
                     </templates>
