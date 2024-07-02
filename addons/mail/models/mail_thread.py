@@ -3180,7 +3180,7 @@ class MailThread(models.AbstractModel):
                     (
                         self.env["res.partner"].browse(partner_id),
                         "mail.message/inbox",
-                        self.env["mail.message"]
+                        message
                         .with_user(user_id)
                         ._message_format(
                             for_current_user=True,
