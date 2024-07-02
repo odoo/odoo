@@ -221,20 +221,10 @@
     @return $-with-support-font;
 }
 
-// Function to remove all null values of a map. Also transforms `'True'` and
-// `'False'` values into boolean `true` and `false`. This is needed in website
-// because of some options that wrongly set some CSS variables to these values.
-// TODO in master, this should be moved in website, as the only use case is in
-// website user values files.
+// Function to remove all null values of a map.
 @function o-map-omit($map) {
     $-map: ();
     @each $key, $value in $map {
-        @if $value == 'True' {
-            $value: true;
-        }
-        @if $value == 'False' {
-            $value: false;
-        }
         @if $value != null {
             $-map: map-merge($-map, (
                 $key: $value,

@@ -55,7 +55,7 @@ $o-fonts-similar: (
 // By default, most website palette values are null. Each null value is
 // automatically replaced with corresponsing values in chosen default values
 // palette.
-$o-user-website-values: o-map-force-nulls($o-user-website-values);
+$o-user-website-values: o-map-normalize-website-values($o-user-website-values);
 $o-user-website-values: o-map-font-aliases($o-user-website-values);
 $-website-values-default: o-safe-nth($o-website-values-palettes, $o-website-values-palette-number, ());
 $-website-values-default: map-merge($o-base-website-values-palette, $-website-values-default);
@@ -135,7 +135,7 @@ $o-has-customized-colors:
 // By default, most user color palette values are null. Each null value is
 // automatically replaced with corresponsing colors in chosen default color
 // palette.
-$o-user-color-palette: o-map-force-nulls($o-user-color-palette);
+$o-user-color-palette: o-map-normalize-website-values($o-user-color-palette);
 $-palette-default: map-get($o-color-palettes, $o-color-palette-name) or ();
 $-actual-user-color-palette: map-merge($-palette-default, $o-user-color-palette);
 // Compatibility with old values in old names
@@ -169,7 +169,7 @@ $o-color-palettes: map-merge($o-color-palettes, ('user-palette': $-actual-user-c
 // By default, most user gray palette values are null. Each null value is
 // automatically replaced with corresponsing colors in chosen default color
 // palette.
-$o-user-gray-color-palette: o-map-force-nulls($o-user-gray-color-palette);
+$o-user-gray-color-palette: o-map-normalize-website-values($o-user-gray-color-palette);
 $-palette-default: map-get($o-gray-color-palettes, $o-gray-color-palette-name) or ();
 $-actual-user-gray-color-palette: map-merge($-palette-default, $o-user-gray-color-palette);
 $o-gray-color-palettes: map-merge($o-gray-color-palettes, ('user-palette': $-actual-user-gray-color-palette));
@@ -192,7 +192,7 @@ $-alpha: map-get($o-user-theme-color-palette, 'alpha');
 // By default, all user theme color palette values are null. Each null value is
 // automatically replaced with corresponsing colors in chosen default theme
 // color palette.
-$o-user-theme-color-palette: o-map-force-nulls($o-user-theme-color-palette);
+$o-user-theme-color-palette: o-map-normalize-website-values($o-user-theme-color-palette);
 $-palette-default: map-get($o-theme-color-palettes, $o-theme-color-palette-name) or ();
 $-actual-user-theme-color-palette: map-merge($-palette-default, $o-user-theme-color-palette);
 // Always remove the primary/secondary which were customizable in some theme
