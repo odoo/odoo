@@ -20,7 +20,7 @@ export class ClosePosPopup extends Component {
         "orders_details",
         "opening_notes",
         "default_cash_details",
-        "other_payment_methods",
+        "non_cash_payment_methods",
         "is_manager",
         "amount_authorized_diff",
         "close",
@@ -41,7 +41,7 @@ export class ClosePosPopup extends Component {
                 counted: "0",
             };
         }
-        this.props.other_payment_methods.forEach((pm) => {
+        this.props.non_cash_payment_methods.forEach((pm) => {
             if (pm.type === "bank") {
                 initialState.payments[pm.id] = {
                     counted: this.env.utils.formatCurrency(pm.amount, false),
@@ -123,7 +123,7 @@ export class ClosePosPopup extends Component {
         const expectedAmount =
             paymentId === this.props.default_cash_details?.id
                 ? this.props.default_cash_details.amount
-                : this.props.other_payment_methods.find((pm) => pm.id === paymentId).amount;
+                : this.props.non_cash_payment_methods.find((pm) => pm.id === paymentId).amount;
 
         return parseFloat(counted) - expectedAmount;
     }
@@ -198,7 +198,7 @@ export class ClosePosPopup extends Component {
         }
 
         try {
-            const bankPaymentMethodDiffPairs = this.props.other_payment_methods
+            const bankPaymentMethodDiffPairs = this.props.non_cash_payment_methods
                 .filter((pm) => pm.type == "bank")
                 .map((pm) => [pm.id, this.getDifference(pm.id)]);
             const response = await this.pos.data.call("pos.session", "close_session_from_ui", [

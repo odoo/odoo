@@ -101,7 +101,7 @@ export class PosOrder extends Base {
             change: this.uiState.locked ? this.amount_return : this.get_change(),
             name: this.name,
             invoice_id: null, //TODO
-            cashier: this.employee_id?.name || this.user_id?.name,
+            cashier: this.cashier_id?.name || this.user_id?.name,
             date: formatDateTime(luxon.DateTime.fromFormat(this.date_order, "yyyy-MM-dd HH:mm:ss")),
             pos_qr_code:
                 this.company.point_of_sale_use_ticket_qr_code &&

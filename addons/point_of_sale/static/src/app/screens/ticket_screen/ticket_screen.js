@@ -422,7 +422,7 @@ export class TicketScreen extends Component {
         return order.get_cardholder_name();
     }
     getCashier(order) {
-        return order.employee_id ? order.employee_id.name : "";
+        return order.cashier_id ? order.cashier_id.name : "";
     }
     getStatus(order) {
         if (
