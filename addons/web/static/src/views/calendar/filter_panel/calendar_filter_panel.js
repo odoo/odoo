@@ -194,7 +194,7 @@ export class CalendarFilterPanel extends Component {
             { section, filter },
             {
                 closeOnClickAway: false,
-                popoverClass: "o-calendar-filter--tooltip",
+                popoverClass: "o-calendar-filter--tooltip mw-25",
                 position: "top",
             }
         );
