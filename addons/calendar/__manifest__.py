@@ -48,9 +48,13 @@ If you need to manage your meetings, you should install the CRM module.
         ],
         'web.qunit_suite_tests': [
             'calendar/static/tests/**/*',
+            ('remove', 'calendar/static/tests/mock_server/**/*'),
         ],
         'web.assets_tests': [
             'calendar/static/tests/tours/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'calendar/static/tests/mock_server/**/*',
         ],
     },
     'license': 'LGPL-3',

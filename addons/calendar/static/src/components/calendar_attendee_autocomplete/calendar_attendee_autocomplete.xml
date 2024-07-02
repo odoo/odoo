@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="calendar.CalenderAttendeeAutocomplete" t-inherit="web.AutoComplete">
+        <xpath expr="//t[@t-esc='option.label']" position="before">
+            <img t-if='option.value' t-attf-src="/web/image/{{option.model}}/{{option.value}}/avatar_128"
+                class="rounded me-1 o_avatar"
+            />
+        </xpath>
+    </t>
+</templates>

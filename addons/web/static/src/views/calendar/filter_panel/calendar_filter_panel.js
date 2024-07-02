@@ -106,6 +106,10 @@ export class CalendarFilterPanel extends Component {
                 domain: [["id", "in", nameGets.map((nameGet) => nameGet[0])]],
             });
         }
+        this.onFilterSelectCreateDialog(resModel, domain, section, dynamicFilters)
+    }
+
+    onFilterSelectCreateDialog(resModel, domain, section, dynamicFilters) {
         const title = _t("Search: %s", section.label);
         this.addDialog(SelectCreateDialog, {
             title,
