@@ -559,7 +559,15 @@ class Product(models.Model):
         return action
 
     def action_update_quantity_on_hand(self):
-        return self.product_tmpl_id.with_context(default_product_id=self.id, create=True).action_update_quantity_on_hand()
+        advanced_option_groups = [
+            'stock.group_stock_multi_locations',
+            'stock.group_tracking_owner',
+            'stock.group_tracking_lot'
+        ]
+        if (self.env.user.user_has_groups(','.join(advanced_option_groups))) or self.tracking != 'none':
+            return self.action_open_quants()
+        else:
+            return self.product_tmpl_id.with_context(default_product_id=self.id, create=True).action_update_quantity_on_hand()
 
     def action_product_forecast_report(self):
         self.ensure_one()
