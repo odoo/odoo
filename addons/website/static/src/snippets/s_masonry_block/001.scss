@@ -6,11 +6,7 @@
 
 .s_masonry_block[data-vcss='001'] .row.o_grid_mode {
     > div.o_grid_item_image {
-        padding: 0 !important;
-    }
-
-    // No padding highlight on the images.
-    &.o_we_padding_highlight > .o_grid_item_image::after {
-        animation: none;
+        --grid-item-padding-y: 0px;
+        --grid-item-padding-x: 0px;
     }
 }
