@@ -2074,7 +2074,8 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         }
     );
 
-    QUnit.test("getFiltersMatchingPivot works with date=false", async function (assert) {
+    QUnit.test("getFiltersMatchingPivot works with multiple inputs", async function (assert) {
+        patchDate(2022, 6, 14, 0, 0, 0);
         const { model } = await createSpreadsheetWithPivot({
             arch: /*xml*/ `
                 <pivot>
@@ -2091,7 +2092,6 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 type: "date",
                 label: "date filter 1",
                 rangeType: "fixedPeriod",
-                defaultValue: "this_month",
             },
             {
                 pivot: { "PIVOT#1": { chain: "date", type: "date" } },
@@ -2099,9 +2099,42 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         );
         const dateFilters1 = getFiltersMatchingPivot(
             model,
-            '=ODOO.PIVOT.HEADER(1,"expected_revenue","date:month","false")'
+            '=ODOO.PIVOT.HEADER(1,"date:month","false")'
         );
         assert.deepEqual(dateFilters1, [{ filterId: "43", value: undefined }]);
+
+        const matchingYearForMonthGranularity = getFiltersMatchingPivot(
+            model,
+            '=ODOO.PIVOT.HEADER(1,"date:month",2024)'
+        );
+        assert.deepEqual(matchingYearForMonthGranularity, [
+            { filterId: "43", value: { period: undefined, yearOffset: 2 } },
+        ]);
+
+        const matchingYearForQuarterGranularity = getFiltersMatchingPivot(
+            model,
+            '=ODOO.PIVOT.HEADER(1,"date:month","Q2/2024")'
+        );
+        assert.deepEqual(matchingYearForQuarterGranularity, [
+            { filterId: "43", value: { period: undefined, yearOffset: 2 } },
+        ]);
+
+        const errorStrings = getFiltersMatchingPivot(
+            model,
+            '=ODOO.PIVOT.HEADER(1,"date:month","/2024")'
+        );
+        assert.deepEqual(errorStrings, [
+            { filterId: "43", value: { period: undefined, yearOffset: 2 } },
+        ]);
+
+        const emptyString = getFiltersMatchingPivot(model, '=ODOO.PIVOT.HEADER(1,"date:month","")');
+        assert.deepEqual(emptyString, [{ filterId: "43", value: undefined }]);
+
+        const booleanValue = getFiltersMatchingPivot(
+            model,
+            '=ODOO.PIVOT.HEADER(1,"date:month",true)'
+        );
+        assert.deepEqual(booleanValue, [{ filterId: "43", value: undefined }]);
     });
 
     QUnit.test(
