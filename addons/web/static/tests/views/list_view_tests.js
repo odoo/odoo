@@ -2050,7 +2050,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_group_header", 4, "should contain 4 open groups");
         assert.containsNone(target, ".o_group_open", "no group is open");
         assert.deepEqual(
-            [...target.querySelectorAll(".o_group_header .o_group_name")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_group_header .o_group_name")].map((el) => el.innerText.replaceAll("\n", " ")),
             ["None (1)", "Value 1 (3)", "Value 2 (2)", "Value 3 (1)"],
             "should have those group headers"
         );
@@ -8903,7 +8903,7 @@ QUnit.module("Views", (hooks) => {
             "should contain 2 groups at first level and 3 groups at second level"
         );
         assert.deepEqual(
-            [...target.querySelectorAll(".o_group_header .o_group_name")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_group_header .o_group_name")].map((el) => el.innerText.replaceAll("\n", " ")),
             ["Value 1 (5)", "Low (3)", "Medium (1)", "High (1)", "Value 2 (1)"]
         );
     });
@@ -12912,7 +12912,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.deepEqual(
             [...target.querySelectorAll(".o_group_header")].map((el) => el.innerText),
-            ["January 2017 (1)", "None (3)"],
+            ["January 2017\n(1)", "None\n(3)"],
             "the group names should be correct"
         );
     });
@@ -13639,7 +13639,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_pager"); // has a pager
 
         assert.deepEqual(
-            [...target.querySelectorAll(".o_group_name")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_group_name")].map((el) => el.innerText.replaceAll("\n", " ")),
             [
                 "-4 (1)",
                 "0 (1)",
@@ -13659,7 +13659,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 9); // two groups contains two records
 
         assert.deepEqual(
-            [...target.querySelectorAll(".o_group_name")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_group_name")].map((el) => el.innerText.replaceAll("\n", " ")),
             ["9 (2)", "10 (2)", "11 (1)", "12 (1)", "13 (1)", "14 (1)", "17 (1)"]
         );
 
@@ -15095,14 +15095,14 @@ QUnit.module("Views", (hooks) => {
             await click(getGroup(1));
             await click(getGroup(2));
             assert.containsN(target, ".o_data_row", 4);
-            assert.equal(getGroup(1).innerText, "No (1)");
-            assert.equal(getGroup(2).innerText, "Yes (3)");
+            assert.equal(getGroup(1).innerText, "No\n(1)");
+            assert.equal(getGroup(2).innerText, "Yes\n(3)");
 
             // add a row in first group
             await click(target.querySelectorAll(".o_group_field_row_add a")[0]);
             assert.containsOnce(target, ".o_selected_row");
             assert.containsN(target, ".o_data_row", 5);
-            assert.equal(getGroup(1).innerText, "No (2)");
+            assert.equal(getGroup(1).innerText, "No\n(2)");
             assert.strictEqual(
                 document.activeElement,
                 getDataRow(2).querySelector("[name=foo] input")
@@ -15112,8 +15112,8 @@ QUnit.module("Views", (hooks) => {
             await click(target.querySelectorAll(".o_group_field_row_add a")[1]);
             assert.containsOnce(target, ".o_selected_row");
             assert.containsN(target, ".o_data_row", 5);
-            assert.equal(getGroup(2).innerText, "Yes (4)");
-            assert.equal(getGroup(1).innerText, "No (1)");
+            assert.equal(getGroup(2).innerText, "Yes\n(4)");
+            assert.equal(getGroup(1).innerText, "No\n(1)");
             assert.strictEqual(
                 document.activeElement,
                 getDataRow(5).querySelector("[name=foo] input")
@@ -15561,7 +15561,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelectorAll(".o_group_field_row_add a")[1]); // create row in second group "Yes"
         assert.strictEqual(
             target.querySelectorAll(".o_group_name")[1].innerText,
-            "Yes (4)",
+            "Yes\n(4)",
             "group should have correct name and count"
         );
         assert.containsN(target, ".o_data_row", 5);
@@ -17619,7 +17619,7 @@ QUnit.module("Views", (hooks) => {
         await toggleMenuItem(target, "Foo");
 
         assert.deepEqual(
-            [...target.querySelectorAll(".o_group_name")].map((r) => r.innerText),
+            [...target.querySelectorAll(".o_group_name")].map((r) => r.innerText.replaceAll("\n", " ")),
             ["yop (1)", "gnap (1)", "blip (2)"]
         );
 
@@ -18145,7 +18145,7 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll("tbody .o_group_header")].map((el) =>
                     el.innerText.trim()
                 ),
-                ["No (1)", "Yes (3)"]
+                ["No\n(1)", "Yes\n(3)"]
             );
 
             await removeFacet(target);
@@ -18169,7 +18169,7 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll("tbody .o_group_header")].map((el) =>
                     el.innerText.trim()
                 ),
-                ["No (1)", "Yes (3)"]
+                ["No\n(1)", "Yes\n(3)"]
             );
         }
     );
