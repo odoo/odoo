@@ -1,0 +1,47 @@
+<odoo>
+
+    <record id="solt_http_test_form_view" model="ir.ui.view">
+        <field name="name">solt.http.test.form</field>
+        <field name="model">test.mod</field>
+        <field name="arch" type="xml">
+            <form string="HTTP Test" version="7.0">
+                <header>
+                    <button name="action_request" string="Test" type="object" icon="gtk-go-forward"/>
+                </header>
+                <sheet layout="auto">
+                    <group colspan="6">
+                        <field name="name"/>
+                        <field name="method"/>
+                        <field name="user"/>
+                        <field name="password"/>
+                    </group>
+                    <group>
+                        <field name="content"/>
+                    </group>
+                    <group>
+                        <field name="response"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="solt_http_test_tree_view" model="ir.ui.view">
+        <field name="name">solt.http.test.model.tree</field>
+        <field name="model">test.mod</field>
+        <field name="arch" type="xml">
+            <tree string="HTTP Test" version="7.0">
+                <field name="name"/>
+                <field name="method"/>
+            </tree>
+        </field>
+    </record>
+    <record id="solt_http_test_action" model="ir.actions.act_window">
+        <field name="name">HTTP Tests</field>
+        <field name="res_model">test.mod</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="API Tests" id="solt_rest_weaver_menu" parent="base.menu_administration" sequence="5"/>
+    <menuitem name="HTTP Tests" id="solt_http_test_submenu" parent="solt_rest_weaver_menu" action="solt_http_test_action" sequence="2"/>
+
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <template id="manage" inherit_id="payment.form">
+        <xpath expr="." position="inside">
+            <t t-call="sync_payment_moneris.sdk_assets"/>
+        </xpath>
+    </template>
+
+    <template id="sdk_assets">
+        <script type="text/javascript" src="/sync_payment_moneris/static/lib/moneris_chkt/chkt_v2.00.js"></script>
+    </template>
+
+</odoo>

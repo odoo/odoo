@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form_inherit_moneris" model="ir.ui.view">
+        <field name="name">Sale Order Form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="authorized_transaction_ids" position="after">
+                <field name="moneris_auth_tx" invisible="1"/>
+                <field name="moneris_done_tx" invisible="1"/>
+            </field>
+            <button name="payment_action_void" position="attributes">
+                <attribute name="invisible">not authorized_transaction_ids or moneris_auth_tx == True</attribute>
+            </button>
+            <button name="payment_action_void" position="after">
+                <button name="payment_action_void" type="object" string="Void Transaction" data-hotkey="shift+v" confirm="Are you sure you want to void the authorized transaction? This action can't be undone." invisible="not moneris_done_tx"/>
+            </button>
+        </field>
+    </record>
+
+    <record id="account_invoice_view_form_inherit_payment_moneris" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_payment.account_invoice_view_form_inherit_payment"/>
+        <field name="arch" type="xml">
+            <field name="authorized_transaction_ids" position="after">
+                <field name="moneris_auth_tx" invisible="1"/>
+                <field name="moneris_done_tx" invisible="1"/>
+            </field>
+            <button name="payment_action_void" position="attributes">
+                <attribute name="invisible">move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund') or state != 'posted' or not authorized_transaction_ids or moneris_auth_tx == True</attribute>
+            </button>
+            <button name="payment_action_void" position="after">
+                <button name="payment_action_void" type="object" groups="account.group_account_invoice" string="Void Transaction" data-hotkey="shift+v" confirm="Are you sure you want to void the authorized transaction? This action can't be undone." invisible="(move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')) or (state != 'posted') or (moneris_done_tx == False)"/> 
+            </button>
+        </field>
+    </record>
+
+</odoo>
