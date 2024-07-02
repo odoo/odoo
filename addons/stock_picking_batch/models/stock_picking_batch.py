@@ -39,10 +39,10 @@ class StockPickingBatch(models.Model):
         help='Technical Field used to decide whether the button "Allocation" should be displayed.')
     allowed_picking_ids = fields.One2many('stock.picking', compute='_compute_allowed_picking_ids')
     move_ids = fields.One2many(
-        'stock.move', string="Stock moves", compute='_compute_move_ids')
+        'stock.move', string="Stock moves", compute='_compute_move_ids', search='_search_move_ids')
     move_line_ids = fields.One2many(
         'stock.move.line', string='Stock move lines',
-        compute='_compute_move_ids', inverse='_set_move_line_ids', readonly=True,
+        compute='_compute_move_ids', inverse='_set_move_line_ids', search='_search_move_line_ids', readonly=True,
         states={'draft': [('readonly', False)], 'in_progress': [('readonly', False)]})
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -96,6 +96,12 @@ class StockPickingBatch(models.Model):
             batch.move_ids = batch.picking_ids.move_lines
             batch.move_line_ids = batch.picking_ids.move_line_ids
             batch.show_check_availability = any(m.state not in ['assigned', 'cancel', 'done'] for m in batch.move_ids)
+
+    def _search_move_line_ids(self, operator, value):
+        return [('picking_ids.move_line_ids', operator, value)]
+
+    def _search_move_ids(self, operator, value):
+        return [('picking_ids.move_ids', operator, value)]
 
     @api.depends('picking_ids', 'picking_ids.show_validate')
     def _compute_show_validate(self):
