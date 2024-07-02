@@ -247,7 +247,6 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         mo_form = Form(production)
         mo_form.qty_producing = 1
         production = mo_form.save()
-        production._post_inventory()
         production.button_mark_done()
 
         # finished product move

@@ -782,9 +782,6 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.qty_producing = 3
         mo = mo_form.save()
 
-        mo._post_inventory()
-        self.assertEqual(len(mo.move_raw_ids), 4)
-
         mo.move_raw_ids.filtered(lambda m: m.state != 'done')[0].quantity = 3
 
         update_quantity_wizard = self.env['change.production.qty'].create({
@@ -794,8 +791,6 @@ class TestMrpOrder(TestMrpCommon):
 
         mo.move_raw_ids.filtered(lambda m: m.state != 'done')[0].quantity = 0
         update_quantity_wizard.change_prod_qty()
-
-        self.assertEqual(len(mo.move_raw_ids), 4)
 
         mo.move_raw_ids.picked = True
         mo.button_mark_done()
@@ -1082,18 +1077,18 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(move_byproduct_1), 1)
         self.assertEqual(move_byproduct_1.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_1.quantity, 1)
-        self.assertTrue(move_byproduct_1.picked)
+        self.assertFalse(move_byproduct_1.picked)
 
         move_byproduct_2 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct2)
         self.assertEqual(len(move_byproduct_2), 1)
         self.assertEqual(move_byproduct_2.product_uom_qty, 4.0)
         self.assertEqual(move_byproduct_2.quantity, 2)
-        self.assertTrue(move_byproduct_2.picked)
+        self.assertFalse(move_byproduct_2.picked)
 
         move_byproduct_3 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct3)
         self.assertEqual(move_byproduct_3.product_uom_qty, 4.0)
         self.assertEqual(move_byproduct_3.quantity, 2.0)
-        self.assertTrue(move_byproduct_3.picked)
+        self.assertFalse(move_byproduct_3.picked)
         self.assertEqual(move_byproduct_3.product_uom, dozen)
 
         details_operation_form = Form(move_byproduct_1, view=self.env.ref('stock.view_stock_move_operations'))
@@ -1117,18 +1112,18 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(move_byproduct_1), 1)
         self.assertEqual(move_byproduct_1.product_uom_qty, 1.0)
         self.assertEqual(move_byproduct_1.quantity, 1)
-        self.assertTrue(move_byproduct_1.picked)
+        self.assertFalse(move_byproduct_1.picked)
 
         move_byproduct_2 = mo2.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct2)
         self.assertEqual(len(move_byproduct_2), 1)
         self.assertEqual(move_byproduct_2.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_2.quantity, 2)
-        self.assertTrue(move_byproduct_2.picked)
+        self.assertFalse(move_byproduct_2.picked)
 
         move_byproduct_3 = mo2.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct3)
         self.assertEqual(move_byproduct_3.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_3.quantity, 2.0)
-        self.assertTrue(move_byproduct_3.picked)
+        self.assertFalse(move_byproduct_3.picked)
         self.assertEqual(move_byproduct_3.product_uom, dozen)
 
         details_operation_form = Form(move_byproduct_1, view=self.env.ref('stock.view_stock_move_operations'))
@@ -1176,10 +1171,12 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.qty_producing = 3
         self.assertEqual(sum([x['quantity'] for x in mo_form.move_raw_ids._records]), 15, 'Update the produce quantity should change the components quantity.')
         mo = mo_form.save()
+        mo.move_raw_ids.picked = False
         mo_form = Form(mo)
         mo_form.qty_producing = 4
         self.assertEqual(sum([x['quantity'] for x in mo_form.move_raw_ids._records]), 20, 'Update the produce quantity should change the components quantity.')
         mo = mo_form.save()
+        mo.move_raw_ids.picked = False
         mo_form = Form(mo)
         mo_form.qty_producing = 1
         self.assertEqual(sum([x['quantity'] for x in mo_form.move_raw_ids._records]), 5, 'Update the produce quantity should change the components quantity.')
@@ -1588,6 +1585,177 @@ class TestMrpOrder(TestMrpCommon):
             mo.move_raw_ids |= move
         mo.action_confirm()
         self.assertEqual(len(mo.move_raw_ids), 2)
+
+    def test_mass_produce(self):
+        """ Checks if is possible do mass produce when the final product is tracked by serial """
+        mo_with_serial, _, _, _, _ = self.generate_mo(tracking_final='serial')
+        mo_without_serial, _, _, _, _ = self.generate_mo()
+
+        self.assertEqual(mo_with_serial.qty_producing, 0)
+        self.assertEqual(mo_without_serial.qty_producing, 0)
+
+        mo_form_with_serial = Form(mo_with_serial)
+        mo_form_without_serial = Form(mo_without_serial)
+
+        mo_form_with_serial.qty_producing = 3
+        mo_form_without_serial.qty_producing = 3
+        mo_with_serial = mo_form_with_serial.save()
+        mo_without_serial = mo_form_without_serial.save()
+        self.assertEqual(mo_with_serial.qty_producing, 1)
+        self.assertEqual(mo_without_serial.qty_producing, 3)
+
+        mo_form_with_serial = Form(mo_with_serial)
+        mo_form_without_serial = Form(mo_without_serial)
+        mo_form_with_serial.qty_producing = 0
+        mo_form_without_serial.qty_producing = 0
+        mo_with_serial = mo_form_with_serial.save()
+        mo_without_serial = mo_form_without_serial.save()
+        self.assertEqual(mo_with_serial.qty_producing, 0)
+        self.assertEqual(mo_without_serial.qty_producing, 0)
+
+    def test_product_produce_15(self):
+        """
+            Checks if move.quantity is changing when we update the qty_producing
+            and if the auto-qty for byproducts is updated
+        """
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')
+        demo = self.env['product.product'].create({
+            'name': 'DEMO'
+        })
+        comp1 = self.env['product.product'].create({
+            'name': 'COMP1'
+        })
+        comp2 = self.env['product.product'].create({
+            'name': 'COMP2'
+        })
+        comp3 = self.env['product.product'].create({
+            'name': 'COMP3'
+        })
+        bprod1 = self.env['product.product'].create({
+            'name': 'BPROD1'
+        })
+        bprod2 = self.env['product.product'].create({
+            'name': 'BPROD2'
+        })
+        bprod3 = self.env['product.product'].create({
+            'name': 'BPROD3'
+        })
+        work_center_1 = self.env['mrp.workcenter'].create({"name": "WorkCenter 1", "time_start": 11})
+        work_center_2 = self.env['mrp.workcenter'].create({"name": "WorkCenter 2", "time_start": 12})
+        work_center_3 = self.env['mrp.workcenter'].create({"name": "WorkCenter 3", "time_start": 13})
+        bom = self.env['mrp.bom'].create({
+            'product_id': demo.id,
+            'product_tmpl_id': demo.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'operation_ids': [
+                (0, 0, {'name': 'OP1', 'workcenter_id': work_center_1.id, 'time_cycle': 12, 'sequence': 1}),
+                (0, 0, {'name': 'OP2', 'workcenter_id': work_center_2.id, 'time_cycle': 18, 'sequence': 2}),
+                (0, 0, {'name': 'OP3', 'workcenter_id': work_center_3.id, 'time_cycle': 24, 'sequence': 3})
+            ]
+        })
+        self.env['mrp.bom.line'].create({
+            'product_id': comp1.id,
+            'product_qty': 1.0,
+            'bom_id': bom.id,
+            'operation_id': bom.operation_ids[0].id})
+        self.env['mrp.bom.line'].create({
+            'product_id': comp2.id,
+            'product_qty': 2.0,
+            'bom_id': bom.id,
+            'operation_id': bom.operation_ids[1].id})
+        self.env['mrp.bom.line'].create({
+            'product_id': comp3.id,
+            'product_qty': 3.0,
+            'bom_id': bom.id,
+            'operation_id': bom.operation_ids[2].id})
+        self.env['mrp.bom.byproduct'].create({
+            'product_id': bprod1.id,
+            'product_qty': 1.0,
+            'bom_id': bom.id,
+            'operation_id': bom.operation_ids[0].id})
+        self.env['mrp.bom.byproduct'].create({
+            'product_id': bprod2.id,
+            'product_qty': 2.0,
+            'bom_id': bom.id,
+            'operation_id': bom.operation_ids[1].id})
+        self.env['mrp.bom.byproduct'].create({
+            'product_id': bprod3.id,
+            'product_qty': 3.0,
+            'bom_id': bom.id,
+            'operation_id': bom.operation_ids[2].id})
+
+        def _change_qty_producing_and_finish_wo(mo, new_qty, wo_index):
+            mo.qty_producing = new_qty
+            self.assertEqual(mo.qty_producing, new_qty)
+            wo = mo.workorder_ids.sorted()[wo_index]
+            wo.button_start()
+            wo.button_finish()
+
+        def _assert_quantity_and_picked(mo, vals):
+            for move in mo.move_raw_ids:
+                self.assertTrue(move.picked) if vals[move.product_id.id]['picked'] else self.assertFalse(move.picked)
+                self.assertEqual(move.quantity, vals[move.product_id.id]['quantity'])
+            for move in mo.move_byproduct_ids:
+                self.assertTrue(move.picked) if vals[move.product_id.id]['picked'] else self.assertFalse(move.picked)
+                self.assertEqual(move.quantity, vals[move.product_id.id]['quantity'])
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_form.product_qty = 5
+        mo = mo_form.save()
+        mo.action_confirm()
+        _assert_quantity_and_picked(mo, {
+            comp1.id: {'picked': False, 'quantity': 5},
+            comp2.id: {'picked': False, 'quantity': 10},
+            comp3.id: {'picked': False, 'quantity': 15},
+            bprod1.id: {'picked': False, 'quantity': 5},
+            bprod2.id: {'picked': False, 'quantity': 10},
+            bprod3.id: {'picked': False, 'quantity': 15},
+        })
+
+        self.assertEqual(mo.qty_producing, 0)
+        mo.qty_producing = 5
+        self.assertEqual(mo.qty_producing, 5)
+        _assert_quantity_and_picked(mo, {
+            comp1.id: {'picked': False, 'quantity': 5},
+            comp2.id: {'picked': False, 'quantity': 10},
+            comp3.id: {'picked': False, 'quantity': 15},
+            bprod1.id: {'picked': False, 'quantity': 5},
+            bprod2.id: {'picked': False, 'quantity': 10},
+            bprod3.id: {'picked': False, 'quantity': 15},
+        })
+
+        _change_qty_producing_and_finish_wo(mo, 4, 0)
+        _assert_quantity_and_picked(mo, {
+            comp1.id: {'picked': True, 'quantity': 4},
+            comp2.id: {'picked': False, 'quantity': 10},
+            comp3.id: {'picked': False, 'quantity': 15},
+            bprod1.id: {'picked': True, 'quantity': 4},
+            bprod2.id: {'picked': False, 'quantity': 10},
+            bprod3.id: {'picked': False, 'quantity': 15},
+        })
+
+        _change_qty_producing_and_finish_wo(mo, 3, 1)
+        _assert_quantity_and_picked(mo, {
+            comp1.id: {'picked': True, 'quantity': 4},
+            comp2.id: {'picked': True, 'quantity': 6},
+            comp3.id: {'picked': False, 'quantity': 15},
+            bprod1.id: {'picked': True, 'quantity': 4},
+            bprod2.id: {'picked': True, 'quantity': 6},
+            bprod3.id: {'picked': False, 'quantity': 15},
+        })
+
+        _change_qty_producing_and_finish_wo(mo, 2, 2)
+        _assert_quantity_and_picked(mo, {
+            comp1.id: {'picked': True, 'quantity': 4},
+            comp2.id: {'picked': True, 'quantity': 6},
+            comp3.id: {'picked': True, 'quantity': 6},
+            bprod1.id: {'picked': True, 'quantity': 4},
+            bprod2.id: {'picked': True, 'quantity': 6},
+            bprod3.id: {'picked': True, 'quantity': 6},
+        })
 
     def test_product_produce_uom(self):
         """ Produce a finished product tracked by serial number. Set another
