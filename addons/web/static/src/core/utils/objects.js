@@ -104,7 +104,12 @@ export function deepMerge(target, extension) {
     const output = Object.assign({}, target);
     if (isObject(extension)) {
         for (const key of Reflect.ownKeys(extension)) {
-            if (key in target && isObject(extension[key]) && !Array.isArray(extension[key])) {
+            if (
+                key in target &&
+                isObject(extension[key]) &&
+                !Array.isArray(extension[key]) &&
+                typeof extension[key] !== "function"
+            ) {
                 output[key] = deepMerge(target[key], extension[key]);
             } else {
                 Object.assign(output, { [key]: extension[key] });
