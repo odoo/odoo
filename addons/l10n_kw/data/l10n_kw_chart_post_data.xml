@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="kw_chart_template_standard" model="account.chart.template">
+        <field name="property_account_receivable_id" ref="receivable"/>
+        <field name="property_account_payable_id" ref="payable"/>
+        <field name="property_account_expense_categ_id" ref="expense"/>
+        <field name="property_account_income_categ_id" ref="income"/>
+        <field name="expense_currency_exchange_account_id" ref="expense_currency_exchange"/>
+        <field name="income_currency_exchange_account_id" ref="income_currency_exchange"/>
+        <field name="default_pos_receivable_account_id" ref="pos_receivable"/>
+        <field name="property_stock_account_input_categ_id" ref="stock_in"/>
+        <field name="property_stock_account_output_categ_id" ref="stock_out"/>
+        <field name="property_stock_valuation_account_id" ref="stock_valuation"/>
+    </record>
+
+</odoo>
