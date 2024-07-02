@@ -24,6 +24,18 @@
     transform: scale(-1);
 }
 
+// Needed to prevent the emoji picker from inheriting theme colors
+.o-EmojiPicker {
+    --o-EmojiPicker-bg: white;
+    --o-EmojiPicker__section-bg: white;
+    --o-EmojiPicker-color: black;
+    --o-EmojiPicker__input-color: black;
+    --o-EmojiPicker__input-placeholder-color:  #{rgba(black, $o-opacity-muted)};
+    --o-EmojiPicker__input-font-size: 1rem;
+    --o-EmojiPicker--active: #e7e9ed;
+    --o-EmojiPicker__navbar--active: #F9FAFB;
+}
+
 // GRID LAYOUT
 .o_grid_mode {
     @include media-breakpoint-down(lg) {
