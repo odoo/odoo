@@ -142,9 +142,9 @@ class AccountPayment(models.Model):
         # Extends 'account'
         values = super()._get_aml_default_display_name_list()
         if self.check_number:
-            date_index = [i for i, value in enumerate(values) if value[0] == 'date'][0]
-            values.insert(date_index - 1, ('check_number', self.check_number))
-            values.insert(date_index - 1, ('sep', ' - '))
+            insert_index = next(i for i, value in enumerate(values) if value[0] == 'payment_method') + 1
+            values.insert(insert_index, ('check_number', self.check_number))
+            values.insert(insert_index, ('sep', ' - '))
         return values
 
     def action_post(self):
