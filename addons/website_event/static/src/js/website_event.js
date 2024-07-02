@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { WebsiteEventTicketRegistrationDialog } from "@website_event/client_action/website_event_ticket_registration_dialog";
 import { rpc } from "@web/core/network/rpc";
 
 // Catch registration form event, because of JS for attendee details
@@ -40,27 +41,16 @@ var EventRegistrationForm = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    on_click: function (ev) {
+    on_click: async function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
         var $form = $(ev.currentTarget).closest('form');
         var $button = $(ev.currentTarget).closest('[type="submit"]');
         const post = this._getPost();
         $button.attr('disabled', true);
-        return rpc($form.attr('action'), post).then(function (modal) {
-            var $modal = $(modal);
-            $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
-            $modal.appendTo(document.body);
-            const modalBS = new Modal($modal[0], {backdrop: 'static', keyboard: false});
-            modalBS.show();
-            $modal.appendTo('body').modal('show');
-            $modal.on('click', '.js_goto_event', function () {
-                $modal.modal('hide');
-                $button.prop('disabled', false);
-            });
-            $modal.on('click', '.btn-close', function () {
-                $button.prop('disabled', false);
-            });
+        return rpc($form.attr('action'), post).then((data) => {
+            $('#modal_ticket_registration').modal('hide');
+            this.call("dialog", "add", WebsiteEventTicketRegistrationDialog, {data: data});
         });
     },
 });

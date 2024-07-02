@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="website_event_sale.WebsiteEventTicketRegistration" t-inherit="website_event.WebsiteEventTicketRegistration" t-inherit-mode="extension">
+        <!-- Change 'continue' button to use the website login settings -->
+        <xpath expr="//button[hasclass('btn-primary')]" position="replace">
+            <t t-if="data.website.account_on_checkout === 'mandatory' &amp;&amp; data.website.is_public_user">
+                <a class="btn btn-primary" t-attf-href="/web/login?redirect=/event/#{event_slug}">
+                    <span>Sign In</span>
+                    <span class="fa fa-sign-in"/>
+                </a>
+            </t>
+            <t t-else="">
+                <t t-set="has_paying_ticket" t-value="data.registrations || data.tickets.some(ticket => ticket.price > 0)"/>
+                <button class="btn btn-primary" type="submit" t-if="data.availability_check &amp;&amp; registrations.length" t-on-click="(ev) => this.submitForm(ev)">
+                    <span t-if="has_paying_ticket">Go to Cart</span>
+                    <span t-else="">Confirm Registration</span>
+                </button>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

@@ -9,10 +9,11 @@ from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools.misc import get_lang
-from odoo.tools import lazy
+from odoo.tools import consteq, lazy
 from odoo.exceptions import UserError
 
 class WebsiteEventController(http.Controller):
@@ -246,12 +247,124 @@ class WebsiteEventController(http.Controller):
                     "email": visitor.email,
                     "phone": visitor.mobile,
                 }
-        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", {
+        return {
             'tickets': tickets,
-            'event': event,
+            'event': {
+                'event_slug': slug(event),
+                'seats_available': event.seats_available,
+                'tickets_ids': [
+                    {
+                        'id': ticket['id'],
+                        'name': ticket['name'],
+                        'seats_available': ticket['seats_available'],
+                    } for ticket in event.event_ticket_ids
+                ],
+                'question_ids': event.question_ids,
+                'general_question_ids': [
+                    {
+                        'id': general_question.id,
+                        'title': general_question.title,
+                        'is_mandatory_answer': general_question.is_mandatory_answer,
+                        'question_type': general_question.question_type,
+                        'answer_ids': general_question.answer_ids.read(['id', 'name'])
+                    } for general_question in event.general_question_ids
+                ],
+                'specific_question_ids': [
+                    {
+                        'id': specific_question.id,
+                        'title': specific_question.title,
+                        'is_mandatory_answer': specific_question.is_mandatory_answer,
+                        'question_type': specific_question.question_type,
+                        'answer_ids': specific_question.answer_ids.read(['id', 'name'])
+                    } for specific_question in event.specific_question_ids
+                ],
+            },
             'availability_check': availability_check,
             'default_first_attendee': default_first_attendee,
-        })
+            'csrf_token': request.csrf_token(),
+        }
+
+    @http.route(['/event/<model("event.event"):event>/registration/modify'], type='json', auth="public", methods=['POST'], website=True)
+    def registration_modify(self, event, **post):
+        registration = request.env['event.registration'].sudo().browse(post.get('registration_id'))
+        # Get all the registrations from the same sale order and the same event :
+        registrations = request.env['event.registration'].sudo().search([
+            ('sale_order_id', '=', registration.sale_order_id.id),
+            ('event_id', '=', event.id)], order='id')
+        default_first_attendee = {}
+        if not request.env.user._is_public():
+            default_first_attendee = {
+                "name": request.env.user.name,
+                "email": request.env.user.email,
+                "phone": request.env.user.mobile or request.env.user.phone,
+            }
+        else:
+            visitor = request.env['website.visitor']._get_visitor_from_request()
+            if visitor.email:
+                default_first_attendee = {
+                    "name": visitor.display_name,
+                    "email": visitor.email,
+                    "phone": visitor.mobile,
+                }
+        return {
+            'registrations_hash': event._get_tickets_access_hash(registrations.ids),
+            'registrations': [
+                {
+                    'registration_id': registration.id,
+                    'ticket_id': registration.event_ticket_id.id,
+                    'ticket_name': registration.event_ticket_id.name,
+                    'answers': {
+                        answer.question_id.id: answer.value_text_box or answer.value_answer_id.name for answer in registration.registration_answer_ids
+                    }
+                } for registration in registrations
+            ],
+            'event': {
+                'event_slug': slug(event),
+                'seats_available': event.seats_available,
+                'tickets_ids': [
+                    {
+                        'id': ticket['id'],
+                        'name': ticket['name'],
+                        'seats_available': ticket['seats_available'],
+                    } for ticket in event.event_ticket_ids
+                ],
+                'question_ids': event.question_ids,
+                'general_question_ids': [
+                    {
+                        'id': general_question.id,
+                        'title': general_question.title,
+                        'is_mandatory_answer': general_question.is_mandatory_answer,
+                        'question_type': general_question.question_type,
+                        'answer_ids': general_question.answer_ids.read(['id', 'name'])
+                    } for general_question in event.general_question_ids
+                ],
+                'specific_question_ids': [
+                    {
+                        'id': specific_question.id,
+                        'title': specific_question.title,
+                        'is_mandatory_answer': specific_question.is_mandatory_answer,
+                        'question_type': specific_question.question_type,
+                        'answer_ids': specific_question.answer_ids.read(['id', 'name'])
+                    } for specific_question in event.specific_question_ids
+                ],
+            },
+            'availability_check': True,
+            'default_first_attendee': default_first_attendee,
+            'csrf_token': request.csrf_token(),
+        }
+
+    def _registrations_hash_check(self, event, post, registrations_to_delete):
+        registrations_hash = False
+        if 'registrations_hash' in post:
+            registrations_hash = post.get('registrations_hash')
+            del post['registrations_hash']
+
+        registrations_ids_for_hash = registrations_to_delete + [int(value) for key, value in post.items() if key.endswith('registration_id')]
+        # if we have no registration to delete or to modify, we don't need to check the hash
+        if registrations_ids_for_hash:
+            hash_truth = event and event._get_tickets_access_hash(registrations_ids_for_hash)
+            if not consteq(registrations_hash, hash_truth):
+                raise NotFound()
 
     def _process_attendees_form(self, event, form_details):
         """ Process data posted from the attendee details form.
@@ -263,6 +376,13 @@ class WebsiteEventController(http.Controller):
         :param form_details: posted data from frontend registration form, like
             {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1'}
         """
+        registrations_to_delete = []
+        if 'registrations_to_delete' in form_details:
+            registrations_to_delete = literal_eval(form_details.get('registrations_to_delete'))
+            del form_details['registrations_to_delete']
+
+        self._registrations_hash_check(event, form_details, registrations_to_delete)
+
         allowed_fields = request.env['event.registration']._get_website_registration_allowed_fields()
         registration_fields = {key: v for key, v in request.env['event.registration']._fields.items() if key in allowed_fields}
         for ticket_id in list(filter(lambda x: x is not None, [form_details[field] if 'event_ticket_id' in field else None for field in form_details.keys()])):
@@ -280,10 +400,10 @@ class WebsiteEventController(http.Controller):
                 continue
 
             key_values = key.split('-')
-            # Special case for handling event_ticket_id data that holds only 2 values
+            # Special case for handling event_ticket_id or registration_id data that holds only 2 values
             if len(key_values) == 2:
                 registration_index, field_name = key_values
-                if field_name not in registration_fields:
+                if field_name not in registration_fields and field_name != 'registration_id':
                     continue
                 registrations.setdefault(registration_index, dict())[field_name] = int(value) or False
                 continue
@@ -328,7 +448,7 @@ class WebsiteEventController(http.Controller):
             for registration in registrations.values():
                 registration.update(general_identification_answers)
 
-        return list(registrations.values())
+        return list(registrations.values()), registrations_to_delete
 
     def _create_attendees_from_registration_post(self, event, registration_data):
         """ Also try to set a visitor (from request) and
@@ -338,7 +458,14 @@ class WebsiteEventController(http.Controller):
         visitor_sudo = request.env['website.visitor']._get_visitor_from_request(force_create=True)
 
         registrations_to_create = []
+        registration_ids_to_update = [registration['registration_id'] for registration in registration_data if 'registration_id' in registration]
+        registrations_to_update = request.env['event.registration'].sudo().search([('id', 'in', registration_ids_to_update)])
+
         for registration_values in registration_data:
+            # For already existing registration, just write de new values to the record
+            if 'registration_id' in registration_values:
+                registrations_to_update.browse(registration_values.pop('registration_id')).write(registration_values)
+                continue
             registration_values['event_id'] = event.id
             if not registration_values.get('partner_id') and visitor_sudo.partner_id:
                 registration_values['partner_id'] = visitor_sudo.partner_id.id
@@ -350,7 +477,8 @@ class WebsiteEventController(http.Controller):
 
             registrations_to_create.append(registration_values)
 
-        return request.env['event.registration'].sudo().create(registrations_to_create)
+        registrations_to_update.flush_recordset()  # CACL: flush to avoid access rights error, but don't know why...
+        return request.env['event.registration'].sudo().create(registrations_to_create) + registrations_to_update
 
     @http.route(['''/event/<model("event.event"):event>/registration/confirm'''], type='http', auth="public", methods=['POST'], website=True)
     def registration_confirm(self, event, **post):
@@ -358,13 +486,14 @@ class WebsiteEventController(http.Controller):
             that we have enough seats for all selected tickets.
             If we don't, the user is instead redirected to page to register with a
             formatted error message. """
-        registrations_data = self._process_attendees_form(event, post)
+        registrations_data, registrations_to_delete = self._process_attendees_form(event, post)
         event_ticket_ids = {registration['event_ticket_id'] for registration in registrations_data}
         event_tickets = request.env['event.event.ticket'].browse(event_ticket_ids)
         if any(event_ticket.seats_limited and event_ticket.seats_available < len(registrations_data) for event_ticket in event_tickets):
             return request.redirect('/event/%s/register?registration_error_code=insufficient_seats' % event.id)
         attendees_sudo = self._create_attendees_from_registration_post(event, registrations_data)
-
+        if registrations_to_delete:
+            request.env['event.registration'].sudo().browse(registrations_to_delete).unlink()
         return request.redirect(('/event/%s/registration/success?' % event.id) + werkzeug.urls.url_encode({'registration_ids': ",".join([str(id) for id in attendees_sudo.ids])}))
 
     @http.route(['/event/<model("event.event"):event>/registration/success'], type='http', auth="public", methods=['GET'], website=True, sitemap=False)
