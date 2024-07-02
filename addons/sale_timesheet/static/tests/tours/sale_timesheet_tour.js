@@ -69,6 +69,30 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Click on Create button to create and enter to this newest project.',
     run: "click",
 }, {
+    trigger: ".breadcrumb-item.o_back_button",
+    run: "click",
+}, {
+    trigger: ".o_kanban_record:contains('Project for Freeman') .o_dropdown_kanban button",
+    run: "click",
+}, {
+    trigger: ".oe_kanban_action:contains('Milestones')",
+    run: "click",
+}, {
+    trigger: ".o_list_button_add",
+    run: "click",
+}, {
+    trigger: "div[name='name'] input",
+    run: "fill Milestone Zero",
+}, {
+    trigger: ".o_list_button_save",
+    run: "click",
+}, {
+    trigger: ".breadcrumb-item.o_back_button",
+    run: "click",
+}, {
+    trigger: ".o_kanban_record:contains('Project for Freeman')",
+    run: "click",
+}, {
     trigger: 'div.o_kanban_header > div:first-child input',
     content: 'Select a name of your kanban column (e.g. To Do)',
     run: "edit To Do",

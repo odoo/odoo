@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="project.ProjectRightSidePanel">
-        <div t-if="projectId" class="o_rightpanel pt-0 bg-view border-start border-bottom overflow-auto">
+        <div t-if="panelVisible" class="o_rightpanel pt-0 bg-view border-start border-bottom overflow-auto">
             <ProjectRightSidePanelSection
                 name="'stat_buttons'"
                 header="false"
@@ -56,7 +56,7 @@
             </ProjectRightSidePanelSection>
             <ProjectRightSidePanelSection
                 name="'milestones'"
-                show="!!state.data.milestones &amp;&amp; !!state.data.milestones.data"
+                show="!!state.data.milestones and !!state.data.milestones.data"
                 dataClassName="'my-3'"
                 headerClassName="'border-bottom'"
             >
