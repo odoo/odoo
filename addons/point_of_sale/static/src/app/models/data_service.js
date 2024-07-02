@@ -168,7 +168,7 @@ export class PosData extends Reactive {
             return result;
         } catch (error) {
             if (queue) {
-                this.network.unsyncData.push({ type, model, ids, values });
+                this.network.unsyncData.push({ type, model, ids, values, method, args });
             }
 
             this.setOffline();
