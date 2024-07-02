@@ -29,6 +29,9 @@ export class ProductInfoBanner extends Component {
                     let result = {};
                     if (!this.props.info) {
                         await this.fetchStock.call(this.props.product);
+                        if (this.fetchStock.status === "error") {
+                            throw this.fetchStock.result;
+                        }
                         result = this.fetchStock.result;
                     } else {
                         result = this.props.info;
