@@ -73,7 +73,7 @@
                         <td class="text-end" t-att-colspan="data['footer_colspan']">Total Cost of Operations</td>
                         <td t-attf-class="text-end {{ data['get_color'](data['extras'].get('total_mo_cost_operations_decorator')) }}" t-if="data['show_mo_costs']">
                             <t t-out="data['extras'].get('total_mo_cost_operations')" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
-                        </td> 
+                        </td>
                         <td class="text-end" t-if="data['show_real_costs']">
                             <t t-out="data['extras'].get('total_real_cost_operations')" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                         </td>

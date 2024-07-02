@@ -445,7 +445,7 @@ class ReportBomStructure(models.AbstractModel):
 
     @api.model
     def _get_operation_cost(self, duration, operation):
-        return (duration / 60.0) * operation.workcenter_id.costs_hour
+        return (duration / 60.0) * (operation.workcenter_id.costs_hour + operation.workcenter_id.employee_costs_hour * operation.employee_ratio)
 
     @api.model
     def _get_operation_line(self, product, bom, qty, level, index):
@@ -462,6 +462,13 @@ class ReportBomStructure(models.AbstractModel):
             duration_expected = (operation_cycle * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency) + \
                                 operation.workcenter_id._get_expected_duration(product)
             total = self._get_operation_cost(duration_expected, operation)
+            operation_cycle = float_round(qty / capacity, precision_rounding=1, rounding_method='UP')
+            workcenter_capacity_ids = operation.workcenter_id.capacity_ids.filtered(lambda x: x.product_id == product)[:-1]
+            if workcenter_capacity_ids:
+                product_specific_setup_cleanup_time = (workcenter_capacity_ids.time_start + workcenter_capacity_ids.time_stop)
+                workcenter_time = (operation_cycle * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
+                duration_expected += workcenter_time + product_specific_setup_cleanup_time
+            product_specific_setup_cleanup_time = 0
             operations.append({
                 'type': 'operation',
                 'index': f"{index}{operation_index}",
