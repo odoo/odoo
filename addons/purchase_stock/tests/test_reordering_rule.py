@@ -8,7 +8,7 @@ from freezegun import freeze_time
 from odoo import SUPERUSER_ID
 from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 @tagged('post_install', '-at_install')
@@ -257,6 +257,20 @@ class TestReorderingRule(TransactionCase):
         self.assertTrue(purchase_order, 'No purchase order created.')
         self.assertEqual(len(purchase_order.order_line), 1, 'Not enough purchase order lines created.')
         purchase_order.button_confirm()
+
+    def test_reordering_rule_4(self):
+        """ Test that a reordering rule where the min qty is larger than
+         the max qty cannot be created """
+        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+
+        with self.assertRaises(ValidationError, msg="The minimum quantity must be less than or equal to the maximum quantity."):
+            self.env['stock.warehouse.orderpoint'].create({
+                'warehouse_id': warehouse_1.id,
+                'location_id': warehouse_1.lot_stock_id.id,
+                'product_id': self.product_01.id,
+                'product_min_qty': 2,
+                'product_max_qty': 1,
+            })
 
     def test_reordering_rule_triggered_two_times(self):
         """
@@ -904,7 +918,7 @@ class TestReorderingRule(TransactionCase):
             'location_id': warehouse.lot_stock_id.id,
             'product_id': p.id,
             'product_min_qty': 1,
-            'product_max_qty': 0,
+            'product_max_qty': 1,
         } for p in [self.product_01, product_02]])
 
         op_01.action_replenish()
@@ -1037,7 +1051,7 @@ class TestReorderingRule(TransactionCase):
             'location_id': warehouse.lot_stock_id.id,
             'product_id': product.id,
             'product_min_qty': 5,
-            'product_max_qty': 0,
+            'product_max_qty': 5,
         })
         # run the scheduler
         self.env['procurement.group'].run_scheduler()
@@ -1085,7 +1099,7 @@ class TestReorderingRule(TransactionCase):
             'location_id': warehouse.lot_stock_id.id,
             'product_id': product.id,
             'product_min_qty': 500,
-            'product_max_qty': 0,
+            'product_max_qty': 500,
         })
         product.seller_ids.with_context(orderpoint_id=orderpoint.id).action_set_supplier()
         self.assertEqual(orderpoint.supplier_id, product.seller_ids, 'The supplier should be set in the orderpoint')
