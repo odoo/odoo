@@ -2,7 +2,6 @@
 
 import { SlideUploadCategory } from "@website_slides/js/public/components/slide_upload_dialog/slide_upload_category";
 import { patch } from "@web/core/utils/patch";
-import { uniqueId } from "@web/core/utils/functions";
 import { onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -12,6 +11,7 @@ patch(SlideUploadCategory.prototype, {
         super.setup();
         this.state.choices.certifications = [];
         this.state.choices.certificationId = "";
+        this.state.showCertificationRequiredError = false;
         onWillStart(async () => {
             const results = await rpc("/slides_survey/certification/search_read", {
                 fields: ["title"],
@@ -28,7 +28,16 @@ patch(SlideUploadCategory.prototype, {
             ? this.state.choices.certifications.find(
                   (c) => c.value === this.state.choices.certificationId
               ).label
-            : _t("Select or create a certification");
+            : _t("Select a certification");
+    },
+
+    _formValidate() {
+        const isFormValid = super._formValidate();
+        if (this.props.slideCategory === "certification" && !this.state.choices.certificationId) {
+            this.state.showCertificationRequiredError = true;
+            return false;
+        }
+        return isFormValid;
     },
 
     //--------------------------------------------------------------------------
@@ -40,12 +49,7 @@ patch(SlideUploadCategory.prototype, {
         this.state.form.slideName = this.state.choices.certifications.find(
             (c) => c.value === value
         ).label;
-    },
-
-    onClickCreateCertificationBtn(categoryName) {
-        const tempId = uniqueId("temp");
-        this.state.choices.certifications.push({ value: tempId, label: categoryName });
-        this.state.choices.certificationId = tempId;
+        this.state.showCertificationRequiredError = false;
     },
 
     //--------------------------------------------------------------------------
