@@ -476,21 +476,15 @@ export async function loadImageInfo(img, attachmentSrc = '') {
     if ((img.dataset.originalSrc && img.dataset.mimetypeBeforeConversion) || !src) {
         return;
     }
-    // In order to be robust to absolute, relative and protocol relative URLs,
-    // the src of the img is first converted to an URL object. To do so, the URL
-    // of the document in which the img is located is used as a base to build
-    // the URL object if the src of the img is a relative or protocol relative
-    // URL. The original attachment linked to the img is then retrieved thanks
-    // to the path of the built URL object.
     let docHref = img.ownerDocument.defaultView.location.href;
     if (docHref === "about:srcdoc") {
         docHref = window.location.href;
     }
 
-    const srcUrl = new URL(src, docHref);
-    const relativeSrc = srcUrl.pathname;
-
-    const {original} = await rpc('/web_editor/get_image_info', {src: relativeSrc});
+    const {original} = await rpc("/web_editor/get_image_info", {
+        src: src.split(/[?#]/)[0],
+        href_base: docHref,
+    });
     // If src was an absolute "external" URL, we consider unlikely that its
     // relative part matches something from the DB and even if it does, nothing
     // bad happens, besides using this random image as the original when using

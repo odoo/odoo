@@ -42,7 +42,10 @@ class IrAttachment(models.Model):
                 continue
 
             if attachment.type == 'url':
-                if attachment.url.startswith('/'):
+                # Only check if the url starts with a '/' is not enough to
+                # define that it is a local url as it could also be an external
+                # protocol relative url.
+                if attachment.url.startswith('/') and not attachment.url.startswith('//'):
                     # Local URL
                     attachment.image_src = attachment.url
                 else:
