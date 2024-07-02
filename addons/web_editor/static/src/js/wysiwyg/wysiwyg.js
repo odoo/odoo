@@ -1281,9 +1281,11 @@ const Wysiwyg = Widget.extend({
                     }
                 } else {
                     const commonBlock = selection.rangeCount && closestBlock(selection.getRangeAt(0).commonAncestorContainer);
-                    [anchorNode, focusNode] = commonBlock && link.contains(commonBlock) ? [commonBlock, commonBlock] : [link, link];
+                    if (commonBlock && link.contains(commonBlock)) {
+                        [anchorNode, focusNode] = [commonBlock, commonBlock];
+                    }
                 }
-                if (!focusOffset) {
+                if (focusNode && !focusOffset) {
                     focusOffset = focusNode.childNodes.length || focusNode.length;
                 }
             }
