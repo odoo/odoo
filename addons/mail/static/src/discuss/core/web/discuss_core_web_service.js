@@ -67,7 +67,7 @@ export class DiscussCoreWeb {
                 if (data.fold_state !== thread.state) {
                     thread.state = data.fold_state;
                     if (thread.state === "closed") {
-                        const chatWindow = this.store.discuss.chatWindows.find((chatWindow) =>
+                        const chatWindow = this.store.chatWindows.find((chatWindow) =>
                             chatWindow.thread?.eq(thread)
                         );
                         chatWindow?.close({ notifyState: false });

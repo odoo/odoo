@@ -172,7 +172,7 @@ export class MessagingMenu extends Component {
             });
             // Close the related chat window as having both the form view
             // and the chat window does not look good.
-            this.store.discuss.chatWindows.find(({ thr }) => thr?.eq(thread))?.close();
+            this.store.chatWindows.find(({ thr }) => thr?.eq(thread))?.close();
         } else {
             thread.open(undefined, { openMessagingMenuOnClose: true });
         }
