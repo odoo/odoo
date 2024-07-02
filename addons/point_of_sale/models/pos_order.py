@@ -230,8 +230,8 @@ class PosOrder(models.Model):
             line = line_values['record']
             invoice_lines_values = self._get_invoice_lines_values(line_values, line)
             invoice_lines.append((0, None, invoice_lines_values))
-            is_percentage = self.order_id.pricelist_id and any(
-                self.order_id.pricelist_id.item_ids.filtered(
+            is_percentage = self.pricelist_id and any(
+                self.pricelist_id.item_ids.filtered(
                     lambda rule: rule.compute_price == "percentage")
             )
             if is_percentage and float_compare(line.price_unit, line.product_id.lst_price, precision_rounding=self.currency_id.rounding) < 0:
