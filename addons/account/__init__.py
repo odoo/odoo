@@ -16,7 +16,7 @@ def _account_post_init(env):
 # imported here to avoid dependency cycle issues
 # pylint: disable=wrong-import-position
 from . import controllers
-from . import models
+from .models import *
 from . import demo
 from . import wizard
 from . import report

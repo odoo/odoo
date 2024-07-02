@@ -3,7 +3,7 @@
 from odoo.addons import account
 
 
-class AccountMoveLine(account.models.AccountMoveLine):
+class AccountMoveLine(account.AccountMoveLine):
 
     def _sale_can_be_reinvoice(self):
         """ determine if the generated analytic line should be reinvoiced or not.
@@ -42,7 +42,7 @@ class AccountMoveLine(account.models.AccountMoveLine):
         return res
 
 
-class AccountMove(account.models.AccountMove):
+class AccountMove(account.AccountMove):
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
         self.expense_sheet_id._sale_expense_reset_sol_quantities()

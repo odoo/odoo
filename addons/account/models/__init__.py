@@ -11,7 +11,7 @@ from .account_tax import AccountTax
 from . import account_reconcile_model
 from .account_payment_term import AccountPaymentTerm
 from .account_move import AccountMove
-from . import account_move_line
+from .account_move_line import AccountMoveLine
 from . import account_move_line_tax_details
 from . import account_partial_reconcile
 from . import account_full_reconcile
