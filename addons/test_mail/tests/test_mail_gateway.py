@@ -11,7 +11,7 @@ from odoo import exceptions
 from odoo.addons.mail.models.mail_thread import MailThread
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.data import test_mail_data
-from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE, THAI_EMAIL_WINDOWS_874
+from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE, MAIL_TEMPLATE_RP_CONFIG, THAI_EMAIL_WINDOWS_874
 from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests import tagged, RecordCapturer
@@ -291,6 +291,92 @@ class TestMailAliasMixin(TestMailCommon):
         record_copy2 = record_copy.copy()
         self.assertEqual(record_copy2.alias_bounced_content, new_content)
 
+
+@tagged('mail_gateway', 'prout')
+class TestMailgatewayProut(TestMailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestMailgatewayProut, cls).setUpClass()
+        cls.test_model = cls.env['ir.model']._get('mail.test.gateway')
+        cls.email_from = '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>'
+
+        cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
+            'name': 'Test',
+            'email_from': 'ignasse@example.com',
+        }).with_context({})
+
+        cls.partner_1 = cls.env['res.partner'].with_context(cls._test_context).create({
+            'name': 'Valid Lelitre',
+            'email': 'valid.lelitre@agrolait.com',
+        })
+        # groups@.. will cause the creation of new mail.test.gateway
+        cls.alias = cls.env['mail.alias'].create({
+            'alias_name': 'groups',
+            'alias_user_id': False,
+            'alias_model_id': cls.test_model.id,
+            'alias_contact': 'everyone'})
+
+        # Set a first message on public group to test update and hierarchy
+        cls.fake_email = cls._create_gateway_message(cls.test_record, '123456')
+
+        cls._init_mail_gateway()
+
+    @classmethod
+    def _create_gateway_message(cls, record, msg_id_prefix, **values):
+        msg_values = {
+            'author_id': cls.partner_1.id,
+            'email_from': cls.partner_1.email_formatted,
+            'body': '<p>Generic body</p>',
+            'message_id': f'<{msg_id_prefix}-openerp-{record.id}-{record._name}@{socket.gethostname()}>',
+            'message_type': 'email',
+            'model': record._name,
+            'res_id': record.id,
+            'subject': 'Generic Message',
+            'subtype_id': cls.env.ref('mail.mt_comment').id,
+        }
+        msg_values.update(**values)
+        return cls.env['mail.message'].create(msg_values)
+
+    # @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_message_route_write_to_catchall_loops(self):
+        """ Writing to catchall and other unroutable recipients should bounce
+        unless we are going to create loops. This may happen in following case
+
+          * redirects all incoming emails ...
+          ...
+         """
+        forward_domain = "another.test.com"
+
+        bounce_right_domain = '%s@%s' % (self.alias_bounce, self.alias_domain)
+        bounce_other_domain = '%s@%s' % (self.alias_bounce, forward_domain)
+        for email_from, return_path, exp_bounce, exp_bounce_to in [
+            # bounce sent to catchall: should not bounce again, break loop
+            (bounce_right_domain, bounce_right_domain, False, ''),
+            (bounce_right_domain, "", False, ''),
+            # left-part only is a weak criterion, ok
+            (bounce_other_domain, bounce_other_domain, True, bounce_other_domain),
+            # return-path contains a 'valid' email for bounce, ok
+            (bounce_right_domain, "whatever-2a840@postmaster.twitter.com", True, "whatever-2a840@postmaster.twitter.com"),
+        ]:
+            with self.subTest(usage="Routing a forward bounce to catchall", email_from=email_from, return_path=return_path):
+                with self.mock_mail_gateway():
+                    record = self.format_and_process(
+                        MAIL_TEMPLATE_RP_CONFIG,
+                        f'"MAILER-DAEMON" <{email_from}>',
+                        f'"My Super Catchall" <{self.alias_catchall}@{self.alias_domain}>, Unroutable <unroutable@{self.alias_domain}>',
+                        subject=f'Should Bounce - from {email_from}',
+                        return_path=return_path,
+                    )
+                # anyway those incoming emails can never be routed
+                self.assertFalse(record)
+                if exp_bounce:
+                    self.assertSentEmail(
+                        f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>',
+                        [exp_bounce_to],
+                        subject=f'Re: Should Bounce - from {email_from}')
+                else:
+                    self.assertNotSentEmail()
 
 @tagged('mail_gateway')
 class TestMailgateway(TestMailCommon):

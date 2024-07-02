@@ -655,7 +655,36 @@ class MailThread(models.AbstractModel):
             raise ValueError(short_message)
 
     def _routing_create_bounce_email(self, email_from, body_html, message, **mail_values):
-        bounce_to = tools.decode_message_header(message, 'Return-Path') or email_from
+        """ Send a bounce email when incoming email is invalid and should bounce
+        to the original sender. 'email_from' of incoming email is used as 'To'
+        for bounce email unless it is itself an email that is going to bounce
+        again (e.g. writing to bounce / catchall when email forwarding redirects
+        all emails to catchall)
+
+        :param str email_from: original email email_from;
+        :param str body_html: body of bounce email to send;
+        :param email.message message: incoming email to bounce as an email.message instance;
+        :param dict mail_values: (optional) additional values given for MailMail
+          creation;
+        """
+        bounce_email = catchall_email = False
+        bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
+        catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
+        catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
+        if catchall_domain and bounce_alias:
+            bounce_email = f'{bounce_alias}@{catchall_domain}'
+        if catchall_domain and catchall_alias:
+            catchall_email = f'{catchall_alias}@{catchall_domain}'
+
+        bounce_to = tools.email_normalize(tools.decode_message_header(message, 'Return-Path') or '')
+        if not bounce_to or bounce_to in {bounce_email, catchall_email}:
+            bounce_to = tools.email_normalize(email_from)
+        if bounce_to in {bounce_email, catchall_email}:
+            _logger.warning("Cannot send bounce_email to %s or %s as it is either the bounce or catchall domain email",
+                            tools.decode_message_header(message, 'Return-Path'),
+                            email_from)
+            return
+
         bounce_mail_values = {
             'author_id': False,
             'body_html': body_html,
