@@ -212,6 +212,7 @@ class StockMove(models.Model):
     def _compute_display_assign_serial(self):
         for move in self:
             move.display_import_lot = (
+                move.product_id and
                 move.has_tracking != 'none' and
                 move.picking_type_id.use_create_lots and
                 not move.origin_returned_move_id.id and
