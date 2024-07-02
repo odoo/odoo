@@ -6,8 +6,13 @@ import { OdooChart } from "./odoo_chart";
 
 const { chartRegistry } = spreadsheet.registries;
 
-const { getDefaultChartJsRuntime, getChartAxisTitleRuntime, chartFontColor, ColorGenerator } =
-    spreadsheet.helpers;
+const {
+    getDefaultChartJsRuntime,
+    getChartAxisTitleRuntime,
+    chartFontColor,
+    ColorGenerator,
+    formatTickValue,
+} = spreadsheet.helpers;
 
 export class OdooBarChart extends OdooChart {
     constructor(definition, sheetId, getters) {
@@ -96,5 +101,13 @@ function getBarConfiguration(chart, labels, locale) {
         config.options.scales.x.stacked = true;
         config.options.scales.y.stacked = true;
     }
+
+    config.options.plugins.chartShowValuesPlugin = {
+        showValues: chart.showValues,
+        background: chart.background,
+        horizontal: chart.horizontal,
+        callback: formatTickValue({ locale }),
+    };
+
     return config;
 }

@@ -14,6 +14,7 @@ const {
     getFillingMode,
     colorToRGBA,
     rgbaToHex,
+    formatTickValue,
 } = spreadsheet.helpers;
 
 const LINE_FILL_TRANSPARENCY = 0.4;
@@ -126,5 +127,11 @@ function getLineConfiguration(chart, labels, locale) {
     if (chart.stacked) {
         config.options.scales.y.stacked = true;
     }
+
+    config.options.plugins.chartShowValuesPlugin = {
+        showValues: chart.showValues,
+        background: chart.background,
+        callback: formatTickValue({ locale }),
+    };
     return config;
 }
