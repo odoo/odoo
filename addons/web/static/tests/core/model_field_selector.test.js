@@ -488,7 +488,7 @@ test("title on first four pages", async () => {
         },
     });
     await openModelFieldSelectorPopover();
-    expect(getTitle()).toBe("");
+    expect(getTitle()).toBe("Select a field");
 
     await followRelation();
     expect(getTitle()).toBe("Mother");
@@ -551,7 +551,7 @@ test("start on complex path and click prev", async () => {
 
     // go back to first page. Nothing has changed.
     await clickPrev();
-    expect(getTitle()).toBe("");
+    expect(getTitle()).toBe("Select a field");
     expect(getFocusedFieldName()).toBe("Mother");
     expect(getModelFieldSelectorValues()).toEqual(["Mother"]);
     expect(".o_model_field_selector_popover_prev_page").toHaveCount(0);
@@ -751,7 +751,7 @@ test("support properties", async () => {
 
     await mountWithCleanup(Parent);
     await openModelFieldSelectorPopover();
-    expect(getTitle()).toBe("");
+    expect(getTitle()).toBe("Select a field");
     expect('.o_model_field_selector_popover_item[data-name="properties"]').toHaveCount(1);
     expect(
         '.o_model_field_selector_popover_item[data-name="properties"] .o_model_field_selector_popover_relation_icon'
@@ -767,7 +767,7 @@ test("support properties", async () => {
     expect.verifySteps([]);
 
     await clickPrev();
-    expect(getTitle()).toBe("");
+    expect(getTitle()).toBe("Select a field");
     await contains(
         '.o_model_field_selector_popover_item[data-name="properties"] .o_model_field_selector_popover_item_name'
     ).click();

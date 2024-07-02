@@ -262,6 +262,25 @@
                                     readonly="state in ('sending', 'done')"/>
                             </div>
                         </group>
+                        <!-- For testing, to remove -->
+                        <group string="Testing zone, to test the widget with different options (enable an other lang)">
+                            <field class="text-break" name="char_no_emoji"
+                                options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
+                                readonly="state in ('sending', 'done')"
+                                placeholder="e.g. New Sale on all T-shirts"/>
+                            <field class="text-break" name="char_no_emoji_translate"
+                                options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
+                                readonly="state in ('sending', 'done')"
+                                placeholder="e.g. New Sale on all T-shirts"/>
+                            <field class="text-break" name="char_emoji_translate"
+                                options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}" widget="char_emojis"
+                                readonly="state in ('sending', 'done')"
+                                placeholder="e.g. New Sale on all T-shirts"/>
+                            <field class="text-break" name="text_emoji"
+                                widget="text_emojis"
+                                readonly="state in ('sending', 'done')"
+                                placeholder="e.g. New Sale on all T-shirts"/>
+                        </group>
                         <notebook>
                             <page string="Mail Body" name="mail_body">
                                 <div class="position-relative">
