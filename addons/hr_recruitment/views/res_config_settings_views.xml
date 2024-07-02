@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="open_job_board_modules" model="ir.actions.act_window">
+            <field name="name">Job Boards</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{}</field>
+            <field name="domain">[('name', 'ilike', 'hr_recruitment_integration_%')]</field>
+            <field name="search_view_id" ref="base.view_module_filter"/>
+        </record>
+
         <record id="res_config_settings_view_form" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.hr.recruitment</field>
             <field name="model">res.config.settings</field>
@@ -25,6 +34,13 @@
                             </setting>
                             <setting id="recruitment_extract_settings" string="CV Digitization (OCR)" company_dependent="1" help="Digitize your CV to extract name and email automatically." title="Use OCR to fill data from a picture of the CV or the file itself">
                                 <field name="module_hr_recruitment_extract" widget="upgrade_boolean"/>
+                            </setting>
+                        </block>
+                        <block title="Job Board Integrations" name="hr_recruitment_job_board">
+                            <setting string="Job Board Providers">
+                                <div class="mt8" id="job_board_text">
+                                    <button name="%(open_job_board_modules)d" icon="oi-arrow-right" type="action" string="Install a Provider" class="btn-link"/>
+                                </div>
                             </setting>
                         </block>
                     </app>
