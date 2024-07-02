@@ -60,6 +60,7 @@ function getPieConfiguration(chart, labels, locale) {
             },
         },
     };
+    config.options.plugins.chartShowValuesPlugin = { showValues: chart.showValues };
     return config;
 }
 
