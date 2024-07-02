@@ -1,8 +1,9 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, mount, xml } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import { test, expect } from "@odoo/hoot";
+import { test, expect, getFixture, destroy, after } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { mountWithCleanup, getService } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup, getService, makeMockEnv } from "@web/../tests/web_test_helpers";
+import { getTemplate } from "@web/core/templates";
 
 test("simple case", async () => {
     await mountWithCleanup(MainComponentsContainer);
@@ -22,6 +23,31 @@ test("simple case", async () => {
     remove();
     await animationFrame();
     expect(".o-overlay-container > .overlayed").toHaveCount(0);
+});
+
+test("shadow DOM overlays are visible when registered before main component is mounted", async () => {
+    let app, root;
+    after(() => {
+        if (app) {
+            destroy(app);
+        }
+        root?.remove();
+    });
+    class MyComp extends Component {
+        static template = xml`
+            <div class="overlayed"></div>
+        `;
+        static props = ["*"];
+    }
+    const env = await makeMockEnv();
+    root = document.createElement("div");
+    getFixture().append(root);
+    root.setAttribute("id", "my-root-id");
+    getService("overlay").add(MyComp, undefined, { rootId: "my-root-id" });
+    const shadow = root.attachShadow({ mode: "open" });
+    app = await mount(MainComponentsContainer, shadow, { env, getTemplate });
+    await animationFrame();
+    expect("#my-root-id:shadow .o-overlay-container > .overlayed").toHaveCount(1);
 });
 
 test("onRemove callback", async () => {
