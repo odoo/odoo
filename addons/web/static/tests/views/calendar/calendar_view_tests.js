@@ -372,8 +372,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(
             target,
             ".fc-event",
-            6,
-            "should display 6 events on the week (4 event + 1 allday + 1 >24h allday)"
+            10,
+            "should display 10 events on the week (4 event + 1 allday + 1 >24h allday)"
         );
 
         assert.containsOnce(
@@ -2135,8 +2135,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(
             target,
             ".fc-event",
-            5,
-            "should display 5 events on the week (4 event + 1 >24h event)"
+            9,
+            "should display 9 events on the week (4 event + 1 >24h event)"
         );
 
         await pickDate(target, "2016-12-19");
@@ -2145,7 +2145,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(
             target,
             ".fc-event",
-            2,
+            4,
             "should display 4 events on the week (1 event + 1 >24h event)"
         );
 
@@ -2169,7 +2169,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(
             target,
             ".fc-event",
-            2,
+            4,
             "should display 4 events on the week (1 event + 1 >24h event)"
         );
 
@@ -2578,11 +2578,11 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(target, ".fc-event", 4, "should display 4 events on the week");
 
         await toggleFilter(target, "partner_ids", 2);
-        assert.containsN(target, ".fc-event", 5, "should display 5 events on the week");
+        assert.containsN(target, ".fc-event", 9, "should display 9 events on the week");
 
         // Click on the "all" filter to reload all events
         await toggleFilter(target, "partner_ids", "all");
-        assert.containsN(target, ".fc-event", 5, "should display 5 events on the week");
+        assert.containsN(target, ".fc-event", 9, "should display 9 events on the week");
     });
 
     QUnit.test("dynamic filters with selection fields", async (assert) => {
@@ -3175,7 +3175,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         await toggleFilter(target, "partner_id", 4);
         await toggleFilter(target, "partner_ids", 2);
-        assert.containsN(target, ".fc-event", 7, "should display all records");
+        assert.containsN(target, ".fc-event", 11, "should display all records");
     });
 
     QUnit.test(`create event with filters (no quickCreate)`, async (assert) => {
@@ -5592,5 +5592,37 @@ QUnit.module("Views", ({ beforeEach }) => {
         await click(target, ".o_cp_switch_buttons .o_calendar");
 
         assert.ok(document.querySelector(".o_calendar_filter_item[data-value='all'] input").checked, "The value of the 'all' filter should remain the same as it was before re-rendering")
+    });
+
+    QUnit.test(`update time while drag and drop on month mode`, async (assert) => {
+        assert.expect(2);
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" mode="month" event_open_popup="1" quick_create="0">
+                    <field name="name" />
+                    <field name="partner_id" />
+                </calendar>
+            `,
+        });
+
+        // Create event (on 20 december)
+        await clickDate(target, "2016-12-20");
+        await editInput(target, ".modal-body .o_field_widget[name=name] input", "An event");
+        await click(target, ".form-check-input");
+        await editInput(target, ".modal-body .o_field_widget[name=start] input", "2016-12-20 08:00:00");
+        await editInput(target, ".modal-body .o_field_widget[name=stop] input", "2016-12-22 10:00:00");
+        await click(target, ".modal .o_form_button_save");
+
+        await moveEventToDate(target, 8, "2016-12-29");
+        await clickEvent(target, 8);
+        await click(target, ".o_cw_popover .o_cw_popover_edit");
+
+        let input_start = target.querySelector(".o_field_widget[name='start'] input");
+        assert.strictEqual(input_start.value, "12/28/2016 08:00:00", "should display the datetime");
+        let input_stop = target.querySelector(".o_field_widget[name='stop'] input");
+        assert.strictEqual(input_stop.value, "12/30/2016 10:00:00", "should display the datetime");
     });
 });
