@@ -208,12 +208,12 @@ export class LazyComponent extends Component {
     static template = xml`<t t-component="Component" t-props="props.props"/>`;
     static props = {
         Component: String,
-        bundle: String,
+        bundles: { type: Array, element: String },
         props: { type: Object, optional: true },
     };
     setup() {
         onWillStart(async () => {
-            await loadBundle(this.props.bundle);
+            await Promise.all(this.props.bundles.map((bundleName) => loadBundle(bundleName)));
             this.Component = registry.category("lazy_components").get(this.props.Component);
         });
     }
