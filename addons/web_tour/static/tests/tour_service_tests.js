@@ -674,4 +674,64 @@ QUnit.module("Tour service", (hooks) => {
             assert.strictEqual(Math.floor(iframeTop + btnBottom + 6), Math.floor(tourPointerTop));
         }
     );
+
+    QUnit.test("show rainbow man at end of tour by default", async function (assert) {
+        patchWithCleanup(session, { show_effect: true });
+
+        registry.category("web_tour.tours").add("tour1", {
+            sequence: 10,
+            rainbowManMessage: 'Good job, tour is done!',
+            steps: [],
+        });
+        const env = await makeTestEnv({});
+        class Root extends Component {
+            static template = xml/*html*/ `
+                <t>
+                    <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
+                </t>
+            `;
+            get OverlayContainer() {
+                return registry.category("main_components").get("OverlayContainer");
+            }
+        }
+
+        await mount(Root, target, { env, props: {} });
+        env.services.tour_service.startTour("tour1", { mode: "manual" });
+        await mock.advanceTime(750);
+        await nextTick();
+        mock.execRegisteredTimeouts();
+
+        assert.containsOnce(target, ".o_reward");
+        assert.strictEqual(target.querySelector(".o_reward").innerText, "Good job, tour is done!");
+    });
+
+    QUnit.test("do not show rainbow man at end of tour if disabled for that tour", async function (assert) {
+        patchWithCleanup(session, { show_effect: true });
+
+        registry.category("web_tour.tours").add("tour1", {
+            sequence: 10,
+            rainbowMan: false,
+            steps: [],
+        });
+        const env = await makeTestEnv({});
+
+        class Root extends Component {
+            static template = xml/*html*/ `
+                <t>
+                    <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
+                </t>
+            `;
+            get OverlayContainer() {
+                return registry.category("main_components").get("OverlayContainer");
+            }
+        }
+
+        await mount(Root, target, { env, props: {} });
+        env.services.tour_service.startTour("tour1", { mode: "manual" });
+        await mock.advanceTime(750);
+        await nextTick();
+        mock.execRegisteredTimeouts();
+
+        assert.containsNone(target, ".o_reward");
+    });
 });

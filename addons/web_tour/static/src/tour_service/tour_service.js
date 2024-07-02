@@ -220,25 +220,27 @@ export const tourService = {
                 onStepConsummed(tour, step) {
                     bus.trigger("STEP-CONSUMMED", { tour, step });
                 },
-                onTourEnd({ name, rainbowManMessage, fadeout }) {
+                onTourEnd({ name, rainbowMan, rainbowManMessage, fadeout }) {
                     if (mode === "auto") {
                         transitionConfig.disabled = false;
                     }
-                    let message;
-                    if (typeof rainbowManMessage === "function") {
-                        message = rainbowManMessage({
-                            isTourConsumed: (name) => consumedTours.has(name),
-                        });
-                    } else if (typeof rainbowManMessage === "string") {
-                        message = rainbowManMessage;
-                    } else {
-                        message = markup(
-                            _t(
-                                "<strong><b>Good job!</b> You went through all steps of this tour.</strong>"
-                            )
-                        );
+                    if (rainbowMan) {
+                        let message;
+                        if (typeof rainbowManMessage === "function") {
+                            message = rainbowManMessage({
+                                isTourConsumed: (name) => consumedTours.has(name),
+                            });
+                        } else if (typeof rainbowManMessage === "string") {
+                            message = rainbowManMessage;
+                        } else {
+                            message = markup(
+                                _t(
+                                    "<strong><b>Good job!</b> You went through all steps of this tour.</strong>"
+                                )
+                            );
+                        }
+                        effect.add({ type: "rainbow_man", message, fadeout });
                     }
-                    effect.add({ type: "rainbow_man", message, fadeout });
                     if (mode === "manual") {
                         consumedTours.add(name);
                         orm.call("web_tour.tour", "consume", [[name]]);
