@@ -24,7 +24,7 @@ from .i18n import *
 from .image import *
 from .mail import *
 from .misc import *
-from .query import Query, _generate_table_alias
+from .query import Query
 from .sql import *
 from .template_inheritance import *
 from .translate import *
