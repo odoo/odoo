@@ -921,7 +921,7 @@ class Store {
         values = kwargs.values;
         delete kwargs.values;
         let model_name;
-        if (data instanceof models.ServerModel) {
+        if (data instanceof models.Model) {
             if (values) {
                 throw new Error(`expected empty values with recordset ${data}: ${values}`);
             }

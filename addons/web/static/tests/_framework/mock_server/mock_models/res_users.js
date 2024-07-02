@@ -37,7 +37,7 @@ export class ResUsers extends ServerModel {
      */
     create() {
         const userId = super.create(...arguments);
-        const [user] = this.env["res.users"]._filter([["id", "=", userId]]);
+        const [user] = this.env["res.users"].browse(userId);
         if (user && !user.partner_id) {
             this.env["res.users"].write(userId, { partner_id: this.env["res.partner"].create({}) });
         }
