@@ -72,7 +72,7 @@
     <field name="name">website.controller.page.kanban</field>
     <field name="model">website.controller.page</field>
     <field name="arch" type="xml">
-        <kanban class="">
+        <kanban>
             <t t-name="kanban-card" class="w-100 flex-row flex-wrap gap-1">
                 <field name="website_published" invisible="1" />
                 <widget name="web_ribbon" text="Published" invisible="not website_published" />
@@ -81,15 +81,15 @@
                     <div class="d-flex flex-column col-3">
                         <div class="fw-bold"><field name="page_name"/> &#8212; <field name="page_type" /></div>
                         <div>
-                            <span class="me-1">Exposes</span>
-                            <field name="model_id" widget="many2one"/>
+                            <span class="me-1">Exposes:</span>
+                            <field name="model_id"/>
                         </div>
                         <div invisible="website_id">On all websites</div>
-                        <div invisible="not website_id">On <field name="website_id"/></div>
+                        <div invisible="not website_id"><span class="me-1">On:</span><field name="website_id"/></div>
                     </div>
                      <div class="d-md-flex d-xs-none d-sm-none align-items-center gap-3" data-name="more-info">
                             <i class="fa fa-2x fa-arrow-right text-primary" title="URL" />
-                            <div><span>/model/</span><field name="name_slugified" /></div>
+                            <field name="url_demo" />
                         </div>
                 </div>
             </t>
@@ -97,6 +97,20 @@
     </field>
 </record>
 
+<record id="website_controller_pages_search_view" model="ir.ui.view">
+    <field name="name">website.controller.page.search</field>
+    <field name="model">website.controller.page</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="model" filter_domain="[('model','=', self)]" string="Model"/>
+            <group expand="0" string="Group By" colspan="4">
+                <filter string="Page Type" name="page_type" domain="[]" context="{'group_by':'page_type'}"/>
+                <filter string="Model" name="page_model" domain="[]" context="{'group_by':'model'}"/>
+                <filter string="Website" name="page_website_id" domain="[]" context="{'group_by':'website_id'}"/>
+            </group>
+        </search>
+    </field>
+</record>
 
 <record id="action_website_controller_pages_list" model="ir.actions.act_window">
     <field name="name">Website Model Pages</field>
