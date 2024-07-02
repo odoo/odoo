@@ -130,6 +130,42 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.receivable_account.id, self.env['account.tax'],         down_pay_amt, 0            ],
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
+        invoice.action_post()
+
+        # Deliver product_service_delivery and product_delivery_no
+        self.sale_order.order_line[1].qty_delivered = 2
+        self.sale_order.order_line[3].qty_delivered = 2
+
+        # Full Invoice
+        invoicing_wizard = self.env['sale.advance.payment.inv'].create({
+            'sale_order_ids': [Command.link(self.sale_order.id)],
+            'advance_payment_method': 'delivered',
+        })
+        action = invoicing_wizard.create_invoices()
+        full_invoice = self.env['account.move'].browse(action['res_id'])
+        # pylint: disable=C0326
+        full_invoice_expected = [
+            # keys
+            ['account_id',               'tax_ids',                      'balance',     'price_total'],
+            # product lines
+            [self.revenue_account.id,    (self.tax_15 + self.tax_10).ids, -200,         250          ],
+            [income_acc_2.id,            self.tax_10.ids,                 -200,         220          ],
+            [self.revenue_account.id,    self.tax_10.ids,                 -200,         220          ],
+            [self.revenue_account.id,    self.env['account.tax'],         -200,         200          ],
+            # downpayment section
+            [False,                      [],                              0,            0            ],
+            # deduction downpayment lines
+            [self.revenue_account.id,    (self.tax_15 + self.tax_10).ids, 100,          -125         ],
+            [income_acc_2.id,            self.tax_10.ids,                 100,          -110         ],
+            [self.revenue_account.id,    self.tax_10.ids,                 100,          -110         ],
+            [self.revenue_account.id,    self.env['account.tax'],         100,          -100         ],
+            # taxes
+            [self.tax_account.id,        self.env['account.tax'],         -30,          0            ],
+            [self.tax_account.id,        self.env['account.tax'],         -15,          0            ],
+            # receivable (same as dwonpayment since downpayment 50%)
+            [self.receivable_account.id, self.env['account.tax'],         down_pay_amt, 0            ],
+        ]
+        self._assert_invoice_lines_values(full_invoice.line_ids, full_invoice_expected)
 
     def test_tax_with_diff_tax_on_invoice_breakdown(self):
         # if a generated invoice has it's taxes changed, this should not affect the next downpayment on an SO
