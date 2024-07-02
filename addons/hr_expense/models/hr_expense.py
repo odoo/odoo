@@ -414,7 +414,7 @@ class HrExpense(models.Model):
                     company=expense.company_id,
                 )[product_id.id]
             else:
-                expense.price_unit = expense.company_currency_id.round(expense.total_amount / expense.quantity) if expense.quantity else 0.
+                expense.price_unit = (expense.total_amount / expense.quantity) if expense.quantity else 0.
 
     def _needs_product_price_computation(self):
         # Hook to be overridden.
