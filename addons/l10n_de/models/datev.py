@@ -4,7 +4,7 @@ from odoo import fields, models
 class AccountTax(models.Model):
     _inherit = "account.tax"
 
-    l10n_de_datev_code = fields.Char(size=4, help="4 digits code use by Datev")
+    l10n_de_datev_code = fields.Char(size=4, help="4 digits code use by Datev", tracking=True)
 
 
 class ProductTemplate(models.Model):
