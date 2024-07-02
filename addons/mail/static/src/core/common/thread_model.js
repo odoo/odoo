@@ -1092,6 +1092,12 @@ export class Thread extends Record {
         return message;
     }
 
+    get url() {
+        const active_id =
+            typeof this.id === "string" ? `mail.box_${this.id}` : `discuss.channel_${this.id}`;
+        return router.stateToUrl({ action: "discuss", active_id });
+    }
+
     /** @param {boolean} pushState */
     setAsDiscussThread(pushState) {
         if (pushState === undefined) {

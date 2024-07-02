@@ -439,7 +439,7 @@ test("receive new needaction messages", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
     await start();
     await openDiscuss();
-    await contains("button.o-active", { text: "Inbox", contains: [".badge", { count: 0 }] });
+    await contains(".o-active", { text: "Inbox", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-Thread .o-mail-Message", { count: 0 });
     // simulate receiving a new needaction message
     const messageId_1 = pyEnv["mail.message"].create({
@@ -458,7 +458,7 @@ test("receive new needaction messages", async () => {
     const [message1] = pyEnv["mail.message"]._message_format(messageId_1, true);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", message1);
-    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
+    await contains("a", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-content", { text: "not empty 1" });
     // simulate receiving a new needaction message
@@ -477,7 +477,7 @@ test("receive new needaction messages", async () => {
     });
     const [message2] = pyEnv["mail.message"]._message_format(messageId_2, true);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", message2);
-    await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
+    await contains("a", { text: "Inbox", contains: [".badge", { text: "2" }] });
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Message-content", { text: "not empty 1" });
     await contains(".o-mail-Message-content", { text: "not empty 2" });
@@ -494,9 +494,9 @@ test("basic rendering", async () => {
 test("basic rendering: sidebar", async () => {
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebar button", { text: "Inbox" });
-    await contains(".o-mail-DiscussSidebar button", { text: "Starred" });
-    await contains(".o-mail-DiscussSidebar button", { text: "History" });
+    await contains(".o-mail-DiscussSidebar a", { text: "Inbox" });
+    await contains(".o-mail-DiscussSidebar a", { text: "Starred" });
+    await contains(".o-mail-DiscussSidebar a", { text: "History" });
     await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
     await contains(".o-mail-DiscussSidebarCategory-channel", { text: "Channels" });
     await contains(".o-mail-DiscussSidebarCategory-chat", { text: "Direct messages" });
@@ -505,23 +505,23 @@ test("basic rendering: sidebar", async () => {
 test("sidebar: Inbox should have icon", async () => {
     await start();
     await openDiscuss();
-    await contains("button", { text: "Inbox", contains: [".fa-inbox"] });
+    await contains("a", { text: "Inbox", contains: [".fa-inbox"] });
 });
 
 test("sidebar: default active inbox", async () => {
     await start();
     await openDiscuss();
-    await contains("button.o-active", { text: "Inbox" });
+    await contains(".o-active", { text: "Inbox" });
 });
 
 test("sidebar: change active", async () => {
     await start();
     await openDiscuss();
-    await contains("button.o-active", { text: "Inbox" });
-    await contains("button:not(.o-active)", { text: "Starred" });
-    await click("button", { text: "Starred" });
-    await contains("button:not(.o-active)", { text: "Inbox" });
-    await contains("button.o-active", { text: "Starred" });
+    await contains(".o-active", { text: "Inbox" });
+    await contains("a:not(.o-active)", { text: "Starred" });
+    await click("a", { text: "Starred" });
+    await contains("a:not(.o-active)", { text: "Inbox" });
+    await contains(".o-active", { text: "Starred" });
 });
 
 test("sidebar: basic channel rendering", async () => {
@@ -635,7 +635,7 @@ test("initially load messages from inbox", async () => {
 test("default active id on mailbox", async () => {
     await start();
     await openDiscuss("mail.box_starred");
-    await contains("button.o-active", { text: "Starred" });
+    await contains(".o-active", { text: "Starred" });
 });
 
 test("basic top bar rendering", async () => {
@@ -645,7 +645,7 @@ test("basic top bar rendering", async () => {
     await openDiscuss();
     await contains("button:disabled", { text: "Mark all read" });
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
-    await click("button", { text: "Starred" });
+    await click("a", { text: "Starred" });
     await contains("button:disabled", { text: "Unstar all" });
     await contains(".o-mail-Discuss-threadName", { value: "Starred" });
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
@@ -779,17 +779,17 @@ test('messages marked as read move to "History" mailbox', async () => {
     ]);
     await start();
     await openDiscuss("mail.box_history");
-    await contains("button.o-active", { text: "History" });
+    await contains(".o-active", { text: "History" });
     await contains(".o-mail-Thread h4", { text: "No history messages" });
-    await click("button", { text: "Inbox" });
-    await contains("button.o-active", { text: "Inbox" });
+    await click("a", { text: "Inbox" });
+    await contains(".o-active", { text: "Inbox" });
     await contains(".o-mail-Thread h4", { count: 0, text: "Your inbox is empty" });
     await contains(".o-mail-Thread .o-mail-Message", { count: 2 });
     await click("button", { text: "Mark all read" });
-    await contains("button.o-active", { text: "Inbox" });
+    await contains(".o-active", { text: "Inbox" });
     await contains(".o-mail-Thread h4", { text: "Your inbox is empty" });
-    await click("button", { text: "History" });
-    await contains("button.o-active", { text: "History" });
+    await click("a", { text: "History" });
+    await contains(".o-active", { text: "History" });
     await contains(".o-mail-Thread h4", { count: 0, text: "No history messages" });
     await contains(".o-mail-Thread .o-mail-Message", { count: 2 });
 });
@@ -820,18 +820,18 @@ test('mark a single message as read should only move this message to "History" m
     ]);
     await start();
     await openDiscuss("mail.box_history");
-    await contains("button.o-active", { text: "History" });
+    await contains(".o-active", { text: "History" });
     await contains(".o-mail-Thread h4", { text: "No history messages" });
-    await click("button", { text: "Inbox" });
-    await contains("button.o-active", { text: "Inbox" });
+    await click("a", { text: "Inbox" });
+    await contains(".o-active", { text: "Inbox" });
     await contains(".o-mail-Message", { count: 2 });
     await click("[title='Mark as Read']", {
         parent: [".o-mail-Message", { text: "not empty 1" }],
     });
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-content", { text: "not empty 2" });
-    await click("button", { text: "History" });
-    await contains("button.o-active", { text: "History" });
+    await click("a", { text: "History" });
+    await contains(".o-active", { text: "History" });
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-content", { text: "not empty 1" });
 });
@@ -854,7 +854,7 @@ test('all messages in "Inbox" in "History" after marked all as read', async () =
     await contains(".o-mail-Message", { count: 30 });
     await click("button", { text: "Mark all read" });
     await contains(".o-mail-Message", { count: 0 });
-    await click("button", { text: "History" });
+    await click("a", { text: "History" });
     await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
@@ -968,9 +968,9 @@ test("starred: unstar all", async () => {
     await start();
     await openDiscuss("mail.box_starred");
     await contains(".o-mail-Message", { count: 2 });
-    await contains("button", { text: "Starred", contains: [".badge", { text: "2" }] });
+    await contains("a", { text: "Starred", contains: [".badge", { text: "2" }] });
     await click("button:enabled", { text: "Unstar all" });
-    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
+    await contains("a", { text: "Starred", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-Message", { count: 0 });
     await contains("button:disabled", { text: "Unstar all" });
 });
@@ -990,7 +990,7 @@ test("auto-focus composer on opening thread [REQUIRE FOCUS]", async () => {
     ]);
     await start();
     await openDiscuss();
-    await contains("button.o-active", { text: "Inbox" });
+    await contains(".o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Demo User" });
     await contains(".o-mail-Composer", { count: 0 });

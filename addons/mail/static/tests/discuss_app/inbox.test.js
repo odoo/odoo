@@ -397,7 +397,7 @@ test("inbox: mark all messages as read", async () => {
     ]);
     await start();
     await openDiscuss();
-    await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
+    await contains("a", { text: "Inbox", contains: [".badge", { text: "2" }] });
     await contains(".o-mail-DiscussSidebarChannel", {
         contains: [
             ["span", { text: "General" }],
@@ -406,7 +406,7 @@ test("inbox: mark all messages as read", async () => {
     });
     await contains(".o-mail-Discuss-content .o-mail-Message", { count: 2 });
     await click(".o-mail-Discuss-header button:enabled", { text: "Mark all read" });
-    await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
+    await contains("a", { text: "Inbox", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-DiscussSidebarChannel", {
         contains: [
             ["span", { text: "General" }],
@@ -597,13 +597,13 @@ test("emptying inbox doesn't display rainbow man in another thread", async () =>
     ]);
     await start();
     await openDiscuss(channelId);
-    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
+    await contains("a", { text: "Inbox", contains: [".badge", { text: "1" }] });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/mark_as_read", {
         message_ids: [messageId],
         needaction_inbox_counter: 0,
     });
-    await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
+    await contains("a", { text: "Inbox", contains: [".badge", { count: 0 }] });
     // weak test, no guarantee that we waited long enough for the potential rainbow man to show
     await contains(".o_reward_rainbow", { count: 0 });
 });
@@ -630,7 +630,7 @@ test("Counter should be incremented by 1 when receiving a message with a mention
     ]);
     await start();
     await openDiscuss();
-    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
+    await contains("a", { text: "Inbox", contains: [".badge", { text: "1" }] });
     const mention = [serverState.partnerId];
     const mentionName = serverState.partnerName;
     withUser(userId, () =>
@@ -645,7 +645,7 @@ test("Counter should be incremented by 1 when receiving a message with a mention
             thread_model: "discuss.channel",
         })
     );
-    await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
+    await contains("a", { text: "Inbox", contains: [".badge", { text: "2" }] });
 });
 
 test("Clear need action counter when opening a channel", async () => {

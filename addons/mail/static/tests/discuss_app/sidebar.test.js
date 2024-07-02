@@ -37,7 +37,7 @@ test("toggling category button hide category items", async () => {
     });
     await start();
     await openDiscuss();
-    await contains("button.o-active", { text: "Inbox" });
+    await contains(".o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel");
     await click(
         ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
@@ -170,7 +170,7 @@ test("sidebar: inbox with counter", async () => {
     });
     await start();
     await openDiscuss();
-    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
+    await contains("a", { text: "Inbox", contains: [".badge", { text: "1" }] });
 });
 
 test("default thread rendering", async () => {
@@ -178,21 +178,21 @@ test("default thread rendering", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss();
-    await contains("button", { text: "Inbox" });
-    await contains("button", { text: "Starred" });
-    await contains("button", { text: "History" });
+    await contains("a", { text: "Inbox" });
+    await contains("a", { text: "Starred" });
+    await contains("a", { text: "History" });
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await contains("button.o-active", { text: "Inbox" });
+    await contains(".o-active", { text: "Inbox" });
     await contains(".o-mail-Thread", {
         text: "Your inbox is empty Change your preferences to receive new notifications in your inbox.",
     });
-    await click("button", { text: "Starred" });
-    await contains("button.o-active", { text: "Starred" });
+    await click("a", { text: "Starred" });
+    await contains(".o-active", { text: "Starred" });
     await contains(".o-mail-Thread", {
         text: "No starred messages  You can mark any message as 'starred', and it shows up in this mailbox.",
     });
-    await click("button", { text: "History" });
-    await contains("button.o-active", { text: "History" });
+    await click("a", { text: "History" });
+    await contains(".o-active", { text: "History" });
     await contains(".o-mail-Thread", {
         text: "No history messages  Messages marked as read will appear in the history.",
     });
@@ -895,7 +895,7 @@ test("channel - states: the active category item should be visible even if the c
     await click(".o-mail-DiscussSidebarCategory .btn", { text: "Channels" });
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
     await contains("button", { text: "channel1" });
-    await click("button", { text: "Inbox" });
+    await click("a", { text: "Inbox" });
     await contains("button", { count: 0, text: "channel1" });
 });
 
@@ -1050,7 +1050,7 @@ test("chat - states: the active category item should be visible even if the cate
     await click(".o-mail-DiscussSidebarCategory-chat .btn", { text: "Direct messages" });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
     await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
-    await click("button", { text: "Inbox" });
+    await click("a", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
     await contains(".o-mail-DiscussSidebar button", { count: 0, text: "Mitchell Admin" });
 });
