@@ -177,10 +177,23 @@ class MergePartnerAutomatic(models.TransientModel):
                 with mute_logger('odoo.sql_db'), self._cr.savepoint():
                     records.sudo().write({field_id: dst_partner.id})
                     records.env.flush_all()
-            except psycopg2.Error:
-                # updating fails, most likely due to a violated unique constraint
-                # keeping record with nonexistent partner_id is useless, better delete it
-                records.sudo().unlink()
+            except psycopg2.Error as e:
+                # If updating fails and record's model is in the ones allowed to delete in case
+                # of unique violation error then delete it, in case is not in allowed ones or
+                # postgresql error is not unique violation, then raise an error
+                model_names_to_delete = self.env['ir.config_parameter'].sudo().get_param("base.models_allowed_to_unlink_partner_merge", "")
+                model_names_to_delete = [m.strip() for m in model_names_to_delete.split(",") if m.strip()]
+                allow_unlink = (records._name in model_names_to_delete and e.pgcode == psycopg2.errorcodes.UNIQUE_VIOLATION)
+                if not model_names_to_delete or allow_unlink:
+                    records.sudo().unlink()
+                elif model_names_to_delete:
+                    # Everything else is not expected and should fail.
+                    msg = _("""An error has occurred meanwhile reference fields were updated:
+                            \nDestination Record: %s
+                            \nSource Record: %s
+                            \nError: %s""", dst_partner.id, tuple(src_partners.ids), e)
+                    _logger.error(msg)
+                    raise UserError(msg)
 
         update_records = functools.partial(update_records)
 
