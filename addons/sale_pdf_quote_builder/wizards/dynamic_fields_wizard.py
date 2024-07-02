@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
 import json
+import re
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -15,8 +15,7 @@ class SalePDFQuoteBuilderDynamicFieldsWizard(models.TransientModel):
     _description = "Sale PDF Quote Builder Dynamic Fields Configurator Wizard"
 
     @api.model
-    def default_get(self, fields_list):
-        res = super().default_get(fields_list)
+    def _default_wizard_line_ids(self):
         res_id = self.env.context.get('active_id')
         res_model = self.env.context.get('active_model')
         document = self.env[res_model].browse(res_id)
@@ -30,12 +29,7 @@ class SalePDFQuoteBuilderDynamicFieldsWizard(models.TransientModel):
             if document.sale_footer:
                 valid_form_fields.update(utils._get_form_fields_from_pdf(document.sale_footer))
             current_form_fields = {'header_footer': list(valid_form_fields)}
-        res.update({'wizard_line_ids': self._get_wizard_lines(current_form_fields)})
-        return res
-
-    wizard_line_ids = fields.One2many(
-        'sale.pdf.quote.builder.dynamic.fields.wizard.line', 'wizard_id'
-    )
+        return self._get_wizard_lines(current_form_fields)
 
     def _get_wizard_lines(self, current_form_fields):
         """ Add wizard lines containing existing mappings and form fields from the current document.
@@ -60,6 +54,12 @@ class SalePDFQuoteBuilderDynamicFieldsWizard(models.TransientModel):
         ])
         # Create the wizard lines
         return [Command.create(vals) for vals in lines_vals]
+
+    wizard_line_ids = fields.One2many(
+        comodel_name='sale.pdf.quote.builder.dynamic.fields.wizard.line',
+        inverse_name='wizard_id',
+        default=_default_wizard_line_ids,
+    )
 
     def save_configuration(self):
         """ Save this mapping configuration in the config parameters. """
