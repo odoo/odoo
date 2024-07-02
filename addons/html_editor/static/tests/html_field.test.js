@@ -529,212 +529,6 @@ test("Embed video by pasting video URL", async () => {
     ).toHaveCount(1);
 });
 
-test("Ensure that urgentSave works even with modified image to save", async () => {
-    expect.assertions(5);
-    Partner._records = [
-        {
-            id: 1,
-            txt: "<p class='test_target'><br></p>",
-        },
-    ];
-
-    let sendBeaconDef;
-    mockSendBeacon((route, blob) => {
-        blob.text().then((r) => {
-            const { params } = JSON.parse(r);
-            const { args, model } = params;
-            if (route === "/web/dataset/call_kw/partner/web_save" && model === "partner") {
-                if (writeCount === 0) {
-                    // Save normal value without image.
-                    expect(args[1].txt).toBe(`<p class="test_target">a<br></p>`);
-                } else if (writeCount === 1) {
-                    // Save image with unfinished modification changes.
-                    expect(args[1].txt).toBe(imageContainerHTML);
-                } else if (writeCount === 2) {
-                    // Save the modified image.
-                    expect(args[1].txt).toBe(getImageContainerHTML(newImageSrc, false));
-                } else {
-                    // Fail the test if too many write are called.
-                    expect(true).toBe("false");
-                    throw new Error("Write should only be called 3 times during this test");
-                }
-                writeCount += 1;
-            }
-            sendBeaconDef.resolve();
-        });
-        return true;
-    });
-
-    let formController;
-    // Patch to get the controller instance.
-    patchWithCleanup(FormController.prototype, {
-        setup() {
-            super.setup(...arguments);
-            formController = this;
-        },
-    });
-
-    const imageRecord = IrAttachment._records[0];
-    // Method to get the html of a cropped image.
-    const getImageContainerHTML = (src, isModified) => {
-        return `
-            <p>
-                <img
-                    class="img img-fluid o_we_custom_image o_we_image_cropped${
-                        isModified ? " o_modified_image_to_save" : ""
-                    }"
-                    data-original-id="${imageRecord.id}"
-                    data-original-src="${imageRecord.image_src}"
-                    data-mimetype="image/png"
-                    data-width="50"
-                    data-height="50"
-                    data-scale-x="1"
-                    data-scale-y="1"
-                    data-aspect-ratio="0/0"
-                    src="${src}"
-                >
-                <br>
-            </p>
-        `
-            .replace(/(?:\s|(?:\r\n))+/g, " ")
-            .replace(/\s?(<|>)\s?/g, "$1");
-    };
-    // Promise to resolve when we want the response of the modify_image RPC.
-    const modifyImagePromise = new Deferred();
-    let writeCount = 0;
-    let modifyImageCount = 0;
-    // Valid base64 encoded image in its transitory modified state.
-    const imageContainerHTML = getImageContainerHTML(
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII",
-        true
-    );
-    // New src URL to assign to the image when the modification is
-    // "registered".
-    const newImageSrc = "/web/image/1234/cropped_transparent.png";
-    onRpc("web_save", () => {
-        expect(true).toBe(false);
-        throw new Error("web_save should only be called through sendBeacon");
-    });
-    onRpc(`/web_editor/modify_image/${imageRecord.id}`, async (request) => {
-        if (modifyImageCount === 0) {
-            const { params } = request.json();
-            expect(params.res_model).toBe("partner");
-            expect(params.res_id).toBe(1);
-            await modifyImagePromise;
-            modifyImageCount++;
-            return newImageSrc;
-        } else {
-            // Fail the test if too many modify_image are called.
-            expect(true).toBe(false);
-            throw new Error("The image should only have been modified once during this test");
-        }
-    });
-    await mountView({
-        type: "form",
-        resId: 1,
-        resModel: "partner",
-        arch: `
-            <form>
-                <field name="txt" widget="html"/>
-            </form>`,
-    });
-
-    // Simulate an urgent save without any image in the content.
-    sendBeaconDef = new Deferred();
-    setSelectionInHtmlField(".test_target");
-    insertText(htmlEditor, "a");
-    htmlEditor.dispatch("ADD_STEP");
-    await formController.beforeUnload();
-    await sendBeaconDef;
-
-    // Replace the empty paragraph with a paragrah containing an unsaved
-    // modified image
-    const imageContainerElement = parseHTML(htmlEditor.document, imageContainerHTML).firstChild;
-    const paragraph = htmlEditor.editable.querySelector(".test_target");
-    htmlEditor.editable.replaceChild(imageContainerElement, paragraph);
-    htmlEditor.dispatch("ADD_STEP");
-
-    // Simulate an urgent save before the end of the RPC roundtrip for the
-    // image.
-    sendBeaconDef = new Deferred();
-    await formController.beforeUnload();
-    await sendBeaconDef;
-
-    // Resolve the image modification (simulate end of RPC roundtrip).
-    modifyImagePromise.resolve();
-    await modifyImagePromise;
-    await animationFrame();
-
-    // Simulate the last urgent save, with the modified image.
-    sendBeaconDef = new Deferred();
-    await formController.beforeUnload();
-    await sendBeaconDef;
-});
-
-test("Pasted/dropped images are converted to attachments on save", async () => {
-    function pasteFile(editor, file) {
-        const clipboardData = new DataTransfer();
-        clipboardData.items.add(file);
-        const pasteEvent = new ClipboardEvent("paste", { clipboardData, bubbles: true });
-        editor.editable.dispatchEvent(pasteEvent);
-    }
-
-    function createBase64ImageFile(base64ImageData) {
-        const binaryImageData = atob(base64ImageData);
-        const uint8Array = new Uint8Array(binaryImageData.length);
-        for (let i = 0; i < binaryImageData.length; i++) {
-            uint8Array[i] = binaryImageData.charCodeAt(i);
-        }
-        return new File([uint8Array], "test_image.png", { type: "image/png" });
-    }
-
-    Partner._records = [
-        {
-            id: 1,
-            txt: "<p class='test_target'><br></p>",
-        },
-    ];
-
-    onRpc("/web_editor/attachment/add_data", (request) => {
-        const { res_id, res_model } = request.json().params;
-        expect.step(`add_data: ${res_model} ${res_id}`);
-        return {
-            image_src: "/test_image_url.png",
-            access_token: "1234",
-            public: false,
-        };
-    });
-
-    await mountView({
-        type: "form",
-        resId: 1,
-        resModel: "partner",
-        arch: `
-                <form>
-                    <field name="txt" widget="html"/>
-                </form>`,
-    });
-    setSelectionInHtmlField(".test_target");
-
-    // Paste image.
-    pasteFile(
-        htmlEditor,
-        createBase64ImageFile(
-            "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
-        )
-    );
-    await animationFrame();
-    const img = htmlEditor.editable.querySelector("img");
-    expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
-    expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
-
-    // Save changes.
-    await contains(".o_form_button_save").click();
-    expect(img.getAttribute("src")).toBe("/test_image_url.png?access_token=1234");
-    expect(img.classList.contains("o_b64_image_to_save")).not.toBe(true);
-    expect.verifySteps(["add_data: partner 1"]);
-});
-
 test("isDirty should be false when the content is being transformed by the editor", async () => {
     Partner._records = [
         {
@@ -1582,5 +1376,344 @@ describe("direction config", () => {
         expect(queryAllTexts(".o-we-command-name")).toEqual(["Switch direction"]);
         press("Enter");
         expect(".odoo-editor-editable p").toHaveAttribute("dir", "ltr");
+    });
+});
+
+describe("save image", () => {
+    function pasteFile(editor, file) {
+        const clipboardData = new DataTransfer();
+        clipboardData.items.add(file);
+        const pasteEvent = new ClipboardEvent("paste", { clipboardData, bubbles: true });
+        editor.editable.dispatchEvent(pasteEvent);
+    }
+
+    function createBase64ImageFile(base64ImageData) {
+        const binaryImageData = atob(base64ImageData);
+        const uint8Array = new Uint8Array(binaryImageData.length);
+        for (let i = 0; i < binaryImageData.length; i++) {
+            uint8Array[i] = binaryImageData.charCodeAt(i);
+        }
+        return new File([uint8Array], "test_image.png", { type: "image/png" });
+    }
+
+    test("Ensure that urgentSave works even with modified image to save", async () => {
+        expect.assertions(5);
+        Partner._records = [
+            {
+                id: 1,
+                txt: "<p class='test_target'><br></p>",
+            },
+        ];
+        let sendBeaconDef;
+        mockSendBeacon((route, blob) => {
+            blob.text().then((r) => {
+                const { params } = JSON.parse(r);
+                const { args, model } = params;
+                if (route === "/web/dataset/call_kw/partner/web_save" && model === "partner") {
+                    if (writeCount === 0) {
+                        // Save normal value without image.
+                        expect(args[1].txt).toBe(`<p class="test_target">a<br></p>`);
+                    } else if (writeCount === 1) {
+                        // Save image with unfinished modification changes.
+                        expect(args[1].txt).toBe(imageContainerHTML);
+                    } else if (writeCount === 2) {
+                        // Save the modified image.
+                        expect(args[1].txt).toBe(getImageContainerHTML(newImageSrc, false));
+                    } else {
+                        // Fail the test if too many write are called.
+                        expect(true).toBe("false");
+                        throw new Error("Write should only be called 3 times during this test");
+                    }
+                    writeCount += 1;
+                }
+                sendBeaconDef.resolve();
+            });
+            return true;
+        });
+
+        let formController;
+        // Patch to get the controller instance.
+        patchWithCleanup(FormController.prototype, {
+            setup() {
+                super.setup(...arguments);
+                formController = this;
+            },
+        });
+
+        const imageRecord = IrAttachment._records[0];
+        // Method to get the html of a cropped image.
+        const getImageContainerHTML = (src, isModified) => {
+            return `
+            <p>
+                <img
+                    class="img img-fluid o_we_custom_image o_we_image_cropped${
+                        isModified ? " o_modified_image_to_save" : ""
+                    }"
+                    data-original-id="${imageRecord.id}"
+                    data-original-src="${imageRecord.image_src}"
+                    data-mimetype="image/png"
+                    data-width="50"
+                    data-height="50"
+                    data-scale-x="1"
+                    data-scale-y="1"
+                    data-aspect-ratio="0/0"
+                    src="${src}"
+                >
+                <br>
+            </p>
+        `
+                .replace(/(?:\s|(?:\r\n))+/g, " ")
+                .replace(/\s?(<|>)\s?/g, "$1");
+        };
+        // Promise to resolve when we want the response of the modify_image RPC.
+        const modifyImagePromise = new Deferred();
+        let writeCount = 0;
+        let modifyImageCount = 0;
+        // Valid base64 encoded image in its transitory modified state.
+        const imageContainerHTML = getImageContainerHTML(
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII",
+            true
+        );
+        // New src URL to assign to the image when the modification is
+        // "registered".
+        const newImageSrc = "/web/image/1234/cropped_transparent.png";
+        onRpc("web_save", () => {
+            expect(true).toBe(false);
+            throw new Error("web_save should only be called through sendBeacon");
+        });
+        onRpc(`/web_editor/modify_image/${imageRecord.id}`, async (request) => {
+            if (modifyImageCount === 0) {
+                const { params } = request.json();
+                expect(params.res_model).toBe("partner");
+                expect(params.res_id).toBe(1);
+                await modifyImagePromise;
+                modifyImageCount++;
+                return newImageSrc;
+            } else {
+                // Fail the test if too many modify_image are called.
+                expect(true).toBe(false);
+                throw new Error("The image should only have been modified once during this test");
+            }
+        });
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+        });
+
+        // Simulate an urgent save without any image in the content.
+        sendBeaconDef = new Deferred();
+        setSelectionInHtmlField(".test_target");
+        insertText(htmlEditor, "a");
+        htmlEditor.dispatch("ADD_STEP");
+        await formController.beforeUnload();
+        await sendBeaconDef;
+
+        // Replace the empty paragraph with a paragrah containing an unsaved
+        // modified image
+        const imageContainerElement = parseHTML(htmlEditor.document, imageContainerHTML).firstChild;
+        const paragraph = htmlEditor.editable.querySelector(".test_target");
+        htmlEditor.editable.replaceChild(imageContainerElement, paragraph);
+        htmlEditor.dispatch("ADD_STEP");
+
+        // Simulate an urgent save before the end of the RPC roundtrip for the
+        // image.
+        sendBeaconDef = new Deferred();
+        await formController.beforeUnload();
+        await sendBeaconDef;
+
+        // Resolve the image modification (simulate end of RPC roundtrip).
+        modifyImagePromise.resolve();
+        await modifyImagePromise;
+        await animationFrame();
+
+        // Simulate the last urgent save, with the modified image.
+        sendBeaconDef = new Deferred();
+        await formController.beforeUnload();
+        await sendBeaconDef;
+    });
+
+    test("Pasted/dropped images are converted to attachments on save", async () => {
+        Partner._records = [
+            {
+                id: 1,
+                txt: "<p class='test_target'><br></p>",
+            },
+        ];
+        onRpc("/web_editor/attachment/add_data", (request) => {
+            const { res_id, res_model } = request.json().params;
+            expect.step(`add_data: ${res_model} ${res_id}`);
+            return {
+                image_src: "/test_image_url.png",
+                access_token: "1234",
+                public: false,
+            };
+        });
+
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        setSelectionInHtmlField(".test_target");
+
+        // Paste image.
+        pasteFile(
+            htmlEditor,
+            createBase64ImageFile(
+                "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
+            )
+        );
+        await animationFrame();
+        const img = htmlEditor.editable.querySelector("img");
+        expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
+        expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
+
+        // Save changes.
+        await contains(".o_form_button_save").click();
+        expect(img.getAttribute("src")).toBe("/test_image_url.png?access_token=1234");
+        expect(img.classList.contains("o_b64_image_to_save")).not.toBe(true);
+        expect.verifySteps(["add_data: partner 1"]);
+    });
+
+    test("Pasted/dropped images are converted once to attachments on save with slow network", async () => {
+        Partner._records = [
+            {
+                id: 1,
+                txt: "<p class='test_target'><br></p>",
+            },
+        ];
+
+        const def = new Deferred();
+        onRpc("/web_editor/attachment/add_data", async (request) => {
+            const { res_id, res_model } = request.json().params;
+            expect.step(`add_data-start: ${res_model} ${res_id}`);
+            await def;
+            expect.step(`add_data-end: ${res_model} ${res_id}`);
+            return {
+                image_src: "/test_image_url.png",
+                access_token: "1234",
+                public: false,
+            };
+        });
+
+        onRpc("partner", "web_save", ({ args }) => {
+            expect.step("web_save");
+            expect(args[1].txt).toBe(
+                `<p class="test_target"><img class="img-fluid" data-file-name="test_image.png" src="/test_image_url.png?access_token=1234"><br></p>`
+            );
+        });
+
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        setSelectionInHtmlField(".test_target");
+
+        // Paste image.
+        pasteFile(
+            htmlEditor,
+            createBase64ImageFile(
+                "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
+            )
+        );
+        await animationFrame();
+        const img = htmlEditor.editable.querySelector("img");
+        expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
+        expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
+
+        // Save changes.
+        await contains(".o_form_button_save").click();
+        expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
+        expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
+
+        def.resolve();
+        await tick();
+        expect(img.getAttribute("src")).toBe("/test_image_url.png?access_token=1234");
+        expect(img.classList.contains("o_b64_image_to_save")).not.toBe(true);
+
+        expect.verifySteps(["add_data-start: partner 1", "add_data-end: partner 1", "web_save"]);
+    });
+
+    test("Pasted/dropped images are converted once to attachments on switch page with slow network", async () => {
+        Partner._records = [
+            {
+                id: 1,
+                txt: "<p class='test_target'><br></p>",
+            },
+            {
+                id: 2,
+                txt: "<p class='test_target_2'><br></p>",
+            },
+        ];
+
+        const def = new Deferred();
+        onRpc("/web_editor/attachment/add_data", async (request) => {
+            const { res_id, res_model } = request.json().params;
+            expect.step(`add_data-start: ${res_model} ${res_id}`);
+            await def;
+            expect.step(`add_data-end: ${res_model} ${res_id}`);
+            return {
+                image_src: "/test_image_url.png",
+                access_token: "1234",
+                public: false,
+            };
+        });
+
+        onRpc("partner", "web_save", ({ args }) => {
+            expect.step("web_save");
+            expect(args[1].txt).toBe(
+                `<p class="test_target"><img class="img-fluid" data-file-name="test_image.png" src="/test_image_url.png?access_token=1234"><br></p>`
+            );
+        });
+
+        await mountView({
+            type: "form",
+            resId: 1,
+            resIds: [1, 2],
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        setSelectionInHtmlField(".test_target");
+
+        // Paste image.
+        pasteFile(
+            htmlEditor,
+            createBase64ImageFile(
+                "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
+            )
+        );
+        await animationFrame();
+        const img = htmlEditor.editable.querySelector("img");
+        expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
+        expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
+
+        // Save changes.
+        await contains(".o_pager_next").click();
+        expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
+        expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
+        expect(".test_target_2").toHaveCount(0);
+
+        def.resolve();
+        await animationFrame();
+
+        expect(".test_target_2").toHaveCount(1);
+        expect.verifySteps(["add_data-start: partner 1", "add_data-end: partner 1", "web_save"]);
     });
 });

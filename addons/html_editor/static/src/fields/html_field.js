@@ -1,10 +1,11 @@
 import { COLLABORATION_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { Component, useRef, useState } from "@odoo/owl";
+import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Mutex } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { localization } from "@web/core/l10n/localization";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { HtmlViewer } from "./html_viewer";
@@ -41,6 +42,8 @@ export class HtmlField extends Component {
     };
 
     setup() {
+        this.mutex = new Mutex();
+
         this.codeViewRef = useRef("codeView");
 
         const { model } = this.props.record;
@@ -93,7 +96,7 @@ export class HtmlField extends Component {
         await this.props.record.update({ [this.props.name]: this.lastValue }).catch(() => {
             this.isDirty = true;
         });
-        this.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
+        this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
     }
 
     async getEditorContent() {
@@ -101,7 +104,7 @@ export class HtmlField extends Component {
         return this.editor.getElContent();
     }
 
-    async commitChanges({ urgent } = {}) {
+    async _commitChanges({ urgent }) {
         if (this.isDirty) {
             if (this.state.showCodeView) {
                 await this.updateValue(this.codeViewRef.el.value);
@@ -116,6 +119,14 @@ export class HtmlField extends Component {
             if (!urgent || (urgent && this.lastValue !== content)) {
                 await this.updateValue(content);
             }
+        }
+    }
+
+    async commitChanges({ urgent } = {}) {
+        if (urgent) {
+            this._commitChanges({ urgent });
+        } else {
+            return this.mutex.exec(() => this._commitChanges({ urgent }));
         }
     }
 
