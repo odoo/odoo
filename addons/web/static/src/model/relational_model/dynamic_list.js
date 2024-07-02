@@ -348,6 +348,8 @@ export class DynamicList extends DataPoint {
             }
         }
 
+        // Save the original list in case of error
+        const originalOrder = [...originalList];
         // Perform the resequence in the list of records/groups
         const [dp] = originalList.splice(fromIndex, 1);
         originalList.splice(toIndex, 0, dp);
@@ -380,9 +382,16 @@ export class DynamicList extends DataPoint {
         if (offset) {
             params.offset = offset;
         }
-        const wasResequenced = await rpc("/web/dataset/resequence", params);
-        if (!wasResequenced) {
-            return;
+        // Attempt to resequence the records/groups on the server
+        try {
+            const wasResequenced = await rpc("/web/dataset/resequence", params);
+            if (!wasResequenced) {
+                return;
+            }
+        } catch (error) {
+            // If the server fails to resequence, rollback the original list
+            originalList.splice(0, originalList.length, ...originalOrder);
+            throw error;
         }
 
         // Read the actual values set by the server and update the records/groups
