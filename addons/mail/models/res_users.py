@@ -3,7 +3,8 @@
 from collections import defaultdict
 
 from odoo import _, api, Command, fields, models, modules, tools
-from odoo.tools import email_normalize
+from odoo.osv import expression
+from odoo.tools import email_normalize, groupby
 
 
 class Users(models.Model):
@@ -379,3 +380,36 @@ class Users(models.Model):
         if "mail.activity" in user_activities:
             user_activities["mail.activity"]["name"] = _("Other activities")
         return list(user_activities.values())
+
+    def _get_follower_by_message_user(self, messages):
+        if not self or not messages:
+            return {}
+        domain = expression.OR(
+            [
+                ("res_model", "=", model),
+                ("res_id", "in", list({message.res_id for message in messages})),
+            ]
+            for model, messages in groupby(
+                (
+                    message
+                    for message in messages
+                    if message.res_id and message.model not in {None, False, "", "discuss.channel"}
+                ),
+                key=lambda message: message.model,
+            )
+        )
+        # sudo: res.users - reading partner of user to build a domain
+        domain = expression.AND([domain, [("partner_id", "in", self.sudo().partner_id.ids)]])
+        # sudo: mail.followers - reading followers to map them to their own user
+        followers = self.env["mail.followers"].sudo().search(domain)
+        follower_by_model_res_id_partner = {
+            (follower.res_model, follower.res_id, follower.partner_id): follower
+            for follower in followers
+        }
+        return {
+            (message, user): follower_by_model_res_id_partner.get(
+                (message.model, message.res_id, user.partner_id), self.env["mail.followers"]
+            )
+            for message in messages
+            for user in self
+        }
