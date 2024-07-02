@@ -120,7 +120,7 @@
                         <page string="Description"
                             name="page_description"
                             invisible="exhibitor_type == 'sponsor'">
-                            <field name="website_description" nolabel="1" options="{'noVideos': False}" 
+                            <field name="website_description" nolabel="1" options="{'noVideos': False}"
                                 placeholder='e.g. "Openwood specializes in home decoration..."'/>
                         </page>
                         <page string="Online"
@@ -128,7 +128,7 @@
                             invisible="exhibitor_type != 'online'">
                             <group>
                                 <group>
-                                    <field name="room_name" required="exhibitor_type == 'online'" string="Jitsi Name"/>
+                                    <field name="room_name" required="exhibitor_type == 'online'" string="Room Name"/>
                                     <field name="room_lang_id"/>
                                     <field name="room_max_capacity" required="exhibitor_type == 'online'"/>
                                     <field name="chat_room_id" groups="base.group_no_one"/>

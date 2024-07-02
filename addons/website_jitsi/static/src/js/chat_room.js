@@ -4,59 +4,20 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { renderToElement } from "@web/core/utils/render";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 import { rpc } from "@web/core/network/rpc";
+import { patch } from "@web/core/utils/patch";
 
-publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
-    selector: '.o_wjitsi_room_widget',
-    events: {
-        'click .o_wjitsi_room_link': '_onChatRoomClick',
-    },
+patch(publicWidget.registry.ChatRoom.prototype, {
 
-    /**
-      * Manage the chat room (Jitsi), update the participant count...
-      *
-      * The widget takes some options
-      * - 'room-name', the name of the Jitsi room
-      * - 'chat-room-id', the ID of the `chat.room` record
-      * - 'auto-open', the chat room will be automatically opened when the page is loaded
-      * - 'check-full', check if the chat room is full before joining
-      * - 'attach-to', a JQuery selector of the element on which we will add the Jitsi
-      *                iframe. If nothing is specified, it will open a modal instead.
-      * - 'default-username': the username to use in the chat room
-      * - 'jitsi-server': the domain name of the Jitsi server to use
-      */
-    start: async function () {
-        await this._super.apply(this, arguments);
-        this.roomName = this.$el.data('room-name');
-        this.chatRoomId = parseInt(this.$el.data('chat-room-id'));
-        // automatically open the current room
-        this.autoOpen = parseInt(this.$el.data('auto-open') || 0);
-        // before joining, perform a RPC call to verify that the chat room is not full
-        this.checkFull = parseInt(this.$el.data('check-full') || 0);
-        // query selector of the element on which we attach the Jitsi iframe
-        // if not defined, the widget will pop in a modal instead
-        this.attachTo = this.$el.data('attach-to') || false;
-        // default username for jitsi
-        this.defaultUsername = this.$el.data('default-username') || false;
-
-        this.jitsiServer = this.$el.data('jitsi-server') || 'meet.jit.si';
-
-        this.maxCapacity = parseInt(this.$el.data('max-capacity')) || Infinity;
-
-        if (this.autoOpen) {
-            await this._onChatRoomClick();
-        }
-    },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
     /**
-      * Click on a chat room to join it.
-      *
-      * @private
-      */
+     * @override
+     */
     _onChatRoomClick: async function () {
+        this.jitsiServer = this.roomUrl;
         if (this.checkFull) {
             // maybe we didn't refresh the page for a while and so we might join a room
             // which is full, so we perform a RPC call to verify that we can really join
@@ -170,7 +131,7 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
         jitsiRoom.addEventListener('videoConferenceJoined', async (event) => {
             this.participantId = event.id;
             updateParticipantCount(true);
-            $('.o_wjitsi_chat_room_loading').addClass('d-none');
+            $('.o_wdiscuss_chat_room_loading').addClass('d-none');
 
             // recheck if the room is not full
             if (this.checkFull && this.allParticipantIds.length > this.maxCapacity) {
@@ -262,5 +223,3 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
       }
     },
 });
-
-export default publicWidget.registry.ChatRoom;

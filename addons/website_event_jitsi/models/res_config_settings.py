@@ -7,6 +7,11 @@ from odoo import fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
+    module_website_jitsi = fields.Boolean(
+        'Use Jitsi for Video Conferences',
+        default=False,
+        help='Enable Jisti for chat and video conferences instead of Odoo Discuss')
+
     jitsi_server_domain = fields.Char(
         'Jitsi Server Domain',
         default='meet.jit.si',

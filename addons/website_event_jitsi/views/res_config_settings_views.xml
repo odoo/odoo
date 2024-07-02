@@ -6,8 +6,12 @@
         <field name="inherit_id" ref="event.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//block[@name='events_setting_container']" position="inside">
-                <setting>
-                    <field name="jitsi_server_domain" placeholder="meet.jit.si"/>
+                <setting string="Use Jitsi" help="Enable Jisti for chat and video conferences instead of Odoo Discuss">
+                    <field name="module_website_jitsi"/>
+                    <div class="content-group" invisible="not module_website_jitsi">
+                        <label for="jitsi_server_domain" class="me-2"/>
+                        <field name="jitsi_server_domain" placeholder="meet.jit.si"/>
+                    </div>
                 </setting>
             </xpath>
         </field>
