@@ -746,7 +746,25 @@ function createBetweenOperators(tree) {
  * @param {Tree} tree
  * @returns {Tree}
  */
+function createWithinOperators(tree) {
+    if (tree.type !== "condition" || tree.operator !== ">") {
+        return tree;
+    }
+    const regex = /relativedelta\(\s*(\w+)\s*=\s*(-?\d+)\s*\)/;
+    const matches = regex.exec(tree.value._expr);
+    if (matches) {
+        tree.operator = "within";
+        tree.value = normalizeValue([parseInt(matches[2]), matches[1]])
+    }
+    return tree;
+}
+
+/**
+ * @param {Tree} tree
+ * @returns {Tree}
+ */
 export function removeBetweenOperators(tree) {
+    // console.log("Got removeBetweenOperators", tree);
     if (tree.type === "complex_condition") {
         return tree;
     }
@@ -755,6 +773,11 @@ export function removeBetweenOperators(tree) {
             return tree;
         }
         const { negate, path, value } = tree;
+        // console.log("Return removeBetweenOperators", connector(
+        //     "&",
+        //     [condition(path, ">=", value[0]), condition(path, "<=", value[1])],
+        //     negate
+        // ));
         return connector(
             "&",
             [condition(path, ">=", value[0]), condition(path, "<=", value[1])],
@@ -763,6 +786,7 @@ export function removeBetweenOperators(tree) {
     }
     const processedChildren = tree.children.map(removeBetweenOperators);
     if (tree.value === "|") {
+        // console.log("Return removeBetweenOperators", { ...tree, children: processedChildren });
         return { ...tree, children: processedChildren };
     }
     const newTree = { ...tree, children: [] };
@@ -770,7 +794,25 @@ export function removeBetweenOperators(tree) {
     for (let i = 0; i < processedChildren.length; i++) {
         addChild(newTree, processedChildren[i]);
     }
+    // console.log("Return removeBetweenOperators", newTree);
     return newTree;
+}
+
+export function removeWithinOperators(tree) {
+    console.log("Got Within tree", tree);
+    if (tree.type === "complex_condition") {
+        return tree;
+    }
+    if (tree.type === "condition") {
+        if (tree.operator !== "within") {
+            return tree;
+        }
+        const { negate, path, value } = tree;
+        return { ...tree, operator: ">", value: expression(`(context_today() - relativedelta(${value[1]}=${value[0]})).strftime('%Y-%m-%d')`) };
+    }
+    const processedChildren = tree.children.map(removeWithinOperators);
+    console.log("Returning Within", { ...tree, children: processedChildren });
+    return { ...tree, children: processedChildren };
 }
 
 /**
@@ -881,7 +923,7 @@ function removeComplexConditions(tree) {
 export function treeFromExpression(expression, options = {}) {
     const ast = parseExpr(expression);
     const tree = _treeFromAST(ast, options);
-    return createVirtualOperators(createBetweenOperators(tree), options);
+    return createVirtualOperators(createBetweenOperators(createWithinOperators(tree)), options);
 }
 
 /**
@@ -891,19 +933,18 @@ export function treeFromExpression(expression, options = {}) {
  */
 export function expressionFromTree(tree, options = {}) {
     const simplifiedTree = createComplexConditions(
-        removeBetweenOperators(removeVirtualOperators(tree))
-    );
+        removeWithinOperators(removeBetweenOperators(removeVirtualOperators(tree))
+    ));
     return _expressionFromTree(simplifiedTree, options, true);
 }
-
 /**
  * @param {Tree} tree
  * @returns {string} a string representation of a domain
  */
 export function domainFromTree(tree) {
-    const simplifiedTree = removeBetweenOperators(
+    const simplifiedTree = removeWithinOperators(removeBetweenOperators(
         removeVirtualOperators(removeComplexConditions(tree))
-    );
+    ));
     const domainAST = {
         type: 4,
         value: getASTs(simplifiedTree),
@@ -920,8 +961,9 @@ export function treeFromDomain(domain, options = {}) {
     domain = new Domain(domain);
     const domainAST = domain.ast;
     const tree = construcTree(domainAST.value, options); // a simple tree
-    return createVirtualOperators(createBetweenOperators(tree), options);
+    return createVirtualOperators(createBetweenOperators(createWithinOperators(tree)), options);
 }
+
 
 /**
  * @param {DomainRepr} domain a string representation of a domain
