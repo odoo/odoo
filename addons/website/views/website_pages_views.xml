@@ -45,6 +45,12 @@
                     <group class="mt-4">
                         <field name="is_in_menu" string="Show in Top Menu" widget="boolean_toggle"/>
                         <field name="is_homepage" string="Use as Homepage" widget="boolean_toggle"/>
+                        <label for="has_parent_page" invisible="is_homepage"/>
+                        <div class="d-flex" invisible="is_homepage">
+                            <field name="has_parent_page" class="w-25" widget="boolean_toggle" options="{'autosave': False}"/>
+                            <label for="parent_page_id" string="/" invisible="not has_parent_page"/>
+                            <field name="parent_page_id" widget="many2one" invisible="not has_parent_page" required="has_parent_page"/>
+                        </div>
                         <field name="website_indexed" string="Indexed" widget="boolean_toggle" help="Hide this page from search results"/>
                         <field name="is_published" string="Published" widget="boolean_toggle"/>
                         <field name="date_publish" widget="datetime"/>
@@ -74,6 +80,7 @@
             <field name="is_in_menu" string="Is In Main Menu"/>
             <field name="is_seo_optimized"/>
             <field name="is_published"/>
+            <field name="parent_page_id" widget="many2one"/>
 
             <field name="create_uid" column_invisible="True"/>
             <field name="write_uid" widget="many2one_avatar" optional="hide"/>

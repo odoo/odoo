@@ -48,6 +48,7 @@ class Assets(models.AbstractModel):
                 'menu-secondary-gradient': 'null',
                 'footer-gradient': 'null',
                 'copyright-gradient': 'null',
+                'breadcrumb-gradient': 'null',
                 **preset_gradients,
             })
 

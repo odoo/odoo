@@ -9,6 +9,7 @@ from odoo import api, fields, models
 from odoo.osv import expression
 from odoo.tools import escape_psql, SQL
 from odoo.tools.translate import _
+from odoo.exceptions import ValidationError
 
 
 class Page(models.Model):
@@ -32,6 +33,8 @@ class Page(models.Model):
     is_homepage = fields.Boolean(compute='_compute_is_homepage', inverse='_set_is_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
     is_new_page_template = fields.Boolean(string="New Page Template", help='Add this page to the "+New" page templates. It will be added to the "Custom" category.')
+    has_parent_page = fields.Boolean(help="Choose a parent page. For more than 3 levels breadcrumd, add a parent page to the parent page.")
+    parent_page_id = fields.Many2one('website.page', string="Parent Page", domain="[('website_id','=?',website_id),('id','!=',id)]", compute="_compute_parent_page_id", inverse="_inverse_parent_page_id", store=True, readonly=False)
 
     # Page options
     header_overlay = fields.Boolean()
@@ -39,6 +42,10 @@ class Page(models.Model):
     header_text_color = fields.Char()
     header_visible = fields.Boolean(default=True)
     footer_visible = fields.Boolean(default=True)
+    breadcrumb_overlay = fields.Boolean()
+    breadcrumb_color = fields.Char()
+    breadcrumb_text_color = fields.Char()
+    breadcrumb_visible = fields.Boolean(default=True)
 
     # don't use mixin website_id but use website_id on ir.ui.view instead
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
@@ -55,6 +62,7 @@ class Page(models.Model):
             if page.is_homepage:
                 if website.homepage_url != page.url:
                     website.homepage_url = page.url
+                page.has_parent_page = False
             else:
                 if website.homepage_url == page.url:
                     website.homepage_url = ''
@@ -111,6 +119,29 @@ class Page(models.Model):
                 ids.append(page.id)
             previous_page = page
         return self.browse(ids)
+
+    @api.depends('has_parent_page')
+    def _compute_parent_page_id(self):
+        website = self.env['website'].get_current_website()
+        homepage = self.env['website.page'].search([('website_id', '=', website.id)]).filtered(lambda r: r.is_homepage)
+        for page in self:
+            if page.has_parent_page:
+                page.parent_page_id = page.parent_page_id or homepage
+            else:
+                page.parent_page_id = False
+
+    def _inverse_parent_page_id(self):
+        for page in self:
+            if page.parent_page_id:
+                page.has_parent_page = True
+
+    @api.constrains('parent_page_id')
+    def _check_parent_page_id(self):
+        for page in self:
+            if page.parent_page_id.id == page.id:
+                raise ValidationError(_("Page '%s' cannot be parent of itself") % page.name)
+            if page.is_homepage and page.parent_page_id:
+                raise ValidationError(_("Homepage '%s' cannot have a parent page") % page.name)
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
