@@ -44,6 +44,7 @@ export class Dialog extends Component {
         },
         technical: { type: Boolean, optional: true },
         title: { type: String, optional: true },
+        centerTitle: { type: Boolean, optional: true},
         modalRef: { type: Function, optional: true },
         slots: {
             type: Object,
@@ -64,6 +65,7 @@ export class Dialog extends Component {
         size: "lg",
         technical: true,
         title: "Odoo",
+        centerTitle: false,
         withBodyPadding: true,
     };
 
