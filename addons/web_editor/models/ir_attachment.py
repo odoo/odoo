@@ -4,6 +4,7 @@
 from werkzeug.urls import url_quote
 
 from odoo import api, models, fields, tools
+from odoo.fields import Command
 
 SUPPORTED_IMAGE_MIMETYPES = {
     'image/gif': '.gif',
@@ -25,6 +26,11 @@ class IrAttachment(models.Model):
     image_width = fields.Integer(compute='_compute_image_size')
     image_height = fields.Integer(compute='_compute_image_size')
     original_id = fields.Many2one('ir.attachment', string="Original (unoptimized, unresized) attachment")
+    tag_ids = fields.Many2many('ir.attachment.tag', 'rel_attachment_tag', 'attachment_id', 'tag_id', string='Tags', copy=False)
+    is_favorite = fields.Boolean(
+        string='Is a favorite media', compute='_compute_is_favorite', inverse='_inverse_is_favorite',
+        search='_search_is_favorite',
+        help="Makes it easier to find preferred media.")
 
     def _compute_local_url(self):
         for attachment in self:
@@ -71,6 +77,31 @@ class IrAttachment(models.Model):
                 attachment.image_width = 0
                 attachment.image_height = 0
 
+    def _compute_is_favorite(self):
+        favorite_tag = self.env.ref('web_editor.favorite_attachment_tag')
+        for attachment in self:
+            attachment.is_favorite = favorite_tag in attachment.tag_ids
+
+    def _inverse_is_favorite(self):
+        favorite_tag = self.env.ref('web_editor.favorite_attachment_tag')
+        for attachment in self:
+            if attachment.is_favorite and favorite_tag not in attachment.tag_ids:
+                attachment.write({
+                    'tag_ids': [Command.link(favorite_tag.id)],
+                })
+            elif not attachment.is_favorite and favorite_tag in attachment.tag_ids:
+                attachment.write({
+                    'tag_ids': [Command.unlink(favorite_tag.id)],
+                })
+        return True
+
+    @api.model
+    def _search_is_favorite(self, operator, value):
+        if operator != '=' or value not in [True, False]:
+            raise NotImplementedError()
+        favorite_tag = self.env.ref('web_editor.favorite_attachment_tag')
+        return [('tag_ids', '=' if value else '!=', favorite_tag.id)]
+
     def _get_media_info(self):
         """Return a dict with the values that we need on the media dialog."""
         self.ensure_one()
@@ -84,3 +115,15 @@ class IrAttachment(models.Model):
         - Non admin user uploading an unsplash image (bypass binary/url check)
         """
         return False
+
+
+class IrAttachmentTag(models.Model):
+    """ Tag to search attachments. """
+    _name = 'ir.attachment.tag'
+    _description = 'Attachment Tag'
+
+    name = fields.Char('Name', required=True, translate=True)
+
+    _sql_constraints = [
+        ('attachment_tag_unique', 'UNIQUE(name)', 'A tag must be unique!'),
+    ]
