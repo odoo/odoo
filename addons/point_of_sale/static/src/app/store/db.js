@@ -34,6 +34,7 @@ export class PosDB {
         this.product_by_barcode = {};
         this.product_by_category_id = {};
         this.product_packaging_by_barcode = {};
+        this.product_by_tmpl_id = {};
 
         this.attribute_by_id = {};
         this.attribute_value_by_id = {};
@@ -287,6 +288,11 @@ export class PosDB {
             this.product_by_id[product.id] = product;
             if (product.barcode && product.active) {
                 this.product_by_barcode[product.barcode] = product;
+            }
+            if (this.product_by_tmpl_id[product.product_tmpl_id]) {
+                this.product_by_tmpl_id[product.product_tmpl_id].push(product);
+            } else {
+                this.product_by_tmpl_id[product.product_tmpl_id] = [product];
             }
         }
     }
@@ -554,35 +560,54 @@ export class PosDB {
         }
         return list;
     }
+
     /* returns a list of products with :
      * - a category that is or is a child of category_id,
      * - a name, package or barcode containing the query (case insensitive)
      */
     search_product_in_category(category_id, query) {
+        let filteredProducts = [];
         try {
-            // eslint-disable-next-line no-useless-escape
+            // Try to extract the product template ID from the query using a regular expression.
+            // If found, get the products filtered by the template ID and remove the ID from the query.
+            let reg = /;product_tmpl_id:(\d+)/gi;
+            let match = reg.exec(query);
+            if (match) {
+                filteredProducts = this.product_by_tmpl_id[parseInt(match[1], 10)];
+                query = query.replace(reg, '');
+            }
+        } catch (e){
+            console.error("Search on product template ID fails", e)
+        }
+        try {
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g, ".");
             query = query.replace(/ /g, ".+");
-            var re = RegExp("([0-9]+):.*?" + unaccent(query), "gi");
-        } catch {
+            let re = RegExp("([0-9]+):.*?" + unaccent(query), "gi");
+            let results = [];
+            if (filteredProducts.length > 0) {
+                const filteredProductIds = filteredProducts.map(p => p.id);
+                const idsPattern = filteredProductIds.join('|');
+                re = new RegExp(`(${idsPattern}):.*?` + unaccent(query), "gi");
+            }
+            for (let i = 0; i < this.limit; i++) {
+                let r = re.exec(this.category_search_string[category_id]);
+                if (r) {
+                    let id = Number(r[1]);
+                    const product = this.get_product_by_id(id);
+                    if (this.shouldAddProduct(product, results)) {
+                        results.push(product);
+                    }
+                } else {
+                    break;
+                }
+            }
+            return results;
+        } catch (e) {
+            console.error("Search on product category fails", e)
             return [];
         }
-        var results = [];
-        for (var i = 0; i < this.limit; i++) {
-            var r = re.exec(this.category_search_string[category_id]);
-            if (r) {
-                var id = Number(r[1]);
-                const product = this.get_product_by_id(id);
-                if (!this.shouldAddProduct(product, results)) {
-                    continue;
-                }
-                results.push(product);
-            } else {
-                break;
-            }
-        }
-        return results;
     }
+
     /**
      * returns true if the product belongs to one of the provided categories
      * or one of its child categories.
