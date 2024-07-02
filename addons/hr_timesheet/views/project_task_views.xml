@@ -28,7 +28,7 @@
                     </div>
                 </xpath>
                 <xpath expr="//t[@name='warning_section']" position="inside">
-                    <div class="alert alert-warning text-center mb-2" role="alert" invisible="analytic_account_active or not project_id" groups="hr_timesheet.group_hr_timesheet_user">
+                    <div class="alert alert-warning text-center mb-2" role="alert" invisible="analytic_account_active or not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user">
                         You cannot log timesheets on this project since it is linked to an inactive analytic account.<br/> Please change this account, or reactivate the current one to timesheet on the project.
                     </div>
                 </xpath>
