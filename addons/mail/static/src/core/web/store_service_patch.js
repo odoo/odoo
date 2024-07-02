@@ -29,6 +29,23 @@ const StorePatch = {
     },
     onStarted() {
         super.onStarted(...arguments);
+        this.discuss.inbox = {
+            id: "inbox",
+            model: "mail.box",
+            name: _t("Inbox"),
+        };
+        this.discuss.starred = {
+            id: "starred",
+            model: "mail.box",
+            name: _t("Starred"),
+            counter: 0,
+        };
+        this.discuss.history = {
+            id: "history",
+            model: "mail.box",
+            name: _t("History"),
+            counter: 0,
+        };
         try {
             // useful for synchronizing activity data between multiple tabs
             this.activityBroadcastChannel = new browser.BroadcastChannel("mail.activity.channel");
@@ -101,6 +118,12 @@ const StorePatch = {
                 break;
             }
         }
+    },
+    async unstarAll() {
+        // apply the change immediately for faster feedback
+        this.discuss.starred.counter = 0;
+        this.discuss.starred.messages = [];
+        await this.env.services.orm.call("mail.message", "unstar_all");
     },
 };
 patch(Store.prototype, StorePatch);
