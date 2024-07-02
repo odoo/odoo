@@ -238,7 +238,10 @@ export class OdooEditor extends EventTarget {
                 getPowerboxElement: () => {
                     const selection = document.getSelection();
                     if (selection.isCollapsed && selection.rangeCount) {
-                        return closestElement(selection.anchorNode, 'P, DIV');
+                        return closestElement(
+                            selection.anchorNode,
+                            ['DIV', 'LI', ...paragraphRelatedElements]
+                        );
                     }
                 },
                 preHistoryUndo: () => {},
@@ -4467,15 +4470,18 @@ export class OdooEditor extends EventTarget {
 
         const selectors = {
             BLOCKQUOTE: this.options._t('Empty quote'),
+            PRE: this.options._t('Code'),
+            DIV: this.options._t('Type "/" for commands'),
+            P: this.options._t('Type "/" for commands'),
             H1: this.options._t('Heading 1'),
             H2: this.options._t('Heading 2'),
             H3: this.options._t('Heading 3'),
             H4: this.options._t('Heading 4'),
             H5: this.options._t('Heading 5'),
             H6: this.options._t('Heading 6'),
-            'UL LI': this.options._t('List'),
-            'OL LI': this.options._t('List'),
-            'CL LI': this.options._t('To-do'),
+            'UL': this.options._t('List'),
+            'OL': this.options._t('List'),
+            'CL': this.options._t('To-do'),
         };
 
         for (const hint of this.editable.querySelectorAll('.oe-hint')) {
@@ -4501,19 +4507,14 @@ export class OdooEditor extends EventTarget {
             }
         }
 
-        if (this.options.showEmptyElementHint) {
-            for (const [selector, text] of Object.entries(selectors)) {
-                for (const el of this.editable.querySelectorAll(selector)) {
-                    if (!this.options.isHintBlacklisted(el)) {
-                        this._makeHint(el, text);
-                    }
-                }
-            }
-        }
-
         const block = this.options.getPowerboxElement();
-        if (block) {
-            this._makeHint(block, this.options._t('Type "/" for commands'), true);
+        if (block && this.options.showEmptyElementHint && !this.options.isHintBlacklisted(block)) {
+            if (block.nodeName === "LI") {
+                const listMode = getListMode(closestElement(block, 'OL, UL'));
+                this._makeHint(block, selectors[listMode], true);
+            } else {
+                this._makeHint(block, selectors[block.nodeName], true);
+            }
         }
 
         // placeholder hint
