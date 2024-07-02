@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import json
 from collections import defaultdict
 
@@ -210,6 +211,11 @@ class ProjectProject(models.Model):
         if section_name in ['other_invoice_revenues', 'downpayments']:
             action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
             action['domain'] = domain if domain else []
+            action['context'] = {
+                **ast.literal_eval(action['context']),
+                'default_partner_id': self.partner_id.id,
+                'project_id': self.id,
+            }
             if res_id:
                 action['views'] = [(False, 'form')]
                 action['view_mode'] = 'form'
@@ -683,6 +689,9 @@ class ProjectProject(models.Model):
                 'number': self_sudo.sale_order_count,
                 'action_type': 'object',
                 'action': 'action_view_sos',
+                'additional_context': json.dumps({
+                    'create_for_project_id': self.id,
+                }),
                 'show': self_sudo.display_sales_stat_buttons and self_sudo.sale_order_count > 0,
                 'sequence': 27,
             })
@@ -766,7 +775,8 @@ class ProjectProject(models.Model):
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
             'domain': [('id', 'in', vendor_bill_ids)],
             'context': {
-                'create': False,
+                'default_move_type': 'in_invoice',
+                'project_id': self.id,
             }
         }
         if len(vendor_bill_ids) == 1:
