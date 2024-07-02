@@ -17,7 +17,7 @@ class IrFilters(models.Model):
                                    "and available to all users.")
     domain = fields.Text(default='[]', required=True)
     context = fields.Text(default='{}', required=True)
-    sort = fields.Text(default='[]', required=True)
+    sort = fields.Char(default='[]', required=True)
     model_id = fields.Selection(selection='_list_all_models', string='Model', required=True)
     is_default = fields.Boolean(string='Default Filter')
     action_id = fields.Many2one('ir.actions.actions', string='Action', ondelete='cascade',
@@ -169,6 +169,7 @@ class IrFilters(models.Model):
             )""",
             'Constraint to ensure that the embedded_parent_res_id is only defined when a top_action_id is defined.'
         ),
+        ('check_sort_json', "CHECK(sort IS NULL OR jsonb_typeof(sort::jsonb) = 'array')", 'Invalid sort definition'),
     ]
 
     def _auto_init(self):
