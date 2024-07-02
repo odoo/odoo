@@ -2612,18 +2612,14 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             )  # bypass the ORM to set an invalid model name
             definition = self._get_sql_definition(self.discussion_1)
             self.assertEqual(definition[0]['comodel'], invalid_model_name)
-            with self.assertQueryCount(3):
+            error_message = f"You cannot use 'Partners' because the linked {invalid_model_name!r} model doesn't exist or is invalid"
+            with self.assertRaisesRegex(UserError, error_message):
                 result = Model.read_group(
                     domain=[('discussion', '!=', self.wrong_discussion_id)],
                     fields=[],
                     groupby=['attributes.mypartners'],
                     lazy=False,
                 )
-
-            self.assertEqual(len(result), 1)
-            self.assertFalse(result[0]['attributes.mypartners'])
-            self.assertEqual(result[0]['__count'], 4)
-            self._check_domains_count(result)
 
     @mute_logger('odoo.fields')
     def test_properties_field_read_group_many2one(self):
@@ -2632,6 +2628,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         # group by many2one property
         self.message_1.attributes = [{
             'name': 'mypartner',
+            'string': 'My Partner',
             'type': 'many2one',
             'value': self.partner_2.id,
             'comodel': 'test_new_api.partner',
@@ -2715,17 +2712,14 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             )  # bypass the ORM to set an invalid model name
             definition = self._get_sql_definition(self.discussion_1)
             self.assertEqual(definition[0]['comodel'], invalid_model_name)
-            with self.assertQueryCount(3):
+            error_message = f"You cannot use 'My Partner' because the linked {invalid_model_name!r} model doesn't exist or is invalid"
+            with self.assertRaisesRegex(UserError, error_message):
                 result = Model.read_group(
                     domain=[('discussion', '!=', self.wrong_discussion_id)],
                     fields=[],
                     groupby=['attributes.mypartner'],
                     lazy=False,
                 )
-
-            self.assertEqual(len(result), 1)
-            self.assertEqual(result[0]['__count'], 4)
-            self._check_domains_count(result)
 
     @mute_logger('odoo.fields')
     def test_properties_field_read_group_selection(self):
