@@ -6588,6 +6588,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             mimetype: this._getImageMimetype(img),
         });
 
+        const restoreCursor = preserveCursor(this.$target[0].ownerDocument);
         await new Promise(resolve => {
             this.$target.one('image_cropper_destroyed', async () => {
                 if (isGif(this._getImageMimetype(img))) {
@@ -6599,6 +6600,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         });
         imageCropWrapperElement.remove();
         imageCropWrapper.destroy();
+        restoreCursor();
         this.trigger_up('enable_loading_effect');
     },
     /**
@@ -6650,6 +6652,7 @@ registry.ImageTools = ImageHandlerOption.extend({
     async resetCrop() {
         const img = this._getImg();
 
+        const restoreCursor = preserveCursor(this.$target[0].ownerDocument);
         // Mount the ImageCrop to call the reset method. As we need the state of
         // the component to be mounted before calling reset, mount it
         // temporarily into the body.
@@ -6666,6 +6669,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         imageCropWrapper.destroy();
         imageCropWrapperElement.remove();
 
+        restoreCursor();
         await this._reapplyCurrentShape();
     },
     /**
