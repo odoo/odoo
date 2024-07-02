@@ -272,6 +272,30 @@ class Meeting(models.Model):
                 commands += [(0, 0, {'duration': duration, 'interval': interval, 'name': name, 'alarm_type': alarm_type})]
         return commands
 
+    def action_synchronize_google_events(self, google_service=GoogleCalendarService):
+        """ Synchronize events with Google Calendar. """
+        # Check if user synchronization status is active before trying to synchronize events.
+        if not self.env.user.is_google_calendar_synced():
+            raise ValidationError(_('An active synchronization with Google Calendar is needed for synchronizing events.'))
+
+        self._sync_odoo2google(GoogleCalendarService(self.env['google.service']))
+
+        # Define success message if all records got synchronized and warning message otherwise.
+        if all(ev.google_id for ev in self):
+            return_type = 'success'
+            return_message = 'Success! The selected events are now synchronized with Google Calendar.'
+        else:
+            return_type = 'warning'
+            return_message = 'Please try again later, an error occurred trying to synchronize the selected events.'
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'message': _(return_message),
+                'type': return_type,
+            }
+        }
+
     def action_mass_archive(self, recurrence_update_setting):
         """ Delete recurrence in Odoo if in 'all_events' or in 'future_events' edge case, triggering one mail. """
         self.ensure_one()
