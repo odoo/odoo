@@ -562,6 +562,9 @@ export class X2ManyFieldDialog extends Component {
             this.archInfo = { ...this.archInfo, xmlDoc: this.archInfo.xmlDoc.cloneNode(true) };
             this.footerArchInfo = Object.assign({}, this.archInfo);
             this.footerArchInfo.xmlDoc = createElement("t");
+            if (this.archInfo.xmlDoc.querySelectorAll("footer:not(field footer)").length > 1) {
+                console.warn("Multiple footers!");
+            }
             this.footerArchInfo.xmlDoc.append(
                 ...this.archInfo.xmlDoc.querySelectorAll("footer:not(field footer)")
             );
