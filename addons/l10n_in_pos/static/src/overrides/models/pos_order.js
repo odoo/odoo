@@ -15,11 +15,6 @@ patch(PosOrder.prototype, {
         }
         if (this.company.country_id?.code === "IN") {
             result.l10n_in_hsn_summary = this._prepareL10nInHsnSummary();
-            result.tax_details.forEach((tax) => {
-                if (tax?._l10n_in_tax_type) {
-                    tax._letter = tax._l10n_in_tax_type.toUpperCase();
-                }
-            });
         }
         return result;
     },
