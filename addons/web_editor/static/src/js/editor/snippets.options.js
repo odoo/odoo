@@ -6619,6 +6619,38 @@ registry.ImageTools = ImageHandlerOption.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Toggle image with certain shapes into 0/0(original) and 1:1 ratio.
+     *
+     * @see this.selectClass for parameters
+     */
+    async removeStretch(previewMode, widgetValue, params) {
+        this.trigger_up("disable_loading_effect");
+        const restoreCursor = preserveCursor(this.$target[0].ownerDocument);
+        const img = this._getImg();
+        const document = this.$el[0].ownerDocument;
+        const imageCropWrapperElement = document.createElement("div");
+        // During temporary mounting, making sure component isn't visible.
+        imageCropWrapperElement.classList.add("d-none");
+        document.body.append(imageCropWrapperElement);
+        const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
+            activeOnStart: true,
+            media: img,
+            mimetype: this._getImageMimetype(img),
+        });
+        await imageCropWrapper.component.mountedPromise;
+        widgetValue
+            ? await imageCropWrapper.component.reset()
+            : await imageCropWrapper.component.cropSquare(true);
+        if (isGif(this._getImageMimetype(img))) {
+            img.dataset[img.dataset.shape ? "originalMimetype" : "mimetype"] = "image/png";
+        }
+        await this._reapplyCurrentShape();
+        imageCropWrapperElement.remove();
+        imageCropWrapper.destroy();
+        restoreCursor();
+        this.trigger_up("enable_loading_effect");
+    },
+    /**
      * Displays the image cropping tools
      *
      * @see this.selectClass for parameters
@@ -6701,6 +6733,8 @@ registry.ImageTools = ImageHandlerOption.extend({
         // the component to be mounted before calling reset, mount it
         // temporarily into the body.
         const imageCropWrapperElement = document.createElement('div');
+        // During temporary mounting, making sure component is not visible to user.
+        imageCropWrapperElement.classList.add("d-none");
         document.body.append(imageCropWrapperElement);
         const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
             activeOnStart: true,
@@ -6729,6 +6763,35 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async setImgShape(previewMode, widgetValue, params) {
         const img = this._getImg();
+        const restoreCursor = preserveCursor(this.$target[0].ownerDocument);
+        const document = this.$el[0].ownerDocument;
+        const imageCropWrapperElement = document.createElement("div");
+        // During temporary mounting, making sure component isn't visible.
+        imageCropWrapperElement.classList.add("d-none");
+        document.body.append(imageCropWrapperElement);
+        const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
+            activeOnStart: true,
+            media: img,
+            mimetype: this._getImageMimetype(img),
+        });
+        await imageCropWrapper.component.mountedPromise;
+        const isCropRequired = this._isCropRequired();
+        if (previewMode === true) {
+            await imageCropWrapper.component.cropSquare(isCropRequired, previewMode);
+            img.classList.add("o_we_image_cropped_preview");
+        } else if (previewMode === false) {
+            await imageCropWrapper.component.cropSquare(isCropRequired && widgetValue);
+        } else {
+            await imageCropWrapper.component.resetCropSquare();
+            img.classList.remove("o_we_image_cropped_preview");
+        }
+        if (isGif(this._getImageMimetype(img))) {
+            img.dataset[img.dataset.shape ? "originalMimetype" : "mimetype"] = "image/png";
+        }
+        await this._reapplyCurrentShape();
+        imageCropWrapperElement.remove();
+        imageCropWrapper.destroy();
+
         const saveData = previewMode === false;
         if (img.dataset.hoverEffect && !widgetValue) {
             // When a shape is removed and there is a hover effect on the
@@ -6787,6 +6850,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             weUtils.forwardToThumbnail(img);
         }
         img.classList.add('o_modified_image_to_save');
+        restoreCursor();
     },
     /**
      * Handles color assignment on the shape. Widget is a color picker.
@@ -7326,6 +7390,9 @@ registry.ImageTools = ImageHandlerOption.extend({
             const shapeImgSquareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
             return !shapeImgSquareWidget.isActive();
         }
+        if (widgetName === "toggle_stretch_opt") {
+            return this._isCropRequired();
+        }
         return this._super(...arguments);
     },
     /**
@@ -7370,6 +7437,9 @@ registry.ImageTools = ImageHandlerOption.extend({
             case 'setHoverEffectColor': {
                 const imgEl = this._getImg();
                 return imgEl.dataset.hoverEffectColor || "";
+            }
+            case "removeStretch": {
+                return  !this._isCropped();
             }
         }
         return this._super(...arguments);
@@ -7596,6 +7666,16 @@ registry.ImageTools = ImageHandlerOption.extend({
     _isAnimatedShape() {
         const shapeImgWidget = this._requestUserValueWidgets("shape_img_opt")[0];
         return shapeImgWidget?.getMethodsParams().animated;
+    },
+    /**
+     * Checks if squaring of image is required before application of shape.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isCropRequired() {
+        const shapeImgWidget = this._requestUserValueWidgets("shape_img_opt")[0];
+        return shapeImgWidget?.getMethodsParams().unstretch;
     },
     /**
      * Checks if the shape can have a hover effect.
