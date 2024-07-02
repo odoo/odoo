@@ -37,13 +37,13 @@ _schema = logging.getLogger('odoo.schema')
 
 
 _REGISTRY_CACHES = {
-    'default': 8192,
-    'assets': 512, # arbitrary
-    'templates': 1024, # arbitrary
-    'routing': 1024,  # 2 entries per website
-    'routing.rewrites': 8192,  # url_rewrite entries
-    'templates.cached_values': 2048, # arbitrary
-    'groups': 1,  # contains all res.groups
+    'default': (33554432, 'footprint'),  # 32MB
+    'assets': (512, 'count'),  # arbitrary
+    'templates': (1024, 'count'),  # arbitrary
+    'routing': (1024, 'count'),  # 2 entries per website
+    'routing.rewrites': (8192, 'count'),  # url_rewrite entries
+    'templates.cached_values': (2048, 'count'),  # arbitrary
+    'groups': (1, 'count'),  # contains all res.groups
 }
 
 # cache invalidation dependencies, as follows:
@@ -83,10 +83,12 @@ class Registry(Mapping):
                 # cannot specify the memory limit soft on windows...
                 size = 42
             else:
-                # A registry takes 10MB of memory on average, so we reserve
-                # 10Mb (registry) + 5Mb (working memory) per registry
-                avgsz = 15 * 1024 * 1024
-                size = int(config['limit_memory_soft'] / avgsz)
+                # A fully cached registry takes around 64MB of memory
+                # registry for models: 10MB
+                # ormcache: 30MB for default, 20MB for others
+                avgsz = 64 * 1024 * 1024
+                # we leave half of the limit_memory_soft for working memory
+                size = int(config['limit_memory_soft'] / 2 / avgsz)
         return LRU(size)
 
     def __new__(cls, db_name):
@@ -151,7 +153,7 @@ class Registry(Mapping):
         self._fields_by_model = None
         self._ordinary_tables = None
         self._constraint_queue = deque()
-        self.__caches = {cache_name: LRU(cache_size) for cache_name, cache_size in _REGISTRY_CACHES.items()}
+        self.__caches = {cache_name: LRU(lru_size, lru_mode) for cache_name, (lru_size, lru_mode) in _REGISTRY_CACHES.items()}
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()

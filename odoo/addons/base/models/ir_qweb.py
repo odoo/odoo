@@ -2681,7 +2681,7 @@ def render(template_name, values, load, **options):
     """
     class MockPool:
         db_name = None
-        _Registry__caches = {cache_name: LRU(cache_size) for cache_name, cache_size in registry._REGISTRY_CACHES.items()}
+        _Registry__caches = {cache_name: LRU(lru_size, lru_mode) for cache_name, (lru_size, lru_mode) in registry._REGISTRY_CACHES.items()}
         _Registry__caches_groups = {}
         for cache_name, cache in _Registry__caches.items():
             _Registry__caches_groups.setdefault(cache_name.split('.')[0], []).append(cache)

@@ -464,7 +464,7 @@ class ThreadedServer(CommonServer):
 
                 registries = odoo.modules.registry.Registry.registries
                 _logger.debug('cron%d polling for jobs', number)
-                for db_name, registry in registries.d.items():
+                for db_name, registry in registries.items():
                     if registry.ready:
                         thread = threading.current_thread()
                         thread.start_time = time.time()
@@ -576,7 +576,7 @@ class ThreadedServer(CommonServer):
             if config['test_enable']:
                 logger = odoo.tests.result._logger
                 with Registry.registries._lock:
-                    for db, registry in Registry.registries.d.items():
+                    for db, (registry, _) in Registry.registries.d.items():
                         report = registry._assertion_report
                         log = logger.error if not report.wasSuccessful() \
                          else logger.warning if not report.testsRun \
