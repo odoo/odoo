@@ -254,7 +254,7 @@ test("can import (export) contextual domain", async function () {
                         tag: "chart",
                         data: {
                             type: "odoo_line",
-                            title: { text: "Partners" },
+                            title: { type: "string", text: "Partners" },
                             legendPosition: "top",
                             searchParams: {
                                 domain: '[("foo", "=", uid)]',
@@ -568,7 +568,7 @@ test("cumulative line chart with past data before domain period", async () => {
                 orderBy: [],
             },
             cumulative: true,
-            title: { text: "Partners" },
+            title: { type: "string", text: "Partners" },
             dataSourceId: "42",
             id: "42",
         },

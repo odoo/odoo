@@ -68,7 +68,7 @@ function getChartDefinition(type) {
             orderBy: [],
         },
         stacked: true,
-        title: { text: "Partners" },
+        title: { type: "string", text: "Partners" },
         background: "#FFFFFF",
         legendPosition: "top",
         verticalAxisPosition: "left",

@@ -8,9 +8,11 @@ const { chartRegistry } = spreadsheet.registries;
 
 const {
     getDefaultChartJsRuntime,
+    getAxesDesignWithValidRanges,
+    getAxesDesignWithRangeString,
     getChartAxisTitleRuntime,
     chartFontColor,
-    ColorGenerator
+    ColorGenerator,
 } = spreadsheet.helpers;
 
 export class OdooBarChart extends OdooChart {
@@ -18,7 +20,7 @@ export class OdooBarChart extends OdooChart {
         super(definition, sheetId, getters);
         this.verticalAxisPosition = definition.verticalAxisPosition;
         this.stacked = definition.stacked;
-        this.axesDesign = definition.axesDesign;
+        this.axesDesign = getAxesDesignWithValidRanges(getters, sheetId, definition.axesDesign);
     }
 
     getDefinition() {
@@ -26,7 +28,7 @@ export class OdooBarChart extends OdooChart {
             ...super.getDefinition(),
             verticalAxisPosition: this.verticalAxisPosition,
             stacked: this.stacked,
-            axesDesign: this.axesDesign,
+            axesDesign: getAxesDesignWithRangeString(this.getters, this.sheetId, this.axesDesign),
         };
     }
 }
@@ -46,7 +48,7 @@ function createOdooChartRuntime(chart, getters) {
     const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getData();
     const locale = getters.getLocale();
-    const chartJsConfig = getBarConfiguration(chart, labels, locale);
+    const chartJsConfig = getBarConfiguration(chart, getters, labels, locale);
     const colors = new ColorGenerator();
     for (const { label, data } of datasets) {
         const color = colors.next();
@@ -62,9 +64,9 @@ function createOdooChartRuntime(chart, getters) {
     return { background, chartJsConfig };
 }
 
-function getBarConfiguration(chart, labels, locale) {
+function getBarConfiguration(chart, getters, labels, locale) {
     const fontColor = chartFontColor(chart.background);
-    const config = getDefaultChartJsRuntime(chart, labels, fontColor, { locale });
+    const config = getDefaultChartJsRuntime(chart, getters, labels, fontColor, { locale });
     config.type = chart.type.replace("odoo_", "");
     const legend = {
         ...config.options.legend,
@@ -87,7 +89,7 @@ function getBarConfiguration(chart, labels, locale) {
                 labelOffset: 2,
                 color: fontColor,
             },
-            title: getChartAxisTitleRuntime(chart.axesDesign?.x),
+            title: getChartAxisTitleRuntime(getters, chart.axesDesign?.x),
         },
         y: {
             position: chart.verticalAxisPosition,
@@ -95,7 +97,7 @@ function getBarConfiguration(chart, labels, locale) {
                 color: fontColor,
             },
             beginAtZero: true, // the origin of the y axis is always zero
-            title: getChartAxisTitleRuntime(chart.axesDesign?.y),
+            title: getChartAxisTitleRuntime(getters, chart.axesDesign?.y),
         },
     };
     if (chart.stacked) {

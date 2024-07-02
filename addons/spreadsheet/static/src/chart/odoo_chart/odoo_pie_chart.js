@@ -23,7 +23,7 @@ function createOdooChartRuntime(chart, getters) {
     const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getData();
     const locale = getters.getLocale();
-    const chartJsConfig = getPieConfiguration(chart, labels, locale);
+    const chartJsConfig = getPieConfiguration(chart, getters, labels, locale);
     const colors = new ColorGenerator();
     for (const { label, data } of datasets) {
         const backgroundColor = getPieColors(colors, datasets);
@@ -38,9 +38,9 @@ function createOdooChartRuntime(chart, getters) {
     return { background, chartJsConfig };
 }
 
-function getPieConfiguration(chart, labels, locale) {
+function getPieConfiguration(chart, getters, labels, locale) {
     const fontColor = chartFontColor(chart.background);
-    const config = getDefaultChartJsRuntime(chart, labels, fontColor, { locale });
+    const config = getDefaultChartJsRuntime(chart, getters, labels, fontColor, { locale });
     config.type = chart.type.replace("odoo_", "");
     const legend = {
         ...config.options.legend,
