@@ -25,10 +25,7 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
-        excluded_fields = super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_id']
-        if self.env['ir.config_parameter'].sudo().get_param('purchase_stock.merge_different_procurement'):
-            excluded_fields += ['procure_method']
-        return excluded_fields
+        return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_id']
 
     def _compute_partner_id(self):
         # dropshipped moves should have their partner_ids directly set
