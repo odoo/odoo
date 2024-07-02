@@ -1441,6 +1441,16 @@ export class Model extends Array {
 
     /**
      * @param {MaybeIterable<number>} idOrIds
+     * @param {{ active_test?: boolean }} [options]
+     */
+    browse(idOrIds, options) {
+        const ids = ensureArray(idOrIds);
+        const activeTest = (options?.active_test ?? true) && this._fields.active;
+        return this.filter((record) => ids.includes(record.id) && (!activeTest || record.active));
+    }
+
+    /**
+     * @param {MaybeIterable<number>} idOrIds
      * @param {Partial<ModelRecord>} defaultValues
      */
     copy(idOrIds, defaultValues) {
@@ -1480,7 +1490,7 @@ export class Model extends Array {
             applyDefaults(this, values, kwargs.context);
             this._write(values, record.id);
         }
-        this._filter([["id", "in", ids]])._applyComputesAndValidate();
+        this.browse(ids)._applyComputesAndValidate();
         return shouldReturnList ? ids : ids[0];
     }
 
@@ -2624,10 +2634,10 @@ export class Model extends Array {
         const ids = ensureArray(idOrIds);
         const originalRecords = {};
         for (const id of ids) {
-            originalRecords[id] = this.search_read([["id", "=", id]])[0];
+            originalRecords[id] = { ...this.browse(id)[0] };
             this._write(values, id);
         }
-        this._filter([["id", "in", ids]])._applyComputesAndValidate(originalRecords);
+        this.browse(ids)._applyComputesAndValidate(originalRecords);
         return true;
     }
 
@@ -2682,7 +2692,7 @@ export class Model extends Array {
      * the domain.
      *
      * @param {DomainListRepr} [domain]
-     * @param {{ active_test: boolean }} [options]
+     * @param {{ active_test?: boolean }} [options]
      */
     _filter(domain, options) {
         domain ||= [];
@@ -2690,7 +2700,7 @@ export class Model extends Array {
             throw new TypeError(`domain must be an array, got: ${domain}`);
         }
         // add ['active', '=', true] to the domain if 'active' is not yet present in domain
-        if ((options?.active_test ?? true) && "active" in this._fields) {
+        if ((options?.active_test ?? true) && this._fields.active) {
             const activeInDomain = domain.some((subDomain) => subDomain[0] === "active");
             if (!activeInDomain) {
                 domain = [...domain, ["active", "=", true]];
@@ -2782,11 +2792,7 @@ export class Model extends Array {
         }
         fieldNames = unique([...fieldNames, "id"]);
         const { context } = params;
-        const activeTest = context && "active_test" in context ? context.active_test : true;
-        let records = this._filter(params.domain, {
-            ...context,
-            active_test: activeTest,
-        });
+        let records = this._filter(params.domain, { active_test: context?.active_test });
         orderByField(records, params.order);
         const nbRecords = records.length;
         records = records.slice(offset, params.limit ? offset + params.limit : nbRecords);
