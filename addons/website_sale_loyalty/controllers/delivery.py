@@ -19,13 +19,13 @@ class WebsiteSaleLoyaltyDelivery(WebsiteSaleDelivery):
                     'new_amount_delivery_discount': Monetary.value_to_html(
                         amount_free_shipping, {'display_currency': currency}
                     ),
-                    'new_amount_order_discounted': Monetary.value_to_html(order.reward_amount - amount_free_shipping, {'display_currency': currency}),
                     'delivery_discount_minor_amount': payment_utils.to_minor_currency_units(
                         amount_free_shipping, currency
                     ),
                 })
-            else:
-                result.update({'new_amount_order_discounted': Monetary.value_to_html(
+            result.update({
+                'new_amount_order_discounted': Monetary.value_to_html(
                     order.reward_amount, {'display_currency': currency}
-                )})
+                )
+            })
         return result

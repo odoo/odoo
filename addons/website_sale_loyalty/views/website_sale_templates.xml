@@ -133,16 +133,16 @@
 
     <template id="cart_discount" name="Show Discount in Subtotal" active="False" inherit_id="website_sale.total">
         <xpath expr="//tr[@id='order_total_untaxed']" position="before">
-            <tr t-if="website_sale_order and website_sale_order.reward_amount">
-            <td class="text-end border-0 text-muted" title="Discounted amount">Discount:</td>
-            <td class="text-xl-end border-0 text-muted">
-                <span t-field="website_sale_order.reward_amount" style="white-space: nowrap;"
-                    class="monetary_field"
-                    t-options='{
-                            "widget": "monetary",
-                            "display_currency": website_sale_order.currency_id,
-                    }'/>
-            </td>
+            <tr id="order_discount">
+                <td colspan="2" class="text-muted border-0 ps-0 pt-0 pb-2">Discount</td>
+                <td class="text-end border-0 pe-0 pt-0 pb-2" name="order_discount">
+                    <span
+                        t-field="website_sale_order.reward_amount"
+                        class="monetary_field"
+                        style="white-space: nowrap;"
+                        t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
+                    />
+                </td>
             </tr>
         </xpath>
     </template>

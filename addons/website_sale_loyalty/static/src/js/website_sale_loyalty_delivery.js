@@ -22,10 +22,8 @@ publicWidget.registry.websiteSaleDelivery.include({
                 cart_summary_discount_line.innerHTML = this.result.new_amount_delivery_discount;
             }
         }
-        else if (this.result.new_amount_order_discounted) {
-             const cart_summary_discount_line = document.querySelector(
-                '[data-reward-type="discount"]'
-            );
+        if (this.result.new_amount_order_discounted) {
+            const cart_summary_discount_line = document.querySelector('#order_discount .monetary_field');
             if (cart_summary_discount_line) {
                 cart_summary_discount_line.innerHTML = this.result.new_amount_order_discounted;
             }
