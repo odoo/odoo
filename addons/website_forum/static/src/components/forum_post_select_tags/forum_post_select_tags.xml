@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="website_forum.ForumPostSelectMenu" t-inherit="web.SelectMenu" t-inherit-mode="primary">
+    <xpath expr="//button" position="attributes">
+      <attribute name="onclick">return false</attribute>
+    </xpath>
+    <xpath expr="//t[@t-set-slot='content']" position="replace">
+      <t t-set-slot="content" t-slot-scope="select">
+        <input
+            t-if="props.searchable"
+            type="text"
+            class="dropdown-item o_select_menu_sticky px-3 py-3 position-sticky top-0 start-0 border-bottom"
+            t-ref="inputRef"
+            t-on-input="debouncedOnInput"
+            t-att-placeholder="props.searchPlaceholder"
+            autocomplete="selectMenuAutocompleteOff"
+            autocorrect="off"
+            spellcheck="false"
+        />
+        <span 
+          t-if="props.getErrorMessage(state.searchValue)"
+          class="text-muted fst-italic ms-3"
+          t-out="props.getErrorMessage(state.searchValue)"/>
+        <t t-elif="state.displayedOptions.length gt 0">
+          <t t-foreach="state.displayedOptions" t-as="choice" t-key="choice_index">
+            <t t-call="{{ this.constructor.choiceItemTemplate }}">
+                <t t-set="choice" t-value="choice" />
+            </t>
+          </t>
+        </t>
+        <t t-else="">
+          <span class="text-muted fst-italic ms-3">No matches found</span>
+        </t>
+        <t t-if="props.slots and props.slots.bottomArea" t-slot="bottomArea" data="state"/>
+      </t>
+    </xpath>
+    <xpath expr="//TagsList" position="after">
+      <t t-if="props.value.length === 0">Select or create tags</t>
+    </xpath>
+  </t>
+
+  <t t-name="website_forum.ForumPostSelectTags">
+    <input t-model="state.value" type="hidden" name="post_tags"/>
+    <ForumPostSelectMenu
+        choices= "state.choices"
+        class="'p-O'"
+        getErrorMessage.bind="getErrorMessage"
+        multiSelect= "true"
+        onInput.bind="onInput"
+        onSelect.bind="onTagsSelect"
+        searchable= "true"
+        searchPlaceholder= "'Tags...'"
+        togglerClass="'bg-transparent border-0'"
+        value= "state.value"
+        hasTokenSeparator="state.hasTokenSeparator"
+    >
+      <t t-set-slot="bottomArea" t-slot-scope="select">
+        <DropdownItem
+            t-if="select.data.searchValue and this.canCreateTag(select.data.searchValue, select.data.choices)"
+            class="'btn text-primary'"
+            onSelected="() => this.onClickCreateTagBtn(select.data.searchValue)"
+        >
+            Create New Tag "<i t-out="select.data.searchValue"/>"
+        </DropdownItem>
+      </t>
+    </ForumPostSelectMenu>
+  </t>
+</templates>

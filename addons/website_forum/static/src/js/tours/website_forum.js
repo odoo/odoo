@@ -31,17 +31,18 @@
         trigger: `.note-editable p:not(:contains(/^<br>$/))`,
     },
     {
-        trigger: ".select2-choices",
+        trigger: "button.o_select_menu_toggler",
         content: _t("Insert tags related to your question."),
         position: "top",
+        run: "click",
     }, 
     {
-        trigger: "input[id=s2id_autogen2]",
+        trigger: "input.dropdown-item.o_select_menu_sticky",
         run: "editor Test",
     },
     {
         isActive: ["auto"],
-        trigger: `input[id=s2id_autogen2]:not(:contains(Tags))`,
+        trigger: `input.dropdown-item.o_select_menu_sticky:not(:contains(Tags))`,
     },
     {
         trigger: "button:contains(/^Post/)",
