@@ -16,12 +16,12 @@
                 <MessageInReply t-if="message.parentMessage" alignedRight="isAlignedRight" message="message" onClick="props.onParentMessageClick"/>
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
                     <div class="o-mail-Message-sidebar d-flex flex-shrink-0" t-att-class="{ 'justify-content-end': isAlignedRight, 'align-items-start justify-content-start': !isAlignedRight  }">
-                        <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view" t-att-class="getAvatarContainerAttClass()">
+                        <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative" t-att-class="getAvatarContainerAttClass()">
                             <img class="o-mail-Message-avatar w-100 h-100 rounded" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
                         </div>
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
                         <t t-elif="!message.is_transient">
-                            <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted opacity-75 o-smaller mt-2">
+                            <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted opacity-75 smaller mt-2">
                                 <t t-esc="message.dateSimple"/>
                             </small>
                             <div t-else="">
@@ -32,13 +32,13 @@
                             </div>
                         </t>
                     </div>
-                    <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': message.composer }" t-ref="messageContent">
+                    <div class="w-100 min-w-0" t-att-class="{ 'flex-grow-1': message.composer }" t-ref="messageContent">
                         <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.is_note }">
                             <span t-if="authorName and shouldDisplayAuthorName" class="o-mail-Message-author" t-att-class="getAuthorAttClass()">
                                 <strong class="me-1 text-truncate" t-esc="authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
-                            <small t-if="!message.is_transient" class="o-mail-Message-date text-muted opacity-75 o-smaller" t-att-title="message.datetimeShort">
+                            <small t-if="!message.is_transient" class="o-mail-Message-date text-muted opacity-75 smaller" t-att-title="message.datetimeShort">
                                 <t t-if="shouldDisplayAuthorName">- </t>
                                 <t t-if="message.isPending" t-call="mail.Message.pendingStatus"/>
                                 <RelativeTime t-else="" datetime="message.datetime"/>
@@ -74,7 +74,7 @@
                                    'pe-2': env.inChatWindow and !isAlignedRight and composerViewInEditing,
                                    }"
                         >
-                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing, 'opacity-50': message.isPending, 'pt-1': message.is_note }">
+                            <div class="o-mail-Message-content min-w-0" t-att-class="{ 'w-100': state.isEditing, 'opacity-50': message.isPending, 'pt-1': message.is_note }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': state.isEditing }">
                                     <t t-if="message.message_type === 'notification' and message.body" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
                                     <t t-if="message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing)">
@@ -83,9 +83,9 @@
                                             <div class="position-relative overflow-x-auto d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
                                                 <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
                                                     'border': state.isEditing and !message.is_note,
-                                                    'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.is_note and !message.isHighlightedFromMention,
-                                                    'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.is_note and !message.isHighlightedFromMention,
-                                                    'bg-warning-light border border-warning opacity-50': message.isHighlightedFromMention,
+                                                    'bg-info border border-info': !message.isSelfAuthored and !message.is_note and !message.isHighlightedFromMention,
+                                                    'bg-success border border-success': message.isSelfAuthored and !message.is_note and !message.isHighlightedFromMention,
+                                                    'bg-warning border border-warning o-important': message.isHighlightedFromMention,
                                                     }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
                                                             'p-1': message.is_note,
@@ -120,7 +120,7 @@
                                     t-if="message.attachments.length > 0"
                                     attachments="message.attachments.map((a) => a)"
                                     unlinkAttachment.bind="onClickAttachmentUnlink"
-                                    imagesHeight="message.attachments.length === 1 ? 300 : 75"
+                                    imagesHeight="message.attachments.length === 1 ? 300 : 150"
                                     messageSearch="props.messageSearch"/>
                                 <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="deletable"/>
                             </div>
@@ -143,30 +143,32 @@
             'mt-1': !env.inChatWindow and !ui.isSmall and !message.is_note,
             'my-n2': message.is_note,
             'invisible': !isActive,
-            'o-expanded': optionsDropdown.isOpen
+            'o-expanded': optionsDropdown.isOpen,
         }"
     >
         <div class="d-flex rounded-1 overflow-hidden" t-att-class="{
                 'flex-row-reverse': env.inChatWindow and isAlignedRight,
+                'flex-row': !(env.inChatWindow and isAlignedRight),
                 'bg-view shadow-sm': env.inChatWindow,
+                'list-group list-group-flush': ui.isSmall,
             }"
         >
             <t t-foreach="messageActions.actions.slice(0, quickActionCount)" t-as="action" t-key="action.id">
                 <t t-if="action.callComponent" t-component="action.callComponent" t-props="action.props"/>
-                <button t-else="" class="btn px-1 py-0 rounded-0" t-att-title="action.title" t-att-name="action.id" t-on-click.stop="action.onClick">
-                    <i class="fa fa-lg" t-att-class="action.icon"/>
+                <button t-else="" class="btn py-0 rounded-0" t-att-class="{ 'list-group-item fs-4 px-1': ui.isSmall, 'px-1': !ui.isSmall }" t-att-title="action.title" t-att-name="action.id" t-on-click.stop="action.onClick">
+                    <i class="fa fa-lg" t-att-class="action.icon" t-attf-class="{{ ui.isSmall ? 'fa-fw': '' }}"/>
                 </button>
             </t>
             <div t-if="messageActions.actions.length gt quickActionCount" class="d-flex rounded-0">
-                <Dropdown state="optionsDropdown" position="props.message.threadAsNewest  ? 'top-start' : 'bottom-start'" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" >
-                    <button t-att-class="`btn p-0 rounded-0 ${ optionsDropdown.isOpen ? 'bg-200' : '' }`" t-att-title="expandText">
-                        <i class="btn px-1 py-0 fa fa-lg fa-ellipsis-h rounded-0" t-att-class="{ 'order-1': props.isInChatWindow }" tabindex="1"/>
+                <Dropdown state="optionsDropdown" position="props.message.threadAsNewest  ? 'top-start' : 'bottom-start'" menuClass="'d-flex flex-column p-1 o-mail-Message-moreMenu'" >
+                    <button class="btn p-0 rounded-0 border-0" t-att-class="{ 'bg-200': optionsDropdown.isOpen, 'list-group-item fs-4': ui.isSmall }" t-att-title="expandText">
+                        <i class="btn fa fa-lg fa-ellipsis-h rounded-0" t-att-class="{ 'order-1': props.isInChatWindow, 'fa-fw p-1': ui.isSmall, 'px-1 py-0': !ui.isSmall }" tabindex="1"/>
                     </button>
                     <t t-set-slot="content">
                         <t t-foreach="messageActions.actions.slice(quickActionCount)" t-as="action" t-key="action.id">
-                            <DropdownItem class="'px-2 d-flex align-items-center rounded-0'" onSelected="action.onClick" attrs="{ title: action.title}">
-                                <i class="fa fa-lg fa-fw pe-2" t-att-class="action.icon"/>
-                                <t t-esc="action.title"/>
+                            <DropdownItem class="'d-flex align-items-center rounded-0' + (ui.isSmall ? ' fs-4 p-2' : ' px-2') + ' ' + action.class" onSelected="action.onClick" attrs="{ 'aria-label': action.title}">
+                                <i class="fa fa-fw pe-2 me-1" t-att-class="action.icon" t-attf-class="{{ ui.isSmall ? 'fa-lg' : '' }}"/>
+                                <span t-att-class="{ 'small': !ui.isSmall }" t-esc="action.title"/>
                             </DropdownItem>
                         </t>
                     </t>

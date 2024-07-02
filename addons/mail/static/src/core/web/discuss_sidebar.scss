@@ -1,17 +1,44 @@
 .o-mail-DiscussSidebar {
     width: $o-mail-Discuss-inspector;
-    box-shadow: 1px 0px 6px -3px rgba(50, 50, 50, 0.15);
 }
 
 .o-mail-DiscussSidebar-badge {
     padding: 3px 6px;
 }
 
+.o-mail-DiscussSidebarChannel-commands, .o-mail-DiscussSidebarCategory {
+    button {
+        opacity: 75%;
+
+        &:hover {
+            opacity: 100%;
+        }
+    }
+}
+
 .o-mail-DiscussSidebar-item {
     &:hover {
-        background-color: mix($o-gray-100, $o-gray-200);
+        background-color: mix($o-gray-100, $o-gray-200, 75%);
+
+        .o-mail-DiscussSidebar-itemMain {
+            background-color: inherit !important;
+        }
+
+        .o-mail-DiscussSidebar-itemName {
+            opacity: 100% !important;
+        }
+        .o-mail-DiscussSidebar-itemAvatar {
+            box-shadow: $box-shadow-sm;
+        }
     }
     &.o-active {
-        background-color: mix($o-gray-100, $o-gray-200);
+        background-color: $o-gray-200;
+    }
+    &:not(.o-active) {
+        &:hover, &.o-unread {
+            .o-mail-DiscussSidebar-itemName {
+                font-weight: $font-weight-bold;
+            }
+        }
     }
 }

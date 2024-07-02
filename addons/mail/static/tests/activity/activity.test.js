@@ -71,7 +71,7 @@ test("activity can upload a document", async () => {
         }),
     ]);
     await contains(".o-mail-Activity .btn", { count: 0, text: "Upload Document" });
-    await contains("button[aria-label='Attach files']", { text: "1" });
+    await contains("button[aria-label='Attach Files']", { text: "1" });
 });
 
 test("activity simplest layout", async () => {

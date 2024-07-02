@@ -8,4 +8,10 @@ patch(ChatWindow.prototype, {
         super.setup(...arguments);
         this.actionService = useService("action");
     },
+    get attClass() {
+        return {
+            ...super.attClass,
+            border: true,
+        };
+    },
 });

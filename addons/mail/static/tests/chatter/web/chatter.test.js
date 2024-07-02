@@ -135,8 +135,8 @@ test("can post a note on a record thread", async () => {
 test("No attachment loading spinner when creating records", async () => {
     await start();
     await openFormView("res.partner");
-    await contains("button[aria-label='Attach files']");
-    await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });
+    await contains("button[aria-label='Attach Files']");
+    await contains("button[aria-label='Attach Files'] .fa-spin", { count: 0 });
 });
 
 test("No attachment loading spinner when switching from loading record to creation of record", async () => {
@@ -145,11 +145,11 @@ test("No attachment loading spinner when switching from loading record to creati
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John" });
     await openFormView("res.partner", partnerId);
-    await contains("button[aria-label='Attach files']");
+    await contains("button[aria-label='Attach Files']");
     await advanceTime(DELAY_FOR_SPINNER);
-    await contains("button[aria-label='Attach files'] .fa-spin");
+    await contains("button[aria-label='Attach Files'] .fa-spin");
     await click(".o_control_panel_main_buttons .o_form_button_create");
-    await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });
+    await contains("button[aria-label='Attach Files'] .fa-spin", { count: 0 });
 });
 
 test("Composer toggle state is kept when switching from aside to bottom", async () => {
@@ -381,10 +381,10 @@ test("show attachment box", async () => {
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter");
     await contains(".o-mail-Chatter-topbar");
-    await contains("button[aria-label='Attach files']");
-    await contains("button[aria-label='Attach files']", { text: "2" });
+    await contains("button[aria-label='Attach Files']");
+    await contains("button[aria-label='Attach Files']", { text: "2" });
     await contains(".o-mail-AttachmentBox", { count: 0 });
-    await click("button[aria-label='Attach files']");
+    await click("button[aria-label='Attach Files']");
     await contains(".o-mail-AttachmentBox");
 });
 
@@ -653,8 +653,8 @@ test("upload attachment on draft record", async () => {
                 <chatter/>
             </form>`,
     });
-    await contains("button[aria-label='Attach files']");
-    await contains("button[aria-label='Attach files']", { count: 0, text: "1" });
+    await contains("button[aria-label='Attach Files']");
+    await contains("button[aria-label='Attach Files']", { count: 0, text: "1" });
     const files = [
         await createFile({
             content: "hello, world",
@@ -664,7 +664,7 @@ test("upload attachment on draft record", async () => {
     ];
     await dragenterFiles(".o-mail-Chatter", files);
     await dropFiles(".o-mail-Dropzone", files);
-    await contains("button[aria-label='Attach files']", { text: "1" });
+    await contains("button[aria-label='Attach Files']", { text: "1" });
 });
 
 test("Follower count of draft record is set to 0", async () => {

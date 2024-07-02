@@ -79,6 +79,10 @@ export class DiscussSidebarCategories extends Component {
         );
     }
 
+    get isUnread() {
+        return this.thread.selfMember?.message_unread_counter > 0 && !this.thread.mute_until_dt;
+    }
+
     /**
      * @param {import("models").Thread} thread
      */

@@ -50,6 +50,7 @@ export class ChatWindow extends Component {
             actionsMenuOpened: false,
             jumpThreadPresent: 0,
             editingName: false,
+            focused: false,
         });
         this.ui = useState(useService("ui"));
         this.contentRef = useRef("content");
@@ -60,6 +61,17 @@ export class ChatWindow extends Component {
             inChatWindow: true,
             messageHighlight: this.messageHighlight,
         });
+    }
+
+    get attClass() {
+        return {
+            "w-100 h-100 o-mobile": this.ui.isSmall,
+            "o-focused": this.state.focused,
+            "o-folded": this.props.chatWindow.folded || this.props.chatWindow.hidden,
+            "position-fixed bottom-0 overflow-hidden d-flex flex-column":
+                !this.props.chatWindow.hidden,
+            "rounded-top-3": !this.props.chatWindow.hidden && !this.ui.isSmall,
+        };
     }
 
     get composerType() {

@@ -4,14 +4,14 @@
     max-height: Min(calc(#{ $o-dropdown-max-height } - 5px), 630px); // -5px for borders
 }
 
-.o-mail-MessagingMenu-header {
-    box-shadow: 0px 7px 7px -7px rgba(50, 50, 50, 0.15);
+.o-mail-MessagingMenu-list {
+    --border-color: #{mix($o-gray-100, $o-gray-200, 25%)} !important;
 }
 
 .o-mail-MessagingMenu-navbar, .o-mail-MessagingMenu-header {
     button {
         &.o-active {
-            background-color: mix($o-gray-100, $o-gray-200);
+            background-color: mix($o-gray-100, $o-gray-200, 75%);
         }
     }
 }

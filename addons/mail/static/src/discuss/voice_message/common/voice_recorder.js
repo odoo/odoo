@@ -47,6 +47,7 @@ export class VoiceRecorder extends Component {
         });
         this.notification = useService("notification");
         this.store = useState(useService("mail.store"));
+        this.ui = useState(useService("ui"));
         this.voiceMessageService = useState(useService("discuss.voice_message"));
         this.config = {
             // 128 or 160 kbit/s – mid-range bitrate quality

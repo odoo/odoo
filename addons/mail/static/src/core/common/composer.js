@@ -159,6 +159,9 @@ export class Composer extends Component {
         );
         useEffect(
             () => {
+                if (!this.ref.el) {
+                    return;
+                }
                 this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
                 this.saveContentDebounced();
             },
@@ -180,6 +183,13 @@ export class Composer extends Component {
                 this.restoreContent();
             }
         });
+    }
+
+    get emojiButtonAttClass() {
+        return {
+            "fs-4": this.ui.isSmall,
+            "bg-300": this.picker.state.picker === this.picker.PICKERS.EMOJI,
+        };
     }
 
     get pickerSettings() {
