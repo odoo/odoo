@@ -114,7 +114,7 @@ export class HtmlField extends Component {
             res_model: this.props.record.resModel,
             res_id: this.props.record.resId,
         };
-        onWillUpdateProps((newProps) => {
+        onWillUpdateProps(async (newProps) => {
             if (!newProps.readonly && !this.sandboxedPreview && this.state.iframeVisible) {
                 this.state.iframeVisible = false;
             }
@@ -127,6 +127,14 @@ export class HtmlField extends Component {
                 this.currentEditingValue = undefined;
             }
             this._lastRecordInfo = newRecordInfo;
+            // When record is created, create attachments for pending images.
+            if (this._pendingImages && newRecordInfo.res_id) {
+                this.wysiwyg.options.recordInfo.res_id = newRecordInfo.res_id;
+                delete this._pendingImages;
+                await this.wysiwyg.savePendingImages();
+                await this.updateValue();
+                this.props.record.save();
+            }
         });
         useEffect(() => {
             (async () => {
@@ -391,7 +399,14 @@ export class HtmlField extends Component {
             let savePendingImagesPromise, toInlinePromise;
             if (this.wysiwyg && this.wysiwyg.odooEditor) {
                 this.wysiwyg.odooEditor.observerUnactive('commitChanges');
-                savePendingImagesPromise = this.wysiwyg.savePendingImages();
+                if (this._lastRecordInfo.res_id) {
+                    savePendingImagesPromise = this.wysiwyg.savePendingImages();
+                } else {
+                    // New record does not have a res_id yet.
+                    // Postpone attachments creation to after record creation.
+                    savePendingImagesPromise = Promise.resolve();
+                    this._pendingImages = true;
+                }
                 if (this.props.isInlineStyle) {
                     // Avoid listening to changes made during the _toInline process.
                     toInlinePromise = this._toInline();
