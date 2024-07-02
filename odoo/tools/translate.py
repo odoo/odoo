@@ -160,6 +160,9 @@ TRANSLATED_ATTRS = dict.fromkeys({
     'value_label', 'data-tooltip', 'data-editor-message', 'label',
 }, lambda e: True)
 
+# Which elements (by CSS class) are translated inline.
+TRANSLATED_ELEMENTS_CLASSES = []
+
 def translate_attrib_value(node):
     # check if the value attribute of a node must be translated
     classes = node.attrib.get('class', '').split(' ')
@@ -179,6 +182,15 @@ TRANSLATED_ATTRS.update(
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
 
 
+def should_force_translatable_element(node):
+    # Some specific nodes (e.g., text highlights) have an auto-updated DOM
+    # structure that makes them impossible to translate. The introduction of a
+    # translation `<span>` in the middle of their hierarchy breaks their
+    # functionalities. The goal here is to force them to be translated as a
+    # whole using their CSS class selectors.
+    classes = node.attrib.get("class", "").split()
+    return any(translated_class in classes for translated_class in TRANSLATED_ELEMENTS_CLASSES)
+
 def translate_xml_node(node, callback, parse, serialize):
     """ Return the translation of the given XML/HTML node.
 
@@ -195,7 +207,8 @@ def translate_xml_node(node, callback, parse, serialize):
     def translatable(node):
         """ Return whether the given node can be translated as a whole. """
         return (
-            node.tag in TRANSLATED_ELEMENTS
+            should_force_translatable_element(node)
+            or node.tag in TRANSLATED_ELEMENTS
             and not any(key.startswith("t-") for key in node.attrib)
             and all(translatable(child) for child in node)
         )

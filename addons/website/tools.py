@@ -12,6 +12,8 @@ import odoo
 from odoo.tests.common import HttpCase, HOST
 from odoo.tools.misc import hmac, DotDict, frozendict
 
+# Force the text highlight effects to be translated as a whole.
+odoo.tools.translate.TRANSLATED_ELEMENTS_CLASSES.extend(["o_text_highlight"])
 
 @contextlib.contextmanager
 def MockRequest(
