@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import pytz
 from werkzeug.exceptions import NotFound
 
 from odoo import http, _
@@ -95,3 +96,51 @@ class EventController(Controller):
                 'company_name': request.env.company.name,
                 'company_id': request.env.company.id
             }
+
+    @http.route(['/event/<int:event_id>/timezone_converter'], type='http', auth="public", website=True)
+    def event_timezone_converter(self, event_id, selected_tz=False):
+
+        if not event_id:
+            raise NotFound()
+        event_sudo = request.env['event.event'].browse(event_id).exists().sudo()
+
+        # put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
+        tz_list = [(tz, tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
+
+        if selected_tz:
+            try:
+                visitor_tz = pytz.timezone(selected_tz)
+            except pytz.UnknownTimeZoneError:
+                selected_tz = False
+        if not selected_tz:
+            visitor_tz = pytz.timezone(request.env['website.visitor']._get_visitor_from_request().timezone)
+
+        render_params = {
+            'converted_datetime_begin': event_sudo.date_begin.astimezone(visitor_tz),
+            'converted_datetime_end': event_sudo.date_end.astimezone(visitor_tz),
+            'datetime_begin': event_sudo.date_begin.astimezone(pytz.timezone(event_sudo.date_tz)),
+            'datetime_end': event_sudo.date_end.astimezone(pytz.timezone(event_sudo.date_tz)),
+            'event_id': event_sudo.id,
+            'event_tz': event_sudo.date_tz,
+            'tz_list': tz_list,
+            'visitor_tz': visitor_tz.zone,
+        }
+        return request.render("event.timezone_converter", render_params)
+
+    @http.route(['/event/<int:event_id>/timezone_conversion'], type='json', auth="public", website=True)
+    def event_timezone_convertion(self, event_id, selected_tz):
+        if not event_id:
+            raise NotFound()
+        event_sudo = request.env['event.event'].browse(event_id).exists().sudo()
+
+        try:
+            visitor_tz = pytz.timezone(selected_tz)
+        except pytz.UnknownTimeZoneError:
+            raise NotFound()
+
+        return {
+            'converted_date_begin': event_sudo.date_begin.astimezone(visitor_tz).date(),
+            'converted_time_begin': event_sudo.date_begin.astimezone(visitor_tz).time(),
+            'converted_date_end': event_sudo.date_end.astimezone(visitor_tz).date(),
+            'converted_time_end': event_sudo.date_end.astimezone(visitor_tz).time(),
+        }

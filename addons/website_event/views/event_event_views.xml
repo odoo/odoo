@@ -47,6 +47,9 @@
                     <field name="community_menu" invisible="1"/>
                 </div>
             </xpath>
+            <xpath expr="//field[@name='event_url']" position="attributes">
+                <attribute name="required">False</attribute>
+            </xpath>
             <field name="tag_ids" position="attributes">
                 <attribute name="domain">['|', ('category_id.website_id', '=', website_id), ('category_id.website_id', '=', False)]</attribute>
                 <attribute name="invisible">not website_id</attribute>
