@@ -2679,15 +2679,16 @@ class Model(models.AbstractModel):
         """ Return an action to open given records.
             If there's more than one record, it will be a List, otherwise it's a Form.
             Given keyword arguments will overwrite default ones. """
-        if len(self) == 0:
-            length_dependent = {'views': [(False, 'form')]}
-        elif len(self) == 1:
-            length_dependent = {'views': [(False, 'form')], 'res_id': self.id}
-        else:
-            length_dependent = {
-                'views': [(False, 'list'), (False, 'form')],
-                'domain': [('id', 'in', self.ids)]
-            }
+        match self.ids:  # `self.ids` will silently filter out new records (`NewId`s)
+            case []:
+                length_dependent = {'views': [(False, 'form')]}
+            case [res_id]:
+                length_dependent = {'views': [(False, 'form')], 'res_id': res_id}
+            case ids:
+                length_dependent = {
+                    'views': [(False, 'list'), (False, 'form')],
+                    'domain': [('id', 'in', ids)]
+                }
         return {
             'type': 'ir.actions.act_window',
             'res_model': self._name,
