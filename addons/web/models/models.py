@@ -788,7 +788,7 @@ class Base(models.AbstractModel):
 
         if field.type == 'many2many':
             comodel_records = Comodel.search_read(comodel_domain, field_names, limit=limit)
-            if expand and limit and len(comodel_records) == limit:
+            if limit and len(comodel_records) == limit:
                 return {'error_msg': str(SEARCH_PANEL_ERROR_MESSAGE)}
 
             group_domain = kwargs.get('group_domain')
@@ -831,9 +831,6 @@ class Base(models.AbstractModel):
                     if enable_counters:
                         values['__count'] = count
                     field_range.append(values)
-
-            if not expand and limit and len(field_range) == limit:
-                return {'error_msg': str(SEARCH_PANEL_ERROR_MESSAGE)}
 
             return { 'values': field_range, }
 
