@@ -52,6 +52,7 @@ export class FormRenderer extends Component {
         activeNotebookPages: { type: Object, optional: true },
         saveRecord: { type: Function, optional: true },
         setFieldAsDirty: { type: Function, optional: true },
+        slots: { type: Object, optional: true },
     };
     static defaultProps = {
         activeNotebookPages: {},

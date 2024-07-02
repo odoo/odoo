@@ -191,8 +191,6 @@ export class FormController extends Component {
         };
         this.model = useState(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
 
-        this.cpButtonsRef = useRef("cpButtons");
-
         onMounted(() => {
             effect(
                 (model) => {

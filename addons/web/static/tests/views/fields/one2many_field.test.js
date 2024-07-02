@@ -12020,8 +12020,48 @@ test.tags("desktop")("one2many, form view dialog with custom footer", async () =
 
     // open it again
     await contains(".o_data_row td[name=name]").click();
+    expect(".modal-footer button").toHaveCount(0);
     expect(".modal-footer .my_span").toHaveCount(1);
 });
+
+test.tags("desktop")(
+    "one2many, form view dialog with added custom footer (replace='0')",
+    async () => {
+        Partner._records[0].p = [1];
+
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
+            <form>
+                <field name="p">
+                    <tree>
+                        <field name="name"/>
+                    </tree>
+                    <form>
+                        <field name="name"/>
+                        <footer replace="0">
+                            <button class="btn btn-primary my_button">Hello</button>
+                        </footer>
+                    </form>
+                </field>
+            </form>`,
+            resId: 1,
+        });
+
+        await contains(".o_data_row td[name=name]").click();
+        expect(".modal-footer .my_button").toHaveCount(1);
+        expect(".modal-footer button").toHaveCount(3);
+
+        await contains(".modal-header .btn-close").click();
+        expect(".modal").toHaveCount(0);
+
+        // open it again
+        await contains(".o_data_row td[name=name]").click();
+        expect(".modal-footer .my_button").toHaveCount(1);
+        expect(".modal-footer button").toHaveCount(3);
+    }
+);
 
 test('Add a line, click on "Save & New" with an invalid form', async () => {
     mockService("notification", {
