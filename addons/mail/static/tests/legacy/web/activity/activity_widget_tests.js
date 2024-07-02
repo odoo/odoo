@@ -379,6 +379,62 @@ test("list activity widget: open dropdown", async () => {
     await contains(".o-mail-ListActivity-summary", { text: "Meet FP" });
 });
 
+test("list activity widget: cancel an activity", async () => {
+    const pyEnv = await startServer();
+    const activityTypeId = pyEnv["mail.activity.type"].create([{}]);
+    const activityId = pyEnv["mail.activity"].create([
+        {
+            date_deadline: serializeDate(DateTime.now()),
+            can_write: true,
+            state: "today",
+            user_id: serverState.userId,
+            create_uid: serverState.userId,
+            activity_type_id: activityTypeId,
+        },
+    ]);
+    pyEnv["res.users"].write([serverState.userId], {
+        activity_ids: [activityId],
+        activity_state: "today",
+        activity_type_id: activityTypeId,
+    });
+    const views = {
+        "res.users,false,list": `
+            <list>
+                <field name="activity_ids" widget="list_activity"/>
+            </list>`,
+    };
+    const { openView } = await start({
+        mockRPC(route, args) {
+            if (args.method === "unlink") {
+                step(`${route} - ${JSON.stringify(args)}`);
+            }
+        },
+        serverData: { views },
+    });
+    await openView({
+        res_model: "res.users",
+        views: [[false, "list"]],
+    });
+
+    // Has activity scheduled
+    await contains(".o-mail-ActivityButton .fa-tasks");
+    await click(".o-mail-ActivityButton");
+    await click(".o-mail-ActivityListPopoverItem .o-mail-ActivityListPopoverItem-cancel");
+    await assertSteps([
+        `/web/dataset/call_kw/mail.activity/unlink - ${JSON.stringify({
+            model: "mail.activity",
+            method: "unlink",
+            args: [[activityId]],
+            kwargs: {
+                context: { lang: "en", tz: "taht", uid: serverState.userId },
+            },
+        })}`,
+    ]);
+
+    // Has no activity scheduled
+    await contains(".o-mail-ActivityButton .fa-clock-o");
+});
+
 test("list activity widget: batch selection from list", async (assert) => {
     function selectContaining(domElement, selector, containing) {
         return Array.from(domElement.querySelectorAll(selector)).filter((sel) =>
