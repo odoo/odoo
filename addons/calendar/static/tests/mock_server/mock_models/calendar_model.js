@@ -1,4 +1,5 @@
-import { fields, models, serverState } from "@web/../tests/web_test_helpers";
+import { defineMailModels, mailModels } from "@mail/../tests/mail_test_helpers";
+import { defineModels, fields, models, serverState } from "@web/../tests/web_test_helpers";
 
 export class CalendarEvent extends models.Model {
     _name = "calendar.event";
@@ -130,3 +131,16 @@ export class CalendarFilters extends models.Model {
         }
     ];
 }
+
+export function defineCalendarModels() {
+    defineMailModels();
+    defineModels(calendarModels);
+}
+
+export const calendarModels = {
+    CalendarEvent,
+    EventType,
+    ResUsers,
+    ResPartner,
+    CalendarFilters
+};

@@ -2,23 +2,19 @@ import { beforeEach, expect, test, describe } from "@odoo/hoot";
 import { mockDate, advanceTime } from "@odoo/hoot-mock";
 import {
     contains,
-    defineModels,
     mountView,
     onRpc,
+    webModels,
 } from "@web/../tests/web_test_helpers";
 import { click, queryAllTexts } from "@odoo/hoot-dom";
 import {
-    CalendarEvent,
-    EventType,
-    ResUsers,
+    defineCalendarModels,
     ResPartner,
-    CalendarFilters
 } from "@calendar/../tests/mock_server/mock_models/calendar_model";
 
-defineModels([CalendarEvent, EventType, ResUsers, ResPartner, CalendarFilters]);
 
+defineCalendarModels()
 describe.current.tags("desktop");
-
 beforeEach(() => {
     mockDate("2016-12-12T08:00:00", 1);
 });
@@ -33,23 +29,27 @@ const calendarFilterParams = {
         `,
 }
 
-onRpc(async ({ args, method, model }) => {
-    switch (method) {
-        case "get_attendee_detail":
-        return [];
-        case "check_synchronization_status":
-        return {};
-        case "get_default_duration":
-        return 3.25;
-    }
-});
-
 onRpc("/calendar/check_credentials", async (args) => {
     return Promise.resolve(true);
 });
 
 
 test(`Check the avatar of the attendee in the calendar filter panel autocomplete`, async () => {
+    onRpc(async (args) => {
+        if (args.method === "get_attendee_detail") {
+            return Promise.resolve([
+                { id: 1, name: "Jesus", status: "accepted", color: 0 },
+                { id: 2, name: "Mahomet", status: "tentative", color: 0 },
+            ]);
+        } else if (args.method === "check_synchronization_status") {
+            return Promise.resolve({});
+        } else if (args.method === "get_default_duration") {
+            return 3.25;
+        } else if (args.method == "check_credentials") {
+            return Promise.resolve(true);
+        }
+    });
+
     await mountView(calendarFilterParams);
 
     expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
@@ -69,12 +69,12 @@ test(`Check the avatar of the attendee in the calendar filter panel autocomplete
 test(`Select multiple attendees in the calendar filter panel autocomplete`, async () => {
     onRpc("has_group", () => true);
 
-    ResPartner._views = {
+    webModels.ResPartner._views = {
         list: `<tree><field name="name"/></tree>`,
         search: `<search/>`,
     };
 
-    ResPartner._records.push(
+    webModels.ResPartner._records.push(
         { id: 5, name: "foo partner 5" },
         { id: 6, name: "foo partner 6" },
         { id: 7, name: "foo partner 7" },
