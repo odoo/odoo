@@ -17,7 +17,16 @@ export function displayNotificationAction(env, action) {
     const links = (params.links || []).map((link) => {
         return `<a href="${escape(link.url)}" target="_blank">${escape(link.label)}</a>`;
     });
-    const message = markup(sprintf(escape(params.message), ...links));
+    const messageContent = sprintf(escape(params.message), ...links);
+    // conditionally prepend an icon to the message
+    const message = (() => {
+        if (params.icon) {
+            const icon = escape(params.icon);
+            return markup(`<span class="${icon}"></span> ${messageContent}`);
+        }
+        return markup(messageContent);
+    })();
+
     env.services.notification.add(message, options);
     return params.next;
 }
