@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 from odoo.exceptions import ValidationError
 
@@ -282,6 +283,42 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self.assertEqual(len(order_bis.order_line), 2, "You should get 1 regular product_B and 1 free product_B")
         order_bis._update_programs_and_rewards()
         self.assertEqual(len(order_bis.order_line), 2, "Free product from a coupon generated from a promotion program on next order should not dissapear")
+
+    def test_partner_assigned_to_next_order_coupon(self):
+        """ Test the assignment of a partner on coupons with program type `next_order_coupons`.
+
+        1. Create a loyalty program of type `next_order_coupons`.
+        2. Create a sale order and add a product to it.
+        3. Apply the loyalty program to the sale order.
+        4. Verify that the generated coupon is assigned to the order's partner.
+        """
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': '10% Discount on Next Order',
+            'program_type': 'next_order_coupons',
+            'applies_on': 'future',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({})],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+        })
+        order = self.empty_order.copy()
+        order.write({'order_line': [
+            Command.create({
+                'product_id': self.product_A.id,
+                'name': '1 Product A',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            })
+        ]})
+        generated_coupons = order._try_apply_program(loyalty_program).get('coupon')
+        self.assertTrue(generated_coupons, "A coupon should have been generated")
+        self.assertEqual(generated_coupons.partner_id, order.partner_id,
+            "The partner should be set on the coupon with program type 'next_order_coupons'"
+        )
 
     def test_edit_and_reapply_promotion_program(self):
         # The flow:

@@ -1117,7 +1117,7 @@ class SaleOrder(models.Model):
                 all_points = [p for p in all_points if p]
                 partner = False
                 # Loyalty programs and ewallets are nominative
-                if program.is_nominative:
+                if program.is_nominative or program.program_type == 'next_order_coupons':
                     partner = self.partner_id.id
                 coupons = self.env['loyalty.card'].sudo().with_context(loyalty_no_mail=True, tracking_disable=True).create([{
                     'program_id': program.id,
