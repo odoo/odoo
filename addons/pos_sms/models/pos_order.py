@@ -17,4 +17,5 @@ class PosOrder(models.Model):
                 'res_model': 'pos.order'
             }
         )
+        self.mobile = phone
         sms_composer.action_send_sms()
