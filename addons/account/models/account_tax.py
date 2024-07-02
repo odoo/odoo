@@ -937,7 +937,7 @@ class AccountTax(models.Model):
             }
 
         sorted_taxes = self.env['account.tax']
-        for tax in self.sorted():
+        for tax in self.sorted(key=lambda t: (t.sequence, t.id)):
             if tax.amount_type == 'group':
                 children = tax.children_tax_ids.sorted()
                 sorted_taxes |= children
