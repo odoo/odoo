@@ -117,6 +117,7 @@ export class Message extends Component {
         this.hasTouch = hasTouch;
         this.messageBody = useRef("body");
         this.messageActions = useMessageActions();
+        this.notification = useService("notification");
         this.store = useState(useService("mail.store"));
         this.shadowBody = useRef("shadowBody");
         this.dialog = useService("dialog");
@@ -275,6 +276,10 @@ export class Message extends Component {
         return Boolean(!this.message.is_transient && this.message.thread);
     }
 
+    get copyable() {
+        return Boolean(this.message.message_type);
+    }
+
     get deletable() {
         return this.editable;
     }
@@ -423,8 +428,23 @@ export class Message extends Component {
             }
             return;
         }
+        const messageLinkEl = ev.target.closest(".o_message_redirect");
+        if (
+            messageLinkEl &&
+            ((messageLinkEl.dataset.oeModel === "discuss.channel" &&
+                (this.store.self.type !== "guest" ||
+                    (this.message.thread?.model === "discuss.channel" &&
+                        this.message.thread?.id === Number(messageLinkEl.dataset.oeResId)))) ||
+                (messageLinkEl.dataset.oeModel !== "discuss.channel" &&
+                    this.store.self.type !== "guest" &&
+                    this.message.thread?.model === messageLinkEl.dataset.oeModel &&
+                    this.message.thread?.id === Number(messageLinkEl.dataset.oeResId)))
+        ) {
+            ev.preventDefault();
+            this.redirectMessage(messageLinkEl.dataset.oeId);
+        }
         if (ev.target.tagName === "A") {
-            if (model && id) {
+            if (model && id && !ev.target.closest(".o_message_redirect")) {
                 ev.preventDefault();
                 await this.env.services.action.doAction({
                     type: "ir.actions.act_window",
@@ -434,7 +454,7 @@ export class Message extends Component {
                 });
                 if (!this.env.isSmall) {
                     this.props.thread.open(true, {
-                        autofocus: false
+                        autofocus: false,
                     });
                 }
             }
@@ -456,6 +476,26 @@ export class Message extends Component {
                     { capture: true, once: true }
                 );
             }
+        }
+    }
+
+    async redirectMessage(messageId) {
+        const { threadData, error } = await rpc("/mail/message/redirect", {
+            message_id: messageId,
+        });
+        if (error) {
+            const errorMessage =
+                error === "Unauthorized"
+                    ? _t("You do not have access to this conversation.")
+                    : error === "NotFound"
+                    ? _t("This message no longer exists.")
+                    : _t("Something went wrong.");
+            this.notification.add(errorMessage, { type: "danger" });
+            return;
+        }
+        const [thread] = this.store.insert(threadData).Thread;
+        if (thread.model === "discuss.channel") {
+            thread.open();
         }
     }
 

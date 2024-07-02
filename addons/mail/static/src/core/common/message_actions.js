@@ -97,6 +97,13 @@ messageActionsRegistry
         title: (component) => (component.state.showTranslation ? _t("Revert") : _t("Translate")),
         onClick: (component) => component.onClickToggleTranslation(),
         sequence: 100,
+    })
+    .add("copy-link", {
+        condition: (component) => component.message.linkCopyable,
+        icon: "fa-link",
+        title: _t("Copy Message Link"),
+        onClick: (component) => component.message.copyLink(),
+        sequence: 110,
     });
 
 function transformAction(component, id, action) {

@@ -595,6 +595,34 @@ export async function mail_message_post(request) {
     return MailThread.message_post.call(model, [thread_id], { ...kwargs, model: thread_model });
 }
 
+registerRoute("/mail/message/redirect", mail_message_redirect);
+/** @type {RouteCallback} */
+async function mail_message_redirect(request) {
+    /** @type {import("mock_models").MailMessage} */
+    const MailMessage = this.env["mail.message"];
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+
+    const { message_id } = await parseRequestParams(request);
+    const [message] = MailMessage.search_read([["id", "=", Number(message_id)]]);
+    if (!message) {
+        return { error: "Unauthorized" };
+    }
+    if (!message.body) {
+        return { error: "NotFound" };
+    }
+    const res = {};
+    const threadData = { id: message.res_id, model: message.model };
+    const messageData = { id: message.id, thread: threadData };
+    Object.assign(res, {
+        Thread: [{ ...threadData, highlightMessage: messageData }],
+    });
+    if (message.model === "discuss.channel") {
+        Object.assign(res.Thread[0], DiscussChannel._channel_info([message.res_id])[0]);
+    }
+    return { threadData: res };
+}
+
 registerRoute("/mail/message/reaction", mail_message_add_reaction);
 /** @type {RouteCallback} */
 async function mail_message_add_reaction(request) {

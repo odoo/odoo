@@ -3,11 +3,12 @@
 import base64
 from markupsafe import Markup
 from unittest.mock import patch
+from werkzeug.urls import url_encode
 
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.exceptions import AccessError, UserError
-from odoo.tests.common import tagged, users
+from odoo.tests.common import tagged, users, HttpCase
 from odoo.tools import is_html_empty, mute_logger, formataddr
 
 
@@ -507,3 +508,111 @@ class TestMessageAccess(MailCommon):
 
         self.assertTrue(new_mail)
         self.assertEqual(new_msg.parent_id, message)
+
+
+@tagged("mail_message", "post_install", "-at_install")
+class TestMessageLinks(MailCommon, HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.user_employee_1 = mail_new_test_user(cls.env, login='tao', groups='base.group_user', name='Tao Lee')
+        cls.public_channel = cls.env['discuss.channel'].channel_create(name='Public Channel', group_id=None)
+        cls.private_group = cls.env['discuss.channel'].create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")
+
+    @users('employee')
+    def test_internal_message_lisk_by_employee(self):
+        [public_message, deleted_message] = self.env['mail.message'].create([
+            {
+                'body': 'Public Message',
+                'model': 'discuss.channel',
+                'res_id': self.public_channel.id,
+            },
+            {
+                'body': '',  # Represents an deleted message
+                'model': 'discuss.channel',
+                'res_id': self.public_channel.id,
+            },
+        ])
+        private_message_id = self.env['mail.message'].with_user(self.user_employee_1).create({
+            'body': 'Private Message',
+            'model': 'discuss.channel',
+            'res_id': self.private_group.id,
+        }).id
+        url = '/mail/message/redirect'
+        self.authenticate('employee', 'employee')
+        with self.subTest(message=public_message):
+            res = self.make_jsonrpc_request(url, {'message_id': public_message.id})
+            res = res['threadData']['Thread'][0]
+            expected_message = {'id': public_message.id, 'thread': {'id': public_message.res_id, 'model': public_message.model}}
+            self.assertEqual(res['id'], self.public_channel.id)
+            self.assertEqual(res['model'], 'discuss.channel')
+            self.assertEqual(res['highlightMessage'], expected_message)
+        for message_id, expected_error in [(deleted_message.id, 'NotFound'), (private_message_id, 'Unauthorized')]:
+            with self.subTest(message_id=message_id):
+                res = self.make_jsonrpc_request(url, {'message_id': message_id})
+                self.assertEqual(res, {'error': expected_error})
+
+    @users('employee')
+    def test_external_message_link_by_employee(self):
+        record1 = self.env['mail.test.simple'].create({'name': 'Test1'})
+        [thread_message, channel_message, deleted_message] = self.env['mail.message'].create([
+            {
+                'body': 'Thread Message',
+                'model': 'mail.test.simple',
+                'res_id': record1.id,
+            },
+            {
+                'body': 'Public Channel Message',
+                'model': 'discuss.channel',
+                'res_id': self.public_channel.id,
+            },
+            {
+                'body': '',  # Represents an deleted message
+                'model': 'mail.test.simple',
+                'res_id': record1.id,
+            },
+        ])
+        private_message_id = self.env['mail.message'].with_user(self.user_employee_1).create({
+            'body': 'body',
+            'model': 'discuss.channel',
+            'res_id': self.private_group.id,
+        }).id
+        self.authenticate('employee', 'employee')
+        with self.subTest(thread_message=thread_message):
+            url_params = {
+                'active_id': thread_message.res_id,
+                'highlight_message_id': thread_message.id,
+                'model': thread_message.model,
+                'id': thread_message.res_id,
+                'view_type': 'form',
+            }
+            expected_url = self.base_url() + '/web#%s' % url_encode(url_params)
+            res = self.url_open(f'/mail/{thread_message.model}/{thread_message.res_id}/message/{thread_message.id}')
+            self.assertEqual(res.url, expected_url)
+        with self.subTest(channel_message=channel_message):
+            url_params = {
+                'active_id': channel_message.res_id,
+                'highlight_message_id': channel_message.id,
+                'action': 'mail.action_discuss',
+            }
+            expected_url = self.base_url() + '/web#%s' % url_encode(url_params)
+            res = self.url_open(f'/mail/{channel_message.model}/{channel_message.res_id}/message/{channel_message.id}')
+            self.assertEqual(res.url, expected_url)
+        with self.subTest(deleted_message=deleted_message):
+            res = self.url_open(f'/mail/{deleted_message.model}/{deleted_message.res_id}/message/{deleted_message.id}')
+            self.assertEqual(res.status_code, 404)
+        with self.subTest(private_message_id=private_message_id):
+            res = self.url_open(f'/mail/discuss.channel/{self.private_group.id}/message/{private_message_id}')
+            self.assertEqual(res.status_code, 401)
+
+    @users('employee')
+    def test_message_link_by_public(self):
+        message = self.public_channel.message_post(
+            body='Public Channel Message',
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment'
+        )
+        res = self.url_open(f'/mail/{message.model}/{message.res_id}/message/{message.id}')
+        self.assertEqual(res.status_code, 200)

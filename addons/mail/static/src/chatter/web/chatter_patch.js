@@ -43,6 +43,7 @@ Chatter.props.push(
     "hasParentReloadOnAttachmentsChanged?",
     "hasParentReloadOnFollowersUpdate?",
     "hasParentReloadOnMessagePosted?",
+    "highlightMessageId?",
     "isAttachmentBoxVisibleInitially?",
     "isChatterAside?",
     "isInFormSheetBg?",
@@ -303,6 +304,16 @@ patch(Chatter.prototype, {
         document.body.click(); // hack to close dropdown
         this.reloadParentView();
         this.load(thread, ["followers", "suggestedRecipients"]);
+    },
+
+    _onMounted() {
+        super._onMounted();
+        if (this.state.thread && this.props.highlightMessageId) {
+            this.state.thread.highlightMessage = {
+                id: this.props.highlightMessageId,
+                thread: this.state.thread,
+            };
+        }
     },
 
     onPostCallback() {
