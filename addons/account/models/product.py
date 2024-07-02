@@ -216,34 +216,11 @@ class ProductProduct(models.Model):
                 return product_price_unit
 
             product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
-
-        flattened_taxes_after_fp = product_taxes_after_fp._origin.flatten_taxes_hierarchy()
-        flattened_taxes_before_fp = product_taxes._origin.flatten_taxes_hierarchy()
-        taxes_before_included = all(tax.price_include for tax in flattened_taxes_before_fp)
-
-        if set(product_taxes.ids) != set(product_taxes_after_fp.ids) and taxes_before_included:
-            taxes_res = flattened_taxes_before_fp.with_context(round=False, round_base=False).compute_all(
+            product_price_unit = self.env['account.tax']._adapt_price_unit_to_another_taxes(
                 product_price_unit,
-                quantity=1.0,
-                currency=currency,
-                product=self,
-                is_refund=is_refund_document,
+                product_taxes._convert_to_dict_for_taxes_computation(),
+                product_taxes_after_fp._convert_to_dict_for_taxes_computation(),
             )
-            product_price_unit = taxes_res['total_excluded']
-
-            if any(tax.price_include for tax in flattened_taxes_after_fp):
-                taxes_res = flattened_taxes_after_fp.with_context(round=False, round_base=False).compute_all(
-                    product_price_unit,
-                    quantity=1.0,
-                    currency=currency,
-                    product=self,
-                    is_refund=is_refund_document,
-                    handle_price_include=False,
-                )
-                for tax_res in taxes_res['taxes']:
-                    tax = self.env['account.tax'].browse(tax_res['id'])
-                    if tax.price_include:
-                        product_price_unit += tax_res['amount']
 
         return product_price_unit
 

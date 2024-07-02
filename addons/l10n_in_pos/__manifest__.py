@@ -17,6 +17,7 @@
     'auto_install': True,
     'assets': {
         'point_of_sale._assets_pos': [
+            'l10n_in/static/src/helpers/hsn_summary.js',
             'l10n_in_pos/static/src/**/*',
         ],
     },

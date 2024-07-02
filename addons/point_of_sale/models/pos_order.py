@@ -697,7 +697,7 @@ class PosOrder(models.Model):
 
         # Concert each order line to a dictionary containing business values. Also, prepare for taxes computation.
         base_line_vals_list = self._prepare_tax_base_line_values(sign=-1)
-        tax_results = self.env['account.tax']._compute_taxes(base_line_vals_list)
+        tax_results = self.env['account.tax']._compute_taxes(base_line_vals_list, self.company_id)
 
         total_balance = 0.0
         total_amount_currency = 0.0

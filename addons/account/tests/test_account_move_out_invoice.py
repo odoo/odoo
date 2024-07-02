@@ -1531,7 +1531,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
 
     def test_out_invoice_line_onchange_currency_1(self):
-        move_form = Form(self.invoice.with_context(dudu=True))
+        move_form = Form(self.invoice)
         move_form.currency_id = self.currency_data['currency']
         move_form.save()
 

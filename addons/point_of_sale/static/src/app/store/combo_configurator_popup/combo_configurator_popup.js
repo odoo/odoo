@@ -28,8 +28,9 @@ export class ComboConfiguratorPopup extends AbstractAwaitablePopup {
         if (floatIsZero(combo_price)) {
             return "";
         } else {
-            const product = this.pos.db.product_by_id[comboLine.product_id[0]];
-            return this.env.utils.formatCurrency(product.get_display_price({ price: combo_price }));
+            const product = comboLine.product_id;
+            const price = this.pos.getProductPrice(product, combo_price);
+            return this.env.utils.formatCurrency(price);
         }
     }
 

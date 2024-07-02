@@ -901,7 +901,8 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                 Command.create({
                     'name': 'line3',
                     'account_id': self.company_data['default_account_revenue'].id,
-                    'price_unit': -400.0,
+                    'price_unit': 400.0,
+                    'quantity': -1,
                     'tax_ids': [Command.set(fixed_tax.ids)],
                 }),
             ]

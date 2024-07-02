@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 
-from odoo import models, fields, _
+from odoo import api, fields, models, _
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
 
@@ -29,33 +30,43 @@ class AccountTaxPython(models.Model):
             ":param product: product.product recordset singleton or None\n"
             ":param partner: res.partner recordset singleton or None")
 
-    def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None, fixed_multiplicator=1):
-        self.ensure_one()
-        if product and product._name == 'product.template':
-            product = product.product_variant_id
-        if self.amount_type == 'code':
-            company = self.env.company
-            localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
-            try:
-                safe_eval(self.python_compute, localdict, mode="exec", nocopy=True)
-            except Exception as e:
-                raise UserError(_("You entered invalid code %r in %r taxes\n\nError : %s", self.python_compute, self.name, e)) from e
-            return localdict['result']
-        return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner, fixed_multiplicator)
-
-    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True, include_caba_tags=False, fixed_multiplicator=1):
-        if product and product._name == 'product.template':
-            product = product.product_variant_id
-
-        def is_applicable_tax(tax, company=self.env.company):
-            if tax.amount_type == 'code':
-                localdict = {'price_unit': price_unit, 'quantity': quantity, 'product': product, 'partner': partner, 'company': company}
-                try:
-                    safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
-                except Exception as e:
-                    raise UserError(_("You entered invalid code %r in %r taxes\n\nError : %s", tax.python_applicable, tax.name, e)) from e
-                return localdict.get('result', False)
-
+    @api.model
+    def _process_as_fixed_tax_amount_batch(self, batch):
+        # EXTENDS 'account'
+        if batch['amount_type'] == 'code':
             return True
+        return super()._process_as_fixed_tax_amount_batch(batch)
 
-        return super(AccountTaxPython, self.filtered(is_applicable_tax)).compute_all(price_unit, currency, quantity, product, partner, is_refund=is_refund, handle_price_include=handle_price_include, include_caba_tags=include_caba_tags, fixed_multiplicator=fixed_multiplicator)
+    @api.model
+    def _eval_tax_amount(self, tax_values, evaluation_context):
+        # EXTENDS 'account'
+        amount_type = tax_values['amount_type']
+        if amount_type == 'code':
+            tax = self.browse(tax_values['id'])
+            raw_base = (evaluation_context['quantity'] * evaluation_context['price_unit']) + evaluation_context['extra_base']
+            local_dict = {**evaluation_context, 'base_amount': raw_base}
+            json.dumps(local_dict)  # Ensure it contains only json serializable data (security).
+            try:
+                safe_eval(tax.python_applicable, local_dict, mode="exec", nocopy=True)
+            except Exception as e:
+                raise UserError(_(
+                    "You entered invalid code %r in %r taxes\n\nError : %s",
+                    tax.python_applicable,
+                    tax_values['name'],
+                    e
+                )) from e
+            is_applicable = local_dict.get('result', False)
+            if not is_applicable:
+                return
+
+            try:
+                safe_eval(tax.python_compute, local_dict, mode="exec", nocopy=True)
+            except Exception as e:
+                raise UserError(_(
+                    "You entered invalid code %r in %r taxes\n\nError : %s",
+                    tax.python_compute,
+                    tax_values['name'],
+                    e
+                )) from e
+            return local_dict.get('result', 0.0)
+        return super()._eval_tax_amount(tax_values, evaluation_context)

@@ -1104,7 +1104,7 @@ patch(Order.prototype, {
             if (!line.get_quantity()) {
                 continue;
             }
-            const taxKey = line.get_taxes().map((t) => t.id);
+            const taxKey = line.getTaxIds();
             discountable += line.get_price_with_tax();
             if (!discountablePerTax[taxKey]) {
                 discountablePerTax[taxKey] = 0;
@@ -1137,7 +1137,7 @@ patch(Order.prototype, {
         if (!cheapestLine) {
             return { discountable: 0, discountablePerTax: {} };
         }
-        const taxKey = cheapestLine.get_taxes().map((t) => t.id);
+        const taxKey = cheapestLine.getTaxIds();
         return {
             discountable: cheapestLine.price,
             discountablePerTax: Object.fromEntries([[taxKey, cheapestLine.price]]),
@@ -1231,11 +1231,11 @@ patch(Order.prototype, {
                     (line) => !linesToDiscount.includes(line)
                 );
                 const discountedAmounts = lines.reduce((map, line) => {
-                    map[line.get_taxes().map((t) => t.id)];
+                    map[line.getTaxIds()];
                     return map;
                 }, {});
                 const process = (line) => {
-                    const key = line.get_taxes().map((t) => t.id);
+                    const key = line.getTaxIds();
                     if (!discountedAmounts[key] || line.reward_id) {
                         return;
                     }
@@ -1253,7 +1253,7 @@ patch(Order.prototype, {
         const discountablePerTax = {};
         for (const line of linesToDiscount) {
             discountable += remainingAmountPerLine[line.cid];
-            const taxKey = line.get_taxes().map((t) => t.id);
+            const taxKey = line.getTaxIds();
             if (!discountablePerTax[taxKey]) {
                 discountablePerTax[taxKey] = 0;
             }

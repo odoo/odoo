@@ -627,12 +627,12 @@ class TestSalePrices(SaleCommon):
             tax_exclude_dst,
         ) = self.env['account.tax'].create([{
             'name': "fixed include",
-            'amount': '10.00',
+            'amount': 10.00,
             'amount_type': 'fixed',
             'price_include': True,
         }, {
             'name': "fixed exclude",
-            'amount': '10.00',
+            'amount': 10.00,
             'amount_type': 'fixed',
             'price_include': False,
         }, {
@@ -778,7 +778,7 @@ class TestSalePrices(SaleCommon):
             line.product_id = product_tmpl_c.product_variant_id
             line.product_uom_qty = 1.0
         sale_order = order_form.save()
-        self.assertRecordValues(sale_order.order_line, [{'price_unit': 100, 'price_subtotal': 84.91}])
+        self.assertRecordValues(sale_order.order_line, [{'price_unit': 100, 'price_subtotal': 84.34}])
 
         # Test Mapping (excluded,included) to (excluded, excluded)
         order_form = Form(SaleOrder)
