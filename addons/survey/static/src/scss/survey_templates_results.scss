@@ -9,8 +9,15 @@
     .tab-content > .tab-pane {
         display: block;
     }
+    .toPrint {
+        white-space: pre-wrap;
+    }
     html {
         height: unset;
+    }
+    @page {
+        size: portrait; // force paper orientation to portrait
+        margin: 0px; // default margins to center the elements and to avoid any overflow
     }
 }
 
