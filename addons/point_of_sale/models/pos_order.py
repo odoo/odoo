@@ -643,7 +643,7 @@ class PosOrder(models.Model):
         self.ensure_one()
         invoice = self.env['account.move'].sudo()\
             .with_company(self.company_id)\
-            .with_context(default_move_type=move_vals['move_type'])\
+            .with_context(default_move_type=move_vals['move_type'], linked_to_pos=True)\
             .create(move_vals)
 
         if self.config_id.cash_rounding:
