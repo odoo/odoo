@@ -51,6 +51,8 @@ import {
     getCursorDirection,
     padLinkWithZws,
     isLinkEligibleForZwnbsp,
+    lastLeaf,
+    firstLeaf,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
@@ -156,6 +158,9 @@ export const editorCommands = {
             editor.deleteRange(selection);
         }
         const range = selection.getRangeAt(0);
+        const block = closestBlock(selection.anchorNode);
+        const isSelectionAtStart = firstLeaf(block) === selection.anchorNode && selection.anchorOffset === 0;
+        const isSelectionAtEnd = lastLeaf(block) === selection.focusNode && selection.focusOffset === nodeSize(selection.focusNode);
         if (range.startContainer.nodeType === Node.TEXT_NODE) {
             insertBefore = !range.startOffset;
             splitTextNode(range.startContainer, range.startOffset, DIRECTIONS.LEFT);
@@ -180,25 +185,55 @@ export const editorCommands = {
         }
 
         startNode = startNode || editor.document.getSelection().anchorNode;
+        const isBlockElement = (node) => isBlock(node) && !['TABLE', 'UL', 'OL', 'DIV'].includes(node.nodeName);
+        const shouldUnwrapBlock = (node) => (
+            block.nodeName === node.nodeName || ['BLOCKQUOTE', 'PRE'].includes(block.nodeName)
+        );
+        const direction = block.getAttribute('dir');
+
+        // Empty block must contain a br element.
+        if (
+            container.lastElementChild &&
+            isBlockElement(container.lastElementChild) &&
+            !container.lastElementChild.hasChildNodes()
+        ) {
+            container.lastElementChild.appendChild(document.createElement('br'));
+        }
 
         // In case the html inserted is all contained in a single root <p> or <li>
         // tag, we take the all content of the <p> or <li> and avoid inserting the
         // <p> or <li>. The same is true for a <pre> inside a <pre>.
-        if (container.childElementCount === 1 && (
-            container.firstChild.nodeName === 'P' ||
-            container.firstChild.nodeName === 'LI' ||
-            container.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
-        )) {
+        if (
+            container.childElementCount === 1 &&
+            (
+                ['P', 'LI'].includes(container.firstChild.nodeName) ||
+                shouldUnwrapBlock(container.firstChild)
+            )
+        ) {
             const p = container.firstElementChild;
             container.replaceChildren(...p.childNodes);
         } else if (container.childElementCount > 1) {
             // Grab the content of the first child block and isolate it.
-            if (isBlock(container.firstChild) && !['TABLE', 'UL', 'OL'].includes(container.firstChild.nodeName)) {
+            if (
+                isBlockElement(container.firstChild) &&
+                (
+                    (shouldUnwrapBlock(container.firstChild) && !isSelectionAtStart) ||
+                    !isBlockElement(block)
+                ) &&
+                !isEmptyBlock(container.firstChild)
+            ) {
                 containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
                 container.firstElementChild.remove();
             }
             // Grab the content of the last child block and isolate it.
-            if (isBlock(container.lastChild) && !['TABLE', 'UL', 'OL'].includes(container.lastChild.nodeName)) {
+            if (
+                isBlockElement(container.lastChild) &&
+                (
+                    (shouldUnwrapBlock(container.lastChild) && !isSelectionAtEnd) ||
+                    !isBlockElement(block)
+                ) &&
+                !isEmptyBlock(container.lastChild)
+            ) {
                 containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
                 container.lastElementChild.remove();
             }
@@ -276,17 +311,36 @@ export const editorCommands = {
                     }
                     if (offset) {
                         const [left, right] = splitElement(currentNode.parentElement, offset);
+                        if (isUnbreakable(nodeToInsert) && container.childNodes.length === 1) {
+                            fillEmpty(right);
+                        } else if (isEmptyBlock(right)) {
+                            right.remove();
+                        }
                         currentNode = insertBefore ? right : left;
                     } else {
                         currentNode = currentNode.parentElement;
                     }
                 }
             }
+            if (direction && nodeToInsert.nodeType === Node.ELEMENT_NODE) {
+                nodeToInsert.setAttribute('dir', direction);
+            }
             if (insertBefore) {
                 currentNode.before(nodeToInsert);
                 insertBefore = false;
             } else {
                 currentNode.after(nodeToInsert);
+            }
+            if (['BLOCKQUOTE', 'PRE'].includes(block.nodeName) && isBlockElement(nodeToInsert)) {
+                if (nodeToInsert.nodeName === 'LI') {
+                    const leafNode = firstLeaf(nodeToInsert);
+                    const nodeToConvert = closestBlock(leafNode);
+                    const newNode = setTagName(nodeToConvert, block.nodeName);
+                    unwrapContents(nodeToInsert);
+                    nodeToInsert = newNode;
+                } else {
+                    nodeToInsert = setTagName(nodeToInsert, block.nodeName);
+                }
             }
             if (currentNode.tagName !== 'BR' && isShrunkBlock(currentNode)) {
                 currentNode.remove();
@@ -295,6 +349,14 @@ export const editorCommands = {
         }
 
         currentNode = lastChildNode || currentNode;
+        if (
+            currentNode.nodeName !== 'BR' &&
+            currentNode.nextSibling &&
+            currentNode.nextSibling.nodeName === 'BR' &&
+            lastLeaf(currentNode.parentNode) === currentNode.nextSibling
+        ) {
+            currentNode.nextSibling.remove();
+        }
         selection.removeAllRanges();
         const newRange = new Range();
         let lastPosition;
@@ -303,7 +365,7 @@ export const editorCommands = {
             currentNode = currentNode.nextSibling;
             lastPosition = getDeepestPosition(...rightPos(currentNode));
         } else {
-            lastPosition = rightPos(currentNode);
+            lastPosition = isBlockElement(currentNode) ? rightPos(lastLeaf(currentNode)) : rightPos(currentNode);
         }
         if (lastPosition[0] === editor.editable) {
             // Correct the position if it happens to be in the editable root.

@@ -11,7 +11,7 @@ describe('Paste HTML tables', () => {
     describe('From Microsoft Excel Online', async () => {
         it('should keep all allowed style (Excel Online)', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>[]</p>',
+                contentBefore: '<p>[]<br></p>',
                 stepFunction: async editor => {
                     await pasteHtml(editor,
 `<div ccp_infra_version='3' ccp_infra_timestamp='1684505961078' ccp_infra_user_hash='540904553' ccp_infra_copy_id=''
@@ -252,7 +252,7 @@ describe('Paste HTML tables', () => {
     describe('From Google Sheets', async () => {
         it('should keep all allowed style (Google Sheets)', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>[]</p>',
+                contentBefore: '<p>[]<br></p>',
                 stepFunction: async editor => {
                     await pasteHtml(editor,
 `<google-sheets-html-origin>
