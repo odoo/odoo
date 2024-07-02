@@ -45,7 +45,20 @@ function getPieConfiguration(chart, labels, locale) {
     const legend = {
         ...config.options.legend,
         display: chart.legendPosition !== "none",
-        labels: { fontColor },
+        labels: {
+            fontColor,
+            usePointStyle: true,
+            generateLabels: (_chart) =>
+                _chart.data.labels.map((label, index) => ({
+                    text: label,
+                    strokeStyle: _chart.data.datasets[0].backgroundColor[index],
+                    fillStyle: _chart.data.datasets[0].backgroundColor[index],
+                    pointStyle: "rect",
+                    hidden: false,
+                    lineWidth: 2,
+                })
+            ),
+        },
     };
     legend.position = chart.legendPosition;
     config.options.plugins = config.options.plugins || {};

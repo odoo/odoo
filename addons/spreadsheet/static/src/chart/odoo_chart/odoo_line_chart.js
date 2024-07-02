@@ -94,14 +94,17 @@ function getLineConfiguration(chart, labels, locale) {
         display: chart.legendPosition !== "none",
         labels: {
             color: fontColor,
-            generateLabels(chart) {
-                const { data } = chart;
-                const labels = window.Chart.defaults.plugins.legend.labels.generateLabels(chart);
-                for (const [index, label] of labels.entries()) {
-                    label.fillStyle = data.datasets[index].borderColor;
-                }
-                return labels;
-            },
+            usePointStyle: true,
+            generateLabels: (_chart) =>
+                _chart.data.datasets.map((dataset, index) => ({
+                    text: dataset.label ?? "",
+                    strokeStyle: dataset.borderColor,
+                    fillStyle: dataset.backgroundColor,
+                    pointStyle,
+                    hidden: !_chart.isDatasetVisible(index),
+                    lineWidth,
+                })
+            ),
         },
     };
     legend.position = chart.legendPosition;
