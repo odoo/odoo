@@ -22,6 +22,7 @@ import requests
 from PIL import Image
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat, parse_version
@@ -1375,6 +1376,17 @@ class Import(models.TransientModel):
             import_set_empty_fields=options.get('import_set_empty_fields', []),
             import_skip_records=options.get('import_skip_records', []),
             _import_limit=import_limit)
+        fix_import_fields = [models.fix_import_export_id_paths(f) for f in import_fields]
+        invalid_fields = []
+        valid_fields = model._fields.keys()
+        for field in fix_import_fields:
+            invalid_fields += [f for f in field if not f in valid_fields]
+        if invalid_fields:
+            raise ValidationError(_(
+                "The '%(field)s' fields you given in the import file are not valid fields on the '%(model)s' model",
+                field=[', '.join(invalid_fields)],
+                model=model
+            ))
         import_result = model.load(import_fields, merged_data)
         _logger.info('done')
 
