@@ -26,5 +26,6 @@
                 <t t-out="content" />
             </div>
         </div>
+        <div class="o_tour_dropzone position-fixed pe-none" t-if="props.pointerState.isVisible and props.pointerState.isZone" t-ref="zone" style="border: 3px dashed #714b67;"/>
     </t>
 </templates>

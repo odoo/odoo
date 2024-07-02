@@ -1,8 +1,18 @@
 /** @odoo-module **/
 import * as hoot from "@odoo/hoot-dom";
 import { markup } from "@odoo/owl";
+import { isMacOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { utils } from "@web/core/ui/ui_service";
+
+/**
+ * @typedef {string | (actions: RunningTourActionHelper) => void | Promise<void>} RunCommand
+ *
+ * @typedef ConsumeEvent
+ * @property {string} name
+ * @property {Element} target
+ * @property {(ev: Event) => boolean} conditional
+ */
 
 /**
  * Calls the given `func` then returns/resolves to `true`
@@ -28,67 +38,150 @@ export function callWithUnloadCheck(func, ...args) {
 }
 
 /**
+ *
+ * @param {TourStep} step
+ * @returns {{
+ *  event: string,
+ *  anchor: string,
+ *  altAnchor: string | undefined,
+ * }[]}
+ */
+export function getSubActions(step) {
+    const actions = [];
+    if (!step.run || typeof step.run === "function") {
+        return [];
+    }
+
+    for (const todo of step.run.split("&&")) {
+        const m = String(todo)
+            .trim()
+            .match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
+
+        const a = m.groups?.action;
+        const anchor = m.groups?.arguments || step.trigger;
+        if (a === "drag_and_drop") {
+            actions.push({
+                event: "drag",
+                anchor: step.trigger,
+            });
+            actions.push({
+                event: "drop",
+                anchor,
+            });
+        } else {
+            actions.push({
+                event: a,
+                anchor: a === "edit" ? step.trigger : anchor,
+                altAnchor: step.alt_trigger,
+            });
+        }
+    }
+
+    return actions;
+}
+
+/**
  * @param {HTMLElement} [element]
  * @param {RunCommand} [runCommand]
- * @returns {string}
+ * @returns {ConsumeEvent[]}
  */
 export function getConsumeEventType(element, runCommand) {
-    if (!element) {
-        return "click";
-    }
-    const { classList, tagName, type } = element;
-    const tag = tagName.toLowerCase();
+    const consumeEvents = [];
+    if (runCommand === "click") {
+        consumeEvents.push({
+            name: "click",
+            target: element,
+        });
 
-    // Many2one
-    if (classList.contains("o_field_many2one")) {
-        return "autocompleteselect";
+        // Use the hotkey should also consume
+        if (element.hasAttribute("data-hotkey")) {
+            consumeEvents.push({
+                name: "keydown",
+                target: element,
+                conditional: (ev) =>
+                    ev.key === element.getAttribute("data-hotkey") &&
+                    (isMacOS() ? ev.ctrlKey : ev.altKey),
+            });
+        }
+
+        // Click on a field widget with an autocomplete should be also completed with a selection though Enter or Tab
+        // This case is for the steps that click on field_widget
+        if (element.querySelector(".o-autocomplete--input")) {
+            consumeEvents.push({
+                name: "keydown",
+                target: element.querySelector(".o-autocomplete--input"),
+                conditional: (ev) =>
+                    ["Tab", "Enter"].includes(ev.key) &&
+                    ev.target.parentElement.querySelector(
+                        ".o-autocomplete--dropdown-item .ui-state-active"
+                    ),
+            });
+        }
+
+        // Click on an element of a dropdown should be also completed with a selection though Enter or Tab
+        // This case is for the steps that click on a dropdown-item
+        if (element.closest(".o-autocomplete--dropdown-menu")) {
+            consumeEvents.push({
+                name: "keydown",
+                target: element.closest(".o-autocomplete").querySelector("input"),
+                conditional: (ev) => ["Tab", "Enter"].includes(ev.key),
+            });
+        }
+
+        // Press enter on a button do the same as a click
+        if (element.tagName === "BUTTON") {
+            consumeEvents.push({
+                name: "keydown",
+                target: element,
+                conditional: (ev) => ev.key === "Enter",
+            });
+
+            // Pressing enter in the input group does the same as clicking on the button
+            if (element.closest(".input-group")) {
+                for (const inputEl of element.parentElement.querySelectorAll("input")) {
+                    consumeEvents.push({
+                        name: "keydown",
+                        target: inputEl,
+                        conditional: (ev) => ev.key === "Enter",
+                    });
+                }
+            }
+        }
     }
 
-    // Inputs and textareas
-    if (
-        tag === "textarea" ||
-        (tag === "input" &&
-            (!type ||
-                [
-                    "email",
-                    "number",
-                    "password",
-                    "search",
-                    "tel",
-                    "text",
-                    "url",
-                    "date",
-                    "range",
-                ].includes(type)))
-    ) {
+    if (["fill", "edit"].includes(runCommand)) {
         if (
             utils.isSmall() &&
             element.closest(".o_field_widget")?.matches(".o_field_many2one, .o_field_many2many")
         ) {
-            return "click";
+            consumeEvents.push({
+                name: "click",
+                target: element,
+            });
+        } else {
+            consumeEvents.push({
+                name: "input",
+                target: element,
+            });
         }
-        return "input";
     }
 
     // Drag & drop run command
-    if (typeof runCommand === "string" && /^drag_and_drop/.test(runCommand)) {
-        // this is a heuristic: the element has to be dragged and dropped but it
-        // doesn't have class 'ui-draggable-handle', so we check if it has an
-        // ui-sortable parent, and if so, we conclude that its event type is 'sort'
-        if (element.closest(".ui-sortable")) {
-            return "sort";
-        }
-        if (
-            (/^drag_and_drop_native/.test(runCommand) && classList.contains("o_draggable")) ||
-            element.closest(".o_draggable") ||
-            element.draggable
-        ) {
-            return "pointerdown";
-        }
+    if (runCommand === "drag") {
+        consumeEvents.push({
+            name: "pointerdown",
+            target: element,
+        });
     }
 
-    // Default: click
-    return "click";
+    if (runCommand === "drop") {
+        consumeEvents.push({
+            name: "pointerup",
+            target: element,
+        });
+    }
+
+    return consumeEvents;
 }
 /**
  * @param {HTMLElement} element

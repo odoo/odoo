@@ -20,6 +20,7 @@ import { getScrollParent } from "./tour_utils";
  * @property {() => {}} [onMouseEnter]
  * @property {() => {}} [onMouseLeave]
  * @property {boolean} isVisible
+ * @property {boolean} isZone
  * @property {Direction} position
  * @property {number} rev
  *
@@ -100,8 +101,9 @@ export function createPointerState() {
     /**
      * @param {TourStep} step
      * @param {HTMLElement} [anchor]
+     * @param {boolean} [isZone] will border de zone. e.g.: a dropzone
      */
-    const pointTo = (anchor, step) => {
+    const pointTo = (anchor, step, isZone) => {
         intersection.setTarget(anchor);
         if (anchor) {
             let { position, content } = step;
@@ -114,7 +116,7 @@ export function createPointerState() {
                     if (document.body.contains(floatingAnchor)) {
                         floatingAnchor.remove();
                     }
-                    setState({ anchor, content, onClick: null, position, isVisible: true });
+                    setState({ anchor, content, isZone, onClick: null, position, isVisible: true });
                     break;
                 }
                 default: {
@@ -125,7 +127,14 @@ export function createPointerState() {
 
                     const scrollParent = getScrollParent(anchor);
                     if (!scrollParent) {
-                        setState({ anchor, content, onClick: null, position, isVisible: true });
+                        setState({
+                            anchor,
+                            content,
+                            isZone,
+                            onClick: null,
+                            position,
+                            isVisible: true,
+                        });
                         return;
                     }
                     const { x, y, width, height } = scrollParent.getBoundingClientRect();
@@ -147,6 +156,7 @@ export function createPointerState() {
                         content,
                         onClick,
                         position,
+                        isZone,
                         isVisible: true,
                     });
                 }

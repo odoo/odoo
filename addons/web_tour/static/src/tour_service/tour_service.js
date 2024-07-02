@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
 import { config as transitionConfig } from "@web/core/transition";
 import { session } from "@web/session";
 import { TourPointer } from "../tour_pointer/tour_pointer";
-import { compileStepAuto, compileStepManual, compileTourToMacro } from "./tour_compilers";
+import { compileTourToMacro } from "./tour_compilers";
 import { createPointerState } from "./tour_pointer_state";
 import { tourState } from "./tour_state";
 import { callWithUnloadCheck } from "./tour_utils";
@@ -51,7 +51,7 @@ import { callWithUnloadCheck } from "./tour_utils";
  * @property {string} [consumeEvent] Only in manual mode (onboarding tour). It's the event we want the customer to do.
  * @property {boolean} [mobile] When true, step will only trigger in mobile view.
  * @property {string} [title]
- * @property {string|false|undefined} [shadow_dom] By default, trigger nodes are selected in the main document node 
+ * @property {string|false|undefined} [shadow_dom] By default, trigger nodes are selected in the main document node
  * but this property forces to search in a shadowRoot document.
 
  * @typedef {"manual" | "auto"} TourMode
@@ -190,8 +190,8 @@ export const tourService = {
                     methods.destroy();
                 },
                 ...methods,
-                async pointTo(anchor, step) {
-                    possiblePointTos.push([tourName, () => methods.pointTo(anchor, step)]);
+                async pointTo(anchor, step, isZone) {
+                    possiblePointTos.push([tourName, () => methods.pointTo(anchor, step, isZone)]);
                     await Promise.resolve();
                     // only done once per macro advance
                     if (!possiblePointTos.length) {
@@ -234,18 +234,14 @@ export const tourService = {
             pointer,
             { mode, stepDelay, keepWatchBrowser, showPointerDuration }
         ) {
-            // IMPROVEMENTS: Custom step compiler. Will probably require decoupling from `mode`.
-            const stepCompiler = mode === "auto" ? compileStepAuto : compileStepManual;
-            const checkDelay = mode === "auto" ? tour.checkDelay : 100;
             const filteredSteps = tour.steps;
             return compileTourToMacro(tour, {
                 filteredSteps,
-                stepCompiler,
+                mode,
                 pointer,
                 stepDelay,
                 keepWatchBrowser,
                 showPointerDuration,
-                checkDelay,
                 onStepConsummed(tour, step) {
                     bus.trigger("STEP-CONSUMMED", { tour, step });
                 },
@@ -336,7 +332,7 @@ export const tourService = {
             const macro = convertToMacro(tour, pointer, options);
             const willUnload = callWithUnloadCheck(() => {
                 if (tour.url && tour.url !== options.startUrl && options.redirect) {
-                    window.location.href = window.location.origin + tour.url;
+                    browser.location.href = browser.location.origin + tour.url;
                 }
             });
             if (!willUnload) {

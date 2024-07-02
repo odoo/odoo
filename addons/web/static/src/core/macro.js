@@ -9,6 +9,10 @@ import { Mutex } from "@web/core/utils/concurrency";
  * - Current step index won't be incremented.
  * @property {string | (el: Element, step: MacroStep) => undefined | string} [action]
  * @property {*} [*] - any payload to the step.
+ *
+ * @typedef MacroDescriptor
+ * @property {() => Element | undefined | [el: Element, proceedToBackward: boolean]} trigger
+ * @property {() => {}} action
  */
 
 export const ACTION_HELPERS = {
@@ -65,7 +69,16 @@ class Macro {
             return;
         }
         const step = this.steps[this.currentIndex];
-        const [proceedToAction, el] = this.checkTrigger(step);
+        const [proceedToAction, el, proceedToBackward] = this.checkTrigger(step);
+
+        if (proceedToBackward && this.currentIndex > 1) {
+            do {
+                this.currentIndex--;
+            } while (this.currentIndex > 1 && !this.steps[this.currentIndex].trigger);
+            this.setTimer();
+            await this.advance();
+        }
+
         if (proceedToAction) {
             this.safeCall(this.onStep, el, step);
             const actionResult = await this.performAction(el, step);
@@ -85,12 +98,13 @@ class Macro {
     }
 
     /**
-     * Find the trigger and assess whether it can continue on performing the actions.
-     * @param {{ trigger: string | () => Element | null }} param0
-     * @returns {[proceedToAction: boolean; el: Element | undefined]}
+     * Find the trigger and assess whether it can continue on performing the actions or has to go backward.
+     * @param {{ trigger: string | Function }} param0
+     * @returns {[proceedToAction: boolean; el: Element | undefined, proceedToBackward: boolean]}
      */
     checkTrigger({ trigger }) {
         let el;
+        let backward;
 
         if (!trigger) {
             return [true, el];
@@ -98,6 +112,9 @@ class Macro {
 
         if (typeof trigger === "function") {
             el = this.safeCall(trigger);
+            if (Array.isArray(el)) {
+                [el, backward] = el;
+            }
         } else if (typeof trigger === "string") {
             const triggerEl = document.querySelector(trigger);
             el = isVisible(triggerEl) && triggerEl;
@@ -106,9 +123,9 @@ class Macro {
         }
 
         if (el) {
-            return [true, el];
+            return [true, el, backward];
         } else {
-            return [false, el];
+            return [false, el, backward];
         }
     }
 
