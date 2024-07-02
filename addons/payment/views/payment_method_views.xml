@@ -12,32 +12,34 @@
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Name"/></h1>
                     </div>
-                    <group>
-                        <field name="code" readonly="id" groups="base.group_no_one"/>
-                        <field name="primary_payment_method_id" invisible="is_primary"/>
-                        <field name="active"/>
-                        <label for="supported_country_ids"/>
-                        <div>
-                            <field name="supported_country_ids"
-                                   class="oe_inline"
-                                   widget="many2many_tags"
-                                   readonly="1"
-                            />
-                            <span class="oe_inline text-muted" invisible="supported_country_ids">
-                                All countries are supported.
-                            </span>
-                        </div>
-                        <label for="supported_currency_ids"/>
-                        <div>
-                            <field name="supported_currency_ids"
-                                   class="oe_inline"
-                                   widget="many2many_tags"
-                                   readonly="1"
-                            />
-                            <span class="oe_inline text-muted" invisible="supported_currency_ids">
-                                All currencies are supported.
-                            </span>
-                        </div>
+                    <group name="payment_method_configuration">
+                        <group>
+                            <field name="code" readonly="id" groups="base.group_no_one"/>
+                            <field name="primary_payment_method_id" invisible="is_primary"/>
+                            <field name="active"/>
+                            <label for="supported_country_ids"/>
+                            <div>
+                                <field name="supported_country_ids"
+                                    class="oe_inline"
+                                    widget="many2many_tags"
+                                    readonly="1"
+                                />
+                                <span class="oe_inline text-muted" invisible="supported_country_ids">
+                                    All countries are supported.
+                                </span>
+                            </div>
+                            <label for="supported_currency_ids"/>
+                            <div>
+                                <field name="supported_currency_ids"
+                                    class="oe_inline"
+                                    widget="many2many_tags"
+                                    readonly="1"
+                                />
+                                <span class="oe_inline text-muted" invisible="supported_currency_ids">
+                                    All currencies are supported.
+                                </span>
+                            </div>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Providers" name="providers">
