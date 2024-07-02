@@ -423,9 +423,9 @@ class IoTboxHomepage(Home):
         """ Reboots the IoT Box / restarts Odoo on it depending on chosen 'action' argument"""
         try:
             if action == 'restart_odoo':
-                helpers.odoo_restart(3)
+                helpers.odoo_restart()
             else:
-                subprocess.call(['sudo', 'reboot'])
+                helpers.restart_iot_box()
             return 'success'
         except Exception as e:
             _logger.error('An error encountered : %s ', e)

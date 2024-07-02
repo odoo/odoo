@@ -38,16 +38,31 @@ def send_to_controller(device_type, params):
 def on_message(ws, messages):
     """
         When a message is receive, this function is triggered
-        The message is load and if its type is 'iot_action', is sent to the device
+        The message is load and if its type is 'iot_device_action', is sent to the device
+        If the message type is 'iot_box_action', an action is executed on the box directly
     """
     messages = json.loads(messages)
     for message in messages:
-        if (message['message']['type'] == 'iot_action'):
-            payload = message['message']['payload']
-            if helpers.get_mac_address() in payload['iotDevice']['iotIdentifiers']:
-                for device in payload['iotDevice']['identifiers']:
-                    if device['identifier'] in main.iot_devices:
-                        main.iot_devices[device["identifier"]].action(payload)
+        if (message['message']['type'] == 'iot_device_action'):
+            on_device_action_message(message)
+        if (message['message']['type'] == 'iot_box_action'):
+            on_box_action_message(message)
+
+
+def on_device_action_message(message):
+    payload = message['message']['payload']
+    if helpers.get_mac_address() in payload['iotDevice']['iotIdentifiers']:
+        for device in payload['iotDevice']['identifiers']:
+            if device['identifier'] in main.iot_devices:
+                main.iot_devices[device["identifier"]].action(payload)
+
+
+def on_box_action_message(message):
+    action = message['message']['payload']['action']
+    if action == 'reboot_box':
+        helpers.restart_iot_box()
+    if action == 'restart_odoo':
+        helpers.odoo_restart()
 
 
 def on_error(ws, error):
