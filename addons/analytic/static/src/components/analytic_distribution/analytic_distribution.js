@@ -605,14 +605,16 @@ export class AnalyticDistribution extends Component {
     }
 
     onWindowClick(ev) {
-        //TODO: dragging the search more dialog should not close the popup either
-        const modal = document.querySelector('.modal:not(.o_inactive_modal)');
-        const clickedInSearchMoreDialog = modal && modal.querySelector('.o_list_view') && modal.contains(ev.target);
-        const clickedInKanbanSelectorDialog = modal && modal.querySelector('.o_kanban_view') && modal.contains(ev.target);
+        //FIX: Prevent editor closing when using command palette
+        const selectors = [
+            ".o_popover",
+            ".o_modal:not(.o_inactive_modal) .o_list_view, .o_modal:not(.o_inactive_modal) .o_kanban_view",
+            ".o_dialog:not(.o_inactive_modal)",
+        ];
         if (this.isDropdownOpen
             && !this.widgetRef.el.contains(ev.target)
-            && !clickedInSearchMoreDialog
-            && !clickedInKanbanSelectorDialog
+            && !ev.target.closest(selectors.join(","))
+            && !ev.target.isSameNode(document.documentElement) // this fixes closing on modal dragging
            ) {
             this.forceCloseEditor();
         }
