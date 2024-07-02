@@ -185,7 +185,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         bom_kit = self.env['mrp.bom']._bom_find(self, bom_type='phantom')[self]
         if bom_kit:
-            boms, bom_sub_lines = bom_kit.explode(self, 1)
+            _boms, bom_sub_lines = bom_kit.explode(self, 1)
             return [bom_line.product_id.id for bom_line, data in bom_sub_lines if bom_line.product_id.is_storable]
         else:
             return super(ProductProduct, self).get_components()
@@ -260,7 +260,7 @@ class ProductProduct(models.Model):
                         # to avoid a division by zero. The same logic is applied to non-storable products as those
                         # products have 0 qty available.
                         continue
-                    uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
+                    uom_qty_per_kit = bom_line_data['qty']
                     qty_per_kit += bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False, raise_if_failure=False)
                 if not qty_per_kit:
                     continue
@@ -283,11 +283,11 @@ class ProductProduct(models.Model):
                 ratios_free_qty.append(component_res["free_qty"] / qty_per_kit)
             if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
                 res[product.id] = {
-                    'virtual_available': min(ratios_virtual_available) * bom_kits[product].product_qty // 1,
-                    'qty_available': min(ratios_qty_available) * bom_kits[product].product_qty // 1,
-                    'incoming_qty': min(ratios_incoming_qty) * bom_kits[product].product_qty // 1,
-                    'outgoing_qty': min(ratios_outgoing_qty) * bom_kits[product].product_qty // 1,
-                    'free_qty': min(ratios_free_qty) * bom_kits[product].product_qty // 1,
+                    'virtual_available': min(ratios_virtual_available) // 1,
+                    'qty_available': min(ratios_qty_available) // 1,
+                    'incoming_qty': min(ratios_incoming_qty) // 1,
+                    'outgoing_qty': min(ratios_outgoing_qty) // 1,
+                    'free_qty': min(ratios_free_qty) // 1,
                 }
             else:
                 res[product.id] = {
@@ -320,7 +320,7 @@ class ProductProduct(models.Model):
         bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom')
         components = self - self.env['product.product'].concat(*list(bom_kits.keys()))
         for product in bom_kits:
-            boms, bom_sub_lines = bom_kits[product].explode(product, 1)
+            _boms, bom_sub_lines = bom_kits[product].explode(product, 1)
             components |= self.env['product.product'].concat(*[l[0].product_id for l in bom_sub_lines])
         res = super(ProductProduct, components).action_open_quants()
         if bom_kits:
