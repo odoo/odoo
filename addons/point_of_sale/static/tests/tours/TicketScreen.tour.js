@@ -189,4 +189,16 @@ odoo.define('point_of_sale.tour.TicketScreen', function (require) {
 
     Tour.register('LotRefundTour', { test: true, url: '/pos/ui' }, getSteps());
 
+    startSteps();
+
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.do.clickHomeCategory();
+    ProductScreen.do.clickDisplayedProduct("Test Product");
+    ProductScreen.check.checkTaxAmount("9.09");
+    ProductScreen.check.totalAmountIs("100.00");
+    ProductScreen.do.changeFiscalPosition("test fp");
+    ProductScreen.check.totalAmountIs("100.00");
+    ProductScreen.check.checkTaxAmount("4.76");
+
+    Tour.register("FiscalPositionTwoTaxIncluded", { test: true, url: "/pos/ui" }, getSteps());
 });
