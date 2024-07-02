@@ -373,7 +373,7 @@ class HrEmployeePrivate(models.Model):
         return res
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None):
         """
             We override the _search because it is the method that checks the access rights
             This is correct to override the _search. That way we enforce the fact that calling
@@ -383,9 +383,9 @@ class HrEmployeePrivate(models.Model):
             employees exactly match the ids of the related hr.employee.
         """
         if self.check_access_rights('read', raise_exception=False):
-            return super()._search(domain, offset, limit, order, access_rights_uid)
+            return super()._search(domain, offset, limit, order)
         try:
-            ids = self.env['hr.employee.public']._search(domain, offset, limit, order, access_rights_uid)
+            ids = self.env['hr.employee.public']._search(domain, offset, limit, order)
         except ValueError:
             raise AccessError(_('You do not have access to this document.'))
         # the result is expected from this table, so we should link tables

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, SUPERUSER_ID
+from odoo import models, fields, api
 
 class test_model(models.Model):
     _name = 'test_converter.test_model'
@@ -30,7 +30,7 @@ class test_model(models.Model):
 
     @api.model
     def _gbf_m2o(self, subs, domain):
-        sub_ids = subs._search([], order=subs._order, access_rights_uid=SUPERUSER_ID)
+        sub_ids = subs.sudo()._search([], order=subs._order)
         return subs.browse(sub_ids)
 
 

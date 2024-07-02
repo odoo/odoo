@@ -4,13 +4,12 @@
 import logging
 import pytz
 import threading
-from ast import literal_eval
 from collections import OrderedDict, defaultdict
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from markupsafe import Markup
 from psycopg2 import sql
 
-from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo import api, fields, models, tools
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import mail_validation
 from odoo.addons.phone_validation.tools import phone_validation
@@ -956,7 +955,7 @@ class Lead(models.Model):
             search_domain = ['|', ('id', 'in', stages.ids), ('team_id', '=', False)]
 
         # perform search
-        stage_ids = stages._search(search_domain, order=stages._order, access_rights_uid=SUPERUSER_ID)
+        stage_ids = stages.sudo()._search(search_domain, order=stages._order)
         return stages.browse(stage_ids)
 
     def _stage_find(self, team_id=False, domain=None, order='sequence, id', limit=1):
