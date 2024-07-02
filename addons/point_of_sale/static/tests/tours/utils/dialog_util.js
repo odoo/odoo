@@ -6,7 +6,7 @@ export function confirm(confirmationText, button = ".btn-primary") {
         trigger += `:contains("${confirmationText}")`;
     }
     return {
-        content: "confirm dialog",
+        content: `confirm dialog${confirmationText ? " with text " + confirmationText : ""}`,
         in_modal: true,
         trigger,
         run: "click",

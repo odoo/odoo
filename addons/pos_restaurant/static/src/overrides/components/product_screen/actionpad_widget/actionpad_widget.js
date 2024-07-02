@@ -12,6 +12,9 @@ patch(ActionpadWidget.prototype, {
             clicked: false,
         });
     },
+    canOrder() {
+        return !this.currentOrder.isRefund();
+    },
     get swapButton() {
         return this.props.actionType === "payment" && this.pos.config.module_pos_restaurant;
     },
@@ -48,9 +51,10 @@ patch(ActionpadWidget.prototype, {
     },
     get highlightPay() {
         return (
-            this.currentOrder?.lines?.length &&
-            !this.hasChangesToPrint &&
-            this.hasQuantity(this.currentOrder)
+            this.currentOrder.isRefund ||
+            (this.currentOrder?.lines?.length &&
+                !this.hasChangesToPrint &&
+                this.hasQuantity(this.currentOrder))
         );
     },
     get displayCategoryCount() {

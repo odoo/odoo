@@ -33,3 +33,13 @@ export function endTour() {
         trigger: "body",
     };
 }
+export function newOrder() {
+    return {
+        content: "create new order",
+        trigger: ".pos-topheader button i.fa-plus-circle",
+    };
+}
+export const openTab = (order) => ({
+    content: `Open the tab ( the draft order ) with tracking number ${order}`,
+    trigger: `pos-topheader button.tab:contains(${order})`,
+});

@@ -157,15 +157,14 @@ export function useIsChildLarger(childRefName) {
     const state = useState({
         isLarger: false,
     });
+    const resizeObserver = new ResizeObserver(([entry]) => {
+        state.isLarger = entry.target.scrollWidth > entry.target.parentElement.clientWidth;
+    });
     useEffect(
         (child) => {
-            const updateDimensions = () => {
-                state.isLarger = child.el.scrollWidth > child.el.parentElement.clientWidth;
-            };
-            updateDimensions();
-            window.addEventListener("resize", updateDimensions);
+            resizeObserver.observe(child.el);
             return () => {
-                window.removeEventListener("resize", updateDimensions);
+                resizeObserver.disconnect();
             };
         },
         () => [child]

@@ -448,6 +448,11 @@ class PosOrder(models.Model):
             vals = self._complete_values_from_session(session, vals)
         return super().create(vals_list)
 
+    # def unlink(self):
+        # for order in self:
+            # order.config_id._notify('ORDER_UNLINKED', {'id': order.id})
+        # super().unlink()
+
     @api.model
     def _complete_values_from_session(self, session, values):
         if values.get('state') and values['state'] == 'paid' and not values.get('name'):
@@ -1052,16 +1057,18 @@ class PosOrder(models.Model):
         return refund_orders
 
     def refund(self):
-        return {
-            'name': _('Return Products'),
-            'view_mode': 'form',
-            'res_model': 'pos.order',
-            'res_id': self._refund().ids[0],
-            'view_id': False,
-            'context': self.env.context,
-            'type': 'ir.actions.act_window',
-            'target': 'current',
-        }
+        return self._refund().ids
+    # def refund(self):
+    #     return {
+    #         'name': _('Return Products'),
+    #         'view_mode': 'form',
+    #         'res_model': 'pos.order',
+    #         'res_id': self._refund().ids[0],
+    #         'view_id': False,
+    #         'context': self.env.context,
+    #         'type': 'ir.actions.act_window',
+    #         'target': 'current',
+    #     }
 
     def _add_mail_attachment(self, name, ticket):
         filename = 'Receipt-' + name + '.jpg'
@@ -1189,6 +1196,7 @@ class PosOrderLine(models.Model):
     refunded_qty = fields.Float('Refunded Quantity', compute='_compute_refund_qty', help='Number of items refunded in this orderline.')
     uuid = fields.Char(string='Uuid', readonly=True, copy=False)
     note = fields.Char('Internal Note')
+    order_state = fields.Selection(related='order_id.state', string='Order State', readonly=True)
 
     combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent') # FIXME rename to parent_line_id
     combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines') # FIXME rename to child_line_ids
@@ -1231,7 +1239,8 @@ class PosOrderLine(models.Model):
         self.ensure_one()
         return {
             'name': self.name + _(' REFUND'),
-            'qty': -(self.qty - self.refunded_qty),
+            # 'qty': -(self.qty - self.refunded_qty),
+            'qty': 0,
             'order_id': refund_order.id,
             'price_subtotal': -self.price_subtotal,
             'price_subtotal_incl': -self.price_subtotal_incl,
@@ -1480,6 +1489,16 @@ class PosOrderLine(models.Model):
                 }
             )
         return base_line_vals_list
+
+    # def action_decrease_quantity(self):
+    #     self.ensure_one()
+    #     self.qty -= 1
+    #     self.order_id._onchange_amount_all()
+
+    # def action_increase_quantity(self):
+    #     self.ensure_one()
+    #     self.qty += 1
+    #     self.order_id._onchange_amount_all()
 
 
 class PosOrderLineLot(models.Model):

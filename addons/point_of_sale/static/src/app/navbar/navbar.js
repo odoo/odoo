@@ -9,10 +9,8 @@ import {
 } from "@point_of_sale/app/navbar/sale_details_button/sale_details_button";
 import { SyncNotification } from "@point_of_sale/app/navbar/sync_notification/sync_notification";
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
-import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { Component, onMounted, useState } from "@odoo/owl";
 import { ClosePosPopup } from "@point_of_sale/app/navbar/closing_popup/closing_popup";
-import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/webclient/barcode/barcode_scanner";
@@ -21,6 +19,10 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { deduceUrl } from "@point_of_sale/utils";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { user } from "@web/core/user";
+import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
+import { ListContainer } from "@point_of_sale/app/generic_components/list_container";
+import { TextInputPopup } from "../utils/input_popups/text_input_popup";
+import { _t } from "@web/core/l10n/translation";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -33,6 +35,7 @@ export class Navbar extends Component {
         Input,
         Dropdown,
         DropdownItem,
+        ListContainer,
     };
     static props = {};
     setup() {
@@ -42,6 +45,7 @@ export class Navbar extends Component {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
         this.hardwareProxy = useService("hardware_proxy");
+        this.action = useService("action");
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
         onMounted(async () => {
             this.isSystemUser = await user.hasGroup("base.group_system");
@@ -62,25 +66,44 @@ export class Navbar extends Component {
         this.dialog.add(CashMovePopup);
     }
     async onClickBackButton() {
-        if (this.pos.mainScreen.component === TicketScreen) {
-            if (this.pos.ticket_screen_mobile_pane == "left") {
-                this.pos.closeScreen();
-            } else {
-                this.pos.ticket_screen_mobile_pane = "left";
-            }
-        } else if (
+        if (
             this.pos.mobile_pane == "left" ||
-            this.pos.mainScreen.component === PaymentScreen
+            [PaymentScreen, ActionScreen].includes(this.pos.mainScreen.component)
         ) {
             this.pos.mobile_pane = "right";
             this.pos.showScreen("ProductScreen");
         }
     }
-
-    get orderCount() {
-        return this.pos.get_open_orders().length;
+    showTabs() {
+        return true;
     }
-
+    newFloatingOrder() {
+        this.pos.add_new_order();
+        this.pos.showScreen("ProductScreen");
+    }
+    selectFloatingOrder(order) {
+        this.pos.set_order(order);
+        this.pos.showScreen("ProductScreen");
+    }
+    getFloatingOrders() {
+        return this.pos.get_open_orders().filter((order) => !order.table_id);
+    }
+    editOrderNote(order) {
+        this.dialog.add(TextInputPopup, {
+            title: _t("Edit order note"),
+            placeholder: _t("Emma's Birthday Party"),
+            startingValue: order.note || "",
+            getPayload: async (newName) => {
+                if (typeof order.id == "number") {
+                    this.pos.data.write("pos.order", [order.id], {
+                        note: newName,
+                    });
+                } else {
+                    order.note = newName;
+                }
+            },
+        });
+    }
     async closeSession() {
         const info = await this.pos.getClosePosInfo();
         await this.pos.data.resetIndexedDB();

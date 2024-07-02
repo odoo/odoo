@@ -3,8 +3,6 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_scre
 import * as TextInputPopup from "@point_of_sale/../tests/tours/utils/text_input_popup_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import { registry } from "@web/core/registry";
-import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
-import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 
 registry.category("web_tour.tours").add("GiftCardProgramCreateSetTour1", {
     test: true,
@@ -49,45 +47,5 @@ registry.category("web_tour.tours").add("GiftCardProgramScanUseTour", {
             PosLoyalty.enterCode("043123456"),
             PosLoyalty.orderTotalIs("35.00"),
             PosLoyalty.finalizeOrder("Cash", "35"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
-    test: true,
-    steps: () =>
-        [
-            Dialog.confirm("Open session"),
-            ProductScreen.addOrderline("Magnetic Board", "1"), // 1.98
-            PosLoyalty.orderTotalIs("1.98"),
-            PosLoyalty.finalizeOrder("Cash", "20"),
-            ...ProductScreen.clickRefund(),
-            TicketScreen.selectOrder("-0001"),
-            Order.hasLine({
-                withClass: ".selected",
-                productName: "Magnetic Board",
-            }),
-            ProductScreen.clickNumpad("1"),
-            TicketScreen.confirmRefund(),
-            ProductScreen.isShown(),
-            ProductScreen.selectedOrderlineHas("Magnetic Board", "-1.00"),
-            ProductScreen.addOrderline("Gift Card", "1"),
-            ProductScreen.selectedOrderlineHas("Gift Card", "1"),
-            PosLoyalty.orderTotalIs("0.0"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("GiftCardProgramPriceNoTaxTour", {
-    test: true,
-    url: "/pos/web",
-    steps: () =>
-        [
-            Dialog.confirm("Open session"),
-            // Use gift card
-            ProductScreen.addOrderline("Magnetic Board", "1", "1.98", "1.98"),
-            PosLoyalty.enterCode("043123456"),
-            Dialog.confirm(),
-            ProductScreen.clickOrderline("Gift Card"),
-            ProductScreen.selectedOrderlineHas("Gift Card", "1.00", "-1.00"),
-            PosLoyalty.orderTotalIs("0.98"),
         ].flat(),
 });

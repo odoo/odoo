@@ -46,10 +46,6 @@
                                 <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
                                 New Order
                             </button>
-                            <button t-if="isResumeVisible()" class="button next validation btn btn-primary w-100 py-5 rounded-0 fs-2" t-att-class="{ highlight: !locked }" t-on-click="resumeOrder" name="resume">
-                                <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
-                                Resume Order
-                            </button>
                         </div>
                     </div>
                     <div class="pos-receipt-container d-flex flex-grow-1 flex-lg-grow-0 user-select-none justify-content-center bg-200 text-center overflow-hidden">
@@ -61,9 +57,6 @@
                 <div  id="action_btn_mobile" t-if="ui.isSmall" class="switchpane d-flex h-12">
                     <div class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }" t-if="!splittedOrder" t-on-click="orderDone" name="done">
                                 New Order
-                    </div>
-                    <div t-if="isResumeVisible() and !splittedOrder" class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }" t-on-click="resumeOrder" name="resume">
-                                Resume Order
                     </div>
                 </div>
             </div>

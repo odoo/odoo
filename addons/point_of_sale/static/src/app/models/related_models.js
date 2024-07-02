@@ -665,9 +665,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                     }
 
                     if (field.type === "many2one") {
-                        result[name] = record[name] ? record[name].id : false;
+                        result[name] = record[name] ? record[name].id : record.raw[name];
                     } else if (X2MANY_TYPES.has(field.type)) {
-                        result[name] = [...record[name]].map((record) => record.id);
+                        result[name] = [...record[name]].map(
+                            (record) => record.id || record.raw[name]
+                        );
                     } else if (typeof record[name] === "object") {
                         result[name] = JSON.stringify(record[name]);
                     } else {
