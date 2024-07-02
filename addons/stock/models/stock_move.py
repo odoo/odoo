@@ -2135,8 +2135,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                 ('location_id', 'parent_of', move.location_id.id),
                 ('company_id', '=', move.company_id.id),
                 '!', ('location_id', 'parent_of', move.location_dest_id.id),
-                '|', ('snoozed_until', '=', False),
-                ('snoozed_until', '<=', fields.Date.today()),
             ], limit=1)
             if orderpoint:
                 orderpoints_by_company[orderpoint.company_id] |= orderpoint

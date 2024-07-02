@@ -8,7 +8,7 @@ from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged, Form
 from odoo.tools.misc import formatLang, format_date
 from odoo import fields, Command
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 @tagged('-at_install', 'post_install')
@@ -1391,3 +1391,35 @@ class TestExpenses(TestExpenseCommon):
             {'name': 'test sheet no update', 'unit_amount': 100.0, 'quantity': 1, 'total_amount': 100.0},
             {'name':    'test sheet update', 'unit_amount': 250.0, 'quantity': 1, 'total_amount': 250.0},  # no update
         ])
+
+    def test_expense_mandatory_analytic_plan_product_category(self):
+        """
+        Check that when an analytic plan has a mandatory applicability matching
+        product category this is correctly triggered
+        """
+        self.env['account.analytic.applicability'].create({
+            'business_domain': 'expense',
+            'analytic_plan_id': self.analytic_plan.id,
+            'applicability': 'mandatory',
+            'product_categ_id': self.product_a.categ_id.id,
+        })
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2021-01-01',
+            'expense_line_ids': [Command.create({
+                'name': 'Car Travel Expenses',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'unit_amount': 350.00,
+                'payment_mode': 'company_account',
+            })]
+        })
+
+        expense_sheet.action_submit_sheet()
+        with self.assertRaises(ValidationError, msg="One or more lines require a 100% analytic distribution."):
+            expense_sheet.with_context(validate_analytic=True).approve_expense_sheets()
+
+        expense_sheet.expense_line_ids.analytic_distribution = {self.analytic_account_1.id: 100.00}
+        expense_sheet.with_context(validate_analytic=True).approve_expense_sheets()

@@ -1419,6 +1419,7 @@ class HrExpenseSheet(models.Model):
         for line in self.expense_line_ids:
             line._validate_distribution(**{
                 'account': line.account_id.id,
+                'product': line.product_id.id,
                 'business_domain': 'expense',
                 'company_id': line.company_id.id,
             })
