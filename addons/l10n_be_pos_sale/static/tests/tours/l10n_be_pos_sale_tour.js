@@ -21,4 +21,17 @@ odoo.define('l10n_be_pos_sale.tour', function (require) {
     ErrorPopup.do.clickConfirm();
 
     Tour.register('PosSettleOrderIsInvoice', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.do.clickQuotationButton();
+    ProductScreen.do.selectFirstOrder();
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.check.isInvoiceButtonChecked();
+    PaymentScreen.do.clickInvoiceButton();
+    PaymentScreen.check.isInvoiceButtonChecked(false);
+    ErrorPopup.check.isShown(false);
+
+    Tour.register('PosSettleOrderBelgianPartner', { test: true, url: '/pos/ui' }, getSteps());
 });

@@ -15,11 +15,11 @@ odoo.define('point_of_sale.tour.ErrorPopupTourMethods', function (require) {
     }
 
     class Check {
-        isShown() {
+        isShown(isShown=true) {
             return [
                 {
-                    content: 'error popup is shown',
-                    trigger: '.modal-dialog .popup-error',
+                    content: 'error popup is ' + (isShown ? '' : 'not ') + 'shown',
+                    trigger: isShown ? '.modal-dialog .popup-error' : 'body:not(:has(.modal-dialog .popup-error))',
                     run: () => {},
                 },
             ];
