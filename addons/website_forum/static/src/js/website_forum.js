@@ -8,9 +8,12 @@ import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFrom
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { session } from "@web/session";
 import { rpc } from "@web/core/network/rpc";
+import { get } from "@web/core/network/http_service";
 import { escape } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
+import { attachComponent } from "@web/legacy/utils";
+import { SelectMenuForum } from "./select_menu_forum";
 
 publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',
@@ -38,16 +41,19 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     init() {
         this._super(...arguments);
         this.orm = this.bindService("orm");
+        this.http = this.bindService("http");
         this.notification = this.bindService("notification");
     },
 
     /**
      * @override
      */
-    start: function () {
+    async start() {
         var self = this;
+        const _super = this._super.bind(this);
 
         this.lastsearch = [];
+        this.choice = [];
 
         // float-start class messes up the post layout OPW 769721
         $('span[data-oe-model="forum.post"][data-oe-field="content"]').find('img.float-start').removeClass('float-start');
@@ -60,66 +66,64 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         this.$('[data-bs-toggle="tooltip"]').tooltip({delay: 0});
         this.$('[data-bs-toggle="popover"]').popover({offset: '8'});
 
-        $('input.js_select2').select2({
-            tags: true,
-            tokenSeparators: [',', ' ', '_'],
-            maximumInputLength: 35,
-            minimumInputLength: 2,
-            maximumSelectionSize: 5,
-            lastsearch: [],
-            createSearchChoice: function (term) {
-                if (self.lastsearch.filter(s => s.text.localeCompare(term) === 0).length === 0) {
-                    //check Karma
-                    if (parseInt($('#karma').val()) >= parseInt($('#karma_edit_retag').val())) {
-                        return {
-                            id: '_' + $.trim(term),
-                            text: $.trim(term) + ' *',
-                            isNew: true,
-                        };
-                    }
-                }
-            },
-            createSearchChoicePosition: "bottom",
-            formatResult: function (term) {
-                if (term.isNew) {
-                    return '<span class="badge bg-primary">New</span> ' + escape(term.text);
-                } else {
-                    return escape(term.text);
-                }
-            },
-            ajax: {
-                url: '/forum/get_tags',
-                dataType: 'json',
-                data: function (term) {
-                    return {
-                        query: term,
-                        limit: 50,
-                        forum_id: $('#wrapwrap').data('forum_id'),
-                    };
-                },
-                results: function (data) {
-                    var ret = [];
-                    data.forEach((x) => {
-                        ret.push({
-                            id: x.id,
-                            text: x.name,
-                            isNew: false,
-                        });
-                    });
-                    self.lastsearch = ret;
-                    return {results: ret};
-                }
-            },
+        const element = document.querySelector("input.js_select_menu");
+        if (element) {
             // Take default tags from the input value
-            initSelection: function (element, callback) {
-                var data = [];
-                element.data("init-value").forEach((x) => {
-                    data.push({id: x.id, text: x.name, isNew: false});
-                });
-                element.val('');
-                callback(data);
-            },
-        });
+            const defaultChoices = [];
+            JSON.parse(element.getAttribute("data-init-value"))?.forEach((x) => {
+                defaultChoices.push({ id: x.id, label: x.name, value: x.id, isNew: false });
+            });
+            let defaulValue = defaultChoices.map((choice) => choice.id);
+            defaulValue = defaulValue.join(",");
+
+            const tagsSelectMenu = await attachComponent(
+                this,
+                element.parentNode,
+                SelectMenuForum,
+                {
+                    searchPlaceholder: _t("Please enter 2 or more characters"),
+                    placeholder: _t("Tags"),
+                    element: element,
+                    multiSelect: true,
+                    choices: defaultChoices,
+                    onSelect: (value) => {
+                        tagsSelectMenu?.update({
+                            value: value,
+                        });
+                    },
+                    choiceFetchFunction: (searchString) => {
+                        if (searchString.length > 3) {
+                            const newchoice = {
+                                id: "new",
+                                name: searchString.trim(),
+                                value: `_${searchString.trim()}`,
+                                label: `Create ${searchString}`,
+                            };
+                            this.choice.push(newchoice);
+                        }
+
+                        const forumID = $("#wrapwrap").data("forum_id");
+                        return new Promise((resolve, reject) => {
+                            this.http
+                                .get(
+                                    `/forum/get_tags?query=${searchString}&limit=${50}&forum_id=${forumID}`
+                                )
+                                .then((result) => {
+                                    result.forEach((choice) => {
+                                        choice.value = choice.name;
+                                        choice.label = choice.name;
+                                    });
+                                    result = this.choice.length
+                                        ? result.concat(this.choice)
+                                        : result;
+                                    resolve(result);
+                                });
+                        });
+                    },
+                    value: defaulValue || "",
+                }
+            );
+        }
 
         $('textarea.o_wysiwyg_loader').toArray().forEach((textarea) => {
             var $textarea = $(textarea);
@@ -183,7 +187,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     .fromSQL(post.dataset.lastActivity, {zone: 'utc'})
                     .toRelative();
             });
-        return this._super.apply(this, arguments);
+        return _super.apply(...arguments);
     },
 
     //--------------------------------------------------------------------------
