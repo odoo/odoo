@@ -18,7 +18,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 
-import { Component, onWillStart, useSubEnv, useEffect, useRef } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useSubEnv, useEffect, useRef } from "@odoo/owl";
 
 export class ListViewHeaderButton extends ViewButton {
     async onClick() {
@@ -85,6 +85,15 @@ export class ListController extends Component {
             this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");
         });
 
+        onMounted(() => {
+            const { rendererScrollPositions } = this.props.state || {};
+            if (rendererScrollPositions) {
+                const renderer = this.rootRef.el.querySelector(".o_list_renderer");
+                renderer.scrollLeft = rendererScrollPositions.left;
+                renderer.scrollTop = rendererScrollPositions.top;
+            }
+        });
+
         this.archiveEnabled =
             "active" in fields
                 ? !fields.active.readonly
@@ -118,8 +127,10 @@ export class ListController extends Component {
                 }
             },
             getLocalState: () => {
+                const renderer = this.rootRef.el.querySelector(".o_list_renderer");
                 return {
                     rootState: this.model.root.exportState(),
+                    rendererScrollPositions: { left: renderer.scrollLeft, top: renderer.scrollTop },
                 };
             },
             getOrderBy: () => {
