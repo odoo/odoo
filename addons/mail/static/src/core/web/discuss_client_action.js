@@ -59,7 +59,10 @@ export class DiscussClientAction extends Component {
         const activeThread = await this.store.Thread.getOrFetch({ model, id });
         if (activeThread && activeThread.notEq(this.store.discuss.thread)) {
             if (props.action.params?.highlight_message_id) {
-                activeThread.highlightMessageId = props.action.params.highlight_message_id;
+                activeThread.highlightMessage = {
+                    id: props.action.params.highlight_message_id,
+                    thread: activeThread,
+                };
             }
             activeThread.setAsDiscussThread(false);
         }

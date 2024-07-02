@@ -9,7 +9,7 @@ import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
 import { MessageReactions } from "@mail/core/common/message_reactions";
 import { MessageSeenIndicator } from "@mail/core/common/message_seen_indicator";
 import { RelativeTime } from "@mail/core/common/relative_time";
-import { formatMessageForEdit, htmlToTextContentInline } from "@mail/utils/common/format";
+import { convertBrToLineBreak, htmlToTextContentInline } from "@mail/utils/common/format";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
 import {
@@ -27,7 +27,6 @@ import {
 } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
-import { browser } from "@web/core/browser/browser";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -36,7 +35,7 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
-import { getOrigin, url } from "@web/core/utils/urls";
+import { url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
@@ -372,16 +371,6 @@ export class Message extends Component {
         return true;
     }
 
-    async onClickCopy() {
-        const { model, id: threadId } = this.message.thread || {};
-        const { id: messageId } = this.message;
-        const pathname = `/mail/${model}/${threadId}/message/redirect/${messageId}`;
-        await browser.navigator.clipboard.writeText(`${getOrigin()}${pathname}`);
-        this.notification.add(_t("The message link was copied to your clipboard!"), {
-            type: "success",
-        });
-    }
-
     onClickDelete() {
         const message = toRaw(this.message);
         this.dialog.add(
@@ -465,7 +454,7 @@ export class Message extends Component {
                 });
                 if (!this.env.isSmall) {
                     this.props.thread.open(true, {
-                        autofocus: false
+                        autofocus: false,
                     });
                 }
             }
@@ -517,7 +506,7 @@ export class Message extends Component {
 
     enterEditMode() {
         const message = toRaw(this.props.message);
-        const text = formatMessageForEdit(message.body);
+        const text = convertBrToLineBreak(message.body);
         message.composer = {
             mentionedPartners: message.recipients,
             text,

@@ -1,17 +1,18 @@
 import { Record } from "@mail/core/common/record";
 import {
     EMOJI_REGEX,
-    formatMessageForEdit,
+    convertBrToLineBreak,
     htmlToTextContentInline,
     prettifyMessageContent,
 } from "@mail/utils/common/format";
 import { rpc } from "@web/core/network/rpc";
 
+import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { omit } from "@web/core/utils/objects";
-import { url } from "@web/core/utils/urls";
+import { getOrigin, url } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;
 export class Message extends Record {
@@ -41,6 +42,11 @@ export class Message extends Record {
     author = Record.one("Persona");
     body = Record.attr("", { html: true });
     composer = Record.one("Composer", { inverse: "message", onDelete: (r) => r.delete() });
+    linkCopyable = Record.attr(false, {
+        compute() {
+            return this.message_type;
+        },
+    });
     /** @type {DateTime} */
     date = Record.attr(undefined, { type: "datetime" });
     /** @type {string} */
@@ -348,8 +354,17 @@ export class Message extends Record {
         });
     }
 
+    async copyLink() {
+        const { model, id: threadId } = this.thread || {};
+        const pathname = `/mail/${model}/${threadId}/message/${this.id}`;
+        await browser.navigator.clipboard.writeText(`${getOrigin()}${pathname}`);
+        this.store.env.services.notification.add(_t("Message Link Copied!"), {
+            type: "info",
+        });
+    }
+
     async edit(body, attachments = [], { mentionedChannels = [], mentionedPartners = [] } = {}) {
-        if (formatMessageForEdit(this.body) === body && attachments.length === 0) {
+        if (convertBrToLineBreak(this.body) === body && attachments.length === 0) {
             return;
         }
         const validMentions = this.store.getMentionsFromText(body, {

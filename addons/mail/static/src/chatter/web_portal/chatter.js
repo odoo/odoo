@@ -35,15 +35,7 @@ export class Chatter extends Component {
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
         useChildSubEnv(this.childSubEnv);
 
-        onMounted(() => {
-            this.changeThread(this.props.threadModel, this.props.threadId);
-            if (!this.env.chatter || this.env.chatter?.fetchData) {
-                if (this.env.chatter) {
-                    this.env.chatter.fetchData = false;
-                }
-                this.load(this.state.thread, this.requestList);
-            }
-        });
+        onMounted(this._onMounted);
         onWillUpdateProps((nextProps) => {
             if (
                 this.props.threadId !== nextProps.threadId ||
@@ -100,6 +92,16 @@ export class Chatter extends Component {
             return;
         }
         thread.fetchData(requestList);
+    }
+
+    _onMounted() {
+        this.changeThread(this.props.threadModel, this.props.threadId);
+        if (!this.env.chatter || this.env.chatter?.fetchData) {
+            if (this.env.chatter) {
+                this.env.chatter.fetchData = false;
+            }
+            this.load(this.state.thread, this.requestList);
+        }
     }
 
     onPostCallback() {

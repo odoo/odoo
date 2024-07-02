@@ -110,7 +110,7 @@ function linkify(text) {
         // Decode the url first, in case it's already an encoded url
         const url = decodeURI(match[0]);
         const href = encodeURI(!/^https?:\/\//i.test(url) ? "http://" + url : url);
-        const paramsMatch = /\/mail\/([a-zA-Z.]+)\/(\d+)\/message\/redirect\/(\d+\b)/.exec(url);
+        const paramsMatch = /\/mail\/([a-zA-Z.]+)\/(\d+)\/message\/(\d+\b)/.exec(url);
         let urlParams = `target="_blank" rel="noreferrer noopener" href="${href}"`;
         if (paramsMatch && new URL(href).origin === getOrigin()) {
             const oeData = `data-oe-model="${paramsMatch[1]}" data-oe-res-id="${paramsMatch[2]}" data-oe-id="${paramsMatch[3]}"`;
@@ -250,20 +250,6 @@ export function convertBrToLineBreak(str) {
         str.replaceAll("<br>", "\n").replaceAll("</br>", "\n"),
         "text/html"
     ).body.textContent;
-}
-
-export function formatMessageForEdit(str) {
-    const transform = (node, transformChildren) => {
-        if (node.nodeType === 3) {
-            return node.textContent;
-        }
-        if (node.tagName === "A" && node.classList.contains("o_message_redirect")) {
-            return node.getAttribute("href");
-        }
-        node.innerHTML = transformChildren();
-        return node.outerHTML;
-    };
-    return convertBrToLineBreak(parseAndTransform(str, transform));
 }
 
 export function cleanTerm(term) {

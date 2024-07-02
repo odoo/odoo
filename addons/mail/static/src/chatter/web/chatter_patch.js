@@ -77,7 +77,6 @@ patch(Chatter.prototype, {
         this.recipientsPopover = usePopover(RecipientList);
         Object.assign(this.state, {
             composerType: false,
-            highlightMessageId: this.props.highlightMessageId,
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             isSearchOpen: false,
             showActivities: true,
@@ -147,14 +146,6 @@ patch(Chatter.prototype, {
                 }
             },
             () => [this.state.thread?.status, this.attachments]
-        );
-        useEffect(
-            () => {
-                if (this.state.thread && this.state.highlightMessageId) {
-                    this.highlightMessage();
-                }
-            },
-            () => [this.state.highlightMessageId, this.state.thread]
         );
     },
 
@@ -250,19 +241,6 @@ patch(Chatter.prototype, {
         this.onFollowerChanged(thread);
     },
 
-    async highlightMessage() {
-        const messageId = this.state.highlightMessageId;
-        this.state.highlightMessageId = null;
-        await this.state.thread.isLoadedDeferred;
-        await this.messageHighlight.highlightMessage(
-            this.store.Message.insert({
-                id: messageId,
-                thread: this.state.thread,
-            }),
-            this.state.thread
-        );
-    },
-
     onActivityChanged(thread) {
         this.load(thread, [...this.requestList, "messages"]);
     },
@@ -326,6 +304,16 @@ patch(Chatter.prototype, {
         document.body.click(); // hack to close dropdown
         this.reloadParentView();
         this.load(thread, ["followers", "suggestedRecipients"]);
+    },
+
+    _onMounted() {
+        super._onMounted();
+        if (this.state.thread && this.props.highlightMessageId) {
+            this.state.thread.highlightMessage = {
+                id: this.props.highlightMessageId,
+                thread: this.state.thread,
+            };
+        }
     },
 
     onPostCallback() {

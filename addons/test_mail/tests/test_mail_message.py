@@ -545,9 +545,10 @@ class TestMessageLinks(MailCommon, HttpCase):
         with self.subTest(message=public_message):
             res = self.make_jsonrpc_request(url, {'message_id': public_message.id})
             res = res['threadData']['Thread'][0]
+            expected_message = {'id': public_message.id, 'thread': {'id': public_message.res_id, 'model': public_message.model}}
             self.assertEqual(res['id'], self.public_channel.id)
             self.assertEqual(res['model'], 'discuss.channel')
-            self.assertEqual(res['highlightMessageId'], public_message.id)
+            self.assertEqual(res['highlightMessage'], expected_message)
         for message_id, expected_error in [(deleted_message.id, 'NotFound'), (private_message_id, 'Unauthorized')]:
             with self.subTest(message_id=message_id):
                 res = self.make_jsonrpc_request(url, {'message_id': message_id})
@@ -588,7 +589,7 @@ class TestMessageLinks(MailCommon, HttpCase):
                 'view_type': 'form',
             }
             expected_url = self.base_url() + '/web#%s' % url_encode(url_params)
-            res = self.url_open(f'/mail/{thread_message.model}/{thread_message.res_id}/message/redirect/{thread_message.id}')
+            res = self.url_open(f'/mail/{thread_message.model}/{thread_message.res_id}/message/{thread_message.id}')
             self.assertEqual(res.url, expected_url)
         with self.subTest(channel_message=channel_message):
             url_params = {
@@ -597,13 +598,13 @@ class TestMessageLinks(MailCommon, HttpCase):
                 'action': 'mail.action_discuss',
             }
             expected_url = self.base_url() + '/web#%s' % url_encode(url_params)
-            res = self.url_open(f'/mail/{channel_message.model}/{channel_message.res_id}/message/redirect/{channel_message.id}')
+            res = self.url_open(f'/mail/{channel_message.model}/{channel_message.res_id}/message/{channel_message.id}')
             self.assertEqual(res.url, expected_url)
         with self.subTest(deleted_message=deleted_message):
-            res = self.url_open(f'/mail/{deleted_message.model}/{deleted_message.res_id}/message/redirect/{deleted_message.id}')
+            res = self.url_open(f'/mail/{deleted_message.model}/{deleted_message.res_id}/message/{deleted_message.id}')
             self.assertEqual(res.status_code, 404)
         with self.subTest(private_message_id=private_message_id):
-            res = self.url_open(f'/mail/discuss.channel/{self.private_group.id}/message/redirect/{private_message_id}')
+            res = self.url_open(f'/mail/discuss.channel/{self.private_group.id}/message/{private_message_id}')
             self.assertEqual(res.status_code, 401)
 
     @users('employee')
@@ -613,5 +614,5 @@ class TestMessageLinks(MailCommon, HttpCase):
             message_type='comment',
             subtype_xmlid='mail.mt_comment'
         )
-        res = self.url_open(f'/mail/{message.model}/{message.res_id}/message/redirect/{message.id}')
+        res = self.url_open(f'/mail/{message.model}/{message.res_id}/message/{message.id}')
         self.assertEqual(res.status_code, 200)

@@ -312,7 +312,7 @@ export class Thread extends Record {
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
     /** @type {integer|null} */
-    highlightMessageId = null;
+    highlightMessage = Record.one("Message");
 
     _computeDiscussAppCategory() {
         if (["group", "chat"].includes(this.channel_type)) {

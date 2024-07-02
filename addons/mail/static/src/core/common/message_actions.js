@@ -98,11 +98,11 @@ messageActionsRegistry
         onClick: (component) => component.onClickToggleTranslation(),
         sequence: 100,
     })
-    .add("copy", {
-        condition: (component) => component.copyable,
+    .add("copy-link", {
+        condition: (component) => component.message.linkCopyable,
         icon: "fa-link",
         title: _t("Copy Message Link"),
-        onClick: (component) => component.onClickCopy(),
+        onClick: (component) => component.message.copyLink(),
         sequence: 110,
     });
 

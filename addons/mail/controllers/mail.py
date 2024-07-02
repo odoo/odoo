@@ -214,16 +214,18 @@ class MailController(http.Controller):
         store = Store()
         if message.model == 'discuss.channel':
             store.add(request.env['discuss.channel'].browse(message.res_id))
-        store.add('Thread', {'id': message.res_id, 'model': message.model, 'highlightMessageId': message_id})
+        thread_data = {'id': message.res_id, 'model': message.model}
+        message_data = {'id': message_id, 'thread': thread_data}
+        store.add('Thread', {**thread_data, 'highlightMessage': message_data})
         return {'threadData': store.get_result()}
 
-    @http.route('/mail/<string:res_model>/<int:res_id>/message/redirect/<int:message_id>', type='http', auth='public')
+    @http.route('/mail/<string:res_model>/<int:res_id>/message/<int:message_id>', type='http', auth='public')
     @add_guest_to_context
     def mail_thread_message_redirect(self, res_model, res_id, message_id, **kwargs):
         message = request.env['mail.message'].search([('id', '=', message_id)])
         if not message:
             if request.env.user._is_public():
-                return request.redirect('/web/login?redirect=/mail/%s/%s/message/redirect/%s' % (res_model, res_id, message_id))
+                return request.redirect('/web/login?redirect=/mail/%s/%s/message/%s' % (res_model, res_id, message_id))
             raise Unauthorized()
 
         # sudo: public user can access some relational fields of mail.message
@@ -232,7 +234,7 @@ class MailController(http.Controller):
         if not request.env.user._is_internal():
             thread = request.env[message.model].search([('id', '=', message.res_id)])
             if message.model == 'discuss.channel':
-                store = Store({'isChannelTokenSecret': True, 'discuss_public_thread': {'highlightMessageId': message_id}})
+                store = Store({'isChannelTokenSecret': True, 'discuss_public_thread': {'highlightMessage': message_id}})
                 return PublicPageController()._response_discuss_channel_invitation(store, thread)
             else:
                 return request.redirect(thread._get_share_url(share_token=False))
