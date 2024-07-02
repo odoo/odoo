@@ -8,6 +8,7 @@ const {
     getNumberOfPivotFunctions,
     pivotTimeAdapter,
     toNormalizedPivotValue,
+    toNumber,
 } = helpers;
 const { DEFAULT_LOCALE } = constants;
 
@@ -125,6 +126,21 @@ describe("toNormalizedPivotValue", () => {
             expect(() => toNormalizedPivotValue(dimension, "true")).toThrow();
             expect(() => toNormalizedPivotValue(dimension, true)).toThrow();
             expect(() => toNormalizedPivotValue(dimension, "won")).toThrow();
+
+            dimension.granularity = "quarter";
+            // special quarter syntax:
+            expect(toNormalizedPivotValue(dimension, "1/2020")).toBe("1/2020");
+            expect(toNormalizedPivotValue(dimension, "2/2020")).toBe("2/2020");
+            expect(toNormalizedPivotValue(dimension, "3/2020")).toBe("3/2020");
+            expect(toNormalizedPivotValue(dimension, "4/2020")).toBe("4/2020");
+
+            // falls back on regular date parsing:
+            expect(toNormalizedPivotValue(dimension, "5/2020")).toBe("2/2020");
+            expect(toNormalizedPivotValue(dimension, "01/01/2020")).toBe("1/2020");
+            expect(toNormalizedPivotValue(dimension, toNumber("01/01/2020", DEFAULT_LOCALE))).toBe(
+                "1/2020"
+            );
+            expect(() => toNormalizedPivotValue(dimension, "hello")).toThrow();
 
             dimension.granularity = "year";
             expect(toNormalizedPivotValue(dimension, "2020")).toBe(2020);
