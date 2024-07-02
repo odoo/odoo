@@ -45,11 +45,11 @@ const ThreadPatch = {
             /** @this {import("models").Thread} */
             onAdd(r) {
                 this.rtcSessions.add(r);
-                this.store.discuss.ringingThreads.add(this);
+                this.store.ringingThreads.add(this);
             },
             /** @this {import("models").Thread} */
             onDelete(r) {
-                this.store.discuss.ringingThreads.delete(this);
+                this.store.ringingThreads.delete(this);
             },
         });
         this.rtcSessions = Record.many("RtcSession", {
