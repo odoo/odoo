@@ -33,6 +33,10 @@ class ResCompany(models.Model):
     attendance_kiosk_url = fields.Char(compute="_compute_attendance_kiosk_url")
     attendance_kiosk_use_pin = fields.Boolean(string='Employee PIN Identification')
     attendance_from_systray = fields.Boolean(string='Attendance From Systray', default=True)
+    attendance_overtime_validation = fields.Selection([
+        ('no_validation', 'No Validation'),
+        ('by_manager', 'By Manager'),
+    ], string='Extra Hours Validation', default='no_validation')
 
     @api.depends("attendance_kiosk_key")
     def _compute_attendance_kiosk_url(self):
