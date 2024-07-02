@@ -750,10 +750,11 @@ function createWithinOperators(tree) {
     if (tree.type !== "condition" || tree.operator !== ">") {
         return tree;
     }
-    const regex = /relativedelta\((\w+)=(\d+)\)/;
-    const matches = regex.exec(tree.value);
+    const regex = /relativedelta\(\s*(\w+)\s*=\s*(-?\d+)\s*\)/;
+    const matches = regex.exec(tree.value._expr);
     if (matches) {
-        tree.value = condition(tree.path, "within", normalizeValue([parseInt(matches[2]), matches[1]]))
+        tree.operator = "within";
+        tree.value = normalizeValue([parseInt(matches[2]), matches[1]])
     }
     return tree;
 }
@@ -763,6 +764,7 @@ function createWithinOperators(tree) {
  * @returns {Tree}
  */
 export function removeBetweenOperators(tree) {
+    // console.log("Got removeBetweenOperators", tree);
     if (tree.type === "complex_condition") {
         return tree;
     }
@@ -771,6 +773,11 @@ export function removeBetweenOperators(tree) {
             return tree;
         }
         const { negate, path, value } = tree;
+        // console.log("Return removeBetweenOperators", connector(
+        //     "&",
+        //     [condition(path, ">=", value[0]), condition(path, "<=", value[1])],
+        //     negate
+        // ));
         return connector(
             "&",
             [condition(path, ">=", value[0]), condition(path, "<=", value[1])],
@@ -779,6 +786,7 @@ export function removeBetweenOperators(tree) {
     }
     const processedChildren = tree.children.map(removeBetweenOperators);
     if (tree.value === "|") {
+        // console.log("Return removeBetweenOperators", { ...tree, children: processedChildren });
         return { ...tree, children: processedChildren };
     }
     const newTree = { ...tree, children: [] };
@@ -786,10 +794,12 @@ export function removeBetweenOperators(tree) {
     for (let i = 0; i < processedChildren.length; i++) {
         addChild(newTree, processedChildren[i]);
     }
+    // console.log("Return removeBetweenOperators", newTree);
     return newTree;
 }
 
 export function removeWithinOperators(tree) {
+    console.log("Got Within tree", tree);
     if (tree.type === "complex_condition") {
         return tree;
     }
@@ -798,22 +808,11 @@ export function removeWithinOperators(tree) {
             return tree;
         }
         const { negate, path, value } = tree;
-        return connector(
-            "&",
-            [condition(path, ">", `(context_today() - relativedelta(${value[1]}=${value[0]})).strftime('%Y-%m-%d')`)],
-            negate
-        );
+        return { ...tree, operator: ">", value: expression(`(context_today() - relativedelta(${value[1]}=${value[0]})).strftime('%Y-%m-%d')`) };
     }
     const processedChildren = tree.children.map(removeWithinOperators);
-    if (tree.value === "|") {
-        return { ...tree, children: processedChildren };
-    }
-    const newTree = { ...tree, children: [] };
-    // after processing a child might have become a connector "&" --> normalize
-    for (let i = 0; i < processedChildren.length; i++) {
-        addChild(newTree, processedChildren[i]);
-    }
-    return newTree;
+    console.log("Returning Within", { ...tree, children: processedChildren });
+    return { ...tree, children: processedChildren };
 }
 
 /**

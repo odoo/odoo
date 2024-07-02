@@ -34,7 +34,7 @@ export class Within extends Component {
     static props = ["value", "update"];
     static template = "web.TreeEditor.Within";
     static components = { Input, Select };
-    static options = ["Day", "Week", "Month", "Quarter", "Year"];
+    static options = ["Days", "Weeks", "Months", "Years"];
 
     get options() {
         return Within.options.map(option => [option.toLowerCase(), option]);

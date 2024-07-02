@@ -121,7 +121,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     update,
                     editorInfo,
                 }),
-                isSupported: (value) => Array.isArray(value) && value.length === 2,
+                isSupported: (value) => Array.isArray(value) && value.length === 2 && typeof value[0] === "string" && typeof value[1] === "string",
                 defaultValue: () => {
                     const { defaultValue } = editorInfo;
                     return [defaultValue(), defaultValue()];
@@ -135,7 +135,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     value,
                     update,
                 }),
-                isSupported: (value) => Array.isArray(value) && value.length === 2, // add maybe a type check ? 
+                isSupported: (value) => Array.isArray(value) && value.length === 2 && typeof value[0] === "number" && ["days", "weeks", "months", "years"].includes(value[1]),
                 defaultValue: () => {
                     return [1, "weeks"];
                 },
