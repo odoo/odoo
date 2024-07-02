@@ -9,6 +9,7 @@ import {
     getState,
     leftPos,
     splitTextNode,
+    isBlock,
 } from '../utils/utils.js';
 
 Text.prototype.oShiftEnter = function (offset) {
@@ -60,9 +61,14 @@ HTMLAnchorElement.prototype.oShiftEnter = function () {
     }
     if (brs.includes(firstChild)) {
         brs.forEach(br => anchor.before(br));
-        setSelection(...rightPos(brs[brs.length - 1]));
     } else if (brs.includes(lastChild)) {
+        const brToRemove = isBlock(anchor) ? brs.shift() : null;
         brs.forEach(br => anchor.after(br));
-        setSelection(...rightPos(brs[0]));
+        if (brToRemove) {
+            brToRemove.remove();
+            setSelection(...leftPos(brs[0]));
+        } else {
+            setSelection(...rightPos(brs[0]));
+        }
     }
 }
