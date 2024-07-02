@@ -21,9 +21,13 @@
           attrs="{ href: getMenuItemHref(currentApp), 'data-menu-xmlid': currentApp.xmlid, 'data-section': currentApp.id }"
         />
 
-        <!-- Current App Sections -->
-        <t t-if="currentAppSections.length" t-call="web.NavBar.SectionsMenu">
-          <t t-set="sections" t-value="currentAppSections" />
+        <div class="o_navbar_breadcrumbs d-contents"/>
+
+        <t t-if="!env.isSmall">
+          <!-- Current App Sections -->
+          <t t-if="currentAppSections.length" t-call="web.NavBar.SectionsMenu">
+            <t t-set="sections" t-value="currentAppSections" />
+          </t>
         </t>
 
         <!-- Systray -->

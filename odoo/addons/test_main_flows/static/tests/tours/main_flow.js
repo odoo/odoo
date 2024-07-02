@@ -1088,7 +1088,7 @@ stepUtils.autoExpandMoreButtons(),
 {
     in_modal: false,
     isActive: ["mobile"],
-    trigger: '.o_control_panel .o_breadcrumb:contains("Sales Orders")',
+    trigger: '.o_navbar_breadcrumbs .o_breadcrumb:contains("Sales Orders")',
 },
 {
     isActive: ["mobile"],
@@ -1112,7 +1112,7 @@ stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons()),
 {
     in_modal: false,
     isActive: ["mobile"],
-    trigger: '.o_control_panel .o_breadcrumb:contains("S0")',
+    trigger: '.o_navbar_breadcrumbs .o_breadcrumb:contains("S0")',
 },
 {
     isActive: ["mobile"],

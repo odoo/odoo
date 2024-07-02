@@ -5,7 +5,7 @@
         <div t-if="hasItems" class="o_cp_action_menus d-flex align-items-center pe-2 gap-1">
             <div class="lh-1">
                 <Dropdown menuClass="'lh-base'">
-                    <button class="d-print-none btn p-0 ms-1 lh-sm border-0" data-hotkey="u" data-tooltip="Actions">
+                    <button class="d-print-none btn" t-att-class="env.isSmall ? 'btn-secondary' : 'lh-sm p-0 border-0'" data-hotkey="u" data-tooltip="Actions">
                         <i class="fa fa-cog"/>
                     </button>
 
