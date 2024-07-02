@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+        <record
+        id="fiscal_position_template_1"
+        model="account.fiscal.position.template"
+    >
+            <field name="name">Iran</field>
+            <field name="auto_apply" eval="True" />
+            <field name="country_id" ref="base.ir" />
+            <field name="chart_template_id" ref="l10n_ir_chart_template" />
+        </record>
+
+
+        <record
+        id="fiscal_position_tax_template_1"
+        model="account.fiscal.position.tax.template"
+    >
+            <field name="position_id" ref="fiscal_position_template_1" />
+            <field name="tax_src_id" ref="ir_sale_tax_9" />
+            <field name="tax_dest_id" ref="ir_purchase_tax_9" />
+        </record>
+</odoo>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- sale taxes -->
+    <record id="ir_sale_tax_9" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_ir_chart_template" />
+        <field name="name">VAT 9%</field>
+        <field name="description">VAT 9%</field>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="ir_tax_group_9" />
+        <field
+            name="invoice_repartition_line_ids"
+            eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_sales_base')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('ir_account_211006'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_sales_vat')],
+            }),
+        ]"
+        />
+        <field
+            name="refund_repartition_line_ids"
+            eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_sales_base')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('ir_account_211006'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_sales_vat')],
+            }),
+        ]"
+        />
+    </record>
+    <!-- purchase taxes -->
+    <record id="ir_purchase_tax_9" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_ir_chart_template" />
+        <field name="name">VAT 9%</field>
+        <field name="description">VAT 9%</field>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="ir_tax_group_9" />
+        <field
+            name="invoice_repartition_line_ids"
+            eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_expense_base')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('ir_account_211006'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_expense_vat')],
+            }),
+        ]"
+        />
+        <field
+            name="refund_repartition_line_ids"
+            eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_expense_base')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('ir_account_211006'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_expense_vat')],
+            }),
+        ]"
+        />
+    </record>
+
+</odoo>
