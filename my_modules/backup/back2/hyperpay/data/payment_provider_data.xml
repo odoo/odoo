@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment_method_hyperpay" model="payment.method">
+        <field name="name">Hyperpay</field>
+        <field name="code">hyperpay</field>
+        <field name="sequence">1000</field>
+        <field name="active">True</field>
+        <field name="image" type="base64" file="payment/static/img/card.png"/>
+        <field name="support_tokenization">True</field>
+    </record>
+
+    <record id="hyperpay" model="payment.provider">
+        <field name="name">Hyperpay Checkout</field>
+        <field name="image_128"
+               type="base64"
+               file="hyperpay/static/src/img/hyperpay_icon.png"/>
+        <field name="module_id" ref="base.module_hyperpay"/>
+        <field name="code">hyperpay</field>
+        <field name="payment_method_ids"
+               eval="[Command.set([ref('hyperpay.payment_method_hyperpay')])]"
+        />
+        <field name="redirect_form_view_id" ref="redirect_form"/>
+    </record>
+
+</odoo>

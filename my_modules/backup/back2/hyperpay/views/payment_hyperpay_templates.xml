@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="redirect_form">
+        <!-- TODO: remove in master -->
+        <div>
+            <script t-attf-src="https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId={{processingValues}}"></script>
+            <form action="http://localhost:8088/payment/confirmation" class="paymentWidgets" data-brands="VISA GOOGLEPAY MASTER AMEX"></form>
+        </div>
+
+    </template>
+
+</odoo>

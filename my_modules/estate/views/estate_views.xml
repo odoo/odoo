@@ -1,0 +1,86 @@
+<odoo>
+
+    <record id="estate_tree_view_views" model="ir.ui.view">
+        <field name="name">estate.view</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="postcode"/>
+                <field name="bedrooms"/>
+                <field name="living_area"/>
+                <field name="expected_price"/>
+                <field name="selling_price"/>
+                <field name="date_availability"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="estate_search_view_views" model="ir.ui.view">
+        <field name="name">estate.view</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="postcode"/>
+                <field name="property_Type"/>
+                <filter name="filter_garden" string="South" domain="[('garden_orientation', '=', 'South')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="estate_form_view_views" model="ir.ui.view">
+        <field name="name">estate.view</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <form>
+                <button name="%(estate.estate_action_visit)d" string="Edit" type="action" class="oe_highlight"/>
+                <button name="%(estate.estate_action_visit)d" string="Create" type="action"/>
+                <sheet>
+                    <header>My new house</header>
+                    <group>
+                        <group>
+                            <group>
+                                <field name="postcode"/>
+                                <field name="date_availability"/>
+                            </group>
+                            <group>
+                                <field name="expected_price" />
+                                <field name="selling_price" />
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Description">
+                                <group>
+                                    <field name="description"/>
+                                    <field name="bedrooms"/>
+                                    <field name="living_area"/>
+                                    <field name="facades"/>
+                                    <field name="garage"/>
+                                    <field name="garden"/>
+                                    <field name="garden_area"/>
+                                    <field name="garden_orientation"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="estate_action_views" model="ir.actions.act_window">
+        <field name="name">Properties</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+    <menuitem id="estate_root_menu" name="Real Estate">
+        <menuitem id="estate_submenu" name="Advertisements">
+            <menuitem id="estate_menu_views" action="estate_action_views" name="Properties"/>
+        </menuitem>
+    </menuitem>
+
+</odoo>

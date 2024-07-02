@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="payment" xml:space="preserve">
+
+    <t t-name="hyperpay.payment_form_card">
+        <Dialog footer="false" contentClass="'o_command_palette mt-5'">
+            <div class="container">
+                        <script t-att-src="props.order_id"></script>
+                        <form action="http://localhost:8088/hyper_test" class="paymentWidgets" data-brands="VISA PAYPAL MASTER AMEX"></form>
+            </div>
+        </Dialog>
+    </t>
+
+</templates>

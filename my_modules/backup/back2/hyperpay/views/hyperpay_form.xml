@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="index">
+            <t t-call="website.layout">
+                <div class="oe_structure">
+                    <div class="container">
+                        <script t-attf-src="https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId=B2C871B338706EC1AD01BD7B744CC312.uat01-vm-tx01"></script>
+                        <form action="http://localhost:8088/payment/confirmation" class="paymentWidgets" data-brands="VISA GOOGLEPAY MASTER AMEX"></form>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+    </data>
+</odoo>
