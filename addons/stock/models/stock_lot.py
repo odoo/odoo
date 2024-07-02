@@ -8,6 +8,7 @@ from re import findall as regex_findall, split as regex_split
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
+from odoo.tools import is_valid_code_128
 
 OPERATORS = {
     '<': py_operator.lt,
@@ -54,6 +55,7 @@ class StockLot(models.Model):
     location_id = fields.Many2one(
         'stock.location', 'Location', compute='_compute_single_location', store=True, readonly=False,
         inverse='_set_single_location', domain="[('usage', '!=', 'view')]", group_expand='_read_group_location_id')
+    valid_code_128 = fields.Boolean(string="Is Lot Name in Code 128", compute='_compute_valid_code_128')
 
     @api.model
     def generate_lot_names(self, first_lot, count):
@@ -150,6 +152,11 @@ class StockLot(models.Model):
         for lot in self:
             quants = lot.quant_ids.filtered(lambda q: q.quantity > 0)
             lot.location_id = quants.location_id if len(quants.location_id) == 1 else False
+
+    @api.depends('name')
+    def _compute_valid_code_128(self):
+        for record in self:
+            record.valid_code_128 = is_valid_code_128(record.name) if record.name else False
 
     def _set_single_location(self):
         quants = self.quant_ids.filtered(lambda q: q.quantity > 0)

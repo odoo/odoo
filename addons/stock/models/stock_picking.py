@@ -14,7 +14,7 @@ from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime, format_date, format_list, groupby, SQL
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime, format_date, format_list, groupby, SQL, is_valid_code_128
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
@@ -129,6 +129,7 @@ class PickingType(models.Model):
     count_move_ready = fields.Integer(compute='_compute_move_count')
     hide_reservation_method = fields.Boolean(compute='_compute_hide_reservation_method')
     barcode = fields.Char('Barcode', copy=False)
+    valid_code_128 = fields.Boolean(string="Is Barcode Coded in Code 128", compute='_compute_valid_code_128')
     company_id = fields.Many2one(
         'res.company', 'Company', required=True,
         default=lambda s: s.env.company.id, index=True)
@@ -335,6 +336,11 @@ class PickingType(models.Model):
                 picking_type.warehouse_id = warehouse
             else:
                 picking_type.warehouse_id = False
+
+    @api.depends('barcode')
+    def _compute_valid_code_128(self):
+        for record in self:
+            record.valid_code_128 = is_valid_code_128(record.barcode) if record.barcode else False
 
     @api.depends('code')
     def _compute_show_picking_type(self):

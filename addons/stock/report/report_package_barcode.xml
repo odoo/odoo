@@ -25,7 +25,7 @@
                             </div>
                         </div>
                     </div>
-                    <div t-else="" class="col-6 text-center">
+                    <div t-elif="o.valid_code_128" class="col-6 text-center">
                         <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;'}">
                             <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center px-1 py-2 opacity-75 text-muted text-center">
                                 (package barcode)
@@ -64,7 +64,8 @@
                         <!-- Quant's summary: product's barcode, product, qty and content's barcode.  -->
                         <thead><tr>
                             <th name="th_product_barcode" class="text-center" style="width: 30%;">
-                                <div t-field="product.barcode"
+                                <div t-if="product.valid_code_128"
+                                    t-field="product.barcode"
                                     class="w-100 text-center pt-2 pb-1"
                                     t-options="{
                                         'widget': 'barcode',
@@ -82,7 +83,7 @@
                                 <span t-field="product.uom_id.name" groups="uom.group_uom">Units</span>
                             </th>
                             <th name="th_content_barcode" class="text-center" style="width: 20%;">
-                                <div t-if="len(aggregate_barcodes) == 1"
+                                <div t-if="len(aggregate_barcodes) == 1 and product.valid_code_128"
                                     t-out="aggregate_barcodes[0]"
                                     class="my-3"
                                     t-options="{
@@ -174,8 +175,8 @@
                     <t t-else="">
                         <div class="row">
                             <div class="text-center col-12">
-                                <span t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:600px;height:100px;'}">Name Demo</span>
-                                <span t-field="o.name" style="font-size:20px; margin:100px;">Name Demo</span>
+                                <span t-if="o.valid_code_128" t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:600px;height:100px;'}">Name Demo</span>
+                                <div t-field="o.name" style="font-size:20px; margin:5px;">Name Demo</div>
                             </div>
                         </div>
                         <div t-if="o.pack_date" class="col-12 text-center" style="font-size:24px; font-weight:bold;">Pack Date: <span t-field="o.pack_date">2023-01-01</span></div>

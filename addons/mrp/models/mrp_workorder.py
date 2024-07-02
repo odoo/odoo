@@ -8,7 +8,7 @@ import json
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_compare, float_round, format_datetime
+from odoo.tools import float_compare, float_round, format_datetime, is_valid_code_128
 
 
 class MrpWorkorder(models.Model):
@@ -91,6 +91,7 @@ class MrpWorkorder(models.Model):
         'Duration Deviation (%)', compute='_compute_duration',
         aggregator="avg", readonly=True, store=True)
     progress = fields.Float('Progress Done (%)', digits=(16, 2), compute='_compute_progress')
+    valid_code_128 = fields.Boolean(string="Is Work Order Name Coded in Code 128", compute='_compute_valid_code_128')
 
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Operation', check_company=True)
@@ -387,6 +388,11 @@ class MrpWorkorder(models.Model):
         count_data = {workorder.id: count for workorder, count in data}
         for workorder in self:
             workorder.scrap_count = count_data.get(workorder.id, 0)
+
+    @api.depends('name')
+    def _compute_valid_code_128(self):
+        for record in self:
+            record.valid_code_128 = is_valid_code_128(record.name)
 
     @api.onchange('operation_id')
     def _onchange_operation_id(self):

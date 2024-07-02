@@ -23,8 +23,14 @@
                                                     <strong><span t-field="o.name">WH/Stock</span></strong>
                                                 </div>
                                                 <div class="text-center mt-3">
-                                                    <span t-if="o.barcode" t-field="o.barcode" style="padding:0"
-                                                        t-options="{'widget': 'barcode', 'humanreadable': 1, 'symbology': 'auto', 'img_style': 'width:47mm;height:11mm'}">1234567890</span>
+                                                    <span t-if="o.barcode" style="padding:0">
+                                                        <t t-if="o.valid_code_128">
+                                                            <t t-out="o.barcode" t-options="{'widget': 'barcode', 'humanreadable': 1, 'symbology': 'auto', 'img_style': 'width:47mm;height:11mm'}"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <t t-out="o.barcode"/>
+                                                        </t>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </td>

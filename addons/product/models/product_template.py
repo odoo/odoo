@@ -134,6 +134,7 @@ class ProductTemplate(models.Model):
 
     # related to display product product information if is_product_variant
     barcode = fields.Char('Barcode', compute='_compute_barcode', inverse='_set_barcode', search='_search_barcode')
+    valid_code_128 = fields.Boolean(string="Is Barcode Coded in Code 128", compute='_compute_valid_code_128')
     default_code = fields.Char(
         'Internal Reference', compute='_compute_default_code',
         inverse='_set_default_code', store=True)
@@ -313,6 +314,9 @@ class ProductTemplate(models.Model):
     @api.depends('product_variant_ids.barcode')
     def _compute_barcode(self):
         self._compute_template_field_from_variant_field('barcode')
+
+    def _compute_valid_code_128(self):
+        self._compute_template_field_from_variant_field('valid_code_128')
 
     def _search_barcode(self, operator, value):
         subquery = self.with_context(active_test=False)._search([

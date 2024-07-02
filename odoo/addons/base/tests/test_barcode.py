@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
-from odoo.tools import check_barcode_encoding, get_barcode_check_digit
+from odoo.tools import check_barcode_encoding, get_barcode_check_digit, is_valid_code_128
 
 
 class TestBarcode(TransactionCase):
@@ -25,3 +25,10 @@ class TestBarcode(TransactionCase):
         self.assertFalse(check_barcode_encoding('9745213796148', 'ean13'), 'incorrect check digit')
         self.assertFalse(check_barcode_encoding('2022!71416014', 'ean13'), 'should contains digits only')
         self.assertFalse(check_barcode_encoding('0022071416014', 'ean13'), 'when starting with one zero, it indicates that a 12-digit UPC-A code follows')
+
+    def test_is_valid_code_128(self):
+        self.assertTrue(is_valid_code_128('abc01234def'), "should be a valid Code 128 barcode")
+        self.assertFalse(is_valid_code_128('abcdéf'), "should not be a valid Code 128 barcode")
+        self.assertFalse(is_valid_code_128('éΩà⊕ö♣ñ©ÿβ'), "should not be a valid Code 128 barcode with non-ASCII characters")
+        all_ascii = """!"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"""
+        self.assertTrue(is_valid_code_128(all_ascii), "should be a valid Code 128 barcode with all ASCII characters")

@@ -52,3 +52,13 @@ def check_barcode_encoding(barcode, encoding):
            and len(barcode) == barcode_size \
            and re.match(r"^\d+$", barcode) \
            and get_barcode_check_digit(barcode) == int(barcode[-1])
+
+
+def is_valid_code_128(barcode):
+    """
+    Checks if the given barcode string is valid code 128.
+    :param barcode: The barcode string to check.
+    :return: True if the barcode is valid code 128, False otherwise.
+    :rtype: bool
+    """
+    return bool(re.match(r'^[\x00-\x7F]+$', barcode))

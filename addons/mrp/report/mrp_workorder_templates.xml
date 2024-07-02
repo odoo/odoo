@@ -10,7 +10,7 @@
                         <div class="col-7">
                             <h2><span t-field="o.name">Laptop model X</span></h2>
                         </div>
-                        <div class="col-5">
+                        <div t-if="o.valid_code_128" class="col-5">
                             <span class="text-end">
                                 <span t-field="o.production_id.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:350px;height:60px'}">12345678901</span>
                             </span>

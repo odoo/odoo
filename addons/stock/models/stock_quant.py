@@ -10,7 +10,7 @@ from psycopg2 import Error
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import SQL, check_barcode_encoding, format_list, groupby
+from odoo.tools import SQL, check_barcode_encoding, format_list, groupby, is_valid_code_128
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 _logger = logging.getLogger(__name__)
@@ -1531,6 +1531,7 @@ class QuantPackage(models.Model):
         Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer.""")
     valid_sscc = fields.Boolean('Package name is valid SSCC', compute='_compute_valid_sscc')
     pack_date = fields.Date('Pack Date', default=fields.Date.today)
+    valid_code_128 = fields.Boolean(string="Is Package Name in Code 128", compute='_compute_valid_code_128')
 
     @api.depends('quant_ids.location_id', 'quant_ids.company_id')
     def _compute_package_info(self):
@@ -1557,6 +1558,11 @@ class QuantPackage(models.Model):
         for package in self:
             if package.name:
                 package.valid_sscc = check_barcode_encoding(package.name, 'sscc')
+
+    @api.depends('name')
+    def _compute_valid_code_128(self):
+        for record in self:
+            record.valid_code_128 = is_valid_code_128(record.name) if record.name else False
 
     def _search_owner(self, operator, value):
         if value:
