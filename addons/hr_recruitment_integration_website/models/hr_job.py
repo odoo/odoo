@@ -2,7 +2,9 @@
 
 import re
 
-from odoo import models
+from odoo import models, _
+from odoo.exceptions import UserError, AccessError
+from odoo.addons.iap.tools import iap_tools
 
 sub_tags = re.compile(r'<[^>]*>').sub
 section_regex = re.compile(
@@ -31,7 +33,11 @@ box_regex = re.compile(
     re.DOTALL
 )
 close_i_tag = re.compile(r'</i>')
-
+DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
+AI_BASE_PROMPT = """
+Given the following infos, Generate a professional job description that could be used to attract potential candidates:
+The platforms could be things like LinkedIn, Indeed, Glassdoor, Monster, etc.
+"""
 
 class Job(models.Model):
     _inherit = 'hr.job'
@@ -69,3 +75,30 @@ class Job(models.Model):
                     paragraph = re.sub('\n +', ' ', paragraph)
                     post_text += sub_tags('', paragraph) + '\n'
         return re.sub('\n\n+', '\n\n', re.sub('\n+ +', '\n', re.sub(' +', ' ', post_text)))
+
+    def generate_post(self):
+        self.ensure_one()
+        prompt = AI_BASE_PROMPT + self.action_extract_data()
+        try:
+            IrConfigParameter = self.env['ir.config_parameter'].sudo()
+            olg_api_endpoint = IrConfigParameter.get_param('web_editor.olg_api_endpoint', DEFAULT_OLG_ENDPOINT)
+            database_id = IrConfigParameter.get_param('database.uuid')
+            response = iap_tools.iap_jsonrpc(olg_api_endpoint + "/api/olg/1/chat", params={
+                'prompt': prompt,
+                'conversation_history': [],
+                'database_id': database_id,
+            }, timeout=30)
+            if response['status'] == 'success':
+                return response['content']
+            elif response['status'] == 'error_prompt_too_long':
+                raise UserError(_("Sorry, your prompt is too long. Try to say it in fewer words."))
+            elif response['status'] == 'limit_call_reached':
+                raise UserError(_("You have reached the maximum number of requests for this service. Try again later."))
+            else:
+                raise UserError(_("Sorry, we could not generate a response. Please try again later."))
+        except AccessError:
+            raise AccessError(_("Oops, it looks like our AI is unreachable!"))
+
+    def action_generate_post(self):
+        self.ensure_one()
+        self.write({'description': self.generate_post().replace('\n', '<br/>')})
