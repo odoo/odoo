@@ -19,7 +19,7 @@ class Project(models.Model):
         action.update({
             'display_name': _('Expenses'),
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban'], [False, 'graph'], [False, 'pivot']],
-            'context': {'default_analytic_distribution': {self.analytic_account_id.id: 100}},
+            'context': {'project_id': self.id},
             'domain': domain or [('id', 'in', expense_ids)],
         })
         if len(expense_ids) == 1:

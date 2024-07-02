@@ -16,7 +16,7 @@ class Project(models.Model):
         self.ensure_one()
         action = self.env['ir.actions.actions']._for_xml_id('mrp.mrp_production_action')
         action['domain'] = [('id', 'in', self.analytic_account_id.production_ids.ids)]
-        action['context'] = {'default_analytic_account_id': self.analytic_account_id.id}
+        action['context'] = {'project_id': self.id}
         if self.production_count == 1:
             action['view_mode'] = 'form'
             action['res_id'] = self.analytic_account_id.production_ids.id
