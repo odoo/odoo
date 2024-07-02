@@ -1,4 +1,84 @@
 <odoo>
+    <template id="portal_my_home_overdue_invoice" name="Portal layout: overdue invoices" inherit_id="portal.portal_breadcrumbs" priority="30">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'overdue_invoices'" t-attf-class="breadcrumb-item active">
+                <a t-attf-href="/my/invoices?{{ keep_query() }}">Invoices &amp; Bills</a>
+            </li>
+            <li t-if="payment" class="breadcrumb-item active">
+                <t t-out="payment['reference']"/>
+            </li>
+        </xpath>
+
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="after">
+            <a t-if="page_name == 'invoice' and not invoice and filterby != 'bills' and overdue_invoice_count > 0"
+                class='btn btn-primary'
+                href='/my/invoices/overdue'>
+                Pay overdue
+            </a>
+        </xpath>
+    </template>
+
+    <template id="account_payment.portal_docs_entry" inherit_id="portal.portal_docs_entry">
+        <xpath expr="//a" position="inside">
+            <t t-out="html_children"/>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_account_payment" name="Overdue invoices" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+            <t t-set="portal_alert_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_alert_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="bg_color" t-value="'alert alert-primary align-items-center'"/>
+                <t t-set="placeholder_count" t-value="'overdue_invoice_count'"/>
+                <t t-set="title">Invoices to pay</t>
+                <t t-set="url" t-value="'/my/invoices?filterby=overdue_invoices'"/>
+                <t t-set="show_count" t-value="True"/>
+                <t t-set="html_children">
+                    <button onclick="event.preventDefault(); window.location.href='/my/invoices/overdue'" class="btn btn-secondary ms-auto">
+                        Pay Now
+                    </button>
+                </t>
+            </t>
+        </div>
+    </template> 
+
+    <template id="payment_summary_form" name="Payment Summary">
+        <div class="text-bg-light row mx-0 rounded">
+            <t t-call="payment.summary_item">
+                <t t-set="name" t-value="'amount'"/>
+                <t t-set="label">Amount</t>
+                <t t-set="value" t-value="abs(amount)"/>
+                <t t-set="options"
+                    t-value="{'widget': 'monetary', 'display_currency': currency}"/>
+            </t>
+            <t t-call="payment.summary_item">
+                <t t-set="name" t-value="'reference'"/>
+                <t t-set="label">Reference</t>
+                <t t-set="value" t-value="reference"/>
+                <t t-set="include_separator" t-value="True"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="portal_overdue_invoices_page" name="Overdue payments">
+        <t t-call="portal.portal_layout">
+            <div class="row justify-content-center my-3">
+                <div class="col-lg-7">
+                    <t t-call="account_payment.payment_summary_form">
+                        <t t-set="amount" t-value="payment['amount']"/>
+                        <t t-set="reference" t-value="payment['reference']"/>
+                    </t>
+                    <div class="mt-4">
+                        <t t-call="payment.form"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <template id="portal_my_invoices_payment" name="Payment on My Invoices" inherit_id="account.portal_my_invoices">
         <xpath expr="//t[@t-call='portal.portal_table']/thead/tr/th[last()]" position="before">
             <th></th>
@@ -6,7 +86,11 @@
         <xpath expr="//t[@t-foreach='invoices']/tr/td[last()]" position="before">
             <td class="text-center">
                 <a t-if="invoice._has_to_be_paid()"
-                    t-att-href="invoice.get_portal_url(anchor='portal_pay')" title="Pay Now" aria-label="Pay now" class="btn btn-sm btn-primary" role="button">
+                    t-att-href="invoice.get_portal_url(anchor='portal_pay', query_string='&amp;showPaymentModal=true')"
+                    title="Pay Now"
+                    aria-label="Pay Now"
+                    class="btn btn-sm btn-primary"
+                    role="button">
                     <i class="fa fa-arrow-circle-right"/><span class='d-none d-md-inline'> Pay Now</span>
                 </a>
             </td>
@@ -32,15 +116,21 @@
     </template>
 
     <template id="portal_invoice_payment" name="Invoice Payment">
-        <div class="row">
+        <div id="portal_invoice_payment" class="row">
             <div class="modal fade" id="pay_with" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h3 class="modal-title">Pay with</h3>
+                        <div class="modal-header pb-0">
+                            <h3 class="modal-title">Pay</h3>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+                            <div class="mb-4">
+                                <t t-call="account_payment.payment_summary_form">
+                                    <t t-set="amount" t-value="invoice.amount_total_signed"/>
+                                    <t t-set="reference" t-value="invoice.payment_reference"/>
+                                </t>
+                            </div>
                             <div t-if="company_mismatch">
                                 <t t-call="payment.company_mismatch_warning"/>
                             </div>
@@ -64,6 +154,7 @@
         </xpath>
         <xpath expr="//t[@t-call='portal.portal_record_sidebar']//div[hasclass('o_download_pdf')]" position="before">
             <a t-if="invoice._has_to_be_paid()"
+                id="invoice_portal_pay_now_btn"
                 href="#"
                 class="btn btn-primary"
                 data-bs-toggle="modal"

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from dateutil.relativedelta import relativedelta
+
+from odoo import fields, Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
-from odoo import fields, Command
+from odoo.tests.common import Like
 
-from dateutil.relativedelta import relativedelta
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 @tagged('post_install', '-at_install')
@@ -13,6 +15,8 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        cls.current_year = fields.Date.today().year
 
         cls.other_currency = cls.setup_other_currency('EUR')
         cls.other_currency_2 = cls.setup_other_currency('CAD', rates=[('2016-01-01', 3.0), ('2017-01-01', 0.01)])
@@ -165,7 +169,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'ref': 'INV/2017/00001 INV/2017/00002',
+            'ref': Like(f'BATCH/{self.current_year}/...'),
             'payment_method_line_id': self.inbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -199,7 +203,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'ref': 'INV/2017/00001 INV/2017/00002',
+            'ref': Like(f'BATCH/{self.current_year}/...'),
             'payment_method_line_id': self.inbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -234,7 +238,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'ref': 'INV/2017/00001 INV/2017/00002',
+            'ref': Like(f'BATCH/{self.current_year}/...'),
             'payment_method_line_id': self.inbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -277,7 +281,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'ref': 'INV/2017/00001 INV/2017/00002',
+            'ref': Like(f'BATCH/{self.current_year}/...'),
             'payment_method_line_id': self.inbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -320,7 +324,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'ref': 'BILL/2017/01/0001 BILL/2017/01/0002',
+            'ref': Like(f'BATCH/{self.current_year}/...'),
             'payment_method_line_id': self.outbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -363,7 +367,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'ref': 'BILL/2017/01/0001 BILL/2017/01/0002',
+            'ref': Like(f'BATCH/{self.current_year}/...'),
             'payment_method_line_id': self.outbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -520,7 +524,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
         self.assertRecordValues(payments, [
             {
-                'ref': 'BILL/2017/01/0001 BILL/2017/01/0002 RBILL/2017/01/0001',
+                'ref': Like(f'BATCH/{self.current_year}/...'),
                 'payment_method_line_id': self.outbound_payment_method_line.id,
             },
         ])
@@ -647,7 +651,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
         self.assertRecordValues(payments, [
             {
-                'ref': 'BILL/2017/01/0001 BILL/2017/01/0002',
+                'ref': Like(f'BATCH/{self.current_year}/...'),
                 'payment_method_line_id': self.outbound_payment_method_line.id,
             },
             {
