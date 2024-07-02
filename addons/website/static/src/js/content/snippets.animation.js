@@ -711,15 +711,15 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
      * @override
      */
     start: function () {
-        // TODO: this code should be refactored to make more sense and be better
-        // integrated with Odoo (this refactoring should be done in master).
-
         const proms = [this._super.apply(this, arguments)];
         let iframeEl = this.$target[0].querySelector(':scope > iframe');
 
         // The following code is only there to ensure compatibility with
         // videos added before bug fixes or new Odoo versions where the
-        // <iframe/> element is properly saved.
+        // <iframe/> element is properly saved in the DOM. Previous versions
+        // could sanitize those depending on the editor user access rights or
+        // the type of content that was edited. Now those are never sanitized.
+        // TODO: remove this code once a proper migration script is done.
         if (!iframeEl) {
             iframeEl = this._generateIframe();
         }
@@ -769,6 +769,7 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
             return;
         }
         var domain = m[1].replace(/^www\./, '');
+        // See host_whitelist on the python side
         var supportedDomains = ['youtu.be', 'youtube.com', 'youtube-nocookie.com', 'instagram.com', 'vine.co', 'player.vimeo.com', 'vimeo.com', 'dailymotion.com', 'player.youku.com', 'youku.com'];
         if (!_.contains(supportedDomains, domain)) {
             // Unsupported domain, don't inject iframe
