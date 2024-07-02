@@ -373,3 +373,6 @@ class Pricelist(models.Model):
                 pricelists='\n'.join(linked_items.base_pricelist_id.mapped('display_name')),
                 other_pricelists='\n'.join(linked_items.pricelist_id.mapped('display_name')),
             ))
+
+    def print_pricelist(self):
+        return self.env.ref('product.action_report_print_pricelist').report_action(self)

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_print_pricelist">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <t t-foreach="docs" t-as="pricelist">
+                        <div class="container bg-white p-4 my-4">
+                            <h2>
+                                Pricelist: <span t-field="pricelist.display_name"/>
+                            </h2>
+                            <div class="row">
+                                <div class="col-12">
+                                    <table t-if="pricelist.item_ids" class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Minimum Quantity</th>
+                                                <th>Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="pricelist.item_ids" t-as="item">
+                                                <tr>
+                                                    <td>
+                                                        <t t-out="item.name"/>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <t t-out="item.min_quantity"/>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <t t-out="item.price"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

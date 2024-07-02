@@ -6,6 +6,7 @@ import { Layout } from "@web/search/layout";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
 
 function sendCustomNotification(type, message) {
@@ -30,6 +31,7 @@ export class ProductPricelistReport extends Component {
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
+        this.dialog = useService("dialog");
 
         this.MAX_QTY = 5;
         const pastState = this.props.state || {};
@@ -174,12 +176,85 @@ export class ProductPricelistReport extends Component {
     }
 
     onClickPrint() {
+        const selectedFormat = document.getElementById('formats').value;
+        if (selectedFormat === 'pdf') {
+            this.export_pdf();
+        } else if (selectedFormat === 'csv') {
+            this.export_csv();
+        } else if (selectedFormat === 'xlsx') {
+            this.export_xlsx();
+        }
+    }
+
+    export_pdf() {
         this.action.doAction({
             type: 'ir.actions.report',
             report_type: 'qweb-pdf',
             report_name: 'product.report_pricelist',
             report_file: 'product.report_pricelist',
             data: this.reportParams,
+        });
+    }
+
+    async export_csv() {
+        // Fetch the product data from the server
+        const csvData = await this.orm.call(
+            "report.product.report_pricelist", "export_csv", [], { data: this.reportParams }
+        );
+
+        // Prepare CSV content
+        const csvContent = "data:text/csv;charset=utf-8," + csvData;
+
+        // Encode URI
+        const encodedUri = encodeURI(csvContent);
+
+        // Create and click the download link
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "products.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    async export_xlsx() {
+        // Fetch the product data from the server
+        const xlsData = await this.orm.call(
+            "report.product.report_pricelist", "export_xls", [], { data: this.reportParams }
+        );
+
+        // Convert base64 string to binary
+        const binaryString = atob(xlsData);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        // Create a Blob with the correct MIME type
+        const blob = new Blob([bytes.buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        // Create and click the download link
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "pricelist.xlsx";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    onClickAllProducts() {
+        this.dialog.add(SelectCreateDialog, {
+            resModel: this.activeModel || 'product.template',
+            title: _t("All Products"),
+            noCreate: true,
+            onSelected: async (resIds) => {
+                resIds.forEach(id => {
+                    if (!this.activeIds.includes(id)) {
+                        this.activeIds.push(id);
+                    }
+                });
+                this.renderHtml();
+            },
         });
     }
 
