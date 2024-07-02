@@ -40,10 +40,11 @@
                         'border rounded-3 align-self-stretch flex-column' : extended,
                     }"
                 >
-                    <div class="position-relative flex-grow-1">
-                        <textarea class="o-mail-Composer-input form-control px-3 border-0 rounded-3 shadow-none overflow-auto"
+                    <div class="position-relative flex-grow-1" t-att-class="{ 'p-1': !ui.isSmall and env.inChatWindow }">
+                        <textarea class="o-mail-Composer-input form-control shadow-none overflow-auto"
+                            t-att-class="{ 'px-3 rounded-3 border-0': !env.inChatWindow or ui.isSmall, 'px-2 rounded-4 border o-chatWindow': env.inChatWindow and !ui.isSmall }"
                             t-ref="textarea"
-                            t-att-style="ui.isSmall ? 'height:60px;' : 'height:40px;'"
+                            t-att-style="ui.isSmall ? 'height:60px;' : (env.inChatWindow ? 'height:26px;' : 'height:40px;')"
                             t-on-keydown="onKeydown"
                             t-on-focusin="onFocusin"
                             t-on-focusout="() => this.props.composer.isFocused = false"
@@ -59,7 +60,8 @@
                              the textarea properly without flicker.
                         -->
                         <textarea
-                            class="o-mail-Composer-fake position-absolute px-3"
+                            class="o-mail-Composer-fake position-absolute"
+                            t-att-class="{ 'px-3': !env.inChatWindow or ui.isSmall, 'o-chatWindow px-2': env.inChatWindow and !ui.isSmall }"
                             t-model="props.composer.text"
                             t-ref="fakeTextarea"
                             disabled="1"
@@ -68,7 +70,7 @@
                     <div class="o-mail-Composer-actions d-flex rounded"
                         t-att-class="{
                             'ms-1': compact and ui.isSmall,
-                            'mx-1': compact and !ui.isSmall,
+                            'pe-2': compact and !ui.isSmall,
                             'ms-3': normal,
                             'mx-3 border-top p-1': extended,
                         }"
