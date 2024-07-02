@@ -460,8 +460,7 @@ export class MailThread extends models.ServerModel {
                     "discuss.channel/new_message",
                     {
                         data: new mailDataHelpers.Store(
-                            "Message",
-                            MailMessage._message_format([message_id])
+                            MailMessage.browse(message_id)
                         ).get_result(),
                         id: channel.id,
                         temporary_id,
@@ -495,18 +494,13 @@ export class MailThread extends models.ServerModel {
                         notifications.push([
                             partner,
                             "mail.message/inbox",
-                            new mailDataHelpers.Store()
-                                .add(
-                                    "Message",
-                                    MailMessage._message_format(
-                                        [message.id],
-                                        makeKwArgs({
-                                            for_current_user: true,
-                                            follower_by_message_user,
-                                        })
-                                    )
-                                )
-                                .get_result(),
+                            new mailDataHelpers.Store(
+                                MailMessage.browse(message.id),
+                                makeKwArgs({
+                                    for_current_user: true,
+                                    follower_by_message_user,
+                                })
+                            ).get_result(),
                         ]);
                     }
                 }

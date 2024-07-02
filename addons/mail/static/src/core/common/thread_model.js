@@ -651,7 +651,7 @@ export class Thread extends Record {
         }
         try {
             // ordered messages received: newest to oldest
-            const { data } = await rpc(this.getFetchRoute(), {
+            const { data, messages } = await rpc(this.getFetchRoute(), {
                 ...this.getFetchParams(),
                 limit:
                     !around && around !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2,
@@ -659,9 +659,9 @@ export class Thread extends Record {
                 around,
                 before,
             });
-            const { Message: messages = [] } = this.store.insert(data, { html: true });
+            this.store.insert(data, { html: true });
             this.isLoaded = true;
-            return messages.reverse();
+            return this.store.Message.insert(messages.reverse());
         } catch (e) {
             this.hasLoadingFailed = true;
             throw e;
@@ -1081,7 +1081,7 @@ export class Thread extends Record {
             return;
         }
         const { Message: messages = [] } = this.store.insert(data, { html: true });
-        const message = messages.at(-1);
+        const message = messages[0];
         this.addOrReplaceMessage(message, tmpMsg);
         if (this.selfMember?.seen_message_id?.id < message.id) {
             this.selfMember.seen_message_id = message;

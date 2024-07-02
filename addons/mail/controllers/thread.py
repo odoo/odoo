@@ -24,10 +24,14 @@ class ThreadController(http.Controller):
             ("message_type", "!=", "user_notification"),
         ]
         res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
+        messages = res.pop("messages")
         if not request.env.user._is_public():
-            res["messages"].set_message_done()
-        store = Store("Message", res.pop("messages")._message_format(for_current_user=True))
-        return {**res, "data": store.get_result()}
+            messages.set_message_done()
+        return {
+            **res,
+            "data": Store(messages, for_current_user=True).get_result(),
+            "messages": [{"id": message.id} for message in messages],
+        }
 
     @http.route("/mail/partner/from_email", methods=["POST"], type="json", auth="user")
     def mail_thread_partner_from_email(self, emails, additional_values=None):
@@ -116,7 +120,7 @@ class ThreadController(http.Controller):
                 if key in self._get_allowed_message_post_params()
             }
         )
-        return Store("Message", message._message_format(for_current_user=True)).get_result()
+        return Store(message, for_current_user=True).get_result()
 
     @http.route("/mail/message/update_content", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
@@ -132,4 +136,4 @@ class ThreadController(http.Controller):
         guest.env[message_sudo.model].browse([message_sudo.res_id])._message_update_content(
             message_sudo, body, attachment_ids=attachment_ids, partner_ids=partner_ids
         )
-        return Store("Message", message_sudo._message_format(for_current_user=True)).get_result()
+        return Store(message_sudo, for_current_user=True).get_result()

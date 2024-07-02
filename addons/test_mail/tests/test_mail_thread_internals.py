@@ -449,10 +449,7 @@ class TestDiscuss(MailCommon, TestRecipients):
         )
 
         with self.assertRaises(exceptions.AccessError):
-            Store.add(
-                "Message",
-                notification_msg.with_env(self.env)._message_format(for_current_user=True),
-            ).get_result()
+            Store(notification_msg.with_env(self.env), for_current_user=True).get_result()
 
         channel_message = self.env['mail.message'].sudo().search([('model', '=', 'discuss.channel'), ('res_id', 'in', channel.ids)])
         self.assertEqual(len(channel_message), 1, "Test message should have been posted")
@@ -467,7 +464,7 @@ class TestNoThread(MailCommon, TestRecipients):
     """ Specific tests for cross models thread features """
 
     @users('employee')
-    def test_message_format(self):
+    def test_message_to_store(self):
         """ Test formatting of messages when linked to non-thread models.
         Format could be asked notably if an inbox notification due to a
         'message_notify' happens. """
@@ -480,16 +477,12 @@ class TestNoThread(MailCommon, TestRecipients):
             'record_name': 'Not used in message_format',
             'res_id': test_record.id,
         })
-        formatted = Store("Message", message._message_format(for_current_user=True)).get_result()[
-            "Message"
-        ][0]
+        formatted = Store(message, for_current_user=True).get_result()["Message"][0]
         self.assertEqual(formatted['default_subject'], test_record.name)
         self.assertEqual(formatted['record_name'], test_record.name)
 
         test_record.write({'name': 'Just Test'})
-        formatted = Store("Message", message._message_format(for_current_user=True)).get_result()[
-            "Message"
-        ][0]
+        formatted = Store(message, for_current_user=True).get_result()["Message"][0]
         self.assertEqual(formatted['default_subject'], 'Just Test')
         self.assertEqual(formatted['record_name'], 'Just Test')
 

@@ -3182,13 +3182,9 @@ class MailThread(models.AbstractModel):
                         self.env["res.partner"].browse(partner_id),
                         "mail.message/inbox",
                         Store(
-                            "Message",
-                            self.env["mail.message"]
-                            .with_user(user_id)
-                            ._message_format(
-                                for_current_user=True,
-                                follower_by_message_user=follower_by_message_user,
-                            ),
+                            message.with_user(user_id),
+                            for_current_user=True,
+                            follower_by_message_user=follower_by_message_user,
                         ).get_result(),
                     )
                 )

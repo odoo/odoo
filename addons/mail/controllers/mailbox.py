@@ -11,25 +11,35 @@ class MailboxController(http.Controller):
         domain = [("needaction", "=", True)]
         res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
         messages = res.pop("messages")
-        follower_by_message_user = request.env.user.sudo(False)._get_follower_by_message_user(messages)
-        store = Store(
-            "Message",
-            messages._message_format(
-                for_current_user=True, follower_by_message_user=follower_by_message_user
-            ),
+        follower_by_message_user = request.env.user.sudo(False)._get_follower_by_message_user(
+            messages
         )
-        return {**res, "data": store.get_result()}
+        return {
+            **res,
+            "data": Store(
+                messages, for_current_user=True, follower_by_message_user=follower_by_message_user
+            ).get_result(),
+            "messages": [{"id": message.id} for message in messages],
+        }
 
     @http.route("/mail/history/messages", methods=["POST"], type="json", auth="user")
     def discuss_history_messages(self, search_term=None, before=None, after=None, limit=30, around=None):
         domain = [("needaction", "=", False)]
         res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
-        store = Store("Message", res.pop("messages")._message_format(for_current_user=True))
-        return {**res, "data": store.get_result()}
+        messages = res.pop("messages")
+        return {
+            **res,
+            "data": Store(messages, for_current_user=True).get_result(),
+            "messages": [{"id": message.id} for message in messages],
+        }
 
     @http.route("/mail/starred/messages", methods=["POST"], type="json", auth="user")
     def discuss_starred_messages(self, search_term=None, before=None, after=None, limit=30, around=None):
         domain = [("starred_partner_ids", "in", [request.env.user.partner_id.id])]
         res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
-        store = Store("Message", res.pop("messages")._message_format(for_current_user=True))
-        return {**res, "data": store.get_result()}
+        messages = res.pop("messages")
+        return {
+            **res,
+            "data": Store(messages, for_current_user=True).get_result(),
+            "messages": [{"id": message.id} for message in messages],
+        }

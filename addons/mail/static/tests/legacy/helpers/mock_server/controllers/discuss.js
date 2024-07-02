@@ -257,6 +257,7 @@ patch(MockServer.prototype, {
                     res.messages.map((message) => message.id)
                 ),
             },
+            message: res.messages.map((message) => ({ id: message.id })),
         };
     },
     /**
@@ -370,6 +371,7 @@ patch(MockServer.prototype, {
                     messagesWithNotification.map((message) => message.id)
                 ),
             },
+            message: res.messages.map((message) => ({ id: message.id })),
         };
     },
     /**
@@ -386,8 +388,8 @@ patch(MockServer.prototype, {
         limit = 30
     ) {
         return {
-            count: 0,
             data: {},
+            messages: [],
         };
     },
     /**
@@ -418,6 +420,7 @@ patch(MockServer.prototype, {
                     res.messages.map((message) => message.id)
                 ),
             },
+            message: res.messages.map((message) => ({ id: message.id })),
         };
     },
     /**
@@ -683,6 +686,7 @@ patch(MockServer.prototype, {
                     res.messages.map((message) => message.id)
                 ),
             },
+            message: res.messages.map((message) => ({ id: message.id })),
         };
     },
 });

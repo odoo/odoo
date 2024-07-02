@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons.mail.tools.discuss import Store
 
 
 class MailMessage(models.Model):
@@ -16,12 +17,22 @@ class MailMessage(models.Model):
             return guest and self.model == "discuss.channel" and self.res_id in guest.sudo().channel_ids.ids
         return super()._validate_access_for_current_persona(operation)
 
-    def _message_format_extras(self, format_reply):
-        self.ensure_one()
-        vals = super()._message_format_extras(format_reply)
-        if format_reply and self.model == "discuss.channel" and self.parent_id:
-            vals["parentMessage"] = self.parent_id._message_format(format_reply=False)[0]
-        return vals
+    def _extras_to_store(self, store: Store, format_reply):
+        super()._extras_to_store(store, format_reply=format_reply)
+        if format_reply:
+            # sudo: mail.message: access to parent is allowed
+            for message in self.sudo().filtered(lambda message: message.model == "discuss.channel"):
+                if message.parent_id:
+                    store.add(message.parent_id, format_reply=False)
+                store.add(
+                    "Message",
+                    {
+                        "id": message.id,
+                        "parentMessage": (
+                            {"id": message.parent_id.id} if message.parent_id else False
+                        ),
+                    },
+                )
 
     def _bus_notification_target(self):
         self.ensure_one()

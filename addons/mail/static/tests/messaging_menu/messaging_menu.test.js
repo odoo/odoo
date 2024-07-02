@@ -23,6 +23,7 @@ import { Deferred, mockUserAgent } from "@odoo/hoot-mock";
 import {
     Command,
     getService,
+    makeKwArgs,
     mockService,
     patchWithCleanup,
     serverState,
@@ -1075,8 +1076,8 @@ test("messaging menu should show new needaction messages from chatter", async ()
         partner,
         "mail.message/inbox",
         new mailDataHelpers.Store(
-            "Message",
-            pyEnv["mail.message"]._message_format(messageId, true)
+            pyEnv["mail.message"].browse(messageId),
+            makeKwArgs({ for_current_user: true })
         ).get_result()
     );
     await contains(".o-mail-NotificationItem-text", { text: "Frodo Baggins: @Mitchel Admin" });

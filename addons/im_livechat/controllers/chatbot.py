@@ -17,9 +17,7 @@ class LivechatChatbotScriptController(http.Controller):
             return None
         chatbot_language = self._get_chatbot_language()
         message = discuss_channel.with_context(lang=chatbot_language)._chatbot_restart(chatbot)
-        store = Store()
-        store.add("Message", message._message_format(for_current_user=True))
-        return store.get_result()
+        return Store(message, for_current_user=True).get_result()
 
     @http.route("/chatbot/answer/save", type="json", auth="public")
     @add_guest_to_context
@@ -65,10 +63,8 @@ class LivechatChatbotScriptController(http.Controller):
             return None
 
         posted_message = next_step._process_step(discuss_channel)
-        store = Store()
-        store.add("Message", posted_message._message_format(for_current_user=True))
         return {
-            "data": store.get_result(),
+            "data": Store(posted_message, for_current_user=True).get_result(),
             'scriptStep': {
                 'id': next_step.id,
                 'answers': [{
@@ -104,9 +100,7 @@ class LivechatChatbotScriptController(http.Controller):
             result = chatbot._validate_email(user_answer.body, discuss_channel)
 
             if posted_message := result.pop("posted_message"):
-                store = Store()
-                store.add("Message", posted_message._message_format(for_current_user=True))
-                result["data"] = store.get_result()
+                result["data"] = Store(posted_message, for_current_user=True).get_result()
 
         return result
 

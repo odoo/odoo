@@ -84,12 +84,11 @@ export class ChatBotService {
             chatbot_script_id: this.chatbot.script.id,
         });
         const { Message: messages = [] } = this.store.insert(data, { html: true });
+        const [message] = messages;
         if (!this.livechatService.thread) {
             return;
         }
-        for (const message of messages) {
-            this.livechatService.thread.messages.add(message);
-        }
+        this.livechatService.thread.messages.add(message);
         this.chatbot.restart();
         this._triggerNextStep();
     }

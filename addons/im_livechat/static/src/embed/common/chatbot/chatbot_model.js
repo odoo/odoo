@@ -60,8 +60,9 @@ export class Chatbot extends Record {
             return;
         }
         const { Message: messages = [] } = this.store.insert(this.currentStep.data, { html: true });
+        const [message] = messages;
         this.currentStep.message =
-            messages[0] ??
+            message ??
             this.store.Message.insert(
                 {
                     id: this.store.getNextTemporaryId(),
@@ -168,9 +169,8 @@ export class Chatbot extends Record {
             channel_id: this.thread.id,
         });
         const { Message: messages = [] } = this.store.insert(data, { html: true });
-        for (const message of messages) {
-            this.thread.messages.add(message);
-        }
+        const [message] = messages;
+        this.thread.messages.add(message);
         return success;
     }
 

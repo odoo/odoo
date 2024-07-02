@@ -891,8 +891,9 @@ class Message(models.Model):
                 record_by_message[message] = self.env[message.model].browse(message.res_id).with_prefetch(record_ids_by_model_name[message.model])
         return record_by_message
 
-    def _message_format(
+    def _to_store(
         self,
+        store: Store,
         format_reply=True,
         msg_vals=None,
         for_current_user=False,
@@ -953,7 +954,12 @@ class Message(models.Model):
                 }
         """
         self.check_access_rule("read")
-        vals_list = self._read_format(self._get_message_format_fields())
+        vals_list = self._read_format([
+            'id', 'body', 'date',  # base message fields
+            'message_type', 'subject',  # message specific
+            'model', 'res_id', 'record_name',  # document related FIXME need to be kept for mobile app as iOS app cannot be updated
+            'starred_partner_ids',  # list of partner ids for whom the message is starred (legacy)
+        ])
         com_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
         note_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_note")
         # fetch scheduled notifications once, only if msg_vals is not given to
@@ -970,11 +976,6 @@ class Message(models.Model):
         record_by_message = self._record_by_message()
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
-            author = False
-            if message_sudo.author_guest_id:
-                author = message_sudo.author_guest_id._guest_format(fields={"id": True, "name": True}).get(message_sudo.author_guest_id)
-            elif message_sudo.author_id:
-                author = message_sudo.author_id.mail_partner_format({'id': True, 'name': True, 'is_company': True, 'user': {"id": True}, "write_date": True}).get(message_sudo.author_id)
             record = record_by_message.get(message_sudo)
             if record:
                 # sudo: if mentionned in a non accessible thread, user should be able to see the name
@@ -995,10 +996,8 @@ class Message(models.Model):
                 'personas': [{'id': guest.id, 'name': guest.name, 'type': "guest"} for guest in reactions.guest_id] + [{'id': partner.id, 'name': partner.name, 'type': "partner"} for partner in reactions.partner_id],
                 'message': {'id': message_sudo.id},
             } for content, reactions in reactions_per_content.items()]
-            vals.update(message_sudo._message_format_extras(format_reply))
             vals.pop("starred_partner_ids", None)
             vals.update({
-                'author': author,
                 'default_subject': default_subject,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachments': sorted(message_sudo.attachment_ids._attachment_format(), key=lambda a: a["id"]),
@@ -1014,12 +1013,12 @@ class Message(models.Model):
                 "recipients": [{"id": p.id, "name": p.name, "type": "partner"} for p in message_sudo.partner_ids],
                 "scheduledDatetime": scheduled_dt_by_msg_id.get(message_sudo.id, False),
             })
-            if message_sudo.model and message_sudo.res_id:
-                thread = {"model": message_sudo.model, "id": message_sudo.res_id}
-                if message_sudo.model != "discuss.channel":
+            if record:
+                thread = {"model": record._name, "id": record.id}
+                if record._name != "discuss.channel":
                     thread["name"] = record_name
-                if self.env[message_sudo.model]._original_module:
-                    thread["module_icon"] = modules.module.get_module_icon(self.env[message_sudo.model]._original_module)
+                if self.env[record._name]._original_module:
+                    thread["module_icon"] = modules.module.get_module_icon(self.env[record._name]._original_module)
                 vals["thread"] = thread
             if for_current_user:
                 allowed_tracking_ids = message_sudo.tracking_value_ids._filter_has_field_access(self.env)
@@ -1030,7 +1029,7 @@ class Message(models.Model):
                 vals["needaction"] = not self.env.user._is_public() and self.env.user.partner_id in notifications_partners
                 vals["starred"] = message_sudo.starred
                 vals["trackingValues"] = displayed_tracking_ids._tracking_value_format()
-                if follower_by_message_user:
+                if record and follower_by_message_user:
                     if follower := follower_by_message_user.get((message_sudo, self.env.user)):
                         vals["thread"]["selfFollower"] = {
                             "id": follower.id,
@@ -1038,12 +1037,56 @@ class Message(models.Model):
                             "partner": {"id": follower.partner_id.id, "type": "partner"},
                         }
                     else:
-                        vals['thread']['selfFollower'] = False
-        return vals_list
+                        vals["thread"]["selfFollower"] = False
+            store.add("Message", vals)
+        # sudo: mail.message: access to author is allowed
+        self.sudo()._author_to_store(store)
+        # Add extras at the end to guarantee order in result. In particular, the parent message
+        # needs to be after the current message (client code assuming the first received message is
+        # the one just posted for example, and not the message being replied to).
+        self._extras_to_store(store, format_reply=format_reply)
 
-    def _message_format_extras(self, format_reply):
-        self.ensure_one()
-        return {}
+    def _author_to_store(self, store: Store):
+        for message in self:
+            if message.author_guest_id:
+                store.add(
+                    "Persona",
+                    message.author_guest_id._guest_format(fields={"id": True, "name": True}).get(
+                        message.author_guest_id
+                    ),
+                )
+                store.add(
+                    "Message",
+                    {
+                        "id": message.id,
+                        "author": {"id": message.author_guest_id.id, "type": "guest"},
+                        "email_from": message.email_from,
+                    },
+                )
+            elif message.author_id:
+                store.add(
+                    "Persona",
+                    message.author_id.mail_partner_format(
+                        {
+                            "id": True,
+                            "name": True,
+                            "is_company": True,
+                            "user": {"id": True},
+                            "write_date": True,
+                        }
+                    ).get(message.author_id),
+                )
+                store.add(
+                    "Message",
+                    {
+                        "id": message.id,
+                        "author": {"id": message.author_id.id, "type": "partner"},
+                        "email_from": message.email_from,
+                    },
+                )
+
+    def _extras_to_store(self, store: Store, format_reply):
+        pass
 
     @api.model
     def _message_fetch(self, domain, search_term=None, before=None, after=None, around=None, limit=30):
@@ -1072,14 +1115,6 @@ class Message(models.Model):
         if after:
             res["messages"] = res["messages"].sorted('id', reverse=True)
         return res
-
-    def _get_message_format_fields(self):
-        return [
-            'id', 'body', 'date', 'email_from',  # base message fields
-            'message_type', 'subject',  # message specific
-            'model', 'res_id', 'record_name',  # document related FIXME need to be kept for mobile app as iOS app cannot be updated
-            'starred_partner_ids',  # list of partner ids for whom the message is starred (legacy)
-        ]
 
     def _message_notifications_to_store(self, store: Store):
         """Returns the current messages and their corresponding notifications in

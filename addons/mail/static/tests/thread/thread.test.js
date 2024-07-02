@@ -22,7 +22,7 @@ import {
 import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
-import { Command, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { Command, makeKwArgs, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -852,8 +852,8 @@ test("Opening thread with needaction messages should mark all messages of thread
         partner,
         "mail.message/inbox",
         new mailDataHelpers.Store(
-            "Message",
-            pyEnv["mail.message"]._message_format(messageId, true)
+            pyEnv["mail.message"].browse(messageId),
+            makeKwArgs({ for_current_user: true })
         ).get_result()
     );
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });

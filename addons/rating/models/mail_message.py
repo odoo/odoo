@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons.mail.tools.discuss import Store
 
 
 class MailMessage(models.Model):
@@ -26,14 +26,16 @@ class MailMessage(models.Model):
         ])
         return [('id', 'in', ratings.mapped('message_id').ids)]
 
-    def _message_format(
+    def _to_store(
         self,
+        store: Store,
         format_reply=True,
         msg_vals=None,
         for_current_user=False,
         follower_by_message_user=None,
     ):
-        message_values = super()._message_format(
+        super()._to_store(
+            store,
             format_reply=format_reply,
             msg_vals=msg_vals,
             for_current_user=for_current_user,
@@ -46,13 +48,15 @@ class MailMessage(models.Model):
         )
         if rating_mixin_messages:
             ratings = self.env['rating.rating'].sudo().search([('message_id', 'in', rating_mixin_messages.ids), ('consumed', '=', True)])
-            rating_by_message_id = dict((r.message_id.id, r) for r in ratings)
-            for vals in message_values:
-                if vals['id'] in rating_by_message_id:
-                    rating = rating_by_message_id[vals['id']]
-                    vals['rating'] = {
-                        'id': rating.id,
-                        'ratingImageUrl': rating.rating_image_url,
-                        'ratingText': rating.rating_text,
-                    }
-        return message_values
+            for rating in ratings:
+                store.add(
+                    "Message",
+                    {
+                        "id": rating.message_id.id,
+                        "rating": {
+                            "id": rating.id,
+                            "ratingImageUrl": rating.rating_image_url,
+                            "ratingText": rating.rating_text,
+                        },
+                    },
+                )

@@ -1130,7 +1130,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
-class TestMailFormattersPerformance(BaseMailPerformance):
+class TestMessageToStorePerformance(BaseMailPerformance):
 
     @classmethod
     def setUpClass(cls):
@@ -1251,8 +1251,8 @@ class TestMailFormattersPerformance(BaseMailPerformance):
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
     @warmup
-    def test_message_format_multi(self):
-        """Test performance of `_message_format` and of `message_format` with
+    def test_message_to_store_multi(self):
+        """Test performance of `_to_store` and of `message_format` with
         multiple messages with multiple attachments, different authors, various
         notifications, and different tracking values.
 
@@ -1270,7 +1270,7 @@ class TestMailFormattersPerformance(BaseMailPerformance):
         messages_all = self.messages_all.with_env(self.env)
 
         with self.assertQueryCount(employee=26):
-            res = Store("Message", messages_all._message_format(for_current_user=True)).get_result()
+            res = Store(messages_all, for_current_user=True).get_result()
 
         self.assertEqual(len(res["Message"]), 2 * 2)
         for message in res["Message"]:
@@ -1279,11 +1279,11 @@ class TestMailFormattersPerformance(BaseMailPerformance):
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
     @warmup
-    def test_message_format_single(self):
+    def test_message_to_store_single(self):
         message = self.messages_all[0].with_env(self.env)
 
         with self.assertQueryCount(employee=23):
-            res = Store("Message", message._message_format(for_current_user=True)).get_result()
+            res = Store(message, for_current_user=True).get_result()
 
         self.assertEqual(len(res["Message"]), 1)
         self.assertEqual(len(res["Message"][0]["attachments"]), 2)
@@ -1291,7 +1291,7 @@ class TestMailFormattersPerformance(BaseMailPerformance):
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
     @warmup
-    def test_message_format_group_thread_name_by_model(self):
+    def test_message_to_store_group_thread_name_by_model(self):
         """Ensures the fetch of multiple thread names is grouped by model."""
         records = []
         for _i in range(5):
@@ -1304,14 +1304,14 @@ class TestMailFormattersPerformance(BaseMailPerformance):
         } for record in records])
 
         with self.assertQueryCount(employee=7):
-            res = Store("Message", messages._message_format(for_current_user=True)).get_result()
+            res = Store(messages, for_current_user=True).get_result()
             self.assertEqual(len(res["Message"]), 6)
 
         self.env.flush_all()
         self.env.invalidate_all()
 
         with self.assertQueryCount(employee=15):
-            res = Store("Message", messages._message_format(for_current_user=True)).get_result()
+            res = Store(messages, for_current_user=True).get_result()
             self.assertEqual(len(res["Message"]), 6)
 
 

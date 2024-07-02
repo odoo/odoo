@@ -32,15 +32,14 @@ export class MailCoreWeb {
         });
         this.busService.subscribe("mail.message/inbox", (payload, { id: notifId }) => {
             const { Message: messages = [] } = this.store.insert(payload, { html: true });
+            const message = messages[0];
             const inbox = this.store.discuss.inbox;
-            for (const message of messages) {
-                if (notifId > inbox.counter_bus_id) {
-                    inbox.counter++;
-                }
-                inbox.messages.add(message);
-                if (notifId > message.thread.message_needaction_counter_bus_id) {
-                    message.thread.message_needaction_counter++;
-                }
+            if (notifId > inbox.counter_bus_id) {
+                inbox.counter++;
+            }
+            inbox.messages.add(message);
+            if (notifId > message.thread.message_needaction_counter_bus_id) {
+                message.thread.message_needaction_counter++;
             }
         });
         this.busService.subscribe("mail.message/mark_as_read", (payload, { id: notifId }) => {

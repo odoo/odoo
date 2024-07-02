@@ -1485,7 +1485,10 @@ export class Model extends Array {
 
     /** @param {MaybeIterable<number>} idOrIds */
     browse(idOrIds) {
-        return this._filter([["id", "in", ensureArray(idOrIds)]]).map((record) => record.id);
+        const ids = ensureArray(idOrIds);
+        return this._filter([["id", "in", ids]])
+            .map((record) => record.id)
+            .sort((a, b) => ids.indexOf(a) - ids.indexOf(b));
     }
 
     /**

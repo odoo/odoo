@@ -313,19 +313,18 @@ async function discuss_channel_messages(request) {
         ["message_type", "!=", "user_notification"],
     ];
     const res = MailMessage._message_fetch(domain, search_term, before, after, around, limit);
+    const { messages } = res;
+    delete res.messages;
     if (!around) {
-        MailMessage.set_message_done(res.messages.map((message) => message.id));
+        MailMessage.set_message_done(messages.map((message) => message.id));
     }
-    const store = new mailDataHelpers.Store(
-        "Message",
-        MailMessage._message_format(
-            res.messages.map((message) => message.id),
-            true
-        )
-    );
     return {
         ...res,
-        data: store.get_result(),
+        data: new mailDataHelpers.Store(
+            MailMessage.browse(messages.map((message) => message.id)),
+            makeKwArgs({ for_current_user: true })
+        ).get_result(),
+        messages: messages.map((message) => ({ id: message.id })),
     };
 }
 
@@ -395,8 +394,8 @@ async function discuss_channel_pins(request) {
         ["pinned_at", "!=", false],
     ]);
     return new mailDataHelpers.Store(
-        "Message",
-        MailMessage._message_format(messageIds, true)
+        messageIds,
+        makeKwArgs({ for_current_user: true })
     ).get_result();
 }
 
@@ -450,7 +449,9 @@ async function discuss_history_messages(request) {
     const { after, around, before, limit = 30, search_term } = await parseRequestParams(request);
     const domain = [["needaction", "=", false]];
     const res = MailMessage._message_fetch(domain, search_term, before, after, around, limit);
-    const messagesWithNotification = res.messages.filter((message) => {
+    const { messages } = res;
+    delete res.messages;
+    const messagesWithNotification = messages.filter((message) => {
         const notifs = MailNotification.search_read([
             ["mail_message_id", "=", message.id],
             ["is_read", "=", true],
@@ -458,16 +459,13 @@ async function discuss_history_messages(request) {
         ]);
         return notifs.length > 0;
     });
-    const store = new mailDataHelpers.Store(
-        "Message",
-        MailMessage._message_format(
-            messagesWithNotification.map((message) => message.id),
-            true
-        )
-    );
     return {
         ...res,
-        data: store.get_result(),
+        data: new mailDataHelpers.Store(
+            MailMessage.browse(messagesWithNotification.map((message) => message.id)),
+            makeKwArgs({ for_current_user: true })
+        ).get_result(),
+        messages: messages.map((message) => ({ id: message.id })),
     };
 }
 
@@ -488,14 +486,14 @@ async function discuss_inbox_messages(request) {
         [this.env.user.id],
         messages
     );
-    const store = new mailDataHelpers.Store(
-        "Message",
-        MailMessage._message_format(
-            messages.map((message) => message.id),
+    return {
+        ...res,
+        data: new mailDataHelpers.Store(
+            MailMessage.browse(messages.map((message) => message.id)),
             makeKwArgs({ for_current_user: true, follower_by_message_user })
-        )
-    );
-    return { ...res, data: store.get_result() };
+        ).get_result(),
+        messages: messages.map((message) => ({ id: message.id })),
+    };
 }
 
 registerRoute("/mail/link_preview", mail_link_preview);
@@ -621,8 +619,8 @@ export async function mail_message_post(request) {
         });
     }
     return new mailDataHelpers.Store(
-        "Message",
-        MailMessage._message_format([messageId], true)
+        MailMessage.browse(messageId),
+        makeKwArgs({ for_current_user: true })
     ).get_result();
 }
 
@@ -665,8 +663,8 @@ async function mail_message_update_content(request) {
         },
     });
     return new mailDataHelpers.Store(
-        "Message",
-        MailMessage._message_format([message_id], true)
+        MailMessage.browse(message_id),
+        makeKwArgs({ for_current_user: true })
     ).get_result();
 }
 
@@ -761,14 +759,16 @@ async function discuss_starred_messages(request) {
     const { after, before, limit = 30, search_term } = await parseRequestParams(request);
     const domain = [["starred_partner_ids", "in", [this.env.user.partner_id]]];
     const res = MailMessage._message_fetch(domain, search_term, before, after, false, limit);
-    const store = new mailDataHelpers.Store(
-        "Message",
-        MailMessage._message_format(
-            res.messages.map((message) => message.id),
-            true
-        )
-    );
-    return { ...res, data: store.get_result() };
+    const { messages } = res;
+    delete res.messages;
+    return {
+        ...res,
+        data: new mailDataHelpers.Store(
+            MailMessage.browse(messages.map((message) => message.id)),
+            makeKwArgs({ for_current_user: true })
+        ).get_result(),
+        messages: messages.map((message) => ({ id: message.id })),
+    };
 }
 
 registerRoute("/mail/thread/data", mail_thread_data);
@@ -798,15 +798,17 @@ async function mail_thread_messages(request) {
         ["message_type", "!=", "user_notification"],
     ];
     const res = MailMessage._message_fetch(domain, search_term, before, after, around, limit);
-    MailMessage.set_message_done(res.messages.map((message) => message.id));
-    const store = new mailDataHelpers.Store(
-        "Message",
-        MailMessage._message_format(
-            res.messages.map((message) => message.id),
-            true
-        )
-    );
-    return { ...res, data: store.get_result() };
+    const { messages } = res;
+    delete res.messages;
+    MailMessage.set_message_done(messages.map((message) => message.id));
+    return {
+        ...res,
+        data: new mailDataHelpers.Store(
+            MailMessage.browse(messages.map((message) => message.id)),
+            makeKwArgs({ for_current_user: true })
+        ).get_result(),
+        messages: messages.map((message) => ({ id: message.id })),
+    };
 }
 
 registerRoute("/mail/action", mail_action);
@@ -898,24 +900,19 @@ async function processRequest(request) {
     if (args.channels_as_member) {
         const channels = DiscussChannel._get_channels_as_member();
         store.add(
-            "Message",
-            channels
-                .map((channel) => {
-                    const channelMessages = MailMessage._filter([
-                        ["model", "=", "discuss.channel"],
-                        ["res_id", "=", channel.id],
-                    ]);
-                    const lastMessage = channelMessages.reduce((lastMessage, message) => {
-                        if (message.id > lastMessage.id) {
-                            return message;
-                        }
-                        return lastMessage;
-                    }, channelMessages[0]);
-                    return lastMessage
-                        ? MailMessage._message_format([lastMessage.id], true)[0]
-                        : false;
-                })
-                .filter((lastMessage) => lastMessage)
+            MailMessage.browse(
+                channels
+                    .map(
+                        (channel) =>
+                            MailMessage._filter([
+                                ["model", "=", "discuss.channel"],
+                                ["res_id", "=", channel.id],
+                            ]).sort((a, b) => a.id - b.id)[0]
+                    )
+                    .filter((lastMessage) => lastMessage)
+                    .map((message) => message.id)
+            ),
+            makeKwArgs({ for_current_user: true })
         );
         store.add(channels.map((channel) => channel.id));
     }
