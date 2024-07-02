@@ -26,6 +26,8 @@ class Partner(models.Model):
     contact_address_inline = fields.Char(compute='_compute_contact_address_inline', string='Inlined Complete Address', tracking=True)
     starred_message_ids = fields.Many2many('mail.message', 'mail_message_res_partner_starred_rel')
 
+    custom_im_status = fields.Char(compute='_compute_custom_im_status')
+
     @api.depends('contact_address')
     def _compute_contact_address_inline(self):
         """Compute an inline-friendly address based on contact_address."""
@@ -39,6 +41,13 @@ class Partner(models.Model):
         odoobot = self.env['res.partner'].browse(odoobot_id)
         if odoobot in self:
             odoobot.im_status = 'bot'
+
+    def _compute_custom_im_status(self):
+        for partner in self:
+            users = partner.with_context(active_test=False).user_ids
+            internal_users = users - users.filtered('share')
+            main_user = internal_users[0] if len(internal_users) > 0 else users[0] if len(users) > 0 else self.env['res.users']
+            partner.custom_im_status = main_user.custom_im_status
 
     # pseudo computes
 
@@ -214,7 +223,7 @@ class Partner(models.Model):
     def mail_partner_format(self, fields=None):
         partners_format = dict()
         if not fields:
-            fields = {'id': True, 'name': True, 'email': True, 'active': True, 'im_status': True, 'is_company': True, 'user': {}, "write_date": True}
+            fields = {'id': True, 'name': True, 'email': True, 'active': True, 'im_status': True, 'custom_im_status': True, 'is_company': True, 'user': {}, "write_date": True}
         for partner in self:
             data = {"id": partner.id}
             if 'name' in fields:
@@ -225,6 +234,8 @@ class Partner(models.Model):
                 data['active'] = partner.active
             if 'im_status' in fields:
                 data['im_status'] = partner.im_status
+            if 'custom_im_status' in fields:
+                data['custom_im_status'] = partner.user_id.custom_im_status
             if 'is_company' in fields:
                 data['is_company'] = partner.is_company
             if "write_date" in fields:

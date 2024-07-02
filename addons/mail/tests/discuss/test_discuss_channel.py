@@ -146,6 +146,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "Persona": [
                                 self._filter_persona_fields({
                                     "active": True,
+                                    "custom_im_status": False,
                                     "email": "test_customer@example.com",
                                     "id": self.test_partner.id,
                                     "im_status": "im_partner",
