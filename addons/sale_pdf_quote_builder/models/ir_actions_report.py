@@ -154,26 +154,28 @@ class IrActionsReport(models.Model):
 
         Note: order.ensure_one()
         """
-        def _get_formatted_value(field_type_, value_):
-            if field_type_ == 'boolean':
-                formatted_value = _("Yes") if value_ else _("No")
-            elif field_type_ == 'monetary':
-                currency_id = records[field.get_currency_field(records)]
-                formatted_value = format_amount(
-                    translated_env, value_, currency_id or order.currency_id
+        def _get_formatted_value(value_):
+            context = {'lang': lang}
+            if field_type == 'boolean':
+                formatted_value_ = _("Yes") if value_ else _("No")
+            elif field_type == 'monetary':
+                currency_id_ = record[field.get_currency_field(record)]
+                formatted_value_ = format_amount(
+                    translated_env, value_, currency_id_ or order.currency_id
                 )
-            elif field_type_ == 'date':
-                formatted_value = format_date(translated_env, value_, lang_code=lang)
-            elif field_type_ == 'datetime':
-                formatted_value = format_datetime(translated_env, value_, tz=tz)
-            elif field_type_ == 'selection' and value_:
-                formatted_value = dict(field._description_selection(translated_env))[value_]
-            elif field_type_ in {'one2many', 'many2one', 'many2many'}:
-                formatted_value = ', '.join([v.display_name for v in value_])
+            elif field_type == 'date':
+                formatted_value_ = format_date(translated_env, value_, lang_code=lang)
+            elif field_type == 'datetime':
+                formatted_value_ = format_datetime(translated_env, value_, tz=tz)
+            elif field_type == 'selection' and value_:
+                formatted_value_ = dict(field._description_selection(translated_env))[value_]
+            elif field_type in {'one2many', 'many2one', 'many2many'}:
+                formatted_value_ = ', '.join([v.display_name for v in value_])
             else:
-                formatted_value = value_
+                formatted_value_ = value_
+            del context
 
-            return '' if formatted_value is False else str(formatted_value)
+            return '' if formatted_value_ is False else str(formatted_value_)
 
         order.ensure_one()
         is_sol = form_field_name.startswith('sol_id_')
@@ -199,10 +201,8 @@ class IrActionsReport(models.Model):
         field_type = field.type
 
         lang = order._get_lang() or self.env.user.lang
-        context = {'lang': lang}
         formatted_values = ', '.join(
-            [_get_formatted_value(field_type, value[field_name]) for value in records]
+            [_get_formatted_value(record[field_name]) for record in records]
         )
-        del context
 
         return formatted_values
