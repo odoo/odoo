@@ -126,7 +126,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("SplitBillScreenTour4PosCombo", {
+registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
     test: true,
     steps: () =>
         [
