@@ -104,8 +104,8 @@ class PosConfig(models.Model):
                 'seats': 1,
                 'position_h': 100,
                 'position_v': 100,
-                'width': 100,
-                'height': 100,
+                'width': 130,
+                'height': 130,
             })
 
     @api.model
