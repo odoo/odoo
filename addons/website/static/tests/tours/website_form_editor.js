@@ -866,6 +866,12 @@
             trigger: "iframe section.s_website_form h3.card-title",
             run: "keydown 65 66 67",
         },
+        {   // Scroll to make the form visible.
+            trigger: "iframe section.s_website_form",
+            run: function () {
+                this.$anchor[0].scrollIntoView();
+            },
+        },
         {
             content: "Check that the new text value was correctly set",
             trigger: "iframe section.s_website_form h3:containsExact(ABC)",
