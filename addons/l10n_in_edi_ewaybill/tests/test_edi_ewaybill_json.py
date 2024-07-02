@@ -45,7 +45,7 @@ class TestEdiEwaybillJson(TestEdiJson):
             "itemList": [
             {
               "productName": "product_a",
-              "hsnCode": "01111",
+              "hsnCode": "111111",
               "productDesc": "product_a",
               "quantity": 1.0,
               "qtyUnit": "UNT",
@@ -55,7 +55,7 @@ class TestEdiEwaybillJson(TestEdiJson):
             },
             {
               "productName": "product_with_cess",
-              "hsnCode": "02222",
+              "hsnCode": "333333",
               "productDesc": "product_with_cess",
               "quantity": 1.0,
               "qtyUnit": "UNT",
@@ -81,7 +81,7 @@ class TestEdiEwaybillJson(TestEdiJson):
         expected.update({
             "docNo": "INV/2019/00003",
             "itemList": [{
-                "productName": "product_a", "hsnCode": "01111", "productDesc": "product_a", "quantity": 1.0,
+                "productName": "product_a", "hsnCode": "111111", "productDesc": "product_a", "quantity": 1.0,
                 "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0
             }],
             "totalValue": 0.0,
@@ -100,7 +100,7 @@ class TestEdiEwaybillJson(TestEdiJson):
         expected.update({
             "docNo": "INV/2019/00004",
             "itemList": [{
-                "productName": "product_a", "hsnCode": "01111", "productDesc": "product_a", "quantity": 0.0,
+                "productName": "product_a", "hsnCode": "111111", "productDesc": "product_a", "quantity": 0.0,
                 "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0
             }],
             "totalValue": 0.0,

@@ -79,13 +79,13 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
 
         # === Products === #
         cls.product_a.write({
-            "l10n_in_hsn_code": "01111",
+            "l10n_in_hsn_code": "111111",
             'taxes_id': cls.sgst_sale_5,
             'supplier_taxes_id': cls.sgst_purchase_5,
         })
 
         cls.product_b.write({
-            "l10n_in_hsn_code": "01111",
+            "l10n_in_hsn_code": "111111",
             'uom_id': cls.env.ref('uom.product_uom_unit').id,
             'lst_price': 1000.0,
             'standard_price': 1000.0,

@@ -93,21 +93,21 @@ class AccountEdiFormat(models.Model):
             error_message.append(_("Invoice number should not be more than 16 characters"))
         all_base_tags = self._get_l10n_in_gst_tags() + self._get_l10n_in_non_taxable_tags()
         for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding') and not self._l10n_in_is_global_discount(line)):
-            if line.display_type == 'product' and line.discount < 0:
-                error_message.append(_("Negative discount is not allowed, set in line %s", line.name))
+            if line.display_type == 'product':
+                if line.discount < 0:
+                    error_message.append(_("Negative discount is not allowed, set in line %s", line.name))
+                hsn_code = self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code)
+                if not hsn_code:
+                    error_message.append(_("HSN code is not set in product line %s", line.name))
+                elif not re.match(r'^\d{4}$|^\d{6}$|^\d{8}$', hsn_code):
+                    error_message.append(_(
+                        "Invalid HSN Code (%(hsn_code)s) in product line %(product_line)s") % {
+                        'hsn_code': hsn_code,
+                        'product_line': line.product_id.name or line.name
+                    })
             if not line.tax_tag_ids or not any(move_line_tag.id in all_base_tags for move_line_tag in line.tax_tag_ids):
                 error_message.append(_(
                     """Set an appropriate GST tax on line "%s" (if it's zero rated or nil rated then select it also)""", line.product_id.name))
-            if line.product_id:
-                hsn_code = self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code)
-                if not hsn_code:
-                    error_message.append(_("HSN code is not set in product %s", line.product_id.name))
-                elif not re.match("^[0-9]+$", hsn_code):
-                    error_message.append(_(
-                        "Invalid HSN Code (%(hsn_code)s) in product %(product)s", hsn_code=hsn_code, product=line.product_id.name,
-                    ))
-            else:
-                error_message.append(_("product is required to get HSN code"))
         return error_message
 
     def _l10n_in_edi_get_iap_buy_credits_message(self, company):
