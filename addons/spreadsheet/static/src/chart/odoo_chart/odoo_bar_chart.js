@@ -69,7 +69,45 @@ function getBarConfiguration(chart, labels, locale) {
     const legend = {
         ...config.options.legend,
         display: chart.legendPosition !== "none",
-        labels: { fontColor },
+        onHover: (event) => {
+            const target = event.native?.target;
+            if (!target) {
+                return;
+            }
+            target.style.cursor = "pointer";
+        },
+        onLeave: (event) => {
+            const target = event.native?.target;
+            if (!target) {
+                return;
+            }
+            target.style.cursor = "default";
+        },
+        onClick: (click, legendItem, legend) => {
+            if (!legend.legendItems) {
+                return;
+            }
+            const index = legend.legendItems.indexOf(legendItem);
+            if (legend.chart.isDatasetVisible(index)) {
+                legend.chart.hide(index);
+            } else {
+                legend.chart.show(index);
+            }
+        },
+        labels: {
+            color: fontColor,
+            usePointStyle: true,
+            generateLabels: (_chart) =>
+                _chart.data.datasets.map((dataset, index) => ({
+                    text: dataset.label ?? "",
+                    strokeStyle: dataset.borderColor,
+                    fillStyle: dataset.backgroundColor,
+                    pointStyle: "rect",
+                    hidden: !_chart.isDatasetVisible(index),
+                    lineWidth: 3,
+                }
+            )),
+        },
     };
     legend.position = chart.legendPosition;
     config.options.plugins = config.options.plugins || {};
