@@ -22,13 +22,13 @@ registry.category("web_tour.tours").add("test_company_access_error_redirect", {
             trigger: ".o-dropdown--menu",
             run() {
                 assertEqual(
-                    document.querySelectorAll(".o-dropdown-item .toggle_company[aria-checked=true]")
+                    document.querySelectorAll(".o_switch_company_item [role=menuitemcheckbox][aria-checked=true]")
                         .length,
                     2
                 );
                 assertEqual(
                     cookie.get("cids"),
-                    [...document.querySelectorAll(".o-dropdown-item [data-company-id]")]
+                    [...document.querySelectorAll(".o_switch_company_item[data-company-id]")]
                         .flatMap((x) => x.getAttribute("data-company-id"))
                         .join("-")
                 );
