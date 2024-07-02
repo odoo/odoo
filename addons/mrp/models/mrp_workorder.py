@@ -48,11 +48,12 @@ class MrpWorkorder(models.Model):
         string='Currently Produced Quantity', digits='Product Unit of Measure')
     qty_remaining = fields.Float('Quantity To Be Produced', compute='_compute_qty_remaining', digits='Product Unit of Measure')
     qty_produced = fields.Float(
-        'Quantity', default=0.0,
+        'Quantity Done', default=0.0,
         readonly=True,
         digits='Product Unit of Measure',
         copy=False,
         help="The number of products already handled by this work order")
+    qty_ready = fields.Float('Quantity Ready', compute='_compute_qty_ready', digits='Product Unit of Measure')  # Implicits : readonly=True, store=False
     is_produced = fields.Boolean(string="Has Been Produced",
         compute='_compute_is_produced')
     state = fields.Selection([
@@ -145,7 +146,7 @@ class MrpWorkorder(models.Model):
                                      domain="[('allow_workorder_dependencies', '=', True), ('id', '!=', id), ('production_id', '=', production_id)]",
                                      copy=False)
 
-    @api.depends('production_availability', 'blocked_by_workorder_ids.state')
+    @api.depends('production_availability', 'blocked_by_workorder_ids.state', 'blocked_by_workorder_ids.qty_producing')
     def _compute_state(self):
         # Force to compute the production_availability right away.
         # It is a trick to force that the state of workorder is computed at the end of the
@@ -153,12 +154,12 @@ class MrpWorkorder(models.Model):
         self.mapped('production_availability')
         for workorder in self:
             if workorder.state == 'pending':
-                if all([wo.state in ('done', 'cancel') for wo in workorder.blocked_by_workorder_ids]):
+                if all(wo.state in ('done', 'cancel') or (wo.state in ('progress', 'ready') and float_compare(wo.qty_producing, 0, precision_rounding=wo.product_uom_id.rounding) > 0) for wo in workorder.blocked_by_workorder_ids):
                     workorder.state = 'ready' if workorder.production_availability == 'assigned' else 'waiting'
                     continue
             if workorder.state not in ('waiting', 'ready'):
                 continue
-            if not all([wo.state in ('done', 'cancel') for wo in workorder.blocked_by_workorder_ids]):
+            if not all(wo.state in ('done', 'cancel') for wo in workorder.blocked_by_workorder_ids):
                 workorder.state = 'pending'
                 continue
             if workorder.production_availability not in ('waiting', 'confirmed', 'assigned'):
@@ -227,6 +228,20 @@ class MrpWorkorder(models.Model):
                 workorder.production_id.qty_producing = workorder.qty_producing
                 workorder.production_id._set_qty_producing()
 
+    def register_production_qty(self, value):
+        # Entry point for the register_production QCP, value (positive or negative) is added to qty_producing
+        self.ensure_one()
+        self.qty_produced = min(max(self.qty_produced + value, 0), self.qty_production)
+
+    @api.depends('blocked_by_workorder_ids.qty_produced')
+    def _compute_qty_ready(self):
+        # TODO: Optimize
+        # previous_wo_ids = self.env['mrp.workorder']._read_group(
+        #     [('id', 'in', self.blocked_by_workorder_ids.ids)],
+        # )
+        for workorder in self:
+            workorder.qty_ready = min((wo.qty_produced for wo in workorder.blocked_by_workorder_ids), default=workorder.qty_production)
+
     # Both `date_start` and `date_finished` are related fields on `leave_id`. Let's say
     # we slide a workorder on a gantt view, a single call to write is made with both
     # fields Changes. As the ORM doesn't batch the write on related fields and instead
@@ -294,7 +309,7 @@ class MrpWorkorder(models.Model):
         self.is_produced = False
         for order in self.filtered(lambda p: p.production_id and p.production_id.product_uom_id):
             rounding = order.production_id.product_uom_id.rounding
-            order.is_produced = float_compare(order.qty_produced, order.production_id.product_qty, precision_rounding=rounding) >= 0
+            order.is_produced = float_compare(order.qty_produced, order.qty_production, precision_rounding=rounding) >= 0
 
     @api.depends('operation_id', 'workcenter_id', 'qty_production')
     def _compute_duration_expected(self):
