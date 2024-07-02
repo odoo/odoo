@@ -54,6 +54,9 @@ except Exception:
 def _get_wkhtmltopdf_bin():
     return find_in_path('wkhtmltopdf')
 
+def _get_wkhtmltoimage_bin():
+    return find_in_path('wkhtmltoimage')
+
 def _split_table(tree, max_rows):
     """
     Walks through the etree and splits tables with more than max_rows rows into
@@ -413,6 +416,62 @@ class IrActionsReport(models.Model):
         })
 
         return bodies, res_ids, header, footer, specific_paperformat_args
+
+    @api.model
+    def _build_wkhtmltoimage_args(self, width, height, allow_js=False):
+        """Build arguments understandable by wkhtmltoimage bin."""
+        command_args = ['--disable-local-file-access']
+
+        # Passing the cookie to wkhtmltopdf in order to resolve internal links.
+        if request and request.db:
+            command_args.extend(['--cookie', 'session_id', request.session.sid])
+
+        # Less verbose error messages
+        command_args.extend(['--quiet'])
+        if not allow_js:
+            command_args.extend(['--disable-javascript'])
+
+        # Build dimension args
+        command_args.extend(['--width', str(width)])
+        command_args.extend(['--height', str(height)])
+
+        return command_args
+
+    def _run_wkhtmltoimage(self, bodies, width, height, image_format="jpg"):
+        """
+        :bodies str: valid html documents as strings
+        :param width int: width in pixels
+        :param height int: height in pixels
+        :param image_format union['jpg', 'png']: format of the image
+        :return list[bytes]:
+        """
+        command_args = self._build_wkhtmltoimage_args(width, height)
+        inputpath_arr = []
+        outputfd_arr = []
+        outputpath_arr = []
+        for body in bodies:
+            infd, inputpath = tempfile.mkstemp(suffix='.html', prefix='report_image_html_input.tmp.')
+            with closing(os.fdopen(infd, 'wb')) as html_file:
+                html_file.write(body.encode())
+            inputpath_arr.append(inputpath)
+            outfd, outpath = tempfile.mkstemp(suffix=f'.{image_format}', prefix='report_image_output.tmp.')
+            outputfd_arr.append(outfd)
+            outputpath_arr.append(outpath)
+        output_image_arr = []
+        for input_path, output_path, outfd in zip(inputpath_arr, outputpath_arr, outputfd_arr):
+            wkhtmltoimage = [_get_wkhtmltoimage_bin()] + command_args + [input_path, output_path]
+            # start and block, no need for parallelism for now
+            process = subprocess.Popen(wkhtmltoimage, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            out, err = process.communicate()
+            with closing(os.fdopen(outfd, 'rb')) as image_file:
+                output_image_arr.append(image_file.read())
+            # cleanup
+            for unlink_path in (input_path, output_path):
+                try:
+                    os.unlink(unlink_path)
+                except (OSError, IOError):
+                    _logger.error('Error when trying to remove file %s', unlink_path)
+        return output_image_arr
 
     @api.model
     def _run_wkhtmltopdf(

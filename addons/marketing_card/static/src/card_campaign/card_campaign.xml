@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<templates>
+    <t t-name="marketing_card.CardCampaign">
+        <ShareBar shareUrl="props.shareUrl" postText="props.postText"/>
+    </t>
+
+    <t t-name="marketing_card.ThanksMessage">
+        <div>
+            <p t-if="message" t-out="message"/>
+            <p t-if="rewardUrl"><a t-att-href="rewardUrl">Click here for your reward!</a></p>
+        </div>
+    </t>
+</templates>

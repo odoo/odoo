@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="card_card_share_view_form" model="ir.ui.view">
+        <field name="name">card.card.share.view.form</field>
+        <field name="model">card.card.share</field>
+        <field name="arch" type="xml">
+            <form string="Preview Card"><sheet>
+                <group>
+                    <field name="campaign_id" invisible="1"/>
+                    <field name="record_ref" placeholder="Select a record..." options="{'hide_model': True, 'no_create': True}"/>
+                    <field name="url" widget="CopyClipboardChar" invisible="not record_ref"/>
+                </group>
+                <field name="image" class="border border-3" widget="image" invisible="not image"></field>
+                <footer>
+                    <button string="Copy &amp; Close" special="cancel" data-hotkey="x"/>
+                </footer>
+            </sheet></form>
+        </field>
+    </record>
+</odoo>
