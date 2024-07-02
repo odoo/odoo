@@ -36,15 +36,15 @@
             <xpath expr="//kanban" position="attributes">
                 <attribute name="create">0</attribute>
             </xpath>
-            <xpath expr="//div[hasclass('oe_kanban_details')]" position="inside">
-                <div class="oe_kanban_content d-flex flex-column gap-1">
-                    <div class="oe_kanban_row d-flex gap-1">
+            <xpath expr="//main" position="inside">
+                <div class="d-flex flex-column gap-1">
+                    <div class="d-flex gap-1">
                         <field name="hr_presence_state" invisible="1"/>
-                        <button name="action_set_present" type="object" class="btn btn-success btn-sm fa fa-check" title="Set as present" invisible="hr_presence_state == 'present'"> </button>
-                        <button name="action_set_absent" type="object" class="btn btn-warning btn-sm fa fa-times" title="Set as absent" invisible="hr_presence_state != 'present'"> </button>
+                        <button name="action_set_present" type="object" class="btn btn-success btn-sm fa fa-check" title="Set as present" invisible="hr_presence_state == 'present'"></button>
+                        <button name="action_set_absent" type="object" class="btn btn-warning btn-sm fa fa-times" title="Set as absent" invisible="hr_presence_state != 'present'"></button>
                         <button name="action_open_leave_request" type="object" class="btn btn-secondary btn-sm">Time Off</button>
                     </div>
-                    <div class="oe_kanban_row d-flex gap-1">
+                    <div class="d-flex gap-1">
                         <button name="action_send_sms" type="object" class="btn btn-secondary btn-sm">SMS</button>
                         <button name="action_send_mail" type="object" class="btn btn-secondary btn-sm">Log</button>
                     </div>
