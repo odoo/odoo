@@ -649,3 +649,20 @@ test("Remove odoo chart when sheet is deleted", async () => {
     model.dispatch("DELETE_SHEET", { sheetId });
     expect(model.getters.getOdooChartIds().length).toBe(0);
 });
+
+test("Show values is taken into account in the runtime", async () => {
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const definition = model.getters.getChartDefinition(chartId);
+    model.dispatch("UPDATE_CHART", {
+        definition: {
+            ...definition,
+            showValues: true,
+        },
+        id: chartId,
+        sheetId,
+    });
+    const runtime = model.getters.getChartRuntime(chartId);
+    expect(runtime.chartJsConfig.options.plugins.chartShowValuesPlugin.showValues).toBe(true);
+});
