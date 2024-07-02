@@ -6,37 +6,47 @@
         <field name="model">account.payment.register</field>
         <field name="inherit_id" ref="account.view_account_payment_register_form"/>
         <field name="arch" type="xml">
-            <field name="payment_method_line_id" position="after">
-                <field name="l10n_latam_manual_checks" invisible="1"/>
-                <field name="payment_method_code" invisible="1"/>
-                <field name="l10n_latam_check_number"
-                    invisible="payment_method_code != 'new_third_party_checks' and (not l10n_latam_manual_checks or payment_method_code != 'check_printing')"
-                    required="(payment_method_code == 'check_printing' and l10n_latam_manual_checks) or payment_method_code == 'new_third_party_checks'"/>
-
-                <div class="o_row"
-                        invisible="not can_edit_wizard or can_group_payments and not group_payment" colspan="2">
-                    <group>
-                        <field name="l10n_latam_check_id"
-                            invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks']"
-                            required="payment_method_code in ['in_third_party_checks', 'out_third_party_checks']"
-                            domain="
-                                [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', journal_id), ('state', '=', 'posted')]
-                                    if payment_type == 'outbound' else
-                                [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', False), ('state', '=', 'posted')]"
-                            options="{'no_create': True}"/>
-                        <field name="l10n_latam_check_payment_date"
-                            invisible="payment_method_code != 'new_third_party_checks' and (not l10n_latam_manual_checks or payment_method_code != 'check_printing')"/>
-                        <field name="l10n_latam_check_bank_id" string="Check Bank"
-                            invisible="payment_method_code != 'new_third_party_checks'"/>
-                        <field name="l10n_latam_check_issuer_vat" string="Check Issuer Vat"
-                            invisible="payment_method_code != 'new_third_party_checks'"/>
-                    </group>
+            <group>
+                <notebook invisible="not can_edit_wizard or (can_group_payments and not group_payment)">
+                    <page name="latam_checks_page" string="Checks" invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks', 'new_third_party_checks', 'own_checks']">
+                        <group name="latam_checks" colspan="2">
+                            <field name="l10n_latam_new_check_ids" invisible="payment_method_code not in ['new_third_party_checks', 'own_checks']" nolabel="1" colspan="2" >
+                                <tree editable="bottom">
+                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="name" />
+                                    <field name="bank_id" column_invisible="parent.payment_method_code == 'own_checks'"/>
+                                    <field name="issuer_vat" column_invisible="parent.payment_method_code == 'own_checks'"/>
+                                    <field name="payment_date"/>
+                                    <field name="amount" />
+                                </tree>
+                            </field>
+                            <field name="l10n_latam_move_check_ids" invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks']"
+                                domain="
+                                    [('payment_method_code', '=', 'new_third_party_checks'), ('current_journal_id', '=', journal_id), ('company_id', '=', company_id)]
+                                        if payment_type == 'outbound' else
+                                    [('payment_method_code', '=', 'new_third_party_checks'), ('current_journal_id', '=', False), ('company_id', '=', company_id)]" options="{'no_create': True}"
+                                    nolabel="1" colspan="2">
+                                <tree name="existing_checks">
+                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="name" />
+                                    <field name="bank_id" optional="hide"/>
+                                    <field name="issuer_vat" optional="hide"/>
+                                    <field name="payment_date" optional="show"/>
+                                    <field name="amount"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </notebook>
+            </group>
+            <div role="alert" position="after">
+                <div role="alert" class="alert alert-info"
+                        invisible="payment_method_code not in ['new_third_party_checks', 'in_third_party_checks', 'out_third_party_checks', 'own_checks'] or can_edit_wizard and (not can_group_payments or can_group_payments and group_payment)">
+                    <p>You can't use checks when paying invoices of different partners or same partner without grouping</p>
                 </div>
-                <div colspan="2" class="o_row"
-                        invisible="payment_method_code not in ['new_third_party_checks', 'in_third_party_checks', 'out_third_party_checks'] or can_edit_wizard and (not can_group_payments or can_group_payments and group_payment)">
-                    <p class="alert alert-warning" role="alert">You can't use checks when paying invoices of different partners or same partner without grouping</p>
-                </div>
-            </field>
+            </div>
         </field>
     </record>
 
