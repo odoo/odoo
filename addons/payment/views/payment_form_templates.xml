@@ -101,7 +101,8 @@
                     <!-- === Body === -->
                     <ul class="list-group">
                         <t t-foreach="payment_methods_sudo" t-as="pm_sudo">
-                            <li name="o_payment_option"
+                            <t t-set="supported_providers" t-value="[provider for provider,support in supported_methods[pm_sudo][0] if support]"></t>
+                            <li t-if="supported_providers" name="o_payment_option"
                                 class="list-group-item d-flex flex-column gap-2 py-3 o_outline"
                             >
                                 <t t-call="payment.method_form">
@@ -257,7 +258,7 @@
             - is_selected: Whether the radio button of the payment method should be checked.
         -->
         <t t-set="provider_sudo"
-           t-value="pm_sudo.provider_ids.filtered(lambda p: p in providers_sudo)[:1]"
+           t-value="pm_sudo.provider_ids.filtered(lambda p: p in supported_providers)[:1]"
         />
         <t t-set="is_test" t-value="provider_sudo.state == 'test'"/>
         <t t-set="is_unpublished" t-value="not provider_sudo.is_published"/>
