@@ -263,7 +263,7 @@ export const editorCommands = {
                 while (
                     currentNode.parentElement !== editor.editable &&
                     (!allowsParagraphRelatedElements(currentNode.parentElement) ||
-                        currentNode.parentElement.nodeName === 'LI')
+                        (currentNode.parentElement.nodeName === 'LI' && nodeToInsert.nodeName !== 'TABLE'))
                 ) {
                     if (isUnbreakable(currentNode.parentElement)) {
                         makeContentsInline(container);
@@ -280,6 +280,10 @@ export const editorCommands = {
                     } else {
                         currentNode = currentNode.parentElement;
                     }
+                }
+                if (currentNode.parentElement.nodeName === 'LI' && nodeToInsert.nodeName === 'TABLE') {
+                    const br = document.createElement('br');
+                    currentNode[currentNode.textContent ? 'after' : 'before'](br);
                 }
             }
             if (insertBefore) {
