@@ -32,6 +32,7 @@ class ResConfigSettings(models.TransientModel):
     module_base_geolocalize = fields.Boolean("GeoLocalize")
     module_google_recaptcha = fields.Boolean("reCAPTCHA")
     module_website_cf_turnstile = fields.Boolean("Cloudflare Turnstile")
+    module_google_address_autocomplete = fields.Boolean("Google Address Autocomplete")
     report_footer = fields.Html(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.", readonly=False)
     group_multi_currency = fields.Boolean(string='Multi-Currencies',
             implied_group='base.group_multi_currency',
