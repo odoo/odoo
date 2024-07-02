@@ -194,7 +194,9 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             fontEl.dataset.variable = variable;
             fontEl.dataset[methodName] = fontKey;
             fontEl.dataset.font = realFontNb;
-            fontEl.dataset.fontFamily = fontFamily;
+            // Display with either the real font family, or the renamed one for
+            // built-in fonts.
+            fontEl.dataset.fontFamily = `${fontFamily}, VersionOf${fontFamily}ForWysiwyg`;
             if ((realFontNb <= themeFontsNb) && !isSystemFonts) {
                 // Add the "cloud" icon next to the theme's default fonts
                 // because they are served by Google.
