@@ -553,6 +553,7 @@ class TestUi(odoo.tests.HttpCase):
 
         self.start_tour('/', 'website_no_dirty_page', login='admin')
 
+<<<<<<< HEAD
     def test_widget_lifecycle(self):
         self.env['ir.asset'].create({
             'name': 'wysiwyg_patch_start_and_destroy',
@@ -560,3 +561,8 @@ class TestUi(odoo.tests.HttpCase):
             'path': 'website/static/tests/tour_utils/widget_lifecycle_patch_wysiwyg.js',
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'widget_lifecycle', login='admin')
+||||||| parent of 9bfe2bb475b5 (temp)
+=======
+    def test_snippet_carousel(self):
+        self.start_tour('/', 'snippet_carousel', login='admin')
+>>>>>>> 9bfe2bb475b5 (temp)
