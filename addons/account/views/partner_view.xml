@@ -199,12 +199,16 @@
                         <group>
                             <group string="Bank Accounts" name="banks" groups="account.group_account_invoice,account.group_account_readonly">
                                 <field name="bank_ids" nolabel="1" colspan="2" context="{'default_partner_id': id}" widget="auto_save_res_partner">
-                                    <tree>
+                                    <tree delete="false" decoration-muted="not active" default_order="active">
                                         <field name="sequence" widget="handle"/>
                                         <field name="acc_number"/>
                                         <field name="bank_id"/>
                                         <field name="allow_out_payment"/>
                                         <field name="acc_holder_name" column_invisible="True"/>
+                                        <field name="active" column_invisible="True"/>
+                                        <button name="action_archive" title="Archive" icon="fa-archive" type="object" invisible="not active"/>
+                                        <button name="action_unarchive" title="Unarchive" icon="fa-undo" type="object" invisible="active"/>
+                                        <button name="unlink" title="Delete" icon="fa-trash" type="object" invisible="not active"/>
                                     </tree>
                                 </field>
                             </group>
