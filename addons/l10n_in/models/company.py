@@ -12,6 +12,10 @@ class ResCompany(models.Model):
         ],
         string="HSN Code Digit",
     )
+    l10n_in_trade_name = fields.Char(
+        string="Trade Name",
+        help="The trade name to be used in EDI (E-Invoice and E-waybill) transactions."
+    )
 
     def create(self, vals):
         res = super().create(vals)
