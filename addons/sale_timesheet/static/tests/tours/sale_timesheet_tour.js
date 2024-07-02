@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="name"] textarea:value(Service Product)',
 }, {
-    trigger: 'button[name="action_confirm"]',
+    trigger: "button[name=action_confirm]:enabled",
     content: 'Click on Confirm button to create a sale order with this quotation.',
     run: "click",
 }, {

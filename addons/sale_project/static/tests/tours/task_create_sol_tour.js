@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add("task_create_sol_tour", {
         in_modal: true,
         run: "click",
     }, {
-        trigger: ".o_form_button_save",
+        trigger: ".o_form_button_save:enabled",
         content: "Save task",
         run: "click",
     }, {
