@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_picking_move_line">
+        <td>
+            <span t-field="ml.product_id.display_name">Customizable Desk</span><br/>
+            <span t-if="ml.product_id.description_picking" t-field="ml.product_id.description_picking"></span>
+        </td>
+        <td align="right">
+            <span t-field="ml.quantity">3.00</span>
+            <span t-field="ml.product_uom_id" groups="uom.group_uom">units</span>
+            <span t-if="ml.move_id.product_packaging_id">
+                <span t-if="o.state != 'done'">
+                    (<span t-field="ml.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="ml.move_id.product_packaging_id.name"/>)
+                </span>
+                <span t-if="o.state == 'done'">
+                    (<span t-field="ml.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="ml.move_id.product_packaging_id.name"/>)
+                </span>
+            </span>
+        </td>
+        <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
+            <span t-esc="ml.location_id.display_name">WH/Stock</span>
+                <t t-if="ml.package_id">
+                    <span t-field="ml.package_id">Package A</span>
+                </t>
+        </td>
+        <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+            <div>
+                <span t-field="ml.location_dest_id">WH/Outgoing</span>
+                <t t-if="ml.result_package_id">
+                    <span t-field="ml.result_package_id">Package B</span>
+                </t>
+            </div>
+        </td>
+        <td class=" text-center h6" t-if="has_serial_number">
+            <span t-if="has_serial_number and (ml.lot_id or ml.lot_name)" t-esc="ml.lot_id.name or ml.lot_name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 400, 'height': 100, 'img_style': 'width:100%;height:35px;'}">
+                <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center px-1 py-2 opacity-75 text-muted text-center">
+                    (serial barcode)
+                </div>
+            </span>
+        </td>
+        <td class="text-center" t-if="has_barcode">
+            <t t-if="product_barcode != ml.product_id.barcode">
+                <span t-if="ml.product_id and ml.product_id.barcode">
+                    <div t-field="ml.product_id.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 400, 'height': 100, 'quiet': 0, 'img_style': 'height:35px;'}">
+                        <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center px-1 py-2 opacity-75 text-muted text-center">
+                            (product barcode)
+                        </div>
+                    </div>
+                </span>
+                <t t-set="product_barcode" t-value="ml.product_id.barcode"/>
+            </t>
+        </td>
+    </template>
+    <template id="mrp_report_stock_picking" inherit_id="stock.report_picking">
+        <xpath expr="//table[@t-if='o.move_line_ids and o.move_ids_without_package']/tbody" position="replace">
+            <tbody>
+                <!-- In case you come across duplicated lines, ask NIM or LAP -->
+                <t t-set="move_lines_with_kit" t-value="o.move_line_ids_without_package.filtered(lambda ml: ml.move_id.bom_line_id.bom_id.type == 'phantom')"/>
+                <t t-if="move_lines_with_kit">
+                    <t t-foreach="move_lines_with_kit.move_id.bom_line_id.bom_id" t-as="kit_section">
+                        <tr>
+                            <td colspan="6" style="font-weight: bold; background-color: lightgray;">
+                                <span t-field="kit_section.product_tmpl_id.display_name"/>
+                            </td>
+                        </tr>
+                        <t t-set="kit_section_move_line" t-value="move_lines_with_kit.filtered(lambda ml: ml.move_id.bom_line_id.bom_id == kit_section)"/>
+                        <tr t-foreach="kit_section_move_line.sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))" t-as="ml">
+                            <t t-call="mrp.report_picking_move_line"/>
+                        </tr>
+                    </t>
+                </t>
+                <t t-set="move_lines_without_kit" t-value="o.move_line_ids_without_package.filtered(lambda ml: ml.move_id.bom_line_id.bom_id.type != 'phantom')"/>
+                <t t-if="move_lines_without_kit">
+                    <tr t-if="move_lines_with_kit">
+                        <td colspan="6" style="font-weight: bold; background-color: lightgray;">
+                            <span>Products not associated with a kit</span>
+                        </td>
+                    </tr>
+                    <tr t-foreach="move_lines_without_kit.sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))" t-as="ml">
+                        <t t-call="mrp.report_picking_move_line"/>
+                    </tr>
+                </t>
+            </tbody>
+        </xpath>
+    </template>
+</odoo>
