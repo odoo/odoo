@@ -121,3 +121,18 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             {'account_id': self.alt_exp_account.id, 'debit': 2000.0, 'credit': 0.0, 'analytic_distribution': {str(self.analytic_account_b.id): 100.0}},
             {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 12000.0, 'analytic_distribution': {str(self.analytic_account_a.id): 66.67, str(self.analytic_account_b.id): 33.33}},
         ])
+
+    def test_accrued_order_with_zero_order_amount(self):
+        # purchase order with zero total amount
+        self.purchase_order.amount_total = 0.0
+        self.assertFalse(self.purchase_order.amount_total)
+        self.wizard.write({'amount': 1})
+
+        self.assertRecordValues(self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids, [
+            # reverse move lines
+            {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 1.0, 'amount_currency': -1.0},
+            {'account_id': self.account_revenue.id, 'debit': 1.0, 'credit': 0.0, 'amount_currency': 1.0},
+            # move lines
+            {'account_id': self.account_expense.id, 'debit': 1.0, 'credit': 0.0, 'amount_currency': 1.0},
+            {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 1.0, 'amount_currency': -1.0},
+        ])
