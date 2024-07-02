@@ -191,4 +191,27 @@ export class ResUsers extends webModels.ResUsers {
         }
         return Object.values(userActivitiesByModelName);
     }
+
+    _get_follower_by_message_user(ids, messages) {
+        /** @type {import("mock_models").MailFollowers} */
+        const MailFollowers = this.env["mail.followers"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+
+        const res = new Map();
+        const users = ResUsers._filter([["id", "in", ids]]);
+        for (const user of users) {
+            for (const message of messages) {
+                const [follower] = MailFollowers._filter([
+                    ["res_model", "=", message.model],
+                    ["res_id", "=", message.res_id],
+                    ["partner_id", "=", user.partner_id],
+                ]);
+                if (follower) {
+                    res.set(`${message.id}-${user.id}`, follower);
+                }
+            }
+        }
+        return res;
+    }
 }
