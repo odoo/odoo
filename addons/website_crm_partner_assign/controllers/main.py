@@ -185,19 +185,18 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
     def sitemap_partners(env, rule, qs):
         if not qs or qs.lower() in '/partners':
             yield {'loc': '/partners'}
-
-        Grade = env['res.partner.grade']
-        dom = [('website_published', '=', True)]
-        dom += sitemap_qs2dom(qs=qs, route='/partners/grade/', field=Grade._rec_name)
-        for grade in env['res.partner.grade'].search(dom):
-            loc = '/partners/grade/%s' % slug(grade)
+        base_partner_domain = [('is_company', '=', True),
+                               ('grade_id', '!=', False),
+                               ('website_published', '=', True),
+                               ('grade_id.website_published', '=', True),
+                               ('grade_id.active', '=', True)]
+        grades = env['res.partner'].sudo().read_group(base_partner_domain, fields=['id', 'grade_id'], groupby='grade_id')
+        for grade in grades:
+            loc = '/partners/grade/%s' % slug(grade['grade_id'])
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
-
-        partners_dom = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True),
-                        ('grade_id.website_published', '=', True), ('country_id', '!=', False)]
-        dom += sitemap_qs2dom(qs=qs, route='/partners/country/')
-        countries = env['res.partner'].sudo().read_group(partners_dom, fields=['id', 'country_id'], groupby='country_id')
+        country_partner_domain = base_partner_domain + [('country_id', '!=', False)]
+        countries = env['res.partner'].sudo().read_group(country_partner_domain, fields=['id', 'country_id'], groupby='country_id')
         for country in countries:
             loc = '/partners/country/%s' % slug(country['country_id'])
             if not qs or qs.lower() in loc:
@@ -222,7 +221,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         country_obj = request.env['res.country']
         search = post.get('search', '')
 
-        base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True)]
+        base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True), ('grade_id.active', '=', True)]
         if not request.env['res.users'].has_group('website.group_website_publisher'):
             base_partner_domain += [('grade_id.website_published', '=', True)]
         if search:
