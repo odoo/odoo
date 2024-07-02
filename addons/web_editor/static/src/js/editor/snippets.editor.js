@@ -28,7 +28,7 @@ import {
     useState,
 } from "@odoo/owl";
 import { LinkTools } from '@web_editor/js/wysiwyg/widgets/link_tools';
-import { touching, closest, addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
+import { touching, closest, addLoadingEffect as addButtonLoadingEffect, scrollTo } from "@web/core/utils/ui";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { RPCError } from "@web/core/network/rpc";
@@ -1149,7 +1149,7 @@ var SnippetEditor = Widget.extend({
         self.$target.detach();
         self.$el.addClass('d-none');
 
-        var $selectorSiblings;
+        var $selectorSiblings = $();
         for (var i = 0; i < self.selectorSiblings.length; i++) {
             let $siblings = self.selectorSiblings[i].all();
             if (this.excludeAncestors) {
@@ -3712,7 +3712,8 @@ class SnippetsMenu extends Component {
         if (modalEl && !$(modalEl).hasScrollableContent()) {
             return;
         }
-        return dom.scrollTo($el[0], {extraOffset: 50, $scrollable: $scrollable});
+        let scrollable = $scrollable?.get(0);
+        return scrollTo($el[0], {extraOffset: 50, scrollable: scrollable});
     }
     /**
      * @private
