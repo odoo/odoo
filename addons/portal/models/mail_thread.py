@@ -1,10 +1,72 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hashlib
 import hmac
 
+from functools import wraps
+from inspect import signature
+from werkzeug.exceptions import NotFound, Forbidden
+
 from odoo import fields, models, _
+from odoo.http import request
+from odoo.tools import consteq, frozendict
+from odoo.addons.bus.websocket import wsrequest
+
+
+def _add_portal_partner_to_context(env, security_params):
+    token = security_params.get("token")
+    _hash = security_params.get("hash")
+    pid = security_params.get("pid")
+    if token or (_hash and pid):
+        has_access = False
+        record = env[security_params["thread_model"]].browse(security_params["thread_id"]).sudo()
+        if _hash and pid:  # Signed Token Case: hash implies token is signed by partner pid
+            pid = int(pid)
+            has_access = consteq(_hash, record._sign_token(pid))
+            if not has_access:
+                parent_sign_token = record._portal_get_parent_hash_token(pid)
+                has_access = parent_sign_token and consteq(_hash, parent_sign_token)
+        elif token:  # Token Case: token is the global one of the document
+            token_field = env[security_params["thread_model"]]._mail_post_token_field
+            has_access = (token and record and consteq(record[token_field], token))
+        if has_access:
+            partner_id = env.user.partner_id
+            record = env[security_params["thread_model"]].sudo().browse(security_params["thread_id"])
+            if _hash and pid:
+                partner_id = env["res.partner"].sudo().browse(pid)
+            elif token:
+                if env.user._is_public() and hasattr(record, 'partner_id') and record.partner_id:
+                    partner_id = record.partner_id
+                elif not partner_id:
+                    raise NotFound()
+            env.context = frozendict({**env.context, "portal_partner": partner_id})
+        else:
+            raise Forbidden()
+
+
+def add_portal_partner_to_context(func):
+    """
+    Decorate a function to extract the portal partner from the request.
+    """
+    params = tuple(signature(func).parameters.keys())[1:]  # skip 'self'
+
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        req = request or wsrequest
+        env = self.env if hasattr(self, "env") else req.env
+        args_map = {p: i for i, p in enumerate(params)}
+        params_map = {
+            v: (
+                args[args_map[v]]
+                if v in args_map and args_map[v] < len(args)
+                else kwargs.get(v)
+            )
+            for v in ["token", "hash", "pid", "thread_id", "thread_model"]
+        }
+        _add_portal_partner_to_context(env, params_map)
+        return func(self, *args, **kwargs)
+
+    return wrapper
 
 
 class MailThread(models.AbstractModel):
@@ -87,3 +149,8 @@ class MailThread(models.AbstractModel):
         :return: False or logical parent's _sign_token() result
         """
         return False
+
+    def _get_request_list_data(self, res, store, request_list):
+        if self.env.user._is_internal():
+            return super()._get_request_list_data(res, store, request_list)
+        store.add("Thread", res)

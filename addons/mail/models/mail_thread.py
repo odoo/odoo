@@ -4537,6 +4537,9 @@ class MailThread(models.AbstractModel):
             res['hasWriteAccess'] = True
         except AccessError:
             pass
+        self._get_request_list_data(res, store, request_list)
+
+    def _get_request_list_data(self, res, store, request_list):
         if isinstance(self.env[self._name], self.env.registry["mail.activity.mixin"]):
             activities = self.with_context(active_test=True).activity_ids
             store.add(activities)

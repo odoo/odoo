@@ -20,15 +20,15 @@ export class MessageReactions extends Record {
     message = Record.one("Message");
 
     async remove() {
-        await rpc(
-            "/mail/message/reaction",
-            {
-                action: "remove",
-                content: this.content,
-                message_id: this.message.id,
-            },
-            { silent: true }
-        );
+        await rpc("/mail/message/reaction", this.removeParams, { silent: true });
+    }
+
+    get removeParams() {
+        return {
+            action: "remove",
+            content: this.content,
+            message_id: this.message.id,
+        };
     }
 }
 

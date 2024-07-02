@@ -352,10 +352,9 @@ class CustomerPortal(Controller):
             'res_id': 0,
             'access_token': IrAttachment._generate_access_token(),
         })
-        return request.make_response(
-            data=json.dumps(attachment.read(['id', 'name', 'mimetype', 'file_size', 'access_token'])[0]),
-            headers=[('Content-Type', 'application/json')]
-        )
+        data = attachment.read(['id', 'name', 'mimetype', 'file_size', 'access_token'])[0]
+        data['accessToken'] = data.get('access_token')
+        return request.make_json_response(data)
 
     @http.route('/portal/attachment/remove', type='json', auth='public')
     def attachment_remove(self, attachment_id, access_token=None):

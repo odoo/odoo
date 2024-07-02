@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="portal.Chatter" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-Chatter-top')]" position="attributes">
+            <attribute name="class" add="bg-view" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-Chatter-top')]" position="attributes">
+            <attribute name="t-att-class">{ "col-lg-6":props.twoColumns }</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-Chatter')]" position="attributes">
+            <attribute name="class" add="pt-2" remove="flex-column" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-Chatter')]" position="attributes">
+            <attribute name="t-att-class">{ "row":props.twoColumns, "flex-column":!props.twoColumns }</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-Chatter-top')]" position="attributes">
+            <attribute name="t-att-style">
+                (!props.twoColumns) and "top: -1px !important; margin-top:-15px; padding-top: 20px"
+            </attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-Chatter-content')]" position="attributes">
+            <attribute name="t-att-class">{ "col-lg-6":props.twoColumns }</attribute>
+        </xpath>
+    </t>
+</templates>

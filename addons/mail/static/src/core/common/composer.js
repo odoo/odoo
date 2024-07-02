@@ -159,7 +159,9 @@ export class Composer extends Component {
         );
         useEffect(
             () => {
-                this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
+                if (this.fakeTextarea.el.scrollHeight) {
+                    this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
+                }
                 this.saveContentDebounced();
             },
             () => [this.props.composer.text, this.ref.el]
@@ -597,16 +599,21 @@ export class Composer extends Component {
             return;
         }
         await this.processMessage(async (value) => {
-            const postData = {
-                attachments: composer.attachments,
-                isNote: this.props.type === "note",
-                mentionedChannels: composer.mentionedChannels,
-                mentionedPartners: composer.mentionedPartners,
-                cannedResponseIds: composer.cannedResponses.map((c) => c.id),
-                parentId: this.props.messageToReplyTo?.message?.id,
-            };
-            await this._sendMessage(value, postData);
+            await this._sendMessage(value, this.postData);
         });
+    }
+
+    get postData() {
+        const composer = toRaw(this.props.composer);
+        return {
+            attachments: composer.attachments,
+            isNote: this.props.type === "note",
+            mentionedChannels: composer.mentionedChannels,
+            mentionedPartners: composer.mentionedPartners,
+            cannedResponseIds: composer.cannedResponses.map((c) => c.id),
+            parentId: this.props.messageToReplyTo?.message?.id,
+            extraData: {},
+        };
     }
 
     /**

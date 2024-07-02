@@ -110,6 +110,9 @@ async function _startServices(env, toStart) {
             toStart.delete(service);
             const entries = (service.dependencies || []).map((dep) => [dep, services[dep]]);
             const dependencies = Object.fromEntries(entries);
+            if (name in services) {
+                continue;
+            }
             const value = service.start(env, dependencies);
             if ("async" in service) {
                 SERVICES_METADATA[name] = service.async;

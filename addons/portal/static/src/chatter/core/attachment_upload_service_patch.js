@@ -1,0 +1,22 @@
+import { AttachmentUploadService } from "@mail/core/common/attachment_upload_service";
+
+import { patch } from "@web/core/utils/patch";
+
+patch(AttachmentUploadService.prototype, {
+    _buildFormData(formData, tmpURL, thread, composer, tmpId, options) {
+        super._buildFormData(...arguments);
+        const file = formData.get("ufile")
+        if (thread.model !== "discuss.channel") {
+            formData.append("name", file.name);
+            formData.append("file", file);
+        }
+        return formData;
+    },
+
+    getUploadURL(thread) {
+        if (thread.model !== "discuss.channel") {
+            return "/portal/attachment/add";
+        }
+        return super.getUploadURL(...arguments);
+    },
+});
