@@ -6,7 +6,8 @@ import { OdooChart } from "./odoo_chart";
 
 const { chartRegistry } = spreadsheet.registries;
 
-const { getDefaultChartJsRuntime, chartFontColor, ColorGenerator } = spreadsheet.helpers;
+const { getDefaultChartJsRuntime, chartFontColor, ColorGenerator, formatTickValue } =
+    spreadsheet.helpers;
 
 chartRegistry.add("odoo_pie", {
     match: (type) => type === "odoo_pie",
@@ -65,6 +66,11 @@ function getPieConfiguration(chart, labels, locale) {
                 return tooltipItem.label;
             },
         },
+    };
+
+    config.options.plugins.chartShowValuesPlugin = {
+        showValues: chart.showValues,
+        callback: formatTickValue({ locale }),
     };
     return config;
 }

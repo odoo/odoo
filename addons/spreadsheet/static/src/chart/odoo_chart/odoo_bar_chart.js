@@ -12,6 +12,7 @@ const {
     chartFontColor,
     ColorGenerator,
     getTrendDatasetForBarChart,
+    formatTickValue
 } = spreadsheet.helpers;
 
 const { TREND_LINE_XAXIS_ID } = spreadsheet.constants;
@@ -147,5 +148,13 @@ function getBarConfiguration(chart, labels, locale) {
         config.options.scales.x.stacked = true;
         config.options.scales.y.stacked = true;
     }
+
+    config.options.plugins.chartShowValuesPlugin = {
+        showValues: chart.showValues,
+        background: chart.background,
+        horizontal: chart.horizontal,
+        callback: formatTickValue({ locale }),
+    };
+
     return config;
 }
