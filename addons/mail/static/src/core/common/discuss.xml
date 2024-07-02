@@ -28,6 +28,7 @@
                             onValidate.bind="renameThread"
                             value="thread.displayName"
                         />
+                        <span t-if="thread.correspondent" t-out="thread.correspondent.persona.custom_im_status or ''" class="mt-1 text-truncate text-muted" />
                         <t t-if="thread.allowDescription and (thread.is_editable or (!thread.is_editable and thread.description))">
                             <div class="flex-shrink-0 mx-2 py-2 border-start"/>
                             <t t-set="autogrowDescriptionPlaceholder">Add a description</t>

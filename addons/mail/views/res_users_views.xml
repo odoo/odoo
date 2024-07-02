@@ -1,6 +1,25 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
+        <record id="view_users_form_custom_status" model="ir.ui.view">
+            <field name="name">res.users.custom.status</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <form string="Custom IM Status" edit="1">
+                    <group>
+                        <field name="custom_im_status" readonly="0"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="res_users_action_custom_status" model="ir.actions.act_window">
+            <field name="name">Set Custom Status</field>
+            <field name="res_model">res.users</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="mail.view_users_form_custom_status"/>
+        </record>
 
         <!-- Update Preferences form !-->
         <record id="view_users_form_simple_modif_mail" model="ir.ui.view">

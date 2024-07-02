@@ -425,6 +425,8 @@ class ChannelMember(models.Model):
         invitation_notifications = []
         members = self.env['discuss.channel.member'].search(channel_member_domain)
         for member in members:
+            if member.partner_id.im_status == "do_not_disturb":
+                member.sudo()._rtc_leave_call()
             member.rtc_inviting_session_id = self.rtc_session_ids.id
             if member.partner_id:
                 target = member.partner_id

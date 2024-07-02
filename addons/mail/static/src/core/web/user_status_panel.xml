@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.UserStatusPanel">
+        <div class="p-2 mt-auto">
+            <button class="py-2 btn border-0 rounded-0 w-100 text-reset d-flex align-items-center o-mail-UserStatusPanel" t-ref="status" t-on-click="onStatusClicked">
+                <div class="bg-inherit position-relative flex-shrink-0" style="width:42px;height:42px">
+                    <img class="w-100 h-100 rounded" t-att-src="store.self.avatarUrl" alt="Avatar of user" />
+                    <span name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center">
+                        <i t-if="store.self.im_status === 'online'" class="fa fa-fw fa-circle text-success" title="Online" role="img" aria-label="User is online"/>
+                        <i t-elif="store.self.im_status === 'away'" class="fa fa-fw fa-circle o-yellow" title="Idle" role="img" aria-label="User is idle"/>
+                        <i t-elif="store.self.im_status === 'do_not_disturb'" class="fa fa-minus-circle text-danger" title="Do Not Disturb" aria-label="User is do not disturb"/>
+                        <i t-elif="store.self.im_status === 'offline'" class="fa fa-fw fa-circle-o text-700" title="Offline" role="img" aria-label="User is offline"/>
+                        <i t-elif="!store.self.im_status" class="fa fa-fw fa-question-circle" title="No IM status available"/>
+                    </span>
+                </div>
+                <div class="d-flex flex-column ms-2 text-start o-min-width-0">
+                    <span class="text-truncate w-100" t-esc="store.self.nameOrDisplayName"/>
+                    <span class="text-truncate w-100 text-muted">
+                        <t t-if="store.self.custom_im_status" t-out="store.self.custom_im_status" />
+                        <t t-elif="store.self.im_status === 'online'" t-esc="'Online'"/>
+                        <t t-elif="store.self.im_status === 'away'" t-esc="'Away'"/>
+                        <t t-elif="store.self.im_status === 'do_not_disturb'" t-esc="'Do Not Disturb'"/>
+                        <t t-elif="store.self.im_status === 'offline'" t-esc="'Offline'"/>
+                        <t t-else="" t-esc="'Offline'"/>
+                    </span>
+                </div>
+            </button>
+        </div>
+    </t>
+</templates>

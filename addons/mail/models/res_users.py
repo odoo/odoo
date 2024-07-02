@@ -12,6 +12,7 @@ class Users(models.Model):
         - make a new user follow itself
         - add a welcome message
         - add suggestion preference
+        - add custom IM status
     """
     _name = 'res.users'
     _inherit = ['res.users']
@@ -24,6 +25,13 @@ class Users(models.Model):
         help="Policy on how to handle Chatter notifications:\n"
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
+
+    forced_im_status = fields.Selection([
+        ('away', 'Away'),
+        ('do_not_disturb', 'Do Not Disturb'),
+        ('offline', 'Offline')],
+        'Forced IM Status')
+    custom_im_status = fields.Char('Custom IM Status')
 
     _sql_constraints = [(
         "notification_type",
@@ -63,11 +71,11 @@ class Users(models.Model):
 
     @property
     def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['notification_type']
+        return super().SELF_READABLE_FIELDS + ['notification_type', 'forced_im_status', 'custom_im_status']
 
     @property
     def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + ['notification_type']
+        return super().SELF_WRITEABLE_FIELDS + ['notification_type', 'forced_im_status', 'custom_im_status']
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -249,6 +257,14 @@ class Users(models.Model):
                           user_name=current_user.name, user_id=current_user.id,
                           portal_user_name=user.name)
             )
+
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
+
+    @api.model
+    def action_custom_status(self):
+        return self.sudo().env.ref('mail.res_users_action_custom_status').read()[0]
 
     # ------------------------------------------------------------
     # DISCUSS

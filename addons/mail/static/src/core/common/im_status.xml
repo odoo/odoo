@@ -7,6 +7,7 @@
                 <t t-if="!props.thread or !props.thread.hasOtherMembersTyping">
                     <i t-if="props.persona.im_status === 'online'" class="fa fa-circle text-success" title="Online" role="img" aria-label="User is online"/>
                     <i t-elif="props.persona.im_status === 'away'" class="fa fa-circle o-away" title="Idle" role="img" aria-label="User is idle"/>
+                    <i t-elif="props.persona.im_status === 'do_not_disturb'" class="fa fa-minus-circle text-danger" title="Do Not Disturb" role="img" aria-label="User is do not disturb"/>
                     <i t-elif="props.persona.im_status === 'offline'" class="fa fa-circle-o text-700" title="Offline" role="img" aria-label="User is offline"/>
                     <i t-elif="props.persona.im_status === 'bot'" class="fa fa-heart text-success" title="Bot" role="img" aria-label="User is a bot"/>
                     <i t-else="" class="fa fa-fw fa-question-circle" title="No IM status available"/>

@@ -15,14 +15,16 @@ class ResUsers(models.Model):
         """ Compute the im_status of the users """
         self.env.cr.execute("""
             SELECT
-                user_id as id,
+                user_id as id, forced_im_status,
                 CASE WHEN age(now() AT TIME ZONE 'UTC', last_poll) > interval %s THEN 'offline'
                      WHEN age(now() AT TIME ZONE 'UTC', last_presence) > interval %s THEN 'away'
                      ELSE 'online'
                 END as status
-            FROM bus_presence
+            FROM bus_presence B
+            RIGHT JOIN res_users U ON B.user_id = U.id
             WHERE user_id IN %s
         """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, tuple(self.ids)))
-        res = dict(((status['id'], status['status']) for status in self.env.cr.dictfetchall()))
+        res = {status['id']: (status['status'], status['forced_im_status']) for status in self.env.cr.dictfetchall()}
         for user in self:
-            user.im_status = res.get(user.id, 'offline')
+            im_status, forced_im_status = res.get(user.id, ('offline', None))
+            user.im_status = forced_im_status or im_status
