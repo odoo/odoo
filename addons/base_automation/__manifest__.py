@@ -26,7 +26,7 @@ trigger an automatic reminder email.
         'web.assets_backend': [
             'base_automation/static/src/**/*',
         ],
-        'web.qunit_suite_tests': [
+        'web.assets_unit_tests': [
             'base_automation/static/tests/**/*',
         ],
     },
