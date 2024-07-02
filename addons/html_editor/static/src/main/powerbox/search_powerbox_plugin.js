@@ -90,7 +90,7 @@ export class SearchPowerboxPlugin extends Plugin {
         const selection = this.shared.getEditableSelection();
         this.offset = selection.startOffset - 1;
         this.enabledCommands = this.commands.filter(
-            (cmd) => !cmd.isDisabled?.(selection.anchorNode)
+            (cmd) => !cmd.isAvailable?.(selection.anchorNode)
         );
         this.shared.openPowerbox({
             commands: this.enabledCommands,
