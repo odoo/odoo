@@ -54,35 +54,18 @@
                             <field name="company_id" column_invisible="True"/>
                         </tree>
                         <kanban class="o_kanban_mobile">
-                            <field name="readonly_timesheet"/>
-                            <field name="date"/>
-                            <field name="user_id"/>
-                            <field name="name"/>
-                            <field name="unit_amount" decoration-danger="unit_amount &gt; 24"/>
-                            <field name="project_id"/>
-                            <field name="task_id"/>
                             <templates>
-                                <t t-name="kanban-box">
-                                    <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                                        <div class="row">
-                                            <div class="col-6 d-flex">
-                                                <field name="employee_id" class="me-1" widget="many2one_avatar_employee" context="{'active_test': True}" readonly="readonly_timesheet"/>
-                                                <strong><span class="ps-1"><t t-esc="record.employee_id.value"/></span></strong>
-                                            </div>
-                                            <div class="col-6 float-end text-end">
-                                                <strong><t t-esc="record.date.value"/></strong>
-                                            </div>
+                                <t t-name="kanban-card">
+                                    <div class="row">
+                                        <div class="col-6 d-flex">
+                                            <field name="employee_id" class="me-1" widget="many2one_avatar_employee" context="{'active_test': True}" readonly="readonly_timesheet"/>
+                                            <field name="employee_id" class="ps-1 fw-bold"/>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-6 text-muted">
-                                                <span><t t-esc="record.name.value"/></span>
-                                            </div>
-                                            <div class="col-6">
-                                                <span class="float-end text-end">
-                                                    <field name="unit_amount" widget="float_time"/>
-                                                </span>
-                                            </div>
-                                        </div>
+                                        <field name="date" class="col-6 text-end fw-bold"/>
+                                    </div>
+                                    <div class="row">
+                                        <field name="name" class="col-6 text-muted"/>
+                                        <field name="unit_amount" widget="float_time" class="col-6 text-end"/>
                                     </div>
                                 </t>
                             </templates>
