@@ -862,7 +862,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         )
         values['website_sale.total'] = request.env['ir.ui.view']._render_template(
             "website_sale.total", {
-                'website_sale_order': order,
+                'order': order,
             }
         )
         return values
@@ -931,27 +931,28 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(
         '/shop/checkout', type='http', methods=['GET'], auth='public', website=True, sitemap=False
     )
-    def shop_checkout(self, try_skip_step=None, **query_params):  # TODO ANV was checkout
+    def shop_checkout(self, try_skip_step=None, **query_params):
         """ Display the checkout page.
 
         :param str try_skip_step: Whether the user should immediately be redirected to the next step
                                   if no additional information (i.e., address or delivery method) is
-                                  required on the checkout page.
+                                  required on the checkout page. 'true' or 'false'.
         :param dict query_params: The additional query string parameters.
         :return: The rendered checkout page.
         :rtype: str
         """
-        try_skip_step = bool(try_skip_step)
+        try_skip_step = str2bool(try_skip_step or 'false')
         order_sudo = request.website.sale_get_order()
 
         if redirection := self._check_cart_and_addresses(order_sudo):
             return redirection
 
-        values = self.checkout_values(order_sudo, **query_params)
+        checkout_page_values = self._prepare_checkout_page_values(order_sudo, **query_params)
 
         can_skip_delivery = True  # Delivery is only needed for deliverable products.
         if order_sudo._has_deliverable_products():
-            available_dms = values['delivery_methods'] = order_sudo._get_delivery_methods()
+            available_dms = order_sudo._get_delivery_methods()
+            checkout_page_values['delivery_methods'] = available_dms
             delivery_method = order_sudo._get_preferred_delivery_method(available_dms)
             rate = delivery_method.rate_shipment(order_sudo)
             if (
@@ -965,41 +966,48 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if try_skip_step and can_skip_delivery:
             return request.redirect('/shop/confirm_order')
 
-        return request.render('website_sale.checkout', values)
+        return request.render('website_sale.checkout', checkout_page_values)
 
-    def checkout_values(self, order, **_kwargs):  # TODO ANV was checkout_values # TODO ANV rename
-        """ TODO ANV.
+    def _prepare_checkout_page_values(self, order_sudo, **_kwargs):
+        """ Prepare and return the values to use to render the checkout page.
+
+        :param sale.order order_sudo: The current cart.
+        :return: The checkout page values.
+        :rtype: dict
         """
-        order = order or request.website.sale_get_order(force_create=True)
-        bill_partners = []
-        ship_partners = []
-        if not order._is_anonymous_cart():
-            Partner = order.partner_id.with_context(show_address=1).sudo()
-            commercial_partner = order.partner_id.commercial_partner_id
-            bill_partners = Partner.search([
-                ('id', 'child_of', commercial_partner.ids),
-                '|', ('type', 'in', ['invoice', 'other']), ('id', '=', commercial_partner.id)
-            ], order='id desc') | order.partner_id
-            ship_partners = Partner.search([
-                ('id', 'child_of', commercial_partner.ids),
-                '|', ('type', 'in', ['delivery', 'other']), ('id', '=', commercial_partner.id)
-            ], order='id desc') | order.partner_id
+        PartnerSudo = order_sudo.partner_id.with_context(show_address=1)
+        commercial_partner_sudo = order_sudo.partner_id.commercial_partner_id
+        billing_partners_sudo = PartnerSudo.search([
+            ('id', 'child_of', commercial_partner_sudo.ids),
+            '|',
+            ('type', 'in', ['invoice', 'other']),
+            ('id', '=', commercial_partner_sudo.id),
+        ], order='id desc') | order_sudo.partner_id
+        delivery_partners_sudo = PartnerSudo.search([
+            ('id', 'child_of', commercial_partner_sudo.ids),
+            '|',
+            ('type', 'in', ['delivery', 'other']),
+            ('id', '=', commercial_partner_sudo.id),
+        ], order='id desc') | order_sudo.partner_id
 
-            # do not show commercial_partner_id if its mandatory fields are not complete to children
-            # as children can not edit (fill) the commercial_partner_id
-            if commercial_partner != order.partner_id:
-                if not self._check_billing_address(commercial_partner):
-                    bill_partners = bill_partners.filtered(lambda p: p.id != commercial_partner.id)
-
-                if not self._check_delivery_address(commercial_partner):
-                    ship_partners = ship_partners.filtered(lambda p: p.id != commercial_partner.id)
+        if order_sudo.partner_id != commercial_partner_sudo:  # Child of the commercial partner.
+            # Don't display the commercial partner's addresses if they are not complete, as its
+            # children can't edit them.
+            if not self._check_billing_address(commercial_partner_sudo):
+                billing_partners_sudo = billing_partners_sudo.filtered(
+                    lambda p: p.id != commercial_partner_sudo.id
+                )
+            if not self._check_delivery_address(commercial_partner_sudo):
+                delivery_partners_sudo = delivery_partners_sudo.filtered(
+                    lambda p: p.id != commercial_partner_sudo.id
+                )
 
         return {
-            'order': order,
-            'website_sale_order': order,
-            'shippings': ship_partners,
-            'billings': bill_partners,
-            'only_services': order and order.only_services or False
+            'order': order_sudo,
+            'website_sale_order': order_sudo,  # Compatibility with other templates.
+            'billing_addresses': billing_partners_sudo,
+            'delivery_addresses': delivery_partners_sudo,
+            'only_services': order_sudo.only_services,
         }
 
     def can_skip_delivery_step(self, order_sudo, delivery_methods):
@@ -1906,7 +1914,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return request.redirect('/web/login?redirect=/shop/checkout')
 
         # Check that there is no ongoing payment.
-        tx = request.env.context.get('website_sale_transaction')
+        tx = request.env.context.get('website_sale_transaction')  # TODO ANVFE key is never set
         if tx and tx.state != 'draft':
             return request.redirect(f'/shop/payment/confirmation/{order_sudo.id}')
 
