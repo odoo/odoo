@@ -27,7 +27,7 @@
             <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: state.activeWebsite.id === website.id }"
                 checked="state.activeWebsite.id === website.id"
                 closingMode="'none'"
-                t-esc="website.name"
+                t-out="website.name"
                 attrs=" { title: website.name.length > 15 ? website.name : '' }"
                 onSelected="() => this.onSelectWebsite(website)"
             />

@@ -31,7 +31,7 @@
                         title="element.title"
                         moduleXmlId="element.moduleXmlId">
                         <t t-call="{{ element.icon }}"/>
-                        <p><t t-esc="element.title"/></p>
+                        <p><t t-out="element.title"/></p>
                     </NewContentElement>
                 </t>
             </div>
@@ -51,7 +51,7 @@
         title="props.title"
         primaryTitle="installButton"
         primaryClick="() => this.onClickInstall()">
-        <t t-esc="props.installationText"/>
+        <t t-out="props.installationText"/>
     </WebsiteDialog>
 </t>
 </templates>

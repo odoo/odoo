@@ -5,7 +5,7 @@
         <Dropdown>
             <button data-hotkey="w" class="mx-1 border-0">
                 <div class="d-none d-md-block">
-                    <span t-esc="websiteService.currentWebsite.name" class="me-2"/>
+                    <span t-out="websiteService.currentWebsite.name" class="me-2"/>
                     <i class="fa fa-caret-down"/>
                 </div>
                 <div class="d-md-none">

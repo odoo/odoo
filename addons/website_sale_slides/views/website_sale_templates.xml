@@ -49,7 +49,7 @@
         <div t-if="line.product_id.channel_ids"
              t-foreach="line.product_id.channel_ids.filtered(lambda course: course.enroll == 'payment')"
              t-as="course"
-             t-esc="course.name"/>
+             t-out="course.name"/>
     </xpath>
 </template>
 

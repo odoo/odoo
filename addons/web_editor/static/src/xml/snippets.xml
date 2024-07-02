@@ -37,7 +37,7 @@
     <t t-name="web_editor.customize_block_options_section">
         <we-customizeblock-options>
             <we-title>
-                <span t-esc="name"/>
+                <span t-out="name"/>
                 <we-top-button-group>
                     <we-button class="fa fa-fw fa-clone oe_snippet_clone o_we_link o_we_hover_success"
                                 title="Duplicate Container"
@@ -165,7 +165,7 @@
                 <t t-foreach="getSnippetsByCategories()" t-as="category" t-key="category.id">
                     <div t-att-id="category.id" t-if="category_value.length > 0" class="o_panel">
                         <div class="o_panel_header">
-                            <span t-esc="category.text"/>
+                            <span t-out="category.text"/>
                         </div>
                         <div t-att-id="category.id === 'snippet_custom' ? 'snippet_custom_body' : ''" class="o_panel_body" t-on-pointerup="_onMouseUp">
                             <t t-foreach="category_value" t-as="snippet" t-key="snippet.id">

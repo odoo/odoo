@@ -39,7 +39,7 @@
                                                     <div class="card-body text-center">
                                                         <h2 style="margin: 0">
                                                             <b>
-                                                                <t t-esc="percentage['great']" />
+                                                                <t t-out="percentage['great']" />
                                                             </b>
                                                             <small>%</small>
                                                         </h2>
@@ -54,7 +54,7 @@
                                                     <div class="card-body text-center">
                                                         <h2 style="margin: 0">
                                                             <b>
-                                                                <t t-esc="percentage['okay']" />
+                                                                <t t-out="percentage['okay']" />
                                                             </b>
                                                             <small>%</small>
                                                         </h2>
@@ -69,7 +69,7 @@
                                                     <div class="card-body text-center">
                                                         <h2 style="margin: 0">
                                                             <b>
-                                                                <t t-esc="percentage['bad']" />
+                                                                <t t-out="percentage['bad']" />
                                                             </b>
                                                             <small>%</small>
                                                         </h2>
@@ -81,7 +81,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-12 mb32">
-                                        <h3>The <t t-esc="len(ratings)"/> last feedbacks</h3>
+                                        <h3>The <t t-out="len(ratings)"/> last feedbacks</h3>
                                         <div>
                                             <t t-foreach="ratings" t-as="rating">
                                                 <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' t-att-alt="rating.res_name" width="48px" height="48px"/>
@@ -105,10 +105,10 @@
                                     <div class="flex-grow-1">
                                         <h5>
                                             <t t-if="user.livechat_username">
-                                                <t t-esc="user.livechat_username"/>
+                                                <t t-out="user.livechat_username"/>
                                             </t>
                                             <t t-else="">
-                                                <t t-esc="user.name"/>
+                                                <t t-out="user.name"/>
                                             </t>
                                         </h5>
                                         <div class="col-lg-12">
@@ -116,15 +116,15 @@
                                                 <t t-if="user.partner_id.id in ratings_per_user">
                                                     <div class="col-lg-4 ps-0 pe-0">
                                                         <img t-attf-src='/rating/static/src/img/rating_5.png' alt="Great" width="16px" height="16px"/>
-                                                        <span class="align-middle"><t t-esc="ratings_per_user[user.partner_id.id]['great']"/>%</span>
+                                                        <span class="align-middle"><t t-out="ratings_per_user[user.partner_id.id]['great']"/>%</span>
                                                     </div>
                                                     <div class="col-lg-4 ps-0 pe-0">
                                                         <img t-attf-src='/rating/static/src/img/rating_3.png' alt="Okay" width="16px" height="16px"/>
-                                                        <span class="align-middle"><t t-esc="ratings_per_user[user.partner_id.id]['okay']"/>%</span>
+                                                        <span class="align-middle"><t t-out="ratings_per_user[user.partner_id.id]['okay']"/>%</span>
                                                     </div>
                                                     <div class="col-lg-4 ps-0 pe-0">
                                                         <img t-attf-src='/rating/static/src/img/rating_1.png' alt="Bad" width="16px" height="16px"/>
-                                                        <span class="align-middle"><t t-esc="ratings_per_user[user.partner_id.id]['bad']"/>%</span>
+                                                        <span class="align-middle"><t t-out="ratings_per_user[user.partner_id.id]['bad']"/>%</span>
                                                     </div>
                                                 </t>
                                                 <t t-else="">
@@ -163,7 +163,7 @@
                                                 <img t-att-src="channel.image_128 and image_data_uri(channel.image_128) or '/web/static/img/placeholder.png'" t-att-alt="channel.name" class="o_image_64_cover"/>
                                             </a>
                                             <div class="flex-grow-1 h-100 my-auto">
-                                                <h4><t t-esc="channel.name"/></h4>
+                                                <h4><t t-out="channel.name"/></h4>
                                             </div>
                                         </div>
                                     </t>
