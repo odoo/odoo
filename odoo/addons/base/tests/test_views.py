@@ -14,6 +14,7 @@ from lxml.builder import E
 from psycopg2 import IntegrityError
 from psycopg2.extras import Json
 
+from odoo.tools import apply_inheritance_specs
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import common, tagged
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -453,6 +454,71 @@ class TestApplyInheritanceSpecs(ViewCase):
                     E.field(name="inserted 2"),
                     name="target"),
                 string="Title"))
+
+    def test_insert_replace_text(self):
+        xml = """
+        <div>
+            TEXT 1
+            <div/>
+            TEXT 2
+        </div>
+        """
+
+        before = """
+        <xpath expr="/div/div" position="before" replace_text="true">
+            TEXT 3
+            <div added="1"/>
+            TEXT 4
+        </xpath>
+        """
+        new = apply_inheritance_specs(etree.fromstring(xml), etree.fromstring(before))
+        self.assertXMLEqual(etree.tostring(new), """
+        <div>
+            TEXT 3
+            <div added="1"/>
+            TEXT 4
+            <div/>
+            TEXT 2
+        </div>
+        """)
+
+        after = """
+        <xpath expr="/div/div" position="after" replace_text="true">
+            TEXT 3
+            <div added="1"/>
+            TEXT 4
+        </xpath>
+        """
+        new = apply_inheritance_specs(etree.fromstring(xml), etree.fromstring(after))
+        self.assertXMLEqual(etree.tostring(new), """
+        <div>
+            TEXT 1
+            <div/>
+            TEXT 3
+            <div added="1"/>
+            TEXT 4
+        </div>
+        """)
+
+        inside = """
+        <xpath expr="/div" position="inside" replace_text="true">
+            <span/>
+            TEXT 3
+            <div added="1"/>
+            TEXT 4
+        </xpath>
+        """
+        new = apply_inheritance_specs(etree.fromstring(xml), etree.fromstring(inside))
+        self.assertXMLEqual(etree.tostring(new), """
+        <div>
+            TEXT 1
+            <div/>
+            <span/>
+            TEXT 3
+            <div added="1"/>
+            TEXT 4
+        </div>
+        """)
 
     def test_replace_inner(self):
         spec = E.field(
