@@ -659,7 +659,7 @@ class AccountReportExpression(models.Model):
             country = tag_expression.report_line_id.report_id.country_id
             or_domains.append(self.env['account.account.tag']._get_tax_tags_domain(tag_expression.formula, country.id, sign))
 
-        return self.env['account.account.tag'].with_context(active_test=False).search(osv.expression.OR(or_domains))
+        return self.env['account.account.tag'].with_context(active_test=False, lang='en_US').search(osv.expression.OR(or_domains))
 
     @api.model
     def _get_tags_create_vals(self, tag_name, country_id, existing_tag=None):
