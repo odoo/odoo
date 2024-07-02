@@ -93,7 +93,7 @@ export class TableUIPlugin extends Plugin {
                 dispatch: this.dispatch,
                 editable: this.editable,
                 overlay: this.picker,
-                direction: this.config.direction,
+                direction: this.config.direction || "ltr",
             },
         });
     }
@@ -167,7 +167,7 @@ export class TableUIPlugin extends Plugin {
                     overlay: this.colMenu,
                     target: td,
                     dropdownState: this.createDropdownState(this.rowMenu),
-                    direction: this.config.direction,
+                    direction: this.config.direction || "ltr",
                 },
             });
         }

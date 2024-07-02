@@ -11,8 +11,9 @@ export class TableMenu extends Component {
         overlay: Object,
         dropdownState: Object,
         target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
-        direction: String,
+        direction: { type: String, optional: true },
     };
+    static defaultProps = { direction: "ltr" };
     static components = { Dropdown, DropdownItem };
 
     setup() {
