@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
@@ -12,6 +13,7 @@ MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 
 # Used for displaying the days and reversing selection -> integer
 DAY_SELECT_VALUES = [str(i) for i in range(1, 29)] + ['last']
 DAY_SELECT_SELECTION_NO_LAST = tuple(zip(DAY_SELECT_VALUES, (str(i) for i in range(1, 29))))
+MONTHS_TO_INTEGER = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6, "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12}
 
 def _get_selection_days(self):
     return DAY_SELECT_SELECTION_NO_LAST + (("last", _("last day")),)
@@ -125,6 +127,17 @@ class AccrualPlanLevel(models.Model):
     postpone_max_days = fields.Integer("Maximum amount of accruals to transfer",
         help="Set a maximum of accruals an allocation keeps at the end of the year.")
     can_modify_value_type = fields.Boolean(compute="_compute_can_modify_value_type")
+    accrual_validity = fields.Boolean(string="Accrual Validity")
+    accrual_validity_count = fields.Integer(
+        "Accrual Validity Count",
+        help="You can define a period of time where the days carried over will be available", default="1")
+    accrual_validity_type = fields.Selection(
+        [('day', 'Days'),
+         ('month', 'Months'),
+         ('year', 'Years')],
+        default='day', string="Accrual Validity Type", required=True,
+        help="This field defines the unit of time after which the accrual ends.")
+    accrual_validity_date = fields.Date(string="Accrual Validity Date", compute="_compute_accrual_validity_date", store=True)
 
     _sql_constraints = [
         ('check_dates',
@@ -155,6 +168,20 @@ class AccrualPlanLevel(models.Model):
         }
         for level in self:
             level.sequence = level.start_count * start_type_multipliers[level.start_type]
+
+    @api.depends('accrual_plan_id.carryover_date')
+    def _compute_accrual_validity_date(self):
+        for level in self:
+            accrual_plan = level.accrual_plan_id
+            if accrual_plan.carryover_date == "year_start":
+                level.accrual_validity_date = date(accrual_plan.create_date.year + 1, 1, 1) + relativedelta(**{level.accrual_validity_type + 's': level.accrual_validity_count})
+            elif level.accrual_plan_id.carryover_date == "allocation":
+                # will be handled when allocation is created
+                pass
+            else:
+                month = MONTHS_TO_INTEGER[accrual_plan.carryover_month]
+                year = accrual_plan.create_date.year + (1 if month == 1 else -1)
+                level.accrual_validity_date = date(year, month, accrual_plan.carryover_day) + relativedelta(**{level.accrual_validity_type + 's': level.accrual_validity_count})
 
     @api.depends('accrual_plan_id', 'accrual_plan_id.level_ids', 'accrual_plan_id.time_off_type_id')
     def _compute_can_modify_value_type(self):

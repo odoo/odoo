@@ -111,6 +111,7 @@ class HolidaysAllocation(models.Model):
         domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]")
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
+    accrued_days = fields.Integer("Accrued Days")
 
     _sql_constraints = [
         ('duration_check', "CHECK( ( number_of_days > 0 AND allocation_type='regular') or (allocation_type != 'regular'))", "The duration must be greater than 0."),
@@ -448,6 +449,22 @@ class HolidaysAllocation(models.Model):
                         allocation_days = allocation.number_of_days + leaves_taken
                         allocation_max_days = current_level.postpone_max_days + leaves_taken
                         allocation.number_of_days = min(allocation_days, allocation_max_days)
+                    allocation.accrued_days = allocation.number_of_days
+
+                if current_level.accrual_validity_date and current_level.accrual_validity_date == allocation.nextcall:
+                    if allocation.number_of_days >= allocation.accrued_days:
+                        allocation.number_of_days -= allocation.accrued_days
+                    else:
+                        allocation.number_of_days = 0
+                    current_level.accrual_validity_date += relativedelta(years=+1)
+                if allocation.accrual_plan_id.carryover_date == "allocation":
+                    if allocation.date_from:
+                        expiry_date = allocation.date_from + relativedelta(**{current_level.accrual_validity_type + 's': current_level.accrual_validity_count}) + relativedelta(years=+1)
+                        if expiry_date == allocation.nextcall:
+                            if allocation.number_of_days >= allocation.accrued_days:
+                                allocation.number_of_days -= allocation.accrued_days
+                            else:
+                                allocation.number_of_days = 0
 
                 allocation.lastcall = allocation.nextcall
                 allocation.nextcall = nextcall
