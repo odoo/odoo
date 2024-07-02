@@ -683,7 +683,7 @@ class AccountMoveLine(models.Model):
         self.env.cr.execute(sql, where_clause_params)
         result = {r[0]: r[1] for r in self.env.cr.fetchall()}
         for record in self:
-            record.cumulated_balance = result[record.id]
+            record.cumulated_balance = result.get(record.id, 0.0)
 
     @api.depends('debit', 'credit', 'amount_currency', 'account_id', 'currency_id', 'company_id',
                  'matched_debit_ids', 'matched_credit_ids')
