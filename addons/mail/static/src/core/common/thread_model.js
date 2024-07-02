@@ -183,10 +183,7 @@ export class Thread extends Record {
     });
     isDisplayed = Record.attr(false, {
         compute() {
-            if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
-                return this.eq(this.store.discuss.thread);
-            }
-            return this.store.ChatWindow.get({ thread: this })?.isOpen;
+            return this.computeIsDisplayed();
         },
         onUpdate() {
             if (this.selfMember && !this.isDisplayed) {
@@ -257,11 +254,6 @@ export class Thread extends Record {
      */
     scrollTop = "bottom";
     transientMessages = Record.many("Message");
-    discussAppCategory = Record.one("DiscussAppCategory", {
-        compute() {
-            return this._computeDiscussAppCategory();
-        },
-    });
     /** @type {string} */
     defaultDisplayMode;
     scrollUnread = true;
@@ -311,15 +303,6 @@ export class Thread extends Record {
     });
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
-
-    _computeDiscussAppCategory() {
-        if (["group", "chat"].includes(this.channel_type)) {
-            return this.store.discuss.chats;
-        }
-        if (this.channel_type === "channel") {
-            return this.store.discuss.channels;
-        }
-    }
 
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {
@@ -416,6 +399,10 @@ export class Thread extends Record {
             return this.channelMembers[0];
         }
         return undefined;
+    }
+
+    computeIsDisplayed() {
+        return this.store.ChatWindow.get({ thread: this })?.isOpen;
     }
 
     get avatarUrl() {
