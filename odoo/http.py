@@ -149,6 +149,7 @@ import traceback
 import warnings
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
+from hashlib import sha512
 from io import BytesIO
 from os.path import join as opj
 from pathlib import Path
@@ -250,7 +251,14 @@ def get_default_session():
         'login': None,
         'uid': None,
         'session_token': None,
+        '_trace': [],
     }
+    # `_trace` is a list with for each item:
+    #   - device information: list(platform:str, browser:str, IP address:str)
+    #   - timestamp information: list(first activity:int, last activit:int)
+    #   - database synchronization information: list(last log in db:bool)
+    # Note:
+    #   Usage of list type to be able to edit them by reference.
 
 DEFAULT_MAX_CONTENT_LENGTH = 128 * 1024 * 1024  # 128MiB
 
@@ -886,10 +894,13 @@ def _check_and_complete_route_definition(controller_cls, submethod, merged_routi
 # Session
 # =========================================================
 
+_base64_urlsafe_re = re.compile(r'^[A-Za-z0-9_-]{84}$')
+
+
 class FilesystemSessionStore(sessions.FilesystemSessionStore):
     """ Place where to load and save session objects. """
     def get_session_filename(self, sid):
-        # scatter sessions across 256 directories
+        # scatter sessions across 4096 (64^2) directories
         if not self.is_valid_key(sid):
             raise ValueError(f'Invalid session id {sid!r}')
         sha_dir = sid[:2]
@@ -933,6 +944,22 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
             with contextlib.suppress(OSError):
                 if os.path.getmtime(path) < threshold:
                     os.unlink(path)
+
+    def generate_key(self, salt=None):
+        return base64.urlsafe_b64encode(sha512(str(time.time()).encode() + os.urandom(64)).digest()[:-1]).decode('utf-8')
+
+    def is_valid_key(self, key):
+        return _base64_urlsafe_re.match(key) is not None
+
+    def delete_from_identifiers(self, identifiers):
+        files_to_unlink = []
+        for identifier in identifiers:
+            normalized_path = os.path.normpath(os.path.join(self.path, identifier[:2], identifier + '*'))
+            if normalized_path.startswith(self.path):
+                files_to_unlink.extend(glob.glob(normalized_path))
+        for fn in files_to_unlink:
+            with contextlib.suppress(OSError):
+                os.unlink(fn)
 
 
 class Session(collections.abc.MutableMapping):

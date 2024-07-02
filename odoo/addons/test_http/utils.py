@@ -60,6 +60,14 @@ class MemorySessionStore(SessionStore):
     def delete(self, session):
         self.store.pop(session.sid, None)
 
+    def delete_from_identifiers(self, identifiers):
+        sid_to_remove = []
+        for sid in self.store:
+            if any(sid.startswith(identifier) for identifier in identifiers):
+                sid_to_remove.append(sid)
+        for sid in sid_to_remove:
+            self.store.pop(sid)
+
     def rotate(self, session, env):
         FilesystemSessionStore.rotate(self, session, env)
 

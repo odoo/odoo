@@ -231,3 +231,19 @@ class TestHttp(http.Controller):
     @http.route('/test_http/httprequest_environ', type='http', auth='none')
     def request_environ(self):
         return json.dumps(list(request.httprequest.environ.keys()))
+
+    @http.route('/test_http/honeypot_readonly', type='http', auth='none', readonly=True, csrf=False)
+    def request_honeypot_readonly(self):
+        return 'test'
+
+    @http.route('/test_http/honeypot_no_readonly', type='http', auth='none', readonly=False, csrf=False)
+    def request_honeypot_no_readonly(self):
+        return 'test'
+
+    @http.route('/test_http/honeypot_public', type='http', auth='public', readonly=False, csrf=False)
+    def request_honeypot_public(self):
+        return 'test'
+
+    @http.route('/test_http/honeypot_auth_user', type='http', auth='user', readonly=False, csrf=False)
+    def request_honeypot_auth_user(self):
+        return 'test'
