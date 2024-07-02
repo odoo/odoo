@@ -1032,7 +1032,8 @@
                                                 <i class="fa fa-minus"></i>
                                             </a>
                                         </div>
-                                        <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
+                                        <t t-set="rounded_uom_qty" t-value="round(line.product_uom_qty,env['decimal.precision'].precision_get('Product Unit of Measure'))"/>
+                                        <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(rounded_uom_qty) == rounded_uom_qty and int(rounded_uom_qty) or rounded_uom_qty" />
                                         <div class="input-group-append">
                                             <a t-attf-href="#" class="btn btn-link float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
                                                 <i class="fa fa-plus"></i>
