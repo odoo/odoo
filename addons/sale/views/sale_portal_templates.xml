@@ -141,9 +141,19 @@
                         <h2 t-field="sale_order.amount_total" data-id="total_amount" class="mb-0 text-break"/>
                     </t>
                     <t t-set="entries">
+                        <t t-if="sale_order.state in 'draft,sent' and sale_order.require_payment">
+                            <t t-if="sale_order.amount_paid > 0">
+                                <div class="alert alert-warning" role="alert">
+                                    Amount paid: <span t-field="sale_order.amount_paid"/>
+                                </div>
+                            </t>
+                            <div class="alert alert-success" role="alert">
+                                Amount due: <span t-esc="sale_order._get_prepayment_required_amount() - sale_order.amount_paid"/>
+                            </div>
+                        </t>
                         <div class="d-flex flex-column gap-4 mt-3">
                             <div class="d-flex flex-column gap-2" id="sale_order_sidebar_button">
-                                <a t-if="sale_order._has_to_be_signed()" role="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#">
+                                <a t-if="sale_order._has_to_be_signed()  and not link_amount" role="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#">
                                     <i class="fa fa-check"/><t t-if="sale_order._has_to_be_paid()"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t>
                                 </a>
                                 <a t-elif="sale_order._has_to_be_paid()" role="button" id="o_sale_portal_paynow" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#" t-att-class="'%s' % ('btn btn-light' if sale_order.transaction_ids else 'btn btn-primary')" >
@@ -195,7 +205,7 @@
 
                     <!-- modal relative to the actions sign and pay -->
                     <div role="dialog" class="modal fade" id="modalaccept">
-                        <div class="modal-dialog" t-if="sale_order._has_to_be_signed()">
+                        <div class="modal-dialog" t-if="sale_order._has_to_be_signed() and not link_amount">
                             <form id="accept" method="POST" t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="js_accept_json modal-content js_website_submit_form">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <header class="modal-header">
@@ -265,6 +275,52 @@
                                         for the <b data-id="total_amount" t-field="sale_order.amount_total"/> quote.
                                         <b t-if="sale_order.payment_term_id" t-field="sale_order.payment_term_id.note" class="o_sale_payment_terms"/>
                                     </div>
+                                    <div t-if="company_mismatch">
+                                        <t t-call="payment.company_mismatch_warning"/>
+                                    </div>
+                                    <div t-elif="not sale_order._has_to_be_paid()" class="alert alert-danger">
+                                        The order is not in a state requiring customer payment.
+                                    </div>
+                                    <div t-else="" id="payment_method" class="text-start mt-0" >
+                                        <t t-call="payment.form">
+                                            <!-- Inject the order ID to allow Stripe to check if tokenization is required. -->
+                                            <t t-set="sale_order_id" t-value="sale_order.id"/>
+                                        </t>
+                                    </div>
+                                </main>
+                            </div>
+                        </div>
+
+                        <div class="modal-dialog" t-if="link_amount">
+                            <div class="modal-content">
+                                <header class="modal-header">
+                                    <h4 class="modal-title">Validate Order</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </header>
+                                <main class="modal-body" id="sign-dialog">
+                                    <t t-set="prepayment_amount" t-value="sale_order._get_prepayment_required_amount()"/>
+                                    <t t-set="prepayment_available" t-value="sale_order.prepayment_percent and sale_order.prepayment_percent != 1.0"/>
+                                        <div
+                                            id="o_sale_portal_link_buttons"
+                                            class="d-flex btn-group mb-3"
+                                            role="group">
+                                            <t t-set="amount_left" t-value="sale_order._get_prepayment_required_amount()"/>
+                                            <t t-set="installment_amount" t-value="float(link_amount) != amount_left"/>
+                                            <t t-if="installment_amount">
+                                                <button name="o_sale_portal_amount_installment_button" class="btn btn-light active">
+                                                Installment <br/>
+                                                <span t-esc="float(link_amount)" class="fw-bold"
+                                                      t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+                                                </button>
+                                                <button name="o_sale_portal_amount_confirmation_button" class="btn btn-light">
+                                                    Full amount <br/>
+                                                    <span class="fw-bold" t-esc="amount_left"/>
+                                                </button>
+                                            </t>
+                                        </div>
+                                        <div>
+                                            Reference: <t t-esc="sale_order.name"></t>
+                                        </div>
                                     <div t-if="company_mismatch">
                                         <t t-call="payment.company_mismatch_warning"/>
                                     </div>
