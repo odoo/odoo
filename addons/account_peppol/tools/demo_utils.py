@@ -88,8 +88,11 @@ def _mock_button_verify_partner_endpoint(func, self, *args, **kwargs):
 def _mock_user_creation(func, self, *args, **kwargs):
     func(self, *args, **kwargs)
     self.account_peppol_proxy_state = 'receiver' if self.smp_registration else 'sender'
+    pkey = self.env['certificate.key'].create({
+        'content': b64encode(file_open(DEMO_PRIVATE_KEY, 'rb').read()),
+    })
     self.edi_user_id.write({
-        'private_key': b64encode(file_open(DEMO_PRIVATE_KEY, 'rb').read()),
+        'private_key': pkey.id,
     })
     return self._action_send_notification(
         *_get_notification_message(self.account_peppol_proxy_state)

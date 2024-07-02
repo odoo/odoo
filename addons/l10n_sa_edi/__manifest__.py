@@ -10,7 +10,8 @@
         'account_edi_ubl_cii',
         'account_debit_note',
         'l10n_sa',
-        'base_vat'
+        'base_vat',
+        'certificate',
     ],
     'author': 'Odoo',
     'summary': "E-Invoicing, Universal Business Language",

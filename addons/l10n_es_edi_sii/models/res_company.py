@@ -10,12 +10,13 @@ class ResCompany(models.Model):
         string="Certificate (ES)",
         store=True,
         readonly=False,
-        comodel_name='l10n_es_edi.certificate',
+        comodel_name='certificate.certificate',
         compute="_compute_l10n_es_edi_certificate",
     )
     l10n_es_edi_certificate_ids = fields.One2many(
-        comodel_name='l10n_es_edi.certificate',
+        comodel_name='certificate.certificate',
         inverse_name='company_id',
+        domain=[('scope', '=', 'general')],
     )
     l10n_es_edi_tax_agency = fields.Selection(
         string="Tax Agency for SII",
@@ -36,8 +37,8 @@ class ResCompany(models.Model):
     def _compute_l10n_es_edi_certificate(self):
         for company in self:
             if company.country_code == 'ES':
-                company.l10n_es_edi_certificate_id = self.env['l10n_es_edi.certificate'].search(
-                    [('company_id', '=', company.id)],
+                company.l10n_es_edi_certificate_id = self.env['certificate.certificate'].search(
+                    [('company_id', '=', company.id), ('is_valid', '=', True), ('scope', '=', 'general')],
                     order='date_end desc',
                     limit=1,
                 )
