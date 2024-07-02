@@ -6281,10 +6281,16 @@ class BaseModel(metaclass=MetaModel):
                 # determine the field with the final type for values
                 field = None
                 if key:
-                    model = self.browse()
-                    for fname in key.split('.'):
-                        field = model._fields[fname]
-                        model = model[fname]
+                    if '.' in key:
+                        fname, rest = key.split('.', 1)
+                        field = self._fields[fname]
+                        if field.relational:
+                            # for relational fields, evaluate as 'any'
+                            # so that negations are applied on the result of 'any' instead
+                            # of on the mapped value
+                            key, comparator, value = fname, 'any', [(rest, comparator, value)]
+                    else:
+                        field = self._fields[key]
 
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                     if comparator.endswith('ilike'):

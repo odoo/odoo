@@ -331,7 +331,9 @@ def distribute_not(domain):
         if is_leaf(token):
             if negate:
                 left, operator, right = token
-                if operator in TERM_OPERATORS_NEGATION:
+                if operator in TERM_OPERATORS_NEGATION and (isinstance(left, int) or "." not in left):
+                    # rewrite using the negated operator, except for relationship traversal
+                    # because not ('a.b', '=', x) should become ('a', 'not any', ('b', '=', x))
                     if token in (TRUE_LEAF, FALSE_LEAF):
                         result.append(FALSE_LEAF if token == TRUE_LEAF else TRUE_LEAF)
                     else:
