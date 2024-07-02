@@ -51,6 +51,7 @@ export class WebClient extends Component {
     }
 
     mounted() {
+        document.querySelector("body").classList.add("o_fullscreen");
         // the chat window and dialog services listen to 'web_client_ready' event in
         // order to initialize themselves:
         this.env.bus.trigger("WEB_CLIENT_READY");
