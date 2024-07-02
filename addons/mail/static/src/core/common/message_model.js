@@ -280,11 +280,7 @@ export class Message extends Record {
         },
         /** @this {import("models").Message} */
         onUpdate() {
-            if (this.isEmpty && this.starred) {
-                const starred = this.store.discuss.starred;
-                starred.counter--;
-                starred.messages.delete(this);
-            }
+            this._onUpdateIsEmpty();
         },
     });
     isBodyEmpty = Record.attr(undefined, {
@@ -370,6 +366,8 @@ export class Message extends Record {
             rpc("/mail/link_preview", { message_id: this.id }, { silent: true });
         }
     }
+
+    _onUpdateIsEmpty() {}
 
     async react(content) {
         await rpc(

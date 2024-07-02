@@ -62,6 +62,10 @@ export class ChatWindowContainer extends Component {
         }
         return unreadCounter;
     }
+
+    get isShown() {
+        return true;
+    }
 }
 
 registry

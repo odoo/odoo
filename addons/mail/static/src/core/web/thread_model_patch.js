@@ -21,8 +21,14 @@ patch(Thread.prototype, {
         return this.recipientsCount === this.recipients.length;
     },
     closeChatWindow() {
-        const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(this));
+        const chatWindow = this.store.chatWindows.find((c) => c.thread?.eq(this));
         chatWindow?.close({ notifyState: false });
+    },
+    computeIsDisplayed() {
+        if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
+            return this.eq(this.store.discuss.thread);
+        }
+        return super.computeIsDisplayed();
     },
     async leave() {
         this.closeChatWindow();
@@ -65,7 +71,7 @@ patch(Thread.prototype, {
         super.open(replaceNewMessageChatWindow);
     },
     async unpin() {
-        const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(this));
+        const chatWindow = this.store.chatWindows.find((c) => c.thread?.eq(this));
         await chatWindow?.close();
         super.unpin(...arguments);
     },

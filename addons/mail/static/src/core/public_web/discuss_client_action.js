@@ -1,4 +1,4 @@
-import { Discuss } from "@mail/core/common/discuss";
+import { Discuss } from "@mail/core/public_web/discuss";
 
 import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 
@@ -32,6 +32,15 @@ export class DiscussClientAction extends Component {
         });
     }
 
+    getActiveId(props) {
+        return (
+            props.action.context.active_id ??
+            props.action.params?.active_id ??
+            this.store.Thread.localIdToActiveId(this.store.discuss.thread?.localId) ??
+            "mail.box_inbox"
+        );
+    }
+
     /**
      * @param {string} rawActiveId
      */
@@ -50,11 +59,7 @@ export class DiscussClientAction extends Component {
      * @param {Props} props
      */
     async restoreDiscussThread(props) {
-        const rawActiveId =
-            props.action.context.active_id ??
-            props.action.params?.active_id ??
-            this.store.Thread.localIdToActiveId(this.store.discuss.thread?.localId) ??
-            "mail.box_inbox";
+        const rawActiveId = this.getActiveId(props);
         const [model, id] = this.parseActiveId(rawActiveId);
         const activeThread = await this.store.Thread.getOrFetch({ model, id });
         if (activeThread && activeThread.notEq(this.store.discuss.thread)) {

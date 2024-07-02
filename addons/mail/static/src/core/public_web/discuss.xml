@@ -3,7 +3,6 @@
 
 <t t-name="mail.Discuss">
     <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center bg-view': ui.isSmall }" t-ref="root">
-        <div t-if="ui.isSmall and store.discuss.activeTab === 'main'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
         <div t-if="store.inPublicPage or !(ui.isSmall and store.discuss.activeTab !== 'main')" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 overflow-auto" t-ref="content">
             <div class="o-mail-Discuss-header px-3 bg-view d-flex flex-shrink-0 align-items-center border-bottom z-1" t-att-class="{ 'flex-grow-1': !ui.isSmall and !store.inPublicPage }" t-ref="header">
                 <t t-if="thread">
@@ -63,6 +62,8 @@
                 </t>
             </div>
             <div class="o-mail-Discuss-main d-flex overflow-hidden flex-grow-1" t-ref="main">
+                <t t-if="ui.isSmall" t-call="mail.Discuss.loading"/>
+                <DiscussSidebar t-elif="props.hasSidebar"/>
                 <div class="o-mail-Discuss-core overflow-auto d-flex flex-grow-1" t-ref="core">
                     <t t-if="thread">
                         <div class="d-flex flex-column flex-grow-1">
@@ -82,26 +83,18 @@
     </div>
 </t>
 
-<t t-name="mail.Discuss.mobileTopbar">
-    <div class="btn-group d-flex w-100 p-1">
-        <t t-call="mail.MobileMailbox" >
-            <t t-set="mailbox" t-value="store.discuss.inbox"/>
-        </t>
-        <t t-call="mail.MobileMailbox">
-            <t t-set="mailbox" t-value="store.discuss.starred"/>
-        </t>
-        <t t-call="mail.MobileMailbox">
-            <t t-set="mailbox" t-value="store.discuss.history"/>
-        </t>
-    </div>
-</t>
-
 <t t-name="mail.MobileMailbox">
     <button class="btn btn-secondary flex-grow-1 p-2"
         t-att-class="{
             'active o-active shadow-none': mailbox.eq(store.discuss.thread),
         }" t-on-click="mailbox.setAsDiscussThread" t-esc="mailbox.name"
     />
+</t>
+
+<t t-name="mail.Discuss.loading">
+    <div t-if="store.channels.status === 'fetching'" class="d-flex flex-grow-1 align-items-center justify-content-center h-100 w-100 o-pointer-events-none">
+        <h4 class="text-muted opacity-50 o-visible-short-delay"><b><i class="o-mail-Discuss-mobileLoading fa fa-circle-o-notch fa-spin"/></b></h4>
+    </div>
 </t>
 
 </templates>

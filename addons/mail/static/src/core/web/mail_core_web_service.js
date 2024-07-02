@@ -41,6 +41,24 @@ export class MailCoreWeb {
                 message.thread.message_needaction_counter++;
             }
         });
+        this.busService.subscribe("mail.message/toggle_star", (payload, { id: notifId }) => {
+            const { message_ids: messageIds, starred } = payload;
+            for (const messageId of messageIds) {
+                const message = this.store.Message.insert({ id: messageId, starred });
+                const starredBox = this.store.discuss.starred;
+                if (starred) {
+                    if (notifId > starredBox.counter_bus_id) {
+                        starredBox.counter++;
+                    }
+                    starredBox.messages.add(message);
+                } else {
+                    if (notifId > starredBox.counter_bus_id) {
+                        starredBox.counter--;
+                    }
+                    starredBox.messages.delete(message);
+                }
+            }
+        });
         this.busService.subscribe("mail.message/mark_as_read", (payload, { id: notifId }) => {
             const { message_ids: messageIds, needaction_inbox_counter } = payload;
             const inbox = this.store.discuss.inbox;
@@ -75,6 +93,24 @@ export class MailCoreWeb {
             }
             if (inbox.counter > inbox.messages.length) {
                 inbox.fetchMoreMessages();
+            }
+        });
+        this.busService.subscribe("mail.message/toggle_star", (payload, { id: notifId }) => {
+            const { message_ids: messageIds, starred } = payload;
+            for (const messageId of messageIds) {
+                const message = this.store.Message.insert({ id: messageId, starred });
+                const starredBox = this.store.discuss.starred;
+                if (starred) {
+                    if (notifId > starredBox.counter_bus_id) {
+                        starredBox.counter++;
+                    }
+                    starredBox.messages.add(message);
+                } else {
+                    if (notifId > starredBox.counter_bus_id) {
+                        starredBox.counter--;
+                    }
+                    starredBox.messages.delete(message);
+                }
             }
         });
         this.busService.start();

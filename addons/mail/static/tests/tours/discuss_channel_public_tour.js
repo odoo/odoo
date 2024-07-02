@@ -5,7 +5,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
     test: true,
     steps: () => [
         {
-            trigger: ".o-mail-DiscussPublic",
+            trigger: ".o-mail-Discuss",
         },
         {
             content: "Check that we are on channel page",

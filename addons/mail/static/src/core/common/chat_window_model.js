@@ -23,7 +23,7 @@ export class ChatWindow extends Record {
      * @returns {import("models").ChatWindow}
      */
     static _insert(data = {}) {
-        const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(data.thread));
+        const chatWindow = this.store.chatWindows.find((c) => c.thread?.eq(data.thread));
         if (!chatWindow) {
             /** @type {import("models").ChatWindow} */
             const chatWindow = this.preinsert(data);
@@ -32,23 +32,23 @@ export class ChatWindow extends Record {
             const visible = this.store.visibleChatWindows;
             const maxVisible = this.store.maxVisibleChatWindows;
             if (!data.replaceNewMessageChatWindow) {
-                if (maxVisible <= this.store.discuss.chatWindows.length) {
+                if (maxVisible <= this.store.chatWindows.length) {
                     const swaped = visible[visible.length - 1];
                     index = visible.length - 1;
                     swaped.hide();
                 } else {
-                    index = this.store.discuss.chatWindows.length;
+                    index = this.store.chatWindows.length;
                 }
             } else {
-                const newMessageChatWindowIndex = this.store.discuss.chatWindows.findIndex(
+                const newMessageChatWindowIndex = this.store.chatWindows.findIndex(
                     (cw) => !cw.thread
                 );
                 index =
                     newMessageChatWindowIndex !== -1
                         ? newMessageChatWindowIndex
-                        : this.store.discuss.chatWindows.length;
+                        : this.store.chatWindows.length;
             }
-            this.store.discuss.chatWindows.splice(
+            this.store.chatWindows.splice(
                 index,
                 data.replaceNewMessageChatWindow ? 1 : 0,
                 chatWindow
@@ -78,24 +78,21 @@ export class ChatWindow extends Record {
 
     async close(options = {}) {
         const { escape = false } = options;
-        if (
-            !this.hidden &&
-            this.store.maxVisibleChatWindows < this.store.discuss.chatWindows.length
-        ) {
+        if (!this.hidden && this.store.maxVisibleChatWindows < this.store.chatWindows.length) {
             const swaped = this.store.hiddenChatWindows[0];
             swaped.hidden = false;
             swaped.folded = false;
         }
-        const index = this.store.discuss.chatWindows.findIndex((c) => c.eq(this));
+        const index = this.store.chatWindows.findIndex((c) => c.eq(this));
         if (index > -1) {
-            this.store.discuss.chatWindows.splice(index, 1);
+            this.store.chatWindows.splice(index, 1);
         }
         const thread = this.thread;
         if (thread) {
             thread.state = "closed";
         }
-        if (escape && this.store.discuss.chatWindows.length > 0) {
-            this.store.discuss.chatWindows.at(index - 1).focus();
+        if (escape && this.store.chatWindows.length > 0) {
+            this.store.chatWindows.at(index - 1).focus();
         }
         await this._onClose(options);
         this.delete();

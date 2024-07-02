@@ -4,6 +4,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { Thread } from "@mail/core/common/thread";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
+import { DiscussSidebar } from "@mail/core/public_web/discuss_sidebar";
 import {
     useMessageEdition,
     useMessageHighlight,
@@ -17,7 +18,6 @@ import {
     useChildSubEnv,
     useRef,
     useState,
-    useEffect,
     useExternalListener,
 } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -29,13 +29,17 @@ import { FileUploader } from "@web/views/fields/file_handler";
 export class Discuss extends Component {
     static components = {
         AutoresizeInput,
+        DiscussSidebar,
         Thread,
         ThreadIcon,
         Composer,
         FileUploader,
         ImStatus,
     };
-    static props = {};
+    static props = {
+        hasSidebar: { type: Boolean, optional: true },
+    };
+    static defaultProps = { hasSidebar: true };
     static template = "mail.Discuss";
 
     setup() {
@@ -50,7 +54,6 @@ export class Discuss extends Component {
         this.orm = useService("orm");
         this.effect = useService("effect");
         this.ui = useState(useService("ui"));
-        this.prevInboxCounter = this.store.discuss.inbox.counter;
         useChildSubEnv({
             inDiscussApp: true,
             messageHighlight: this.messageHighlight,
@@ -68,23 +71,6 @@ export class Discuss extends Component {
                 }
             },
             { capture: true }
-        );
-        useEffect(
-            () => {
-                if (
-                    this.thread?.id === "inbox" &&
-                    this.prevInboxCounter !== this.store.discuss.inbox.counter &&
-                    this.store.discuss.inbox.counter === 0
-                ) {
-                    this.effect.add({
-                        message: _t("Congratulations, your inbox is empty!"),
-                        type: "rainbow_man",
-                        fadeout: "fast",
-                    });
-                }
-                this.prevInboxCounter = this.store.discuss.inbox.counter;
-            },
-            () => [this.store.discuss.inbox.counter]
         );
         onMounted(() => (this.store.discuss.isActive = true));
         onWillUnmount(() => (this.store.discuss.isActive = false));

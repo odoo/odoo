@@ -1,11 +1,10 @@
-import { DiscussApp } from "@mail/core/common/discuss_app_model";
-import { Record } from "@mail/core/common/record";
-
+import { Record } from "@mail/model/record";
+import { Store } from "@mail/model/store";
 import { patch } from "@web/core/utils/patch";
 
-patch(DiscussApp.prototype, {
+patch(Store.prototype, {
     setup() {
-        super.setup();
+        super.setup(...arguments);
         this.ringingThreads = Record.many("Thread", {
             /** @this {import("models").DiscussApp} */
             onUpdate() {

@@ -1,5 +1,5 @@
 import { ThreadIcon } from "@mail/core/common/thread_icon";
-import { discussSidebarItemsRegistry } from "@mail/core/web/discuss_sidebar";
+import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sidebar";
 
 import { Component, useState } from "@odoo/owl";
 
