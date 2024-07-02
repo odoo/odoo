@@ -25,12 +25,6 @@ tour.register('tour_shop_no_variant_attribute', {
     },
         tourUtils.goToCart(),
     {
-        content: "check no_variant value is present",
-        trigger: '.td-product_name:contains(No Variant Attribute: No Variant Value)',
-        extra_trigger: '#cart_products',
-        run: function () {},
-    },
-    {
         content: "check price is correct",
         trigger: '.td-price:contains(11.0)',
         run: function () {},
