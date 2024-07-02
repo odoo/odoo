@@ -5,5 +5,7 @@
         <function model="ir.config_parameter" name="set_param" eval="('auth_signup.invitation_scope', 'b2c')"/>
         <!-- activate Reset password by default -->
         <function model="ir.config_parameter" name="set_param" eval="('auth_signup.reset_password', 'True')"/>
+        <function model="ir.config_parameter" name="set_param" eval="('auth_signup.signup.validity.hours', 7*24)"/>
+        <function model="ir.config_parameter" name="set_param" eval="('auth_signup.reset_password.validity.hours', '4')"/>
     </data>
 </odoo>

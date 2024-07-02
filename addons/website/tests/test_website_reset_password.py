@@ -50,20 +50,20 @@ class TestWebsiteResetPassword(HttpCase):
             self.env.invalidate_all()  # invalidate get_base_url
 
             user.action_reset_password()
-            self.assertIn(website_2.domain, user.signup_url)
+            self.assertIn(website_2.domain, user.partner_id._get_signup_url())
 
             self.env.invalidate_all()
 
             user.partner_id.website_id = website_1.id
-            user.action_reset_password()
-            self.assertIn(website_1.domain, user.signup_url)
+            user.partner_id.signup_prepare(signup_type="reset")
+            self.assertIn(website_1.domain, user.partner_id._get_signup_url())
 
             (website_1 + website_2).domain = False
 
-            user.action_reset_password()
+            user.partner_id.signup_prepare(signup_type="reset")
             self.env.invalidate_all()
 
-            self.start_tour(user.signup_url, 'website_reset_password', login=None)
+            self.start_tour(user.partner_id._get_signup_url(), 'website_reset_password', login=None)
 
     def test_02_multi_user_login(self):
         # In case Specific User Account is activated on a website, the same login can be used for
@@ -110,10 +110,10 @@ class TestWebsiteResetPassword(HttpCase):
             {'website_id': website_2.id, 'login': login, 'email': login, 'name': login, "groups_id": [Command.link(portal_group.id), Command.unlink(internal_group.id)]},
         ])
 
-        self.assertFalse(user_website_1.signup_valid)
-        self.assertFalse(user_website_2.signup_valid)
+        self.assertFalse(user_website_1.signup_type)
+        self.assertFalse(user_website_2.signup_type)
 
         self.env['res.users'].with_context(website_id=website_1.id).reset_password(login)
 
-        self.assertTrue(user_website_1.signup_valid)
-        self.assertFalse(user_website_2.signup_valid)
+        self.assertTrue(user_website_1.signup_type)
+        self.assertFalse(user_website_2.signup_type)
