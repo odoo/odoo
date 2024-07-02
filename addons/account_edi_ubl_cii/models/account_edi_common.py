@@ -728,6 +728,41 @@ class AccountEdiCommon(models.AbstractModel):
             invoice_line_form.tax_ids.add(tax)
         return logs
 
+    def _force_invoice_tax_lines(self, line_ids, xml_tax_amount_per_rate):
+        """
+        Adjusts the tax and total lines of an invoice based on the tax amounts
+        provided in an XML file.
+
+        :param line_ids: A recordset of the invoice lines to adjust.
+        :param xml_tax_amount_per_rate: A dictionary mapping tax rates to tax
+                                        amounts from the XML file.
+        """
+        total_tax_change = 0
+        for line in line_ids:
+            if not line['tax_line_id']:
+                continue
+            account_tax = self.env['account.tax'].browse(line['tax_line_id'])
+            if account_tax.amount not in xml_tax_amount_per_rate:
+                continue
+            xml_tax = xml_tax_amount_per_rate[account_tax.amount]
+            line_change = line['price_total'] - xml_tax
+
+            line['debit'] -= line_change
+            line['amount_currency'] -= line_change
+            line['price_subtotal'] -= line_change
+            line['price_total'] -= line_change
+
+            total_tax_change += line_change
+
+        if total_tax_change != 0:
+            # The total line is always the second line because it's created just
+            # after the first line creation.
+            total_line = line_ids[1]
+            new_total = line_ids[1]['credit'] - total_tax_change
+            total_line['price_unit'] = - new_total
+            total_line['credit'] = new_total
+            total_line['amount_currency'] = - new_total
+
     # -------------------------------------------------------------------------
     # Check xml using the free API from Ph. Helger, don't abuse it !
     # -------------------------------------------------------------------------
