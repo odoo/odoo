@@ -128,14 +128,15 @@ class TimesheetCustomerPortal(CustomerPortal):
 
         def get_timesheets():
             field = None if groupby == 'none' else groupby
-            orderby = '%s, %s' % (field, sortby) if field else sortby
+            orderby = f'{field}, {sortby}' if field and field != sortby.split(' ')[0] else sortby
             timesheets = Timesheet_sudo.search(domain, order=orderby, limit=_items_per_page, offset=pager['offset'])
             if field:
                 if groupby == 'date':
                     raw_timesheets_group = Timesheet_sudo._read_group(
                         domain, ['date:day'], ['unit_amount:sum', 'id:recordset']
                     )
-                    grouped_timesheets = [(records, unit_amount) for __, unit_amount, records in raw_timesheets_group]
+                    mapped_time = {date: unit_amount for date, unit_amount, _ in raw_timesheets_group}
+                    grouped_timesheets = [(Timesheet_sudo.concat(*g), mapped_time[date]) for date, g in groupbyelem(timesheets, itemgetter('date'))]
 
                 else:
                     time_data = Timesheet_sudo._read_group(domain, [field], ['unit_amount:sum'])
