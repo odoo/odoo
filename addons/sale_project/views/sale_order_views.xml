@@ -23,6 +23,9 @@
                     <field name="tasks_count" widget="statinfo" string="Tasks"/>
                 </button>
             </xpath>
+            <field name="analytic_account_id" position="after">
+                <field name="project_id" required="has_line_creating_task"/>
+            </field>
         </field>
     </record>
 

@@ -44,6 +44,7 @@ class TestCommonTimesheet(TransactionCase):
             'allow_timesheets': True,
             'partner_id': cls.partner.id,
             'analytic_account_id': cls.analytic_account.id,
+            'account_id': cls.analytic_account.id,
         })
         cls.task1 = cls.env['project.task'].create({
             'name': 'Task One',
@@ -203,6 +204,7 @@ class TestTimesheet(TestCommonTimesheet):
             'allow_timesheets': True,
             'partner_id': self.partner.id,
             'analytic_account_id': tracked_project.analytic_account_id.id,
+            'account_id': tracked_project.analytic_account_id.id,
         })
         self.assertNotEqual(analytic_project.name, tracked_project.analytic_account_id.name, "The name of the associated AA can be different from the project")
         self.assertEqual(tracked_project.analytic_account_id.project_count, 2, "The AA should be linked to 2 project")
@@ -408,6 +410,7 @@ class TestTimesheet(TestCommonTimesheet):
             'name': 'Aa Project',
             'company_id': company_3.id,
             'analytic_account_id': analytic_account.id,
+            'account_id': analytic_account.id,
         })
         task = self.env['project.task'].create({
             'name': 'Aa Task',

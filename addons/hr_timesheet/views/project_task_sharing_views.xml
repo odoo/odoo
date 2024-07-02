@@ -42,11 +42,11 @@
                 </div>
             </xpath>
             <xpath expr="//notebook/page[@name='description_page']" position="after">
-                <field name="analytic_account_active" invisible="1"/>
+                <field name="analytic_accounts_active" invisible="1"/>
                 <field name="allow_timesheets" invisible="1"/>
                 <page string="Timesheets" name="page_timesheets" id="timesheets_tab" invisible="not allow_timesheets">
                     <field name="timesheet_ids" mode="tree,kanban"
-                          readonly="not analytic_account_active">
+                          readonly="not analytic_accounts_active">
                         <tree string="Timesheet Activities" default_order="date" no_open="1" create="false" delete="0">
                             <field name="date"/>
                             <field name="employee_id"/>
@@ -85,7 +85,7 @@
                             </templates>
                         </kanban>
                     </field>
-                    <group invisible="not analytic_account_active">
+                    <group invisible="analytic_accounts_active">
                         <group class="oe_subtotal_footer" name="project_hours">
                             <span class="o_td_label float-start">
                                 <label class="fw-bold" for="effective_hours" string="Time Spent"/>

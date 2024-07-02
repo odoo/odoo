@@ -19,7 +19,6 @@ class ProjectTask(models.Model):
         return res
 
     sale_order_id = fields.Many2one(domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
-    so_analytic_account_id = fields.Many2one(related='sale_order_id.analytic_account_id', string='Sale Order Analytic Account')
     pricing_type = fields.Selection(related="project_id.pricing_type")
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')
     has_multi_sol = fields.Boolean(compute='_compute_has_multi_sol', compute_sudo=True)
@@ -57,12 +56,6 @@ class ProjectTask(models.Model):
     @api.model
     def _search_remaining_hours_so(self, operator, value):
         return [('sale_line_id.remaining_hours', operator, value)]
-
-    @api.depends('so_analytic_account_id.active')
-    def _compute_analytic_account_active(self):
-        super()._compute_analytic_account_active()
-        for task in self:
-            task.analytic_account_active = task.analytic_account_active or task.so_analytic_account_id.active
 
     def _inverse_partner_id(self):
         super()._inverse_partner_id()

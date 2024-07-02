@@ -200,3 +200,24 @@ class AccountAnalyticLine(models.Model):
 
     def _is_updatable_timesheet(self):
         return super()._is_updatable_timesheet and self._is_not_billed()
+
+    def _timesheet_preprocess_accounts(self, vals, project):
+        if not vals.get('so_line'):
+            return super()._timesheet_preprocess_accounts(vals, project)
+        so_line = self.env['sale.order.line'].browse(vals['so_line'])
+        distribution = so_line.analytic_distribution
+        if not distribution:
+            return super()._timesheet_preprocess_accounts(vals, project)
+
+        accounts = self.env['account.analytic.account'].browse([
+            int(account_id) for k in distribution for account_id in k.split(",")
+        ])
+        vals.update({
+            account.root_plan_id._column_name(): account.id
+            for account in accounts
+        })
+        return set(accounts.company_id.ids), any(account.active for account in accounts)
+
+    def _check_project_mandantory_plans(self, project, company):
+        # TODO
+        return super()._check_project_mandantory_plans(project, company)

@@ -24,6 +24,7 @@ class Project(models.Model):
         'mail.thread',
         'mail.activity.mixin',
         'mail.tracking.duration.mixin',
+        'analytic.plan.fields.mixin',
     ]
     _order = "sequence, name, id"
     _rating_satisfaction_days = 30  # takes 30 days by default
@@ -77,13 +78,14 @@ class Project(models.Model):
     partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]")
     company_id = fields.Many2one('res.company', string='Company', compute="_compute_company_id", inverse="_inverse_company_id", store=True, readonly=False)
     currency_id = fields.Many2one('res.currency', compute="_compute_currency_id", string="Currency", readonly=True, export_string_translation=False)
-    analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
+    analytic_account_id = fields.Many2one('account.analytic.account', string="Project Analytic Account", copy=False, ondelete='set null',
         domain="['|', ('company_id', '=', False), ('company_id', '=?', company_id)]", check_company=True,
         help="Analytic account to which this project, its tasks and its timesheets are linked. \n"
             "Track the costs and revenues of your project by setting this analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
             "This analytic account can be changed on each task individually if necessary.\n"
             "An analytic account is required in order to use timesheets.")
     analytic_account_balance = fields.Monetary(related="analytic_account_id.balance")
+    account_id = fields.Many2one('account.analytic.account', copy=True, domain="['|', ('company_id', '=', False), ('company_id', '=?', company_id)]")
 
     favorite_user_ids = fields.Many2many(
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
@@ -418,6 +420,9 @@ class Project(models.Model):
                 old_project.map_tasks(new_project.id)
             if not self.active:
                 new_project.with_context(active_test=False).tasks.active = True
+            account_id = old_project.analytic_account_id
+            if account_id:
+                new_project[account_id.root_plan_id._column_name()] = new_project.analytic_account_id
         return new_projects
 
     @api.model
@@ -897,9 +902,18 @@ class Project(models.Model):
         analytic_accounts = self.env['account.analytic.account'].create(analytic_accounts_values)
         for project, analytic_account in zip(self, analytic_accounts):
             project.analytic_account_id = analytic_account
+            project[analytic_account.root_plan_id._column_name()] = analytic_account
 
     def _get_projects_to_make_billable_domain(self):
         return [('partner_id', '!=', False)]
+
+    @api.constrains(lambda self: self._get_plan_fnames())
+    def _check_account_id(self):
+        # Overriden from 'analytic.plan.fields.mixin'
+        pass
+
+    def _get_plan_domain(self, plan):
+        return super()._get_plan_domain(plan) + ", '|', ('company_id', '=', False), ('company_id', '=?', company_id)"
 
     # ---------------------------------------------------
     # Rating business

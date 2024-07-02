@@ -119,6 +119,7 @@
                 </group>
             </xpath>
             <xpath expr="//page[@name='settings']//field[@name='analytic_account_id']" position="before">
+                <field name="analytic_sale_order_id" invisible="not allow_billable or not partner_id"/>
                 <label for="sale_line_id" invisible="not allow_billable or not partner_id"/>
                 <div 
                     class="o_row" 

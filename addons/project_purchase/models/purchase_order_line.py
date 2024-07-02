@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from functools import reduce
 
 from odoo import api, models
 
@@ -9,9 +9,12 @@ class PurchaseOrderLine(models.Model):
 
     def _compute_analytic_distribution(self):
         super()._compute_analytic_distribution()
+        ProjectProject = self.env['project.project']
         for line in self:
-            if line._context.get('project_id'):
-                line.analytic_distribution = {line.env['project.project'].browse(line._context['project_id']).analytic_account_id.id: 100}
+            project_id = line._context.get('project_id')
+            project = ProjectProject.browse(project_id) if project_id else line.order_id.project_id
+            if project:
+                line.analytic_distribution = {reduce(lambda acc, el: f"{acc},{el}", project._get_analytic_account_ids().ids): 100}
 
     @api.model_create_multi
     def create(self, vals_list):

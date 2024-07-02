@@ -53,9 +53,11 @@ class TestProjectProject(TransactionCase):
         project1, project2 = self.env['project.project'].with_context(default_analytic_account_id=analytic_account.id).create([{
             'name': 'Project 1 (no timesheets)',
             'allow_timesheets': False,
+            'account_id': analytic_account.id,
         }, {
             'name': 'Project 2 (timesheets)',
             'allow_timesheets': True,
+            'account_id': analytic_account.id,
         }])
         self.assertEqual(project1.analytic_account_id, analytic_account, 'Project 1 should have the default analytic account')
         self.assertEqual(project2.analytic_account_id, analytic_account, 'Project 2 should have the default analytic account')

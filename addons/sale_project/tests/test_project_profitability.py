@@ -70,6 +70,7 @@ class TestProjectProfitabilityCommon(Common):
         cls.project_non_billable = cls.env['project.project'].with_context(tracking_disable=True).create({
             'name': "Non Billable Project",
             'analytic_account_id': cls.analytic_account_nb.id,
+            'account_id': cls.analytic_account_nb.id,
             'allow_billable': False,
             'partner_id': False,
         })

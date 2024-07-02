@@ -283,13 +283,6 @@ class Task(models.Model):
     ], default="forever", string="Until", compute='_compute_repeat', compute_sudo=True, readonly=False)
     repeat_until = fields.Date(string="End Date", compute='_compute_repeat', compute_sudo=True, readonly=False)
 
-    # Account analytic
-    analytic_account_id = fields.Many2one('account.analytic.account', ondelete='set null', compute='_compute_analytic_account_id', store=True, readonly=False,
-        domain="[('company_id', '=?', company_id)]",
-        help="Analytic account to which this task and its timesheets are linked.\n"
-            "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
-            "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary.")
-
     # Quick creation shortcuts
     display_name = fields.Char(compute='_compute_display_name', inverse='_inverse_display_name',
         help="""Use these keywords in the title to set new tasks:\n
@@ -354,11 +347,6 @@ class Task(models.Model):
     def _compute_show_display_in_project(self):
         for task in self:
             task.show_display_in_project = bool(task.parent_id) and task.project_id == task.parent_id.project_id
-
-    @api.depends('project_id.analytic_account_id')
-    def _compute_analytic_account_id(self):
-        for task in self:
-            task.analytic_account_id = task.project_id.analytic_account_id
 
     @api.depends('stage_id', 'depend_on_ids.state', 'project_id.allow_task_dependencies')
     def _compute_state(self):
@@ -940,11 +928,6 @@ class Task(models.Model):
                 )
                 if partner_id:
                     vals['partner_id'] = partner_id
-        project_id = vals.get('project_id', self.env.context.get('default_project_id'))
-        if project_id:
-            project = self.env['project.project'].browse(project_id)
-            if project.analytic_account_id:
-                vals['analytic_account_id'] = project.analytic_account_id.id
         elif 'default_user_ids' not in self.env.context and 'user_ids' in default_fields:
             user_ids = vals.get('user_ids', [])
             user_ids.append(Command.link(self.env.user.id))
@@ -1928,13 +1911,6 @@ class Task(models.Model):
     # ---------------------------------------------------
     def _unsubscribe_portal_users(self):
         self.message_unsubscribe(partner_ids=self.message_partner_ids.filtered('user_ids.share').ids)
-
-    # ---------------------------------------------------
-    # Analytic accounting
-    # ---------------------------------------------------
-    def _get_task_analytic_account_id(self):
-        self.ensure_one()
-        return self.analytic_account_id or self.project_id.analytic_account_id
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
