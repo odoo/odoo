@@ -2026,7 +2026,7 @@ class SnippetsMenu extends Component {
         // blocks should not be taken into account here because they have
         // tooltips with a particular behavior (see _showSnippetTooltip).
         this.tooltips = new Tooltip(this.el, {
-            selector: 'we-title, [title]:not(.oe_snippet)',
+            selector: 'we-title',
             placement: 'bottom',
             delay: 100,
             // Ensure the tooltips have a good position when in iframe.
@@ -2047,6 +2047,23 @@ class SnippetsMenu extends Component {
                 el.style.removeProperty('overflow');
                 return tipContent;
             },
+        });
+
+        this.buttonTooltips = [];
+        document.querySelectorAll('[title]:not(.oe_snippet)').forEach(el => {
+            this.buttonTooltips.push(new Tooltip(el, {
+                placement: 'bottom',
+                delay: 100,
+                // Ensure the tooltips have a good position when in iframe.
+                container: this.el,
+                // Prevent horizontal scroll when tooltip is displayed.
+                boundary: this.el.ownerDocument.body,
+                title: function () {
+                    // Workaround BS regression: https://github.com/twbs/bootstrap/issues/38720
+                    const el = this === undefined ? arguments[0] : this.el;
+                    return el.title;
+                },
+            }));
         });
 
         // Active snippet editor on click in the page
@@ -2228,6 +2245,7 @@ class SnippetsMenu extends Component {
         this.el.ownerDocument.body.classList.remove('editor_has_snippets');
         // Dispose BS tooltips.
         this.tooltips.dispose();
+        this.buttonTooltips.forEach(tooltip => tooltip.dispose());
         options.clearServiceCache();
         options.clearControlledSnippets();
         if (this.$body[0].ownerDocument !== this.ownerDocument) {
