@@ -329,7 +329,7 @@ export function compileStepManual(stepIndex, step, options) {
             trigger: () => {
                 removeListeners();
                 if (!isActive(step, "manual")) {
-                    return hoot.queryFirst("body");
+                    return true;
                 }
                 if (proceedWith) {
                     return proceedWith;
@@ -432,7 +432,7 @@ export function compileStepAuto(stepIndex, step, options) {
                 if (!isActive(step, "auto")) {
                     step.run = () => {};
                     step.state.canContinue = true;
-                    return hoot.queryFirst("body");
+                    return true;
                 }
                 const { triggerEl, altEl, extraTriggerOkay } = findStepTriggers(tour, step);
                 const stepEl = extraTriggerOkay && (triggerEl || altEl);
