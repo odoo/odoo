@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web_editor.AddSnippetDialog">
+    <Dialog
+        title="title"
+        contentClass="'o_add_snippet_dialog h-100'"
+        footer="false"
+        size="'xl'">
+        <div class="overflow-hidden w-100">
+            <div class="d-flex w-100 h-100 vertical flex-row">
+                <ul class="nav nav-pills flex-column flex-nowrap overflow-y-auto" t-ref="snippetGroupTabs">
+                    <t t-foreach="snippetGroups" t-as="snippetGroup" t-key="snippetGroup.name">
+                        <li class="nav-item border-bottom">
+                            <a class="nav-link p-3 rounded-0"
+                                t-att-class="{ 'active': this.state.groupSelected === snippetGroup.name}"
+                                href="#"
+                                role="tab"
+                                t-on-click="() => this.state.groupSelected = snippetGroup.name">
+                                <t t-out="snippetGroup.displayName"/>
+                            </a>
+                        </li>
+                    </t>
+                </ul>
+                <div class="position-relative flex-grow-1 flex-shrink-1">
+                    <iframe class="border-0 fade bg-200" tabindex="-1" t-ref="iframe" src="about:blank" height="333%" width="333%"/>
+                </div>
+            </div>
+        </div>
+    </Dialog>
+</t>
+
+</templates>
