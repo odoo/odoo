@@ -837,6 +837,12 @@ class MrpProduction(models.Model):
             if sum(order.move_byproduct_ids.filtered(lambda m: m.state != 'cancel').mapped('cost_share')) > 100:
                 raise ValidationError(_("The total cost share for a manufacturing order's by-products cannot exceed 100."))
 
+    @api.onchange('move_raw_ids')
+    def _onchange_move_raw_ids(self):
+        if self.state in ('progress', 'to_close'):
+            moves_to_pick = self.move_raw_ids.filtered(lambda m: not m.picked and not m.manual_consumption)
+            moves_to_pick.picked = True
+
     def write(self, vals):
         if 'move_byproduct_ids' in vals and 'move_finished_ids' not in vals:
             vals['move_finished_ids'] = vals.get('move_finished_ids', []) + vals['move_byproduct_ids']
