@@ -5,6 +5,7 @@ odoo.define('pos_sale.SaleOrderFetcher', function (require) {
     const { Gui } = require('point_of_sale.Gui');
     const { isConnectionError } = require('point_of_sale.utils');
     const models = require('point_of_sale.models');
+    const utils = require('web.utils');
 
     class SaleOrderFetcher extends EventBus {
         constructor() {
@@ -98,7 +99,7 @@ odoo.define('pos_sale.SaleOrderFetcher', function (require) {
                 saleOrder.amount_unpaid = saleOrdersAmountUnpaid[saleOrder.id];
             }
 
-            return saleOrders;
+            return saleOrders.filter(so => !utils.float_is_zero(so.amount_unpaid, this.comp.env.pos.currency.decimals));
         }
 
         nextPage() {
