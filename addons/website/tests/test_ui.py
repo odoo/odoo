@@ -138,6 +138,10 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
 
         self.start_tour("/", 'website_media_dialog_undraw', login='admin')
 
+    def test_code_editor_usable(self):
+        url = '/web?debug=1,tests#action=website.website_preview'
+        self.start_tour(url, 'website_code_editor_usable', login='admin')
+
 
 @odoo.tests.tagged('external', '-standard', '-at_install', 'post_install')
 class TestUiHtmlEditorWithExternal(HttpCaseWithUserDemo):
