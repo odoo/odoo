@@ -1,4 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import Command
+
 from odoo.tests.common import HttpCase
 from odoo.tests import tagged
 
@@ -41,13 +44,13 @@ class TestWebsiteSaleDelivery(HttpCase):
             'program_type': 'gift_card',
             'applies_on': 'future',
             'trigger': 'auto',
-            'rule_ids': [(0, 0, {
+            'rule_ids': [Command.create({
                 'reward_point_amount': 1,
                 'reward_point_mode': 'money',
                 'reward_point_split': True,
                 'product_ids': self.gift_card,
             })],
-            'reward_ids': [(0, 0, {
+            'reward_ids': [Command.create({
                 'reward_type': 'discount',
                 'discount_mode': 'per_point',
                 'discount': 1,
@@ -99,3 +102,44 @@ class TestWebsiteSaleDelivery(HttpCase):
         admin_user.partner_id.write({'property_delivery_carrier_id': self.normal_delivery.id})
 
         self.start_tour("/", 'shop_sale_loyalty_delivery', login='admin')
+
+    def test_shipping_discount(self):
+        self.env['product.product'].create({
+            'name': 'Plumbus',
+            'list_price': 100.0,
+            'website_published': True,
+        })
+        self.env['loyalty.program'].create({
+            'name': 'Buy 3 get free shipping up to 75$',
+            'program_type': 'promotion',
+            'applies_on': 'current',
+            'trigger': 'auto',
+            'rule_ids': [(0, 0, {
+                'minimum_amount': 300.0
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'shipping',
+                'discount_max_amount': 75.0
+            })],
+        })
+        product_paid_delivery = self.env['product.product'].create({
+            'name': 'free shipping (Max 75$)',
+            'invoice_policy': 'order',
+            'type': 'service',
+        })
+        delivery_with_rule = self.env['delivery.carrier'].create({
+            'name': 'delivery with rule',
+            'delivery_type': 'base_on_rule',
+            'price_rule_ids': [Command.create({
+                'variable': 'quantity',
+                'operator': '>=',
+                'max_value': 3,
+                'list_base_price': 100,
+            })],
+
+            'website_published': True,
+            'product_id': product_paid_delivery.id,
+        })
+        admin_user = self.env.ref('base.user_admin')
+        admin_user.partner_id.write({'property_delivery_carrier_id': delivery_with_rule.id})
+        self.start_tour("/", 'check_shipping_discount', login="admin")
