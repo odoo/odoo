@@ -152,7 +152,9 @@ export class CollaborationPlugin extends Plugin {
         }
 
         this.shared.enableObserver();
-        this.shared.rectifySelection(selection);
+        if (selection.inEditable) {
+            this.shared.rectifySelection(selection);
+        }
 
         this.resources.onExternalHistorySteps?.forEach((cb) => cb());
 
