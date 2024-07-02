@@ -204,7 +204,8 @@ class StockMove(models.Model):
                 location_dest = move.picking_id.location_dest_id
             elif move.picking_type_id:
                 location_dest = move.picking_type_id.default_location_dest_id
-            if location_dest and move.location_final_id and move.location_final_id._child_of(location_dest):
+            if location_dest and move.location_final_id and \
+               (move.location_final_id._child_of(location_dest) or move.picking_type_id.code == 'outgoing'):
                 location_dest = move.location_final_id
             move.location_dest_id = location_dest
 
@@ -566,13 +567,14 @@ Please change the quantity done or the rounding precision of your unit of measur
         for move in self:
             move.show_quant = move.picking_code != 'incoming'\
                            and move.product_id.detailed_type == 'product'
-            move.show_lots_m2o = not move.show_quant\
-                and move.has_tracking != 'none'\
-                and (move.picking_type_id.use_existing_lots or move.state == 'done' or move.origin_returned_move_id.id)
             move.show_lots_text = move.has_tracking != 'none'\
                 and move.picking_type_id.use_create_lots\
                 and move.state != 'done' \
                 and not move.origin_returned_move_id.id
+            move.show_lots_m2o = not move.show_quant\
+                and not move.show_lots_text\
+                and move.has_tracking != 'none'\
+                and (move.picking_type_id.use_existing_lots or move.state == 'done' or move.origin_returned_move_id.id)
 
     @api.constrains('product_uom')
     def _check_uom(self):
