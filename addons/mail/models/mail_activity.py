@@ -331,13 +331,14 @@ class MailActivity(models.Model):
         return res
 
     def unlink(self):
-        todo_activities = self.filtered(lambda act: act.date_deadline <= fields.Date.today())
+        only_active = self.filtered(lambda r: r.active)
+        todo_activities = only_active.filtered(lambda act: act.date_deadline <= fields.Date.today())
         if todo_activities:
             self.env['bus.bus']._sendmany([
                 [partner, 'mail.activity/updated', {'activity_deleted': True}]
                 for partner in todo_activities.user_id.partner_id
             ])
-        return super(MailActivity, self).unlink()
+        return super(MailActivity, only_active).unlink()
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
@@ -428,7 +429,8 @@ class MailActivity(models.Model):
     def action_done(self):
         """ Wrapper without feedback because web button add context as
         parameter, therefore setting context to feedback """
-        return self.action_feedback()
+        only_active = self.filtered(lambda r: r.active)
+        return only_active.action_feedback()
 
     def action_done_redirect_to_other(self):
         """ Mark activity as done and return action mail.mail_activity_without_access_action.
@@ -579,8 +581,9 @@ class MailActivity(models.Model):
         }
 
     def action_snooze(self):
+        only_active = self.filtered(lambda r: r.active)
         today = date.today()
-        for activity in self:
+        for activity in only_active:
             activity.date_deadline = max(activity.date_deadline, today) + timedelta(days=7)
 
     def activity_format(self):
