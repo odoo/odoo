@@ -120,7 +120,6 @@ export class Store extends BaseStore {
     fetchParams = {};
     fetchReadonly = true;
     fetchSilent = true;
-
     cannedReponses = this.makeCachedFetchData({ canned_responses: true });
 
     specialMentions = [

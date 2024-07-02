@@ -2,7 +2,6 @@ import { AND, Record } from "@mail/core/common/record";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
-import { router } from "@web/core/browser/router";
 
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -78,7 +77,8 @@ export class Thread extends Record {
         return (
             ["channel", "group"].includes(this.channel_type) &&
             !this.message_needaction_counter &&
-            !this.group_based_subscription
+            !this.group_based_subscription &&
+            this.store.self?.type === "partner"
         );
     }
     get canUnpin() {
@@ -1079,46 +1079,12 @@ export class Thread extends Record {
         return message;
     }
 
-    /** @param {boolean} pushState */
-    setAsDiscussThread(pushState) {
-        if (pushState === undefined) {
-            pushState = this.notEq(this.store.discuss.thread);
-        }
-        this.store.discuss.thread = this;
-        const activeId =
-            typeof this.id === "string" ? `mail.box_${this.id}` : `discuss.channel_${this.id}`;
-        this.store.discuss.activeTab =
-            !this.store.env.services.ui.isSmall || this.model === "mail.box"
-                ? "main"
-                : ["chat", "group"].includes(this.channel_type)
-                ? "chat"
-                : "channel";
-        if (pushState) {
-            router.pushState({ active_id: activeId });
-        }
-    }
-
     /** @param {number} index */
     async setMainAttachmentFromIndex(index) {
         this.mainAttachment = this.attachmentsInWebClientView[index];
         await this.store.env.services.orm.call("ir.attachment", "register_as_main_attachment", [
             this.mainAttachment.id,
         ]);
-    }
-
-    async unpin() {
-        this.isLocallyPinned = false;
-        if (this.eq(this.store.discuss.thread)) {
-            router.replaceState({ active_id: undefined });
-        }
-        if (this.model === "discuss.channel" && this.is_pinned) {
-            return this.store.env.services.orm.silent.call(
-                "discuss.channel",
-                "channel_pin",
-                [this.id],
-                { pinned: false }
-            );
-        }
     }
 
     /**
