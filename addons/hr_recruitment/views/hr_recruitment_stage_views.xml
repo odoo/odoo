@@ -35,18 +35,12 @@
             <field name="model">hr.recruitment.stage</field>
             <field name="arch" type="xml">
                 <kanban>
-                    <field name="name"/>
-                    <field name="fold"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
-                                <div>
-                                    <strong><field name="name"/></strong>
-                                </div>
-                                <div>
-                                    <span>Folded in Recruitment Pipe: </span>
-                                    <field name="fold" widget="boolean"/>
-                                </div>
+                        <t t-name="kanban-card">
+                            <field class="fw-bolder" name="name"/>
+                            <div class="d-flex">
+                                Folded in Recruitment Pipe:
+                                <field name="fold" class="ms-1" widget="boolean"/>
                             </div>
                         </t>
                     </templates>
