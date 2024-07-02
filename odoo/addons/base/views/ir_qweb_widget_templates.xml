@@ -15,14 +15,15 @@
 </template>
 
 <template id="contact">
-    <address t-ignore="true" class="o_portal_address mb-0" itemscope="itemscope" itemtype="http://schema.org/Organization">
+    <address t-ignore="true" class="o_portal_address mb-0">
         <div t-if="not (('name' in fields) or (address and 'address' in fields) or (city and 'city' in fields) or (mobile and 'mobile' in fields) or (website and 'website' in fields) or (email and 'email' in fields))" class="css_non_editable_mode_hidden">
             --<span class="text-muted" t-esc="name"/>--
         </div>
         <t t-if="object.country_id.name_position != 'after'">
             <t t-call="base.contact_name"/>
         </t>
-        <div class="gap-2" itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
+        <div class="gap-2" t-att-itemprop="options.get('with_microdata') and 'address'" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
+
             <div t-if="address and 'address' in fields" t-attf-class="d-flex align-items-baseline gap-1">
                 <i t-if="not options.get('no_marker')" class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>
                 <span class="d-block w-100 lh-sm" itemprop="streetAddress" t-esc="address"/>
@@ -56,8 +57,8 @@
 </template>
 
 <template id="no_contact">
-    <address t-ignore="true" class="mb-0" itemscope="itemscope" itemtype="http://schema.org/Organization">
-        <div itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
+    <address t-ignore="true" class="mb-0">
+        <div>
             <div class="d-flex align-items-baseline">
                 <i t-if="not options.get('no_marker')" class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>
                 <span class="w-100 o_force_ltr d-block" t-out="options.get('null_text')"/>

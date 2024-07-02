@@ -133,10 +133,10 @@
             <div class="o_event_full_page_ticket_wrapper">
                 <div class="o_event_full_page_ticket_details d-flex">
                     <div class="o_event_full_page_left_details ps-3 pt-4 pb-3 pe-2">
-                        <span itemprop="startDate" t-field="event.date_begin"
+                        <span t-field="event.date_begin"
                             t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
                             class="fw-bold"/>
-                        <span itemprop="startDateTime" t-field="event.date_begin"
+                        <span t-field="event.date_begin"
                             class="fw-bold"
                             t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
                         <h2 class="o_event_full_page_ticket_event_name fw-bold pt-3 pb-2" t-field="event.name"/>

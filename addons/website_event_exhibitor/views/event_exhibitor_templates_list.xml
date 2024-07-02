@@ -236,8 +236,7 @@
 <!-- ============================================================ -->
 
 <template id="exhibitor_card" name="Exhibitor Card">
-    <article class="o_wesponsor_card card h-100"
-        itemscope="itemscope" itemtype="http://schema.org/Event">
+    <article class="o_wesponsor_card card h-100">
         <div class="row g-0 h-100" t-att-data-publish="sponsor.website_published and 'on' or 'off'">
             <t t-set="sponsor_image_url" t-value="sponsor.website_image_url"/>
             <header t-att-class="'overflow-hidden col-12 %s' % ('bg-secondary' if not sponsor_image_url else '')">
@@ -265,7 +264,7 @@
                 <main class="card-body">
                     <!-- Title -->
                     <h5 class="card-title d-flex align-items-start justify-content-between mt-0 mb-0">
-                        <span t-field="sponsor.name" itemprop="name" class="text-break fs-6 mb-2"/>
+                        <span t-field="sponsor.name" class="text-break fs-6 mb-2"/>
                         <span t-if="sponsor.is_in_opening_hours and sponsor.chat_room_id"
                             class="alert alert-danger mb-2 px-2 py-1 smaller lh-1">Live
                         </span>
