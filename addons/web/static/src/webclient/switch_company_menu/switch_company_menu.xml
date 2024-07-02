@@ -4,69 +4,80 @@
 <t t-name="web.SwitchCompanyMenu">
     <div class="o_switch_company_menu d-none d-md-block">
         <DropdownGroup group="'web-navbar-group'">
-            <Dropdown disabled="isSingleCompany" position="'bottom-end'">
-                <button t-att-disabled="isSingleCompany">
+            <Dropdown
+                position="'bottom-end'"
+                menuRef="containerRef"
+                state="this.dropdown"
+                onStateChanged.bind="handleDropdownChange"
+                navigationOptions="navigationOptions"
+                menuClass="'o_switch_company_menu_dropdown'"
+                disabled="isSingleCompany"
+            >
+                <button data-hotkey="shift+u" t-att-disabled="isSingleCompany" t-att-title="companyService.currentCompany.name">
                     <i class="fa fa-building d-lg-none"/>
-                    <span class="oe_topbar_name d-none d-lg-block" t-esc="companyService.currentCompany.name"/>
+                    <span class="oe_topbar_name d-none d-lg-block text-truncate" t-esc="companyService.currentCompany.name"/>
                 </button>
+
                 <t t-set-slot="content">
-                    <t t-foreach="Object.values(companyService.allowedCompaniesWithAncestors)
-                        .filter((c) => !c.parent_id)
-                        .sort((c1, c2) => c1.sequence - c2.sequence)
-                        " t-as="company" t-key="company.id">
-                        <SwitchCompanyItem company="company" level="0"/>
-                    </t>
+                    <t t-call="web.SwitchCompanyMenu.Items"/>
                 </t>
             </Dropdown>
         </DropdownGroup>
     </div>
 </t>
 
-
-<t t-name="web.SwitchCompanyItem">
-    <DropdownItem class="'p-0'" closingMode="!isCompanyAllowed ? 'none' : 'all'">
+<t t-name="web.SwitchCompanyMenu.Items">
+    <div class="d-flex flex-row pe-2 mb-2" t-att-class="{ 'visually-hidden': !state.showFilter }">
         <div
-            class="d-flex"
-            t-att-class="{ 'disabled': !isCompanyAllowed }"
-            data-menu="company"
-            t-att-data-company-id="props.company.id">
-            <div
-                role="menuitemcheckbox"
-                t-att-aria-checked="isCompanySelected ? 'true' : 'false'"
-                t-att-aria-label="props.company.name"
-                t-att-title="(isCompanySelected ? 'Hide ' : 'Show ') + props.company.name + ' content.'"
-                tabindex="0"
-                class="border-end toggle_company"
-                t-att-class="{ 'border-primary': isCurrent, 'disabled': !isCompanyAllowed }"
-                t-on-click.stop="() => this.toggleCompany()">
-
-                <span class="btn border-0 p-2" t-att-class="isCompanyAllowed ? 'btn-link text-primary' : 'disabled'">
-                    <i class="fa fa-fw py-2" t-att-class="isCompanySelected ? 'fa-check-square text-primary' : 'fa-square-o'"/>
-                </span>
-            </div>
-
-            <div
-                role="button"
-                t-att-aria-pressed="isCurrent ? 'true' : 'false'"
-                t-att-aria-label="'Switch to ' + props.company.name "
-                t-att-title="'Switch to ' + props.company.name "
-                tabindex="0"
-                class="d-flex flex-grow-1 align-items-center py-0 log_into ps-2"
-                t-att-class="isCurrent ? 'bg-primary-subtle' : 'btn fw-normal border-0 ' + (isCompanyAllowed ? 'btn-link text-primary' : 'disabled')"
-                t-on-click="() => this.logIntoCompany()">
-
-                <span
-                    class='company_label pe-3'
-                    t-att-class="isCurrent ? 'text-900 fw-bold' : ''"
-                    t-attf-style="padding-left:{{props.level * 20}}px;">
-                    <t t-out="props.company.name"/>
-                </span>
+            role="menuitemcheckbox"
+            t-att-aria-checked="companySelector.selectedCompaniesIds.length > 0 ? 'true' : 'false'"
+            t-att-aria-label="companySelector.selectedCompaniesIds.length > 0 ? 'Deselect all' : 'Select all'"
+            t-att-title="companySelector.selectedCompaniesIds.length > 0 ? 'Deselect all' : 'Select all'"
+            t-on-click="() => companySelector.selectAll()"
+        >
+            <span class="btn border-0 pt-2 px-2" t-att-class="selectAllClass">
+                <i class="fa fa-fw" t-att-class="selectAllIcon"/>
+            </span>
+        </div>
+        <div
+            class="form-control d-flex align-items-center py-1"
+            role="search"
+        >
+            <i class="oi oi-search me-2" role="img" aria-label="Search..." title="Search..."/>
+            <div class="d-flex flex-grow-1 flex-wrap gap-1">
+                <input
+                    t-on-input="this.onSearch"
+                    t-att-value="this.state.searchFilter"
+                    t-ref="inputRef"
+                    type="text"
+                    class="o_input flex-grow-1 border-0 o-navigable"
+                    placeholder="Search..."
+                    role="searchbox"
+                />
             </div>
         </div>
-    </DropdownItem>
-    <t t-foreach="props.company.child_ids" t-as="child" t-key="child">
-        <SwitchCompanyItem company="companyService.getCompany(child)" level="props.level + 1"/>
-    </t>
+    </div>
+
+    <div class="o_switch_company_menu_items">
+        <t t-foreach="companiesEntries" t-as="entry" t-key="entry.company.id">
+            <SwitchCompanyItem company="entry.company" level="entry.level"/>
+        </t>
+    </div>
+
+    <div t-if="companySelector.hasSelectionChanged" class="o_switch_company_menu_buttons d-flex justify-content-end gap-2 px-2 pt-2">
+        <button
+            class="btn btn-primary o-navigable flex-grow-1 text-center"
+            t-on-click="() => this.confirm()"
+        >
+            Confirm
+        </button>
+        <button
+            class="btn btn-secondary o-navigable flex-grow-1 text-center"
+            t-on-click="() => companySelector.reset()"
+        >
+            Reset
+        </button>
+    </div>
 </t>
 
 </templates>
