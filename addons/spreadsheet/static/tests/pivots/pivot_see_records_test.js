@@ -35,6 +35,7 @@ const basicListAction = {
     ],
     target: "current",
     domain: [],
+    context: {},
 };
 
 QUnit.test("Can open see records on headers col", async function (assert) {

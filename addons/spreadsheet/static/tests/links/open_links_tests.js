@@ -144,6 +144,37 @@ QUnit.test("Click a link containing an action xml id", async (assert) => {
     assert.verifySteps(["do-action"]);
 });
 
+QUnit.test("Context is passed correctly to the action service", async (assert) => {
+    const env = await makeTestEnv({ serverData: getMenuServerData() });
+    env.services.action = {
+        ...env.services.action,
+        loadAction(_, context) {
+            assert.step("load-action");
+            assert.deepEqual(context, { search_default_partner: 1 });
+        },
+    };
+
+    const view = {
+        name: "My Action Name",
+        viewType: "list",
+        action: {
+            modelName: "ir.ui.menu",
+            views: [[false, "list"]],
+            domain: [(1, "=", 1)],
+            xmlId: "spreadsheet.action1",
+            context: { search_default_partner: 1 },
+        },
+    };
+
+    const model = new Model({}, { custom: { env } });
+    setCellContent(model, "A1", `[an action link](odoo://view/${JSON.stringify(view)})`);
+    const cell = getEvaluatedCell(model, "A1");
+    assert.strictEqual(urlRepresentation(cell.link, model.getters), "My Action Name");
+    await openLink(cell.link, env);
+    await nextTick();
+    assert.verifySteps(["load-action"]);
+});
+
 QUnit.test("Can open link when some views are absent from the referred action", async (assert) => {
     const env = await makeTestEnv({ serverData: getMenuServerData() });
     env.services.action = {
