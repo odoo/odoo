@@ -19,7 +19,31 @@ class IrActionsReport(models.Model):
             return result
 
         orders = self.env['sale.order'].browse(res_ids)
-
+        ProductDocument = self.env['product.document']
+        product_ids = orders.order_line.product_id.ids
+        product_template_ids = orders.order_line.product_template_id.ids
+        docs_per_product_id = dict(
+            ProductDocument._read_group(
+                domain=[
+                    ('res_id', 'in', product_ids),
+                    ('res_model', '=', 'product.product'),
+                    ('attached_on_sale', '=', 'inside'),
+                ],
+                groupby=['res_id'],
+                aggregates=['id:recordset'],
+            )
+        )
+        docs_per_product_tmpl_id = dict(
+            ProductDocument._read_group(
+                domain=[
+                    ('res_id', 'in', product_template_ids),
+                    ('res_model', '=', 'product.template'),
+                    ('attached_on_sale', '=', 'inside'),
+                ],
+                groupby=['res_id'],
+                aggregates=['id:recordset'],
+            )
+        )
         for order in orders:
             initial_stream = result[order.id]['stream']
             if initial_stream:
@@ -28,14 +52,15 @@ class IrActionsReport(models.Model):
                 footer_record = order_template if order_template.sale_footer else order.company_id
                 has_header = bool(header_record.sale_header)
                 has_footer = bool(footer_record.sale_footer)
-                included_product_docs = self.env['product.document']
+                included_product_docs = ProductDocument
                 doc_line_id_mapping = {}
+                customer_lang = order.partner_id.lang or order.partner_id.parent_id.lang
                 for line in order.order_line:
-                    product_product_docs = line.product_id.product_document_ids
-                    product_template_docs = line.product_template_id.product_document_ids
                     doc_to_include = (
-                        product_product_docs.filtered(lambda d: d.attached_on_sale == 'inside')
-                        or product_template_docs.filtered(lambda d: d.attached_on_sale == 'inside')
+                        docs_per_product_id.get(line.product_id.id, ProductDocument).filtered(
+                            lambda doc: not doc.lang or doc.lang == customer_lang)
+                        | docs_per_product_tmpl_id.get(line.product_template_id.id, ProductDocument).filtered(
+                            lambda doc: not doc.lang or doc.lang == customer_lang)
                     )
                     included_product_docs = included_product_docs | doc_to_include
                     doc_line_id_mapping.update({doc.id: line.id for doc in doc_to_include})
