@@ -296,7 +296,7 @@ test("mark channel as fetched when a new message is loaded", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",

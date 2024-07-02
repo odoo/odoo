@@ -526,7 +526,10 @@ export class RecordList extends Array {
             .map((localId) => recordListFullProxy._store.recordByLocalId.get(localId))
             .concat(...collections.map((c) => [...c]));
     }
-    /** @param {...R}  */
+    /**
+     * @param {...R}
+     * @returns {R|R[]} the added record(s)
+     */
     add(...records) {
         const recordList = toRaw(this)._raw;
         const store = recordList._store;
@@ -534,25 +537,35 @@ export class RecordList extends Array {
             if (isOne(recordList)) {
                 const last = records.at(-1);
                 if (isRecord(last) && recordList.data.includes(toRaw(last)._raw.localId)) {
-                    return;
+                    return last;
                 }
-                recordList._.insert(recordList, last, function recordListAddInsertOne(record) {
-                    if (record.localId !== recordList.data[0]) {
-                        recordList.splice.call(recordList._proxy, 0, 1, record);
+                return recordList._.insert(
+                    recordList,
+                    last,
+                    function recordListAddInsertOne(record) {
+                        if (record.localId !== recordList.data[0]) {
+                            recordList.splice.call(recordList._proxy, 0, 1, record);
+                        }
                     }
-                });
-                return;
+                );
             }
+            const res = [];
             for (const val of records) {
                 if (isRecord(val) && recordList.data.includes(val.localId)) {
                     continue;
                 }
-                recordList._.insert(recordList, val, function recordListAddInsertMany(record) {
-                    if (recordList.data.indexOf(record.localId) === -1) {
-                        recordList.push.call(recordList._proxy, record);
+                const rec = recordList._.insert(
+                    recordList,
+                    val,
+                    function recordListAddInsertMany(record) {
+                        if (recordList.data.indexOf(record.localId) === -1) {
+                            recordList.push.call(recordList._proxy, record);
+                        }
                     }
-                });
+                );
+                res.push(rec);
             }
+            return res.length === 1 ? res[0] : res;
         });
     }
     /** @param {...R}  */

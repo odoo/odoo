@@ -57,26 +57,17 @@ export class DiscussCoreWeb {
             this.notificationService.add(notification, { type: "info" });
             const chat = await this.store.getChat({ partnerId });
             if (chat && !this.ui.isSmall) {
-                this.store.ChatWindow.insert({ thread: chat });
+                this.store.chatHub.opened.add({ thread: chat });
             }
         });
         this.busService.subscribe("discuss.Thread/fold_state", async (data) => {
             const thread = await this.store.Thread.getOrFetch(data);
             if (data.fold_state && thread && data.foldStateCount > thread.foldStateCount) {
                 thread.foldStateCount = data.foldStateCount;
-                if (data.fold_state !== thread.state) {
-                    thread.state = data.fold_state;
-                    if (thread.state === "closed") {
-                        const chatWindow = this.store.discuss.chatWindows.find((chatWindow) =>
-                            chatWindow.thread?.eq(thread)
-                        );
-                        chatWindow?.close({ notifyState: false });
-                    } else {
-                        this.store.ChatWindow.insert({
-                            thread,
-                            folded: thread.state === "folded",
-                        });
-                    }
+                thread.state = data.fold_state;
+                if (thread.state === "closed") {
+                    const chatWindow = this.store.ChatWindow.get({ thread });
+                    chatWindow?.close({ notifyState: false });
                 }
             }
         });

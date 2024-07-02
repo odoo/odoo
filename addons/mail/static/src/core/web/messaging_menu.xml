@@ -93,11 +93,8 @@
                         <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" persona="thread.correspondent.persona" thread="thread" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
                     </t>
                     <t t-if="message" t-set-slot="body-icon">
-                        <t t-if="message.isSelfAuthored">
-                            <i class="fa fa-mail-reply me-1"/>You:
-                        </t>
-                        <t t-elif="message.author and !message.author?.eq(thread.correspondent?.persona)">
-                            <t t-esc="message.author.name"/>:
+                        <t t-call="mail.message_preview_prefix">
+                            <t t-set="message" t-value="message"/>
                         </t>
                     </t>
                 </NotificationItem>

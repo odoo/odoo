@@ -2,6 +2,7 @@ declare module "models" {
     import { Attachment as AttachmentClass } from "@mail/core/common/attachment_model";
     import { CannedResponse as CannedResponseClass } from "@mail/core/common/canned_response_model";
     import { ChannelMember as ChannelMemberClass } from "@mail/core/common/channel_member_model";
+    import { ChatHub as ChatHubClass } from "@mail/core/common/chat_hub_model";
     import { ChatWindow as ChatWindowClass } from "@mail/core/common/chat_window_model";
     import { Composer as ComposerClass } from "@mail/core/common/composer_model";
     import { Country as CountryClass } from "@mail/core/common/country_model";
@@ -23,6 +24,7 @@ declare module "models" {
     export interface Attachment extends AttachmentClass {}
     export interface Attachment extends CannedResponseClass {}
     export interface ChannelMember extends ChannelMemberClass {}
+    export interface ChatHub extends ChatHubClass {}
     export interface ChatWindow extends ChatWindowClass {}
     export interface Composer extends ComposerClass {}
     export interface Country extends CountryClass {}
@@ -45,6 +47,7 @@ declare module "models" {
         "Attachment": Attachment,
         "CannedResponse": CannedResponse,
         "ChannelMember": ChannelMember,
+        "ChatHub": ChatHub,
         "ChatWindow": ChatWindow,
         "Composer": Composer,
         "Country": Country,

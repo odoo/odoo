@@ -31,7 +31,7 @@ test("openChat: open new chat for user", async () => {
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
-    await contains(".o-mail-ChatWindowContainer");
+    await contains(".o-mail-ChatHub");
     await contains(".o-mail-ChatWindow", { count: 0 });
     getService("mail.store").openChat({ partnerId });
     await contains(".o-mail-ChatWindow");

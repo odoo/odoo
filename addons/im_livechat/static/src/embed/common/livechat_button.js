@@ -1,33 +1,12 @@
 import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
 import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 
-import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
+import { useMovable } from "@mail/utils/common/hooks";
 
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
 const LIVECHAT_BUTTON_SIZE = 56;
-
-const useMovable = makeDraggableHook({
-    name: "useMovable",
-    onWillStartDrag({ ctx, addCleanup, addStyle, getRect }) {
-        const { height } = getRect(ctx.current.element);
-        ctx.current.container = document.createElement("div");
-        addStyle(ctx.current.container, {
-            position: "fixed",
-            top: 0,
-            bottom: `${height}px`,
-            left: 0,
-            right: 0,
-        });
-        ctx.current.element.after(ctx.current.container);
-        addCleanup(() => ctx.current.container.remove());
-    },
-    onDrop({ ctx, getRect }) {
-        const { top, left } = getRect(ctx.current.element);
-        return { top, left };
-    },
-});
 
 export class LivechatButton extends Component {
     static template = "im_livechat.LivechatButton";
@@ -86,7 +65,8 @@ export class LivechatButton extends Component {
         return (
             this.livechatService.initialized &&
             this.livechatService.available &&
-            this.livechatService.state === SESSION_STATE.NONE
+            this.livechatService.state === SESSION_STATE.NONE &&
+            Object.keys(this.store.ChatWindow.records).length === 0
         );
     }
 }
