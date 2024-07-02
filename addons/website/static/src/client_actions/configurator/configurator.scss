@@ -4,19 +4,26 @@
     $input-font-size: 40%;
 
     .o_configurator_screen {
+        // ==== Variables
+        --ConfiguratorPreview-height: MIN(70vh, 760px);
+        --ConfiguratorPreview-ratio: 1.1;
 
         // ==== Animations
+        @keyframes theme_screenshot_scroll {
+            to {
+                transform: translate3d(0, calc((100% - var(--ConfiguratorPreview-height)) * -1), 0)
+            }
+        }
+
         @keyframes configuratorFadeIn{
             from {opacity: 0}
             to {opacity: 1}
         }
 
-        @keyframes theme_screenshot_scroll {
-            to { transform: translate3d(0, -24%, 0)}
-        }
-
-        @keyframes theme_screenshot_scroll_small {
-            to { transform: translate3d(0, -31.5%, 0)}
+        @keyframes theme_screenshot_scroll-vertical {
+            to {
+                transform: translate3d(0, -74%, 0)
+            }
         }
 
         // ==== General Components
@@ -314,7 +321,7 @@
             }
 
             .theme_preview_tip {
-                @include o-position-absolute(0, 0, auto, 0);
+                @include o-position-absolute(auto, 0, 0, 0);
             }
 
             .theme_preview, .theme_svg_container svg, .theme_preview_tip {
@@ -335,37 +342,39 @@
                 cursor: pointer;
             }
 
+            .o_themes_preview_container {
+                @include media-breakpoint-up(lg) {
+                    height: var(--ConfiguratorPreview-height);
+                }
+            }
+
             .theme_preview {
-                padding-top: 65%;
+                height: 300px;
                 box-shadow: $box-shadow-sm;
 
                 @include media-breakpoint-up(lg) {
-                    padding-top: 200%;
-
-                    &:hover {
-                        transform: translate3d(0,-10px,0);
-                    }
-
-                    &.small {
-                        padding-top: 180%;
-                    }
+                    // Avoid the container size with hover ratio to be taller than the svg size;
+                    height: calc(var(--ConfiguratorPreview-height) / var(--ConfiguratorPreview-ratio));
                 }
 
                 &:hover {
                     border-color: map-get($theme-colors, primary)!important;
                     box-shadow: $box-shadow;
 
+                    @include media-breakpoint-up(lg) {
+                        height: 100%;
+                    }
+
                     .theme_preview_tip {
-                        transform: translate3d(0,-120%,0);
+                        transform: translate3d(0, 200%, 0);
                     }
 
                     .theme_svg_container svg {
-                        animation: theme_screenshot_scroll 4s cubic-bezier(0.455, 0.030, 0.515, 0.955) .1s infinite alternate;
-                    }
+                        animation: theme_screenshot_scroll 6s cubic-bezier(0.455, 0.030, 0.515, 0.955) .1s infinite alternate;
 
-                    &.small .theme_svg_container svg {
-                        animation-name: theme_screenshot_scroll_small;
-                        animation-duration: 5s;
+                        @include media-breakpoint-down(lg) {
+                            animation: theme_screenshot_scroll-vertical 8s cubic-bezier(0.455, 0.030, 0.515, 0.955) .1s infinite alternate;
+                        }
                     }
                 }
             }
