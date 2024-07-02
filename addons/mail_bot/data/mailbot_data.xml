@@ -4,5 +4,11 @@
         <record id="base.user_root" model="res.users">
             <field name="odoobot_state">disabled</field>
         </record>
+
+        <record id="odoobot_comment" model="mail.message.subtype">
+            <field name="name">Odoobot Discussions</field>
+            <field name="sequence" eval="0"/>
+            <field name="track_recipients" eval="True"/>
+        </record>
     </data>
 </odoo>

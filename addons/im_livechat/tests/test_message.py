@@ -84,6 +84,7 @@ class TestImLivechatMessage(HttpCase):
             'id': message.id,
             'default_subject': channel_livechat_1.name,
             'is_discussion': False,
+            'is_odoobot_discussion': False,
             'is_note': True,
             'linkPreviews': [],
             'message_type': 'notification',

@@ -914,7 +914,7 @@ export class Thread extends Record {
      * @param {import("models").Message} message
      */
     notifyMessageToUser(message) {
-        if (this.isCorrespondentOdooBot) {
+        if (message.is_odoobot_discussion) {
             return;
         }
         const channel_notifications =
