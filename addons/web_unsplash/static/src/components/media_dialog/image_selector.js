@@ -7,7 +7,10 @@ import { MediaDialog, TABS } from '@web_editor/components/media_dialog/media_dia
 import { ImageSelector } from '@web_editor/components/media_dialog/image_selector';
 import { rpc } from "@web/core/network/rpc";
 import { useService } from '@web/core/utils/hooks';
-import { uploadService, AUTOCLOSE_DELAY } from '@web_editor/components/upload_progress_toast/upload_service';
+import {
+    uploadService,
+    AUTOCLOSE_DELAY,
+} from "@html_editor/main/media/upload_progress_toast/upload_service";
 
 import { useState, Component } from "@odoo/owl";
 

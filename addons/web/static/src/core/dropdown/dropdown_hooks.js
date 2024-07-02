@@ -5,25 +5,28 @@ import { DROPDOWN_NESTING } from "@web/core/dropdown/_behaviours/dropdown_nestin
  * @typedef {Object} DropdownState
  * @property {() => void} open
  * @property {() => void} close
- * @property {() => void} toggle
  * @property {boolean} isOpen
- * @property {'auto'|'controlled'} mode
  */
 
 /**
  * Hook used to interact with the Dropdown state.
  * In order to use it, pass the returned state to the dropdown component, i.e.:
  *  <Dropdown state="dropdownState" ...>...</Dropdown>
+ * @param {Object} callbacks
+ * @param {Function} callbacks.onOpen
+ * @param {Function} callbacks.onClose
  * @returns {DropdownState}
  */
-export function useDropdownState() {
+export function useDropdownState({ onOpen, onClose } = {}) {
     const state = useState({
         isOpen: false,
         open: () => {
             state.isOpen = true;
+            onOpen?.();
         },
         close: () => {
             state.isOpen = false;
+            onClose?.();
         },
     });
     return state;

@@ -4,7 +4,7 @@ import { FileViewer } from "./file_viewer";
 
 let id = 1;
 
-export function useFileViewer() {
+export function createFileViewer() {
     const fileViewerId = `web.file_viewer${id++}`;
     /**
      * @param {import("@web/core/file_viewer/file_viewer").FileViewer.props.files[]} file
@@ -27,6 +27,11 @@ export function useFileViewer() {
     function close() {
         registry.category("main_components").remove(fileViewerId);
     }
+    return { open, close };
+}
+
+export function useFileViewer() {
+    const { open, close } = createFileViewer();
     onWillDestroy(close);
     return { open, close };
 }

@@ -37,7 +37,7 @@
     }, 
     {
         trigger: "input[id=s2id_autogen2]",
-        run: "editor Test",
+        run: "edit Test",
     },
     {
         isActive: ["auto"],
