@@ -132,7 +132,7 @@
                                     <t t-foreach="tracks" t-as="track">
                                         <t t-set="_classes"
                                             t-value="'o_event_color_light text-center %s %s %s' % (
-                                                'o_event_color_%s' % (track.color or 0),
+                                                'o_color_%s' % (track.color or 0),
                                                 'event_track h-100' if track else '',
                                                 'o_location_size_%d' % len(locations),
                                             )"/>
@@ -207,8 +207,9 @@
         </div>
         <div class="o_we_agenda_card_filter_badges d-flex justify-content-center flex-wrap pb-1">
             <t t-foreach="track.tag_ids" t-as="tag">
-                <span t-if="tag.color" t-att-title="tag.name"
-                        t-attf-class="me-1 mt-1 badge o_badge_clickable #{'o_badge_color_'+str(tag.color)}" t-out="tag.name"
+                <a t-if="tag.color" t-att-title="tag.name"
+                        t-attf-class="me-1 mt-1 badge #{'o_color_'+str(tag.color)}" t-out="tag.name"
+                        href="#"
                         t-attf-onclick="
                         var value = '#{tag.name}' ;
                         var target = $('#event_track_search');
