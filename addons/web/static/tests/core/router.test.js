@@ -1721,6 +1721,43 @@ describe("internal links", () => {
         expect(defaultPrevented).toBe(true);
     });
 
+    test("click on internal link with children does a loadState instead of a full reload", async () => {
+        redirect("/odoo");
+        createRouter({ onPushState: () => expect.step("pushState") });
+        const fixture = getFixture();
+        const link = document.createElement("a");
+        const span = document.createElement("span");
+        link.appendChild(span);
+        link.href = "/odoo/some-action/2";
+        fixture.appendChild(link);
+
+        expect(router.current).toEqual({});
+
+        let defaultPrevented;
+        browser.addEventListener("click", (ev) => {
+            expect.step("click");
+            defaultPrevented = ev.defaultPrevented;
+            ev.preventDefault();
+        });
+        click("span");
+        await tick();
+        expect.verifySteps(["click"]);
+        expect(router.current).toEqual({
+            action: "some-action",
+            actionStack: [
+                {
+                    action: "some-action",
+                },
+                {
+                    action: "some-action",
+                    resId: 2,
+                },
+            ],
+            resId: 2,
+        });
+        expect(defaultPrevented).toBe(true);
+    });
+
     test("click on internal link with different protocol does a loadState", async () => {
         redirect("/odoo");
         createRouter({ onPushState: () => expect.step("pushState") });
