@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
@@ -14,7 +13,7 @@ from odoo.tools import float_compare, float_round, format_datetime
 class MrpWorkorder(models.Model):
     _name = 'mrp.workorder'
     _description = 'Work Order'
-    _order = 'leave_id, date_start, id'
+    _order = 'sequence, leave_id, date_start, id'
 
     def _read_group_workcenter_id(self, workcenters, domain):
         workcenter_ids = self.env.context.get('default_workcenter_id')
@@ -24,6 +23,7 @@ class MrpWorkorder(models.Model):
 
     name = fields.Char(
         'Work Order', required=True)
+    sequence = fields.Integer("Sequence")
     barcode = fields.Char(compute='_compute_barcode', store=True)
     workcenter_id = fields.Many2one(
         'mrp.workcenter', 'Work Center', required=True,

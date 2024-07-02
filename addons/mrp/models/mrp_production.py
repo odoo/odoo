@@ -1430,7 +1430,7 @@ class MrpProduction(models.Model):
         self.allow_workorder_dependencies = self.bom_id.allow_operation_dependencies
 
         def workorder_order(wo):
-            return (wo.operation_id.bom_id, wo.operation_id.sequence)
+            return (wo.operation_id.bom_id, wo.sequence)
 
         if self.allow_workorder_dependencies:
             for workorder in self.workorder_ids.sorted(workorder_order):
