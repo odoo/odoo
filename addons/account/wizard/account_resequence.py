@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.date_utils import get_month, get_fiscal_year
+from odoo.tools.date_utils import get_fiscal_year
 from odoo.tools.misc import format_date
 
-import re
 from collections import defaultdict
 import json
 
@@ -97,7 +96,7 @@ class ReSequenceWizard(models.TransientModel):
         """Compute the proposed new values.
 
         Sets a json string on new_values representing a dictionary thats maps account.move
-        ids to a disctionay containing the name if we execute the action, and information
+        ids to a dictionary containing the name if we execute the action, and information
         relative to the preview widget.
         """
         def _get_move_key(move_id):
@@ -106,7 +105,9 @@ class ReSequenceWizard(models.TransientModel):
             if self.sequence_number_reset == 'year':
                 return move_id.date.year
             elif self.sequence_number_reset == 'year_range':
-                return "%s-%s"%(year_start.year, year_end.year)
+                return "%s-%s" % (year_start.year, year_end.year)
+            elif self.sequence_number_reset == 'year_range_month':
+                return "%s-%s/%s" % (year_start.year, year_end.year, move_id.date.month)
             elif self.sequence_number_reset == 'month':
                 return (move_id.date.year, move_id.date.month)
             return 'default'
@@ -123,7 +124,7 @@ class ReSequenceWizard(models.TransientModel):
             new_values = {}
             for j, period_recs in enumerate(moves_by_period.values()):
                 # compute the new values period by period
-                year_start, year_end = period_recs[0]._get_sequence_date_range(sequence_number_reset)
+                year_start, year_end, forced_year_start, forced_year_end = period_recs[0]._get_sequence_date_range(sequence_number_reset)
                 for move in period_recs:
                     new_values[move.id] = {
                         'id': move.id,
@@ -137,9 +138,9 @@ class ReSequenceWizard(models.TransientModel):
                 new_name_list = [seq_format.format(**{
                     **format_values,
                     'month': year_start.month,
-                    'year_end': year_end.year % (10 ** format_values['year_end_length']),
-                    'year': year_start.year % (10 ** format_values['year_length']),
-                    'seq': i + (format_values['seq'] if j == (len(moves_by_period)-1) else 1),
+                    'year_end': (forced_year_end or year_end.year) % (10 ** format_values['year_end_length']),
+                    'year': (forced_year_start or year_start.year) % (10 ** format_values['year_length']),
+                    'seq': i + (format_values['seq'] if j == (len(moves_by_period) - 1) else 1),
                 }) for i in range(len(period_recs))]
 
                 # For all the moves of this period, assign the name by increasing initial name
