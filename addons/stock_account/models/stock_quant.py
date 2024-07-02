@@ -69,8 +69,8 @@ class StockQuant(models.Model):
             else:
                 super(StockQuant, inventories)._apply_inventory()
 
-    def _get_inventory_move_values(self, qty, location_id, location_dest_id, package_id=False, package_dest_id=False):
-        res_move = super()._get_inventory_move_values(qty, location_id, location_dest_id, package_id, package_dest_id)
+    def _get_inventory_move_values(self, qty, location_id, location_dest_id, package_id=False, package_dest_id=False, product_id=False, lot_id=False, owner_id=False):
+        res_move = super()._get_inventory_move_values(qty, location_id, location_dest_id, package_id, package_dest_id, product_id, lot_id, owner_id)
         if not self.env.context.get('inventory_name'):
             force_period_date = self.env.context.get('force_period_date', False)
             if force_period_date:
