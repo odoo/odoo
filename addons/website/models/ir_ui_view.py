@@ -100,7 +100,7 @@ class View(models.Model):
         # Website-specific views need to be updated first because they might
         # be relocated to new ids by the cow if they are involved in the
         # inheritance tree.
-        for view in self.with_context(active_test=False).sorted(key='website_id', reverse=True):
+        for view in self.with_context(active_test=False).sorted(lambda v: bool(v.website_id), reverse=True):
             # Make sure views which are written in a website context receive
             # a value for their 'key' field
             if not view.key and not vals.get('key'):
