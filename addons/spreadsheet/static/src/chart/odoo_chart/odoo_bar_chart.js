@@ -102,5 +102,12 @@ function getBarConfiguration(chart, labels, locale) {
         config.options.scales.x.stacked = true;
         config.options.scales.y.stacked = true;
     }
+
+    config.options.plugins.chartShowValuesPlugin = {
+        showValues: chart.showValues,
+        background: chart.background,
+        horizontal: chart.horizontal,
+    };
+
     return config;
 }
