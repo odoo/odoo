@@ -56,13 +56,16 @@ var RecentLinkBox = publicWidget.Widget.extend({
         });
         clonedElement.classList.replace("o_website_links_short_url", "animated-link");
         originalElement.parentNode.insertBefore(clonedElement, originalElement.nextSibling);
-        clonedElement.animate([
-            { opacity: 1, top: (top - 2) + "px" },
-            { opacity: 0, top: (top - 22) + "px" }
-        ], {
-            duration: 500,
-            fill: "forwards"
-        }).onfinish = function() {
+        clonedElement.animate(
+            [
+                { opacity: 1, top: top - 2 + "px" },
+                { opacity: 0, top: top - 22 + "px" },
+            ],
+            {
+                duration: 500,
+                fill: "forwards",
+            }
+        ).onfinish = function () {
             clonedElement.remove();
             self.animating_copy = false;
         };
@@ -85,18 +88,24 @@ var RecentLinkBox = publicWidget.Widget.extend({
                 <input type="hidden" id="init_code" value="${initCode}"/>
                 <input type="text" id="new_code" value="${initCode}"/>
             </form>`;
-        this.el.querySelector(".o_website_links_edit_code").classList.toggle("d-none");
-        this.el.querySelector(".copy-to-clipboard")?.classList.add("d-none");
-        this.el.querySelector(".o_website_links_edit_tools").classList.toggle("d-none");
+        this.el.querySelector(".o_website_links_edit_code").style.display = "none";
+        const copyToClipboardEl = this.el.querySelector(".copy-to-clipboard");
+        if (copyToClipboardEl) {
+            copyToClipboardEl.style.display = "none";
+        }
+        this.el.querySelector(".o_website_links_edit_tools").style.display = "";
     },
     /**
      * @private
      */
     _cancelEdit: function () {
-        this.el.querySelector(".o_website_links_edit_code").classList.toggle("d-none");
-        this.el.querySelector(".copy-to-clipboard")?.classList.remove("d-none");
-        this.el.querySelector(".o_website_links_edit_tools").classList.toggle("d-none");
-        this.el.querySelector(".o_website_links_code_error").classList.toggle("d-none");
+        this.el.querySelector(".o_website_links_edit_code").style.display = "";
+        const copyToClipboardEl = this.el.querySelector(".copy-to-clipboard");
+        if (copyToClipboardEl) {
+            copyToClipboardEl.style.display = "";
+        }
+        this.el.querySelector(".o_website_links_edit_tools").style.display = "none";
+        this.el.querySelector(".o_website_links_code_error").style.display = "none";
 
         const oldCode = this.el.querySelector("#o_website_links_edit_code_form #init_code").value;
         this.el.querySelector("#o_website_links_code").innerHTML = oldCode;
@@ -123,7 +132,7 @@ var RecentLinkBox = publicWidget.Widget.extend({
 
         function showNewCode(newCode) {
             self.el.querySelector(".o_website_links_code_error").innerHTML = "";
-            self.el.querySelector(".o_website_links_code_error").classList.toggle("d-none");
+            self.el.querySelector(".o_website_links_code_error").style.display = "none";
 
             self.el.querySelector("#o_website_links_code form").remove();
 
@@ -137,9 +146,12 @@ var RecentLinkBox = publicWidget.Widget.extend({
                 .setAttribute("data-clipboard-text", host + newCode);
 
             // Show action again
-            self.el.querySelector(".o_website_links_edit_code").classList.toggle("d-none");
-            self.el.querySelector(".copy-to-clipboard")?.classList.remove("d-none");
-            self.el.querySelector(".o_website_links_edit_tools").classList.toggle("d-none");
+            self.el.querySelector(".o_website_links_edit_code").style.display = "";
+            const copyToClipboardEl = self.el.querySelector(".copy-to-clipboard");
+            if (copyToClipboardEl) {
+                copyToClipboardEl.style.display = "";
+            }
+            self.el.querySelector(".o_website_links_edit_tools").style.display = "none";
         }
 
         if (initCode === newCode) {
@@ -151,7 +163,7 @@ var RecentLinkBox = publicWidget.Widget.extend({
             }).then(function (result) {
                 showNewCode(result[0].code);
             }, function () {
-                    self.el.querySelector(".o_website_links_code_error").classList.toggle("d-none");
+                    self.el.querySelector(".o_website_links_code_error").style.display = "";
                     self.el.querySelector(".o_website_links_code_error").innerHTML = _t(
                         "This code is already taken"
                     );
@@ -209,9 +221,7 @@ var RecentLinks = publicWidget.Widget.extend({
             self._updateNotification();
         }, function () {
                 const message = _t("Unable to get recent links");
-                self.el.append(
-                    `<div class="alert alert-danger">${message}</div>`
-                );
+                self.el.append(`<div class="alert alert-danger">${message}</div>`);
         });
     },
     /**
@@ -436,14 +446,14 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
      * @private
      */
     _onGeneratedTrackedLinkClick: function () {
-        const trackedLink = document.querySelector("#generated_tracked_link");
-        trackedLink.textContent = _t("Copied");
-        trackedLink.classList.remove("btn-primary");
-        trackedLink.classList.add("btn-success");
+        const trackedLinkEl = this.el.querySelector("#generated_tracked_link");
+        trackedLinkEl.textContent = _t("Copied");
+        trackedLinkEl.classList.remove("btn-primary");
+        trackedLinkEl.classList.add("btn-success");
         setTimeout(function () {
-            trackedLink.textContent = _t("Copy");
-            trackedLink.classList.remove("btn-success");
-            trackedLink.classList.add("btn-primary");
+            trackedLinkEl.textContent = _t("Copy");
+            trackedLinkEl.classList.remove("btn-success");
+            trackedLinkEl.classList.add("btn-primary");
         }, 5000);
     },
     /**
@@ -451,16 +461,16 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onUrlKeyUp: function (ev) {
-        const shortenUrlButton = document.querySelector("#btn_shorten_url");
-        if (!shortenUrlButton.classList.contains("btn-copy") || ev.key === "Enter") {
+        const shortenUrlButtonEl = this.el.querySelector("#btn_shorten_url");
+        if (!shortenUrlButtonEl.classList.contains("btn-copy") || ev.key === "Enter") {
             return;
         }
 
-        shortenUrlButton.classList.remove("btn-success", "btn-copy");
-        shortenUrlButton.classList.add("btn-primary");
-        shortenUrlButton.innerHTML = "Get tracked link";
-        document.querySelector("#generated_tracked_link").style.display = "none";
-        document.querySelector(".o_website_links_utm_forms").style.display = "block";
+        shortenUrlButtonEl.classList.remove("btn-success", "btn-copy");
+        shortenUrlButtonEl.classList.add("btn-primary");
+        shortenUrlButtonEl.innerHTML = "Get tracked link";
+        this.el.querySelector("#generated_tracked_link").style.display = "none";
+        this.el.querySelector(".o_website_links_utm_forms").style.display = "";
     },
     /**
      * @private
@@ -469,20 +479,20 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         const textValue = ev.target.dataset.clipboardText;
         await window.navigator.clipboard.writeText(textValue);
 
-        const shortenUrlButton = document.querySelector("#btn_shorten_url");
-        if (!shortenUrlButton.classList.contains("btn-copy") || this.url_copy_animating) {
+        const shortenUrlButtonEl = this.el.querySelector("#btn_shorten_url");
+        if (!shortenUrlButtonEl.classList.contains("btn-copy") || this.url_copy_animating) {
             return;
         }
 
         const self = this;
         this.url_copy_animating = true;
-        const originalElement = document.querySelector("#generated_tracked_link");
+        const originalElement = this.el.querySelector("#generated_tracked_link");
         const clonedElement = originalElement.cloneNode(true);
         Object.assign(clonedElement.style, {
             position: "absolute",
             left: "78px",
             zIndex: "2",
-            transition: "opacity 0.8s, bottom 0.8s"
+            transition: "opacity 0.8s, bottom 0.8s",
         });
         clonedElement.classList.remove("#generated_tracked_link");
         clonedElement.classList.add("url-animated-link");
@@ -490,13 +500,13 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         clonedElement.animate(
             [
                 { opacity: 1, bottom: "8px" },
-                { opacity: 0, bottom: "48px"}
+                { opacity: 0, bottom: "48px" },
             ],
             {
                 duration: 500,
                 fill: "forwards",
             }
-        ).onfinish = function() {
+        ).onfinish = function () {
             clonedElement.remove();
             self.url_copy_animating = false;
         };
@@ -538,28 +548,31 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         document.querySelector("#btn_shorten_url").textContent = _t("Generating link...");
 
         rpc('/website_links/new', params).then(function (result) {
-            const notificationElement = document.querySelector(".notification");
+            const notificationElement = self.el.querySelector(".notification");
             if ('error' in result) {
                 // Handle errors
                 if (result.error === 'empty_url') {
-                    notificationElement.innerHTML = "<div class='alert alert-danger'>The URL is empty.</div>";
+                    notificationElement.innerHTML =
+                        "<div class='alert alert-danger'>The URL is empty.</div>";
                 } else if (result.error === "url_not_found") {
-                    notificationElement.innerHTML = "<div class='alert alert-danger'>URL not found (404)</div>";
+                    notificationElement.innerHTML =
+                        "<div class='alert alert-danger'>URL not found (404)</div>";
                 } else {
-                    notificationElement.innerHTML = "<div class='alert alert-danger'>An error occur while trying to generate your link. Try again later.</div>";
+                    notificationElement.innerHTML =
+                        "<div class='alert alert-danger'>An error occur while trying to generate your link. Try again later.</div>";
                 }
             } else {
                 // Link generated, clean the form and show the link
                 var link = result[0];
 
-                const btnShortenUrlElement = document.querySelector("#btn_shorten_url");
+                const btnShortenUrlElement = self.el.querySelector("#btn_shorten_url");
                 btnShortenUrlElement.classList.remove("btn-primary");
                 btnShortenUrlElement.classList.add("btn-success", "btn-copy");
                 btnShortenUrlElement.innerHTML = "Copy";
                 btnShortenUrlElement.setAttribute("data-clipboard-text", link.short_url);
 
                 notificationElement.innerHTML = "";
-                const generatedTrackedLinkEl = document.querySelector("#generated_tracked_link");
+                const generatedTrackedLinkEl = self.el.querySelector("#generated_tracked_link");
                 generatedTrackedLinkEl.innerHTML = link.short_url;
                 generatedTrackedLinkEl.style.display = "inline";
 
@@ -573,7 +586,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
                     });
                 });
                 label.value = "";
-                document.querySelector(".o_website_links_utm_forms").style.display = "none";
+                self.el.querySelector(".o_website_links_utm_forms").style.display = "none";
             }
         });
     },

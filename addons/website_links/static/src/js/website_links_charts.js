@@ -111,7 +111,7 @@ var PieChart = publicWidget.Widget.extend({
             },
         };
 
-        var canvas = this.el.querySelector("canvas");
+        const canvas = this.el.querySelector("canvas");
         var context = canvas.getContext('2d');
         new Chart(context, config);
     },
@@ -160,15 +160,11 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
             var _lastMonthClicksByCountry = results[4];
 
             if (!_totalClicks) {
-                document
-                    .querySelector("#all_time_charts")
-                    .prepend(_t("There is no data to show"));
+                document.querySelector("#all_time_charts").prepend(_t("There is no data to show"));
                 document
                     .querySelector("#last_month_charts")
                     .prepend(_t("There is no data to show"));
-                document
-                    .querySelector("#last_week_charts")
-                    .prepend(_t("There is no data to show"));
+                document.querySelector("#last_week_charts").prepend(_t("There is no data to show"));
                 return;
             }
 
@@ -189,7 +185,6 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
                 formattedClicksByDay[date.setLocale("en").toFormat("yyyy-MM-dd")] =
                     _clicksByDay[i]["create_date_count"];
             }
-
             // Process all time line chart data
             var now = DateTime.now();
             self.charts.all_time_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
