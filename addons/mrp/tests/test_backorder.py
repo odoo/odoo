@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, timedelta
 
+from odoo import Command
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
@@ -957,3 +958,45 @@ class TestMrpWorkorderBackorder(TransactionCase):
         op_6.button_finish()
         bo_2.button_mark_done()
         self.assertRecordValues(op_6, [{'state': 'done', 'qty_remaining': 0.0}])
+
+    def test_kit_bom_order_splitting(self):
+        water_bottle_kit_product = self.env["product.product"].create({
+                "name": "Water Bottle Kit",
+                "type": "product",  # Storable product
+            })
+        water_bottle_kit = self.env['mrp.bom'].create({
+            'product_id': water_bottle_kit_product.id,
+            'product_tmpl_id': water_bottle_kit_product.product_tmpl_id.id,
+            "type": "phantom",  # Kit
+            'operation_ids': [
+                Command.create({
+                    'name': "Test Operation",
+                    'workcenter_id': self.workcenter1.id,
+                }),
+            ],
+        })
+        water_bottle = self.env["product.product"].create({
+            "name": "Water Bottle",
+            "type": "product",  # Storable product
+        })
+        water_bottle_bom = self.env['mrp.bom'].create({
+            'product_id': water_bottle.id,
+            'product_tmpl_id': water_bottle.product_tmpl_id.id,
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': water_bottle_kit.product_id.id,
+                    'product_qty': 1,
+                }),
+            ],
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = water_bottle
+        mo_form.bom_id = water_bottle_bom
+        mo_form.product_qty = 10
+        mo = mo_form.save()
+        self.assertEqual(mo.state, 'draft')
+        action = mo.action_split()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.counter = 10
+        wizard.save().action_split()
