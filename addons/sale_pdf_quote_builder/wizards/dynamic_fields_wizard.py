@@ -18,7 +18,11 @@ class SalePDFQuoteBuilderDynamicFieldsWizard(models.TransientModel):
     def _default_wizard_line_ids(self):
         res_id = self.env.context.get('active_id')
         res_model = self.env.context.get('active_model')
-        document = self.env[res_model].browse(res_id)
+        if res_model == 'res.config.settings':
+            # Avoid relying on wizard records
+            document = self.env.company
+        else:
+            document = self.env[res_model].browse(res_id)
         if res_model == 'product.document':
             valid_form_fields = utils._get_form_fields_from_pdf(document.datas)
             current_form_fields = {'product_document': list(valid_form_fields)}

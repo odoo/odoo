@@ -4,10 +4,10 @@ import base64
 import io
 import json
 
-from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2 import PdfFileReader, PdfFileWriter
 from PyPDF2.generic import NameObject, createStringObject
 
-from odoo import models
+from odoo import _, api, models
 from odoo.tools import format_amount, format_date, format_datetime, pdf
 
 from odoo.addons.sale_pdf_quote_builder.const import DEFAULT_FORM_FIELD_PATH_MAPPING
@@ -70,6 +70,10 @@ class IrActionsReport(models.Model):
                     decoded_footer = base64.b64decode(footer_record.sale_footer)
                     self._add_pages_to_writer(writer, decoded_footer, all_form_fields)
 
+                self = self.with_context(
+                    use_babel=True,
+                    lang=order._get_lang() or self.env.user.lang,
+                )
                 form_fields_values_mapping = self._get_form_fields_values_mapping(
                     order, all_form_fields, param_field_map
                 )
@@ -81,8 +85,9 @@ class IrActionsReport(models.Model):
 
         return result
 
+    @api.model
     def _add_pages_to_writer(self, writer, document, all_form_fields=None, sol_id=None):
-        """Add a PDF doc to the writer. Update the set of form fields present in the pages if needed
+        """Add a PDF doc to the writer and fill the form fields present in the pages if needed.
 
         :param PdfFileWriter writer: the writer to which pages needs to be added
         :param bytes document: the document to add in the final pdf
@@ -101,13 +106,13 @@ class IrActionsReport(models.Model):
             if field_names:
                 all_form_fields.update([prefix + field_name for field_name in field_names])
 
-        for page_id in range(0, reader.getNumPages()):
+        for page_id in range(reader.getNumPages()):
             page = reader.getPage(page_id)
             if all_form_fields and field_names and page.get('/Annots'):
                 # Prefix all form fields in the product document with the sale order line id.
                 # This is necessary to know the line from which the value needs to be taken when
                 # filling the forms.
-                for j in range(0, len(page['/Annots'])):
+                for j in range(len(page['/Annots'])):
                     reader_annot = page['/Annots'][j].getObject()
                     if reader_annot.get('/T') in field_names:
                         form_key = reader_annot.get('/T')
@@ -115,31 +120,32 @@ class IrActionsReport(models.Model):
                         reader_annot.update({NameObject("/T"): createStringObject(new_key)})
             writer.addPage(page)
 
+    @api.model
     def _get_form_fields_values_mapping(self, order, all_form_fields, param_field_map):
-        """ Dictionary mapping specific pdf fields name to Odoo fields data values for a sale order.
+        """Map specific pdf fields name to Odoo fields data values for a sale order.
+
+        Note: order.ensure_one()
 
         :param recordset order: sale.order record from which to take the values
         :param set(str) all_form_fields: all the form field names present in the PDFs
         :param dict param_field_map: the map stored in the config parameter to assign the expected
                                      paths to the form fields. A form field not in that map will be
                                      ignored.
-        :rtype: dict
         :return: mapping of fields name to Odoo fields data
-
-        Note: order.ensure_one()
+        :rtype: dict
         """
         order.ensure_one()
-        env = self.with_context(use_babel=True).env
         tz = order.partner_id.tz or self.env.user.tz or 'UTC'
-        form_fields_mapping = {
-            field: self._get_formatted_field(field, order, env, tz, param_field_map)
+        return {
+            field: self._get_formatted_field(field, order, tz, param_field_map)
             for field in all_form_fields
         }
 
-        return form_fields_mapping
+    @api.model
+    def _get_formatted_field(self, form_field_name, order, tz, param_field_map):
+        """Format a field value from the extracted PDF string.
 
-    def _get_formatted_field(self, form_field_name, order, translated_env, tz, param_field_map):
-        """ Format a field value from the extracted PDF string.
+        Note: order.ensure_one()
 
         :param string form_field_name: field path
         :param recordset order: sale.order record from which to take the value, following the path
@@ -149,33 +155,36 @@ class IrActionsReport(models.Model):
         :param dict param_field_map: the map stored in the config parameter to assign the expected
                                      paths to the form fields. A form field not in that map will be
                                      ignored.
-        :rtype: string
         :return: formatted field value
-
-        Note: order.ensure_one()
+        :rtype: string
         """
-        def _get_formatted_value(value_):
-            context = {'lang': lang}
-            if field_type == 'boolean':
-                formatted_value_ = _("Yes") if value_ else _("No")
-            elif field_type == 'monetary':
-                currency_id_ = record[field.get_currency_field(record)]
-                formatted_value_ = format_amount(
-                    translated_env, value_, currency_id_ or order.currency_id
-                )
-            elif field_type == 'date':
-                formatted_value_ = format_date(translated_env, value_, lang_code=lang)
-            elif field_type == 'datetime':
-                formatted_value_ = format_datetime(translated_env, value_, tz=tz)
-            elif field_type == 'selection' and value_:
-                formatted_value_ = dict(field._description_selection(translated_env))[value_]
-            elif field_type in {'one2many', 'many2one', 'many2many'}:
-                formatted_value_ = ', '.join([v.display_name for v in value_])
-            else:
-                formatted_value_ = value_
-            del context
+        def _get_formatted_value(self, records, field_name):
+            # self must be named so to be considered in the translation logic
+            field = records._fields[field_name]
+            field_type = field.type
+            for record in records:
+                value = record[field_name]
+                if field_type == 'boolean':
+                    formatted_value = _("Yes") if value else _("No")
+                elif field_type == 'monetary':
+                    currency_id_ = record[field.get_currency_field(record)]
+                    formatted_value = format_amount(
+                        self.env, value, currency_id_ or order.currency_id
+                    )
+                elif not value:
+                    formatted_value = ''
+                elif field_type == 'date':
+                    formatted_value = format_date(self.env, value)
+                elif field_type == 'datetime':
+                    formatted_value = format_datetime(self.env, value, tz=tz)
+                elif field_type == 'selection' and value:
+                    formatted_value = dict(field._description_selection(self.env))[value]
+                elif field_type in {'one2many', 'many2one', 'many2many'}:
+                    formatted_value = ', '.join([v.display_name for v in value])
+                else:
+                    formatted_value = str(value)
 
-            return '' if formatted_value_ is False else str(formatted_value_)
+                yield formatted_value
 
         order.ensure_one()
         is_sol = form_field_name.startswith('sol_id_')
@@ -184,8 +193,8 @@ class IrActionsReport(models.Model):
             record = order
             path = param_field_map.get('header_footer', {}).get(form_field_name)
         else:  # Product document
-            prefix, *_ = form_field_name.split('__')
-            line_id = int(prefix.lstrip('sol_id_'))
+            prefix = form_field_name.split('__')[0]
+            line_id = int(prefix[7:])
             record = order.order_line.browse(line_id)
             form_field_name = form_field_name.removeprefix(prefix + '__')
             path = param_field_map.get('product_document', {}).get(form_field_name)
@@ -193,16 +202,10 @@ class IrActionsReport(models.Model):
         if not path:
             return ''
 
-        path = path.split('.')
+        # If path = 'order_id.order_line.product_id.name'
+        path = path.split('.')  # ['order_id', 'order_line', 'product_id', 'name']
         # sudo to be able to follow the path set by the admin
-        records = record.sudo().mapped('.'.join(path[:-1]))
-        field_name = path[-1]
-        field = records._fields[field_name]
-        field_type = field.type
+        records = record.sudo().mapped('.'.join(path[:-1]))  # product.product(id1, id2, ...)
+        field_name = path[-1]  # 'name'
 
-        lang = order._get_lang() or self.env.user.lang
-        formatted_values = ', '.join(
-            [_get_formatted_value(record[field_name]) for record in records]
-        )
-
-        return formatted_values
+        return ', '.join(_get_formatted_value(self, records, field_name))
