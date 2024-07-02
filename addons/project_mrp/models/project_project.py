@@ -10,7 +10,25 @@ class Project(models.Model):
 
     production_count = fields.Integer(related="analytic_account_id.production_count", groups='mrp.group_mrp_user', export_string_translation=False)
     workorder_count = fields.Integer(related="analytic_account_id.workorder_count", groups='mrp.group_mrp_user', export_string_translation=False)
-    bom_count = fields.Integer(related="analytic_account_id.bom_count", groups='mrp.group_mrp_user', export_string_translation=False)
+    bom_count = fields.Integer(compute="_compute_bom_count", groups='mrp.group_mrp_user', export_string_translation=False)
+
+    def _compute_bom_count(self):
+        for project in self:
+            analytic_account_id = project.analytic_account_id
+            # To fetch the boms linked to a project by their analytic account, we have to search on the text field 'analytic_distribution_text'
+            # because the others fields 'analytic_distribution' and 'analytic_account_ids' are non-stored and cannot be stored
+            # as they are made to be company-dependent (and company dependent JSON fields are not yet supported).
+            # So to search on the 'analytic_distribution_text' text field, we have to consider different cases.
+            # Here are some examples of 'analytic_distribution_text' values where 23 is the analytic_account_id of the project:
+            # '{"23": 100}
+            # '{"23,17": 42.0}'
+            # '{"8,23,17": 88.0}'
+            project.bom_count = self.env['mrp.bom'].search_count([
+                '|', '|',
+                ('analytic_distribution_text', 'like', f'%{analytic_account_id.id}":%'),
+                ('analytic_distribution_text', 'like', f'%"{analytic_account_id.id},%'),
+                ('analytic_distribution_text', 'like', f'%,{analytic_account_id.id},%'),
+            ])
 
     def action_view_mrp_production(self):
         self.ensure_one()
@@ -30,9 +48,25 @@ class Project(models.Model):
 
     def action_view_mrp_bom(self):
         self.ensure_one()
-        action = self.analytic_account_id.action_view_mrp_bom()
-        if self.bom_count > 1:
-            action['view_mode'] = 'tree,form,kanban'
+        action = self.env['ir.actions.actions']._for_xml_id('mrp.mrp_bom_form_action')
+        analytic_account_id = self.analytic_account_id
+        bom_ids = self.env['mrp.bom'].search([
+            '|', '|',
+            ('analytic_distribution_text', 'like', f'%{analytic_account_id.id}":%'),
+            ('analytic_distribution_text', 'like', f'%"{analytic_account_id.id},%'),
+            ('analytic_distribution_text', 'like', f'%,{analytic_account_id.id},%'),
+        ])
+        action['domain'] = [('id', 'in', bom_ids.ids)]
+        action['context'] = {'project_id': self.id}
+        if not self.env.context.get('from_embedded_action', False) and self.bom_count == 1:
+            action['view_mode'] = 'form'
+            action['res_id'] = bom_ids.id
+            if 'views' in action:
+                action['views'] = [
+                    (view_id, view_type)
+                    for view_id, view_type in action['views']
+                    if view_type == 'form'
+                ] or [False, 'form']
         return action
 
     def action_view_workorder(self):

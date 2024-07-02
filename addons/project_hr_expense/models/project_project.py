@@ -22,7 +22,7 @@ class Project(models.Model):
             'context': {'default_analytic_distribution': {self.analytic_account_id.id: 100}},
             'domain': domain or [('id', 'in', expense_ids)],
         })
-        if len(expense_ids) == 1:
+        if not self.env.context.get('from_embedded_action', False) and len(expense_ids) == 1:
             action["views"] = [[False, 'form']]
             action["res_id"] = expense_ids[0]
         return action
@@ -37,6 +37,10 @@ class Project(models.Model):
         if section_name == 'expenses':
             return self._get_expense_action(domain, [res_id] if res_id else [])
         return super().action_profitability_items(section_name, domain, res_id)
+
+    def action_open_project_expenses(self):
+        self.ensure_one()
+        return self._get_expense_action(domain=[('analytic_distribution', 'in', self.analytic_account_id.ids)])
 
     # ----------------------------
     #  Project Update

@@ -11,6 +11,7 @@
     'depends': ['project_account', 'hr_expense'],
     'demo': [
         'data/project_hr_expense_demo.xml',
+        'views/project_project_views.xml',
     ],
     'installable': True,
     'auto_install': True,

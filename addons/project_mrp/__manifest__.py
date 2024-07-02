@@ -9,6 +9,7 @@
     'depends': ['mrp_account', 'project'],
     'demo': [
         'data/project_mrp_demo.xml',
+        'views/project_project_views.xml',
     ],
     'auto_install': True,
     'license': 'LGPL-3',
