@@ -5,6 +5,7 @@ import calendar
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools import get_barcode_check_digit
+from itertools import groupby
 
 FNC1_CHAR = '\x1D'
 
@@ -120,6 +121,14 @@ class BarcodeNomenclature(models.Model):
             results.append(res_bar[0])
 
         return results
+
+    def gs1_decompose_extended_with_type(self, barcode):
+        self.ensure_one()
+        decompose = self.gs1_decompose_extanded(barcode)
+        output = {}
+        if decompose:
+            output = {k : list(v) for k, v in groupby(decompose, lambda l: l.get('rule').type)}
+        return output
 
     def parse_barcode(self, barcode):
         if self.is_gs1_nomenclature:
