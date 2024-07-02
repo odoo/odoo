@@ -366,8 +366,8 @@ export class RelationalModel extends Model {
         const orderBy = config.orderBy.filter(
             (o) =>
                 o.name === firstGroupByName ||
-                (o.name in config.activeFields &&
-                    config.fields[o.name].aggregator !== undefined)
+                o.name === "__count" ||
+                (o.name in config.activeFields && config.fields[o.name].aggregator !== undefined)
         );
         const response = await this._webReadGroup(config, orderBy);
         const { groups: groupsData, length } = response;
@@ -561,10 +561,11 @@ export class RelationalModel extends Model {
      * @returns
      */
     async _loadUngroupedList(config) {
+        const orderBy = config.orderBy.filter((o) => o.name !== "__count");
         const kwargs = {
             specification: getFieldsSpec(config.activeFields, config.fields, config.context),
             offset: config.offset,
-            order: orderByToString(config.orderBy),
+            order: orderByToString(orderBy),
             limit: config.limit,
             context: { bin_size: true, ...config.context },
             count_limit:
@@ -680,11 +681,9 @@ export class RelationalModel extends Model {
     }
 
     async _webReadGroup(config, orderBy) {
-        const aggregates = Object.values(config.fields).filter(
-            (field) => field.aggregator && field.name in config.activeFields
-        ).map(
-            (field) => `${field.name}:${field.aggregator}`
-        )
+        const aggregates = Object.values(config.fields)
+            .filter((field) => field.aggregator && field.name in config.activeFields)
+            .map((field) => `${field.name}:${field.aggregator}`);
         return this.orm.webReadGroup(
             config.resModel,
             config.domain,
@@ -694,7 +693,7 @@ export class RelationalModel extends Model {
                 orderby: orderByToString(orderBy),
                 lazy: true,
                 offset: config.offset,
-                limit: config.limit,  // TODO: remove limit when == MAX_integer
+                limit: config.limit, // TODO: remove limit when == MAX_integer
                 context: config.context,
             }
         );
