@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.InternalNote">
+        <div t-if="internalNotes" t-attf-class="{{props.class}} list-inline o_pdis_note d-flex flex-wrap">
+            <t t-foreach="internalNotes" t-as="note" t-key="note_index">
+                <li t-if="note"
+                    class="internal-note px-2 py-1 m-1 bg-warning text-warning bg-opacity-25 small"
+                    style="font-size: 0.85rem; border-radius: 1rem;"
+                    t-attf-class="{{note.color ? `o_colorlist_item_color_${note.color}` : ''}}"
+                >
+                    <t t-esc="note.text" />
+                </li>
+            </t>
+        </div>
+    </t>
+</templates>
