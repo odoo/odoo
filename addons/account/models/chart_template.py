@@ -179,6 +179,11 @@ class AccountChartTemplate(models.AbstractModel):
         template_data = data.pop('template_data')
 
         if reload_template:
+            foreign_countries = self.env['account.tax'].with_context(active_test=False).search(
+                [('company_id', '=', company.id)],
+            ).country_id - company.country_id
+            if foreign_countries:
+                data = self._add_foreign_taxes_data(company, foreign_countries, data)
             self._pre_reload_data(company, template_data, data)
             install_demo = False
         data = self._pre_load_data(template_code, company, template_data, data)
@@ -642,8 +647,15 @@ class AccountChartTemplate(models.AbstractModel):
         for company_attr_name, account in zip(accounts_data.keys(), accounts):
             company[company_attr_name] = account
 
+    def _add_foreign_taxes_data(self, company, countries, data):
+        for country in countries:
+            country_data = self._get_foreign_chart_template_data(country, company, reload=True)
+            for model in ('account.tax', 'account.tax.group'):
+                data[model].update(country_data[model])
+        return data
+
     @api.model
-    def _instantiate_foreign_taxes(self, country, company):
+    def _get_foreign_chart_template_data(self, country, company, reload=False):
         """Create and configure foreign taxes from the provided country.
 
         Instantiate the taxes as they would be for the foreign localization only replacing the accounts used by the most
@@ -662,7 +674,7 @@ class AccountChartTemplate(models.AbstractModel):
             ('country_id', '=', country.id),
             ('company_id', '=', company.id)
         ])
-        if taxes_in_country:
+        if not reload and taxes_in_country:
             return
 
         def create_foreign_tax_account(existing_account, additional_label):
@@ -799,6 +811,11 @@ class AccountChartTemplate(models.AbstractModel):
                 for idx, child_tax in enumerate(children_taxes):
                     children_taxes[idx] = f"{chart_template_code}_{child_tax}"
                 tax_data['children_tax_ids'] = ','.join(children_taxes)
+        return data
+
+    @api.model
+    def _instantiate_foreign_taxes(self, country, company):
+        data = self._get_foreign_chart_template_data(country, company)
         self._load_data(data)
 
     # --------------------------------------------------------------------------------
@@ -1009,6 +1026,12 @@ class AccountChartTemplate(models.AbstractModel):
         translation_importer = TranslationImporter(self.env.cr, verbose=False)
         for chart_template, chart_companies in groupby(companies, lambda c: c.chart_template):
             template_data = self.env['account.chart.template']._get_chart_template_data(chart_template)
+            for company in companies:
+                foreign_countries = self.env['account.tax'].with_context(active_test=False).search(
+                    [('company_id', '=', company.id)],
+                ).country_id - companies.country_id
+                if foreign_countries:
+                    template_data = self._add_foreign_taxes_data(company, foreign_countries, template_data)
             template_data.pop('template_data', None)
             for mname, data in template_data.items():
                 for _xml_id, record in data.items():

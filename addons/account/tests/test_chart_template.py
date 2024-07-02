@@ -10,13 +10,22 @@ from odoo.tests.common import TransactionCase
 
 
 def _get_chart_template_mapping(self, get_all=False):
-    return {'test': {
-        'name': 'test',
-        'country_id': None,
-        'country_code': None,
-        'modules': ['account'],
-        'parent': None,
-    }}
+    return {
+        'test': {
+            'name': 'test',
+            'country_id': None,
+            'country_code': None,
+            'modules': ['account'],
+            'parent': None,
+        },
+        'test_foreign': {
+            'name': 'foreign_test',
+            'country_id': None,
+            'country_code': 'ZZ',
+            'modules': ['account'],
+            'parent': None,
+        }
+    }
 
 def test_get_data(self, template_code):
     return {
@@ -520,3 +529,43 @@ class TestChartTemplate(TransactionCase):
         }
         with self.assertRaisesRegex(UserError, 'update your localization'):
             self.env['account.chart.template']._deref_account_tags('test', {'tax1': tax_to_load})
+
+    def test_update_taxes_foreign_taxes(self):
+        """ When taxes are instantiated through the fiscal position system (in multivat),
+        its taxes should also be updated.
+        """
+        def local_get_data(self, template_code):
+            data = test_get_data(self, template_code)
+            for tax in data['account.tax'].values():
+                tax['country_id'] = country_test.id
+            data['account.tax.group']['tax_group_taxes']['country_id'] = country_test.id
+            return data
+
+        country_test = self.env['res.country'].create({
+            'name': 'Country Test',
+            'code': 'ZZ',
+        })
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template']._instantiate_foreign_taxes(country_test, self.company_1)
+
+        foreign_taxes = self.env['account.tax'].search([
+            ('company_id', '=', self.company_1.id),
+            ('country_id', '=', country_test.id),
+        ])
+        self.assertEqual(len(foreign_taxes), 2)
+        foreign_tax_1 = foreign_taxes.filtered(lambda t: t.name == 'Tax 1')
+        foreign_taxes.filtered(lambda t: t.name == 'Tax 2').unlink()
+        base_invoice_line = foreign_tax_1.invoice_repartition_line_ids.filtered(lambda l: l.repartition_type == 'base')
+        self.assertEqual(base_invoice_line.tag_ids.name, 'tax_tag_name_1')
+        base_invoice_line.tag_ids = False
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company_1, install_demo=False)
+
+        self.assertEqual(base_invoice_line.tag_ids.name, 'tax_tag_name_1')
+        foreign_taxes_after = self.env['account.tax'].search([
+            ('company_id', '=', self.company_1.id),
+            ('country_id', '=', country_test.id),
+        ])
+        self.assertEqual(len(foreign_taxes_after), 2)
