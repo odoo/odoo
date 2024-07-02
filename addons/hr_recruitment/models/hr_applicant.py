@@ -37,7 +37,6 @@ class Applicant(models.Model):
 
     name = fields.Char("Subject / Application", required=True, help="Email subject for applications sent via email", index='trigram')
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
-    description = fields.Html("Description")
     email_from = fields.Char("Email", size=128, compute='_compute_partner_phone_email',
         inverse='_inverse_partner_email', store=True, index='trigram')
     email_normalized = fields.Char(index='trigram')  # inherited via mail.thread.blacklist
@@ -60,11 +59,11 @@ class Applicant(models.Model):
     date_open = fields.Datetime("Assigned", readonly=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Evaluation", default='0')
-    job_id = fields.Many2one('hr.job', "Applied Job", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True, index=True)
+    job_id = fields.Many2one('hr.job', "Job Position", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True, index=True)
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
     salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
-    salary_proposed = fields.Float("Proposed Salary", aggregator="avg", help="Salary Proposed by the Organisation", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
-    salary_expected = fields.Float("Expected Salary", aggregator="avg", help="Salary Expected by Applicant", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
+    salary_proposed = fields.Float("Offered", aggregator="avg", help="Salary Offered by the Organisation", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
+    salary_expected = fields.Float("Expected ", aggregator="avg", help="Salary Expected by Applicant", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
     partner_name = fields.Char("Applicant's Name")
     partner_phone = fields.Char("Phone", size=32, compute='_compute_partner_phone_email',
@@ -102,7 +101,7 @@ class Applicant(models.Model):
     meeting_display_date = fields.Date(compute='_compute_meeting_display')
     # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
     campaign_id = fields.Many2one(ondelete='set null')
-    medium_id = fields.Many2one(ondelete='set null')
+    medium_id = fields.Many2one(ondelete='set null', help="This displays how the applicant has reached out, e.g. via Email, LinkedIn, Website, etc.")
     source_id = fields.Many2one(ondelete='set null')
     interviewer_ids = fields.Many2many('res.users', 'hr_applicant_res_users_interviewers_rel',
         string='Interviewers', index=True, tracking=True,
@@ -115,6 +114,14 @@ class Applicant(models.Model):
         ('archived', 'Archived'),
     ], compute="_compute_application_status", search="_search_application_status")
     applicant_properties = fields.Properties('Properties', definition='job_id.applicant_properties_definition', copy=True)
+    applicant_notes = fields.Html("Notes")
+    # The following fields are copied from the calendar.event model.
+    applicant_calendar_start = fields.Datetime()
+    applicant_calendar_stop = fields.Datetime()
+    applicant_calendar_start_date = fields.Date(compute='_compute_dates', inverse="_inverse_dates")
+    applicant_calendar_stop_date = fields.Date(compute='_compute_dates', inverse="_inverse_dates")
+    applicant_calendar_title = fields.Char(compute='_compute_calendar_title')
+    allday = fields.Boolean()
 
     def init(self):
         self.env.cr.execute("""
@@ -212,6 +219,56 @@ class Applicant(models.Model):
         if self.partner_mobile_sanitized:
             domain = expression.OR([domain, ['|', ('partner_mobile_sanitized', '=', self.partner_mobile_sanitized), ('partner_phone_sanitized', '=', self.partner_mobile_sanitized)]])
         return domain
+
+    # This is copied directly from the calendar.event model
+    @api.depends('allday', 'applicant_calendar_start', 'applicant_calendar_stop')
+    def _compute_dates(self):
+        """ Adapt the value of start_date(time)/stop_date(time)
+            according to start/stop fields and allday. Also, compute
+            the duration for not allday meeting ; otherwise the
+            duration is set to zero, since the meeting last all the day.
+        """
+        for applicant in self:
+            if applicant.allday and applicant.applicant_calendar_start and applicant.applicant_calendar_stop:
+                applicant.applicant_calendar_start_date = applicant.applicant_calendar_start.date()
+                applicant.applicant_calendar_stop_date = applicant.applicant_calendar_stop.date()
+            else:
+                applicant.applicant_calendar_start_date = False
+                applicant.applicant_calendar_stop_date = False
+
+    def _inverse_dates(self):
+        """ This method is used to set the start and stop values of all day events.
+            The calendar view needs date_start and date_stop values to display correctly the allday events across
+            several days. As the user edit the {start,stop}_date fields when allday is true,
+            this inverse method is needed to update the  start/stop value and have a relevant calendar view.
+        """
+        for applicant in self:
+            if applicant.allday:
+
+                # Convention break:
+                # stop and start are NOT in UTC in allday event
+                # in this case, they actually represent a date
+                # because fullcalendar just drops times for full day events.
+                # i.e. Christmas is on 25/12 for everyone
+                # even if people don't celebrate it simultaneously
+                enddate = fields.Datetime.from_string(applicant.applicant_calendar_stop_date)
+                enddate = enddate.replace(hour=18)
+
+                startdate = fields.Datetime.from_string(applicant.applicant_calendar_start_date)
+                startdate = startdate.replace(hour=8)  # Set 8 AM
+
+                applicant.write({
+                    'applicant_calendar_start': startdate.replace(tzinfo=None),
+                    'applicant_calendar_stop': enddate.replace(tzinfo=None)
+                })
+
+    @api.depends('partner_name', 'activity_type_id')
+    def _compute_calendar_title(self):
+        for applicant in self:
+            if applicant.activity_type_id.name:
+                applicant.applicant_calendar_title = applicant.partner_name + " - " + applicant.activity_type_id.name
+            else:
+                applicant.applicant_calendar_title = applicant.partner_name
 
     @api.depends_context('lang')
     @api.depends('meeting_ids', 'meeting_ids.start')
@@ -402,18 +459,45 @@ class Applicant(models.Model):
                 vals['email_from'] = vals['email_from'].strip()
         applicants = super().create(vals_list)
         applicants.sudo().interviewer_ids._create_recruitment_interviewers()
-        # Record creation through calendar, creates the calendar event directly, it will also create the activity.
-        if 'default_activity_date_deadline' in self.env.context:
-            deadline = fields.Datetime.to_datetime(self.env.context.get('default_activity_date_deadline'))
+
+        if (applicants.interviewer_ids.partner_id - self.env.user.partner_id):
             for applicant in applicants:
+                interviewers_to_notify = applicant.interviewer_ids.partner_id - self.env.user.partner_id
+                notification_subject = _("You have been assigned as an interviewer for %s", applicant.display_name)
+                notification_body = _("You have been assigned as an interviewer for the Applicant %s", applicant.partner_name)
+                applicant.message_subscribe(partner_ids=interviewers_to_notify.ids)
+                applicant.message_notify(
+                    res_id=applicant.id,
+                    model=applicant._name,
+                    partner_ids=interviewers_to_notify.ids,
+                    author_id=self.env.user.partner_id.id,
+                    email_from=self.env.user.email_formatted,
+                    subject=notification_subject,
+                    body=notification_body,
+                    email_layout_xmlid="mail.mail_notification_layout",
+                    record_name=applicant.display_name,
+                    model_description="Applicant",
+                )
+
+        # Record creation through calendar, creates the calendar event directly, it will also create the activity.
+        if 'default_applicant_calendar_start' in self.env.context:
+            for applicant in applicants:
+                defaults = self.env['calendar.event'].with_context(default_applicant_id=applicant.id).default_get(['res_model_id', 'res_id'])
+                activity_vals = {
+                    'res_model_id': defaults['res_model_id'],
+                    'res_id': defaults['res_id'],
+                    'activity_type_id': applicant.activity_type_id.id,
+                }
                 partners = applicant.partner_id | applicant.user_id.partner_id | applicant.department_id.manager_id.user_id.partner_id
                 self.env['calendar.event'].sudo().with_context(default_applicant_id=applicant.id).create({
                     'applicant_id': applicant.id,
                     'partner_ids': [(6, 0, partners.ids)],
                     'user_id': self.env.uid,
-                    'name': applicant.name,
-                    'start': deadline,
-                    'stop': deadline + relativedelta(minutes=30),
+                    'name': applicant.applicant_calendar_title,
+                    'start': applicant.applicant_calendar_start,
+                    'stop': applicant.applicant_calendar_stop,
+                    # 'description': "This should maybe be a field?",
+                    'activity_ids': [(0, 0, activity_vals)],
                 })
         return applicants
 
@@ -436,6 +520,26 @@ class Applicant(models.Model):
             interviewers_to_clean = old_interviewers - self.interviewer_ids
             interviewers_to_clean._remove_recruitment_interviewers()
             self.sudo().interviewer_ids._create_recruitment_interviewers()
+            self.message_unsubscribe(partner_ids=interviewers_to_clean.partner_id.ids)
+
+            new_interviewers = self.interviewer_ids - old_interviewers - self.env.user
+            if new_interviewers:
+                notification_subject = _("You have been assigned as an interviewer for %s", self.display_name)
+                notification_body = _("You have been assigned as an interviewer for the Applicant %s", self.partner_name)
+                self.message_subscribe(partner_ids=new_interviewers.partner_id.ids)
+                self.message_notify(
+                    res_id=self.id,
+                    model=self._name,
+                    partner_ids=new_interviewers.partner_id.ids,
+                    author_id=self.env.user.partner_id.id,
+                    email_from=self.env.user.email_formatted,
+                    subject=notification_subject,
+                    body=notification_body,
+                    email_layout_xmlid="mail.mail_notification_layout",
+                    record_name=self.display_name,
+                    model_description="Applicant",
+                )
+
         if vals.get('emp_id'):
             self._update_employee_from_applicant()
         return res
@@ -455,10 +559,8 @@ class Applicant(models.Model):
 
         nocontent_body = Markup("""
 <p class="o_view_nocontent_smiling_face">%(help_title)s</p>
-<p class="mb-0">%(para_1)s<br/>%(para_2)s</p>""") % {
+""") % {
             'help_title': _("No application found. Let's create one !"),
-            'para_1': _('People can also apply by email to save time.'),
-            'para_2': _("You can search into attachment's content, like resumes, with the searchbar."),
         }
 
         if hr_job:
@@ -469,12 +571,12 @@ class Applicant(models.Model):
             'para_1': match[1],
             'para_2': match[2],
             'para_3': match[3],
-            'link': f'/odoo/recruitement/{hr_job.id}',
+            'link': f'/odoo/recruitment/{hr_job.id}',
         }
 
         if hr_job.alias_email:
             nocontent_body += Markup('<p class="o_copy_paste_email oe_view_nocontent_alias">%(helper_email)s <a href="mailto:%(email)s">%(email)s</a></p>') % {
-                'helper_email': _("Create new applications by sending an email to"),
+                'helper_email': _("Try creating an application by sending an email to"),
                 'email': hr_job.alias_email,
             }
 

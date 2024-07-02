@@ -10,20 +10,22 @@
                 <xpath expr="//form" position="inside">
                     <app data-string="Recruitment" string="Recruitment" name="hr_recruitment" groups="hr_recruitment.group_hr_recruitment_manager">
                         <block title="Job Posting" name="online_posting_setting_container">
-                            <setting id="publish_available_jobs_setting" string="Online Posting" help="Publish available jobs on your website">
+                            <setting id="publish_available_jobs_setting" string="Online Posting" help="Publish job offers on your website">
                                 <field name="module_website_hr_recruitment"/>
                             </setting>
                         </block>
-                        <block title="Recruitment Process" name="recruitment_process_div">
+                        <block title="Process" name="recruitment_process_div">
                             <setting id="interview_forms_setting" string="Send Interview Survey" help="Send an Interview Survey to the applicant during the recruitment process" title="Use interview forms tailored to each job position during the recruitment process. Select the form to use in the job position detail form. This relies on the Survey app.">
                                 <field name="module_hr_recruitment_survey"/>
                             </setting>
-                            <setting id="sms" string="Send SMS" documentation="/applications/marketing/sms_marketing/pricing/pricing_and_faq.html" help="Send texts to your contacts">
-                            </setting>
-                            <setting string="CV Display" help="Display CV on application form" id="display_cv">
+                            <setting string="Résumé Display" help="Display résumé on application form" id="display_cv">
                                 <field name="group_applicant_cv_display"/>
                             </setting>
-                            <setting id="recruitment_extract_settings" string="CV Digitization (OCR)" company_dependent="1" help="Digitize your CV to extract name and email automatically." title="Use OCR to fill data from a picture of the CV or the file itself">
+                        </block>
+                        <block title="In-App Purchases" name="recruitment_in_app_purchases">
+                            <setting id="sms" string="Send SMS" documentation="/applications/marketing/sms_marketing/pricing/pricing_and_faq.html" help="Send texts to your contacts">
+                            </setting>
+                            <setting id="recruitment_extract_settings" string="Résumé Digitization (OCR)" company_dependent="1" help="Digitize your résumé to extract name and email automatically." title="Use OCR to fill data from a picture of the Résumr or the file itself">
                                 <field name="module_hr_recruitment_extract" widget="upgrade_boolean"/>
                             </setting>
                         </block>
