@@ -1,7 +1,12 @@
 import { expect, test } from "@odoo/hoot";
 import { click, edit, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { getService, makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    getService,
+    makeMockEnv,
+    mountWithCleanup,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 
 import { ServerCalculator } from "../src/server_calculator";
 
@@ -14,28 +19,36 @@ function mockMultiply(...values) {
 }
 
 /**
- * @hint `onRpc()` and `getService()` ("@web/../tests/web_test_helpers")
+ * @hint `onRpc()` ("@web/../tests/web_test_helpers")
  * @hint `expect().resolves.toBe()`
  */
-test("test ORM service", async () => {
+test.todo("test ORM service", async () => {
     await makeMockEnv();
     const orm = getService("orm");
 
-    onRpc("multiply", ({ args }) => mockMultiply(...args));
-
-    await expect(orm.call("ir.calculator", "multiply", [1, 2, 3, 4])).resolves.toBe(1 * 2 * 3 * 4);
+    await expect(orm.call("ir.calculator", "multiply", [1, 2, 3, 4])).toBe(1 * 2 * 3 * 4);
 });
 
 /**
  * @hint `onRpc()` can handle both ORM calls and generic routes
  */
-test("server calculator can add and multiply", async () => {
+test.todo("server calculator can add and multiply", async () => {
     await mountWithCleanup(ServerCalculator);
 
-    onRpc("multiply", ({ args }) => mockMultiply(...args));
-    onRpc("/calculator/add", async (request) => {
-        const args = await request.json();
-        return mockAdd(...args);
+    // !FIXME: doesn't work with multiply
+    patchWithCleanup(window, {
+        fetch: (url, params) => {
+            const args = JSON.parse(params?.body || "[]");
+            let result;
+            if (url.endsWith("/calculator/add")) {
+                result = mockAdd(args);
+            } else {
+                result = mockMultiply(args);
+            }
+            return new Response(JSON.stringify({ result }), {
+                headers: { "Content-Type": "application/json" },
+            });
+        },
     });
 
     await click("input:first");
