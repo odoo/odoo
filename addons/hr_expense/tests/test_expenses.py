@@ -1098,6 +1098,19 @@ class TestExpenses(TestExpenseCommon):
         # CASE 8: ALLOWS Setting the amounts to 0 while unlinking the expense sheet
         expense.write({'total_amount_currency': 0.0, 'total_amount': 0.0, 'sheet_id': False})
 
+        # CASE 9: FORBIDS Creating an expense with amounts to 0 from the list view in the expense sheet
+        expense_sheet = self.create_expense_report(values={'expense_line_ids': []})
+        expense_form = Form(self.env['hr.expense'].with_context({
+            'default_company_id': expense_sheet.company_id,
+            'default_employee_id': expense_sheet.employee_id,
+            'default_payment_mode': expense_sheet.payment_mode or 'own_account',
+            'check_total_amount_not_zero': True,
+            }))
+        expense_form.name = 'Test Name'
+        expense_form.total_amount_currency = 0.0
+        with self.assertRaises(UserError):
+            expense_sheet.expense_line_ids = [expense_form.save()]
+
     def test_corner_case_expense_prevent_empty_sheet_approval_actions(self):
         """
         Test that the expenses cannot not submitted, approved or posted if the sheet has no lines and that those lines cannot be removed
