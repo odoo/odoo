@@ -125,7 +125,7 @@ export class SelectionPlugin extends Plugin {
                     let [anchorNode, anchorOffset] = startPos(container);
                     if (
                         anchorNode.firstChild &&
-                        anchorNode.firstChild.getAttribute("contenteditable") === "false"
+                        anchorNode.firstChild.isContentEditable === false
                     ) {
                         anchorNode = anchorNode.firstChild.nextSibling;
                         anchorOffset = 0;
