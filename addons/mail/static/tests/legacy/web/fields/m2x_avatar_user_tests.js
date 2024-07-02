@@ -205,7 +205,7 @@ test('many2one_avatar_user widget edited by the smart action "Assign to me" in f
 
         // Unassign me
         await triggerHotkey("control+k");
-        await click("#o_command_2");
+        await click(".o_command", { text: "Unassign from meALT + SHIFT + I" });
         await contains(".o_field_many2one_avatar_user input", { value: "" });
     });
 });
