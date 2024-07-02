@@ -62,4 +62,13 @@
             </xpath>
         </field>
     </record>
+
+    <record id="action_mrp_production_accrued_entry_wizard" model="ir.actions.act_window">
+        <field name="name">Post Wip</field>
+        <field name="res_model">mrp.production.accrued.entry.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+        <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
+        <field name="target">new</field>
+    </record>
 </odoo>

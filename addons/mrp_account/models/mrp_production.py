@@ -109,3 +109,44 @@ class MrpProduction(models.Model):
         res = super()._get_backorder_mo_vals()
         res['extra_cost'] = self.extra_cost
         return res
+
+    def _get_wip_vals(self):
+        self.ensure_one()
+        currency = self.company_id.currency_id
+        labels = []
+        costs = 0
+        for move in self.move_raw_ids:
+            labels.append(move.product_id.display_name)
+            wip_qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
+            costs += wip_qty * move.product_id.standard_price
+        workorder_costs = self.workorder_ids._get_wip_vals()
+        for label, cost in workorder_costs.items():
+            if not currency.is_zero(cost):
+                labels.append('%s %s' % (currency.format(cost), label))
+                costs += cost
+        return {
+            'label': ', '.join(labels),
+            'balance': costs,
+            'account_id': self.product_id.property_account_expense_id.id or self.product_id.categ_id.property_account_expense_categ_id.id,
+            'currency_id': self.company_id.currency_id.id,
+            'amount_currency': costs,
+        }
+
+    def _compute_expected_operation_cost(self):
+        return sum([wo._compute_expected_operation_cost() for wo in self.workorder_ids])
+
+    def _compute_current_operation_cost(self):
+        return sum([wo._compute_current_operation_cost() for wo in self.workorder_ids])
+
+    def _compute_expected_product_cost(self):
+        cost = 0
+        for move in self.move_raw_ids:
+            cost += move.product_uom_qty * move.product_id.standard_price
+        return cost
+
+    def _compute_current_product_cost(self):
+        cost = 0
+        for move in self.move_raw_ids:
+            wip_qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
+            cost += wip_qty * move.product_id.standard_price
+        return cost
