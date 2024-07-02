@@ -120,6 +120,13 @@ $o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
     font-variant-numeric: tabular-nums;
 }
 
+// Show the page content behind the offcanvas < sm, fallback at 400px above.
+.offcanvas {
+    @include media-breakpoint-down(sm) {
+        --Offcanvas-horizontal-width: calc(100vw - #{map-get($spacers, 5)});
+    }
+}
+
 // Modal
 .modal-content {
     // If the text color of the body (used for the text color in modals) is not

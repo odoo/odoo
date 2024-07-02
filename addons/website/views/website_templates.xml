@@ -3,7 +3,9 @@
 
 <template id="submenu" name="Submenu">
     <t t-set="show_dropdown" t-value="(submenu.is_mega_menu and submenu.is_visible) or submenu.child_id.filtered(lambda menu: menu.is_visible)"/>
-    <li t-if="submenu.is_visible and not (submenu.child_id or submenu.is_mega_menu)" t-attf-class="#{item_class or ''}" role="presentation">
+    <t t-set="is_mobile_accordion" t-value="is_in_offcanvas and not submenu.is_mega_menu"/>
+
+    <li t-if="submenu.is_visible and not (submenu.child_id or submenu.is_mega_menu)" t-attf-class="#{item_class or ''} #{is_in_offcanvas and 'px-0'}" role="presentation">
         <a t-att-href="submenu._clean_url()"
             t-attf-class="#{link_class or ''} #{submenu._is_active() and 'active'}"
             role="menuitem"
@@ -12,19 +14,35 @@
             <span t-field="submenu.name"/>
         </a>
     </li>
-    <li t-elif="show_dropdown" t-attf-class="#{item_class or ''} dropdown #{submenu.is_mega_menu and 'position-static'}" role="presentation">
-        <a t-attf-class="#{link_class or ''} dropdown-toggle #{submenu.is_mega_menu and 'o_mega_menu_toggle'} #{submenu._is_active() and 'active'} #{dropdown_toggler_classes}"
-           data-bs-toggle="dropdown" href="#" t-att-data-bs-display="'static' if submenu.is_mega_menu else None"
+    <li t-elif="show_dropdown" t-attf-class="#{item_class or ''} #{submenu.is_mega_menu and 'position-static'} #{offcanvas_is_leftside and 'o_mega_menu_left'} #{is_mobile_accordion and 'accordion' or 'dropdown'}">
+        <a t-attf-class="#{link_class or ''} #{submenu.is_mega_menu and 'o_mega_menu_toggle'} #{is_mobile_accordion and 'accordion-button collapsed px-3 shadow-none' or 'dropdown-toggle'} #{submenu._is_active() and 'active'} #{dropdown_toggler_classes}"
+           t-attf-data-bs-toggle="#{is_mobile_accordion and 'collapse' or 'dropdown'}" href="#" t-att-data-bs-display="'static' if submenu.is_mega_menu else None"
+           t-attf-data-bs-auto-close="#{not is_mobile_accordion and 'outside'}"
+           t-attf-data-bs-target=".o_accordion_target_#{submenu.id}"
+           aria-expanded="false"
+           t-attf-aria-controls="{{ 'o_accordion_target_' + str(submenu.id) if is_mobile_accordion else ''}}"
            role="menuitem">
             <span t-field="submenu.name"/>
         </a>
-        <t t-if="submenu.is_mega_menu">
-            <div t-if="not is_mobile"
-                 t-attf-class="dropdown-menu o_mega_menu #{submenu.mega_menu_classes}"
-                 data-name="Mega Menu"
-                 t-field="submenu.mega_menu_content"
-                 role="menuitem"/>
-        </t>
+        <div t-if="submenu.is_mega_menu and not is_mobile"
+             t-attf-class="o_mega_menu dropdown-menu border-top-0 #{submenu.mega_menu_classes}"
+             data-name="Mega Menu"
+             t-field="submenu.mega_menu_content"
+             role="menuitem"/>
+        <div t-if="submenu.is_mega_menu and is_in_offcanvas" t-attf-class="o_mega_nav o_cc1 position-fixed top-0 #{offcanvas_is_leftside and 'start-0' or 'end-0'} invisible d-flex align-items-center w-100">
+            <button class="btn nav-link oi oi-chevron-left ms-n2 px-2"/>
+        </div>
+        <div t-elif="is_in_offcanvas" t-attf-class="o_accordion_target_#{submenu.id} accordion-collapse collapse" t-attf-aria-labelledby="o_accordion_target_#{submenu.id}" >
+            <ul class="show list-group list-unstyled py-0" role="menu">
+                <t t-foreach="submenu.child_id" t-as="submenu">
+                    <t t-call="website.submenu">
+                        <t t-set="submenu_recursion" t-value="true"/>
+                        <t t-set="item_class" t-value="None"/>
+                        <t t-set="link_class" t-valuef="nav-link list-group-item list-group-item-action border-0 rounded-0 px-4 text-wrap"/>
+                    </t>
+                </t>
+            </ul>
+        </div>
         <ul t-else="" t-attf-class="dropdown-menu #{dropdown_menu_classes}" role="menu">
             <t t-foreach="submenu.child_id" t-as="submenu">
                 <t t-call="website.submenu">
@@ -299,7 +317,7 @@
 </template>
 
 <template id="navbar_nav" name="Navbar Nav">
-    <ul t-att-id="not is_mobile and 'top_menu'" t-attf-class="nav navbar-nav top_menu #{'' if _no_autohide_menu_mobile else 'o_menu_loading'} #{_nav_class}" role="menu">
+    <ul t-att-id="not is_mobile and 'top_menu'" t-attf-class="nav navbar-nav top_menu #{'' if _no_autohide_menu_mobile else 'o_menu_loading'} #{is_in_offcanvas and 'o_mega_menu_is_offcanvas mx-n3'} #{_nav_class} #{(_navbar_pills and not is_mobile) and 'nav-pills'}" role="menu">
         <t t-out="0"/>
     </ul>
 </template>
@@ -331,11 +349,11 @@
                     </button>
                 </li>
             </ul>
-            <div t-attf-class="offcanvas #{_side if _side else 'offcanvas-end'} o_navbar_mobile" id="top_menu_collapse_mobile">
+            <div t-attf-class="offcanvas offcanvas-end o_navbar_mobile" id="top_menu_collapse_mobile">
                 <div class="offcanvas-header justify-content-end o_not_editable">
                     <button type="button" class="nav-link btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
                 </div>
-                <div class="offcanvas-body d-flex flex-column justify-content-between h-100 w-100">
+                <div class="offcanvas-body d-flex flex-column justify-content-between h-100 w-100 pt-0">
                     <ul class="navbar-nav">
                         <!-- Search bar -->
                         <t t-call="website.placeholder_header_search_box">
@@ -346,14 +364,15 @@
                         </t>
                         <!-- Navbar -->
                         <t t-call="website.navbar_nav">
+                            <t t-set="is_in_offcanvas" t-valuef="True"/>
                             <t t-set="_no_autohide_menu_mobile" t-valuef="True"/>
                             <t t-set="is_mobile" t-value="True"/>
 
                             <!-- Menu -->
                             <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                 <t t-call="website.submenu">
-                                    <t t-set="item_class" t-valuef="nav-item"/>
-                                    <t t-set="link_class" t-valuef="nav-link"/>
+                                    <t t-set="item_class" t-valuef="nav-item border-top #{submenu_last and 'border-bottom'}"/>
+                                    <t t-set="link_class" t-valuef="nav-link p-3 text-wrap"/>
                                     <t t-set="dropdown_toggler_classes" t-valuef="d-flex justify-content-between align-items-center"/>
                                     <t t-set="dropdown_menu_classes" t-valuef="position-relative rounded-0 o_dropdown_without_offset"/>
                                 </t>
@@ -361,7 +380,7 @@
                         </t>
                         <!-- Text element -->
                         <t t-call="website.placeholder_header_text_element">
-                            <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast"/>
+                            <t t-set="_div_class" t-valuef="mt-2"/>
                         </t>
                         <!-- Social -->
                         <t t-call="website.placeholder_header_social_links">
@@ -545,7 +564,7 @@
                     <div class="offcanvas-header justify-content-end">
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
                     </div>
-                    <div class="offcanvas-body d-flex flex-column justify-content-between">
+                    <div class="offcanvas-body d-flex flex-column justify-content-between pt-0">
                         <ul class="navbar-nav">
                             <!-- Search bar -->
                             <t t-call="website.placeholder_header_search_box">
@@ -556,13 +575,15 @@
                             <!-- Navbar -->
                             <li>
                                 <t t-call="website.navbar_nav">
-                                    <t t-set="_nav_class" t-valuef="my-3"/>
+                                    <t t-set="is_in_offcanvas" t-valuef="True"/>
+                                    <t t-set="offcanvas_is_leftside" t-valuef="True"/>
+                                    <t t-set="_nav_class" t-valuef="mt-3"/>
 
                                     <!-- Menu -->
                                     <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                         <t t-call="website.submenu">
-                                            <t t-set="item_class" t-valuef="nav-item"/>
-                                            <t t-set="link_class" t-valuef="nav-link"/>
+                                            <t t-set="item_class" t-valuef="nav-item border-top #{submenu_last and 'border-bottom'}"/>
+                                            <t t-set="link_class" t-valuef="nav-link p-3 text-wrap"/>
                                             <t t-set="dropdown_toggler_classes" t-valuef="d-flex justify-content-between align-items-center"/>
                                             <t t-set="dropdown_menu_classes" t-valuef="position-relative rounded-0 o_dropdown_without_offset"/>
                                         </t>
@@ -572,7 +593,7 @@
                             <!-- Text element -->
                             <t t-call="website.placeholder_header_text_element">
                                 <t t-set="_txt_elt_content" t-valuef="phone_mail"/>
-                                <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast"/>
+                                <t t-set="_div_class" t-valuef="mt-2"/>
                             </t>
                             <!-- Social -->
                             <t t-call="website.placeholder_header_social_links">
@@ -613,6 +634,9 @@
     </xpath>
     <xpath expr="//div[@id='top_menu_collapse']" position="attributes" >
         <attribute name="class" add="offcanvas-end" remove="offcanvas-start" separator=" "/>
+    </xpath>
+    <xpath expr="//t[@t-set='offcanvas_is_leftside']" position="attributes">
+        <attribute name="t-valuef" add="False" remove="True"/>
     </xpath>
     <xpath expr="//t[@t-call='portal.user_dropdown']//t[@t-set='_dropdown_menu_class']" position="replace"/>
 </template>
@@ -1310,13 +1334,15 @@
                             <!-- Navbar -->
                             <li>
                                 <t t-call="website.navbar_nav">
+                                    <t t-set="is_in_offcanvas" t-valuef="True"/>
+                                    <t t-set="offcanvas_is_leftside" t-valuef="True"/>
                                     <t t-set="_no_autohide_menu_mobile" t-valuef="True"/>
 
                                     <!-- Menu -->
                                     <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                         <t t-call="website.submenu">
-                                            <t t-set="item_class" t-valuef="nav-item"/>
-                                            <t t-set="link_class" t-valuef="nav-link"/>
+                                            <t t-set="item_class" t-valuef="nav-item border-top #{submenu_last and 'border-bottom'}"/>
+                                            <t t-set="link_class" t-valuef="nav-link p-3 text-wrap"/>
                                             <t t-set="dropdown_toggler_classes" t-valuef="d-flex justify-content-between align-items-center"/>
                                             <t t-set="dropdown_menu_classes" t-valuef="position-relative rounded-0 o_dropdown_without_offset"/>
                                         </t>
@@ -1326,7 +1352,7 @@
                             <!-- Text element -->
                             <t t-call="website.placeholder_header_text_element">
                                 <t t-set="_txt_elt_content" t-valuef="phone_mail"/>
-                                <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast"/>
+                                <t t-set="_div_class" t-valuef="mt-2"/>
                             </t>
                             <!-- Social -->
                             <t t-call="website.placeholder_header_social_links">
@@ -1562,8 +1588,8 @@
 </template>
 
 <template id="header_navbar_pills_style" inherit_id="website.navbar_nav" name="Navbar Links Style" active="False">
-    <xpath expr="//ul[contains(@t-attf-class, 'top_menu')]" position="attributes">
-        <attribute name="t-attf-class" add="nav-pills" separator=" "/>
+    <xpath expr="//ul[contains(@t-attf-class, 'top_menu')]" position="before">
+        <t t-set="_navbar_pills" t-value="True"/>
     </xpath>
 </template>
 
