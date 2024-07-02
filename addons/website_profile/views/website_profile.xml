@@ -67,105 +67,116 @@
     Single User Profile Page
     -->
 
-    <!-- Edit Profile Page -->
-    <template id="user_profile_edit_main" name="Edit Profile">
-        <t t-set="body_classname" t-value="'o_wprofile_body'"/>
-        <t t-call="website.layout">
-            <div id="wrap" class="o_wprofile_wrap">
-                <div class="container pt-4 pb-5">
-                    <t t-call="website_profile.user_profile_edit_content"/>
-                </div>
-            </div>
-        </t>
-    </template>
-
+    <!-- Edit Profile Popup content -->
     <template id="user_profile_edit_content" name="Edit Profile">
-        <h1 class="o_page_header">Edit Profile</h1>
+        <div class="modal fade" id="o_wprofile_edit_profile_modal" tabindex="-1"
+             aria-labelledby="o_wprofile_edit_profile_modal_label" aria-hidden="true">
+            <div class="modal-dialog">
+                <form t-attf-action="/profile/user/save" method="post" role="form" class="o_wprofile_editor_form js_website_submit_form" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="o_wprofile_edit_profile_modal_label">Edit Profile</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+<input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+<input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
+<input type="file" class="d-none o_wprofile_cover_file_upload" name="ufile_image_cover" accept="image/*"/>
+<input type="hidden" name="url_param" t-att-value="request.params.get('url_param')"/>
+<input type="hidden" class="o_wprofile_clear_image" name="clear_image" value="False"/>
+<input type="hidden" class="o_wprofile_clear_image_cover" name="clear_image_cover" value="False"/>
+<div class="row">
+    <div class="o_wprofile_banner mb-3">
+        <img t-attf-class="o_wprofile_cover_img #{'' if user.cover_image else 'o_wprofile_img_empty'}" t-attf-src="#{website.image_url(user, 'cover_image')}" alt="Cover Image"/>
+        <div class="banner-buttons">
+            <a href="#" class="o_wprofile_cover_edit btn btn-sm btn-dark" aria-label="Edit">
+                <i class="fa fa-pencil fa-1g float-sm-none float-md-start" title="Edit Cover"></i>
+            </a>
+            <a href="#" title="Clear" aria-label="Clear" class="btn btn-sm btn-dark o_wprofile_cover_clear">
+                <i class="fa fa-trash-o float-sm-none float-md-end"></i>
+            </a>
+        </div>
+        <div class="profile-image">
+            <img class="o_wforum_avatar_img" t-att-src="website.image_url(user, 'avatar_128')" alt="Profile"/>
+        </div>
+        <div class="profile-buttons">
+            <a href="#" class="o_forum_profile_pic_edit btn btn-sm btn-dark" aria-label="Edit">
+                <i class="fa fa-pencil fa-1g float-sm-none float-md-start" title="Edit"></i>
+            </a>
+            <a href="#" title="Clear" aria-label="Clear" class="btn btn-sm btn-dark o_forum_profile_pic_clear">
+                <i class="fa fa-trash-o float-sm-none float-md-end"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="d-flex justify-content-between">
+        <label class="text-primary" for="user_website_published" t-if="user.id == uid"><span class="fw-bold">Public Profile</span></label>
+        <div t-if="user.id == uid">
+            <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" t-if="not user.website_published"/>
+            <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" checked="checked" t-if="user.website_published"/>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <input name="user_id" t-att-value="user.id" type="hidden"/>
+    <div class="mb-3 col-12">
+        <label class="text-primary mb-1 d-block" for="user_name"><span class="fw-bold">Name</span></label>
         <div>
-            <form t-attf-action="/profile/user/save" method="post" role="form" class="o_wprofile_editor_form js_website_submit_form row" enctype="multipart/form-data">
-                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                <input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
-                <input type="hidden" name="url_param" t-att-value="request.params.get('url_param')"/>
-                <div class="col-3">
-                    <div class="card o_card_people">
-                        <div class="card-body">
-                            <img class="o_wforum_avatar_img w-100 mb-3" t-att-src="website.image_url(user, 'avatar_128')"/>
-                            <div class="text-center">
-                                <a href="#" class="o_forum_profile_pic_edit btn btn-primary" aria-label="Edit">
-                                    <i class="fa fa-pencil fa-1g float-sm-none float-md-start" title="Edit"></i>
-                                </a>
-                                <a href="#" title="Clear" aria-label="Clear" class="btn border-primary o_forum_profile_pic_clear">
-                                    <i class="fa fa-trash-o float-sm-none float-md-end"></i>
-                                </a>
-                            </div>
-                            <div class="my-3 mb-0 pt-2 border-top">
-                                <label class="text-primary" for="user_website_published" t-if="user.id == uid"><span class="fw-bold">Public Profile</span></label>
-                                <div class=" mb-0 float-end" t-if="user.id == uid">
-                                    <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" t-if="not user.website_published"/>
-                                    <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" checked="checked" t-if="user.website_published"/>
-                                </div>
-                            </div>
-                        </div>
+            <input type="text" class="form-control" name="name" id="user_name" required="True" t-attf-value="#{user.name}"/>
+        </div>
+    </div>
+    <div t-if="email_required" class="col-12">
+        <div class="alert alert-danger alert-dismissable oe_email_required p-2" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            Please enter a valid email address in order to receive notifications from answers or comments.
+        </div>
+    </div>
+    <div class="mb-3 col-6">
+        <label class="mb-1 text-primary" for="user_website"><span class="fw-bold">Website</span></label>
+        <div>
+            <input type="text" class="form-control" name="website" id="user_website" t-attf-value="#{user.partner_id.website or ''}"/>
+        </div>
+    </div>
+    <div class="mb-3 col-6">
+        <label class="mb-1 text-primary" for="user_email"><span class="fw-bold">Email</span></label>
+        <div>
+            <input type="text" class="form-control" name="email" id="user_email" required="True" t-attf-value="#{user.partner_id.email}"/>
+        </div>
+    </div>
+    <div class="mb-3 col-6">
+        <label class="mb-1 text-primary" for="user_city"><span class="fw-bold">City</span></label>
+        <div>
+            <input type="text" class="form-control" name="city" id="user_city" t-attf-value="#{user.partner_id.city or ''}"/>
+        </div>
+    </div>
+    <div class="mb-3 col-6">
+        <label class="mb-1 text-primary"><span class="fw-bold">Country</span></label>
+        <div>
+            <select class="form-select" name="country">
+                <option value="">Country...</option>
+                <t t-foreach="countries or []" t-as="country">
+                    <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country_id.id"><t t-esc="country.name"/></option>
+                </t>
+             </select>
+        </div>
+    </div>
+    <div class="mb-3 col-12">
+        <label class="mb-1 text-primary" for="description"><span class="fw-bold">Biography</span></label>
+        <textarea name="description" style="min-height: 120px"
+            class="form-control o_wysiwyg_loader" placeholder="Write a few words about yourself..."><t t-out="user.partner_id.website_description"/></textarea>
+    </div>
+</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close</button>
+                        <button type="submit" class="btn btn-primary o_wprofile_submit_btn">Update</button>
                     </div>
                 </div>
-                <div class="col-9 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <input name="user_id" t-att-value="user.id" type="hidden"/>
-                                <div class="mb-3 col-12">
-                                    <label class="text-primary mb-1 d-block" for="user_name"><span class="fw-bold">Name</span></label>
-                                    <div>
-                                        <input type="text" class="form-control" name="name" id="user_name" required="True" t-attf-value="#{user.name}"/>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3 col-6">
-                                    <label class="mb-1 text-primary" for="user_website"><span class="fw-bold">Website</span></label>
-                                    <div>
-                                        <input type="text" class="form-control" name="website" id="user_website" t-attf-value="#{user.partner_id.website or ''}"/>
-                                    </div>
-                                </div>
-                                <div class="mb-3 col-6">
-                                    <div t-if="email_required" class="alert alert-danger alert-dismissable oe_email_required" role="alert">
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                        <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
-                                    </div>
-                                    <label class="mb-1 text-primary" for="user_email"><span class="fw-bold">Email</span></label>
-                                    <div>
-                                        <input type="text" class="form-control" name="email" id="user_email" required="True" t-attf-value="#{user.partner_id.email}"/>
-                                    </div>
-                                </div>
-                                <div class="mb-3 col-6">
-                                    <label class="mb-1 text-primary" for="user_city"><span class="fw-bold">City</span></label>
-                                    <div>
-                                        <input type="text" class="form-control" name="city" id="user_city" t-attf-value="#{user.partner_id.city or ''}"/>
-                                    </div>
-                                </div>
-                                <div class="mb-3 col-6">
-                                    <label class="mb-1 text-primary"><span class="fw-bold">Country</span></label>
-                                    <div>
-                                        <select class="form-select" name="country">
-                                            <option value="">Country...</option>
-                                            <t t-foreach="countries or []" t-as="country">
-                                                <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country_id.id"><t t-esc="country.name"/></option>
-                                            </t>
-                                         </select>
-                                    </div>
-                                </div>
-                                <div class="mb-3 col-12">
-                                    <label class="mb-1 text-primary" for="description"><span class="fw-bold">Biography</span></label>
-                                    <textarea name="description" id="description" style="min-height: 120px"
-                                        class="form-control o_wysiwyg_loader" placeholder="Write a few words about yourself..."><t t-out="user.partner_id.website_description"/></textarea>
-                                </div>
-                                <div class="col">
-                                    <button type="submit" class="btn btn-primary o_wprofile_submit_btn">Update</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </template>
 
@@ -186,7 +197,8 @@
                 <t t-set="view_user"><t t-esc="user.name"/></t>
             </t>
 
-            <div class="container pb-3 pb-md-0 pt-2 pt-md-5">
+            <div class="container pb-3 pb-md-0 pt-2 pt-md-5"
+                 t-attf-style="#{('background-image: url(' + website.image_url(user, 'cover_image') + '); background-repeat: no-repeat; background-size: cover;') if user.cover_image else ''}">
                 <div class="row">
                     <!-- ==== Header Left ==== -->
                     <div class="col-12 col-md-4 col-lg-3">
@@ -194,7 +206,7 @@
                             <div class="o_wprofile_pict d-inline-block mb-3 mb-md-0" t-attf-style="background-image: url(#{website.image_url(user, 'avatar_1024')});"/>
                             <a class="btn btn-primary d-inline-block d-md-none"
                                 t-if="request.env.user == user and user.karma != 0"
-                                t-attf-href="/profile/edit?url_param=#{edit_button_url_param}&amp;user_id=#{user.id}">
+                                data-bs-toggle="modal" data-bs-target="#o_wprofile_edit_profile_modal">
                                 <i class="fa fa-pencil me-1"/>EDIT
                             </a>
                         </div>
@@ -206,9 +218,11 @@
                             <h1 class="o_card_people_name">
                                 <span t-field="user.name"/><small t-if="user.karma == 0"> (not verified)</small>
                             </h1>
-                            <a class="btn btn-primary d-none d-md-inline-block" t-if="request.env.user == user and user.karma != 0 or request.env.user._is_admin()" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}&amp;user_id=#{user.id}">
+                            <a class="btn btn-primary d-none d-md-inline-block" t-if="request.env.user == user and user.karma != 0 or request.env.user._is_admin()"
+                                data-bs-toggle="modal" data-bs-target="#o_wprofile_edit_profile_modal">
                                 <i class="fa fa-pencil me-2"/>EDIT PROFILE
                             </a>
+                            <t t-call="website_profile.user_profile_edit_content"/>
                         </div>
 
                         <div class="d-flex flex-column justify-content-center flex-grow-1 mb-0 mb-md-5">

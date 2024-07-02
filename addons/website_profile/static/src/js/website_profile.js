@@ -42,8 +42,13 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
     selector: '.o_wprofile_editor_form',
     read_events: {
         'click .o_forum_profile_pic_edit': '_onEditProfilePicClick',
-        'change .o_forum_file_upload': '_onFileUploadChange',
+        'change .o_forum_file_upload': '_onProfileFileUploadChange',
         'click .o_forum_profile_pic_clear': '_onProfilePicClearClick',
+
+        'click .o_wprofile_cover_edit': '_onEditProfileCoverClick',
+        'change .o_wprofile_cover_file_upload': '_onCoverFileUploadChange',
+        'click .o_wprofile_cover_clear': '_onProfileCoverClearClick',
+
         'click .o_forum_profile_bio_edit': '_onProfileBioEditClick',
         'click .o_forum_profile_bio_cancel_edit': '_onProfileBioCancelEditClick',
     },
@@ -75,6 +80,17 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
 
         this._wysiwyg = await loadWysiwygFromTextarea(this, $textarea[0], options);
 
+        this.fileAvatarSelectors = {
+            clear: '.o_wprofile_clear_image',
+            fileInput: '.o_forum_file_upload',
+            image: '.o_wforum_avatar_img',
+        };
+        this.fileCoverSelectors = {
+            clear: '.o_wprofile_clear_image_cover',
+            fileInput: '.o_wprofile_cover_file_upload',
+            image: '.o_wprofile_cover_img',
+        };
+
         return Promise.all([def]);
     },
 
@@ -85,39 +101,94 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
     /**
      * @private
      * @param {Event} ev
+     * @param {string} fileInputSelector selector of the file input to trigger a click on.
      */
-    _onEditProfilePicClick: function (ev) {
+    _onEditImageClick(ev, fileInputSelector) {
         ev.preventDefault();
-        $(ev.currentTarget).closest('form').find('.o_forum_file_upload').trigger('click');
+        $(ev.currentTarget).closest('form').find(fileInputSelector).trigger('click');
     },
+
     /**
      * @private
      * @param {Event} ev
      */
-    _onFileUploadChange: function (ev) {
-        if (!ev.currentTarget.files.length) {
+    _onEditProfilePicClick: function (ev) {
+        this._onEditImageClick(ev, this.fileAvatarSelectors.fileInput);
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onEditProfileCoverClick: function (ev) {
+        this._onEditImageClick(ev, this.fileCoverSelectors.fileInput);
+    },
+
+    /**
+     * @private
+     * @param {EventTarget} target
+     * @param {string} imageSelector selector of the image to update
+     * @param {string} clearSelector selector of the form input controlling whether to remove or not the image
+     */
+    _onFileUploadChange: function (target, imageSelector, clearSelector) {
+        if (!target.files.length) {
             return;
         }
-        var $form = $(ev.currentTarget).closest('form');
+        var $form = $(target).closest('form');
         var reader = new window.FileReader();
-        reader.readAsDataURL(ev.currentTarget.files[0]);
+        reader.readAsDataURL(target.files[0]);
         reader.onload = function (ev) {
-            $form.find('.o_wforum_avatar_img').attr('src', ev.target.result);
+            const $img = $form.find(imageSelector);
+            $img.attr('src', ev.target.result);
+            $img.removeClass('o_wprofile_img_empty');
         };
-        $form.find('#forum_clear_image').remove();
+        $form.find(clearSelector).val('False');
     },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onProfileFileUploadChange: function (ev) {
+        this._onFileUploadChange(ev.currentTarget, this.fileAvatarSelectors.image, this.fileAvatarSelectors.clear);
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onCoverFileUploadChange: function (ev) {
+        this._onFileUploadChange(ev.currentTarget, this.fileCoverSelectors.image, this.fileCoverSelectors.clear);
+    },
+
+    /**
+     * @private
+     * @param {EventTarget} target
+     * @param {string} imageSelector selector of the image to update
+     * @param {string} clearSelector selector of the form input controlling whether to remove or not the image
+     */
+    _onClearImageClick: function (target, imageSelector, clearSelector) {
+        var $form = $(target).closest('form');
+        const $img = $form.find(imageSelector);
+        $img.attr('src', '/web/static/img/placeholder.png');
+        $img.addClass('o_wprofile_img_empty');
+        $form.find(clearSelector).val('True');
+    },
+
     /**
      * @private
      * @param {Event} ev
      */
     _onProfilePicClearClick: function (ev) {
-        var $form = $(ev.currentTarget).closest('form');
-        $form.find('.o_wforum_avatar_img').attr('src', '/web/static/img/placeholder.png');
-        $form.append($('<input/>', {
-            name: 'clear_image',
-            id: 'forum_clear_image',
-            type: 'hidden',
-        }));
+        this._onClearImageClick(ev.currentTarget, this.fileAvatarSelectors.image, this.fileAvatarSelectors.clear);
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onProfileCoverClearClick: function (ev) {
+        this._onClearImageClick(ev.currentTarget, this.fileCoverSelectors.image, this.fileCoverSelectors.clear);
     },
 
     /**
