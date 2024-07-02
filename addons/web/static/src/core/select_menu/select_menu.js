@@ -109,7 +109,9 @@ export class SelectMenu extends Component {
         this.selectedChoice = this.getSelectedChoice(this.props);
         onWillUpdateProps((nextProps) => {
             if (this.props.value !== nextProps.value) {
-                nextProps.choices = this.state.choices;
+                if (this.props.choiceFetchFunction) {
+                    nextProps.choices = this.state.choices;
+                }
                 this.selectedChoice = this.getSelectedChoice(nextProps);
             }
         });
