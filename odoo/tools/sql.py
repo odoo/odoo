@@ -133,7 +133,7 @@ class SQL:
         return bool(self.__code)
 
     def __eq__(self, other):
-        return self.code == other.code and self.params == other.params
+        return isinstance(other, SQL) and self.code == other.code and self.params == other.params
 
     def __iter__(self):
         """ Yields ``self.code`` and ``self.params``. This was introduced for
