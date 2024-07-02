@@ -563,7 +563,7 @@ var KanbanActivity = BasicActivity.extend({
         this._super.apply(this, arguments);
         var selection = {};
         _.each(record.fields.activity_state.selection, function (value) {
-            selection[value[0]] = value[1];
+            selection[value[0]] = _t(value[1]);
         });
         this.selection = selection;
         this._setState(record);
