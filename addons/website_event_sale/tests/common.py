@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 
-from odoo.fields import Datetime
+from odoo.fields import Command, Datetime
 from odoo.tests.common import TransactionCase
 
 
@@ -63,16 +63,26 @@ class TestWebsiteEventSaleCommon(TransactionCase):
         })
 
         def create_pricelist(currency, name, policy):
+            if policy == 'with_discount':
+                return cls.env['product.pricelist'].create({
+                    'currency_id': currency.id,
+                    'item_ids': [(5, 0, 0), (0, 0, {
+                        'applied_on': '3_global',
+                        'compute_price': 'formula',
+                        'price_discount': 10,
+                    })],
+                    'name': name,
+                    'website_ids': [Command.link(cls.current_website.id)],
+                })
             return cls.env['product.pricelist'].create({
                 'currency_id': currency.id,
-                'discount_policy': policy,
                 'item_ids': [(5, 0, 0), (0, 0, {
                     'applied_on': '3_global',
                     'compute_price': 'percentage',
                     'percent_price': 10,
                 })],
                 'name': name,
-                'selectable': True,
+                'website_ids': [Command.link(cls.current_website.id)],
             })
 
         cls.pricelist_with_discount = create_pricelist(currency=cls.env.company.currency_id, name='EUR With Discount Included', policy='with_discount')

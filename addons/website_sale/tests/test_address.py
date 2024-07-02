@@ -171,7 +171,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
         so = self._create_so(partner_id=self.env.user.partner_id.id)
         eur_pl = self.env['product.pricelist'].create({
             'name': 'EUR_test',
-            'website_id': self.website.id,
+            'website_ids': [Command.link(self.website.id)],
             'code': 'EUR_test',
         })
 
@@ -191,7 +191,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
         })
         pl_with_code = self.env['product.pricelist'].create({
             'name': 'EUR_test',
-            'website_id': self.website.id,
+            'website_ids': [Command.link(self.website.id)],
             'code': 'EUR_test',
         })
         self.website.user_id.partner_id.property_product_pricelist = self.pricelist
@@ -576,7 +576,6 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
 
     def test_11_payment_term_when_address_change(self):
         """Make sure the expected payment terms are set on ecommerce orders"""
-        self._setUp_multicompany_env()
         product_id = self.env['product.product'].create({
             'name': 'Product A',
             'list_price': 100,
@@ -584,16 +583,16 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             'sale_ok': True,
         }).id
 
-        env = api.Environment(self.env.cr, self.portal_user.id, {})
+        env = api.Environment(self.env.cr, self.user_portal.id, {})
         with MockRequest(env, website=self.website.with_env(env).with_context(website_id=self.website.id)) as req:
             req.httprequest.method = "POST"
 
             self.WebsiteSaleController.cart_update(product_id)
-            so = self.portal_user.sale_order_ids[0]
+            so = self.user_portal.sale_order_ids[0]
             self.assertTrue(so.payment_term_id, "A payment term should be set by default on the sale order")
 
-            self.default_address_values['partner_id'] = self.portal_partner.id
-            self.default_address_values['name'] = self.portal_partner.name
+            self.default_address_values['partner_id'] = self.user_portal.partner_id.id
+            self.default_address_values['name'] = self.user_portal.partner_id.name
             self.WebsiteSaleController.address(**self.default_address_values)
             self.assertTrue(so.payment_term_id, "A payment term should still be set on the sale order")
 

@@ -126,7 +126,6 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
 
         first_pricelist = self.env['product.pricelist'].create({
             'name': 'First pricelist',
-            'discount_policy': 'with_discount',
             'item_ids': [(0, 0, {
                 'compute_price': 'percentage',
                 'base': 'list_price',

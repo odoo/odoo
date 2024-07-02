@@ -20,7 +20,7 @@
             <tree string="Products Price List" sample="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="discount_policy"/>
+                <field name="country_group_ids" widget="many2many_tags"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
@@ -45,7 +45,6 @@
                                     <i class="fa fa-money" role="img" aria-label="Currency" title="Currency"></i> <field name="currency_id"/>
                                 </strong>
                             </div>
-                            <field name="discount_policy"/>
                         </div>
                     </t>
                 </templates>
@@ -69,35 +68,18 @@
                             <field name="active" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
+                        <group>
+                            <field name="country_group_ids" widget="many2many_tags"/>
+                        </group>
                     </group>
                     <notebook>
                         <page name="pricelist_rules" string="Price Rules">
                             <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}">
-                                <tree groups="!product.group_sale_pricelist" string="Pricelist Rules" editable="bottom">
-                                    <field name="product_tmpl_id" string="Products" required="1"/>
-                                    <field name="product_id" string="Variants"
-                                    groups="product.group_product_variant"
-                                    domain="[('product_tmpl_id', '=', product_tmpl_id)]"
-                                    options="{'no_create':1}"/>
-                                    <field name="min_quantity"/>
-                                    <field name="fixed_price" string="Price"/>
-                                    <field name="currency_id" column_invisible="True"/>
-                                    <field name="pricelist_id" column_invisible="True"/>
-                                    <!-- Pricelist ID is here only for related fields to be correctly computed -->
-                                    <field name="date_start"/>
-                                    <field name="date_end"/>
-                                    <field name="base" column_invisible="True"/>
-                                    <field name="applied_on" column_invisible="True"/>
-                                    <field name="company_id" column_invisible="True"/>
-                                </tree>
-                                <!-- When in advanced pricelist mode : pricelist rules
-                                    Should open in a form view and not be editable inline anymore.
-                                -->
-                                <tree groups="product.group_sale_pricelist" string="Pricelist Rules">
+                                <tree string="Pricelist Rules">
                                     <field name="product_tmpl_id" column_invisible="True"/>
-                                    <field name="name" string="Applicable On"/>
-                                    <field name="min_quantity"/>
+                                    <field name="name" string="Apply on"/>
                                     <field name="price" string="Price"/>
+                                    <field name="min_quantity"/>
                                     <field name="date_start"/>
                                     <field name="date_end"/>
                                     <field name="base" column_invisible="True"/>
@@ -106,16 +88,6 @@
                                     <field name="compute_price" column_invisible="True"/>
                                 </tree>
                             </field>
-                        </page>
-                        <page name="pricelist_config" string="Configuration">
-                            <group>
-                                <group name="pricelist_availability" string="Availability">
-                                    <field name="country_group_ids" widget="many2many_tags"/>
-                                </group>
-                                <group name="pricelist_discounts" string="Discounts">
-                                    <field name="discount_policy" widget="radio"/>
-                                </group>
-                            </group>
                         </page>
                     </notebook>
                 </sheet>

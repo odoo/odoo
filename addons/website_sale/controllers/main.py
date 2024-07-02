@@ -376,7 +376,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # Try to fetch geoip based fpos or fallback on partner one
         fiscal_position_sudo = website.fiscal_position_id.sudo()
-        products_prices = lazy(lambda: products._get_sales_prices(pricelist, fiscal_position_sudo))
+        products_prices = lazy(lambda: products._get_sales_prices(website))
 
         attributes_values = request.env['product.attribute.value'].browse(attrib_set)
         sorted_attributes_values = attributes_values.sorted('sequence')
@@ -651,7 +651,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def pricelist_change(self, pricelist, **post):
         website = request.env['website'].get_current_website()
         redirect_url = request.httprequest.referrer
-        if (pricelist.selectable or pricelist == request.env.user.partner_id.property_product_pricelist) \
+        if (pricelist._is_selectable() or pricelist == request.env.user.partner_id.property_product_pricelist) \
                 and website.is_pricelist_available(pricelist.id):
             if redirect_url and request.website.is_view_active('website_sale.filter_products_price'):
                 decoded_url = url_parse(redirect_url)

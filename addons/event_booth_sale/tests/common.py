@@ -37,7 +37,6 @@ class TestEventBoothSaleCommon(TestEventBoothCommon):
         })
         cls.test_pricelist_with_discount_included = cls.env['product.pricelist'].sudo().create({
             'name': 'Test Pricelist',
-            'discount_policy': 'with_discount',
             'item_ids': [
                 Command.create({
                     'compute_price': 'percentage',

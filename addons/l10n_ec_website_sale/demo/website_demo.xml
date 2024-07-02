@@ -11,7 +11,7 @@
                                                              ('currency_id', '=', ref('base.USD')),
                                                              ('company_id', '=', ref('base.demo_company_ec'))
                                                             ]).id"/>
-        <value model="website" eval="{'sequence': 1, 'website_id': ref('l10n_ec_website_sale.default_website_ec')}"/>
+        <value model="website" eval="{'sequence': 1, 'website_ids': [Command.link(ref('l10n_ec_website_sale.default_website_ec'))]}"/>
     </function>
 
 </odoo>

@@ -271,8 +271,7 @@
 
         <record id="list_christmas" model="product.pricelist">
             <field name="name">Christmas</field>
-            <field name="selectable" eval="False" />
-            <field name="website_id" ref="website.default_website" />
+            <field name="website_ids" eval="[Command.link(ref('website.default_website'))]"/>
             <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
             <field name="sequence">20</field>
         </record>
@@ -285,8 +284,7 @@
 
         <record id="list_benelux" model="product.pricelist">
             <field name="name">Benelux</field>
-            <field name="selectable" eval="False" />
-            <field name="website_id" ref="website.default_website" />
+            <field name="website_ids" eval="[Command.link(ref('website.default_website'))]"/>
             <field name="country_group_ids" eval="[(6,0,[ref('benelux')])]" />
             <field name="sequence">2</field>
         </record>
@@ -301,8 +299,7 @@
 
         <record id="list_europe" model="product.pricelist">
             <field name="name">EUR</field>
-            <field name="selectable" eval="True" />
-            <field name="website_id" ref="website.default_website" />
+            <field name="website_ids" eval="[Command.link(ref('website.default_website'))]"/>
             <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
             <field name="sequence">3</field>
             <field name="currency_id" ref="base.EUR"/>

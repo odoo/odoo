@@ -217,10 +217,6 @@
                             <setting id="multiple_prices_setting" string="Flexible Pricelists" help="Set multiple prices per product, automated discounts, etc." documentation="/applications/sales/point_of_sale/pricing/pricelists.html">
                                 <field name="pos_use_pricelist" readonly="pos_has_active_session"/>
                                 <div class="content-group" invisible="not pos_use_pricelist">
-                                    <div class="mt16">
-                                        <field name="group_sale_pricelist" invisible="1"/>
-                                        <field name="product_pricelist_setting" widget="radio" class="o_light_label"/>
-                                    </div>
                                     <div class="row mt16">
                                         <label string="Available" for="pos_available_pricelist_ids" class="col-lg-3 o_light_label"/>
                                         <field name="pos_available_pricelist_ids" widget="many2many_tags" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]" readonly="pos_has_active_session"/>

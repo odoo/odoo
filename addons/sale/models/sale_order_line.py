@@ -545,10 +545,7 @@ class SaleOrderLine(models.Model):
 
         pricelist_price = self._get_pricelist_price()
 
-        if self.order_id.pricelist_id.discount_policy == 'with_discount':
-            return pricelist_price
-
-        if not self.pricelist_item_id:
+        if not self.pricelist_item_id or not self.pricelist_item_id._is_percentage():
             # No pricelist rule found => no discount from pricelist
             return pricelist_price
 
@@ -622,7 +619,7 @@ class SaleOrderLine(models.Model):
 
             if not (
                 line.order_id.pricelist_id
-                and line.order_id.pricelist_id.discount_policy == 'without_discount'
+                and line.pricelist_item_id._is_percentage()
             ):
                 continue
 

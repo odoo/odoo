@@ -92,6 +92,11 @@ class ResConfigSettings(models.TransientModel):
     enabled_extra_checkout_step = fields.Boolean(string="Extra Step During Checkout")
     enabled_buy_now_button = fields.Boolean(string="Buy Now")
 
+    selectable_pricelist_ids = fields.Many2many(
+        related='website_id.selectable_pricelist_ids',
+        readonly=False,
+    )
+
     #=== COMPUTE METHODS ===#
 
     @api.depends('website_id.account_on_checkout')

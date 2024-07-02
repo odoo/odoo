@@ -12,7 +12,7 @@
     </function>
     <function model="product.pricelist" name="write">
         <value model="product.pricelist" eval="obj().search([('currency_id', '=', ref('base.ARS')), ('company_id', '=', ref('base.company_ri'))]).id"/>
-        <value model="website" eval="{'sequence': 1, 'website_id': ref('l10n_ar_website_sale.default_website_ri')}"/>
+        <value model="website" eval="{'sequence': 1, 'website_ids': [Command.link(ref('l10n_ar_website_sale.default_website_ri'))]}"/>
     </function>
     <function model="product.product" name="write">
         <value model="product.product" eval="obj().search([('taxes_id', '=', False)]).ids"/>

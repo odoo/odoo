@@ -144,7 +144,7 @@ class SaleOrder(models.Model):
         super()._recompute_prices()
         # Special case: we want to overwrite the existing discount on _recompute_prices call
         # i.e. to make sure the discount is correctly reset
-        # if pricelist discount_policy is different than when the price was first computed.
+        # if pricelist rule is different than when the price was first computed.
         self.sale_order_option_ids.discount = 0.0
         self.sale_order_option_ids._compute_price_unit()
         self.sale_order_option_ids._compute_discount()

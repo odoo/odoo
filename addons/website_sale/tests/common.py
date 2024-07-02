@@ -46,7 +46,7 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
             cls.product
             + cls.service_product
         ).website_published = True
-        cls.pricelist.website_id = cls.website
+        cls.pricelist.website_ids = [(6, 0, [cls.website.id])]
 
         country_be_id = cls.env['ir.model.data']._xmlid_to_res_id('base.be')
         country_us_id = cls.env['ir.model.data']._xmlid_to_res_id('base.us')
