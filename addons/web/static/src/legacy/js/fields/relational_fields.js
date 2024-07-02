@@ -111,7 +111,6 @@ var FieldMany2One = AbstractField.extend({
     init: function (parent, name, record, options) {
         options = options || {};
         this._super.apply(this, arguments);
-        this.limit = 7;
         this.orderer = new concurrency.DropMisordered();
 
         // should normally be set, except in standalone M20
@@ -121,8 +120,10 @@ var FieldMany2One = AbstractField.extend({
 
         this.nodeOptions = _.defaults(this.nodeOptions, {
             quick_create: true,
+            limit: 7,
         });
         this.noOpen = 'noOpen' in options ? options.noOpen : this.nodeOptions.no_open;
+        this.limit = 'limit' in options ? options.limit : this.nodeOptions.limit;
         this.m2o_value = this._formatValue(this.value);
         // 'recordParams' is a dict of params used when calling functions
         // 'getDomain' and 'getContext' on this.record
