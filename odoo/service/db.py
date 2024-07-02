@@ -130,6 +130,7 @@ def _create_empty_database(name):
                 # change in the lifetime of a database. If they do change, all
                 # indexes created with this function become corrupted!
                 cr.execute("ALTER FUNCTION unaccent(text) IMMUTABLE")
+            cr.execute("CREATE EXTENSION vector")
     except psycopg2.Error as e:
         _logger.warning("Unable to create PostgreSQL extensions : %s", e)
 
