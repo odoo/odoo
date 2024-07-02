@@ -72,6 +72,7 @@ ListRenderer.include({
                 }
                 this.creates.push({
                     context: child.attrs.context,
+                    hotkey: child.attrs.hotkey,
                     string: child.attrs.string,
                 });
             });
@@ -1246,6 +1247,7 @@ ListRenderer.include({
                 _.each(this.creates, function (create, index) {
                     var $a = $('<a href="#" role="button">')
                         .attr('data-context', create.context)
+                        .attr('data-hotkey', create.hotkey)
                         .text(create.string);
                     if (index > 0) {
                         $a.addClass('ml16');
