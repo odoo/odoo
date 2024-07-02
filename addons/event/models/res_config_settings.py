@@ -18,7 +18,8 @@ class ResConfigSettings(models.TransientModel):
                                              readonly=False, store=True, config_parameter='google_maps.signed_static_api_key')
     google_maps_static_api_secret = fields.Char("Google Maps API secret", compute="_compute_maps_static_api_secret",
                                                 readonly=False, store=True, config_parameter='google_maps.signed_static_api_secret')
-    module_event_sale = fields.Boolean("Tickets")
+    module_event_sale = fields.Boolean("Tickets with Sale")
+    module_pos_event = fields.Boolean("Tickets with PoS")
     module_website_event_meet = fields.Boolean("Discussion Rooms")
     module_website_event_track = fields.Boolean("Tracks and Agenda")
     module_website_event_track_live = fields.Boolean("Live Mode")
