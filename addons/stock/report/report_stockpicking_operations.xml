@@ -8,10 +8,10 @@
                     <t t-call="web.external_layout">
                         <t t-set="address" t-value="None"/>
                         <div class="page o_report_stockpicking_operations">
-                            <div class="row">
+                            <div class="row mb-4">
                                 <div class="col-6" name="div_outgoing_address">
                                     <div t-if="o.should_print_delivery_address()">
-                                        <span><strong>Delivery Address:</strong></span>
+                                        <strong>Delivery Address</strong>
                                         <div t-field="o.move_ids[0].partner_id"
                                             t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'>
                                                 <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
@@ -21,7 +21,7 @@
                                         </div>
                                     </div>
                                     <div t-elif="o.picking_type_id.code != 'internal' and o.picking_type_id.warehouse_id.partner_id">
-                                        <span><strong>Warehouse Address:</strong></span>
+                                        <strong>Warehouse Address</strong>
                                         <div t-field="o.picking_type_id.warehouse_id.partner_id"
                                             t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True, "phone_icons": True}'>
                                                 <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
@@ -35,15 +35,15 @@
                                     <t t-set="show_partner" t-value="False" />
                                     <t t-set="show_full_address" t-value="False" />
                                     <div t-if="o.picking_type_id.code=='incoming' and o.partner_id">
-                                        <span><strong>Vendor:</strong></span>
+                                        <strong>Vendor Address</strong>
                                         <t t-set="show_partner" t-value="True" />
                                     </div>
                                     <div t-elif="o.picking_type_id.code=='internal' and o.partner_id">
-                                        <span><strong>Warehouse:</strong></span>
+                                        <strong>Warehouse Address</strong>
                                         <t t-set="show_partner" t-value="True" />
                                     </div>
                                     <div t-elif="o.picking_type_id.code=='outgoing' and o.partner_id and o.partner_id != o.partner_id.commercial_partner_id">
-                                        <span><strong>Customer Address:</strong></span>
+                                        <strong>Customer Address</strong>
                                         <t t-set="show_partner" t-value="True" />
                                         <t t-set="show_full_address" t-value="True" />
                                     </div>
@@ -72,21 +72,21 @@
                                 </div>
                             </div>
                             <div class="oe_structure"></div>
-                            <div class="row">
-                                <div t-if="o.origin" class="col-auto" name="div_origin">
-                                    <strong>Order:</strong>
-                                    <p t-field="o.origin">S0001</p>
+                            <div id="informations" class="row mb-4">
+                                <div t-if="o.origin" class="col" name="div_origin">
+                                    <strong>Order</strong>
+                                    <div t-field="o.origin">S0001</div>
                                 </div>
-                                <div class="col-auto" name="div_state">
-                                    <strong>Status:</strong>
-                                    <p t-field="o.state">Draft</p>
+                                <div class="col" name="div_state">
+                                    <strong>Status</strong>
+                                    <div t-field="o.state">Draft</div>
                                 </div>
-                                <div t-if="o.scheduled_date" class="col-auto" name="div_sched_date">
-                                    <strong>Scheduled Date:</strong>
-                                    <p t-field="o.scheduled_date">2023-09-24</p>
+                                <div t-if="o.scheduled_date" class="col" name="div_sched_date">
+                                    <strong>Scheduled Date</strong>
+                                    <div t-field="o.scheduled_date">2023-09-24</div>
                                 </div>
                             </div>
-                            <table class="table table-sm mt16" t-if="o.move_line_ids and o.move_ids_without_package">
+                            <table class="table table-borderless mt16" t-if="o.move_line_ids and o.move_ids_without_package">
                                 <t t-set="has_barcode" t-value="any(move_line.product_id and move_line.product_id.sudo().barcode or move_line.package_id for move_line in o.move_line_ids)"/>
                                 <t t-set="has_serial_number" t-value="any(move_line.lot_id or move_line.lot_name for move_line in o.move_line_ids)" groups="stock.group_production_lot"/>
                                 <thead>
@@ -118,7 +118,7 @@
                                             <span t-field="ml.product_id.display_name">Customizable Desk</span><br/>
                                             <span t-if="ml.product_id.description_picking" t-field="ml.product_id.description_picking"></span>
                                         </td>
-                                        <td align="right">
+                                        <td class="text-end">
                                             <span t-field="ml.quantity">3.00</span>
                                             <span t-field="ml.product_uom_id" groups="uom.group_uom">units</span>
                                             <span t-if="ml.move_id.product_packaging_id">
@@ -130,13 +130,13 @@
                                                 </span>
                                             </span>
                                         </td>
-                                        <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
+                                        <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations" class="text-end">
                                             <span t-esc="ml.location_id.display_name">WH/Stock</span>
                                                 <t t-if="ml.package_id">
                                                     <span t-field="ml.package_id">Package A</span>
                                                 </t>
                                         </td>
-                                        <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                        <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations" class="text-end">
                                             <div>
                                                 <span t-field="ml.location_dest_id">WH/Outgoing</span>
                                                 <t t-if="ml.result_package_id">
@@ -167,7 +167,7 @@
                                   </tbody>
                             </table>
                             <div t-if="not (o.package_level_ids and o.picking_type_entire_packs and o.state in ['assigned', 'done'])" class="oe_structure"></div>
-                            <table t-else="" class="table table-sm">
+                            <table t-else="" class="table table-borderless">
                                 <thead>
                                     <tr>
                                         <th name="th_package">Package</th>

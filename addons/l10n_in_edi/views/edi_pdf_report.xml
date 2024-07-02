@@ -3,10 +3,10 @@
     <template id="l10n_in_einvoice_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
         <xpath expr="//div[@id='informations']" position="inside">
             <t t-set="l10n_in_einvoice_json" t-value="o._get_l10n_in_edi_response_json()"/>
-            <div class="col-auto col-3 mw-100 mb-2" t-if="l10n_in_einvoice_json" name="ack_no">
-                <strong>Acknowledgement:</strong>
-                <p class="m-0" t-out="l10n_in_einvoice_json['AckNo']"/>
-                <p t-out="l10n_in_einvoice_json['AckDt']"/>
+            <div class="col" t-if="l10n_in_einvoice_json" name="ack_no">
+                <strong>Acknowledgement</strong>
+                <div t-out="l10n_in_einvoice_json['AckNo']"/>
+                <div t-out="l10n_in_einvoice_json['AckDt']"/>
             </div>
         </xpath>
         <xpath expr="//div[@id='right-elements']" position="after">

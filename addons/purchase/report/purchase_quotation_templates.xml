@@ -17,10 +17,11 @@
         </t>
         <div class="page">
             <div class="oe_structure"/>
+            <t t-set="layout_document_title">
+                <span>Request for Quotation <span t-field="o.name"/></span>
+            </t>
 
-            <h2 class="mt-4">Request for Quotation <span t-field="o.name"/></h2>
-
-            <table class="table table-sm mt-4">
+            <table class="table table-borderless">
                 <thead style="display: table-row-group">
                     <tr>
                         <th name="th_description"><strong>Description</strong></th>
@@ -30,7 +31,7 @@
                 </thead>
                 <tbody>
                     <t t-foreach="o.order_line" t-as="order_line">
-                        <tr t-att-class="'bg-200 fw-bold o_line_section' if order_line.display_type == 'line_section' else 'fst-italic o_line_note' if order_line.display_type == 'line_note' else ''">
+                        <tr t-att-class="'fw-bold o_line_section' if order_line.display_type == 'line_section' else 'fst-italic o_line_note' if order_line.display_type == 'line_note' else ''">
                             <t t-if="not order_line.display_type">
                                 <td id="product">
                                     <span t-field="order_line.name"/>

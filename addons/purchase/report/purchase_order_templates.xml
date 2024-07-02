@@ -9,7 +9,7 @@
         </t>
         <t t-if="o.dest_address_id">
             <t t-set="information_block">
-                <strong>Shipping address:</strong>
+                <strong>Shipping address</strong>
                 <div t-if="o.dest_address_id">
                     <div t-field="o.dest_address_id"
                         t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}' name="purchase_shipping_address"/>
@@ -21,41 +21,41 @@
             <div class="oe_structure"/>
 
             <div class="mt-4">
-                <h2 t-if="o.state in ['draft', 'sent', 'to approve']">Request for Quotation #<span t-field="o.name"/></h2>
-                <h2 t-if="o.state in ['purchase', 'done']">Purchase Order #<span t-field="o.name"/></h2>
-                <h2 t-if="o.state == 'cancel'">Cancelled Purchase Order #<span t-field="o.name"/></h2>
+                <t t-set="layout_document_title">
+                    <t t-if="o.state in ['draft', 'sent', 'to approve']">Request for Quotation #<span t-field="o.name"/></t>
+                    <t t-if="o.state in ['purchase', 'done']">Purchase Order #<span t-field="o.name"/></t>
+                    <t t-if="o.state == 'cancel'">Cancelled Purchase Order #<span t-field="o.name"/></t>
+                </t>
             </div>
 
-            <div id="informations" class="row mt-4 mb32">
-                <div t-if="o.user_id" class="col-3 bm-2">
-                    <strong>Purchase Representative:</strong>
-                    <p t-field="o.user_id" class="m-0"/>
+            <div id="informations" class="row mb-4">
+                <div t-if="o.user_id" class="col">
+                    <strong>Purchase Representative</strong>
+                    <div t-field="o.user_id"/>
                 </div>
-                <div t-if="o.partner_ref" class="col-3 bm-2">
-                    <strong>Your Order Reference:</strong>
-                    <p t-field="o.partner_ref" class="m-0"/>
+                <div t-if="o.partner_ref" class="col">
+                    <strong>Your Order Reference</strong>
+                    <div t-field="o.partner_ref"/>
                 </div>
-                <div t-if="o.state in ['purchase','done'] and o.date_approve" class="col-3 bm-2">
-                    <strong>Order Date:</strong>
-                    <p t-field="o.date_approve" class="m-0"/>
+                <div t-if="o.state in ['purchase','done'] and o.date_approve" class="col">
+                    <strong>Order Date</strong>
+                    <div t-field="o.date_approve"/>
                 </div>
-                <div t-elif="o.date_order" class="col-3 bm-2">
-                    <strong>Order Deadline:</strong>
-                    <p t-field="o.date_order" class="m-0"/>
+                <div t-elif="o.date_order" class="col">
+                    <strong>Order Deadline</strong>
+                    <div t-field="o.date_order"/>
                 </div>
             </div>
 
-            <table class="table table-sm o_main_table table-borderless mt-4">
-                <thead style="display: table-row-group">
+            <table class="o_has_total_table table o_main_table table-borderless">
+                <thead>
                     <tr>
-                        <th name="th_description"><strong>Description</strong></th>
-                        <th name="th_taxes"><strong>Taxes</strong></th>
-                        <th name="th_date_req" class="text-center"><strong>Date Req.</strong></th>
-                        <th name="th_quantity" class="text-end"><strong>Qty</strong></th>
-                        <th name="th_price_unit" class="text-end"><strong>Unit Price</strong></th>
-                        <th name="th_subtotal" class="text-end">
-                            <strong>Amount</strong>
-                        </th>
+                        <th name="th_description" class="text-start">Description</th>
+                        <th name="th_taxes">Taxes</th>
+                        <th name="th_date_req" class="text-center">Date Req.</th>
+                        <th name="th_quantity" class="text-end">Qty</th>
+                        <th name="th_price_unit" class="text-end">Unit Price</th>
+                        <th name="th_subtotal" class="text-end">Amount</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,7 +63,7 @@
                     <t t-foreach="o.order_line" t-as="line">
                         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
 
-                        <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
+                        <tr t-att-class="'fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type">
                                 <td id="product">
                                     <span t-field="line.name"/>
@@ -118,9 +118,9 @@
                 </tbody>
             </table>
 
-            <div id="total" class="row justify-content-end">
+            <div id="total" class="row justify-content-end mt-n3">
                 <div class="col-4">
-                    <table class="table table-sm table-borderless">
+                    <table class="o_total_table table table-borderless">
                         <t t-set="tax_totals" t-value="o.tax_totals"/>
                         <t t-call="purchase.document_tax_totals"/>
                     </table>

@@ -10,7 +10,7 @@
                         <div class="col-6">
                             <t t-set="information_block">
                                 <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
-                                    <strong>Shipping Address:</strong>
+                                    <strong>Shipping Address</strong>
                                     <div t-field="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                                 </div>
                             </t>
@@ -48,9 +48,9 @@
                         </div>
                     </t>
                 </div>
-                <div class="mt-5 clearfix">
+                <div class="clearfix">
                     <div class="page mb-4">
-                        <h2>
+                        <t t-set="layout_document_title">
                             <span t-if="not proforma"></span>
                             <span t-else="">PROFORMA</span>
                             <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">Invoice</span>
@@ -62,58 +62,58 @@
                             <span t-elif="o.move_type == 'in_refund'">Vendor Credit Note</span>
                             <span t-elif="o.move_type == 'in_invoice'">Vendor Bill</span>
                             <span t-if="o.name != '/'" t-field="o.name">INV/2023/0001</span>
-                        </h2>
+                        </t>
                         <div class="oe_structure"></div>
-                        <div id="informations" class="row mt-3 mb-1">
-                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.invoice_date" name="invoice_date">
-                                <t t-if="o.move_type == 'out_invoice'"><strong>Invoice Date:</strong></t>
-                                <t t-elif="o.move_type == 'out_refund'"><strong>Credit Note Date:</strong></t>
-                                <t t-elif="o.move_type == 'out_receipt'"><strong>Receipt Date:</strong></t>
-                                <t t-else=""><strong>Date:</strong></t><br/>
-                                <span t-field="o.invoice_date">2023-09-12</span>
+                        <div id="informations" class="row mb-4">
+                            <div class="col" t-if="o.invoice_date" name="invoice_date">
+                                <t t-if="o.move_type == 'out_invoice'"><strong>Invoice Date</strong></t>
+                                <t t-elif="o.move_type == 'out_refund'"><strong>Credit Note Date</strong></t>
+                                <t t-elif="o.move_type == 'out_receipt'"><strong>Receipt Date</strong></t>
+                                <t t-else=""><strong>Date</strong></t>
+                                <div t-field="o.invoice_date">2023-09-12</div>
                             </div>
-                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'" name="due_date">
-                                <strong>Due Date:</strong><br/>
-                                <span t-field="o.invoice_date_due">2023-10-31</span>
+                            <div class="col" t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'" name="due_date">
+                                <strong>Due Date</strong>
+                                <div t-field="o.invoice_date_due">2023-10-31</div>
                             </div>
-                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.delivery_date" name="delivery_date">
-                                <strong>Delivery Date:</strong><br/>
-                                <span t-field="o.delivery_date">2023-09-25</span>
+                            <div class="col" t-if="o.delivery_date" name="delivery_date">
+                                <strong>Delivery Date</strong>
+                                <div t-field="o.delivery_date">2023-09-25</div>
                             </div>
-                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.invoice_origin" name="origin">
-                                <strong>Source:</strong><br/>
-                                <span t-field="o.invoice_origin">SO123</span>
+                            <div class="col" t-if="o.invoice_origin" name="origin">
+                                <strong>Source</strong>
+                                <div t-field="o.invoice_origin">SO123</div>
                             </div>
-                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.partner_id.ref" name="customer_code">
-                                <strong>Customer Code:</strong><br/>
-                                <span t-field="o.partner_id.ref"/>
+                            <div class="col" t-if="o.partner_id.ref" name="customer_code">
+                                <strong>Customer Code</strong>
+                                <div t-field="o.partner_id.ref"/>
                             </div>
-                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.ref" name="reference">
-                                <strong>Reference:</strong><br/>
-                                <span t-field="o.ref">INV/2023/00001</span>
+                            <div class="col" t-if="o.ref" name="reference">
+                                <strong>Reference</strong>
+                                <div t-field="o.ref">INV/2023/00001</div>
                             </div>
-                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.invoice_incoterm_id" name="incoterm_id">
-                                <strong>Incoterm:</strong><br/>
-                                <p t-if="o.incoterm_location">
+                            <div class="col" t-if="o.invoice_incoterm_id" name="incoterm_id">
+                                <strong>Incoterm</strong>
+                                <div t-if="o.incoterm_location">
                                     <span t-field="o.invoice_incoterm_id.code"/> <br/>
                                     <span t-field="o.incoterm_location"/>
-                                </p>
-                                <span t-else="" t-field="o.invoice_incoterm_id.code" class="m-0"/>
+                                </div>
+                                <div t-else="" t-field="o.invoice_incoterm_id.code" class="m-0"/>
                             </div>
                         </div>
 
                         <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
                         <div class="oe_structure"></div>
-                        <table class="table table-sm o_main_table table-borderless" name="invoice_line_table">
+                        <table class="o_has_total_table table o_main_table table-borderless" name="invoice_line_table">
                             <thead>
                                 <tr>
                                     <th name="th_description" class="text-start"><span>Description</span></th>
                                     <th name="th_quantity" class="text-end"><span>Quantity</span></th>
-                                    <th name="th_priceunit" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Unit Price</span></th>
+                                    <th name="th_priceunit" t-attf-class="text-end text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Unit Price</span></th>
                                     <th name="th_discount" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                         <span>Disc.%</span>
                                     </th>
-                                    <th name="th_taxes" t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Taxes</span></th>
+                                    <th name="th_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Taxes</span></th>
                                     <th name="th_subtotal" class="text-end">
                                         <span>Amount</span>
                                     </th>
@@ -128,14 +128,14 @@
                                     <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
                                     <t t-set="current_total" t-value="current_total + line.price_total"/>
 
-                                    <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
+                                    <tr t-att-class="'fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                         <t t-if="line.display_type == 'product'" name="account_invoice_line_accountable">
                                             <td name="account_invoice_line_name">
                                                 <span t-if="line.product_id.name and line.product_id.default_code">[<t t-out="line.product_id.default_code"/>] </span>
                                                 <span t-if="line.product_id.name" t-field="line.product_id.name" t-options="{'widget': 'text'}"/>
                                                 <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}"/>
                                             </td>
-                                            <td name="td_quantity" class="text-end">
+                                            <td name="td_quantity" class="text-end text-nowrap">
                                                 <span t-field="line.quantity">3.00</span>
                                                 <span t-field="line.product_uom_id"  groups="uom.group_uom">units</span>
                                             </td>
@@ -146,7 +146,7 @@
                                                 <span class="text-nowrap" t-field="line.discount">0</span>
                                             </td>
                                             <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_ids])"/>
-                                            <td name="td_taxes" t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                            <td name="td_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
                                                 <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
                                             </td>
                                             <td name="td_subtotal" class="text-end o_price_total">
@@ -183,9 +183,9 @@
                         </table>
                         <div>
                             <div id="right-elements" t-attf-class="#{'col-5' if report_type != 'html' else 'col-12 col-md-5'} ms-5 d-inline-block float-end">
-                                <div id="total" class="clearfix row">
+                                <div id="total" class="clearfix row mt-n3">
                                     <div class="ms-auto">
-                                        <table class="table table-sm table-borderless avoid-page-break-inside">
+                                        <table class="o_total_table table table-borderless avoid-page-break-inside">
 
                                             <!--Tax totals-->
                                             <t t-set="tax_totals" t-value="o.tax_totals"/>
@@ -206,7 +206,7 @@
                                                         </tr>
                                                     </t>
                                                     <t t-if="len(payments_vals) > 0">
-                                                        <tr class="border-black fw-bold">
+                                                        <tr class="fw-bold">
                                                             <td>Amount Due</td>
                                                             <td class="text-end">
                                                                 <span t-field="o.amount_residual">11.05</span>
@@ -310,8 +310,8 @@
                 - tax_totals: dict in the form generated by account.move's _get_tax_totals.
             -->
             <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
-                <tr class="border-black o_subtotal">
-                    <td><strong t-out="subtotal['name']">Untaxed Amount</strong></td>
+                <tr class="o_subtotal">
+                    <td><span t-out="subtotal['name']">Untaxed Amount</span></td>
 
                     <td class="text-end">
                         <span
@@ -333,10 +333,10 @@
             </tr>
             
             <!--Total amount with all taxes-->
-            <tr class="border-black o_total">
+            <tr class="o_total">
                 <td><strong>Total</strong></td>
                 <td  class="text-end">
-                    <span t-out="tax_totals['formatted_amount_total']">31.05</span>
+                    <strong t-out="tax_totals['formatted_amount_total']">31.05</strong>
                 </td>
             </tr>
         </template>
@@ -354,7 +354,7 @@
             -->
             <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
                 <t t-set="display_tax_base" t-value="tax_totals['display_tax_base']"/>
-                <tr>
+                <tr class="o_taxes">
                     <t t-if="not display_tax_base">
                         <td><span class="text-nowrap" t-out="amount_by_group['tax_group_name']">Tax 15%</span></td>
                         <td class="text-end o_price_total">
@@ -386,14 +386,14 @@
             <div t-if="not show_company_taxes" class="oe_structure"></div>
             <div class="mb-2 mt-3 border p-2 avoid-page-break-inside totals_taxes_company_currency"
                  t-else="">
-                <table class="table table-sm table-borderless mb-0">
+                <table class="o_total_table table table-borderless mb-0">
                     <p class="tax_computation_company_currency">
                         Taxes <span t-field="o.company_currency_id"/>
                     </p>
                     <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
-                        <tr class="border-black o_subtotal">
-                            <td><strong t-out="subtotal['name']">Untaxed amount</strong></td>
+                        <tr class="o_subtotal">
                             <td class="text-end">
+                            <td><span t-out="subtotal['name']">Untaxed amount</span></td>
                                 <span
                                     t-out="subtotal['amount_company_currency']"
                                     t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
@@ -402,7 +402,7 @@
                         </tr>
                         <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
                         <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
-                            <tr>
+                            <tr class="o_taxes">
                                 <t t-if="tax_totals['display_tax_base']">
                                     <td>
                                         <span class="text-nowrap">
@@ -434,12 +434,12 @@
                         </t>
                     </t>
                     <!--Total amount with all taxes-->
-                    <tr class="border-black o_total">
+                    <tr class="o_total">
                         <td><strong>Total</strong></td>
                         <td class="text-end">
-                            <span t-out="abs(o.amount_total_signed)"
-                                  t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>
-                            31.05</span>
+                            <strong t-out="abs(o.amount_total_signed)"
+                                    t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>
+                            31.05</strong>
                         </td>
                     </tr>
                 </table>

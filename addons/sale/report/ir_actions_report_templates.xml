@@ -18,16 +18,16 @@
             <t t-set="information_block">
                 <strong>
                     <t t-if="doc.partner_shipping_id == doc.partner_invoice_id">
-                        Invoicing and Shipping Address:
+                        Invoicing and Shipping Address
                     </t>
                     <t t-else="">
-                        Invoicing Address:
+                        Invoicing Address
                     </t>
                 </strong>
                 <div t-field="doc.partner_invoice_id"
                     t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                 <t t-if="doc.partner_shipping_id != doc.partner_invoice_id">
-                    <strong>Shipping Address:</strong>
+                    <strong>Shipping Address</strong>
                     <div t-field="doc.partner_shipping_id"
                         t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                 </t>
@@ -36,32 +36,32 @@
         <div class="page">
             <div class="oe_structure"/>
 
-            <h2 class="mt-4">
+            <t t-set="layout_document_title">
                 <span t-if="env.context.get('proforma', False) or is_pro_forma">Pro-Forma Invoice # </span>
                 <span t-elif="doc.state in ['draft','sent']">Quotation # </span>
                 <span t-else="">Order # </span>
                 <span t-field="doc.name">SO0000</span>
-            </h2>
+            </t>
 
-            <div class="row mt-4 mb-2" id="informations">
-                <div t-if="doc.client_order_ref" class="col-auto col-3 mw-100 mb-2" name="informations_reference">
-                    <strong>Your Reference:</strong><br/>
-                    <span class="m-0" t-field="doc.client_order_ref">SO0000</span>
+            <div class="row mb-4" id="informations">
+                <div t-if="doc.client_order_ref" class="col" name="informations_reference">
+                    <strong>Your Reference</strong>
+                    <div t-field="doc.client_order_ref">SO0000</div>
                 </div>
-                <div t-if="doc.date_order" class="col-auto col-3 mw-100 mb-2" name="informations_date">
-                    <strong t-if="doc.state in ['draft', 'sent']">Quotation Date:</strong>
-                    <strong t-else="">Order Date:</strong><br/>
-                    <span class="m-0" t-field="doc.date_order" t-options='{"widget": "date"}'>2023-12-31</span>
+                <div t-if="doc.date_order" class="col" name="informations_date">
+                    <strong t-if="doc.state in ['draft', 'sent']">Quotation Date</strong>
+                    <strong t-else="">Order Date</strong>
+                    <div t-field="doc.date_order" t-options='{"widget": "date"}'>2023-12-31</div>
                 </div>
                 <div t-if="doc.validity_date and doc.state in ['draft', 'sent']"
-                    class="col-auto col-3 mw-100 mb-2"
+                    class="col"
                     name="expiration_date">
-                    <strong>Expiration:</strong><br/>
-                    <span class="m-0" t-field="doc.validity_date">2023-12-31</span>
+                    <strong>Expiration</strong>
+                    <div t-field="doc.validity_date">2023-12-31</div>
                 </div>
-                <div t-if="doc.user_id.name" class="col-auto col-3 mw-100 mb-2">
-                    <strong>Salesperson:</strong><br/>
-                    <span class="m-0" t-field="doc.user_id">Mitchell Admin</span>
+                <div t-if="doc.user_id.name" class="col">
+                    <strong>Salesperson</strong>
+                    <div t-field="doc.user_id">Mitchell Admin</div>
                 </div>
             </div>
 
@@ -70,13 +70,13 @@
             <t t-set="display_discount" t-value="any(l.discount for l in lines_to_report)"/>
 
             <div class="oe_structure"></div>
-            <table class="table table-sm o_main_table table-borderless mt-4">
+            <table class="o_has_total_table table o_main_table table-borderless">
                 <!-- In case we want to repeat the header, remove "display: table-row-group" -->
                 <thead style="display: table-row-group">
                     <tr>
                         <th name="th_description" class="text-start">Description</th>
-                        <th name="th_quantity" class="text-end">Quantity</th>
-                        <th name="th_priceunit" class="text-end">Unit Price</th>
+                        <th name="th_quantity" class="text-end text-nowrap">Quantity</th>
+                        <th name="th_priceunit" class="text-end text-nowrap">Unit Price</th>
                         <th name="th_discount" t-if="display_discount" class="text-end">
                             <span>Disc.%</span>
                         </th>
@@ -94,17 +94,17 @@
 
                         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
 
-                        <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
+                        <tr t-att-class="'fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type">
                                 <td name="td_name"><span t-field="line.name">Bacon Burger</span></td>
-                                <td name="td_quantity" class="text-end">
+                                <td name="td_quantity" class="text-end text-nowrap">
                                     <span t-field="line.product_uom_qty">3</span>
                                     <span t-field="line.product_uom">units</span>
                                     <span t-if="line.product_packaging_id">
                                         (<span t-field="line.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="line.product_packaging_id"/>)
                                     </span>
                                 </td>
-                                <td name="td_priceunit" class="text-end">
+                                <td name="td_priceunit" class="text-end text-nowrap">
                                     <span t-field="line.price_unit">3</span>
                                 </td>
                                 <td t-if="display_discount" class="text-end">
@@ -147,9 +147,9 @@
                 </tbody>
             </table>
             <div class="clearfix" name="so_total_summary">
-                <div id="total" class="row" name="total">
+                <div id="total" class="row mt-n3" name="total">
                     <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
-                        <table class="table table-sm table-borderless">
+                        <table class="o_total_table table table-borderless">
                             <!-- Tax totals -->
                             <t t-set="tax_totals" t-value="doc.tax_totals"/>
                             <t t-call="sale.document_tax_totals"/>

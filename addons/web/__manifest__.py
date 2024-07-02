@@ -251,15 +251,25 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/legacy/js/public/lazyloader.js'),
         ],
         'web.report_assets_common': [
-            ('include', 'web._assets_helpers'),
+            # Include some helpers early to define $enable-rfs before
+            # _mixin file and use primary_variables in bs_overridden_report
+            'web/static/src/scss/functions.scss',
+            'web/static/src/scss/utils.scss',
+            ('include', 'web._assets_primary_variables'),
+            ('include', 'web._assets_secondary_variables'),
 
             'web/static/src/webclient/actions/reports/bootstrap_overridden_report.scss',
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_backend_helpers'),
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
 
             ('include', 'web._assets_bootstrap_backend'),
+            ('remove', 'web/static/src/scss/utilities_custom_backend.scss'),
+            ('remove', 'web/static/src/scss/bootstrap_review_backend.scss'),
+            ('after', 'web/static/src/scss/utilities_custom.scss', 'web/static/src/webclient/actions/reports/utilities_custom_report.scss'),
 
             'web/static/lib/popper/popper.js',
             'web/static/lib/bootstrap/js/dist/util/index.js',
@@ -295,11 +305,10 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/odoo_ui_icons/*',
             'web/static/fonts/fonts.scss',
 
+            'web/static/src/webclient/actions/reports/bootstrap_review_report.scss',
             'web/static/src/webclient/actions/reports/report.scss',
-            'web/static/src/webclient/actions/reports/layout_assets/layout_standard.scss',
-            'web/static/src/webclient/actions/reports/layout_assets/layout_background.scss',
-            'web/static/src/webclient/actions/reports/layout_assets/layout_boxed.scss',
-            'web/static/src/webclient/actions/reports/layout_assets/layout_clean.scss',
+            'web/static/src/webclient/actions/reports/report_tables.scss',
+            'web/static/src/webclient/actions/reports/layout_assets/layout_*.scss',
             'web/static/asset_styles_company_report.scss',
         ],
         'web.report_assets_pdf': [
