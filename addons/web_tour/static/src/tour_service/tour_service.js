@@ -34,7 +34,6 @@ import { callWithUnloadCheck } from "./tour_utils";
  * @property {"enterprise"|"community"|"mobile"|"desktop"|HootSelector[][]} isActive Active the step following {@link isActiveStep} filter
  * @property {string} [id]
  * @property {HootSelector} trigger The node on which the action will be executed.
- * @property {HootSelector} [extra_trigger] Required (extra) node for the step to be executed.
  * @property {HootSelector} [alt_trigger] An alternative node to the trigger (trigger or alt_trigger).
  * @property {string} [content] Description of the step.
  * @property {"top" | "botton" | "left" | "right"} [position] The position where the UI helper is shown.
@@ -65,7 +64,6 @@ function checkTourStepKeyValues(tourStep) {
     const stepschema = {
         id: { type: String, optional: true },
         trigger: { type: String },
-        extra_trigger: { type: String, optional: true },
         alt_trigger: { type: String, optional: true },
         isActive: { type: Array, element: String, optional: true },
         content: { type: [String, Object], optional: true }, //allow object for _t && markup
