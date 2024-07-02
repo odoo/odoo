@@ -353,8 +353,14 @@ class ProductPricelistItem(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
-        return [('pricelist_id', 'in', config_id.available_pricelist_ids.ids)] if config_id.use_pricelist else [('pricelist_id', '=', config_id.pricelist_id.id)]
+        product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']['data']]
+        product_ids = [p['id'] for p in data['product.product']['data']]
+        pricelist_ids = [p['id'] for p in data['product.pricelist']['data']]
+        return [
+            ('pricelist_id', 'in', pricelist_ids),
+            '|', ('product_tmpl_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
+            '|', ('product_id', '=', False), ('product_id', 'in', product_ids),
+        ]
 
     @api.model
     def _load_pos_data_fields(self, config_id):
