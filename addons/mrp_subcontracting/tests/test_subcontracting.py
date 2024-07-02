@@ -351,7 +351,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         comp3 = self.env['product.product'].create({
             'name': 'Component1',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         bom_form = Form(self.env['mrp.bom'])
@@ -412,7 +411,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         comp3 = self.env['product.product'].create({
             'name': 'Component3',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         bom_form = Form(self.env['mrp.bom'])
@@ -1134,7 +1132,6 @@ class TestSubcontractingTracking(TransactionCase):
         cls.finished_product = cls.env['product.product'].create({
             'name': 'finished',
             'is_storable': True,
-            'categ_id': cls.env.ref('product.product_category_services').id,
             'tracking': 'lot'
         })
         bom_form = Form(cls.env['mrp.bom'])
@@ -1512,13 +1509,11 @@ class TestSubcontractingPortal(TransactionCase):
         cls.comp1_sn = cls.env['product.product'].create({
             'name': 'Component1',
             'is_storable': True,
-            'categ_id': cls.env.ref('product.product_category_services').id,
             'tracking': 'serial'
         })
         cls.comp2 = cls.env['product.product'].create({
             'name': 'Component2',
             'is_storable': True,
-            'categ_id': cls.env.ref('product.product_category_services').id,
         })
         cls.product_not_in_bom = cls.env['product.product'].create({
             'name': 'Product not in the BoM',
@@ -1529,7 +1524,6 @@ class TestSubcontractingPortal(TransactionCase):
         cls.finished_product = cls.env['product.product'].create({
             'name': 'finished',
             'is_storable': True,
-            'categ_id': cls.env.ref('product.product_category_services').id,
             'tracking': 'lot'
         })
         bom_form = Form(cls.env['mrp.bom'])
