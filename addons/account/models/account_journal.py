@@ -904,16 +904,21 @@ class AccountJournal(models.Model):
                 'move_type': move_type,
             })
 
-            invoice._extend_with_attachments(attachment, new=True)
+            mapping = invoice._extend_with_attachments(attachment, new=True)
+            for idx, current_invoice in enumerate(mapping.get(attachment) or invoice):
 
-            all_invoices |= invoice
+                all_invoices |= current_invoice
 
-            invoice.with_context(
-                account_predictive_bills_disable_prediction=True,
-                no_new_invoice=True,
-            ).message_post(attachment_ids=attachment.ids)
+                current_invoice.with_context(
+                    account_predictive_bills_disable_prediction=True,
+                    no_new_invoice=True,
+                ).message_post(attachment_ids=attachment.ids)
 
-            attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
+                rel_data = {'res_model': 'account.move', 'res_id': current_invoice.id}
+                if idx == 0:
+                    attachment.write(rel_data)
+                else:
+                    attachment.copy(rel_data)
 
         return all_invoices
 
