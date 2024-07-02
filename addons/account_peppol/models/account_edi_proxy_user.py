@@ -202,6 +202,11 @@ class AccountEdiProxyClientUser(models.Model):
 
                 move = message_uuids[uuid]
                 if content.get('error'):
+                    # "Peppol request not ready" error:
+                    # thrown when the IAP is still processing the message
+                    if content['error'].get('code') == 702:
+                        continue
+
                     move.peppol_move_state = 'error'
                     move._message_log(body=_("Peppol error: %s", content['error']['message']))
                     continue
