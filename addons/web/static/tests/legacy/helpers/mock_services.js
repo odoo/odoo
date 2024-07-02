@@ -245,9 +245,11 @@ export const fakeCompanyService = {
     start() {
         return {
             allowedCompanies: {},
+            allowedCompaniesWithAncestors: {},
             activeCompanyIds: [],
             currentCompany: {},
             setCompanies: () => {},
+            getCompany: () => {},
         };
     },
 };
