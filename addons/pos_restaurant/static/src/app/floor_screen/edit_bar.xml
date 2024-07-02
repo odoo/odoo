@@ -4,7 +4,7 @@
     <t t-name="pos_restaurant.EditBar">
         <div class="edit-bar-top d-flex align-items-center justify-content-between px-3 border-bottom bg-view overflow-x-auto h-54 w-100">
             <div class="flex-fill d-flex justify-content-center">
-                <span role="button" class="edit-button text-center d-flex flex-column btn btn-light text-uppercase" t-on-click.stop="props.createTable">
+                <span role="button" class="edit-button text-center d-flex flex-column btn btn-light text-uppercase" t-att-class="{ disabled: props.isCreatingTable }" t-on-click.stop="props.createTable">
                     <i class="fa fa-plus icon-button" role="img" aria-label="Add" title="Add"></i>
                     <span class="text-button d-block">Table</span>
                 </span>

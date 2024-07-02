@@ -8,7 +8,7 @@
                         createTable.bind="createTable" duplicateTableOrFloor.bind="duplicateTableOrFloor" renameTable.bind="renameTable"
                         changeSeatsNum.bind="changeSeatsNum" changeToCircle.bind="changeToCircle" changeToSquare.bind="changeToSquare"
                         setTableColor.bind="setTableColor" setFloorColor.bind="setFloorColor" deleteFloorOrTable.bind="deleteFloorOrTable"
-                        toggleEditMode.bind="toggleEditMode"
+                        toggleEditMode.bind="toggleEditMode" isCreatingTable="state.isCreatingTable"
             />
             <div class="floor-selector d-flex text-center bg-100 fs-3 w-100 h-54">
                 <t t-foreach="pos.floors" t-as="floor" t-key="floor.id">
