@@ -570,10 +570,113 @@ weSnippetEditor.SnippetEditor.include({
         }
         return this._super(...arguments);
     },
+<<<<<<< HEAD
     /**
      * Changes some behaviors before the drag and drop.
+||||||| parent of c82e0f1132fb (temp)
+});
+
+// Edit mode customizations of public widgets.
+
+publicWidget.registry.hoverableDropdown.include({
+    /**
+     * @override
+     */
+    start() {
+        if (this.editableMode) {
+            this._onPageClick = this._onPageClick.bind(this);
+            this.el.closest('#wrapwrap').addEventListener('click', this._onPageClick, {capture: true});
+        }
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        if (this.editableMode) {
+            this.el.closest('#wrapwrap').removeEventListener('click', this._onPageClick, {capture: true});
+        }
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+    
+    /**
+     * Hides all opened dropdowns.
+=======
+});
+
+// Edit mode customizations of public widgets.
+
+publicWidget.registry.hoverableDropdown.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+    
+    /**
+     * Hides all opened dropdowns.
+>>>>>>> c82e0f1132fb (temp)
+     *
+     * TODO: Remove in master.
+     * @private
+<<<<<<< HEAD
+||||||| parent of c82e0f1132fb (temp)
+     */
+    _hideDropdowns() {
+        for (const toggleEl of this.el.querySelectorAll('.dropdown.show .dropdown-toggle')) {
+            $(toggleEl).dropdown('hide');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the page is clicked anywhere.
+     * Closes the shown dropdown if the click is outside of it.
      *
      * @private
+     * @param {Event} ev
+     */
+    _onPageClick(ev) {
+        if (ev.target.closest('.dropdown.show')) {
+            return;
+        }
+        this._hideDropdowns();
+    },
+    /**
+=======
+     */
+    _hideDropdowns() {
+        for (const toggleEl of this.el.querySelectorAll('.dropdown.show .dropdown-toggle')) {
+            $(toggleEl).dropdown('hide');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the page is clicked anywhere.
+     * Closes the shown dropdown if the click is outside of it.
+     *
+     * TODO: Remove in master.
+     * @private
+     * @param {Event} ev
+     */
+    _onPageClick(ev) {
+        if (ev.target.closest('.dropdown.show')) {
+            return;
+        }
+        this._hideDropdowns();
+    },
+    /**
+>>>>>>> c82e0f1132fb (temp)
      * @override
      * @returns {Function} a function that restores what was changed when the
      *  drag and drop is over.
