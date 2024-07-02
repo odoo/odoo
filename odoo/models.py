@@ -1695,6 +1695,7 @@ class BaseModel(metaclass=MetaModel):
         This clears the caches associated to methods decorated with
         ``tools.ormcache`` or ``tools.ormcache_multi``.
         """
+        _logger.info('clear_caches from module %s',cls._name)
         cls.pool._clear_cache()
 
     @api.model
