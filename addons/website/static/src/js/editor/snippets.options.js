@@ -4604,7 +4604,7 @@ registerWebsiteOption("MegaMenuNoDelete", {
 registerWebsiteOption("MegaMenuNoDeleteDrop", {
     selector: ".o_mega_menu .nav > .nav-link",
     dropIn: ".o_mega_menu nav",
-    dropNear: () => ".o_mega_menu .nav-link",
+    dropNear: ".o_mega_menu .nav-link",
 });
 
 options.registry.sizing.include({

@@ -74,3 +74,9 @@ anchorOption.exclude += ",.o_wblog_post_content_field > :not(div, section)";
 registry.category("snippet_options").add("Anchor", anchorOption, {
     force: true,
 });
+
+const containerWidthOption = registry.category("snippet_options").get("container_width");
+containerWidthOption.exclude += ",#o_wblog_post_content *";
+registry.category("snippet_options").add("container_width", containerWidthOption, {
+    force: true,
+});

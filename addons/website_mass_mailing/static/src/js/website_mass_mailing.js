@@ -93,7 +93,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
     },
 
     _getListId: function () {
-        return this.$el.closest('[data-snippet=s_newsletter_block').data('list-id') || this.$el.data('list-id');
+        return this.$el.closest('[data-snippet=s_newsletter_block]').data('list-id') || this.$el.data('list-id');
     },
 
     //--------------------------------------------------------------------------
