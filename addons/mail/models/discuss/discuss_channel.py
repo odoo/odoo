@@ -12,7 +12,7 @@ from odoo import _, api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import html_escape, get_lang
+from odoo.tools import html_escape, get_lang, html2plaintext
 from odoo.tools.misc import babel_locale_parse, DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
@@ -1257,6 +1257,14 @@ class Channel(models.Model):
             return 'no-avatar'
         return sha512(self.avatar_128).hexdigest()
 
+    def _get_channel_history(self):
+        """
+        Converting message body back to plaintext for correct data formatting in HTML field.
+        """
+        return Markup('').join(
+            Markup('%s: %s<br/>') % (message.author_id.name, html2plaintext(message.body))
+            for message in self.message_ids.sorted('id')
+        )
     # ------------------------------------------------------------
     # COMMANDS
     # ------------------------------------------------------------
