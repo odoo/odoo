@@ -626,6 +626,27 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo.product_qty, 1)
         self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [0.5, 1])
 
+    def test_mo_duration_expected_when_backorder(self):
+        """
+        Test duration expected when qty_producing is less than the product_qty,
+        and we make a backorder
+        """
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_5
+        production_form.bom_id = self.bom_2
+        production_form.product_qty = 5.0
+        production = production_form.save()
+        production.action_confirm()
+
+        production_form = Form(production)
+        production_form.qty_producing = 1.0
+        production = production_form.save()
+
+        action = production.button_mark_done()
+        backorder_form = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder_form.save().action_backorder()
+
+        self.assertEqual(production.workorder_ids.duration_expected, 90)
 
 class TestMrpWorkorderBackorder(TransactionCase):
     @classmethod
