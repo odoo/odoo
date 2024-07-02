@@ -3,7 +3,6 @@ import { UNBREAKABLE_ROLLBACK_CODE } from '../utils/constants.js';
 
 import {
     childNodeIndex,
-    clearEmpty,
     fillEmpty,
     isBlock,
     isUnbreakable,
@@ -15,6 +14,8 @@ import {
     toggleClass,
     isVisible,
     nodeSize,
+    isZWS,
+    unwrapContents,
 } from '../utils/utils.js';
 
 Text.prototype.oEnter = function (offset) {
@@ -47,13 +48,11 @@ HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
     while (offset < this.childNodes.length) {
         splitEl.appendChild(this.childNodes[offset]);
     }
-    if (isBlock(this) || splitEl.hasChildNodes()) {
+
+    // Move spliEl after current node.
+    if (!(this.nodeType === Node.TEXT_NODE && this.textContent === '\uFEFF')) {
         this.after(splitEl);
-        if (isVisible(splitEl)) {
-            didSplit = true;
-        } else {
-            splitEl.remove();
-        }
+        didSplit = true;
     }
 
     // Propagate the split until reaching a block element (or continue to the
@@ -72,15 +71,9 @@ HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
     // fill/remove empty nodes.
     if (firstSplit && didSplit) {
         restore();
-
-        fillEmpty(clearEmpty(this));
+        fillEmpty(this);
         fillEmpty(splitEl);
-
-        const focusToElement =
-            splitEl.nodeType === Node.ELEMENT_NODE && splitEl.tagName === 'A'
-                ? clearEmpty(splitEl)
-                : splitEl;
-        setCursorStart(focusToElement);
+        setCursorStart(splitEl);
     }
     return splitEl;
 };
@@ -92,9 +85,15 @@ HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
  */
 HTMLHeadingElement.prototype.oEnter = function () {
     const newEl = HTMLElement.prototype.oEnter.call(this, ...arguments);
-    if (!newEl.textContent) {
-        const node = setTagName(newEl, 'P');
-        setCursorStart(node);
+    // only split element if its not empty or does not contains only
+    // zero-width space.
+    if (!newEl.textContent || isZWS(newEl)) {
+        if (newEl.parentElement && newEl.parentElement.nodeName === 'LI') {
+            unwrapContents(newEl);
+        } else {
+            const node = setTagName(newEl, 'P');
+            setCursorStart(node);
+        }
     }
 };
 const isAtEdgeofLink = (link, offset) => {
@@ -141,7 +140,7 @@ HTMLQuoteElement.prototype.oEnter = HTMLHeadingElement.prototype.oEnter;
  */
 HTMLLIElement.prototype.oEnter = function () {
     // If not empty list item, regular block split
-    if (this.textContent) {
+    if (this.textContent && !isZWS(this)) {
         const node = HTMLElement.prototype.oEnter.call(this, ...arguments);
         if (node.classList.contains('o_checked')) {
             toggleClass(node, 'o_checked');
@@ -154,14 +153,13 @@ HTMLLIElement.prototype.oEnter = function () {
  * Specific behavior for pre: insert newline (\n) in text or insert p at end.
  */
 HTMLPreElement.prototype.oEnter = function (offset) {
-    if (offset < this.childNodes.length) {
+    if (offset < this.childNodes.length && this.childNodes[offset].textContent && !isZWS(this.childNodes[offset])) {
         const lineBreak = document.createElement('br');
         this.insertBefore(lineBreak, this.childNodes[offset]);
         setCursorEnd(lineBreak);
     } else {
-        const node = document.createElement('p');
-        this.parentNode.insertBefore(node, this.nextSibling);
-        fillEmpty(node);
+        const newEl = HTMLElement.prototype.oEnter.call(this, ...arguments);
+        const node = setTagName(newEl, 'P');
         setCursorStart(node);
     }
 };

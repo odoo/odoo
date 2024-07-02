@@ -6281,13 +6281,25 @@ describe('List', () => {
                                     await insertText(editor, 'b');
                                     await insertParagraphBreak(editor);
                                 },
+                                contentAfterEdit: unformat(`
+                                    <ul>
+                                        <li>ab</li>
+                                        <li class="oe-nested">
+                                            <ul>
+                                                <li><font style="color: red;">cd</font></li>
+                                                <li><font style="color: red;">b</font></li>
+                                                <li><font style="color: red;" oe-zws-empty-inline="">[]\u200b</font></li>
+                                            </ul>
+                                        </li>
+                                        <li>ef</li>
+                                    </ul>`),
                                 contentAfter: unformat(`
                                     <ul>
                                         <li>ab</li>
                                         <li class="oe-nested">
                                             <ul>
                                                 <li><font style="color: red;">cd</font></li>
-                                                <li>b</li>
+                                                <li><font style="color: red;">b</font></li>
                                                 <li>[]<br></li>
                                             </ul>
                                         </li>
@@ -6623,18 +6635,30 @@ describe('List', () => {
                                         await insertText(editor, '0');
                                         await insertParagraphBreak(editor);
                                     },
+                                    contentAfterEdit: unformat(`
+                                        <ul class="o_checklist">
+                                            <li>ab</li>
+                                            <li class="oe-nested">
+                                                <ul class="o_checklist">
+                                                    <li><font style="color: red;">cd</font></li>
+                                                    <li><font style="color: red;">0</font></li>
+                                                    <li><font style="color: red;" oe-zws-empty-inline="">[]\u200b</font></li>
+                                                </ul>
+                                            </li>
+                                            <li class="o_checked">ef</li>
+                                        </ul>`),
                                     contentAfter: unformat(`
-                                    <ul class="o_checklist">
-                                        <li>ab</li>
-                                        <li class="oe-nested">
-                                            <ul class="o_checklist">
-                                                <li><font style="color: red;">cd</font></li>
-                                                <li>0</li>
-                                                <li>[]<br></li>
-                                            </ul>
-                                        </li>
-                                        <li class="o_checked">ef</li>
-                                    </ul>`),
+                                        <ul class="o_checklist">
+                                            <li>ab</li>
+                                            <li class="oe-nested">
+                                                <ul class="o_checklist">
+                                                    <li><font style="color: red;">cd</font></li>
+                                                    <li><font style="color: red;">0</font></li>
+                                                    <li>[]<br></li>
+                                                </ul>
+                                            </li>
+                                            <li class="o_checked">ef</li>
+                                        </ul>`),
                                 });
                             });
                         });
@@ -6718,18 +6742,30 @@ describe('List', () => {
                                         await insertText(editor, '0');
                                         await insertParagraphBreak(editor);
                                     },
+                                    contentAfterEdit: unformat(`
+                                        <ul class="o_checklist">
+                                            <li class="o_checked">ab</li>
+                                            <li class="oe-nested">
+                                                <ul class="o_checklist">
+                                                    <li class="o_checked"><font style="color: red;">cd</font></li>
+                                                    <li><font style="color: red;">0</font></li>
+                                                    <li><font style="color: red;" oe-zws-empty-inline="">[]\u200b</font></li>
+                                                </ul>
+                                            </li>
+                                            <li class="o_checked">ef</li>
+                                        </ul>`),
                                     contentAfter: unformat(`
-                                    <ul class="o_checklist">
-                                        <li class="o_checked">ab</li>
-                                        <li class="oe-nested">
-                                            <ul class="o_checklist">
-                                                <li class="o_checked"><font style="color: red;">cd</font></li>
-                                                <li>0</li>
-                                                <li>[]<br></li>
-                                            </ul>
-                                        </li>
-                                        <li class="o_checked">ef</li>
-                                    </ul>`),
+                                        <ul class="o_checklist">
+                                            <li class="o_checked">ab</li>
+                                            <li class="oe-nested">
+                                                <ul class="o_checklist">
+                                                    <li class="o_checked"><font style="color: red;">cd</font></li>
+                                                    <li><font style="color: red;">0</font></li>
+                                                    <li>[]<br></li>
+                                                </ul>
+                                            </li>
+                                            <li class="o_checked">ef</li>
+                                        </ul>`),
                                 });
                             });
                         });
