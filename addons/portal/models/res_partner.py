@@ -17,4 +17,4 @@ class ResPartner(models.Model):
         entity) and the children. Only the commercial entity should be able to
         edit it (as in backend)."""
         self.ensure_one()
-        return not self.parent_id
+        return not self.parent_id or self.env.user.partner_id == self.commercial_partner_id
