@@ -214,12 +214,12 @@ export class MediaPlugin extends Plugin {
      * @param {number} resId
      */
     async saveB64Image(el, resModel, resId) {
-        el.classList.remove("o_b64_image_to_save");
         const imageData = el.getAttribute("src").split("base64,")[1];
         if (!imageData) {
             // Checks if the image is in base64 format for RPC call. Relying
             // only on the presence of the class "o_b64_image_to_save" is not
             // robust enough.
+            el.classList.remove("o_b64_image_to_save");
             return;
         }
         const attachment = await rpc("/web_editor/attachment/add_data", {
@@ -248,6 +248,7 @@ export class MediaPlugin extends Plugin {
             }
             el.setAttribute("src", src);
         }
+        el.classList.remove("o_b64_image_to_save");
     }
 
     /**
