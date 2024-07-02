@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MessageSeenIndicatorPopover" owl="1">
+        <div class="o-mail-MessageSeenIndicatorPopover popover" role="tooltip">
+            <div class="popover-body">
+                <ul class="list-unstyled m-0">
+                    <li t-foreach="props.message.channelMemberHaveSeen.slice(0, 10)" t-as="member" t-key="member.id">
+                        <t t-call="mail.MessageSeenIndicatorPopover.card" />
+                    </li>
+                </ul>
+                <small t-if="props.message.channelMemberHaveSeen.length > 10">
+                    <a role="button" t-out="AND_X_OTHERS" t-on-click="openModal"/>
+                </small>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mail.MessageSeenIndicatorPopover.card">
+        <div class="o-mail-MessageSeenIndicatorPopover-card d-flex align-items-center gap-2">
+            <span class="o_avatar pt-1 position-relative o_card_avatar" style="width: 30px;height:30px;">
+                <img t-att-src="member.persona.avatarUrl" class="w-100 h-100 rounded" />
+            </span>
+            <div class="d-flex flex-column o_card_user_infos overflow-hidden">
+                <span class="fw-bold" t-esc="member.persona.name"/>
+                <span t-if="member.lastSeenDt" t-out="member.lastSeenDt"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mail.MessageSeenIndicatorPopover.dialog">
+        <Dialog size="'sm'">
+            <ul class="list-unstyled m-0">
+                <li t-foreach="props.message.channelMemberHaveSeen" t-as="member" t-key="member.id">
+                    <t t-call="mail.MessageSeenIndicatorPopover.card"/>
+                </li>
+            </ul>
+        </Dialog>
+    </t>
+
+</templates>
