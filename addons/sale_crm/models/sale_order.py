@@ -13,3 +13,9 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         return super(SaleOrder, self.with_context({k:v for k,v in self._context.items() if k != 'default_tag_ids'})).action_confirm()
+
+    def message_post(self, **kwargs):
+        if self.state == 'sale' and self.opportunity_id:
+            msg = ("Now this qoute is confirmed revenue will be calculated on basis of remaining quotes")
+            self._message_log(body=msg)
+        return super().message_post(**kwargs)

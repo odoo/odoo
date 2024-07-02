@@ -14,6 +14,18 @@ class CrmLead(models.Model):
     quotation_count = fields.Integer(compute='_compute_sale_data', string="Number of Quotations")
     sale_order_count = fields.Integer(compute='_compute_sale_data', string="Number of Sale Orders")
     order_ids = fields.One2many('sale.order', 'opportunity_id', string='Orders')
+    expected_revenue = fields.Monetary(compute='_compute_expected_revenue', store=True, readonly=False)
+
+    @api.depends('order_ids.state')
+    def _compute_expected_revenue(self):
+        unconfirmed_order_ids = self.order_ids.filtered(lambda order: order.state == "sent" and order.tax_totals['amount_untaxed'])
+        for record in self:
+            if unconfirmed_order_ids:
+                new_expected_revenue = min(unconfirmed_order_ids.mapped(lambda order: order.tax_totals['amount_untaxed']))
+                if new_expected_revenue > record.expected_revenue:
+                    record.expected_revenue = new_expected_revenue
+                    msg = ("Expected revenue is updated on the based of the linked qoutes")
+                    record._message_log(body=msg)
 
     @api.depends('order_ids.state', 'order_ids.currency_id', 'order_ids.amount_untaxed', 'order_ids.date_order', 'order_ids.company_id')
     def _compute_sale_data(self):
