@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, exceptions, models
-from odoo.addons.phone_validation.tools import phone_validation
+from odoo.tools import phone_validation
 
 
 class BaseModel(models.AbstractModel):

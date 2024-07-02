@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 from odoo import fields
 from odoo.addons.event.tests.common import EventCase
-from odoo.addons.phone_validation.tools import phone_validation
+from odoo.tools import phone_validation
 from odoo.addons.sms.tests.common import SMSCase
 from odoo.tests import tagged, users
 
