@@ -9,7 +9,8 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
+from odoo.tools import float_is_zero, format_amount, format_date, is_html_empty
+from odoo.tools.mail import html_keep_url
 from odoo.tools.sql import create_index
 
 from odoo.addons.payment import utils as payment_utils

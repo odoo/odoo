@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import re
+
+
+__all__ = ['check_barcode_encoding']
 
 
 def get_barcode_check_digit(numeric_barcode):

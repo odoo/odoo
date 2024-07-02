@@ -6,7 +6,8 @@ import logging
 import threading
 
 from odoo.addons.iap.tools import iap_tools
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
+from odoo.tools.mail import email_domain_extract, url_domain_extract
 
 _logger = logging.getLogger(__name__)
 
@@ -127,11 +128,11 @@ class ResCompany(models.Model):
             - info@proximus.be -> proximus.be """
         self.ensure_one()
 
-        company_domain = tools.email_domain_extract(self.email) if self.email else False
+        company_domain = email_domain_extract(self.email) if self.email else False
         if company_domain and company_domain not in iap_tools._MAIL_PROVIDERS:
             return company_domain
 
-        company_domain = tools.url_domain_extract(self.website) if self.website else False
+        company_domain = url_domain_extract(self.website) if self.website else False
         if not company_domain or company_domain in ['localhost', 'example.com']:
             return False
 

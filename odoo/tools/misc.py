@@ -1,32 +1,26 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from __future__ import annotations
-
 """
 Miscellaneous tools used by OpenERP.
 """
+from __future__ import annotations
+
 import base64
-import cProfile
 import collections
-import contextlib
 import datetime
-import hmac as hmac_lib
 import hashlib
-import io
+import hmac as hmac_lib
 import itertools
 import json
+import logging
 import os
 import re
-import socket
-import subprocess
 import sys
 import tempfile
 import threading
 import time
 import traceback
-import types
 import unicodedata
-import warnings
 from collections import OrderedDict
 from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
 from contextlib import ContextDecorator, contextmanager
@@ -39,21 +33,17 @@ from typing import TYPE_CHECKING
 import babel
 import babel.dates
 import markupsafe
-import passlib.utils
 import pytz
-import werkzeug.utils
 from lxml import etree, objectify
 
 import odoo
 import odoo.addons
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
-from odoo.loglevels import get_encodings, ustr, exception_to_unicode     # noqa
-from odoo.tools.float_utils import float_round
+from odoo.loglevels import get_encodings, ustr, exception_to_unicode  # noqa: F401
+from .float_utils import float_round
 from . import pycompat
-from .cache import *
 from .config import config
-from .parse_version import parse_version
 from .which import which
 
 if TYPE_CHECKING:
@@ -1105,7 +1095,7 @@ def groupby(iterable, key=None):
     """
     if key is None:
         key = lambda arg: arg
-    groups = defaultdict(list)
+    groups = collections.defaultdict(list)
     for elem in iterable:
         groups[key(elem)].append(elem)
     return groups.items()
@@ -1153,10 +1143,6 @@ class Reverse(object):
     def __gt__(self, other): return self.val < other.val
     def __le__(self, other): return self.val >= other.val
     def __lt__(self, other): return self.val > other.val
-
-def ignore(*exc):
-    warnings.warn("Since 16.0 `odoo.tools.ignore` is replaced by `contextlib.suppress`.", DeprecationWarning, stacklevel=2)
-    return contextlib.suppress(*exc)
 
 class replace_exceptions(ContextDecorator):
     """

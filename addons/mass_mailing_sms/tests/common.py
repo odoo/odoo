@@ -5,7 +5,7 @@ import random
 import re
 import werkzeug
 
-from odoo import tools
+from odoo.tools import mail
 from odoo.addons.link_tracker.tests.common import MockLinkTracker
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.addons.sms.tests.common import SMSCase, SMSCommon
@@ -152,7 +152,7 @@ class MassSMSCase(SMSCase, MockLinkTracker):
         """ When clicking on a link in a SMS we actually don't have any
         easy information in body, only body. We currently click on all found
         shortened links. """
-        for url in re.findall(tools.TEXT_URL_REGEX, sms_sent['body']):
+        for url in re.findall(mail.TEXT_URL_REGEX, sms_sent['body']):
             if '/r/' in url:  # shortened link, like 'http://localhost:8069/r/LBG/s/53'
                 parsed_url = werkzeug.urls.url_parse(url)
                 path_items = parsed_url.path.split('/')

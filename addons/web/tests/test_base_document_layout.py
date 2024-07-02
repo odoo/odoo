@@ -3,7 +3,8 @@ from PIL import Image
 from functools import partial
 
 from odoo.tests import TransactionCase, tagged, Form
-from odoo.tools import frozendict, image_to_base64, hex_to_rgb
+from odoo.tools import frozendict
+from odoo.tools.image import image_to_base64, hex_to_rgb
 
 
 dir_path = os.path.dirname(os.path.realpath(__file__))

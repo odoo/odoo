@@ -431,7 +431,7 @@ class MailMail(models.Model):
         # used in post-processing to know failures, like missing recipients
         email_list = []
         if self.email_to:
-            email_to = tools.email_split_and_format(self.email_to)
+            email_to = tools.mail.email_split_and_format(self.email_to)
             email_list.append({
                 'email_cc': [],
                 'email_to': email_to,
@@ -491,7 +491,7 @@ class MailMail(models.Model):
                 record_owned_attachments.sudo().generate_access_token()
                 attachments_links = self.env['ir.qweb']._render('mail.mail_attachment_links',
                                                                 {'attachments': record_owned_attachments})
-                body = tools.append_content_to_html(body, attachments_links, plaintext=False)
+                body = tools.mail.append_content_to_html(body, attachments_links, plaintext=False)
                 attachments -= record_owned_attachments
         # Prepare the remaining attachment (those not embedded as link)
         # load attachment binary data with a separate read(), as prefetching all
@@ -693,7 +693,7 @@ class MailMail(models.Model):
                     notifs.flush_recordset(['notification_status', 'failure_type', 'failure_reason'])
 
                 # protect against ill-formatted email_from when formataddr was used on an already formatted email
-                emails_from = tools.email_split_and_format(mail.email_from)
+                emails_from = tools.mail.email_split_and_format(mail.email_from)
                 email_from = emails_from[0] if emails_from else mail.email_from
 
                 # build an RFC2822 email.message.Message object and send it without queuing

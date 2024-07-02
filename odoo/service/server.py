@@ -56,8 +56,8 @@ import odoo
 from odoo.modules import get_modules
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
-from odoo.tools import config
-from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
+from odoo.tools import config, stripped_sys_argv, dumpstacks
+from odoo.tools.cache import log_ormcache_stats
 
 _logger = logging.getLogger(__name__)
 

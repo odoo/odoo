@@ -8,7 +8,7 @@ import werkzeug
 
 from unittest.mock import patch
 
-from odoo import tools
+from odoo.tools import mail
 from odoo.addons.link_tracker.tests.common import MockLinkTracker
 from odoo.addons.mail.tests.common import MailCase, MailCommon, mail_new_test_user
 from odoo.sql_db import Cursor
@@ -202,7 +202,7 @@ class MassMailCase(MailCase, MockLinkTracker):
         parsed_bounce_values = {
             'email_from': 'some.email@external.example.com',  # TDE check: email_from -> trace email ?
             'to': 'bounce@test.example.com',  # TDE check: bounce alias ?
-            'message_id': tools.generate_tracking_message_id('MailTest'),
+            'message_id': mail.generate_tracking_message_id('MailTest'),
             'bounced_partner': self.env['res.partner'].sudo(),
             'bounced_message': self.env['mail.message'].sudo(),
             'body': 'This is the bounce email',
@@ -230,7 +230,7 @@ class MassMailCase(MailCase, MockLinkTracker):
 
         email = self._find_sent_mail_wemail(trace.email)
         self.assertTrue(bool(email))
-        for (_url_href, link_url, _dummy, label) in re.findall(tools.HTML_TAG_URL_REGEX, email['body']):
+        for (_url_href, link_url, _dummy, label) in re.findall(mail.HTML_TAG_URL_REGEX, email['body']):
             if label == click_label and '/r/' in link_url:  # shortened link, like 'http://localhost:8069/r/LBG/m/53'
                 parsed_url = werkzeug.urls.url_parse(link_url)
                 path_items = parsed_url.path.split('/')

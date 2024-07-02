@@ -10,7 +10,7 @@ from werkzeug import urls
 
 from odoo import api, models, tools
 from odoo.addons.link_tracker.tools.html import find_links_with_urls_and_labels
-from odoo.tools import is_html_empty, URL_SKIP_PROTOCOL_REGEX
+from odoo.tools.mail import is_html_empty, URL_SKIP_PROTOCOL_REGEX, TEXT_URL_REGEX
 
 
 class MailRenderMixin(models.AbstractModel):
@@ -73,7 +73,7 @@ class MailRenderMixin(models.AbstractModel):
         base_url = base_url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         shortened_schema = base_url + '/r/'
         unsubscribe_schema = base_url + '/sms/'
-        for original_url in set(re.findall(tools.TEXT_URL_REGEX, content)):
+        for original_url in set(re.findall(TEXT_URL_REGEX, content)):
             # don't shorten already-shortened links or links towards unsubscribe page
             if original_url.startswith(shortened_schema) or original_url.startswith(unsubscribe_schema):
                 continue
