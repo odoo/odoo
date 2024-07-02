@@ -23,10 +23,42 @@ class TestExpression(SavepointCaseWithUserDemo):
         cls._load_partners_set()
         cls.env['res.currency'].with_context({'active_test': False}).search([('name', 'in', ['EUR', 'USD'])]).write({'active': True})
 
-    def _search(self, model, domain, init_domain=None):
+    def _search(self, model, domain, init_domain=None, test_complement=True):
         sql = model.search(domain, order="id")
-        fil = model.search(init_domain or [], order="id").filtered_domain(domain)
+        init_domain = init_domain or []
+        init_search = model.search(init_domain, order="id")
+        fil = init_search.filtered_domain(domain)
         self.assertEqual(sql._ids, fil._ids, f"filtered_domain do not match SQL search for domain: {domain}")
+        if test_complement and domain:
+            # testing is test_complement is aked, skip trivial the case where domain is TRUE
+            def inverse(domain):
+                """Return the complement of the given domain"""
+                return expression.distribute_not(['!', *expression.normalize_domain(domain)])
+
+            # test whether the result of the search and the complement are equal to the universe
+            complement_domain = inverse(domain)
+            if init_domain:
+                # the init_search is not TRUE
+                # first, check the complement with a single search
+                cpl = model.search(complement_domain, order="id")
+                if model._active_name and any(d[0] == model._active_name for d in init_domain):
+                    # if init_domain contains active, search for all records, even the archived ones
+                    uni = model.with_context(active_test=False).search([], order="id")
+                else:
+                    uni = model.search([], order="id")
+                self.assertEqual(sorted(sql._ids + cpl._ids), uni.ids, f"{domain} and {complement_domain} don't cover all records (search all)")
+                # second, for the rest of the check, limit the serach with init_domain
+                complement_domain = ['&', *expression.normalize_domain(init_domain), *complement_domain]
+
+            # general case where the universe is init_search
+            cpl = self._search(
+                model,
+                complement_domain,
+                init_domain=init_domain,
+                test_complement=False,
+            )
+            uni = init_search
+            self.assertEqual(sorted(sql._ids + cpl._ids), uni.ids, f"{domain} and {complement_domain} don't cover all records")
         return sql
 
     def test_00_in_not_in_m2m(self):
@@ -803,26 +835,26 @@ class TestExpression(SavepointCaseWithUserDemo):
         Model = self.env['res.partner.category']
         record = Model.create({'name': 'XY', 'color': 42})
 
-        self.assertIn(record, Model.search([('name', 'like', 'X')]))
-        self.assertIn(record, Model.search([('name', 'ilike', 'X')]))
-        self.assertIn(record, Model.search([('name', 'not like', 'Z')]))
-        self.assertIn(record, Model.search([('name', 'not ilike', 'Z')]))
+        self.assertIn(record, self._search(Model, [('name', 'like', 'X')]))
+        self.assertIn(record, self._search(Model, [('name', 'ilike', 'X')]))
+        self.assertIn(record, self._search(Model, [('name', 'not like', 'Z')]))
+        self.assertIn(record, self._search(Model, [('name', 'not ilike', 'Z')]))
 
-        self.assertNotIn(record, Model.search([('name', 'like', 'Z')]))
-        self.assertNotIn(record, Model.search([('name', 'ilike', 'Z')]))
-        self.assertNotIn(record, Model.search([('name', 'not like', 'X')]))
-        self.assertNotIn(record, Model.search([('name', 'not ilike', 'X')]))
+        self.assertNotIn(record, self._search(Model, [('name', 'like', 'Z')]))
+        self.assertNotIn(record, self._search(Model, [('name', 'ilike', 'Z')]))
+        self.assertNotIn(record, self._search(Model, [('name', 'not like', 'X')]))
+        self.assertNotIn(record, self._search(Model, [('name', 'not ilike', 'X')]))
 
         # like, ilike, not like, not ilike convert their lhs to str
-        self.assertIn(record, Model.search([('color', 'like', '4')]))
-        self.assertIn(record, Model.search([('color', 'ilike', '4')]))
-        self.assertIn(record, Model.search([('color', 'not like', '3')]))
-        self.assertIn(record, Model.search([('color', 'not ilike', '3')]))
+        self.assertIn(record, self._search(Model, [('color', 'like', '4')]))
+        self.assertIn(record, self._search(Model, [('color', 'ilike', '4')]))
+        self.assertIn(record, self._search(Model, [('color', 'not like', '3')]))
+        self.assertIn(record, self._search(Model, [('color', 'not ilike', '3')]))
 
-        self.assertNotIn(record, Model.search([('color', 'like', '3')]))
-        self.assertNotIn(record, Model.search([('color', 'ilike', '3')]))
-        self.assertNotIn(record, Model.search([('color', 'not like', '4')]))
-        self.assertNotIn(record, Model.search([('color', 'not ilike', '4')]))
+        self.assertNotIn(record, self._search(Model, [('color', 'like', '3')]))
+        self.assertNotIn(record, self._search(Model, [('color', 'ilike', '3')]))
+        self.assertNotIn(record, self._search(Model, [('color', 'not like', '4')]))
+        self.assertNotIn(record, self._search(Model, [('color', 'not ilike', '4')]))
 
         # =like and =ilike don't work on non-character fields
         with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.Error):

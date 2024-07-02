@@ -6271,19 +6271,22 @@ class BaseModel(metaclass=MetaModel):
                 # determine the field with the final type for values
                 field = None
                 if key:
-                    model = self.browse()
-                    for fname in key.split('.'):
-                        field = model._fields[fname]
-                        model = model[fname]
+                    if '.' in key:
+                        fname, rest = key.split('.', 1)
+                        field = self._fields[fname]
+                        if field.relational:
+                            key, comparator, value = fname, 'any', [(rest, comparator, value)]
+                    else:
+                        field = self._fields[key]
 
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                     if comparator.endswith('ilike'):
                         # ilike uses unaccent and lower-case comparison
                         def unaccent(x):
-                            return self.pool.unaccent_python(x.lower()) if x else ''
+                            return self.pool.unaccent_python(str(x).lower()) if x else ''
                     else:
                         def unaccent(x):
-                            return x or ''
+                            return str(x) if x else ''
                     value_esc = unaccent(value).replace('_', '?').replace('%', '*').replace('[', '?')
                     if not comparator.startswith('='):
                         value_esc = f'*{value_esc}*'
