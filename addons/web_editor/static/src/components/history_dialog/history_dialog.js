@@ -48,11 +48,14 @@ class HistoryDialog extends Component {
         }
         this.env.services.ui.block();
         this.state.revisionId = revisionId;
-        this.state.revisionContent = await this.getRevisionContent(revisionId);
-        this.state.revisionComparison = await this.getRevisionComparison(
-            revisionId
-        );
-        this.env.services.ui.unblock();
+        try {
+            [this.state.revisionContent, this.state.revisionComparison] = await Promise.all([
+                this.getRevisionContent(revisionId),
+                this.getRevisionComparison(revisionId),
+            ]);
+        } finally {
+            this.env.services.ui.unblock();
+        }
     }
 
     getRevisionComparison = memoize(
