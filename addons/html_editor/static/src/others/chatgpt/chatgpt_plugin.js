@@ -32,7 +32,7 @@ export class ChatGPTPlugin extends Plugin {
             action(dispatch) {
                 dispatch("OPEN_CHATGPT_DIALOG");
             },
-            // isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(), // TODO!
+            // isAvailable: () => !this.odooEditor.isSelectionInBlockRoot(), // TODO!
         },
     });
 
