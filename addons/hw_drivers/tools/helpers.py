@@ -61,14 +61,18 @@ if platform.system() == 'Windows':
 elif platform.system() == 'Linux':
     @contextlib.contextmanager
     def writable():
-        subprocess.call(["sudo", "mount", "-o", "remount,rw", "/"])
-        subprocess.call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/"])
         try:
+            subprocess.run(["sudo", "mount", "-o", "remount,rw", "/"], check=True)
+            subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/"], check=True)
             yield
         finally:
-            subprocess.call(["sudo", "mount", "-o", "remount,ro", "/"])
-            subprocess.call(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"])
-            subprocess.call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
+            try:
+                subprocess.run(["sudo", "mount", "-o", "remount,ro", "/"], check=True)
+                subprocess.run(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"], check=True)
+                subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"], check=True)
+            except subprocess.CalledProcessError:
+                _logger.error("Failed to remount read-only")
+
 
 def access_point():
     return get_ip() == '10.11.12.1'
@@ -124,6 +128,7 @@ def check_certificate():
         _logger.info(message)
         return {"status": CertificateStatus.OK, "message": message}
 
+
 def check_git_branch():
     """
     Check if the local branch is the same than the connected Odoo DB and
@@ -133,10 +138,11 @@ def check_git_branch():
     urllib3.disable_warnings()
     http = urllib3.PoolManager(cert_reqs='CERT_NONE')
     try:
-        response = http.request('POST',
+        response = http.request(
+            'POST',
             server + "/web/webclient/version_info",
             body='{}',
-            headers={'Content-type': 'application/json'}
+            headers={'Content-type': 'application/json'},
         )
 
         if response.status == 200:
@@ -146,20 +152,24 @@ def check_git_branch():
             if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
                 db_branch = 'master'
 
-            local_branch = subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
+            local_branch = (
+                subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
+            )
             _logger.info("Current IoT Box local git branch: %s / Associated Odoo database's git branch: %s", local_branch, db_branch)
 
             if db_branch != local_branch:
                 with writable():
-                    subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/drivers/*"])
-                    subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/interfaces/*"])
-                    subprocess.check_call(git + ['branch', '-m', db_branch])
-                    subprocess.check_call(git + ['remote', 'set-branches', 'origin', db_branch])
+                    subprocess.run(["rsync", "-av", "--delete", "/home/pi/odoo/", "/home/pi/.odoo.backup/"], check=True)
+                    subprocess.run(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/drivers/*"], check=True)
+                    subprocess.run(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/interfaces/*"], check=True)
+                    subprocess.run(git + ['branch', '-m', db_branch], check=True)
+                    subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
                     os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh')
 
     except Exception as e:
         _logger.error('Could not reach configured server')
         _logger.error('A error encountered : %s ', e)
+
 
 def check_image():
     """
@@ -262,12 +272,16 @@ def get_ssid():
     process_grep = subprocess.Popen(['grep', 'ESSID:"'], stdin=process_iwconfig.stdout, stdout=subprocess.PIPE)
     return subprocess.check_output(['sed', 's/.*"\\(.*\\)"/\\1/'], stdin=process_grep.stdout).decode('utf-8').rstrip()
 
+
 def get_odoo_server_url():
     if platform.system() == 'Linux':
         ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd']) # if service is active return 0 else inactive
         if not ap:
             return False
-    return read_file_first_line('odoo-remote-server.conf')
+
+    odoo_server = read_file_first_line('/home/pi/odoo-remote-server.conf')
+    return odoo_server
+
 
 def get_token():
     return read_file_first_line('token')

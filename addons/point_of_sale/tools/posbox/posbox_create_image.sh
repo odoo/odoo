@@ -29,11 +29,22 @@ MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
 OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
 VERSION=17.0
-VERSION_IOTBOX=24.01
-REPO=https://github.com/odoo/odoo.git
+VERSION_IOTBOX=24.06
+
+
+# ask user for the branch/version
+current_branch="$(git branch --show-current)"
+read -p "Enter dev branch [${current_branch}]: " VERSION
+VERSION=${VERSION:-$current_branch}
+
+# ask user for the repository
+current_repo="$(git remote get-url origin | sed 's/.*github.com[\/:]//' | sed 's/\/odoo.git//')"
+read -p "Enter repo [${current_repo}]: " REPO
+REPO="https://github.com/${REPO:-$current_repo}/odoo.git"
+echo "Using repo: ${REPO}"
 
 if ! file_exists *raspios*.img ; then
-    wget 'https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2023-12-11/2023-12-11-raspios-bookworm-armhf-lite.img.xz' -O raspios.img.xz
+    wget 'https://downloads.raspberrypi.com/raspios_armhf/images/raspios_armhf-2024-03-15/2024-03-15-raspios-bookworm-armhf.img.xz' -O raspios.img.xz
     unxz --verbose raspios.img.xz
 fi
 
