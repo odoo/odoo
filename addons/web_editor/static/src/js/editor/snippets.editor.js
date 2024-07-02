@@ -943,7 +943,7 @@ var SnippetEditor = Widget.extend({
             if (!val.selector.is(this.$target)) {
                 return;
             }
-            if (val.data.string) {
+            if (val.data.string && !val.isOwl) {
                 $optionsSection[0].querySelector('we-title > span').textContent = val.data.string;
             }
             if (val['drop-near']) {
@@ -964,6 +964,7 @@ var SnippetEditor = Widget.extend({
             if (val.isOwl) {
                 // TODO: @owl-options remove when legacy is completely converted.
                 this._hasOwlOptions = true;
+                this.name = val.data.string || this.getName();
                 option = Object.assign({}, registry.category("snippet_options").get(optionName));
                 const optionClass = option.Class || SnippetOption;
                 option.instance = new (optionClass)({
