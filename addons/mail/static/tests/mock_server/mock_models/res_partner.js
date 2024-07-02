@@ -167,7 +167,7 @@ export class ResPartner extends webModels.ResPartner {
                 ["channel_id", "=", channel_id],
                 ["partner_id", "=", partner.id],
             ]);
-            store.add(DiscussChannelMember.browse(member.id));
+            store.add(DiscussChannelMember.browse(member.id).map((record) => record.id));
         }
         return store.get_result();
     }

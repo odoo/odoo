@@ -51,7 +51,9 @@ export class WebsiteVisitor extends models.ServerModel {
             BusBus._sendone(
                 partner,
                 "website_livechat.send_chat_request",
-                new mailDataHelpers.Store(DiscussChannel.browse(livechatId)).get_result()
+                new mailDataHelpers.Store(
+                    DiscussChannel.browse(livechatId).map((record) => record.id)
+                ).get_result()
             );
         }
     }

@@ -53,7 +53,9 @@ export class DiscussChannelRtcSession extends models.ServerModel {
 
         const rtcSessions = this._filter([["id", "in", ids]]);
         for (const rtcSession of rtcSessions) {
-            store.add(DiscussChannelMember.browse(rtcSession.channel_member_id));
+            store.add(
+                DiscussChannelMember.browse(rtcSession.channel_member_id).map((record) => record.id)
+            );
             const vals = {
                 id: rtcSession.id,
                 channelMember: { id: rtcSession.channel_member_id },
@@ -94,7 +96,9 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         const [member] = DiscussChannelMember._filter([["id", "=", session.channel_member_id]]);
         const [channel] = DiscussChannel.search_read([["id", "=", member.channel_id]]);
         BusBus._sendone(channel, "discuss.channel.rtc.session/update_and_broadcast", {
-            data: new mailDataHelpers.Store(DiscussChannelRtcSession.browse(id)).get_result(),
+            data: new mailDataHelpers.Store(
+                DiscussChannelRtcSession.browse(id).map((record) => record.id)
+            ).get_result(),
             channelId: channel.id,
         });
     }

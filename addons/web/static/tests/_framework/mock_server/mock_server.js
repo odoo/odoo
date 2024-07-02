@@ -220,7 +220,7 @@ class MockServerBaseEnvironment {
     }
 
     get user() {
-        return MockServer.env["res.users"]._filter([["id", "=", serverState.userId]])[0];
+        return MockServer.env["res.users"].browse(serverState.userId)[0];
     }
 }
 
@@ -1134,7 +1134,7 @@ export function logout() {
         env.cookie.delete("authenticated_user_sid");
     }
     env.cookie.delete("sid");
-    const [publicUser] = env["res.users"]._filter([["id", "=", serverState.publicUserId]], {
+    const [publicUser] = env["res.users"].browse(serverState.publicUserId, {
         active_test: false,
     });
     authenticate(publicUser.login, publicUser.password);
@@ -1222,7 +1222,7 @@ export function stepAllNetworkCalls() {
 export async function withUser(userId, fn) {
     const { env } = MockServer;
     const currentUser = env.user;
-    const [targetUser] = env["res.users"]._filter([["id", "=", userId]], { active_test: false });
+    const [targetUser] = env["res.users"].browse(userId, { active_test: false });
     authenticateUser(targetUser);
     let result;
     try {

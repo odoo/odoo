@@ -33,7 +33,9 @@ export class DiscussChannelMember extends models.ServerModel {
         const notifications = [];
         for (const member of members) {
             const [channel] = DiscussChannel._filter([["id", "=", member.channel_id]]);
-            const store = new mailDataHelpers.Store(DiscussChannelMember.browse(member.id));
+            const store = new mailDataHelpers.Store(
+                DiscussChannelMember.browse(member.id).map((record) => record.id)
+            );
             store.add("ChannelMember", { id: member.id, isTyping: is_typing });
             notifications.push([channel, "mail.record/insert", store.get_result()]);
         }
@@ -265,7 +267,7 @@ export class DiscussChannelMember extends models.ServerModel {
                 target,
                 "mail.record/insert",
                 new mailDataHelpers.Store(
-                    DiscussChannelMember.browse(member.id),
+                    DiscussChannelMember.browse(member.id).map((record) => record.id),
                     makeKwArgs({
                         fields: {
                             id: true,
@@ -308,7 +310,7 @@ export class DiscussChannelMember extends models.ServerModel {
             guest: { id: true, name: true },
         };
         const store = new mailDataHelpers.Store(
-            DiscussChannelMember.browse(member.id),
+            DiscussChannelMember.browse(member.id).map((record) => record.id),
             makeKwArgs({
                 fields: {
                     id: true,
