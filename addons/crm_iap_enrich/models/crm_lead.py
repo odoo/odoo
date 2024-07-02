@@ -53,7 +53,7 @@ class Lead(models.Model):
         batches = [self[index:index + 50] for index in range(0, len(self), 50)]
         for leads in batches:
             lead_emails = {}
-            with self._cr.savepoint():
+            with self._cr.savepoint():  # TODO savepoint in loop
                 try:
                     self._cr.execute(
                         "SELECT 1 FROM {} WHERE id in %(lead_ids)s FOR UPDATE NOWAIT".format(self._table),
