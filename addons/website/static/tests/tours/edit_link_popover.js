@@ -150,6 +150,15 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     {
         content: "Click 'Home' link in footer",
         trigger: ':iframe footer a[href="/"]',
+        run: function (actions) {
+            // Simulate a real click, as the current step does not properly set
+            // focus on the link.
+            actions.click();
+            const el = this.anchor;
+            const sel = el.ownerDocument.getSelection();
+            sel.collapse(el, 0);
+            el.focus();
+        },
     },
     {
         content: "Popover should be shown (4)",
