@@ -101,6 +101,11 @@
             'website_sale/static/src/js/notification/warning_notification/warning_notification.js',
             'website_sale/static/src/js/notification/warning_notification/warning_notification.xml',
             'website_sale/static/src/js/notification/notification_service.js',
+
+            # Location selector components are defined in `delivery` to share the codebase with the
+            # backend.
+            'delivery/static/src/js/location_selector/**/*',
+            'website_sale/static/src/js/location_selector/**/*',
         ],
         'web._assets_primary_variables': [
             'website_sale/static/src/scss/primary_variables.scss',
