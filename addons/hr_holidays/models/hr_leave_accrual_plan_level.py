@@ -53,6 +53,7 @@ class AccrualPlanLevel(models.Model):
         ('monthly', 'Monthly'),
         ('biyearly', 'Twice a year'),
         ('yearly', 'Yearly'),
+        ('allocation_start_date', 'At Allocation Start Date'),
     ], default='daily', required=True, string="Frequency")
     week_day = fields.Selection([
         ('mon', 'Monday'),
@@ -128,7 +129,7 @@ class AccrualPlanLevel(models.Model):
 
     _sql_constraints = [
         ('check_dates',
-         "CHECK( (frequency IN ('daily', 'hourly')) or"
+         "CHECK( (frequency IN ('daily', 'hourly', 'allocation_start_date')) or"
          "(week_day IS NOT NULL AND frequency = 'weekly') or "
          "(first_day > 0 AND second_day > first_day AND first_day <= 31 AND second_day <= 31 AND frequency = 'bimonthly') or "
          "(first_day > 0 AND first_day <= 31 AND frequency = 'monthly')or "
@@ -219,7 +220,7 @@ class AccrualPlanLevel(models.Model):
             else:
                 level.yearly_day = DAY_SELECT_VALUES.index(level.yearly_day_display) + 1
 
-    def _get_next_date(self, last_call):
+    def _get_next_date(self, last_call, allocation_start_date):
         """
         Returns the next date with the given last call
         """
@@ -263,10 +264,18 @@ class AccrualPlanLevel(models.Model):
                 return date
             else:
                 return last_call + relativedelta(years=1, month=month, day=self.yearly_day)
+        elif self.frequency == 'allocation_start_date':
+            month = allocation_start_date.month
+            day = allocation_start_date.day
+            date = last_call + relativedelta(month=month, day=day)
+            if last_call < date:
+                return date
+            else:
+                return last_call + relativedelta(years=1, month=month, day=day)
         else:
             return False
 
-    def _get_previous_date(self, last_call):
+    def _get_previous_date(self, last_call, allocation_start_date):
         """
         Returns the date a potential previous call would have been at
         For example if you have a monthly level giving 16/02 would return 01/02
@@ -312,5 +321,13 @@ class AccrualPlanLevel(models.Model):
                 return year_date
             else:
                 return last_call + relativedelta(years=-1, month=month, day=self.yearly_day)
+        elif self.frequency == 'allocation_start_date':
+            month = allocation_start_date.month
+            day = allocation_start_date.day
+            year_date = last_call + relativedelta(month=month, day=day)
+            if last_call >= year_date:
+                return year_date
+            else:
+                return last_call + relativedelta(years=-1, month=month, day=day)
         else:
             return False
