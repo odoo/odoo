@@ -5,8 +5,8 @@
         <xpath expr="//div[@role='alert']" position="inside">
             <p>
                 The error occurred during the execution of the automation rule
-                "<t t-esc="actionName"/>"
-                (ID: <t t-esc="actionId"/>).
+                "<t t-esc="automationName"/>"
+                (ID: <t t-esc="automationId"/>).
                 <br/>
             </p>
             <p t-if="isUserAdmin">
@@ -22,10 +22,10 @@
         </xpath>
         <xpath expr="//div[@role='alert']//button" position="after">
             <t t-if="isUserAdmin">
-                <button class="btn btn-secondary mt4 o_disable_action_button me-3" t-on-click.prevent="disableAction">
+                <button class="btn btn-secondary mt4 o_disable_action_button me-3" t-on-click.prevent="disableAutomation">
                     <i class="fa fa-ban mr8"/>Disable Automation Rule
                 </button>
-                <button class="btn btn-secondary mt4 o_edit_action_button" t-on-click.prevent="editAction">
+                <button class="btn btn-secondary mt4 o_edit_action_button" t-on-click.prevent="editAutomation">
                     <i class="fa fa-edit mr8"/>Edit Automation Rule
                 </button>
             </t>
