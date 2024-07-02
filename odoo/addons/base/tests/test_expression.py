@@ -1712,11 +1712,14 @@ class TestOne2many(TransactionCase):
             WHERE ("res_partner"."id" IN (
                 SELECT "res_partner"."parent_id"
                 FROM "res_partner"
-                WHERE ("res_partner"."id" IN (
-                    SELECT "res_partner_bank"."partner_id"
-                    FROM "res_partner_bank"
-                    WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
-                )) AND "res_partner"."parent_id" IS NOT NULL
+                WHERE (
+                    ("res_partner"."active" = TRUE)
+                    AND ("res_partner"."id" IN (
+                        SELECT "res_partner_bank"."partner_id"
+                        FROM "res_partner_bank"
+                        WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
+                    ))
+                ) AND "res_partner"."parent_id" IS NOT NULL
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
