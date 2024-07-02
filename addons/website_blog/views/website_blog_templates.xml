@@ -288,7 +288,9 @@ list of filtered posts (by date or tag).
                     </div>
                     <div class="text-muted mb-2">
                         <i class="fa fa-clock-o fa-fw"/>
-                        <span t-field="blog_post.post_date" class="text-muted" t-options="{'format': 'long', 'date_only': 'true'}"/>
+                        <t t-set="date_class" t-value="'text-muted'"/>
+                        <span t-if="blog_post.published_date" t-field="blog_post.published_date" t-att-class="date_class" t-options="{'format': 'long', 'date_only': 'true'}"/>
+                        <span t-else="" t-field="blog_post.publish_on" t-att-class="date_class" t-options="{'format': 'long', 'date_only': 'true'}"/>
                         <span>by
                             <t t-call="website_blog.post_author">
                                 <t t-set="additionnal_classes" t-value="'d-inline-flex me-2'"/>
@@ -439,14 +441,14 @@ list of filtered posts (by date or tag).
     <title t-esc="blog.name"/>
     <link t-att-href="'%s/blog/%s' % (base_url ,blog.id)"/>
     <id t-esc="'%s/blog/%s' % (base_url, blog.id)"/>
-    <updated t-esc="str(posts[0].post_date).replace(' ', 'T') + 'Z' if posts else ''"/>
+    <updated t-esc="str(posts[0].published_date).replace(' ', 'T') + 'Z' if posts else ''"/>
     <entry t-foreach="posts" t-as="post">
         <title t-esc="post.name"/>
         <link t-att-href="'%s%s' % (base_url, post.website_url)"/>
         <id t-esc="'%s%s' % (base_url, post.website_url)"/>
         <author><name t-esc="post.sudo().author_id.name"/></author>
         <summary t-esc="html2plaintext(post.teaser)"/>
-        <updated t-esc="str(post.post_date).replace(' ', 'T') + 'Z'"/>
+        <updated t-esc="str(post.published_date).replace(' ', 'T') + 'Z'"/>
     </entry>
 </feed>
 </template>

@@ -77,6 +77,7 @@ class SlidesCase(MailCommon):
             'channel_id': cls.channel.id,
             'slide_category': 'document',
             'is_published': True,
+            'published_date': '2020-01-01',
             'completion_time': 2.0,
             'sequence': 1,
         })
@@ -92,6 +93,7 @@ class SlidesCase(MailCommon):
             'channel_id': cls.channel.id,
             'slide_category': 'document',
             'is_published': True,
+            'published_date': '2020-01-01',
             'completion_time': 3.0,
             'sequence': 3,
         })
@@ -100,6 +102,7 @@ class SlidesCase(MailCommon):
             'channel_id': cls.channel.id,
             'slide_category': 'document',
             'is_published': True,
+            'published_date': '2020-01-01',
             'completion_time': 1.5,
             'sequence': 4,
             'quiz_first_attempt_reward': 42,

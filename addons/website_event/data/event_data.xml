@@ -30,6 +30,18 @@
             <field name="default" eval="False"/>
             <field name="description">Event unpublished</field>
         </record>
+        <record id="mt_event_scheduled" model="mail.message.subtype">
+            <field name="name">Event scheduled</field>
+            <field name="res_model">event.event</field>
+            <field name="default" eval="False"/>
+            <field name="description">Event scheduled</field>
+        </record>
+        <record id="mt_event_unscheduled" model="mail.message.subtype">
+            <field name="name">Event unscheduled</field>
+            <field name="res_model">event.event</field>
+            <field name="default" eval="False"/>
+            <field name="description">Event unscheduled</field>
+        </record>
 
     </data>
 </odoo>

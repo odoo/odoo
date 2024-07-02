@@ -63,7 +63,11 @@
                                             <i class="fa fa-check me-2" />
                                             Registered
                                         </small>
-                                        <small t-if="not event.website_published" class="o_wevent_unpublished text-bg-danger">
+                                        <small t-if="event.publish_on" class="o_wevent_scheduled text-bg-warning">
+                                            <i class="fa fa-clock-o me-2" />
+                                            Scheduled for <span t-field="event.with_context(tz=event.date_tz).publish_on" t-options="{'format': 'LLL dd'}"/>
+                                        </small>
+                                        <small t-elif="not event.website_published" class="o_wevent_unpublished text-bg-danger">
                                             <i class="fa fa-ban me-2" />
                                             Unpublished
                                         </small>

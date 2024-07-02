@@ -620,7 +620,8 @@
                 <i t-attf-class="fa fa-fw #{'fa-check' if channel_progress[slide.id].get('completed') else 'fa-flag'}"/>
                 <t t-esc="channel_progress[slide.id].get('quiz_karma_won', 0) if channel_progress[slide.id].get('completed') else channel_progress[slide.id].get('quiz_karma_gain', 0)"/> xp
             </span>
-            <span class="badge text-bg-danger fw-normal m-1" t-if="not slide.website_published">Unpublished</span>
+            <span t-if="slide.publish_on and channel.website_published" class="badge text-bg-warning fw-normal m-1">Scheduled</span>
+            <span class="badge text-bg-danger fw-normal m-1" t-elif="not slide.website_published">Unpublished</span>
         </div>
 
         <div t-if="channel.is_member or channel.can_publish" class="pt-2 pb-2 border-start ms-2 me-2 ps-2 d-flex flex-row align-items-center o_wslides_slides_list_slide_controls o_not_editable">
@@ -858,7 +859,8 @@
             <span t-else="" class="card-title h5 o_wslides_desc_truncate_2 text-muted" t-esc="slide.name"/>
             <div class="text-muted o_wslides_desc_truncate_2 mb-2" t-if="slide.is_preview or (not slide.is_published and user.has_group('website_slides.group_website_slides_officer'))">
                 <span t-if="slide.is_preview" class="badge text-bg-info">Preview</span>
-                <span t-if="not slide.is_published and channel.can_publish" class="badge text-bg-danger">Unpublished</span>
+                <span t-if="slide.publish_on and channel.website_published" class="badge text-bg-warning">Scheduled</span>
+                <span t-elif="not slide.is_published and channel.can_publish" class="badge text-bg-danger">Unpublished</span>
             </div>
             <div class="card-text mb-auto">
                 <div class="o_wslides_desc_truncate_3 fw-light oe_no_empty" t-field="slide.description"/>
