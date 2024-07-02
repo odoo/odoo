@@ -2,18 +2,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from base64 import b64decode
+from datetime import datetime
 import json
 import logging
 import os
+from socket import gethostname
 import subprocess
 import time
+from werkzeug.exceptions import Forbidden
 
 from odoo import http, tools
 from odoo.modules.module import get_resource_path
-
+from odoo.tools import date_utils
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices, manager
 from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.tools.iot_object_info_controller import IoTObjectInfoController
 
 _logger = logging.getLogger(__name__)
 
@@ -83,3 +87,25 @@ class DriverController(http.Controller):
             res = http.send_file(tools.config['logfile'], mimetype="text/plain", as_attachment=True)
             res.headers['Cache-Control'] = 'no-cache'
             return res
+
+    @http.route('/hw_drivers/download_iot_info', type='http', auth='none', methods=['POST'], csrf=False, cors='*')
+    def download_iot_info(self, iot_security_token):
+        if not helpers.check_iot_security_token(iot_security_token):
+            raise Forbidden("Invalid IoT security token")
+
+        iot_info_json_b = str.encode(
+            json.dumps(
+                IoTObjectInfoController.get_all_iot_info(),
+                ensure_ascii=False,
+                default=date_utils.json_default
+            )
+        )
+        response = http.Stream(
+            type='data',
+            data=iot_info_json_b,
+            download_name=f"iot-odoo-info-{gethostname()}-{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.json",
+        ).get_response(as_attachment=True)
+        # As it's a CORS request, the Content-Disposition header is not exposed by default, see:
+        # https://stackoverflow.com/a/5837798
+        response.headers.set('Access-Control-Expose-Headers', "Content-Disposition")
+        return response

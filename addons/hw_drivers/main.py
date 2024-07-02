@@ -29,10 +29,16 @@ except ImportError:
 
 drivers = []
 interfaces = {}
+interfaces_instance = set()
+"""Contain all instances of interfaces"""
 iot_devices = {}
 
 
 class Manager(Thread):
+    def __init__(self):
+        super().__init__()
+        self.previous_iot_devices = []
+
     def send_alldevices(self):
         """
         This method send IoT Box and devices informations to Odoo database
@@ -107,15 +113,15 @@ class Manager(Thread):
                 i = interface()
                 i.daemon = True
                 i.start()
-            except Exception as e:
-                _logger.error("Error in %s: %s", str(interface), e)
+                interfaces_instance.add(i)
+            except Exception:
+                _logger.exception("Error instanciating interface %s", str(interface))
 
         # Set scheduled actions
         schedule and schedule.every().day.at("00:00").do(helpers.get_certificate_status)
 
         # Check every 3 secondes if the list of connected devices has changed and send the updated
         # list to the connected DB.
-        self.previous_iot_devices = []
         while 1:
             try:
                 if iot_devices != self.previous_iot_devices:
