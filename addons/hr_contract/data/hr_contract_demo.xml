@@ -16,6 +16,96 @@
         </record>
     </data>
 
+    <record id="resource_calendar_std_20h" model="resource.calendar">
+        <field name="name">Standard 20 hours/week</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="hours_per_day">4.0</field>
+        <field name="attendance_ids"
+            eval="[Command.clear(),
+                Command.create({'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                Command.create({'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                Command.create({'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                Command.create({'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                Command.create({'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'})
+            ]"
+        />
+    </record>
+
+    <record id="hr_contract_kar_old" model="hr.contract">
+          <field name="name">Kate Richards Contract</field>
+          <field name="date_start" eval="(DateTime.now() + relativedelta(months=-3)).strftime('%Y-%m-23')"/>
+          <field name="date_end" eval="(DateTime.now() + relativedelta(days=-5)).strftime('%Y-%m-%d')"/>
+          <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
+          <field name="employee_id" ref="hr.employee_kar"/>
+          <field name="notes">This is Kate Richards's contract</field>
+          <field name="wage">1500.0</field>
+          <field name="state">close</field>
+          <field name="resource_calendar_id" ref="resource_calendar_std_20h"/>
+          <field name="hr_responsible_id" ref="base.user_admin"/>
+      </record>
+
+      <record id="hr_contract_kar_new" model="hr.contract">
+          <field name="name">New Kate Richards Contract</field>
+          <field name="date_start" eval="(DateTime.now() + relativedelta(days=-4)).strftime('%Y-%m-%d')"/>
+          <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
+          <field name="employee_id" ref="hr.employee_kar"/>
+          <field name="notes">This is Kate Richards's Part Time contract</field>
+          <field name="wage">3200.0</field>
+          <field name="state">open</field>
+          <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+          <field name="hr_responsible_id" ref="base.user_admin"/>
+      </record>
+
+      <record id="hr_contract_frd_old" model="hr.contract">
+          <field name="name">Freya Dunkley Contract</field>
+          <field name="date_start" eval="(DateTime.now() + relativedelta(months=-6)).strftime('%Y-%m-25')"/>
+          <field name="date_end" eval="(DateTime.now() + relativedelta(days=-6)).strftime('%Y-%m-%d')"/>
+          <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
+          <field name="employee_id" ref="hr.employee_frd"/>
+          <field name="notes">This is Freya Dunkley's contract</field>
+          <field name="wage">9000.0</field>
+          <field name="state">close</field>
+          <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+          <field name="hr_responsible_id" ref="base.user_admin"/>
+      </record>
+
+      <record id="hr_contract_frd_new" model="hr.contract">
+          <field name="name">New Freya Dunkley Contract</field>
+          <field name="date_start" eval="(DateTime.now() + relativedelta(days=-5)).strftime('%Y-%m-%d')"/>
+          <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
+          <field name="employee_id" ref="hr.employee_frd"/>
+          <field name="notes">This is Freya Dunkley's Part Time contract</field>
+          <field name="wage">7000.0</field>
+          <field name="state">open</field>
+          <field name="resource_calendar_id" ref="resource_calendar_std_20h"/>
+          <field name="hr_responsible_id" ref="base.user_admin"/>
+      </record>
+
+      <record id="hr_contract_jog_old" model="hr.contract">
+          <field name="name">Sarah Davis Contract</field>
+          <field name="date_start" eval="(DateTime.now() + relativedelta(months=-10)).strftime('%Y-%m-18')"/>
+          <field name="date_end" eval="(DateTime.now() + relativedelta(days=-3)).strftime('%Y-%m-%d')"/>
+          <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
+          <field name="employee_id" ref="hr.employee_sad"/>
+          <field name="notes">This is Sarah Davis's Part Time contract</field>
+          <field name="wage">3000.0</field>
+          <field name="state">close</field>
+          <field name="resource_calendar_id" ref="resource_calendar_std_20h"/>
+          <field name="hr_responsible_id" ref="base.user_admin"/>
+      </record>
+
+      <record id="hr_contract_sad_new" model="hr.contract">
+          <field name="name">New Sarah Davis Contract</field>
+          <field name="date_start" eval="(DateTime.now() + relativedelta(days=-2)).strftime('%Y-%m-%d')"/>
+          <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
+          <field name="employee_id" ref="hr.employee_sad"/>
+          <field name="notes">This is Sarah Davis's Full Time contract</field>
+          <field name="wage">3000.0</field>
+          <field name="state">open</field>
+          <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+          <field name="hr_responsible_id" ref="base.user_admin"/>
+      </record>
+
     <record id="hr_contract_admin" model="hr.contract">
         <field name="name">Mitchell Admin Contract</field>
         <field name="date_start" eval="time.strftime('%Y')+'-1-1'"/>
