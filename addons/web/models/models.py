@@ -107,7 +107,7 @@ class Base(models.AbstractModel):
             length = limit
             chunk_size = 100000
             while True:
-                more = len(self.read_group(domain, ['display_name'], groupby, offset=length, limit=chunk_size, lazy=True))
+                more = len(self.read_group(domain, ['display_name'], groupby, orderby='id', offset=length, limit=chunk_size, lazy=True))
                 length += more
                 if more < chunk_size:
                     break

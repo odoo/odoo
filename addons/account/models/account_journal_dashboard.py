@@ -80,6 +80,7 @@ class account_journal(models.Model):
                 domain=[('journal_id', 'in', self.ids)],
                 fields=['journal_id'],
                 groupby=['journal_id'],
+                orderby='id',
             )
         }
         for journal in self:
@@ -289,12 +290,12 @@ class account_journal(models.Model):
             (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency, curr_cache=curr_cache)
             (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency, curr_cache=curr_cache)
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency, curr_cache=curr_cache)
-            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total_signed'], 'journal_id', lazy=False)
+            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total_signed'], 'journal_id', lazy=False, orderby='id')
             if read:
                 number_to_check = read[0]['__count']
                 to_check_balance = read[0]['amount_total_signed']
         elif self.type == 'general':
-            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total_signed'], 'journal_id', lazy=False)
+            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total_signed'], 'journal_id', lazy=False, orderby='id')
             if read:
                 number_to_check = read[0]['__count']
                 to_check_balance = read[0]['amount_total_signed']
