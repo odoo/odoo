@@ -663,7 +663,7 @@ class PosOrder(models.Model):
 
     def _create_invoice(self, move_vals):
         self.ensure_one()
-        new_move = self.env['account.move'].sudo().with_company(self.company_id).with_context(default_move_type=move_vals['move_type']).create(move_vals)
+        new_move = self.env['account.move'].sudo().with_company(self.company_id).with_context(default_move_type=move_vals['move_type'], linked_to_pos=True).create(move_vals)
         message = _("This invoice has been created from the point of sale session: %s",
             self._get_html_link())
 
