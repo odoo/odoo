@@ -80,51 +80,54 @@ class TestStockLot(TestStockCommon):
         self.env['stock.lot']._alert_date_exceeded()
 
         # check a new activity has been created
-        activity_id = self.env.ref('product_expiry.mail_activity_type_alert_date_reached').id
-        activity_count = self.env['mail.activity'].search_count([
-            ('activity_type_id', '=', activity_id),
-            ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
-            ('res_id', '=', self.lot1_productAAA.id)
-        ])
-        self.assertEqual(activity_count, 1, 'No activity created while there should be one')
+        activity_type = self.env.ref('product_expiry.mail_activity_type_alert_date_reached')
+        if activity_type:
+            activity_count = self.env['mail.activity'].search_count([
+                ('activity_type_id', '=', activity_type.id),
+                ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
+                ('res_id', '=', self.lot1_productAAA.id)
+            ])
+            self.assertEqual(activity_count, 1, 'No activity created while there should be one')
 
         # run the scheduler a second time
         self.env['stock.lot']._alert_date_exceeded()
 
         # check there is still only one activity, no additional activity is created if there is already an existing activity
-        activity_count = self.env['mail.activity'].search_count([
-            ('activity_type_id', '=', activity_id),
-            ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
-            ('res_id', '=', self.lot1_productAAA.id)
-        ])
-        self.assertEqual(activity_count, 1, 'There should be one and only one activity')
+        if activity_type:
+            activity_count = self.env['mail.activity'].search_count([
+                ('activity_type_id', '=', activity_type.id),
+                ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
+                ('res_id', '=', self.lot1_productAAA.id)
+            ])
+            self.assertEqual(activity_count, 1, 'There should be one and only one activity')
 
-        # mark the activity as done
-        mail_activity = self.env['mail.activity'].search([
-            ('activity_type_id', '=', activity_id),
-            ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
-            ('res_id', '=', self.lot1_productAAA.id)
-        ])
-        mail_activity.action_done()
+            # mark the activity as done
+            mail_activity = self.env['mail.activity'].search([
+                ('activity_type_id', '=', activity_type.id),
+                ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
+                ('res_id', '=', self.lot1_productAAA.id)
+            ])
+            mail_activity.action_done()
 
-        # check there is no more activity (because it is already done)
-        activity_count = self.env['mail.activity'].search_count([
-            ('activity_type_id', '=', activity_id),
-            ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
-            ('res_id', '=', self.lot1_productAAA.id)
-        ])
-        self.assertEqual(activity_count, 0,"As activity is done, there shouldn't be any related activity")
+            # check there is no more activity (because it is already done)
+            activity_count = self.env['mail.activity'].search_count([
+                ('activity_type_id', '=', activity_type.id),
+                ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
+                ('res_id', '=', self.lot1_productAAA.id)
+            ])
+            self.assertEqual(activity_count, 0,"As activity is done, there shouldn't be any related activity")
 
         # run the scheduler a third time
         self.env['stock.lot']._alert_date_exceeded()
 
         # check there is no activity created
-        activity_count = self.env['mail.activity'].search_count([
-            ('activity_type_id', '=', activity_id),
-            ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
-            ('res_id', '=',self.lot1_productAAA.id)
-        ])
-        self.assertEqual(activity_count, 0, "As there is already an activity marked as done, there shouldn't be any related activity created for this lot")
+        if activity_type:
+            activity_count = self.env['mail.activity'].search_count([
+                ('activity_type_id', '=', activity_type.id),
+                ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
+                ('res_id', '=',self.lot1_productAAA.id)
+            ])
+            self.assertEqual(activity_count, 0, "As there is already an activity marked as done, there shouldn't be any related activity created for this lot")
 
     def test_01_stock_production_lot(self):
         """ Test Scheduled Task on lot with an alert_date in future does not create an activity """

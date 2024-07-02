@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, exceptions, fields, models, _
 
 
 class MailActivityType(models.Model):
@@ -125,3 +125,29 @@ class MailActivityType(models.Model):
                 activity_type.chaining_type = 'trigger'
             else:
                 activity_type.chaining_type = 'suggest'
+
+    def write(self, values):
+        """ Protect Todo against deletiong or modification as it is used as cross
+        model data in various apps and plans e.g. fleet """
+        if 'res_model' in values:
+            todo_activity = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)
+            meeting_activity = self.env.ref('mail.mail_activity_data_meeting', raise_if_not_found=False)
+            modifed = (
+                (todo_activity or self.env['mail.activity.type']) +
+                (meeting_activity or self.env['mail.activity.type'])
+            ) & self
+            if modifed:
+                raise exceptions.UserError(
+                    _('You cannot modify %(activities_name)s target model as it is required in various apps.',
+                      activities_name=', '.join(act.name for act in modifed),
+                ))
+        return super().write(values)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_master_data(self):
+        todo_activity = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)
+        if todo_activity and todo_activity in self:
+            raise exceptions.UserError(
+                _('You cannot delete %(activity_name)s as it is required in various apps.',
+                  activity_name=todo_activity.name,
+            ))
