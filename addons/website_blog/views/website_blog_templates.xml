@@ -320,12 +320,12 @@ list of filtered posts (by date or tag).
                                 <t t-set="hide_date" t-value="True"/>
                             </t>
                         </span>
-                        <span t-if="len(blog_post.message_ids) > 0" class="text-nowrap ps-2 o_not_editable">|
+                        <span t-if="len(blog_post.message_ids.filtered(lambda r: r.body != '')) > 0" class="text-nowrap ps-2 o_not_editable">|
                             <i class="fa fa-comment text-muted me-1"/>
                             <a href="#discussion">
-                                <t t-esc="len(blog_post.message_ids)"/>
-                                <t t-if="len(blog_post.message_ids)>1">Comments</t>
-                                <t t-else="">Comment</t>
+                                <t t-esc="len(blog_post.message_ids.filtered(lambda r: r.body != ''))"/>
+                                <t t-if="len(blog_post.message_ids.filtered(lambda r: r.body != ''))>1"> Comments</t>
+                                <t t-else=""> Comment</t>
                             </a>
                         </span>
                         <span t-elif="is_view_active('website_blog.opt_blog_post_comment')">| No comments yet</span>

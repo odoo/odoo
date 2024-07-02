@@ -151,6 +151,7 @@ var PortalChatter = publicWidget.Widget.extend({
     _reloadChatterContent: function (data) {
         this.messageFetch();
         this._reloadComposer();
+        location.reload();
     },
     _createComposerWidget: function () {
         return new portalComposer.PortalComposer(this, this.options);
