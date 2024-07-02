@@ -67,6 +67,14 @@ odoo.define('pos_sale.tour.ProductScreenTourMethods', function (require) {
                 }
             ];
         }
+        checkOrdersListEmpty() {
+            return [
+                {
+                    content: 'Check that the orders list is empty',
+                    trigger: '.order-list:not(:has(.order-row))',
+                }
+            ]
+        }
     }
     return createTourMethods('ProductScreen', DoExt, CheckExt, Execute);
 });
