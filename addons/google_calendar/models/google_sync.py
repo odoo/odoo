@@ -14,6 +14,7 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
+from odoo.addons.calendar.models.calendar_event import Meeting
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 from odoo.addons.google_account.models.google_service import TIMEOUT
 
@@ -83,6 +84,14 @@ class GoogleSync(models.AbstractModel):
             for vals in vals_list:
                 vals.update({'need_sync': False})
         records = super().create(vals_list)
+
+        # Edge case: when creating 'All Day' recurrent event, the first event is wrongly
+        # synchronized as a single event and then its recurrence creates a duplicated event.
+        if vals_list and isinstance(self, Meeting):
+            forbid_sync = all(not vals.get('need_sync', True) for vals in vals_list)
+            records_to_skip = records.filtered(lambda r: r.need_sync and r.allday and r.recurrency and not r.recurrence_id)
+            if forbid_sync and records_to_skip:
+                records_to_skip.with_context(send_updates=False).need_sync = False
 
         google_service = GoogleCalendarService(self.env['google.service'])
         records_to_sync = records.filtered(lambda r: r.need_sync and r.active)
