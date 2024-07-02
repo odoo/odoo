@@ -92,6 +92,106 @@ class PosConfig(models.Model):
 
         return super().write(vals)
 
+<<<<<<< HEAD
+||||||| parent of b94e71d9dee1 (temp)
+    @api.model
+    def post_install_pos_localisation(self, companies=False):
+        self = self.sudo()
+        if not companies:
+            companies = self.env['res.company'].search([])
+        super(PosConfig, self).post_install_pos_localisation(companies)
+        for company in companies.filtered('chart_template'):
+            pos_configs = self.search([
+                *self.env['account.journal']._check_company_domain(company),
+                ('module_pos_restaurant', '=', True),
+            ])
+            if not pos_configs:
+                pos_configs = self.env['pos.config'].with_company(company).create({
+                'name': _('Bar'),
+                'company_id': company.id,
+                'module_pos_restaurant': True,
+                'iface_splitbill': True,
+                'iface_printbill': True,
+                'iface_orderline_notes': True,
+
+            })
+            pos_configs.setup_defaults(company)
+
+    def setup_defaults(self, company):
+        main_restaurant = self.env.ref('pos_restaurant.pos_config_main_restaurant', raise_if_not_found=False)
+        main_restaurant_is_present = main_restaurant and self.filtered(lambda cfg: cfg.id == main_restaurant.id)
+        if main_restaurant_is_present:
+            non_main_restaurant_configs = self - main_restaurant
+            non_main_restaurant_configs.assign_payment_journals(company)
+            main_restaurant._setup_main_restaurant_defaults()
+            self.generate_pos_journal(company)
+            self.setup_invoice_journal(company)
+        else:
+            super().setup_defaults(company)
+
+    def _setup_main_restaurant_defaults(self):
+        self.ensure_one()
+        self._link_same_non_cash_payment_methods_if_exists('point_of_sale.pos_config_main')
+        self._ensure_cash_payment_method('MRCSH', _('Cash Restaurant'))
+        self._archive_shop()
+
+    def _archive_shop(self):
+        shop = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
+        if shop:
+            session_count = self.env['pos.session'].search_count([('config_id', '=', shop.id)])
+            if session_count == 0:
+                shop.update({'active': False})
+
+=======
+    @api.model
+    def post_install_pos_localisation(self, companies=False):
+        self = self.sudo()
+        if not companies:
+            companies = self.env['res.company'].search([])
+        super(PosConfig, self).post_install_pos_localisation(companies)
+        for company in companies.filtered('chart_template'):
+            pos_configs = self.search([
+                *self.env['account.journal']._check_company_domain(company),
+                ('module_pos_restaurant', '=', True),
+            ])
+            if not pos_configs:
+                pos_configs = self.env['pos.config'].with_company(company).create({
+                'name': _('Bar'),
+                'company_id': company.id,
+                'module_pos_restaurant': True,
+                'iface_splitbill': True,
+                'iface_printbill': True,
+                'iface_orderline_notes': True,
+
+            })
+            pos_configs.setup_defaults(company)
+
+    def setup_defaults(self, company):
+        main_restaurant = self.env.ref('pos_restaurant.pos_config_main_restaurant', raise_if_not_found=False)
+        main_restaurant_is_present = main_restaurant and not main_restaurant.has_active_session and self.filtered(lambda cfg: cfg.id == main_restaurant.id)
+        if main_restaurant_is_present:
+            non_main_restaurant_configs = self - main_restaurant
+            non_main_restaurant_configs.assign_payment_journals(company)
+            main_restaurant._setup_main_restaurant_defaults()
+            self.generate_pos_journal(company)
+            self.setup_invoice_journal(company)
+        else:
+            super().setup_defaults(company)
+
+    def _setup_main_restaurant_defaults(self):
+        self.ensure_one()
+        self._link_same_non_cash_payment_methods_if_exists('point_of_sale.pos_config_main')
+        self._ensure_cash_payment_method('MRCSH', _('Cash Restaurant'))
+        self._archive_shop()
+
+    def _archive_shop(self):
+        shop = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
+        if shop:
+            session_count = self.env['pos.session'].search_count([('config_id', '=', shop.id)])
+            if session_count == 0:
+                shop.update({'active': False})
+
+>>>>>>> b94e71d9dee1 (temp)
     def _setup_default_floor(self, pos_config):
         if not pos_config.floor_ids:
             main_floor = self.env['restaurant.floor'].create({
