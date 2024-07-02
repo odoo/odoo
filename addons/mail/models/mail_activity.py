@@ -604,7 +604,7 @@ class MailActivity(models.Model):
             store.add("Activity", activity)
 
     @api.model
-    def get_activity_data(self, res_model, domain, limit=None, offset=0, fetch_done=False):
+    def get_activity_data(self, res_model, domain, limit=None, offset=0, fetch_done=False, only_activity_user_id=None):
         """ Get aggregate data about records and their activities.
 
         The goal is to fetch and compute aggregated data about records and their
@@ -619,6 +619,8 @@ class MailActivity(models.Model):
         :param int offset: offset of the first record to fetch
         :param bool fetch_done: determines if "done" activities are integrated in the
             aggregated data or not.
+        :param int :only_activity_user_id: when set, only activities belonging to
+            that user will be returned.
         :return dict: {'activity_types': dict of activity type info
                             {id: int, name: str, mail_template: list of {id:int, name:str},
                             keep_done: bool}
@@ -649,6 +651,8 @@ class MailActivity(models.Model):
         is_filtered = domain or limit or offset
         if is_filtered:
             activity_domain.append(('res_id', 'in', DocModel._search(domain or [], offset, limit) if is_filtered else []))
+        if only_activity_user_id:
+            activity_domain.append(('user_id', '=', only_activity_user_id))
         all_activities = Activity.with_context(active_test=not fetch_done).search(
             activity_domain, order='date_done DESC, date_deadline ASC')
         all_ongoing = all_activities.filtered('active')

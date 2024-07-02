@@ -86,6 +86,7 @@ export class ActivityMenu extends Component {
             {
                 clearBreadcrumbs: true,
                 viewType: group.view_type,
+                additionalContext: { only_activity_user_id: this.userId },
             }
         );
     }
