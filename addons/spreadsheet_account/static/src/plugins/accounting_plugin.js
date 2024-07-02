@@ -17,6 +17,7 @@ export class AccountingPlugin extends OdooUIPlugin {
         "getAccountGroupCodes",
         "getFiscalStartDate",
         "getFiscalEndDate",
+        "getAccountResidual",
     ]);
     constructor(config) {
         super(config);
@@ -40,34 +41,38 @@ export class AccountingPlugin extends OdooUIPlugin {
     /**
      * Gets the total balance for given account code prefix
      * @param {string[]} codes prefixes of the accounts' codes
-     * @param {DateRange} dateRange start date of the period to look
-     * @param {number} offset end  date of the period to look
+     * @param {DateRange} dateFrom start date of the period to look
+     * @param {DateRange} dateTo end date of the period to look
+     * @param {number} offset year offset of the period to look
      * @param {number | null} companyId specific company to target
      * @param {boolean} includeUnposted wether or not select unposted entries
+     * @param {number[]} partnerIds ids of the partners
      * @returns {number}
      */
-    getAccountPrefixCredit(codes, dateRange, offset, companyId, includeUnposted) {
-        const data = this._fetchAccountData(codes, dateRange, offset, companyId, includeUnposted);
+    getAccountPrefixCredit(codes, dateFrom, dateTo, offset, companyId, includeUnposted, partnerIds=[]) {
+        const data = this._fetchAccountData(codes, dateFrom, dateTo, offset, companyId, includeUnposted, partnerIds);
         return data.credit;
     }
 
     /**
      * Gets the total balance for a given account code prefix
-     * @param {string[]} codes prefixes of the accounts codes
-     * @param {DateRange} dateRange start date of the period to look
-     * @param {number} offset end  date of the period to look
+     * @param {string[]} codes prefixes of the accounts' codes
+     * @param {DateRange} dateFrom start date of the period to look
+     * @param {DateRange} dateTo end date of the period to look
+     * @param {number} offset year offset of the period to look
      * @param {number | null} companyId specific company to target
      * @param {boolean} includeUnposted wether or not select unposted entries
+     * @param {number[]} partnerIds ids of the partners
      * @returns {number}
      */
-    getAccountPrefixDebit(codes, dateRange, offset, companyId, includeUnposted) {
-        const data = this._fetchAccountData(codes, dateRange, offset, companyId, includeUnposted);
+    getAccountPrefixDebit(codes, dateFrom, dateTo, offset, companyId, includeUnposted, partnerIds=[]) {
+        const data = this._fetchAccountData(codes, dateFrom, dateTo, offset, companyId, includeUnposted, partnerIds);
         return data.debit;
     }
 
     /**
      * @param {Date} date Date included in the fiscal year
-     * @param {number | null} companyId specific company to target
+     * @param {number | undefined} companyId specific company to target
      * @returns {string | undefined}
      */
     getFiscalStartDate(date, companyId) {
@@ -95,25 +100,31 @@ export class AccountingPlugin extends OdooUIPlugin {
      * Fetch the account information (credit/debit) for a given account code
      * @private
      * @param {string[]} codes prefix of the accounts' codes
-     * @param {DateRange} dateRange start date of the period to look
-     * @param {number} offset end  date of the period to look
+     * @param {DateRange} dateFrom start date of the period to look
+     * @param {DateRange} dateTo end date of the period to look
+     * @param {number} offset year offset of the period to look
      * @param {number | null} companyId specific companyId to target
      * @param {boolean} includeUnposted wether or not select unposted entries
+     * @param {number[]} partnerIds ids of the partners
      * @returns {{ debit: number, credit: number }}
      */
-    _fetchAccountData(codes, dateRange, offset, companyId, includeUnposted) {
-        dateRange.year += offset;
+    _fetchAccountData(codes, dateFrom, dateTo, offset, companyId, includeUnposted, partnerIds) {
+        dateFrom.year += offset;
+        dateTo.year += offset;
         // Excel dates start at 1899-12-30, we should not support date ranges
         // that do not cover dates prior to it.
         // Unfortunately, this check needs to be done right before the server
         // call as a date to low (year <= 1) can raise an error server side.
-        if (dateRange.year < 1900) {
-            throw new EvaluationError(_t("%s is not a valid year.", dateRange.year));
+        if (dateFrom.year < 1900) {
+            throw new EvaluationError(_t("%s is not a valid year.", dateFrom.year));
+        }
+        if (dateTo.year < 1900) {
+            throw new EvaluationError(_t("%s is not a valid year.", dateTo.year));
         }
         return this.serverData.batch.get(
             "account.account",
             "spreadsheet_fetch_debit_credit",
-            camelToSnakeObject({ dateRange, codes, companyId, includeUnposted })
+            camelToSnakeObject({ dateFrom, dateTo, codes, companyId, includeUnposted, partnerIds })
         );
     }
 
@@ -122,7 +133,7 @@ export class AccountingPlugin extends OdooUIPlugin {
      * Defaults on the current user company if not provided
      * @private
      * @param {Date} date
-     * @param {number | null} companyId
+     * @param {number | undefined} companyId
      * @returns {{start: string, end: string}}
      */
     _fetchCompanyData(date, companyId) {
@@ -132,6 +143,31 @@ export class AccountingPlugin extends OdooUIPlugin {
         });
         if (result === false) {
             throw new EvaluationError(_t("The company fiscal year could not be found."));
+        }
+        return result;
+    }
+
+    /**
+     * Gets the residual amount for given account code prefixes over a given period
+     * @param {string[]} codes prefixes of the accounts codes
+     * @param {DateRange} dateFrom start date of the period to search
+     * @param {DateRange} dateTo end date of the period to search
+     * @param {number} offset year offset of the period to search
+     * @param {number} companyId specific company to target
+     * @param {boolean} includeUnposted whether or not select unposted entries
+     * @returns {number | undefined}
+     */
+    getAccountResidual(codes, dateFrom, dateTo, offset, companyId, includeUnposted) {
+        dateFrom.year += offset;
+        dateTo.year += offset;
+
+        const result = this.serverData.batch.get(
+            "account.account",
+            "get_residual_amount",
+            camelToSnakeObject({ codes, dateFrom, dateTo, companyId, includeUnposted })
+        );
+        if (result === false) {
+            throw new EvaluationError(_t("The residual amount for given accounts could not be computed."));
         }
         return result;
     }
