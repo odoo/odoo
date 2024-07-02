@@ -1,12 +1,12 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import { models, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
+
+import { View } from "@web/views/view";
 
 class Duck extends models.Model {
     _name = "duck";
     _records = [{ name: "Donald" }, { name: "Scrooge" }];
-
-    name = fields.Char();
 
     _views = {
         form: /* xml */ `
@@ -14,15 +14,8 @@ class Duck extends models.Model {
                 <field name="display_name" />
             </form>
         `,
-        list: /* xml */ `
-            <list>
-                <field name="display_name" />
-            </list>
-        `,
     };
 }
-
-defineModels([Duck]);
 
 onRpc("has_group", () => true); // Needed by the list controller
 
@@ -32,11 +25,13 @@ onRpc("has_group", () => true); // Needed by the list controller
  * @hint declare a `name` field on `Duck` with `fields` ("@web/../tests/web_test_helpers")
  * @hint give `Duck` to `defineModels()` ("@web/../tests/web_test_helpers") to load it in the mock server
  */
-test("form view works with ducks", async () => {
-    await mountView({
-        type: "form",
-        resId: 1,
-        resModel: "duck",
+test.todo("form view works with ducks", async () => {
+    await mountWithCleanup(View, {
+        props: {
+            type: "form",
+            resId: 1,
+            resModel: "dcuk",
+        },
     });
 
     expect(".o_form_renderer").toHaveText("Donald");
@@ -46,14 +41,24 @@ test("form view works with ducks", async () => {
  * @hint `Duck._records` can directly be altered, no need to declare a whole new model from scratch
  * @hint `expect.step` in `onRpc()`
  */
-test("list view works with ducks", async () => {
-    Duck._records = [{ name: "Huey" }, { name: "Dewey" }, { name: "Louie" }];
+test.todo("list view works with ducks", async () => {
+    class Duck extends models.Model {
+        _name = "duck";
+        _records = [{ name: "Huey" }, { name: "Dewey" }, { name: "Louie" }];
+        _views = {
+            list: /* xml */ `
+                <list>
+                    <field name="display_name" />
+                </list>
+            `,
+        };
+    }
 
-    onRpc(({ method }) => expect.step(method));
-
-    await mountView({
-        type: "list",
-        resModel: "duck",
+    await mountWithCleanup(View, {
+        props: {
+            type: "list",
+            resModel: "duck",
+        },
     });
 
     expect(queryAllTexts(`[name=display_name]`)).toEqual(["Huey", "Dewey", "Louie"]);
