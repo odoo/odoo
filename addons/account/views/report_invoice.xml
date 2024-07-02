@@ -278,16 +278,26 @@
                                 <div id="qrcode" class="d-flex mb-3 avoid-page-break-inside" t-else="">
                                     <div class="qrcode me-3" id="qrcode_image">
                                         <t t-set="qr_code_url" t-value="o._generate_qr_code(silent_errors=True)"/>
-                                        <p t-if="qr_code_url" class="position-relative mb-0">
+                                        <p t-if="qr_code_url and o.qr_code_method" class="position-relative mb-0">
                                             <img t-att-src="qr_code_url"/>
                                             <img src="/account/static/src/img/Odoo_logo_O.svg"
                                                  id="qrcode_odoo_logo"
                                                  class="top-50 start-50 position-absolute bg-white border border-white border-3 rounded-circle"
                                             />
                                         </p>
+                                        <a t-else="" target="_blank" t-attf-href="{{ o._generate_portal_url() }}">
+                                            <p t-if="qr_code_url" class="position-relative mb-0">
+                                                <img t-att-src="qr_code_url"/>
+                                                <img src="/account/static/src/img/Odoo_logo_O.svg"
+                                                     id="qrcode_odoo_logo"
+                                                     class="top-50 start-50 position-absolute bg-white border border-white border-3 rounded-circle"
+                                                />
+                                            </p>
+                                        </a>
                                     </div>
                                     <div class="d-inline text-muted lh-sm fst-italic" id="qrcode_info" t-if="qr_code_url">
-                                        <p>Scan this QR Code with<br/>your banking application</p>
+                                        <p t-if="o.qr_code_method">Scan this QR Code with<br/>your banking application</p>
+                                        <p t-else="">Scan or click this<br/>QR Code to pay online</p>
                                     </div>
                                 </div>
                                 <!--terms and conditions-->
