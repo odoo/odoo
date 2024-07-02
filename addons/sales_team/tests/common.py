@@ -3,9 +3,11 @@
 
 from odoo.tests import TransactionCase
 
+from odoo.addons.base.tests.common import BaseCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 
-class SalesTeamCommon(TransactionCase):
+
+class SalesTeamCommon(BaseCommon):
 
     @classmethod
     def setUpClass(cls):
