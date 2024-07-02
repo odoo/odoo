@@ -2,6 +2,7 @@
 
 import pytz
 
+from calendar import monthrange
 from collections import defaultdict
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -463,7 +464,8 @@ class HrAttendance(models.Model):
         # Retrieve employee from xml file
         # Calculate attendances records for the previous month and the current until today
         now = datetime.now()
-        date_range = now.day + (now.replace(day=31) - relativedelta(months=1)).day
+        previous_month_datetime = (now - relativedelta(months=1))
+        date_range = now.day + monthrange(previous_month_datetime.year, previous_month_datetime.month)[1]
         city_coordinates = (50.27, 5.31)
         city_coordinates_exception = (51.01, 2.82)
         city_dict = {
@@ -587,4 +589,8 @@ class HrAttendance(models.Model):
         if not user_domain:
             return self.env['hr.employee'].search([('company_id', 'in', self.env.context.get('allowed_company_ids', []))])
         else:
-            return resources
+            employee_name_domain = []
+            for leaf in user_domain:
+                if len(leaf) == 3 and leaf[0] == 'employee_id':
+                    employee_name_domain.append([('name', leaf[1], leaf[2])])
+            return resources | self.env['hr.employee'].search(OR(employee_name_domain))
