@@ -35,6 +35,7 @@ class ResConfigSettings(models.TransientModel):
     module_delivery_fedex = fields.Boolean("FedEx Connector")
     module_delivery_ups = fields.Boolean("UPS Connector")
     module_delivery_usps = fields.Boolean("USPS Connector")
+    module_delivery_usps_rest = fields.Boolean("USPS Connector (REST)", compute='_compute_module_delivery_usps_rest', store=True)
     module_delivery_bpost = fields.Boolean("bpost Connector")
     module_delivery_easypost = fields.Boolean("Easypost Connector")
     module_quality_control = fields.Boolean("Quality")
@@ -63,6 +64,11 @@ class ResConfigSettings(models.TransientModel):
     def onchange_adv_location(self):
         if self.group_stock_adv_location and not self.group_stock_multi_locations:
             self.group_stock_multi_locations = True
+
+    @api.depends('module_delivery_usps')
+    def _compute_module_delivery_usps_rest(self):
+        for config in self:
+            config.module_delivery_usps_rest = config.module_delivery_usps
 
     def set_values(self):
         warehouse_grp = self.env.ref('stock.group_stock_multi_warehouses')
