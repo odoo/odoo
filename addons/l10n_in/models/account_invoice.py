@@ -153,3 +153,90 @@ class AccountMove(models.Model):
                 'taxes_data': taxes_data,
             })
         return self.env['account.tax']._l10n_in_get_hsn_summary_table(base_lines, display_uom)
+
+    # ------Utils------
+    @api.model
+    def _l10n_in_prepare_tax_details(self):
+        def l10n_in_grouping_key_generator(base_line, tax_values):
+            invl = base_line['record']
+            tax = tax_values['tax_repartition_line'].tax_id
+            tags = tax_values['tax_repartition_line'].tag_ids
+            line_code = "other"
+            if not invl.currency_id.is_zero(tax_values['tax_amount_currency']):
+                if self.env.ref("l10n_in.tax_tag_cess") in tags:
+                    if tax.amount_type != "percent":
+                        line_code = "cess_non_advol"
+                    else:
+                        line_code = "cess"
+                elif self.env.ref("l10n_in.tax_tag_state_cess") in tags:
+                    if tax.amount_type != "percent":
+                        line_code = "state_cess_non_advol"
+                    else:
+                        line_code = "state_cess"
+                else:
+                    for gst in ["cgst", "sgst", "igst"]:
+                        if self.env.ref(f"l10n_in.tax_tag_{gst}") in tags:
+                            line_code = gst
+                        # need to separate rc tax value so it's not pass to other values
+                        if self.env.ref(f"l10n_in.tax_tag_{gst}_rc") in tags:
+                            line_code = gst + '_rc'
+            return {
+                "tax": tax,
+                "base_product_id": invl.product_id,
+                "tax_product_id": invl.product_id,
+                "base_product_uom_id": invl.product_uom_id,
+                "tax_product_uom_id": invl.product_uom_id,
+                "line_code": line_code,
+            }
+
+        def l10n_in_filter_to_apply(base_line, tax_values):
+            return base_line['record'].display_type != 'rounding'
+
+        return self._prepare_invoice_aggregated_taxes(
+            filter_tax_values_to_apply=l10n_in_filter_to_apply,
+            grouping_key_generator=l10n_in_grouping_key_generator,
+        )
+
+    def _get_l10n_in_seller_buyer_party(self):
+        self.ensure_one()
+        return {
+            "seller_details": self.company_id.partner_id,
+            "dispatch_details": self._l10n_in_get_warehouse_address() or self.company_id.partner_id,
+            "buyer_details": self.partner_id,
+            "ship_to_details": self.partner_shipping_id or self.partner_id
+        }
+
+    @api.model
+    def _l10n_in_extract_digits(self, string):
+        if not string:
+            return string
+        matches = re.findall(r"\d+", string)
+        result = "".join(matches)
+        return result
+
+    @api.model
+    def _l10n_in_round_value(self, amount, precision_digits=2):
+        """
+            This method is call for rounding.
+            If anything is wrong with rounding then we quick fix in method
+        """
+        value = round(amount, precision_digits)
+        # avoid -0.0
+        return value or 0.0
+
+    @api.model
+    def _get_l10n_in_tax_details_by_line_code(self, tax_details):
+        l10n_in_tax_details = {}
+        for tax_detail in tax_details.values():
+            if tax_detail["tax"].l10n_in_reverse_charge:
+                l10n_in_tax_details.setdefault("is_reverse_charge", True)
+            l10n_in_tax_details.setdefault("%s_rate" % (tax_detail["line_code"]), tax_detail["tax"].amount)
+            l10n_in_tax_details.setdefault("%s_amount" % (tax_detail["line_code"]), 0.00)
+            l10n_in_tax_details.setdefault("%s_amount_currency" % (tax_detail["line_code"]), 0.00)
+            l10n_in_tax_details["%s_amount" % (tax_detail["line_code"])] += tax_detail["tax_amount"]
+            l10n_in_tax_details["%s_amount_currency" % (tax_detail["line_code"])] += tax_detail["tax_amount_currency"]
+        return l10n_in_tax_details
+
+    def _l10n_in_is_process_thru_irn(self):
+        self.ensure_one()
+        return False

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -26,6 +25,13 @@ class AccountMove(models.Model):
                 lambda i: i.edi_format_id.code == "in_einvoice_1_03"
                 and i.state in ("sent", "to_cancel", "cancelled")
             ))
+
+    def _l10n_in_is_process_thru_irn(self):
+        """Overrided"""
+        if self.move_type == "out_refund" or self.debit_origin_id:
+            return False
+        einvoice_in_edi_format = self.journal_id.edi_format_ids.filtered(lambda f: f.code == "in_einvoice_1_03")
+        return einvoice_in_edi_format and einvoice_in_edi_format._get_move_applicability(self)
 
     def button_cancel_posted_moves(self):
         """Mark the edi.document related to this move to be canceled."""

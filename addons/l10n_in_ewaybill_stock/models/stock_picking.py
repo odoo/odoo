@@ -10,18 +10,13 @@ class StockPicking(models.Model):
     l10n_in_ewaybill_id = fields.One2many('l10n.in.ewaybill', 'picking_id', string='Ewaybill')
 
     def _get_l10n_in_ewaybill_form_action(self):
-        return self.env.ref('l10n_in_ewaybill_stock.l10n_in_ewaybill_form_action')._get_action_dict()
+        return self.env.ref('l10n_in_ewaybill.l10n_in_ewaybill_form_action')._get_action_dict()
 
     def action_l10n_in_ewaybill_create(self):
         self.ensure_one()
-        if (
-            product_with_no_hsn := self.move_ids.mapped('product_id').filtered(
-                lambda product: not product.l10n_in_hsn_code
-            )
-        ):
-            raise UserError(_("Please set HSN code in below products: \n%s", '\n'.join(
-                [product.name for product in product_with_no_hsn]
-            )))
+        if product_with_no_hsn := self.move_ids.mapped('product_id').filtered(lambda p: not p.l10n_in_hsn_code):
+            raise UserError(
+                _("Please set HSN code in below products: \n%s", '\n'.join(product_with_no_hsn.mapped('name'))))
         if self.l10n_in_ewaybill_id:
             raise UserError(_("Ewaybill already created for this picking."))
         action = self._get_l10n_in_ewaybill_form_action()

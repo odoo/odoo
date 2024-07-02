@@ -32,3 +32,15 @@ class ResCompany(models.Model):
             ChartTemplate = self.env['account.chart.template'].with_company(company)
             fiscal_position_data = ChartTemplate._get_in_account_fiscal_position()
             ChartTemplate._load_data({'account.fiscal.position': fiscal_position_data})
+
+    """
+        TODO check if it's better to raise NotImplemented or not?
+    """
+    def _l10n_in_edi_get_token(self):
+        return False
+
+    def _l10n_in_edi_authenticate(self):
+        return {}
+
+    def _get_l10n_in_edi_response_json(self):
+        return {}
