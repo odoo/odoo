@@ -289,7 +289,7 @@ class SaleOrderLine(models.Model):
                (not strict and move.rule_id.id in triggering_rule_ids and move.location_final_id.usage == "customer"):
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
                     outgoing_moves |= move
-            elif move.location_dest_id.usage != "customer" and move.to_refund:
+            elif move.location_id.usage == "customer" and move.to_refund:
                 incoming_moves |= move
 
         return outgoing_moves, incoming_moves
