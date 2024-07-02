@@ -55,6 +55,8 @@ export class MenuDialog extends Component {
             if (!input) {
                 return;
             }
+            // set the default value to be "#"
+            input.value = "#";
             const options = {
                 body: this.website.pageDocument.body,
                 position: "bottom-fit",
