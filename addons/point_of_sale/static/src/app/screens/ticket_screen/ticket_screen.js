@@ -408,9 +408,15 @@ export class TicketScreen extends Component {
         }
     }
     getDate(order) {
-        return DateTime.fromFormat(order.date_order, "yyyy-MM-dd HH:mm:ss").toFormat(
-            "MM/dd/yyyy HH:mm:ss"
-        );
+        if (typeof order.id === "string") {
+            return DateTime.fromFormat(order.date_order, "yyyy-MM-dd HH:mm:ss").toFormat(
+                "MM/dd/yyyy HH:mm:ss"
+            );
+        } else {
+            return DateTime.fromFormat(order.date_order, "yyyy-MM-dd HH:mm:ss", { zone: "utc" })
+                .setZone("local")
+                .toFormat("MM/dd/yyyy HH:mm:ss");
+        }
     }
     getTotal(order) {
         return this.env.utils.formatCurrency(order.get_total_with_tax());

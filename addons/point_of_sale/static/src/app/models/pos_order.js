@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
-import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import { formatDate } from "@web/core/l10n/dates";
 import { omit } from "@web/core/utils/objects";
 import { qrCodeSrc, random5Chars, uuidv4 } from "@point_of_sale/utils";
 import { renderToElement } from "@web/core/utils/render";
@@ -102,7 +102,9 @@ export class PosOrder extends Base {
             name: this.name,
             invoice_id: null, //TODO
             cashier: this.employee_id?.name || this.user_id?.name,
-            date: formatDateTime(luxon.DateTime.fromFormat(this.date_order, "yyyy-MM-dd HH:mm:ss")),
+            date: DateTime.fromFormat(this.date_order, "yyyy-MM-dd HH:mm:ss", { zone: "utc" })
+                .setZone("local")
+                .toFormat("yyyy-MM-dd HH:mm:ss"),
             pos_qr_code:
                 this.company.point_of_sale_use_ticket_qr_code &&
                 this.finalized &&
@@ -124,6 +126,11 @@ export class PosOrder extends Base {
         return this.lines.length;
     }
     recomputeOrderData() {
+        this._payment_ids?.forEach((p) => {
+            p.payment_date = DateTime.fromFormat(p.payment_date, "yyyy-MM-dd HH:mm:ss")
+                .toUTC()
+                .toFormat("yyyy-MM-dd HH:mm:ss");
+        });
         this.amount_paid = this.get_total_paid();
         this.amount_tax = this.get_total_tax();
         this.amount_total = this.get_total_with_tax();
