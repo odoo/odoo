@@ -375,8 +375,10 @@ export class ResourceEditor extends Component {
      */
     async saveXML(resource) {
         const { id, arch } = resource;
-        const context = { ...this.context, lang: false };
-        await this.orm.write("ir.ui.view", [id], { arch }, { context });
+        await this.rpc("/website/save_xml", {
+            view_id: id,
+            arch: arch,
+        })
         delete resource.dirty;
     }
 
