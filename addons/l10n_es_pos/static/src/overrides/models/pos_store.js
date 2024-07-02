@@ -14,6 +14,7 @@ patch(PosStore.prototype, {
         }
         return result;
     },
+<<<<<<< HEAD
     async afterProcessServerData() {
         await super.afterProcessServerData(...arguments);
 
@@ -21,5 +22,20 @@ patch(PosStore.prototype, {
         if (this.config.is_spanish && !this.config.simplified_partner_id) {
             await this._loadPartners([this.config.raw.simplified_partner_id]);
         }
+||||||| parent of d0e9484b5325 (temp)
+=======
+
+    _getCreateOrderContext(orders, options) {
+        let context = super._getCreateOrderContext(...arguments);
+        if (this.config.is_spanish) {
+            const noOrderRequiresInvoicePrinting = orders.every(
+                (order) => !order.to_invoice && order.data.is_l10n_es_simplified_invoice
+            );
+            if (noOrderRequiresInvoicePrinting) {
+                context = { ...context, generate_pdf: false };
+            }
+        }
+        return context;
+>>>>>>> d0e9484b5325 (temp)
     },
 });
