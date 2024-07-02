@@ -290,6 +290,9 @@ class IrActionsReport(models.Model):
         if set_viewport_size:
             command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
 
+        # Take advantage of CSS media query (print)
+        command_args.extend(['--print-media-type'])
+
         # Less verbose error messages
         command_args.extend(['--quiet'])
 
