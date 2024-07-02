@@ -24,10 +24,7 @@ patch(AttendeeCalendarModel.prototype, "google_calendar_google_calendar_model_fu
             return _super(...arguments);
         }
         try {
-            await Promise.race([
-                new Promise(resolve => setTimeout(resolve, 1000)),
-                this.syncGoogleCalendar(true)
-            ]);
+            await this.syncGoogleCalendar(true);
         } catch (error) {
             if (error.event) {
                 error.event.preventDefault();
