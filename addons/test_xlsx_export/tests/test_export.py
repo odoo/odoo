@@ -79,6 +79,17 @@ class TestGroupedExport(XlsxCreatorCase):
     model_name = 'export.aggregator'
     # pylint: disable=bad-whitespace
 
+    def test_archived_groupped(self):
+        values = [
+                {'int_sum': 1, 'active': False},
+        ]
+        export = self.export(values, fields=['int_sum', 'active'], params={'groupby': ['int_sum']})
+
+        self.assertExportEqual(export, [
+            ['Int Sum', 'Active'],
+            ['1 (1)', ''],
+        ])
+
     def test_int_sum_max(self):
         values = [
             {'int_sum': 10, 'int_max': 20},
