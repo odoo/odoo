@@ -1469,7 +1469,8 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     close: function () {
         this._super(...arguments);
-        if (this._customColorValue && this._customColorValue !== this._value) {
+        if (this._isCustomColorValueDirty) {
+            this._isCustomColorValueDirty = false;
             this._value = this._customColorValue;
             this._customColorValue = false;
             this._onUserValueChange();
@@ -1648,6 +1649,8 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _onCustomColorPicked: function (ev) {
         this._customColorValue = ev.data.color;
+        this._isCustomColorValueDirty = this._customColorValue !== this._value;
+        this.notifyValueChange(false, true);
     },
     /**
      * Called when a color button is clicked -> confirms the preview.
@@ -1659,6 +1662,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         this._previewCC = false;
         this._previewColor = false;
         this._customColorValue = false;
+        this._isCustomColorValueDirty = false;
 
         this._ccValue = ev.data.ccValue;
         this._value = ev.data.color;
