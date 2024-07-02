@@ -77,6 +77,24 @@ export class MailCoreWeb {
                 inbox.fetchMoreMessages();
             }
         });
+        this.busService.subscribe("mail.message/toggle_star", (payload, { id: notifId }) => {
+            const { message_ids: messageIds, starred } = payload;
+            for (const messageId of messageIds) {
+                const message = this.store.Message.insert({ id: messageId, starred });
+                const starredBox = this.store.discuss.starred;
+                if (starred) {
+                    if (notifId > starredBox.counter_bus_id) {
+                        starredBox.counter++;
+                    }
+                    starredBox.messages.add(message);
+                } else {
+                    if (notifId > starredBox.counter_bus_id) {
+                        starredBox.counter--;
+                    }
+                    starredBox.messages.delete(message);
+                }
+            }
+        });
         this.busService.start();
     }
 }
