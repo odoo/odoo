@@ -19,6 +19,16 @@ function getClone(template) {
     return c;
 }
 
+const registered = new Set();
+function isRegistered(...args) {
+    const key = JSON.stringify([...args]);
+    if (registered.has(key)) {
+        return true;
+    }
+    registered.add(key);
+    return false;
+}
+
 let blockType = null;
 let blockId = 0;
 
@@ -26,6 +36,9 @@ const templates = {};
 const parsedTemplates = {};
 const info = {};
 export function registerTemplate(name, url, templateString) {
+    if (isRegistered(...arguments)) {
+        return;
+    }
     if (blockType !== "templates") {
         blockType = "templates";
         blockId++;
@@ -40,6 +53,9 @@ export function registerTemplate(name, url, templateString) {
 const templateExtensions = {};
 const parsedTemplateExtensions = {};
 export function registerTemplateExtension(inheritFrom, url, templateString) {
+    if (isRegistered(...arguments)) {
+        return;
+    }
     if (blockType !== "extensions") {
         blockType = "extensions";
         blockId++;
