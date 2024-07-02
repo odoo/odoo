@@ -214,15 +214,12 @@
     <record id="product_product_view_form_normalized_pos" model="ir.ui.view">
         <field name="name">product.product.view.form.normalized.inherit</field>
         <field name="model">product.product</field>
-        <field name="mode">primary</field>
         <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='barcode']" position="attributes">
-                <attribute name="widget">productScanner</attribute>
-            </xpath>
-            <xpath expr="//div[@name='sales_price']" position="after">
-                <field name="available_in_pos"/>
-                <field name="pos_categ_ids" widget="many2many_tags"/>
+            <xpath expr="//div[@name='tax_info']" position="after">
+                <!-- Added available_in_pos to make it true by default but don't show to user -->
+                <field name="available_in_pos" default="true" invisible="1"/>
+                <field name="pos_categ_ids" string="POS Category" widget="many2many_tags" placeholder="Category"/>
             </xpath>
         </field>
     </record>

@@ -470,15 +470,9 @@
                                 <field name="currency_id" invisible="1"/>
                                 <field name="cost_currency_id" invisible="1"/>
                                 <field name="name" class="oe_inline" placeholder="e.g. Cheese Burger" string="Product Name"/>
-                                <label for="barcode" class="mt-1"/>
-                                <div name="barcode_autofill" class="d-flex">
-                                    <field name="barcode" class="oe_inline" placeholder="e.g. 1234567890"/>
-                                </div>
-                                <label for="list_price" class="mt-1"/>
-                                <div name="sales_price">
-                                    <field name="list_price" class="oe_inline" widget="monetary"
-                                            options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                                </div>
+                                <field name="barcode" class="oe_inline" placeholder="e.g. 1234567890" widget="productScanner"/>
+                                <field name="list_price" class="oe_inline" widget="monetary"
+                                        options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                 <field name="description" invisible="1"/>  <!-- Hide the description field for set data in product barcodelookup -->
                                 <field name="weight" invisible="1"/>       <!-- Hide the weight field for set data in product barcodelookup -->
                                 <field name="categ_id" invisible="1"/>     <!-- Hide the categ_id field set data in product barcodelookup -->
