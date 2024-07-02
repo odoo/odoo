@@ -72,6 +72,6 @@ class Job(models.Model):
         })
 
     def write(self, vals):
-        if len(self) == 1:
-            handle_history_divergence(self, 'description', vals)
+        # if len(self) == 1:
+        #     handle_history_divergence(self, 'description', vals)
         return super(Job, self).write(vals)
