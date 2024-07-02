@@ -120,7 +120,7 @@ class MailThread(models.AbstractModel):
                     'sanitized': False,
                     'number': value,
                     'partner_store': False,
-                    'field_store': fname
+                    'field_store': fname,
                 }
         return result
 

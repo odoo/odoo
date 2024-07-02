@@ -618,3 +618,37 @@ class TestSMSComposerMass(SMSCommon):
             test_record_2.customer_id, None,
             content="Hello %s ceci est en français." % test_record_2.display_name
         )
+
+
+class TestSmsComposer(SMSCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # res.partner with valid mobile invalid number
+        cls.partner_valid_invalid = cls.env['res.partner'].create({'name': 'Test Partner1', 'mobile': '+32499123456', 'phone': '+32499123456'})
+        cls.sms_partner_valid_invalid = cls.env['sms.test.partner'].create({'partner_id': cls.partner_valid_invalid.id})
+
+        # res.partner with invalid mobile, valid number
+        cls.partner_invalid_valid = cls.env['res.partner'].create({'name': 'Test Partner2', 'mobile': '123', 'phone': '+32499123456'})
+        cls.sms_partner_invalid_valid = cls.env['sms.test.partner'].create({'partner_id': cls.partner_invalid_valid.id})
+
+        # res.partner with invalid mobile, invalid valid number
+        cls.partner_invalid_invalid = cls.env['res.partner'].create({'name': 'Test Partner3', 'mobile': '123', 'phone': '+1234'})
+        cls.sms_partner_invalid_invalid = cls.env['sms.test.partner'].create({'partner_id': cls.partner_invalid_invalid.id})
+        cls.sms_template = cls._create_sms_template('sms.test.partner')
+
+    def test_sms_compose_mobile_retrieval(self):
+        sms_test_partners = [
+            (self.sms_partner_valid_invalid, self.sms_partner_valid_invalid.partner_id.mobile),
+            (self.sms_partner_invalid_valid, self.sms_partner_invalid_valid.partner_id.phone),
+            (self.sms_partner_invalid_invalid, self.sms_partner_invalid_invalid.partner_id.mobile),
+        ]
+        for (sms_partner, number) in sms_test_partners:
+            sms_composer = self.env['sms.composer'].create({
+                'composition_mode': 'comment',
+                'template_id': self.sms_template.id,
+                'res_id': sms_partner.id,
+                'res_model': 'sms.test.partner',
+            })
+            self.assertEqual(sms_composer.recipient_single_number_itf, number, 'The number should be retrieved from partner correctly')
