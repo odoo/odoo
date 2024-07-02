@@ -252,7 +252,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         for val in line_item_vals['classified_tax_category_vals']:
             # [UBL-CR-601] TaxExemptionReason must not appear in InvoiceLine Item ClassifiedTaxCategory
             # [BR-E-10] TaxExemptionReason must only appear in TaxTotal TaxSubtotal TaxCategory
-            val.pop('tax_exemption_reason')
+            val.pop('tax_exemption_reason', None)
 
         return line_item_vals
 
