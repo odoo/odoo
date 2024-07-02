@@ -167,6 +167,7 @@ class Product(models.Model):
             domain_move_out += date_date_expected_domain_to
 
         Move = self.env['stock.move'].with_context(active_test=False)
+        MoveLine = self.env['stock.move.line'].with_context(active_test=False)
         Quant = self.env['stock.quant'].with_context(active_test=False)
         domain_move_in_todo = [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))] + domain_move_in
         domain_move_out_todo = [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))] + domain_move_out
@@ -177,8 +178,8 @@ class Product(models.Model):
             # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
             domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
             domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
-            moves_in_res_past = {product.id: product_qty for product, product_qty in Move._read_group(domain_move_in_done, ['product_id'], ['product_qty:sum'])}
-            moves_out_res_past = {product.id: product_qty for product, product_qty in Move._read_group(domain_move_out_done, ['product_id'], ['product_qty:sum'])}
+            moves_in_res_past = {product.id: product_qty for product, product_qty in MoveLine._read_group(domain_move_in_done, ['product_id'], ['quantity:sum'])}
+            moves_out_res_past = {product.id: product_qty for product, product_qty in MoveLine._read_group(domain_move_out_done, ['product_id'], ['quantity:sum'])}
 
         res = dict()
         for product in self.with_context(prefetch_fields=False):
