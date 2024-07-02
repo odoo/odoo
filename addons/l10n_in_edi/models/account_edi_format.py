@@ -105,11 +105,6 @@ class AccountEdiFormat(models.Model):
             error_message.append(_("Invoice number should not be more than 16 characters"))
         all_base_tags = self._get_l10n_in_gst_tags() + self._get_l10n_in_non_taxable_tags()
         for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding') and not self._l10n_in_is_global_discount(line)):
-            if line.price_subtotal < 0:
-                # Line having a negative amount is not allowed.
-                if not move._l10n_in_edi_is_managing_invoice_negative_lines_allowed():
-                    raise ValidationError(_("Invoice lines having a negative amount are not allowed to generate the IRN. "
-                                  "Please create a credit note instead."))
             if line.display_type == 'product':
                 if line.discount < 0:
                     error_message.append(_("Negative discount is not allowed, set in line %s", line.name))
