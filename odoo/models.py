@@ -2820,6 +2820,36 @@ class BaseModel(metaclass=MetaModel):
 
         return model, model._fields[last_fname], alias
 
+    def _traverse_company_dependent_sql(self, alias: str, field: Field, query: Query):
+        """ Traverse the company dependent `field` and add needed join to the `query`. """
+        assert field.company_dependent
+        TYPE2FIELD = {
+            'char': 'value_text',
+            'float': 'value_float',
+            'boolean': 'value_integer',
+            'integer': 'value_integer',
+            'text': 'value_text',
+            'binary': 'value_binary',
+            'many2one': 'value_reference',
+            'date': 'value_datetime',
+            'datetime': 'value_datetime',
+            'selection': 'value_text',
+            'html': 'value_text',
+        }
+        comodel = self.env['ir.property']
+        coalias = query.make_alias(alias, f'company_dependent_{field.name}')
+        query.add_join('LEFT JOIN', coalias, 'ir_property', SQL(
+            """ %s = %s
+                AND %s = %s || ',' || %s
+                AND %s = %s
+            """,
+            SQL.identifier(coalias, 'fields_id'), self.env['ir.model.fields']._get(self._name, field.name).id,
+            SQL.identifier(coalias, 'res_id'), self._name, SQL.identifier(alias, 'id'),
+            SQL.identifier(coalias, 'company_id'), self.env.company.id,
+        ))
+
+        return comodel, comodel._fields[TYPE2FIELD[field.type]], coalias
+
     def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         field from the given table alias, in the context of the given query.
@@ -2842,6 +2872,10 @@ class BaseModel(metaclass=MetaModel):
 
         if field.related and not field.store:
             model, field, alias = self._traverse_related_sql(alias, field, query)
+            return model._field_to_sql(alias, field.name, query)
+
+        if field.company_dependent:
+            model, field, alias = self._traverse_company_dependent_sql(alias, field, query)
             return model._field_to_sql(alias, field.name, query)
 
         if not field.store or not field.column_type:

@@ -36,8 +36,8 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         self.assertEqual(self.root_company.fiscalyear_last_month, self.branch_a.fiscalyear_last_month)
 
         # The accounts are shared
-        root_accounts = self.env['account.account'].search([('company_id', 'parent_of', self.root_company.id)])
-        branch_a_accounts = self.env['account.account'].search([('company_id', 'parent_of', self.branch_a.id)])
+        root_accounts = self.env['account.account'].search([('company_ids', 'parent_of', self.root_company.id)])
+        branch_a_accounts = self.env['account.account'].search([('company_ids', 'parent_of', self.branch_a.id)])
         self.assertTrue(root_accounts)
         self.assertEqual(root_accounts, branch_a_accounts)
 

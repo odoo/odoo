@@ -42,7 +42,7 @@ class TestUi(AccountTestInvoicingHttpCommon):
             'account_purchase_tax_id': None,
         })
 
-        account_with_taxes = self.env['account.account'].search([('tax_ids', '!=', False), ('company_id', '=', self.env.company.id)])
+        account_with_taxes = self.env['account.account'].search([('tax_ids', '!=', False), ('company_ids', '=', self.env.company.id)])
         account_with_taxes.write({
             'tax_ids': [Command.clear()],
         })

@@ -16,7 +16,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
 
         cls.account_revenue_c1 = cls.env["account.account"].create(
             {
-                "company_id": cls.company_data["company"].id,
+                "company_ids": cls.company_data["company"].id,
                 "name": "spreadsheet revenue Company 1",
                 "account_type": "income",
                 "code": "sp1234566",
@@ -25,7 +25,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
 
         cls.account_expense_c1 = cls.env["account.account"].create(
             {
-                "company_id": cls.company_data["company"].id,
+                "company_ids": cls.company_data["company"].id,
                 "name": "spreadsheet expense Company 1",
                 "account_type": "expense",
                 "code": "sp1234577",
@@ -34,7 +34,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
 
         cls.account_revenue_c2 = cls.env["account.account"].create(
             {
-                "company_id": cls.company_data_2["company"].id,
+                "company_ids": cls.company_data_2["company"].id,
                 "name": "spreadsheet revenue Company 2",
                 "account_type": "income",
                 "code": "sp99887755",
@@ -43,7 +43,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
 
         cls.account_expense_c2 = cls.env["account.account"].create(
             {
-                "company_id": cls.company_data_2["company"].id,
+                "company_ids": cls.company_data_2["company"].id,
                 "name": "spreadsheet expense Company 2",
                 "account_type": "expense",
                 "code": "sp99887766",

@@ -1759,14 +1759,21 @@ class AccountMoveLine(models.Model):
             return {}
 
         # Override in order to not read the complete move line table and use the index instead
-        query = self._search(domain, limit=1)
-        query.add_where('account.id = account_move_line.account_id')
-        id_rows = self.env.execute_query(SQL("""
+        query_account = self.env['account.account']._search([('company_ids', '=', self.env.companies.ids)])
+        query_line = self._search(domain, limit=1)
+        query_line.add_where('account_account.id = account_move_line.account_id')
+
+        id_rows = self.env.execute_query(SQL(
+            """
             SELECT account.root_id
-              FROM account_account account,
-                   LATERAL (%s) line
-             WHERE account.company_id IN %s
-        """, query.select(), tuple(self.env.companies.ids)))
+              FROM %(account_table)s,
+                   LATERAL (%(line_select)s) line
+             WHERE %(where_clause)s
+            """,
+            account_table=query_account.from_clause,
+            line_select=query_line.select(),
+            where_clause=query_account.where_clause,
+        ))
         return {
             root.id: {'id': root.id, 'display_name': root.display_name}
             for root in self.env['account.root'].browse(id_ for [id_] in id_rows)
