@@ -2,7 +2,7 @@
  * Provides a way to start JS code for public contents.
  */
 
-import dom from '@web/legacy/js/core/dom';
+import dom from '@web/core/dom';
 import Class from "@web/legacy/js/core/class";
 import mixins from "@web/legacy/js/core/mixins";
 import ServicesMixin from "@web/legacy/js/core/service_mixins";
@@ -38,8 +38,8 @@ import { makeAsyncHandler, makeButtonHandler } from "@web/legacy/js/core/minimal
  *             // this method should return a promise
  *         },
  *         start: function() {
- *             // stuff you want to make after the rendering, `this.$el` holds a correct value
- *             this.$(".my_button").click(/* an example of event binding * /);
+ *             // stuff you want to make after the rendering, `this.el` holds a correct value
+ *             this.el.querySelector(".my_button").click(/* an example of event binding * /);
  *
  *             // if you have some asynchronous operations, it's a good idea to return
  *             // a promise in start(). Note that this is quite rare, and if you
@@ -53,7 +53,7 @@ import { makeAsyncHandler, makeButtonHandler } from "@web/legacy/js/core/minimal
  * Now this class can simply be used with the following syntax::
  *
  *     var myWidget = new MyWidget(this);
- *     myWidget.appendTo($(".some-div"));
+ *     myWidget.appendTo(document.querySelector(".some-div"));
  *
  * With these two lines, the MyWidget instance was initialized, rendered,
  * inserted into the DOM inside the ``.some-div`` div and its events were
@@ -114,7 +114,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
     /**
      * The selector attribute, if defined, allows to automatically create an
      * instance of this widget on page load for each DOM element which matches
-     * this selector. The `PublicWidget.$el / el` element will then be that
+     * this selector. The `PublicWidget.el` element will then be that
      * particular DOM element. This should be the main way of instantiating
      * `PublicWidget` elements.
      *
@@ -131,12 +131,12 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      *   'click .hello .world': 'async _onHelloWorldClick',
      *     _^_      _^_           _^_        _^_
      *      |        |             |          |
-     *      |  (Optional) jQuery   |  Handler method name
+     *      |  (Optional) HTML   |  Handler method name
      *      |  delegate selector   |
      *      |                      |_ (Optional) space separated options
      *      |                          * async: use the automatic system
      *      |_ Event name with           making handlers promise-ready (see
-     *         potential jQuery          makeButtonHandler, makeAsyncHandler)
+     *         potential HTML          makeButtonHandler, makeAsyncHandler)
      *         namespaces
      *
      * Note: the values may be replaced by a function declaration. This is
@@ -205,7 +205,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
     /**
      * Destroys the widget and basically restores the target to the state it
      * was before the start method was called (unlike standard widget, the
-     * associated $el DOM is not removed, if this was instantiated thanks to the
+     * associated el DOM is not removed, if this was instantiated thanks to the
      * selector property).
      */
     destroy: function () {
@@ -213,8 +213,8 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
         this._undelegateEvents();
         // If not done with a selector, then
         // remove the elements added to the DOM.
-        if (!this.selector && this.$el) {
-            this.$el.remove();
+        if (!this.selector && this.el) {
+            this.el.remove();
         }
     },
 
@@ -225,24 +225,28 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
     /**
      * Renders the current widget and appends it to the given jQuery object.
      *
-     * @param {jQuery} target
+     * @param {HTMLElement} targetEl
      * @returns {Promise}
      */
-    appendTo: function (target) {
+    appendTo: function (targetEl) {
+        // TO- remove : backward compatibility targetEl can be a jQuery object
+        targetEl = targetEl instanceof jQuery ? targetEl[0] : targetEl;
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
-            self.$el.appendTo(t);
-        }, target);
+            t.append(self.el);
+        }, targetEl);
     },
     /**
      * Attach the current widget to a dom element
      *
-     * @param {jQuery} target
+     * @param {HTMLElement} targetEl
      * @returns {Promise}
      */
-    attachTo: function (target) {
+    attachTo: function (targetEl) {
+        // TO- remove : backward compatibility targetEl can be a jQuery object
+        targetEl = targetEl instanceof jQuery ? targetEl[0] : targetEl;
         var self = this;
-        this.setElement(target.$el || target);
+        this.setElement(targetEl.el || targetEl);
         return this.willStart().then(function () {
             if (self.__parentedDestroyed) {
                 return;
@@ -254,39 +258,45 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * Renders the current widget and inserts it after to the given jQuery
      * object.
      *
-     * @param {jQuery} target
+     * @param {HTMLElement} targetEl
      * @returns {Promise}
      */
-    insertAfter: function (target) {
+    insertAfter: function (targetEl) {
+        // Ensure targetEl is not a jQuery object for backward compatibility
+        targetEl = targetEl instanceof jQuery ? targetEl[0] : targetEl;
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
-            self.$el.insertAfter(t);
-        }, target);
+            t.parentNode.insertBefore(self.el, t.nextSibling);
+        }, targetEl);
     },
     /**
      * Renders the current widget and inserts it before to the given jQuery
      * object.
      *
-     * @param {jQuery} target
+     * @param {HTMLElement} targetEl
      * @returns {Promise}
      */
-    insertBefore: function (target) {
+    insertBefore: function (targetEl) {
+        // Ensure targetEl is not a jQuery object for backward compatibility
+        targetEl = targetEl instanceof jQuery ? targetEl[0] : targetEl;
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
-            self.$el.insertBefore(t);
-        }, target);
+            t.parentNode.insertBefore(self.el, t);
+        }, targetEl);
     },
     /**
      * Renders the current widget and prepends it to the given jQuery object.
      *
-     * @param {jQuery} target
+     * @param {HTMLElement} targetEl
      * @returns {Promise}
      */
-    prependTo: function (target) {
+    prependTo: function (targetEl) {
+        // Ensure targetEl is not a jQuery object for backward compatibility
+        targetEl = targetEl instanceof jQuery ? targetEl[0] : targetEl;
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
-            self.$el.prependTo(t);
-        }, target);
+            t.prepend(self.el);
+        }, targetEl);
     },
     /**
      * Renders the element. The default implementation renders the widget using
@@ -294,24 +304,25 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * the "widget" key that references `this`.
      */
     renderElement: function () {
-        var $el;
+        let el;
         if (this.template) {
-            $el = $(renderToElement(this.template, {widget: this}));
+            el = renderToElement(this.template, { widget: this });
         } else {
-            $el = this._makeDescriptive();
+            el = this._makeDescriptive();
         }
-        this._replaceElement($el);
+        this._replaceElement(el);
     },
     /**
      * Renders the current widget and replaces the given jQuery object.
      *
-     * @param target A jQuery object or a Widget instance.
+     * @param targetEl A HTMLElement or a Widget instance.
      * @returns {Promise}
      */
-    replace: function (target) {
+    replace: function (targetEl) {
+        const self = this;
         return this._widgetRenderAndInsert((t) => {
-            this.$el.replaceAll(t);
-        }, target);
+            t.replaceWith(self.el);
+        }, targetEl);
     },
     /**
      * Re-sets the widget's root element (el/$el/$el).
@@ -327,16 +338,18 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @return {Widget} this
      */
     setElement: function (element) {
-        if (this.$el) {
+        if (this.el) {
             this._undelegateEvents();
         }
 
+        // Note: Kept for backward compatibility, we will remove it in future
         this.$el = (element instanceof $) ? element : $(element);
-        this.el = this.$el[0];
+        this.el = (element instanceof $) ? element[0] : element;
 
         this._delegateEvents();
 
         if (this.selector) {
+            // Note: Kept for backward compatibility, we will remove it in future
             this.$target = this.$el;
             this.target = this.el;
         }
@@ -348,6 +361,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
     // Private
     //--------------------------------------------------------------------------
 
+    // Note: Kept for backward compatibility, we will remove it in future when all public Widget uses this.el
     /**
      * Helper method, for ``this.$el.find(selector)``
      *
@@ -375,9 +389,9 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
 
             event += '.widget_events';
             if (!selector) {
-                self.$el.on(event, method);
+                self.el?.on(event, method);
             } else {
-                self.$el.on(event, selector, method);
+                self.el?.on(event, selector, method);
             }
         };
         Object.entries(this.events || {}).forEach(([event, method]) => {
@@ -437,7 +451,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * widget
      *
      * @private
-     * @return {jQuery}
+     * @return {HTMLElement}
      */
     _makeDescriptive: function () {
         var attrs = Object.assign({}, this.attributes || {});
@@ -447,40 +461,43 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
         if (this.className) {
             attrs['class'] = this.className;
         }
-        var $el = $(document.createElement(this.tagName));
+        const el = document.createElement(this.tagName);
         if (Object.keys(attrs || {}).length > 0) {
-            $el.attr(attrs);
+            for (const key in attrs) {
+                el.setAttribute(key, attrs[key]);
+            }
         }
-        return $el;
+        return el;
     },
     /**
      * Re-sets the widget's root element and replaces the old root element
      * (if any) by the new one in the DOM.
      *
      * @private
-     * @param {HTMLElement | jQuery} $el
+     * @param {HTMLElement} el
      * @returns {Widget} this instance, so it can be chained
      */
-    _replaceElement: function ($el) {
-        var $oldel = this.$el;
-        this.setElement($el);
-        if ($oldel && !$oldel.is(this.$el)) {
-            if ($oldel.length > 1) {
-                $oldel.wrapAll('<div/>');
-                $oldel.parent().replaceWith(this.$el);
+    _replaceElement: function (el) {
+        var oldel = this.el;
+        this.setElement(el);
+        if (oldel && !(oldel === this.el)) {
+            if (oldel) {
+                const divEl = document.createElement('div');
+                divEl.append(oldel);
+                oldel.parentNode.replaceWith(this.el);
             } else {
-                $oldel.replaceWith(this.$el);
+                oldel.replaceWith(this.el);
             }
         }
         return this;
     },
     /**
-     * Remove all handlers registered on this.$el
+     * Remove all handlers registered on this.el
      *
      * @private
      */
     _undelegateEvents: function () {
-        this.$el.off('.widget_events');
+        this.el?.off(".widget_events");
     },
     /**
      * Render the widget.  This is a private method, and should really never be
@@ -488,18 +505,18 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * not willStarted yet.
      *
      * @private
-     * @param {function: jQuery -> any} insertion
-     * @param {jQuery} target
+     * @param {function} insertion
+     * @param {HTMLElement} targetEl
      * @returns {Promise}
      */
-    _widgetRenderAndInsert: function (insertion, target) {
+    _widgetRenderAndInsert: function (insertion, targetEl) {
         var self = this;
         return this.willStart().then(function () {
             if (self.__parentedDestroyed) {
                 return;
             }
             self.renderElement();
-            insertion(target);
+            insertion(targetEl);
             return self.start();
         });
     },
@@ -554,14 +571,14 @@ var RootWidget = PublicWidget.extend({
      * @param {string} childInfo.selector
      *        the jQuery selector to use to find the internal DOM element which
      *        needs to be attached to the instantiated widget
-     * @param {jQuery} [$from] - only check DOM elements which are descendant of
-     *                         the given one. If not given, use this.$el.
+     * @param {HTMLElement} [fromEl] - only check DOM elements which are descendant of
+     *                         the given one. If not given, use this.el.
      * @returns {Deferred}
      */
-    _attachComponent: function (childInfo, $from) {
+    _attachComponent: function (childInfo, fromEl) {
         var self = this;
-        var $elements = dom.cssFind($from || this.$el, childInfo.selector);
-        var defs = Array.from($elements).map((element) => {
+        var elements = dom.cssFind(fromEl || this.el, childInfo.selector);
+        var defs = Array.from(elements).map((element) => {
             var w = new childInfo.Widget(self);
             self._widgets.push(w);
             return w.attachTo(element);
@@ -573,15 +590,16 @@ var RootWidget = PublicWidget.extend({
      * registry.
      *
      * @private
-     * @param {jQuery} [$from] - only check DOM elements which are descendant of
+     * @param {HTMLElement} [fromEl] - only check DOM elements which are descendant of
      *                         the given one. If not given, use this.$el.
      * @returns {Deferred}
      */
-    _attachComponents: function ($from) {
+    _attachComponents: function (fromEl) {
+        // TODO: MSH: Need to convert to VanillaJS
         var self = this;
         var childInfos = this._getRegistry().getAll();
         var defs = childInfos.map((childInfo) => {
-            return self._attachComponent(childInfo, $from);
+            return self._attachComponent(childInfo, fromEl);
         });
         return Promise.all(defs);
     },

@@ -89,6 +89,7 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
      */
     _onClick(ev) {
         super._onClick(...arguments);
+        // TODO- check do we ned to test for ev.originalEvent now ?
         var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;
         // When we select something and move our cursor too far from the editable area, we get the
         // entire editable area as the target, which causes the tab to shift from OPTIONS to BLOCK.

@@ -1,4 +1,4 @@
-import dom from '@web/legacy/js/core/dom';
+import dom from '@web/core/dom';
 import { cookie } from "@web/core/browser/cookie";
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { registry } from '@web/core/registry';
@@ -61,10 +61,10 @@ export const PublicRoot = publicWidget.RootWidget.extend({
         ];
 
         // Display image thumbnail
-        this.$(".o_image[data-mimetype^='image']").each(function () {
-            var $img = $(this);
-            if (/gif|jpe|jpg|png|webp/.test($img.data('mimetype')) && $img.data('src')) {
-                $img.css('background-image', "url('" + $img.data('src') + "')");
+        this.el.querySelectorAll(".o_image[data-mimetype^='image']").forEach(function () {
+            var imgEl = this;
+            if (/gif|jpe|jpg|png|webp/.test(imgEl.dataset.mimetype) && imgEl.data('src')) {
+                imgEl.css('background-image', "url('" + imgEl.data('src') + "')");
             }
         });
 
@@ -130,37 +130,37 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * (@see PublicWidget.selector).
      *
      * @private
-     * @param {jQuery} [$from]
+     * @param {HTMLElement} [fromEl]
      *        only initialize the public widgets whose `selector` matches the
      *        element or one of its descendant (default to the wrapwrap element)
      * @param {Object} [options]
      * @returns {Deferred}
      */
-    _startWidgets: function ($from, options) {
+    _startWidgets: function (fromEl, options) {
         var self = this;
 
-        if ($from === undefined) {
-            $from = this.$('#wrapwrap');
-            if (!$from.length) {
+        if (fromEl === undefined) {
+            fromEl = this.el?.querySelectorAll("#wrapwrap");
+            if (!fromEl.length) {
                 // TODO Remove this once all frontend layouts possess a
                 // #wrapwrap element (which is necessary for those pages to be
                 // adapted correctly if the user installs website).
-                $from = this.$el;
+                fromEl = this.el;
             }
         }
         options = Object.assign({}, options, {
+            // TODO: here wysiwyg is not stored as data attribute
+            // it's set by jquery data() method.
             wysiwyg: $('#wrapwrap').data('wysiwyg'),
         });
-
-        this._stopWidgets($from);
-
+        this._stopWidgets(fromEl);
         var defs = Object.values(this._getPublicWidgetsRegistry(options)).map((PublicWidget) => {
             var selector = PublicWidget.prototype.selector || '';
-            var $target = dom.cssFind($from, selector, true);
-            var defs = Array.from($target).map((el) => {
+            var targetEl = dom.cssFind(fromEl, selector, true);
+            var defs = Array.from(targetEl).map((el) => {
                 var widget = new PublicWidget(self, options);
                 self.publicWidgets.push(widget);
-                return widget.attachTo($(el));
+                return widget.attachTo(el);
             });
             return Promise.all(defs);
         });
@@ -171,15 +171,21 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * saving while in edition mode for example.
      *
      * @private
-     * @param {jQuery} [$from]
+     * @param {Array|NodeList|Element} [fromEl]
      *        only stop the public widgets linked to the given element(s) or one
      *        of its descendants
      */
-    _stopWidgets: function ($from) {
+    _stopWidgets: function (fromEl) {
+        // Normalize fromEl to always be an array
+        if (!(fromEl instanceof NodeList || Array.isArray(fromEl))) {
+            fromEl = fromEl && [fromEl];
+        } else {
+            fromEl = Array.from(fromEl);
+        }
         var removedWidgets = this.publicWidgets.map((widget) => {
-            if (!$from
-                || $from.filter(widget.el).length
-                || $from.find(widget.el).length) {
+            if (!fromEl
+                || fromEl.filter((el) => el === widget.el).length
+                || fromEl.some((el)=> el.contains(widget.el))) {
                 widget.destroy();
                 return widget;
             }
@@ -226,7 +232,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @param {OdooEvent} ev
      */
     _onMainObjectRequest: function (ev) {
-        var repr = $('html').data('main-object');
+        var repr = document.querySelector('html').dataset['main-object'];
         var m = repr.match(/(.+)\((\d+),(.*)\)/);
         ev.data.callback({
             model: m[1],
@@ -241,7 +247,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @param {OdooEvent} ev
      */
     _onWidgetsStartRequest: function (ev) {
-        this._startWidgets(ev.data.$target, ev.data.options)
+        this._startWidgets(ev.data.target ? [ev.data.target] : [], ev.data.options)
             .then(ev.data.onSuccess)
             .catch((e) => {
                 if (ev.data.onFailure) {
@@ -260,19 +266,21 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @param {OdooEvent} ev
      */
     _onWidgetsStopRequest: function (ev) {
-        this._stopWidgets(ev.data.$target);
+        // Divy: Need to update the data target to HTML
+        this._stopWidgets(ev.data.$target && ev.data.$target[0]);
     },
     /**
      * @todo review
      * @private
      */
     _onWebsiteFormSubmit: function (ev) {
-        var $buttons = $(ev.currentTarget).find('button[type="submit"], a.a-submit').toArray();
-        $buttons.forEach((btn) => {
-            var $btn = $(btn);
-            $btn.prepend('<i class="fa fa-circle-o-notch fa-spin"></i> ');
-            $btn.prop('disabled', true);
-        });
+        const buttonEl = ev.currentTarget.querySelector("button[type='submit']");
+        if (buttonEl) {
+            const icon = document.createElement('i');
+            icon.className = "fa fa-circle-o-notch fa-spin";
+            buttonEl.prepend(icon);
+            buttonEl.disabled = true;
+        }
     },
     /**
      * Called when the root is notified that the button should be
@@ -282,7 +290,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @param {Event} ev
      */
     _onDisableOnClick: function (ev) {
-        $(ev.currentTarget).addClass('disabled');
+        ev.currentTarget.classList.add("disabled");
     },
     /**
      * Library clears the wrong date format so just ignore error

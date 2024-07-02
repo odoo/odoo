@@ -1,5 +1,5 @@
 import dom from "@web/legacy/js/core/dom";
-import Widget from "@web/legacy/js/core/widget";
+import { PublicWidget } from "../public/public_widget";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { uniqueId } from "@web/core/utils/functions";
@@ -12,17 +12,17 @@ import { uniqueId } from "@web/core/utils/functions";
  *   A jQuery element targeting a dom part where buttons can be added. It
  *   always exists during the lifecycle of the dialog.
  **/
-var Dialog = Widget.extend({
+const Dialog = PublicWidget.extend({
     tagName: 'main',
-    custom_events: Object.assign({}, Widget.prototype.custom_events, {
+    custom_events: Object.assign({}, PublicWidget.prototype.custom_events, {
         focus_control_button: '_onFocusControlButton',
         close_dialog: '_onCloseDialog',
     }),
-    events: Object.assign({}, Widget.prototype.events, {
+    events: Object.assign({}, PublicWidget.prototype.events, {
         'keydown .modal-footer button': '_onFooterButtonKeyDown',
     }),
     /**
-     * @param {Widget} parent
+     * @param  {PublicWidget} parent
      * @param {Object} [options]
      * @param {string} [options.title=Odoo]
      * @param {string} [options.subtitle]

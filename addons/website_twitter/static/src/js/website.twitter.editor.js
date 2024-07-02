@@ -49,7 +49,7 @@ sOptions.registry.twitter = sOptions.Class.extend({
             window.location = e.currentTarget.href;
         });
         this.trigger_up('widgets_stop_request', {
-            $target: this.$target,
+            target: this.target,
         });
         return this._super.apply(this, arguments);
     },
