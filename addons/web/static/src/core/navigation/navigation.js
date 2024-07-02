@@ -118,9 +118,6 @@ class Navigator {
         this.hotkeyService = hotkeyService;
 
         this.allowedInEditableHotkeys = ["arrowup", "arrowdown", "enter", "tab", "shift+tab"];
-        if (this.options.hotkeys.space) {
-            this.allowedInEditableHotkeys.push("space");
-        }
     }
 
     enable() {
@@ -191,6 +188,7 @@ class Navigator {
         if (!this.containerRef.el) {
             return;
         }
+        const oldItemsLength = this.items.length;
         this.clearItems();
 
         const elements = [...this.containerRef.el.querySelectorAll(this.options.itemsSelector)];
@@ -202,6 +200,10 @@ class Navigator {
                 setActiveItem: (index, el) => this.setActiveItem(index, el),
             });
         });
+
+        if (oldItemsLength != this.items.length && this.currentActiveIndex >= this.items.length) {
+            this.items.at(-1)?.focus();
+        }
     }
 
     setActiveItem(index, item) {
