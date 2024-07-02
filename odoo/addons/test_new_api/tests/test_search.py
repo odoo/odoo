@@ -272,7 +272,10 @@ class TestSubqueries(TransactionCase):
                 AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
                     SELECT "test_new_api_multi_tag"."id"
                     FROM "test_new_api_multi_tag"
-                    WHERE ("test_new_api_multi_tag"."name"::text LIKE %s)
+                    WHERE (
+                        ("test_new_api_multi_tag"."name"::text ILIKE %s)
+                        AND ("test_new_api_multi_tag"."name"::text LIKE %s)
+                    )
                 )
             ) AND EXISTS (
                 SELECT 1
@@ -281,7 +284,10 @@ class TestSubqueries(TransactionCase):
                 AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
                     SELECT "test_new_api_multi_tag"."id"
                     FROM "test_new_api_multi_tag"
-                    WHERE ("test_new_api_multi_tag"."name"::text LIKE %s)
+                    WHERE (
+                        ("test_new_api_multi_tag"."name"::text ILIKE %s)
+                        AND ("test_new_api_multi_tag"."name"::text LIKE %s)
+                    )
                 )
             ))
             ORDER BY "test_new_api_multi"."id"
@@ -302,8 +308,12 @@ class TestSubqueries(TransactionCase):
                 AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
                     SELECT "test_new_api_multi_tag"."id"
                     FROM "test_new_api_multi_tag"
-                    WHERE (("test_new_api_multi_tag"."name"::text LIKE %s)
-                        OR ("test_new_api_multi_tag"."name"::text LIKE %s)
+                    WHERE (
+                        ("test_new_api_multi_tag"."name"::text ILIKE %s)
+                        AND (
+                            ("test_new_api_multi_tag"."name"::text LIKE %s)
+                            OR ("test_new_api_multi_tag"."name"::text LIKE %s)
+                        )
                     )
                 )
             )
@@ -327,7 +337,10 @@ class TestSubqueries(TransactionCase):
                     AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
                         SELECT "test_new_api_multi_tag"."id"
                         FROM "test_new_api_multi_tag"
-                        WHERE ("test_new_api_multi_tag"."name"::text LIKE %s)
+                        WHERE (
+                            ("test_new_api_multi_tag"."name"::text ILIKE %s)
+                            AND ("test_new_api_multi_tag"."name"::text LIKE %s)
+                        )
                     )
                 ) AND EXISTS (
                     SELECT 1
@@ -336,8 +349,12 @@ class TestSubqueries(TransactionCase):
                     AND "test_new_api_multi__tags"."test_new_api_multi_tag_id" IN (
                         SELECT "test_new_api_multi_tag"."id"
                         FROM "test_new_api_multi_tag"
-                        WHERE (("test_new_api_multi_tag"."name"::text LIKE %s)
-                            OR ("test_new_api_multi_tag"."name"::text LIKE %s)
+                        WHERE (
+                            ("test_new_api_multi_tag"."name"::text ILIKE %s)
+                            AND (
+                                ("test_new_api_multi_tag"."name"::text LIKE %s)
+                                OR ("test_new_api_multi_tag"."name"::text LIKE %s)
+                            )
                         )
                     )
                 )
