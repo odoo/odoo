@@ -83,6 +83,7 @@ export class Link extends Component {
             this.$el.find('input, select').on('change', this._onAnyChange.bind(this));
             this.$el.find('[name="url"]').on('input', this.__onURLInput.bind(this));
             this.$el.find('[name="url"]').on('change', this._onURLInputChange.bind(this));
+            this.$el.find('[name="url"]').focus()
 
             await this.start();
         });
@@ -177,8 +178,10 @@ export class Link extends Component {
      */
     focusUrl() {
         const urlInput = this.linkComponentWrapperRef.el.querySelector('input[name="url"]');
-        urlInput.focus();
-        urlInput.select();
+        if (urlInput) {
+            urlInput.focus();
+            urlInput.select();
+        };
     }
 
     //--------------------------------------------------------------------------

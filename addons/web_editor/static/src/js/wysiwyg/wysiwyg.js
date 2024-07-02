@@ -1414,7 +1414,7 @@ export class Wysiwyg extends Component {
                     ) {
                         // Destroy the link tools on click anywhere outside the
                         // toolbar if the target is the orgiginal target not in the original target.
-                        this.destroyLinkTools();
+                        this.destroyLinkTools(!ev.target.matches('input[type="text"]'));
                         this.odooEditor.document.removeEventListener('click', _onClick, true);
                         document.removeEventListener('click', _onClick, true);
                     }
@@ -1481,8 +1481,8 @@ export class Wysiwyg extends Component {
      * Destroy the Link tools/dialog and restore the selection.
      */
     // todo: review me
-    async destroyLinkTools() {
-        if (this.state.linkToolProps) {
+    async destroyLinkTools(shouldFocusLink = true) {
+        if (this.state.linkToolProps && shouldFocusLink) {
             const selection = this.odooEditor.document.getSelection();
             const link = this.linkToolsInfos.link;
             let anchorNode
@@ -1513,6 +1513,9 @@ export class Wysiwyg extends Component {
             if (anchorNode) {
                 setSelection(anchorNode, anchorOffset, focusNode, focusOffset, false);
             }
+        }
+        if (this.state.linkToolProps) {
+            this.linkToolsInfos.removeHintClasses();
             this.state.linkToolProps = undefined;
         }
     }
