@@ -233,15 +233,15 @@ export class ORM {
      * @param {any} [kwargs={}]
      * @returns {Promise<any[]>}
      */
-    webReadGroup(model, domain, fields, groupby, kwargs = {}) {
+    webReadGroup(model, domain, groupby, aggregates, kwargs = {}) {
         validateArray("domain", domain);
-        validatePrimitiveList("fields", "string", fields);
         validatePrimitiveList("groupby", "string", groupby);
+        validatePrimitiveList("aggregates", "string", aggregates);
         return this.call(model, "web_read_group", [], {
-            ...kwargs,
-            groupby,
             domain,
-            fields,
+            groupby,
+            aggregates,
+            ...kwargs,
         });
     }
 

@@ -363,6 +363,7 @@ export class RelationalModel extends Model {
                 config.activeFields[propertiesFieldName] = makeActiveField();
             }
         }
+        // TODO: clean orderBy
         const orderBy = config.orderBy.filter(
             (o) =>
                 o.name === firstGroupByName ||
@@ -688,11 +689,10 @@ export class RelationalModel extends Model {
         return this.orm.webReadGroup(
             config.resModel,
             config.domain,
-            aggregates,
             [config.groupBy[0]],
+            aggregates,
             {
-                orderby: orderByToString(orderBy),
-                lazy: true,
+                order: orderByToString(orderBy),
                 offset: config.offset,
                 limit: config.limit,  // TODO: remove limit when == MAX_integer
                 context: config.context,

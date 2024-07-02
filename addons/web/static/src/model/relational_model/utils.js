@@ -518,9 +518,7 @@ export function parseServerValue(field, value) {
 export function extractInfoFromGroupData(groupData, groupBy, fields) {
     const info = {};
     const groupByField = fields[groupBy[0].split(":")[0]];
-    // sometimes the key FIELD_ID_count doesn't exist and we have to get the count from `__count` instead
-    // see read_group in models.py
-    info.count = groupData.__count || groupData[`${groupByField.name}_count`];
+    info.count = groupData.__count;
     info.length = info.count; // TODO: remove
     info.range = groupData.__range ? groupData.__range[groupBy[0]] : null;
     info.domain = groupData.__domain;
