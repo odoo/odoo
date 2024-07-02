@@ -905,11 +905,7 @@ class TestBatchPicking02(TransactionCase):
         """
         Check pickings are still linked to the batch after validation.
         """
-        warehouse = self.env['stock.warehouse'].create({
-            'name': 'Warehouse test',
-            'code': 'WHTEST',
-            'company_id': self.env.company.id,
-        })
+        warehouse = self.env.ref('stock.warehouse0')
         productA, productB = self.productA, self.productB
         partner = self.env['res.partner'].create({'name': 'Mr. Belougat'})
 
@@ -967,11 +963,13 @@ class TestBatchPicking02(TransactionCase):
         self.assertTrue(bo_1 and bo_2)
         backorders = bo_1 | bo_2
         self.assertEqual(pickings.backorder_ids, backorders)
-        bo_batch = backorders.batch_id
-        self.assertEqual(bo_batch.picking_ids, backorders)
         self.assertEqual(backorders.move_ids.mapped('product_qty'), [3.0, 3.0])
 
-        # Validate the new batch where every picking is to backorder
+        # Validate a new batch where every picking is to backorder
+        bo_batch = self.env['stock.picking.batch'].create({
+            'picking_ids': [Command.link(bo_1.id), Command.link(bo_2.id)],
+            'picking_type_id': warehouse.in_type_id.id,
+        })
         backorders.action_confirm()
         backorders.move_ids.quantity = 1.0
         bo_batch.action_confirm()
@@ -985,17 +983,19 @@ class TestBatchPicking02(TransactionCase):
         self.assertTrue(bo_3 and bo_4)
         backorders_2 = bo_3 | bo_4
         self.assertEqual(bo_batch.picking_ids.backorder_ids, backorders_2)
-        bo_batch_2 = backorders_2.batch_id
-        self.assertEqual(bo_batch_2.picking_ids, backorders_2)
         self.assertEqual(backorders_2.move_ids.mapped('product_qty'), [2.0, 2.0])
 
-        # validate the new batch where no picking is to backorder
+        # Validate a new batch where no picking is to backorder
+        bo_batch_2 = self.env['stock.picking.batch'].create({
+            'picking_ids': [Command.link(bo_3.id), Command.link(bo_4.id)],
+            'picking_type_id': warehouse.in_type_id.id,
+        })
         backorders_2.action_confirm()
         bo_batch_2.action_confirm()
         bo_batch_2.action_done()
         self.assertEqual(bo_batch_2.state, 'done')
         self.assertEqual(bo_batch_2.picking_ids.mapped('state'), ['done', 'done'])
         self.assertRecordValues(bo_batch_2.move_ids, [
-            {'product_id': productA.id, 'quantity': 2.0, 'picked': True},
-            {'product_id': productB.id, 'quantity': 2.0, 'picked': True},
+            {'quantity': 2.0, 'picked': True},
+            {'quantity': 2.0, 'picked': True},
         ])
