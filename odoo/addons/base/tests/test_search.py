@@ -218,9 +218,11 @@ class test_search(TransactionCase):
         kw = dict(groups_id=[Command.set([self.ref('base.group_system'),
                                      self.ref('base.group_partner_manager')])])
 
-        u1 = Users.create(dict(name='Q', login='m', **kw)).id
+        # create a user 'a' to avoid depending on the locale when sorting
+        u0 = Users.create(dict(name='A system', login='a', **kw)).id
+        u1 = Users.with_user(u0).create(dict(name='Q', login='m', **kw)).id
         u2 = Users.with_user(u1).create(dict(name='B', login='f', **kw)).id
-        u3 = Users.create(dict(name='C', login='c', **kw)).id
+        u3 = Users.with_user(u0).create(dict(name='C', login='c', **kw)).id
         u4 = Users.with_user(u2).create(dict(name='D', login='z', **kw)).id
 
         expected_ids = [u2, u4, u3, u1]
