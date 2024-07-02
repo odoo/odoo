@@ -3160,25 +3160,24 @@ class AccountMove(models.Model):
             domain.append(('account_id.internal_group', '=', 'expense'))
 
         query = self.env['account.move.line']._where_calc(domain)
-        from_clause, where_clause, params = query.get_sql()
-        self._cr.execute(f"""
+        rows = self.env.execute_query(SQL("""
             SELECT COUNT(foo.id), foo.account_id, foo.taxes
               FROM (
                          SELECT account_move_line__account_id.id AS account_id,
                                 account_move_line__account_id.code,
                                 account_move_line.id,
                                 ARRAY_AGG(tax_rel.account_tax_id) FILTER (WHERE tax_rel.account_tax_id IS NOT NULL) AS taxes
-                           FROM {from_clause}
+                           FROM %s
                       LEFT JOIN account_move_line_account_tax_rel tax_rel ON account_move_line.id = tax_rel.account_move_line_id
-                          WHERE {where_clause}
+                          WHERE %s
                        GROUP BY account_move_line__account_id.id,
                                 account_move_line.id
                    ) AS foo
           GROUP BY foo.account_id, foo.code, foo.taxes
           ORDER BY COUNT(foo.id) DESC, foo.code, taxes ASC NULLS LAST
              LIMIT 1
-        """, params)
-        return self._cr.fetchone() or (0, False, False)
+        """, query.from_clause, query.where_clause or SQL("TRUE")))
+        return rows[0] if rows else (0, False, False)
 
     def _get_quick_edit_suggestions(self):
         """

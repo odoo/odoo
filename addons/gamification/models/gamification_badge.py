@@ -5,6 +5,8 @@ import logging
 from datetime import date
 
 from odoo import api, fields, models, _, exceptions
+from odoo.tools import SQL
+
 
 _logger = logging.getLogger(__name__)
 
@@ -102,20 +104,21 @@ class GamificationBadge(models.Model):
         Users._apply_ir_rules(query)
         badge_alias = query.join("res_users", "id", "gamification_badge_user", "user_id", "badges")
 
-        tables, where_clauses, where_params = query.get_sql()
-
-        self.env.cr.execute(
-            f"""
-              SELECT {badge_alias}.badge_id, count(res_users.id) as stat_count,
+        rows = self.env.execute_query(SQL(
+            """
+              SELECT %(badge_alias)s.badge_id, count(res_users.id) as stat_count,
                      count(distinct(res_users.id)) as stat_count_distinct,
                      array_agg(distinct(res_users.id)) as unique_owner_ids
-                FROM {tables}
-               WHERE {where_clauses}
-                 AND {badge_alias}.badge_id IN %s
-            GROUP BY {badge_alias}.badge_id
+                FROM %(from_clause)s
+               WHERE %(where_clause)s
+                 AND %(badge_alias)s.badge_id IN %(ids)s
+            GROUP BY %(badge_alias)s.badge_id
             """,
-            [*where_params, tuple(self.ids)]
-        )
+            from_clause=query.from_clause,
+            where_clause=query.where_clause or SQL("TRUE"),
+            badge_alias=SQL.identifier(badge_alias),
+            ids=tuple(self.ids),
+        ))
 
         mapping = {
             badge_id: {
@@ -123,7 +126,7 @@ class GamificationBadge(models.Model):
                 'granted_users_count': distinct_count,
                 'unique_owner_ids': owner_ids,
             }
-            for (badge_id, count, distinct_count, owner_ids) in self.env.cr._obj
+            for (badge_id, count, distinct_count, owner_ids) in rows
         }
         for badge in self:
             badge.update(mapping.get(badge.id, defaults))

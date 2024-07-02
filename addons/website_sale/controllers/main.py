@@ -13,7 +13,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request, route
 from odoo.osv import expression
-from odoo.tools import clean_context, float_round, groupby, lazy, single_email_re, str2bool
+from odoo.tools import clean_context, float_round, groupby, lazy, single_email_re, str2bool, SQL
 from odoo.tools.json import scriptsafe as json_scriptsafe
 
 from odoo.addons.http_routing.models.ir_http import slug
@@ -307,14 +307,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
             # This is ~4 times more efficient than a search for the cheapest and most expensive products
             query = Product._where_calc(domain)
             Product._apply_ir_rules(query, 'read')
-            from_clause, where_clause, where_params = query.get_sql()
-            query = f"""
-                SELECT COALESCE(MIN(list_price), 0) * {conversion_rate}, COALESCE(MAX(list_price), 0) * {conversion_rate}
-                  FROM {from_clause}
-                 WHERE {where_clause}
-            """
-            request.env.cr.execute(query, where_params)
-            available_min_price, available_max_price = request.env.cr.fetchone()
+            sql = query.select(
+                SQL(
+                    "COALESCE(MIN(list_price), 0) * %(conversion_rate)s, COALESCE(MAX(list_price), 0) * %(conversion_rate)s",
+                    conversion_rate=conversion_rate,
+                )
+            )
+            available_min_price, available_max_price = request.env.execute_query(sql)[0]
 
             if min_price or max_price:
                 # The if/else condition in the min_price / max_price value assignment
