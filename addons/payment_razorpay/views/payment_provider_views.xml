@@ -11,14 +11,14 @@
                        invisible="code != 'razorpay'">
                     <field name="razorpay_key_id"
                            string="Key Id"
-                           required="code == 'razorpay' and state != 'disabled'"/>
+                           groups="base.group_no_one"/>
                     <field name="razorpay_key_secret"
                            string="Key Secret"
-                           required="code == 'razorpay' and state != 'disabled'"
+                           groups="base.group_no_one"
                            password="True"/>
                     <field name="razorpay_webhook_secret"
                            string="Webhook Secret"
-                           required="code == 'razorpay' and state != 'disabled'"
+                           groups="base.group_no_one"
                            password="True"/>
                 </group>
             </group>

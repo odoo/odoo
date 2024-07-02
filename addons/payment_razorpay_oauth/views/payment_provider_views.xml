@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form_razorpay_oauth" model="ir.ui.view">
+        <field name="name">Razorpay Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment_razorpay.payment_provider_form_razorpay"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='razorpay_webhook_secret']" position="replace">
+                <label for="razorpay_webhook_secret"/>
+                <div class="o_row">
+                    <field name="razorpay_webhook_secret"
+                           string="Webhook Secret"
+                           groups="base.group_no_one"
+                           password="True"/>
+                    <button string="Create Webhook"
+                            name="action_razorpay_create_and_update_webhook"
+                            type="object"
+                            help="If you change the your base url, you will need to update the webhook. else payment state will not be updated in odoo."
+                            class="btn-primary"
+                            groups="base.group_no_one"
+                            invisible="not razorpay_access_token or razorpay_webhook_id"/>
+                    <button string="Update Webhook"
+                            name="action_razorpay_create_and_update_webhook"
+                            type="object"
+                            help="If you change the your base url, you will need to update the webhook. else payment state will not be updated in odoo."
+                            class="btn-primary"
+                            groups="base.group_no_one"
+                            invisible="not razorpay_access_token or not razorpay_webhook_id"/>
+                </div>
+            </xpath>
+            <group name="provider_credentials" position="after">
+                <field name="razorpay_public_token" invisible="1"/>
+                <field name="razorpay_refresh_token" invisible="1"/>
+                <field name="razorpay_account_id" invisible="1"/>
+                <field name="razorpay_access_token" invisible="1"/>
+                <field name="razorpay_access_token_expiration" invisible="1"/>
+                <field name="razorpay_key_id" invisible="1"/>
+                <field name="razorpay_webhook_secret" invisible="1"/>
+                <field name="razorpay_webhook_id" invisible="1"/>
+                <div class="alert alert-warning" role="alert" invisible="not razorpay_key_id">
+                    You are using Old method key and secret suggested to change to Oauth By click on Connect.
+                </div>
+                <div invisible="code != 'razorpay'">
+                    <button string="Connect"
+                            name="action_razorpay_connect_account"
+                            type="object"
+                            class="btn-primary"
+                            invisible="razorpay_public_token"/>
+                    <button string="Disconnect"
+                            name="action_razorpay_revoked_token"
+                            type="object"
+                            class="btn-secondary"
+                            confirm="Are you sure you want to disconnect?"
+                            invisible="not razorpay_access_token"/>
+                </div>
+            </group>
+        </field>
+    </record>
+
+    <!-- <record id="payment_provider_form_razorpay_oauth_fail" model="ir.ui.view">
+        <field name="name">Razorpay Provider Form Fail</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment_provider_form_razorpay_oauth"/>
+        <field name="mode">primary</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position="after">
+                <div class="alert alert-danger" role="alert">
+                    The connection is not successful. it may be because the request was not authorized
+                    You can retry the request or contact our support team for help if this issue continues.
+                </div>
+            </group>
+        </field>
+    </record> -->
+
+    <record id="action_payment_provider_onboarding_using_key" model="ir.actions.act_window">
+        <field name="name">Payment Providers</field>
+        <field name="res_model">payment.provider</field>
+        <field name="view_mode">form</field>
+        <!-- <field name="view_id" ref="payment_provider_form_razorpay_oauth_fail"/> -->
+    </record>
+
+</odoo>

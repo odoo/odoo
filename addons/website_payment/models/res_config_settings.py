@@ -18,6 +18,8 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_providers_state')
     is_stripe_supported_country = fields.Boolean(
         related='company_id.country_id.is_stripe_supported_country')
+    is_razorpay_supported_currency = fields.Boolean(
+        related='company_id.currency_id.is_razorpay_supported_currency')
 
     def _get_activated_providers(self):
         self.ensure_one()
@@ -50,6 +52,17 @@ class ResConfigSettings(models.TransientModel):
         if not self.is_stripe_supported_country:
             return False
         return self.env['ir.actions.actions']._for_xml_id('website_payment.action_activate_stripe')
+
+    def action_activate_razorpay(self):
+        self.ensure_one()
+        razorpay = self.env['payment.provider'].search([
+            *self.env['payment.provider']._check_company_domain(self.env.company),
+            ('code', '=', 'razorpay')
+        ], limit=1)
+
+        if not self.is_razorpay_supported_currency:
+            return False
+        return razorpay.action_razorpay_connect_account()
 
     def action_configure_first_provider(self):
         self.ensure_one()

@@ -26,17 +26,17 @@ class PaymentProvider(models.Model):
     razorpay_key_id = fields.Char(
         string="Razorpay Key Id",
         help="The key solely used to identify the account with Razorpay.",
-        required_if_provider='razorpay',
+        copy=False
     )
     razorpay_key_secret = fields.Char(
         string="Razorpay Key Secret",
-        required_if_provider='razorpay',
         groups='base.group_system',
+        copy=False
     )
     razorpay_webhook_secret = fields.Char(
         string="Razorpay Webhook Secret",
-        required_if_provider='razorpay',
         groups='base.group_system',
+        copy=False
     )
 
     #=== COMPUTE METHODS ===#
@@ -61,6 +61,10 @@ class PaymentProvider(models.Model):
             )
         return supported_currencies
 
+    def _get_razorpay_access_token(self):
+        self.ensure_one()
+        return False
+
     def _razorpay_make_request(self, endpoint, payload=None, method='POST'):
         """ Make a request to Razorpay API at the specified endpoint.
 
@@ -76,12 +80,18 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         url = url_join('https://api.razorpay.com/v1/', endpoint)
-        auth = (self.razorpay_key_id, self.razorpay_key_secret)
+        headers = {}
+        auth = None
+        razorpay_access_token = self._get_razorpay_access_token()
+        if razorpay_access_token:
+            headers = {'Authorization': f'Bearer {razorpay_access_token}'}
+        else:
+            auth = (self.razorpay_key_id, self.razorpay_key_secret)
         try:
             if method == 'GET':
-                response = requests.get(url, params=payload, auth=auth, timeout=10)
+                response = requests.get(url, params=payload, headers=headers, auth=auth, timeout=10)
             else:
-                response = requests.post(url, json=payload, auth=auth, timeout=10)
+                response = requests.post(url, json=payload, headers=headers, auth=auth, timeout=10)
             try:
                 response.raise_for_status()
             except requests.exceptions.HTTPError:
