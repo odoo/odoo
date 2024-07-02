@@ -142,6 +142,9 @@ class ResPartner(models.Model):
             _logger.exception("Failed VIES VAT check.")
             return self.simple_vat_check(country_code, vat_number)
 
+    def fix_eu_vat_hu(self, vat):
+        return 'HU' + vat[:8]
+
     @api.model
     def fix_eu_vat_number(self, country_id, vat):
         europe = self.env.ref('base.europe')
@@ -152,7 +155,12 @@ class ResPartner(models.Model):
             vat = re.sub('[^A-Za-z0-9]', '', vat).upper()
             country_code = _eu_country_vat.get(country.code, country.code).upper()
             if vat[:2] != country_code:
-                vat = country_code + vat
+                func_name = 'fix_eu_vat_' + country.code.lower()
+                fix_vat_func = getattr(self, func_name, None)
+                if fix_vat_func:
+                    vat = fix_vat_func(vat)
+                else:
+                    vat = country_code + vat
         return vat
 
     @api.constrains('vat', 'country_id')
