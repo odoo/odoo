@@ -257,6 +257,7 @@
     </t>
 
     <t t-name="wysiwyg.widgets.image.existing.error">
+        <!-- Deprecated for wysiwyg.widgets.image.existing.multierror -->
         <div class="form-text">
             <p>The image could not be deleted because it is used in the
                following pages or views:</p>
@@ -298,6 +299,38 @@
                     <div class="mr-auto o_notification_content"/>
                 </div>
             </div>
+        </div>
+    </t>
+
+    <t t-name="wysiwyg.widgets.image.existing.multierror">
+        <div class="form-text">
+            <p>The image could not be deleted.</p>
+            <t t-if="cause.matches.length">
+                <p>It is used in the following pages:</p>
+                <ul t-as="page" t-foreach="cause.matches">
+                    <li>
+                        <a t-att-href="page.website_url">
+                            <t t-esc="page.name"/>
+                        </a>
+                    </li>
+                </ul>
+            </t>
+            <t t-if="cause.accessModels.length">
+                <p>It is used in records to which you do not have access in the following models:</p>
+                <ul t-as="model" t-foreach="cause.accessModels">
+                    <li>
+                        <t t-esc="model.name"/>
+                    </li>
+                </ul>
+            </t>
+            <t t-if="cause.skippedModels.length">
+                <p>It might still be referenced in one of the following models that has many records:</p>
+                <ul t-as="model" t-foreach="cause.skippedModels">
+                    <li>
+                        <t t-esc="model.name"/>
+                    </li>
+                </ul>
+            </t>
         </div>
     </t>
 
