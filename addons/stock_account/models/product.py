@@ -949,7 +949,7 @@ class ProductCategory(models.Model):
                     move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
                 impacted_categories[product_category] = (products, description, products_orig_quantity_svl)
 
-        res = super(ProductCategory, self).write(vals)
+        res = super(ProductCategory, self.with_context(empty_stock_account=True)).write(vals)
 
         for product_category, (products, description, products_orig_quantity_svl) in impacted_categories.items():
             # Replenish the stock with the new cost method.
