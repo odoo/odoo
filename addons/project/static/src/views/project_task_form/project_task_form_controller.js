@@ -44,10 +44,14 @@ export class ProjectTaskFormController extends FormController {
             return;
         }
 
+        const recordId = this.props.resId || this.model.config.resId;
+        if (!recordId) {
+             return;
+        }
         this.dialogService.add(
             HistoryDialog,
             {
-                recordId: this.props.resId,
+                recordId: recordId,
                 recordModel: this.props.resModel,
                 versionedFieldName,
                 historyMetadata,

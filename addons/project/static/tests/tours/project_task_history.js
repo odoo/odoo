@@ -116,8 +116,53 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         content: "Go back to projects view. this step is added because Tour can't be finished with an open form view in edition mode.",
         trigger: 'a[data-menu-xmlid="project.menu_projects"]',
     }, {
-        content: "Verify that we are on kanban view",
-        trigger: 'button.o_switch_view.o_kanban.active',
-        isCheck: true,
+        content: "Open Test History Project",
+        trigger: "div span.o_text_overflow[title='Test History Project']",
+        extra_trigger: ".o_kanban_view",
+    }, {
+        content: "Open Test History Task",
+        trigger: "div strong.o_kanban_record_title:contains('Test History Task')",
+        extra_trigger: ".o_kanban_view",
+    }, {
+        content: "Create a new task on form view",
+        trigger: 'button.o_form_button_create',
+    }, {
+        trigger: 'div.o_task_name textarea',
+        content: 'Set task name',
+        run: 'text New task',
+    },
+        ...changeDescriptionContentAndSave("0"),
+        ...changeDescriptionContentAndSave("1"),
+    {
+        content: "Go back to kanban view of tasks. this step is added because it takes some time to save the changes, so it's a sort of timeout to wait a bit for the save",
+        trigger: ".o_back_button a",
+    }, {
+        content: "Open text New task",
+        trigger: "div strong.o_kanban_record_title:contains('text New task')",
+        extra_trigger: ".o_kanban_view",
+    }, {
+        content: "Open text New task Dialog",
+        trigger: ".o_cp_action_menus i.fa-cog",
+        extra_trigger: ".o_form_view",
+    }, {
+        content: "Open History Dialog",
+        trigger: ".o_cp_action_menus .o_menu_item i.fa-history",
+        extra_trigger: ".o_cp_action_menus .dropdown-menu",
+    }, {
+         content: "Verify revisions are displayed",
+        trigger: ".html-history-dialog .revision-list .btn",
+        run: function () {
+            const items = document.querySelectorAll(".revision-list .btn");
+            if (items.length === 0) {
+                throw new Error('Expect Revisions in the history dialog not throwwing any errors');
+            }
+        },
+    }, {
+         content: "Go back to projects view. this step is added because Tour can't be finished with an open form view in edition mode.",
+         trigger: 'a[data-menu-xmlid="project.menu_projects"]',
+    }, {
+         content: "Verify that we are on kanban view",
+         trigger: 'button.o_switch_view.o_kanban.active',
+         isCheck: true,
     }
 ]});
