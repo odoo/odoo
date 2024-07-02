@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='partner_vat_address_same_as_shipping']" position="after">
+            <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.l10n_ma_ice">
+                ICE: <a t-field="o.partner_id.l10n_ma_ice"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>
