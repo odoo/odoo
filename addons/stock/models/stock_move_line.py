@@ -811,7 +811,8 @@ class StockMoveLine(models.Model):
             return aggregated_move_lines
         pickings = (self.picking_id | backorders)
         for empty_move in pickings.move_lines:
-            if not (empty_move.state == "cancel" and empty_move.product_uom_qty
+            if not ((empty_move.state == "cancel" or (empty_move.state == "confirmed" and not empty_move.move_line_ids))
+                    and empty_move.product_uom_qty
                     and float_is_zero(empty_move.quantity_done, precision_rounding=empty_move.product_uom.rounding)):
                 continue
             line_key, name, description, uom = get_aggregated_properties(move=empty_move)
