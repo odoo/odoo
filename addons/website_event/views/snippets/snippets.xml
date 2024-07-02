@@ -74,7 +74,24 @@
         <!-- Event page  -->
         <div data-js="WebsiteEvent" data-selector="main:has(.o_wevent_event)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Event Page">
             <we-checkbox string="Sub-menu (Specific)"
+                         data-name="is_submenu"
                          data-display-submenu="true"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-button-group string="Align Sub-menu" class="o_we_full_row"
+                             data-dependencies="is_submenu"
+                             data-reload="/">
+                <we-button title="Left" class="fa fa-fw fa-align-left"
+                            data-customize-website-views="website_event.submenu_align_left"/>
+                <we-button title="Center" class="fa fa-fw fa-align-center"
+                            data-customize-website-views="website_event.submenu_align_center"/>
+                <we-button title="Right" class="fa fa-fw fa-align-right"
+                            data-customize-website-views="website_event.submenu_align_right"/>
+            </we-button-group>
+        </div>
+        <div data-selector="main:has(.o_wevent_event)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Event Page">
+            <we-checkbox string="Breadcrumbs"
+                         data-customize-website-views="website_event.breadcrumb_template"
                          data-no-preview="true"
                          data-reload="/"/>
         </div>

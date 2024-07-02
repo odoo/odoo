@@ -24,14 +24,7 @@
     <section id="o_wevent_event_submenu">
         <!-- Mobile -->
         <div id="o_wevent_submenu_mobile" class="container d-flex d-lg-none align-items-center mt-3 mb-3 mb-lg-2">
-            <a t-if="navbar__back_url" t-att-href="navbar__back_url" t-att-title="navbar__back_title or 'Go back'">
-                <i class="oi oi-chevron-left"/>
-                <span t-out="navbar__back_text or 'Go back'"/>
-            </a>
-            <a t-else="" href="/event" title="All Events">
-                <i class="oi oi-chevron-left"/>
-                <span>All Events</span>
-            </a>
+            <div id="mobile_breadcrumb"/>
             <!-- Add Register additional CTA button, in addition to menus -->
             <a t-if="is_rendering_cta"
                 t-att-href="'/event/%s/register' % (slug(event))"
@@ -47,31 +40,17 @@
         <div id="o_wevent_submenu_desktop" class="d-none d-lg-block mt-3 mb-3 mb-lg-2">
             <div class="container">
                 <div class="d-flex align-items-center justify-content-between">
-                    <nav class="d-flex flex-wrap justify-content-between align-items-center gap-2 flex-grow-1">
-                        <ul class="breadcrumb p-0 m-0">
-                            <li class="breadcrumb-item">
-                                <a href="/event" title="Back to All Events">All Events</a>
-                            </li>
-                            <t t-if="navbar__back_url">
-                                <li class="breadcrumb-item">
-                                    <a t-attf-href="/event/{{slug(event)}}" t-attf-title="Back to {{event.name}}" t-field="event.name"/>
-                                </li>
-                                <li class="breadcrumb-item">
-                                    <a t-att-href="navbar__back_url" t-att-title="navbar__back_title" t-out="navbar__back_text"/>
-                                </li>
-                            </t>
-                            <t t-else="">
-                                <li class="breadcrumb-item active" aria-current="page"><span class="pe-3" t-field="event.name"/></li>
-                            </t>
-                        </ul>
-                        <ul t-if="not navbar__back_url" class="nav" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
-                            <t t-foreach="event.menu_id.child_id" t-as="submenu">
-                                <t t-call="website.submenu">
-                                    <t t-set="item_class" t-value="'nav-item'"/>
-                                    <t t-set="link_class" t-value="'nav-link text-nowrap'"/>
+                    <nav class="d-flex flex-wrap align-items-center gap-2 flex-grow-1">
+                        <div id="sub_menu">
+                            <ul t-if="not navbar__back_url" class="nav" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
+                                <t t-foreach="event.menu_id.child_id" t-as="submenu">
+                                    <t t-call="website.submenu">
+                                        <t t-set="item_class" t-value="'nav-item'"/>
+                                        <t t-set="link_class" t-value="'nav-link text-nowrap'"/>
+                                    </t>
                                 </t>
-                            </t>
-                        </ul>
+                            </ul>
+                        </div>
                     </nav>
 
                     <!-- Workaround to avoid flickering while navigating between pages with and without CTA -->
@@ -86,6 +65,58 @@
             </div>
         </div>
     </section>
+</template>
+
+<template id="breadcrumb_template" inherit_id="website_event.navbar">
+    <xpath expr="//div[@id='mobile_breadcrumb']" position="after">
+        <a t-if="navbar__back_url" t-att-href="navbar__back_url" t-att-title="navbar__back_title or 'Go back'">
+            <i class="oi oi-chevron-left"/>
+            <span t-out="navbar__back_text or 'Go back'"/>
+        </a>
+        <a t-else="" href="/event" title="All Events">
+            <i class="oi oi-chevron-left"/>
+            <span>All Events</span>
+        </a>
+    </xpath>
+    <xpath expr="//div[@id='sub_menu']" position="before">
+        <ul class="breadcrumb p-0 m-0">
+            <li class="breadcrumb-item">
+                <a href="/event" title="Back to All Events">All Events</a>
+            </li>
+            <t t-if="navbar__back_url">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/event/{{slug(event)}}" t-attf-title="Back to {{event.name}}" t-field="event.name"/>
+                </li>
+                <li class="breadcrumb-item">
+                    <a t-att-href="navbar__back_url" t-att-title="navbar__back_title" t-out="navbar__back_text"/>
+                </li>
+            </t>
+            <t t-if="not hide_submenu">
+                <li class="breadcrumb-item" aria-current="page"><a class="pe-3" t-field="event.name" t-att-href="'/event/%s/register' % (slug(event))"/></li>
+            </t>
+            <t t-else="">
+                <li class="breadcrumb-item active" aria-current="page"><span class="pe-3" t-field="event.name"/></li>
+            </t>
+        </ul>
+    </xpath>
+</template>
+
+<template id="submenu_align_left" inherit_id="website_event.navbar" active="False">
+    <xpath expr="//div[@id='sub_menu']" position="attributes">
+        <attribute name="class">ms-0</attribute>
+    </xpath>
+</template>
+
+<template id="submenu_align_center" inherit_id="website_event.navbar" active="False">
+    <xpath expr="//div[@id='sub_menu']" position="attributes">
+        <attribute name="class">mx-auto</attribute>
+    </xpath>
+</template>
+
+<template id="submenu_align_right" inherit_id="website_event.navbar" active="True">
+    <xpath expr="//div[@id='sub_menu']" position="attributes">
+        <attribute name="class">ms-auto</attribute>
+    </xpath>
 </template>
 
 <template id="navbar_dropdown" name="Event Navbar Dropdown">
