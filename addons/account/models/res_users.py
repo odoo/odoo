@@ -5,6 +5,25 @@ from odoo import api, models, _
 from odoo.exceptions import ValidationError
 
 
+class ResUsers(models.Model):
+    _inherit = 'res.users'
+
+    def _filter_tracking_x2m(self, fname):
+        result = super()._filter_tracking_x2m(fname)
+        if fname == 'groups_id':
+            result += (
+                self.env.ref('account.group_account_user')
+                + self.env.ref('account.group_account_readonly')
+                + self.env.ref('account.group_account_basic')
+                + self.env.ref('account.group_account_manager')
+                + self.env.ref('account.group_account_invoice')
+                + self.env.ref('account.group_validate_bank_account')
+                + self.env.ref('base.group_system')
+                + self.env.ref('base.group_erp_manager')
+            )
+        return result
+
+
 class GroupsView(models.Model):
     _inherit = 'res.groups'
 
