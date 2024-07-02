@@ -20,6 +20,8 @@ class HrEmployeeSkillReport(models.BaseModel):
     level_progress = fields.Float(readonly=True, aggregator='avg')
     active = fields.Boolean(related='employee_id.active')
 
+    has_department_manager_access = fields.Boolean(search="_search_has_department_manager_access", compute="_compute_has_department_manager_access")
+
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
 
@@ -41,3 +43,26 @@ class HrEmployeeSkillReport(models.BaseModel):
             WHERE st.active IS True
         )
         """ % (self._table, ))
+
+    def _search_has_department_manager_access(self, operator, value):
+        supported_operators = ["!=", "="]
+        if operator not in supported_operators or not isinstance(value, bool):
+            raise NotImplementedError()
+        return [
+                '|',
+                    ('employee_id.user_id', '=', self.env.user.id),
+                    ('employee_id.department_id', 'child_of',
+                        self.env['hr.department']._search([('manager_id', 'in', self.env.user.employee_ids.ids)])
+                    ),
+                ]
+
+    def _compute_has_department_manager_access(self):
+        employees = self.env['hr.employee'].search([
+                '|',
+                    ('user_id', '=', self.env.user.id),
+                    ('department_id', 'child_of',
+                        self.env['hr.department']._search([('manager_id', 'in', self.env.user.employee_ids.ids)])
+                    ),
+                ])
+        for report in self:
+            report.has_department_manager_access = report.employee_id in employees

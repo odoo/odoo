@@ -33,8 +33,9 @@ export class DepartmentChart extends Component {
         ]);
     }
 
-    openDepartmentEmployees(departmentId) {
-        this.action.doAction("hr.act_employee_from_department", {
+    async openDepartmentEmployees(departmentId) {
+        // const action = await this.orm.call('hr.department', 'action_employee_from_department', [this.props.record.resId], {});
+        this.action.doAction("hr.action_employee_from_department" , {
             additionalContext: {
                 active_id: departmentId,
             },

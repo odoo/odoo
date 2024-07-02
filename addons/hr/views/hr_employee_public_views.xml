@@ -105,7 +105,7 @@
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee.public</field>
             <field name="arch" type="xml">
-                <tree string="Employees" sample="1">
+                <tree string="Employees" sample="1" expand="context.get('expand', False)">
                     <field name="name"/>
                     <field name="work_phone" class="o_force_ltr"/>
                     <field name="work_email"/>
