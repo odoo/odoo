@@ -2014,3 +2014,6 @@ class SaleOrder(models.Model):
             return self.partner_id.lang
 
         return self.env.lang
+
+    def _validate_zero_amount_orders(self):
+        return True
