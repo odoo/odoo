@@ -61,7 +61,7 @@ class PaymentProvider(models.Model):
             )
         return supported_currencies
 
-    def _razorpay_make_request(self, endpoint, payload=None, method='POST'):
+    def _razorpay_make_request(self, endpoint, payload=None, method='POST', idempotency_key=None):
         """ Make a request to Razorpay API at the specified endpoint.
 
         Note: self.ensure_one()
@@ -69,6 +69,7 @@ class PaymentProvider(models.Model):
         :param str endpoint: The endpoint to be reached by the request.
         :param dict payload: The payload of the request.
         :param str method: The HTTP method of the request.
+        :param str idempotency_key: The idempotency key to pass in the request.
         :return The JSON-formatted content of the response.
         :rtype: dict
         :raise ValidationError: If an HTTP error occurs.
@@ -81,7 +82,8 @@ class PaymentProvider(models.Model):
             if method == 'GET':
                 response = requests.get(url, params=payload, auth=auth, timeout=10)
             else:
-                response = requests.post(url, json=payload, auth=auth, timeout=10)
+                headers = {'X-Payout-Idempotency': idempotency_key}
+                response = requests.post(url, json=payload, headers=headers, auth=auth, timeout=10)
             try:
                 response.raise_for_status()
             except requests.exceptions.HTTPError:
