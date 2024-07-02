@@ -16,6 +16,7 @@ import {
     makeSeparator,
 } from "@web/views/view_compiler";
 import { ViewCompiler } from "../view_compiler";
+import { exprToBoolean } from "@web/core/utils/strings";
 
 const compilersRegistry = registry.category("form_compilers");
 
@@ -50,6 +51,7 @@ export class FormCompiler extends ViewCompiler {
         this.compilers.push(
             ...compilersRegistry.getAll(),
             { selector: "div[name='button_box']", fn: this.compileButtonBox },
+            { selector: "footer", fn: this.compileFooter },
             { selector: "form", fn: this.compileForm, doNotCopyAttributes: true },
             { selector: "group", fn: this.compileGroup },
             { selector: "header", fn: this.compileHeader },
@@ -245,6 +247,32 @@ export class FormCompiler extends ViewCompiler {
             append(form, compiledList);
         }
         return form;
+    }
+
+    /**
+     * @param {Element} el
+     * @param {Record<string, any>} params
+     * @returns {Element}
+     */
+    compileFooter(el, params) {
+        const footer = createElement("t");
+        const replace = el.getAttribute("replace");
+        if (replace && !exprToBoolean(replace)) {
+            footer.append(
+                createElement("t", {
+                    "t-call": "web.DefaultButtonsSlot",
+                    "t-call-context": "{ props: __comp__.props }",
+                })
+            );
+        }
+        copyAttributes(el, footer);
+        for (const child of el.childNodes) {
+            const compiled = this.compileNode(child, params);
+            if (compiled) {
+                footer.append(compiled);
+            }
+        }
+        return footer;
     }
 
     /**

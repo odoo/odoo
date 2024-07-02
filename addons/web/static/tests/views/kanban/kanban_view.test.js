@@ -7661,7 +7661,7 @@ test.tags("desktop")("kanban with sample data: do an on_create action", async ()
     await createKanbanRecord();
     expect(".modal").toHaveCount(1);
 
-    await contains(".modal .o_cp_buttons .o_form_button_save").click();
+    await contains(".modal .o_form_button_save").click();
     expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
     expect(".o_view_nocontent").toHaveCount(0);
