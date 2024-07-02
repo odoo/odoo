@@ -219,6 +219,9 @@ export class FormController extends Component {
         // that will be moved to the dialog's footer (if we are in a dialog)
         const footers = [...this.archInfo.xmlDoc.querySelectorAll("footer:not(field footer)")];
         if (footers.length) {
+            if (footers.length > 1) {
+                console.warn("Multiple footers!");
+            }
             this.footerArchInfo = Object.assign({}, this.archInfo);
             this.footerArchInfo.xmlDoc = createElement("t");
             this.footerArchInfo.xmlDoc.append(...footers);
