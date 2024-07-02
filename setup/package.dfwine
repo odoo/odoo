@@ -65,8 +65,7 @@ RUN curl ${WKHTMLTOPDF_URL} -sSL  -o/tmp/wkhtml_installer.exe \
     && 7zz e /tmp/wkhtml_installer.exe bin/wkhtmltopdf.exe -o${ODOO_BUILD_DIR}/wkhtmltopdf/ \
     && rm /tmp/wkhtml_installer.exe
 
-ADD --checksum=sha256:5eea714e1f22f1875c1cb7b1738b0c0b1f02aec5ecb95f0fdb1c5171c6cd93a3 \
-    --chown=odoo:odoo \
+ADD --chown=odoo:odoo \
     https://download.microsoft.com/download/9/3/F/93FCF1E7-E6A4-478B-96E7-D4B285925B00/vc_redist.x64.exe \
     ${ODOO_BUILD_DIR}/vcredist/
 
