@@ -463,7 +463,7 @@ class AccountBankStatementLine(models.Model):
                 'partner_id': self.partner_id.id,
                 'journal_id': None,
             })
-        return bank_account.filtered(lambda x: x.company_id in (False, self.company_id))
+        return bank_account.filtered(lambda x: not x.company_id or x.company_id == self.company_id)
 
     def _get_default_amls_matching_domain(self):
         self.ensure_one()
