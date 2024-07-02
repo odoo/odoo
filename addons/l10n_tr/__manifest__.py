@@ -4,19 +4,24 @@
     'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['tr'],
-    'version': '1.1',
+    'version': '1.2',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
-Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.
-==========================================================
+    Bu, Broadmax Partner'ın Türkiye'deki işbirliğiyle yapıldı.
 
-Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
-    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap
-      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.
+    Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.
+    ==========================================================
+
+    Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
+        * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap
+        bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.
     """,
     'author': 'Odoo',
     'depends': [
         'account',
+    ],
+    'data': [
+        'data/account_tax_report_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
