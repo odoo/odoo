@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, onMounted, useRef, useState, xml } from "@odoo/owl";
 import { createURL } from "../core/url";
 import { useWindowListener } from "../hoot_utils";
 import { HootButtons } from "./hoot_buttons";
@@ -50,7 +50,11 @@ export class HootMain extends Component {
             </a>
         </t>
         <t t-else="">
-            <main class="${HootMain.name} flex flex-col w-full h-full bg-base relative" t-att-class="{ 'hoot-animations': env.runner.config.fun }">
+            <main
+                t-ref="root"
+                class="${HootMain.name} flex flex-col w-full h-full bg-base relative"
+                t-att-class="{ 'hoot-animations': env.runner.config.fun }"
+            >
                 <header class="flex flex-col bg-gray-200 dark:bg-gray-800">
                     <nav class="hoot-controls py-1 px-2">
                         <h1
@@ -89,6 +93,31 @@ export class HootMain extends Component {
         });
 
         if (!runner.config.headless) {
+            // Since Chrome 125 and for God knows why the "pointer" event listeners
+            // are all ignored in the HOOT UI, so the buttons appearing on hover
+            // are never displayed.
+            //
+            // Now for some reason adding a SINGLE listener on ANY button seems
+            // to solve this issue. I've looked into it for hours already and this
+            // is as far as I'll go on this matter. Good luck to anyone trying to
+            // debug this mess.
+            const unstuckListeners = () => {
+                if (listenersUnstuck || !rootRef.el) {
+                    return;
+                }
+                listenersUnstuck = true;
+                rootRef.el.querySelector("button").addEventListener(
+                    "pointerenter",
+                    () => {
+                        // Leave this empty (CALLBACK CANNOT BE NULL OR UNDEFINED)
+                    },
+                    { once: true }
+                );
+            };
+
+            const rootRef = useRef("root");
+            let listenersUnstuck = false;
+
             runner.beforeAll(() => {
                 if (!runner.debug) {
                     return;
@@ -101,8 +130,11 @@ export class HootMain extends Component {
             });
             runner.afterAll(() => {
                 this.state.debugTest = null;
+
+                unstuckListeners();
             });
 
+            onMounted(unstuckListeners);
             useWindowListener("keydown", (ev) => this.onWindowKeyDown(ev), { capture: true });
         }
     }
