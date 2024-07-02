@@ -41,6 +41,10 @@ export function insertText(editor, text) {
         // KeyDownEvent is required to trigger deleteRange.
         manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key: char });
         // InputEvent is required to simulate the insert text.
+        manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
+            inputType: "insertText",
+            data: char,
+        });
         insertChar(char);
         manuallyDispatchProgrammaticEvent(editor.editable, "input", {
             inputType: "insertText",
