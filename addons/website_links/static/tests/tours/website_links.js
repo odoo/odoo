@@ -3,26 +3,26 @@
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 
-function fillSelect2(inputID, search) {
+function fillSelectMenu(inputID, search) {
     return [
         {
             content: "Click select2 form item",
-            trigger: `.o_website_links_utm_forms div.select2-container#s2id_${inputID} > .select2-choice`,
+            trigger: `.o_website_links_utm_forms input#${inputID} + div .o_select_menu_toggler`,
             run: "click",
         },
         {
             content: "Enter select2 search query",
-            trigger: '.select2-drop .select2-input',
+            trigger: ".o_popover input.o_select_menu_sticky",
             run: `edit ${search}`,
         },
         {
             content: "Select found select2 item",
-            trigger: `.select2-drop li:only-child .select2-match:contains("/^${search}$/")`,
+            trigger: `.o_popover span.o_select_menu_item div.o_select_menu_item_label:contains("/^${search}$/")`,
             run: "click",
         },
         {
             content: "Check that select2 is properly filled",
-            trigger: `.o_website_links_utm_forms div.select2-container#s2id_${inputID} .select2-chosen:contains("/^${search}$/")`,
+            trigger: `.o_website_links_utm_forms input#${inputID} + div .o_select_menu_toggler span.o_select_menu_toggler_slot:contains("/^${search}$/")`,
             run: () => null,
         },
     ];
@@ -49,9 +49,9 @@ registry.category("web_tour.tours").add('website_links_tour', {
                 document.querySelector("#o_website_links_link_tracker_form input#url").value = url;
             },
         },
-        ...fillSelect2('campaign-select', campaignValue),
-        ...fillSelect2('channel-select', mediumValue),
-        ...fillSelect2('source-select', sourceValue),
+        ...fillSelectMenu("campaign-select", campaignValue),
+        ...fillSelectMenu("channel-select", mediumValue),
+        ...fillSelectMenu("source-select", sourceValue),
         {
             content: "Copy tracker link",
             trigger: '#btn_shorten_url',
