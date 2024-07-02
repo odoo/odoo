@@ -36,13 +36,6 @@ class StockGenerateCommon(TransactionCase):
 
         cls.Wizard = cls.env['stock.assign.serial']
 
-
-    def _import_lots(self, lots, move):
-        location_id = move.location_id
-        move_lines_vals = move.split_lots(lots)
-        move_lines_commands = move._generate_serial_move_line_commands(move_lines_vals, location_dest_id=location_id)
-        move.update({'move_line_ids': move_lines_commands})
-
     def get_new_move(self, nbre_of_lines=0, product=False):
         product = product or self.product_serial
         move_lines_vals = [Command.create({
@@ -60,6 +53,12 @@ class StockGenerateCommon(TransactionCase):
             'location_dest_id': self.location_dest.id,
             'move_line_ids': move_lines_vals,
         })
+
+    def assert_move_line_vals_values(self, line_vals_list, checked_vals_list):
+        self.assertEqual(len(line_vals_list), len(checked_vals_list))
+        for (line_vals, checked_vals) in zip(line_vals_list, checked_vals_list):
+            for checked_field in checked_vals:
+                self.assertEqual(line_vals[checked_field], checked_vals[checked_field])
 
     def test_generate_01_sn(self):
         """ Creates a move with 5 move lines, then asks for generates 5 Serial
@@ -378,16 +377,68 @@ class StockGenerateCommon(TransactionCase):
             {'quantity': 1, 'lot_name': '004', 'location_dest_id': sub_loc_04.id},
         ])
 
-    def test_import_lots(self):
+    def test_receipt_import_lots(self):
+        """ This test ensure that with use_existing_lots is True on the picking type, the 'Import Serial/lots'
+        action generate new lots or use existing lots that are available.
+        It also tests that lot_id is set instead of lot_name so that the frontend correctly
+        shows the lots in the lot column.
+        """
         product_lot = self.env['product.product'].create({
             'name': 'Tracked by Lots',
             'type': 'product',
             'tracking': 'lot',
         })
-        lot_id = self.env['stock.lot'].create({
+        abc_lot_id = self.env['stock.lot'].create({
             'product_id': product_lot.id,
             'name': 'abc',
         })
+        self.warehouse.in_type_id.use_existing_lots = True
+        receipt_picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'state': 'draft',
+        })
+        self.env['stock.move'].create({
+            'name': product_lot.name,
+            'product_id': product_lot.id,
+            'product_uom': product_lot.uom_id.id,
+            'product_uom_qty': 5.0,
+            'picking_id': receipt_picking.id,
+            'location_id': receipt_picking.location_id.id,
+            'location_dest_id': receipt_picking.location_dest_id.id,
+        })
+        action_context = {
+            'default_company_id': self.env.company.id,
+            'default_picking_id': receipt_picking.id,
+            'default_picking_type_id': self.warehouse.in_type_id.id,
+            'default_location_id': receipt_picking.location_id.id,
+            'default_location_dest_id': receipt_picking.location_dest_id.id,
+            'default_product_id': product_lot.id,
+        }
+        move_line_vals = self.env['stock.move'].action_generate_lot_line_vals(
+            action_context, 'import', None, 0, 'abc;4\ndef'
+        )
+        def_lot_id = self.env['stock.lot'].search([('name', '=', 'def'), ('product_id', '=', product_lot.id)])
+        self.assert_move_line_vals_values(move_line_vals, [
+            {'quantity': 4, 'lot_id': {'id': abc_lot_id.id, 'display_name': 'abc'}},
+            {'quantity': 1, 'lot_id': {'id': def_lot_id.id, 'display_name': 'def'}},
+        ])
+
+    def test_receipt_generate_serial_numbers(self):
+        """ This test ensures that with use_existing_lots is True on the picking type, the 'Generate Serial/Lots'
+        action and 'Assign Serial Numbers' action generate new serials and use existing serials that are available.
+        It also tests that lot_id is set instead of lot_name so that the frontend correctly
+        shows the lots in the lot column.
+        """
+        product_lot = self.env['product.product'].create({
+            'name': 'Tracked by Lots',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        sn_t1_01 = self.env['stock.lot'].create({'product_id': product_lot.id, 'name': 'sn-t1-01'})
+        sn_t1_02 = self.env['stock.lot'].create({'product_id': product_lot.id, 'name': 'sn-t1-02'})
+
         self.warehouse.in_type_id.use_existing_lots = True
         receipt_picking = self.env['stock.picking'].create({
             'picking_type_id': self.warehouse.in_type_id.id,
@@ -404,9 +455,46 @@ class StockGenerateCommon(TransactionCase):
             'location_id': receipt_picking.location_id.id,
             'location_dest_id': receipt_picking.location_dest_id.id,
         })
-        self._import_lots("abc;4\ndef", move)
-        self.assertIn(lot_id, move.move_line_ids.lot_id)
+
+        # Test 'Generate Serial/Lots' action, from the detailed operations view
+        action_context = {
+            'default_company_id': self.env.company.id,
+            'default_picking_id': receipt_picking.id,
+            'default_picking_type_id': self.warehouse.in_type_id.id,
+            'default_location_id': receipt_picking.location_id.id,
+            'default_location_dest_id': receipt_picking.location_dest_id.id,
+            'default_product_id': product_lot.id,
+        }
+        move_line_vals = self.env['stock.move'].action_generate_lot_line_vals(
+            action_context, 'serial', 'sn-t1-01', 5, False
+        )
+        sn_t1_03, sn_t1_04, sn_t1_05 = self.env['stock.lot'].search(
+            [('name', 'in', ['sn-t1-03', 'sn-t1-04', 'sn-t1-05']), ('product_id', '=', product_lot.id)]
+        )
+        self.assert_move_line_vals_values(move_line_vals, [
+            {'quantity': 1, 'lot_id': {'id': sn_t1_01.id, 'display_name': 'sn-t1-01'}},
+            {'quantity': 1, 'lot_id': {'id': sn_t1_02.id, 'display_name': 'sn-t1-02'}},
+            {'quantity': 1, 'lot_id': {'id': sn_t1_03.id, 'display_name': 'sn-t1-03'}},
+            {'quantity': 1, 'lot_id': {'id': sn_t1_04.id, 'display_name': 'sn-t1-04'}},
+            {'quantity': 1, 'lot_id': {'id': sn_t1_05.id, 'display_name': 'sn-t1-05'}},
+        ])
+
+        # Test 'Assign Serial Numbers' action from the operation tree view
+        form_wizard = Form(self.env['stock.assign.serial'].with_context(
+            default_move_id=move.id,
+            default_next_serial_number='sn-t2-01',
+            default_next_serial_count=5
+        ))
+        wiz = form_wizard.save()
+        wiz.generate_serial_numbers()
+        sn_t2_01, sn_t2_02, sn_t2_03, sn_t2_04, sn_t2_05 = self.env['stock.lot'].search([
+            ('name', 'in', ['sn-t2-01', 'sn-t2-02', 'sn-t2-03', 'sn-t2-04', 'sn-t2-05']),
+            ('product_id', '=', product_lot.id),
+        ])
         self.assertRecordValues(move.move_line_ids, [
-            {'quantity': 4, 'lot_name': 'abc'},
-            {'quantity': 1, 'lot_name': 'def'},
+            {'quantity': 1, 'lot_id': sn_t2_01.id},
+            {'quantity': 1, 'lot_id': sn_t2_02.id},
+            {'quantity': 1, 'lot_id': sn_t2_03.id},
+            {'quantity': 1, 'lot_id': sn_t2_04.id},
+            {'quantity': 1, 'lot_id': sn_t2_05.id},
         ])
