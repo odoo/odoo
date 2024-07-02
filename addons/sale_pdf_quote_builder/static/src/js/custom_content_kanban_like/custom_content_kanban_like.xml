@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="sale_pdf_quote_builder.CustomContentKanbanLike">
+        <t t-if="this.state.header_footer">
+            <t t-foreach="state.header_footer" t-as="formField" t-key="'hf' + formField">
+                <div class="card align-items-stretch flex-column mt-2">
+                    <h5 class="card-title text-primary mt-3 mx-2">
+                        Header and footer / <t t-out="formField"/>
+                    </h5>
+                    <div class="card-body">
+                        <span
+                            t-attf-class="card-text #{state.header_footer[formField] ? '' : 'text-muted'}"
+                        >
+                            <input
+                                t-model.lazy="state.header_footer[formField]"
+                                t-att-placeholder="this.placeholderLabel"
+                            />
+                        </span>
+                    </div>
+                </div>
+            </t>
+        </t>
+        <t t-if="state.product_document">
+            <t t-foreach="state.product_document" t-as="formField" t-key="'product' + formField">
+                <div class="card align-items-stretch flex-column mt-2">
+                    <h5 class="card-title text-primary mt-3 mx-2">
+                        Header and footer / <t t-out="formField"/>
+                    </h5>
+                    <div class="card-body">
+                        <span
+                            t-attf-class="card-text #{state.product_document[formField] ? '' : 'text-muted'}"
+                        >
+                            <input
+                                t-model.lazy="state.product_document[formField]"
+                                t-att-placeholder="this.placeholderLabel"
+                            />
+                        </span>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </t>
+
+</templates>

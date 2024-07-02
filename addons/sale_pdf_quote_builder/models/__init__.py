@@ -2,5 +2,7 @@
 
 from . import ir_actions_report
 from . import product_document
-from . import res_company
+from . import quotation_document
+from . import sale_order
+from . import sale_order_line
 from . import sale_order_template

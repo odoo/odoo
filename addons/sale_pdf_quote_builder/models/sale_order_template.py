@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
+import json
 
-from odoo import api, fields, models
+from odoo import _, fields, models
 
 from odoo.addons.sale_pdf_quote_builder import utils
 
@@ -10,21 +10,58 @@ from odoo.addons.sale_pdf_quote_builder import utils
 class SaleOrderTemplate(models.Model):
     _inherit = 'sale.order.template'
 
-    sale_header = fields.Binary(
-        string="Header pages", default=lambda self: self.env.company.sale_header)
-    sale_header_name = fields.Char(default=lambda self: self.env.company.sale_header_name)
-    sale_footer = fields.Binary(
-        string="Footer pages", default=lambda self: self.env.company.sale_footer)
-    sale_footer_name = fields.Char(default=lambda self: self.env.company.sale_footer_name)
+    quotation_document_ids = fields.Many2many(
+        string="Headers and footers",
+        comodel_name='quotation.document',
+        relation='header_footer_quotation_template_rel',
+    )
+    sale_header_ids = fields.Many2many(
+        string="Headers",
+        comodel_name='quotation.document',
+        domain=[('document_type', '=', 'header')],
+        compute='_compute_sale_header_and_sale_footer_ids',
+        inverse='_inverse_sale_header_and_sale_footer_ids',
+        readonly=False,  # TODO edm: order of args
+        # Also TODO edm: recheck '' or "", you know you forgot some
+    )
+    sale_footer_ids = fields.Many2many(
+        string="Footers",
+        comodel_name='quotation.document',
+        domain=[('document_type', '=', 'footer')],
+        compute='_compute_sale_header_and_sale_footer_ids',
+        inverse='_inverse_sale_header_and_sale_footer_ids',
+        readonly=False,
+    )
 
-    @api.constrains('sale_header')
-    def _ensure_header_encryption(self):
-        for template in self:
-            if template.sale_header:
-                utils._ensure_document_not_encrypted(base64.b64decode(template.sale_header))
+    # === COMPUTE METHODS === #
 
-    @api.constrains('sale_footer')
-    def _ensure_footer_encryption(self):
+    def _compute_sale_header_and_sale_footer_ids(self):
         for template in self:
-            if template.sale_footer:
-                utils._ensure_document_not_encrypted(base64.b64decode(template.sale_footer))
+            template.sale_header_ids = template.quotation_document_ids.filtered(
+                lambda doc: doc.document_type == 'header'
+            ).ids
+            template.sale_footer_ids = template.quotation_document_ids.filtered(
+                lambda doc: doc.document_type == 'footer'
+            ).ids
+
+    def _inverse_sale_header_and_sale_footer_ids(self):
+        for template in self:
+            quotation_documents = template.sale_header_ids + template.sale_footer_ids
+            template.quotation_document_ids = quotation_documents.ids
+
+    # === ACTION METHODS === #
+
+    def action_open_dynamic_fields_configurator_wizard(self):
+        self.ensure_one()
+        valid_form_fields = set()
+        for doc in self.quotation_document_ids:
+            valid_form_fields.update(utils._get_valid_form_fields(doc.datas))
+        default_form_fields = {'header_footer': list(valid_form_fields)}
+        return {
+            'name': _("Whitelist PDF Fields"),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'sale.pdf.quote.builder.dynamic.fields.wizard',
+            'target': 'new',
+            'context': {'default_current_form_fields': json.dumps(default_form_fields)},
+        }
