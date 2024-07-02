@@ -38,6 +38,7 @@ except ImportError:
     from PyPDF2.utils import PdfReadError
 
 _logger = logging.getLogger(__name__)
+_audit_logger = logging.getLogger("audit.ir_actions_report")
 
 # A lock occurs when the user wants to print a report having multiple barcode while the server is
 # started in threaded-mode. The reason is that reportlab has to build a cache of the T1 fonts
@@ -946,7 +947,10 @@ class IrActionsReport(models.Model):
         )
         if res_ids:
             self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
-            _logger.info('The PDF report has been generated for model: %s, records %s.' % (self_sudo.model, str(res_ids)))
+            domain_used = f"Domain used : {context['active_domain']}" if context['active_domain'] else ""
+            _audit_logger.getChild('export').info('The PDF report has been generated for model: %r, records %r by %r (%s).'
+                         ' %s', self_sudo.model, str(res_ids), self.env.user.login,
+                         self.env.user, domain_used)
             return self_sudo._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
         return pdf_content, 'pdf'
 

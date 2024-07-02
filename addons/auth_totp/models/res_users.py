@@ -16,6 +16,7 @@ from odoo.tools import sql
 from odoo.addons.auth_totp.models.totp import TOTP, TOTP_SECRET_SIZE
 
 _logger = logging.getLogger(__name__)
+_audit_logger = logging.getLogger("audit.res_users")
 
 compress = functools.partial(re.sub, r'\s', '')
 class Users(models.Model):
@@ -67,19 +68,19 @@ class Users(models.Model):
         key = base64.b32decode(sudo.totp_secret)
         match = TOTP(key).match(code)
         if match is None:
-            _logger.info("2FA check: FAIL for %s %r", self, sudo.login)
+            _audit_logger.getChild('mfa').info("2FA check: FAIL for %s %r", self, sudo.login)
             raise AccessDenied(_("Verification failed, please double-check the 6-digit code"))
-        _logger.info("2FA check: SUCCESS for %s %r", self, sudo.login)
+        _audit_logger.getChild('mfa').info("2FA check: SUCCESS for %s %r", self, sudo.login)
 
     def _totp_try_setting(self, secret, code):
         if self.totp_enabled or self != self.env.user:
-            _logger.info("2FA enable: REJECT for %s %r", self, self.login)
+            _audit_logger.getChild('mfa_setup').info("2FA enable: REJECT for %s %r", self, self.login)
             return False
 
         secret = compress(secret).upper()
         match = TOTP(base64.b32decode(secret)).match(code)
         if match is None:
-            _logger.info("2FA enable: REJECT CODE for %s %r", self, self.login)
+            _audit_logger.getChild('mfa_setup').info("2FA enable: REJECT CODE for %s %r", self, self.login)
             return False
 
         self.sudo().totp_secret = secret
@@ -89,14 +90,15 @@ class Users(models.Model):
             new_token = self.env.user._compute_session_token(request.session.sid)
             request.session.session_token = new_token
 
-        _logger.info("2FA enable: SUCCESS for %s %r", self, self.login)
+        _audit_logger.getChild('mfa_setup').info("2FA enable: SUCCESS for %s %r", self, self.login)
         return True
 
     @check_identity
     def action_totp_disable(self):
         logins = ', '.join(map(repr, self.mapped('login')))
         if not (self == self.env.user or self.env.user._is_admin() or self.env.su):
-            _logger.info("2FA disable: REJECT for %s (%s) by uid #%s", self, logins, self.env.user.id)
+            _audit_logger.getChild('mfa_setup').info("2FA disable: REJECT for %s (%s) by %r (%s)", self,
+                         logins, self.env.user.login, self.env.user)
             return False
 
         self.revoke_all_devices()
@@ -108,7 +110,8 @@ class Users(models.Model):
             new_token = self.env.user._compute_session_token(request.session.sid)
             request.session.session_token = new_token
 
-        _logger.info("2FA disable: SUCCESS for %s (%s) by uid #%s", self, logins, self.env.user.id)
+        _audit_logger.getChild('mfa_setup').info("2FA disable: SUCCESS for %s (%s) by %r (%s)", self,
+         logins, self.env.user.login, self.env.user)
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -151,6 +154,8 @@ class Users(models.Model):
 
     def _revoke_all_devices(self):
         self.totp_trusted_device_ids._remove()
+        _audit_logger.getChild('mfa_setup').info("All TOTP devices revoked for %r (%s) by %r (%s)",
+                     ", ".join(self.mapped('login')), self, self.env.user.login, self.env.user)
 
     @api.model
     def change_password(self, old_passwd, new_passwd):

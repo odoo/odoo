@@ -248,10 +248,10 @@ PSEUDOCONFIG_MAPPER = {
     'debug': ['odoo:DEBUG', 'odoo.sql_db:INFO'],
     'debug_sql': ['odoo.sql_db:DEBUG'],
     'info': [],
-    'runbot': ['odoo:RUNBOT', 'werkzeug:WARNING'],
-    'warn': ['odoo:WARNING', 'werkzeug:WARNING'],
-    'error': ['odoo:ERROR', 'werkzeug:ERROR'],
-    'critical': ['odoo:CRITICAL', 'werkzeug:CRITICAL'],
+    'runbot': ['odoo:RUNBOT', 'werkzeug:WARNING', 'audit:WARNING'],
+    'warn': ['odoo:WARNING', 'werkzeug:WARNING', 'audit:WARNING'],
+    'error': ['odoo:ERROR', 'werkzeug:ERROR', 'audit:ERROR'],
+    'critical': ['odoo:CRITICAL', 'werkzeug:CRITICAL', 'audit:CRITICAL'],
 }
 
 logging.RUNBOT = 25

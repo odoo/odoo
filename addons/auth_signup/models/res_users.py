@@ -16,6 +16,7 @@ from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.auth_signup.models.res_partner import SignupError, now
 
 _logger = logging.getLogger(__name__)
+_audit_logger = logging.getLogger("audit.res_users")
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
@@ -203,7 +204,8 @@ class ResUsers(models.Model):
             with self.env.cr.savepoint():
                 force_send = not(self.env.context.get('import_file', False))
                 template.send_mail(user.id, force_send=force_send, raise_exception=True, email_values=email_values)
-            _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
+            _audit_logger.getChild('password').info("Password reset email sent for user %s to <%s> by %r (%s)",
+                         user, user.email, self.env.user.login, self.env.user)
 
     def send_unregistered_user_reminder(self, after_days=5):
         datetime_min = fields.Datetime.today() - relativedelta(days=after_days)

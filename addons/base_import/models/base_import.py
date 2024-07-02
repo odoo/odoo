@@ -34,6 +34,7 @@ DEFAULT_IMAGE_REGEX = r"^(?:http|https)://"
 DEFAULT_IMAGE_CHUNK_SIZE = 32768
 IMAGE_FIELDS = ["icon", "image", "logo", "picture"]
 _logger = logging.getLogger(__name__)
+_audit_logger = logging.getLogger("audit.base_import")
 BOM_MAP = {
     'utf-16le': codecs.BOM_UTF16_LE,
     'utf-16be': codecs.BOM_UTF16_BE,
@@ -1359,8 +1360,7 @@ class Import(models.TransientModel):
         except ImportValidationError as error:
             return {'messages': [error.__dict__]}
 
-        _logger.info('importing %d rows...', len(input_file_data))
-
+        _logger.info('Starting %simport of %d rows...', "test " if dryrun else "", len(input_file_data))
         import_fields, merged_data = self._handle_multi_mapping(import_fields, input_file_data)
 
         if options.get('fallback_values'):
@@ -1375,7 +1375,11 @@ class Import(models.TransientModel):
             import_skip_records=options.get('import_skip_records', []),
             _import_limit=import_limit)
         import_result = model.load(import_fields, merged_data)
-        _logger.info('done')
+        if dryrun:
+            _logger.info('Test import done')
+        else:
+            _audit_logger.getChild('import').info('Imported %d rows on model %r with fields %r by %r (%s)',
+                         len(input_file_data), self.res_model, fields, self.env.user.display_name, self.env.user)
 
         # If transaction aborted, RELEASE SAVEPOINT is going to raise
         # an InternalError (ROLLBACK should work, maybe). Ignore that.

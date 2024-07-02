@@ -10,6 +10,7 @@ from odoo.tools import config
 from odoo.tools.safe_eval import safe_eval, time
 
 _logger = logging.getLogger(__name__)
+_audit_logger = logging.getLogger("audit.ir_rule")
 class IrRule(models.Model):
     _name = 'ir.rule'
     _description = 'Record Rule'
@@ -227,7 +228,8 @@ class IrRule(models.Model):
         return res
 
     def _make_access_error(self, operation, records):
-        _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, records.ids[:6], self._uid, records._name)
+        _audit_logger.getChild('access').info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, '
+                     'model: %s', operation, records.ids[:6], self._uid, records._name)
         self = self.with_context(self.env.user.context_get())
 
         model = records._name

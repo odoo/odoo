@@ -34,6 +34,7 @@ from odoo.service.db import check_super
 from odoo.tools import partition, collections, frozendict, lazy_property, image_process
 
 _logger = logging.getLogger(__name__)
+_audit_logger = logging.getLogger("audit.res_users")
 
 class CryptContext:
     def __init__(self, *args, **kwargs):
@@ -753,12 +754,19 @@ class Users(models.Model):
         if not password:
             raise AccessDenied()
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
+        user_agent, user_agent_string = request.httprequest.user_agent if request else None, "n/a"
+        if user_agent:
+            user_agent_string = f"{user_agent.platform} {user_agent.browser} {sha256(user_agent.string.encode()).hexdigest()[:8]}"
         try:
             with cls.pool.cursor() as cr:
                 self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
                 with self._assert_can_auth():
-                    user = self.search(self._get_login_domain(login), order=self._get_login_order(), limit=1)
-                    if not user:
+                    user = self.search(self.with_context(active_test=False)._get_login_domain(login),
+                        order=self._get_login_order(), limit=1)
+                    if not user or not user.active:
+                        if not user.active:
+                            # Db and ip is logged in the AccessDenied Log
+                            _audit_logger.getChild('login').warning('Login attempted from archived user %s', login)
                         raise AccessDenied()
                     user = user.with_user(user)
                     user._check_credentials(password, user_agent_env)
@@ -768,10 +776,12 @@ class Users(models.Model):
                         user.tz = tz
                     user._update_last_login()
         except AccessDenied:
-            _logger.info("Login failed for db:%s login:%s from %s", db, login, ip)
+            _audit_logger.getChild('login').info("Login failed for db:%s login:%s from %s UserAgent:%r",
+                         db, login, ip, user_agent_string)
             raise
 
-        _logger.info("Login successful for db:%s login:%s from %s", db, login, ip)
+        _audit_logger.getChild('login').info("Login successful for db:%s login:%s from %s UserAgent:%r",
+                     db, login, ip, user_agent_string)
 
         return user.id
 
@@ -860,7 +870,8 @@ class Users(models.Model):
         self._check_credentials(old_passwd, {'interactive': True})
 
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
-        _logger.info("Password change for '%s' (#%s) from %s", self.env.user.login, self.env.uid, ip)
+        _audit_logger.getChild('password').info("Password change for %r (%s) from %s", self.env.user.login,
+                    self.env.user, ip)
 
         # use self.env.user here, because it has uid=SUPERUSER_ID
         return self.env.user.write({'password': new_passwd})
@@ -1037,7 +1048,7 @@ class Users(models.Model):
         source = request.httprequest.remote_addr
         (failures, previous) = failures_map[source]
         if self._on_login_cooldown(failures, previous):
-            _logger.warning(
+            _audit_logger.getChild('login').warning(
                 "Login attempt ignored for %s on %s: "
                 "%d failures since last success, last failure at %s. "
                 "You can configure the number of login failures before a "
@@ -1046,7 +1057,7 @@ class Users(models.Model):
                 "\"base.login_cooldown_after\" to 0.",
                 source, self.env.cr.dbname, failures, previous)
             if ipaddress.ip_address(source).is_private:
-                _logger.warning(
+                _audit_logger.getChild('login').warning(
                     "The rate-limited IP address %s is classified as private "
                     "and *might* be a proxy. If your Odoo is behind a proxy, "
                     "it may be mis-configured. Check that you are running "
@@ -1678,6 +1689,8 @@ class ChangePasswordUser(models.TransientModel):
             if not line.new_passwd:
                 raise UserError(_("Before clicking on 'Change Password', you have to write a new password."))
             line.user_id.write({'password': line.new_passwd})
+        _audit_logger.getChild('password').info("The users %r (%s) have a new password set by %r (%s)",
+                    ", ".join(self.mapped('user_login')), self.user_id, self.env.user.login, self.env.user)
         # don't keep temporary passwords in the database longer than necessary
         self.write({'new_passwd': False})
 
@@ -1789,8 +1802,8 @@ class APIKeys(models.Model):
             return {'type': 'ir.actions.act_window_close'}
         if self.env.is_system() or self.mapped('user_id') == self.env.user:
             ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
-            _logger.info("API key(s) removed: scope: <%s> for '%s' (#%s) from %s",
-               self.mapped('scope'), self.env.user.login, self.env.uid, ip)
+            _audit_logger.getChild('mfa').info("API key(s) removed: scope: <%s> for %r (%s) from %s",
+               self.mapped('scope'), self.env.user.login, self.env.user, ip)
             self.sudo().unlink()
             return {'type': 'ir.actions.act_window_close'}
         raise AccessError(_("You can not remove API keys unless they're yours or you are a system user"))
@@ -1825,8 +1838,8 @@ class APIKeys(models.Model):
         [name, self.env.user.id, scope, hash_api_key(k), k[:INDEX_SIZE]])
 
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
-        _logger.info("%s generated: scope: <%s> for '%s' (#%s) from %s",
-            self._description, scope, self.env.user.login, self.env.uid, ip)
+        _audit_logger.getChild('mfa').info("%s generated: scope: <%s> for %r (%s) from %s", 
+            self._description, scope, self.env.user.login, self.env.user, ip)
 
         return k
 
