@@ -32,14 +32,12 @@ class L10nPEWebsiteSale(WebsiteSale):
             mandatory_fields.remove('city')
         return mandatory_fields
 
-    def _prepare_address_rendering_values(self, *args, partner_sudo, mode, **kwargs):
-        rendering_values = super()._prepare_address_rendering_values(
-            *args, partner_sudo=partner_sudo, mode=mode, **kwargs,
-        )
+    def _prepare_address_form_values(self, *args, address_type, **kwargs):
+        rendering_values = super()._prepare_address_form_values(*args, address_type, **kwargs)
         if request.website.sudo().company_id.country_id.code != 'PE':
             return rendering_values
 
-        if mode == 'billing':
+        if address_type == 'billing':
             can_edit_vat = rendering_values['can_edit_vat']
             LatamIdentificationType = request.env['l10n_latam.identification.type'].sudo()
             rendering_values.update({

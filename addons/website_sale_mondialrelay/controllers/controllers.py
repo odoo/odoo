@@ -44,14 +44,14 @@ class MondialRelay(http.Controller):
 
 class WebsiteSaleMondialrelay(WebsiteSale):
 
-    def _check_address_update(self, order_sudo, partner_id, mode):
+    def _prepare_address_update(self, *args, **kwargs):
         """Updates of mondialrelay addresses are forbidden"""
-        partner_sudo, mode = super()._check_address_update(order_sudo, partner_id, mode)
+        partner_sudo, _address_type = super()._prepare_address_update(*args, **kwargs)
 
         if partner_sudo and partner_sudo.is_mondialrelay:
             raise UserError(_('You cannot edit the address of a Point Relais®.'))
 
-        return partner_sudo, mode
+        return partner_sudo, _address_type
 
     def _check_delivery_address(self, partner_sudo):
         # skip check for mondialrelay partners as the customer can not edit them

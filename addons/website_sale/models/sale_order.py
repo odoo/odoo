@@ -255,7 +255,7 @@ class SaleOrder(models.Model):
             # we need to recompute the prices to match the new pricelist if it changed
             self._recompute_prices()
 
-            request.session['website_sale_current_pl'] = self.pricelist_id
+            request.session['website_sale_current_pl'] = self.pricelist_id.id
             self.website_id.invalidate_recordset(['pricelist_id'])
 
         if self.carrier_id and 'partner_shipping_id' in fnames and self._has_deliverable_products():

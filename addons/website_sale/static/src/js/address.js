@@ -24,7 +24,7 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
         this._changeCountry = debounce(this._changeCountry.bind(this), 500);
         this.addressForm = document.querySelector('form.checkout_autoformat');
         this.errorsDiv = document.getElementById('errors');
-        this.mode = this.addressForm.mode.value;
+        this.addressType = this.addressForm['address_type'].value;
         this.countryCode = this.addressForm.dataset.companyCountryCode;
         this.requiredFields = this.addressForm.field_required.value.split(',');
     },
@@ -65,8 +65,8 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
         }
 
         const data = await rpc(
-            `/shop/country_infos/${parseInt(countryId)}`,
-            {mode: this.mode},
+            `/shop/country_info/${parseInt(countryId)}`,
+            {address_type: this.addressType},
         );
 
         if (data.phone_code !== 0) {

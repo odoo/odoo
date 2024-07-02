@@ -18,11 +18,9 @@ class L10nECWebsiteSale(WebsiteSale):
         mandatory_fields.add('l10n_latam_identification_type_id')
         return mandatory_fields
 
-    def _prepare_address_rendering_values(self, *args, partner_sudo, mode, **kwargs):
-        rendering_values = super()._prepare_address_rendering_values(
-            *args, partner_sudo=partner_sudo, mode=mode, **kwargs,
-        )
-        if mode == 'billing' and request.website.sudo().company_id.country_id.code == 'EC':
+    def _prepare_address_form_values(self, *args, address_type, **kwargs):
+        rendering_values = super()._prepare_address_form_values(*args, address_type, **kwargs)
+        if address_type == 'billing' and request.website.sudo().company_id.country_id.code == 'EC':
             can_edit_vat = rendering_values['can_edit_vat']
             LatamIdentificationType = request.env['l10n_latam.identification.type'].sudo()
             rendering_values.update({

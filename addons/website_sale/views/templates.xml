@@ -1812,7 +1812,7 @@
                 <t t-call="website_sale.row_addresses">
                     <t t-set="order" t-value="order"/>
                     <t t-set="is_invoice" t-value="True"/>
-                    <t t-set="addresses" t-value="billings"/>
+                    <t t-set="addresses" t-value="billing_addresses"/>
                     <t t-set="selected_address" t-value="order.partner_invoice_id"/>
                 </t>
                 <t t-if="order._has_deliverable_products()">
@@ -1825,7 +1825,7 @@
                         <t t-call="website_sale.row_addresses">
                             <t t-set="order" t-value="order"/>
                             <t t-set="is_invoice" t-value="False"/>
-                            <t t-set="addresses" t-value="shippings"/>
+                            <t t-set="addresses" t-value="delivery_addresses"/>
                             <t t-set="selected_address" t-value="order.partner_shipping_id"/>
                         </t>
                     </t>
@@ -1849,10 +1849,10 @@
             <div t-if="not is_invoice or not order.website_id.is_public_user()" class="one_kanban col-md">
                 <!-- We do not allow public users to have multiple billing addresses -->
                 <t t-if="is_invoice">
-                    <t t-set="new_address_href" t-valuef="/shop/address?mode=billing"/>
+                    <t t-set="new_address_href" t-valuef="/shop/address?address_type=billing"/>
                 </t>
                 <t t-else="">
-                    <t t-set="new_address_href" t-valuef="/shop/address?mode=shipping"/>
+                    <t t-set="new_address_href" t-valuef="/shop/address?address_type=delivery"/>
                 </t>
                 <a role="button" t-att-href="new_address_href" class="o_wsale_add_address d-flex align-items-center justify-content-center h-100 px-4 border rounded mx-auto no-decoration">
                     <i class="fa fa-plus me-md-2"/><span class="d-none d-md-inline">Add address</span>
@@ -1863,14 +1863,14 @@
 
     <!-- Card view of addresses. Called in `website_sale.checkout`. -->
     <template id="address_kanban" name="Kanban address">
-        <t t-set="mode" t-value="is_invoice and 'billing' or 'shipping'"/>
+        <t t-set="address_type" t-value="is_invoice and 'billing' or 'delivery'"/>
         <div t-attf-class="card position-relative h-100 #{selected and 'bg-primary border border-primary' or is_invoice and 'js_change_billing' or 'js_change_delivery'}"
-             t-att-data-mode="mode"
+             t-att-data-address-type="address_type"
              t-att-data-partner-id="contact.id">
             <div class="card-body d-flex flex-column align-items-start">
                 <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
-                <t t-if="contact._can_be_edited_by_current_customer(website_sale_order, mode)">
-                    <t t-set="new_address_href" t-value="'/shop/address?mode=' + mode"/>
+                <t t-if="contact._can_be_edited_by_current_customer(website_sale_order, address_type)">
+                    <t t-set="new_address_href" t-value="'/shop/address?address_type=' + address_type"/>
                     <a
                         t-att-href="new_address_href + '&amp;partner_id=' + str(contact.id)"
                         class="js_edit_address btn btn-link p-0 mt-auto"
@@ -1898,8 +1898,8 @@
                     <div class="row">
                         <div class="oe_cart col-12 col-lg-8">
                             <div>
-                                <t t-if="not is_public_order">
-                                    <t t-if="mode == 'billing'">
+                                <t t-if="not is_anonymous_cart">
+                                    <t t-if="address_type == 'billing'">
                                         <h3 class="mb-3">Billing address</h3>
                                     </t>
                                     <t t-else="">
@@ -1911,17 +1911,18 @@
                                         <h4 class="alert-heading">Be aware!</h4>
                                         <p>
                                             You are editing your <b>billing and delivery</b> addresses at the same time!<br/>
-                                            If you want to modify your delivery address, create a <a href="/shop/address?mode=shipping">new address</a>.
+                                            If you want to modify your delivery address, create a <a href="/shop/address?address_type=delivery">new address</a>.
                                         </p>
                                     </div>
                                 </t>
                                 <div id="errors"/> <!-- for js -->
-                                <form action="/shop/address/submit"
+                                <form
+                                    action="/shop/address/submit"
                                     method="post"
                                     class="checkout_autoformat"
                                     t-att-data-company-country-code="res_company.country_id.code"
                                 >
-                                    <t t-if="is_public_order">
+                                    <t t-if="is_anonymous_cart">
                                         <div id="div_email_public" t-attf-class="col-lg-12">
                                             <label class="col-form-label" for="o_email">Email</label>
                                             <div class="align-items-center float-end" style="margin-top: -11px">
@@ -1952,13 +1953,13 @@
                                                 id="o_name"
                                                 type="text"
                                                 name="name"
-                                                class="form-control"
                                                 t-att-value="partner_sudo.name"
+                                                class="form-control"
                                             />
                                         </div>
                                         <div class="w-100"/>
                                         <div
-                                            t-if="not is_public_order"
+                                            t-if="not is_anonymous_cart"
                                             id="div_email"
                                             class="col-lg-6 mb-2"
                                         >
@@ -1967,8 +1968,8 @@
                                                 id="o_email"
                                                 type="email"
                                                 name="email"
-                                                class="form-control"
                                                 t-att-value="partner_sudo.email"
+                                                class="form-control"
                                             />
                                         </div>
                                         <div id="div_phone" class="col-lg-6 mb-2">
@@ -1977,8 +1978,8 @@
                                                 id="o_phone"
                                                 type="tel"
                                                 name="phone"
-                                                class="form-control"
                                                 t-att-value="partner_sudo.phone"
+                                                class="form-control"
                                             />
                                         </div>
                                         <t t-if="website._display_partner_b2b_fields()">
@@ -1996,9 +1997,10 @@
                                                         id="o_company_name"
                                                         type="text"
                                                         name="company_name"
-                                                        class="form-control"
                                                         t-att-value="partner_sudo.commercial_company_name"
-                                                        t-att-readonly="'1' if vat_warning else None"/>
+                                                        t-att-readonly="'1' if vat_warning else None"
+                                                        class="form-control"
+                                                    />
                                                     <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">
                                                         Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.
                                                     </small>
@@ -2007,12 +2009,14 @@
                                                     <label class="col-form-label fw-normal label-optional" for="o_vat">
                                                         <t t-out="vat_label"/>
                                                     </label>
-                                                    <input type="text"
+                                                    <input
+                                                        type="text"
                                                         id="o_vat"
                                                         name="vat"
-                                                        class="form-control"
                                                         t-att-value="partner_sudo.vat"
-                                                        t-att-readonly="'1' if vat_warning else None"/>
+                                                        t-att-readonly="'1' if vat_warning else None"
+                                                        class="form-control"
+                                                    />
                                                     <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">
                                                         Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.
                                                     </small>
@@ -2074,19 +2078,20 @@
                                             </select>
                                         </div>
                                         <div class="w-100"/>
-                                        <t t-if="mode == 'billing' and not partner_id and not only_services">
+                                        <t t-if="address_type == 'billing' and not partner_id and not only_services">
                                             <div class="col-lg-12">
                                                 <div class="form-check form-switch mt-2 mb-3">
                                                     <label>
                                                         <input
                                                             type="checkbox"
                                                             id="shipping_use_same"
-                                                            class="form-check-input mr8"
                                                             name="use_same"
                                                             value="1"
-                                                            t-att-checked="use_same"/>Deliver to the same address
+                                                            t-att-checked="use_same"
+                                                            class="form-check-input mr8"
+                                                        />Deliver to the same address
                                                         <span
-                                                            t-if="is_public_order"
+                                                            t-if="is_anonymous_cart"
                                                             class="form-check-label ship_to_other text-muted"
                                                             style="display: none">
                                                             &amp;nbsp;(<i>Your delivery address will be requested later)</i>
@@ -2100,7 +2105,7 @@
                                         </t>
                                     </div>
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
-                                    <input type="hidden" name="mode" t-att-value="mode"/>
+                                    <input type="hidden" name="address_type" t-att-value="address_type"/>
                                     <t t-if="partner_id">
                                         <input type="hidden" name="partner_id" t-att-value="partner_id"/>
                                     </t>
@@ -2121,7 +2126,7 @@
                                             <hr class="w-100"/>
                                         </div>
                                         <button id="save_address" class="btn btn-primary w-100 w-md-auto order-1 order-md-3">
-                                            <t t-if="is_public_order">
+                                            <t t-if="is_anonymous_cart">
                                                 Continue checkout
                                             </t>
                                             <t t-else="">
