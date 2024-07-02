@@ -5,7 +5,7 @@ from . import onboarding_step
 from . import payment_method
 from . import payment_provider
 from . import payment_token
-from . import payment_transaction
+from .payment_transaction import PaymentTransaction
 from . import res_company
 from . import res_country
 from . import res_partner

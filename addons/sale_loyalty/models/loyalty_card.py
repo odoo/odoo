@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields
+from odoo.addons import loyalty, sale
 
 
-class LoyaltyCard(models.Model):
-    _inherit = 'loyalty.card'
+class LoyaltyCard(loyalty.models.LoyaltyCard):
 
     order_id = fields.Many2one(
         comodel_name='sale.order',
@@ -27,7 +27,7 @@ class LoyaltyCard(models.Model):
 
     def _compute_use_count(self):
         super()._compute_use_count()
-        read_group_res = self.env['sale.order.line']._read_group(
+        read_group_res = sale.models.SaleOrderLine(self.env)._read_group(
             [('coupon_id', 'in', self.ids)], ['coupon_id'], ['__count'])
         count_per_coupon = {coupon.id: count for coupon, count in read_group_res}
         for card in self:

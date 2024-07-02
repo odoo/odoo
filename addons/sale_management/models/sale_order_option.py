@@ -2,6 +2,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import sale, sale_management, product
 
 
 class SaleOrderOption(models.Model):
@@ -11,14 +12,12 @@ class SaleOrderOption(models.Model):
 
     # FIXME ANVFE wtf is it not required ???
     # TODO related to order.company_id and restrict product choice based on company
-    order_id = fields.Many2one('sale.order', 'Sales Order Reference', ondelete='cascade', index=True)
+    order_id: 'sale_management.SaleOrder' = fields.Many2one(string='Sales Order Reference', ondelete='cascade', index=True)
 
-    product_id = fields.Many2one(
-        comodel_name='product.product',
+    product_id = fields.Many2one[product.ProductProduct](
         required=True,
         domain=lambda self: self._product_id_domain())
-    line_id = fields.Many2one(
-        comodel_name='sale.order.line', ondelete='set null', copy=False)
+    line_id: 'sale_management.SaleOrderLine' = fields.Many2one(ondelete='set null', copy=False)
     sequence = fields.Integer(
         string='Sequence', help="Gives the sequence order when displaying a list of optional products.")
 
@@ -85,7 +84,7 @@ class SaleOrderOption(models.Model):
                 continue
             # To compute the price_unit a so line is created in cache
             values = option._get_values_to_add_to_order()
-            new_sol = self.env['sale.order.line'].new(values)
+            new_sol = sale.SaleOrderLine(self.env).new(values)
             new_sol._compute_price_unit()
             option.price_unit = new_sol.price_unit
             # Avoid attaching the new line when called on template change
@@ -98,7 +97,7 @@ class SaleOrderOption(models.Model):
                 continue
             # To compute the discount a so line is created in cache
             values = option._get_values_to_add_to_order()
-            new_sol = self.env['sale.order.line'].new(values)
+            new_sol = sale.SaleOrderLine(self.env).new(values)
             new_sol._compute_discount()
             option.discount = new_sol.discount
             # Avoid attaching the new line when called on template change
@@ -146,7 +145,7 @@ class SaleOrderOption(models.Model):
             raise UserError(_('You cannot add options to a confirmed order.'))
 
         values = self._get_values_to_add_to_order()
-        order_line = self.env['sale.order.line'].create(values)
+        order_line = sale.SaleOrderLine(self.env).create(values)
 
         self.write({'line_id': order_line.id})
 

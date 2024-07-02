@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields, _
+from odoo import api, fields, _
+from odoo.addons import product
 
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
-
+class ProductTemplate(product.models.ProductTemplate):
     expense_policy_tooltip = fields.Char(compute='_compute_expense_policy_tooltip')
 
     @api.depends_context('lang')

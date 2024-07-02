@@ -2,14 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import loyalty, sale_loyalty
 
 
 class SaleOrderCouponPoints(models.Model):
     _name = 'sale.order.coupon.points'
     _description = 'Sale Order Coupon Points - Keeps track of how a sale order impacts a coupon'
 
-    order_id = fields.Many2one(comodel_name='sale.order', required=True, ondelete='cascade')
-    coupon_id = fields.Many2one(comodel_name='loyalty.card', required=True, ondelete='cascade')
+    order_id: 'sale_loyalty.SaleOrder' = fields.Many2one(required=True, ondelete='cascade')
+    coupon_id = fields.Many2one[loyalty.LoyaltyCard](required=True, ondelete='cascade')
     points = fields.Float(required=True)
 
     _sql_constraints = [

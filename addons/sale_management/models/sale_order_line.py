@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import api, fields
+from odoo.addons import sale, sale_management
+from .sale_order_option import SaleOrderOption
 
-from odoo import api, fields, models
 
+class SaleOrderLine(sale.SaleOrderLine):
 
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
-    _description = "Sales Order Line"
-
-    sale_order_option_ids = fields.One2many('sale.order.option', 'line_id', 'Optional Products Lines')
+    order_id: 'sale_management.SaleOrder'
+    sale_order_option_ids = fields.One2many(SaleOrderOption, 'line_id', 'Optional Products Lines')
 
     @api.depends('product_id')
     def _compute_name(self):

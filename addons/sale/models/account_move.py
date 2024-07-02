@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, _
+from odoo.addons.account.models import account_move as account
+from odoo.addons.utm.models import utm_mixin as utm
+from odoo.addons.sales_team.models import crm_team as sales_team
+from odoo.addons.base.models import ir_actions as base
 
 
-class AccountMove(models.Model):
-    _name = 'account.move'
-    _inherit = ['account.move', 'utm.mixin']
+class AccountMove(account.AccountMove, utm.UtmMixin):
 
     @api.model
     def _get_invoice_default_sale_team(self):
-        return self.env['crm.team']._get_default_team_id()
+        return sales_team.CrmTeam(self.env)._get_default_team_id()
 
     team_id = fields.Many2one(
         'crm.team', string='Sales Team', default=_get_invoice_default_sale_team,
@@ -27,7 +28,7 @@ class AccountMove(models.Model):
 
     def unlink(self):
         downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
-        res = super(AccountMove, self).unlink()
+        res = super().unlink()
         if downpayment_lines:
             downpayment_lines.unlink()
         return res
@@ -37,7 +38,7 @@ class AccountMove(models.Model):
         for move in self:
             if not move.invoice_user_id.sale_team_id or not move.is_sale_document(include_receipts=True):
                 continue
-            move.team_id = self.env['crm.team']._get_default_team_id(
+            move.team_id = sales_team.CrmTeam(self.env)._get_default_team_id(
                 user_id=move.invoice_user_id.id,
                 domain=[('company_id', '=', move.company_id.id)])
 
@@ -60,7 +61,7 @@ class AccountMove(models.Model):
 
     def action_post(self):
         # inherit of the function from account.move to validate a new tax and the priceunit of a downpayment
-        res = super(AccountMove, self).action_post()
+        res = super().action_post()
 
         # We cannot change lines content on locked SO, changes on invoices are not forwarded to the SO if the SO is locked
         dp_lines = self.line_ids.sale_line_ids.filtered(lambda l: l.is_downpayment and not l.display_type)
@@ -109,7 +110,7 @@ class AccountMove(models.Model):
 
     def _invoice_paid_hook(self):
         # OVERRIDE
-        res = super(AccountMove, self)._invoice_paid_hook()
+        res = super()._invoice_paid_hook()
         todo = set()
         for invoice in self.filtered(lambda move: move.is_invoice()):
             for line in invoice.invoice_line_ids:
@@ -133,7 +134,7 @@ class AccountMove(models.Model):
     def action_view_source_sale_orders(self):
         self.ensure_one()
         source_orders = self.line_ids.sale_line_ids.order_id
-        result = self.env['ir.actions.act_window']._for_xml_id('sale.action_orders')
+        result = base.IrActionsActWindow(self.env)._for_xml_id('sale.action_orders')
         if len(source_orders) > 1:
             result['domain'] = [('id', 'in', source_orders.ids)]
         elif len(source_orders) == 1:

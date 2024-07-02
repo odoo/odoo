@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields
+from odoo.addons import base
 
 
-class ResUsers(models.Model):
-    _inherit = 'res.users'
+class ResUsers(base.Users):
 
     target_sales_invoiced = fields.Integer('Invoiced in Sales Orders Target')

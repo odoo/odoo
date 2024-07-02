@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import _
 from odoo.fields import Command
+from odoo.addons import sale_loyalty
 
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(sale_loyalty.models.SaleOrder):
 
     # delivery overrides
 

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ High-level objects for fields. """
+from __future__ import annotations
 
 from collections import defaultdict
 from datetime import date, datetime, time
@@ -16,6 +17,7 @@ import enum
 import itertools
 import json
 import logging
+import re
 import uuid
 import warnings
 
@@ -25,8 +27,9 @@ from markupsafe import Markup, escape as markup_escape
 from psycopg2.extras import Json as PsycopgJson
 from difflib import get_close_matches, unified_diff
 from hashlib import sha256
+from typing import Any, TypeVar, Generic, ForwardRef, get_args
 
-from .models import check_property_field_value_name
+from .models import check_property_field_value_name, class_name_to_model_name
 from .netsvc import ColoredFormatter, GREEN, RED, DEFAULT, COLOR_PATTERN
 from .tools import (
     float_repr, float_round, float_compare, float_is_zero, human_size,
@@ -42,6 +45,9 @@ from .tools.mimetypes import guess_mimetype
 
 from odoo.exceptions import CacheMiss
 from odoo.osv import expression
+
+_T = TypeVar("_T", bound=Any)
+_type = type
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -59,6 +65,10 @@ _schema = logging.getLogger(__name__[:-7] + '.schema')
 
 NoneType = type(None)
 Default = object()                      # default value for __init__() methods
+
+
+def camel_case_to_dot_case(name):
+    return re.sub(r"(?<!^)(?=[A-Z])", ".", name).lower()
 
 
 def first(records):
@@ -130,7 +140,7 @@ class MetaField(type):
 _global_seq = iter(itertools.count())
 
 
-class Field(MetaField('DummyField', (object,), {})):
+class Field(MetaField('DummyField', (object,), {}), Generic[_T]):
     """The field descriptor contains the field definition, and manages accesses
     and assignments of the corresponding field on records. The following
     attributes may be provided when instantiating a field:
@@ -329,6 +339,14 @@ class Field(MetaField('DummyField', (object,), {})):
         kwargs['string'] = string
         self._sequence = next(_global_seq)
         self.args = {key: val for key, val in kwargs.items() if val is not Default}
+
+    def new(self, **kwargs):
+        """ Return a field of the same type as ``self``, with its own parameters. """
+        type_args = get_args(getattr(self, "__orig_class__", None))
+        t = type(self)
+        if type_args:
+            t = t[type_args[0]]
+        return t(**kwargs)
 
     def __str__(self):
         if self.name is None:
@@ -1187,7 +1205,7 @@ class Field(MetaField('DummyField', (object,), {})):
     # Descriptor methods
     #
 
-    def __get__(self, record, owner=None):
+    def __get__(self, record, owner=None) -> _T:
         """ return the value of field ``self`` on ``record`` """
         if record is None:
             return self         # the field is accessed through the owner class
@@ -1338,7 +1356,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         return self.convert_to_record_multi(vals, records)
 
-    def __set__(self, records, value):
+    def __set__(self, records, value: _T) -> None:
         """ set the value of field ``self`` on ``records`` """
         protected_ids = []
         new_ids = []
@@ -1457,7 +1475,7 @@ class Field(MetaField('DummyField', (object,), {})):
         return determine(self.search, records, operator, value)
 
 
-class Boolean(Field):
+class Boolean(Field[bool]):
     """ Encapsulates a :class:`bool`. """
     type = 'boolean'
     column_type = ('bool', 'bool')
@@ -1472,7 +1490,7 @@ class Boolean(Field):
         return value
 
 
-class Integer(Field):
+class Integer(Field[int]):
     """ Encapsulates an :class:`int`. """
     type = 'integer'
     column_type = ('int4', 'int4')
@@ -1516,7 +1534,7 @@ class Integer(Field):
         return ''
 
 
-class Float(Field):
+class Float(Field[float]):
     """ Encapsulates a :class:`float`.
 
     The precision digits are given by the (optional) ``digits`` attribute.
@@ -1612,7 +1630,7 @@ class Float(Field):
     compare = staticmethod(float_compare)
 
 
-class Monetary(Field):
+class Monetary(Field[float]):
     """ Encapsulates a :class:`float` expressed in a given
     :class:`res_currency<odoo.addons.base.models.res_currency.Currency>`.
 
@@ -1705,7 +1723,7 @@ class Monetary(Field):
         return value
 
 
-class _String(Field):
+class _String(Field[str]):
     """ Abstract class for string fields. """
     translate = False                   # whether the field is translated
 
@@ -2174,7 +2192,7 @@ class Html(_String):
         return list(map(str, super().get_trans_terms(value)))
 
 
-class Date(Field):
+class Date(Field[date]):
     """ Encapsulates a python :class:`date <datetime.date>` object. """
     type = 'date'
     column_type = ('date', 'date')
@@ -2272,7 +2290,7 @@ class Date(Field):
         return self.from_string(value)
 
 
-class Datetime(Field):
+class Datetime(Field[datetime]):
     """ Encapsulates a python :class:`datetime <datetime.datetime>` object. """
     type = 'datetime'
     column_type = ('timestamp', 'timestamp')
@@ -2689,7 +2707,7 @@ class Image(Binary):
             return False
 
 
-class Selection(Field):
+class Selection(Field[str]):
     """ Encapsulates an exclusive choice between different values.
 
     :param selection: specifies the possible values for this field.
@@ -2962,19 +2980,120 @@ class Reference(Selection):
         return value.display_name if value else False
 
 
-class _Relational(Field):
+class _Relational(Field[_T]):
     """ Abstract class for relational fields. """
     relational = True
     domain = []                         # domain for searching values
     context = {}                        # context for searching values
     check_company = False
 
-    def __get__(self, records, owner=None):
+    def __init__(self, comodel_name: type[_T] = Default, string: str = Default, **kwargs):
+        if isinstance(comodel_name, MetaModel):
+            comodel_name = comodel_name._name
+        super().__init__(comodel_name=comodel_name, string=string, **kwargs)
+
+    def __get__(self, records, owner=None) -> _T:
         # base case: do the regular access
         if records is None or len(records._ids) <= 1:
             return super().__get__(records, owner)
         # multirecord case: use mapped
         return self.mapped(records)
+
+    def __set__(self, records, value: _T) -> None:
+        return super().__set__(records, value)
+
+    def setup(self, model):
+        error = None
+        class_name = "ClassModel"
+        module_name = self._module
+        comodel_by_attribute = self.args and self.args.get('comodel_name')
+        comodel_by_annotation = None
+        comodel_by_typing = None
+
+        for base in model.__class__.__bases__:
+            annotation = getattr(base, '__annotations__', {}).get(self.name)
+            if annotation:
+                break
+
+        if annotation:
+            class_name = None
+            if isinstance(annotation, str):
+                if '.' in annotation:
+                    module_name, class_name = annotation.split('.')
+                else:
+                    class_name = annotation
+                try:
+                    command_module = __import__(f'odoo.addons.{module_name}', fromlist=['odoo', 'addons', module_name, 'models'])
+                except ModuleNotFoundError:
+                    raise ValueError("Can not import the annotation %r from the field %r." % (annotation, self,))
+                ClassModel = getattr(command_module, class_name, None)
+            else:
+                ClassModel = annotation
+                class_name = ClassModel.__name__
+            try:
+                comodel_by_annotation = ClassModel._name
+            except AttributeError:
+                error = "Can not found the model name of %(class_name)r\n"
+
+        # Auto initialize the comodel name from the generic type's var if used
+        # This allows to get the comodel from the type when the field is declared
+        # as `partner = fields.Many2one[Partner]()`
+        type_args = get_args(getattr(self, "__orig_class__", None))
+        if type_args:
+            if type_args[0].__class__ == ForwardRef:
+                comodel_by_typing = class_name_to_model_name(type_args[0].__forward_arg__)
+            elif issubclass(type_args[0], BaseModel):
+                comodel_by_typing = type_args[0]._name
+
+        if not error:
+            if self.comodel_name:
+                if comodel_by_attribute and self.comodel_name != comodel_by_attribute:
+                    error = "The comodel %r from the field %r is not equal to the attribute 'comodel_name' %r" % (self.comodel_name, self, comodel_by_attribute,)
+                if comodel_by_annotation and self.comodel_name != comodel_by_annotation:
+                    error = "The comodel %r from the field %r is not equal to the annotation type %r" % (self.comodel_name, self, comodel_by_annotation,)
+                if comodel_by_typing and self.comodel_name != comodel_by_typing:
+                    error = "The comodel %r from the field %r is not equal to the typing %r" % (self.comodel_name, self, comodel_by_typing,)
+            elif not self.related and not (comodel_by_typing or comodel_by_annotation or comodel_by_attribute):
+                error = 'The comodel is not defined.'
+                pass
+        if error:
+            raise SyntaxError(error + "\n" + (
+                    "For the field %(field)r from %(module)r, use either:\n"
+                    "* If the comodel is found in the same file / same module:\n"
+                    "  %(field_name)s = fields.%(ttype)s[%(class_name)s](...)\n"
+                    "* If the comodel was imported:\n"
+                    "  %(field_name)s = fields.%(ttype)s[%(module_name)s.%(class_name)s](...)\n"
+                    "* If it is not possible to import the comodel (e.g. circular import)\n"
+                    "  %(field_name)s: '%(module_name)s.%(class_name)s' = fields.%(ttype)s(...)"
+                ) % {
+                    "field": self,
+                    "module": self._module,
+                    "field_name": self.name,
+                    "ttype": self.__class__.__name__,
+                    "module_name": module_name,
+                    "class_name": class_name,
+                })
+        elif annotation and module_name != self._module:
+                raise SyntaxError((
+                    "For the field %(field)r from %(module)r, use the syntax:\n"
+                    "  %(field_name)s = fields.%(ttype)s[%(module_name)s.%(class_name)s](...)"
+                ) % {
+                    "field": self,
+                    "module": self._module,
+                    "field_name": self.name,
+                    "ttype": self.__class__.__name__,
+                    "module_name": module_name,
+                    "class_name": class_name,
+                })
+
+        if comodel_by_typing:
+            self.comodel_name = comodel_by_typing
+        elif comodel_by_annotation:
+            self.comodel_name = comodel_by_annotation
+        elif comodel_by_attribute:
+            self.comodel_name = comodel_by_attribute
+
+        return super().setup(model)
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
@@ -3023,7 +3142,7 @@ class _Relational(Field):
         return domain
 
 
-class Many2one(_Relational):
+class Many2one(_Relational[_T]):
     """ The value of such a field is a recordset of size 0 (no
     record) or 1 (a single record).
 
@@ -3057,7 +3176,7 @@ class Many2one(_Relational):
     auto_join = False                   # whether joins are generated upon search
     delegate = False                    # whether self implements delegation
 
-    def __init__(self, comodel_name=Default, string=Default, **kwargs):
+    def __init__(self, comodel_name: _type[_T] = Default, string: str = Default, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
 
     def _setup_attrs(self, model_class, name):
@@ -4231,7 +4350,7 @@ class Command(enum.IntEnum):
         return (cls.SET, 0, ids)
 
 
-class _RelationalMulti(_Relational):
+class _RelationalMulti(_Relational[_T]):
     r"Abstract class for relational fields \*2many."
     write_sequence = 20
 
@@ -4428,7 +4547,7 @@ class _RelationalMulti(_Relational):
         return comodel
 
 
-class One2many(_RelationalMulti):
+class One2many(_RelationalMulti[_T]):
     """One2many field; the value of such a field is the recordset of all the
     records in ``comodel_name`` such that the field ``inverse_name`` is equal to
     the current record.
@@ -4457,7 +4576,7 @@ class One2many(_RelationalMulti):
     auto_join = False                   # whether joins are generated upon search
     copy = False                        # o2m are not copied by default
 
-    def __init__(self, comodel_name=Default, inverse_name=Default, string=Default, **kwargs):
+    def __init__(self, comodel_name: _type[_T] = Default, inverse_name: str = Default, string: str = Default, **kwargs):
         super(One2many, self).__init__(
             comodel_name=comodel_name,
             inverse_name=inverse_name,
@@ -4497,7 +4616,7 @@ class One2many(_RelationalMulti):
             domain = domain + [(inverse_field.model_field, '=', records._name)]
         return domain
 
-    def __get__(self, records, owner=None):
+    def __get__(self, records, owner=None) -> _T:
         if records is not None and self.inverse_name is not None:
             # force the computation of the inverse field to ensure that the
             # cache value of self is consistent
@@ -4721,7 +4840,7 @@ class One2many(_RelationalMulti):
                         cache.set(recs[-1], self, lines._ids)
 
 
-class Many2many(_RelationalMulti):
+class Many2many(_RelationalMulti[_T]):
     """ Many2many field; the value of such a field is the recordset.
 
     :param comodel_name: name of the target model (string)
@@ -4771,8 +4890,8 @@ class Many2many(_RelationalMulti):
     auto_join = False                   # whether joins are generated upon search
     ondelete = 'cascade'                # optional ondelete for the column2 fkey
 
-    def __init__(self, comodel_name=Default, relation=Default, column1=Default,
-                 column2=Default, string=Default, **kwargs):
+    def __init__(self, comodel_name: _type[_T] = Default, relation: str = Default, column1: str = Default,
+                 column2: str = Default, string: str = Default, **kwargs):
         super(Many2many, self).__init__(
             comodel_name=comodel_name,
             relation=relation,
@@ -5187,7 +5306,7 @@ class Many2many(_RelationalMulti):
             ])
 
 
-class Id(Field):
+class Id(Field[int]):
     """ Special case for field 'id'. """
     type = 'integer'
     column_type = ('int4', 'int4')
@@ -5270,5 +5389,5 @@ def apply_required(model, field_name):
 from .exceptions import AccessError, MissingError, UserError
 from .models import (
     check_pg_name, expand_ids, is_definition_class,
-    BaseModel, IdType, NewId, PREFETCH_MAX,
+    MetaModel, BaseModel, IdType, NewId, PREFETCH_MAX,
 )

@@ -3,6 +3,8 @@
 
 from . import controllers
 from . import models
+from .models import Lead
+from .models import Team
 from . import populate
 from . import report
 from . import wizard

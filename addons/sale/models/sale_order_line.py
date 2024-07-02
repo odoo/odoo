@@ -1,23 +1,28 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from __future__ import annotations
 import re
-
 from collections import defaultdict
 from datetime import timedelta
-
 from markupsafe import Markup
 
-from odoo import _, _lt, api, fields, models
+from odoo import _, _lt, api, models, fields
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero, format_date, groupby
+from odoo.addons import (
+    product as product_,
+    uom,
+    account,
+    analytic,
+    sale,
+)
 
 
-class SaleOrderLine(models.Model):
-    _name = 'sale.order.line'
-    _inherit = 'analytic.mixin'
+class SaleOrderLine(models.Model, analytic.models.AnalyticMixin):
+    """ Sales Order Line (model name: 'sale.order.line')"""
     _description = "Sales Order Line"
+    _name = 'sale.order.line'
     _rec_names_search = ['name', 'order_id.name']
     _order = 'order_id, sequence, id'
     _check_company_auto = True
@@ -36,14 +41,13 @@ class SaleOrderLine(models.Model):
     # This reduces execution stacks depth when precomputing fields
     # on record creation (and is also a good ordering logic imho)
 
-    order_id = fields.Many2one(
-        comodel_name='sale.order',
+    order_id: sale.SaleOrder = fields.Many2one(
         string="Order Reference",
         required=True, ondelete='cascade', index=True, copy=False)
     sequence = fields.Integer(string="Sequence", default=10)
 
     # Order-related fields
-    company_id = fields.Many2one(
+    company_id: sale.Company = fields.Many2one(
         related='order_id.company_id',
         store=True, index=True, precompute=True)
     currency_id = fields.Many2one(
@@ -85,13 +89,13 @@ class SaleOrderLine(models.Model):
 
     # Generic configuration fields
     product_id = fields.Many2one(
-        comodel_name='product.product',
+        comodel_name=product_.ProductProduct,
         string="Product",
         change_default=True, ondelete='restrict', index='btree_not_null',
         domain="[('sale_ok', '=', True)]")
     product_template_id = fields.Many2one(
         string="Product Template",
-        comodel_name='product.template',
+        comodel_name=product_.ProductTemplate,
         compute='_compute_product_template_id',
         readonly=False,
         search='_search_product_template_id',
@@ -105,14 +109,14 @@ class SaleOrderLine(models.Model):
         related='product_id.product_template_attribute_value_ids',
         depends=['product_id'])
     product_custom_attribute_value_ids = fields.One2many(
-        comodel_name='product.attribute.custom.value', inverse_name='sale_order_line_id',
+        comodel_name=product_.ProductAttributeCustomValue, inverse_name='sale_order_line_id',
         string="Custom Values",
         compute='_compute_custom_attribute_values',
         store=True, readonly=False, precompute=True, copy=True)
     # M2M holding the values of product.attribute with create_variant field set to 'no_variant'
     # It allows keeping track of the extra_price associated to those attribute values and add them to the SO line description
     product_no_variant_attribute_value_ids = fields.Many2many(
-        comodel_name='product.template.attribute.value',
+        comodel_name=product_.ProductAttributeCustomValue,
         string="Extra Values",
         compute='_compute_no_variant_attribute_values',
         store=True, readonly=False, precompute=True, ondelete='restrict')
@@ -129,26 +133,26 @@ class SaleOrderLine(models.Model):
         digits='Product Unit of Measure', default=1.0,
         store=True, readonly=False, required=True, precompute=True)
     product_uom = fields.Many2one(
-        comodel_name='uom.uom',
+        comodel_name=uom.models.UoM,
         string="Unit of Measure",
         compute='_compute_product_uom',
         store=True, readonly=False, precompute=True, ondelete='restrict',
         domain="[('category_id', '=', product_uom_category_id)]")
-    linked_line_id = fields.Many2one(
+    linked_line_id: sale.SaleOrderLine = fields.Many2one(
         string="Linked Order Line",
-        comodel_name='sale.order.line',
         ondelete='cascade',
         domain="[('order_id', '=', order_id)]",
         copy=False,
         index=True,
     )
-    linked_line_ids = fields.One2many(
-        string="Linked Order Lines", comodel_name='sale.order.line', inverse_name='linked_line_id',
+    linked_line_ids: sale.SaleOrderLine = fields.One2many(
+        string="Linked Order Lines",
+        inverse_name='linked_line_id',
     )
 
     # Pricing fields
     tax_id = fields.Many2many(
-        comodel_name='account.tax',
+        comodel_name=account.models.AccountTax,
         string="Taxes",
         compute='_compute_tax_id',
         store=True, readonly=False, precompute=True,
@@ -471,7 +475,7 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id', 'company_id')
     def _compute_tax_id(self):
-        lines_by_company = defaultdict(lambda: self.env['sale.order.line'])
+        lines_by_company = defaultdict(lambda: sale.SaleOrderLine(self.env))
         cached_taxes = {}
         for line in self:
             lines_by_company[line.company_id] += line
@@ -1143,7 +1147,7 @@ class SaleOrderLine(models.Model):
     #=== ACTION METHODS ===#
 
     def action_add_from_catalog(self):
-        order = self.env['sale.order'].browse(self.env.context.get('order_id'))
+        order = sale.SaleOrder(self.env).browse(self.env.context.get('order_id'))
         return order.with_context(child_field='order_line').action_add_from_catalog()
 
     #=== BUSINESS METHODS ===#

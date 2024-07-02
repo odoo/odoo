@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api
+from odoo import fields, api
+from odoo.addons import (hr_expense, sale)
 
 
-class HrExpenseSplit(models.TransientModel):
-    _inherit = "hr.expense.split"
+class HrExpenseSplit(hr_expense.wizard.HrExpenseSplit):
 
     def default_get(self, fields):
-        result = super(HrExpenseSplit, self).default_get(fields)
+        result = super().default_get(fields)
         if 'expense_id' in result:
-            expense = self.env['hr.expense'].browse(result['expense_id'])
+            expense = hr_expense.models.HrExpense(self.env).browse(result['expense_id'])
             result['sale_order_id'] = expense.sale_order_id
         return result
 
-    sale_order_id = fields.Many2one('sale.order', string="Customer to Reinvoice", compute='_compute_sale_order_id', readonly=False, store=True, domain="[('state', '=', 'sale'), ('company_id', '=', company_id)]")
+    sale_order_id = fields.Many2one(sale.models.SaleOrder, string="Customer to Reinvoice", compute='_compute_sale_order_id', readonly=False, store=True, domain="[('state', '=', 'sale'), ('company_id', '=', company_id)]")
     can_be_reinvoiced = fields.Boolean("Can be reinvoiced", compute='_compute_can_be_reinvoiced')
 
     def _get_values(self):
         self.ensure_one()
-        vals = super(HrExpenseSplit, self)._get_values()
+        vals = super()._get_values()
         vals['sale_order_id'] = self.sale_order_id.id
         return vals
 

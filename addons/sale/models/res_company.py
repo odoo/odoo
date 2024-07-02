@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields
 from odoo.exceptions import ValidationError
+from odoo.addons import base
 
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
+class Company(base.Company):
     _check_company_auto = True
 
     _sql_constraints = [

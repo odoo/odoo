@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import Counter
 
-from odoo import fields, models, _
+from odoo import fields, _
+from odoo.addons import base
+from odoo.addons import (hr_expense, sale)
 
 
-class HrExpenseSheet(models.Model):
-    _inherit = "hr.expense.sheet"
+class HrExpenseSheet(hr_expense.models.HrExpenseSheet):
 
     sale_order_count = fields.Integer(compute='_compute_sale_order_count')
 
@@ -27,14 +28,14 @@ class HrExpenseSheet(models.Model):
         # Get the product account move lines created by an expense
         expensed_amls = self.account_move_ids.line_ids.filtered(lambda aml: aml.expense_id.sale_order_id and aml.balance >= 0 and not aml.tax_line_id)
         if not expensed_amls:
-            return self.env['sale.order.line']
+            return sale.models.SaleOrder(self.env)
 
         # Get the sale orders linked to the related expenses
         aml_to_so_map = expensed_amls._sale_determine_order()
 
-        self.env['sale.order.line'].flush_model(['order_id', 'product_id', 'product_uom_qty', 'price_unit', 'name'])
-        self.env['res.company'].flush_model(['currency_id'])
-        self.env['res.currency'].flush_model(['rounding'])
+        sale.models.SaleOrderLine(self.env).flush_model(['order_id', 'product_id', 'product_uom_qty', 'price_unit', 'name'])
+        base.models.Company(self.env).flush_model(['currency_id'])
+        base.models.Currency(self.env).flush_model(['rounding'])
         query = """
               WITH aml(key_id, key_count, order_id, product_id, product_uom_qty, price_unit, name) AS (VALUES %s)
             SELECT ARRAY_AGG(sol.id ORDER BY sol.id), aml.key_count
@@ -71,7 +72,7 @@ class HrExpenseSheet(models.Model):
         sol_ids = []
         for all_sol_ids_per_key, expense_count_per_key in self.env.cr.fetchall():
             sol_ids += all_sol_ids_per_key[:expense_count_per_key]
-        return self.env['sale.order.line'].browse(sol_ids)
+        return sale.models.SaleOrderLine(self.env, sol_ids)
 
     def _sale_expense_reset_sol_quantities(self):
         sale_order_lines = self._get_sale_order_lines()

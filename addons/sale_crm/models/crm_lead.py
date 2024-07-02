@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from dateutil.relativedelta import relativedelta
-
-from odoo import api, fields, models
+from odoo import api, fields
 from odoo.osv import expression
 
+from odoo.addons import base
+from odoo.addons import sale, crm
 
-class CrmLead(models.Model):
-    _inherit = 'crm.lead'
+
+class Lead(crm.Lead):
 
     sale_amount_total = fields.Monetary(compute='_compute_sale_data', string="Sum of Orders", help="Untaxed Total of Confirmed Orders", currency_field='company_currency')
     quotation_count = fields.Integer(compute='_compute_sale_data', string="Number of Quotations")
     sale_order_count = fields.Integer(compute='_compute_sale_data', string="Number of Sale Orders")
-    order_ids = fields.One2many('sale.order', 'opportunity_id', string='Orders')
+    order_ids = fields.One2many[sale.SaleOrder](inverse_name='opportunity_id', string='Orders')
 
     @api.depends('order_ids.state', 'order_ids.currency_id', 'order_ids.amount_untaxed', 'order_ids.date_order', 'order_ids.company_id')
     def _compute_sale_data(self):
@@ -31,19 +31,19 @@ class CrmLead(models.Model):
 
     def action_sale_quotations_new(self):
         if not self.partner_id:
-            return self.env["ir.actions.actions"]._for_xml_id("sale_crm.crm_quotation_partner_action")
+            return base.IrActions(self.env)._for_xml_id("sale_crm.crm_quotation_partner_action")
         else:
             return self.action_new_quotation()
 
     def action_new_quotation(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("sale_crm.sale_action_quotations_new")
+        action = base.IrActions(self.env)._for_xml_id("sale_crm.sale_action_quotations_new")
         action['context'] = self._prepare_opportunity_quotation_context()
         action['context']['search_default_opportunity_id'] = self.id
         return action
 
     def action_view_sale_quotation(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_quotations_with_onboarding")
+        action = base.IrActions(self.env)._for_xml_id("sale.action_quotations_with_onboarding")
         action['context'] = self._prepare_opportunity_quotation_context()
         action['context']['search_default_draft'] = 1
         action['domain'] = expression.AND([[('opportunity_id', '=', self.id)], self._get_action_view_sale_quotation_domain()])
@@ -55,7 +55,7 @@ class CrmLead(models.Model):
 
     def action_view_sale_order(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
+        action = base.IrActions(self.env)._for_xml_id("sale.action_orders")
         action['context'] = {
             'search_default_partner_id': self.partner_id.id,
             'default_partner_id': self.partner_id.id,
