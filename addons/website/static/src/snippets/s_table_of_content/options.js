@@ -7,8 +7,20 @@ options.registry.TableOfContent = options.Class.extend({
     /**
      * @override
      */
+    init() {
+        this.targetedElements = "h1, h2";
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    onBuilt() {
+        this._generateNav();
+    },
+    /**
+     * @override
+     */
     start: function () {
-        this.targetedElements = 'h1, h2';
         const $headings = this.$target.find(this.targetedElements);
         if ($headings.length > 0) {
             this._generateNav();
@@ -45,14 +57,54 @@ options.registry.TableOfContent = options.Class.extend({
     /**
      * @private
      */
+    _getTocId(tocEl) {
+        const firstNavLinkEl = tocEl.querySelector(".table_of_content_link");
+        if (firstNavLinkEl) {
+            const match = /^#table_of_content_heading_(\d+)_\d+$/.exec(firstNavLinkEl.getAttribute("href"));
+            if (match) {
+                return parseInt(match[1]);
+            }
+        }
+        return 0;
+    },
+    /**
+     * @private
+     */
     _generateNav: function (ev) {
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
+        let tocId = this._getTocId(this.$target[0]);
+        const tocEls = this.$target[0].ownerDocument.body.querySelectorAll("[data-snippet='s_table_of_content']");
+        const otherTocEls = [...tocEls].filter(tocEl =>
+            tocEl !== this.$target[0]
+            // TODO In next version do not exclude droppable snippet.
+            && !tocEl.closest("#oe_snippets")
+        );
+        const otherTocIds = otherTocEls.map(tocEl => this._getTocId(tocEl));
+        if (!tocId || otherTocIds.includes(tocId)) {
+            tocId = 1 + Math.max(0, ...otherTocIds);
+        }
         const $nav = this.$target.find('.s_table_of_content_navbar');
         const $headings = this.$target.find(this.targetedElements);
         $nav.empty();
+        const uniqueHeadingIds = new Set();
         _.each($headings, el => {
             const $el = $(el);
-            const id = 'table_of_content_heading_' + _.now() + '_' + _.uniqueId();
+            if (el.dataset.headingId) {
+                // Reset headingId on duplicate.
+                if (uniqueHeadingIds.has(el.dataset.headingId)) {
+                    delete el.dataset.headingId;
+                } else {
+                    uniqueHeadingIds.add(el.dataset.headingId);
+                }
+            }
+            if (!el.dataset.headingId) {
+                const headingIds = [...$headings].map(headingEl => parseInt(headingEl.dataset.headingId) || 0);
+                const nextHeadingId = 1 + Math.max(...headingIds);
+                el.dataset.headingId = nextHeadingId;
+            }
+            // Generate stable ids so that external links to heading anchors do
+            // not get broken next time the navigation links are re-generated.
+            const id = 'table_of_content_heading_' + tocId + '_' + el.dataset.headingId;
             const visibilityId = $el.closest('[data-visibility-id]').data('visibility-id');
             $('<a>').attr({ 'href': "#" + id, 'data-visibility-id': visibilityId })
                     .addClass('table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0')
