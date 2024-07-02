@@ -32,10 +32,8 @@ test("many2one_avatar_employee widget in kanban view with skills on avatar card"
         resModel: "m2o.avatar.employee",
         arch: `<kanban>
             <templates>
-                <t t-name="kanban-box">
-                    <div>
-                        <field name="employee_id" widget="many2one_avatar_employee"/>
-                    </div>
+                <t t-name="kanban-card">
+                    <field name="employee_id" widget="many2one_avatar_employee"/>
                 </t>
             </templates>
         </kanban>`,

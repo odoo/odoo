@@ -54,33 +54,12 @@
                             <field name="unit_amount" string="Time Spent" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
                         </tree>
                         <kanban class="o_kanban_mobile">
-                            <field name="date"/>
-                            <field name="employee_id"/>
-                            <field name="name"/>
-                            <field name="unit_amount" decoration-danger="unit_amount &gt; 24"/>
-                            <field name="project_id"/>
                             <templates>
-                                <t t-name="kanban-box">
-                                    <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <strong><span><t t-esc="record.employee_id.value"/></span></strong>
-                                            </div>
-                                            <div class="col-6 float-end text-end">
-                                                <strong><t t-esc="record.date.value"/></strong>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-6 text-muted">
-                                                <span><t t-esc="record.name.value"/></span>
-                                            </div>
-                                            <div class="col-6">
-                                                <span class="float-end text-end">
-                                                    <field name="unit_amount" widget="float_time"/>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <t t-name="kanban-card" class="row g-0">
+                                    <field name="employee_id" class="col-6 fw-bold"/>
+                                    <field name="date" class="col-6 text-end fw-bold" />
+                                    <field name="name" class="col-6 text-muted"/>
+                                    <field name="unit_amount" widget="float_time" class="col-6 text-end"/>
                                 </t>
                             </templates>
                         </kanban>

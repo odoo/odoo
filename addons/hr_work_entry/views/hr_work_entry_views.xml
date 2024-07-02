@@ -210,23 +210,14 @@
         <field name="name">hr.work.entry.type.kanban.view</field>
         <field name="model">hr.work.entry.type</field>
         <field name="arch" type="xml">
-            <kanban>
-                <field name="color"/>
+            <kanban highlight_color="color">
                 <templates>
                     <t t-name="kanban-menu" t-if="!selection_mode">
-                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                        <field name="color" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click">
-                            <div class="oe_kanban_content">
-                                <div>
-                                    <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
-                                </div>
-                                <div>
-                                    <span class="text-muted o_kanban_record_subtitle"><field name="code"/></span>
-                                </div>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card" t-attf-class="#{!selection_mode ? record.color.raw_value : ''}">
+                        <field class="fw-bold fs-5" name="name"/>
+                        <field class="text-muted" name="code"/>
                     </t>
                 </templates>
             </kanban>
