@@ -470,10 +470,14 @@ export class DeletePlugin extends Plugin {
 
     fillShrunkBlocks(commonAncestor) {
         const fillBlock = (block) => {
-            if (block === this.editable) {
+            if (
+                block.matches("div[contenteditable='true']") &&
+                !block.parentElement.isContentEditable
+            ) {
+                // @todo: not sure we want this when allowInlineAtRoot is true
                 const p = this.document.createElement("p");
                 p.appendChild(this.document.createElement("br"));
-                this.editable.appendChild(p);
+                block.appendChild(p);
             } else {
                 block.appendChild(this.document.createElement("br"));
             }
@@ -1320,8 +1324,3 @@ export class DeletePlugin extends Plugin {
         return { startContainer, startOffset, endContainer, endOffset, commonAncestorContainer };
     }
 }
-
-// @todo @phoenix: handle this:
-// The first child element of a contenteditable="true" zone which
-// itself is contained in a contenteditable="false" zone can not be
-// removed if it is paragraph-like.
