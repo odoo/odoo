@@ -134,10 +134,12 @@ class AccountMoveSend(models.TransientModel):
     def _get_default_mail_partner_ids(self, move, mail_template, mail_lang):
         partners = self.env['res.partner'].with_company(move.company_id)
         if mail_template.email_to:
-            for mail_data in tools.email_split(mail_template.email_to):
+            email_to = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'email_to')
+            for mail_data in tools.email_split(email_to):
                 partners |= partners.find_or_create(mail_data)
         if mail_template.email_cc:
-            for mail_data in tools.email_split(mail_template.email_cc):
+            email_cc = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'email_cc')
+            for mail_data in tools.email_split(email_cc):
                 partners |= partners.find_or_create(mail_data)
         if mail_template.partner_to:
             partner_to = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'partner_to')
