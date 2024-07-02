@@ -706,18 +706,14 @@ class AccountMoveLine(models.Model):
         # get the where clause
         query = self._where_calc(list(self.env.context.get('domain_cumulated_balance') or []))
         sql_order = self._order_to_sql(self.env.context.get('order_cumulated_balance'), query, reverse=True)
-        order_string = self.env.cr.mogrify(sql_order).decode()
-        from_clause, where_clause, where_clause_params = query.get_sql()
-        sql = """
-            SELECT account_move_line.id, SUM(account_move_line.balance) OVER (
-                ORDER BY %(order_by)s
-                ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-            )
-            FROM %(from)s
-            WHERE %(where)s
-        """ % {'from': from_clause, 'where': where_clause or 'TRUE', 'order_by': order_string}
-        self.env.cr.execute(sql, where_clause_params)
-        result = {r[0]: r[1] for r in self.env.cr.fetchall()}
+        result = dict(self.env.execute_query(query.select(
+            SQL.identifier(query.table, "id"),
+            SQL(
+                "SUM(%s) OVER (ORDER BY %s ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)",
+                SQL.identifier(query.table, "balance"),
+                sql_order,
+            ),
+        )))
         for record in self:
             record.cumulated_balance = result[record.id]
 

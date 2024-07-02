@@ -3,7 +3,7 @@ from ast import literal_eval
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.res_bank import sanitize_account_number
-from odoo.tools import remove_accents, groupby
+from odoo.tools import groupby
 from collections import defaultdict
 import logging
 import re
@@ -948,33 +948,17 @@ class AccountJournal(models.Model):
                         along with the total number of move lines having the same account as of the journal's default account.
         '''
         self.ensure_one()
-        self.env['account.move.line'].check_access_rights('read')
-
-        if not self.default_account_id:
-            return 0.0, 0
-
-        domain = (domain or []) + [
-            ('account_id', 'in', tuple(self.default_account_id.ids)),
-            ('display_type', 'not in', ('line_section', 'line_note')),
-            ('parent_state', '!=', 'cancel'),
-        ]
-        query = self.env['account.move.line']._where_calc(domain)
-        tables, where_clause, where_params = query.get_sql()
-
-        query = '''
-            SELECT
-                COUNT(account_move_line.id) AS nb_lines,
-                COALESCE(SUM(account_move_line.balance), 0.0),
-                COALESCE(SUM(account_move_line.amount_currency), 0.0)
-            FROM ''' + tables + '''
-            WHERE ''' + where_clause + '''
-        '''
+        nb_lines, balance, amount_currency = self.env['account.move.line']._read_group(
+            domain=([
+                ('account_id', 'in', tuple(self.default_account_id.ids)),
+                ('display_type', 'not in', ('line_section', 'line_note')),
+                ('parent_state', '!=', 'cancel'),
+            ] + (domain or [])),
+            aggregates=('__count', 'balance:sum', 'amount_currency:sum'),
+        )[0]
 
         company_currency = self.company_id.currency_id
         journal_currency = self.currency_id if self.currency_id and self.currency_id != company_currency else False
-
-        self._cr.execute(query, where_params)
-        nb_lines, balance, amount_currency = self._cr.fetchone()
         return amount_currency if journal_currency else balance, nb_lines
 
     def _get_journal_inbound_outstanding_payment_accounts(self):

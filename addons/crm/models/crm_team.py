@@ -11,7 +11,7 @@ from markupsafe import Markup
 
 from odoo import api, exceptions, fields, models, _
 from odoo.osv import expression
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare, float_round, SQL
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -705,17 +705,17 @@ class Team(models.Model):
 
     def _graph_date_column(self):
         if self.use_opportunities:
-            return 'create_date'
+            return SQL('create_date')
         return super(Team,self)._graph_date_column()
 
     def _graph_y_query(self):
         if self.use_opportunities:
-            return 'count(*)'
+            return SQL('count(*)')
         return super(Team,self)._graph_y_query()
 
     def _extra_sql_conditions(self):
         if self.use_opportunities:
-            return "AND type LIKE 'opportunity'"
+            return SQL("type LIKE 'opportunity'")
         return super(Team,self)._extra_sql_conditions()
 
     def _graph_title_and_key(self):

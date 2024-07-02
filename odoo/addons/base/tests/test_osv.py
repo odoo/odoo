@@ -18,10 +18,10 @@ class QueryTestCase(BaseCase):
         alias = query.left_join("product_product", "user_id", "res_user", "id", "user_id")
         self.assertEqual(alias, 'product_product__user_id')
 
-        from_clause, where_clause, where_params = query.get_sql()
-        self.assertEqual(from_clause,
+        self.assertEqual(query.from_clause.code,
             '"product_product", "product_template" JOIN "product_category" AS "product_template__categ_id" ON ("product_template"."categ_id" = "product_template__categ_id"."id") LEFT JOIN "res_user" AS "product_product__user_id" ON ("product_product"."user_id" = "product_product__user_id"."id")')
-        self.assertEqual(where_clause, "product_product.template_id = product_template.id")
+        self.assertEqual(query.where_clause.code,
+            "product_product.template_id = product_template.id")
 
     def test_query_chained_explicit_joins(self):
         query = Query(None, 'product_product')
@@ -34,10 +34,10 @@ class QueryTestCase(BaseCase):
         alias = query.left_join("product_template__categ_id", "user_id", "res_user", "id", "user_id")
         self.assertEqual(alias, 'product_template__categ_id__user_id')
 
-        from_clause, where_clause, where_params = query.get_sql()
-        self.assertEqual(from_clause,
+        self.assertEqual(query.from_clause.code,
             '"product_product", "product_template" JOIN "product_category" AS "product_template__categ_id" ON ("product_template"."categ_id" = "product_template__categ_id"."id") LEFT JOIN "res_user" AS "product_template__categ_id__user_id" ON ("product_template__categ_id"."user_id" = "product_template__categ_id__user_id"."id")')
-        self.assertEqual(where_clause, "product_product.template_id = product_template.id")
+        self.assertEqual(query.where_clause.code,
+            "product_product.template_id = product_template.id")
 
     def test_mixed_query_chained_explicit_implicit_joins(self):
         query = Query(None, 'product_product')
@@ -53,10 +53,10 @@ class QueryTestCase(BaseCase):
         query.add_table('account_account')
         query.add_where("product_category.expense_account_id = account_account.id")
 
-        from_clause, where_clause, where_params = query.get_sql()
-        self.assertEqual(from_clause,
+        self.assertEqual(query.from_clause.code,
             '"product_product", "product_template", "account_account" JOIN "product_category" AS "product_template__categ_id" ON ("product_template"."categ_id" = "product_template__categ_id"."id") LEFT JOIN "res_user" AS "product_template__categ_id__user_id" ON ("product_template__categ_id"."user_id" = "product_template__categ_id__user_id"."id")')
-        self.assertEqual(where_clause, "product_product.template_id = product_template.id AND product_category.expense_account_id = account_account.id")
+        self.assertEqual(query.where_clause.code,
+            "product_product.template_id = product_template.id AND product_category.expense_account_id = account_account.id")
 
     def test_raise_missing_lhs(self):
         query = Query(None, 'product_product')
@@ -83,21 +83,21 @@ class QueryTestCase(BaseCase):
 
     def test_table_expression(self):
         query = Query(None, 'foo')
-        from_clause, where_clause, where_params = query.get_sql()
+        from_clause = query.from_clause.code
         self.assertEqual(from_clause, '"foo"')
 
         query = Query(None, 'bar', SQL('(SELECT id FROM foo)'))
-        from_clause, where_clause, where_params = query.get_sql()
+        from_clause = query.from_clause.code
         self.assertEqual(from_clause, '(SELECT id FROM foo) AS "bar"')
 
         query = Query(None, 'foo')
         query.add_table('bar', SQL('(SELECT id FROM foo)'))
-        from_clause, where_clause, where_params = query.get_sql()
+        from_clause = query.from_clause.code
         self.assertEqual(from_clause, '"foo", (SELECT id FROM foo) AS "bar"')
 
         query = Query(None, 'foo')
         query.join('foo', 'bar_id', SQL('(SELECT id FROM foo)'), 'id', 'bar')
-        from_clause, where_clause, where_params = query.get_sql()
+        from_clause = query.from_clause.code
         self.assertEqual(from_clause, '"foo" JOIN (SELECT id FROM foo) AS "foo__bar" ON ("foo"."bar_id" = "foo__bar"."id")')
 
 
