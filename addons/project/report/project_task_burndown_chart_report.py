@@ -66,7 +66,6 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
         # the ids that are returned from this sub query.
         project_task_query = self.env['project.task']._where_calc(task_specific_domain)
         self.env.flush_query(project_task_query.subselect())
-        project_task_from_clause, project_task_where_clause, project_task_where_clause_params = project_task_query.get_sql()
 
         # Get the stage_id `ir.model.fields`'s id in order to inject it directly in the query and avoid having to join
         # on `ir_model_fields` table.
@@ -85,13 +84,9 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
         simple_date_groupby_sql = self.env.cr.mogrify(simple_date_groupby_sql).decode()
         simple_date_groupby_sql = simple_date_groupby_sql.replace('"project_task_burndown_chart_report".', '')
 
-        burndown_chart_query = """
+        burndown_chart_sql = SQL("""
             (
-              WITH task_ids AS (
-                 SELECT id
-                 FROM %(task_query_from)s
-                 %(task_query_where)s
-              ),
+              WITH task_ids AS %(task_query_subselect)s,
               all_stage_task_moves AS (
                  SELECT count(*) as __count,
                         sum(allocated_hours) as allocated_hours,
@@ -194,18 +189,16 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                          JOIN LATERAL generate_series(t.date_begin, t.date_end-INTERVAL '1 day', '%(interval)s')
                             AS date ON TRUE
             )
-        """ % {
-            'task_query_from': project_task_from_clause,
-            'task_query_where': f'WHERE {project_task_where_clause}' if project_task_where_clause else '',
-            'date_begin': simple_date_groupby_sql.replace('"date"', '"date_begin"'),
-            'date_end': simple_date_groupby_sql.replace('"date"', '"date_end"'),
-            'interval': sql_interval,
-            'field_id': field_id,
-        }
+            """,
+            task_query_subselect=project_task_query.subselect(),
+            date_begin=SQL(simple_date_groupby_sql.replace('"date"', '"date_begin"')),
+            date_end=SQL(simple_date_groupby_sql.replace('"date"', '"date_end"')),
+            interval=SQL(sql_interval),
+            field_id=field_id,
+        )
 
         # hardcode 'project_task_burndown_chart_report' as the query above
         # (with its own parameters)
-        burndown_chart_sql = SQL(burndown_chart_query, *project_task_where_clause_params)
         main_query._tables['project_task_burndown_chart_report'] = burndown_chart_sql
 
         return main_query

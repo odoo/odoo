@@ -9,7 +9,7 @@ import secrets
 from odoo import api, fields, models, _, Command
 from odoo.osv.expression import OR, AND
 from odoo.exceptions import AccessError, ValidationError, UserError
-from odoo.tools import convert
+from odoo.tools import convert, SQL
 
 
 class PosConfig(models.Model):
@@ -725,10 +725,11 @@ class PosConfig(models.Model):
         }).id
 
     def get_limited_products_loading(self, fields):
-        tables, where_clause, params = self.env['product.product']._where_calc(
+        query = self.env['product.product']._where_calc(
             self._get_available_product_domain()
-        ).get_sql()
-        query = f"""
+        )
+        sql = SQL(
+            """
             WITH pm AS (
                   SELECT product_id,
                          MAX(write_date) date
@@ -736,18 +737,21 @@ class PosConfig(models.Model):
                 GROUP BY product_id
             )
                SELECT product_product.id
-                 FROM {tables}
+                 FROM %s
             LEFT JOIN pm ON product_product.id=pm.product_id
-                WHERE {where_clause}
+                WHERE %s
              ORDER BY product_product__product_tmpl_id.is_favorite DESC,
                       CASE WHEN product_product__product_tmpl_id.type = 'service' THEN 1 ELSE 0 END DESC,
                       pm.date DESC NULLS LAST,
                       product_product.write_date DESC
                 LIMIT %s
-        """
-        self.env.cr.execute(query, params + [self.get_limited_product_count()])
-        product_ids = self.env.cr.fetchall()
-        products = self.env['product.product'].browse([p[0] for p in product_ids])
+            """,
+            query.from_clause,
+            query.where_clause or SQL("TRUE"),
+            self.get_limited_product_count(),
+        )
+        product_ids = [r[0] for r in self.env.execute_query(sql)]
+        products = self.env['product.product'].browse(product_ids)
         product_combo = products.filtered(lambda p: p['type'] == 'combo')
         product_in_combo = product_combo.combo_ids.combo_line_ids.product_id
         products_available = products | product_in_combo

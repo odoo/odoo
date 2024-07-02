@@ -211,12 +211,6 @@ class Query:
             SQL(" WHERE %s", self.where_clause) if self._where_clauses else SQL(),
         )
 
-    def get_sql(self):
-        """ Returns (query_from, query_where, query_params). """
-        from_string, from_params = self.from_clause
-        where_string, where_params = self.where_clause
-        return from_string, where_string, from_params + where_params
-
     def get_result_ids(self):
         """ Return the result of ``self.select()`` as a tuple of ids. The result
         is memoized for future use, which avoids making the same query twice.
