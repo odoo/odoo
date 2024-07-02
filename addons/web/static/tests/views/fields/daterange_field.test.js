@@ -336,8 +336,8 @@ test("Render with initial empty value: datetime field", async () => {
     // Add an end date
     await contains(".o_add_date").click();
 
-    const [startInput, endInput] = queryAll(".o_field_daterange input");
-    expect(startInput.value).toBe(endInput.value);
+    const endInput = queryAll(".o_field_daterange input")[1];
+    expect("08/14/2014 13:00:00").toBe(endInput.value);
 });
 
 test("Render with initial empty value and optional start date", async () => {
@@ -358,15 +358,15 @@ test("Render with initial empty value and optional start date", async () => {
 
     // Select a value (today)
     await contains(".o_today").click();
-    expect(".o_field_daterange input:eq(0)").toHaveValue("08/14/2014 12:00:00");
+    expect(".o_field_daterange input:eq(0)").toHaveValue("08/14/2014 13:00:00");
     expect(".o_add_date").toBeVisible();
     expect(".o_add_date").toHaveText("Add start date");
 
     // Add an end date
     await contains(".o_add_date").click();
 
-    const [startInput, endInput] = queryAll(".o_field_daterange input");
-    expect(startInput.value).toBe(endInput.value);
+    const endInput = queryAll(".o_field_daterange input")[1];
+    expect("08/14/2014 13:00:00").toBe(endInput.value);
 });
 
 test("initial empty date with optional start date", async () => {
@@ -395,9 +395,9 @@ test("initial empty date with optional start date", async () => {
     // Add an end date
     await contains(".o_add_date").click();
 
-    const [startInput, endInput] = queryAll(".o_field_daterange input");
+    const endInput = queryAll(".o_field_daterange input")[1];
     expect(".o_datetime_picker").toHaveCount(1);
-    expect(startInput.value).toBe(endInput.value);
+    expect("03/13/2017 01:00:00").toBe(endInput.value);
 });
 
 test("initial empty date with optional end date", async () => {
@@ -426,8 +426,8 @@ test("initial empty date with optional end date", async () => {
     // Add a start date
     await contains(".o_add_date").click();
 
-    const [startInput, endInput] = queryAll(".o_field_daterange input");
-    expect(startInput.value).toBe(endInput.value);
+    const endInput = queryAll(".o_field_daterange input")[1];
+    expect("03/13/2017 00:00:00").toBe(endInput.value);
 });
 
 test.tags("desktop")("Datetime field - open datepicker and switch page", async () => {
