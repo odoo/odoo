@@ -776,8 +776,9 @@ class StockQuant(models.Model):
         domain = self._get_gather_domain(product_id, location_id, lot_id, package_id, owner_id, strict)
         domain, order = self._get_removal_strategy_domain_order(domain, removal_strategy, qty)
         if self.ids:
+            domain = expression.AND([domain, [('id', 'in', self.ids)]])
             sort_key = self._get_removal_strategy_sort_key(removal_strategy)
-            res = self.filtered_domain(domain).sorted(key=sort_key[0], reverse=sort_key[1])
+            res = self.search(domain).sorted(key=sort_key[0], reverse=sort_key[1])
         else:
             res = self.search(domain, order=order)
         if removal_strategy == "closest":
