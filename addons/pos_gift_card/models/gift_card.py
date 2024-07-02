@@ -33,7 +33,7 @@ class GiftCard(models.Model):
                 balance -= sum(
                     confirmed_line.mapped(
                         lambda line: line.currency_id._convert(
-                            line.price_unit,
+                            line.price_subtotal_incl,
                             record.currency_id,
                             record.env.company,
                             line.create_date,
