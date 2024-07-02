@@ -89,7 +89,7 @@ class Holidays(models.Model):
 
         # Unlink previous timesheets to avoid doublon (shouldn't happen on the interface but meh)
         old_timesheets = self.env["account.analytic.line"].sudo().search([('project_id', '!=', False), ('holiday_id', 'in', leave_ids)])
-        if old_timesheets:
+        if old_timesheets and not self.env.context.get('skip_unlink_timesheets')::
             old_timesheets.holiday_id = False
             old_timesheets.unlink()
 
