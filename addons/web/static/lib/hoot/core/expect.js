@@ -556,7 +556,7 @@ const R_ELEMENTS = /%(elements?)%/i;
 const R_NOT = /\[([\w\s]*)!([\w\s]*)\]/;
 const R_RECEIVED = /%(received)%/i;
 
-/** @type {Set<Matchers>} */
+/** @type {Set<Matcher>} */
 const unconsumedMatchers = new Set();
 
 /** @type {TestResult | null} */
@@ -590,7 +590,7 @@ export function makeExpect(params) {
             throw scopeError("expect");
         }
 
-        return new Matchers(received, {}, params.headless);
+        return new Matcher(received, {}, params.headless);
     }
 
     const enrichedExpect = $assign(expect, {
@@ -634,11 +634,20 @@ export class Assertion {
  * @template [A=R]
  * @template [Async=false]
  */
-export class Matchers {
-    /** @type {R} */
+export class Matcher {
+    /**
+     * @private
+     * @type {R}
+     */
     _received = null;
+    /**
+     * @private
+     */
     _headless = false;
-    /** @type {Modifiers<Async>} */
+    /**
+     * @private
+     * @type {Modifiers<Async>}
+     */
     _modifiers = {
         not: false,
         rejects: false,
@@ -666,7 +675,7 @@ export class Matchers {
      * Returns a set of matchers expecting a result opposite to what normal matchers
      * would expect.
      *
-     * @returns {Omit<Matchers<R, A, Async>, "not">}
+     * @returns {Omit<Matcher<R, A, Async>, "not">}
      * @example
      *  expect([1]).not.toBeEmpty();
      * @example
@@ -677,7 +686,7 @@ export class Matchers {
             throw matcherModifierError("not", `matcher is already negated`);
         }
         unconsumedMatchers.delete(this);
-        return new Matchers(this._received, { ...this._modifiers, not: true }, this._headless);
+        return new Matcher(this._received, { ...this._modifiers, not: true }, this._headless);
     }
 
     /**
@@ -685,7 +694,7 @@ export class Matchers {
      * and will be applied to a value rejected by that promise. The matcher will
      * throw an error should the promise resolve instead of being rejected.
      *
-     * @returns {Omit<Matchers<R, A, true>, "rejects" | "resolves">}
+     * @returns {Omit<Matcher<R, A, true>, "rejects" | "resolves">}
      * @example
      *  await expect(Promise.reject("foo")).rejects.toBe("foo");
      */
@@ -697,7 +706,7 @@ export class Matchers {
             );
         }
         unconsumedMatchers.delete(this);
-        return new Matchers(this._received, { ...this._modifiers, rejects: true }, this._headless);
+        return new Matcher(this._received, { ...this._modifiers, rejects: true }, this._headless);
     }
 
     /**
@@ -705,7 +714,7 @@ export class Matchers {
      * and will be applied to a value resolved by that promise. The matcher will
      * throw an error should the promise reject instead of being resolved.
 
-     * @returns {Omit<Matchers<R, A, true>, "rejects" | "resolves">}
+     * @returns {Omit<Matcher<R, A, true>, "rejects" | "resolves">}
      * @example
      *  await expect(Promise.resolve("foo")).resolves.toBe("foo");
      */
@@ -717,7 +726,7 @@ export class Matchers {
             );
         }
         unconsumedMatchers.delete(this);
-        return new Matchers(this._received, { ...this._modifiers, resolves: true }, this._headless);
+        return new Matcher(this._received, { ...this._modifiers, resolves: true }, this._headless);
     }
 
     //-------------------------------------------------------------------------
@@ -1827,6 +1836,7 @@ export class Matchers {
     //-------------------------------------------------------------------------
 
     /**
+     * @private
      * @param {MatcherSpecifications<R, A>} specs
      * @returns {Async extends true ? Promise<void> : void}
      */
@@ -1861,6 +1871,7 @@ export class Matchers {
     }
 
     /**
+     * @private
      * @param {MatcherSpecifications<R, A>} specs
      * @returns {void}
      */
@@ -1899,6 +1910,9 @@ export class Matchers {
         registerAssertion(assertion);
     }
 
+    /**
+     * @private
+     */
     _saveStack() {
         unconsumedMatchers.delete(this);
         if (!this._headless) {
@@ -1907,6 +1921,7 @@ export class Matchers {
     }
 
     /**
+     * @private
      * @param {"innerHTML" | "outerHTML"} fname
      * @param {string | RegExp} expected
      * @param {ExpectOptions & FormatXmlOptions} [options]
