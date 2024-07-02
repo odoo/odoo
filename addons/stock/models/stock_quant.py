@@ -110,7 +110,7 @@ class StockQuant(models.Model):
     inventory_date = fields.Date(
         'Scheduled Date', compute='_compute_inventory_date', store=True, readonly=False,
         help="Next date the On Hand Quantity should be counted.")
-    last_count_date = fields.Date(compute='_compute_last_count_date', help='Last time the Quantity was Updated')
+    last_count_date = fields.Date(compute='_compute_last_count_date', help='Last time the Quantity was Updated', search='_search_last_count_date')
     inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False, default=False)
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated', search='_search_is_outdated')
     user_id = fields.Many2one(
@@ -175,6 +175,55 @@ class StockQuant(models.Model):
             _update_dict(date_by_quant, (location_dest_id, result_package_id, product_id, lot_id, owner_id), move_line_date)
         for quant in self:
             quant.last_count_date = date_by_quant.get((quant.location_id.id, quant.package_id.id, quant.product_id.id, quant.lot_id.id, quant.owner_id.id))
+
+    def _search_last_count_date(self, operator, value):
+        assert operator in ('=', '!=', '<=', '<', '>', '>='), 'Invalid domain operator'
+        query = SQL("""
+            WITH tmp_stock AS (
+                SELECT
+                    MAX(sml.date) AS date,
+                    sml.product_id,
+                    locations.location_id,
+                    packages.package_id,
+                    sml.lot_id,
+                    sml.owner_id
+                FROM
+                    stock_move_line sml
+                LEFT JOIN stock_move sm ON sm.id = sml.move_id
+                CROSS JOIN LATERAL (
+                    VALUES (sml.location_id), (sml.location_dest_id)
+                ) AS locations (location_id)
+                CROSS JOIN LATERAL (
+                    VALUES (sml.package_id), (sml.result_package_id)
+                ) AS packages (package_id)
+                LEFT JOIN stock_location sl ON sl.id = locations.location_id
+                WHERE
+                    sm.state = 'done'
+                    AND sm.is_inventory = TRUE
+                    AND sm.date %s %s
+                    AND sl.usage = 'internal'
+                GROUP BY
+                    sml.product_id,
+                    locations.location_id,
+                    packages.package_id,
+                    sml.lot_id,
+                    sml.owner_id
+            )
+            SELECT
+                sq.id
+            FROM
+                stock_quant sq
+            LEFT JOIN stock_location sl ON sl.id = sq.location_id
+            LEFT JOIN tmp_stock ts ON sq.product_id = ts.product_id
+                AND sq.location_id = ts.location_id
+                AND COALESCE(sq.lot_id, 0) = COALESCE(ts.lot_id, 0)
+                AND COALESCE(sq.owner_id, 0) = COALESCE(ts.owner_id, 0)
+                AND COALESCE(sq.package_id, 0) = COALESCE(ts.package_id, 0)
+            WHERE
+                sl.usage = 'internal'
+                AND ts.date IS NOT NULL
+                    """, SQL(operator), value)
+        return [('id', 'inselect', query)]
 
     def _search(self, domain, *args, **kwargs):
         domain = [
