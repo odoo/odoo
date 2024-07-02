@@ -54,6 +54,12 @@ patch(TicketScreen.prototype, {
     },
     async onDeleteOrder(order) {
         const confirmed = await super.onDeleteOrder(...arguments);
+        if (confirmed && order.orderlines.length === 0) {
+            this.pos.pos_session.sequence_number = await this.env.services.rpc("/pos/get-sequence", {
+                access_token: this.pos.config.access_token,
+                delete_empty_record: true
+            });
+        }
         if (
             confirmed &&
             this.pos.config.module_pos_restaurant &&

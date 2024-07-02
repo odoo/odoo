@@ -94,7 +94,7 @@ registry.category("web_tour.tours").add("EWalletProgramTour2", {
             // - Refund order.
             ProductScreen.clickRefund(),
             TicketScreen.filterIs("Paid"),
-            TicketScreen.selectOrder("-0004"),
+            TicketScreen.selectOrder("-0006"),
             TicketScreen.partnerIs("BBBBBBB"),
             TicketScreen.confirmRefund(),
             ProductScreen.isShown(),

@@ -126,7 +126,10 @@ export class TicketScreen extends Component {
             }
         }
     }
-    onCreateNewOrder() {
+    async onCreateNewOrder() {
+        this.pos.pos_session.sequence_number = await this.env.services.rpc("/pos/get-sequence", {
+            access_token: this.pos.config.access_token,
+        });
         this.pos.add_new_order();
         this.pos.showScreen("ProductScreen");
     }
