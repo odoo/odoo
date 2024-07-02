@@ -598,6 +598,25 @@ class TestChannelInternals(MailCommon, HttpCase):
         ):
             channel.name = "test test"
 
+    def test_channel_mention_should_send_message_in_channel(self):
+        channel = self.env['discuss.channel'].create({"name": "Test Channel", "channel_type": "channel"})
+        partner = self.env["res.partner"].create({
+            "name": "Test Partner",
+            "email": "testpartner@odoo.com",
+        })
+        # Message Post
+        message = partner.message_post(body="Hello", channel_ids=[channel.id], message_type="comment", subtype_xmlid="mail.mt_comment")
+        # Check that the mentioned channel containt a message with id of channel
+        message_in_db = self.env['mail.message'].search([('res_id', '=', channel.id), ('model', '=', 'discuss.channel')])
+        self.assertEqual(len(message_in_db), 1)
+        self.assertEqual(self.env['mail.message'].search([('id', '=', message.id), ('model', '=', 'res.partner')]).body, '<p>Hello</p>')
+        user = f'<span><a href="/odoo/res.partner/{self.env.user.partner_id.id}">{self.env.user.partner_id.name}</a>'
+        backlink_html = f'<a href="/odoo/res.partner/{partner.id}">Test Partner</a></span>'
+        self.assertEqual(
+            message_in_db.body,
+            f"{user} mentioned this channel in {backlink_html}"
+        )
+
     def test_channel_write_should_send_notification_if_image_128_changed(self):
         channel = self.env['discuss.channel'].create({'name': '', 'uuid': 'test-uuid'})
         # do the operation once before the assert to grab the value to expect

@@ -2066,7 +2066,7 @@ class MailThread(models.AbstractModel):
                      email_from=None, author_id=None, parent_id=False,
                      subtype_xmlid=None, subtype_id=False, partner_ids=None,
                      attachments=None, attachment_ids=None, body_is_html=False,
-                     **kwargs):
+                     channel_ids=None, **kwargs):
         """ Post a new message in an existing thread, returning the new mail.message.
 
         :param str|Markup body: body of the message, str content will be escaped, Markup
@@ -2085,6 +2085,7 @@ class MailThread(models.AbstractModel):
             notification mechanism;
         :param list(int) partner_ids: partner_ids to notify in addition to partners
             computed based on subtype / followers matching;
+        :param list(int) channel_ids: channel_ids to add message in mentioned channels
         :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
             tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
             is NOT base64 encoded;
@@ -2137,6 +2138,13 @@ class MailThread(models.AbstractModel):
                  )
             )
         partner_ids = list(partner_ids or [])
+        if channel_ids and not tools.is_list_of(channel_ids, int):
+            raise ValueError(
+                _('Posting a message should receive channels as a list of IDs (received %(cids)s)',
+                  cids=repr(channel_ids),
+                 )
+            )
+        channel_ids = list(channel_ids or [])
 
         # split message additional values from notify additional values
         msg_kwargs = {key: val for key, val in kwargs.items()
@@ -2192,6 +2200,7 @@ class MailThread(models.AbstractModel):
             'subtype_id': subtype_id,
             # recipients
             'partner_ids': partner_ids,
+            'channel_ids': channel_ids,
         })
         # add default-like values afterwards, to avoid useless queries
         if 'record_alias_domain_id' not in msg_values:
@@ -2881,8 +2890,21 @@ class MailThread(models.AbstractModel):
             for x in ('from', 'to', 'cc'):
                 create_values.pop(x, None)
             create_values['partner_ids'] = [Command.link(pid) for pid in (create_values.get('partner_ids') or [])]
+            channel_ids = create_values.pop('channel_ids', None)
             create_values_list.append(create_values)
 
+            # Create message in mentioned channels
+            if channel_ids:
+                user = f'<a href="/odoo/res.partner/{self.env.user.partner_id.id}">{self.env.user.name}</a>'
+                backlink_html = f'<a href="/odoo/{self._name}/{self.id}">{create_values.get("record_name")}</a>'
+                create_channel_values = dict(create_values)
+                create_channel_values['body'] = f"{user} mentioned this channel in {backlink_html}"
+                create_channel_values['model'] = 'discuss.channel'
+                create_channel_list = [{**create_channel_values, 'res_id': channel_id} for channel_id in channel_ids]
+                messages_in_channel = self.env['mail.message'].with_context(
+                    clean_context(self.env.context)
+                ).create(create_channel_list)
+                self._notify_thread_by_channel(messages_in_channel)
         # remove context, notably for default keys, as this thread method is not
         # meant to propagate default values for messages, only for master records
         return self.env['mail.message'].with_context(
@@ -2899,6 +2921,7 @@ class MailThread(models.AbstractModel):
             'author_guest_id',
             'author_id',
             'body',
+            'channel_ids',
             'create_date',  # anyway limited to admins
             'date',
             'email_add_signature',
@@ -3132,6 +3155,23 @@ class MailThread(models.AbstractModel):
             self._notify_thread_by_web_push(message, recipients_data, msg_vals, **kwargs)
 
         return recipients_data
+
+    def _notify_thread_by_channel(self, messages, **kwargs):
+        """ Send bus notifications for messages through channels.
+
+        :param recordset messages: A recordset of mail.message records being
+         notified. It may be void as 'msg_vals' supersedes it.
+        """
+        bus_notifications = []
+        if messages:
+            for message_format in messages._message_format():
+                if "temporary_id" in self.env.context:
+                    message_format["temporary_id"] = self.env.context["temporary_id"]
+                bus_notifications.append((
+                    self.env['discuss.channel'].browse(message_format['res_id']),
+                    "discuss.channel/new_message",
+                    {"id": message_format['res_id'], "message": message_format}))
+            self.env['bus.bus']._sendmany(bus_notifications)
 
     def _notify_thread_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
         """ Notificaty recipients inbox of a message. It does two main things :

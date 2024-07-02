@@ -69,7 +69,7 @@ class ThreadController(http.Controller):
         )
 
     def _get_allowed_message_post_params(self):
-        return {"attachment_ids", "body", "message_type", "partner_ids", "subtype_xmlid", "parent_id"}
+        return {"attachment_ids", "body", "message_type", "partner_ids", "channel_ids", "subtype_xmlid", "parent_id"}
 
     @http.route("/mail/message/post", methods=["POST"], type="json", auth="public")
     @add_guest_to_context

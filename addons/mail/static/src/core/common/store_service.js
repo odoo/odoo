@@ -502,6 +502,7 @@ export class Store extends BaseStore {
                   })
                 : undefined;
         const partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
+        const channel_ids = validMentions?.threads.map((thread) => thread.id) ?? [];
         const recipientEmails = [];
         const recipientAdditionalValues = {};
         if (!isNote) {
@@ -523,6 +524,7 @@ export class Store extends BaseStore {
             post_data: {
                 body: await prettifyMessageContent(body, validMentions),
                 attachment_ids: attachments.map(({ id }) => id),
+                channel_ids,
                 message_type: "comment",
                 partner_ids,
                 subtype_xmlid: subtype,
