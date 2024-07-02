@@ -29,7 +29,7 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request, DEFAULT_LANG
 from odoo.osv import expression
-from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property, SetDefinitions
+from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property, SQL, SetDefinitions
 
 _logger = logging.getLogger(__name__)
 
@@ -129,13 +129,13 @@ def check_identity(fn):
     Prevents access outside of interactive contexts (aka with a request)
     """
     @wraps(fn)
-    def wrapped(self):
+    def wrapped(self, *args, **kwargs):
         if not request:
             raise UserError(_("This method can only be accessed over HTTP"))
 
         if request.session.get('identity-check-last', 0) > time.time() - 10 * 60:
             # update identity-check-last like github?
-            return fn(self)
+            return fn(self, *args, **kwargs)
 
         w = self.sudo().env['res.users.identitycheck'].create({
             'request': json.dumps([
@@ -432,7 +432,7 @@ class Users(models.Model):
         )
         self.browse(uid).invalidate_recordset(['password'])
 
-    def _check_credentials(self, password, env):
+    def _check_credentials(self, credential, env):
         """ Validates the current user's password.
 
         Override this method to plug additional authentication methods.
@@ -448,14 +448,14 @@ class Users(models.Model):
         instead.
         """
         """ Override this method to plug additional authentication methods"""
-        assert password
+        assert credential['type'] == 'password'
         self.env.cr.execute(
             "SELECT COALESCE(password, '') FROM res_users WHERE id=%s",
             [self.env.user.id]
         )
         [hashed] = self.env.cr.fetchone()
         valid, replacement = self._crypt_context()\
-            .verify_and_update(password, hashed)
+            .verify_and_update(credential['password'], hashed)
         if replacement is not None:
             self._set_encrypted_password(self.env.user.id, replacement)
             if request and self == self.env.user:
@@ -467,6 +467,11 @@ class Users(models.Model):
 
         if not valid:
             raise AccessDenied()
+        return {
+            'uid': self.env.user.id,
+            'auth_method': 'password',
+            'mfa': 'default',
+        }
 
     def _compute_password(self):
         for user in self:
@@ -869,9 +874,8 @@ class Users(models.Model):
         return self._order
 
     @classmethod
-    def _login(cls, db, login, password, user_agent_env):
-        if not password:
-            raise AccessDenied()
+    def _login(cls, db, credential, user_agent_env):
+        login = credential['login']
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         try:
             with cls.pool.cursor() as cr:
@@ -881,7 +885,8 @@ class Users(models.Model):
                     if not user:
                         raise AccessDenied()
                     user = user.with_user(user)
-                    user._check_credentials(password, user_agent_env)
+                    auth_info = user._check_credentials(credential, user_agent_env)
+                    auth_info['uid'] = user.id
                     tz = request.httprequest.cookies.get('tz') if request else None
                     if tz in pytz.all_timezones and (not user.tz or not user.login_date):
                         # first login or missing tz -> set tz to browser tz
@@ -893,23 +898,23 @@ class Users(models.Model):
 
         _logger.info("Login successful for db:%s login:%s from %s", db, login, ip)
 
-        return user.id
+        return auth_info
 
     @classmethod
-    def authenticate(cls, db, login, password, user_agent_env):
+    def authenticate(cls, db, credential, user_agent_env):
         """Verifies and returns the user ID corresponding to the given
           ``login`` and ``password`` combination, or False if there was
           no matching user.
            :param str db: the database on which user is trying to authenticate
            :param str login: username
-           :param str password: user password
+           :param dict credential: user credential
            :param dict user_agent_env: environment dictionary describing any
                relevant environment attributes
         """
-        uid = cls._login(db, login, password, user_agent_env=user_agent_env)
+        auth_info = cls._login(db, credential, user_agent_env=user_agent_env)
         if user_agent_env and user_agent_env.get('base_location'):
             with cls.pool.cursor() as cr:
-                env = api.Environment(cr, uid, {})
+                env = api.Environment(cr, auth_info['uid'], {})
                 if env.user.has_group('base.group_system'):
                     # Successfully logged in as system user!
                     # Attempt to guess the web base url...
@@ -920,7 +925,7 @@ class Users(models.Model):
                             ICP.set_param('web.base.url', base)
                     except Exception:
                         _logger.exception("Failed to update web.base.url configuration parameter")
-        return uid
+        return auth_info
 
     @classmethod
     @tools.ormcache('uid', 'passwd')
@@ -936,19 +941,39 @@ class Users(models.Model):
             with self._assert_can_auth(user=uid):
                 if not self.env.user.active:
                     raise AccessDenied()
-                self._check_credentials(passwd, {'interactive': False})
+                credential = {'login': uid, 'password': passwd, 'type': 'password'}
+                self._check_credentials(credential, {'interactive': False})
 
     def _get_session_token_fields(self):
         return {'id', 'login', 'password', 'active'}
+
+    def _get_session_token_query_params(self):
+        database_secret = SQL("SELECT value FROM ir_config_parameter WHERE key='database.secret'")
+        fields = SQL(", ").join(
+            SQL.identifier(self._table, fname)
+            for fname in sorted(self._get_session_token_fields())
+            # To handle `auth_passkey_key_ids`,
+            # which we want in the `_get_session_token_fields` list for the cache invalidation mechanism
+            # but which we do not want here as it isn't an actual column in the res_users table.
+            # Instead, the left join to that table is done with an override of `_get_session_token_query_params`.
+            if not self._fields[fname].relational
+        )
+        return {
+            "select": SQL("(%s), %s", database_secret, fields),
+            "from": SQL("res_users"),
+            "joins": SQL(""),
+            "where": SQL("res_users.id = %s", self.id),
+            "group_by": SQL("res_users.id"),
+        }
 
     @tools.ormcache('sid')
     def _compute_session_token(self, sid):
         """ Compute a session token given a session id and a user id """
         # retrieve the fields used to generate the session token
-        session_fields = ', '.join(sorted(self._get_session_token_fields()))
-        self.env.cr.execute("""SELECT %s, (SELECT value FROM ir_config_parameter WHERE key='database.secret')
-                                FROM res_users
-                                WHERE id=%%s""" % (session_fields), (self.id,))
+        self.env.cr.execute(SQL(
+            "SELECT %(select)s FROM %(from)s %(joins)s WHERE %(where)s GROUP BY %(group_by)s",
+            **self._get_session_token_query_params(),
+        ))
         if self.env.cr.rowcount != 1:
             self.env.registry.clear_cache()
             return False
@@ -975,7 +1000,8 @@ class Users(models.Model):
             raise AccessDenied()
 
         # alternatively: use identitycheck wizard?
-        self._check_credentials(old_passwd, {'interactive': True})
+        credential = {'login': self.env.user.login, 'password': old_passwd, 'type': 'password'}
+        self._check_credentials(credential, {'interactive': True})
 
         # use self.env.user here, because it has uid=SUPERUSER_ID
         self.env.user._change_password(new_passwd)
@@ -2062,11 +2088,20 @@ class CheckIdentity(models.TransientModel):
     _description = "Password Check Wizard"
 
     request = fields.Char(readonly=True, groups=fields.NO_ACCESS)
+    auth_method = fields.Selection([('password', 'Password')], default=lambda self: self._get_default_auth_method())
     password = fields.Char()
+
+    def _get_default_auth_method(self):
+        return 'password'
 
     def _check_identity(self):
         try:
-            self.create_uid._check_credentials(self.password, {'interactive': True})
+            credential = {
+                'login': self.env.user.login,
+                'password': self.password,
+                'type': 'password',
+            }
+            self.create_uid._check_credentials(credential, {'interactive': True})
         except AccessDenied:
             raise UserError(_("Incorrect Password, try again or click on Forgot Password to reset your password."))
 
@@ -2178,7 +2213,7 @@ class APIKeysUser(models.Model):
         """ To be overridden if RPC access needs to be restricted to API keys, e.g. for 2FA """
         return False
 
-    def _check_credentials(self, password, user_agent_env):
+    def _check_credentials(self, credential, user_agent_env):
         user_agent_env = user_agent_env or {}
         if user_agent_env.get('interactive', True):
             if 'interactive' not in user_agent_env:
@@ -2187,17 +2222,21 @@ class APIKeysUser(models.Model):
                     Check calls and overrides to ensure the 'interactive' key is properly set in \
                     all _check_credentials environments"
                 )
-            return super()._check_credentials(password, user_agent_env)
+            return super()._check_credentials(credential, user_agent_env)
 
         if not self.env.user._rpc_api_keys_only():
             try:
-                return super()._check_credentials(password, user_agent_env)
+                return super()._check_credentials(credential, user_agent_env)
             except AccessDenied:
                 pass
 
         # 'rpc' scope does not really exist, we basically require a global key (scope NULL)
-        if self.env['res.users.apikeys']._check_credentials(scope='rpc', key=password) == self.env.uid:
-            return
+        if self.env['res.users.apikeys']._check_credentials(scope='rpc', key=credential['password']) == self.env.uid:
+            return {
+                'uid': self.env.user.id,
+                'auth_method': 'apikey',
+                'mfa': 'default',
+            }
 
         raise AccessDenied()
 

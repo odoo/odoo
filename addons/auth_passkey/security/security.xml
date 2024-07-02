@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.rule" id="rule_auth_passkey_key_user">
+        <field name="name">Passkeys: Users can only access own Passkeys</field>
+        <field name="model_id" ref="model_auth_passkey_key"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="1"/>
+    </record>
+
+    <record model="ir.rule" id="rule_auth_passkey_key_admin">
+        <field name="name">Passkeys: Admins can view and delete other peoples Passkeys</field>
+        <field name="model_id" ref="model_auth_passkey_key"/>
+        <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+    </record>
+</odoo>

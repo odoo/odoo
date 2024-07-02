@@ -73,6 +73,7 @@ PKGS_TO_INSTALL="
     python3-requests \
     python3-serial \
     python3-tz \
+    python3-cbor2 \
     rsync \
     screen \
     swig \
