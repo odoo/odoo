@@ -12,7 +12,7 @@ QUnit.module("utils", () => {
     QUnit.test("LazyComponent loads the required bundle", async function (assert) {
         class Test extends Component {
             static template = xml`
-                <LazyComponent bundle="'test_assetsbundle.lazy_test_component'" Component="'LazyTestComponent'" props="childProps"/>
+                <LazyComponent bundles="['test_assetsbundle.lazy_test_component']" Component="'LazyTestComponent'" props="childProps"/>
             `;
             static components = { LazyComponent };
             static props = ["*"];

@@ -10,6 +10,7 @@ import { WithSearch } from "@web/search/with_search/with_search";
 import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { useActionLinks } from "@web/views/view_hook";
 import { computeViewClassName } from "./utils";
+import { loadBundle } from "@web/core/assets";
 import {
     Component,
     markRaw,
@@ -21,10 +22,7 @@ import {
 } from "@odoo/owl";
 const viewRegistry = registry.category("views");
 
-viewRegistry.addValidation({
-    Controller: { validate: (c) => c.prototype instanceof Component },
-    "*": true,
-});
+const DEFAULT_LAZY_BUNDLE = "web.assets_backend_lazy";
 
 /** @typedef {Object} Config
  *  @property {integer|false} actionId
@@ -328,6 +326,11 @@ export class View extends Component {
                 subType = null;
             }
         }
+
+        if (!descr.Controller) {
+            await loadBundle(DEFAULT_LAZY_BUNDLE);
+        }
+        descr = viewRegistry.get(subType || props.type);
 
         Object.assign(this.env.config, {
             rawArch: arch,
