@@ -111,6 +111,7 @@
             'website_sale/static/src/scss/website_sale_backend.scss',
             'website_sale/static/src/js/tours/website_sale_shop.js',
             'website_sale/static/src/xml/website_sale.xml',
+            'website_sale/static/src/js/components/media_dialog/*',
         ],
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',
@@ -127,8 +128,11 @@
             'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',
         ],
         'web.assets_tests': [
-            'website_sale/static/tests/**/*',
+            'website_sale/static/tests/tours/**/*',
         ],
+        'web.qunit_suite_tests': [
+            'website_sale/static/tests/*.js',
+        ]
     },
     'license': 'LGPL-3',
 }
