@@ -4203,8 +4203,9 @@ class _RelationalMulti(_Relational):
                 browse = lambda it: comodel.browse((it and NewId(it),))
             else:
                 browse = comodel.browse
-            # determine the value ids
-            ids = OrderedSet(record[self.name]._ids if validate else ())
+            # Determine the current ids: if record is a new record without origin, we don't want
+            # to take default value into account (see the last block of Field.__get__())
+            ids = OrderedSet(record[self.name]._ids if record._origin else ())
             # modify ids with the commands
             for command in value:
                 if isinstance(command, (tuple, list)):
