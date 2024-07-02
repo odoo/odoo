@@ -632,7 +632,13 @@ export const editorCommands = {
 
         function getFonts(selectedNodes) {
             return selectedNodes.flatMap(node => {
-                let font = closestElement(node, "font") || closestElement(node, "span");
+                let font = closestElement(node, "font, a");
+                if (!font || font.nodeName === "A") {
+                    font = closestElement(node, "span, a");
+                    if (font && font.nodeName === "A") {
+                        font = null;
+                    }
+                }
                 const children = font && descendants(font);
                 if (font && (font.nodeName === 'FONT' || (font.nodeName === 'SPAN' && font.style[mode]))) {
                     // Partially selected <font>: split it.
