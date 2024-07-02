@@ -48,6 +48,7 @@ class MaintenanceEquipmentCategory(models.Model):
     alias_id = fields.Many2one(help="Email alias for this equipment category. New emails will automatically "
         "create a new equipment under this category.")
     fold = fields.Boolean(string='Folded in Maintenance Pipe', compute='_compute_fold', store=True)
+    equipment_properties_definition = fields.PropertiesDefinition('Equipment Properties')
 
     def _compute_equipment_count(self):
         equipment_data = self.env['maintenance.equipment']._read_group([('category_id', 'in', self.ids)], ['category_id'], ['__count'])
@@ -163,6 +164,8 @@ class MaintenanceEquipment(models.Model):
     color = fields.Integer('Color Index')
     scrap_date = fields.Date('Scrap Date')
     maintenance_ids = fields.One2many('maintenance.request', 'equipment_id')
+    equipment_properties = fields.Properties('Properties', definition='category_id.equipment_properties_definition', copy=True)
+    match_serial = fields.Boolean(compute='_compute_match_serial')
 
     @api.onchange('category_id')
     def _onchange_category_id(self):
@@ -192,6 +195,20 @@ class MaintenanceEquipment(models.Model):
         """
         category_ids = categories._search([], order=categories._order, access_rights_uid=SUPERUSER_ID)
         return categories.browse(category_ids)
+
+    @api.depends('serial_no')
+    def _compute_match_serial(self):
+        for equipment in self:
+            equipment.match_serial = False
+            has_match_serial = self.env['stock.lot'].search_count([('name', '=', equipment.serial_no)])
+            if has_match_serial:
+                equipment.match_serial = True
+
+    def action_open_matched_serial(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_production_lot_form")
+        action['context'] = {'search_default_name': self.serial_no}
+        return action
 
 
 class MaintenanceRequest(models.Model):

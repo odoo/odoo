@@ -8,7 +8,7 @@ import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { Component, useState, onWillUpdateProps, onWillStart, onWillDestroy } from "@odoo/owl";
 
-function formatMinutes(value) {
+export function formatMinutes(value) {
     if (value === false) {
         return "";
     }

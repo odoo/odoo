@@ -108,6 +108,15 @@
         <field name="mode">primary</field>
         <field name="inherit_id" ref="mrp_production_workorder_tree_editable_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='duration_expected']" position="before">
+                <field name="qty_producing_duration_expected" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='duration_expected']" position="attributes">
+                <attribute name="column_invisible">not parent.qty_producing == 0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='duration_expected']" position="after">
+                <field name="duration_expected" widget="mrp_qty_producing_duration_expected" column_invisible="parent.qty_producing == 0" readonly="state in ['cancel', 'done']"/>
+            </xpath>
             <xpath expr="//field[@name='show_json_popover']" position='before'>
                 <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only" title="Open Work Order" context="{'default_workcenter_id': workcenter_id}"/>
             </xpath>
