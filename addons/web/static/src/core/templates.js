@@ -25,7 +25,16 @@ let blockId = 0;
 const templates = {};
 const parsedTemplates = {};
 const info = {};
+
+const alreadyExists = new Set();
 export function registerTemplate(name, url, templateString) {
+    const e = JSON.stringify([...arguments]);
+    if (alreadyExists.has(e)) {
+        console.log("DUPLICATE TEMPLATE FOR", ...arguments);
+        return;
+    }
+    alreadyExists.add(e);
+
     if (blockType !== "templates") {
         blockType = "templates";
         blockId++;
@@ -39,7 +48,15 @@ export function registerTemplate(name, url, templateString) {
 
 const templateExtensions = {};
 const parsedTemplateExtensions = {};
+const extAlreadyExists = new Set();
 export function registerTemplateExtension(inheritFrom, url, templateString) {
+    const e = JSON.stringify([inheritFrom, url, templateString]);
+    if (extAlreadyExists.has(e)) {
+        console.log("DUPLICATE EXT FOR", inheritFrom, url, templateString);
+        return;
+    }
+    extAlreadyExists.add(e);
+
     if (blockType !== "extensions") {
         blockType = "extensions";
         blockId++;
