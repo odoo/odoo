@@ -21,7 +21,7 @@ patch(Thread.prototype, {
         return this.recipientsCount === this.recipients.length;
     },
     closeChatWindow() {
-        const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(this));
+        const chatWindow = this.store.chatWindows.find((c) => c.thread?.eq(this));
         chatWindow?.close({ notifyState: false });
     },
     async leave() {
@@ -65,7 +65,7 @@ patch(Thread.prototype, {
         super.open(replaceNewMessageChatWindow);
     },
     async unpin() {
-        const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(this));
+        const chatWindow = this.store.chatWindows.find((c) => c.thread?.eq(this));
         await chatWindow?.close();
         super.unpin(...arguments);
     },

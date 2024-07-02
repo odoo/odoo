@@ -82,6 +82,7 @@ export class Store extends BaseStore {
      * @type {string[]}
      */
     channel_types_with_seen_infos = [];
+    chatWindows = Record.many("ChatWindow");
     /** This is the current logged partner / guest */
     self = Record.one("Persona");
     /**
@@ -147,11 +148,11 @@ export class Store extends BaseStore {
     }
 
     get visibleChatWindows() {
-        return this.discuss.chatWindows.filter((chatWindow) => !chatWindow.hidden);
+        return this.chatWindows.filter((chatWindow) => !chatWindow.hidden);
     }
 
     get hiddenChatWindows() {
-        return this.discuss.chatWindows.filter((chatWindow) => chatWindow.hidden);
+        return this.chatWindows.filter((chatWindow) => chatWindow.hidden);
     }
 
     get maxVisibleChatWindows() {
@@ -170,7 +171,7 @@ export class Store extends BaseStore {
     }
 
     closeNewMessage() {
-        const newMessageChatWindow = this.discuss.chatWindows.find(({ thread }) => !thread);
+        const newMessageChatWindow = this.chatWindows.find(({ thread }) => !thread);
         newMessageChatWindow?.close();
     }
 
@@ -564,7 +565,7 @@ export class Store extends BaseStore {
     }
 
     openNewMessage({ openMessagingMenuOnClose } = {}) {
-        if (this.discuss.chatWindows.some(({ thread }) => !thread)) {
+        if (this.chatWindows.some(({ thread }) => !thread)) {
             // New message chat window is already opened.
             return;
         }
