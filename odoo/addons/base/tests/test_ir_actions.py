@@ -515,6 +515,16 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             self.action.with_context(self.context).run()
         self.assertEqual(num_requests, 2)
 
+    def test_90_convert_to_float(self):
+        # make sure eval_value convert the value into float for float-type fields
+        self.action.write({
+            'state': 'object_write',
+            'update_path': 'partner_latitude',
+            'value': '20.99',
+        })
+        self.assertEqual(self.action._eval_value()[self.action.id], 20.99)
+
+
 class TestCommonCustomFields(common.TransactionCase):
     MODEL = 'res.partner'
     COMODEL = 'res.users'
