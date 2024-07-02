@@ -86,7 +86,7 @@ messageActionsRegistry
                     file_ids: component.message.attachments.map((rec) => rec.id),
                     zip_name: `attachments_${DateTime.local().toFormat("HHmmddMMyyyy")}.zip`,
                 },
-                url: "mail/attachment/zip",
+                url: "/mail/attachment/zip",
             }),
         sequence: 55,
     })
