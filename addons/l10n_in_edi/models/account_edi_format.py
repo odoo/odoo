@@ -168,6 +168,7 @@ class AccountEdiFormat(models.Model):
         if not response.get("error"):
             json_dump = json.dumps(response.get("data"))
             json_name = "%s_einvoice.json" % (invoice.name.replace("/", "_"))
+            invoice.l10n_in_irn_number = response.get('data', {}).get('Irn', '')
             attachment = self.env["ir.attachment"].create({
                 "name": json_name,
                 "raw": json_dump.encode(),
