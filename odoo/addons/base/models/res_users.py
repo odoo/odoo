@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import binascii
 import contextlib
 import datetime
 import hmac
@@ -9,7 +8,7 @@ import ipaddress
 import itertools
 import json
 import logging
-import os
+import secrets
 import time
 from collections import defaultdict
 from functools import wraps
@@ -2287,7 +2286,7 @@ class APIKeys(models.Model):
 
         """
         # no need to clear the LRU when *adding* a key, only when removing
-        k = binascii.hexlify(os.urandom(API_KEY_SIZE)).decode()
+        k = secrets.token_hex(API_KEY_SIZE)
         self.env.cr.execute("""
         INSERT INTO {table} (name, user_id, scope, key, index)
         VALUES (%s, %s, %s, %s, %s)
