@@ -35,6 +35,17 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     */
+    _computeWidgetState(methodName){
+        switch(methodName){
+            case 'applyDescription': {
+                return this.$target[0].textContent;
+            }
+        }
+        return this._super(...arguments);
+    },
+    /**
      * @private
      * @override
      */
@@ -83,6 +94,17 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
         this._setOptionValue('showVariants', true);
         this._super.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    applyDescription(value) {
+        this.$target[0].textContent = value;
+    }
 });
 
 options.registry.dynamic_snippet_products = dynamicSnippetProductsOptions;

@@ -973,7 +973,7 @@ options.Class.include({
 
         // Some blocks flicker when we start their public widgets, so we skip
         // the refresh for them to avoid the flickering.
-        const targetNoRefreshSelector = ".s_instagram_page";
+        const targetNoRefreshSelector = ".s_instagram_page, .s_dynamic_snippet_products";
         // TODO: we should review the way public widgets are restarted when
         // converting to OWL and a new API.
         if (this.options.isWebsite && !widget.$el.closest('[data-no-widget-refresh="true"]').length
