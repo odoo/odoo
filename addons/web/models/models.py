@@ -117,6 +117,8 @@ class Base(models.AbstractModel):
                     vals['id']: cleanup(vals)
                     for vals in co_records.web_read(extra_fields)
                 }
+                if not many2one_data:
+                    continue
 
                 if 'display_name' in field_spec['fields']:
                     for rec in co_records.sudo():
