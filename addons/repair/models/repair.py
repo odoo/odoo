@@ -314,7 +314,9 @@ class Repair(models.Model):
     def create(self, vals_list):
         # We generate a standard reference
         for vals in vals_list:
-            picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id', self.default_get('picking_type_id')))
+            picking_type = self.env['stock.picking.type'].browse(
+                vals.get('picking_type_id', self.default_get(['picking_type_id'])['picking_type_id'])
+            )
             if 'picking_type_id' not in vals:
                 vals['picking_type_id'] = picking_type.id
             if not vals.get('name', False) or vals['name'] == 'New':
