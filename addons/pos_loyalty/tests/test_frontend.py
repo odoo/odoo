@@ -342,9 +342,9 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         (self.promo_programs | self.coupon_program).write({'active': False})
 
-        partner_aaa = self.env['res.partner'].create({'name': 'Test Partner AAA'})
-        partner_bbb = self.env['res.partner'].create({'name': 'Test Partner BBB'})
-        partner_ccc = self.env['res.partner'].create({'name': 'Test Partner CCC'})
+        partner_aaa = self.env['res.partner'].create({'name': 'AAA Test Partner'})
+        partner_bbb = self.env['res.partner'].create({'name': 'BBB Test Partner'})
+        partner_ccc = self.env['res.partner'].create({'name': 'CCC Test Partner'})
 
         # Part 1
         self.start_tour(
@@ -408,7 +408,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         (self.promo_programs | self.coupon_program).write({'active': False})
 
-        partner_aaa = self.env['res.partner'].create({'name': 'Test Partner AAA'})
+        partner_aaa = self.env['res.partner'].create({'name': 'AAA Test Partner'})
 
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
