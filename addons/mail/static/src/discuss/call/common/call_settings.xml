@@ -31,7 +31,7 @@
                     <input class="form-check-input" type="radio" t-att-checked="store.settings.use_push_to_talk ? 'checked' : ''"/>
                     <span class="text-start flex-grow-1 mx-3">Push to Talk</span>
                 </button>
-                <span t-if="store.settings.use_push_to_talk and !pttExtService.isEnabled" class="small text-muted fst-italic mb-3" t-out="pttExtService.downloadText"/>
+                <span t-if="store.settings.use_push_to_talk and !isMobileOS and !pttExtService.isEnabled" class="small text-muted fst-italic mb-3" t-out="pttExtService.downloadText"/>
             </div>
             <div class="d-flex flex-column">
                 <label t-if="!store.settings.use_push_to_talk" class="d-flex flex-column flex-wrap flex-grow-1 align-items-start" title="Voice detection threshold" aria-label="Voice detection threshold">
@@ -42,7 +42,7 @@
                     </div>
                 </label>
                 <div t-if="store.settings.use_push_to_talk" class="d-flex" t-att-class="{'flex-column': props.isCompact}">
-                    <div class="d-flex flex-column align-items-center" t-att-class="{'me-1 w-50': !props.isCompact}">
+                    <div t-if="!isMobileOS" class="d-flex flex-column align-items-center" t-att-class="{'me-1 w-50': !props.isCompact}">
                         <label class="d-flex flex-column align-items-start flex-wrap w-100" title="Push-to-talk key" aria-label="Push-to-talk key">
                             <span class="me-2 my-1 text-truncate text-wrap">Push-to-talk key</span>
                             <span class="d-flex border border-2 rounded w-100" t-attf-class="{{ store.settings.isRegisteringKey ? 'border-danger' : 'border-primary' }}">
