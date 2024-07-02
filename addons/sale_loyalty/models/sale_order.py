@@ -666,6 +666,12 @@ class SaleOrder(models.Model):
                 # If the total is 0 again without the payment reward it will be removed.
                 if reward.reward_type == 'discount' and total_is_zero and (not has_payment_reward or reward.program_id.is_payment_program):
                     continue
+                search_domain = expression.AND([
+                    reward._get_active_products_domain(),
+                    [('id', "=", reward.id)]
+                ])
+                if reward.search_count(search_domain) == 0:
+                    continue
                 if points >= reward.required_points:
                     result[coupon] |= reward
         return result

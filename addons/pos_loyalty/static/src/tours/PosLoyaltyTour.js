@@ -399,3 +399,17 @@ PosLoyalty.check.orderTotalIs('90'),
 PosLoyalty.check.pointsAwardedAre("90"),
 PosLoyalty.exec.finalizeOrder("Cash", "90"),
 Tour.register("PosLoyaltyPointsGlobalDiscountProgramNoDomain", { test: true, url: "/pos/web" }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.confirmOpeningPopup();
+
+ProductScreen.do.clickDisplayedProduct('Test Product A');
+ProductScreen.check.selectedOrderlineHas('Test Product A', '1.00', '100.00');
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer("partner_a");
+PosLoyalty.check.isRewardButtonHighlighted(false);
+
+Tour.register('PosLoyaltyArchivedRewardProducts', {test: true, url: '/pos/web'}, getSteps());
