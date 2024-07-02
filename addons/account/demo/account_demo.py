@@ -115,7 +115,7 @@ class AccountChartTemplate(models.AbstractModel):
         )
         default_receivable = self.env.ref('base.res_partner_3').with_company(company).property_account_receivable_id
         income_account = self.env['account.account'].search([
-            ('company_id', '=', cid),
+            ('company_ids', '=', cid),
             ('account_type', '=', 'income'),
             ('id', '!=', (company or self.env.company).account_journal_early_pay_discount_gain_account_id.id)
         ], limit=1)

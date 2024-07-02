@@ -198,7 +198,8 @@ class AccountChartTemplate(models.AbstractModel):
         if not reload_template and (not company.root_id._existing_accounting() or self.env.ref('base.module_account').demo):
             for model in ('account.move',) + TEMPLATE_MODELS[::-1]:
                 if not company.parent_id:
-                    self.env[model].sudo().with_context(active_test=False).search([('company_id', 'child_of', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+                    company_field = 'company_id' if 'company_id' in self.env[model] else 'company_ids'
+                    self.env[model].sudo().with_context(active_test=False).search([(company_field, 'child_of', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
 
         data = self._get_chart_template_data(template_code)
         template_data = data.pop('template_data')
@@ -358,7 +359,7 @@ class AccountChartTemplate(models.AbstractModel):
                         query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
                         account_company_mapping_alias = query.join('account_account', 'id', 'account_company_mapping', 'account_id', 'company_mapping_ids')
                         query.add_where("%s SIMILAR TO %s", [SQL.identifier(account_company_mapping_alias, 'code'), f'{values["code"]}0*'])
-                        query.add_where("%s = %s", [SQL.identifier(account_company_mapping_alias, 'company_id'), SQL.identifier('account_account', 'company_id')])
+                        query.add_where("%s = %s", [SQL.identifier(account_company_mapping_alias, 'company_id'), self.env.company.id])
                         accounts = self.env['account.account'].browse(query)
                         existing_account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
                         if existing_account:
@@ -798,10 +799,8 @@ class AccountChartTemplate(models.AbstractModel):
             return
 
         def create_foreign_tax_account(existing_account, additional_label):
-            new_code = self.env['account.account']._search_new_account_code(
-                existing_account.code,
-                existing_account.company_id,
-            )
+            company = self.env.company if self.env.company in existing_account.company_ids else (existing_account.company_ids & self.env.companies)[:1]
+            new_code = self.env['account.account']._search_new_account_code(existing_account.code, company)
             return self.env['account.account'].create({
                 'name': f"{existing_account.name} - {additional_label}",
                 'code': new_code,

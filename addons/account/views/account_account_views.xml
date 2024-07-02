@@ -32,7 +32,7 @@
                                 </div>
                             </button>
                         </div>
-                        <field name="company_id" invisible="1"/>
+                        <field name="company_ids" invisible="1"/>
                         <div>
                             <h1 style="font-size: 1.9rem;">
                                 <div class="row">
@@ -53,7 +53,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <field name="company_id" invisible="1"/>
+                                <field name="company_ids" invisible="1"/>
                             </h1>
                         </div>
                         <notebook>
@@ -70,7 +70,7 @@
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                         <field name="deprecated"/>
                                         <field name="group_id"/>
-                                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                        <field name="company_ids" widget="many2many_tags" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     </group>
                                 </group>
                             </page>
@@ -96,7 +96,7 @@
             <field name="model">account.account</field>
             <field name="arch" type="xml">
                 <tree editable="top" create="1" delete="1" multi_edit="1" string="Chart of accounts"  open_form_view="True">
-                    <field name="company_id" column_invisible="True"/>
+                    <field name="company_ids" column_invisible="True"/>
                     <field name="code"/>
                     <field name="name"/>
                     <field name="account_type" widget="account_type_selection"/>
@@ -108,7 +108,7 @@
                     <field name="tag_ids" optional="hide" widget="many2many_tags"/>
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
-                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    <field name="company_ids" widget="many2many_tags" options="{'no_create': True}" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>

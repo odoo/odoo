@@ -90,12 +90,12 @@
                         <page name="account_mapping" string="Account Mapping" groups="account.group_account_readonly">
                             <field name="account_ids" widget="one2many" nolabel="1">
                                 <tree string="Account Mapping" editable="bottom">
-                                    <field name="account_src_id" domain="['|', '|', ('company_id', '=', False), ('company_id', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
-                                    <field name="account_dest_id" domain="['|', '|', ('company_id', '=', False), ('company_id', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
+                                    <field name="account_src_id" domain="['|', ('company_ids', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
+                                    <field name="account_dest_id" domain="['|', ('company_ids', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
                                 </tree>
                                 <form string="Account Mapping">
-                                    <field name="account_src_id" domain="['|', '|', ('company_id', '=', False), ('company_id', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
-                                    <field name="account_dest_id" domain="['|', '|', ('company_id', '=', False), ('company_id', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
+                                    <field name="account_src_id" domain="['|', ('company_ids', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
+                                    <field name="account_dest_id" domain="['|', ('company_ids', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
                                 </form>
                             </field>
                         </page>

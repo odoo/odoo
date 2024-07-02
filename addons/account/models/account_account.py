@@ -16,13 +16,28 @@ ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
 ACCOUNT_CODE_REGEX = re.compile(r'^[A-Za-z0-9.]+$')
 ACCOUNT_CODE_NUMBER_REGEX = re.compile(r'(.*?)(\d*)(\D*?)$')
 
+
+def check_company_domain_parent_of(self, companies):
+    if isinstance(companies, str):
+        return ['|', ('company_ids', '=', False), ('company_ids', 'parent_of', [companies])]
+
+    companies = [id for id in models.to_company_ids(companies) if id]
+    if not companies:
+        return [('company_ids', '=', False)]
+
+    return ['|', ('company_ids', '=', False), ('company_ids', 'in', [
+        int(parent)
+        for rec in self.env['res.company'].sudo().browse(companies)
+        for parent in rec.parent_path.split('/')[:-1]
+    ])]
+
+
 class AccountAccount(models.Model):
     _name = "account.account"
     _inherit = ['mail.thread']
     _description = "Account"
-    _order = "code, company_id"
-    _check_company_auto = True
-    _check_company_domain = models.check_company_domain_parent_of
+    _order = "code"
+    _check_company_domain = check_company_domain_parent_of
 
     @api.constrains('account_type', 'reconcile')
     def _check_reconcile(self):
@@ -34,7 +49,7 @@ class AccountAccount(models.Model):
     def _check_account_type_unique_current_year_earning(self):
         result = self._read_group(
             domain=[('account_type', '=', 'equity_unaffected')],
-            groupby=['company_id'],
+            groupby=['company_ids'],
             aggregates=['id:recordset'],
             having=[('__count', '>', 1)],
         )
@@ -44,7 +59,7 @@ class AccountAccount(models.Model):
     name = fields.Char(string="Account Name", required=True, tracking=True, company_dependent=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True, company_dependent=True,
         help="Forces all journal items in this account to have a specific currency (i.e. bank journals). If no currency is set, entries can use any currency.")
-    company_currency_id = fields.Many2one(related='company_id.currency_id')
+    company_currency_id = fields.Many2one(compute='_compute_company_currency_id')
     code = fields.Char(size=64, required=True, tracking=True, company_dependent=True)
     deprecated = fields.Boolean(default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
@@ -97,10 +112,10 @@ class AccountAccount(models.Model):
         help="Check this box if this account allows invoices & payments matching of journal items.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes',
-        check_company=True,
+        domain="[('company_id', 'parent_of', company_ids)]",
         context={'append_type_to_tax_name': True})
     note = fields.Text('Internal Notes', tracking=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=False,
+    company_ids = fields.Many2many('res.company', string='Companies', required=True, readonly=False,
         default=lambda self: self.env.company)
     company_mapping_ids = fields.One2many(comodel_name='account.company.mapping', inverse_name='account_id')
     tag_ids = fields.Many2many(
@@ -111,13 +126,14 @@ class AccountAccount(models.Model):
         ondelete='restrict',
     )
     group_id = fields.Many2one('account.group', compute='_compute_account_group', store=True, readonly=True,
+                               company_dependent=True,
                                help="Account prefixes can determine account groups.")
     root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True, precompute=True)
     allowed_journal_ids = fields.Many2many(
         'account.journal',
         string="Allowed Journals",
         help="Define in which journals this account can be used. If empty, can be used in all journals.",
-        check_company=True,
+        domain="[('company_id', 'parent_of', company_ids)]",
     )
     opening_debit = fields.Monetary(string="Opening Debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', currency_field='company_currency_id')
     opening_credit = fields.Monetary(string="Opening Credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', currency_field='company_currency_id')
@@ -135,12 +151,15 @@ class AccountAccount(models.Model):
             return SQL("split_part(account_account.account_type, '_', 1)", to_flush=self._fields['account_type'])
         return super()._field_to_sql(alias, fname, query, flush)
 
-    @api.constrains('company_id', 'code')
+    @api.constrains('company_ids', 'code')
     def _constrains_code(self):
         # check for duplicates in each root company
         # Note: filtering on non-false codes is needed because inverses are called after stored fields are written to DB,
         # so on CoA loading this constraint will be called first with all codes set to False.
-        by_root_company = self.filtered(lambda a: a.code).grouped(lambda record: record.company_id.root_id)
+        by_root_company = defaultdict(self.env['account.account'])
+        for account in self.filtered(lambda a: a.code):
+            for company in account.company_ids:
+                by_root_company[company] |= account
         for root_company, records in by_root_company.items():
             by_code = records.grouped('code')
             if len(by_code) < len(records):
@@ -149,14 +168,14 @@ class AccountAccount(models.Model):
             else:
                 # search for duplicates of self in database
                 duplicates = self.search([
-                    ('company_id', 'child_of', root_company.id),
+                    ('company_ids', 'child_of', root_company.id),
                     ('code', 'in', list(by_code)),
                     ('id', 'not in', records.ids),
                 ])
             if duplicates:
                 raise ValidationError(
                     _("The code of the account must be unique per company!")
-                    + "\n" + "\n".join(f"- {duplicate.code} in {duplicate.company_id.name}" for duplicate in duplicates)
+                    + "\n" + "\n".join(f"- {duplicate.code} in {duplicate.company_ids.mapped('name')}" for duplicate in duplicates)
                 )
 
     @api.constrains('reconcile', 'account_type', 'tax_ids')
@@ -258,10 +277,14 @@ class AccountAccount(models.Model):
 
     @api.constrains('company_id')
     def _check_company_consistency(self):
-        for company, accounts in tools.groupby(self, lambda account: account.company_id):
+        accounts_by_company = defaultdict(self.env['account.account'])
+        for account in self:
+            for company in account.company_ids:
+                accounts_by_company[company] |= account
+        for company, accounts in accounts_by_company:
             if self.env['account.move.line'].search_count([
                 ('account_id', 'in', [account.id for account in accounts]),
-                '!', ('company_id', 'child_of', company.id)
+                '!', ('', 'child_of', company.id)
             ], limit=1):
                 raise UserError(_("You can't change the company of your account since there are some journal items linked to it."))
 
@@ -415,7 +438,7 @@ class AccountAccount(models.Model):
             cache = {start_code}
 
         def code_is_available(new_code):
-            return new_code not in cache and not self.search_count([('code', '=', new_code), ('company_id', 'child_of', company.root_id.id)], limit=1)
+            return new_code not in cache and not self.search_count([('code', '=', new_code), ('company_ids', 'child_of', company.root_id.id)], limit=1)
 
         if code_is_available(start_code):
             return start_code
@@ -434,11 +457,16 @@ class AccountAccount(models.Model):
 
         raise UserError(_('Cannot generate an unused account code.'))
 
+    @api.depends_context('allowed_company_ids')
     def _compute_current_balance(self):
         balances = {
             account.id: balance
             for account, balance in self.env['account.move.line']._read_group(
-                domain=[('account_id', 'in', self.ids), ('parent_state', '=', 'posted')],
+                domain=[
+                    ('account_id', 'in', self.ids),
+                    ('parent_state', '=', 'posted'),
+                    self.env['account.move.line']._check_company_domain(self.env.companies),
+                ],
                 groupby=['account_id'],
                 aggregates=['balance:sum'],
             )
@@ -446,12 +474,19 @@ class AccountAccount(models.Model):
         for record in self:
             record.current_balance = balances.get(record.id, 0)
 
+    @api.depends_context('allowed_company_ids')
     def _compute_related_taxes_amount(self):
         for record in self:
             record.related_taxes_amount = self.env['account.tax'].search_count([
                 ('repartition_line_ids.account_id', '=', record.id),
+                self.env['account.tax']._check_company_domain(self.env.companies),
             ])
 
+    @api.depends_context('allowed_company_ids')
+    def _compute_company_currency_id(self):
+        self.company_currency_id = self.env.company.currency_id
+
+    @api.depends_context('allowed_company_ids')
     def _compute_opening_debit_credit(self):
         self.opening_debit = 0
         self.opening_credit = 0
@@ -464,11 +499,13 @@ class AccountAccount(models.Model):
                    SUM(line.debit) AS debit,
                    SUM(line.credit) AS credit
               FROM account_move_line line
-              JOIN res_company comp ON comp.id = line.company_id
+              JOIN res_company comp
+                ON comp.id = line.company_id
+                   AND comp.id IN %s
              WHERE line.move_id = comp.account_opening_move_id
                AND line.account_id IN %s
              GROUP BY line.account_id
-        """, [tuple(self.ids)])
+        """, [tuple(self.env.companies.ids), tuple(self.ids)])
         result = {r['account_id']: r for r in self.env.cr.dictfetchall()}
         for record in self:
             res = result.get(record.id) or {'debit': 0, 'credit': 0, 'balance': 0}
@@ -498,18 +535,18 @@ class AccountAccount(models.Model):
         assert field_name in self._fields
 
         all_accounts = self.search_read(
-            domain=[('company_id', 'in', accounts_to_process.company_id.ids)],
-            fields=['code', field_name, 'company_id'],
+            domain=self._check_company_domain(self.env.company),
+            fields=['code', field_name],
             order='code',
         )
         accounts_with_codes = defaultdict(dict)
         # We want to group accounts by company to only search for account codes of the current company
         for account in all_accounts:
-            accounts_with_codes[account['company_id'][0]][account['code']] = account[field_name]
+            accounts_with_codes[account['code']] = account[field_name]
         for account in accounts_to_process:
-            codes_list = list(accounts_with_codes[account.company_id.id].keys())
+            codes_list = list(accounts_with_codes.keys())
             closest_index = bisect_left(codes_list, account.code) - 1
-            account[field_name] = accounts_with_codes[account.company_id.id][codes_list[closest_index]] if closest_index != -1 else default_value
+            account[field_name] = accounts_with_codes[codes_list[closest_index]] if closest_index != -1 else default_value
 
     @api.depends('account_type')
     def _compute_include_initial_balance(self):
@@ -562,7 +599,7 @@ class AccountAccount(models.Model):
             account._set_opening_debit_credit(abs(balance) if balance > 0.0 else 0.0, 'debit')
             account._set_opening_debit_credit(abs(balance) if balance < 0.0 else 0.0, 'credit')
 
-    def _set_opening_debit_credit(self, amount, field):
+    def _set_opening_debit_credit(self, company, amount, field):
         """ Generic function called by both opening_debit and opening_credit's
         inverse function. 'Amount' parameter is the value to be set, and field
         either 'debit' or 'credit', depending on which one of these two fields
@@ -574,7 +611,7 @@ class AccountAccount(models.Model):
             self._cr.precommit.add(self._load_precommit_update_opening_move)
         else:
             data = self._cr.precommit.data['import_account_opening_balance']
-        data.setdefault(self.id, [None, None])
+        data.setdefault(company.id, {}).setdefault(self.id, [None, None])
         index = 0 if field == 'debit' else 1
         data[self.id][index] = amount
 
@@ -698,8 +735,9 @@ class AccountAccount(models.Model):
         cache_map = defaultdict(set)
         for account, vals in zip(self, vals_list):
             if 'code' not in default:
-                company = default.get('company_id', account.company_id)
-                company = company if isinstance(company, models.BaseModel) else account.env['res.company'].browse(company)
+                companies = default.get('company_ids', account.company_ids)
+                companies = companies if isinstance(companies, models.BaseModel) else account.env['res.company'].browse(companies)
+                company = self.env.company if self.env.company in companies else (companies & self.env.companies)[:1]
                 cache = cache_map[company.id]
                 vals['code'] = account._search_new_account_code(account.code, company, cache)
                 cache.add(vals['code'])
@@ -726,14 +764,12 @@ class AccountAccount(models.Model):
         to update the opening move accordingly.
         """
         data = self._cr.precommit.data.pop('import_account_opening_balance', {})
-        accounts = self.browse(data.keys())
 
-        accounts_per_company = defaultdict(lambda: self.env['account.account'])
-        for account in accounts:
-            accounts_per_company[account.company_id] |= account
-
-        for company, company_accounts in accounts_per_company.items():
-            company._update_opening_move({account: data[account.id] for account in company_accounts})
+        for company_id, account_values in data.items():
+            self.env['res_company'].browse(company_id)._update_opening_move({
+                self.env['account.account'].browse(account_id): values
+                for account_id, values in account_values.items()
+            })
 
     def _toggle_reconcile_to_true(self):
         '''Toggle the `reconcile´ boolean from False -> True
@@ -794,7 +830,8 @@ class AccountAccount(models.Model):
         cache_map = defaultdict(list)
         for vals in vals_list:
             if 'prefix' in vals:
-                company = self.env['res.company'].browse(vals.get('company_id')) or self.env.company
+                companies = self.env['res.company'].browse(vals.get('company_ids')) or self.env.companies
+                company = self.env.company if self.env.company in companies else (companies & self.env.companies)[:1]
                 cache = cache_map[company.id]
                 prefix, digits = vals.pop('prefix'), vals.pop('code_digits')
                 start_code = prefix.ljust(digits-1, '0') + '1' if len(prefix) < digits else prefix
@@ -997,33 +1034,42 @@ class AccountGroup(models.Model):
             account_ids = []
         if not company_ids and not account_ids:
             return
-        account_where_clause = SQL('account.company_id IN %s', tuple(company_ids))
-        if account_ids:
-            account_where_clause = SQL('%s AND account.id IN %s', account_where_clause, tuple(account_ids))
 
-        self._cr.execute(SQL("""
+        query = self.env['account.account']._search([])
+        account_group_alias = self.env['account.account']._field_to_sql('account_account', 'group_id', account_query)
+        query.add_where(SQL('account.company_id IN %s', company_ids))
+        if account_ids:
+            query.add_where(SQL('%s AND account.id IN %s', account_where_clause, account_ids))
+
+        self._cr.execute(SQL(
+            """
             WITH relation AS (
-                 SELECT DISTINCT ON (account.id)
-                        account.id AS account_id,
-                        agroup.id AS group_id
-                   FROM account_account account
-                   JOIN res_company account_company ON account_company.id = account.company_id
+                 SELECT DISTINCT ON (account_account.id)
+                        account_account.id AS account_id,
+                        %(account_group_alias)s.id AS group_id
+                   FROM %(from_clause)s
+                   JOIN res_company account_company ON account_company.id IN account_account.company_id
               LEFT JOIN ir_property code_property
                      ON code_property.res_id = 'account.account,' || account.id
                         AND code_property.company_id = account.company_id
-                        AND code_property.fields_id = %s
+                        AND code_property.fields_id = %(account_code_field_id)s
               LEFT JOIN account_group agroup
-                     ON agroup.code_prefix_start <= LEFT(code_property.value_text, char_length(agroup.code_prefix_start))
-                    AND agroup.code_prefix_end >= LEFT(code_property.value_text, char_length(agroup.code_prefix_end))
-                    AND agroup.company_id = split_part(account_company.parent_path, '/', 1)::int
-                  WHERE %s
-               ORDER BY account.id, char_length(agroup.code_prefix_start) DESC, agroup.id
+                     ON %(account_group_alias)s.code_prefix_start <= LEFT(code_property.value_text, char_length(%(account_group_alias)s.code_prefix_start))
+                    AND %(account_group_alias)s.code_prefix_end >= LEFT(code_property.value_text, char_length(%(account_group_alias)s.code_prefix_end))
+                    AND %(account_group_alias)s.company_id = split_part(account_company.parent_path, '/', 1)::int
+                  WHERE %(where_clause)s
+               ORDER BY account_account.id, char_length(%(account_group_alias)s.code_prefix_start) DESC, %(account_group_alias)s.id
             )
             UPDATE account_account
                SET group_id = rel.group_id
               FROM relation rel
              WHERE account_account.id = rel.account_id
-        """, self.env['ir.model.fields']._get('account.account', 'code').id, account_where_clause))
+            """,
+            account_group_alias=account_group_alias,
+            from_clause=query.from_clause,
+            account_code_field_id=self.env['ir.model.fields']._get('account.account', 'code').id,
+            where_clause=query.where_clause,
+        ))
         self.env['account.account'].invalidate_model(['group_id'], flush=False)
 
     def _adapt_parent_account_group(self, company=None):
