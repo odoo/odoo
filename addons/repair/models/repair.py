@@ -5,6 +5,7 @@ from random import randint
 
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons.stock.utils.overview_graph import calculate_date_category
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero, clean_context
 from odoo.tools.misc import format_date, groupby
@@ -65,6 +66,10 @@ class Repair(models.Model):
         'Under Warranty',
         help='If ticked, the sales price will be set to 0 for all products transferred from the repair order.')
     schedule_date = fields.Datetime("Scheduled Date", default=fields.Datetime.now, index=True, required=True, copy=False)
+    date_category = fields.Char(
+        string="Date Category", compute='_compute_date_category',
+        search="_search_date_category", help="TODO", readonly=True
+    )
 
     # Product To Repair
     move_id = fields.Many2one(  # Generated in 'action_repair_done', needed for traceability
@@ -291,6 +296,20 @@ class Repair(models.Model):
                 repair.state in ('confirmed', 'under_repair') and
                 any(not move.picked and move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in repair.move_ids)
             )
+
+    @api.depends('schedule_date')
+    def _compute_date_category(self):
+        for repair in self:
+            repair.date_category = calculate_date_category(self.env.user, repair.schedule_date)
+
+    def _search_date_category(self, operator, value):
+        matching_ids = []
+        for repair in self.env['repair.order'].search([('schedule_date', '!=', False)]):
+            if operator != '=':
+                raise NotImplementedError(_('Operation not supported'))
+            if repair.date_category == value:
+                matching_ids.append(repair.id)
+        return [('id', 'in', matching_ids)]
 
     @api.onchange('product_uom')
     def onchange_product_uom(self):

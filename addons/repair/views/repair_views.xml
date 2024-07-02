@@ -253,6 +253,13 @@
                 <filter string="Cancelled" name="filter_cancel" domain="[('state', '=', 'cancel')]"/>
                 <filter string="Returned" name="returned" domain="[('picking_id', '!=', False), ('picking_id.state', '=', 'done')]"/>
                 <separator/>
+                <filter name="before" string="Before" help="TODO" domain="[('state', '=', 'confirmed'), ('date_category', '=', 'before')]"/>
+                <filter name="yesterday" string="Yesterday" help="TODO" domain="[('state', '=', 'confirmed'), ('date_category', '=', 'yesterday')]"/>
+                <filter name="today" string="Today" help="TODO" domain="[('state', '=', 'confirmed'), ('date_category', '=', 'today')]"/>
+                <filter name="day_1" string="Tomorrow" help="TODO" domain="[('state', '=', 'confirmed'), ('date_category', '=', 'day_1')]"/>
+                <filter name="day_2" string="The day after tomorrow" help="TODO" domain="[('state', '=', 'confirmed'), ('date_category', '=', 'day_2')]"/>
+                <filter name="after" string="After" help="TODO" domain="[('state', '=', 'confirmed'), ('date_category', '=', 'after')]"/>
+                <separator/>
                 <filter string="Ready" name="ready" domain="[('state', 'in', ('confirmed', 'under_repair')),('is_parts_available', '=', True)]" invisible="True"/>
                 <filter string="Late" name="filter_late" domain="[('state', 'in', ('confirmed', 'under_repair')), '|', ('schedule_date', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_parts_late', '=', True)]"/>
                 <filter name="filter_create_date" date="create_date"/>
@@ -341,6 +348,17 @@
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
             <field name="domain">[('picking_type_id', '=', active_id)]</field>
             <field name="context">{'default_picking_type_id': active_id}</field>
+        </record>
+
+        <record id="action_picking_repair_graph" model="ir.actions.act_window">
+            <field name="name">Repair Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">repair.order</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_repair_order_form_filter"/>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_ready': 1}</field>
         </record>
 
         <record id="view_repair_tag_form" model="ir.ui.view">

@@ -11,6 +11,7 @@ from collections import defaultdict
 
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
+from odoo.addons.stock.utils.overview_graph import calculate_date_category
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
@@ -344,16 +345,11 @@ class PickingType(models.Model):
     def _compute_kanban_dashboard_graph(self):
         grouped_records = self._get_aggregated_records_by_date()
 
-        start_today = fields.Date.context_today(self)
-
-        start_yesterday = start_today + timedelta(days=-1)
-        start_day_1 = start_today + timedelta(days=1)
-        start_day_2 = start_today + timedelta(days=2)
-
         summaries = {}
         for picking_type_id, dates, data_series_name in grouped_records:
             summaries[picking_type_id.id] = {
                 'data_series_name': data_series_name,
+                'picking_type_id': picking_type_id.id,
                 'total_before': 0,
                 'total_yesterday': 0,
                 'total_today': 0,
@@ -362,19 +358,8 @@ class PickingType(models.Model):
                 'total_after': 0,
             }
             for p_date in dates:
-                p_date = p_date.astimezone(pytz.UTC).date()
-                if p_date < start_yesterday:
-                    summaries[picking_type_id.id]['total_before'] += 1
-                elif p_date == start_yesterday:
-                    summaries[picking_type_id.id]['total_yesterday'] += 1
-                elif p_date == start_today:
-                    summaries[picking_type_id.id]['total_today'] += 1
-                elif p_date == start_day_1:
-                    summaries[picking_type_id.id]['total_day_1'] += 1
-                elif p_date == start_day_2:
-                    summaries[picking_type_id.id]['total_day_2'] += 1
-                else:
-                    summaries[picking_type_id.id]['total_after'] += 1
+                date_category = calculate_date_category(self.env.user, p_date)
+                summaries[picking_type_id.id]['total_' + date_category] += 1
 
         for picking_type in self:
             picking_type_summary = summaries.get(picking_type.id)
@@ -512,6 +497,8 @@ class PickingType(models.Model):
         if picking_type_summary:
             graph_data = [{
                 'key': picking_type_summary['data_series_name'],
+                # Passing the picking type ID allows for a redirection after clicking
+                'picking_type_id': picking_type_summary['picking_type_id'],
                 'values': [
                     dict(v, value=picking_type_summary[k])
                     for k, v in mapping.items()
@@ -521,6 +508,7 @@ class PickingType(models.Model):
             # Provide random sample data
             graph_data = [{
                 'key': _('Sample data'),
+                'picking_type_id': None,
                 'values': [
                     dict(v, type='sample', value=random.randint(1, 10))
                     for k, v in mapping.items()
@@ -686,6 +674,10 @@ class Picking(models.Model):
         definition='picking_type_id.picking_properties_definition',
         copy=True)
     show_next_pickings = fields.Boolean(compute='_compute_show_next_pickings')
+    date_category = fields.Char(
+        string="Date Category", compute='_compute_date_category',
+        search="_search_date_category", help="TODO", readonly=True
+    )
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -699,6 +691,20 @@ class Picking(models.Model):
     def _compute_has_deadline_issue(self):
         for picking in self:
             picking.has_deadline_issue = picking.date_deadline and picking.date_deadline < picking.scheduled_date or False
+
+    @api.depends('scheduled_date')
+    def _compute_date_category(self):
+        for picking in self:
+            picking.date_category = calculate_date_category(self.env.user, picking.scheduled_date)
+
+    def _search_date_category(self, operator, value):
+        matching_ids = []
+        for picking in self.env['stock.picking'].search([('scheduled_date', '!=', False)]):
+            if operator != '=':
+                raise NotImplementedError(_('Operation not supported'))
+            if picking.date_category == value:
+                matching_ids.append(picking.id)
+        return [('id', 'in', matching_ids)]
 
     @api.depends('state')
     def _compute_hide_picking_type(self):
@@ -1752,9 +1758,15 @@ class Picking(models.Model):
                 return res
             raise UserError(_("There is nothing eligible to put in a pack. Either there are no quantities to put in a pack or all products are already in a pack."))
 
+    @api.model
+    def get_action_click_graph(self):
+        return self._get_action("stock.action_picking_tree_ready")
+
     def _get_action(self, action_xmlid):
         action = self.env["ir.actions.actions"]._for_xml_id(action_xmlid)
-        context = literal_eval(action['context'])
+        context = self.env.context
+        context.update(literal_eval(action['context']))
+        action["context"] = context
 
         action['help'] = self.env['ir.ui.view']._render_template(
             'stock.help_message_template', {
