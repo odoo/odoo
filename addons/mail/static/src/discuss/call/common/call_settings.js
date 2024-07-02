@@ -2,6 +2,7 @@ import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallSettings extends Component {
@@ -40,6 +41,10 @@ export class CallSettings extends Component {
             Boolean
         );
         return keys.join(" + ");
+    }
+
+    get isMobileOS() {
+        return isMobileOS();
     }
 
     _onKeyDown(ev) {
