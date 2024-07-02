@@ -10,6 +10,10 @@
         background-position: bottom 50% right 1em;
     }
 
+    .oe_seo_auto_fill_card {
+        height:100%
+    }
+
     .o_seo_og_image {
         .o_meta_img {
             position: relative;
@@ -97,13 +101,37 @@
             line-height: 18px;
             color: #545454;
             .kv {
-                font-size: 14px;
+                display: block;
+                max-width: 300px;
+                font-size: 12px;
                 line-height: 18px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis !important;
             }
+        }
+
+        .i {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .l {
+            height: 26px;
+            width: 26px;
         }
     }
 
     td.o_seo_keyword_suggestion span.o_seo_suggestion.badge {
         cursor: pointer;
+    }
+
+    .oe_seo_checks {
+        .i {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
     }
 }
