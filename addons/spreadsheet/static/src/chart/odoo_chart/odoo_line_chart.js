@@ -16,6 +16,7 @@ const {
     rgbaToHex,
     getTrendDatasetForLineChart,
     getChartAxisType,
+    formatTickValue,
 } = spreadsheet.helpers;
 
 const { TREND_LINE_XAXIS_ID } = spreadsheet.constants;
@@ -174,5 +175,11 @@ function getLineConfiguration(chart, labels, locale) {
     if (chart.stacked) {
         config.options.scales.y.stacked = true;
     }
+
+    config.options.plugins.chartShowValuesPlugin = {
+        showValues: chart.showValues,
+        background: chart.background,
+        callback: formatTickValue({ locale }),
+    };
     return config;
 }

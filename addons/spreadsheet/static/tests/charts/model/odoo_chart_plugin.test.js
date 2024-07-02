@@ -849,3 +849,20 @@ test("import/export action xml id", async () => {
     const chartId = model2.getters.getChartIds(sheetId)[0];
     expect(model2.getters.getChartDefinition(chartId).actionXmlId).toBe("test.my_action");
 });
+
+test("Show values is taken into account in the runtime", async () => {
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const definition = model.getters.getChartDefinition(chartId);
+    model.dispatch("UPDATE_CHART", {
+        definition: {
+            ...definition,
+            showValues: true,
+        },
+        id: chartId,
+        sheetId,
+    });
+    const runtime = model.getters.getChartRuntime(chartId);
+    expect(runtime.chartJsConfig.options.plugins.chartShowValuesPlugin.showValues).toBe(true);
+});
