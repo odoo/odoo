@@ -286,6 +286,14 @@ const getEventConstructor = (eventType) => {
         case "wheel":
             return [WheelEvent, mapWheelEvent];
 
+        // Animation events
+        case "animationcancel":
+        case "animationend":
+        case "animationiteration":
+        case "animationstart": {
+            return [AnimationEvent, mapBubblingCancelableEvent];
+        }
+
         // Error events
         case "error":
             return [ErrorEvent, mapNonBubblingEvent];
