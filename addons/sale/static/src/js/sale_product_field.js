@@ -9,6 +9,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { ProductConfiguratorDialog } from "./product_configurator_dialog/product_configurator_dialog";
+import { ComboConfiguratorDialog } from "./combo_configurator_dialog/combo_configurator_dialog";
 
 async function applyProduct(record, product) {
     // handle custom values & no variants
@@ -93,13 +94,16 @@ export class SaleOrderLineProductField extends Many2OneField {
         return res || (!!this.props.record.data[this.props.name] && !this.state.isFloating);
     }
     get hasConfigurationButton() {
-        return this.isConfigurableLine || this.isConfigurableTemplate;
+        return this.isConfigurableLine || this.isConfigurableTemplate || this.isCombo;
     }
     get isConfigurableLine() {
         return false;
     }
     get isConfigurableTemplate() {
         return this.props.record.data.is_configurable_product;
+    }
+    get isCombo() {
+        return this.props.record.data.product_type === 'combo';
     }
 
     get configurationButtonHelp() {
@@ -125,6 +129,10 @@ export class SaleOrderLineProductField extends Many2OneField {
     }
 
     async _onProductTemplateUpdate() {
+        if (this.isCombo) {
+            this._openComboConfigurator();
+            return;
+        }
         const result = await this.orm.call(
             'product.template',
             'get_single_product_variant',
@@ -174,16 +182,13 @@ export class SaleOrderLineProductField extends Many2OneField {
     onEditConfiguration() {
         if (this.isConfigurableLine) {
             this._editLineConfiguration();
-        } else {
-            this._editProductConfiguration();
+        } else if (this.isConfigurableTemplate) {
+            this._openProductConfigurator(true);
+        } else if (this.isCombo) {
+            this._openComboConfigurator();
         }
     }
     _editLineConfiguration() {} // event_booth_sale, event_sale, sale_renting
-    _editProductConfiguration() { // sale_product_matrix
-        if (this.props.record.data.is_configurable_product) {
-            this._openProductConfigurator(true);
-        }
-    }
 
     async _openProductConfigurator(edit=false) {
         const saleOrderRecord = this.props.record.model.root;
@@ -247,6 +252,28 @@ export class SaleOrderLineProductField extends Many2OneField {
                     });
                     await applyProduct(line, optionalProduct);
                 }
+            },
+            discard: () => {
+                saleOrderRecord.data.order_line.delete(this.props.record);
+            },
+        });
+    }
+
+    _openComboConfigurator() {
+        const saleOrderRecord = this.props.record.model.root;
+        this.dialog.add(ComboConfiguratorDialog, {
+            name: this.props.record.data.product_template_id[0].name,
+            productTemplateId: this.props.record.data.product_template_id[0],
+            comboItemIds: this.props.record.data.product_template_id[0].combo_item_ids.records.map(record => record.resId),
+            save: async (product) => {
+                // TODO(loti): create multiple lines (one for the prod, one for each combo).
+                await this.props.record.update({
+                    product_id: [product.id, product.display_name], // TODO(loti): necessary?
+                    product_uom_qty: product.quantity, // TODO(loti): how should we handle qty?
+                    combo_item_ids: [x2ManyCommands.set(product.selected_combo_item_ids)],
+                });
+                this._onProductUpdate();
+                saleOrderRecord.data.order_line.leaveEditMode();
             },
             discard: () => {
                 saleOrderRecord.data.order_line.delete(this.props.record);

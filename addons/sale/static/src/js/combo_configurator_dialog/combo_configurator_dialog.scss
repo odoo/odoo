@@ -1,0 +1,16 @@
+.combo-configurator-dialog input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.combo-configurator-dialog input {
+    label {
+        border: $border-width solid $secondary;
+    }
+
+    .selected + label {
+        border: (2 * $border-width) solid $primary;
+    }
+}

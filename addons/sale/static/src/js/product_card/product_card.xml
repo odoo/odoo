@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="sale.ProductCard">
+        <article
+            class="card"
+            t-on-keypress="(event) => event.code === 'Space' ? props.onClick() : () => {}"
+            t-on-click="props.onClick"
+            t-att-data-product-id="props.id"
+            t-att-aria-label="props.name"
+        >
+            <div class="card-header">
+                <img
+                    class="w-100"
+                    t-attf-src="/web/image/product.product/{{props.id}}/image_128"
+                    alt="Product Image"
+                />
+            </div>
+            <div class="card-body">
+                <span class="card-title" t-esc="props.name"/>
+                <BadgeExtraPrice
+                    t-if="props.extraPrice"
+                    price="props.extraPrice"
+                    currencyId="this.env.currency.id"
+                />
+            </div>
+        </article>
+    </t>
+</templates>

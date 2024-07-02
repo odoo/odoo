@@ -74,7 +74,7 @@ class PosSelfOrderController(http.Controller):
                 fiscal_pos = pos_config.takeaway_fp_id
 
             if len(line.combo_line_ids) > 0:
-                original_total = sum(line.combo_line_ids.mapped("combo_line_id").combo_id.mapped("base_price"))
+                original_total = sum(line.combo_line_ids.mapped("combo_item_id").combo_id.mapped("base_price"))
                 remaining_total = lst_price
                 factor = lst_price / original_total
 
@@ -88,7 +88,7 @@ class PosSelfOrderController(http.Controller):
 
                     selected_attributes = pos_order_line.attribute_value_ids
                     price_extra_child = sum(attr.price_extra for attr in selected_attributes)
-                    price_unit += pos_order_line.combo_line_id.combo_price + price_extra_child
+                    price_unit += pos_order_line.combo_item_id.extra_price + price_extra_child
 
                     taxes = fiscal_pos.map_tax(child_product.taxes_id) if fiscal_pos else child_product.taxes_id
                     pdetails = taxes.compute_all(price_unit, pos_config.currency_id, pos_order_line.qty, child_product)
