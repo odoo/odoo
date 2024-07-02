@@ -1713,6 +1713,66 @@ describe('Copy and paste', () => {
             });
         });
     });
+    describe('Pasting h1', () => {
+        describe('range collapsed', async () => {
+            it('should paste h1 when pasting in empty p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a</h1><h1>b</h1><h1>c</h1>');
+                    },
+                    contentAfter: '<h1>a</h1><h1>b</h1><h1>c</h1><p>[]<br></p>',
+                });
+            });
+            it('should paste first and last child into p when pasting h1 in p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>te[]st</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a</h1><h1>b</h1><h1>c</h1>');
+                    },
+                    contentAfter: '<p>tea</p><h1>b</h1><p>c[]st</p>',
+                });
+            });
+            it('should convert single h1 into p  if p has content', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>te[]st</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a<br>b<br>c</h1>');
+                    },
+                    contentAfter: '<p>tea<br>b<br>c[]st</p>',
+                });
+            });
+        });
+        describe('range not collapsed', async () => {
+            it('should paste h1 when pasting in empty p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[test]</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a</h1><h1>b</h1><h1>c</h1>');
+                    },
+                    contentAfter: '<h1>a</h1><h1>b</h1><h1>c</h1><p>[]<br></p>',
+                });
+            });
+            it('should paste first and last child into p when pasting h1 in p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>te[xx]st</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a</h1><h1>b</h1><h1>c</h1>');
+                    },
+                    contentAfter: '<p>tea</p><h1>b</h1><p>c[]st</p>',
+                });
+            });
+            it('should convert single h1 into p if p has content', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>te[xx]st</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a<br>b<br>c</h1>');
+                    },
+                    contentAfter: '<p>tea<br>b<br>c[]st</p>',
+                });
+            });
+        });
+    });
     describe('youtube video', () => {
         describe('range collapsed', async () => {
             it('should paste and transform a youtube URL in a p', async () => {
