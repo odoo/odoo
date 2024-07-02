@@ -1836,5 +1836,37 @@ describe("Selection not collapsed", () => {
                         <p>before[]after</p>`),
             });
         });
+
+        test("should fill the inner editable with a P when all of its contents are removed", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <div contenteditable="false">
+                        <div contenteditable="true">[<p>abc</p>]</div>
+                    </div>`),
+                stepFunction: async (editor) => {
+                    deleteBackward(editor);
+                },
+                contentAfter: unformat(`
+                    <div contenteditable="false">
+                        <div contenteditable="true"><p>[]<br></p></div>
+                    </div>`),
+            });
+        });
+
+        test("should fill the inner editable with a P when all of its contents are removed (2)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <div contenteditable="false">
+                        <div contenteditable="true">[<h1>abc</h1><p>def</p>]</div>
+                    </div>`),
+                stepFunction: async (editor) => {
+                    deleteBackward(editor);
+                },
+                contentAfter: unformat(`
+                    <div contenteditable="false">
+                        <div contenteditable="true"><p>[]<br></p></div>
+                    </div>`),
+            });
+        });
     });
 });
