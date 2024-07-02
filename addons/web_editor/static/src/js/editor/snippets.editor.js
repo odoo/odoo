@@ -1973,6 +1973,18 @@ class SnippetsMenu extends Component {
     set invalidateSnippetCache(invalidate) {
         this._invalidateSnippetCache = invalidate;
     }
+    _createTooltip($el, title, selector = false) {
+        return new Tooltip($el, {
+            title: title,
+            selector: selector,
+            placement: "bottom",
+            delay: 100,
+            // Ensure the tooltips have a good position when in iframe.
+            container: this.el,
+            // Prevent horizontal scroll when tooltip is displayed.
+            boundary: this.el.ownerDocument.body,
+        });
+    }
     /**
      * Method called when the SnippetsMenu is mounted.
      * At this stage, references at accessible.
@@ -2026,20 +2038,11 @@ class SnippetsMenu extends Component {
         // elements with available tooltip text. Note that the tooltips of the
         // blocks should not be taken into account here because they have
         // tooltips with a particular behavior (see _showSnippetTooltip).
-        this.tooltips = new Tooltip(this.el, {
-            selector: 'we-title, [title]:not(.oe_snippet)',
-            placement: 'bottom',
-            delay: 100,
-            // Ensure the tooltips have a good position when in iframe.
-            container: this.el,
-            // Prevent horizontal scroll when tooltip is displayed.
-            boundary: this.el.ownerDocument.body,
-            title: function () {
+        this.tooltips = this._createTooltip(
+            this.el,
+            function () {
                 // Workaround BS regression: https://github.com/twbs/bootstrap/issues/38720
                 const el = this === undefined ? arguments[0] : this.el;
-                if (el.tagName !== 'WE-TITLE') {
-                    return el.title;
-                }
                 // On Firefox, el.scrollWidth is equal to el.clientWidth when
                 // overflow: hidden, so we need to update the style before to
                 // get the right values.
@@ -2048,6 +2051,21 @@ class SnippetsMenu extends Component {
                 el.style.removeProperty('overflow');
                 return tipContent;
             },
+            "we-title"
+        );
+
+        this.buttonTooltips = [];
+        // Before boostrap 5.3, sub tooltips were working by default with hover
+        // behavior, now it is not the case so we instantiate them 1 by 1.
+        document.querySelectorAll("[title]:not(.oe_snippet)").forEach(el => {
+            this.buttonTooltips.push(this._createTooltip(
+                el,
+                function () {
+                    // Workaround BS regression: https://github.com/twbs/bootstrap/issues/38720
+                    const el = this === undefined ? arguments[0] : this.el;
+                    return el.title;
+                }
+            ));
         });
 
         // Active snippet editor on click in the page
@@ -2229,6 +2247,7 @@ class SnippetsMenu extends Component {
         this.el.ownerDocument.body.classList.remove('editor_has_snippets');
         // Dispose BS tooltips.
         this.tooltips.dispose();
+        this.buttonTooltips.forEach(tooltip => tooltip.dispose());
         options.clearServiceCache();
         options.clearControlledSnippets();
         if (this.$body[0].ownerDocument !== this.ownerDocument) {
