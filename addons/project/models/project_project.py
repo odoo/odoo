@@ -527,7 +527,7 @@ class Project(models.Model):
             if project.analytic_account_id and not project.analytic_account_id.line_ids:
                 analytic_accounts_to_delete |= project.analytic_account_id
         result = super(Project, self).unlink()
-        tasks.unlink()
+        tasks.sudo().unlink()
         analytic_accounts_to_delete.unlink()
         return result
 

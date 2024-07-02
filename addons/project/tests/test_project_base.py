@@ -478,3 +478,10 @@ class TestProjectBase(TestProjectCommon):
         } for x in range(10)])
         projects._create_analytic_account()
         self.assertEqual(projects.mapped("name"), projects.analytic_account_id.mapped("name"), "The analytic accounts names should match with the projects.")
+
+    def test_project_deletion_not_blocked_by_unfollowed_tasks(self):
+        """ This test ensures that when a user with project.manager access rights delete a project, all of its tasks are also correctly deleted
+         even if the tasks that user is not a follower of."""
+        # This line just ensure that the user_projectmanager is not following the task. If the test data were to be updated, this line ensure this test is failing.
+        self.assertNotIn(self.task_1.message_partner_ids, self.user_projectmanager.partner_id)
+        self.project_pigs.with_user(self.user_projectmanager).unlink()
