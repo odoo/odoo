@@ -12,5 +12,14 @@
                 <div t-out="getReadOnlyPtal()" class="text-muted small"/>
             </t>
         </div>
+        <xpath expr="//div[@name='ptal']" position="attributes">
+            <attribute name="class" remove="o_input" separator=" "/>
+        </xpath>
+    </t>
+
+    <t t-inherit="sale.ptav_select" t-inherit-mode="extension">
+        <xpath expr="//select" position="attributes">
+            <attribute name="class" add="form-select" separator=" "/>
+        </xpath>
     </t>
 </templates>

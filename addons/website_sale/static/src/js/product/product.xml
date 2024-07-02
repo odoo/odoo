@@ -3,12 +3,20 @@
     <t t-inherit="sale.Product" t-inherit-mode="extension">
         <div name="sale_product_configurator_quantity_buttons" position="attributes">
             <attribute name="t-if">this.props.can_be_sold</attribute>
+            <attribute name="class" add="css_quantity" separator=" "/>
         </div>
+        <xpath expr="//div[@name='sale_product_configurator_quantity_buttons']//button[1]" position="attributes">
+            <attribute name="class" remove="btn-secondary" add="btn-light" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@name='sale_product_configurator_quantity_buttons']//button[2]" position="attributes">
+            <attribute name="class" remove="btn-secondary" add="btn-light" separator=" "/>
+        </xpath>
         <div name="sale_product_configurator_quantity_buttons" position="after">
             <t t-call="website_sale.not_for_sale"/>
         </div>
         <button name="sale_product_configurator_add_button" position="attributes">
             <attribute name="t-if">this.props.can_be_sold</attribute>
+            <attribute name="class" remove="btn-secondary" add="btn-light" separator=" "/>
         </button>
         <button name="sale_product_configurator_add_button" position="after">
             <t t-call="website_sale.not_for_sale"/>
@@ -19,6 +27,15 @@
         <t name="sale_product_configurator_optional_price" position="before">
             <t t-call="website_sale.strikethrough_product_price"/>
         </t>
+        <xpath expr="//span[hasclass('h5')]" position="attributes">
+            <attribute name="class" remove="h5" add="h6" separator=" "/>
+        </xpath>
+    </t>
+
+    <t t-inherit="sale.product_price" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('h5')]" position="attributes">
+            <attribute name="class" remove="h5" add="h6" separator=" "/>
+        </xpath>
     </t>
 
     <t t-name="website_sale.not_for_sale">
