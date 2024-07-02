@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="move_form_inherit_l10n_in_gst_verification" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.in.gst.verification</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <label for="l10n_in_partner_gstin_status"
+                    invisible="not partner_id or country_code != 'IN'
+                        or move_type not in ['in_invoice', 'in_refund', 'out_invoice', 'out_refund']
+                        or l10n_in_gst_treatment in ['unregistered', 'consumer', 'overseas']
+                        or state == 'cancel' or payment_state in ['paid', 'reversed']" />
+                <div name="status_date_container"
+                    invisible="not partner_id or country_code != 'IN'
+                        or move_type not in ['in_invoice', 'in_refund', 'out_invoice', 'out_refund']
+                        or l10n_in_gst_treatment in ['unregistered', 'consumer', 'overseas']
+                        or state == 'cancel' or payment_state in ['paid', 'reversed']" >
+                    <span class="text-nowrap" readonly="1">
+                        <field name="l10n_in_partner_gstin_status" class="oe_inline"
+                            decoration-success="l10n_in_partner_gstin_status_color == 'green'"
+                            decoration-warning="l10n_in_partner_gstin_status_color == 'yellow'"
+                            decoration-danger="l10n_in_partner_gstin_status_color == 'red'" />
+                        <span class="text-muted oe_inline">
+                            <span class="ps-3" invisible="not l10n_in_gstin_verified_date">checked: </span>
+                            <span invisible="l10n_in_gstin_verified_date">Not Checked</span>
+                            <field name="l10n_in_gstin_verified_date" class="oe_inline" />
+                            <button name="l10n_in_verify_partner_gstin_status"
+                                type="object" icon="fa-refresh"
+                                class="oe_link p-0 ps-3" title="Reverify GSTIN status" />
+                        </span>
+                    </span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
