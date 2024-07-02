@@ -286,7 +286,7 @@ browser.addEventListener("click", (ev) => {
         let url;
         try {
             // ev.target.href is the full url including current path
-            url = new URL(ev.target.href);
+            url = new URL(ev.target.closest("a").href);
         } catch {
             return;
         }
