@@ -426,7 +426,7 @@ var ColorpickerWidget = Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onChangeInputs: function (ev) {
+    _onChangeInputs: _.throttle(function (ev) {
         switch ($(ev.target).data('colorMethod')) {
             case 'hex':
                 this._updateHex(this.$('.o_hex_input').val());
@@ -451,7 +451,7 @@ var ColorpickerWidget = Widget.extend({
         }
         this._updateUI();
         this._colorSelected();
-    },
+    }, 10),
 });
 
 //--------------------------------------------------------------------------
