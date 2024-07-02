@@ -21,61 +21,44 @@ export class TestsSharedJsPython extends Component {
 
     processTest(params) {
         if (params.test === "taxes_computation") {
-            const jsResults = {};
-            let evaluationContext = accountTaxHelpers.eval_taxes_computation_prepare_context(
-                params.price_unit,
-                params.quantity,
-                params.product_values,
-                params.evaluation_context_kwargs
-            );
-            let taxesComputation = accountTaxHelpers.prepare_taxes_computation(
-                params.taxes_data,
-                params.compute_kwargs
-            );
-            jsResults.results = accountTaxHelpers.eval_taxes_computation(
-                taxesComputation,
-                evaluationContext
-            );
-
-            if (params.is_round_globally) {
-                let taxesComputation = accountTaxHelpers.prepare_taxes_computation(
-                    params.taxes_data,
-                    { ...params.compute_kwargs, special_mode: "total_excluded" }
-                );
-                evaluationContext = accountTaxHelpers.eval_taxes_computation_prepare_context(
-                    jsResults.results.total_excluded / params.quantity,
+            const kwargs = {
+                product: params.product,
+                precision_rounding: params.precision_rounding,
+                rounding_method: params.rounding_method,
+            };
+            const results = {
+                results: accountTaxHelpers.evaluate_taxes_computation(
+                    params.taxes,
+                    params.price_unit,
                     params.quantity,
-                    params.product_values,
-                    params.evaluation_context_kwargs
-                );
-                jsResults.total_excluded_results = accountTaxHelpers.eval_taxes_computation(
-                    taxesComputation,
-                    evaluationContext
-                );
-                taxesComputation = accountTaxHelpers.prepare_taxes_computation(
-                    params.taxes_data,
-                    { ...params.compute_kwargs, special_mode: "total_included" }
-                );
-                evaluationContext = accountTaxHelpers.eval_taxes_computation_prepare_context(
-                    jsResults.results.total_included / params.quantity,
+                    kwargs,
+                )
+            };
+            if (params.rounding_method === "round_globally") {
+                results.total_excluded_results = accountTaxHelpers.evaluate_taxes_computation(
+                    params.taxes,
+                    results.results.total_excluded / params.quantity,
                     params.quantity,
-                    params.product_values,
-                    params.evaluation_context_kwargs
+                    {...kwargs, special_mode: "total_excluded"}
                 );
-                jsResults.total_included_results = accountTaxHelpers.eval_taxes_computation(
-                    taxesComputation,
-                    evaluationContext
+                results.total_included_results = accountTaxHelpers.evaluate_taxes_computation(
+                    params.taxes,
+                    results.results.total_included / params.quantity,
+                    params.quantity,
+                    {...kwargs, special_mode: "total_included"}
                 );
             }
-            return jsResults;
+            return results;
         }
         if (params.test === "adapt_price_unit_to_another_taxes") {
-            return accountTaxHelpers.adapt_price_unit_to_another_taxes(
-                params.price_unit,
-                params.product_values,
-                params.original_taxes_data,
-                params.new_taxes_data
-            );
+            return {
+                price_unit: accountTaxHelpers.adapt_price_unit_to_another_taxes(
+                    params.price_unit,
+                    params.product,
+                    params.original_taxes,
+                    params.new_taxes
+                )
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import _, api, models
+from odoo import _, api, models, fields
 from odoo.exceptions import UserError
 from odoo.tools import split_every
 
@@ -8,6 +8,12 @@ from odoo.tools import split_every
 class AccountTax(models.Model):
     _name = 'account.tax'
     _inherit = ['account.tax', 'pos.load.mixin']
+
+    pos_letter = fields.Char(compute='_compute_pos_letter')
+
+    @api.depends('country_code')
+    def _compute_pos_letter(self):
+        self.pos_letter = None
 
     def write(self, vals):
         forbidden_fields = {
@@ -58,25 +64,6 @@ class AccountTax(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return [
-            'id', 'name', 'price_include', 'include_base_amount', 'is_base_affected',
-            'amount_type', 'children_tax_ids', 'amount', 'repartition_line_ids', 'company_id', 'id'
+            'id', 'name', 'price_include', 'include_base_amount', 'is_base_affected', 'total_tax_factor',
+            'amount_type', 'children_tax_ids', 'amount', 'company_id', 'id', 'sequence', 'pos_letter',
         ]
-
-    def _load_pos_data(self, data):
-        domain = self._load_pos_data_domain(data)
-        tax_ids = self.search(domain)
-        taxes_list = []
-
-        for tax in tax_ids:
-            taxes_list.append(tax._prepare_dict_for_taxes_computation())
-
-        if data.get('pos.config') and len(data['pos.config']['data']) > 0:
-            product_fields = self.env['account.tax']._eval_taxes_computation_prepare_product_fields(taxes_list)
-            data['pos.config']['data'][0]['_product_default_values'] = self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(
-                product_fields,
-            )
-
-        return {
-            'data': taxes_list,
-            'fields': self._load_pos_data_fields(data['pos.config']['data'][0]['id']),
-        }

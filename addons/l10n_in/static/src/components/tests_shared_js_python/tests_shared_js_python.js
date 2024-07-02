@@ -7,7 +7,7 @@ patch(TestsSharedJsPython.prototype, {
     /** override **/
     processTest(params){
         if(params.test === "l10n_in_hsn_summary"){
-            return accountTaxHelpers.l10n_in_get_hsn_summary_table(params.base_lines, params.display_uom);
+            return {'hsn': accountTaxHelpers.l10n_in_get_hsn_summary_table(params.base_lines, params.display_uom)};
         }
         return super.processTest(...arguments);
     },
