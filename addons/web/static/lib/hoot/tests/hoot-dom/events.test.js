@@ -42,6 +42,25 @@ const formatKeyBoardEvent = (ev) =>
  * @param {(ev: Event) => string} [formatStep]
  */
 const monitorEvents = (target, formatStep) => {
+    const handleEvent = (element, type) => {
+        const passive = type !== "submit";
+        const off = on(
+            element,
+            type,
+            (ev) => {
+                const step = formatStep(ev);
+                if (step) {
+                    expect.step(formatStep(ev));
+                }
+                if (!passive) {
+                    ev.preventDefault();
+                }
+            },
+            { passive }
+        );
+        after(off);
+    };
+
     formatStep ||= (ev) => `${ev.currentTarget.tagName.toLowerCase()}.${ev.type}`;
 
     for (const element of document.querySelectorAll(target)) {
@@ -50,25 +69,15 @@ const monitorEvents = (target, formatStep) => {
             if (!type) {
                 continue;
             }
-            const passive = type !== "submit";
-            const off = on(
-                element,
-                type,
-                (ev) => {
-                    const step = formatStep(ev);
-                    if (step) {
-                        expect.step(formatStep(ev));
-                    }
-                    if (!passive) {
-                        ev.preventDefault();
-                    }
-                },
-                { passive }
-            );
-            after(off);
+            handleEvent(element, type);
+        }
+        for (const type of ADDITIONAL_EVENT_TYPES) {
+            handleEvent(element, type);
         }
     }
 };
+
+const ADDITIONAL_EVENT_TYPES = ["focusin", "focusout"];
 
 describe(parseUrl(import.meta.url), () => {
     test("clear", async () => {
@@ -151,6 +160,7 @@ describe(parseUrl(import.meta.url), () => {
             "button.pointerdown",
             "button.mousedown",
             "button.focus",
+            "button.focusin",
             "button.pointerup",
             "button.mouseup",
             "button.click",
@@ -175,6 +185,7 @@ describe(parseUrl(import.meta.url), () => {
             "button.pointerdown",
             "button.mousedown",
             "button.focus",
+            "button.focusin",
             "button.pointerup",
             "button.mouseup",
             "button.click",
@@ -251,6 +262,8 @@ describe(parseUrl(import.meta.url), () => {
             "button.mousedown",
             "main.mousedown",
             "button.focus",
+            "button.focusin",
+            "main.focusin",
             // Move to second
             "button.pointermove",
             "main.pointermove",
@@ -348,6 +361,7 @@ describe(parseUrl(import.meta.url), () => {
             "first-item.pointerdown",
             "first-item.mousedown",
             "first-item.focus",
+            "first-item.focusin",
             // Cancel
             "keydown:Escape",
             "keyup:Escape",
@@ -361,6 +375,7 @@ describe(parseUrl(import.meta.url), () => {
             "first-item.pointerdown",
             "first-item.mousedown",
             "first-item.focus",
+            "first-item.focusin",
             // Leave first
             "first-item.dragstart",
             "first-item.drag",
@@ -396,6 +411,7 @@ describe(parseUrl(import.meta.url), () => {
             "first-item.pointerdown",
             "first-item.mousedown",
             "first-item.focus",
+            "first-item.focusin",
             // Leave first
             "first-item.dragstart",
             "first-item.drag",
@@ -432,6 +448,7 @@ describe(parseUrl(import.meta.url), () => {
             "first-item.pointerdown",
             "first-item.mousedown",
             "first-item.focus",
+            "first-item.focusin",
             // Leave first
             "first-item.dragstart",
             "first-item.drag",
@@ -467,6 +484,7 @@ describe(parseUrl(import.meta.url), () => {
             "first-item.pointerdown",
             "first-item.mousedown",
             "first-item.focus",
+            "first-item.focusin",
             // Leave first
             "first-item.dragstart",
             "first-item.drag",
@@ -770,6 +788,7 @@ describe(parseUrl(import.meta.url), () => {
             "mouseleave",
             // Change
             "blur",
+            "focusout",
             "change",
         ]);
     });
@@ -930,6 +949,7 @@ describe(parseUrl(import.meta.url), () => {
             "input.pointerdown",
             "input.mousedown",
             "input.focus",
+            "input.focusin",
             // Set range
             "input.input",
             "input.change",
@@ -1072,6 +1092,7 @@ describe(parseUrl(import.meta.url), () => {
             "button.pointerdown",
             "button.mousedown",
             "button.focus",
+            "button.focusin",
         ]);
 
         pointerUp("button");
@@ -1207,6 +1228,8 @@ describe(parseUrl(import.meta.url), () => {
         expect.verifySteps([
             // Tab
             "input.focus",
+            "input.focusin",
+            "form.focusin",
             // Enter
             "input.keydown",
             "form.keydown",
@@ -1236,6 +1259,8 @@ describe(parseUrl(import.meta.url), () => {
         expect.verifySteps([
             // Tab
             "button.focus",
+            "button.focusin",
+            "form.focusin",
             // Enter
             "button.keydown",
             "form.keydown",
@@ -1266,6 +1291,8 @@ describe(parseUrl(import.meta.url), () => {
         expect.verifySteps([
             // Tab
             "button.focus",
+            "button.focusin",
+            "form.focusin",
             // Enter
             "button.keydown",
             "form.keydown",

@@ -141,7 +141,7 @@ const afterTest = (test, options) => {
                 label: "step",
                 message: `unverified steps`,
                 pass: false,
-                info: [[Markup.red("Steps:"), Markup.diff([], deepCopy(currentResult.steps))]],
+                info: [[Markup.red("Steps:"), Markup.diff([], currentResult.steps)]],
             })
         );
     }
@@ -457,7 +457,7 @@ const step = (value) => {
     }
     ensureArguments([[value, "any"]]);
 
-    currentResult.steps.push(value);
+    currentResult.steps.push(deepCopy(value));
 };
 
 /**
@@ -489,7 +489,7 @@ const verifyErrors = (errors) => {
             : "no errors"
         : `expected the following errors`;
     const assertion = new Assertion({
-        label: "verifySteps",
+        label: "verifyErrors",
         message,
         pass,
     });
@@ -556,7 +556,7 @@ const R_ELEMENTS = /%(elements?)%/i;
 const R_NOT = /\[([\w\s]*)!([\w\s]*)\]/;
 const R_RECEIVED = /%(received)%/i;
 
-/** @type {Set<Matchers>} */
+/** @type {Set<Matcher>} */
 const unconsumedMatchers = new Set();
 
 /** @type {TestResult | null} */
@@ -590,7 +590,7 @@ export function makeExpect(params) {
             throw scopeError("expect");
         }
 
-        return new Matchers(received, {}, params.headless);
+        return new Matcher(received, {}, params.headless);
     }
 
     const enrichedExpect = $assign(expect, {
@@ -634,11 +634,20 @@ export class Assertion {
  * @template [A=R]
  * @template [Async=false]
  */
-export class Matchers {
-    /** @type {R} */
+export class Matcher {
+    /**
+     * @private
+     * @type {R}
+     */
     _received = null;
+    /**
+     * @private
+     */
     _headless = false;
-    /** @type {Modifiers<Async>} */
+    /**
+     * @private
+     * @type {Modifiers<Async>}
+     */
     _modifiers = {
         not: false,
         rejects: false,
@@ -666,7 +675,7 @@ export class Matchers {
      * Returns a set of matchers expecting a result opposite to what normal matchers
      * would expect.
      *
-     * @returns {Omit<Matchers<R, A, Async>, "not">}
+     * @returns {Omit<Matcher<R, A, Async>, "not">}
      * @example
      *  expect([1]).not.toBeEmpty();
      * @example
@@ -677,7 +686,7 @@ export class Matchers {
             throw matcherModifierError("not", `matcher is already negated`);
         }
         unconsumedMatchers.delete(this);
-        return new Matchers(this._received, { ...this._modifiers, not: true }, this._headless);
+        return new Matcher(this._received, { ...this._modifiers, not: true }, this._headless);
     }
 
     /**
@@ -685,7 +694,7 @@ export class Matchers {
      * and will be applied to a value rejected by that promise. The matcher will
      * throw an error should the promise resolve instead of being rejected.
      *
-     * @returns {Omit<Matchers<R, A, true>, "rejects" | "resolves">}
+     * @returns {Omit<Matcher<R, A, true>, "rejects" | "resolves">}
      * @example
      *  await expect(Promise.reject("foo")).rejects.toBe("foo");
      */
@@ -697,7 +706,7 @@ export class Matchers {
             );
         }
         unconsumedMatchers.delete(this);
-        return new Matchers(this._received, { ...this._modifiers, rejects: true }, this._headless);
+        return new Matcher(this._received, { ...this._modifiers, rejects: true }, this._headless);
     }
 
     /**
@@ -705,7 +714,7 @@ export class Matchers {
      * and will be applied to a value resolved by that promise. The matcher will
      * throw an error should the promise reject instead of being resolved.
 
-     * @returns {Omit<Matchers<R, A, true>, "rejects" | "resolves">}
+     * @returns {Omit<Matcher<R, A, true>, "rejects" | "resolves">}
      * @example
      *  await expect(Promise.resolve("foo")).resolves.toBe("foo");
      */
@@ -717,7 +726,7 @@ export class Matchers {
             );
         }
         unconsumedMatchers.delete(this);
-        return new Matchers(this._received, { ...this._modifiers, resolves: true }, this._headless);
+        return new Matcher(this._received, { ...this._modifiers, resolves: true }, this._headless);
     }
 
     //-------------------------------------------------------------------------
@@ -1827,40 +1836,56 @@ export class Matchers {
     //-------------------------------------------------------------------------
 
     /**
+     * @private
      * @param {MatcherSpecifications<R, A>} specs
      * @returns {Async extends true ? Promise<void> : void}
      */
     _resolve(specs) {
+        unconsumedMatchers.delete(this);
         if (this._modifiers.rejects || this._modifiers.resolves) {
             return Promise.resolve(this._received).then(
                 /** @param {PromiseFulfilledResult<R>} reason */
                 (result) => {
                     if (this._modifiers.rejects) {
-                        throw new HootError(
-                            `expected promise to reject, instead resolved with: ${result}`
+                        registerAssertion(
+                            new Assertion({
+                                label: "rejects",
+                                message: `expected promise to reject, instead resolved with: ${formatHumanReadable(
+                                    result
+                                )}`,
+                                pass: false,
+                            })
                         );
+                    } else {
+                        this._received = result;
+                        this._resolveFinalResult(specs);
                     }
-                    this._received = result;
-                    return this._resolveFinalResult(specs);
                 },
                 /** @param {PromiseRejectedResult} reason */
                 (reason) => {
                     if (this._modifiers.resolves) {
-                        throw new HootError(
-                            `expected promise to resolve, instead rejected with: ${reason}`,
-                            { cause: reason }
+                        registerAssertion(
+                            new Assertion({
+                                label: "resolves",
+                                message: `expected promise to resolve, instead rejected with: ${formatHumanReadable(
+                                    reason
+                                )}`,
+                                pass: false,
+                            })
                         );
+                    } else {
+                        this._received = reason;
+                        this._resolveFinalResult(specs);
                     }
-                    this._received = reason;
-                    return this._resolveFinalResult(specs);
                 }
             );
         } else {
-            return this._resolveFinalResult(specs);
+            this._resolveFinalResult(specs);
         }
     }
 
     /**
+     * @private
      * @param {MatcherSpecifications<R, A>} specs
      * @returns {void}
      */
@@ -1893,20 +1918,23 @@ export class Matchers {
         if (!pass) {
             const formattedStack = formatStack(currentStack);
             const stackContent = Markup.text(formattedStack, { technical: true });
-            assertion.info = [...deepCopy(details(actual)), [Markup.red("Source:"), stackContent]];
+            assertion.info = [...details(actual), [Markup.red("Source:"), stackContent]];
         }
 
         registerAssertion(assertion);
     }
 
+    /**
+     * @private
+     */
     _saveStack() {
-        unconsumedMatchers.delete(this);
         if (!this._headless) {
             currentStack = new Error().stack;
         }
     }
 
     /**
+     * @private
      * @param {"innerHTML" | "outerHTML"} fname
      * @param {string | RegExp} expected
      * @param {ExpectOptions & FormatXmlOptions} [options]

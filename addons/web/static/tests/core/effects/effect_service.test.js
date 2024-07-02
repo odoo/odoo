@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { click, queryOne } from "@odoo/hoot-dom";
+import { click, manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, markup, xml } from "@odoo/owl";
 import { getService, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -41,8 +41,9 @@ test("rendering a rainbowman destroy after animation", async () => {
     expect(".o_reward_rainbow").toHaveCount(1);
     expect(".o_reward_msg_content").toHaveInnerHTML("<div>Congrats!</div>");
 
-    const ev = new AnimationEvent("animationend", { animationName: "reward-fading-reverse" });
-    queryOne(".o_reward").dispatchEvent(ev);
+    manuallyDispatchProgrammaticEvent(queryOne(".o_reward"), "animationend", {
+        animationName: "reward-fading-reverse",
+    });
     await animationFrame();
     expect(".o_reward").toHaveCount(0);
 });
