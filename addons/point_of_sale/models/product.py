@@ -32,6 +32,12 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
+    show_product_in_pos = fields.Boolean(compute='_compute_show_product_in_pos')
+
+    def _compute_show_product_in_pos(self):
+        for product in self:
+            product.show_product_in_pos = product.active and product.available_in_pos
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
         product_ctx = dict(self.env.context or {}, active_test=False)
