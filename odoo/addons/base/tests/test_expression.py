@@ -718,6 +718,11 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual(expression.distribute_not(source), expect,
             "distribute_not on long expression applied wrongly")
 
+    def test_40_negating_traversal(self):
+        domain = ['!', ('a.b', '=', 4)]
+        self.assertEqual(expression.distribute_not(domain), domain,
+            "distribute_not must not distribute the operator on domain traversal")
+
     def test_accent(self):
         if not self.registry.has_unaccent:
             raise unittest.SkipTest("unaccent not enabled")
@@ -1446,6 +1451,20 @@ class TestMany2one(TransactionCase):
                 ('company_id.name', 'like', self.company.name),
                 ('country_id.code', 'like', 'BE'),
             ])
+
+    def test_complement_regular(self):
+        self.Partner.search(['!', ('company_id.name', 'like', self.company.name)])
+        with self.assertQueries(['''
+            SELECT "res_partner"."id"
+            FROM "res_partner"
+            WHERE (("res_partner"."company_id" NOT IN (
+                SELECT "res_company"."id"
+                FROM "res_company"
+                WHERE ("res_company"."name"::text LIKE %s)
+            )) OR "res_partner"."company_id" IS NULL)
+            ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
+        ''']):
+            self.Partner.search(['!', ('company_id.name', 'like', self.company.name)])
 
     def test_explicit_subquery(self):
         self.Partner.search([('company_id.name', 'like', self.company.name)])
