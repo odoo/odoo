@@ -281,13 +281,14 @@ test("a failing tour logs the step that failed in run", async () => {
     getService("tour_service").startTour("tour2", { mode: "auto" });
     await advanceTime(750);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour2 on step: '.button0'"]);
+    expect.verifySteps(["log: Tour tour2 at Step (1 / 2): .button0"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour2 on step: '.button1'"]);
+    expect.verifySteps(["log: Tour tour2 at Step (2 / 2): .button1"]);
     await advanceTime(750);
 
     const expectedError = [
-        `error: Tour tour2 failed at step .button1. Element has been found. The error seems to be with step.run`,
+        `error: Tour tour2 at Step (2 / 2): .button1
+Element has been found. The error seems to be with step.run`,
         "error: Cannot read properties of null (reading 'click')",
         "error: tour not succeeded",
     ];
@@ -334,14 +335,15 @@ test("a failing tour with disabled element", async () => {
     getService("tour_service").startTour("tour3", { mode: "auto" });
     await advanceTime(750);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour3 on step: '.button0'"]);
+    expect.verifySteps(["log: Tour tour3 at Step (1 / 3): .button0"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour3 on step: '.button1'"]);
+    expect.verifySteps(["log: Tour tour3 at Step (2 / 3): .button1"]);
     await advanceTime(750);
     await advanceTime(10000);
 
     const expectedError = [
-        `error: Tour tour3 failed at step .button1. Element has been found but is disabled.`,
+        `error: Tour tour3 at Step (2 / 3): .button1
+Element has been found but is disabled.`,
     ];
     expect.verifySteps(expectedError);
 });
@@ -425,18 +427,19 @@ test("a failing tour logs the step that failed", async () => {
     getService("tour_service").startTour("tour1", { mode: "auto" });
     await advanceTime(750);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .button0)'"]);
+    expect.verifySteps(["log: Tour tour1 at Step (1 / 9): content (trigger: .button0)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .button1)'"]);
+    expect.verifySteps(["log: Tour tour1 at Step (2 / 9): content (trigger: .button1)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .button2)'"]);
+    expect.verifySteps(["log: Tour tour1 at Step (3 / 9): content (trigger: .button2)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .button3)'"]);
+    expect.verifySteps(["log: Tour tour1 at Step (4 / 9): content (trigger: .button3)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .wrong_selector)'"]);
+    expect.verifySteps(["log: Tour tour1 at Step (5 / 9): content (trigger: .wrong_selector)"]);
     await advanceTime(10000);
-    const expectedWarning = `warn: Tourtour1failedatstepcontent(trigger:.wrong_selector){"content":"content","trigger":".button1","run":"click"},{"content":"content","trigger":".button2","run":"click"},{"content":"content","trigger":".button3","run":"click"},FAILINGSTEP(59){"content":"content","trigger":".wrong_selector","run":"click"},{"content":"content","trigger":".button4","run":"click"},{"content":"content","trigger":".button5","run":"click"},{"content":"content","trigger":".button6","run":"click"},`;
-    const expectedError = `error: Tour tour1 failed at step content (trigger: .wrong_selector). The cause is that trigger (.wrong_selector) element cannot be found in DOM.`;
+    const expectedWarning = `warn: {"content":"content","trigger":".button1","run":"click"},{"content":"content","trigger":".button2","run":"click"},{"content":"content","trigger":".button3","run":"click"},Tourtour1atStep(59):content(trigger:.wrong_selector){"content":"content","trigger":".wrong_selector","run":"click"},{"content":"content","trigger":".button4","run":"click"},{"content":"content","trigger":".button5","run":"click"},{"content":"content","trigger":".button6","run":"click"},`;
+    const expectedError = `error: Tour tour1 at Step (5 / 9): content (trigger: .wrong_selector)
+The cause is that trigger (.wrong_selector) element cannot be found in DOM.`;
     expect.verifySteps([expectedWarning, expectedError]);
 });
 
@@ -895,5 +898,9 @@ test("manual tour with inactive steps", async () => {
     await advanceTime(750);
     await advanceTime(750);
     await advanceTime(750);
-    expect.verifySteps(["log: .button0", "log: .button1", "log: .button2"]);
+    expect.verifySteps([
+        "log: Tour pipu_tour2 at Step (1 / 3): .button0",
+        "log: Tour pipu_tour2 at Step (2 / 3): .button1",
+        "log: Tour pipu_tour2 at Step (3 / 3): .button2",
+    ]);
 });
