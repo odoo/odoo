@@ -16,10 +16,10 @@
                     <table class="text-start">
                         <thead>
                             <tr class="text-dark">
-                                <th>Payment Method</th>
+                                <th>Payment<span class="d-none d-sm-inline"> Method</span></th>
                                 <th>Expected</th>
                                 <th style="width:20%">Counted</th>
-                                <th>Difference</th>
+                                <th class="d-none d-sm-flex justify-content-end">Difference</th>
                             </tr>
                         </thead>
                         <t t-if="pos.config.cash_control">
@@ -35,13 +35,21 @@
                                     </td>
                                     <t t-set="diff" t-value="getDifference(props.default_cash_details.id)" />
                                     <td t-esc="env.utils.isValidFloat(diff) ? env.utils.formatCurrency(diff) : ''"
-                                        t-att-class="{'warning text-danger fw-bolder': !env.utils.floatIsZero(getDifference(props.default_cash_details.id))}"/>
+                                        t-att-class="{'warning text-danger fw-bolder': !env.utils.floatIsZero(getDifference(props.default_cash_details.id))}"
+                                        class="d-none d-sm-table-cell cashDifference"/>
                                 </tr>
                             </tbody>
                             <tbody class="cash-overview border-start small text-muted">
                                 <tr>
-                                    <td>Opening</td>
+                                    <td class="align-top">Opening</td>
                                     <td class="align-top" t-esc="env.utils.formatCurrency(props.default_cash_details.opening)"/>
+                                    <td class="d-flex justify-content-between d-sm-none">
+                                        <p>Difference</p>
+                                        <span t-esc="env.utils.isValidFloat(diff) ? env.utils.formatCurrency(diff) : ''"
+                                        t-att-class="{'warning text-danger fw-bolder': !env.utils.floatIsZero(getDifference(props.default_cash_details.id))}"
+                                        class="cashDifference"/>
+                                    </td>
+
                                 </tr>
                                 <t t-set="_totalAmount" t-value="getMovesTotalAmount()" />
                                 <t t-if="_totalAmount != 0">
@@ -99,7 +107,7 @@
                     <button class="button btn btn-lg btn-secondary" t-att-disabled="!canCancel()" t-on-click="cancel">Discard</button>
                 </div>
                 <!-- Download Sale Details -->
-                <div class="modal-footer-right d-flex gap-2 ms-auto">
+                <div class="modal-footer-right d-flex gap-2 ms-sm-auto">
                     <button class="button icon btn btn-lg btn-secondary"
                         t-on-click="downloadSalesReport"
                         title="Download a report with all the sales of the current PoS Session">

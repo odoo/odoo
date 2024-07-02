@@ -399,7 +399,7 @@ export function modeIsActive(mode) {
 export function cashDifferenceIs(val) {
     return [
         {
-            trigger: `.payment-methods-overview tr td:nth-child(4):contains(${val})`,
+            trigger: `.payment-methods-overview .cashDifference:contains(${val})`,
         },
     ];
 }
