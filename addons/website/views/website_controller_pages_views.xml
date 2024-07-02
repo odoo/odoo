@@ -23,7 +23,8 @@
                         <field name="website_published" />
                     </group>
                     <group colspan="1" string="Settings">
-                        <field name="model" invisible="1"/>
+                        <field name="model_id" readonly="id"/>
+                        <field name="model" invisible="1" />
                         <field name="record_domain" widget="domain" options="{'in_dialog': True, 'model': 'model'}"/>
                         <field name="page_type" required="1"/>
                         <field name="default_layout" invisible="page_type != 'listing'" />
@@ -52,17 +53,17 @@
     <field name="priority">99</field>
     <field name="arch" type="xml">
         <tree>
+            <field name="page_name" />
             <field name="name" string="Page Title"/>
-            <field name="name_slugified"/>
-            <field name="page_type"/>
-            <field name="view_id" column_invisible="True"/>
-
             <!-- website_id should be shown only in multi website environment
             when the group is enabled, but we need the field to be there all the
             time for `PageRendererMixin`'s `recordFilter' to be able to filter
             correctly. -->
             <field name="website_id" column_invisible="True"/>
             <field name="website_id" groups="website.group_multi_website"/>
+            <field name="url_demo"/>
+            <field name="page_type"/>
+            <field name="is_published"/>
         </tree>
     </field>
 </record>
@@ -73,9 +74,12 @@
     <field name="arch" type="xml">
         <kanban class="">
             <t t-name="kanban-card" class="w-100 flex-row flex-wrap gap-1">
+                <field name="website_published" invisible="1" />
+                <widget name="web_ribbon" text="Published" invisible="not website_published" />
+                <widget name="web_ribbon" text="Unpublished" invisible="website_published" bg_color="text-bg-danger" />
                 <div class="d-flex flex-row col-10 me-auto">
                     <div class="d-flex flex-column col-3">
-                        <div class="fw-bold"><field name="page_name"/></div>
+                        <div class="fw-bold"><field name="page_name"/> &#8212; <field name="page_type" /></div>
                         <div>
                             <span class="me-1">Exposes</span>
                             <field name="model_id" widget="many2one"/>
@@ -88,14 +92,6 @@
                             <div><span>/model/</span><field name="name_slugified" /></div>
                         </div>
                 </div>
-
-                    <div class="d-flex align-items-center ms-auto flex-shrink-0 flex-grow-0">
-                        <div t-att-class="record.website_published ? 'bg-success' : 'bg-danger'" class="rounded p-2 text-white">
-                            <span invisible="website_published">Unpublished</span>
-                            <span invisible="not website_published">Published</span>
-                        </div>
-                        <field name="website_published" invisible="1" />
-                    </div>
             </t>
         </kanban>
     </field>

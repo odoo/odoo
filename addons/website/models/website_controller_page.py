@@ -24,6 +24,7 @@ class WebsiteControllerPage(models.Model):
     page_name = fields.Char(string="Name", help="The name is used to generate the URL and is shown in the browser title bar", required=True)
     name_slugified = fields.Char(compute="_compute_name_slugified", store=True,
         string="URL", help="The name of the page usable in a URL")
+    url_demo = fields.Char(string="URL", compute="_compute_url_demo")
     page_type = fields.Selection(selection=[("listing", "Listing"), ("single", "Single record")],
         default="listing", string="Page Type",
         help="The type of the page. If set, it indicates whether the page displays a list of records or a single record")
@@ -35,6 +36,10 @@ class WebsiteControllerPage(models.Model):
         ],
         default="grid",
     )
+
+    _sql_constraints = [
+        ('unique_name_slugified', 'UNIQUE(name_slugified)', 'url should be unique')
+    ]
 
     @api.constrains('view_id', 'model_id', "model")
     def _check_user_has_model_access(self):
@@ -48,6 +53,17 @@ class WebsiteControllerPage(models.Model):
                 rec.name_slugified = False
                 continue
             rec.name_slugified = slugify(rec.page_name or '')
+
+    @api.depends("name_slugified")
+    def _compute_url_demo(self):
+        for rec in self:
+            if not rec.name_slugified:
+                rec.url_demo = ""
+                continue
+            url = ["", "model", rec.name_slugified]
+            if rec.page_type == "single":
+                url.append("record-slug-[id]")
+            rec.url_demo = "/".join(url)
 
     def unlink(self):
         # When a website_controller_page is deleted, the ORM does not delete its
@@ -63,3 +79,10 @@ class WebsiteControllerPage(models.Model):
         # Make sure website._get_menu_ids() will be recomputed
         self.env.registry.clear_cache()
         return super().unlink()
+
+    def open_website_url(self):
+        if self.page_type == "listing":
+            return {
+                "type": "ir.actions.act_url",
+                "url": f"/model/{self.name_slugified}"
+            }
