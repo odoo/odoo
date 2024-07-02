@@ -1,5 +1,5 @@
 import { Record } from "@mail/core/common/record";
-import { DiscussApp } from "@mail/core/common/discuss_app_model";
+import { DiscussApp } from "@mail/core/public_web/discuss_app_model";
 import { patch } from "@web/core/utils/patch";
 
 patch(DiscussApp.prototype, {
