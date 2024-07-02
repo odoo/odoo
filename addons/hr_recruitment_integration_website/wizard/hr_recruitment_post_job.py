@@ -1,3 +1,4 @@
+
 from werkzeug.urls import url_join
 
 from odoo import fields, models
@@ -19,3 +20,6 @@ class HrRecruitmentPostJobWizard(models.TransientModel):
             }
         else:
             return super()._get_apply_method()
+
+    def action_generate_post_from_website(self):
+        self.ensure_one()

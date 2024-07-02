@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Job board website integration',
-    'category': 'Website/Website',
+    'name': 'Recruitment Integration website',
     'version': '1.0',
+    'category': 'Human Resources/Recruitment/Integration',
     'summary': 'Manage Job board integrations with website',
     'description': "This module allows to adapt job board integrations with online recruitment.",
     'depends': ['hr_recruitment_integration_base', 'website_hr_recruitment'],
