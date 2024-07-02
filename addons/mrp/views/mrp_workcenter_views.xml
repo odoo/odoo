@@ -155,6 +155,7 @@
                     <field name="workorder_count"/>
                     <field name="working_state"/>
                     <field name="oee_target"/>
+                    <field name="kanban_dashboard_graph"/>
                     <templates>
                         <t t-name="kanban-menu">
                             <div class="container">
@@ -201,6 +202,20 @@
                                     <div class="o_kanban_record_headings o_kanban_card_header_title">
                                         <span class="o_primary ml8" style="display: inline-block">
                                             <field name="name"/>
+                                        </span>
+                                        <span style="position: relative; right:20px; top: 5px;" name="wc_stages">
+                                            <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status float-end"
+                                                title="No workorder currently in progress. Click to mark work center as blocked."
+                                                aria-label="No workorder currently in progress. Click to mark work center as blocked."
+                                                invisible="working_state in ('blocked', 'done')"/>
+                                            <a name="unblock" type="object" class=" o_status o_status_red float-end"
+                                                title="Workcenter blocked, click to unblock."
+                                                aria-label="Workcenter blocked, click to unblock."
+                                                invisible="working_state in ('normal', 'done')"/>
+                                            <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_green float-end"
+                                                title="Work orders in progress. Click to block work center."
+                                                aria-label="Work orders in progress. Click to block work center."
+                                                invisible="working_state in ('normal', 'blocked')"/>
                                         </span>
                                     </div>
                                 </div>
@@ -268,20 +283,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-12 o_kanban_primary_left" style="position:absolute; bottom:10px;" name="wc_stages">
-                                            <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status float-end"
-                                                title="No workorder currently in progress. Click to mark work center as blocked."
-                                                aria-label="No workorder currently in progress. Click to mark work center as blocked."
-                                                invisible="working_state in ('blocked', 'done')"/>
-                                            <a name="unblock" type="object" class=" o_status o_status_red float-end"
-                                                title="Workcenter blocked, click to unblock."
-                                                aria-label="Workcenter blocked, click to unblock."
-                                                invisible="working_state in ('normal', 'done')"/>
-                                            <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_green float-end"
-                                                title="Work orders in progress. Click to block work center."
-                                                aria-label="Work orders in progress. Click to block work center."
-                                                invisible="working_state in ('normal', 'blocked')"/>
-                                        </div>
+                                        <field name="kanban_dashboard_graph" graph_type="bar" widget="dashboard_graph"/>
                                     </div>
                                 </div>
                             </div>
