@@ -39,3 +39,4 @@ class SkillLevel(models.Model):
         if vals.get('default_level'):
             self.skill_type_id.skill_level_ids.filtered(lambda r: r.id != self.id).default_level = False
         return res
+
