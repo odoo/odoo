@@ -165,7 +165,12 @@ class Project(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
             'name': _("%(name)s's Sales Orders", name=self.name),
-            "context": {"create": self.env.context.get('create_for_project_id', False), "show_sale": True},
+            "context": {
+                "create": self.env.context.get('create_for_project_id', False),
+                "show_sale": True,
+                "default_partner_id": self.partner_id.id,
+                "default_analytic_account_id": self.analytic_account_id.id,
+            },
         }
         if len(all_sale_orders) <= 1:
             action_window.update({
@@ -255,7 +260,9 @@ class Project(models.Model):
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
             'domain': [('id', 'in', invoice_ids)],
             'context': {
-                'create': False,
+                'default_move_type': 'out_invoice',
+                'default_partner_id': self.partner_id.id,
+                'project_id': self.id,
             }
         }
         if len(invoice_ids) == 1:
@@ -682,6 +689,9 @@ class Project(models.Model):
                 'number': self_sudo.sale_order_count,
                 'action_type': 'object',
                 'action': 'action_view_sos',
+                'additional_context': json.dumps({
+                    'create_for_project_id': self.id,
+                }),
                 'show': self_sudo.display_sales_stat_buttons and self_sudo.sale_order_count > 0,
                 'sequence': 27,
             })
@@ -768,7 +778,9 @@ class Project(models.Model):
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
             'domain': [('id', 'in', vendor_bill_ids)],
             'context': {
-                'create': False,
+                'default_move_type': 'in_invoice',
+                'default_partner_id': self.partner_id.id,
+                'project_id': self.id,
             }
         }
         if len(vendor_bill_ids) == 1:
