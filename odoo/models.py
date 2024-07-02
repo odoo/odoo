@@ -2891,15 +2891,16 @@ class BaseModel(metaclass=MetaModel):
             else:
                 comodel = self.env.get(definition.get('comodel'))
                 if comodel is None or comodel._transient or comodel._abstract:
-                    # all value are false, because the model does not exist anymore
-                    # (or is a transient model e.g.)
-                    condition = SQL("FALSE")
-                else:
-                    # check the existences of the many2many
-                    condition = SQL(
-                        "%s::int IN (SELECT id FROM %s)",
-                        SQL.identifier(property_alias), SQL.identifier(comodel._table),
-                    )
+                    raise UserError(_(
+                                            "You cannot use %(property_name)r because the linked %(model_name)r model doesn't exist or is invalid",
+                        property_name=definition.get('string', property_name), model_name=definition.get('comodel'),
+                    ))
+
+                # check the existences of the many2many
+                condition = SQL(
+                    "%s::int IN (SELECT id FROM %s)",
+                    SQL.identifier(property_alias), SQL.identifier(comodel._table),
+                )
 
             query.add_join(
                 "LEFT JOIN",
@@ -2927,9 +2928,10 @@ class BaseModel(metaclass=MetaModel):
         elif property_type == 'many2one':
             comodel = self.env.get(definition.get('comodel'))
             if comodel is None or comodel._transient or comodel._abstract:
-                # all value are false, because the model does not exist anymore
-                # (or is a transient model e.g.)
-                return SQL('FALSE')
+                raise UserError(_(
+                    "You cannot use %(property_name)r because the linked %(model_name)r model doesn't exist or is invalid",
+                    property_name=definition.get('string', property_name), model_name=definition.get('comodel'),
+                ))
 
             return SQL(
                 """ CASE
