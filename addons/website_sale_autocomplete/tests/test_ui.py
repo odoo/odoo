@@ -2,12 +2,12 @@
 
 from odoo.tests import HttpCase, patch, tagged
 
-from odoo.addons.website_sale_autocomplete.controllers.main import (
+from odoo.addons.google_address_autocomplete.controllers.google_address_autocomplete import (
     AutoCompleteController,
 )
 
 
-CONTROLLER_PATH = 'odoo.addons.website_sale_autocomplete.controllers.main.AutoCompleteController'
+CONTROLLER_PATH = 'odoo.addons.google_address_autocomplete.controllers.google_address_autocomplete.AutoCompleteController'
 MOCK_GOOGLE_ID = 'aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1kUXc0dzlXZ1hjUQ=='
 MOCK_API_KEY = 'Tm9ib2R5IGV4cGVjdHMgdGhlIFNwYW5pc2ggaW5xdWlzaXRpb24gIQ=='
 
@@ -26,8 +26,8 @@ class TestUI(HttpCase):
     def test_autocomplete(self):
         with patch.object(AutoCompleteController, '_perform_complete_place_search',
                           lambda controller, *args, **kwargs: {
-                              'country': self.env['res.country'].search([('code', '=', 'USA')]).id,
-                              'state': self.env['res.country.state'].search([('country_id.code', '=', 'USA')])[0].id,
+                              'country': [self.env['res.country'].search([('code', '=', 'USA')]).id, 'United States'],
+                              'state': [self.env['res.country.state'].search([('country_id.code', '=', 'USA')])[0].id, 'Alabama'],
                               'zip': '12345',
                               'city': 'A Fictional City',
                               'street': 'A fictional Street',

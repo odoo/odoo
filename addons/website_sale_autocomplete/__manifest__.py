@@ -7,7 +7,8 @@
     'version': '1.0',
     'description': "Assist your users with automatic completion & suggestions when filling their address during checkout",
     'depends': [
-        'website_sale'
+        'website_sale',
+        'google_address_autocomplete',
     ],
     'data': [
         'views/templates.xml',
@@ -15,6 +16,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
+            'google_address_autocomplete/static/src/google_places_session.js',
             'website_sale_autocomplete/static/src/js/address_form.js',
             'website_sale_autocomplete/static/src/xml/autocomplete.xml',
         ],
