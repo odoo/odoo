@@ -2356,22 +2356,20 @@ export class OdooEditor extends EventTarget {
         if (this._isResizingTable || !traversedNodes.some(node => !!closestElement(node, 'td') && !closestElement(node, '[data-oe-protected="true"]'))) {
             return false;
         }
-        let range;
-        if (selection.rangeCount > 1) {
-            // Firefox selection in table works with multiple ranges.
-            const startRange = getDeepRange(this.editable, {range: selection.getRangeAt(0)});
-            const endRange = getDeepRange(this.editable, {range: selection.getRangeAt(selection.rangeCount - 1)});
-            range = this.document.createRange();
-            range.setStart(startRange.startContainer, 0);
-            range.setEnd(endRange.startContainer, 0);
-        } else {
-            // We need the triple click correction only for a bug in firefox
-            // where it gives a selection of a full cell as tr 0 tr 1. The
-            // correction makes it so it gives us the cell and not its neighbor.
-            // In all other cases we don't want to make that correction so as to
-            // avoid flicker when hovering borders.
-            range = getDeepRange(this.editable, { correctTripleClick: anchorNode && anchorNode.nodeName === 'TR' });
+        if (this.isFirefox) {
+            if (selection.rangeCount > 1) {
+                this.historyResetLatestComputedSelection(true);
+            } else if (ev && closestElement(ev.target, 'table') === closestElement(selection.anchorNode, 'table') &&
+                    closestElement(selection.focusNode, 'td') !== closestElement(ev.target, 'td')) {
+                setSelection(selection.anchorNode, selection.anchorOffset, ev.target, 0);
+            }
         }
+        // We need the triple click correction only for a bug in firefox
+        // where it gives a selection of a full cell as tr 0 tr 1. The
+        // correction makes it so it gives us the cell and not its neighbor.
+        // In all other cases we don't want to make that correction so as to
+        // avoid flicker when hovering borders.
+        const range = getDeepRange(this.editable, { correctTripleClick: anchorNode && anchorNode.nodeName === 'TR' });
         const startTd = closestElement(range.startContainer, 'td');
         const endTd = closestElement(range.endContainer, 'td');
         let appliedCustomSelection = false;
@@ -3400,12 +3398,19 @@ export class OdooEditor extends EventTarget {
                 ev.preventDefault();
                 this._applyCommand('oDeleteForward');
             } else if (
-                (ev.inputType === 'insertParagraph' || isChromeInsertParagraph)
+                (['insertParagraph', 'insertLineBreak'].includes(ev.inputType) || isChromeInsertParagraph)
             ) {
                 this._compositionStep();
                 this.historyRollback();
                 ev.preventDefault();
-                if (this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
+                getDeepRange(this.editable, { select: true, correctTripleClick: true });
+                const anchorTD = closestElement(newSelection.anchorNode, '.o_selected_td');
+                const focusTD = closestElement(newSelection.focusNode, '.o_selected_td');
+                if (anchorTD && focusTD && closestElement(anchorTD, 'table') === closestElement(focusTD, 'table')) {
+                    this.deselectTable();
+                    setSelection(anchorTD.firstChild, 0, anchorTD.lastChild, nodeSize(anchorTD.lastChild));
+                }
+                if (ev.inputType === 'insertLineBreak' || this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
                     this._applyCommand('oShiftEnter');
                 }
             } else if (['insertText', 'insertCompositionText'].includes(ev.inputType)) {
@@ -3777,9 +3782,6 @@ export class OdooEditor extends EventTarget {
             }
             ev.preventDefault();
             ev.stopPropagation();
-        } else if (ev.shiftKey && ev.key === "Enter") {
-            ev.preventDefault();
-            this._applyCommand('oShiftEnter');
         } else if (IS_KEYBOARD_EVENT_UNDO(ev)) {
             // Ctrl-Z
             ev.preventDefault();
