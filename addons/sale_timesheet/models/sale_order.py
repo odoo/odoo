@@ -16,6 +16,7 @@ class SaleOrder(models.Model):
         help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit", compute_sudo=True,
         groups="hr_timesheet.group_hr_timesheet_user", export_string_translation=False)
     show_hours_recorded_button = fields.Boolean(compute="_compute_show_hours_recorded_button", groups="hr_timesheet.group_hr_timesheet_user", export_string_translation=False)
+    has_timesheet_portal = fields.Boolean(compute='_compute_has_timesheet_portal', export_string_translation=False)
 
 
     def _compute_timesheet_count(self):
@@ -70,6 +71,13 @@ class SaleOrder(models.Model):
         show_button_ids = self._get_order_with_valid_service_product()
         for order in self:
             order.show_hours_recorded_button = order.timesheet_count or order.project_count and order.id in show_button_ids
+
+    def _compute_has_timesheet_portal(self):
+        Timesheet = self.env['account.analytic.line']
+        initial_domain = Timesheet._timesheet_get_portal_domain()
+        for order in self:
+            domain = expression.AND([initial_domain, ['|', ('so_line', 'ilike', order.name), ('so_line.order_id.name', 'ilike', order.name)]])
+            order.has_timesheet_portal = Timesheet.sudo().search(domain, limit=1)
 
     def _get_order_with_valid_service_product(self):
         SaleOrderLine = self.env['sale.order.line']
