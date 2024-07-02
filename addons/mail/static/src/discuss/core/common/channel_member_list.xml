@@ -11,7 +11,7 @@
                 </h6>
                 <t t-foreach="props.thread.onlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
             </t>
-            <t t-if="props.thread.offlineMembers.length > 0">
+            <t name="offlineMembers" t-if="props.thread.offlineMembers.length > 0">
                 <h6 class="mx-3 text-700">
                     Offline -
                     <t t-esc="props.thread.offlineMembers.length"/>
