@@ -36,6 +36,7 @@
         ],
         'website.assets_wysiwyg': [
             'website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js',
+            'website_hr_recruitment/static/src/snippets/s_searchbar/options.xml',
         ],
         'website.assets_editor': [
             'website_hr_recruitment/static/src/js/systray_items/new_content.js',

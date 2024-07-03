@@ -27,42 +27,6 @@
     </section>
 </template>
 
-<template id="searchbar_input_snippet_options" inherit_id="website.snippet_options" name="search bar snippet options">
-    <xpath expr="." position="inside">
-        <div data-js="SearchBar" data-selector=".s_searchbar_input">
-            <we-select string="Search within" data-name="scope_opt"
-                    data-attribute-name="searchType" data-apply-to=".search-query">
-                <we-button data-set-search-type="all" data-select-data-attribute="all" data-name="search_all_opt" data-form-action="/website/search">Everything</we-button>
-                <we-button data-set-search-type="pages" data-select-data-attribute="pages" data-name="search_pages_opt" data-form-action="/pages">Pages</we-button>
-            </we-select>
-            <we-select string="Order by" data-name="order_opt" data-attribute-name="orderBy" data-apply-to=".search-query">
-                <we-button data-set-order-by="name asc" data-select-data-attribute="name asc" data-name="order_name_asc_opt">Name (A-Z)</we-button>
-            </we-select>
-            <t t-set="unit">results</t>
-            <we-input string="Suggestions" data-name="limit_opt" data-attribute-name="limit"
-                data-apply-to=".search-query" data-select-data-attribute="" t-att-data-unit="unit"/>
-            <div data-dependencies="limit_opt">
-                <we-checkbox string="Description" data-dependencies="search_all_opt" data-select-data-attribute="true" data-attribute-name="displayDescription"
-                    data-apply-to=".search-query"/>
-                <we-checkbox string="Extra Link" data-dependencies="search_all_opt" data-select-data-attribute="true" data-attribute-name="displayExtraLink"
-                    data-apply-to=".search-query"/>
-                <we-checkbox string="Detail" data-dependencies="search_all_opt" data-select-data-attribute="true" data-attribute-name="displayDetail"
-                    data-apply-to=".search-query"/>
-                <we-checkbox string="Image" data-dependencies="search_all_opt" data-select-data-attribute="true" data-attribute-name="displayImage"
-                    data-apply-to=".search-query"/>
-
-                <we-checkbox string="Content" data-dependencies="search_pages_opt" data-select-data-attribute="true" data-attribute-name="displayDescription"
-                    data-apply-to=".search-query"/>
-            </div>
-            <we-select string="Style">
-                <we-button data-set-searchbar-style="default">Default Input Style</we-button>
-                <we-button data-set-searchbar-style="light">Light</we-button>
-            </we-select>
-        </div>
-    </xpath>
-    <xpath expr="//*[@t-set='so_content_addition_selector']" position="inside">, .s_searchbar_input</xpath>
-</template>
-
 <record id="website.s_searchbar_000_js" model="ir.asset">
     <field name="name">Searchbar 000 JS</field>
     <field name="bundle">web.assets_frontend</field>

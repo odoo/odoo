@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website.s_searchbar_options">
+        <WeSelect title.translate="Search within"
+                  name="'scope_opt'"
+                  attributeName="'searchType'"
+                  applyTo="'.search-query'">
+            <WeButton setSearchType="'all'"
+                      selectDataAttribute="'all'"
+                      name="'search_all_opt'"
+                      formAction="'/website/search'">
+                Everything
+            </WeButton>
+            <WeButton setSearchType="'pages'"
+                      selectDataAttribute="'pages'"
+                      name="'search_pages_opt'"
+                      formAction="'/pages'">
+                Pages
+            </WeButton>
+        </WeSelect>
+        <WeSelect title.translate="Order by" name="'order_opt'" attributeName="'orderBy'" applyTo="'.search-query'">
+            <WeButton setOrderBy="'name asc'" selectDataAttribute="'name asc'" name="'order_name_asc_opt'">
+                Name (A-Z)
+            </WeButton>
+        </WeSelect>
+        <WeInput title.translate="Suggestions"
+                 name="'limit_opt'"
+                 attributeName="'limit'"
+                 applyTo="'.search-query'"
+                 selectDataAttribute="''"
+                 unit="'results'"/>
+        <div dependencies="'limit_opt'">
+            <WeRow title.translate="Description">
+                <WeCheckbox dependencies="'search_all_opt'"
+                            selectDataAttribute="'true'"
+                            attributeName="'displayDescription'"
+                            applyTo="'.search-query'"/>
+            </WeRow>
+            <WeRow title.translate="Extra Link">
+                <WeCheckbox dependencies="'search_all_opt'"
+                            selectDataAttribute="'true'"
+                            attributeName="'displayExtraLink'"
+                            applyTo="'.search-query'"/>
+            </WeRow>
+            <WeRow title.translate="Detail">
+                <WeCheckbox dependencies="'search_all_opt'"
+                            selectDataAttribute="'true'"
+                            attributeName="'displayDetail'"
+                            applyTo="'.search-query'"/>
+            </WeRow>
+            <WeRow title.translate="Image">
+                <WeCheckbox dependencies="'search_all_opt'"
+                            selectDataAttribute="'true'"
+                            attributeName="'displayImage'"
+                            applyTo="'.search-query'"/>
+            </WeRow>
+
+            <WeRow title.translate="Content">
+                <WeCheckbox dependencies="'search_pages_opt'"
+                            selectDataAttribute="'true'"
+                            attributeName="'displayDescription'"
+                            applyTo="'.search-query'"/>
+            </WeRow>
+        </div>
+        <WeSelect title.translate="Style">
+            <WeButton setSearchbarStyle="'default'">Default Input Style</WeButton>
+            <WeButton setSearchbarStyle="'light'">Light</WeButton>
+        </WeSelect>
+    </t>
+
+</templates>

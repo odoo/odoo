@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website_hr_recruitment.s_searchbar_options" t-inherit="website.s_searchbar_options" t-inherit-mode="extension">
+        <xpath expr="//WeSelect[@name=&quot;'scope_opt'&quot;]" position="inside">
+            <WeButton setSearchType="'jobs'" selectDataAttribute="'jobs'" name="'search_jobs_opt'" formAction="'/jobs'">Jobs</WeButton>
+        </xpath>
+        <xpath expr="//div[@dependencies=&quot;'limit_opt'&quot;]" position="inside">
+            <WeCheckbox title.translate="Description"
+                        dependencies="'search_jobs_opt'"
+                        selectDataAttribute="'true'"
+                        attributeName="'displayDescription'"
+                        applyTo="'.search-query'"/>
+        </xpath>
+    </t>
+
+</templates>

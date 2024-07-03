@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website_blog.s_searchbar_options" t-inherit="website.s_searchbar_options" t-inherit-mode="extension">
+        <xpath expr="//WeSelect[@name=&quot;'scope_opt'&quot;]" position="inside">
+            <WeButton setSearchType="'blogs'" selectDataAttribute="'blogs'" name="'search_blogs_opt'" formAction="'/blog'">Blogs</WeButton>
+        </xpath>
+        <xpath expr="//WeSelect[@name=&quot;'order_opt'&quot;]" position="inside">
+            <WeButton setOrderBy="'published_date asc'" selectDataAttribute="'published_date asc'" dependencies="'search_blogs_opt'" name="'order_published_date_asc_opt'">Date (old to new)</WeButton>
+            <WeButton setOrderBy="'published_date desc'" selectDataAttribute="'published_date desc'" dependencies="'search_blogs_opt'" name="'order_published_date_desc_opt'">Date (new to old)</WeButton>
+        </xpath>
+        <xpath expr="//div[@dependencies=&quot;'limit_opt'&quot;]" position="inside">
+            <WeCheckbox title.translate="Description"
+                        dependencies="'search_blogs_opt'"
+                        selectDataAttribute="'true'"
+                        attributeName="'displayDescription'"
+                        applyTo="'.search-query'"/>
+            <WeCheckbox title.translate="Publication Date"
+                        dependencies="'search_blogs_opt'"
+                        selectDataAttribute="'true'"
+                        attributeName="'displayDetail'"
+                        applyTo="'.search-query'"/>
+        </xpath>
+    </t>
+
+</templates>

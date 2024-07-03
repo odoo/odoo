@@ -1,55 +1,77 @@
-/** @odoo-module **/
+import { SnippetOption } from "@web_editor/js/editor/snippets.options";
+import { registerContentAdditionSelector } from "@web_editor/js/editor/snippets.registry";
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
 
-import options from '@web_editor/js/editor/snippets.options.legacy';
+export class SearchBar extends SnippetOption {
+    constructor({ callbacks }) {
+        super(...arguments);
+        this.requestUserValue = callbacks.requestUserValue;
+        this._constructor();
+    }
 
-options.registry.SearchBar = options.Class.extend({
+    /**
+     * Allows patching the constructor.
+     *
+     * @protected
+     */
+    _constructor() {
+    }
+
     /**
      * @override
      */
-    start() {
+    async willStart() {
+        await super.willStart(...arguments);
         this.searchInputEl = this.$target[0].querySelector(".oe_search_box");
         this.searchButtonEl = this.$target[0].querySelector(".oe_search_button");
-        return this._super(...arguments);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
 
-    setSearchType: function (previewMode, widgetValue, params) {
+    setSearchType(previewMode, widgetValue, params) {
         const form = this.$target.parents('form');
         form.attr('action', params.formAction);
 
         if (!previewMode) {
-            this.trigger_up('snippet_edition_request', {exec: () => {
-                const widget = this._requestUserValueWidgets('order_opt')[0];
-                const orderBy = widget.getValue("selectDataAttribute");
-                const order = widget.$el.find("we-button[data-select-data-attribute='" + orderBy + "']")[0];
-                if (order.classList.contains("d-none")) {
-                    const defaultOrder = widget.$el.find("we-button[data-name='order_name_asc_opt']")[0];
-                    defaultOrder.click(); // open
-                    defaultOrder.click(); // close
+            this.env.snippetEditionRequest(async () => {
+                // Reset orderBy if current value is not present in searchType
+                const orderBySelect = this.requestUserValue({ name: "order_opt" });
+                const currentOrderBy = orderBySelect.getValue("selectDataAttribute");
+                const currentOrderByButton = Object.values(orderBySelect._subValues)
+                    .find(userValue => userValue._data.selectDataAttribute === currentOrderBy);
+                if (!currentOrderByButton.show) {
+                    const defaultOrderByWidget = orderBySelect.findWidget("order_name_asc_opt");
+                    defaultOrderByWidget.enable();
                 }
-            }});
 
-            // Reset display options.
-            const displayOptions = new Set();
-            for (const optionEl of this.$el[0].querySelectorAll('[data-dependencies="limit_opt"] [data-attribute-name^="display"]')) {
-                displayOptions.add(optionEl.dataset.attributeName);
-            }
-            const scopeName = this.$el[0].querySelector(`[data-set-search-type="${widgetValue}"]`).dataset.name;
-            for (const displayOption of displayOptions) {
-                this.$target[0].dataset[displayOption] = this.$el[0].querySelector(
-                    `[data-attribute-name="${displayOption}"][data-dependencies="${scopeName}"]`
-                ) ? 'true' : '';
-            }
+                // Reset display options.
+                const displayOptions = Object.values(this._userValues)
+                    .filter(userValue => userValue._data.attributeName?.startsWith("display"));
+                const displayOptionsNames = new Set(
+                    displayOptions.map(userValue => userValue._data.attributeName)
+                );
+                const shownDisplayOptions = displayOptions.filter(userValue => userValue.show);
+                for (const displayOptionName of displayOptionsNames) {
+                    const shownUserValue = shownDisplayOptions.find(
+                        userValue => userValue._data.attributeName === displayOptionName
+                    );
+                    const isEnabled = !!shownUserValue;
+                    this.$target[0].dataset[displayOptionName] = isEnabled ? "true" : "";
+
+                    if (shownUserValue) {
+                        // TODO: @owl-options Should this be needed ?
+                        await shownUserValue.setValue("true");
+                    }
+                }
+            });
         }
-    },
-
-    setOrderBy: function (previewMode, widgetValue, params) {
+    }
+    setOrderBy(previewMode, widgetValue, params) {
         const form = this.$target.parents('form');
         form.find(".o_search_order_by").attr("value", widgetValue);
-    },
+    }
     /**
      * Sets the style of the searchbar.
      *
@@ -61,7 +83,7 @@ options.registry.SearchBar = options.Class.extend({
         this.searchInputEl.classList.toggle("bg-light", isLight);
         this.searchButtonEl.classList.toggle("btn-light", isLight);
         this.searchButtonEl.classList.toggle("btn-primary", !isLight);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -70,16 +92,19 @@ options.registry.SearchBar = options.Class.extend({
     /**
      * @override
      */
-    _computeWidgetState(methodName, params) {
+    async _computeWidgetState(methodName, params) {
         if (methodName === "setSearchbarStyle") {
             const searchInputIsLight = this.searchInputEl.matches(".border-0.bg-light");
             const searchButtonIsLight = this.searchButtonEl.matches(".btn-light");
             return searchInputIsLight && searchButtonIsLight ? "light" : "default";
         }
-        return this._super(...arguments);
-    },
-});
+        return super._computeWidgetState(...arguments);
+    }
+}
 
-export default {
-    SearchBar: options.registry.SearchBar,
-};
+registerWebsiteOption("SearchBar", {
+    Class: SearchBar,
+    template: "website.s_searchbar_options",
+    selector: ".s_searchbar_input",
+});
+registerContentAdditionSelector(".s_searchbar_input");

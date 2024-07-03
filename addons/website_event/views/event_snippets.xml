@@ -12,22 +12,6 @@
     <xpath expr="//*[@t-set='so_content_addition_selector']" position="inside">, .s_speaker_bio</xpath>
 </template>
 
-<template id="event_searchbar_input_snippet_options" inherit_id="website.searchbar_input_snippet_options" name="event search bar snippet options">
-    <xpath expr="//div[@data-js='SearchBar']/we-select[@data-name='scope_opt']" position="inside">
-        <we-button data-set-search-type="events" data-select-data-attribute="events" data-name="search_events_opt" data-form-action="/events">Events</we-button>
-    </xpath>
-    <xpath expr="//div[@data-js='SearchBar']/we-select[@data-name='order_opt']" position="inside">
-        <we-button data-set-order-by="date_begin asc" data-select-data-attribute="date_begin asc" data-dependencies="search_events_opt" data-name="order_date_begin_asc_opt">Date (old to new)</we-button>
-        <we-button data-set-order-by="date_end desc" data-select-data-attribute="date_end desc" data-dependencies="search_events_opt" data-name="order_date_end_desc_opt">Date (new to old)</we-button>
-    </xpath>
-    <xpath expr="//div[@data-js='SearchBar']/div[@data-dependencies='limit_opt']" position="inside">
-        <we-checkbox string="Description" data-dependencies="search_events_opt" data-select-data-attribute="true" data-attribute-name="displayDescription"
-            data-apply-to=".search-query"/>
-        <we-checkbox string="Event Date" data-dependencies="search_events_opt" data-select-data-attribute="true" data-attribute-name="displayDetail"
-            data-apply-to=".search-query"/>
-    </xpath>
-</template>
-
 <!-- Snippet - Speaker Bio -->
 <template id="s_speaker_bio" name="Speaker Bio">
     <div class="s_speaker_bio" itemscope="itemscope" itemtype="http://schema.org/Person" itemprop="performer">
