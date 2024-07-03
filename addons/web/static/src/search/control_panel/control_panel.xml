@@ -105,7 +105,7 @@
     </t>
 
     <t t-name="web.embeddedActionsDropdown">
-        <Dropdown>
+        <Dropdown menuClass="'o_embedded_actions_dropdown_menu'">
             <button class="btn btn-secondary">
                 <i class="fa fa-sliders"/>
             </button>
@@ -116,13 +116,14 @@
                         onSelected="() => this.env.isSmall ? this.onEmbeddedActionClick(action) : action.id ? this._setVisibility(action.id) : {}"
                         closingMode="'none'"
                     >
-                        <div class="d-flex p-0 align-items-center justify-content-between">
+                        <div class="d-flex p-0 pe-1 align-items-center justify-content-between">
                             <span t-out="action.name"/>
-                            <i t-if="action.is_deletable" class="ms-1 o_icon_right fa fa-trash-o" title="Delete item" t-on-click.stop="() => this.openConfirmationDialog(action)" />
+                            <i t-if="action.is_deletable" class="o_icon_right btn btn-link text-danger p-0 position-absolute end-0 fa fa-trash-o" title="Delete item" t-on-click.stop="() => this.openConfirmationDialog(action)" />
                         </div>
                     </DropdownItem>
                 </t>
-                <AccordionItem class="'o_save_current_view'" description="'Save current view'">
+                <div role="separator" class="dropdown-divider"/>
+                <AccordionItem class="'o_save_current_view'" description="'Save View'">
                     <div class="px-2 py-2">
                         <input type="text"
                             t-ref="newActionNameRef"
