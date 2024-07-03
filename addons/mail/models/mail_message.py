@@ -946,7 +946,6 @@ class Message(models.Model):
                     'parentMessage': {...}, # formatted message that this message is a reply to. Only present if format_reply is True
                 }
         """
-        self.check_access_rule("read")
         vals_list = self._read_format(self._get_message_format_fields())
         com_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
         note_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_note")

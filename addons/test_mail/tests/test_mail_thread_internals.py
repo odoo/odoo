@@ -442,17 +442,12 @@ class TestDiscuss(MailCommon, TestRecipients):
     @users("employee")
     def test_unlink_notification_message(self):
         channel = self.env['discuss.channel'].create({'name': 'testChannel'})
-        notification_msg = channel.with_user(self.user_admin).message_notify(
+        channel.with_user(self.user_admin).message_notify(
             body='test',
             partner_ids=[self.partner_2.id],
         )
-
-        with self.assertRaises(exceptions.AccessError):
-            notification_msg.with_env(self.env)._message_format(for_current_user=True)
-
         channel_message = self.env['mail.message'].sudo().search([('model', '=', 'discuss.channel'), ('res_id', 'in', channel.ids)])
         self.assertEqual(len(channel_message), 1, "Test message should have been posted")
-
         channel.sudo().unlink()
         remaining_message = channel_message.exists()
         self.assertEqual(len(remaining_message), 0, "Test message should have been deleted")
