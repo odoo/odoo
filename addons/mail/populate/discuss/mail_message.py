@@ -20,6 +20,7 @@ class Message(models.Model):
         admin = self.env.ref("base.user_admin").partner_id
         random = populate.Random("mail.message in discuss")
         channels = self.env["discuss.channel"].browse(self.env.registry.populated_models["discuss.channel"])
+        channels = channels.filtered(lambda channel: channel.channel_type in ['channel', 'group', 'chat'])
         messages = []
         big_done = 0
         for channel in channels.filtered(lambda channel: channel.channel_member_ids):

@@ -17,6 +17,7 @@ class ChannelMember(models.Model):
         res = super()._populate(size)
         random = populate.Random("discuss.channel.member")
         channels = self.env["discuss.channel"].browse(self.env.registry.populated_models["discuss.channel"])
+        channels = channels.filtered(lambda channel: channel.channel_type in ['channel', 'group', 'chat'])
         users = self.env["res.users"].browse(self.env.registry.populated_models["res.users"])
         users = users.filtered(lambda user: user.active)
         admin = self.env.ref("base.user_admin")
