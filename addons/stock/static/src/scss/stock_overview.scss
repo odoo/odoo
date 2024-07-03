@@ -1,15 +1,11 @@
 .o_kanban_dashboard.o_stock_kanban .o_kanban_renderer {
+    --KanbanRecord-width: 48%;
 
-    &.o_kanban_ungrouped {
-        .o_kanban_record {
-            width: 480px;
-        }
+    @include media-only(screen) {
+        --KanbanGroup-width: 480px;
     }
-
-    .o_kanban_group {
-        &:not(.o_column_folded) {
-            --KanbanGroup-width: 480px;
-        }
+    @include media-only(print) {
+        --KanbanGroup-width: 400px;
     }
 }
 
