@@ -5,13 +5,16 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.vpicktree"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='origin']" position="replace">
+                <xpath expr="//field[@name='origin']" position="after">
                     <field name="partner_id" string="Partner"/>
                     <field name="zip_code"/>
                     <field name="weight" sum="Total Max Weight (Kg)" string="Max Weight (Kg)" optional="hide"/>
                     <field name="volume" sum="Total Max Volume (m³)" string="Max Volume (m³)" optional="hide"/>
                 </xpath>
                 <xpath expr="//field[@name='company_id'][2]" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='origin']" position="attributes">
                     <attribute name="optional">hide</attribute>
                 </xpath>
                 <xpath expr="//field[@name='company_id']" position="before">

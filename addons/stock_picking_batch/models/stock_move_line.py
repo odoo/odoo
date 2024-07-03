@@ -89,3 +89,4 @@ class StockMoveLine(models.Model):
         if picking_to_wave_vals_list:
             self.env['stock.picking'].create(picking_to_wave_vals_list)
         wave.action_confirm()
+        return wave

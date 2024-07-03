@@ -18,6 +18,7 @@
         'report/report_picking_batch.xml',
         'views/stock_location.xml',
         'wizard/stock_picking_to_batch_views.xml',
+        'wizard/stock_add_to_wave_views.xml',
     ],
     'license': 'LGPL-3',
 }

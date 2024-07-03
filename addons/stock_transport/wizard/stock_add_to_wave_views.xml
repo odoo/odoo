@@ -1,0 +1,14 @@
+<odoo>
+    <record id="stock_add_to_wave_form_inherit_stock_transport" model="ir.ui.view">
+        <field name="name">stock.add.to.wave.form.inherit.stock.transport</field>
+        <field name="model">stock.add.to.wave</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_add_to_wave_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/group/group/field[@name='user_id']" position="after">
+                <field name="dock_id" groups="stock.group_stock_multi_locations"/>
+                <field name="vehicle_id" placeholder="Third Party Provider"/>
+                <field name="vehicle_category_id" placeholder="semi-truck"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import fields, models, api
 
 
@@ -27,10 +25,16 @@ class StockPickingType(models.Model):
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    sequence = fields.Integer(string='Sequence', readonly=False)
+    sequence = fields.Integer(string='Sequence', compute='update_sequence', store=True, readonly=False)
     zip_code = fields.Char(string="Zip", related='partner_id.zip')
     weight = fields.Float(string="Max Weight", compute='_compute_total_weight')
     volume = fields.Float(string="Max Volume", compute='_compute_total_volume')
+
+    @api.depends('partner_id')
+    def update_sequence(self):
+        sorted_records = self.batch_id.picking_ids.filtered(lambda x: not x.partner_id or '0').sorted(key=lambda r: r.zip_code or '0')
+        for idx, record in enumerate(sorted_records):
+            record.sequence = idx
 
     @api.depends('move_ids.product_id.weight')
     def _compute_total_weight(self):

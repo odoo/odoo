@@ -133,7 +133,7 @@
                 </xpath>
                 <xpath expr="//filter[@name='done']" position="after">
                     <filter name="vehicle_id" string="Own Fleet" domain="[('vehicle_id', '!=', False)]"/>
-                    <filter name="vehicle_id" string="Third Party Carrier" domain="[('vehicle_id', '=', False), ('vehicle_category_id', '!=', False)]"/>
+                    <filter name="vehicle_id" string="Third Party Carrier" domain="[('vehicle_id', '=', False)]"/>
                 </xpath>
                 <xpath expr="//filter[@name='my_transfers']" position="after">
                     <filter name="scheduled_date" date="scheduled_date" string="Scheduled Date"/>
@@ -185,9 +185,10 @@
     <record id="vpicktree_inherit_stock_picking_batch_stock_transport" model="ir.ui.view">
         <field name="name">stock.picking.tree.inherit.stock.transport</field>
         <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock_picking_batch.vpicktree_inherit_stock_picking_batch"/>
+        <field name="inherit_id" ref="stock_picking_batch.vpicktree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='batch_id']" position="replace">
+            <xpath expr="//field[@name='batch_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
             </xpath>
         </field>
     </record>
