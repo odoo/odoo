@@ -139,6 +139,7 @@ class Project(models.Model):
                 'show_sale': True,
                 'link_to_project': self.id,
                 'form_view_ref': 'sale_project.sale_order_line_view_form_editable', # Necessary for some logic in the form view
+                'action_view_sols': True,
                 'default_partner_id': self.partner_id.id,
                 'default_company_id': self.company_id.id,
                 'default_order_id': self.sale_order_id.id,
