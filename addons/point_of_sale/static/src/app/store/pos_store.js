@@ -388,8 +388,7 @@ export class PosStore extends Reactive {
         window.addEventListener("beforeunload", () =>
             this.db.save("TO_REFUND_LINES", this.toRefundLines)
         );
-        const { start_category, iface_start_categ_id } = this.config;
-        this.selectedCategoryId = (start_category && iface_start_categ_id?.[0]) || 0;
+        this.resetProductScreenSearch();
         // Push orders in background, do not await
         this.push_orders();
         // This method is to load the demo datas.
@@ -2087,6 +2086,12 @@ export class PosStore extends Reactive {
 
     redirectToBackend() {
         window.location = "/web#action=point_of_sale.action_client_pos_menu";
+    }
+
+    resetProductScreenSearch() {
+        this.searchProductWord = "";
+        const { start_category, iface_start_categ_id } = this.config;
+        this.selectedCategoryId = (start_category && iface_start_categ_id?.[0]) || 0;
     }
 }
 
