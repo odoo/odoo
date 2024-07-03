@@ -52,38 +52,33 @@ test("press 'ctrl+a' inside a banner should select all the banner content", asyn
     );
 });
 
-test.todo(
-    "remove all content should preserves the first paragraph tag inside the banner",
-    async () => {
-        const { el, editor } = await setupEditor("<p>Test[]</p>");
-        insertText(editor, "/bannerinfo");
-        press("enter");
-        insertText(editor, "Test1");
-        manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
-            inputType: "insertParagraph",
-        });
-        insertText(editor, "Test2");
-        press(["ctrl", "a"]);
-        expect(getContent(el)).toBe(
-            `<p>Test</p><div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
+test("remove all content should preserves the first paragraph tag inside the banner", async () => {
+    const { el, editor } = await setupEditor("<p>Test[]</p>");
+    insertText(editor, "/bannerinfo");
+    press("enter");
+    insertText(editor, "Test1");
+    manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
+        inputType: "insertParagraph",
+    });
+    insertText(editor, "Test2");
+    press(["ctrl", "a"]);
+    expect(getContent(el)).toBe(
+        `<p>Test</p><div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                 <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
                 <div class="w-100 ms-3" contenteditable="true">[
                     <p>Test1</p><p>Test2<br></p>
                 ]</div>
             </div><p></p>`
-        );
+    );
 
-        press("Backspace");
-        expect(getContent(el)).toBe(
-            `<p>Test</p><div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
+    press("Backspace");
+    expect(getContent(el)).toBe(
+        `<p>Test</p><div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                 <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                <div class="w-100 ms-3" contenteditable="true">
-                    <p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>
-                </div>
+                <div class="w-100 ms-3" contenteditable="true"><p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p></div>
             </div><p></p>`
-        );
-    }
-);
+    );
+});
 
 test("first element of an editable that is contenteditable='false' must not be selected with ctrl+a", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
