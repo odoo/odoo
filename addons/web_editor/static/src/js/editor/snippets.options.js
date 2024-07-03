@@ -64,6 +64,7 @@ import {
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { registerOption } from "./snippets.registry";
 
 const preserveCursor = OdooEditorLib.preserveCursor;
 const { DateTime } = luxon;
@@ -4971,7 +4972,6 @@ export class SnippetOption {
     }
 }
 
-const owlRegistry = registry.category("snippet_options");
 
 // class TestOption extends SnippetOption {
 //     constructor() {
@@ -9654,7 +9654,7 @@ class ContainerWidth extends SnippetOption {
     }
 }
 
-owlRegistry.add("container_width", {
+registerOption("container_width", {
     Class: ContainerWidth,
     template: "web_editor.container_width",
     selector: "section, .s_carousel .carousel-item, s_quotes_carousel .carousel-item",
@@ -10345,4 +10345,3 @@ legacyRegistry.CarouselHandler = legacyRegistry.GalleryHandler.extend({
         carouselEl.classList.add("slide");
     },
 });
-

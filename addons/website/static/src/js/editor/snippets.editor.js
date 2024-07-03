@@ -229,6 +229,15 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
         return super._computeSnippetTemplates(html);
     }
     /**
+     * @override
+     */
+    getOptions() {
+        const options = super.getOptions().filter(([optionID, option]) => {
+            return ["website", "web_editor"].includes(option.module);
+        });
+        return options;
+    }
+    /**
      * Depending of the demand, reconfigure they gmap key or configure it
      * if not already defined.
      *

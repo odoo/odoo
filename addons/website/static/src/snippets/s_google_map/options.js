@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
 import { SnippetOption } from "@web_editor/js/editor/snippets.options";
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
 
 class GoogleMap extends SnippetOption {
 
@@ -65,7 +65,7 @@ class GoogleMap extends SnippetOption {
         return super._computeWidgetState(...arguments);
     }
 }
-registry.category("snippet_options").add("GoogleMap", {
+registerWebsiteOption("GoogleMap", {
     Class: GoogleMap,
     template: "website.s_google_map_option",
     selector: ".s_google_map",

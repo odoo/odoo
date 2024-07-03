@@ -2,6 +2,7 @@
 
 import { SnippetOption } from "@web_editor/js/editor/snippets.options";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
 
 export class ImageSnippet extends SnippetOption {
 
@@ -43,7 +44,7 @@ export class ImageSnippet extends SnippetOption {
     }
 }
 
-registry.category("snippet_options").add("Image", {
+registerWebsiteOption("Image", {
     Class: ImageSnippet,
     selector: '.s_image',
 });

@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 import { SnippetOption } from "@web_editor/js/editor/snippets.options";
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
 
 export class FacebookPage extends SnippetOption {
     constructor() {
@@ -184,7 +185,7 @@ export class FacebookPage extends SnippetOption {
     }
 }
 
-registry.category("snippet_options").add("FacebookPage", {
+registerWebsiteOption("FacebookPage", {
     Class: FacebookPage,
     template: "website.s_facebook_page_options",
     selector: ".o_facebook_page",

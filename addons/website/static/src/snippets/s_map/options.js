@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
 import { SnippetOption } from "@web_editor/js/editor/snippets.options";
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
 import { generateGMapIframe, generateGMapLink } from '@website/js/utils';
 
 export class Map extends SnippetOption {
@@ -86,7 +86,7 @@ export class Map extends SnippetOption {
     }
 }
 
-registry.category("snippet_options").add("Map", {
+registerWebsiteOption("Map", {
     Class: Map,
     template: "website.s_map_options",
     selector: ".s_map",

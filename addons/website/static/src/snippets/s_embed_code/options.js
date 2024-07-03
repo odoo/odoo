@@ -8,6 +8,7 @@ import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/ed
 import { cloneContentEls } from "@website/js/utils";
 
 import { Component, useState } from "@odoo/owl";
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
 
 class CodeEditorDialog extends Component {
     static template = "website.s_embed_code_dialog";
@@ -69,7 +70,7 @@ class EmbedCode extends SnippetOption {
     }
 }
 
-registry.category("snippet_options").add("EmbedCode", {
+registerWebsiteOption("EmbedCode", {
     Class: EmbedCode,
     template: "website.s_embed_code",
     selector: ".s_embed_code",

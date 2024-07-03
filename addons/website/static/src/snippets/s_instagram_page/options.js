@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import {_t} from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
 import { SnippetOption } from "@web_editor/js/editor/snippets.options";
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
 import SocialMediaOption from "@website/snippets/s_social_media/options";
 
 export class InstagramPage extends SnippetOption {
@@ -96,7 +96,7 @@ export class InstagramPage extends SnippetOption {
     }
 }
 
-registry.category("snippet_options").add("InstagramPage", {
+registerWebsiteOption("InstagramPage", {
     Class: InstagramPage,
     template: "website.s_instagram_page_options",
     selector: ".s_instagram_page",

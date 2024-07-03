@@ -3477,7 +3477,7 @@ class SnippetsMenu extends Component {
         $styles.addClass('d-none');
 
         // TODO: @owl-options Rename this property when all options have been converted.
-        this.templateOptions.push(...registry.category("snippet_options").getEntries().map(([optionID, option]) => {
+        this.templateOptions.push(...this.getOptions().map(([optionID, option]) => {
             const selector = option.selector;
             const exclude = option.exclude || "";
             const excludeParent = optionID === "so_content_addition" ? snippetAdditionDropIn : "";
@@ -3626,6 +3626,15 @@ class SnippetsMenu extends Component {
         this._makeSnippetDraggable();
         this._disableUndroppableSnippets();
 
+    }
+    /**
+     * Returns all the options from the registry. Allows modules to override
+     * this to filter out options that don't belong to them.
+     *
+     * @return {[string, Object][]}
+     */
+    getOptions() {
+        return registry.category("snippet_options").getEntries();
     }
     /**
      * Creates a snippet editor to associated to the given snippet. If the given
