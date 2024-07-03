@@ -200,7 +200,7 @@
             <CondizioniPagamento t-translation="off"><t t-if="len(payments) == 1">TP02</t><t t-else="">TP01</t></CondizioniPagamento>
             <t t-foreach="payments" t-as="payment">
                 <DettaglioPagamento>
-                    <ModalitaPagamento t-translation="off">MP05</ModalitaPagamento>
+                    <ModalitaPagamento t-translation="off" t-out="payment_method"/>
                     <DataScadenzaPagamento t-out="format_date(payment.date_maturity)"/>
                     <ImportoPagamento t-out="format_monetary(abs(payment.amount_currency), currency)"/>
                     <IstitutoFinanziario t-if="partner_bank.bank_id" t-out="format_alphanumeric(partner_bank.bank_id.name, 80)"/>

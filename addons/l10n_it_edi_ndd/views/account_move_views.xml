@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_invoice_form_l10n_it" model="ir.ui.view">
+        <field name="name">account.move.form.l10n.it</field>
+        <field name="model">account.move</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="l10n_it_edi.account_invoice_form_l10n_it"/>
+        <field name="arch" type="xml">
+            <field name="l10n_it_ddt_id" position="after">
+                <field name="l10n_it_document_type"
+                       string="Document Type"
+                       domain="[('type', '=', 'purchase' if move_type in ('in_invoice', 'in_receipt', 'in_refund') else 'sale')]"
+                />
+                <field name="l10n_it_payment_method" string="Payment Method"/>
+            </field>
+        </field>
+    </record>
+</odoo>
