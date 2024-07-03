@@ -5694,6 +5694,56 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
+    QUnit.test("one2many, edit record in dialog, save, re-edit, discard", async function (assert) {
+        assert.expect(6);
+        serverData.models.partner.records[0].p = [2];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <form>
+                            <field name="int_field"/>
+                        </form>
+                        <tree>
+                            <field name="int_field"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(target.querySelector(".o_data_cell[name=int_field]").innerText, "9");
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.strictEqual(
+            target.querySelector(".modal .o_field_widget[name=int_field] input").value,
+            "9"
+        );
+
+        await editInput(target, ".modal .o_field_widget[name=int_field] input", "123");
+        await clickSave(target.querySelector(".modal"));
+        assert.strictEqual(target.querySelector(".o_data_cell[name=int_field]").innerText, "123");
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.strictEqual(
+            target.querySelector(".modal .o_field_widget[name=int_field] input").value,
+            "123"
+        );
+
+        await clickDiscard(target.querySelector(".modal"));
+        assert.strictEqual(target.querySelector(".o_data_cell[name=int_field]").innerText, "123");
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.strictEqual(
+            target.querySelector(".modal .o_field_widget[name=int_field] input").value,
+            "123"
+        );
+    });
+
     QUnit.test(
         "one2many list with inline form view with context with parent key",
         async function (assert) {
