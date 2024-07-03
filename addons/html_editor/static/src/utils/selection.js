@@ -1,5 +1,5 @@
-import { isBlock } from "./blocks";
-import { isNotEditableNode, isSelfClosingElement } from "./dom_info";
+import { closestBlock, isBlock } from "./blocks";
+import { isNotEditableNode, isSelfClosingElement, nextLeaf, previousLeaf } from "./dom_info";
 import { isFakeLineBreak } from "./dom_state";
 import { closestElement, createDOMPathGenerator } from "./dom_traversal";
 import {
@@ -203,3 +203,35 @@ export const callbacksForCursorUpdate = {
     /** @type {(node: HTMLElement) => (cursor: Cursor) => void} */
     unwrap: (node) => (cursor) => updateCursorBeforeUnwrap(node, cursor),
 };
+
+/**
+ * @param {Selection} selection
+ * @param {"previous"|"next"} side
+ * @param {HTMLElement} editable
+ * @returns {string | undefined}
+ */
+export function getAdjacentCharacter(selection, side, editable) {
+    let { focusNode, focusOffset } = selection;
+    const originalBlock = closestBlock(focusNode);
+    let adjacentCharacter;
+    while (!adjacentCharacter && focusNode) {
+        if (side === "previous") {
+            // @todo: this might be wrong in the first time, as focus node might not be a leaf.
+            adjacentCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
+        } else {
+            adjacentCharacter = focusNode.textContent[focusOffset];
+        }
+        if (!adjacentCharacter) {
+            if (side === "previous") {
+                focusNode = previousLeaf(focusNode, editable);
+                focusOffset = focusNode && nodeSize(focusNode);
+            } else {
+                focusNode = nextLeaf(focusNode, editable);
+                focusOffset = 0;
+            }
+            const characterIndex = side === "previous" ? focusOffset - 1 : focusOffset;
+            adjacentCharacter = focusNode && focusNode.textContent[characterIndex];
+        }
+    }
+    return closestBlock(focusNode) === originalBlock ? adjacentCharacter : undefined;
+}
