@@ -450,9 +450,9 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsGlobalDiscountProgramNo
     steps: () =>
         [
             Dialog.confirm("Open session"),
+            ProductScreen.addOrderline("product_a", "1"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAAA"),
-            ProductScreen.addOrderline("product_a", "1"),
             PosLoyalty.hasRewardLine("10% on your order", "-10.00"),
             PosLoyalty.orderTotalIs("90"),
             PosLoyalty.pointsAwardedAre("90"),
