@@ -597,8 +597,7 @@ export function makeActionManager(env, router = _router) {
                 return clientAction.target;
             }
         }
-        if (controllerStack.some((c) => c.action.target === "fullscreen")) {
-            // Force fullscreen when one of the controllers is set to fullscreen
+        if (action.target === "fullscreen") {
             return "fullscreen";
         }
         // Default: current
