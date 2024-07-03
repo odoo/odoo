@@ -92,6 +92,7 @@ const {
     Array: { isArray: $isArray },
     Boolean,
     Error,
+    Math: { floor: $floor },
     Object: { assign: $assign, fromEntries: $fromEntries, entries: $entries, keys: $keys },
     Promise,
     TypeError,
@@ -444,6 +445,15 @@ const registerAssertion = (assertion) => {
 };
 
 /**
+ * @param {number} value
+ * @param {number} digits
+ */
+const roundTo = (value, digits) => {
+    const divisor = 10 ** digits;
+    return $floor(value * divisor) / divisor;
+};
+
+/**
  * @param {string} method
  */
 const scopeError = (method) => new HootError(`cannot call \`${method}()\` outside of a test`);
@@ -760,6 +770,48 @@ export class Matcher {
                 (pass
                     ? `received value is[! not] strictly equal to %actual%`
                     : `expected values to be strictly equal`),
+            details: (actual) => {
+                const details = [
+                    [Markup.green("Expected:"), expected],
+                    [Markup.red("Received:"), actual],
+                ];
+                if (canDiff(actual) && canDiff(expected)) {
+                    details.push([Markup.text("Diff:"), Markup.diff(expected, actual)]);
+                }
+                return details;
+            },
+        });
+    }
+
+    /**
+     * Expects the received value to be strictly equal to the `expected` value.
+     *
+     * @param {R} expected
+     * @param {ExpectOptions & { digits?: number }} [options]
+     * @example
+     *  expect(0.2 + 0.1).toBeCloseTo(0.3);
+     * @example
+     *  expect(3.51).toBeCloseTo(3.5, { digits: 1 });
+     */
+    toBeCloseTo(expected, options) {
+        this._saveStack();
+
+        ensureArguments([
+            [expected, "number"],
+            [options, ["object", null]],
+        ]);
+
+        const digits = options?.digits ?? 2;
+        return this._resolve({
+            name: "toBeCloseTo",
+            acceptedType: "number",
+            transform: (value) => roundTo(value, digits),
+            predicate: (actual) => strictEqual(actual, expected),
+            message: (pass) =>
+                options?.message ||
+                (pass
+                    ? `received value is[! not] close to %actual%`
+                    : `expected values to be close to the given value`),
             details: (actual) => {
                 const details = [
                     [Markup.green("Expected:"), expected],

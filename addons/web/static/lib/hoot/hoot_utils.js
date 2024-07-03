@@ -489,7 +489,14 @@ export function formatHumanReadable(value, options) {
         }
         return `"${value}"`;
     } else if (typeof value === "number") {
-        return value << 0 === value ? String(value) : value.toFixed(3);
+        if (value << 0 === value) {
+            return String(value);
+        }
+        let fixed = value.toFixed(3);
+        while (fixed.endsWith("0")) {
+            fixed = fixed.slice(0, -1);
+        }
+        return fixed;
     } else if (typeof value === "function") {
         const name = value.name || "anonymous";
         const prefix = /^[A-Z][a-z]/.test(name) ? `class ${name}` : `Function ${name}()`;
