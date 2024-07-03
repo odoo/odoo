@@ -180,6 +180,23 @@ test(`width computation: no record, all fields with a max width`, async () => {
     expect(getColumnWidths()).toEqual([40, 253, 253, 253]);
 });
 
+test(`width computation: no record, sample data`, async () => {
+    Foo._records = [];
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <tree sample="1">
+                <field name="bar"/>
+                <field name="foo"/>
+                <field name="text"/>
+                <field name="m2o"/>
+                <field name="int_field"/>
+            </tree>`,
+    });
+    expect(getColumnWidths()).toEqual([40, 146, 156, 156, 156, 146]);
+});
+
 test(`width computation: with records, lot of fields`, async () => {
     await mountView({
         type: "list",
