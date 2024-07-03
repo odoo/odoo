@@ -975,7 +975,7 @@
                                      invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'">
                                     <field name="journal_id"
                                         options="{'no_create': True, 'no_open': True}"
-                                        readonly="posted_before"/>
+                                        readonly="posted_before and name not in (False, '', '/')"/>
                                     <span class="oe_inline o_form_label mx-3"
                                           groups="base.group_multi_currency"
                                           invisible="move_type == 'entry'"> in </span>
