@@ -4964,6 +4964,45 @@ test.tags("desktop")("one2many list with inline form view", async () => {
     await clickSave();
 });
 
+test.tags("desktop")("one2many, edit record in dialog, save, re-edit, discard", async () => {
+    Partner._records[0].p = [2];
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="p">
+                    <form>
+                        <field name="int_field"/>
+                    </form>
+                    <tree>
+                        <field name="int_field"/>
+                    </tree>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_data_cell[name=int_field]").toHaveText("9");
+
+    await contains(".o_data_row .o_data_cell").click();
+    expect(".modal .o_field_widget[name=int_field] input").toHaveValue("9");
+
+    await contains(".modal .o_field_widget[name=int_field] input").edit("123");
+    await contains(`.modal .modal-footer .o_form_button_save`).click();
+    expect(".o_data_cell[name=int_field]").toHaveText("123");
+
+    await contains(".o_data_row .o_data_cell").click();
+    expect(".modal .o_field_widget[name=int_field] input").toHaveValue("123");
+
+    await contains(`.modal .modal-footer .o_form_button_cancel`).click();
+    expect(".o_data_cell[name=int_field]").toHaveText("123");
+
+    await contains(".o_data_row .o_data_cell").click();
+    expect(".modal .o_field_widget[name=int_field] input").toHaveValue("123");
+});
+
 test.tags("desktop")(
     "one2many list with inline form view with context with parent key",
     async () => {
