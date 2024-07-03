@@ -14,25 +14,28 @@ _logger = logging.getLogger(__name__)
 websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel()))
 
 def send_to_controller(device_type, params):
+    """
+    Confirm the operation's completion by sending a response back to the Odoo server
+    """
     routes = {
         "printer": "/iot/printer/status",
-        }
-    server = helpers.get_odoo_server_url()
+    }
+    params['iot_mac'] = helpers.get_mac_address()
+    server_url = helpers.get_odoo_server_url() + routes[device_type]
     try:
         urllib3.disable_warnings()
         http = urllib3.PoolManager(cert_reqs='CERT_NONE')
         http.request(
             'POST',
-            server + routes[device_type],
-            body=json.dumps(
-                {'params': params}).encode('utf8'),
+            server_url,
+            body=json.dumps({'params': params}).encode('utf8'),
             headers={
                 'Content-type': 'application/json',
                 'Accept': 'text/plain',
             },
         )
     except Exception:
-        _logger.exception('Could not reach configured server: %s', server)
+        _logger.exception('Could not reach confirmation status URL: %s', server_url)
 
 
 def on_message(ws, messages):
@@ -42,7 +45,7 @@ def on_message(ws, messages):
     """
     messages = json.loads(messages)
     for message in messages:
-        if (message['message']['type'] == 'iot_action'):
+        if message['message']['type'] == 'iot_action':
             payload = message['message']['payload']
             if helpers.get_mac_address() in payload['iotDevice']['iotIdentifiers']:
                 for device in payload['iotDevice']['identifiers']:
