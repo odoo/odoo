@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ControlButtons">
-        <div t-attf-class="flex-{{!props.wrapped ? (ui.isSmall ? 'column' : 'wrap') : 'wrap'}}" class="control-buttons d-flex bg-300 border-bottom">
+        <div t-attf-class="flex-{{ui.isSmall ? 'column' : 'wrap'}}" class="control-buttons d-flex bg-300 border-bottom">
             <!-- All buttons always displayed -->
-            <SelectPartnerButton partner="partner" t-if="props.wrapped"/>
-            <t t-if="props.wrapped || (ui.isSmall and !props.wrapped)">
+            <SelectPartnerButton partner="partner" t-if="!props.showRemainingButtons"/>
+            <t t-if="!props.showRemainingButtons || (ui.isSmall and props.showRemainingButtons)">
                 <button t-if="pos.models['account.fiscal.position'].length"
                     class="control-button o_fiscal_position_button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickFiscalPosition()">
                     <i class="fa fa-book me-1" role="img" aria-label="Set fiscal position"
@@ -20,12 +20,11 @@
                 <OrderlineNoteButton t-if="!pos.config.module_pos_restaurant"/>
             </t>
             <!-- All buttons only displayed outside of dialog -->
-            <button class="btn btn-light rounded-0 fw-bolder" t-if="props.wrapped and !ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
+            <button class="btn btn-light rounded-0 fw-bolder" t-if="!props.showRemainingButtons and !ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
                 More...
             </button>
-
             <!-- All these buttons will only be displayed in a dialog -->
-            <t t-if="!props.wrapped">
+            <t t-if="props.showRemainingButtons">
                 <OrderlineNoteButton t-if="pos.config.module_pos_restaurant" />
                 <button class="o_pricelist_button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickPricelist()">
                     <i class="fa fa-th-list me-2" role="img" aria-label="Price list" title="Price list" />

@@ -12,11 +12,11 @@ export class ControlButtons extends Component {
     static template = "point_of_sale.ControlButtons";
     static components = { OrderlineNoteButton, SelectPartnerButton };
     static props = {
-        wrapped: { type: Boolean, optional: true },
+        showRemainingButtons: { type: Boolean, optional: true },
         onClickMore: { type: Function, optional: true },
     };
     static defaultProps = {
-        wrapped: true,
+        showRemainingButtons: false,
     };
     setup() {
         this.pos = usePos();
@@ -124,7 +124,7 @@ export class ControlButtonsPopup extends Component {
     static components = { Dialog, ControlButtons };
     static template = xml`
         <Dialog bodyClass="'d-flex flex-column'" footer="false" title="''" t-on-click="props.close">
-            <ControlButtons wrapped="false"/>
+            <ControlButtons showRemainingButtons="true"/>
         </Dialog>
     `;
     static props = {

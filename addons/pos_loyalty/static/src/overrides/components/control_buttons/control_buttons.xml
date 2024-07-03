@@ -27,7 +27,7 @@
                 </button>
             </t>
         </xpath>
-        <xpath expr="//t[@t-if='!props.wrapped']/OrderlineNoteButton" position="after">
+        <xpath expr="//t[@t-if='props.showRemainingButtons']/OrderlineNoteButton" position="after">
             <t t-if="pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type))">
                 <button class="btn btn-light rounded-0 fw-bolder" t-att-class="{'disabled': !pos.get_order().isProgramsResettable()}"
                     t-on-click="() => this.pos.resetPrograms()">
