@@ -39,7 +39,7 @@
             <table cellspacing="0" cellpadding="0" style="width:100%; border-collapse: collapse;">
                 <t t-foreach="channel.message_ids.sorted(key=lambda m: m.date)" t-as="message" >
                     <!-- sudo: res.partner - visitor can access authors of the messages sent on their channel -->
-                    <t t-set="author_name" t-value="message.author_id.sudo().name if message.author_id else 'You'" />
+                    <t t-set="author_name"><t t-if="message.author_id" t-esc="message.author_id.sudo().user_livechat_username or message.author_id.sudo().name"></t><t t-else="">You</t></t>
                     <tr>
                         <td valign="top" align="center" rowspan="2" t-att-style="'width: 70px;' + top + bottom + left">
                             <t t-if="message.author_avatar">
