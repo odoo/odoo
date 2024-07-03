@@ -128,7 +128,7 @@ export class ColorPlugin extends Plugin {
      */
     applyColor(color, mode) {
         const selectedTds = [...this.editable.querySelectorAll("td.o_selected_td")].filter(
-            (node) => closestElement(node).isContentEditable
+            (node) => node.isContentEditable
         );
         if (selectedTds.length && mode === "backgroundColor") {
             for (const td of selectedTds) {

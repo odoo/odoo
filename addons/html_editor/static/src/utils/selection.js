@@ -75,7 +75,7 @@ export function normalizeNotEditableNode(node, offset, position = "right") {
     let closest = closestElement(node);
     while (closest && closest !== editable && !closest.isContentEditable) {
         [node, offset] = position === "right" ? rightPos(node) : leftPos(node);
-        closest = closestElement(node);
+        closest = node;
     }
     return [node, offset];
 }

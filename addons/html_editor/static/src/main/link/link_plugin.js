@@ -429,7 +429,7 @@ export class LinkPlugin extends Plugin {
         let selection = this.shared.getEditableSelection();
         if (
             isHtmlContentSupported(selection.anchorNode) &&
-            !closestElement(selection.anchorNode).closest("a") &&
+            !closestElement(selection.anchorNode, "a") &&
             selection.anchorNode.nodeType === Node.TEXT_NODE
         ) {
             // Merge adjacent text nodes.
