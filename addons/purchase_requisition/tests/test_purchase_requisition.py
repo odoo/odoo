@@ -145,3 +145,20 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.requisition1.company_id = new_company
         self.requisition1.action_in_progress()
         self.assertTrue(self.requisition1.name.startswith("REQ_"))
+
+    def test_purchase_requisition_with_same_product(self):
+        """
+        Create two requisitions with the same product, but only one of them has a PO linked.
+        Check that the ordered quantity is correctly computed.
+        """
+        requisition_2 = self.requisition1.copy({'name': 'requisition_2'})
+        # Create purchase order from purchase requisition
+        po_form = Form(self.env['purchase.order'].with_context(default_requisition_id=requisition_2.id))
+        po_form.partner_id = self.res_partner_1
+        po = po_form.save()
+        self.assertEqual(po.requisition_id, requisition_2)
+        po.button_confirm()
+        self.assertEqual(po.state, 'purchase')
+        (self.requisition1.line_ids | requisition_2.line_ids)._compute_ordered_qty()
+        self.assertEqual(self.requisition1.line_ids.qty_ordered, 0)
+        self.assertEqual(requisition_2.line_ids.qty_ordered, 10)
