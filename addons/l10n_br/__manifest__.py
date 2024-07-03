@@ -66,6 +66,7 @@ Same as the l10n_br_avatax module with the extension to the sales order module.
         'data/l10n_latam.document.type.csv',
         'views/account_view.xml',
         'views/account_fiscal_position_views.xml',
+        'views/ir_ui_menu_brazil.xml',
         'views/res_company_views.xml',
         'views/account_journal_views.xml',
         'views/res_bank_views.xml',
