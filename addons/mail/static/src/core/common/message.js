@@ -247,6 +247,10 @@ export class Message extends Component {
         return this.env.inChatter ? 2 : 3;
     }
 
+    get showSeenIndicator() {
+        return this.props.message.isSelfAuthored && this.props.thread?.hasSeenFeature;
+    }
+
     get showSubtypeDescription() {
         return (
             this.message.subtype_description &&
@@ -433,9 +437,7 @@ export class Message extends Component {
                     res_id: id,
                 });
                 if (!this.env.isSmall) {
-                    this.props.thread.open(true, {
-                        autofocus: false
-                    });
+                    this.props.thread.open(true, { autofocus: false });
                 }
             }
             return;

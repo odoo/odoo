@@ -24,12 +24,6 @@
                             <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted opacity-75 o-smaller mt-2">
                                 <t t-esc="message.dateSimple"/>
                             </small>
-                            <div t-else="">
-                                <MessageSeenIndicator
-                                    t-if="props.message.isSelfAuthored and props.thread?.hasSeenFeature"
-                                    message="props.message"
-                                    thread="props.thread"/>
-                            </div>
                         </t>
                     </div>
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': message.composer }" t-ref="messageContent">
@@ -43,11 +37,6 @@
                                 <t t-if="message.isPending" t-call="mail.Message.pendingStatus"/>
                                 <RelativeTime t-else="" datetime="message.datetime"/>
                             </small>
-                            <MessageSeenIndicator
-                                t-if="props.message.isSelfAuthored and !props.squashed and props.thread?.hasSeenFeature"
-                                className="'ms-1'"
-                                message="props.message"
-                                thread="props.thread"/>
                             <small t-if="!isOriginThread and !message.is_transient and message.thread" t-on-click.prevent="openRecord" class="ms-1 text-500">
                                 <t t-if="message.thread.model !== 'discuss.channel'">
                                     on <a t-att-href="message.resUrl"><t t-esc="message.thread.displayName"/></a>
@@ -110,6 +99,13 @@
                                                         <!-- <small t-if="message.editDate" class="o-mail-Message-edited fst-italic text-muted" t-att-class="{ 'ms-2': !message.isBodyEmpty }" t-att-title="message.editDatetimeHuge">(edited)</small> --> <!-- DISABLED because new messages sent by email are wrongly flagged as (edited) -->
                                                         <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtype_description) ?? message.subtype_description"/>
                                                     </t>
+                                                </div>
+                                                <div class="position-absolute bottom-0 end-0 smaller me-1">
+                                                    <MessageSeenIndicator
+                                                        t-if="showSeenIndicator"
+                                                        message="props.message"
+                                                        thread="props.thread"
+                                                    />
                                                 </div>
                                             </div>
                                         </t>
