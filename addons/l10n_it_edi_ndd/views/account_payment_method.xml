@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_journal_form_l10n_it" model="ir.ui.view">
+            <field name="name">account.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@id='inbound_payment_settings']/field[@name='inbound_payment_method_line_ids']/tree" position="inside">
+                    <field name="l10n_it_payment_method" optional="hide" column_invisible="parent.country_code != 'IT'"/>
+                </xpath>
+
+                <xpath expr="//page[@id='outbound_payment_settings']/field[@name='outbound_payment_method_line_ids']/tree" position="inside">
+                    <field name="l10n_it_payment_method" optional="hide" column_invisible="parent.country_code != 'IT'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
