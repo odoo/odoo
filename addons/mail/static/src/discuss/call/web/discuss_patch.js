@@ -1,4 +1,4 @@
-import { Discuss } from "@mail/core/common/discuss";
+import { Discuss } from "@mail/core/public_web/discuss";
 
 import { patch } from "@web/core/utils/patch";
 
