@@ -830,6 +830,42 @@ class TestExpression(SavepointCaseWithUserDemo):
         with self.assertRaises(ValueError):
             Model.search([('name', '=', 'X'), ('color', '=like', '4%')])
 
+    def test_like_complement_m2o_access(self):
+        Model = self.env['res.partner']
+        parent1, parent2 = Model.create([{'name': 'Parent 1'}, {'name': 'Parent 2'}])
+        child1, child2 = Model.create([
+            {'name': 'Child 1', 'parent_id': parent1.id},
+            {'name': 'Child 2', 'parent_id': parent2.id},
+        ])
+        other = Model.create({'name': 'other'})
+        partners = parent1 + parent2 + child1 + child2 + other
+
+        # replace all ir.rules by one global rule to prevent access to parent1
+        self.env['ir.rule'].search([]).unlink()
+        self.env['ir.rule'].create([{
+            'name': 'partners rule',
+            'model_id': self.env['ir.model']._get('res.partner').id,
+            'domain_force': str([('id', 'not in', parent1.ids)]),
+        }])
+
+        # search for children, bypassing access rights
+        found = self._search(
+            Model,
+            [('parent_id', 'like', 'Parent'), ('id', 'in', partners.ids)],
+            [('id', 'in', partners.ids)],
+        )
+        self.assertEqual(found, child1 + child2)
+
+        # search for children with opposite condition and access rights; we find
+        # all except parent1 (no access) and child2(parent matches 'Parent')
+        partners.invalidate_recordset()  # avoid cache poisoning
+        found = self._search(
+            Model.with_user(self.user_demo),
+            [('parent_id', 'not like', 'Parent'), ('id', 'in', partners.ids)],
+            [('id', 'in', partners.ids)],
+        )
+        self.assertEqual(found, partners - (parent1 + child2))
+
     def test_translate_search(self):
         Country = self.env['res.country']
         belgium = self.env.ref('base.be')
@@ -1635,11 +1671,11 @@ class TestMany2one(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner"."id"
             FROM "res_partner"
-            WHERE (("res_partner"."company_id" IN (
+            WHERE (("res_partner"."company_id" NOT IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE (("res_company"."name"::text not like %s) OR "res_company"."name" IS NULL))
-            ) OR "res_partner"."company_id" IS NULL)
+                WHERE ("res_company"."name"::text LIKE %s)
+            )) OR "res_partner"."company_id" IS NULL)
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search([('company_id', 'not like', "blablabla")])

@@ -6296,7 +6296,11 @@ class BaseModel(metaclass=MetaModel):
                         if isinstance(value, (list, tuple, set)) and value:
                             v = next(iter(value))
                         if isinstance(v, str):
-                            data = data.mapped('display_name')
+                            try:
+                                data = data.mapped('display_name')
+                            except AccessError:
+                                # failed to access the record, return empty string for comparison
+                                data = ['']
                         else:
                             data = data and data.ids or [False]
                     elif field and field.type in ('date', 'datetime'):
