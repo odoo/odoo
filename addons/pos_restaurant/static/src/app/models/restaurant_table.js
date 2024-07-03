@@ -59,6 +59,8 @@ export class RestaurantTable extends Base {
             y: this.getY() + this.height / 2,
         };
     }
+    getOrder() {
+        return this["<-pos.order.table_id"][0];
+    }
 }
-
 registry.category("pos_available_models").add(RestaurantTable.pythonModel, RestaurantTable);

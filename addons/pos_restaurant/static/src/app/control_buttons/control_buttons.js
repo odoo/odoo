@@ -11,6 +11,7 @@ import { BillScreen } from "@pos_restaurant/app/bill_screen/bill_screen";
 patch(ControlButtons.prototype, {
     setup() {
         super.setup(...arguments);
+        this.alert = useService("alert");
         this.printer = useService("printer");
         this.clickPrintBill = useAsyncLockedMethod(this.clickPrintBill);
     },

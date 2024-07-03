@@ -26,13 +26,13 @@
                     <div class="controls border-start flex-column flex-nowrap flex-grow-1 flex-shrink-1 flex-basis-0">
                         <div class="order-info py-4 border-bottom text-center text-success">
                             <span class="subtotal">
-                                <t t-esc="env.utils.formatCurrency(this.newOrderPrice)" />
+                                <t t-esc="env.utils.formatCurrency(newOrderPrice)" />
                             </span>
                         </div>
                         <div class="pay-button m-3">
                             <div class="button btn btn-lg btn-secondary py-3 w-100" t-on-click="createSplittedOrder">
                                 <i class="oi oi-chevron-right me-2" />
-                                <span>Payment</span>
+                                <span>Split Order</span>
                             </div>
                         </div>
                     </div>
