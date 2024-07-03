@@ -34,7 +34,7 @@ class PaymentTransaction(models.Model):
         common = xmlrpc.client.ServerProxy('{}/xmlrpc/2/common'.format(tx_url), allow_none=True)
         tx_uid = common.authenticate(db, username, password, {})
         models = xmlrpc.client.ServerProxy('{}/xmlrpc/2/object'.format(tx_url), allow_none=True)
-        tx_ids = models.execute_kw(db, tx_uid, password, 'payment.transaction', 'search_read', [[['state', '=', 'pending']]])
+        tx_ids = models.execute_kw(db, tx_uid, password, 'payment.transaction', 'search', [[['state', '=', 'pending']]])
         for rec in tx_ids:
             self._update_state(rec, 'pending', {'done', 'error', 'cancel'})
 
