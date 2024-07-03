@@ -6,6 +6,7 @@ import { Test } from "../core/test";
 import { EXCLUDE_PREFIX } from "../core/url";
 import { formatTime, getFuzzyScore, normalize } from "../hoot_utils";
 import { HootJobButtons } from "./hoot_job_buttons";
+import { HootTechnicalValue } from "./hoot_technical_value";
 import { HootTestPath } from "./hoot_test_path";
 import { HootTestResult } from "./hoot_test_result";
 
@@ -43,12 +44,38 @@ const COLORS = {
 
 /** @extends {Component<HootReportingProps, import("../hoot").Environment>} */
 export class HootReporting extends Component {
-    static components = { HootJobButtons, HootTestPath, HootTestResult };
+    static components = { HootJobButtons, HootTechnicalValue, HootTestPath, HootTestResult };
 
     static props = {};
 
     static template = xml`
         <div class="${HootReporting.name} flex-1 overflow-y-auto">
+            <!-- Errors -->
+            <t t-foreach="runnerState.globalErrors" t-as="key" t-key="key">
+                <t t-set="error" t-value="runnerState.globalErrors[key]" />
+                <div
+                    class="flex flex-col justify-center px-3 py-2 gap-2 border-muted border-b text-fail bg-fail-900"
+                    t-att-title="error.message"
+                >
+                    <h3 class="flex items-center gap-1 whitespace-nowrap">
+                        <span class="min-w-3 min-h-3 rounded-full bg-fail" />
+                        Global <t t-esc="error.name" />
+                        <span t-if="error.count > 1">
+                            (x<t t-esc="error.count" />)
+                        </span>:
+                        <small class="ms-auto text-muted whitespace-nowrap italic font-normal">
+                            stack trace available in the console
+                        </small>
+                    </h3>
+                    <ul>
+                        <t t-foreach="error.message.split('\n')" t-as="messagePart" t-key="messagePart_index">
+                            <li class="truncate" t-esc="messagePart" />
+                        </t>
+                    </ul>
+                </div>
+            </t>
+
+            <!-- Test results -->
             <t t-set="resultStart" t-value="uiState.resultsPage * uiState.resultsPerPage" />
             <t t-foreach="filteredResults.slice(resultStart, resultStart + uiState.resultsPerPage)" t-as="result" t-key="result.id">
                 <HootTestResult
@@ -77,6 +104,8 @@ export class HootReporting extends Component {
                     </div>
                 </HootTestResult>
             </t>
+
+            <!-- "No test" panel -->
             <t t-if="!filteredResults.length">
                 <em class="text-center text-muted w-full p-4 whitespace-nowrap">
                     <t t-set="message" t-value="getEmptyMessage()" />

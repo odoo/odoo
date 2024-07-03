@@ -469,10 +469,10 @@ export function ensureError(value) {
         return value;
     }
     if (value instanceof ErrorEvent) {
-        return ensureError(value.error);
+        return ensureError(value.error || value.message);
     }
     if (value instanceof PromiseRejectionEvent) {
-        return ensureError(value.reason);
+        return ensureError(value.reason || value.message);
     }
     return new Error(String(value || "unknown error"));
 }
