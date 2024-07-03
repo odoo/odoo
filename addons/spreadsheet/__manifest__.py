@@ -89,23 +89,12 @@
         "web.assets_web_dark": [
             'spreadsheet/static/src/**/*.dark.scss',
         ],
-        'web.qunit_suite_tests': [
-            ('include', 'spreadsheet.dependencies'),
-            'spreadsheet/static/tests/legacy/**/*',
-            ('include', 'spreadsheet.o_spreadsheet'),
-            'spreadsheet/static/src/public_readonly_app/**/*.xml',
-            'spreadsheet/static/src/public_readonly_app/**/*.js',
-            ('remove', 'spreadsheet/static/src/public_readonly_app/main.js'),
-        ],
-        # Unit test files
         'web.assets_unit_tests': [
             'spreadsheet/static/tests/**/*',
             ('include', 'spreadsheet.o_spreadsheet'),
             'spreadsheet/static/src/public_readonly_app/**/*.xml',
             'spreadsheet/static/src/public_readonly_app/**/*.js',
             ('remove', 'spreadsheet/static/src/public_readonly_app/main.js'),
-
-            ('remove', 'spreadsheet/static/tests/legacy/**/*'),  # to remove when all legacy tests are ported
         ],
     }
 }
