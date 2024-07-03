@@ -1,0 +1,85 @@
+<odoo>
+
+    <record id="estate_tree_view_visit" model="ir.ui.view">
+        <field name="name">estate.view</field>
+        <field name="model">estate.visit</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="priority"/>
+                <field name="estate_id"/>
+                <field name="buyer_name"/>
+                <field name="buyer_contact"/>
+                <field name="visit_time"/>
+                <field name="time_remaining"/>
+                <field name="booking_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="estate_search_view_visit" model="ir.ui.view">
+        <field name="name">estate.view</field>
+        <field name="model">estate.visit</field>
+        <field name="arch" type="xml">
+            <search>
+            </search>
+        </field>
+    </record>
+
+    <record id="estate_form_view_visit" model="ir.ui.view">
+        <field name="name">estate.view</field>
+        <field name="model">estate.visit</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"
+                    statusbar_visible="draft,in_consultation,deal"/>
+                </header>
+                <sheet>
+                    <h1>
+                        <field name="priority" widget="priority"/>
+                    </h1>
+                    <group>
+                        <field name="estate_id"/>
+                        <field name="ref"/>
+                        <button name="test_button" string="Test Button" type="object" class="oe_highlight"/>
+                        <button name="%(estate.estate_action_visit)d" string="Test Action" type="action"
+                                help="You will be redirected"
+                                confirm="Are you sure about that? :)" class="oe_highlight"/>
+                    </group>
+                    <group>
+                        <field name="visit_time"/>
+                        <field name="time_remaining"/>
+                        <field name="booking_date"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Buyer Details" name="buyer">
+                            <group>
+                                <field name="buyer_name"/>
+                                <field name="buyer_contact"/>
+                            </group>
+                        </page>
+                        <page string="Estate Details" name="estate">
+                            <group>
+                                <field name="expected_price"/>
+                                <field name="postcode"/>
+                                <field name="bedrooms"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="estate_action_visit" model="ir.actions.act_window">
+        <field name="name">Property Types</field>
+        <field name="res_model">estate.visit</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+<menuitem id="estate_settings_menu" name="Setting" parent="estate_root_menu">
+    <menuitem id="estate_menu_visit" action="estate_action_visit" name="Property Types" />
+</menuitem>
+</odoo>

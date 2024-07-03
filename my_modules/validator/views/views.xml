@@ -1,0 +1,46 @@
+<odoo>
+
+<!--    <record id="validator_view" model="ir.ui.view">-->
+<!--        <field name="name">validator.view</field>-->
+<!--        <field name="model">validator.validator</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <tree>-->
+<!--                <field name="name"/>-->
+<!--                <field name="contact"/>-->
+<!--            </tree>-->
+<!--        </field>-->
+<!--    </record>-->
+
+<!--    <record id="validator_form_view" model="ir.ui.view">-->
+<!--        <field name="name">validator.view</field>-->
+<!--        <field name="model">validator.validator</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <form>-->
+<!--                <sheet>-->
+<!--                    <group>-->
+<!--                        <field name="name"/>-->
+<!--                        <field name="contact"/>-->
+<!--                    </group>-->
+<!--                </sheet>-->
+<!--            </form>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+<!--    <record id="validator_action_views" model="ir.actions.act_window">-->
+<!--        <field name="name">Validator</field>-->
+<!--        <field name="res_model">validator.validator</field>-->
+<!--        <field name="view_mode">tree,form</field>-->
+<!--    </record>-->
+
+    <record id="validator_action_js" model="ir.actions.client">
+        <field name="name">Todo List OWL</field>
+        <field name="tag">owl.validator</field>
+    </record>
+
+    <menuitem id="validator_menu" name="Validator">
+<!--        <menuitem id="validator_submenu" action="validator_action_views" name="Validator"/>-->
+        <menuitem id="validator_submenu_js" action="validator_action_js" name="Validator"/>
+    </menuitem>
+
+</odoo>

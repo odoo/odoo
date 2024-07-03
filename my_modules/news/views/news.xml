@@ -1,0 +1,50 @@
+<odoo>
+
+    <record id="owl_news_tree_view" model="ir.ui.view">
+        <field name="name">owl.news.view</field>
+        <field name="model">owl.news</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="news"/>
+                <field name="description"/>
+                <field name="imgsrc"/>
+                <field name="url"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="owl_news_form_view" model="ir.ui.view">
+        <field name="name">owl.news.view</field>
+        <field name="model">owl.news</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="news"/>
+                        <field name="description"/>
+                        <field name="imgsrc"/>
+                        <field name="url"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="owl_news_action_views" model="ir.actions.act_window">
+        <field name="name">News List</field>
+        <field name="res_model">owl.news</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="owl_action_news_js" model="ir.actions.client">
+        <field name="name">Top News</field>
+        <field name="tag">owl_action_news_js</field>
+    </record>
+
+    <menuitem id="owl_news_menu" name="NEWS">
+        <menuitem id="owl_news_list_submenu" action="owl_news_action_views" name="News List" sequence="5"/>
+        <menuitem id="owl_news_list_submenu_js" action="owl_action_news_js" name="TOP News" sequence="10"/>
+    </menuitem>
+
+</odoo>
