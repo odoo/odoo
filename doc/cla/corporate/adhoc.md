@@ -6,17 +6,14 @@ I declare that I am authorized and able to make this agreement and sign this dec
 
 Signed,
 
-Damián Soriano ds@adhoc.com.ar https://github.com/damiansoriano
+Juan José Scarafía jjs@adhoc.com.ar https://github.com/jjscarafia
 
 List of contributors:
 
-Damián Soriano ds@adhoc.com.ar https://github.com/damiansoriano
 Juan José Scarafía jjs@adhoc.com.ar https://github.com/jjscarafia
 Nicolás Mac Rouillon nmr@adhoc.com.ar https://github.com/nicomacr
 Katherine Zaoral kz@adhoc.com.ar https://github.com/zaoral
-Valentino Defelice vd@adhoc.com.ar https://github.com/ValentinoDefelice
 Bruno Zanotti bz@adhoc.com.ar https://github.com/Bruno-Zanotti
-Pablo Santiago Paez Sheridan pp@adhoc.com.ar https://github.com/PabloPaezSheridan
 Juan Ignacio Carreras jc@adhoc.com.ar https://github.com/jcadhoc
 Joel Zilli joz@adhoc.com.ar https://github.com/JoelZilli
 Augusto Weiss awe@adhoc.com.ar https://github.com/augusto-weiss
@@ -29,3 +26,5 @@ Rocio Marina Vega rov@adhoc.com.ar https://github.com/rov-adhoc
 Camila Vives cav@adhoc.com.ar https://github.com/cav-adhoc
 Celina Devigili ced@adhoc.com.ar https://github.com/ced-adhoc
 Matías Velazquez mav@adhoc.com.ar https://github.com/mav-adhoc
+Franco Leyes lef@adhoc.com.ar https://github.com/lef-adhoc
+Matias Nahuel Peralta mnp@adhoc.com.ar https://github.com/matiasperalta1
