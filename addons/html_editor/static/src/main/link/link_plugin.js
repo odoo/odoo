@@ -330,11 +330,9 @@ export class LinkPlugin extends Plugin {
             const link = this.document.createElement("a");
             if (!selection.isCollapsed) {
                 const content = this.shared.extractContent(selection);
-                if (!this.shared.getEditableSelection().inEditable) {
-                    const anchorNode = selection.anchorNode;
-                    const anchorOffset = selection.anchorOffset;
-                    this.shared.setSelection({ anchorNode, anchorOffset });
-                }
+                const anchorNode = selection.anchorNode;
+                const anchorOffset = selection.anchorOffset;
+                this.shared.setSelection({ anchorNode, anchorOffset });
                 link.append(content);
             }
             this.shared.domInsert(link);
