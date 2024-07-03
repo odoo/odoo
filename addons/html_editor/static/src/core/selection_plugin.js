@@ -1,14 +1,14 @@
 import { closestBlock } from "@html_editor/utils/blocks";
 import {
     getDeepestPosition,
-    previousLeaf,
+    isMediaElement,
     isProtected,
     paragraphRelatedElements,
-    isMediaElement,
+    previousLeaf,
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "../plugin";
-import { DIRECTIONS, endPos, nodeSize, startPos } from "../utils/position";
+import { DIRECTIONS, childNodeIndex, endPos, nodeSize, startPos } from "../utils/position";
 import {
     normalizeCursorPosition,
     normalizeDeepCursorPosition,
@@ -71,6 +71,35 @@ export function isArtificialVoidElement(node) {
 
 export function isNotAllowedContent(node) {
     return isArtificialVoidElement(node) || VOID_ELEMENT_NAMES.includes(node.nodeName);
+}
+
+/**
+ * @returns edges nodes if they do not have content selected
+ */
+function getUnselectedEdgeNodes(selection) {
+    function getEdgeNodes(node, offset, position = "start") {
+        const result = [];
+        if (selection.commonAncestorContainer === node) {
+            return result;
+        }
+        if (position === "start") {
+            if (offset === nodeSize(node)) {
+                result.push(node);
+                return result.concat(getEdgeNodes(node.parentNode, childNodeIndex(node), "start"));
+            }
+        } else if (position === "end") {
+            if (offset === 0) {
+                result.push(node);
+                return result.concat(getEdgeNodes(node.parentNode, childNodeIndex(node), "end"));
+            }
+        }
+        return result;
+    }
+    return new Set(
+        getEdgeNodes(selection.startContainer, selection.startOffset, "start").concat(
+            getEdgeNodes(selection.endContainer, selection.endOffset, "end")
+        )
+    );
 }
 
 export class SelectionPlugin extends Plugin {
@@ -468,8 +497,7 @@ export class SelectionPlugin extends Plugin {
     getTraversedNodes() {
         const selection = this.getEditableSelection({ deep: true });
         const selectedTableCells = this.editable.querySelectorAll(".o_selected_td");
-        const document = this.editable.ownerDocument;
-        const iterator = document.createNodeIterator(selection.commonAncestorContainer);
+        const iterator = this.document.createNodeIterator(selection.commonAncestorContainer);
         let node;
         do {
             node = iterator.nextNode();
@@ -478,7 +506,9 @@ export class SelectionPlugin extends Plugin {
             node !== selection.startContainer &&
             !(selectedTableCells.length && node === selectedTableCells[0])
         );
+
         const traversedNodes = new Set([node, ...descendants(node)]);
+        const edgeNodes = getUnselectedEdgeNodes(selection);
         while (node && node !== selection.endContainer) {
             node = iterator.nextNode();
             if (node) {
@@ -492,11 +522,7 @@ export class SelectionPlugin extends Plugin {
                     }
                 } else {
                     // ignore edges nodes if they do not have content selected
-                    if (
-                        (node === selection.endContainer && selection.endOffset === 0) ||
-                        (node === selection.startContainer &&
-                            selection.startOffset === nodeSize(selection.startContainer))
-                    ) {
+                    if (edgeNodes.has(node)) {
                         continue;
                     }
                     traversedNodes.add(node);

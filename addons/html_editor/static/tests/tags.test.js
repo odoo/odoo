@@ -122,6 +122,14 @@ describe("to heading 1", () => {
         });
     });
 
+    test("should just turn the paragraph with selected content into a heading 1", async () => {
+        await testEditor({
+            contentBefore: "<p>[ab</p><p>]cd</p>",
+            stepFunction: setTag("h1"),
+            contentAfter: "<h1>[ab</h1><p>]cd</p>",
+        });
+    });
+
     test("should turn a paragraph, a heading 1 and a heading 2 into three headings 1", async () => {
         await testEditor({
             contentBefore: "<p>a[b</p><h1>cd</h1><h2>e]f</h2>",

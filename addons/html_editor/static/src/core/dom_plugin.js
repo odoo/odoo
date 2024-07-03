@@ -325,7 +325,7 @@ export class DomPlugin extends Plugin {
     setTag({ tagName, extraClass = "" }) {
         tagName = tagName.toUpperCase();
         const selection = this.shared.getEditableSelection();
-        const selectedBlocks = [...new Set(this.shared.getTraversedNodes().map(closestBlock))];
+        const selectedBlocks = [...this.shared.getTraversedBlocks()];
         const deepestSelectedBlocks = selectedBlocks.filter(
             (block) =>
                 !descendants(block).some((descendant) => selectedBlocks.includes(descendant)) &&
