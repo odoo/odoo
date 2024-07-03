@@ -3,6 +3,7 @@
 
 from odoo.tests import Form
 from odoo.addons.stock.tests.test_report import TestReportsCommon
+from odoo import Command
 
 
 class TestMrpStockReports(TestReportsCommon):
@@ -361,3 +362,37 @@ class TestMrpStockReports(TestReportsCommon):
 
         overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
         self.assertEqual(overview_values['data']['id'], mo.id, "computing overview value should work")
+
+    def test_overview_with_component_also_as_byproduct(self):
+        """ Check that opening he overview of an MO for which the BoM contains an element as both component and byproduct
+        does not cause an infinite recursion.
+        """
+        product_1 = self.env['product.product'].create({
+            'name': 'Product',
+            'type': 'product',
+        })
+        product_2 = self.env['product.product'].create({
+            'name': 'Component',
+            'type': 'product',
+        })
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product_1.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({'product_id': product_2.id, 'product_qty': 1.0}),
+                ],
+            'byproduct_ids': [
+                Command.create({'product_id': product_2.id, 'product_qty': 1.0})
+                ]
+        })
+
+        mo = self.env['mrp.production'].create({
+            'product_id': product_1.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+        })
+
+        mo.action_confirm()
+        overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        self.assertEqual(overview_values['data']['id'], mo.id, "Unexpected disparity between overview and MO data")
