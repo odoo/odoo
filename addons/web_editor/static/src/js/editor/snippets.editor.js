@@ -733,7 +733,7 @@ var SnippetEditor = Widget.extend({
         var $element = this.$target.parent();
         while ($element.length) {
             var parentEditor = $element.data('snippet-editor');
-            if (parentEditor) {
+            if (parentEditor && parentEditor._customize$Elements) {
                 this._customize$Elements = this._customize$Elements
                     .concat(parentEditor._customize$Elements);
                 break;
