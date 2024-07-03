@@ -1437,6 +1437,10 @@ class SaleOrder(models.Model):
                 render_values={'self': move, 'origin': move.line_ids.sale_line_ids.order_id},
                 subtype_xmlid='mail.mt_note',
             )
+        if moves.mapped('move_type') == ['out_refund']:
+            original_invoices = self.invoice_ids - moves
+            if len(original_invoices) == 1 and original_invoices.move_type == 'out_invoice':
+                moves.reversed_entry_id = original_invoices.id
         return moves
 
     # MAIL #
