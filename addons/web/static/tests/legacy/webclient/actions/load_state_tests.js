@@ -1098,6 +1098,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
 
         await click(target, ".clickMe");
+        await nextTick(); //wait for the dialog to open
         assert.containsOnce(target, ".o_dialog .o_form_view");
         assert.verifySteps(["/web/action/load", "get_views", "onchange"]);
         assert.strictEqual(
