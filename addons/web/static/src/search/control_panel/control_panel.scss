@@ -76,8 +76,19 @@
     }
 }
 
-.o_save_current_view {
-    color: $link-color;
+.o_embedded_actions_dropdown_menu {
+    .o_icon_right {
+        transform: translate(-0.45em, 0);
+    }
+
+    .o_save_current_view {
+        &:before {
+            margin-inline-end: map-get($spacers, 1);
+            font-family: FontAwesome;
+            opacity: $o-opacity-muted;
+            content: "\f0c7";
+        }
+    }
 }
 
 @include media-breakpoint-down(md) {
