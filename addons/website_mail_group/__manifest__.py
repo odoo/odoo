@@ -16,6 +16,7 @@
     'assets': {
         'website.assets_wysiwyg': [
             'website_mail_group/static/src/snippets/s_group/options.js',
+            'website_mail_group/static/src/snippets/s_group/options.xml',
         ],
         'web.assets_frontend': [
             'website_mail_group/static/src/snippets/s_group/000.js',

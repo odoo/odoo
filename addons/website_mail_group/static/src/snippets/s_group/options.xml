@@ -1,0 +1,15 @@
+<templates>
+<t t-name="website_mail_group.s_group_options">
+    <WeRow>
+        <WeSelect class="'select_discussion_list'" attributeName="'id'" noPreview="'true'">
+            <t t-foreach="renderContext.mailGroups" t-as="group" t-key="group[0]">
+                <WeButton selectDataAttribute="group[0].toString()">
+                    <t t-out="group[1]"/>
+                </WeButton>
+            </t>
+        </WeSelect>
+        <WeButton class="'fa fa-fw fa-plus'" tooltip.translate="Create a public discussion group in your backend"
+                  createGroup="''" noPreview="'true'" name="'create_mail_group_opt'"/>
+    </WeRow>
+</t>
+</templates>
