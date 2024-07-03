@@ -1,24 +1,39 @@
 /** @odoo-module **/
 
 import { renderToElement } from "@web/core/utils/render";
-import options from '@web_editor/js/editor/snippets.options.legacy';
 import { _t } from "@web/core/l10n/translation";
+import { SnippetOption } from "@web_editor/js/editor/snippets.options";
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
 
-options.registry.Donation = options.Class.extend({
+export class Donation extends SnippetOption {
     /**
      * @override
      */
-    start() {
+    constructor() {
+        super(...arguments);
         this.defaultDescription = _t("Add a description here");
-        return this._super(...arguments);
-    },
+        this.descriptions = [];
+        if (this.$target[0].dataset.descriptions) {
+            const descriptionEls = this.$target[0].querySelectorAll('#s_donation_description_inputs > input');
+            for (const descriptionEl of descriptionEls) {
+                this.descriptions.push(descriptionEl.value);
+            }
+        }
+    }
+    /**
+     * @override
+     */
+    async willStart() {
+        await super.willStart(...arguments);
+        this.renderContext.showOptionDescriptions = this.$target[0].dataset.descriptions;
+    }
     /**
      * @override
      */
     onBuilt() {
         this._rebuildPrefilledOptions();
-        return this._super(...arguments);
-    },
+        return super.onBuilt(...arguments);
+    }
     /**
      * @override
      */
@@ -26,7 +41,7 @@ options.registry.Donation = options.Class.extend({
         if (!this.$target[0].dataset.descriptions) {
             this._updateDescriptions();
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -36,9 +51,9 @@ options.registry.Donation = options.Class.extend({
      * @override
      */
     async updateUI() {
-        await this._super(...arguments);
-        this._buildDescriptionsList();
-    },
+        await super.updateUI(...arguments);
+        this._updateDescriptions();
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -57,7 +72,7 @@ options.registry.Donation = options.Class.extend({
             this.$target[0].dataset.customAmount = "slider";
         }
         this._rebuildPrefilledOptions();
-    },
+    }
     /**
      * Add/remove prefilled buttons.
      *
@@ -65,12 +80,11 @@ options.registry.Donation = options.Class.extend({
      */
     togglePrefilledOptions(previewMode, widgetValue, params) {
         this.$target[0].dataset.prefilledOptions = widgetValue;
-        this.$el.find('.o_we_prefilled_options_list').toggleClass('d-none', !widgetValue);
         if (!widgetValue && this.$target[0].dataset.displayOptions) {
             this.$target[0].dataset.customAmount = "slider";
         }
         this._rebuildPrefilledOptions();
-    },
+    }
     /**
      * Add/remove description of prefilled buttons.
      *
@@ -78,8 +92,9 @@ options.registry.Donation = options.Class.extend({
      */
     toggleOptionDescription(previewMode, widgetValue, params) {
         this.$target[0].dataset.descriptions = widgetValue;
+        this.renderContext.showOptionDescriptions = widgetValue;
         this.renderListItems(false, this._buildPrefilledOptionsList());
-    },
+    }
     /**
      * Select an amount input
      *
@@ -88,7 +103,7 @@ options.registry.Donation = options.Class.extend({
     selectAmountInput(previewMode, widgetValue, params) {
         this.$target[0].dataset.customAmount = widgetValue;
         this._rebuildPrefilledOptions();
-    },
+    }
     /**
      * Apply the we-list on the target and rebuild the input(s)
      *
@@ -97,13 +112,17 @@ options.registry.Donation = options.Class.extend({
     renderListItems(previewMode, value, params) {
         const valueList = JSON.parse(value);
         const donationAmounts = [];
+        this.descriptions = [];
         delete this.$target[0].dataset.donationAmounts;
         valueList.forEach((value) => {
             donationAmounts.push(value.display_name);
+            if (value.secondInputText) {
+                this.descriptions.push(value.secondInputText);
+            }
         });
         this.$target[0].dataset.donationAmounts = JSON.stringify(donationAmounts);
         this._rebuildPrefilledOptions();
-    },
+    }
     /**
      * Redraws the target whenever the list changes
      *
@@ -112,7 +131,7 @@ options.registry.Donation = options.Class.extend({
     listChanged(previewMode, value, params) {
         this._updateDescriptions();
         this._rebuildPrefilledOptions();
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -125,7 +144,7 @@ options.registry.Donation = options.Class.extend({
         } else if ($amountInput.length) {
             $amountInput[0].min = widgetValue;
         }
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -138,7 +157,7 @@ options.registry.Donation = options.Class.extend({
         } else if ($amountInput.length) {
             $amountInput[0].max = widgetValue;
         }
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -148,7 +167,7 @@ options.registry.Donation = options.Class.extend({
         if ($rangeSlider.length) {
             $rangeSlider[0].step = widgetValue;
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -184,8 +203,8 @@ options.registry.Donation = options.Class.extend({
                 return this.$target[0].dataset.sliderStep;
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -193,22 +212,8 @@ options.registry.Donation = options.Class.extend({
         if (widgetName === 'free_amount_opt') {
             return !(this.$target[0].dataset.displayOptions && !this.$target[0].dataset.prefilledOptions);
         }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    _renderCustomXML(uiFragment) {
-        const list = document.createElement('we-list');
-        list.dataset.dependencies = "pre_filled_opt";
-        list.dataset.addItemTitle = _t("Add new pre-filled option");
-        list.dataset.renderListItems = '';
-        list.dataset.unsortable = 'true';
-        list.dataset.inputType = 'number';
-        list.dataset.defaultValue = 50;
-        list.dataset.listChanged = '';
-        $(uiFragment).find('we-checkbox[data-name="pre_filled_opt"]').after(list);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * Build the prefilled options list in the editor panel
      *
@@ -216,38 +221,23 @@ options.registry.Donation = options.Class.extend({
      */
     _buildPrefilledOptionsList() {
         const amounts = JSON.parse(this.$target[0].dataset.donationAmounts);
-        let valueList = amounts.map(amount => {
+        let valueList = amounts.map((amount, i) => {
+            let doubleInput = {};
+            if (this.$target[0].dataset.descriptions) {
+                doubleInput = {
+                    firstInputClass: "w-25",
+                    secondInputClass: "w-auto",
+                    secondInputText: this.descriptions[i] || this.defaultDescription,
+                }
+            }
             return {
                 id: amount,
                 display_name: amount,
+                ...doubleInput,
             };
         });
         return JSON.stringify(valueList);
-    },
-    /**
-     * Add descriptions in the prefilled options list of the
-     * editor panel.
-     *
-     * @private
-     */
-    _buildDescriptionsList() {
-        if (this.$target[0].dataset.descriptions) {
-            const $descriptions = this.$target.find('#s_donation_description_inputs > input');
-            const $tableEl = this.$el.find('we-list table');
-            $tableEl.find("tr").toArray().forEach((trEl, i) => {
-                const $inputAmount = $(trEl).find('td').first();
-                $inputAmount.addClass('w-25');
-                const tdEl = document.createElement('td');
-                const inputEl = document.createElement('input');
-                inputEl.type = 'text';
-                inputEl.value = $descriptions[i] ? $descriptions[i].value : this.defaultDescription;
-                tdEl.classList.add('w-auto');
-                tdEl.appendChild(inputEl);
-                $(tdEl).insertAfter($inputAmount);
-            });
-            this._updateDescriptions();
-        }
-    },
+    }
     /**
      * Update descriptions in the input hidden.
      *
@@ -256,16 +246,15 @@ options.registry.Donation = options.Class.extend({
     _updateDescriptions() {
         const descriptionInputs = this.$target.find('#s_donation_description_inputs');
         descriptionInputs.empty();
-        const descriptions = this.$el.find('we-list input[type=text]');
-        descriptions.toArray().forEach((description) => {
+        this.descriptions.forEach((description) => {
             const inputEl = document.createElement('input');
             inputEl.type = 'hidden';
             inputEl.classList.add('o_translatable_input_hidden', 'd-block', 'mb-1', 'w-100');
             inputEl.name = 'donation_descriptions';
-            inputEl.value = description.value;
+            inputEl.value = description;
             descriptionInputs[0].appendChild(inputEl);
         });
-    },
+    }
     /**
      * Rebuild options in the DOM.
      *
@@ -311,9 +300,10 @@ options.registry.Donation = options.Class.extend({
             }));
             this.$target.find('#s_donation_description_inputs').after($prefilledButtons);
         }
-    },
+    }
+}
+registerWebsiteOption("Donation", {
+    Class: Donation,
+    template: "website_payment.s_donation_options",
+    selector: ".s_donation",
 });
-
-export default {
-    Donation: options.registry.Donation,
-};

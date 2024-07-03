@@ -2650,6 +2650,7 @@ class WeList extends UserValueComponent {
         allowEmpty: { type: String, optional: true },
         newElementsNotToggleable: { type: String, optional: true },
         renderOnInputBlur: { type: String, optional: true },
+        doubleInput: { type: String, optional: true },
     };
     static defaultProps = {
         inputType: "text",
@@ -2823,7 +2824,11 @@ class WeList extends UserValueComponent {
             const recordToUpdate = this.state.listRecords.find((rec) =>
                 rec.id === this.state._toComparableId(ev.currentTarget.name)
             );
-            recordToUpdate.display_name = ev.currentTarget.value;
+            if (ev.currentTarget.closest(".o_we_list_record_name")) {
+                recordToUpdate.display_name = ev.currentTarget.value;
+            } else {
+                recordToUpdate.secondInputText = ev.currentTarget.value;
+            }
             const timeSinceMousedown = ev.timeStamp - this.mousedownTime;
             if (timeSinceMousedown < 500) {
                 // Without this "setTimeOut", "click" events are not triggered when

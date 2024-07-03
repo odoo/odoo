@@ -310,13 +310,19 @@
                             <td t-if="props.unsortable !== 'true'">
                                 <we-button class="o_we_drag_handle o_we_link fa fa-fw fa-arrows" data-no-preview="true"/>
                             </td>
-                            <td class="o_we_list_record_name">
+                            <td class="o_we_list_record_name" t-att-class="{[listRecord.firstInputClass]: props.doubleInput === 'true'}">
                                 <input t-att-type="props.inputType" t-att-value="listRecord.display_name || props.defaultValue"
                                     t-att-name="listRecord.id" t-att-placeholder="listRecord.placeholder"
                                     t-att="this.getInputDataAtts(listRecord)"
                                     t-on-input="_onListItemBlurInput"
                                     t-on-blur="_onListItemBlurInput"
                                     t-att-disabled="!state.isCustom"/>
+                            </td>
+                            <td t-if="props.doubleInput === 'true'" t-att-class="listRecord.secondInputClass">
+                                <input type="text" t-att-value="listRecord.secondInputText"
+                                       t-att-name="listRecord.id"
+                                       t-on-input="_onListItemBlurInput"
+                                       t-on-blur="_onListItemBlurInput"/>
                             </td>
                             <td t-if="props.hasDefault and !listRecord.notToggleable">
                                 <we-button class="o_we_user_value_widget o_we_checkbox_wrapper"

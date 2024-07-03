@@ -39,4 +39,38 @@
             <output class="s_range_bubble" contenteditable="false">25</output>
         </div>
     </t>
+
+    <t t-name="website_payment.s_donation_options">
+        <WeInput title.translate="Recipient Email" class="'o_we_large'" selectDataAttribute="''"
+                 attributeName="'donationEmail'"/>
+        <WeCheckbox title.translate="Display Options" name="'display_options_opt'"
+                    displayOptions="'true'" noPreview="'true'"/>
+        <WeCheckbox title.translate="Pre-filled Options" name="'pre_filled_opt'" noPreview="'true'"
+                    togglePrefilledOptions="'true'" dependencies="'!no_input_opt'"/>
+        <t t-set="addItemTitle">Add new pre-filled option</t>
+        <WeList dependencies="'pre_filled_opt'" addItemTitle="addItemTitle" renderListItems="''"
+                unsortable="'true'" inputType="'number'" defaultValue="'50'" listChanged="''"
+                doubleInput="renderContext.showOptionDescriptions ? 'true' : ''"/>
+        <WeCheckbox title.translate="Descriptions" class="'o_we_sublevel_1'" noPreview="'true'"
+                    toggleOptionDescription="'true'" dependencies="'pre_filled_opt'"/>
+        <WeSelect title.translate="Custom Amount" noPreview="'true'">
+            <WeButton name="'free_amount_opt'" selectAmountInput="'freeAmount'">Input</WeButton>
+            <WeButton name="'slider_opt'" selectAmountInput="'slider'"
+                      dependencies="'display_options_opt'">
+                Slider
+            </WeButton>
+            <WeButton name="'no_input_opt'" selectAmountInput="''"
+                      dependencies="'pre_filled_opt'">
+                None
+            </WeButton>
+        </WeSelect>
+        <WeInput title.translate="Minimum" class="'o_we_sublevel_1'" step="'1'" setMinimumAmount="''"
+                 dependencies="'!no_input_opt'"/>
+        <WeInput title.translate="Maximum" class="'o_we_sublevel_1'" step="'1'" setMaximumAmount="''"
+                 dependencies="'slider_opt'"/>
+        <WeInput title.translate="Step" class="'o_we_sublevel_1'" step="'1'" setSliderStep="''"
+                 dependencies="'slider_opt'"/>
+        <WeInput title.translate="Default Amount" step="'1'" attributeDefaultValue="'25'"
+                 selectDataAttribute="''" attributeName="'defaultAmount'"/>
+    </t>
 </templates>
