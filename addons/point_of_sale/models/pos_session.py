@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 from datetime import timedelta
-from itertools import groupby
+from itertools import groupby, starmap
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
@@ -873,12 +873,15 @@ class PosSession(models.Model):
                         # for taxes
                         tuple(base_line['record'].tax_ids_after_fiscal_position.flatten_taxes_hierarchy().ids),
                         tuple(to_update['tax_tag_ids'][0][2]),
+                        base_line['product'].id if self.config_id.is_closing_entry_by_product else False,
                     )
                     sales[sale_key] = self._update_amounts(
                         sales[sale_key],
                         {'amount': to_update['price_subtotal']},
                         order.date_order,
                     )
+                    if self.config_id.is_closing_entry_by_product:
+                        sales[sale_key] = self._update_quantities(sales[sale_key], base_line['quantity'])
 
                 # Combine tax lines
                 for tax_line in tax_results['tax_lines_to_add']:
@@ -994,7 +997,7 @@ class PosSession(models.Model):
             rounding_vals = [self._get_rounding_difference_vals(rounding_difference['amount'], rounding_difference['amount_converted'])]
 
         MoveLine.create(tax_vals)
-        move_line_ids = MoveLine.create([self._get_sale_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in sales.items()])
+        move_line_ids = MoveLine.create(list(starmap(self._get_sale_vals, sales.items())))
         for key, ml_id in zip(sales.keys(), move_line_ids.ids):
             sales[key]['move_line_id'] = ml_id
         MoveLine.create(
@@ -1317,7 +1320,8 @@ class PosSession(models.Model):
         partial_vals = {
             'account_id': self._get_receivable_account(payment_method).id,
             'move_id': self.move_id.id,
-            'name': '%s - %s' % (self.name, payment_method.name)
+            'name': '%s - %s' % (self.name, payment_method.name),
+            'display_type': 'payment_term',
         }
         return self._debit_amounts(partial_vals, amount, amount_converted)
 
@@ -1326,23 +1330,38 @@ class PosSession(models.Model):
             'account_id': self.company_id.account_default_pos_receivable_account_id.id,
             'move_id': self.move_id.id,
             'name': _('From invoice payments'),
+            'display_type': 'payment_term',
         }
         return self._credit_amounts(partial_vals, amount, amount_converted)
 
-    def _get_sale_vals(self, key, amount, amount_converted):
-        account_id, sign, tax_ids, base_tag_ids = key
+    def _get_sale_vals(self, key, sale_vals):
+        account_id, sign, tax_ids, base_tag_ids, product_id = key
+        amount = sale_vals['amount']
+        amount_converted = sale_vals['amount_converted']
         applied_taxes = self.env['account.tax'].browse(tax_ids)
+        if product_id:
+            product = self.env['product.product'].browse(product_id)
+            product_name = product.display_name
+            product_uom = product.uom_id.id
+        else:
+            product_name = ""
+            product_uom = False
         title = 'Sales' if sign == 1 else 'Refund'
         name = '%s untaxed' % title
         if applied_taxes:
-            name = '%s with %s' % (title, ', '.join([tax.name for tax in applied_taxes]))
+            name = '%s %s with %s' % (title, product_name, ', '.join([tax.name for tax in applied_taxes]))
         partial_vals = {
             'name': name,
             'account_id': account_id,
             'move_id': self.move_id.id,
             'tax_ids': [(6, 0, tax_ids)],
             'tax_tag_ids': [(6, 0, base_tag_ids)],
+            'product_id': product_id,
+            'display_type': 'product',
+            'product_uom_id': product_uom
         }
+        if partial_vals.get('product_id'):
+            partial_vals['quantity'] = sale_vals.get('quantity') or 1
         return self._credit_amounts(partial_vals, amount, amount_converted)
 
     def _get_tax_vals(self, key, amount, amount_converted, base_amount_converted):
@@ -1388,6 +1407,12 @@ class PosSession(models.Model):
             'counterpart_account_id': accounting_partner.property_account_receivable_id.id,
             'partner_id': accounting_partner.id,
         }
+
+    def _update_quantities(self, vals, qty_to_add):
+        vals.setdefault('quantity', 0)
+        # update quantity
+        vals['quantity'] += qty_to_add
+        return vals
 
     def _update_amounts(self, old_amounts, amounts_to_add, date, round=True, force_company_currency=False):
         """Responsible for adding `amounts_to_add` to `old_amounts` considering the currency of the session.
