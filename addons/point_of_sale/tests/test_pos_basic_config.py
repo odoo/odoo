@@ -1108,3 +1108,83 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=3))
         self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product3, 1)])])
         self.assertEqual(get_top_product_ids(3), [self.product3.id, self.product2.id, self.product1.id])
+
+    def test_closing_entry_by_product(self):
+        # set the Group by Product at Closing Entry
+        self.config.is_closing_entry_by_product = True
+        self.open_new_session()
+
+        # 4 orders
+
+        # Orders
+        # ======
+        # +---------+----------+---------------+----------+-----+-------+
+        # | order   | payments | invoiced?     | product  | qty | total |
+        # +---------+----------+---------------+----------+-----+-------+
+        # | order 1 | bank     | no            | product1 |   2 |    60 |
+        # |         |          |               | product4 |   3 | 39.84 |
+        # +---------+----------+---------------+----------+-----+-------+
+        # | order 2 | bank     | yes           | product4 |   1 | 29.88 |
+        # |         |          |               | product2 |   5 |   400 |
+        # +---------+----------+---------------+----------+-----+-------+
+        # | order 3 | bank     | yes           | product1 |   3 | 29.88 |
+        # |         |          |               | product2 |  10 |   400 |
+        # +---------+----------+---------------+----------+-----+-------+
+        # | order 4 | bank     | yes           | product1 |   5 | 29.88 |
+        # |         |          |               | product0 |  10|   400 |
+        # +---------+----------+---------------+----------+-----+-------+
+
+        # Expected Output
+        # +---------------+-----------+
+        # | invoice_line  | Quantity  |
+        # +---------------+-----------+
+        # | Product 0     |      10   |
+        # +---------------+-----------+
+        # | Product 1     |      10   |
+        # +---------------+-----------+
+        # | Product 2     |      15   |
+        # +---------------+-----------+
+        # | Product 4     |       4   |
+        # +---------------+-----------+
+
+        # create orders
+        orders = []
+
+        # create orders
+        orders = []
+        orders.append(self.create_ui_order_data(
+            [(self.product1, 2), (self.product4, 3)],
+            payments=[(self.bank_pm1, 49.88)]
+        ))
+        orders.append(self.create_ui_order_data(
+            [(self.product4, 1), (self.product2, 5)],
+            payments=[(self.bank_pm1, 109.96)]
+        ))
+        orders.append(self.create_ui_order_data(
+            [(self.product1, 3), (self.product2, 10)],
+            payments=[(self.bank_pm1, 230)]
+        ))
+        orders.append(self.create_ui_order_data(
+            [(self.product1, 5), (self.product0, 10)],
+            payments=[(self.bank_pm1, 50)]
+        ))
+
+        # sync orders
+        self.env['pos.order'].sync_from_ui(orders)
+        # close the session
+        self.pos_session.action_pos_session_validate()
+
+        # check values after the session is closed
+        session_account_move = self.pos_session.move_id
+
+        # Define expected quantities for each product
+        expected_product_quantity = {
+            self.product0: 10,
+            self.product1: 10,
+            self.product2: 15,
+            self.product4: 4,
+        }
+        # Iterate through invoice lines and assert the expected quantities
+        for i in session_account_move.line_ids:
+            if i.product_id and expected_product_quantity.get(i.product_id):
+                self.assertEqual(i.quantity, expected_product_quantity.get(i.product_id), f"Unexpected quantity for {i.product_id.name}")

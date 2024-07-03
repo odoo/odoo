@@ -114,6 +114,7 @@ class ResConfigSettings(models.TransientModel):
     point_of_sale_ticket_portal_url_display_mode = fields.Selection(related='company_id.point_of_sale_ticket_portal_url_display_mode', readonly=False, required=True)
     pos_note_ids = fields.Many2many(related='pos_config_id.note_ids', readonly=False)
     pos_module_pos_sms = fields.Boolean(related="pos_config_id.module_pos_sms", readonly=False)
+    pos_is_closing_entry_by_product = fields.Boolean(related='pos_config_id.is_closing_entry_by_product', readonly=False)
 
     @api.model_create_multi
     def create(self, vals_list):
