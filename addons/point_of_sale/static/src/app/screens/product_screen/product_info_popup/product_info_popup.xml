@@ -3,33 +3,6 @@
     <t t-name="point_of_sale.ProductInfoPopup">
         <Dialog title="'Product information'">
             <ProductInfoBanner product="props.product" info="props.info"/>
-            <div class="section-financials mt-3 mb-4 pb-4 border-bottom text-start">
-                <h3 class="section-title">Financials</h3>
-                <div class="section-financials-body d-flex flex-column flex-sm-row">
-                    <table class="table table-borderless mb-0">
-                        <tr>
-                            <td>Price excl. Tax:</td>
-                            <td><t t-esc="env.utils.formatCurrency(props.info.productInfo.all_prices.price_without_tax)"/></td>
-                        </tr>
-                        <tr t-if="_hasMarginsCostsAccessRights()">
-                            <td>Cost:</td>
-                            <td><t t-esc="props.info.costCurrency"/></td>
-                        </tr>
-                        <tr t-if="_hasMarginsCostsAccessRights()">
-                            <td>Margin:</td>
-                            <td><t t-esc="props.info.marginCurrency"/> (<t t-esc="props.info.marginPercent"/>%) </td>
-                        </tr>
-                    </table>
-                    <table class="table table-borderless">
-                        <t t-foreach="props.info.productInfo.pricelists" t-as="pricelist" t-key="pricelist.name">
-                            <tr>
-                                <td t-esc="pricelist.name"/>
-                                <td t-esc="env.utils.formatCurrency(pricelist.price)"/>
-                            </tr>
-                        </t>
-                    </table>
-                </div>
-            </div>
             <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="!isVariant and props.info.productInfo.warehouses.length > 0">
                 <h3 class="section-title">
                     Inventory
@@ -73,44 +46,52 @@
                     </t>
                 </div>
             </div>
-            <div class="extra mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info.productInfo.variants.length > 0">
-                <div class="section-variants">
-                    <h3 class="section-title">Attributes</h3>
-                    <div class="section-variants-body">
-                        <t t-foreach="props.info.productInfo.variants" t-as="variant" t-key="variant.name">
-                            <div class="d-flex flex-column align-items-start gap-2 mb-2">
-                                <div>
-                                    <span t-esc="variant.name" class="table-name"/>:
-                                </div>
-                                <div class="d-flex flex-wrap gap-1">
-                                    <t t-foreach="variant.values" t-as="attribute_value" t-key="attribute_value.name">
-                                        <span class="searchable btn btn-secondary" t-on-click="() => this.searchProduct(attribute_value.search)">
-                                            <t t-esc="attribute_value.name"/>
-                                        </span>
-                                    </t>
-                                </div>
-                            </div>
-                        </t>
+            <div class="financials-order d-grid gap-2 mt-3" style="grid-template-columns: repeat(2, 1fr);">
+                <div class="section-financials text-start">
+                    <h3 class="section-title">Financials</h3>
+                    <div class="section-financials-body d-flex flex-column">
+                        <table class="table table-borderless mb-0">
+                            <tr>
+                                <td>Price excl. Tax:</td>
+                                <td><t t-esc="env.utils.formatCurrency(props.info.productInfo.all_prices.price_without_tax)"/></td>
+                            </tr>
+                            <tr t-if="_hasMarginsCostsAccessRights()">
+                                <td>Cost:</td>
+                                <td><t t-esc="props.info.costCurrency"/></td>
+                            </tr>
+                            <tr t-if="_hasMarginsCostsAccessRights()">
+                                <td>Margin:</td>
+                                <td><t t-esc="props.info.marginCurrency"/> (<t t-esc="props.info.marginPercent"/>%) </td>
+                            </tr>
+                        </table>
+                        <table class="table table-borderless">
+                            <t t-foreach="props.info.productInfo.pricelists" t-as="pricelist" t-key="pricelist.name">
+                                <tr>
+                                    <td t-esc="pricelist.name"/>
+                                    <td t-esc="env.utils.formatCurrency(pricelist.price)"/>
+                                </tr>
+                            </t>
+                        </table>
                     </div>
                 </div>
-            </div>
-            <div class="section-order mt-3 mb-4 pb-4 border-bottom text-start">
-                <h3 class="section-title">Order</h3>
-                <div class="section-order-body">
-                    <table class="table table-borderless w-100 w-sm-50 mb-0">
-                        <tr>
-                            <td>Total Price excl. Tax:</td>
-                            <td t-esc="props.info.orderPriceWithoutTaxCurrency" class="table-value"/>
-                        </tr>
-                        <tr t-if="_hasMarginsCostsAccessRights()">
-                            <td>Total Cost:</td>
-                            <td t-esc="props.info.orderCostCurrency" class="table-value"/>
-                        </tr>
-                        <tr t-if="_hasMarginsCostsAccessRights()">
-                            <td>Total Margin:</td>
-                            <td class="table-value"><t t-esc="props.info.orderMarginCurrency"/> (<t t-esc="props.info.orderMarginPercent"/>%)</td>
-                        </tr>
-                    </table>
+                <div class="section-order text-start">
+                    <h3 class="section-title">Order</h3>
+                    <div class="section-order-body">
+                        <table class="table table-borderless w-100 mb-0">
+                            <tr>
+                                <td>Total Price excl. Tax:</td>
+                                <td t-esc="props.info.orderPriceWithoutTaxCurrency" class="table-value"/>
+                            </tr>
+                            <tr t-if="_hasMarginsCostsAccessRights()">
+                                <td>Total Cost:</td>
+                                <td t-esc="props.info.orderCostCurrency" class="table-value"/>
+                            </tr>
+                            <tr t-if="_hasMarginsCostsAccessRights()">
+                                <td>Total Margin:</td>
+                                <td class="table-value"><t t-esc="props.info.orderMarginCurrency"/> (<t t-esc="props.info.orderMarginPercent"/>%)</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
             <t t-set-slot="footer">
