@@ -6,6 +6,10 @@
     --ListRenderer-thead-bg-color: #{$gray-200};
     --ListRenderer-thead-border-end-color: #{$border-color};
 
+    @include media-breakpoint-up(md) {
+        height: 100%;
+    }
+
     .o_list_view &  {
         --ListRenderer-table-padding-h: #{$o-horizontal-padding};
     }

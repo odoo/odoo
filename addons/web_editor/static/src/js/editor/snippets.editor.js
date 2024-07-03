@@ -5,6 +5,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
+const { pyToJsLocale } = require('@web/core/l10n/utils');
 const { session } = require('@web/session');
 const {Markup, sprintf, confine} = require('web.utils');
 var Widget = require('web.Widget');
@@ -1897,7 +1898,7 @@ var SnippetsMenu = Widget.extend({
         // ... it probably should be.
         const context = this.options.context || session.user_context || {};
         const userLang = context.user_lang || context.lang || 'en_US';
-        this.el.setAttribute('lang', userLang.replace('_', '-'));
+        this.el.setAttribute('lang', pyToJsLocale(userLang));
 
         // We need to activate the touch events to be able to drag and drop
         // snippets on devices with a touch screen.

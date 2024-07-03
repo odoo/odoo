@@ -761,6 +761,34 @@ export function getTraversedNodes(editable, range = getDeepRange(editable)) {
     do {
         node = iterator.nextNode();
     } while (node && node !== range.startContainer && !(selectedTableCells.length && node === selectedTableCells[0]));
+    if (
+        node &&
+        !range.collapsed &&
+        node.nodeType === Node.ELEMENT_NODE &&
+        node.childNodes.length &&
+        range.startOffset &&
+        node.childNodes[range.startOffset - 1].nodeName === "BR"
+    ) {
+        // Handle the cases:
+        // <p>ab<br>[</p><p>cd</p>] => [p2, cd]
+        // <p>ab<br>[<br>cd</p><p>ef</p>] => [br2, cd, p2, ef]
+        const targetBr = node.childNodes[range.startOffset - 1];
+        while (node != targetBr) {
+            node = iterator.nextNode();
+        }
+        node = iterator.nextNode();
+    }
+    if (
+        node &&
+        !range.collapsed &&
+        node === range.startContainer &&
+        range.startOffset === nodeSize(node) &&
+        node.nextSibling &&
+        node.nextSibling.nodeName === "BR"
+    ) {
+        // Handle the case: <p>ab[<br>cd</p><p>ef</p>] => [br, cd, p2, ef]
+        node = iterator.nextNode();
+    }
     const traversedNodes = new Set([node, ...descendants(node)]);
     while (node && node !== range.endContainer) {
         node = iterator.nextNode();
@@ -771,9 +799,32 @@ export function getTraversedNodes(editable, range = getDeepRange(editable)) {
                     traversedNodes.add(selectedTd);
                     descendants(selectedTd).forEach(descendant => traversedNodes.add(descendant));
                 }
-            } else {
+            } else if (
+                !(
+                    // Handle the case: [<p>ab</p><p>cd<br>]ef</p> => [ab, p2, cd, br]
+                    node === range.endContainer &&
+                    range.endOffset === 0 &&
+                    !range.collapsed &&
+                    node.previousSibling &&
+                    node.previousSibling.nodeName === "BR"
+                )
+            ) {
                 traversedNodes.add(node);
             }
+        }
+    }
+    if (node) {
+        // Handle the cases:
+        // [<p>ab</p><p>cd<br>]</p> => [ab, p2, cd, br]
+        // [<p>ab</p><p>cd<br>]<br>ef</p> => [ab, p2, cd, br1]
+        for (const descendant of descendants(node)) {
+            if (
+                descendant.parentElement === node &&
+                childNodeIndex(descendant) >= range.endOffset
+            ) {
+                break;
+            }
+            traversedNodes.add(descendant);
         }
     }
     return [...traversedNodes];

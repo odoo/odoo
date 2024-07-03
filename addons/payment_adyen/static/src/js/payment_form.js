@@ -3,6 +3,7 @@ odoo.define('payment_adyen.payment_form', require => {
     'use strict';
 
     const core = require('web.core');
+    const { pyToJsLocale } = require('@web/core/l10n/utils');
     const checkoutForm = require('payment.checkout_form');
     const manageForm = require('payment.manage_form');
 
@@ -159,7 +160,7 @@ odoo.define('payment_adyen.payment_form', require => {
                         paymentMethodsResponse: paymentMethodsResult['payment_methods_data'],
                         amount: paymentMethodsResult['amount_formatted'],
                         clientKey: providerInfo.client_key,
-                        locale: (this._getContext().lang || 'en-US').replace('_', '-'),
+                        locale: pyToJsLocale(this._getContext().lang || 'en-US'),
                         environment: providerInfo.state === 'enabled' ? 'live' : 'test',
                         onAdditionalDetails: this._dropinOnAdditionalDetails.bind(this),
                         onError: this._dropinOnError.bind(this),
