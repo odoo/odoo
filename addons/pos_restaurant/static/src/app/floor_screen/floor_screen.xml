@@ -3,17 +3,6 @@
     <t t-name="pos_restaurant.FloorScreen">
         <div class="floor-screen screen h-100 position-relative d-flex flex-column flex-nowrap m-0 bg-100 text-start overflow-hidden">
             <t t-set="editButtonClass" t-value="'text-center d-flex flex-column align-items-center btn btn-light text-uppercase'" />
-            <div t-if="pos.orderToTransferUuid" class="d-flex align-items-center justify-content-between px-3 border-bottom bg-view overflow-x-auto w-100">
-                <button t-attf-class="ms-auto {{editButtonClass}}" t-att-class="{active: !pos.isTableToMerge}" t-on-click="() => this.pos.isTableToMerge = false">
-                    <i class="fa fa-arrow-right" role="img" aria-label="Transfer" title="Transfer" />Transfer</button>
-                <button
-                    t-if="pos.models['pos.order'].find(o => o.uuid === pos.orderToTransferUuid).table_id"
-                    t-attf-class="{{editButtonClass}}" t-att-class="{active: pos.isTableToMerge}"
-                    t-on-click="() => this.pos.isTableToMerge = true">
-                    <i class="fa fa-link" role="img" aria-label="Merge" title="Merge" />Merge</button>
-                <button t-attf-class="ms-auto {{editButtonClass}}" t-on-click.stop="stopOrderTransfer">
-                    <i class="fa fa-times" role="img" aria-label="Close" title="Close" />Discard</button>
-            </div>
             <div t-if="pos.isEditMode" class="edit-buttons d-flex px-3 border-bottom bg-view overflow-x-auto w-100">
                 <button t-attf-class="ms-auto {{editButtonClass}}" t-on-click.stop="createTable">
                     <i class="fa fa-plus" role="img" aria-label="Add" title="Add" />Table</button>
@@ -122,7 +111,7 @@
                                                         left: ${table.getX()}px;
                                                     `
                                                 }}
-                                                "
+                                            "
                                     >
                                     <t t-set="offset" t-value="getTableHandleOffset(table)"/>
                                     <div class="info position-relative w-100 h-100" t-att-class="{'opacity-25': table.parent_id}">
