@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { EventBus, markup, whenReady, reactive, validate } from "@odoo/owl";
+import { EventBus, markup, whenReady, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { MacroEngine } from "@web/core/macro";
@@ -8,9 +8,9 @@ import { registry } from "@web/core/registry";
 import { config as transitionConfig } from "@web/core/transition";
 import { session } from "@web/session";
 import { TourPointer } from "../tour_pointer/tour_pointer";
-import { compileStepAuto, compileStepManual, compileTourToMacro } from "./tour_compilers";
 import { createPointerState } from "./tour_pointer_state";
 import { tourState } from "./tour_state";
+import { TourStep } from "./tour_step";
 import { callWithUnloadCheck } from "./tour_utils";
 
 /**
@@ -30,65 +30,8 @@ import { callWithUnloadCheck } from "./tour_utils";
  * @property {number} [checkDelay]
  * @property {string|undefined} [shadow_dom]
  *
- * @typedef TourStep
- * @property {"enterprise"|"community"|"mobile"|"desktop"|HootSelector[][]} isActive Active the step following {@link isActiveStep} filter
- * @property {string} [id]
- * @property {HootSelector} trigger The node on which the action will be executed.
- * @property {HootSelector} [alt_trigger] An alternative node to the trigger (trigger or alt_trigger).
- * @property {string} [content] Description of the step.
- * @property {"top" | "botton" | "left" | "right"} [position] The position where the UI helper is shown.
- * @property {"community" | "enterprise"} [edition]
- * @property {RunCommand} [run] The action to perform when trigger conditions are verified.
- * @property {boolean} [allowInvisible] Allow trigger nodes (any of them) to be invisible
- * @property {boolean} [allowDisabled] Allow the trigger node to be disabled.
- === run() {}``` (mainly to avoid clicking on the trigger by default)
- allows that trigger node can be disabled. run() {} does not allow this behavior.
- * @property {boolean} [auto]
- * @property {boolean} [in_modal] When true, check that trigger node is present in the last visible .modal.
- * @property {number} [timeout] By default, when the trigger node isn't found after 10000 milliseconds, it throws an error.
- * You can change this value to lengthen or shorten the time before the error occurs [ms].
- * @property {string} [consumeEvent] Only in manual mode (onboarding tour). It's the event we want the customer to do.
- * @property {boolean} [mobile] When true, step will only trigger in mobile view.
- * @property {string} [title]
- * @property {string|false|undefined} [shadow_dom] By default, trigger nodes are selected in the main document node 
- * but this property forces to search in a shadowRoot document.
-
  * @typedef {"manual" | "auto"} TourMode
  */
-
-/**
- * Check properties of tourStep
- * @param {TourStep} tourStep
- */
-function checkTourStepKeyValues(tourStep) {
-    const stepschema = {
-        id: { type: String, optional: true },
-        trigger: { type: String },
-        alt_trigger: { type: String, optional: true },
-        isActive: { type: Array, element: String, optional: true },
-        content: { type: [String, Object], optional: true }, //allow object for _t && markup
-        position: { type: String, optional: true },
-        run: { type: [String, Function], optional: true },
-        allowInvisible: { type: Boolean, optional: true },
-        allowDisabled: { type: Boolean, optional: true },
-        in_modal: { type: Boolean, optional: true },
-        timeout: { type: Number, optional: true },
-        consumeEvent: { type: String, optional: true },
-        title: { type: String, optional: true },
-        debugHelp: { type: String, optional: true },
-        noPrepend: { type: Boolean, optional: true },
-        pause: { type: Boolean, optional: true }, //ONLY IN DEBUG MODE
-        break: { type: Boolean, optional: true }, //ONLY IN DEBUG MODE
-    };
-
-    try {
-        validate(tourStep, stepschema);
-        return true;
-    } catch (error) {
-        console.error(`Error for step ${JSON.stringify(tourStep, null, 4)}\n${error.message}`);
-        return false;
-    }
-}
 
 export const tourService = {
     // localization dependency to make sure translations used by tours are loaded
@@ -113,7 +56,7 @@ export const tourService = {
                         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
                     }
                     if (!steps) {
-                        steps = tour.steps().filter(checkTourStepKeyValues);
+                        steps = tour.steps();
                     }
                     return steps;
                 },
@@ -233,56 +176,78 @@ export const tourService = {
             { mode, stepDelay, keepWatchBrowser, showPointerDuration }
         ) {
             // IMPROVEMENTS: Custom step compiler. Will probably require decoupling from `mode`.
-            const stepCompiler = mode === "auto" ? compileStepAuto : compileStepManual;
             const checkDelay = mode === "auto" ? tour.checkDelay : 100;
-            const filteredSteps = tour.steps;
-            return compileTourToMacro(tour, {
-                filteredSteps,
-                stepCompiler,
-                pointer,
-                stepDelay,
-                keepWatchBrowser,
-                showPointerDuration,
+
+            function onTourEnd({ name, rainbowManMessage, fadeout }) {
+                if (mode === "auto") {
+                    transitionConfig.disabled = false;
+                }
+                let message;
+                if (typeof rainbowManMessage === "function") {
+                    message = rainbowManMessage({
+                        isTourConsumed: (name) => consumedTours.has(name),
+                    });
+                } else if (typeof rainbowManMessage === "string") {
+                    message = rainbowManMessage;
+                } else {
+                    message = markup(
+                        _t(
+                            "<strong><b>Good job!</b> You went through all steps of this tour.</strong>"
+                        )
+                    );
+                }
+                effect.add({ type: "rainbow_man", message, fadeout });
+                if (mode === "manual") {
+                    consumedTours.add(name);
+                    orm.call("web_tour.tour", "consume", [[name]]);
+                }
+                pointer.stop();
+                bus.trigger("TOUR-FINISHED");
+                // Used to signal the python test runner that the tour finished without error.
+                browser.console.log("tour succeeded");
+                // Used to see easily in the python console and to know which tour has been succeeded in suite tours case.
+                const succeeded = `║ TOUR ${name} SUCCEEDED ║`;
+                const msg = [succeeded];
+                msg.unshift("╔" + "═".repeat(succeeded.length - 2) + "╗");
+                msg.push("╚" + "═".repeat(succeeded.length - 2) + "╝");
+                browser.console.log(`\n\n${msg.join("\n")}\n`);
+                runningTours.delete(name);
+            }
+
+            const currentStepIndex = tourState.get(tour.name, "currentIndex");
+            const steps = tour.steps
+                .map((step, i) => {
+                    const tourStep = new TourStep(step, tour);
+                    Object.assign(tourStep, {
+                        index: i,
+                        keepWatchBrowser,
+                        showPointerDuration,
+                        stepDelay,
+                    });
+                    return tourStep;
+                })
+                .filter((step) => step.index >= currentStepIndex)
+                .map((step) => step.compileToMacro(pointer))
+                .concat([
+                    {
+                        action() {
+                            if (tourState.get(tour.name, "tourState") === "running") {
+                                tourState.set(tour.name, "tourState", "succeeded");
+                                tourState.clear(tour.name);
+                                onTourEnd(tour);
+                            } else {
+                                tourState.set(tour.name, "tourState", "errored");
+                                console.error("tour not succeeded");
+                            }
+                        },
+                    },
+                ])
+                .flat();
+            return {
+                ...tour,
                 checkDelay,
-                onStepConsummed(tour, step) {
-                    bus.trigger("STEP-CONSUMMED", { tour, step });
-                },
-                onTourEnd({ name, rainbowManMessage, fadeout }) {
-                    if (mode === "auto") {
-                        transitionConfig.disabled = false;
-                    }
-                    let message;
-                    if (typeof rainbowManMessage === "function") {
-                        message = rainbowManMessage({
-                            isTourConsumed: (name) => consumedTours.has(name),
-                        });
-                    } else if (typeof rainbowManMessage === "string") {
-                        message = rainbowManMessage;
-                    } else {
-                        message = markup(
-                            _t(
-                                "<strong><b>Good job!</b> You went through all steps of this tour.</strong>"
-                            )
-                        );
-                    }
-                    effect.add({ type: "rainbow_man", message, fadeout });
-                    if (mode === "manual") {
-                        consumedTours.add(name);
-                        orm.call("web_tour.tour", "consume", [[name]]);
-                    }
-                    pointer.stop();
-                    bus.trigger("TOUR-FINISHED");
-                    // Used to signal the python test runner that the tour finished without error.
-                    browser.console.log("tour succeeded");
-                    // Used to see easily in the python console and to know which tour has been succeeded in suite tours case.
-                    const succeeded = `║ TOUR ${name} SUCCEEDED ║`;
-                    const msg = [succeeded];
-                    msg.unshift("╔" + "═".repeat(succeeded.length - 2) + "╗");
-                    msg.push("╚" + "═".repeat(succeeded.length - 2) + "╝");
-                    browser.console.log(`\n\n${msg.join("\n")}\n`);
-                    runningTours.delete(name);
-                },
-            });
+                steps,
+            };
         }
 
         /**
@@ -323,6 +288,7 @@ export const tourService = {
             tourState.set(tourName, "showPointerDuration", options.showPointerDuration);
             tourState.set(tourName, "mode", options.mode);
             tourState.set(tourName, "sequence", tour.sequence);
+            tourState.set(tourName, "tourState", "running");
             if (tourState.get(tourName, "debug") !== false) {
                 // Starts the tour with a debugger to allow you to choose devtools configuration.
                 // eslint-disable-next-line no-debugger

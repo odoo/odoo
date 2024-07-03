@@ -40,7 +40,8 @@ const ALLOWED_KEYS = {
     debug: BOOLEAN,
 
     // Errored || Succeeded
-    stepState: STRING,
+    // Very useful to not resume tour that has been failed...
+    tourState: STRING,
 };
 
 function getPrefixedName(tourName, key) {
@@ -82,7 +83,8 @@ export const tourState = {
         const tourNames = new Set();
         for (const key of Object.keys(browser.localStorage)) {
             const [tourName] = destructurePrefixedName(key) || [false];
-            if (tourName) {
+            // avoid to resume errored tours
+            if (tourName && this.get(tourName, "tourState") === "running") {
                 tourNames.add(tourName);
             }
         }
