@@ -1330,11 +1330,12 @@ class expression(object):
                         operator = dict_op[operator]
                     elif isinstance(right, list) and operator in ('!=', '='):  # for domain (FIELD,'=',['value1','value2'])
                         operator = dict_op[operator]
-                    res_ids = comodel._name_search(right, [], operator)
                     if operator in NEGATIVE_TERM_OPERATORS:
-                        for dom_leaf in ('|', (left, 'in', res_ids), (left, '=', False)):
+                        res_ids = comodel._name_search(right, [], TERM_OPERATORS_NEGATION[operator])
+                        for dom_leaf in ('|', (left, 'not in', res_ids), (left, '=', False)):
                             push(dom_leaf, model, alias)
                     else:
+                        res_ids = comodel._name_search(right, [], operator)
                         push((left, 'in', res_ids), model, alias)
 
                 else:
