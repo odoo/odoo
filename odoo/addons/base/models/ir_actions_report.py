@@ -439,7 +439,7 @@ class IrActionsReport(models.Model):
         if request and request.db:
             expiration = datetime.now() + timedelta(hours=1)
             # Use format_datetime to force locale
-            expiration = format_datetime(self.env, expiration, "UTC", "E, d-M-Y H:m:s z", "en_US")
+            expiration = format_datetime(self.env, expiration, "UTC", "EEE, dd MMM yyyy HH:mm:ss 'GMT'", "en_US")
             base_url = self._get_report_url()
             domain = urlparse(base_url).hostname
             cookie = f'session_id={request.session.sid}; HttpOnly; expires={expiration}; domain={domain}; path=/;'
