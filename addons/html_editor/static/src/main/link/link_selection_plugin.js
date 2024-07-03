@@ -55,6 +55,9 @@ export class LinkSelectionPlugin extends Plugin {
         mutation_filtered_classes: ["o_link_in_selection"],
         link_ignore_classes: ["o_link_in_selection"],
         onSelectionChange: p.resetLinkInSelection.bind(p),
+        arrows_should_skip: (ev, char, lastSkiped) =>
+            // Skip first FEFF, but not the second one (unless shift is pressed).
+            char === "\uFEFF" && (ev.shiftKey || lastSkiped !== "\uFEFF"),
     });
 
     handleCommand(command, payload) {

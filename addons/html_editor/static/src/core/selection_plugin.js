@@ -11,10 +11,12 @@ import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "../plugin";
 import { DIRECTIONS, childNodeIndex, endPos, nodeSize, startPos } from "../utils/position";
 import {
+    getAdjacentCharacter,
     normalizeCursorPosition,
     normalizeDeepCursorPosition,
     normalizeFakeBR,
 } from "../utils/selection";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 /**
  * @typedef { Object } EditorSelection
@@ -134,6 +136,10 @@ export class SelectionPlugin extends Plugin {
         });
         this.addDomListener(this.editable, "keydown", (ev) => {
             this.currentKeyDown = ev.key;
+            const handled = ["arrowright", "shift+arrowright", "arrowleft", "shift+arrowleft"];
+            if (handled.includes(getActiveHotkey(ev))) {
+                this.onKeyDownArrows(ev);
+            }
         });
         this.addDomListener(this.editable, "pointerdown", () => {
             this.isPointerDown = true;
@@ -798,6 +804,37 @@ export class SelectionPlugin extends Plugin {
         return this.activeSelection;
     }
 
+    /**
+     * Changes the selection before the browser's default behavior moves the
+     * cursor, in order to skip undesired characters (tipically invisible
+     * characters).
+     */
+    onKeyDownArrows(ev) {
+        const selection = this.document.getSelection();
+        if (!selection || !this.isSelectionInEditable(selection)) {
+            return;
+        }
+
+        const mode = ev.shiftKey ? "extend" : "move";
+        const direction = ev.key === "ArrowLeft" ? "backward" : "forward";
+        const shouldSkipCallbacks = this.resources.arrows_should_skip || [];
+        const side = direction === "backward" ? "previous" : "next";
+        let adjacentCharacter = getAdjacentCharacter(selection, side, this.editable);
+        let lastSkipedChar = null;
+        while (shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter, lastSkipedChar))) {
+            const { focusNode: nodeBefore, focusOffset: offsetBefore } = selection;
+            selection.modify(mode, direction, "character");
+            const { focusNode: nodeAfter, focusOffset: offsetAfter } = selection;
+
+            if (nodeBefore === nodeAfter && offsetBefore === offsetAfter) {
+                //  Selection has not changed.
+                return;
+            }
+
+            lastSkipedChar = adjacentCharacter;
+            adjacentCharacter = getAdjacentCharacter(selection, side, this.editable);
+        }
+    }
 
     isSelectionInEditable({ anchorNode, focusNode }) {
         return (
