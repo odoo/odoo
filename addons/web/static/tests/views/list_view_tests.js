@@ -10049,6 +10049,53 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("editable list with handle widget and null sequence item", async function (assert) {
+        assert.expect(3);
+
+        // resequence makes sense on a sequence field, not on arbitrary fields
+        serverData.models.foo.records[0].int_field = 0;
+        serverData.models.foo.records[1].int_field = 1;
+        serverData.models.foo.records[2].int_field = 2;
+        // pretend the orm returned (null -> 0) for the sequence
+        // this happens when the `default` value for the sequence is unspecified
+        serverData.models.foo.records[3].int_field = undefined;
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top" default_order="int_field">
+                    <field name="int_field" widget="handle"/>
+                    <field name="amount" widget="float" digits="[5,0]"/>
+                </tree>`,
+            mockRPC(route, args) {
+                if (route === "/web/dataset/resequence") {
+                    console.log('args: ', args);
+                    assert.strictEqual(
+                        args.offset,
+                        undefined,
+                        "should reorder all"
+                    );
+                    assert.strictEqual(
+                        args.field,
+                        "int_field",
+                        "should write the right field as sequence"
+                    );
+                    assert.deepEqual(
+                        args.ids,
+                        [1, 4, 2, 3],
+                        "should write the sequence in correct order"
+                    );
+                }
+            },
+        });
+
+        console.log($('tbody tr:nth-child(4)'));
+        // Drag and drop the 4th line to the 2nd position
+        await dragAndDrop("tbody tr:nth-child(4) .o_handle_cell", "tbody tr:nth-child(2)");
+    });
+
     QUnit.test("editable target, handle widget locks and unlocks on sort", async function (assert) {
         // we need another sortable field to lock/unlock the handle
         serverData.models.foo.fields.amount.sortable = true;

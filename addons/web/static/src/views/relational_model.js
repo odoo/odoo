@@ -1762,18 +1762,15 @@ class DynamicList extends DataPoint {
         const lastIndex = Math.max(fromIndex, toIndex) + 1;
         let reorderAll = records.some((record) => record.data[handleField] === undefined);
         if (!reorderAll) {
-            let lastSequence = (asc ? -1 : 1) * Infinity;
-            for (let index = 0; index < records.length; index++) {
-                const sequence = getSequence(records[index]);
-                if (
-                    ((index < firstIndex || index >= lastIndex) &&
-                        ((asc && lastSequence >= sequence) ||
-                            (!asc && lastSequence <= sequence))) ||
-                    (index >= firstIndex && index < lastIndex && lastSequence === sequence)
-                ) {
+            // if the list is not already ordered by sequence (strict), reorder all
+            const sequences = records.map(getSequence);
+            for (let i = 0; i < sequences.length - 1; i++) {
+                const seq1 = sequences[i];
+                const seq2 = sequences[i + 1];
+                if ((asc && seq1 >= seq2) || (!asc && seq1 <= seq2)) {
                     reorderAll = true;
+                    break;
                 }
-                lastSequence = sequence;
             }
         }
 
