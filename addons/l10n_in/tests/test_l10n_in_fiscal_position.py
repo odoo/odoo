@@ -26,15 +26,16 @@ class TestFiscal(L10nInTestInvoicingCommon):
                 }]
             )
 
-    def _assert_invoice_fiscal_position(self, fiscal_position_ref, partner, taxes):
+    def _assert_invoice_fiscal_position(self, fiscal_position_ref, partner, taxes, post=True):
         test_invoice = self.init_invoice(
             move_type="out_invoice",
             partner=partner,
-            post=True,
+            post=post,
             amounts=[110, 500],
             taxes=taxes
         )
         self.assertEqual(test_invoice.fiscal_position_id, self.env['account.chart.template'].ref(fiscal_position_ref))
+        return test_invoice
 
     def test_l10n_in_setting_up_company(self):
         company = self._create_company(name='Fiscal Setup Test Company')
@@ -104,4 +105,30 @@ class TestFiscal(L10nInTestInvoicingCommon):
             fiscal_position_ref='fiscal_position_in_export_sez_in',
             partner=self.partner_foreign,
             taxes=self.igst_sale_18,
+        )
+
+    def test_l10n_in_fiscal_in_bill_to_ship_to(self):
+        self.env.company = self.default_company
+        # Inter State
+        out_invoice = self._assert_invoice_fiscal_position(
+            fiscal_position_ref='fiscal_position_in_inter_state',
+            partner=self.partner_b,
+            taxes=self.igst_sale_18,
+            post=False,
+        )
+        # Intra State
+        out_invoice.write({
+            'l10n_in_state_id': self.env.ref('base.state_in_gj').id,
+        })
+        self.assertEqual(
+            out_invoice.fiscal_position_id,
+            self.env['account.chart.template'].ref('fiscal_position_in_intra_state')
+        )
+        # Outside India (Export/SEZ)
+        out_invoice.write({
+            'l10n_in_state_id': self.env.ref('l10n_in.state_in_oc').id,  # Other Country State
+        })
+        self.assertEqual(
+            out_invoice.fiscal_position_id,
+            self.env['account.chart.template'].ref('fiscal_position_in_export_sez_in')
         )

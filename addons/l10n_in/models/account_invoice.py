@@ -21,7 +21,8 @@ class AccountMove(models.Model):
             ('deemed_export', 'Deemed Export'),
             ('uin_holders', 'UIN Holders'),
         ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, readonly=False, copy=True, precompute=True)
-    l10n_in_state_id = fields.Many2one('res.country.state', string="Place of supply", compute="_compute_l10n_in_state_id", store=True, readonly=False)
+    l10n_in_state_id = fields.Many2one('res.country.state', string="Place of supply",
+        compute="_compute_l10n_in_state_id", store=True, copy=True, readonly=False, precompute=True)
     l10n_in_gstin = fields.Char(string="GSTIN")
     # For Export invoice this data is need in GSTR report
     l10n_in_shipping_bill_number = fields.Char('Shipping bill number')
@@ -49,7 +50,7 @@ class AccountMove(models.Model):
     @api.depends('partner_id', 'partner_shipping_id', 'company_id')
     def _compute_l10n_in_state_id(self):
         for move in self:
-            if move.country_code == 'IN' and move.journal_id.type == 'sale':
+            if move.country_code == 'IN' and move.is_sale_document(include_receipts=True):
                 partner_state = (
                     move.partner_id.commercial_partner_id == move.partner_shipping_id.commercial_partner_id
                     and move.partner_shipping_id.state_id
@@ -66,6 +67,26 @@ class AccountMove(models.Model):
                 move.l10n_in_state_id = move.company_id.state_id
             else:
                 move.l10n_in_state_id = False
+
+    @api.depends('l10n_in_state_id')
+    def _compute_fiscal_position_id(self):
+        other_country = None
+        in_moves = self.filtered(lambda move: move.country_code == 'IN' and move.is_sale_document(include_receipts=True))
+        for move in in_moves:
+            state_id = move.l10n_in_state_id.id
+            country_id = move.l10n_in_state_id.country_id.id
+            if move.l10n_in_state_id.l10n_in_tin == '96':  # Foreign Country
+                other_country = other_country or self.env['res.country'].search([('code', '!=', 'IN')], limit=1)
+                country_id = other_country.id
+                state_id = False
+            virtual_partner = self.env['res.partner'].new({
+                'state_id': state_id,
+                'country_id': country_id,
+            })
+            move.fiscal_position_id = self.env['account.fiscal.position'].with_company(
+                move.company_id
+            )._get_fiscal_position(virtual_partner)
+        super(AccountMove, self - in_moves)._compute_fiscal_position_id()
 
     @api.onchange('name')
     def _onchange_name_warning(self):
