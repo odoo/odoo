@@ -5,6 +5,7 @@ import publicWidget from '@web/legacy/js/public/public_widget';
 import { rpc } from "@web/core/network/rpc";
 
 const CUSTOM_BUTTON_EXTRA_WIDTH = 10;
+let cachedCurrency;
 
 publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
     selector: '.s_donation',
@@ -82,7 +83,11 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
      * @private
      */
     _displayCurrencies() {
-        return rpc('/website/get_current_currency').then((result) => {
+        return this._getCachedCurrency().then((result) => {
+            // No need to recreate the elements if the currency is already set.
+            if (this.currency === result) {
+                return;
+            }
             this.currency = result;
             this.$('.s_donation_currency').remove();
             const $prefilledButtons = this.$('.s_donation_btn, .s_range_bubble');
@@ -98,6 +103,17 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
                 }
             });
         });
+    },
+    /**
+     * @private
+     */
+    _getCachedCurrency() {
+        return cachedCurrency
+            ? Promise.resolve(cachedCurrency)
+            : rpc("/website/get_current_currency").then((result) => {
+                cachedCurrency = result;
+                return result;
+            });
     },
 
     //--------------------------------------------------------------------------
