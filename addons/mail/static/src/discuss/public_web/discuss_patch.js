@@ -1,4 +1,4 @@
-import { Discuss } from "@mail/core/common/discuss";
+import { Discuss } from "@mail/core/public_web/discuss";
 import { Call } from "@mail/discuss/call/common/call";
 import { useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";

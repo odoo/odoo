@@ -1,6 +1,6 @@
 import { onRendered } from "@odoo/owl";
 
-import { Discuss } from "@mail/core/common/discuss";
+import { Discuss } from "@mail/core/public_web/discuss";
 import { DiscussSidebar } from "@mail/core/web/discuss_sidebar";
 import { MessagingMenu } from "@mail/core/web/messaging_menu";
 
