@@ -492,18 +492,10 @@ class AccountPaymentRegister(models.TransientModel):
             wizard.require_partner_bank_account = wizard.payment_method_line_id.code in self.env['account.payment']._get_method_codes_needing_bank_account()
 
     def _get_total_amount_using_same_currency(self, batch_result, early_payment_discount=True):
+        #todo in Master: fully refactor in account.move
         self.ensure_one()
-        amount = 0.0
-        mode = False
         moves = batch_result['lines'].mapped('move_id')
-        for move in moves:
-            if early_payment_discount and move._is_eligible_for_early_payment_discount(move.currency_id, self.payment_date):
-                amount -= move.direction_sign * move.invoice_payment_term_id._get_amount_due_after_discount(move.amount_total, move.amount_tax)
-                mode = 'early_payment'
-            else:
-                for aml in batch_result['lines'].filtered(lambda l: l.move_id.id == move.id):
-                    amount += aml.amount_residual_currency
-        return abs(amount), mode
+        return moves._get_total_amount_using_same_currency(payment_date=self.payment_date, early_payment_discount=early_payment_discount)
 
     def _get_total_amount_in_wizard_currency_to_full_reconcile(self, batch_result, early_payment_discount=True):
         """ Compute the total amount needed in the currency of the wizard to fully reconcile the batch of journal

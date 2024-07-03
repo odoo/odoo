@@ -1981,7 +1981,7 @@ class AccountMove(models.Model):
                 raise ValidationError(_("This entry contains one or more taxes that are incompatible with your fiscal country. Check company fiscal country in the settings and tax country in taxes configuration."))
 
     # -------------------------------------------------------------------------
-    # EARLY PAYMENT DISCOUNT
+    # PAYMENT
     # -------------------------------------------------------------------------
     def _is_eligible_for_early_payment_discount(self, currency, reference_date):
         self.ensure_one()
@@ -1991,6 +1991,17 @@ class AccountMove(models.Model):
             and (not reference_date or reference_date <= self.invoice_payment_term_id._get_last_discount_date(self.invoice_date)) \
             and self.payment_state == 'not_paid'
 
+    def _get_total_amount_using_same_currency(self, payment_date, early_payment_discount=True):
+        amount = 0.0
+        mode = False
+        for move in self:
+            if early_payment_discount and move._is_eligible_for_early_payment_discount(move.currency_id, payment_date):
+                amount -= move.direction_sign * move.invoice_payment_term_id._get_amount_due_after_discount(move.amount_total, move.amount_tax)
+                mode = 'early_payment'
+            else:
+                for aml in move.line_ids.filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable')):
+                    amount += aml.amount_residual_currency
+        return abs(amount), mode
     # -------------------------------------------------------------------------
     # BUSINESS MODELS SYNCHRONIZATION
     # -------------------------------------------------------------------------
