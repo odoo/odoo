@@ -858,7 +858,7 @@
                                      groups="account.group_account_readonly">
                                     <field name="journal_id"
                                            options="{'no_create': True}"
-                                           attrs="{'readonly': [('posted_before', '=', True)]}"/>
+                                           attrs="{'readonly': [('posted_before', '=', True), ('name', 'not in', (False, '', '/'))]}"/>
                                     <span class="oe_inline o_form_label mx-3 oe_read_only"
                                         groups="base.group_multi_currency"> in </span>
                                     <!-- Bigger margin on the left because in edit mode the external link button covers the text -->
