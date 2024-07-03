@@ -1060,10 +1060,11 @@ patch(PosOrder.prototype, {
         }
         let maxDiscount = reward.discount_max_amount || Infinity;
         if (reward.discount_mode === "per_point") {
-            maxDiscount = Math.min(
-                maxDiscount,
-                reward.discount * this._getRealCouponPoints(coupon_id)
-            );
+            // Rewards cannot be partially offered to customers
+            const points =
+                Math.floor(this._getRealCouponPoints(coupon_id) / reward.required_points) *
+                reward.required_points;
+            maxDiscount = Math.min(maxDiscount, reward.discount * points);
         } else if (reward.discount_mode === "per_order") {
             maxDiscount = Math.min(maxDiscount, reward.discount);
         } else if (reward.discount_mode === "percent") {
