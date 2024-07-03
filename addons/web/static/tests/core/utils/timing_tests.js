@@ -96,7 +96,7 @@ QUnit.module("utils", () => {
                 assert.step("myFunc");
                 return 42;
             };
-            const myDebouncedFunc = debounce(myFunc, 3000, { immediate: true });
+            const myDebouncedFunc = debounce(myFunc, 3000, true);
             myDebouncedFunc().then((x) => {
                 assert.step("resolved " + x);
             });
@@ -118,6 +118,32 @@ QUnit.module("utils", () => {
             await Promise.resolve(); // wait for promise returned by debounce
             await Promise.resolve(); // wait for promise returned chained onto it (step resolved x)
             assert.verifySteps(["resolved 42"]);
+        });
+
+        QUnit.test("debounce with leading and trailing", async function (assert) {
+            const { execRegisteredTimeouts } = mockTimeout();
+            const myFunc = (lastValue) => {
+                assert.step("myFunc");
+                return lastValue;
+            };
+            const myDebouncedFunc = debounce(myFunc, 3000, { leading: true, trailing: true });
+            myDebouncedFunc(42).then((x) => {
+                assert.step("resolved " + x);
+            });
+            myDebouncedFunc(43).then((x) => {
+                assert.step("resolved " + x);
+            });
+            myDebouncedFunc(44).then((x) => {
+                assert.step("resolved " + x);
+            });
+            assert.verifySteps(["myFunc"]);
+            await Promise.resolve(); // wait for promise returned by debounce
+            await Promise.resolve(); // wait for promise returned chained onto it (step resolved x)
+            assert.verifySteps(["resolved 42"]);
+
+            await execRegisteredTimeouts();
+            await Promise.resolve(); // wait for the inner promise
+            assert.verifySteps(["myFunc", "resolved 44"]);
         });
 
         QUnit.test("debounce with 'animationFrame' delay", async function (assert) {
