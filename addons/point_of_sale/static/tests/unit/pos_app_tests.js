@@ -40,6 +40,11 @@ QUnit.module("Chrome", {
             .add("ui", uiService)
             .add("dialog", dialogService)
             .add("contextual_utils_service", mockContextualUtilsService)
+            .add("alert", {
+                start() {
+                    return { add: () => {}, dismiss: () => {} };
+                },
+            })
             .add("barcode", {
                 start() {
                     return { bus: new EventBus() };

@@ -11,6 +11,16 @@ patch(Navbar, {
 });
 patch(Navbar.prototype, {
     async onClickBackButton() {
+        if (this.pos.orderToTransferUuid) {
+            const order = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
+            this.pos.set_order(order);
+            if (order.table_id) {
+                this.pos.setTable(order.table_id);
+            }
+            this.pos.orderToTransferUuid = false;
+            this.pos.showScreen("ProductScreen");
+            return;
+        }
         if (this.pos.mainScreen.component && this.pos.config.module_pos_restaurant) {
             if (
                 (this.pos.mainScreen.component === ProductScreen &&
@@ -29,14 +39,21 @@ patch(Navbar.prototype, {
      * If no table is set to pos, which means the current main screen
      * is floor screen, then the order count should be based on all the orders.
      */
+
     get orderCount() {
         if (this.pos.config.module_pos_restaurant && this.pos.selectedTable) {
             return this.pos.getTableOrders(this.pos.selectedTable.id).length;
         }
         return super.orderCount;
     },
+    getTable() {
+        return this.pos.orderToTransferUuid
+            ? this.pos.models["pos.order"].find((o) => o.uuid == this.pos.orderToTransferUuid)
+                  ?.table_id
+            : this.pos.selectedTable;
+    },
     get showTableIcon() {
-        return this.pos.selectedTable?.name && this.pos.showBackButton();
+        return this.getTable()?.name && this.pos.showBackButton();
     },
     onSwitchButtonClick() {
         const mode = this.pos.floorPlanStyle === "kanban" ? "default" : "kanban";

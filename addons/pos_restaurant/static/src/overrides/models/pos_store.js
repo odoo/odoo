@@ -3,8 +3,6 @@ import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 import { ConnectionLostError } from "@web/core/network/rpc";
-import { _t } from "@web/core/l10n/translation";
-import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 
@@ -27,7 +25,6 @@ patch(PosStore.prototype, {
     async setup() {
         this.orderToTransferUuid = null; // table transfer feature
         this.isEditMode = false;
-        this.isTableToMerge = false;
         this.tableSyncing = false;
         await super.setup(...arguments);
         this.floorPlanStyle =
@@ -179,6 +176,9 @@ patch(PosStore.prototype, {
         return super.closePos(...arguments);
     },
     showBackButton() {
+        if (this.orderToTransferUuid) {
+            return true;
+        }
         if (this.config.module_pos_restaurant) {
             const screenWoBackBtn = [ReceiptScreen, FloorScreen, TicketScreen];
             return (
@@ -314,33 +314,36 @@ patch(PosStore.prototype, {
     shouldShowNavbarButtons() {
         return super.shouldShowNavbarButtons(...arguments) && !this.orderToTransferUuid;
     },
-    async transferTable(destinationTable) {
+    async transferOrder(destinationTable) {
         const order = this.models["pos.order"].getBy("uuid", this.orderToTransferUuid);
         const originalTable = order.table_id;
-        if (originalTable && destinationTable.id === originalTable.id) {
+        this.loadingOrderState = false;
+        this.orderToTransferUuid = null;
+        this.alert.dismiss();
+        if (destinationTable.id === originalTable?.id) {
+            this.set_order(order);
+            this.setTable(destinationTable);
             return;
         }
-        if (this.tableHasOrders(destinationTable)) {
-            const confirm = await ask(this.dialog, {
-                title: _t("Multiple open orders"),
-                body: _t(
-                    "Both tables have an open order. If you proceed, both orders will live on the same table. You can access them anytime from the Orders menu."
-                ),
-            });
-            if (!confirm) {
-                return;
+        if (!this.tableHasOrders(destinationTable)) {
+            order.update({ table_id: destinationTable });
+            this.set_order(order);
+        } else {
+            const destinationOrder = this.getActiveOrdersOnTable(destinationTable)[0];
+            for (const orphanLine of order.lines) {
+                const adoptingLine = destinationOrder.lines.find((l) =>
+                    l.can_be_merged_with(orphanLine)
+                );
+                if (adoptingLine) {
+                    adoptingLine.merge(orphanLine);
+                } else {
+                    orphanLine.update({ order_id: destinationOrder });
+                }
             }
+            this.set_order(destinationOrder);
+            await this.deleteOrders([order]);
         }
-        this.selectedTable = destinationTable;
-        this.loadingOrderState = false;
-        if (this.isTableToMerge) {
-            originalTable.update({ parent_id: destinationTable });
-            this.updateTables(originalTable);
-            this.isTableToMerge = false;
-        }
-        order.update({ table_id: destinationTable });
-        this.set_order(order);
-        this.orderToTransferUuid = null;
+        await this.setTable(destinationTable);
     },
     updateTables(...tables) {
         this.data.call("restaurant.table", "update_tables", [

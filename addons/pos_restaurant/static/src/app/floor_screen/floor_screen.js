@@ -65,7 +65,7 @@ export class FloorScreen extends Component {
             selectedFloorId: floor ? floor.id : null,
             floorHeight: "100%",
             floorWidth: "100%",
-            selectedTableIds: this.getTablesSelectedByDefault(),
+            selectedTableIds: [],
             isColorPicker: false,
             potentialLink: null,
         });
@@ -161,7 +161,7 @@ export class FloorScreen extends Component {
                 const oToTrans = this.pos.getActiveOrdersOnTable(table)[0];
                 if (oToTrans) {
                     this.pos.orderToTransferUuid = oToTrans.uuid;
-                    this.pos.transferTable(newParentTable);
+                    this.pos.transferOrder(newParentTable);
                 }
                 this.pos.data.write("restaurant.table", [table.id], {
                     parent_id: newParentTable.id,
@@ -272,10 +272,6 @@ export class FloorScreen extends Component {
             this.state.floorWidth = `${positionH}px`;
         }
     }
-    getTablesSelectedByDefault() {
-        const oToTrans = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
-        return oToTrans?.table_id ? [oToTrans.table_id.id] : [];
-    }
     async onWillStart() {
         this.pos.searchProductWord = "";
         const table = this.pos.selectedTable;
@@ -320,7 +316,7 @@ export class FloorScreen extends Component {
                 ...table.serialize({ orm: true }),
             });
         }
-        this.state.selectedTableIds = this.getTablesSelectedByDefault();
+        this.state.selectedTableIds = [];
         this.state.isColorPicker = false;
     }
     _computePinchHypo(ev, callbackFunction) {
@@ -544,7 +540,7 @@ export class FloorScreen extends Component {
         }
         const oToTrans = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
         if (oToTrans) {
-            await this.pos.transferTable(table);
+            await this.pos.transferOrder(table);
             this.pos.showScreen("ProductScreen");
         } else {
             try {
@@ -693,13 +689,6 @@ export class FloorScreen extends Component {
                 });
             },
         });
-    }
-    stopOrderTransfer() {
-        const order = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
-        this.pos.set_order(order);
-        this.pos.showScreen("ProductScreen");
-        this.pos.isTableToMerge = false;
-        this.pos.orderToTransferUuid = null;
     }
     changeShape(form) {
         for (const table of this.selectedTables) {
