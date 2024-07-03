@@ -172,15 +172,18 @@ class AccountEdiFormat(models.Model):
             be mixed in the same invoice, because the TipoDocumento depends on which which kind
             of product is bought and it's unambiguous.
         """
-        scopes = []
+        scopes = set()
         for line in invoice.invoice_line_ids.filtered(lambda l: not l.display_type):
             tax_ids_with_tax_scope = line.tax_ids.filtered(lambda x: x.tax_scope)
             if tax_ids_with_tax_scope:
-                scopes += tax_ids_with_tax_scope.mapped('tax_scope')
+                scopes |= set(tax_ids_with_tax_scope.mapped('tax_scope'))
             else:
-                scopes.append(line.product_id and line.product_id.type or 'consu')
+                scopes.add(line.product_id and line.product_id.type or 'consu')
 
-        if set(scopes) == set(['consu', 'service']):
+        # Stockable product are goods overall
+        scopes = scopes ^ {'product'} | {'consu'} if 'product' in scopes else scopes
+
+        if scopes == {'consu', 'service'}:
             return "both"
         return scopes and scopes.pop()
 
