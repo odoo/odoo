@@ -182,7 +182,7 @@ export class ListRenderer extends Component {
         this.columnWidths = useMagicColumnWidths(this.tableRef, () => {
             return {
                 columns: this.columns,
-                isEmpty: this.isEmpty,
+                isEmpty: !this.props.list.records.length || this.props.list.model.useSampleModel,
                 hasSelectors: this.hasSelectors,
                 hasOpenFormViewColumn: this.hasOpenFormViewColumn,
                 hasActionsColumn: this.hasActionsColumn,
@@ -322,13 +322,6 @@ export class ListRenderer extends Component {
         }
         const { handleField, orderBy } = this.props.list;
         return !orderBy.length || (orderBy.length && orderBy[0].name === handleField);
-    }
-
-    /**
-     * No records, no groups.
-     */
-    get isEmpty() {
-        return !this.props.list.records.length;
     }
 
     get fields() {
