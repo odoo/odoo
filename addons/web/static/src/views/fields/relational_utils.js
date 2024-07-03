@@ -520,7 +520,7 @@ export class X2ManyFieldDialog extends Component {
 
     discard() {
         if (this.record.isInEdition) {
-            this.record.discard();
+            this.record.discard({rollback: true});
         }
         this.props.close();
     }
