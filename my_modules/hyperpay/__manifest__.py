@@ -14,9 +14,9 @@
     'description': """
     """,
     'data': [
-        # 'views/hyperpay_form.xml',
         'views/payment_provider_views.xml',
         'views/payment_hyperpay_templates.xml',
+        'data/ir_cron.xml',
         'data/payment_provider_data.xml',
     ],
     'images': ['hyperpay/static/description/hyperpay_icon.png'],

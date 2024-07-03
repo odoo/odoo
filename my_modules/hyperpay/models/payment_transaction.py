@@ -6,6 +6,8 @@ import time
 import uuid
 import requests
 import re
+import xmlrpc.client
+
 
 from datetime import datetime
 
@@ -22,6 +24,19 @@ _logger = logging.getLogger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
+
+    @api.model
+    def send_pending(self):
+        tx_url = 'http://localhost:8088'
+        db = self.env.cr.dbname
+        username = 'admin'
+        password = 'admin'
+        common = xmlrpc.client.ServerProxy('{}/xmlrpc/2/common'.format(tx_url), allow_none=True)
+        tx_uid = common.authenticate(db, username, password, {})
+        models = xmlrpc.client.ServerProxy('{}/xmlrpc/2/object'.format(tx_url), allow_none=True)
+        tx_ids = models.execute_kw(db, tx_uid, password, 'payment.transaction', 'search_read', [[['state', '=', 'pending']]])
+        for rec in tx_ids:
+            self._update_state(rec, 'pending', {'done', 'error', 'cancel'})
 
     def _get_specific_processing_values(self, processing_values):
         """ Override of `payment` to return hyperpay-specific processing values.
@@ -121,54 +136,6 @@ class PaymentTransaction(models.Model):
         else:
             max_amount = pm_max_amount
         return max_amount
-
-    # def _send_payment_request(self):
-    #     """ Override of `payment` to send a payment request to Hyperpay.
-    #
-    #     Note: self.ensure_one()
-    #
-    #     :return: None
-    #     :raise UserError: If the transaction is not linked to a token.
-    #     """
-    #     super()._send_payment_request()
-    #     if self.provider_code != 'hyperpay':
-    #         return
-    #
-    #     if not self.token_id:
-    #         raise UserError("Hyperpay: " + _("The transaction is not linked to a token."))
-    #
-    #     try:
-    #         order_data = self._hyperpay_create_order()
-    #         phone = self._validate_phone_number(self.partner_phone)
-    #         customer_id, token_id = self.token_id.provider_ref.split(',')
-    #         payload = {
-    #             'email': self.partner_email,
-    #             'contact': phone,
-    #             'amount': order_data['amount'],
-    #             'currency': self.currency_id.name,
-    #             'order_id': order_data['id'],
-    #             'customer_id': customer_id,
-    #             'token': token_id,
-    #             'description': self.reference,
-    #             'recurring': '1',
-    #         }
-    #         _logger.info(
-    #             "Sending '/payments/create/recurring' request for transaction with reference %s:\n%s",
-    #             self.reference, pprint.pformat(payload)
-    #         )
-    #         recurring_payment_data = self.provider_id._hyperpay_make_request(
-    #             'payments/create/recurring', payload=payload
-    #         )
-    #         _logger.info(
-    #             "Response of '/payments/create/recurring' request for transaction with reference "
-    #             "%s:\n%s", self.reference, pprint.pformat(recurring_payment_data)
-    #         )
-    #         self._handle_notification_data('hyperpay', recurring_payment_data)
-    #     except ValidationError as e:
-    #         if self.operation == 'offline':
-    #             self._set_error(str(e))
-    #         else:
-    #             raise
 
     def _send_refund_request(self, amount_to_refund=None):
         """ Override of `payment` to send a refund request to Hyperpay.
