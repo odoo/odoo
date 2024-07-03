@@ -1634,9 +1634,15 @@ const Wysiwyg = Widget.extend({
         const selection = this.odooEditor.document.getSelection();
         const range = selection.rangeCount && selection.getRangeAt(0);
         const targetNode = range && range.startContainer;
-        const targetElement = targetNode && targetNode.nodeType === Node.ELEMENT_NODE
+        let targetElement;
+        const selectedTd = closestElement(targetNode, 'td.o_selected_td');
+        if (selectedTd && eventName === 'backColor') {
+            targetElement = selectedTd;
+        } else {
+            targetElement = targetNode && targetNode.nodeType === Node.ELEMENT_NODE
             ? targetNode
             : targetNode && targetNode.parentNode;
+        }
         const backgroundImage = $(targetElement).css('background-image');
         let backgroundGradient = false;
         if (weUtils.isColorGradient(backgroundImage)) {
@@ -1644,6 +1650,11 @@ const Wysiwyg = Widget.extend({
             if (eventName === "foreColor" && textGradient || eventName !== "foreColor" && !textGradient) {
                 backgroundGradient = backgroundImage;
             }
+        }
+        // If there is a cell selected then get background
+        // color of the cell from inline style.
+        if (selectedTd && eventName === 'backColor') {
+            return backgroundGradient || selectedTd.style.backgroundColor;
         }
         return backgroundGradient || $(targetElement).css(eventName === "foreColor" ? 'color' : 'backgroundColor');
     },
