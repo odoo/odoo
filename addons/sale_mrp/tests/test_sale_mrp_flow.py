@@ -2778,6 +2778,8 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
 
         so.action_confirm()
         with self.assertRaises(UserError):
+            self.bom_kit_1.write({'type': 'normal'})
+        with self.assertRaises(UserError):
             self.bom_kit_1.toggle_active()
         with self.assertRaises(UserError):
             self.bom_kit_1.unlink()
@@ -2787,6 +2789,8 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         so.picking_ids.button_validate()
 
         self.assertEqual(so.picking_ids.state, 'done')
+        with self.assertRaises(UserError):
+            self.bom_kit_1.write({'type': 'normal'})
         with self.assertRaises(UserError):
             self.bom_kit_1.toggle_active()
         with self.assertRaises(UserError):
@@ -2798,4 +2802,6 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(invoice.state, 'posted')
         self.bom_kit_1.toggle_active()
         self.bom_kit_1.toggle_active()
+        self.bom_kit_1.write({'type': 'normal'})
+        self.bom_kit_1.write({'type': 'phantom'})
         self.bom_kit_1.unlink()
