@@ -860,11 +860,13 @@ class UnfollowFromInboxTest(MailCommon):
 
     def _fetch_inbox_message(self, message_id, user=None):
         """ Fetch the given message similarly to the controller. """
-        MailMessage = self.env['mail.message'].with_user(user) if user else self.env['mail.message']
-        partner_id = self.env.user.partner_id.id
+        messages = self.env['mail.message'].with_user(user) if user else self.env['mail.message']._message_fetch(domain=[('needaction', '=', True)])["messages"]
+        follower_by_message_user = self.env.user.sudo(False)._get_follower_by_message_user(messages)
         return list(filter(
             lambda m: m['id'] == message_id,
-            MailMessage._message_fetch(domain=[('needaction', '=', True)])["messages"]._message_format_personalize(partner_id)))
+            messages._message_format(
+                for_current_user=True, follower_by_message_user=follower_by_message_user
+        )))
 
     @users('employee')
     @mute_logger('odoo.models')

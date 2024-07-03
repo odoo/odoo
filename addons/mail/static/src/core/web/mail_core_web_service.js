@@ -37,7 +37,7 @@ export class MailCoreWeb {
                 inbox.counter++;
             }
             inbox.messages.add(message);
-            if (notifId > message.thread.message_needaction_counter_bus_id) {
+            if (notifId > message.thread?.message_needaction_counter_bus_id) {
                 message.thread.message_needaction_counter++;
             }
         });

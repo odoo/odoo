@@ -453,14 +453,23 @@ registerRoute("/mail/inbox/messages", discuss_inbox_messages);
 async function discuss_inbox_messages(request) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
+    /** @type {import("mock_models").ResUsers} */
+    const ResUsers = this.env["res.users"];
 
     const { after, around, before, limit = 30, search_term } = await parseRequestParams(request);
     const domain = [["needaction", "=", true]];
     const res = MailMessage._message_fetch(domain, search_term, before, after, around, limit);
+    const { messages } = res;
+    delete res.messages;
+    const follower_by_message_user = ResUsers._get_follower_by_message_user(
+        [this.env.user.id],
+        messages
+    );
     return {
         ...res,
-        messages: MailMessage._message_format_personalize(
-            res.messages.map((message) => message.id)
+        messages: MailMessage._message_format(
+            messages.map((message) => message.id),
+            makeKwArgs({ for_current_user: true, follower_by_message_user })
         ),
     };
 }

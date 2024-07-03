@@ -3157,27 +3157,39 @@ class MailThread(models.AbstractModel):
           skip message usage and spare some queries;
         """
         bus_notifications = []
-        inbox_pids = [r['id'] for r in recipients_data if r['notif'] == 'inbox']
-        if inbox_pids:
-            notif_create_values = [{
-                'author_id': message.author_id.id,
-                'mail_message_id': message.id,
-                'notification_status': 'sent',
-                'notification_type': 'inbox',
-                'res_partner_id': pid,
-            } for pid in inbox_pids]
-            self.env['mail.notification'].sudo().create(notif_create_values)
-
-            MailMessage = self.env['mail.message']
-            messages_format_prepared = MailMessage._message_format_personalized_prepare(
-                message._message_format(msg_vals=msg_vals, for_current_user=True), partner_ids=inbox_pids)
-            for partner_id in inbox_pids:
+        inbox_pids_uids = [(r["id"], r["uid"]) for r in recipients_data if r["notif"] == "inbox"]
+        if inbox_pids_uids:
+            notif_create_values = [
+                {
+                    "author_id": message.author_id.id,
+                    "mail_message_id": message.id,
+                    "notification_status": "sent",
+                    "notification_type": "inbox",
+                    "res_partner_id": pid,
+                }
+                for (pid, uid) in inbox_pids_uids
+            ]
+            self.env["mail.notification"].sudo().create(notif_create_values)
+            follower_by_message_user = (
+                self.env["res.users"]
+                .browse(i[1] for i in inbox_pids_uids)
+                ._get_follower_by_message_user(message)
+            )
+            for partner_id, user_id in inbox_pids_uids:
                 bus_notifications.append(
-                    (self.env['res.partner'].browse(partner_id),
-                     'mail.message/inbox',
-                     MailMessage._message_format_personalize(partner_id, messages_format_prepared)[0])
+                    (
+                        self.env["res.partner"].browse(partner_id),
+                        "mail.message/inbox",
+                        message
+                        .with_user(user_id)
+                        ._message_format(
+                            for_current_user=True,
+                            msg_vals=msg_vals,
+                            follower_by_message_user=follower_by_message_user,
+                        ),
+                    )
                 )
-        self.env['bus.bus'].sudo()._sendmany(bus_notifications)
+        self.env["bus.bus"].sudo()._sendmany(bus_notifications)
 
     def _notify_thread_by_email(self, message, recipients_data, msg_vals=False,
                                 mail_auto_delete=True,  # mail.mail

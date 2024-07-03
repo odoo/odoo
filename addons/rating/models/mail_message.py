@@ -26,8 +26,19 @@ class MailMessage(models.Model):
         ])
         return [('id', 'in', ratings.mapped('message_id').ids)]
 
-    def _message_format(self, format_reply=True, msg_vals=None, for_current_user=False):
-        message_values = super()._message_format(format_reply=format_reply, msg_vals=msg_vals, for_current_user=for_current_user)
+    def _message_format(
+        self,
+        format_reply=True,
+        msg_vals=None,
+        for_current_user=False,
+        follower_by_message_user=None,
+    ):
+        message_values = super()._message_format(
+            format_reply=format_reply,
+            msg_vals=msg_vals,
+            for_current_user=for_current_user,
+            follower_by_message_user=follower_by_message_user,
+        )
         rating_mixin_messages = self.filtered(lambda message:
             message.model
             and message.res_id
