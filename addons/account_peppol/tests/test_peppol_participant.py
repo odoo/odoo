@@ -22,11 +22,12 @@ class TestPeppolParticipant(TransactionCase):
         cls.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', 'test')
 
     @classmethod
-    def _get_mock_responses(cls, reject=False):
+    def _get_mock_responses(cls):
+        participant_state = cls.env.context.get('participant_state', 'receiver')
         return {
             '/api/peppol/2/participant_status': {
                 'result': {
-                    'peppol_state': 'receiver' if not reject else 'rejected',
+                    'peppol_state': participant_state,
                 }
             },
             '/api/peppol/1/activate_participant': {'result': {}},
@@ -61,7 +62,7 @@ class TestPeppolParticipant(TransactionCase):
 
         url = r.path_url
         body = json.loads(r.body)
-        responses = cls._get_mock_responses(cls.env.context.get('reject'))
+        responses = cls._get_mock_responses()
         if (
             url == '/api/peppol/2/register_participant'
             and cls.env.context.get('migrate_to')
@@ -135,7 +136,8 @@ class TestPeppolParticipant(TransactionCase):
         # since we did not select receiver registration, we're now just a sender
         self.assertEqual(company.account_peppol_proxy_state, 'sender')
         # running the cron should not do anything for the company
-        self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
+        with self._set_context({'participant_state': 'sender'}):
+            self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
         self.assertEqual(company.account_peppol_proxy_state, 'sender')
 
     def test_create_success_receiver(self):
@@ -152,7 +154,8 @@ class TestPeppolParticipant(TransactionCase):
         wizard.verification_code = '123456'
         wizard.button_check_peppol_verification_code()
         self.assertEqual(company.account_peppol_proxy_state, 'smp_registration')
-        self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
+        with self._set_context({'participant_state': 'receiver'}):
+            self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
         self.assertEqual(company.account_peppol_proxy_state, 'receiver')
 
     def test_create_success_receiver_two_steps(self):
@@ -178,7 +181,7 @@ class TestPeppolParticipant(TransactionCase):
         company = self.env.company
         wizard = self.env['peppol.registration'].create(self._get_participant_vals())
 
-        with self._set_context({'reject': True}):
+        with self._set_context({'participant_state': 'rejected'}):
             wizard.button_peppol_sender_registration()
             company.account_peppol_proxy_state = 'smp_registration'
             self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
