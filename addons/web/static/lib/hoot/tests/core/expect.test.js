@@ -50,6 +50,18 @@ describe(parseUrl(import.meta.url), () => {
         expect(document.createElement("div")).not.toBe(document.createElement("div"));
     });
 
+    test("toBeCloseTo", () => {
+        expect(0.2 + 0.1).toBeCloseTo(0.3);
+        expect(0.2 + 0.1).toBeCloseTo(0.3, { digits: 2 });
+        expect(0.2 + 0.1).toBeCloseTo(0.3, { digits: 16 });
+        expect(0.2 + 0.1).not.toBeCloseTo(0.3, { digits: 17 });
+
+        expect(3.51).toBeCloseTo(3.5, { digits: 1 });
+        expect(3.51).not.toBeCloseTo(3.5);
+        expect(3.51).not.toBeCloseTo(3.5, { digits: 2 });
+        expect(3.51).not.toBeCloseTo(3.5, { digits: 17 });
+    });
+
     test("toEqual", () => {
         // Boolean
         expect(true).toEqual(true);
