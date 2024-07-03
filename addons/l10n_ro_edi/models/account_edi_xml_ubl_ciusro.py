@@ -6,6 +6,10 @@ from odoo import models, _
 SECTOR_RO_CODES = ('SECTOR1', 'SECTOR2', 'SECTOR3', 'SECTOR4', 'SECTOR5', 'SECTOR6')
 
 
+def get_formatted_sector_ro(city: str):
+    return city.upper().replace(' ', '')
+
+
 class AccountEdiXmlUBLRO(models.AbstractModel):
     _inherit = "account.edi.xml.ubl_bis3"
     _name = "account.edi.xml.ubl_ro"
@@ -20,6 +24,10 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
 
         if partner.state_id:
             vals["country_subentity"] = partner.country_code + '-' + partner.state_id.code
+
+            # Romania requires the CityName to be in the format of "SECTORX" if the address state is in Bucharest.
+            if partner.state_id.code == 'B' and partner.city:
+                vals['city_name'] = get_formatted_sector_ro(partner.city)
 
         return vals
 
@@ -106,7 +114,8 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
             if (partner.country_code == 'RO'
                     and partner.state_id
                     and partner.state_id.code == 'B'
-                    and partner.city not in SECTOR_RO_CODES):
+                    and partner.city
+                    and get_formatted_sector_ro(partner.city) not in SECTOR_RO_CODES):
                 constraints[f"ciusro_{partner_type}_invalid_city_name"] = _(
                     "The following partner's city name is invalid: %s. "
                     "If partner's state is București, the city name must be 'SECTORX', "
