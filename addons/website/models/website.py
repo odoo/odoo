@@ -1148,16 +1148,21 @@ class Website(models.Model):
             page = self.env['website.page'].create(default_page_values)
             result['page_id'] = page.id
         if add_menu:
-            default_menu_values = {
-                'name': name,
-                'url': page_url,
-                'parent_id': website.menu_id.id,
-                'page_id': page.id,
-                'website_id': website.id,
-            }
-            if menu_values:
-                default_menu_values.update(menu_values)
-            menu = self.env['website.menu'].create(default_menu_values)
+            menu = self.env['website.menu'].search([
+                ('url', '=', page_url),
+                ('website_id', '=', website.id),
+            ], limit=1)
+            if not menu:
+                default_menu_values = {
+                    'name': name,
+                    'url': page_url,
+                    'parent_id': website.menu_id.id,
+                    'page_id': page.id,
+                    'website_id': website.id,
+                }
+                if menu_values:
+                    default_menu_values.update(menu_values)
+                menu = self.env['website.menu'].create(default_menu_values)
             result['menu_id'] = menu.id
         return result
 
