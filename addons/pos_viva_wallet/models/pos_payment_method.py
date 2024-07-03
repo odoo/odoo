@@ -55,8 +55,6 @@ class PosPaymentMethod(models.Model):
 
     def _bearer_token(self, session):
         self.ensure_one()
-        if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Do not have access to fetch token from Viva Wallet"))
 
         data = {'grant_type': 'client_credentials'}
         auth = requests.auth.HTTPBasicAuth(self.viva_wallet_client_id, self.viva_wallet_client_secret)
