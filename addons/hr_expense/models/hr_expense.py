@@ -548,7 +548,10 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             move_line_values = []
             unit_amount = expense.unit_amount or expense.total_amount
             quantity = expense.quantity if expense.unit_amount else 1
-            taxes = expense.tax_ids.with_context(round=True).compute_all(unit_amount, expense.currency_id,quantity,expense.product_id)
+            taxes = expense.tax_ids.with_context(
+                round=True,
+                caba_no_transition_account=expense.payment_mode == 'company_account',
+            ).compute_all(unit_amount, expense.currency_id, quantity, expense.product_id)
             total_amount = 0.0
             total_amount_currency = 0.0
             partner_id = expense.employee_id.sudo().address_home_id.commercial_partner_id.id
