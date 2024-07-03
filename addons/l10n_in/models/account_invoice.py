@@ -21,7 +21,8 @@ class AccountMove(models.Model):
             ('deemed_export', 'Deemed Export'),
             ('uin_holders', 'UIN Holders'),
         ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, readonly=False, copy=True, precompute=True)
-    l10n_in_state_id = fields.Many2one('res.country.state', string="Place of supply", compute="_compute_l10n_in_state_id", store=True, readonly=False)
+    l10n_in_state_id = fields.Many2one('res.country.state', string="Place of supply",
+        compute="_compute_l10n_in_state_id", store=True, readonly=False, precompute=True)
     l10n_in_gstin = fields.Char(string="GSTIN")
     # For Export invoice this data is need in GSTR report
     l10n_in_shipping_bill_number = fields.Char('Shipping bill number')
@@ -46,19 +47,31 @@ class AccountMove(models.Model):
                 record.l10n_in_gst_treatment = gst_treatment
         (self - indian_invoice).l10n_in_gst_treatment = False
 
+    def _get_l10n_in_pos_sale_partner(self):
+        """
+            Returns the appropriate partner record based on specific conditions
+            to identify the `Place Of Supply` Partner.
+        """
+        self.ensure_one()
+        if (self.partner_id.commercial_partner_id == self.partner_shipping_id.commercial_partner_id
+            and self.partner_shipping_id.state_id
+        ):
+            return self.partner_shipping_id
+        elif self.partner_id.state_id:
+            return self.partner_id
+        elif self.partner_id.commercial_partner_id.state_id:
+            return self.partner_id.commercial_partner_id
+        return self.env['res.partner'].browse()
+
     @api.depends('partner_id', 'partner_shipping_id', 'company_id')
     def _compute_l10n_in_state_id(self):
         for move in self:
             if move.country_code == 'IN' and move.journal_id.type == 'sale':
                 partner_state = (
-                    move.partner_id.commercial_partner_id == move.partner_shipping_id.commercial_partner_id
-                    and move.partner_shipping_id.state_id
-                    or move.partner_id.state_id
+                    move._get_l10n_in_pos_sale_partner().state_id
+                    or move.company_id.state_id
                 )
-                if not partner_state:
-                    partner_state = move.partner_id.commercial_partner_id.state_id or move.company_id.state_id
-                country_code = partner_state.country_id.code or move.country_code
-                if country_code == 'IN':
+                if (partner_state.country_id.code or move.country_code) == 'IN':
                     move.l10n_in_state_id = partner_state
                 else:
                     move.l10n_in_state_id = self.env.ref('l10n_in.state_in_oc', raise_if_not_found=False)
@@ -66,6 +79,18 @@ class AccountMove(models.Model):
                 move.l10n_in_state_id = move.company_id.state_id
             else:
                 move.l10n_in_state_id = False
+
+    @api.depends('partner_id', 'partner_shipping_id', 'company_id', 'l10n_in_state_id')
+    def _compute_fiscal_position_id(self):
+        in_moves = self.filtered(lambda move: move.country_code == 'IN' and move.journal_id.type == 'sale')
+        for move in in_moves:
+            pos_partner = move._get_l10n_in_pos_sale_partner()
+            move.fiscal_position_id = self.env['account.fiscal.position'].with_company(move.company_id
+            ).with_context(
+                force_state=move.l10n_in_state_id,
+                force_country=pos_partner.country_id or move.company_id.country_id
+            )._get_fiscal_position(pos_partner)
+        super(AccountMove, self - in_moves)._compute_fiscal_position_id()
 
     @api.onchange('name')
     def _onchange_name_warning(self):
