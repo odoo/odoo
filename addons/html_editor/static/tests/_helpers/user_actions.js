@@ -1,7 +1,7 @@
 import { closestBlock } from "@html_editor/utils/blocks";
-import { childNodeIndex, endPos } from "@html_editor/utils/position";
+import { endPos } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
-import { click, manuallyDispatchProgrammaticEvent, waitFor } from "@odoo/hoot-dom";
+import { click, manuallyDispatchProgrammaticEvent, press, waitFor } from "@odoo/hoot-dom";
 import { tick } from "@odoo/hoot-mock";
 import { setSelection } from "./selection";
 
@@ -146,21 +146,16 @@ export function splitBlock(editor) {
     editor.dispatch("SPLIT_BLOCK");
 }
 
-// TODO @phoenix: we should maybe use it in each test ???
-// Simulates placing the cursor at the editable root after an arrow key press
-export async function simulateArrowKeyPress(editor, key) {
+export async function simulateArrowKeyPress(editor, keys) {
+    press(keys);
+    const keysArray = Array.isArray(keys) ? keys : [keys];
+    const alter = keysArray.includes("Shift") ? "extend" : "move";
+    const direction =
+        keysArray.includes("ArrowLeft") || keysArray.includes("ArrowUp") ? "backward" : "forward";
+    const granularity =
+        keysArray.includes("ArrowUp") || keysArray.includes("ArrowDown") ? "line" : "character";
     const selection = editor.document.getSelection();
-    const node = selection.anchorNode;
-    let editableChild = node;
-    while (editableChild.parentNode !== editor.editable) {
-        editableChild = editableChild.parentNode;
-    }
-    const index =
-        key === "ArrowRight" ? childNodeIndex(editableChild) + 1 : childNodeIndex(editableChild);
-    const pos = [editor.editable, index];
-    manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key });
-    selection.setBaseAndExtent(...pos, ...pos);
-    await tick();
+    selection.modify(alter, direction, granularity);
 }
 
 export function unlinkByCommand(editor) {

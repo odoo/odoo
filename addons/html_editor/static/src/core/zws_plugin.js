@@ -1,9 +1,6 @@
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Plugin } from "../plugin";
-import { closestBlock } from "../utils/blocks";
-import { nextLeaf, previousLeaf, ZERO_WIDTH_CHARS } from "../utils/dom_info";
 import { prepareUpdate } from "../utils/dom_state";
-import { boundariesOut, leftPos, nodeSize, rightPos } from "../utils/position";
+import { boundariesOut, leftPos, rightPos } from "../utils/position";
 import { descendants } from "../utils/dom_traversal";
 import { cleanTextNode } from "@html_editor/utils/dom";
 
@@ -13,20 +10,9 @@ export class ZwsPlugin extends Plugin {
     static name = "zws";
     static dependencies = ["selection", "split"];
     static shared = ["insertAndSelectZws"];
-
-    setup() {
-        this.addDomListener(this.editable, "keydown", (ev) => {
-            const hotkey = getActiveHotkey(ev);
-            switch (hotkey) {
-                case "arrowright":
-                case "shift+arrowright":
-                case "arrowleft":
-                case "shift+arrowleft":
-                    this.moveSelection(ev);
-                    break;
-            }
-        });
-    }
+    static resources = (p) => ({
+        arrows_should_skip: (ev, char, lastSkiped) => char === "\u200b",
+    });
 
     handleCommand(command, payload) {
         switch (command) {
@@ -92,81 +78,6 @@ export class ZwsPlugin extends Plugin {
             cleanTextNode(node, "\u200B", cursors);
         }
         cursors.restore();
-    }
-
-    // @todo: move me to another plugin (arrow keys plugin ?)
-    // Consider always preventing default and handle arrows left and right
-    // movements with selection.modify.
-    moveSelection(ev) {
-        const side = ev.key === "ArrowLeft" ? "previous" : "next";
-
-        // @todo phoenix: in the original code, they check if it s a code element, and if it is, they add a zws before it.
-        // If the selection is at the edge of a code element at the edge of its
-        // parent, make sure there's a zws next to it, where the selection can
-        // then be set.
-
-        // Move selection if adjacent character is zero-width space.
-        let didSkipFeff = false;
-        let adjacentCharacter = this.getAdjacentCharacter(side);
-        let previousSelection; // Is used to stop if `modify` doesn't move the selection.
-        const hasSelectionChanged = (oldSelection = {}) => {
-            const newSelection = this.shared.getEditableSelection();
-            return (
-                oldSelection.anchorNode !== newSelection.anchorNode ||
-                oldSelection.anchorOffset !== newSelection.anchorOffset ||
-                oldSelection.focusNode !== newSelection.focusNode ||
-                oldSelection.focusOffset !== newSelection.focusOffset
-            );
-        };
-        while (
-            ZERO_WIDTH_CHARS.includes(adjacentCharacter) &&
-            hasSelectionChanged(previousSelection)
-        ) {
-            previousSelection = this.shared.getEditableSelection();
-            this.shared.modifySelection(
-                ev.shiftKey ? "extend" : "move",
-                side === "previous" ? "backward" : "forward",
-                "character"
-            );
-            didSkipFeff = didSkipFeff || adjacentCharacter === "\ufeff";
-            adjacentCharacter = this.getAdjacentCharacter(side);
-        }
-
-        if (didSkipFeff && !ev.shiftKey) {
-            // If moving, just skip the zws then stop. Otherwise, do as if
-            // they weren't there.
-            ev.preventDefault();
-            ev.stopPropagation();
-        }
-    }
-
-    // @todo: same as above (move me somewhere else)
-    // There is some duplicated logic with deletePlugin's findPreviousPostion.
-    // Consider unifying them.
-    getAdjacentCharacter(side) {
-        let { focusNode, focusOffset } = this.shared.getEditableSelection();
-        const originalBlock = closestBlock(focusNode);
-        let adjacentCharacter;
-        while (!adjacentCharacter && focusNode) {
-            if (side === "previous") {
-                // @todo: this might be wrong in the first time, as focus node might not be a leaf.
-                adjacentCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
-            } else {
-                adjacentCharacter = focusNode.textContent[focusOffset];
-            }
-            if (!adjacentCharacter) {
-                if (side === "previous") {
-                    focusNode = previousLeaf(focusNode, this.editable);
-                    focusOffset = focusNode && nodeSize(focusNode);
-                } else {
-                    focusNode = nextLeaf(focusNode, this.editable);
-                    focusOffset = 0;
-                }
-                const characterIndex = side === "previous" ? focusOffset - 1 : focusOffset;
-                adjacentCharacter = focusNode && focusNode.textContent[characterIndex];
-            }
-        }
-        return closestBlock(focusNode) === originalBlock ? adjacentCharacter : undefined;
     }
 
     insertText(selection, content) {
