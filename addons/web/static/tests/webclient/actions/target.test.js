@@ -506,6 +506,17 @@ describe("fullscreen", () => {
         expect(".o_main_navbar").toHaveCount(0);
     });
 
+    test('action after another in target="fullscreen" is not displayed in fullscreen mode', async () => {
+        await mountWithCleanup(WebClient);
+        await getService("action").doAction(15);
+        await animationFrame(); // wait for the webclient template to be re-rendered
+        expect(".o_main_navbar").toHaveCount(0);
+        await getService("action").doAction(1);
+        await animationFrame(); // wait for the webclient template to be re-rendered
+        // The navbar should be displayed again
+        expect(".o_main_navbar").toHaveCount(1);
+    });
+
     test.tags("desktop")('fullscreen on action change: back to a "current" action', async () => {
         defineActions([
             {
