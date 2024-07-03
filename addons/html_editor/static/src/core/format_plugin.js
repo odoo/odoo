@@ -195,7 +195,7 @@ export class FormatPlugin extends Plugin {
         // Get selected nodes within td to handle non-p elements like h1, h2...
         // Targeting <br> to ensure span stays inside its corresponding block node.
         const selectedNodesInTds = [...this.editable.querySelectorAll(".o_selected_td")].map(
-            (node) => closestElement(node).querySelector("br")
+            (node) => node.querySelector("br")
         );
         const selectedNodes = /** @type { Text[] } **/ (
             this.shared
