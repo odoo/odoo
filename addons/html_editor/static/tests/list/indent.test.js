@@ -1034,7 +1034,7 @@ describe("with selection", () => {
                         [b
                     </li><li class="oe-nested">
                         <ol>
-                            <li>]c</li>
+                            <li>c]</li>
                         </ol>
                     </li>
                 </ul>`),
@@ -1051,9 +1051,36 @@ describe("with selection", () => {
                             </li>
                             <li class="oe-nested">
                                 <ol>
-                                    <li>]c</li>
+                                    <li>c]</li>
                                 </ol>
                             </li>
+                        </ol>
+                    </li>
+                </ul>`),
+        });
+    });
+
+    test("should only indent elements with selected content (mix lists)", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <ul>
+                    <li>a</li>
+                    <li>
+                        [b
+                    </li><li class="oe-nested">
+                        <ol>
+                            <li>]c</li>
+                        </ol>
+                    </li>
+                </ul>`),
+            stepFunction: keydownTab,
+            contentAfter: unformat(`
+                <ul>
+                    <li>a</li>
+                    <li class="oe-nested">
+                        <ol>
+                            <li>[b</li>
+                            <li>]c</li>
                         </ol>
                     </li>
                 </ul>`),
