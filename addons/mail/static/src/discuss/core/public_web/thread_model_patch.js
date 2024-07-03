@@ -10,6 +10,18 @@ patch(Thread.prototype, {
         super.delete(...arguments);
     },
 
+    open() {
+        if (
+            this.store.discuss.isActive &&
+            !this.store.env.services.ui.isSmall &&
+            this.model === "discuss.channel"
+        ) {
+            this.setAsDiscussThread();
+            return;
+        }
+        super.open(...arguments);
+    },
+
     onPinStateUpdated() {
         super.onPinStateUpdated();
         if (this.is_pinned) {

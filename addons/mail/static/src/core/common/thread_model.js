@@ -945,10 +945,11 @@ export class Thread extends Record {
         this.setAsDiscussThread();
     }
 
-    openChatWindow({ fromMessagingMenu } = {}) {
-        const cw = this.store.ChatWindow.insert(
-            assignDefined({ thread: this }, { fromMessagingMenu })
-        );
+    openChatWindow(chatWindowData = {}) {
+        const cw = this.store.ChatWindow.insert({
+            thread: this,
+            ...chatWindowData,
+        });
         this.store.chatHub.opened.delete(cw);
         this.store.chatHub.opened.unshift(cw);
         cw.focus();
