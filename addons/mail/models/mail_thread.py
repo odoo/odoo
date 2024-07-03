@@ -3599,10 +3599,10 @@ class MailThread(models.AbstractModel):
         # prepare notification mail values
         base_mail_values = {
             'mail_message_id': message.id,
-            'mail_server_id': message.mail_server_id.id, # 2 query, check acces + read, may be useless, Falsy, when will it be used?
             'references': references,
-            'subject': mail_subject,
         }
+        if mail_subject != message.subject:
+            base_mail_values['subject'] = mail_subject
         if additional_values:
             base_mail_values.update(additional_values)
 
