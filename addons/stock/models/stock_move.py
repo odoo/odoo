@@ -586,6 +586,10 @@ class StockMove(models.Model):
                 picking = self.env['stock.picking'].browse(vals['picking_id'])
                 if picking.group_id:
                     vals['group_id'] = picking.group_id.id
+            if vals.get('picking_id') and vals.get('state'):
+                picking = self.env['stock.picking'].browse(vals['picking_id'])
+                if picking.state == 'done' and vals['state'] != 'done':
+                    raise UserError(_('Only \'Done\' stock moves can be added to a \'Done\' transfer.'))
         res = super().create(vals_list)
         res._update_orderpoints()
         return res
