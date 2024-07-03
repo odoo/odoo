@@ -78,10 +78,10 @@ class StockMove(models.Model):
         help='The operations brings product to this location', readonly=False,
         index=True, store=True, compute='_compute_location_dest_id', precompute=True)
     location_final_id = fields.Many2one(
-        'stock.location', 'Destination Location',
+        'stock.location', 'Final Location',
         readonly=False, store=True,
         help="The operation brings the products to the intermediate location."
-        "But this operation is part of a chain of operations targeting the destination location.",
+        "But this operation is part of a chain of operations targeting the final location.",
         auto_join=True, index=True, check_company=True)
     location_usage = fields.Selection(string="Source Location Type", related='location_id.usage')
     location_dest_usage = fields.Selection(string="Destination Location Type", related='location_dest_id.usage')
