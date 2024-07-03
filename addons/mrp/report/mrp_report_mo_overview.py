@@ -543,6 +543,7 @@ class ReportMoOverview(models.AbstractModel):
                 'currency_id': currency.id,
                 'currency': currency,
             }
+            forecast_line['already_used'] = True
             if doc_in._name == 'mrp.production':
                 replenishment['components'] = self._get_components_data(doc_in, replenish_data, level + 2, replenishment_index)
                 replenishment['operations'] = self._get_operations_data(doc_in, level + 2, replenishment_index)
@@ -558,7 +559,6 @@ class ReportMoOverview(models.AbstractModel):
             replenishment['summary']['mo_cost_decorator'] = self._get_comparison_decorator(replenishment['summary']['real_cost'], replenishment['summary']['mo_cost'], replenishment['summary']['currency'].rounding)
             replenishment['summary']['formatted_state'] = self._format_state(doc_in, replenishment['components']) if doc_in._name == 'mrp.production' else self._format_state(doc_in)
             replenishments.append(replenishment)
-            forecast_line['already_used'] = True
             total_ordered += replenishment['summary']['quantity']
 
         # Add "In transit" line if necessary
