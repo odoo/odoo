@@ -1668,6 +1668,12 @@ export class PosStore extends Reactive {
     getDisplayDeviceIP() {
         return this.config.proxy_ip;
     }
+
+    resetProductScreenSearch() {
+        this.searchProductWord = "";
+        const { start_category, iface_start_categ_id } = this.config;
+        this.setSelectedCategory((start_category && iface_start_categ_id?.[0]) || 0);
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};

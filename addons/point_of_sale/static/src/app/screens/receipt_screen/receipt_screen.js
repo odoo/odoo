@@ -79,6 +79,7 @@ export class ReceiptScreen extends Component {
         this.currentOrder.uiState.screen_data.value = "";
         this.currentOrder.uiState.locked = true;
         this._addNewOrder();
+        this.pos.resetProductScreenSearch();
         const { name, props } = this.nextScreen;
         this.pos.showScreen(name, props);
     }
