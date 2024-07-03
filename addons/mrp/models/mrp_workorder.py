@@ -757,13 +757,15 @@ class MrpWorkorder(models.Model):
                 duration_expected_working = 0
             return self.workcenter_id.time_start + self.workcenter_id.time_stop + duration_expected_working * ratio * 100.0 / self.workcenter_id.time_efficiency
         qty_production = self.production_id.product_uom_id._compute_quantity(self.qty_production, self.production_id.product_id.uom_id)
-        cycle_number = float_round(qty_production / self.workcenter_id.capacity, precision_digits=0, rounding_method='UP')
+        capacity = self.production_id.product_uom_id._compute_quantity(self.workcenter_id.capacity, self.production_id.product_id.uom_id)
+        cycle_number = float_round(qty_production / capacity, precision_digits=0, rounding_method='UP')
         if alternative_workcenter:
             # TODO : find a better alternative : the settings of workcenter can change
             duration_expected_working = (self.duration_expected - self.workcenter_id.time_start - self.workcenter_id.time_stop) * self.workcenter_id.time_efficiency / (100.0 * cycle_number)
-            if duration_expected_working < 0:
+            if duration_expected_working < 0: 
                 duration_expected_working = 0
-            alternative_wc_cycle_nb = float_round(qty_production / alternative_workcenter.capacity, precision_digits=0, rounding_method='UP')
+            alternative_wc_capacity = self.production_id.product_uom_id._compute_quantity(alternative_workcenter.capacity, self.production_id.product_id.uom_id)
+            alternative_wc_cycle_nb = float_round(qty_production / alternative_wc_capacity, precision_digits=0, rounding_method='UP')
             return alternative_workcenter.time_start + alternative_workcenter.time_stop + alternative_wc_cycle_nb * duration_expected_working * 100.0 / alternative_workcenter.time_efficiency
         time_cycle = self.operation_id.time_cycle
         return self.workcenter_id.time_start + self.workcenter_id.time_stop + cycle_number * time_cycle * 100.0 / self.workcenter_id.time_efficiency

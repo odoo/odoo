@@ -1281,3 +1281,40 @@ class TestBoM(TestMrpCommon):
                 (0, 0, {'product_id': self.product_7_1.id, 'product_qty': 1.0}),
             ],
         })
+
+    def test_expected_duration_with_different_uom(self):
+        """       
+            Test if the Expected Duration on the workorder is correct
+            when the product's uom differs from the bom uom.
+        """
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        uom_g = self.env.ref('uom.product_uom_gram')
+        finished = self.env['product.product'].create({
+            'name': 'finished product',
+            'type': 'product',
+            'uom_id': uom_g.id,
+            'uom_po_id': uom_g.id,
+        })
+        component = self.env['product.product'].create({
+            'name': 'component product',
+            'type': 'product',
+            'uom_id': uom_g.id,
+            'uom_po_id': uom_g.id,
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_id': finished.id,
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': uom_kg.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1000}),
+            ],
+            'operation_ids': [
+                (0, 0, {'name': 'Assembly', 'workcenter_id': self.workcenter_2.id, 'time_cycle_manual': 35}),
+            ]
+        })
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = bom
+        production = production_form.save()
+        self.assertEqual(production.workorder_ids.duration_expected, 35)
