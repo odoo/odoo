@@ -77,7 +77,7 @@ class SaleOrderLine(models.Model):
         # To get the right product when creating a SOL on the fly, we need to get
         # the name that was entered in the field from the `default_get` method.
         # The easiest way of doing that is to store it in the context.
-        if self.env.context.get('form_view_ref') == 'sale_project.sale_order_line_view_form_editable':
+        if self.env.context.get('form_view_ref') == 'sale_project.sale_order_line_view_form_editable' and not self.env.context.get('action_view_sols'):
             self = self.with_context(sol_product_name=name)
         return super().name_create(name)
 
@@ -87,7 +87,7 @@ class SaleOrderLine(models.Model):
         # called with whatever was typed in the field. However, we don't want
         # that value to overwrite the computed SOL name if we find a product.
         defaults = super()._add_missing_default_values(values)
-        if self.env.context.get('form_view_ref') == 'sale_project.sale_order_line_view_form_editable':
+        if self.env.context.get('form_view_ref') == 'sale_project.sale_order_line_view_form_editable' and not self.env.context.get('action_view_sols'):
             if "name" in defaults and "product_id" in defaults:
                 del defaults["name"]
         return defaults
