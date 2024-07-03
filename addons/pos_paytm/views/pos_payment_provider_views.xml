@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_provider_view_form_inherit_pos_paytm" model="ir.ui.view">
+        <field name="name">pos.payment.provider.form.inherit.paytm</field>
+        <field name="model">pos.payment.provider</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_provider_view_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group name="paytm_credentials" invisible="code != 'paytm'">
+                    <field name="paytm_mid" required="code == 'paytm'"/>
+                    <field name="paytm_merchant_key" required="code == 'paytm'" password="True"/>
+                    <field name="paytm_channel_id" groups="base.group_no_one" required="code == 'paytm'"/>
+                    <field name="paytm_accept_payment" required="code == 'paytm'"/>
+                    <field name="paytm_allowed_payment_modes" required="code == 'paytm'"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

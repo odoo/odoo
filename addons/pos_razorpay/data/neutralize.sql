@@ -1,3 +1,3 @@
-UPDATE pos_payment_method
-SET razorpay_test_mode = true,
+UPDATE pos_payment_provider
+SET mode = 'test',
     razorpay_api_key = 'dummykey00012345';

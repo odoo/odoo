@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_provider_view_form_inherit_pos_adyen" model="ir.ui.view">
+        <field name="name">pos.payment.provider.form.inherit.adyen</field>
+        <field name="model">pos.payment.provider</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_provider_view_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group name="adyen_credentials" invisible="code != 'adyen'">
+                    <field name="adyen_api_key" required="code == 'adyen' and mode != 'disabled'" password="True"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

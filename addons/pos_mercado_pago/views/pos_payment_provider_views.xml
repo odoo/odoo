@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_provider_view_form_inherit_pos_mercado_pago" model="ir.ui.view">
+        <field name="name">pos.payment.provider.form.inherit.mercado_pago</field>
+        <field name="model">pos.payment.provider</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_provider_view_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group name="mercado_pago_credentials" invisible="code != 'mercado_pago'">
+                    <field name="mp_bearer_token" placeholder="APP_USR-..." required="code == 'mercado_pago'"/>
+                    <field name="mp_webhook_secret_key" placeholder="c2f3662..." required="code == 'mercado_pago'" password="True"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

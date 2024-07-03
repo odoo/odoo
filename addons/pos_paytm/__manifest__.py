@@ -18,8 +18,9 @@ following:
 * Supported cards: Visa, MasterCard, Rupay, UPI
     """,
     'data': [
-        'views/pos_payment_method_views.xml',
+        'data/pos_payment_provider_data.xml',
         'views/pos_payment_views.xml',
+        'views/pos_payment_provider_views.xml',
     ],
     'depends': ['point_of_sale'],
     'installable': True,

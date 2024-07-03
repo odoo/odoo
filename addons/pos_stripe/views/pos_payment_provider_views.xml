@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_provider_view_form_inherit_pos_stripe" model="ir.ui.view">
+        <field name="name">pos.payment.provider.form.inherit.stripe</field>
+        <field name="model">pos.payment.provider</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_provider_view_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group name="stripe_credentials" invisible="code != 'stripe'">
+                    <div colspan="2" class="mt16" invisible="code != 'stripe'">
+                        <p invisible="not is_stripe_provider_configured">You already configured the stripe payment provider.</p>
+                        <button name="action_stripe_key" type="object" invisible="is_stripe_provider_configured" icon="oi-arrow-right" string="Don't forget to complete Stripe connect before using this payment provider." class="btn-link"/>
+                    </div>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

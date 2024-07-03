@@ -6,7 +6,8 @@
     'sequence': 7,
     'summary': 'Integrate your POS with a Viva Wallet payment terminal',
     'data': [
-        'views/pos_payment_method_views.xml',
+        'data/pos_payment_provider_data.xml',
+        'views/pos_payment_provider_views.xml',
     ],
     'depends': ['point_of_sale'],
     'installable': True,

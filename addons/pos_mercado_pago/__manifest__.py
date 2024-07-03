@@ -5,7 +5,9 @@
     'sequence': 6,
     'summary': 'Integrate your POS with the Mercado Pago Smart Point terminal',
     'data': [
+        'data/pos_payment_provider_data.xml',
         'views/pos_payment_method_views.xml',
+        'views/pos_payment_provider_views.xml',
     ],
     'depends': ['point_of_sale'],
     'installable': True,

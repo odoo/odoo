@@ -69,7 +69,7 @@ export class PaymentAdyen extends PaymentInterface {
             MessageType: "Request",
             SaleID: this._adyen_get_sale_id(config),
             ServiceID: this.most_recent_service_id,
-            POIID: this.payment_method_id.adyen_terminal_identifier,
+            POIID: this.payment_method_id?.terminal_identifier,
         };
     }
 

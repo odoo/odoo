@@ -68,7 +68,7 @@ class PosMercadoPagoWebhook(http.Controller):
             return http.Response('OK', status=200)
 
         # We have to check if this comes from Mercado Pago with the secret key
-        secret_key = payment_method_sudo.mp_webhook_secret_key
+        secret_key = payment_method_sudo.pos_payment_provider_id.mp_webhook_secret_key
         signed_template = f"id:{data['id']};request-id:{x_request_id};ts:{ts};"
         cyphed_signature = hmac.new(secret_key.encode(), signed_template.encode(), hashlib.sha256).hexdigest()
         if not hmac.compare_digest(cyphed_signature, v1):

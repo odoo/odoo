@@ -12,7 +12,7 @@
                 </div>
             </xpath>
             <xpath expr="//form/sheet/group/group/field[@name='split_transactions']" position="before">
-                <field name="is_online_payment"/>
+                <field name="is_online_payment" invisible="context.get('is_pos_provider')"/>
             </xpath>
             <xpath expr="//form/sheet/group/group/field[@name='split_transactions']" position="attributes">
                 <attribute name="invisible">is_online_payment</attribute>

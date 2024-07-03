@@ -10,7 +10,7 @@ class PosPaymentMethod(models.Model):
     def _get_payment_terminal_selection(self):
         return super(PosPaymentMethod, self)._get_payment_terminal_selection() + [('six', 'SIX')]
 
-    six_terminal_ip = fields.Char('Six Terminal IP')
+    six_terminal_ip = fields.Char('Six Terminal IP', copy=False)
 
     @api.model
     def _load_pos_data_fields(self, config_id):

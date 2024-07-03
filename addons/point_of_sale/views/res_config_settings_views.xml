@@ -312,38 +312,6 @@
                             </setting>
                         </block>
 
-                        <block title="Payment Terminals" help="Those settings are common to all PoS." id="pos_payment_terminals_section">
-                            <setting id="adyen_payment_terminal_setting" title="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method." string="Adyen" help="Accept payments with an Adyen payment terminal"
-                                     documentation="/applications/sales/point_of_sale/payment_methods/terminals/adyen.html">
-                                <field name="module_pos_adyen"/>
-                            </setting>
-                            <setting id="stripe_payment_terminal_setting" title="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method." string="Stripe" help="Accept payments with a Stripe payment terminal" documentation="applications/sales/point_of_sale/payment_methods/terminals/stripe.html">
-                                <field name="module_pos_stripe"/>
-                            </setting>
-                            <setting id="vantiv_payment_terminal_setting" title="The transactions are processed by Vantiv. Set your Vantiv credentials on the related payment method." string="Vantiv (US &amp; Canada)" documentation="/applications/sales/point_of_sale/payment_methods/terminals/vantiv.html" help="Accept payments with a Vantiv payment terminal">
-                                <field name="module_pos_mercury"/>
-                                <div class="content-group" invisible="not module_pos_mercury">
-                                    <div class="mt16" id="btn_use_pos_mercury">
-                                    </div>
-                                </div>
-                            </setting>
-                            <setting title="The transactions are processed by Six. Set the IP address of the terminal on the related payment method." string="Six" documentation="/applications/sales/point_of_sale/payment_methods/terminals/six.html" help="Accept payments with a Six payment terminal">
-                                <field name="module_pos_six"/>
-                            </setting>
-                            <setting title="The transactions are processed by Viva Wallet on terminal or tap on phone." string="Viva Wallet" help="Accept payments with Viva Wallet on a terminal or tap on phone">
-                                <field name="module_pos_viva_wallet"/>
-                            </setting>
-                            <setting title="The transactions are processed by PayTM. Set your PayTM credentials on the related payment method." string="PayTM" help="Accept payments with a PayTM payment terminal">
-                                <field name="module_pos_paytm"/>
-                            </setting>
-                            <setting id="pos_razorpay_setting" title="The transactions are processed by Razorpay. Set your Razorpay credentials on the related payment method." string="Razorpay" help="Accept payments with a Razorpay payment terminal">
-                                <field name="module_pos_razorpay"/>
-                            </setting>
-                            <setting title="The transactions are processed by Mercado Pago on terminal" string="Mercado Pago" help="Accept payments with Mercado Pago on a terminal">
-                                <field name="module_pos_mercado_pago"/>
-                            </setting>
-                        </block>
-
                         <block title="Connected Devices" id="pos_connected_devices_section">
                             <setting id="pos_other_devices" string="ePos Printer" help="Connect device to your PoS without an IoT Box" documentation="/applications/sales/point_of_sale/configuration/epos_ssc.html">
                                 <field name="pos_other_devices"/>

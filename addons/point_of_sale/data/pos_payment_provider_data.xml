@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_provider_adyen" model="pos.payment.provider">
+        <field name="name">Adyen</field>
+        <field name="image_128" type="base64" file="pos_adyen/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_pos_adyen"/>
+    </record>
+
+    <record id="pos_payment_provider_viva_wallet" model="pos.payment.provider">
+        <field name="name">Viva Wallet</field>
+        <field name="image_128" type="base64" file="pos_viva_wallet/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_pos_viva_wallet"/>
+    </record>
+    
+    <record id="pos_payment_provider_paytm" model="pos.payment.provider">
+        <field name="name">PayTM</field>
+        <field name="image_128" type="base64" file="pos_paytm/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_pos_paytm"/>
+    </record>
+
+    <record id="pos_payment_provider_razorpay" model="pos.payment.provider">
+        <field name="name">Razorpay</field>
+        <field name="image_128" type="base64" file="pos_razorpay/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_pos_razorpay"/>
+    </record>
+
+    <record id="pos_payment_provider_mercado_pago" model="pos.payment.provider">
+        <field name="name">Mercado Pago</field>
+        <field name="image_128" type="base64" file="pos_mercado_pago/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_pos_mercado_pago"/>
+    </record>
+
+    <record id="pos_payment_provider_stripe" model="pos.payment.provider">
+        <field name="name">Stripe</field>
+        <field name="image_128" type="base64" file="pos_stripe/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_pos_stripe"/>
+    </record>
+</odoo>
