@@ -192,11 +192,9 @@ export class MacroEngine {
     observeIframe(iframeEl, observer) {
         const observeIframeContent = () => {
             if (iframeEl.contentDocument) {
-                iframeEl.contentDocument.addEventListener("readystatechange", () => {
-                    if (iframeEl.contentDocument.readyState === "complete") {
-                        this.delayedCheck();
-                        observer.observe(iframeEl.contentDocument, this.observerOptions);
-                    }
+                iframeEl.contentDocument.addEventListener("load", (event) => {
+                    this.delayedCheck();
+                    observer.observe(event.target, this.observerOptions);
                 });
                 if (!iframeEl.src || iframeEl.contentDocument.readyState === "complete") {
                     this.delayedCheck();
