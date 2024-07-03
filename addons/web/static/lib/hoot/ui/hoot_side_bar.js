@@ -7,10 +7,11 @@ import { HootJobButtons } from "./hoot_job_buttons";
 /**
  * @typedef {{
  *  name: string;
+ *  hasSuites: boolean;
  *  reporting: import("../hoot_utils").Reporting;
  *  selected: boolean;
  *  unfolded: boolean;
- * }} HootSideBarChevronProps
+ * }} HootSideBarSuiteProps
  *
  * @typedef {{
  *  reporting: import("../hoot_utils").Reporting;
@@ -32,21 +33,25 @@ const { Boolean, Object, String } = globalThis;
 //-----------------------------------------------------------------------------
 
 /**
- * @extends {Component<HootSideBarChevronProps, import("../hoot").Environment>}
+ * @extends {Component<HootSideBarSuiteProps, import("../hoot").Environment>}
  */
 export class HootSideBarSuite extends Component {
     static props = {
         name: String,
+        hasSuites: Boolean,
         reporting: Object,
         selected: Boolean,
         unfolded: Boolean,
     };
 
     static template = xml`
-        <t t-if="props.reporting.suites">
+        <t t-if="props.hasSuites">
             <i
                 class="fa fa-chevron-right text-xs transition"
-                t-att-class="{ 'rotate-90': props.unfolded }"
+                t-att-class="{
+                    'rotate-90': props.unfolded,
+                    'opacity-25': !props.reporting.failed and !props.reporting.tests
+                }"
             />
         </t>
         <span t-att-class="getClassName()" t-esc="props.name" />
@@ -124,6 +129,7 @@ export class HootSideBar extends Component {
                             <div class="flex items-center truncate gap-1 flex-1">
                                 <HootSideBarSuite
                                     name="item.name"
+                                    hasSuites="hasSuites(item)"
                                     reporting="item.reporting"
                                     selected="uiState.selectedSuiteId === item.id"
                                     unfolded="state.unfolded.has(item.id)"
@@ -146,7 +152,6 @@ export class HootSideBar extends Component {
         const { runner, ui } = this.env;
 
         this.uiState = useState(ui);
-        this.runnerState = useState(runner.state);
         this.state = useState({
             hovered: null,
             items: [],
@@ -181,24 +186,31 @@ export class HootSideBar extends Component {
          * @param {Suite} suite
          */
         const addSuite = (suite) => {
+            if (!(suite instanceof Suite)) {
+                return;
+            }
             this.state.items.push(suite);
             if (!unfolded.has(suite.id)) {
                 return;
             }
             for (const child of suite.jobs) {
-                if (suites.includes(child)) {
-                    addSuite(child);
-                }
+                addSuite(child);
             }
         };
 
-        const { suites } = this.runnerState;
         const { unfolded } = this.state;
 
         this.state.items = [];
         for (const suite of this.env.runner.rootSuites) {
             addSuite(suite);
         }
+    }
+
+    /**
+     * @param {import("../core/job").Job} job
+     */
+    hasSuites(job) {
+        return job.jobs.some((subJob) => subJob instanceof Suite);
     }
 
     /**
