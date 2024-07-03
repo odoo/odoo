@@ -812,13 +812,13 @@ export class Record extends DataPoint {
         this.model.notify();
     }
 
-    async discard() {
+    async discard(options) {
         if (this._closeUrgentSaveNotification) {
             this._closeUrgentSaveNotification();
         }
         await this._savePromise;
         this._closeInvalidFieldsNotification();
-        this.model.__bm__.discardChanges(this.__bm_handle__);
+        this.model.__bm__.discardChanges(this.__bm_handle__, options);
         this._invalidFields = new Set();
         this.__syncData();
         this.model.notify();
