@@ -45,6 +45,11 @@ import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
  *  readonly todo: () => CurrentConfigurators;
  * }} CurrentConfigurators
  *
+ * @typedef {{
+ *  count: number;
+ *  name: string;
+ * }} GlobalErrorReport
+ *
  * @typedef {Suite | Test} Job
  *
  * @typedef {import("./job").JobConfig} JobConfig
@@ -180,6 +185,11 @@ const getDefaultPresets = () =>
 const noop = () => {};
 
 /**
+ * @param {Event} ev
+ */
+const safePrevent = (ev) => ev.cancelable && ev.preventDefault();
+
+/**
  * @template T
  * @param {T[]} array
  */
@@ -239,6 +249,7 @@ const warnUserEvent = (ev) => {
     removeEventListener(ev.type, warnUserEvent);
 };
 
+const RESIZE_OBSERVER_MESSAGE = "ResizeObserver loop completed with undelivered notifications";
 const handledErrors = new WeakSet();
 
 //-----------------------------------------------------------------------------
@@ -271,6 +282,10 @@ export class Runner {
          * @type {Test[]}
          */
         done: [],
+        /**
+         * @type {Record<string, GlobalErrorReport>}
+         */
+        globalErrors: {},
         /**
          * Dictionnary containing whether a job is included or excluded from the
          * current run. Values are numbers defining priority:
@@ -402,6 +417,9 @@ export class Runner {
         if (this.config.random) {
             internalRandom.seed = this.config.random;
         }
+
+        on(window, "error", this._handleError.bind(this));
+        on(window, "unhandledrejection", this._handleError.bind(this));
     }
 
     /**
@@ -757,7 +775,7 @@ export class Runner {
         this.state.status = "running";
 
         /** @type {Runner["_handleError"]} */
-        const handlError = this._handleError.bind(this);
+        const handleError = !this.config.notrycatch && this._handleError.bind(this);
 
         /**
          * @param {Job} [job]
@@ -795,16 +813,16 @@ export class Runner {
                         // before suite code
                         this.suiteStack.push(suite);
 
-                        await this._callbacks.call("before-suite", suite, handlError);
-                        await suite.callbacks.call("before-suite", suite, handlError);
+                        await this._callbacks.call("before-suite", suite, handleError);
+                        await suite.callbacks.call("before-suite", suite, handleError);
                     }
                     if (suite.visited >= suite.currentJobs.length) {
                         // after suite code
                         this.suiteStack.pop();
 
                         await this._execAfterCallback(async () => {
-                            await suite.callbacks.call("after-suite", suite, handlError);
-                            await this._callbacks.call("after-suite", suite, handlError);
+                            await suite.callbacks.call("after-suite", suite, handleError);
+                            await this._callbacks.call("after-suite", suite, handleError);
                         });
 
                         suite.parent?.reporting.add({ suites: +1 });
@@ -839,7 +857,7 @@ export class Runner {
             this.state.currentTest = test;
             this.expectHooks.before(test);
             for (const callbackRegistry of [...callbackChain].reverse()) {
-                await callbackRegistry.call("before-test", test, handlError);
+                await callbackRegistry.call("before-test", test, handleError);
             }
 
             let timeoutId = 0;
@@ -871,7 +889,11 @@ export class Runner {
                 .catch((error) => {
                     this._rejectCurrent = noop; // prevents loop
 
-                    return this._handleError(error);
+                    if (handleError) {
+                        return handleError(error);
+                    } else {
+                        throw error;
+                    }
                 })
                 .finally(() => {
                     this._rejectCurrent = noop;
@@ -886,7 +908,7 @@ export class Runner {
             const { lastResults } = test;
             await this._execAfterCallback(async () => {
                 for (const callbackRegistry of callbackChain) {
-                    await callbackRegistry.call("after-test", test, handlError);
+                    await callbackRegistry.call("after-test", test, handleError);
                 }
             });
 
@@ -908,7 +930,7 @@ export class Runner {
                 logger.error(`Test "${test.fullName}" failed:\n${failReason}`);
             }
 
-            await this._callbacks.call("after-post-test", test, handlError);
+            await this._callbacks.call("after-post-test", test, handleError);
 
             if (this.config.bail) {
                 if (!test.config.skip && !lastResults.pass) {
@@ -1385,46 +1407,87 @@ export class Runner {
      */
     _handleError(ev) {
         const error = ensureError(ev);
-        if (handledErrors.has(error)) {
+        if (this.config.notrycatch || handledErrors.has(error)) {
+            // Already handled
             return;
         }
         handledErrors.add(error);
+
         if (!(ev instanceof Event)) {
             ev = new ErrorEvent("error", { error });
         }
 
+        if (error.message.includes(RESIZE_OBSERVER_MESSAGE)) {
+            // Stop event
+            ev.stopImmediatePropagation();
+            if (ev.bubbles) {
+                ev.stopPropagation();
+            }
+            return safePrevent(ev);
+        }
+
         if (this.state.currentTest) {
-            for (const callbackRegistry of this._getCallbackChain(this.state.currentTest)) {
-                callbackRegistry.callSync("error", ev, logger.error);
-                if (ev.defaultPrevented) {
-                    return;
-                }
+            // Handle the error in the current test
+            const handled = this._handleErrorInTest(ev, error);
+            if (handled) {
+                return safePrevent(ev);
             }
-
-            const { lastResults } = this.state.currentTest;
-            if (!lastResults) {
-                return;
-            }
-
-            ev.preventDefault();
-
-            lastResults.errors.push(error);
-            lastResults.caughtErrors++;
-            if (lastResults.expectedErrors >= lastResults.caughtErrors) {
-                return;
-            }
-
-            this._rejectCurrent(error);
+        } else {
+            this._handleGlobalError(ev, error);
         }
 
-        if (this.config.notrycatch) {
-            throw error;
-        }
+        // Prevent error event
+        safePrevent(ev);
 
-        if (error.cause) {
-            logger.error(error.cause);
-        }
+        // Log error
         logger.error(error);
+    }
+
+    /**
+     * @param {ErrorEvent | PromiseRejectionEvent} ev
+     * @param {Error} error
+     */
+    _handleErrorInTest(ev, error) {
+        for (const callbackRegistry of this._getCallbackChain(this.state.currentTest)) {
+            callbackRegistry.callSync("error", ev, logger.error);
+            if (ev.defaultPrevented) {
+                // Prevented in tests
+                return true;
+            }
+        }
+
+        const { lastResults } = this.state.currentTest;
+        if (!lastResults) {
+            return false;
+        }
+
+        lastResults.errors.push(error);
+        lastResults.caughtErrors++;
+        if (lastResults.expectedErrors >= lastResults.caughtErrors) {
+            return true;
+        }
+
+        this._rejectCurrent(error);
+        return false;
+    }
+
+    /**
+     * @param {ErrorEvent | PromiseRejectionEvent} ev
+     * @param {Error} error
+     */
+    _handleGlobalError(ev, error) {
+        const { globalErrors } = this.state;
+        const key = String(error);
+        if (globalErrors[key]) {
+            globalErrors[key].count++;
+        } else {
+            globalErrors[key] = {
+                count: 1,
+                message: error.message,
+                name: error.constructor.name || error.name,
+            };
+        }
+        return false;
     }
 
     async _setupStart() {
@@ -1459,9 +1522,6 @@ export class Runner {
 
         // Register default hooks
         this.afterAll(
-            // Catch errors
-            on(window, "error", this._handleError.bind(this)),
-            on(window, "unhandledrejection", this._handleError.bind(this)),
             // Warn user events
             !this.debug && on(window, "pointermove", warnUserEvent),
             !this.debug && on(window, "pointerdown", warnUserEvent),
