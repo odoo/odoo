@@ -11,9 +11,10 @@
 
             <div class="news-container">
                 <div class="row row-cols-1 mx-1 mt-1 row-cols-md-4 g-4">
-                      <div class="col" t-foreach="state.newslist" t-as="task" t-key="task.id" t-if="task.imgsrc">
+                    <div class="col" t-foreach="state.newslist" t-as="task" t-key="task.id" t-if="task.imgsrc">
                         <div class="card border-info">
                             <img t-att-src="task.imgsrc" class="card-img-top" t-att-alt="task.news"/>
+
                             <div class="card-body">
                                 <h5 class="card-title" t-esc="task.news"></h5>
                                 <t t-if="task.description != false">
@@ -23,11 +24,13 @@
                                     <a href="task.url" class="card-text" t-esc="task.news"/>
                                 </t>
                             </div>
+
                             <div class="card-footer">
                                 <small class="text-muted">Last updated 3 mins ago</small>
                             </div>
+
                         </div>
-                      </div>
+                    </div>
                 </div>
             </div>
         </div>

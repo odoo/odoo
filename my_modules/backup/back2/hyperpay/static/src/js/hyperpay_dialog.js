@@ -15,7 +15,6 @@ export class PaymentHyperpayDialog extends Component {
     static props = {
         order_id: String,
         ticket: String,
-        moneris_redirect_uri:String,
         tokenizationRequested:String,
         env:Object,
     };
