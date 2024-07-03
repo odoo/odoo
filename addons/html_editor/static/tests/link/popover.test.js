@@ -485,21 +485,17 @@ describe("shortcut", () => {
             '<p><a href="http://test.com">test.com[]</a></p>'
         );
     });
-    // need to fix
-    test.todo(
-        "should be able to create link with ctrl+k , and should make link on two existing characters",
-        async () => {
-            const { el } = await setupEditor(`<p>H[el]lo</p>`);
+    test("should be able to create link with ctrl+k , and should make link on two existing characters", async () => {
+        const { el } = await setupEditor(`<p>H[el]lo</p>`);
 
-            press(["ctrl", "k"]);
-            await animationFrame();
-            press(["ctrl", "k"]);
-            await contains(".o-we-linkpopover input.o_we_href_input_link").edit("test.com");
-            expect(cleanLinkArtifacts(getContent(el))).toBe(
-                '<p>H<a href="http://test.com">el</a>lo</p>'
-            );
-        }
-    );
+        press(["ctrl", "k"]);
+        await animationFrame();
+        press(["ctrl", "k"]);
+        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("test.com");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>H<a href="http://test.com">el[]</a>lo</p>'
+        );
+    });
     test("Press enter to apply when create a link", async () => {
         const { el } = await setupEditor(`<p><a>li[]nk</a></p>`);
 
