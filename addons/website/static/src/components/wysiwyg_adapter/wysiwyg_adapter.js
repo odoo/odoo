@@ -980,8 +980,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                     name: `${modelName} ${recordName} cover image.${groups.mimetype.split("/")[1]}`,
                     data: groups.imageData,
                     is_image: true,
-                    res_model: resModel,
-                    res_id: resID,
+                    res_model: 'ir.ui.view',
                 },
             );
             cssBgImage = `url(${attachment.image_src})`;

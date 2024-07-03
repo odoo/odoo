@@ -386,7 +386,7 @@ def html_translate(callback, value):
         root = parse_html("<div>%s</div>" % value)
         result = translate_xml_node(root, callback, parse_html, serialize_html)
         # remove tags <div> and </div> from result
-        value = serialize_html(result)[5:-6]
+        value = serialize_html(result)[5:-6].replace('\xa0', '&nbsp;')
     except ValueError:
         _logger.exception("Cannot translate malformed HTML, using source value instead")
 

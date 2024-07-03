@@ -244,12 +244,14 @@ class Project(models.Model):
     def _compute_allow_rating(self):
         self.allow_rating = self.env.user.has_group('project.group_project_rating')
 
-    @api.depends('analytic_account_id.company_id')
+    @api.depends('analytic_account_id.company_id', 'partner_id.company_id')
     def _compute_company_id(self):
         for project in self:
-            # if a new restriction is put on the account, the restriction on the project is updated.
+            # if a new restriction is put on the account or the customer, the restriction on the project is updated.
             if project.analytic_account_id.company_id:
                 project.company_id = project.analytic_account_id.company_id
+            if not project.company_id and project.partner_id.company_id:
+                project.company_id = project.partner_id.company_id
 
     @api.depends_context('company')
     @api.depends('company_id', 'company_id.resource_calendar_id')
@@ -264,7 +266,7 @@ class Project(models.Model):
         """
         for project in self:
             account = project.analytic_account_id
-            if project.partner_id and project.partner_id.company_id and project.company_id and project.company_id != project.partner_id.company_id:
+            if project.partner_id and project.partner_id.company_id and project.company_id != project.partner_id.company_id:
                 raise UserError(_('The project and the associated partner must be linked to the same company.'))
             if not account or not account.company_id:
                 continue

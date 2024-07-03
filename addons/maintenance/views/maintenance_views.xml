@@ -123,9 +123,9 @@
                             </div>
                             <label for="repeat_interval" invisible="not recurring_maintenance"/>
                             <div class="d-flex" invisible="not recurring_maintenance">
-                                <field name="repeat_interval" required="True" class="me-2" style="max-width: 2rem !important;" />
-                                <field name="repeat_unit" required="True" class="me-2" style="max-width: 4rem !important;" />
-                                <field name="repeat_type" required="True" class="me-2" style="max-width: 15rem !important;" />
+                                <field name="repeat_interval" required="recurring_maintenance" class="me-2" style="max-width: 2rem !important;" />
+                                <field name="repeat_unit" required="recurring_maintenance" class="me-2" style="max-width: 4rem !important;" />
+                                <field name="repeat_type" required="recurring_maintenance" class="me-2" style="max-width: 15rem !important;" />
                                 <field name="repeat_until" invisible="repeat_type != 'until'" required="repeat_type == 'until'" class="me-2" />
                             </div>
                             <field name="priority" widget="priority"/>

@@ -59,11 +59,20 @@ else:
         # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.12.57/python/phonenumbers/data/region_SN.py
         phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('SN', _local_load_region)
 
+    if parse_version(phonenumbers.__version__) < parse_version('8.12.39'):
+        # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.13.36/python/phonenumbers/data/region_CO.py
+        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('CO', _local_load_region)
+
     # MONKEY PATCHING phonemetadata to fix Brazilian phonenumbers following 2016 changes
     def _hook_load_region(code):
-        phonenumbers.data._load_region(code)
-        if code == 'BR':
-            phonenumbers.data.region_BR.PHONE_METADATA_BR.intl_number_format.append(
+        if parse_version(phonenumbers.__version__) < parse_version('8.13.39'):
+            # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.13.39/python/phonenumbers/data/region_BR.py
+            _local_load_region(code)
+        else:
+            phonenumbers.data._load_region(code)
+        _region_metadata = phonenumbers.PhoneMetadata._region_metadata
+        if 'BR' in _region_metadata:
+            _region_metadata['BR'].intl_number_format.append(
                 phonenumbers.phonemetadata.NumberFormat(
                     pattern='(\\d{2})(\\d{4})(\\d{4})',
                     format='\\1 9\\2-\\3',

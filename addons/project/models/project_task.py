@@ -651,6 +651,9 @@ class Task(models.Model):
                         extract_data(task)
                 task.name = task.display_name.strip()
 
+    def _portal_get_parent_hash_token(self, pid):
+        return self.project_id._sign_token(pid)
+
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default is None:

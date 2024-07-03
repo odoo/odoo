@@ -372,7 +372,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         }
         result = model.onchange(values, ['name'], fields_spec)
         self.assertEqual(result['value'], {
-            'messages': [Command.update('virtual1', {'name': '[Stuff] OdooBot'})],
+            'messages': [Command.update('virtual1', {'name': f'[Stuff] {self.env.user.name}'})],
         })
 
     def test_fields_specific(self):

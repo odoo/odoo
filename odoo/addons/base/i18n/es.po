@@ -514,7 +514,7 @@ msgstr ""
 "Nota:\n"
 "-----\n"
 "\n"
-"* Se agregaron las posiciones fiscales ''内税'' y ''外税'' para gestionar los requisitos especiales que podrían surgir de la implementación de PdV. [1] En circunstancias normales, es posible que no necesite usarlos en absoluto.\n"
+"* Se agregaron las posiciones fiscales ''内税'' y ''外税'' para gestionar los requisitos especiales que podrían surgir de la implementación de TPV. [1] En circunstancias normales, es posible que no necesite usarlos en absoluto.\n"
 "\n"
 "[1] Consulte https://github.com/odoo/odoo/pull/6470 para más detalles.\n"
 
@@ -567,7 +567,7 @@ msgstr ""
 "\n"
 "\n"
 "Este módulo agrega diversas funcionalidades al Punto de Venta que son específicas para la administración de un restaurante:\n"
-"- Impresión de cuenta: Permite imprimir la cuenta antes de pagar la orden.\n"
+"- Impresión de cuenta: Permite imprimir la cuenta antes de pagar el pedido.\n"
 "- División de factura: Permite dividir la factura en diferentes pedidos.\n"
 "- Impresión de comanda en la cocina: Permite imprimir las comandas y actualizaciones en las impresoras de la cocina o el bar.\n"
 "\n"
@@ -2414,10 +2414,10 @@ msgid ""
 "When creating invoices from picking, the system is able to add and compute the shipping line.\n"
 msgstr ""
 "\n"
-"Le permite agregar métodos de entrega en las recolecciones.\n"
+"Le permite agregar métodos de entrega en los albaranes.\n"
 "===============================================\n"
 "\n"
-"Al crear facturas desde la recolección, el sistema es capaz de agregar y calcular la transportación.\n"
+"Al crear facturas desde el albarán, el sistema es capaz de agregar y calcular la transportación.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery
@@ -3975,7 +3975,7 @@ msgstr ""
 "Vrste konta\n"
 "Kontni plan prema RRIF-u, dorađen u smislu kraćenja naziva i dodavanja analitika\n"
 "Porezne grupe prema poreznoj prijavi\n"
-"Porezi PDV obrasca\n"
+"Porezi TPV obrasca\n"
 "Ostali porezi\n"
 "Osnovne fiskalne pozicije\n"
 "\n"
@@ -4108,7 +4108,7 @@ msgstr ""
 "Siempre que se transfieran bienes entre A y B, el DDT sirve\n"
 "como legitimación, por ejemplo, si en algún momento la policía lo detiene. \n"
 "\n"
-"Cuando desee imprimir una recolección saliente en una empresa italiana,\n"
+"Cuando desee imprimir un albarán de pedido saliente en una empresa italiana,\n"
 "lo que se imprimirá será el DDT. Es como un albarán\n"
 "de entrega, pero también contiene el valor del producto,\n"
 "el motivo de transporte, el transportista, entre otras cosas. Toda esta información lo hace un DDT. \n"
@@ -4116,7 +4116,7 @@ msgstr ""
 "También usamos una secuencia separada para el DDT, ya que el número\n"
 "no puede tener separaciones y solo se debe aplicar cuando se envíen los bienes.\n"
 "\n"
-"Cuando las facturas están relacionadas a su pedido de venta y la pedido de venta está relacionado \n"
+"Cuando las facturas están relacionadas a su orden de venta y la orden de venta está relacionada \n"
 "a la entrega, el sistema calculará los DDT automáticamente para cada \n"
 "línea de factura para exportarlo al XML de FatturaPA.\n"
 
@@ -4890,7 +4890,7 @@ msgstr ""
 "\n"
 "    1.3. De forma opcional puede definir si le gustaría poder verificar facturas de proveedor en la AFIP.\n"
 "\n"
-"2. Cree diarios de ventas que representarán cada uno de sus PdV de AFIP (disponible en el portal de la AFIP) que quiera usar en Odoo.\n"
+"2. Cree diarios de ventas que representarán cada uno de sus TPV de AFIP (disponible en el portal de la AFIP) que quiera usar en Odoo.\n"
 "\n"
 "    2.1. El campo de usar Documentos está configurado en automático, no lo cambie.\n"
 "    2.2. Configure el sistema de AFIP POS para uno de los electrónicos.\n"
@@ -5364,7 +5364,7 @@ msgid ""
 "Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
 msgstr ""
 "\n"
-"Genera el reporte XML Intrastat para la delcaración.\n"
+"Genera el informe XML Intrastat para la delcaración.\n"
 "Ahora es posible especificar el país de origen de los bienes así como el número de identificación fiscal en el archivo XML del informe de Intrastat.\n"
 
 #. module: base
@@ -5576,7 +5576,7 @@ msgstr ""
 "* Las entregas confirmadas en Odoo se sincronizan en Amazon.\n"
 "* Soporte para Logística de Amazon (Fulfillment by Amazon, FBA) y Logística de Comerciante (Fulfillment by Merchant, FBM):\n"
 "    * Logística de Amazon: una ubicación de stock y los movimientos de stock permiten supervisar su stock en los centros logísticos de Amazon.\n"
-"    * FBM: las notificaciones de entrega se envían a Amazon para cada picking confirmado (entrega parcial amigable).\n"
+"    * FBM: las notificaciones de entrega se envían a Amazon para cada albarán confirmado (entrega parcial amigable).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_debit_note
@@ -5589,9 +5589,9 @@ msgid ""
 msgstr ""
 "\n"
 "En muchos países, una nota de débito se utiliza como un aumento de los importes de una factura existente\n"
-"o en algunos casos específicos para cancelar una nota de crédito.\n"
+"o en algunos casos específicos para cancelar una factura rectificativa.\n"
 "Es como una factura normal, pero debemos realizar un seguimiento del enlace con la factura original.\n"
-"El asistente utilizado es similar al de la nota de crédito.\n"
+"El asistente utilizado es similar al de la factura rectificativa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
@@ -5930,7 +5930,7 @@ msgstr ""
 "Gestión de costes en destino\n"
 "============================\n"
 "\n"
-"Este módulo permite agregar con facilidad costes adicionales a las recolecciones y decidir el reparto de estos costes entre los movimientos de stock para tenerlos en cuenta en la valoración de stock.\n"
+"Este módulo permite agregar con facilidad costes adicionales a los albaranes de picking y decidir el reparto de estos costes entre los movimientos de stock para tenerlos en cuenta en la valoración de stock.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_board
@@ -6313,7 +6313,7 @@ msgstr ""
 "* Validación por su responsable\n"
 "* Validación por el contable y creación de asiento contable\n"
 "\n"
-"Este módulo también utiliza la contabilidad analítica y es compatible con el módulo de facturación de partes de empleado por lo que es posible facturar los gastos a sus clientes si está trabajando por proyecto.\n"
+"Este módulo también utiliza la contabilidad analítica y es compatible con el módulo de facturación de hojas de asistencia de empleado por lo que es posible facturar los gastos a sus clientes si está trabajando por proyecto.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_management
@@ -6368,10 +6368,10 @@ msgstr ""
 "Con este módulo puede personalizar el pedido de ventas y el informe de facturas con\n"
 "categorías, subtotales o saltos de página.\n"
 "\n"
-"El tablero de Control del Gerente de Ventas incluirá\n"
+"El tablero para el gerente de ventas incluirá\n"
 "------------------------------------------------\n"
 "* Mis presupuestos \n"
-"* Volumen de negocios mensual (gráfico)\n"
+"* Volumen de negocios mensual (gráfica)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_stock
@@ -6393,13 +6393,13 @@ msgstr ""
 "Gestione presupuestos y pedidos de ventas\n"
 "==================================\n"
 "\n"
-"Este módulo crea el vínculo entre las aplicaciones de gestión de ventas y almacenes.\n"
+"Este módulo vincula las aplicaciones de gestión de ventas y almacenes.\n"
 "\n"
 "Preferencias\n"
 "-----------\n"
-"* Envío: Elección de entrega a la vez o entrega parcial\n"
-"* Facturación: elige cómo se pagarán las facturas\n"
-"* Incoterms: Términos comerciales internacionales\n"
+"* Envío: elija entre entrega completa o entrega parcial\n"
+"* Facturación: elija cómo se pagarán las facturas\n"
+"* Incoterms: Términos de comercio internacional\n"
 "\n"
 
 #. module: base
@@ -6446,20 +6446,20 @@ msgid ""
 "A synchronization with an internal agenda (Meetings of the CRM module) is also possible in order to automatically create a meeting when a time off request is accepted by setting up a type of meeting in time off Type.\n"
 msgstr ""
 "\n"
-"Gestiona ausencias y solicitudes de asignación\n"
+"Gestione permisos y solicitudes de asignación\n"
 "====================================\n"
 "\n"
-"Esta aplicación controla la planificación de vacaciones de su compañía. Permite a los empleados solicitar vacaciones. Luego, los responsables pueden revisar las solicitudes de vacaciones y aprobarlas o rechazarlas. De esta manera usted puede controlar en conjunto la planificación de las vacaciones para una compañía o departamento.\n"
+"Esta aplicación controla la planificación de permisos de su empresa. Los empleados podrán solicitar vacaciones y sus gerentes podrán revisar estas solicitudes para aprobarlas o rechazarlas. De esta manera usted puede controlar en conjunto la planificación de permisos para una empresa o departamento.\n"
 "\n"
-"Puede configurar distintos tipos de ausencias (enfermedad, vacaciones, días compensatorios, ...) y distribuirlas para un empleado o departamento rápidamente usando las solicitudes de asignación. Un empleado puede también hacer una petición para más días creando una nueva asignación. Esto incrementará el total de días disponibles para ese tipo de ausencia (si la petición es aceptada).\n"
+"Puede configurar distintos tipos de permisos (enfermedad, vacaciones, etc.) y distribuirlos para un empleado o departamento con rapidez mediante las solicitudes de asignación. Un empleado también puede puede solicitar más días creando una nueva asignación, lo cual incrementará el total de días disponibles para ese tipo de ausencia (si se acepta la petición).\n"
 "\n"
-"Puede seguir las ausencias de diferentes maneras con los siguientes informes: \n"
+"Puede dar seguimiento a las ausencias de diferentes maneras con los siguientes informes: \n"
 "\n"
 "* Resumen de ausencias\n"
 "* Ausencias por departamento\n"
-"* Análisis de ausencias\n"
+"* Análisis de permisos\n"
 "\n"
-"También es posible la sincronización con la agenda interna (Reuniones del módulo de CRM) de cara a crear automáticamente una reunión cuando se acepta una solicitud de vacaciones, configurando un tipo reunión como tipo de ausencia.\n"
+"También es posible sincronizar estos permisos con la agenda interna (Reuniones del módulo de CRM) para crear una reunión de forma automática al aceptar una solicitud de permiso si configura un tipo de reunión como tipo de ausencia.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_group
@@ -6674,7 +6674,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"        Módulo para importar los archivos estándar de FEC (Documento de Escrituras Contables, por sus siglas en francés), útil para importar el historial contables.\n"
+"        Módulo para importar los archivos estándar de FEC, útil para importar el historial contables.\n"
 "        Los archivos FEC son los informes contables estándar que los negocios franceses deben enviar a las autoridades tributarias.\n"
 "        Este módulo permite importar cuentas, diarios, contactos y movimientos de estos archivos.\n"
 "        Solo se implementa el formato CSV de FEC.\n"
@@ -6951,16 +6951,16 @@ msgid ""
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
 "\n"
-"Módulo para importar extractos bancarios CSV.\n"
-"======================================\n"
+"Módulo para importación de extractos bancarios CSV.\n"
+"==========================================\n"
 "\n"
-"Este módulo permite importar archivos CSV en Odoo: se analizan y almacenan en un formato legible en\n"
-"Contabilidad \\ Banco y efectivo \\ Extractos bancarios.\n"
+"Este módulo le permite importar los archivos CSV en Odoo: se analizan y se almacenan en formato legible por humanos en\n"
+"Contabilidad \\ Banco y caja \\ Extractos bancarios.\n"
 "\n"
 "Nota importante\n"
-"---------------------------------------------\n"
-"Debido a la limitación del formato CSV, no podemos garantizar que las mismas transacciones no se importen varias veces o que utilicen múltiples monedas.\n"
-"Siempre que sea posible, debe utilizar un formato de archivo más apropiado, como OFX.\n"
+"---------------------\n"
+"Debido a la limitación del formato CSV, no podemos asegurar que las mismas transacciones no se importen varias veces o que manejen moneda múltiple.\n"
+"Siempre que sea posible, debe utilizar un formato de archivo más apropiado como OFX.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -7346,10 +7346,10 @@ msgstr ""
 "\n"
 "Extiende el módulo \"Impresión de cheques\" para gestionar cheques propios con más funciones:\n"
 "\n"
-"* Permitir el uso de cheques propios que no se imprimen pero se llenan de forma manual por el usuario\n"
+"* Permitir el uso de cheques propios que no se imprimen pero se llenan manualmente por el usuario\n"
 "* Permitir el uso de cheques electrónicos o diferidos\n"
 "  * Deshabilitar la impresión\n"
-"  * Establecer el número del cheque de forma manual por parte del usuario \n"
+"  * Establecer el número del cheque manualmente por parte del usuario \n"
 "* Agregar una \"fecha de cobro del cheque\" opcional para cheques con fecha posterior (pagos diferidos)\n"
 "* Agregar un menú para realizar un seguimiento de sus propios cheques\n"
 "\n"
@@ -7742,7 +7742,7 @@ msgstr ""
 "\n"
 "Base de calidad\n"
 "===============\n"
-"* Definir puntos de calidad que generarán controles de calidad en las recolecciones, (quality_mrp)\n"
+"* Definir puntos de calidad que generarán controles de calidad en los albaranes, (quality_mrp)\n"
 "*  Las alertas de calidad se pueden crear independientemente o relacionada con los controles de calidad.\n"
 "* Posibilidad de agregar una medida al control de calidad con una tolerancia mínima o máxima\n"
 "* Defina sus etapas para las alertas de calidad\n"
@@ -7762,11 +7762,10 @@ msgstr ""
 "\n"
 "Control de calidad\n"
 "===============\n"
-"* Definir puntos de calidad que generarán controles de calidad en las recolecciones,\n"
-"  órdenes de fabricación u órdenes de trabajo (quality_mrp)\n"
-"* Las alertas de calidad se pueden crear independientemente o relacionadas con los controles de calidad.\n"
-"* Posibilidad de agregar una medida al control de calidad con una tolerancia mínima y máxima\n"
-"* Defina sus etapas para las alertas de calidad.\n"
+"* Definir puntos de calidad que generarán controles de calidad en los albaranes, (quality_mrp)\n"
+"*  Las alertas de calidad se pueden crear independientemente o relacionada con los controles de calidad.\n"
+"* Posibilidad de agregar una medida al control de calidad con una tolerancia mínima o máxima\n"
+"* Defina sus etapas para las alertas de calidad\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll_expense
@@ -8110,7 +8109,7 @@ msgid ""
 "    * Defines tax reports mod 111, 115 and 303\n"
 msgstr ""
 "\n"
-"Gráficos de cuentas españoles (PGCE 2008).\n"
+"Planes contables españoles (PGCE 2008).\n"
 "========================================\n"
 "\n"
 "    * Define las siguientes plantillas de planes contables:\n"
@@ -9325,7 +9324,7 @@ msgstr ""
 "Este módulo agrega un acceso rápido a uno o varios casos de oportunidad en el CRM.\n"
 "===========================================================================\n"
 "\n"
-"Este acceso le permite generar una orden de alquiler en el caso seleccionado.\n"
+"Este acceso le permite generar un pedido de alquiler en el caso seleccionado.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -9709,7 +9708,7 @@ msgid ""
 msgstr ""
 "\n"
 "Este módulo permite que los usuarios identifiquen órdenes de subcontratación al aplicar costes en destino,\n"
-"ya que también muestran la referencia de recolección asociada en la vista de búsqueda.\n"
+"ya que también muestran la referencia de albarán asociado en la vista de búsqueda.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_landed_costs
@@ -10075,8 +10074,8 @@ msgstr ""
 "        cobrar un conjunto de pagos.\n"
 "\n"
 "        Para ser elegible para este método de pago, el cliente primero debió\n"
-"        devolver una orden a la empresa, dando su consentimiento para utilizar la domiciliación bancaria.\n"
-"        Este consentimiento se debió codificar como una \"orden del cliente\" en Odoo.\n"
+"        devolver un mandato a la empresa, dando su consentimiento para utilizar la domiciliación bancaria.\n"
+"        Este consentimiento se debió codificar como un \"mandato del cliente\" en Odoo.\n"
 "\n"
 "        También debe cumplir con los siguientes requisitos para poder\n"
 "        generar un archivo SDD:\n"
@@ -10342,7 +10341,7 @@ msgid ""
 "Allows to prepare batches depending on their carrier\n"
 msgstr ""
 "\n"
-"Este módulo es el enlace entre las aplicaciones de recolección por lotes y transportista.\n"
+"Este módulo es el enlace entre las aplicaciones de picking por lotes y transportista.\n"
 "\n"
 "Permite preparar lotes dependiendo del transportista\n"
 
@@ -10570,18 +10569,18 @@ msgid ""
 "valid ones.\n"
 msgstr ""
 "\n"
-"    Este módulo prueba el módulo 'account_edi_ubl_cii', que está separado ya que se necesitaban dependencias a \n"
-"    algunas localizaciones. El nombre empieza con 'l10n' para no sobrecargar al runbot.\n"
-"    \n"
-"    Los archivos de prueba se separan por fuentes de donde se tomaron:\n"
-"    \n"
-"    * el documento factur-x (de FNFE)\n"
-"    * el documento peppol-bis-invoice-3 (el siguiente repositorio de GitHub incluye ejemplos: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples)\n"
-"    * odoo, estos archivos pasan todas las pruebas de validación (usando ecosio o el validador FNFE)\n"
-"    \n"
-"    Probamos que los ejemplos externos se importen de forma correcta (moneda, cantidad total y coincidencia fiscal total).\n"
-"    También probamos que la generación de xml desde Odoo con los parámetros dados resulta exactamente en el mismo xml que se espera, \n"
-"    válido.\n"
+"Este módulo prueba el módulo 'account_edi_ubl_cii', que está separado ya que se necesitaban dependencias a \n"
+"algunas localizaciones. El nombre empieza con 'l10n' para no sobrecargar al runbot.\n"
+"\n"
+"Los archivos de prueba se separan por fuentes de donde se tomaron:\n"
+"\n"
+"* el documento factur-x (de FNFE)\n"
+"* el documento peppol-bis-invoice-3 (la siguiente biblioteca de módulos de GitHub incluye ejemplos: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples)\n"
+"* odoo, estos archivos pasan todas las pruebas de validación (usando ecosio o el validador FNFE)\n"
+"\n"
+"Probamos que los ejemplos externos se importen de forma correcta (divisa, cantidad total y coincidencia fiscal total).\n"
+"También probamos que la generación de xml desde Odoo con los parámetros dados resulta exactamente en el mismo xml que se espera, \n"
+"válido.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website_slides_full
@@ -10995,7 +10994,7 @@ msgstr ""
 "* Reciba un recordatorio cuando la fecha de vencimiento de un contrato se aproxime.\n"
 "* Agregue los servicios y los valores de odómetro para todos sus vehículos.\n"
 "* Muestra todos los costes asociados a un vehículo o a un tipo de servicio.\n"
-"* Gráfico de análisis de costes.\n"
+"* Gráfica de análisis de costes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -11022,7 +11021,7 @@ msgstr ""
 "Características clave\n"
 "------------\n"
 "* Valoración de stock (periódica o automática)\n"
-"* Facturación desde recolección\n"
+"* Facturación desde albarán de picking\n"
 "\n"
 "El tablero y los informes para la gestión de almacén incluye:\n"
 "-------------------------------------------------------------\n"
@@ -11881,7 +11880,7 @@ msgid ""
 "- Follow-up Address: Preferred address for follow-up reports. Selected by default when you send reminders about overdue invoices.\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
-"- Contactos: utilice esta opción para organizar los datos de contacto de los empleados de una empresa determinada (por ejemplo, director general, director financiero, etc.).\n"
+"- Contactos: utilice esta opción para organizar los datos de contacto de los empleados de una empresa determinada (por ejemplo, director ejecutivo, director financiero, etc.).\n"
 "- Dirección de facturación: dirección preferida para todas las facturas. Se selecciona por defecto cuando se factura un pedido que pertenece a esta empresa.\n"
 "- Dirección de entrega: dirección preferida para todas las entregas. Se selecciona por defecto cuando entrega una orden que pertenece a esta empresa.\n"
 "- Privada: las direcciones privadas solo son visibles por los usuarios autorizados y contienen datos sensibles (direcciones particulares de los empleados, etc.).\n"
@@ -12388,7 +12387,7 @@ msgid ""
 "deliver an order that belongs to this company.</span>"
 msgstr ""
 "<span>La dirección preferida para todas las entregas. Se selecciona "
-"automáticamente cuando entrega una orden que pertenece a esta "
+"automáticamente cuando entrega un pedido que pertenece a esta "
 "empresa.</span>"
 
 #. module: base
@@ -12398,7 +12397,7 @@ msgid ""
 "invoice an order that belongs to this company.</span>"
 msgstr ""
 "<span>La dirección preferida para todas las facturas. Seleccionada por "
-"defecto cuando factura una orden que pertenece a esta empresa.</span>"
+"defecto cuando factura un pedido que pertenece a esta empresa.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -12681,7 +12680,7 @@ msgstr ""
 "\n"
 "* Generar un nuevo pedido de compra de un producto del extranjero. El coste en destino solo está\n"
 "  disponible para productos configurados con una valoración de inventarios 'automatizada' y con\n"
-"  el método de cálculo del coste 'PEPS'. El método de cálculo del coste está configurado en las categorías\n"
+"  el método de cálculo del coste 'FIFO. El método de cálculo del coste está configurado en las categorías\n"
 "de producto.\n"
 "\n"
 ".. figure:: static/description/purchase_order_new.png\n"
@@ -12691,7 +12690,7 @@ msgstr ""
 ".. figure:: static/description/picking_done_purchase.png\n"
 "\n"
 "* Vaya a Inventario -> Control de inventario -> Coste en destino\n"
-"* Cree un nuevo coste en destino indicando el movimiento de almacén del pedido de compra\n"
+"* Cree un nuevo coste en destino indicando la preparación del pedido de compra\n"
 "  y el número de pedimento de importación. Los costos de envío son\n"
 "  solo posibles para productos configurados con método de costeo en tiempo real.\n"
 " El método de costeo se configura en la categoría\n"
@@ -12710,7 +12709,7 @@ msgstr ""
 ".. figure:: static/description/product_landed_cost.png\n"
 "\n"
 "* Haga clic en el botón Calcular para ver cómo los costos de envío se distribuyen \n"
-"  entre las líneas del movimiento de almacén.\n"
+"  entre las líneas del albarán del picking.\n"
 "\n"
 ".. figure:: static/description/compute_landed_cost.png\n"
 "\n"
@@ -13832,7 +13831,7 @@ msgid ""
 "Adds a full traceability of inventory operations on the profitability "
 "report."
 msgstr ""
-"Agrega trazabilidad completa de las operaciones de inventario al reporte de "
+"Agrega trazabilidad completa de las operaciones de inventario al informe de "
 "rentabilidad."
 
 #. module: base
@@ -13840,7 +13839,7 @@ msgstr ""
 msgid ""
 "Adds a full traceability of reinvoice expenses on the profitability report."
 msgstr ""
-"Agrega trazabilidad completa de los gastos de refacturación al reporte de "
+"Agrega trazabilidad completa de los gastos de refacturación al informe de "
 "rentabilidad."
 
 #. module: base
@@ -14398,8 +14397,8 @@ msgid ""
 "and wishes. There is no central tag repository across clients."
 msgstr ""
 "Una cadena arbitraria, interpretada por el cliente de acuerdo con sus "
-"propias necesidades y deseos. No hay repositorio central de etiqueta a "
-"través de clientes."
+"propias necesidades y deseos. No hay biblioteca de módulos central de "
+"etiqueta a través de clientes."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_module_module__auto_install
@@ -17558,7 +17557,7 @@ msgstr "Crear una etiqueta de contacto"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Create a Contact in your address book"
-msgstr "Crear un contacto en su directorio"
+msgstr "Crear un contacto en su libreta de direcciones"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country_group
@@ -17593,12 +17592,12 @@ msgstr "Crear una nueva compañia"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
 msgid "Create a new customer in your address book"
-msgstr "Crear un nuevo cliente en su libro de direcciones"
+msgstr "Crear un nuevo cliente en su libreta de direcciones"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_supplier_form
 msgid "Create a new vendor in your address book"
-msgstr "Crear un nuevo proveedor en su libro de direcciones"
+msgstr "Crear un nuevo proveedor en su libreta de direcciones"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
@@ -18519,7 +18518,7 @@ msgstr "Gastos de envío"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_stock_picking_batch
 msgid "Delivery Stock Picking Batch"
-msgstr "Recolección por lotes del stock de entrega"
+msgstr "Picking por lotes para entrega de stock"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo
@@ -21045,6 +21044,11 @@ msgid "France - Accounting Reports"
 msgstr "Francia - informes contables"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_invoice_addr
+msgid "France - Adding Mandatory Invoice Mentions (Decree no. 2022-1299)"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC Export"
 msgstr "Francia - Exportación FEC"
@@ -21436,7 +21440,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_l10n_in_sale_stock
 msgid "Get warehouse address if the invoice is created from Sale Order"
 msgstr ""
-"Obtenga la dirección del almacén si la factura se genera desde la orden de "
+"Obtenga la dirección del almacén si la factura se genera desde el pedido de "
 "compra"
 
 #. module: base
@@ -21530,7 +21534,7 @@ msgstr "Integración con Google reCAPTCHA"
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__graph
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__graph
 msgid "Graph"
-msgstr "Gráfico"
+msgstr "Gráfica"
 
 #. module: base
 #: model:res.country,name:base.gr
@@ -23208,8 +23212,8 @@ msgid ""
 "comma-separated list of valid field names (optionally followed by asc/desc "
 "for the direction)"
 msgstr ""
-"Se especificó una orden \"no válida\" (%s). Una especificación de orden "
-"\"válida\" es una lista de campos de nombres válidos que están separados por"
+"Se especificó un orden \"no válida\" (%s). Una especificación de orden "
+"\"válido\" es una lista de campos de nombres válidos que están separados por"
 " una coma (opcionalmente seguidos por asc/desc para la dirección)."
 
 #. module: base
@@ -24306,7 +24310,7 @@ msgstr "Rastreador de enlaces"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale_stock_renting
 msgid "Link between PoS and Stock Rental."
-msgstr "Módulo de enlace entre PdV y Alquiler de inventario "
+msgstr "Módulo de enlace entre TPV y Alquiler de inventario "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_online_payment_self_order_preparation_display
@@ -25897,7 +25901,7 @@ msgstr "Nombre de módulo"
 #. module: base
 #: model:ir.model,name:base.model_report_base_report_irmodulereference
 msgid "Module Reference Report (base)"
-msgstr "Reporte del módulo de referencia (base)"
+msgstr "Informe del módulo de referencia (base)"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_uninstall
@@ -27723,7 +27727,7 @@ msgstr ""
 "\n"
 "### En su navegador \n"
 "\n"
-"El PdV de Odoo es una aplicación que funciona en cualquier dispositivo que pueda mostrar\n"
+"El TPV de Odoo es una aplicación que funciona en cualquier dispositivo que pueda mostrar\n"
 "sitios web y no tendrá que instalar nada.\n"
 "\n"
 "### ¿Pantalla táctil o teclado?\n"
@@ -27741,11 +27745,11 @@ msgstr ""
 "En línea y sin conexión\n"
 "------------------\n"
 "\n"
-"### El PdV siempre será confiable, incluso si su conexión no lo es\n"
+"### El TPV siempre será confiable, incluso si su conexión no lo es\n"
 "\n"
 "Muestre nuevas tiendas solo con conexión a internet: **sin instalación, sin\n"
 "hardware específico requerido**. Funciona en cualquier **iPad, tableta PC, laptop** o \n"
-"una máquina de PdV industrial.\n"
+"una máquina de TPV industrial.\n"
 "\n"
 "Aunque requiere una conexión a internet para iniciar el Punto de venta, este se mantendrá\n"
 "en línea incluso si se desconecta por completo.\n"
@@ -27756,7 +27760,7 @@ msgstr ""
 "\n"
 "### Simple y llamativa\n"
 "\n"
-"Despídase de los softwares de PdV feos y anticuados. Disfrute la interfaz web de Odoo\n"
+"Despídase de los softwares de TPV feos y anticuados. Disfrute la interfaz web de Odoo\n"
 "que está diseñada para vendedores modernos.\n"
 "\n"
 "### Diseñado para la productividad\n"
@@ -28596,7 +28600,7 @@ msgstr "Propiedad 'On delete' (al eliminar) para campos many2one"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_picking
 msgid "On site Payment & Picking"
-msgstr "Pago y recolección en la ubicación"
+msgstr "Pago y recogida en la ubicación"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_onboarding
@@ -29390,7 +29394,7 @@ msgstr "Código de barras TPV en el móvil"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_mobile
 msgid "POS Barcode scan in Mobile"
-msgstr "Lector de código de barras del PdV en el móvil"
+msgstr "Lector de código de barras del TPV en el móvil"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_epson_printer
@@ -32267,7 +32271,7 @@ msgstr "Ventas"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales & Purchase"
-msgstr "Ventas y compra"
+msgstr "Ventas y compras"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project
@@ -36095,7 +36099,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_pos
 msgid "This module integrates POS with WhatsApp"
-msgstr "Este módulo integra el PdV con WhatsApp"
+msgstr "Este módulo integra el TPV con WhatsApp"
 
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_sale

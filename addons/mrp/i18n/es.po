@@ -36,7 +36,7 @@ msgid ""
 msgstr ""
 "* Borrador: la orden de fabricación aún no está confirmada.\n"
 "* Confirmado: la orden de fabricación está confirmada, las reglas de stock y el reabastecimiento de los componentes se activan.\n"
-"* En progreso: la producción comenzó (en la orden de fabricación o en la orden de trabajo).\n"
+"* En proceso: la producción comenzó (en la orden de fabricación o en la orden de trabajo).\n"
 "* A cerrar: la producción terminó, se debe cerrar la orden de fabricación.\n"
 "* Listo: se cerró la orden de fabricación, los movimientos de stock se registran.\n"
 "* Cancelado: se canceló la orden de fabricación, ya no se puede confirmar."
@@ -1305,6 +1305,17 @@ msgstr "Cancelado"
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"Cannot compute days to prepare due to missing route info for at least 1 "
+"component or for the final product."
+msgstr ""
+"No es posible calcular los días necesarios de preparación. Falta información"
+" sobre la ruta para al menos 1 componente o para el producto final."
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Cannot delete a manufacturing order in done state."
@@ -2249,7 +2260,7 @@ msgstr "Números de serie existentes (%s)"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Exp %s"
-msgstr "Exp %s"
+msgstr "%s previsto"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__components_availability_state__expected
@@ -2511,7 +2522,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__sequence
 msgid "Gives the sequence order when displaying."
-msgstr "Indica la orden de secuencia cuando se visualiza."
+msgstr "Indica el orden de secuencia cuando se visualiza."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_google_slide
@@ -2783,7 +2794,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "In Progress"
-msgstr "En progreso"
+msgstr "En proceso"
 
 #. module: mrp
 #. odoo-python
@@ -4104,32 +4115,32 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
 msgid "Picking Before Manufacturing MTO Rule"
-msgstr "Regla de recolección antes de fabricación sobre pedido"
+msgstr "Regla de fabricación sobre pedido para picking antes de fabricación"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_type_id
 msgid "Picking Before Manufacturing Operation Type"
-msgstr "Tipo de operación de recolección antes de fabricación"
+msgstr "Tipo de operación de picking antes de fabricación"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_route_id
 msgid "Picking Before Manufacturing Route"
-msgstr "Ruta de recolección antes de fabricación"
+msgstr "Ruta de picking antes de fabricación"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Tipo de recolección"
+msgstr "Tipo de albarán"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__picking_ids
 msgid "Picking associated to this manufacturing order"
-msgstr "Recolección asociada a esta orden de fabricación"
+msgstr "Albarán de picking asociado a esta orden de fabricación"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_loc_id
 msgid "Picking before Manufacturing Location"
-msgstr "Ubicación de recolección antes de fabricación"
+msgstr "Ubicación de picking antes de fabricación"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -5061,7 +5072,7 @@ msgstr "Secuencia"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence picking before manufacturing"
-msgstr "Secuencia de recolección antes de fabricación"
+msgstr "Secuencia de picking antes de fabricación"
 
 #. module: mrp
 #. odoo-python
@@ -5216,7 +5227,7 @@ msgid ""
 "Some of your byproducts are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct byproducts."
 msgstr ""
-"Algunos de sus subproductos estan siendo rastreados, debe especificar un "
+"Algunos de sus subproductos estan siendo rastreados, debe especificar una "
 "orden de fabricación para recuperar los subproductos correctos."
 
 #. module: mrp
@@ -6757,8 +6768,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Work orders in progress. Click to block work center."
 msgstr ""
-"Órdenes de trabajo en progreso. Haga clic para bloquear el centro de "
-"trabajo."
+"Órdenes de trabajo en proceso. Haga clic para bloquear el centro de trabajo."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__workcenter_id
@@ -6927,7 +6937,7 @@ msgid ""
 "done."
 msgstr ""
 "No puede cambiar el centro de trabajo de una orden de trabajo que está en "
-"progreso o hecha."
+"proceso o hecha."
 
 #. module: mrp
 #. odoo-python
@@ -7211,7 +7221,7 @@ msgstr "de"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_document_form
 msgid "on"
-msgstr "de"
+msgstr "el"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
