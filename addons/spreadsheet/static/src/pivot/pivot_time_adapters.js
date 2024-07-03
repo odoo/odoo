@@ -1,12 +1,14 @@
 /** @odoo-module */
 // @ts-check
 
-import { registries } from "@odoo/o-spreadsheet";
+import { registries, helpers, constants } from "@odoo/o-spreadsheet";
 import { deserializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 
 const { pivotTimeAdapterRegistry } = registries;
+const { formatValue, toNumber, toJsDate, toString } = helpers;
+const { DEFAULT_LOCALE } = constants;
 
 const { DateTime } = luxon;
 
@@ -58,7 +60,23 @@ const odooDayAdapter = {
     },
 };
 
+/**
+ * Normalized value: "2/2023" for week 2 of 2023
+ */
 const odooWeekAdapter = {
+    normalizeFunctionValue(value) {
+        const [week, year] = toString(value).split("/");
+        return `${Number(week)}/${Number(year)}`;
+    },
+    toValueAndFormat(normalizedValue, locale) {
+        const [week, year] = normalizedValue.split("/");
+        return {
+            value: _t("W%(week)s %(year)s", { week, year }),
+        };
+    },
+    toFunctionValue(normalizedValue) {
+        return `"${normalizedValue}"`;
+    },
     normalizeServerValue(groupBy, field, readGroupResult) {
         const weekValue = readGroupResult[groupBy];
         const { week, year } = parseServerWeekHeader(weekValue);
@@ -74,7 +92,24 @@ const odooWeekAdapter = {
     },
 };
 
+/**
+ * normalized month value is a string formatted as "MM/yyyy" (luxon format)
+ * e.g. "01/2020" for January 2020
+ */
 const odooMonthAdapter = {
+    normalizeFunctionValue(value) {
+        const date = toNumber(value, DEFAULT_LOCALE);
+        return formatValue(date, { locale: DEFAULT_LOCALE, format: "mm/yyyy" });
+    },
+    toValueAndFormat(normalizedValue) {
+        return {
+            value: toNumber(normalizedValue, DEFAULT_LOCALE),
+            format: "mmmm yyyy",
+        };
+    },
+    toFunctionValue(normalizedValue) {
+        return `"${normalizedValue}"`;
+    },
     normalizeServerValue(groupBy, field, readGroupResult) {
         const firstOfTheMonth = getGroupStartingDay(field, groupBy, readGroupResult);
         const date = deserializeDate(firstOfTheMonth);
@@ -87,7 +122,32 @@ const odooMonthAdapter = {
     },
 };
 
+const NORMALIZED_QUARTER_REGEXP = /^[1-4]\/\d{4}$/;
+
+/**
+ * normalized quarter value is "quarter/year"
+ * e.g. "1/2020" for Q1 2020
+ */
 const odooQuarterAdapter = {
+    normalizeFunctionValue(value) {
+        // spreadsheet normally interprets "4/2020" as the 1st April
+        // but it should be understood as a quarter here.
+        if (typeof value === "string" && NORMALIZED_QUARTER_REGEXP.test(value)) {
+            return value;
+        }
+        // Any other value is interpreted as any date-like spreadsheet value
+        const dateTime = toJsDate(value, DEFAULT_LOCALE);
+        return `${dateTime.getQuarter()}/${dateTime.getFullYear()}`;
+    },
+    toValueAndFormat(normalizedValue) {
+        const [quarter, year] = normalizedValue.split("/");
+        return {
+            value: _t("Q%(quarter)s %(year)s", { quarter, year }),
+        };
+    },
+    toFunctionValue(normalizedValue) {
+        return `"${normalizedValue}"`;
+    },
     normalizeServerValue(groupBy, field, readGroupResult) {
         const firstOfTheQuarter = getGroupStartingDay(field, groupBy, readGroupResult);
         const date = deserializeDate(firstOfTheQuarter);
@@ -164,10 +224,11 @@ function extendSpreadsheetAdapter(granularity, adapter) {
     );
 }
 
+pivotTimeAdapterRegistry.add("week", falseHandlerDecorator(odooWeekAdapter));
+pivotTimeAdapterRegistry.add("month", falseHandlerDecorator(odooMonthAdapter));
+pivotTimeAdapterRegistry.add("quarter", falseHandlerDecorator(odooQuarterAdapter));
+
 extendSpreadsheetAdapter("day", odooDayAdapter);
-extendSpreadsheetAdapter("week", odooWeekAdapter);
-extendSpreadsheetAdapter("month", odooMonthAdapter);
-extendSpreadsheetAdapter("quarter", odooQuarterAdapter);
 extendSpreadsheetAdapter("year", odooYearAdapter);
 
 /**
