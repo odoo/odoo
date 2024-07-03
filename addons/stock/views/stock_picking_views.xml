@@ -285,6 +285,7 @@
                                     <field name="is_storable" column_invisible="True"/>
                                     <field name="has_tracking" column_invisible="True"/>
                                     <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0" force_save="1"/>
+                                    <field name="location_final_id" optional="hide" groups="stock.group_stock_multi_locations"/>
                                     <field name="description_picking" string="Description" optional="hide"/>
                                     <field name="date" optional="hide"/>
                                     <field name="date_deadline" optional="hide"/>
