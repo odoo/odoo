@@ -6,7 +6,7 @@ import {
     getPyEnv,
 } from "@spreadsheet/../tests/helpers/data";
 
-import { selectCell, setCellContent } from "@spreadsheet/../tests/helpers/commands";
+import { selectCell, setCellContent, updatePivot } from "@spreadsheet/../tests/helpers/commands";
 import { doMenuAction, getActionMenu } from "@spreadsheet/../tests/helpers/ui";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 
@@ -97,6 +97,86 @@ test("Can open see records on measure headers", async function () {
     await animationFrame();
     await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
     expect.verifySteps(["doAction"]);
+});
+
+test("Domain with granularity quarter_number are correctly computer", async function () {
+    const fakeActionService = {
+        doAction: (actionRequest) => {
+            expect.step("doAction");
+            expect.step(actionRequest.domain);
+        },
+    };
+    mockService("action", fakeActionService);
+    const { env, model, pivotId } = await createSpreadsheetWithPivot();
+
+    updatePivot(model, pivotId, {
+        rows: [{ name: "date", granularity: "quarter_number", order: "asc" }],
+    });
+    await animationFrame();
+    setCellContent(model, "A1", `=PIVOT.HEADER(1,"date:quarter_number",2)`);
+    selectCell(model, "A1");
+    await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
+    expect.verifySteps(["doAction", [[`date.quarter_number`, "=", 2]]]);
+});
+
+test("Domain with granularity iso_week_number are correctly computer", async function () {
+    const fakeActionService = {
+        doAction: (actionRequest) => {
+            expect.step("doAction");
+            expect.step(actionRequest.domain);
+        },
+    };
+    mockService("action", fakeActionService);
+    const { env, model, pivotId } = await createSpreadsheetWithPivot();
+
+    updatePivot(model, pivotId, {
+        rows: [{ name: "date", granularity: "iso_week_number", order: "asc" }],
+    });
+    await animationFrame();
+    setCellContent(model, "A1", `=PIVOT.HEADER(1,"date:iso_week_number",15)`);
+    selectCell(model, "A1");
+    await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
+    expect.verifySteps(["doAction", [[`date.iso_week_number`, "=", 15]]]);
+});
+
+test("Domain with granularity month_number are correctly computer", async function () {
+    const fakeActionService = {
+        doAction: (actionRequest) => {
+            expect.step("doAction");
+            expect.step(actionRequest.domain);
+        },
+    };
+    mockService("action", fakeActionService);
+    const { env, model, pivotId } = await createSpreadsheetWithPivot();
+
+    updatePivot(model, pivotId, {
+        rows: [{ name: "date", granularity: "month_number", order: "asc" }],
+    });
+    await animationFrame();
+    setCellContent(model, "A1", `=PIVOT.HEADER(1,"date:month_number",4)`);
+    selectCell(model, "A1");
+    await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
+    expect.verifySteps(["doAction", [[`date.month_number`, "=", 4]]]);
+});
+
+test("Domain with granularity day_of_month are correctly computer", async function () {
+    const fakeActionService = {
+        doAction: (actionRequest) => {
+            expect.step("doAction");
+            expect.step(actionRequest.domain);
+        },
+    };
+    mockService("action", fakeActionService);
+    const { env, model, pivotId } = await createSpreadsheetWithPivot();
+
+    updatePivot(model, pivotId, {
+        rows: [{ name: "date", granularity: "day_of_month", order: "asc" }],
+    });
+    await animationFrame();
+    setCellContent(model, "A1", `=PIVOT.HEADER(1,"date:day_of_month",11)`);
+    selectCell(model, "A1");
+    await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
+    expect.verifySteps(["doAction", [[`date.day_of_month`, "=", 11]]]);
 });
 
 test("Cannot open see records on the main PIVOT cell", async function () {

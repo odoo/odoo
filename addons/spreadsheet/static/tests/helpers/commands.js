@@ -226,3 +226,11 @@ export function undo(model) {
 export function redo(model) {
     model.dispatch("REQUEST_REDO");
 }
+
+export function updatePivot(model, pivotId, pivotData) {
+    const pivot = {
+        ...model.getters.getPivotCoreDefinition(pivotId),
+        ...pivotData,
+    };
+    return model.dispatch("UPDATE_PIVOT", { pivotId, pivot });
+}
