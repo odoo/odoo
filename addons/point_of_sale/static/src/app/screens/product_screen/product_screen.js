@@ -327,7 +327,7 @@ export class ProductScreen extends Component {
 
         const exactMatches = products.filter((product) => product.exactMatch(searchWord));
 
-        if (exactMatches.length > 0 && searchWord.length > 5) {
+        if (exactMatches.length > 0 && searchWord.length > 2) {
             return exactMatches;
         }
 
