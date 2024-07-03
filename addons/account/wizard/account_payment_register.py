@@ -736,6 +736,21 @@ class AccountPaymentRegister(models.TransientModel):
 
         return payment_vals
 
+    def _get_write_off_vals_from_wizard(self, batch_result):
+        epd_aml_values_list = []
+        for aml in batch_result['lines']:
+            if aml.move_id._is_eligible_for_early_payment_discount(self.currency_id, self.payment_date):
+                epd_aml_values_list.append({
+                    'aml': aml,
+                    'amount_currency': -aml.amount_residual_currency,
+                    'balance': aml.currency_id._convert(-aml.amount_residual_currency, aml.company_currency_id, date=self.payment_date),
+                })
+
+        open_amount_currency = self.payment_difference * (-1 if self.payment_type == 'outbound' else 1)
+        open_balance = self.currency_id._convert(open_amount_currency, self.company_id.currency_id, self.company_id, self.payment_date)
+        early_payment_values = self.env['account.move']._get_invoice_counterpart_amls_for_early_payment_discount(epd_aml_values_list, open_balance)
+        return [line for lines in early_payment_values.values() for line in lines]
+
     def _create_payment_vals_from_batch(self, batch_result):
         batch_values = self._get_wizard_values_from_batch(batch_result)
 

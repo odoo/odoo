@@ -161,17 +161,40 @@ class PaymentTransaction(models.Model):
             'ref': reference,
             **extra_create_values,
         }
-        payment = self.env['account.payment'].create(payment_values)
-        payment.action_post()
-
-        # Track the payment to make a one2one.
-        self.payment_id = payment
 
         # Reconcile the payment with the source transaction's invoices in case of a partial capture.
         if self.operation == self.source_transaction_id.operation:
             invoices = self.source_transaction_id.invoice_ids
         else:
             invoices = self.invoice_ids
+
+        today = fields.Date.context_today(self)
+        invoices_with_epd = invoices.filtered(lambda inv: inv._is_eligible_for_early_payment_discount(inv.currency_id, today))
+        if invoices_with_epd:
+            wizard = self.env['account.payment.register'].with_context(
+                active_model='account.move',
+                active_ids=invoices_with_epd.ids,
+            ).create({
+                'payment_date': today,
+                'early_payment_discount_mode': True,
+            })
+            batch_result = wizard._get_batches()[0]
+            write_off_line_vals = wizard._get_write_off_vals_from_wizard(batch_result)
+
+            # write off are set with the invoice's partner id, so we force it in case of disparity between lines
+            # (see _synchronize_from_moves "In order to proceed, the journal items must share the same partner.")
+            # e.g. Mitchel (connected user) pays for Deco Addict (invoice's partner) from the portal view -> KO
+            if payment_values['partner_id'] != (invoice_partner := batch_result['payment_values']['partner_id']):
+                payment_values['partner_id'] = invoice_partner
+
+            payment_values.setdefault('write_off_line_vals', []).extend(write_off_line_vals)
+
+        payment = self.env['account.payment'].create(payment_values)
+        payment.action_post()
+
+        # Track the payment to make a one2one.
+        self.payment_id = payment
+
         if invoices:
             invoices.filtered(lambda inv: inv.state == 'draft').action_post()
 

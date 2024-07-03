@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from odoo import fields
 from odoo.http import request
 
 from odoo.addons.account.controllers import portal
@@ -52,8 +52,12 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
                 providers_sudo
             ),
         }
+        amount = invoice.amount_residual
+        if invoice._is_eligible_for_early_payment_discount(invoice.currency_id, fields.Date.context_today(invoice)):
+            amount = invoice.invoice_payment_term_id._get_amount_due_after_discount(invoice.amount_residual, invoice.amount_tax)
+
         payment_context = {
-            'amount': invoice.amount_residual,
+            'amount': amount,
             'currency': invoice.currency_id,
             'partner_id': partner_sudo.id,
             'providers_sudo': providers_sudo,
