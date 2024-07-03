@@ -913,7 +913,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'summary': 'Pricing new update',
             'visibility': 'public',
             'recurrence': ['EXDATE;TZID=Europe/Rome:20200113',
-                           'RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=MO'],
+                           'RRULE;X-EVOLUTION-ENDDATE=20200120:FREQ=WEEKLY;COUNT=3;BYDAY=MO'],
             'reminders': {'useDefault': True},
             'start': {'date': '2020-01-6'},
             'end': {'date': '2020-01-7'},

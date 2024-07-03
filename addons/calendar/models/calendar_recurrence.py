@@ -361,6 +361,26 @@ class RecurrenceRule(models.Model):
         data = {}
         day_list = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
+        # Skip X-named RRULE extensions
+        # TODO Remove patch when dateutils contains the fix
+        # HACK https://github.com/dateutil/dateutil/pull/1374
+        try:
+            prefix, suffix = rule_str.split(':', 1)
+        except ValueError:
+            # No special params, that's OK
+            pass
+        else:
+            new_prefix = ";".join(
+                part for part in prefix.split(';') if not part.startswith('X-')
+            )
+            if new_prefix:
+                # If there are non-X-named params, keep only those. FWIW it
+                # will mean an ValueError in dateutil
+                rule_str = f"{new_prefix}:{suffix}"
+            else:
+                # If all RRULE params were X-extensions, just keep the suffix
+                rule_str = suffix
+
         if 'Z' in rule_str and date_start and not date_start.tzinfo:
             date_start = pytz.utc.localize(date_start)
         rule = rrule.rrulestr(rule_str, dtstart=date_start)
