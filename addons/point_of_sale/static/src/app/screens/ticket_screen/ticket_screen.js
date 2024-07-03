@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { formatDateTime } from "@web/core/l10n/dates";
+import { formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -634,6 +634,20 @@ export class TicketScreen extends Component {
                 repr: (order) => this.getDate(order),
                 displayName: _t("Date"),
                 modelField: "date_order",
+                formatSearch: (searchTerm) => {
+                    const includesTime = searchTerm.includes(":");
+                    let parsedDateTime;
+                    try {
+                        parsedDateTime = parseDateTime(searchTerm);
+                    } catch {
+                        return searchTerm;
+                    }
+                    if (includesTime) {
+                        return parsedDateTime.toUTC().toFormat("yyyy-MM-dd HH:mm:ss");
+                    } else {
+                        return parsedDateTime.toFormat("yyyy-MM-dd");
+                    }
+                },
             },
             PARTNER: {
                 repr: (order) => order.get_partner_name(),
@@ -686,13 +700,16 @@ export class TicketScreen extends Component {
     }
     //#region SEARCH SYNCED ORDERS
     _computeSyncedOrdersDomain() {
-        const { fieldName, searchTerm } = this.state.search;
+        let { fieldName, searchTerm } = this.state.search;
         if (!searchTerm) {
             return [];
         }
-        const modelField = this._getSearchFields()[fieldName].modelField;
-        if (modelField && modelField !== null) {
-            return [[modelField, "ilike", `%${searchTerm}%`]];
+        const searchField = this._getSearchFields()[fieldName];
+        if (searchField && searchField.modelField && searchField.modelField !== null) {
+            if (searchField.formatSearch) {
+                searchTerm = searchField.formatSearch(searchTerm);
+            }
+            return [[searchField.modelField, "ilike", `%${searchTerm}%`]];
         } else {
             return [];
         }
