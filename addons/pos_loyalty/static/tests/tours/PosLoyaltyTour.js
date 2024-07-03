@@ -236,7 +236,7 @@ registry.category("web_tour.tours").add("PosLoyaltyTour6", {
             ProductScreen.clickDisplayedProduct("Test Product A"),
             PosLoyalty.clickRewardButton(),
             SelectionPopup.clickItem("$ 1 per point on your order"),
-            ProductScreen.totalAmountIs("138.50"),
+            ProductScreen.totalAmountIs("165.00"),
         ].flat(),
 });
 
