@@ -28,7 +28,7 @@ export class SpreadsheetShareButton extends Component {
     }
 
     get togglerClass() {
-        return ["btn btn-light", this.props.togglerClass].join(" ");
+        return ["btn", this.props.togglerClass].join(" ");
     }
 
     async onOpened() {
@@ -42,7 +42,7 @@ export class SpreadsheetShareButton extends Component {
         this.state.url = url;
         setTimeout(async () => {
             await browser.navigator.clipboard.writeText(url);
-        })
+        });
     }
 
     /**
