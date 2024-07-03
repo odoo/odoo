@@ -40,15 +40,14 @@ import { patch } from "@web/core/utils/patch";
 import { Component, markup, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
 
 import {
+    BackgroundToggler,
     LayoutColumn,
-    legacyRegistry,
     Many2oneUserValue,
     registerBackgroundOptions,
     ReplaceMedia,
     SelectTemplate,
     SelectUserValue,
     SnippetOption,
-    UnitUserValue,
     UserValue,
     UserValueComponent,
     WeButton,
@@ -1213,7 +1212,7 @@ function _getLastPreFilterLayerElement($el) {
     return null;
 }
 
-options.registry.BackgroundToggler.include({
+patch(BackgroundToggler.prototype, {
     /**
      * Toggles background video on or off.
      *
@@ -1224,11 +1223,11 @@ options.registry.BackgroundToggler.include({
             this.$target.find('> .o_we_bg_filter').remove();
             // TODO: use setWidgetValue instead of calling background directly when possible
             const [bgVideoWidget] = this._requestUserValueWidgets('bg_video_opt');
-            const bgVideoOpt = bgVideoWidget.getParent();
+            const bgVideoOpt = bgVideoWidget.option;
             return bgVideoOpt._setBgVideo(false, '');
         } else {
             // TODO: use trigger instead of el.click when possible
-            this._requestUserValueWidgets('bg_video_opt')[0].el.click();
+            this._requestUserValueWidgets('bg_video_opt')[0].enable();
         }
     },
 
@@ -1243,7 +1242,7 @@ options.registry.BackgroundToggler.include({
         if (methodName === 'toggleBgVideo') {
             return this.$target[0].classList.contains('o_background_video');
         }
-        return this._super(...arguments);
+        return super._computeWidgetState(...arguments);
     },
     /**
      * TODO an overall better management of background layers is needed
@@ -1255,7 +1254,7 @@ options.registry.BackgroundToggler.include({
         if (el) {
             return el;
         }
-        return this._super(...arguments);
+        return super._getLastPreFilterLayerElement(...arguments);
     },
 });
 
@@ -1373,7 +1372,7 @@ options.registry.ReplaceMedia.include({
     },
 });
 
-options.registry.BackgroundVideo = options.Class.extend({
+class BackgroundVideo extends SnippetOption {
 
     //--------------------------------------------------------------------------
     // Options
@@ -1384,12 +1383,12 @@ options.registry.BackgroundVideo = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    background: function (previewMode, widgetValue, params) {
+    background(previewMode, widgetValue, params) {
         if (previewMode === 'reset' && this.videoSrc) {
             return this._setBgVideo(false, this.videoSrc);
         }
         return this._setBgVideo(previewMode, widgetValue);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -1398,7 +1397,7 @@ options.registry.BackgroundVideo = options.Class.extend({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         if (methodName === 'background') {
             if (this.$target[0].classList.contains('o_background_video')) {
                 return this.$('> .o_bg_video_container iframe').attr('src');
@@ -1406,7 +1405,7 @@ options.registry.BackgroundVideo = options.Class.extend({
             return '';
         }
         return this._super(...arguments);
-    },
+    }
     /**
      * Updates the background video used by the snippet.
      *
@@ -1414,7 +1413,7 @@ options.registry.BackgroundVideo = options.Class.extend({
      * @see this.selectClass for parameters
      * @returns {Promise}
      */
-    _setBgVideo: async function (previewMode, value) {
+    async _setBgVideo(previewMode, value) {
         this.$('> .o_bg_video_container').toggleClass('d-none', previewMode === true);
 
         if (previewMode !== false) {
@@ -1430,8 +1429,8 @@ options.registry.BackgroundVideo = options.Class.extend({
             delete target.dataset.bgVideoSrc;
         }
         await this._refreshPublicWidgets();
-    },
-});
+    }
+}
 
 options.registry.WebsiteLevelColor = options.Class.extend({
     specialCheckAndReloadMethodsNames: options.Class.prototype.specialCheckAndReloadMethodsNames
@@ -2225,18 +2224,22 @@ options.registry.CarouselItem = options.Class.extend({
     },
 });
 
-options.registry.Parallax = options.Class.extend({
+class Parallax extends SnippetOption {
     /**
      * @override
      */
-    async start() {
+    async willStart() {
         this.parallaxEl = this.$target.find('> .s_parallax_bg')[0] || null;
-        this._updateBackgroundOptions();
+        // Delay the notify that changes the target because options that handle
+        // the target might not be initialized yet.
+        this.env.snippetEditionRequest(() => {
+            this._updateBackgroundOptions();
+        });
 
         this.$target.on('content_changed.ParallaxOption', this._onExternalUpdate.bind(this));
 
-        return this._super(...arguments);
-    },
+        return super.willStart(...arguments);
+    }
     /**
      * @override
      */
@@ -2248,20 +2251,20 @@ options.registry.Parallax = options.Class.extend({
         if (this.parallaxEl) {
             this._refreshPublicWidgets();
         }
-    },
+    }
     /**
      * @override
      */
     onMove() {
         this._refreshPublicWidgets();
-    },
+    }
     /**
      * @override
      */
     destroy() {
-        this._super(...arguments);
+        super.destroy();
         this.$target.off('.ParallaxOption');
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -2273,7 +2276,7 @@ options.registry.Parallax = options.Class.extend({
      * @see this.selectClass for parameters
      */
     async selectDataAttribute(previewMode, widgetValue, params) {
-        await this._super(...arguments);
+        await super.selectDataAttribute(...arguments);
         if (params.attributeName !== 'scrollBackgroundRatio') {
             return;
         }
@@ -2296,7 +2299,7 @@ options.registry.Parallax = options.Class.extend({
         }
 
         this._updateBackgroundOptions();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -2307,7 +2310,7 @@ options.registry.Parallax = options.Class.extend({
      */
     async _computeVisibility(widgetName) {
         return !this.$target.hasClass('o_background_video');
-    },
+    }
     /**
      * @override
      */
@@ -2325,8 +2328,8 @@ options.registry.Parallax = options.Class.extend({
                 }
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * Updates external background-related option to work with the parallax
      * element instead of the original target when necessary.
@@ -2334,12 +2337,12 @@ options.registry.Parallax = options.Class.extend({
      * @private
      */
     _updateBackgroundOptions() {
-        this.trigger_up('option_update', {
+        this.callbacks.notifyOptions({
             optionNames: ['BackgroundImage', 'BackgroundPosition', 'BackgroundOptimize'],
             name: 'target',
             data: this.parallaxEl ? $(this.parallaxEl) : this.$target,
         });
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2366,8 +2369,8 @@ options.registry.Parallax = options.Class.extend({
             widget.enable();
             widget.getParent().close(); // FIXME remove this ugly hack asap
         }
-    },
-});
+    }
+}
 
 options.registry.collapse = options.Class.extend({
     /**
@@ -4395,8 +4398,9 @@ registerWebsiteOption("WebsiteLayoutColumns", {
     template: "website.layout_column",
     selector: "section, section.s_carousel_wrapper .carousel-item",
     target: "> *:has(> .row), > .s_allow_columns",
-    exclude: ".s_masonry_block, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline"
-});
+    exclude: ".s_masonry_block, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline",
+    tags: ["website"],
+}, { sequence: 15 });
 
 options.registry.SnippetMove.include({
     /**
@@ -4405,6 +4409,63 @@ options.registry.SnippetMove.include({
     _isMobile() {
         return wUtils.isMobile(this);
     },
+});
+
+export function websiteRegisterBackgroundOptions(key, options) {
+    options.module = "website";
+    registerBackgroundOptions(key, options, (name) => name === "toggler" && "website.snippet_options_background_options");
+    if (options.withVideos) {
+        registerWebsiteOption(`${key}-bgVideo`, {
+            Class: BackgroundVideo, 
+            template: "website.BackgroundVideo",
+            ...options,
+        }, { sequence: 30 });
+    }
+    if (options.withImages) {
+        registerWebsiteOption(`${key}-parallax`, {
+            Class: Parallax,
+            template: "website.Parallax",
+            ...options,
+        }, { sequence: 30 });
+    }
+    
+}
+
+export const onlyBgColorSelector = "section .row > div, .s_text_highlight, .s_mega_menu_thumbnails_footer, .s_hr, .s_cta_badge";
+export const onlyBgColorExclude = ".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .s_image_gallery .row > div, .s_text_cover .row > .o_not_editable, [data-snippet] :not(.oe_structure) > .s_hr";
+export const baseOnlyBgImageSelector = ".s_tabs .oe_structure > *, footer .oe_structure > *";
+export const onlyBgImageSelector = baseOnlyBgImageSelector;
+export const onlyBgImageExclude = "";
+export const bothBgColorImageSelector = "section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax, .s_text_cover .row > .o_not_editable";
+export const bothBgColorImageExclude = baseOnlyBgImageSelector + ", .s_carousel_wrapper, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block .s_col_no_resize";
+
+websiteRegisterBackgroundOptions("BothBgImage", {
+    selector: bothBgColorImageSelector,
+    exclude: bothBgColorImageExclude,
+    withColors: true,
+    withImages: true,
+    withVideos: true,
+    withShapes: true,
+    withColorCombinations: true,
+    withGradients: true,
+});
+
+websiteRegisterBackgroundOptions("OnlyBgColor", {
+        selector: onlyBgColorSelector,
+        exclude: onlyBgColorExclude,
+        withColors: true,
+        withImages: false,
+        withColorCombinations: true,
+        withGradients: true,
+});
+
+websiteRegisterBackgroundOptions("OnlyBgImage", {
+    selector: onlyBgImageSelector,
+    exclude: onlyBgImageExclude,
+    withColors: false,
+    withImages: true,
+    withVideos: true,
+    withShapes: true,
 });
 
 const oldExport = {

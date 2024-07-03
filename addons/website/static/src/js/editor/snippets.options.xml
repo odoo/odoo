@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
+<t t-name="website.snippet_options_background_options" t-inherit="web_editor.snippet_options_background_options">
+    <xpath expr="//WeButton[@toggleBgImage]" position="after">
+        <t t-if="option.withVideos">
+            <WeButton tooltip.translate="Video" class="'fa fa-fw fa-film'"
+                    name="'bg_video_toggler_opt'"
+                    dependencies="option.imagesDependencies || false"
+                    toggleBgVideo="'true'"
+                    noPreview="'true'"/>
+        </t>
+    </xpath>
+</t>
+<t t-name="website.BackgroundVideo">
+    <WeRow class="'o_we_sublevel_1'" title.translate="Video">
+        <WeMediapicker tooltip.translate="Edit video"
+                        background="''"
+                        mediaType="'videos'"
+                        name="'bg_video_opt'"
+                        dependencies="'bg_video_opt'"/>
+    </WeRow>
+</t>
 <t t-name="website.column_count_option">
     <WeSelect class="with_grid and 'o_grid'" noPreview="'true'" name="'column_count_opt'" dependencies="with_grid and 'normal_mode'">
         <!-- TODO: @owl-options
@@ -162,5 +182,39 @@
             <span class="o_we_dropdown_caret"/>
         </div>
     </we-select>
+</t>
+<t t-name="website.Parallax">
+    <WeSelect title.translate="Parallax"
+              class="'o_we_sublevel_2'"
+              attributeName="'scrollBackgroundRatio'"
+              attributeDefaultValue="'0'"
+              parallaxTypeOpt="'true'"
+              noPreview="'true'"
+              dependencies="'bg_image_opt'">
+        <WeButton name="'parallax_none_opt'" selectDataAttribute="'0'">None</WeButton>
+        <WeButton selectDataAttribute="'1'">Fixed</WeButton>
+        <WeButton name="'parallax_top_opt'" selectDataAttribute="'1.5'">Bottom to Top</WeButton>
+        <WeButton name="'parallax_bottom_opt'" selectDataAttribute="'-1.5'">Top to Bottom</WeButton>
+    </WeSelect>
+    <WeRange title.translate="Intensity"
+                class="'o_we_sublevel_3'"
+                dependencies="'parallax_top_opt'"
+                selectDataAttribute="''"
+                attributeName="'scrollBackgroundRatio'"
+                attributeDefaultValue="'0'"
+                noPreview="'true'"
+                min="'0'"
+                max="'3'"
+                step="'0.15'"/> <!-- Make sure this cannot land on 1 -->
+    <WeRange title.translate="Intensity"
+                class="'o_we_sublevel_3'"
+                dependencies="'parallax_bottom_opt'"
+                selectDataAttribute="''"
+                attributeName="'scrollBackgroundRatio'"
+                attributeDefaultValue="'0'"
+                noPreview="'true'"
+                min="'0'"
+                max="'-3'"
+                step="'0.15'"/> <!-- Make sure this cannot land on 1 -->
 </t>
 </templates>

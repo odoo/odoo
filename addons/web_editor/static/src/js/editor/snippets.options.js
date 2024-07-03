@@ -8,7 +8,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { camelToKebab } from "@web/core/utils/strings";
-import { throttleForAnimation, debounce } from "@web/core/utils/timing";
+import { useThrottleForAnimation, debounce } from "@web/core/utils/timing";
 import { clamp } from "@web/core/utils/numbers";
 import { scrollTo } from "@web/core/utils/scrolling";
 import Widget from "@web_editor/js/core/widget";
@@ -2990,33 +2990,16 @@ class WeRange extends WeInput {
 }
 registry.category("snippet_widgets").add("WeRange", WeRange);
 
-const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
-    className: (SelectUserValueWidget.prototype.className || '') + ' o_we_select_pager',
-    events: Object.assign({}, SelectUserValueWidget.prototype.events, {
-        'click .o_pager_nav_btn': '_onClickScrollPage',
-        'click .o_pager_nav_angle': '_onClickCloseMenu',
-    }),
+class WeSelectPager extends WeSelect {
+
+    static template = "web_editor.WeSelectPager";
     /**
      * @override
      */
-    async start() {
-        const _super = this._super.bind(this);
-
-        await _super(...arguments);
-        this.menuEl.classList.add('o_we_has_pager', 'position-fixed', 'top-0', 'end-0', 'z-1', 'rounded-0');
-        this.menuTogglerEl.classList.add('o_we_toggler_pager');
-
-        this.pagerContainerEl = this.el.querySelector('.o_pager_container');
-        this.__onScroll = throttleForAnimation(this._onScroll.bind(this));
-        this.pagerContainerEl.addEventListener('scroll', this.__onScroll);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this._super(...arguments);
-        this.pagerContainerEl.removeEventListener('scroll', this.__onScroll);
-    },
+    setup() {
+        super.setup();
+        this.__onScroll = useThrottleForAnimation(this._onScroll);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -3030,13 +3013,13 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
      */
     _adjustDropdownPosition() {
         return;
-    },
+    }
     /**
      * @override
      */
     _shouldIgnoreClick(ev) {
-        return !!ev.target.closest('.o_pager_nav') || this._super(...arguments);
-    },
+        return !!ev.target.closest('.o_pager_nav') || super._shouldIgnoreClick(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -3048,38 +3031,44 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
      * @private
      */
     _onClickScrollPage(ev) {
-        const navButtonEl = ev.currentTarget;
+        const navButtonEl = ev.target.closest("[data-scroll-to]");
+        if (!navButtonEl) {
+            return;
+        }
         const attribute = navButtonEl.dataset.scrollTo;
-        const destinationOffset = this.menuEl.querySelector('.' + attribute).offsetTop;
+        const destinationOffset = this.menuRef.el.querySelector('.' + attribute).offsetTop;
 
-        const pagerNavEl = this.menuEl.querySelector('.o_pager_nav');
-        this.pagerContainerEl.scrollTop = destinationOffset - pagerNavEl.offsetHeight;
-    },
+        const pagerNavEl = this.menuRef.el.querySelector(".o_pager_nav");
+        const pagerContainerEl = this.menuRef.el.querySelector(".o_pager_container");
+        pagerContainerEl.scrollTop = destinationOffset - pagerNavEl.offsetHeight;
+    }
     /**
      * @private
      */
     _onClickCloseMenu(ev) {
-        this.close();
-    },
+        this.state.close();
+    }
     /**
      * @private
      */
     _onScroll(ev) {
-        const pagerContainerHeight = this.pagerContainerEl.getBoundingClientRect().height;
+        const pagerContainerEl = this.menuRef.el.querySelector(".o_pager_container");
+        const pagerContainerHeight = pagerContainerEl.getBoundingClientRect().height;
         // The threshold for when a menu element is defined as 'active' is half
         // of the container's height. This has a drawback as if a section
         // is too small it might never get `active` if it's the last section.
-        const threshold = this.pagerContainerEl.scrollTop + (pagerContainerHeight / 2);
-        const anchorElements = this.menuEl.querySelectorAll('[data-scroll-to]');
+        const threshold = pagerContainerEl.scrollTop + (pagerContainerHeight / 2);
+        const anchorElements = this.menuRef.el.querySelectorAll('[data-scroll-to]');
         for (const anchorEl of anchorElements) {
             const destination = anchorEl.getAttribute('data-scroll-to');
-            const sectionEl = this.menuEl.querySelector(`.${destination}`);
+            const sectionEl = this.menuRef.el.querySelector(`.${destination}`);
             const nextSectionEl = sectionEl.nextElementSibling;
             anchorEl.classList.toggle('active', sectionEl.offsetTop < threshold &&
             (!nextSectionEl || nextSectionEl.offsetTop > threshold));
         }
     }
-});
+}
+registry.category("snippet_widgets").add("WeSelectPager", WeSelectPager);
 
 const Many2oneUserValueWidget = SelectUserValueWidget.extend({});
 
@@ -3668,7 +3657,6 @@ const userValueWidgetsRegistry = {
     'we-imagepicker': ImagepickerUserValueWidget,
     'we-videopicker': VideopickerUserValueWidget,
     'we-range': RangeUserValueWidget,
-    'we-select-pager': SelectPagerUserValueWidget,
     'we-many2one': Many2oneUserValueWidget,
     'we-many2many': Many2manyUserValueWidget,
 };
@@ -3694,6 +3682,9 @@ export class SnippetOptionComponent extends Component {
 
     setup() {
         this.renderContext = useState(this.props.snippetOption.instance.renderContext);
+        // When a component is mounted or unmounted, the state of other
+        // components might be impacted. (i.e. dependencies behaving 
+        // differently when a component is in the DOM or when it isn't)
         this.updateUI = false;
 
         useSubEnv({
@@ -3704,6 +3695,7 @@ export class SnippetOptionComponent extends Component {
                 return this.props.snippetOption.instance.registerUserValue(userValue);
             },
             unregisterUserValue: (userValue) => {
+                this.updateUI = true;
                 return this.props.snippetOption.instance.unregisterUserValue(userValue);
             },
             renderContext: this.renderContext,
@@ -6655,30 +6647,27 @@ legacyRegistry.ReplaceMedia = SnippetOptionWidget.extend({
  * Abstract option to be extended by the ImageTools and BackgroundOptimize
  * options that handles all the common parts.
  */
-const ImageHandlerOption = SnippetOptionWidget.extend({
+export class ImageHandlerOption extends SnippetOption {
     /**
      * @override
      */
     async willStart() {
-        const _super = this._super.bind(this);
         await this._initializeImage();
-        return _super(...arguments);
-    },
+        return super.willStart(...arguments);
+    }
     /**
      * @override
+     *
      */
     async start() {
+        // TODO: @owl-options This is currently not called
         await this._super(...arguments);
-        const weightEl = document.createElement('span');
-        weightEl.classList.add('o_we_image_weight', 'o_we_tag', 'd-none');
-        weightEl.title = _t("Size");
-        this.$weight = $(weightEl);
         // Perform the loading of the image info synchronously in order to
         // avoid an intermediate rendering of the Blocks tab during the
         // loadImageInfo RPC that obtains the file size.
         // This does not update the target.
         await this._applyOptions(false);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -6688,18 +6677,14 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @override
      */
     async updateUI() {
-        await this._super(...arguments);
+        await super.updateUI(...arguments);
 
         if (this._filesize === undefined) {
-            // TODO ? this.$weight.addClass('d-none');
             await this._applyOptions(false);
         }
-        if (this._filesize !== undefined) {
-            this.$weight.text(`${this._filesize.toFixed(1)} kb`);
-            this.$weight.removeClass('d-none');
-            this._relocateWeightEl();
-        }
-    },
+
+        this._relocateWeightEl();
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -6721,7 +6706,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             image.dataset.mimetype = values[1];
         }
         return this._applyOptions();
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -6731,7 +6716,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         }
         this._getImg().dataset.quality = widgetValue;
         return this._applyOptions();
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -6743,7 +6728,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             delete dataset.glFilter;
         }
         return this._applyOptions();
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -6757,7 +6742,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const newOptions = Object.assign(JSON.parse(filterOptions || "{}"), {[filterProperty]: widgetValue});
         img.dataset.filterOptions = JSON.stringify(newOptions);
         return this._applyOptions();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -6769,13 +6754,12 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     _computeVisibility() {
         const src = this._getImg().getAttribute('src');
         return src && src !== '/';
-    },
+    }
     /**
      * @override
      */
     async _computeWidgetState(methodName, params) {
         const img = this._getImg();
-        const _super = this._super.bind(this);
 
         // Make sure image is loaded because we need its naturalWidth
         await new Promise((resolve, reject) => {
@@ -6803,32 +6787,26 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
                 return options[filterProperty] || defaultValue;
             }
         }
-        return _super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @abstract
      */
-    _relocateWeightEl() {},
+    _relocateWeightEl() {}
     /**
      * @override
      */
-    async _renderCustomXML(uiFragment) {
+    async _getRenderContext() {
+        const context = await super._getRenderContext();
         const img = this._getImg();
         if (!this.originalSrc || !this._isImageSupportedForProcessing(img)) {
-            return;
+            return context;
         }
-        const $select = $(uiFragment).find('we-select[data-name=format_select_opt]');
-        (await this._computeAvailableFormats()).forEach(([value, [label, targetFormat]]) => {
-            $select.append(`<we-button data-select-format="${Math.round(value)} ${targetFormat}" class="o_we_badge_at_end">${label} <span class="badge rounded-pill text-bg-dark">${targetFormat.split('/')[1]}</span></we-button>`);
-        });
+        context.availableFormats = await this._computeAvailableFormats();
+        context.noQuality = !['image/jpeg', 'image/webp'].includes(this._getImageMimetype(img));
 
-        if (!['image/jpeg', 'image/webp'].includes(this._getImageMimetype(img))) {
-            const optQuality = uiFragment.querySelector('we-range[data-set-quality]');
-            if (optQuality) {
-                optQuality.remove();
-            }
-        }
-    },
+        return context;
+    }
     /**
      * Returns a list of valid formats for a given image or an empty list if
      * there is no mimetypeBeforeConversion data attribute on the image.
@@ -6863,7 +6841,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         return Object.entries(widths)
             .filter(([width]) => width <= maxWidth)
             .sort(([v1], [v2]) => v1 - v2);
-    },
+    }
     /**
      * Applies all selected options on the original image.
      *
@@ -6900,7 +6878,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             return loadedImg;
         }
         return img;
-    },
+    }
     /**
      * Loads the image's attachment info.
      *
@@ -6917,7 +6895,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         this.originalId = img.dataset.originalId;
         this.originalSrc = img.dataset.originalSrc;
         this.mimetypeBeforeConversion = img.dataset.mimetypeBeforeConversion;
-    },
+    }
     /**
      * Sets the image's width to its suggested size.
      *
@@ -6925,7 +6903,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     async _autoOptimizeImage() {
         await this._loadImageInfo();
-        await this._rerenderXML();
+        const newContext = await this._getRenderContext();
+        Object.assign(this.renderContext, newContext);
         const img = this._getImg();
         if (!['image/gif', 'image/svg+xml'].includes(img.dataset.mimetype)) {
             // Convert to recommended format and width.
@@ -6937,7 +6916,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         }
         await this._applyOptions();
         await this.updateUI();
-    },
+    }
     /**
      * Returns the image that is currently being modified.
      *
@@ -6945,7 +6924,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @abstract
      * @returns {HTMLImageElement} the image to use for modifications
      */
-    _getImg() {},
+    _getImg() {}
     /**
      * Computes the image's maximum display width.
      *
@@ -6953,7 +6932,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @abstract
      * @returns {Int} the maximum width at which the image can be displayed
      */
-    _computeMaxDisplayWidth() {},
+    _computeMaxDisplayWidth() {}
     /**
      * Use the processed image when it's needed in the DOM.
      *
@@ -6961,7 +6940,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @abstract
      * @param {HTMLImageElement} img
      */
-    _applyImage(img) {},
+    _applyImage(img) {}
     /**
      * @private
      * @param {HTMLImageElement} img
@@ -6969,13 +6948,13 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     _getImageMimetype(img) {
         return img.dataset.mimetype;
-    },
+    }
     /**
      * @private
      */
     async _initializeImage() {
         return this._loadImageInfo();
-    },
+    }
      /**
      * @private
      * @param {HTMLImageElement} img
@@ -6984,7 +6963,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     _isImageSupportedForProcessing(img, strict = false) {
         return isImageSupportedForProcessing(this._getImageMimetype(img), strict);
-    },
+    }
     /**
      * @override
      */
@@ -6997,7 +6976,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             return this._isImageSupportedForProcessing(img, true);
         }
         return isImageSupportedForStyle(this._getImg());
-    },
+    }
     /**
      * Indicates if an option should be applied only on supported mimetypes.
      *
@@ -7010,8 +6989,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             || 'customFilter' in params.optionsPossibleValues
             || params.optionsPossibleValues.setQuality
             || widgetName === 'format_select_opt';
-    },
-});
+    }
+}
 
 /**
  * @param {Element} containerEl
@@ -7042,7 +7021,8 @@ const _addAnimatedShapeLabel = function addAnimatedShapeLabel(containerEl, label
 /**
  * Controls image width and quality.
  */
-legacyRegistry.ImageTools = ImageHandlerOption.extend({
+
+legacyRegistry.ImageTools = {
     MAX_SUGGESTED_WIDTH: 1920,
 
     /**
@@ -8368,26 +8348,26 @@ legacyRegistry.ImageTools = ImageHandlerOption.extend({
     async _onImageCropped(ev) {
         await this._rerenderXML();
     },
-});
+};
 
 /**
  * Controls background image width and quality.
  */
-legacyRegistry.BackgroundOptimize = ImageHandlerOption.extend({
+export class BackgroundOptimize extends ImageHandlerOption {
     /**
      * @override
      */
-    start() {
+    async willStart() {
         this.$target.on('background_changed.BackgroundOptimize', this._onBackgroundChanged.bind(this));
-        return this._super(...arguments);
-    },
+        return super.willStart(...arguments);
+    }
     /**
      * @override
      */
-    destroy() {
+    cleanForSave() {
         this.$target.off('.BackgroundOptimize');
-        return this._super(...arguments);
-    },
+        return super.cleanForSave(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -8398,13 +8378,13 @@ legacyRegistry.BackgroundOptimize = ImageHandlerOption.extend({
      */
     _getImg() {
         return this.img;
-    },
+    }
     /**
      * @override
      */
     _computeMaxDisplayWidth() {
         return 1920;
-    },
+    }
     /**
      * Initializes this.img to an image with the background image url as src.
      *
@@ -8429,18 +8409,18 @@ legacyRegistry.BackgroundOptimize = ImageHandlerOption.extend({
             // modified)
             this.img.src = src.startsWith("/") ? src : "";
         }
-        return await this._super(...arguments);
-    },
+        return await super._loadImageInfo(...arguments);
+    }
     /**
      * @override
      */
     _relocateWeightEl() {
-        this.trigger_up('option_update', {
-            optionNames: ['BackgroundImage'],
-            name: 'add_size_indicator',
-            data: this.$weight,
-        });
-    },
+        this.callbacks.notifyOptions({
+           optionNames: ['BackgroundImage'],
+           name: 'add_size_indicator',
+           data: this._filesize,
+       });
+    }
     /**
      * @override
      */
@@ -8464,7 +8444,7 @@ legacyRegistry.BackgroundOptimize = ImageHandlerOption.extend({
             this.$target[0].dataset[key] = value;
         });
         this.$target[0].dataset.bgSrc = img.getAttribute("src");
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -8478,14 +8458,14 @@ legacyRegistry.BackgroundOptimize = ImageHandlerOption.extend({
     async _onBackgroundChanged(ev, previewMode) {
         ev.stopPropagation();
         if (!previewMode) {
-            this.trigger_up('snippet_edition_request', {exec: async () => {
+            this.env.snippetEditionRequest(async () => {
                 await this._autoOptimizeImage();
-            }});
+            });
         }
-    },
-});
+    }
+}
 
-legacyRegistry.BackgroundToggler = SnippetOptionWidget.extend({
+export class BackgroundToggler extends SnippetOption {
 
     //--------------------------------------------------------------------------
     // Options
@@ -8501,13 +8481,13 @@ legacyRegistry.BackgroundToggler = SnippetOptionWidget.extend({
             this.$target.find('> .o_we_bg_filter').remove();
             // TODO: use setWidgetValue instead of calling background directly when possible
             const [bgImageWidget] = this._requestUserValueWidgets('bg_image_opt');
-            const bgImageOpt = bgImageWidget.getParent();
+            const bgImageOpt = bgImageWidget.option;
             return bgImageOpt.background(false, '', bgImageWidget.getMethodsParams('background'));
         } else {
             // TODO: use trigger instead of el.click when possible
-            this._requestUserValueWidgets('bg_image_opt')[0].el.click();
+            this._requestUserValueWidgets('bg_image_opt')[0].enable();
         }
-    },
+    }
     /**
      * Toggles background shape on or off.
      *
@@ -8515,11 +8495,11 @@ legacyRegistry.BackgroundToggler = SnippetOptionWidget.extend({
      */
     toggleBgShape(previewMode, widgetValue, params) {
         const [shapeWidget] = this._requestUserValueWidgets('bg_shape_opt');
-        const shapeOption = shapeWidget.getParent();
+        const shapeOption = shapeWidget.option;
         // TODO: open select after shape was selected?
         // TODO: use setWidgetValue instead of calling shapeOption method directly when possible
         return shapeOption._toggleShape();
-    },
+    }
     /**
      * Sets a color filter.
      *
@@ -8554,7 +8534,7 @@ legacyRegistry.BackgroundToggler = SnippetOptionWidget.extend({
         const obj = createPropertyProxy(this, '$target', $(filterEl));
         params.cssProperty = 'background-color';
         return this.selectStyle.call(obj, previewMode, widgetValue, params);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -8567,12 +8547,12 @@ legacyRegistry.BackgroundToggler = SnippetOptionWidget.extend({
         switch (methodName) {
             case 'toggleBgImage': {
                 const [bgImageWidget] = this._requestUserValueWidgets('bg_image_opt');
-                const bgImageOpt = bgImageWidget.getParent();
+                const bgImageOpt = bgImageWidget.option;
                 return !!bgImageOpt._computeWidgetState('background', bgImageWidget.getMethodsParams('background'));
             }
             case 'toggleBgShape': {
                 const [shapeWidget] = this._requestUserValueWidgets('bg_shape_opt');
-                const shapeOption = shapeWidget.getParent();
+                const shapeOption = shapeWidget.option;
                 return !!shapeOption._computeWidgetState('shape', shapeWidget.getMethodsParams('shape'));
             }
             case 'selectFilterColor': {
@@ -8585,27 +8565,27 @@ legacyRegistry.BackgroundToggler = SnippetOptionWidget.extend({
                 return this._computeWidgetState.call(obj, 'selectStyle', params);
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @private
      */
     _getLastPreFilterLayerElement() {
         return null;
-    },
-});
+    }
+}
 
 /**
  * Handles the edition of snippet's background image.
  */
-legacyRegistry.BackgroundImage = SnippetOptionWidget.extend({
+export class BackgroundImage extends SnippetOption {
     /**
      * @override
      */
-    start: function () {
+    willStart() {
         this.__customImageSrc = getBgImageURL(this.$target[0]);
-        return this._super(...arguments);
-    },
+        return super.willStart(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -8616,7 +8596,7 @@ legacyRegistry.BackgroundImage = SnippetOptionWidget.extend({
      *
      * @see this.selectClass for parameters
      */
-    background: async function (previewMode, widgetValue, params) {
+    async background(previewMode, widgetValue, params) {
         if (previewMode === true) {
             this.__customImageSrc = getBgImageURL(this.$target[0]);
         } else if (previewMode === 'reset') {
@@ -8631,7 +8611,7 @@ legacyRegistry.BackgroundImage = SnippetOptionWidget.extend({
             removeOnImageChangeAttrs.forEach(attr => delete this.$target[0].dataset[attr]);
             this.$target.trigger('background_changed', [previewMode]);
         }
-    },
+    }
     /**
      * Changes the main color of dynamic SVGs.
      *
@@ -8655,7 +8635,7 @@ legacyRegistry.BackgroundImage = SnippetOptionWidget.extend({
         if (!previewMode) {
             this.previousSrc = src;
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -8666,15 +8646,15 @@ legacyRegistry.BackgroundImage = SnippetOptionWidget.extend({
      */
     notify(name, data) {
         if (name === 'add_size_indicator') {
-            this._requestUserValueWidgets('bg_image_opt')[0].$el.after(data);
+            this.renderContext.filesize = data && `${data.toFixed(1)} kb` || undefined;
         } else {
-            this._super(...arguments);
+            super.notify(...arguments);
         }
-    },
+    }
     /**
      * @override
      */
-    setTarget: function () {
+    setTarget() {
         // When we change the target of this option we need to transfer the
         // background-image and the dataset information relative to this image
         // from the old target to the new one.
@@ -8692,7 +8672,7 @@ legacyRegistry.BackgroundImage = SnippetOptionWidget.extend({
         // target as its image source will be deleted.
         this.$target[0].classList.remove("o_modified_image_to_save");
         this._setBackground('');
-        this._super(...arguments);
+        super.setTarget(...arguments);
         if (oldBgURL) {
             this._setBackground(oldBgURL);
             filteredOldDataset.forEach(([key, value]) => {
@@ -8703,7 +8683,7 @@ legacyRegistry.BackgroundImage = SnippetOptionWidget.extend({
 
         // TODO should be automatic for all options as equal to the start method
         this.__customImageSrc = getBgImageURL(this.$target[0]);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -8712,15 +8692,15 @@ legacyRegistry.BackgroundImage = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'background':
                 return getBgImageURL(this.$target[0]);
             case 'dynamicColor':
                 return new URL(getBgImageURL(this.$target[0]), window.location.origin).searchParams.get(params.colorName);
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -8732,8 +8712,8 @@ legacyRegistry.BackgroundImage = SnippetOptionWidget.extend({
             const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
             return src.origin === window.location.origin && src.pathname.startsWith('/web_editor/shape/');
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * @private
      * @param {string} backgroundURL
@@ -8758,23 +8738,28 @@ legacyRegistry.BackgroundImage = SnippetOptionWidget.extend({
         this.selectStyle(false, combined, {
             cssProperty: 'background-image',
         });
-    },
-});
+    }
+}
 
 /**
  * Handles background shapes.
  */
-legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
+export class BackgroundShape extends SnippetOption {
+    constructor() {
+        super(...arguments);
+        this.debugRow = true;
+    }
     /**
      * @override
      */
-    updateUI({assetsChanged} = {}) {
+    async updateUI({assetsChanged} = {}) {
         if (this.rerender || assetsChanged) {
             this.rerender = false;
-            return this._rerenderXML();
+            const newContext = await this._getRenderContext();
+            Object.assign(this.renderContext, newContext);
         }
-        return this._super.apply(this, arguments);
-    },
+        return super.updateUI(this, arguments);
+    }
     /**
      * @override
      */
@@ -8786,7 +8771,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
                 return {flip: this._getShapeData().flip};
             });
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -8807,7 +8792,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
                 shapeAnimationSpeed: this._getShapeData().shapeAnimationSpeed,
             };
         });
-    },
+    }
     /**
      * Sets the current background shape's colors.
      *
@@ -8821,7 +8806,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
             const newColors = Object.assign(previousColors, {[colorName]: newColor});
             return {colors: newColors};
         });
-    },
+    }
     /**
      * Flips the shape on its x axis.
      *
@@ -8829,7 +8814,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
      */
     flipX(previewMode, widgetValue, params) {
         this._flipShape(previewMode, 'x');
-    },
+    }
     /**
      * Flips the shape on its y axis.
      *
@@ -8837,7 +8822,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
      */
     flipY(previewMode, widgetValue, params) {
         this._flipShape(previewMode, 'y');
-    },
+    }
     /**
      * Shows/Hides the shape on mobile.
      *
@@ -8847,7 +8832,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
         this._handlePreviewState(previewMode, () => {
             return {showOnMobile: !this._getShapeData().showOnMobile};
         });
-    },
+    }
     /**
      * Sets the speed of the animation of a background shape.
      *
@@ -8857,7 +8842,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
         this._handlePreviewState(previewMode, () => {
             return { shapeAnimationSpeed: widgetValue };
         });
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -8894,8 +8879,8 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
                 return this._getShapeData().shapeAnimationSpeed;
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -8904,16 +8889,14 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
             const bgShapeWidget = this._requestUserValueWidgets("bg_shape_opt")[0];
             return bgShapeWidget.getMethodsParams().animated === "true";
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * @override
      */
-    _renderCustomXML(uiFragment) {
-        Object.keys(this._getDefaultColors()).map(colorName => {
-            uiFragment.querySelector('[data-name="colors"]')
-                .prepend($(`<we-colorpicker data-color="true" data-color-name="${colorName}"></we-colorpicker>`)[0]);
-        });
+    async _getRenderContext() {
+        const context = await super._getRenderContext();
+        const colorPickers = Object.keys(this._getDefaultColors());
 
         // Inventory shape URLs per class.
         const style = window.getComputedStyle(this.$target[0]);
@@ -8933,30 +8916,11 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
                     }
                 }
             }
+            context._shapeBackgroundImagePerClass = this._shapeBackgroundImagePerClass;
         }
-
-        uiFragment.querySelectorAll('we-select-pager we-button[data-shape]').forEach(btn => {
-            const btnContent = document.createElement('div');
-            btnContent.classList.add('o_we_shape_btn_content', 'position-relative', 'border-dark');
-            const btnContentInnerDiv = document.createElement('div');
-            btnContentInnerDiv.classList.add('o_we_shape');
-            btnContent.appendChild(btnContentInnerDiv);
-
-            if (btn.dataset.animated) {
-                _addAnimatedShapeLabel(btnContent);
-            }
-
-            const {shape} = btn.dataset;
-            const shapeEl = btnContent.querySelector('.o_we_shape');
-            const shapeClassName = `o_${shape.replace(/\//g, '_')}`;
-            shapeEl.classList.add(shapeClassName);
-            // Match current palette.
-            const shapeBackgroundImage = this._shapeBackgroundImagePerClass[`.o_we_shape.${shapeClassName}`];
-            shapeEl.style.setProperty("background-image", shapeBackgroundImage);
-            btn.append(btnContent);
-        });
-        return uiFragment;
-    },
+        context.colorPickers = colorPickers;
+        return context;
+    }
     /**
      * Flips the shape on its x/y axis.
      *
@@ -8973,7 +8937,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
             }
             return {flip: [...flip]};
         });
-    },
+    }
     /**
      * Inserts or removes the given container at the right position in the
      * document.
@@ -8996,7 +8960,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
             }
         }
         return newContainer;
-    },
+    }
     /**
      * Creates and inserts a container for the shape with the right classes.
      *
@@ -9007,7 +8971,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
         this.$target[0].style.position = 'relative';
         shapeContainer.className = `o_we_shape o_${shape.replace(/\//g, '_')}`;
         return shapeContainer;
-    },
+    }
     /**
      * Handles everything related to saving state before preview and restoring
      * it after a preview or locking in the changes when not in preview.
@@ -9084,14 +9048,14 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
             this.prevShapeContainer = shapeContainer.cloneNode(true);
             this.prevShape = target.dataset.oeShapeData;
         }
-    },
+    }
     /**
      * @private
      * @param {HTMLElement} shapeEl
      */
     _removeShapeEl(shapeEl) {
         shapeEl.remove();
-    },
+    }
     /**
      * Overwrites shape properties with the specified data.
      *
@@ -9112,7 +9076,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
         } else {
             this.$target[0].dataset.oeShapeData = JSON.stringify(shapeData);
         }
-    },
+    }
     /**
      * @private
      */
@@ -9122,7 +9086,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
             return $filterEl[0];
         }
         return null;
-    },
+    }
     /**
      * Returns the src of the shape corresponding to the current parameters.
      *
@@ -9145,7 +9109,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
             searchParams.push(`shapeAnimationSpeed=${encodeURIComponent(shapeAnimationSpeed)}`);
         }
         return `/web_editor/shape/${encodeURIComponent(shape)}.svg?${searchParams.join('&')}`;
-    },
+    }
     /**
      * Retrieves current shape data from the target's dataset.
      *
@@ -9163,7 +9127,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
         };
         const json = target.dataset.oeShapeData;
         return json ? Object.assign(defaultData, JSON.parse(json.replace(/'/g, '"'))) : defaultData;
-    },
+    }
     /**
      * Returns the default colors for the currently selected shape.
      *
@@ -9186,7 +9150,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
         }
         const url = new URL(shapeSrc, window.location.origin);
         return Object.fromEntries(url.searchParams.entries());
-    },
+    }
     /**
      * Returns the default colors for the a shape in the selector.
      *
@@ -9194,12 +9158,11 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
      * @param {String} shapeId identifier of the shape
      */
     _getShapeDefaultColors(shapeId) {
-        const $shapeContainer = this.$el.find(".o_we_bg_shape_menu we-button[data-shape='" + shapeId + "'] div.o_we_shape");
-        const shapeContainer = $shapeContainer[0];
-        const shapeSrc = shapeContainer && getBgImageURL(shapeContainer);
+        const shapeClassName = `o_we_shape.${shapeId.replace(new RegExp('/', 'g'), '_')}`;
+        const shapeSrc = getBgImageURL(this.renderContext._shapeBackgroundImagePerClass[shapeClassName]);
         const url = new URL(shapeSrc, window.location.origin);
         return Object.fromEntries(url.searchParams.entries());
-    },
+    }
     /**
      * Returns the implicit colors for the currently selected shape.
      *
@@ -9224,7 +9187,7 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
         const defaultKeys = Object.keys(defaultColors);
         colors = Object.assign(defaultColors, colors);
         return pick(colors, ...defaultKeys);
-    },
+    }
     /**
      * Toggles whether there is a shape or not, to be called from bg toggler.
      *
@@ -9237,7 +9200,8 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
             const target = this.$target[0];
             const previousSibling = target.previousElementSibling;
             const [shapeWidget] = this._requestUserValueWidgets('bg_shape_opt');
-            const possibleShapes = shapeWidget.getMethodsParams('shape').possibleValues;
+            const params = shapeWidget.getMethodsParams("shape");
+            const possibleShapes = params.possibleValues;
             let shapeToSelect;
             if (previousSibling) {
                 const previousShape = this._getShapeData(previousSibling).shape;
@@ -9254,9 +9218,9 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
             }
             // Only show on mobile by default if toggled from mobile view
             const showOnMobile = weUtils.isMobileView(this.$target[0]);
-            this.trigger_up('snippet_edition_request', {exec: () => {
+            this.options.snippetEditionRequest({exec: () => {
                 // options for shape will only be available after _toggleShape() returned
-                this._requestUserValueWidgets('bg_shape_opt')[0].enable();
+                this._requestUserValueWidgets('bg_shape_opt')[0].open();
             }});
             this._createShapeContainer(shapeToSelect);
             return this._handlePreviewState(false, () => (
@@ -9267,55 +9231,68 @@ legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
                 }
             ));
         }
-    },
-});
+    }
+}
+
+export class WeShapeBtn extends Component {
+    static template = "web_editor.WeShapeBtn";
+    static components = { WeButton };
+    static props = {
+        shape: String,
+        selectLabel: String,
+        animated: { type: Boolean, optional: true },
+    };
+    setup() {
+        this.renderContext = useState(this.env.renderContext);
+    }
+}
+
+registry.category("snippet_widgets").add("WeShapeBtn", WeShapeBtn);
+
+export class BackgroundShapePosition extends SnippetOptionComponent {
+    static template = "web_editor.BackgroundShape";
+}
 
 /**
  * Handles the edition of snippets' background image position.
  */
-legacyRegistry.BackgroundPosition = SnippetOptionWidget.extend({
+class BackgroundPosition extends SnippetOption {
     /**
      * @override
      */
-    start: function () {
-        this._super.apply(this, arguments);
-
+    willStart() {
         this._initOverlay();
-
-        // Resize overlay content on window resize because background images
-        // change size, and on carousel slide because they sometimes take up
-        // more space and move elements around them.
         $(window).on('resize.bgposition', () => this._dimensionOverlay());
-    },
+        return super.willStart();
+    }
     /**
      * @override
      */
-    destroy: function () {
+    cleanUI() {
         this._toggleBgOverlay(false);
         $(window).off('.bgposition');
-        this._super.apply(this, arguments);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
 
-    /**
+    /*
      * Sets the background type (cover/repeat pattern).
      *
      * @see this.selectClass for params
      */
-    backgroundType: function (previewMode, widgetValue, params) {
+    backgroundType(previewMode, widgetValue, params) {
         this.$target.toggleClass('o_bg_img_opt_repeat', widgetValue === 'repeat-pattern');
         this.$target.css('background-position', '');
         this.$target.css('background-size', widgetValue !== 'repeat-pattern' ? '' : '100px');
-    },
+    }
     /**
      * Saves current background position and enables overlay.
      *
      * @see this.selectClass for params
      */
-    backgroundPositionOverlay: async function (previewMode, widgetValue, params) {
+    async backgroundPositionOverlay(previewMode, widgetValue, params) {
         // Updates the internal image
         await new Promise(resolve => {
             this.img = document.createElement('img');
@@ -9348,11 +9325,11 @@ legacyRegistry.BackgroundPosition = SnippetOptionWidget.extend({
             await scrollTo(this.$target[0], { behavior: "smooth", offset: 50 });
         }
         this._toggleBgOverlay(true);
-    },
+    }
     /**
      * @override
      */
-    selectStyle: function (previewMode, widgetValue, params) {
+    selectStyle(previewMode, widgetValue, params) {
         if (params.cssProperty === 'background-size'
                 && !this.$target.hasClass('o_bg_img_opt_repeat')) {
             // Disable the option when the image is in cover mode, otherwise
@@ -9360,7 +9337,7 @@ legacyRegistry.BackgroundPosition = SnippetOptionWidget.extend({
             return;
         }
         this._super(...arguments);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -9369,25 +9346,25 @@ legacyRegistry.BackgroundPosition = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    _computeVisibility: function () {
-        return this._super(...arguments) && !!getBgImageURL(this.$target[0]);
-    },
+    _computeVisibility() {
+        return super._computeVisibility && !!getBgImageURL(this.$target[0]);
+    }
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         if (methodName === 'backgroundType') {
             return this.$target.css('background-repeat') === 'repeat' ? 'repeat-pattern' : 'cover';
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * Initializes the overlay, binds events to the buttons, inserts it in
      * the DOM.
      *
      * @private
      */
-    _initOverlay: function () {
+    _initOverlay() {
         this.$backgroundOverlay = $(renderToElement('web_editor.background_position_overlay'));
         this.$overlayContent = this.$backgroundOverlay.find('.o_we_overlay_content');
         this.$overlayBackground = this.$overlayContent.find('.o_overlay_background');
@@ -9401,14 +9378,14 @@ legacyRegistry.BackgroundPosition = SnippetOptionWidget.extend({
         });
 
         this.$backgroundOverlay.insertAfter(this.$overlay);
-    },
+    }
     /**
      * Sets the overlay in the right place so that the draggable background
      * renders over the target, and size the background item like the target.
      *
      * @private
      */
-    _dimensionOverlay: function () {
+    _dimensionOverlay() {
         if (!this.$backgroundOverlay.is('.oe_active')) {
             return;
         }
@@ -9430,22 +9407,22 @@ legacyRegistry.BackgroundPosition = SnippetOptionWidget.extend({
 
         const topPos = Math.max(0, $(window).scrollTop() - this.$target.offset().top);
         this.$overlayContent.find('.o_we_overlay_buttons').css('top', `${topPos}px`);
-    },
+    }
     /**
      * Toggles the overlay's display and renders a background clone inside of it.
      *
      * @private
      * @param {boolean} activate toggle the overlay on (true) or off (false)
      */
-    _toggleBgOverlay: function (activate) {
+    _toggleBgOverlay(activate) {
         if (!this.$backgroundOverlay || this.$backgroundOverlay.is('.oe_active') === activate) {
             return;
         }
 
         if (!activate) {
             this.$backgroundOverlay.removeClass('oe_active');
-            this.trigger_up('unblock_preview_overlays');
-            this.trigger_up('activate_snippet', {$snippet: this.$target});
+            this.env.unblockPreviewOverlays();
+            this.env.activateSnippet(this.$target);
 
             $(document).off('click.bgposition');
             if (this.$bgDragger) {
@@ -9454,12 +9431,9 @@ legacyRegistry.BackgroundPosition = SnippetOptionWidget.extend({
             return;
         }
 
-        this.trigger_up('hide_overlay');
-        this.trigger_up('activate_snippet', {
-            $snippet: this.$target,
-            previewMode: true,
-        });
-        this.trigger_up('block_preview_overlays');
+        this.env.hideOverlay();
+        this.env.activateSnippet(this.$target, true);
+        this.env.blockPreviewOverlays();
 
         // Create empty clone of $target with same display size, make it draggable and give it a tooltip.
         this.$bgDragger = this.$target.clone().empty();
@@ -9487,14 +9461,14 @@ legacyRegistry.BackgroundPosition = SnippetOptionWidget.extend({
         // Needs to be deferred or the click event that activated the overlay deactivates it as well.
         // This is caused by the click event which we are currently handling bubbling up to the document.
         window.setTimeout(() => $(document).on('click.bgposition', this._onDocumentClicked.bind(this)), 0);
-    },
+    }
     /**
      * Returns the difference between the target's size and the background's
      * rendered size. Background position values in % are a percentage of this.
      *
      * @private
      */
-    _getBackgroundDelta: function () {
+    _getBackgroundDelta() {
         const bgSize = this.$target.css('background-size');
         if (bgSize !== 'cover') {
             let [width, height] = bgSize.split(' ');
@@ -9521,7 +9495,7 @@ legacyRegistry.BackgroundPosition = SnippetOptionWidget.extend({
             x: this.$target.outerWidth() - Math.round(renderRatio * this.img.naturalWidth),
             y: this.$target.outerHeight() - Math.round(renderRatio * this.img.naturalHeight),
         };
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -9532,7 +9506,7 @@ legacyRegistry.BackgroundPosition = SnippetOptionWidget.extend({
      *
      * @private
      */
-    _onDragBackgroundStart: function (ev) {
+    _onDragBackgroundStart(ev) {
         ev.preventDefault();
         this.$bgDragger.addClass('o_we_grabbing');
         const $document = $(this.$target[0].ownerDocument);
@@ -9541,13 +9515,13 @@ legacyRegistry.BackgroundPosition = SnippetOptionWidget.extend({
             this.$bgDragger.removeClass('o_we_grabbing');
             $document.off('mousemove.bgposition');
         });
-    },
+    }
     /**
      * Drags the overlay's background image, copied to target on "Apply".
      *
      * @private
      */
-    _onDragBackgroundMove: function (ev) {
+    _onDragBackgroundMove(ev) {
         ev.preventDefault();
 
         const delta = this._getBackgroundDelta();
@@ -9571,18 +9545,18 @@ legacyRegistry.BackgroundPosition = SnippetOptionWidget.extend({
             bounds = bounds.sort();
             return Math.max(bounds[0], Math.min(val, bounds[1]));
         }
-    },
+    }
     /**
      * Deactivates the overlay if the user clicks outside of it.
      *
      * @private
      */
-    _onDocumentClicked: function (ev) {
+    _onDocumentClicked(ev) {
         if (!$(ev.target).closest('.o_we_background_position_overlay').length) {
             this._toggleBgOverlay(false);
         }
-    },
-});
+    }
+}
 
 /**
  * Marks color levels of any element that may get or has a color classes. This
@@ -9590,20 +9564,20 @@ legacyRegistry.BackgroundPosition = SnippetOptionWidget.extend({
  * snippet drop (so that base snippet definition do not need to care about that)
  * and on first focus (for compatibility).
  */
-legacyRegistry.ColoredLevelBackground = legacyRegistry.BackgroundToggler.extend({
+export class ColoredLevelBackground extends BackgroundToggler {
     /**
      * @override
      */
-    start: function () {
+    start() {
         this._markColorLevel();
         return this._super(...arguments);
-    },
+    }
     /**
      * @override
      */
-    onBuilt: function () {
+    onBuilt() {
         this._markColorLevel();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -9617,12 +9591,12 @@ legacyRegistry.ColoredLevelBackground = legacyRegistry.BackgroundToggler.extend(
      *
      * @private
      */
-    _markColorLevel: function () {
+    _markColorLevel() {
         this.options.wysiwyg.odooEditor.observerUnactive('_markColorLevel');
         this.$target.addClass('o_colored_level');
         this.options.wysiwyg.odooEditor.observerActive('_markColorLevel');
-    },
-});
+    }
+}
 
 class ContainerWidth extends SnippetOption {
     /**
@@ -10345,3 +10319,44 @@ legacyRegistry.CarouselHandler = legacyRegistry.GalleryHandler.extend({
         carouselEl.classList.add("slide");
     },
 });
+
+export function registerBackgroundOptions(name, options, getTemplateName = () => null) {
+    registerOption(`${name}-bgToggler`, {
+        Class: (
+            options.withColors
+            && options.withColorCombinations
+            && ColoredLevelBackground
+        ) || BackgroundToggler,
+        template: getTemplateName("toggler") || "web_editor.snippet_options_background_options",
+        ...options
+    }, { sequence: 25 });
+    if (options.withImages) {
+        registerOption(`${name}-bgImg`, {
+            Class: BackgroundImage,
+            template: getTemplateName("img") || "web_editor.BackgroundImage",
+            ...options
+        }, { sequence: 27 });
+        registerOption(`${name}-bgPosition`, {
+            Class: BackgroundPosition,
+            template: getTemplateName("position") || "web_editor.BackgroundPosition",
+            ...options,
+        }, { sequence: 29 });
+        registerOption(`${name}-bgOptimize`, {
+            Class: BackgroundOptimize,
+            template: getTemplateName("optimize") || "web_editor.snippet_options_image_optimization_widgets",
+            indent: true,
+            ...options,
+        }, { sequence: 31 });
+        registerOption(`${name}-filter`, {
+            Class: options.withColors && options.withColorCombinations && ColoredLevelBackground || BackgroundToggler,
+            template: getTemplateName("filter") || "web_editor.BackgroundFilter",
+            ...options,
+        }, { sequence: 33 });
+        registerOption(`${name}-shape`, {
+            Class: BackgroundShape,
+            template: getTemplateName("shape") || "web_editor.BackgroundShapes",
+            ...options,
+        }, { sequence: 35 });
+    }
+}
+

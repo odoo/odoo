@@ -2219,11 +2219,15 @@ class SnippetsMenu extends Component {
 
         useSubEnv({
             activateSnippet: this._activateSnippet.bind(this),
+            blockPreviewOverlays: this._onBlockPreviewOverlays.bind(this),
             cloneSnippet: this._cloneSnippet.bind(this),
             cleanUI: this._cleanUI.bind(this),
             requestSave: (data) => this._onSaveRequest.call(this, { data }),
+            hideOverlay: this._onHideOverlay.bind(this),
+            unblockPreviewOverlays: this._onUnblockPreviewOverlays.bind(this),
             userValueWidgetOpening: this._onUserValueWidgetOpening.bind(this),
             userValueWidgetClosing: this._onUserValueWidgetClosing.bind(this),
+            snippetEditionRequest: this._execWithLoadingEffect.bind(this),
         });
         this.options.env = this.env;
         // If multiple SnippetOptionsComponent are mounted at the same time,

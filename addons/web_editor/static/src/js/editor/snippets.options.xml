@@ -411,4 +411,398 @@
         </div>
     </div>
 </t>
+
+<t t-name="web_editor.WeSelectPager">
+    <we-select class="o_we_user_value_widget o_we_select_pager" t-att-class="getAllClasses()" t-on-click="_onClick">
+        <div>
+            <we-toggler t-out="state.toggler.textContent" class="o_we_toggler_pager" t-att-class="{ 'active': state.opened }"/>
+            <we-selection-items t-ref="menu" class="o_we_has_pager position-fixed top-0 end-0 z-1 rounded-0">
+                <header class="o_pager_nav d-flex flex-column flex-wrap flex-shrink-0 mh-100">
+                    <div class="d-flex align-items-center">
+                        <button class="o_pager_nav_angle fa fa-angle-left btn btn-secondary bg-transparent border-0" t-on-click="_onClickCloseMenu"/>
+                        <t t-slot="title"/>
+                    </div>
+                    <div class="d-flex" t-on-click="_onClickScrollPage">
+                        <t t-slot="buttons"/>
+                    </div>
+                </header>
+                <div class="o_pager_container" t-on-scroll="__onScroll">
+                    <t t-slot="default"/>
+                </div>
+            </we-selection-items>
+        </div>
+    </we-select>
+</t>
+
+<t t-name="web_editor.snippet_options_image_optimization_widgets">
+    <t t-set="indent" t-value="props.snippetOption.indent"/>
+    <WeSelect class="indent and 'o_we_sublevel_2'" title.translate="Filter">
+        <WeButton glFilter="''">None</WeButton>
+        <WeButton glFilter="'blur'">Blur</WeButton>
+        <WeButton glFilter="'1977'">1977</WeButton>
+        <WeButton glFilter="'aden'">Aden</WeButton>
+        <WeButton glFilter="'brannan'">Brannan</WeButton>
+        <WeButton glFilter="'earlybird'">EarlyBird</WeButton>
+        <WeButton glFilter="'inkwell'">Inkwell</WeButton>
+        <WeButton glFilter="'maven'">Maven</WeButton>
+        <WeButton glFilter="'toaster'">Toaster</WeButton>
+        <WeButton glFilter="'walden'">Walden</WeButton>
+        <WeButton glFilter="'valencia'">Valencia</WeButton>
+        <WeButton glFilter="'xpro'">Xpro</WeButton>
+        <WeButton glFilter="'custom'" name="'custom_glfilter_opt'">Custom</WeButton>
+    </WeSelect>
+    <WeRow class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'" title.translate="Color">
+        <WeSelect filterProperty="'blend'" dependencies="'custom_glfilter_opt'">
+            <WeButton customFilter="'normal'">Normal</WeButton>
+            <WeButton customFilter="'overlay'">overlay</WeButton>
+            <WeButton customFilter="'screen'">screen</WeButton>
+            <WeButton customFilter="'multiply'">multiply</WeButton>
+            <WeButton customFilter="'lighter'">add</WeButton>
+            <WeButton customFilter="'exclusion'">exclusion</WeButton>
+            <WeButton customFilter="'darken'">darken</WeButton>
+            <WeButton customFilter="'lighten'">lighten</WeButton>
+        </WeSelect>
+        <WeColorpicker dependencies="'custom_glfilter_opt'" customFilter="''" filterProperty="'filterColor'" excluded="'common, theme'"/>
+    </WeRow>
+    <WeRange class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
+            dependencies="'custom_glfilter_opt'"
+            customFilter="''"
+            filterProperty="'saturation'"
+            min="'-100'"
+            step="'10'"
+            title.translate="Saturation"/>
+    <WeRange class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
+            dependencies="'custom_glfilter_opt'"
+            customFilter="''"
+            filterProperty="'contrast'"
+            min="'-100'"
+            step="'10'"
+            title.translate="Contrast"/>
+    <WeRange class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
+            dependencies="'custom_glfilter_opt'"
+            customFilter="''"
+            filterProperty="'brightness'"
+            min="'-100'"
+            step="'10'"
+            title.translate="Brightness"/>
+    <WeRange class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
+            dependencies="'custom_glfilter_opt'"
+            customFilter="''"
+            filterProperty="'sepia'"
+            step="'5'"
+            title.translate="Sepia"/>
+    <WeRange class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
+            dependencies="'custom_glfilter_opt'"
+            customFilter="''"
+            filterProperty="'blur'"
+            max="'2000'"
+            step="'100'"
+            title.translate="Blur"/>
+
+    <WeSelect class="indent and 'o_we_sublevel_2'"
+              name="'format_select_opt'"
+              title.translate="Format">
+        <t t-set="availableFormats" t-value="renderContext.availableFormats"/>
+        <t t-foreach="renderContext.availableFormats || []" t-as="format" t-key="format">
+            <t t-set="value" t-value="format[0]"/>
+            <t t-set="label" t-value="format[1][0]"/>
+            <t t-set="targetFormat" t-value="format[1][1]"/>
+            <WeButton selectFormat="`${Math.round(value)} ${targetFormat}`" class="'o_we_badge_at_end'">
+                <t t-out="label"/> <span class="badge rounded-pill text-bg-dark"><t t-out="targetFormat.split('/')[1]"/></span>
+            </WeButton>
+        </t>
+    </WeSelect>
+
+    <WeRange t-if="!renderContext.noQuality" class="indent and 'o_we_sublevel_2'"
+              setQuality="''" title.translate="Quality"/>
+</t>
+
+<t t-name="web_editor.snippet_options_background_color_widget">
+    <WeColorpicker tooltip.translate="Color"
+                    name="'bg_color_opt'"
+                    selectColorCombination="option.withColorCombinations ? '' : false"
+                    selectStyle="''"
+                    cssProperty="'background-color'"
+                    colorPrefix="'bg-'"
+                    withCombinations="option.withColorCombinations and 'selectColorCombination' or false"
+                    withGradients="option.withGradients and 'true' or false"
+                    cssCompatible="option.cssCompatible and 'true' or false"/>
+</t>
+<t t-name="web_editor.snippet_options_background_options">
+    <t t-set="option" t-value="props.snippetOption"/>
+    <WeRow t-if="option.withColors or option.withImages" class="'o_we_full_row'"
+            title.translate="Background">
+        <t t-if="option.withColors" t-call="web_editor.snippet_options_background_color_widget"/>
+        <t t-if="option.withImages">
+            <WeButton tooltip.translate="Image" class="'ms-auto fa fa-fw fa-camera'"
+                        name="'bg_image_toggle_opt'"
+                        dependencies="option.imagesDependencies || false"
+                        toggleBgImage="'true'"
+                        noPreview="'true'"/>
+            <t t-if="option.withShapes">
+                <WeButton tooltip.translate="Shape"
+                        toggleBgShape="'true'"
+                        dependencies="option.imagesDependencies || false"
+                        noPreview="'true'"
+                        img="'/web_editor/static/src/img/snippets_options/bg_shape.svg'"/>
+            </t>
+        </t>
+    </WeRow>
+</t>
+<t t-name="web_editor.animated_shape_label">
+    <span class="o_we_shape_animated_label">
+        <t t-if="imgSize">
+            <i class="fa fa-expand"/><span t-out="imgSize"/>
+        </t>
+        <t t-else="">
+            <!-- We do it like that to keep the translations. -->
+            <t t-set="animated">Animated</t>
+            <t t-out="animated[0]"/><span t-out="animated.substring(1)"/>
+        </t>
+    </span>
+</t>
+<t t-name="web_editor.WeShapeBtn">
+    <t t-set="shapeClassName" t-value="`o_${props.shape.replace(new RegExp('/', 'g'), '_')}`"/>
+    <t t-set="bgUrl" t-value="renderContext._shapeBackgroundImagePerClass[`.o_we_shape.${shapeClassName}`]"/>
+    <WeButton shape="props.shape" selectLabel="props.selectLabel" animated="props.animated and 'true'">
+        <div class="o_we_shape_btn_content position-relative border-dark">
+            <div class="o_we_shape"
+                 t-att-class="shapeClassName"
+                 t-attf-style="background-image: {{bgUrl}}">
+                <t t-if="props.animated">
+                    <t t-call="web_editor.animated_shape_label"/>
+                </t>
+            </div>
+        </div>
+    </WeButton>
+</t>
+<t t-name="web_editor.BackgroundShapes">
+    <WeRow class="'o_we_sublevel_1'" title.translate="Shapes">
+        <!-- TODO: @owl-options remove the owl in the name -->
+        <WeSelectPager dependencies="'!shape_none_opt'" name="'bg_shape_opt'">
+            <t t-set-slot="title">
+                <h5 class="o_pager_nav_title mb-0 text-white">Shapes</h5>
+            </t>
+            <t t-set-slot="buttons">
+                <button type="button" class="o_pager_nav_btn p-0 text-uppercase active" data-scroll-to="o_scroll_bgshapes_basic">
+                    <span class="w-100">Basic</span>
+                </button>
+                <button type="button" class="o_pager_nav_btn p-0 text-uppercase" data-scroll-to="o_scroll_bgshapes_linear">
+                    <span class="w-100">Linear</span>
+                </button>
+                <button type="button" class="o_pager_nav_btn p-0 text-uppercase" data-scroll-to="o_scroll_bgshapes_creative">
+                    <span class="w-100">Creative</span>
+                </button>
+            </t>
+            <div class="o_scroll_bgshapes_basic">
+                <we-title class="">Geometrics</we-title>
+                <we-select-page>
+                    <WeShapeBtn shape="'web_editor/Origins/02_001'" selectLabel="'Origins 01'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/04_001'" selectLabel="'Origins 02'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/05'" selectLabel="'Origins 03'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/06_001'" selectLabel="'Origins 04'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/07_002'" selectLabel="'Origins 05'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/08'" selectLabel="'Origins 06'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/09_001'" selectLabel="'Origins 07'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/11_001'" selectLabel="'Origins 08'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/14_001'" selectLabel="'Origins 09'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/16'" selectLabel="'Origins 10'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Origins/17'" selectLabel="'Origins 11'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Origins/18'" selectLabel="'Origins 12'" animated="true"/>
+                </we-select-page>
+                <we-title>Bold</we-title>
+                <we-select-page string="Bold">
+                    <WeShapeBtn shape="'web_editor/Bold/01'" selectLabel="'Bold 01'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/02'" selectLabel="'Bold 02'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/03'" selectLabel="'Bold 03'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/04'" selectLabel="'Bold 04'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/05_001'" selectLabel="'Bold 05'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/06_001'" selectLabel="'Bold 06'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/07_001'" selectLabel="'Bold 07'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/08'" selectLabel="'Bold 08'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/09'" selectLabel="'Bold 09'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/10_001'" selectLabel="'Bold 10'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/11_001'" selectLabel="'Bold 11'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/12_001'" selectLabel="'Bold 12'"/>
+                </we-select-page>
+                <we-select-page string="Blobs">
+                    <WeShapeBtn shape="'web_editor/Blobs/01_001'" selectLabel="'Blobs 01'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/02'" selectLabel="'Blobs 02'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/03'" selectLabel="'Blobs 03'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/04'" selectLabel="'Blobs 04'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/05'" selectLabel="'Blobs 05'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/06'" selectLabel="'Blobs 06'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/07'" selectLabel="'Blobs 07'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/08'" selectLabel="'Blobs 08'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/09'" selectLabel="'Blobs 09'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/10_001'" selectLabel="'Blobs 10'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/11'" selectLabel="'Blobs 11'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/12'" selectLabel="'Blobs 12'"/>
+                </we-select-page>
+            </div>
+            <div class="o_scroll_bgshapes_linear">
+                <we-title>Airy &amp; Zigs</we-title>
+                <we-select-page string="Airy &amp; Zigs">
+                    <WeShapeBtn shape="'web_editor/Airy/01'" selectLabel="'Airy 01'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/02'" selectLabel="'Airy 02'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/03_001'" selectLabel="'Airy 03'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Airy/04_001'" selectLabel="'Airy 04'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Airy/05_001'" selectLabel="'Airy 05'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Airy/06'" selectLabel="'Airy 06'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/07'" selectLabel="'Airy 07'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/08'" selectLabel="'Airy 08'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/09'" selectLabel="'Airy 09'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/10'" selectLabel="'Airy 10'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/11'" selectLabel="'Airy 11'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/12_001'" selectLabel="'Airy 12'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Airy/13_001'" selectLabel="'Airy 13'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Airy/14'" selectLabel="'Airy 14'"/>
+                    <WeShapeBtn shape="'web_editor/Zigs/01_001'" selectLabel="'Zigs 01'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Zigs/02_001'" selectLabel="'Zigs 02'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Zigs/03'" selectLabel="'Zigs 03'"/>
+                    <WeShapeBtn shape="'web_editor/Zigs/04'" selectLabel="'Zigs 04'"/>
+                    <WeShapeBtn shape="'web_editor/Zigs/05'" selectLabel="'Zigs 05'"/>
+                    <WeShapeBtn shape="'web_editor/Zigs/06'" selectLabel="'Zigs 06'"/>
+                </we-select-page>
+            </div>
+            <div class="o_scroll_bgshapes_creative">
+                <we-title>Wavy</we-title>
+                <we-select-page string="Wavy">
+                    <WeShapeBtn shape="'web_editor/Wavy/01_001'" selectLabel="'Wavy 01'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/02_001'" selectLabel="'Wavy 02'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/03'" selectLabel="'Wavy 03'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/10'" selectLabel="'Wavy 04'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/24'" selectLabel="'Wavy 05'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/25'" selectLabel="'Wavy 06'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/26'" selectLabel="'Wavy 07'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/27'" selectLabel="'Wavy 08'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/04'" selectLabel="'Wavy 09'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/05'" selectLabel="'Wavy 10'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/06_001'" selectLabel="'Wavy 11'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/07'" selectLabel="'Wavy 12'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/08'" selectLabel="'Wavy 13'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/09'" selectLabel="'Wavy 14'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/11'" selectLabel="'Wavy 15'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/12_001'" selectLabel="'Wavy 16'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/28'" selectLabel="'Wavy 17'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/13_001'" selectLabel="'Wavy 18'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/14'" selectLabel="'Wavy 19'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/15'" selectLabel="'Wavy 20'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/16'" selectLabel="'Wavy 21'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/17'" selectLabel="'Wavy 22'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/18'" selectLabel="'Wavy 23'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/19'" selectLabel="'Wavy 24'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/20'" selectLabel="'Wavy 25'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/21'" selectLabel="'Wavy 26'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/22'" selectLabel="'Wavy 27'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/23'" selectLabel="'Wavy 28'"/>
+                </we-select-page>
+                <we-title>Block &amp; Rainy</we-title>
+                <we-select-page string="Blocks &amp; Rainy">
+                    <WeShapeBtn shape="'web_editor/Blocks/02_001'" selectLabel="'Blocks 01'"/>
+                    <WeShapeBtn shape="'web_editor/Blocks/01_001'" selectLabel="'Blocks 02'"/>
+                    <WeShapeBtn shape="'web_editor/Blocks/03'" selectLabel="'Blocks 03'"/>
+                    <WeShapeBtn shape="'web_editor/Blocks/04'" selectLabel="'Blocks 04'"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/01_001'" selectLabel="'Rainy 01'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/02_001'" selectLabel="'Rainy 02'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/06'" selectLabel="'Rainy 03'"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/07'" selectLabel="'Rainy 04'"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/10'" selectLabel="'Rainy 05'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/04'" selectLabel="'Rainy 06'"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/05_001'" selectLabel="'Rainy 07'"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/03_001'" selectLabel="'Rainy 08'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/08_001'" selectLabel="'Rainy 09'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/09_001'" selectLabel="'Rainy 10'"/>
+                </we-select-page>
+                <we-title>Floating Shapes</we-title>
+                <we-select-page string="Floating Shapes">
+                    <WeShapeBtn shape="'web_editor/Floats/01'" selectLabel="'Float 01'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/02'" selectLabel="'Float 02'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/03'" selectLabel="'Float 03'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/04'" selectLabel="'Float 04'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/05'" selectLabel="'Float 05'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/06'" selectLabel="'Float 06'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/07'" selectLabel="'Float 07'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/08'" selectLabel="'Float 08'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/09'" selectLabel="'Float 09'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/10'" selectLabel="'Float 10'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/11'" selectLabel="'Float 11'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/12'" selectLabel="'Float 12'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/13'" selectLabel="'Float 13'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/14'" selectLabel="'Float 14'" animated="true"/>
+                </we-select-page>
+            </div>
+        </WeSelectPager>
+        <WeButton class="'o_we_device'" showOnMobile="'false'" tooltip.translate="Show/Hide on Mobile"
+            dependencies="'!shape_none_opt'" noPreview="'true'"
+            img="'/website/static/src/img/snippets_options/mobile_invisible.svg'"/>
+        <WeButton shape="''" name="'shape_none_opt'" dependencies="'!shape_none_opt'" noPreview="'true'" class="'o_we_image_shape_remove o_we_bg_danger fa fa-fw fa-times'"/>
+    </WeRow>
+    <WeRow class="'o_we_sublevel_2'" title.translate="Flip">
+        <WeButton class="'oi oi-fw oi-arrows-h'" flipX="'true'" noPreview="'true'" dependencies="'!shape_none_opt'"/>
+        <WeButton class="'oi oi-fw oi-arrows-v'" flipY="'true'" noPreview="'true'" dependencies="'!shape_none_opt'"/>
+    </WeRow>
+    <WeRow class="'o_we_sublevel_2'" name="'colors'" title.translate="Colors">
+        <t t-foreach="renderContext.colorPickers" t-as="colorName" t-key="colorName">
+            <WeColorpicker color="'true'" colorName="colorName"/>
+        </t>
+        <WeColorpicker selectStyle="''" cssProperty="'background-color'" colorPrefix="'bg-'" applyTo="'> .o_we_shape'"/>
+    </WeRow>
+    <WeRow class="'o_we_sublevel_2'" title.translate="Speed">
+        <WeRange name="'bg_shape_anim_speed_opt'"
+                    noPreview="'true'"
+                    displayRangeValue="'true'"
+                    setBgShapeAnimationSpeed="''"
+                    max="'2'"
+                    min="'-2'"
+                    step="'0.1'"
+                    toRatio="'true'"/>
+    </WeRow>
+</t>
+<t t-name="web_editor.BackgroundImage">
+    <WeRow title.translate="Image" class="'o_we_sublevel_1'">
+        <WeMediapicker tooltip.translate="Edit image"
+                        mediaType="'images'"
+                        background="''"
+                        name="'bg_image_opt'"
+                        dependencies="'bg_image_opt'"/>
+        <span t-if="renderContext.filesize" t-out="renderContext.filesize" class="o_we_image_weight o_we_tag"/>
+    </WeRow>
+    <WeRow class="'o_we_sublevel_2'" title.translate="Main Color" name="'main_color_opt'">
+        <WeColorpicker dynamicColor="'true'" colorName="'c1'"/>
+        <WeColorpicker dynamicColor="'true'" colorName="'c2'"/>
+        <WeColorpicker dynamicColor="'true'" colorName="'c3'"/>
+        <WeColorpicker dynamicColor="'true'" colorName="'c4'"/>
+        <WeColorpicker dynamicColor="'true'" colorName="'c5'"/>
+    </WeRow>
+</t>
+<t t-name="web_editor.BackgroundPosition">
+    <WeRow class="'o_we_sublevel_2'" title.translate="Position">
+        <WeSelect noPreview="'true'">
+            <WeButton backgroundType="'cover'">Cover</WeButton>
+            <WeButton backgroundType="'repeat-pattern'" name="'background_repeat_opt'">Repeat pattern</WeButton>
+        </WeSelect>
+        <WeButton class="'fa fa-fw fa-crosshairs'" tooltip.translate="Background Position"
+                backgroundPositionOverlay="'true'" noPreview="'true'"/>
+    </WeRow>
+    <WeMulti cssProperty="'background-size'" dependencies="'background_repeat_opt'">
+        <WeInput title.translate="Width" class="'o_we_sublevel_3'"
+                selectStyle="'auto'" placeholder.translate="auto" unit="'px'"/>
+        <WeInput title.translate="Height" class="'o_we_sublevel_3'"
+                selectStyle="'auto'" placeholder.translate="auto" unit="'px'"/>
+    </WeMulti>
+</t>
+<t t-name="web_editor.BackgroundFilter">
+    <t t-set="color_filter_dependencies" t-value="'bg_image_toggle_opt'"/>
+    <WeColorpicker title.translate="Color Filter"
+                    class="'o_we_sublevel_2'"
+                    dependencies="color_filter_dependencies"
+                    name="'bg_filter_opt'"
+                    selectFilterColor="''"
+                    colorPrefix="'bg-'"
+                    opacity="'0.5'"
+                    withGradients="'1'"
+                    selectedTab="'gradients'"
+                    excluded="'theme, common'"/>
+</t>
 </templates>
