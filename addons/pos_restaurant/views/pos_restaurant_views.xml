@@ -17,10 +17,14 @@
                             <field name="background_color" groups="base.group_no_one" />
                         </group>
                         <field name="table_ids">
-                            <tree string='Tables'>
+                            <tree string='Tables' editable="bottom">
                                 <field name="name" />
                                 <field name="seats" />
                                 <field name="shape" />
+                                <field name="height" optional="hide" />
+                                <field name="width" optional="hide" />
+                                <field name="color" widget="color" optional="hide" />
+                                <field name="active" optional="hide" />
                             </tree>
                         </field>
                     </sheet>

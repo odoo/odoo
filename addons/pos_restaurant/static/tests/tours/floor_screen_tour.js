@@ -116,7 +116,7 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             NumberPopup.enterValue("9"),
             NumberPopup.isShown("9"),
             Dialog.confirm(),
-            FloorScreen.table({ name: "4", numOfSeats: "9" }),
+            FloorScreen.table({ name: "4" }),
 
             // change number of seat when the input is already selected
             FloorScreen.clickTable("4"),
@@ -125,7 +125,7 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             NumberPopup.enterValue("15"),
             NumberPopup.isShown("15"),
             Dialog.confirm(),
-            FloorScreen.table({ name: "4", numOfSeats: "15" }),
+            FloorScreen.table({ name: "4" }),
 
             // change shape
             FloorScreen.clickTable("4"),
