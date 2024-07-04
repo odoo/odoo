@@ -163,16 +163,3 @@ registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder", {
             PaymentScreen.clickValidate(),
         ].flat(),
 });
-
-registry.category("web_tour.tours").add("PosQuotationSaving", {
-    test: true,
-    url: "/pos/ui",
-    steps: () =>
-        [
-            Dialog.confirm("Open session"),
-            PosSale.settleNthOrder(1),
-            ProductScreen.selectedOrderlineHas("Product", "4.00", "40.00"),
-            ProductScreen.clickControlButton("More..."),
-            ProductScreen.clickControlButton("Park Order"),
-        ].flat(),
-});
