@@ -4,6 +4,8 @@
 
 from dateutil.relativedelta import relativedelta
 
+from freezegun import freeze_time
+
 from odoo import Command, fields
 from odoo.tests.common import tagged, TransactionCase
 from odoo.addons.mail.tools.discuss import Store
@@ -13,6 +15,7 @@ from odoo.addons.mail.tools.discuss import Store
 class TestPartner(TransactionCase):
 
     @classmethod
+    @freeze_time('2024-06-04')
     def setUpClass(cls):
         super().setUpClass()
         # use a single value for today throughout the tests to avoid weird scenarios around midnight
@@ -42,17 +45,18 @@ class TestPartner(TransactionCase):
             'responsible_ids': cls.users.ids
         })
         cls.leaves = cls.env['hr.leave'].create([{
-            'request_date_from': cls.today + relativedelta(days=-2),
+            'request_date_from': cls.today + relativedelta(days=-1),
             'request_date_to': cls.today + relativedelta(days=2),
             'employee_id': cls.employees[0].id,
             'holiday_status_id': cls.leave_type.id,
         }, {
             'request_date_from': cls.today + relativedelta(days=-2),
-            'request_date_to': cls.today + relativedelta(days=3),
+            'request_date_to': cls.today + relativedelta(days=1),
             'employee_id': cls.employees[1].id,
             'holiday_status_id': cls.leave_type.id,
         }])
 
+    @freeze_time('2024-06-04')
     def test_res_partner_to_store(self):
         self.leaves.write({'state': 'validate'})
         self.assertEqual(

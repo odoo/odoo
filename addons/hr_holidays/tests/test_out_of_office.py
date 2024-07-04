@@ -3,6 +3,8 @@
 from datetime import date, datetime, timezone
 from dateutil.relativedelta import relativedelta
 
+from freezegun import freeze_time
+
 from odoo import fields
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests.common import tagged, users, warmup
@@ -22,18 +24,30 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'requires_allocation': 'no',
         })
 
+    @freeze_time('2024-06-06')
     def test_leave_ooo(self):
         self.assertNotEqual(self.employee_hruser.user_id.im_status, 'leave_offline', 'user should not be on leave')
         self.assertNotEqual(self.employee_hruser.user_id.partner_id.im_status, 'leave_offline', 'user should not be on leave')
-        leave_date_end = (date.today() + relativedelta(days=2))
-        leave = self.env['hr.leave'].create({
+        first_leave_date_end = (date.today() + relativedelta(days=1))
+        first_leave = self.env['hr.leave'].create({
             'name': 'Christmas',
             'employee_id': self.employee_hruser.id,
             'holiday_status_id': self.leave_type.id,
             'request_date_from': (date.today() - relativedelta(days=1)),
-            'request_date_to': leave_date_end,
+            'request_date_to': first_leave_date_end,
         })
-        leave.action_approve()
+        first_leave.action_approve()
+        # validate a leave from 2024-06-5 (Wednesday) to 2024-06-07 (Friday)
+        second_leave_date_end = (date.today() + relativedelta(days=5))
+        second_leave = self.env['hr.leave'].create({
+            'name': 'Christmas',
+            'employee_id': self.employee_hruser.id,
+            'holiday_status_id': self.leave_type.id,
+            'request_date_from': (date.today() + relativedelta(days=4)),
+            'request_date_to': second_leave_date_end,
+        })
+        second_leave.action_approve()
+        # validate a leave from 2024-06-10 (Monday) to 2024-06-11 (Tuesday)
         self.assertEqual(self.employee_hruser.user_id.im_status, 'leave_offline', 'user should be out (leave_offline)')
         self.assertEqual(self.employee_hruser.user_id.partner_id.im_status, 'leave_offline', 'user should be out (leave_offline)')
 
@@ -54,9 +68,10 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         self.assertFalse(
             partner2_info["out_of_office_date_end"], "current user should not be out of office"
         )
+        # The employee will be back in the office the day after his second leave ends
         self.assertEqual(
             partner_info["out_of_office_date_end"],
-            fields.Date.to_string(leave_date_end),
+            fields.Date.to_string(second_leave_date_end + relativedelta(days=1)),
             "correspondent should be out of office",
         )
 

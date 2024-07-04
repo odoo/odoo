@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, date, time, timezone
+from datetime import datetime, date, time, timezone, timedelta
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 import pytz
@@ -130,6 +130,26 @@ class HrEmployeeBase(models.AbstractModel):
                                           and employee.is_absent)
         employees_present.update({'hr_icon_display': 'presence_holiday_present', 'show_hr_icon_display': True})
 
+    def _get_first_working_interval(self, dt):
+        # find the first working interval after a given date
+        dt = dt.replace(tzinfo=timezone.utc)
+        lookahead_days = [7, 30, 90, 180, 365, 730]
+        work_intervals = None
+        for lookahead_day in lookahead_days:
+            periods = self._get_calendar_periods(dt, dt + timedelta(days=lookahead_day))
+            if not periods:
+                calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
+                work_intervals = calendar._work_intervals_batch(
+                    dt, dt + timedelta(days=lookahead_day), resources=self.resource_id)
+            else:
+                for period in periods[self]:
+                    start, end, calendar = period
+                    work_intervals = calendar._work_intervals_batch(
+                        start, end, resources=self.resource_id)
+            if work_intervals.get(self.resource_id.id) and work_intervals[self.resource_id.id]._items:
+                # return start time of the earliest interval
+                return work_intervals[self.resource_id.id]._items[0][0]
+
     def _compute_leave_status(self):
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
         holidays = self.env['hr.leave'].sudo().search([
@@ -142,7 +162,8 @@ class HrEmployeeBase(models.AbstractModel):
         for holiday in holidays:
             leave_data[holiday.employee_id.id] = {}
             leave_data[holiday.employee_id.id]['leave_date_from'] = holiday.date_from.date()
-            leave_data[holiday.employee_id.id]['leave_date_to'] = holiday.date_to.date()
+            back_on = holiday.employee_id._get_first_working_interval(holiday.date_to)
+            leave_data[holiday.employee_id.id]['leave_date_to'] = back_on.date() if back_on else None
             leave_data[holiday.employee_id.id]['current_leave_state'] = holiday.state
 
         for employee in self:

@@ -2,8 +2,9 @@
 
 from datetime import datetime, date
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged
+from odoo.tests import tagged, freeze_time
 from odoo.addons.hr_holidays_contract.tests.common import TestHolidayContract
+
 
 @tagged('multi_contract')
 class TestHolidaysMultiContract(TestHolidayContract):
@@ -229,3 +230,82 @@ class TestHolidaysMultiContract(TestHolidayContract):
         (leave_during_full_time + leave_during_partial_time).action_approve()
         self.assertEqual(leave_during_full_time.number_of_hours, 24)
         self.assertEqual(leave_during_partial_time.number_of_hours, 16)
+
+    @freeze_time('2024-01-05')
+    def test_multi_contract_out_of_office(self):
+        """
+            Test that the out of office feature works correctly with multiple contracts
+            The Case is when the employee is out of the office for a period that overlaps multiple contracts
+        """
+        calendar_full, calendar_partial = self.env['resource.calendar'].create([
+            {
+                'name': 'Full time (5/5)',
+            },
+            {
+                'name': 'Partial time (4/5)',
+                'attendance_ids': [
+                    (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Monday Evening', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Tuesday Evening', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Wednesday Evening', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Thursday Evening', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+                ]
+            },
+        ])
+
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee',
+            'resource_calendar_id': calendar_full.id,
+        })
+
+        self.env['hr.contract'].create([
+            {
+                'name': 'Full time (5/5)',
+                'employee_id': employee.id,
+                'date_start': datetime.strptime('2024-01-01', '%Y-%m-%d').date(),
+                'date_end': datetime.strptime('2024-01-31', '%Y-%m-%d').date(),
+                'resource_calendar_id': calendar_full.id,
+                'wage': 1000.0,
+                'state': 'open',
+            },
+            {
+                'name': 'Partial time (4/5)',
+                'employee_id': employee.id,
+                'date_start': datetime.strptime('2024-02-01', '%Y-%m-%d').date(),
+                'resource_calendar_id': calendar_partial.id,
+                'wage': 1000.0,
+                'state': 'draft',
+                'kanban_state': 'done'
+            },
+        ])
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'leave_validation_type': 'hr',
+            'request_unit': 'day',
+        })
+
+        leave1 = self.env['hr.leave'].create({
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': '2024-01-01',
+            'request_date_to': '2024-01-31',
+        })
+
+        leave2 = self.env['hr.leave'].create({
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': '2024-02-01',
+            'request_date_to': '2024-02-29',
+        })
+
+        leave1.action_approve()
+        leave2.action_approve()
+
+        employee._compute_leave_status()
+        self.assertEqual(employee.leave_date_to, date(2024, 3, 4))
