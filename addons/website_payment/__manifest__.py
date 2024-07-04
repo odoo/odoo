@@ -24,6 +24,8 @@ This is a bridge module that adds multi-website support for payment acquirers.
     'assets': {
         'website.assets_wysiwyg': [
             'website_payment/static/src/snippets/s_donation/options.js',
+            'website_payment/static/src/js/wysiwyg.js',
+            'website_payment/static/src/js/link.js',
         ],
         'web.assets_frontend': [
             'website_payment/static/src/js/website_payment_donation.js',
