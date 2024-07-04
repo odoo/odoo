@@ -256,3 +256,19 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("FiscalPositionPriceIncluded", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickShowProductsMobile(),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.changeFiscalPosition("No Change"),
+            ProductScreen.totalAmountIs("100.00"),
+
+            Chrome.endTour(),
+        ].flat(),
+});

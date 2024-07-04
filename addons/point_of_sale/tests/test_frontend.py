@@ -1245,6 +1245,40 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(response.status_code, 200)
         self.assertTrue('Shop.png' in response.headers['Content-Disposition'])
 
+    def test_fiscal_position_included_tax(self):
+        # create a tax of 15% with price included
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 15%',
+            'amount': 15,
+            'price_include': True,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+
+        # create a product with the tax
+        self.product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'taxes_id': [(6, 0, [tax.id])],
+            'list_price': 100,
+            'available_in_pos': True,
+        })
+
+        # create a fiscal position that map the tax to itself
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'No Change',
+            'tax_ids': [(0, 0, {
+                'tax_src_id': tax.id,
+                'tax_dest_id': tax.id,
+            })],
+        })
+
+        self.main_pos_config.write({
+            'tax_regime_selection': True,
+            'fiscal_position_ids': [(6, 0, [fiscal_position.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionPriceIncluded', login="pos_user")
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'

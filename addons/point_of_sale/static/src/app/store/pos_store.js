@@ -1088,11 +1088,95 @@ export class PosStore extends Reactive {
         return this.orders;
     }
 
+<<<<<<< HEAD
     getTaxesByIds(taxIds) {
         const taxes = [];
         for (let i = 0; i < taxIds.length; i++) {
             if (this.tax_data_by_id[taxIds[i]]) {
                 taxes.push(this.tax_data_by_id[taxIds[i]]);
+||||||| parent of 2e5fbaa33ca7 (temp)
+    computePriceAfterFp(price, taxes) {
+        const order = this.get_order();
+        if (order && order.fiscal_position) {
+            const mapped_included_taxes = [];
+            let new_included_taxes = [];
+            taxes.forEach((tax) => {
+                const line_taxes = this.get_taxes_after_fp([tax.id], order.fiscal_position);
+                if (line_taxes.length && line_taxes[0].price_include) {
+                    new_included_taxes = new_included_taxes.concat(line_taxes);
+                }
+                if (tax.price_include && !line_taxes.includes(tax)) {
+                    mapped_included_taxes.push(tax);
+                }
+            });
+
+            if (mapped_included_taxes.length > 0) {
+                if (new_included_taxes.length > 0) {
+                    const price_without_taxes = this.compute_all(
+                        mapped_included_taxes,
+                        price,
+                        1,
+                        this.currency.rounding,
+                        true
+                    ).total_excluded;
+                    price = this.compute_all(
+                        new_included_taxes,
+                        price_without_taxes,
+                        1,
+                        this.currency.rounding,
+                        false
+                    ).total_included;
+                } else {
+                    price = this.compute_all(
+                        mapped_included_taxes,
+                        price,
+                        1,
+                        this.currency.rounding,
+                        true
+                    ).total_excluded;
+                }
+=======
+    computePriceAfterFp(price, taxes) {
+        const order = this.get_order();
+        if (order && order.fiscal_position) {
+            const mapped_included_taxes = [];
+            let new_included_taxes = [];
+            taxes.forEach((tax) => {
+                const line_taxes = this.get_taxes_after_fp([tax], order.fiscal_position);
+                if (line_taxes.length && line_taxes[0].price_include) {
+                    new_included_taxes = new_included_taxes.concat(line_taxes);
+                }
+                if (tax.price_include && !line_taxes.includes(tax)) {
+                    mapped_included_taxes.push(tax);
+                }
+            });
+
+            if (mapped_included_taxes.length > 0) {
+                if (new_included_taxes.length > 0) {
+                    const price_without_taxes = this.compute_all(
+                        mapped_included_taxes,
+                        price,
+                        1,
+                        this.currency.rounding,
+                        true
+                    ).total_excluded;
+                    price = this.compute_all(
+                        new_included_taxes,
+                        price_without_taxes,
+                        1,
+                        this.currency.rounding,
+                        false
+                    ).total_included;
+                } else {
+                    price = this.compute_all(
+                        mapped_included_taxes,
+                        price,
+                        1,
+                        this.currency.rounding,
+                        true
+                    ).total_excluded;
+                }
+>>>>>>> 2e5fbaa33ca7 (temp)
             }
         }
         return taxes;
