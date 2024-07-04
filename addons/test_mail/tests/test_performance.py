@@ -4,6 +4,7 @@
 from markupsafe import Markup
 from unittest.mock import patch
 
+from odoo import fields
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import Form, users, warmup, tagged
@@ -19,20 +20,34 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
 
         # creating partners is required notably with template usage
         cls.user_employee.write({'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)]})
-        cls.user_test = cls.user_test_inbox = cls.env['res.users'].with_context(cls._test_context).create({
-            'name': 'Paulette Testouille',
-            'login': 'paul',
-            'email': 'user.test.paulette@example.com',
-            'notification_type': 'inbox',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
-        })
-        cls.user_test_email = cls.env['res.users'].with_context(cls._test_context).create({
-            'name': 'Georgette Testouille',
-            'login': 'george',
-            'email': 'user.test.georgette@example.com',
-            'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
-        })
+        res_users = cls.env["res.users"].with_context(cls._test_context)
+        cls.user_test = cls.user_test_inbox = res_users.create(
+            {
+                "name": "Paulette Testouille",
+                "login": "paul",
+                "email": "user.test.paulette@example.com",
+                "notification_type": "inbox",
+                "groups_id": [(6, 0, [cls.env.ref("base.group_user").id])],
+            }
+        )
+        cls.user_test_inbox_2 = res_users.create(
+            {
+                "name": "Jeannette Testouille",
+                "login": "jeannette",
+                "email": "user.test.jeannette@example.com",
+                "notification_type": "inbox",
+                "groups_id": [(6, 0, [cls.env.ref("base.group_user").id])],
+            }
+        )
+        cls.user_test_email = res_users.create(
+            {
+                "name": "Georgette Testouille",
+                "login": "george",
+                "email": "user.test.georgette@example.com",
+                "notification_type": "email",
+                "groups_id": [(6, 0, [cls.env.ref("base.group_user").id])],
+            }
+        )
 
         cls.customers = cls.env['res.partner'].with_context(cls._test_context).create([
             {
@@ -1312,6 +1327,200 @@ class TestMailFormattersPerformance(BaseMailPerformance):
         with self.assertQueryCount(employee=15):
             res = messages._message_format(for_current_user=True)
             self.assertEqual(len(res), 6)
+
+    @mute_logger("odoo.models.unlink")
+    @warmup
+    def test_message_format_multi_followers_inbox(self):
+        """Test query count as well as bus notifcations from sending a message to multiple followers
+        with inbox."""
+        record = self.env["mail.test.simple"].create({"name": "Test"})
+        record.message_partner_ids = (self.user_test_inbox + self.user_test_inbox_2).partner_id
+        follower_1 = record.message_follower_ids.filtered(
+            lambda f: f.partner_id == self.user_test_inbox.partner_id
+        )
+        follower_2 = record.message_follower_ids.filtered(
+            lambda f: f.partner_id == self.user_test_inbox_2.partner_id
+        )
+        def get_bus_params():
+            message = self.env["mail.message"].search([], order="id desc", limit=1)
+            notif_1 = message.notification_ids.filtered(
+                lambda n: n.res_partner_id == self.user_test_inbox.partner_id
+            )
+            notif_2 = message.notification_ids.filtered(
+                lambda n: n.res_partner_id == self.user_test_inbox_2.partner_id
+            )
+            return (
+                [
+                    (self.cr.dbname, "res.partner", self.user_test_inbox.partner_id.id),
+                    (self.cr.dbname, "res.partner", self.user_test_inbox_2.partner_id.id),
+                ],
+                [
+                    {
+                        "type": "mail.message/inbox",
+                        "payload": {
+                            "id": message.id,
+                            "body": "<p>Test Post Performances with multiple inbox ping!</p>",
+                            "date": fields.Datetime.to_string(message.date),
+                            "email_from": '"OdooBot" <odoobot@example.com>',
+                            "message_type": "comment",
+                            "subject": False,
+                            "model": "mail.test.simple",
+                            "res_id": record.id,
+                            "record_name": "Test",
+                            "author": {
+                                "id": self.env.user.partner_id.id,
+                                "name": "OdooBot",
+                                "is_company": False,
+                                "write_date": fields.Datetime.to_string(self.env.user.write_date),
+                                "userId": self.env.user.id,
+                                "isInternalUser": True,
+                                "type": "partner",
+                            },
+                            "default_subject": "Test",
+                            "notifications": [
+                                {
+                                    "id": notif_1.id,
+                                    "notification_type": "inbox",
+                                    "notification_status": "sent",
+                                    "failure_type": False,
+                                    "persona": {
+                                        "id": self.user_test_inbox.partner_id.id,
+                                        "displayName": "Paulette Testouille",
+                                        "type": "partner",
+                                    },
+                                },
+                                {
+                                    "id": notif_2.id,
+                                    "notification_type": "inbox",
+                                    "notification_status": "sent",
+                                    "failure_type": False,
+                                    "persona": {
+                                        "id": self.user_test_inbox_2.partner_id.id,
+                                        "displayName": "Jeannette Testouille",
+                                        "type": "partner",
+                                    },
+                                },
+                            ],
+                            "attachments": [],
+                            "linkPreviews": [],
+                            "reactions": [],
+                            "pinned_at": False,
+                            "create_date": fields.Datetime.to_string(message.create_date),
+                            "write_date": fields.Datetime.to_string(message.write_date),
+                            "is_note": False,
+                            "is_discussion": True,
+                            "subtype_description": False,
+                            "recipients": [],
+                            "scheduledDatetime": None,
+                            "thread": {
+                                "model": "mail.test.simple",
+                                "id": record.id,
+                                "name": "Test",
+                                "module_icon": "/base/static/description/icon.png",
+                                "selfFollower": {
+                                    "id": follower_1.id,
+                                    "is_active": True,
+                                    "partner": {
+                                        "id": self.user_test_inbox.partner_id.id,
+                                        "type": "partner",
+                                    },
+                                },
+                            },
+                            "needaction": False,
+                            "starred": False,
+                            "trackingValues": [],
+                            "sms_ids": [],
+                        },
+                    },
+                    {
+                        "type": "mail.message/inbox",
+                        "payload": {
+                            "id": message.id,
+                            "body": "<p>Test Post Performances with multiple inbox ping!</p>",
+                            "date": fields.Datetime.to_string(message.date),
+                            "email_from": '"OdooBot" <odoobot@example.com>',
+                            "message_type": "comment",
+                            "subject": False,
+                            "model": "mail.test.simple",
+                            "res_id": record.id,
+                            "record_name": "Test",
+                            "author": {
+                                "id": self.env.user.partner_id.id,
+                                "name": "OdooBot",
+                                "is_company": False,
+                                "write_date": fields.Datetime.to_string(self.env.user.write_date),
+                                "userId": self.env.user.id,
+                                "isInternalUser": True,
+                                "type": "partner",
+                            },
+                            "default_subject": "Test",
+                            "notifications": [
+                                {
+                                    "id": notif_1.id,
+                                    "notification_type": "inbox",
+                                    "notification_status": "sent",
+                                    "failure_type": False,
+                                    "persona": {
+                                        "id": self.user_test_inbox.partner_id.id,
+                                        "displayName": "Paulette Testouille",
+                                        "type": "partner",
+                                    },
+                                },
+                                {
+                                    "id": notif_2.id,
+                                    "notification_type": "inbox",
+                                    "notification_status": "sent",
+                                    "failure_type": False,
+                                    "persona": {
+                                        "id": self.user_test_inbox_2.partner_id.id,
+                                        "displayName": "Jeannette Testouille",
+                                        "type": "partner",
+                                    },
+                                },
+                            ],
+                            "attachments": [],
+                            "linkPreviews": [],
+                            "reactions": [],
+                            "pinned_at": False,
+                            "create_date": fields.Datetime.to_string(message.create_date),
+                            "write_date": fields.Datetime.to_string(message.write_date),
+                            "is_note": False,
+                            "is_discussion": True,
+                            "subtype_description": False,
+                            "recipients": [],
+                            "scheduledDatetime": None,
+                            "thread": {
+                                "model": "mail.test.simple",
+                                "id": record.id,
+                                "name": "Test",
+                                "module_icon": "/base/static/description/icon.png",
+                                "selfFollower": {
+                                    "id": follower_1.id,
+                                    "is_active": True,
+                                    "partner": {
+                                        "id": self.user_test_inbox.partner_id.id,
+                                        "type": "partner",
+                                    },
+                                },
+                            },
+                            "needaction": False,
+                            "starred": False,
+                            "trackingValues": [],
+                            "sms_ids": [],
+                        },
+                    },
+                ],
+            )
+
+        self._reset_bus()
+        self.env.invalidate_all()
+        with self.assertBus(get_params=get_bus_params):
+            with self.assertQueryCount(21):
+                record.message_post(
+                    body=Markup("<p>Test Post Performances with multiple inbox ping!</p>"),
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_comment",
+                )
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
