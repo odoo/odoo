@@ -2129,23 +2129,31 @@ Please change the quantity done or the rounding precision of your unit of measur
         if not self or self.env['ir.config_parameter'].sudo().get_param('stock.no_auto_scheduler'):
             return
 
+        all_orderpoints = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
+        for (company, product, orderpoints) in self.env['stock.warehouse.orderpoint']._read_group(
+            domain=[
+                ('product_id', 'in', self.product_id.ids),
+                ('trigger', '=', 'auto'),
+                ('company_id', 'in', self.company_id.ids),
+                '|', ('snoozed_until', '=', False),
+                ('snoozed_until', '<=', fields.Date.today()),
+            ],
+            groupby=['company_id', 'product_id'],
+            aggregates=['id:recordset']
+        ):
+            all_orderpoints[(company, product)] = orderpoints
+
         orderpoints_by_company = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
         orderpoints_context_by_company = defaultdict(dict)
         for move in self:
-            orderpoint = self.env['stock.warehouse.orderpoint'].search([
-                ('product_id', '=', move.product_id.id),
-                ('trigger', '=', 'auto'),
-                ('location_id', 'parent_of', move.location_id.id),
-                ('company_id', '=', move.company_id.id),
-                '!', ('location_id', 'parent_of', move.location_dest_id.id),
-                '|', ('snoozed_until', '=', False),
-                ('snoozed_until', '<=', fields.Date.today()),
-            ], limit=1)
+            orderpoint = all_orderpoints[(move.company_id, move.product_id)].filtered(
+                lambda o: move.location_id._child_of(o.location_id) and not move.location_dest_id._child_of(o.location_id)
+            )[:1]
             if orderpoint:
                 orderpoints_by_company[orderpoint.company_id] |= orderpoint
-            if orderpoint and move.product_qty > orderpoint.product_min_qty and move.origin:
-                orderpoints_context_by_company[orderpoint.company_id].setdefault(orderpoint.id, [])
-                orderpoints_context_by_company[orderpoint.company_id][orderpoint.id].append(move.origin)
+                if move.product_qty > orderpoint.product_min_qty and move.origin:
+                    orderpoints_context_by_company[orderpoint.company_id].setdefault(orderpoint.id, [])
+                    orderpoints_context_by_company[orderpoint.company_id][orderpoint.id].append(move.origin)
         for company, orderpoints in orderpoints_by_company.items():
             orderpoints.with_context(origins=orderpoints_context_by_company[company])._procure_orderpoint_confirm(
                 company_id=company, raise_user_error=False)
