@@ -483,6 +483,7 @@ class StockWarehouseOrderpoint(models.Model):
                 'params': {
                     'title': _('The inter-warehouse transfers have been generated'),
                     'sticky': False,
+                    'next': {'type': 'ir.actions.act_window_close'},
                 }
             }
         return False
