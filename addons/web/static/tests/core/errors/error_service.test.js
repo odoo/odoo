@@ -19,6 +19,7 @@ import {
 import { UncaughtPromiseError } from "@web/core/errors/error_service";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { omit } from "@web/core/utils/objects";
 
 const errorDialogRegistry = registry.category("error_dialogs");
 const errorHandlerRegistry = registry.category("error_handlers");
@@ -40,7 +41,7 @@ test("can handle rejected promise errors with a string as reason", async () => {
 });
 
 test("handle RPC_ERROR of type='server' and no associated dialog class", async () => {
-    expect.assertions(3);
+    expect.assertions(5);
     expect.errors(1);
     const error = new RPCError();
     error.code = 701;
@@ -51,7 +52,7 @@ test("handle RPC_ERROR of type='server' and no associated dialog class", async (
     mockService("dialog", {
         add(dialogClass, props) {
             expect(dialogClass).toBe(RPCErrorDialog);
-            expect(props).toEqual({
+            expect(omit(props, "traceback")).toEqual({
                 name: "RPC_ERROR",
                 type: "server",
                 code: 701,
@@ -61,8 +62,9 @@ test("handle RPC_ERROR of type='server' and no associated dialog class", async (
                 subType: "strange_error",
                 message: "Some strange error occured",
                 exceptionName: null,
-                traceback: error.stack,
             });
+            expect(props.traceback).toMatch(/RPC_ERROR/);
+            expect(props.traceback).toMatch(/Some strange error occured/);
         },
     });
     await makeMockEnv();
@@ -72,7 +74,7 @@ test("handle RPC_ERROR of type='server' and no associated dialog class", async (
 });
 
 test("handle custom RPC_ERROR of type='server' and associated custom dialog class", async () => {
-    expect.assertions(3);
+    expect.assertions(5);
     expect.errors(1);
     class CustomDialog extends Component {
         static template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
@@ -91,7 +93,7 @@ test("handle custom RPC_ERROR of type='server' and associated custom dialog clas
     mockService("dialog", {
         add(dialogClass, props) {
             expect(dialogClass).toBe(CustomDialog);
-            expect(props).toEqual({
+            expect(omit(props, "traceback")).toEqual({
                 name: "RPC_ERROR",
                 type: "server",
                 code: 701,
@@ -99,8 +101,9 @@ test("handle custom RPC_ERROR of type='server' and associated custom dialog clas
                 subType: null,
                 message: "Some strange error occured",
                 exceptionName: null,
-                traceback: error.stack,
             });
+            expect(props.traceback).toMatch(/RPC_ERROR/);
+            expect(props.traceback).toMatch(/Some strange error occured/);
         },
     });
     await makeMockEnv();
@@ -111,7 +114,7 @@ test("handle custom RPC_ERROR of type='server' and associated custom dialog clas
 });
 
 test("handle normal RPC_ERROR of type='server' and associated custom dialog class", async () => {
-    expect.assertions(3);
+    expect.assertions(5);
     expect.errors(1);
     class CustomDialog extends Component {
         static template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
@@ -134,7 +137,7 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
     mockService("dialog", {
         add(dialogClass, props) {
             expect(dialogClass).toBe(NormalDialog);
-            expect(props).toEqual({
+            expect(omit(props, "traceback")).toEqual({
                 name: "RPC_ERROR",
                 type: "server",
                 code: 701,
@@ -142,8 +145,9 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
                 subType: null,
                 message: "A normal error occured",
                 exceptionName: "normal_error",
-                traceback: error.stack,
             });
+            expect(props.traceback).toMatch(/RPC_ERROR/);
+            expect(props.traceback).toMatch(/A normal error occured/);
         },
     });
     await makeMockEnv();
@@ -276,7 +280,7 @@ test("originalError is the root cause of the error chain", async () => {
 });
 
 test("handle uncaught promise errors", async () => {
-    expect.assertions(3);
+    expect.assertions(5);
     expect.errors(1);
     class TestError extends Error {}
     const error = new TestError();
@@ -286,11 +290,12 @@ test("handle uncaught promise errors", async () => {
     mockService("dialog", {
         add(dialogClass, props) {
             expect(dialogClass).toBe(ClientErrorDialog);
-            expect(props).toEqual({
+            expect(omit(props, "traceback")).toEqual({
                 name: "UncaughtPromiseError > TestError",
                 message: "Uncaught Promise > This is an error test",
-                traceback: error.stack,
             });
+            expect(props.traceback).toMatch(/TestError/);
+            expect(props.traceback).toMatch(/This is an error test/);
         },
     });
     await makeMockEnv();
