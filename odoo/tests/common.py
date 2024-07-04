@@ -2002,10 +2002,16 @@ def users(*logins):
 
 @decorator
 def warmup(func, *args, **kwargs):
-    """ Decorate a test method to run it twice: once for a warming up phase, and
-        a second time for real.  The test attribute ``warm`` is set to ``False``
-        during warm up, and ``True`` once the test is warmed up.  Note that the
-        effects of the warmup phase are rolled back thanks to a savepoint.
+    """
+    Stabilize assertQueries and assertQueryCount assertions.
+
+    Reset the cache to a stable state by flushing pending changes and
+    invalidating the cache.
+
+    Warmup the ormcaches by running the decorated function an extra time
+    before the actual test runs. The extra execution ignores
+    assertQueries and assertQueryCount assertions, it also discardes all
+    changes but the ormcaches ones.
     """
     self = args[0]
     self.env.flush_all()
