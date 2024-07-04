@@ -91,6 +91,25 @@ test('display partner mention suggestions on typing "@" in chatter', async () =>
     await contains(".o-mail-Composer-suggestion strong", { text: "Mitchell Admin" });
 });
 
+test("Do not fetch if search more specific and fetch had no result", async () => {
+    await startServer();
+    onRpc("res.partner", "get_mention_suggestions", () => {
+        step("get_mention_suggestions");
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button", { text: "Send message" });
+    insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion", { count: 3 }); // Mitchell Admin, Hermit, Public user
+    await contains(".o-mail-Composer-suggestion", { text: "Mitchell Admin" });
+    await assertSteps(["get_mention_suggestions"]);
+    insertText(".o-mail-Composer-input", "x");
+    await contains(".o-mail-Composer-suggestion", { count: 0 });
+    await assertSteps(["get_mention_suggestions"]);
+    insertText(".o-mail-Composer-input", "x");
+    await assertSteps([]);
+});
+
 test("show other channel member in @ mention", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
