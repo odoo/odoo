@@ -861,3 +861,36 @@ class TestUnbuild(TestMrpCommon):
             {'product_id': self.bom_1.bom_line_ids[0].product_id.id, 'qty_done': 0.6},
             {'product_id': self.bom_1.bom_line_ids[1].product_id.id, 'qty_done': 1.2},
         ])
+
+    def test_unbuild_zero_quantity(self):
+        """ Test that the unbuild does not give traceback when produced qty is 0
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo_form.qty_producing = 4
+        action = mo.button_mark_done()
+        self.assertEqual(action.get('res_model'), 'mrp.immediate.production')
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        action = wizard.process()
+        self.assertEqual(mo.state, 'done', "Production order should be in done state.")
+        # unlock and update the qty produced
+        mo.action_toggle_is_locked()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 0.0
+        self.assertEqual(mo.qty_producing, 0.0)
+        #unbuild order
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        # check that the quantity to unbuild is the qty produced in the MO
+        self.assertEqual(unbuild_form.product_qty, 0.0)
+        unbuild_form.product_qty = 3
+        unbuild_order = unbuild_form.save()
+        unbuild_order.action_unbuild()
+        self.assertRecordValues(unbuild_order.produce_line_ids.move_line_ids, [
+            {'product_id': self.bom_1.product_id.id, 'qty_done': 3},
+            {'product_id': self.bom_1.bom_line_ids[0].product_id.id, 'qty_done': 6.0},
+            {'product_id': self.bom_1.bom_line_ids[1].product_id.id, 'qty_done': 12.0},
+        ])
