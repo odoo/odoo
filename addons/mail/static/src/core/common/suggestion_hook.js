@@ -122,6 +122,14 @@ export function useSuggestion() {
             position: undefined,
             term: "",
         },
+        lastFetchedSearch: undefined,
+        get isSearchMoreSpecificThanLastFetch() {
+            return (
+                self.lastFetchedSearch.delimiter === self.search.delimiter &&
+                self.search.term.startsWith(self.lastFetchedSearch.term) &&
+                self.lastFetchedSearch.position >= self.search.position
+            );
+        },
         state: useState({
             count: 0,
             items: undefined,
@@ -164,6 +172,12 @@ export function useSuggestion() {
                 ) {
                     return; // ignore obsolete call
                 }
+                if (
+                    self.lastFetchedSearch?.count === 0 &&
+                    (!self.search.delimiter || self.isSearchMoreSpecificThanLastFetch)
+                ) {
+                    return; // no need to fetch since this is more specific than last and last had no result
+                }
                 await suggestionService.fetchSuggestions(self.search, {
                     thread: self.thread,
                 });
@@ -171,6 +185,12 @@ export function useSuggestion() {
                     return;
                 }
                 self.update();
+                self.lastFetchedSearch = {
+                    ...self.search,
+                    count:
+                        (self.state.items?.mainSuggestions.length ?? 0) +
+                        (self.state.items?.extraSuggestions.length ?? 0),
+                };
                 if (
                     self.search.delimiter === delimiter &&
                     self.search.position === position &&

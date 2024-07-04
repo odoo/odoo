@@ -7,7 +7,7 @@ import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 QUnit.module("suggestion", {
     async beforeEach() {
@@ -84,6 +84,31 @@ QUnit.test('display partner mention suggestions on typing "@" in chatter', async
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion strong", { text: "Mitchell Admin" });
+});
+
+QUnit.test("Do not fetch if search more specific and fetch had no result", async () => {
+    const pyEnv = await startServer();
+    const { openFormView } = await start({
+        async mockRPC(args, params, originalFn) {
+            if (params.method === "get_mention_suggestions") {
+                const res = await originalFn(args, params);
+                step("get_mention_suggestions");
+                return res;
+            }
+            return originalFn(args, params);
+        },
+    });
+    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await click("button", { text: "Send message" });
+    insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion", { count: 2 }); // Mitchell Admin, Odoobot
+    await contains(".o-mail-Composer-suggestion", { text: "Mitchell Admin" });
+    await assertSteps(["get_mention_suggestions"]);
+    insertText(".o-mail-Composer-input", "x");
+    await contains(".o-mail-Composer-suggestion", { count: 0 });
+    await assertSteps(["get_mention_suggestions"]);
+    insertText(".o-mail-Composer-input", "x");
+    await assertSteps([]);
 });
 
 QUnit.test("show other channel member in @ mention", async () => {
