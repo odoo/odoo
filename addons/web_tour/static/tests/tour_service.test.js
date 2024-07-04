@@ -856,44 +856,68 @@ test("scroller pointer to reach next step", async () => {
 });
 
 test("manual tour with inactive steps", async () => {
-    patchWithCleanup(browser.console, {
-        log: (s) => expect.step(`log: ${s}`),
-    });
-    await makeMockEnv();
-    class Root extends Component {
-        static components = {};
-        static template = xml/*html*/ `
-            <t>
-                <button class="button0">Button 0</button>
-                <button class="button1">Button 1</button>
-                <button class="button2">Button 2</button>
-            </t>
-        `;
-        static props = ["*"];
-    }
-
-    await mountWithCleanup(Root);
-    registry.category("web_tour.tours").add("pipu_tour2", {
-        test: true,
+    registry.category("web_tour.tours").add("tour_de_wallonie", {
+        rainbowMessage: "bravo",
+        sequence: 10,
         steps: () => [
             {
                 isActive: ["auto"],
-                trigger: ".button0",
+                trigger: ".interval input",
+                run: "click",
             },
             {
                 isActive: ["auto"],
-                trigger: ".button1",
+                trigger: ".interval input",
+                run: "click",
             },
             {
                 isActive: ["manual"],
-                trigger: ".button2",
+                trigger: ".interval input",
+                run: "click",
+            },
+            {
+                isActive: ["auto"],
+                trigger: "button.inc",
+                run: "click",
+            },
+            {
+                isActive: ["auto"],
+                trigger: "button.inc",
+                run: "click",
+            },
+            {
+                isActive: ["manual"],
+                trigger: "button.inc",
+                run: "click",
+            },
+            {
+                isActive: ["auto"],
+                trigger: "button.inc",
+                run: "click",
             },
         ],
     });
-    getService("tour_service").startTour("pipu_tour2", { mode: "manual" });
+    class Root extends Component {
+        static props = ["*"];
+        static components = { Counter };
+        static template = xml/*html*/ `
+            <t>
+                <Counter />
+            </t>
+        `;
+    }
+    await mountWithCleanup(Root);
+    getService("tour_service").startTour("tour_de_wallonie", { mode: "manual" });
+    await animationFrame();
+    await advanceTime(100);
+    expect(".o_tour_pointer").toHaveCount(1);
+    await contains(".interval input").edit(5);
+    expect(".o_tour_pointer").toHaveCount(0);
     await advanceTime(750);
-    await advanceTime(750);
-    await advanceTime(750);
-    await advanceTime(750);
-    expect.verifySteps(["log: .button0", "log: .button1", "log: .button2"]);
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+    await contains("button.inc").click();
+    expect(".o_tour_pointer").toHaveCount(0);
+    await expect(".counter .value").toHaveText("5");
+    await advanceTime(10000);
 });
