@@ -6,6 +6,7 @@ import {
     queryFirst,
     queryLast,
     queryOne,
+    queryAllAttributes,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
@@ -33,6 +34,12 @@ test("can be rendered", async () => {
     await contains(".o-autocomplete input").click();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
     expect(queryAllTexts(".o-autocomplete--dropdown-item")).toEqual(["World", "Hello"]);
+
+    const dropdownItemIds = queryAllAttributes(".dropdown-item", "id");
+    expect(dropdownItemIds).toEqual(["autocomplete_0_0", "autocomplete_0_1"]);
+    expect(queryAllAttributes(".dropdown-item", "role")).toEqual(["option", "option"]);
+    expect(queryAllAttributes(".dropdown-item", "aria-selected")).toEqual(["true", "false"]);
+    expect(".o-autocomplete--input").toHaveAttribute("aria-activedescendant", dropdownItemIds[0]);
 });
 
 test("select option", async () => {
@@ -567,6 +574,21 @@ test("correct sequence of blur, focus and select", async () => {
     await mountWithCleanup(Parent);
     expect(".o-autocomplete input").toHaveCount(1);
     await contains(".o-autocomplete input").click();
+
+    // Navigate suggestions using arrow keys
+    let dropdownItemIds = queryAllAttributes(".dropdown-item", "id");
+    expect(dropdownItemIds).toEqual(["autocomplete_0_0", "autocomplete_0_1"]);
+    expect(queryAllAttributes(".dropdown-item", "role")).toEqual(["option", "option"]);
+    expect(queryAllAttributes(".dropdown-item", "aria-selected")).toEqual(["true", "false"]);
+    expect(".o-autocomplete--input").toHaveAttribute("aria-activedescendant", dropdownItemIds[0]);
+
+    await contains(".o-autocomplete--input").press("ArrowDown");
+
+    dropdownItemIds = queryAllAttributes(".dropdown-item", "id");
+    expect(dropdownItemIds).toEqual(["autocomplete_0_0", "autocomplete_0_1"]);
+    expect(queryAllAttributes(".dropdown-item", "role")).toEqual(["option", "option"]);
+    expect(queryAllAttributes(".dropdown-item", "aria-selected")).toEqual(["false", "true"]);
+    expect(".o-autocomplete--input").toHaveAttribute("aria-activedescendant", dropdownItemIds[1]);
 
     // Start typing hello and click on the result
     await contains(".o-autocomplete input").edit("h", { confirm: false });
