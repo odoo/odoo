@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from markupsafe import Markup
-from datetime import datetime, timedelta
 from urllib.parse import urlparse
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval, time
-from odoo.tools.misc import find_in_path, format_datetime, ustr
+from odoo.tools.misc import find_in_path, ustr
 from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
@@ -437,12 +436,9 @@ class IrActionsReport(models.Model):
 
         # Passing the cookie to wkhtmltopdf in order to resolve internal links.
         if request and request.db:
-            expiration = datetime.now() + timedelta(hours=1)
-            # Use format_datetime to force locale
-            expiration = format_datetime(self.env, expiration, "UTC", "E, d-M-Y H:m:s z", "en_US")
             base_url = self._get_report_url()
             domain = urlparse(base_url).hostname
-            cookie = f'session_id={request.session.sid}; HttpOnly; expires={expiration}; domain={domain}; path=/;'
+            cookie = f'session_id={request.session.sid}; HttpOnly; domain={domain}; path=/;'
             cookie_jar_file_fd, cookie_jar_file_path = tempfile.mkstemp(suffix='.txt', prefix='report.cookie_jar.tmp.')
             temporary_files.append(cookie_jar_file_path)
             with closing(os.fdopen(cookie_jar_file_fd, 'wb')) as cookie_jar_file:
