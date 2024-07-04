@@ -1429,7 +1429,6 @@ class TestMailFormattersPerformance(BaseMailPerformance):
                             "needaction": True,
                             "starred": False,
                             "trackingValues": [],
-                            "sms_ids": [],
                         },
                     },
                     {
@@ -1506,7 +1505,6 @@ class TestMailFormattersPerformance(BaseMailPerformance):
                             "needaction": True,
                             "starred": False,
                             "trackingValues": [],
-                            "sms_ids": [],
                         },
                     },
                 ],

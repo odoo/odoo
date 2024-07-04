@@ -1,11 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-from operator import itemgetter
-
-from odoo import exceptions, fields, models
-from odoo.tools import groupby
+from odoo import fields, models
 
 
 class MailMessage(models.Model):
@@ -32,22 +27,3 @@ class MailMessage(models.Model):
         if operator == '=' and operand:
             return ['&', ('notification_ids.notification_status', '=', 'exception'), ('notification_ids.notification_type', '=', 'sms')]
         raise NotImplementedError()
-
-    def _message_format(self, *args, **kwargs):
-        """ Override in order to retrieves data about SMS (recipient name and
-            SMS status)
-
-        TDE FIXME: clean the overall message_format thingy
-        """
-        message_values = super()._message_format(*args, **kwargs)
-        all_sms_notifications = self.notification_ids.filtered(
-            lambda notification: notification.notification_type == "sms"
-        )
-        msgid_to_notif = defaultdict(lambda: self.env['mail.notification'].sudo())
-        for notif in all_sms_notifications:
-            msgid_to_notif[notif.mail_message_id.id] += notif
-
-        for message in message_values:
-            customer_sms_data = [(notif.id, notif.res_partner_id.display_name or notif.sms_number, notif.notification_status) for notif in msgid_to_notif.get(message['id'], [])]
-            message['sms_ids'] = customer_sms_data
-        return message_values

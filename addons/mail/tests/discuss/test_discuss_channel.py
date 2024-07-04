@@ -126,7 +126,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "id": channel.id,
                                     "module_icon": "/mail/static/description/icon.png",
                                 },
-                                "sms_ids": [],
                             },
                         },
                     },
