@@ -29,7 +29,7 @@ class SaleOrder(models.Model):
             if record.user_id:
                 data.append((_("Salesperson"), record.user_id.name))
             if 'incoterm' in record._fields and record.incoterm:
-                data.append((_("Incoterm"), record.incoterm.code))
+                data.append((_("Incoterms"), record.incoterm.code))
 
     def _compute_l10n_din5008_document_title(self):
         for record in self:

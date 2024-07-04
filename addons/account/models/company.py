@@ -97,7 +97,7 @@ class ResCompany(models.Model):
     property_stock_account_output_categ_id = fields.Many2one('account.account', string="Output Account for Stock Valuation")
     property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
-    incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
+    incoterm_id = fields.Many2one('account.incoterms', string='Default incoterms',
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
 
     qr_code = fields.Boolean(string='Display QR-code on invoices')

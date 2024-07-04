@@ -513,7 +513,7 @@ class AccountMove(models.Model):
     )
     invoice_incoterm_id = fields.Many2one(
         comodel_name='account.incoterms',
-        string='Incoterm',
+        string='Incoterms',
         default=lambda self: self.env.company.incoterm_id,
         help='International Commercial Terms are a series of predefined commercial '
              'terms used in international transactions.',
