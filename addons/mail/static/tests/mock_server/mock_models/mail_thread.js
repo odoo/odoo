@@ -448,7 +448,10 @@ export class MailThread extends models.ServerModel {
                         notifications.push([
                             partner,
                             "mail.message/inbox",
-                            MailMessage._message_format_personalize([message_id])[0],
+                            MailMessage._message_format(
+                                [message_id],
+                                makeKwArgs({ for_current_user: true, add_followers: true })
+                            )[0],
                         ]);
                     }
                 }

@@ -459,8 +459,9 @@ async function discuss_inbox_messages(request) {
     const res = MailMessage._message_fetch(domain, search_term, before, after, around, limit);
     return {
         ...res,
-        messages: MailMessage._message_format_personalize(
-            res.messages.map((message) => message.id)
+        messages: MailMessage._message_format(
+            res.messages.map((message) => message.id),
+            makeKwArgs({ for_current_user: true, add_followers: true })
         ),
     };
 }
