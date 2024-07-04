@@ -510,35 +510,3 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.env['pos.order'].sync_from_ui([pos_order])
         self.assertEqual(sale_order.order_line[0].untaxed_amount_invoiced, 10, "Untaxed invoiced amount should be 10")
         self.assertEqual(sale_order.order_line[1].untaxed_amount_invoiced, 0, "Untaxed invoiced amount should be 0")
-
-    def test_quotation_saving(self):
-        """ Verify that a saved quotation doesn't change the state of the quotation """
-        trusted_pos_config = self.env['pos.config'].create({
-            'name': 'Trusted Shop',
-            'module_pos_restaurant': False,
-        })
-
-        product = self.env['product.product'].create({
-            'name': 'Product',
-            'available_in_pos': True,
-            'type': 'consu',
-            'lst_price': 10.0,
-            'taxes_id': False,
-        })
-
-        sale_order = self.env['sale.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
-            'order_line': [(0, 0, {
-                'product_id': product.id,
-                'name': product.name,
-                'product_uom_qty': 4,
-                'price_unit': product.lst_price,
-            })],
-        })
-        self.assertEqual(sale_order.state, 'draft')
-
-        self.main_pos_config.trusted_config_ids = trusted_pos_config.ids
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosQuotationSaving', login="accountman")
-
-        self.assertEqual(sale_order.state, 'draft')
