@@ -3113,7 +3113,10 @@ class MailThread(models.AbstractModel):
         recipients_data = self._notify_get_recipients(message, msg_vals, **kwargs)
         if not recipients_data:
             return recipients_data
-
+        # cache data fetched by manual query to avoid extra queries when reading user.partner_id
+        for r in filter(lambda r: r["uid"], recipients_data):
+            user = self.env["res.users"].browse(r["uid"])
+            self.env.cache.insert_missing(user, user._fields["partner_id"], [r["id"]])
         # if scheduled for later: add in queue instead of generating notifications
         scheduled_date = self._is_notification_scheduled(kwargs.pop('scheduled_date', None))
         if scheduled_date:
@@ -3157,27 +3160,43 @@ class MailThread(models.AbstractModel):
           skip message usage and spare some queries;
         """
         bus_notifications = []
-        inbox_pids = [r['id'] for r in recipients_data if r['notif'] == 'inbox']
-        if inbox_pids:
-            notif_create_values = [{
-                'author_id': message.author_id.id,
-                'mail_message_id': message.id,
-                'notification_status': 'sent',
-                'notification_type': 'inbox',
-                'res_partner_id': pid,
-            } for pid in inbox_pids]
-            self.env['mail.notification'].sudo().create(notif_create_values)
-
-            MailMessage = self.env['mail.message']
-            messages_format_prepared = MailMessage._message_format_personalized_prepare(
-                message._message_format(msg_vals=msg_vals, for_current_user=True), partner_ids=inbox_pids)
-            for partner_id in inbox_pids:
+        inbox_pids_uids = [(r["id"], r["uid"]) for r in recipients_data if r["notif"] == "inbox"]
+        if inbox_pids_uids:
+            notif_create_values = [
+                {
+                    "author_id": message.author_id.id,
+                    "mail_message_id": message.id,
+                    "notification_status": "sent",
+                    "notification_type": "inbox",
+                    "res_partner_id": pid_uid[0],
+                }
+                for pid_uid in inbox_pids_uids
+            ]
+            # sudo: mail.notification - creating notifications is the purpose of notify methods
+            self.env["mail.notification"].sudo().create(notif_create_values)
+            users = self.env["res.users"].browse(i[1] for i in inbox_pids_uids if i[1])
+            # sudo: mail.followers - reading followers of target users in batch to send it to them
+            followers = self.env["mail.followers"].sudo().search(
+                [
+                    ("res_model", "=", message.model),
+                    ("res_id", "=", message.res_id),
+                    ("partner_id", "in", users.partner_id.ids),
+                ]
+            )
+            for user in users:
                 bus_notifications.append(
-                    (self.env['res.partner'].browse(partner_id),
-                     'mail.message/inbox',
-                     MailMessage._message_format_personalize(partner_id, messages_format_prepared)[0])
+                    (
+                        user.partner_id,
+                        "mail.message/inbox",
+                        message.with_user(user)._message_format(
+                            msg_vals=msg_vals,
+                            for_current_user=True,
+                            add_followers=True,
+                            followers=followers,
+                        )[0]
+                    )
                 )
-        self.env['bus.bus'].sudo()._sendmany(bus_notifications)
+        self.env["bus.bus"].sudo()._sendmany(bus_notifications)
 
     def _notify_thread_by_email(self, message, recipients_data, msg_vals=False,
                                 mail_auto_delete=True,  # mail.mail
