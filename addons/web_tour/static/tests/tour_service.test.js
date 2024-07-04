@@ -13,7 +13,7 @@ import {
 import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { Component, useState, xml } from "@odoo/owl";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { queryFirst } from "@odoo/hoot-dom";
+import { click, queryFirst } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { session } from "@web/session";
@@ -222,7 +222,6 @@ test("next step with new anchor at same position", async () => {
     await mountWithCleanup(Root);
     getService("tour_service").startTour("tour1", { mode: "manual" });
     await animationFrame();
-    await advanceTime(100);
     expect(".o_tour_pointer").toHaveCount(1);
 
     // check position of the pointer relative to the foo button
@@ -234,7 +233,7 @@ test("next step with new anchor at same position", async () => {
     expect(bottomValue1 !== 0).toBe(true);
 
     await contains("button.foo").click();
-    await advanceTime(100);
+    await animationFrame();
     expect(".o_tour_pointer").toHaveCount(1);
 
     // check position of the pointer relative to the bar button
@@ -244,6 +243,10 @@ test("next step with new anchor at same position", async () => {
     const bottomValue2 = pointerRect.bottom - buttonRect.bottom;
     expect(Math.round(bottomValue1)).toBe(Math.round(bottomValue2));
     expect(leftValue1).toBe(leftValue2);
+
+    await contains("button.bar").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
 });
 
 test("a failing tour logs the step that failed in run", async () => {
@@ -276,7 +279,7 @@ test("a failing tour logs the step that failed in run", async () => {
             {
                 trigger: ".button1",
                 run() {
-                    const el = document.querySelector(".wrong_selector");
+                    const el = queryFirst(".wrong_selector");
                     el.click();
                 },
             },
@@ -504,7 +507,7 @@ test("pointer is added on top of overlay's stack", async () => {
         sequence: 10,
         steps: () => [
             { trigger: ".modal .a", run: "click" },
-            { trigger: ".open", run: "click" },
+            { trigger: ".btn-primary", run: "click" },
         ],
     });
     await makeMockEnv({});
@@ -534,6 +537,14 @@ test("pointer is added on top of overlay's stack", async () => {
     expect(".o-overlay-item:eq(0) .modal").toHaveCount(1);
     await advanceTime(100);
     expect(".o-overlay-item:eq(1) .o_tour_pointer").toHaveCount(1);
+
+    click(".modal .a");
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+
+    click(".btn-primary");
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
 });
 
 test("registering test tour after service is started doesn't auto-start the tour", async () => {
@@ -563,7 +574,6 @@ test("registering test tour after service is started doesn't auto-start the tour
         ],
     });
     await animationFrame();
-    await advanceTime(100);
     expect(".o_tour_pointer").toHaveCount(0);
 });
 
@@ -593,8 +603,11 @@ test("registering non-test tour after service is started auto-starts the tour", 
         ],
     });
     await animationFrame();
-    await advanceTime(100);
     expect(".o_tour_pointer").toHaveCount(1);
+
+    click("button.inc");
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
 });
 
 test("hovering to the anchor element should show the content", async () => {
@@ -623,7 +636,6 @@ test("hovering to the anchor element should show the content", async () => {
     await mountWithCleanup(Root);
     getService("tour_service").startTour("la_vuelta", { mode: "manual" });
     await animationFrame();
-    await advanceTime(750);
     expect(".o_tour_pointer").toHaveCount(1);
     await contains("button.inc").hover();
     await animationFrame();
@@ -632,6 +644,10 @@ test("hovering to the anchor element should show the content", async () => {
     await contains(".other").hover();
     await animationFrame();
     expect(".o_tour_pointer_content.invisible").toHaveCount(1);
+
+    click("button.inc");
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
 });
 
 test("should show only 1 pointer at a time", async () => {
@@ -668,12 +684,12 @@ test("should show only 1 pointer at a time", async () => {
     getService("tour_service").startTour("paris_roubaix", { mode: "manual" });
     getService("tour_service").startTour("milan_sanremo", { mode: "manual" });
     await animationFrame();
-    await advanceTime(100);
+    expect(".o_tour_pointer").toHaveCount(1);
+    click("button.inc");
+    await animationFrame();
     expect(".o_tour_pointer").toHaveCount(1);
     await contains(".interval input").edit(5);
     expect(".o_tour_pointer").toHaveCount(0);
-    await advanceTime(750);
-    expect(".o_tour_pointer").toHaveCount(1);
 });
 
 test("perform edit on next step", async () => {
@@ -704,15 +720,13 @@ test("perform edit on next step", async () => {
     await mountWithCleanup(Root);
     getService("tour_service").startTour("giro_d_italia", { mode: "manual" });
     await animationFrame();
-    await advanceTime(100);
     expect(".o_tour_pointer").toHaveCount(1);
     await contains(".interval input").edit(5);
-    expect(".o_tour_pointer").toHaveCount(0);
-    await advanceTime(750);
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(1);
     await contains("button.inc").click();
-    await expect(".counter .value").toHaveText("5");
+    expect(".counter .value").toHaveText("5");
+    expect(".o_tour_pointer").toHaveCount(0);
 });
 
 test("scrolling to next step should update the pointer's height", async (assert) => {
@@ -750,7 +764,6 @@ test("scrolling to next step should update the pointer's height", async (assert)
     await mountWithCleanup(Root);
     getService("tour_service").startTour("tour_de_france", { mode: "manual" });
     await animationFrame();
-    await advanceTime(100); // awaits the macro engine
     const pointer = queryFirst(".o_tour_pointer");
     expect(pointer).toHaveCount(1);
     expect(pointer.textContent).toBe(stepContent);
@@ -758,39 +771,41 @@ test("scrolling to next step should update the pointer's height", async (assert)
     expect(pointer.style.height).toBe("28px");
     expect(pointer.style.width).toBe("28px");
 
-    await contains(pointer).hover();
+    await contains("button.inc").hover();
     const firstOpenHeight = pointer.style.height;
     const firstOpenWidth = pointer.style.width;
 
-    await advanceTime(100); // awaits for the macro engine next check cycle
     expect(pointer).toHaveClass("o_open");
-    await contains(".other").hover();
+    await contains(".interval input").hover();
 
-    await advanceTime(100); // awaits for the macro engine next check cycle
     expect(".o_tour_pointer").not.toHaveClass("o_open");
 
     await contains(".scrollable-parent").scroll({ top: 1000 });
+    await advanceTime(1000);
     await animationFrame(); // awaits the intersection observer to update after the scroll
-    await advanceTime(100); // awaits for the macro engine next check cycle
     // now the scroller pointer should be shown
     expect(pointer).toHaveCount(1);
     expect(pointer.textContent).toBe("Scroll up to reach the next step.");
 
     await contains(".scrollable-parent").scroll({ top: 0 });
-    await animationFrame(); // awaits the intersection observer to update after the scroll
-    await advanceTime(100); // awaits for the macro engine next check cycle
+    await advanceTime(1000);
+    // awaits the intersection observer to update after the scroll
+    await animationFrame();
     // now the true step pointer should be shown again
     expect(pointer).toHaveCount(1);
     expect(pointer.textContent).toBe(stepContent);
 
     await contains(".o_tour_pointer").hover();
     await animationFrame(); // awaits the intersection observer to update after the scroll
-    await advanceTime(100); // awaits for the macro engine next check cycle
     expect(pointer).toHaveClass("o_open");
     const secondOpenHeight = pointer.style.height;
     const secondOpenWidth = pointer.style.width;
     expect(secondOpenHeight).toEqual(firstOpenHeight);
     expect(secondOpenWidth).toEqual(firstOpenWidth);
+
+    click("button.inc");
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
 });
 
 test("scroller pointer to reach next step", async () => {
@@ -820,7 +835,6 @@ test("scroller pointer to reach next step", async () => {
     await mountWithCleanup(Root);
     getService("tour_service").startTour("tour_des_flandres", { mode: "manual" });
     await animationFrame();
-    await advanceTime(100); // awaits the macro engine
 
     // Even if this seems weird, it should show the initial pointer.
     // This is due to the fact the intersection observer has just been started and
@@ -832,37 +846,39 @@ test("scroller pointer to reach next step", async () => {
     expect(pointer.textContent).toBe("Click to increment");
 
     await animationFrame();
-    await advanceTime(100); // awaits for the macro engine next check cycle
     // now the scroller pointer should be shown
     expect(pointer).toHaveCount(1);
     expect(pointer.textContent).toBe("Scroll down to reach the next step.");
 
     // awaiting the click here permits to the intersection observer to update
     await contains(".o_tour_pointer").click();
-    expect(".o_tour_pointer").toHaveCount(0);
-
+    await advanceTime(1000);
     await animationFrame();
-    await advanceTime(700); // awaits for the macro engine next check cycle
+
     pointer = queryFirst(".o_tour_pointer");
     expect(pointer).toHaveCount(1);
     expect(pointer.textContent).toBe("Click to increment");
 
     await contains(".scrollable-parent").scroll({ top: 1000 });
+    await advanceTime(1000);
     await animationFrame();
-    await advanceTime(100); // awaits for the macro engine next check cycle
+
     pointer = queryFirst(".o_tour_pointer");
     expect(pointer).toHaveCount(1);
     expect(pointer.textContent).toBe("Scroll up to reach the next step.");
 
     // awaiting the click here permits to the intersection observer to update
     await contains(".o_tour_pointer").click();
-    expect(".o_tour_pointer").toHaveCount(0);
-
+    await advanceTime(1000);
     await animationFrame();
-    await advanceTime(100); // awaits for the macro engine next check cycle
+
     pointer = queryFirst(".o_tour_pointer");
     expect(pointer).toHaveCount(1);
     expect(pointer.textContent).toBe("Click to increment");
+
+    click("button.inc");
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
 });
 
 test("manual tour with inactive steps", async () => {
@@ -919,15 +935,55 @@ test("manual tour with inactive steps", async () => {
     await mountWithCleanup(Root);
     getService("tour_service").startTour("tour_de_wallonie", { mode: "manual" });
     await animationFrame();
-    await advanceTime(100);
     expect(".o_tour_pointer").toHaveCount(1);
     await contains(".interval input").edit(5);
-    expect(".o_tour_pointer").toHaveCount(0);
-    await advanceTime(750);
-    await animationFrame();
     expect(".o_tour_pointer").toHaveCount(1);
     await contains("button.inc").click();
     expect(".o_tour_pointer").toHaveCount(0);
     expect(".counter .value").toHaveText("5");
     await advanceTime(10000);
+});
+
+test("Tour backward when the pointed element disappear", async () => {
+    registry.category("web_tour.tours").add("tour1", {
+        sequence: 10,
+        steps: () => [
+            { trigger: "button.foo", run: "click" },
+            { trigger: "button.bar", run: "click" },
+        ],
+    });
+    await makeMockEnv({});
+
+    class Dummy extends Component {
+        static props = ["*"];
+        state = useState({ bool: true });
+        static components = {};
+        static template = xml`
+            <button class="fool w-100" t-on-click="() => { state.bool = true; }">You fool</button>
+            <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
+            <button class="bar w-100" t-if="!state.bool">Bar</button>
+        `;
+    }
+
+    await mountWithCleanup(Dummy);
+
+    getService("tour_service").startTour("tour1", { mode: "manual" });
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+
+    await contains("button.foo").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+
+    await contains("button.fool").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+
+    await contains("button.foo").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+
+    await contains("button.bar").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
 });

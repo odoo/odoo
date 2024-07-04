@@ -12,6 +12,7 @@ import { compileTourToMacro } from "./tour_compilers";
 import { createPointerState } from "./tour_pointer_state";
 import { tourState } from "./tour_state";
 import { callWithUnloadCheck } from "./tour_utils";
+import { TourInteractive } from "./tour_interactive";
 
 /**
  * @typedef {string} HootSelector
@@ -156,6 +157,7 @@ export const tourService = {
 
         const bus = new EventBus();
         const macroEngine = new MacroEngine({ target: document });
+        const tourInteractive = new TourInteractive();
 
         const pointers = reactive({});
         /** @type {Set<string>} */
@@ -243,54 +245,47 @@ export const tourService = {
                 onStepConsummed(tour, step) {
                     bus.trigger("STEP-CONSUMMED", { tour, step });
                 },
-                onTourEnd({ name, rainbowManMessage, fadeout }) {
-                    if (mode === "auto") {
-                        transitionConfig.disabled = false;
-                    }
-                    let message;
-                    if (typeof rainbowManMessage === "function") {
-                        message = rainbowManMessage({
-                            isTourConsumed: (name) => consumedTours.has(name),
-                        });
-                    } else if (typeof rainbowManMessage === "string") {
-                        message = rainbowManMessage;
-                    } else {
-                        message = markup(
-                            _t(
-                                "<strong><b>Good job!</b> You went through all steps of this tour.</strong>"
-                            )
-                        );
-                    }
-                    effect.add({ type: "rainbow_man", message, fadeout });
-                    if (mode === "manual") {
-                        consumedTours.add(name);
-                        orm.call("web_tour.tour", "consume", [[name]]);
-                    }
+                onTourEnd: (tour) => {
+                    transitionConfig.disabled = false;
                     pointer.stop();
-                    bus.trigger("TOUR-FINISHED");
-                    // Used to signal the python test runner that the tour finished without error.
-                    browser.console.log("tour succeeded");
-                    // Used to see easily in the python console and to know which tour has been succeeded in suite tours case.
-                    const succeeded = `║ TOUR ${name} SUCCEEDED ║`;
-                    const msg = [succeeded];
-                    msg.unshift("╔" + "═".repeat(succeeded.length - 2) + "╗");
-                    msg.push("╚" + "═".repeat(succeeded.length - 2) + "╝");
-                    browser.console.log(`\n\n${msg.join("\n")}\n`);
-                    runningTours.delete(name);
+                    endTour(tour);
                 },
             });
         }
 
-        /**
-         * Disable transition before starting an "auto" tour.
-         * @param {Macro} macro
-         * @param {'auto' | 'manual'} mode
-         */
-        function activateMacro(macro, mode) {
-            if (mode === "auto") {
-                transitionConfig.disabled = true;
+        function endTour({ name, rainbowManMessage, fadeout }) {
+            let message;
+            if (typeof rainbowManMessage === "function") {
+                message = rainbowManMessage({
+                    isTourConsumed: (name) => consumedTours.has(name),
+                });
+            } else if (typeof rainbowManMessage === "string") {
+                message = rainbowManMessage;
+            } else {
+                message = markup(
+                    _t("<strong><b>Good job!</b> You went through all steps of this tour.</strong>")
+                );
             }
-            macroEngine.activate(macro, mode === "auto");
+            effect.add({ type: "rainbow_man", message, fadeout });
+            bus.trigger("TOUR-FINISHED");
+            // Used to signal the python test runner that the tour finished without error.
+            browser.console.log("tour succeeded");
+            // Used to see easily in the python console and to know which tour has been succeeded in suite tours case.
+            const succeeded = `║ TOUR ${name} SUCCEEDED ║`;
+            const msg = [succeeded];
+            msg.unshift("╔" + "═".repeat(succeeded.length - 2) + "╗");
+            msg.push("╚" + "═".repeat(succeeded.length - 2) + "╝");
+            browser.console.log(`\n\n${msg.join("\n")}\n`);
+            runningTours.delete(name);
+            tourState.clear(name);
+        }
+
+        /**
+         * @param {Macro} macro
+         */
+        function activateMacro(macro) {
+            transitionConfig.disabled = true;
+            macroEngine.activate(macro, true);
         }
 
         function startTour(tourName, options = {}) {
@@ -327,15 +322,27 @@ export const tourService = {
             const pointer = createPointer(tourName, {
                 bounce: !(options.mode === "auto" && options.keepWatchBrowser),
             });
-            const macro = convertToMacro(tour, pointer, options);
+
             const willUnload = callWithUnloadCheck(() => {
                 if (tour.url && tour.url !== options.startUrl && options.redirect) {
                     browser.location.href = browser.location.origin + tour.url;
                 }
             });
+
             if (!willUnload) {
-                pointer.start();
-                activateMacro(macro, options.mode);
+                if (options.mode === "auto") {
+                    const macro = convertToMacro(tour, pointer, options);
+                    pointer.start();
+                    activateMacro(macro);
+                } else {
+                    tourInteractive.loadTour(tour, pointer, () => {
+                        pointer.stop();
+                        consumedTours.add(tour.name);
+                        orm.call("web_tour.tour", "consume", [[tour.name]]);
+                        endTour(tour);
+                    });
+                    tourInteractive.start();
+                }
             }
         }
 
@@ -352,14 +359,24 @@ export const tourService = {
             const pointer = createPointer(tourName, {
                 bounce: !(mode === "auto" && keepWatchBrowser),
             });
-            const macro = convertToMacro(tour, pointer, {
-                mode,
-                stepDelay,
-                keepWatchBrowser,
-                showPointerDuration,
-            });
-            pointer.start();
-            activateMacro(macro, mode);
+            if (mode === "auto") {
+                const macro = convertToMacro(tour, pointer, {
+                    mode,
+                    stepDelay,
+                    keepWatchBrowser,
+                    showPointerDuration,
+                });
+                pointer.start();
+                activateMacro(macro);
+            } else {
+                tourInteractive.loadTour(tour, pointer, () => {
+                    pointer.stop();
+                    consumedTours.add(tour.name);
+                    orm.call("web_tour.tour", "consume", [[tour.name]]);
+                    endTour(tour);
+                });
+                tourInteractive.start(tourState.get(tourName, "currentIndex"));
+            }
         }
 
         function getSortedTours() {

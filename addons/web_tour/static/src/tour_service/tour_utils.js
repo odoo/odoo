@@ -2,6 +2,8 @@
 import * as hoot from "@odoo/hoot-dom";
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { session } from "@web/session";
+import { utils } from "@web/core/ui/ui_service";
 
 /**
  * Calls the given `func` then returns/resolves to `true`
@@ -254,3 +256,43 @@ export const stepUtils = {
         };
     },
 };
+
+/**
+ * Check if a step is active dependant on step.isActive property
+ * Note that when step.isActive is not defined, the step is active by default.
+ * When a step is not active, it's just skipped and the tour continues to the next step.
+ * @param {import("./tour_service").TourStep} step
+ * @param {import("./tour_service").TourMode} mode TourMode manual means onboarding tour
+ */
+export function isActive(step, mode) {
+    const isSmall = utils.isSmall();
+    const standardKeyWords = ["enterprise", "community", "mobile", "desktop", "auto", "manual"];
+    const isActiveArray = Array.isArray(step.isActive) ? step.isActive : [];
+    if (isActiveArray.length === 0) {
+        return true;
+    }
+    const selectors = isActiveArray.filter((key) => !standardKeyWords.includes(key));
+    if (selectors.length) {
+        // if one of selectors is not found, step is skipped
+        for (const selector of selectors) {
+            const el = hoot.queryFirst(selector);
+            if (!el) {
+                return false;
+            }
+        }
+    }
+    const checkMode =
+        isActiveArray.includes(mode) ||
+        (!isActiveArray.includes("manual") && !isActiveArray.includes("auto"));
+    const edition = (session.server_version_info || "").at(-1) === "e" ? "enterprise" : "community";
+    const checkEdition =
+        isActiveArray.includes(edition) ||
+        (!isActiveArray.includes("enterprise") && !isActiveArray.includes("community"));
+    const onlyForMobile = isActiveArray.includes("mobile") && isSmall;
+    const onlyForDesktop = isActiveArray.includes("desktop") && !isSmall;
+    const checkDevice =
+        onlyForMobile ||
+        onlyForDesktop ||
+        (!isActiveArray.includes("mobile") && !isActiveArray.includes("desktop"));
+    return checkEdition && checkDevice && checkMode;
+}
