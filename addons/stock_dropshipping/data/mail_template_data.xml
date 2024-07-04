@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo><data noupdate="1">
+    <record id="mail_template_data_dropship_confirmation" model="mail.template">
+        <field name="name">Dropship: Send by Email</field>
+        <field name="model_id" ref="model_stock_picking"/>
+        <field name="subject">{{ object.company_id.name }} Shipment (Ref {{ object.name or 'n/a' }})</field>
+        <field name="partner_to">{{ object.sale_id.partner_id.email and object.sale_id.partner_id.id or object.sale_id.partner_id.parent_id.id }}</field>
+        <field name="description">Sent to the customers when orders are shipped, if the setting is enabled</field>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Hello <t t-out="object.sale_id.partner_id.name or ''">Brandon Freeman</t>,<br/><br/>
+        We are glad to inform you that your order has been shipped.
+        <br/><br/>
+        Please find your order attached for more details.<br/><br/>
+        Thank you,
+        <t t-if="user.signature">
+            <br />
+            <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
+    </p>
+</div>
+        </field>
+        <field name="report_template" ref="stock_dropshipping.action_report_dropship"/>
+        <field name="report_name">{{ (object.sale_id.name or '').replace('/','_') }}</field>
+        <field name="lang">{{ object.sale_id.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</data>
+</odoo>

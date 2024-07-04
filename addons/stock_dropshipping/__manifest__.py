@@ -23,6 +23,9 @@ internal transfer document is needed.
     'depends': ['sale_purchase_stock'],
     'data': [
         'data/stock_data.xml',
+        'report/report_dropship.xml',
+        'report/stock_report_views.xml',
+        'data/mail_template_data.xml',
         'views/sale_order_views.xml',
         'views/purchase_order_views.xml'
     ],

@@ -16,6 +16,99 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: stock_dropshipping
+#: model:ir.actions.report,print_report_name:stock_dropshipping.action_report_dropship
+msgid ""
+"'Dropship Order - %s - %s' % (object.sale_id.partner_id.name or '', "
+"object.sale_id.name)"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model:mail.template,body_html:stock_dropshipping.mail_template_data_dropship_confirmation
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello <t t-out=\"object.sale_id.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"        We are glad to inform you that your order has been shipped.\n"
+"        <br><br>\n"
+"        Please find your order attached for more details.<br><br>\n"
+"        Thank you,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.report_dropship
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                All products could not be reserved. Click on the \"Check Availability\" button to try to reserve products."
+msgstr ""
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.report_dropship
+msgid "<span><strong>Customer Address:</strong></span>"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.report_dropship
+msgid "<span><strong>Delivery Address:</strong></span>"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.report_dropship
+msgid "<span><strong>Warehouse Address:</strong></span>"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.report_dropship
+msgid "<strong>From</strong>"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.report_dropship
+msgid "<strong>Lot/Serial Number</strong>"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.report_dropship
+msgid "<strong>Order:</strong>"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.report_dropship
+msgid "<strong>Product Barcode</strong>"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.report_dropship
+msgid "<strong>Product</strong>"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.report_dropship
+msgid "<strong>Quantity</strong>"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.report_dropship
+msgid "<strong>Scheduled Date:</strong>"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.report_dropship
+msgid "<strong>Status:</strong>"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.report_dropship
+msgid "<strong>To</strong>"
+msgstr ""
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_res_company
 msgid "Companies"
 msgstr ""
@@ -31,6 +124,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__dropship_picking_count
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__dropship_picking_count
 msgid "Dropship Count"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model:ir.actions.report,name:stock_dropshipping.action_report_dropship
+msgid "Dropship Slip"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model:mail.template,name:stock_dropshipping.mail_template_data_dropship_confirmation
+msgid "Dropship: Send by Email"
 msgstr ""
 
 #. module: stock_dropshipping
@@ -74,6 +177,12 @@ msgid "Sales Order Line"
 msgstr ""
 
 #. module: stock_dropshipping
+#: model:mail.template,description:stock_dropshipping.mail_template_data_dropship_confirmation
+msgid ""
+"Sent to the customers when orders are shipped, if the setting is enabled"
+msgstr ""
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_rule
 msgid "Stock Rule"
 msgstr ""
@@ -81,4 +190,14 @@ msgstr ""
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_picking
 msgid "Transfer"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model:mail.template,report_name:stock_dropshipping.mail_template_data_dropship_confirmation
+msgid "{{ (object.sale_id.name or '').replace('/','_') }}"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model:mail.template,subject:stock_dropshipping.mail_template_data_dropship_confirmation
+msgid "{{ object.company_id.name }} Shipment (Ref {{ object.name or 'n/a' }})"
 msgstr ""

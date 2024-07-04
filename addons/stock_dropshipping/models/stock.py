@@ -39,6 +39,22 @@ class StockPicking(models.Model):
         self.ensure_one()
         return super()._is_to_external_location() or self.is_dropship
 
+    def _send_confirmation_email(self):
+        dropship_pickings = self.filtered('is_dropship')
+        for picking in dropship_pickings:
+            dropship_template_id = self.env.ref(
+                'stock_dropshipping.mail_template_data_dropship_confirmation',
+                raise_if_not_found=False
+            )
+            if dropship_template_id:
+                picking.with_context(force_send=True).message_post_with_template(
+                    dropship_template_id.id,
+                    email_layout_xmlid='mail.mail_notification_light'
+                )
+
+        return super(StockPicking, self - dropship_pickings)._send_confirmation_email()
+
+
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
 

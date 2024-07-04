@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_dropship" model="ir.actions.report">
+            <field name="name">Dropship Slip</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock_dropshipping.report_dropship</field>
+            <field name="report_file">stock_dropshipping.report_dropship</field>
+            <field name="print_report_name">'Dropship Order - %s - %s' % (object.sale_id.partner_id.name or '', object.sale_id.name)</field>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>
