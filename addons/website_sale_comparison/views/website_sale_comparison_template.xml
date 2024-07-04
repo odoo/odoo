@@ -240,7 +240,7 @@
                                         <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
                                         <div class='product_summary'>
                                             <a class="o_product_comparison_table" t-att-href="product.website_url">
-                                                <span t-esc="combination_info['display_name']"></span><br/>
+                                                <span t-out="combination_info['display_name']"></span><br/>
                                             </a>
                                             <span class="o_comparison_price" t-if="not combination_info['prevent_zero_price_sale']">
                                                 <strong>Price:</strong>
@@ -249,7 +249,7 @@
                                                 <del t-if="combination_info.get('compare_list_price') and (combination_info['compare_list_price'] &gt; combination_info['price'])"
                                                      t-attf-class="text-muted mr8"
                                                      style="white-space: nowrap;"
-                                                     t-esc="combination_info['compare_list_price']"
+                                                     t-out="combination_info['compare_list_price']"
                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                                                 <del t-else=""
                                                      t-attf-class="text-muted mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"

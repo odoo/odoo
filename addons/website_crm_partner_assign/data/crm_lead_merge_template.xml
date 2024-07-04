@@ -19,7 +19,7 @@
     </xpath>
     <xpath expr="//div[@name='address']/*[last()]" position="after">
         <div name="partner_geolocation" t-if="lead.partner_latitude or lead.partner_longitude">
-            Geolocation: <t t-esc="lead.partner_latitude"/> latitude, <t t-esc="lead.partner_longitude"/> longitude
+            Geolocation: <t t-out="lead.partner_latitude"/> latitude, <t t-out="lead.partner_longitude"/> longitude
         </div>
     </xpath>
 </template>

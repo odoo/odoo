@@ -126,7 +126,7 @@
 
         <template id="price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
             <t t-if="not data.get('prevent_zero_price_sale') and not data.get('is_sample')">
-                <span t-esc="data['price']"
+                <span t-out="data['price']"
                       class="mb-0 fw-bold"
                       name="product_price"
                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
@@ -136,7 +136,7 @@
                     style="white-space: nowrap;"
                 >
                     <small
-                        t-esc="data['list_price']"
+                        t-out="data['list_price']"
                         t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                     />
                 </del>

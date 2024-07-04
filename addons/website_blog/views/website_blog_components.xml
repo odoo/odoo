@@ -99,15 +99,15 @@
 ============================================================================ -->
 <template id="tags_list" name="Tags List">
     <t t-if="tags">
-        <div t-if="not hide_title and categ_title" class="text-muted mb-1 h6" t-esc="categ_title"/>
+        <div t-if="not hide_title and categ_title" class="text-muted mb-1 h6" t-out="categ_title"/>
         <t t-foreach="tags" t-as="tag">
             <t t-if="tag.post_ids">
                 <span t-if="dismissibleBtn and tag.id in active_tag_ids" t-attf-class="align-items-baseline d-inline-flex ps-2 rounded mb-2 o_filter_tag #{'o_color_%s' % tag.color}">
                     <i class="fa fa-tag me-2"/>
-                    <t t-esc="tag.name"/>
+                    <t t-out="tag.name"/>
                     <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link text-reset" t-att-rel="len(active_tag_ids) and 'nofollow'">&#215;</a>
                 </span>
-                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate text-decoration-none o_tag o_color_#{tag.color} post_link" t-att-rel="len(active_tag_ids) and 'nofollow'" t-esc="tag.name"/>
+                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate text-decoration-none o_tag o_color_#{tag.color} post_link" t-att-rel="len(active_tag_ids) and 'nofollow'" t-out="tag.name"/>
             </t>
         </t>
     </t>
@@ -126,8 +126,8 @@
             <option t-foreach="nav_list[year]" t-as="months"
                     t-att="[('selected' if date_begin and (months['date_begin'] == date_begin) else 'unselected' ) , 'true' ]"
                     t-attf-value="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'], tag=tag)}">
-                <t t-esc="months['month']"/>
-                <t t-esc="year"/>
+                <t t-out="months['month']"/>
+                <t t-out="year"/>
             </option>
         </optgroup>
     </select>
@@ -143,7 +143,7 @@
              t-options='{"widget": "image", "class": "rounded-circle " + "o_wblog_author_avatar me-1" if hide_date else  "o_wblog_author_avatar_date me-2"}' />
         <div t-att-class="not hide_date and 'small fw-bold'" style="line-height:1">
             <span t-if="editable" t-field="blog_post.author_id" t-options='{ "widget": "contact", "fields": ["name"]}'/>
-            <span t-else="" t-esc="blog_post.author_name"/>
+            <span t-else="" t-out="blog_post.author_name"/>
             <small t-if="not hide_date" t-field="blog_post.post_date" t-options="{'format': 'long', 'date_only': 'true'}"/>
         </div>
     </div>
@@ -327,7 +327,7 @@ Display a sidebar beside the post content.
             <t t-if="blog_post.tag_ids">
                 <div class="h5">
                     <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                        <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-esc="one_tag.name"/>
+                        <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
                     </t>
                 </div>
             </t>

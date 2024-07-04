@@ -132,8 +132,8 @@
 
         <!-- RECORDS FOR REDIRECT TESTS -->
         <template id="test_redirect_view">
-            <t t-esc="country.name"/>
-            <t t-if="not request.env.user._is_public()" t-esc="'Logged In'"/>
+            <t t-out="country.name"/>
+            <t t-if="not request.env.user._is_public()" t-out="'Logged In'"/>
             <!-- `href` is send through `url_for` for non editor users -->
             <a href="/test_website/country/andorra-1">I am a link</a>
         </template>

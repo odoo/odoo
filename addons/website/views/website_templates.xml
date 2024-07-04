@@ -261,7 +261,7 @@
                     'analytics_storage': 'denied',
                 });
                 gtag('js', new Date());
-                gtag('config', '<t t-esc="website.google_analytics_key"/>');
+                gtag('config', '<t t-out="website.google_analytics_key"/>');
                 function allConsentsGranted() {
                     gtag('consent', 'update', {
                         'ad_storage': 'granted',
@@ -316,7 +316,7 @@
             <div class="o_frontend_to_backend_buttons d-flex">
                 <a href="#" title="Go to your Odoo Apps" class="o_frontend_to_backend_apps_btn fa fa-th d-flex align-items-center justify-content-center text-decoration-none" data-bs-toggle="dropdown"/>
                 <div class="dropdown-menu o_frontend_to_backend_apps_menu" role="menu">
-                    <a role="menuitem" class="dropdown-item" t-esc="menu['name']"
+                    <a role="menuitem" class="dropdown-item" t-out="menu['name']"
                        t-as="menu" t-foreach="env['ir.ui.menu'].with_context(force_action=True).load_menus_root()['children']"
                        t-attf-href="/odoo/action-#{menu['action'] and menu['action'].split(',')[1] or ''}"/>
                 </div>
@@ -1751,7 +1751,7 @@
                                 <li><a href="#">Legal</a></li>
                                 <t t-set="configurator_footer_links" t-value="[]"/>
                                 <li t-foreach="configurator_footer_links" t-as="link">
-                                    <a t-att-href="link['href']" t-esc="link['text']"/>
+                                    <a t-att-href="link['href']" t-out="link['text']"/>
                                 </li>
                                 <li><a href="/contactus">Contact us</a></li>
                             </ul>
@@ -1884,7 +1884,7 @@
                                 <li class="list-item py-1"><a href="#">Blog</a></li>
                                 <t t-set="configurator_footer_links" t-value="[]"/>
                                 <li t-foreach="configurator_footer_links" t-as="link" class="list-item py-1">
-                                    <a t-att-href="link['href']" t-esc="link['text']"/>
+                                    <a t-att-href="link['href']" t-out="link['text']"/>
                                 </li>
                             </ul>
                         </div>
@@ -1943,7 +1943,7 @@
                                 <li class="list-inline-item"><a href="#">Services</a></li>
                                 <t t-set="configurator_footer_links" t-value="[]"/>
                                 <li t-foreach="configurator_footer_links" t-as="link" class="list-inline-item">
-                                    <a t-att-href="link['href']" t-esc="link['text']"/>
+                                    <a t-att-href="link['href']" t-out="link['text']"/>
                                 </li>
                             </ul>
                         </div>
@@ -2112,7 +2112,7 @@
                                 <li><a href="/contactus">Contact us</a></li>
                                 <t t-set="configurator_footer_links" t-value="[]"/>
                                 <li t-foreach="configurator_footer_links" t-as="link">
-                                    <a t-att-href="link['href']" t-esc="link['text']"/>
+                                    <a t-att-href="link['href']" t-out="link['text']"/>
                                 </li>
                             </ul>
                         </div>
@@ -2448,11 +2448,11 @@
     <xpath expr="//div[@id='wrap']" position="inside">
         <div class="oe_structure">
             <section class="container">
-                <h1><t t-esc="res_company.name"/>
+                <h1><t t-out="res_company.name"/>
                     <small groups='base.group_no_one'>Odoo Version <t t-out="version.get('server_version')"/></small>
                 </h1>
                 <p>
-                    Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a class="o_translate_inline" target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
+                    Information about the <t t-out="res_company.name"/> instance of Odoo, the <a class="o_translate_inline" target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
                 </p>
 
                 <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_restricted_editor" role="status">
@@ -2667,13 +2667,13 @@
         <div class="container" t-if="view and editable">
             <div class="alert alert-danger" role="alert">
                 <h4>Template fallback</h4>
-                <p>An error occurred while rendering the template <code t-esc="qweb_exception.name"/>.</p>
+                <p>An error occurred while rendering the template <code t-out="qweb_exception.name"/>.</p>
                 <p>If this error is caused by a change of yours in the templates, you have the possibility to reset the template to its <strong>factory settings</strong>.</p>
                 <form action="#" method="post" id="reset_templates_form">
                     <ul>
                         <li>
                             <label>
-                                <t t-esc="view.name"/>
+                                <t t-out="view.name"/>
                             </label>
                         </li>
                     </ul>
@@ -2696,10 +2696,10 @@ Allow: <t t-out="allowed_route"/>
 </t>
 <t t-if="website.domain and not website._is_indexable_url(url_root)">
 Disallow: /
-Sitemap: <t t-esc="website.domain"/>/sitemap.xml
+Sitemap: <t t-out="website.domain"/>/sitemap.xml
 </t>
 <t t-else="">
-Sitemap: <t t-esc="url_root"/>sitemap.xml
+Sitemap: <t t-out="url_root"/>sitemap.xml
 
 
 ##############
@@ -2713,10 +2713,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="sitemap_locs">
     <url t-foreach="locs" t-as="page">
-        <loc><t t-esc="url_root"/><t t-esc="page['loc']"/></loc><t t-if="page.get('lastmod', False)">
-        <lastmod t-esc="page['lastmod']"/></t><t t-if="page.get('priority', False)">
-        <priority t-esc="page['priority']"/></t><t t-if="page.get('changefreq', False)">
-        <changefreq t-esc="page['changefreq']"/></t>
+        <loc><t t-out="url_root"/><t t-out="page['loc']"/></loc><t t-if="page.get('lastmod', False)">
+        <lastmod t-out="page['lastmod']"/></t><t t-if="page.get('priority', False)">
+        <priority t-out="page['priority']"/></t><t t-if="page.get('changefreq', False)">
+        <changefreq t-out="page['changefreq']"/></t>
     </url>
 </template>
 
@@ -2729,7 +2729,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 <template id="sitemap_index_xml"><t t-translation="off">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 <sitemapindex t-attf-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap t-translation="off" t-foreach="pages" t-as="page">
-    <loc><t t-esc="url_root"/>sitemap-<t t-esc="page"/>.xml</loc>
+    <loc><t t-out="url_root"/>sitemap-<t t-out="page"/>.xml</loc>
   </sitemap>
 </sitemapindex>
 </t>
@@ -2749,7 +2749,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <template id="search_text_with_highlight" name="Website Searchbox item highlight">
-    <span t-foreach="enumerate(parts)" t-as="part" t-att-class="'text-primary-emphasis' if part[0] % 2 else None" t-esc="part[1]"/>
+    <span t-foreach="enumerate(parts)" t-as="part" t-att-class="'text-primary-emphasis' if part[0] % 2 else None" t-out="part[1]"/>
 </template>
 
 <template id="list_website_public_pages" name="Website Pages">
@@ -2765,20 +2765,20 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 <h1 class="mt16 h3-fs">Pages</h1>
                 <t t-if="not pages">
                     <div t-if="search" class="alert alert-warning mt8" role="alert">
-                        Your search '<t t-esc="search" />' did not match any pages.
+                        Your search '<t t-out="search" />' did not match any pages.
                     </div>
                     <div t-else="" class="alert alert-warning mt8" role="alert">
                         There are currently no pages for this website.
                     </div>
                 </t>
                 <div t-elif="original_search" class="alert alert-warning mt8" role="alert">
-                    No results found for '<span t-esc="original_search"/>'. Showing results for '<span t-esc="search"/>'.
+                    No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="search"/>'.
                 </div>
                 <div t-if="pages" class="table-responsive">
                     <table class="table table-hover">
                         <tbody>
                             <tr t-foreach="pages" t-as="page">
-                                <td><a t-att-href="page.url"><t t-esc="page.name"/></a></td>
+                                <td><a t-att-href="page.url"><t t-out="page.name"/></a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -2804,7 +2804,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 <t t-if="not results">
                     <div class="alert alert-warning mt8" role="alert">
                         <t t-if="search">
-                            Your search '<t t-esc="search" />' did not match anything.
+                            Your search '<t t-out="search" />' did not match anything.
                         </t>
                         <t t-else="">
                             Specify a search term.
@@ -2813,8 +2813,8 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 </t>
                 <t t-elif="fuzzy_search">
                     <div class="alert alert-warning mt8" role="alert">
-                        Your search '<t t-esc="search" />' did not match anything.
-                        Results are displayed for '<t t-esc="fuzzy_search"/>'.
+                        Your search '<t t-out="search" />' did not match anything.
+                        Results are displayed for '<t t-out="fuzzy_search"/>'.
                     </div>
                 </t>
                 <div t-if="results" class="table-responsive">

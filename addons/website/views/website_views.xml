@@ -277,10 +277,10 @@
                             </div>
                             <div class="o_theme_preview_bottom mt-2 mb-3 px-2">
                                 <small t-if="record.summary.value" class="text-uppercase text-muted">
-                                    <b><t t-esc="record.summary.value.split(',')[0]"/></b>
+                                    <b><t t-out="record.summary.value.split(',')[0]"/></b>
                                 </small>
                                 <h3 t-if="record.display_name.value">
-                                    <b><t t-esc="record.display_name.value.replace('Theme', '').replace('theme', '')"/></b>
+                                    <b><t t-out="record.display_name.value.replace('Theme', '').replace('theme', '')"/></b>
                                 </h3>
                             </div>
                         </div>
