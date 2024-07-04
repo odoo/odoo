@@ -43,7 +43,7 @@ import {
     firstLeaf,
     previousLeaf,
     nextLeaf,
-    isUnremovable,
+    isUnremovableForRange,
     fillEmpty,
     isEmptyBlock,
     getUrlsInfosInString,
@@ -2063,14 +2063,14 @@ export class OdooEditor extends EventTarget {
         }
         range = getDeepRange(this.editable, { sel });
         // Restore unremovables removed by extractContents.
-        [...contents.querySelectorAll('*')].filter(isUnremovable).forEach(n => {
+        [...contents.querySelectorAll('*')].filter(isUnremovableForRange).forEach(n => {
             closestBlock(range.endContainer).after(n);
             n.textContent = '';
         });
         // If the end container was fully selected, extractContents may have
         // emptied it without removing it. Ensure it's gone.
         const isRemovableInvisible = (node, noBlocks = true) =>
-            !isVisible(node, noBlocks) && !isUnremovable(node);
+            !isVisible(node, noBlocks) && !isUnremovableForRange(node);
         const endIsStart = end === start;
         while (end && isRemovableInvisible(end, false) && !end.contains(range.endContainer)) {
             const parent = end.parentNode;

@@ -1603,6 +1603,18 @@ export function isUnremovable(node) {
     );
 }
 
+export function isUnremovableForRange(node) {
+    return (
+        (node.nodeType !== Node.COMMENT_NODE && node.nodeType !== Node.ELEMENT_NODE && node.nodeType !== Node.TEXT_NODE) ||
+        node.oid === "root" ||
+        (node.nodeType === Node.ELEMENT_NODE &&
+            (node.classList.contains("o_editable") || node.getAttribute("t-set") || node.getAttribute("t-call"))) ||
+        (node.classList && (node.classList.contains("oe_unremovable") && !node.classList.contains("allowForRange"))) ||
+        (node.nodeName === "SPAN" && node.parentElement && node.parentElement.getAttribute("data-oe-type") === "monetary") ||
+        (node.ownerDocument && node.ownerDocument.defaultWindow && !ancestors(node).find(ancestor => ancestor.oid === "root")) // Node is in DOM but not in editable.
+    );
+}
+
 export function containsUnbreakable(node) {
     if (!node) {
         return false;

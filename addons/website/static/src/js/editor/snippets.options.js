@@ -3846,7 +3846,23 @@ options.registry.sizing.include({
             $body.on('mouseup', documentMouseUp);
         });
         return defs;
-    }
+    },
+    /**
+     * Ensure Submit button and form fields are 
+     * not allowed to move outside of the form.
+     *
+     * @override
+     */
+    async updateUIVisibility() {
+        await this._super(...arguments);
+        // Hiding the move handle for submit button and form fields
+        // so we can't drag them outside of the form.
+        const moveHandleEl = this.$overlay[0].querySelector(".o_move_handle");
+        moveHandleEl.classList.toggle(
+            "d-none",
+            ["s_website_form_field", "s_website_form_submit"]
+            .some(cls => this.$target[0].classList.contains(cls)));
+    },
 });
 
 options.registry.SwitchableViews = options.Class.extend({

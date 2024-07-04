@@ -303,6 +303,10 @@ const LinkPopoverWidget = Widget.extend({
      */
     _onEditLinkClick(ev) {
         ev.preventDefault();
+        if (ev.currentTarget.classList.contains("o_disable_link")) {
+            ev.stopImmediatePropagation();
+            return;
+        }
         this.options.wysiwyg.toggleLinkTools({
             forceOpen: true,
             link: this.$target[0],
@@ -318,6 +322,10 @@ const LinkPopoverWidget = Widget.extend({
      */
     _onRemoveLinkClick(ev) {
         ev.preventDefault();
+        if (ev.currentTarget.classList.contains("o_disable_link")) {
+            ev.stopImmediatePropagation();
+            return;
+        }
         this.options.wysiwyg.removeLink();
         ev.stopImmediatePropagation();
         this.popover.hide();

@@ -313,6 +313,38 @@ options.registry.Donation = options.Class.extend({
     },
 });
 
+// Superclass for options that need to disable a button from the snippet overlay
+// TODO: In master Export this class from website.
+const DisableOverlayButtonOption = options.Class.extend({
+    // Disable a button of the snippet overlay
+    disableButton(buttonName, message) {
+        // TODO refactor in master
+        const className = "oe_snippet_" + buttonName;
+        this.$overlay.add(this.$overlay.data("$optionsSection")).on("click", "." + className, this.preventButton);
+        const $button = this.$overlay.add(this.$overlay.data("$optionsSection")).find("." + className);
+        $button.attr("title", message).tooltip({delay: 0});
+        // TODO In master: add `o_disabled` but keep actual class.
+        $button.removeClass(className); // Disable the functionnality
+    },
+
+    preventButton(event) {
+        // Snippet options bind their functions before the editor, so we
+        // can't cleanly unbind the editor onRemove function from here
+        event.preventDefault();
+        event.stopImmediatePropagation();
+    }
+});
+
+// Disable delete and duplicate button for "Donate Now" Button
+options.registry.DonateNowButtonRequired = DisableOverlayButtonOption.extend({
+    start() {
+        this.disableButton("remove", _t("You can't remove the Donate Now button of the form"));
+        this.disableButton("clone", _t("You can't duplicate the Donate Now button of the form."));
+        return this._super(...arguments);
+    }
+});
+
 export default {
     Donation: options.registry.Donation,
+    DonateNowButtonRequired: options.registry.DonateNowButtonRequired,
 };

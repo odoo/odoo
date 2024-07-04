@@ -34,6 +34,11 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
             const width = context.measureText(customButtonEl.placeholder).width;
             customButtonEl.style.maxWidth = `${Math.ceil(width) + CUSTOM_BUTTON_EXTRA_WIDTH}px`;
         }
+        // Make below changes in XML itself in master.
+        this.el.querySelector(".s_donation_form").setAttribute("contentEditable", "false");
+        this.el.querySelector(".s_donation_donate_btn").setAttribute("contentEditable", "true");
+        this.el.querySelector(".s_donation_donate_btn").classList.add("oe_unremovable");
+        this.el.querySelector(".s_donation_donate_btn").classList.add("allowForRange");
     },
     /**
      * @override
