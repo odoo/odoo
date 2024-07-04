@@ -11,7 +11,7 @@ from werkzeug.urls import url_encode, url_join
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools.float_utils import float_round
 
 _logger = logging.getLogger(__name__)
@@ -81,6 +81,15 @@ class Digest(models.Model):
             if not digest.next_run_date:
                 digest.next_run_date = digest._get_next_run_date()
         return digests
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_default_digest(self):
+        """As some modules rely on the default digest existing at installation, it
+        should not be deleted."""
+        default_digest = self.env.ref('digest.digest_digest_default', raise_if_not_found=False)
+        for digest in self:
+            if digest == default_digest:
+                raise UserError(_("You cannot delete the default digest, deactivate it instead."))
 
     # ------------------------------------------------------------
     # ACTIONS
