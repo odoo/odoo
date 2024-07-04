@@ -9,10 +9,10 @@ class UseSuggestion {
         useEffect(
             (delimiter, position, term) => {
                 this.update();
-                if (this.search.position === undefined || !this.search.delimiter) {
-                    return; // nothing else to fetch
-                }
                 this.sequential(async () => {
+                    if (this.search.position === undefined || !this.search.delimiter) {
+                        return; // nothing else to fetch
+                    }
                     if (
                         this.search.delimiter !== delimiter ||
                         this.search.position !== position ||
@@ -20,7 +20,16 @@ class UseSuggestion {
                     ) {
                         return; // ignore obsolete call
                     }
-                    await this.suggestionService.fetchSuggestions(this.search, {
+                    if (
+                        this.lastEmptySearch &&
+                        this.lastEmptySearch.delimiter === this.search.delimiter &&
+                        this.search.term.startsWith(this.lastEmptySearch.term) &&
+                        this.lastEmptySearch.position === this.search.position
+                    ) {
+                        return; // no need to fetch since this is more specific than last and last had no result
+                    }
+                    const search = { delimiter, position, term };
+                    await this.suggestionService.fetchSuggestions(search, {
                         thread: this.thread,
                     });
                     if (status(comp) === "destroyed") {
@@ -30,9 +39,10 @@ class UseSuggestion {
                     if (
                         this.search.delimiter === delimiter &&
                         this.search.position === position &&
-                        this.search.term === term &&
+                        this.search.term.startsWith(term) &&
                         !this.state.items?.suggestions.length
                     ) {
+                        this.lastEmptySearch = search;
                         this.clearSearch();
                     }
                 });
@@ -64,6 +74,7 @@ class UseSuggestion {
         position: undefined,
         term: "",
     };
+    lastEmptySearch;
     clearRawMentions() {
         this.composer.mentionedChannels.length = 0;
         this.composer.mentionedPartners.length = 0;
