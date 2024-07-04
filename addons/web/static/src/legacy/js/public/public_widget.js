@@ -344,7 +344,14 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
 
         // Note: Kept for backward compatibility, we will remove it in future
         this.$el = (element instanceof $) ? element : $(element);
-        this.el = (element instanceof $) ? element[0] : element;
+        // Note this.el can also be selector (case found when i click course in website)
+        // To-do use querySeletor in place of $(element)[0] while removing jQuery
+        this.el =
+            element instanceof $
+                ? element[0]
+                : this.el instanceof Element
+                ? this.el
+                : $(element)[0];
 
         this._delegateEvents();
 
@@ -389,9 +396,9 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
 
             event += '.widget_events';
             if (!selector) {
-                self.el?.on(event, method);
+                self.el.on(event, method);
             } else {
-                self.el?.on(event, selector, method);
+                self.el.on(event, selector, method);
             }
         };
         Object.entries(this.events || {}).forEach(([event, method]) => {

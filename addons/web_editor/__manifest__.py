@@ -253,7 +253,6 @@ Odoo Web Editor widget.
             'web_editor/static/src/scss/web_editor.frontend.scss',
 
             'web_editor/static/src/js/frontend/loadWysiwygFromTextarea.js',
-            'web/static/src/legacy/js/core/dialog.js',
         ],
         'web.report_assets_common': [
             'web_editor/static/src/scss/bootstrap_overridden.scss',

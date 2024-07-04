@@ -86,7 +86,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
         this.trigger_up('widgets_stop_request', {
             target: templateAreaEl,
         });
-        templateAreaEl.html('');
+        templateAreaEl.innerHTML = "";
     },
     /**
      * Method to be overridden in child components if additional configuration elements
@@ -193,7 +193,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
         this.trigger_up('widgets_stop_request', {
             target: templateAreaEl,
         });
-        templateAreaEl.html(this.renderedContent);
+        templateAreaEl.innerHTML = this.renderedContent;
         // TODO this is probably not the only public widget which creates DOM
         // which should be attached to another public widget. Maybe a generic
         // method could be added to properly do this operation of DOM addition.

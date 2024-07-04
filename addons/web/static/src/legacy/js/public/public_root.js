@@ -183,9 +183,12 @@ export const PublicRoot = publicWidget.RootWidget.extend({
             fromEl = Array.from(fromEl);
         }
         var removedWidgets = this.publicWidgets.map((widget) => {
-            if (!fromEl
-                || fromEl.filter((el) => el === widget.el).length
-                || fromEl.some((el)=> el.contains(widget.el))) {
+            // To test it el.contains breaks for adding products snippet
+            if (
+                !fromEl ||
+                fromEl.filter((el) => el === widget.el).length ||
+                fromEl.some((el) => el.contains(widget.el))
+            ) {
                 widget.destroy();
                 return widget;
             }
@@ -232,7 +235,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @param {OdooEvent} ev
      */
     _onMainObjectRequest: function (ev) {
-        var repr = document.querySelector('html').dataset['main-object'];
+        var repr = document.querySelector("html").dataset["main-object"];
         var m = repr.match(/(.+)\((\d+),(.*)\)/);
         ev.data.callback({
             model: m[1],
@@ -247,7 +250,8 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @param {OdooEvent} ev
      */
     _onWidgetsStartRequest: function (ev) {
-        this._startWidgets(ev.data.target ? [ev.data.target] : [], ev.data.options)
+        const target = ev.data.target ? [ev.data.target] : [ev.target.el];
+        this._startWidgets(target, ev.data.options)
             .then(ev.data.onSuccess)
             .catch((e) => {
                 if (ev.data.onFailure) {
@@ -266,8 +270,8 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @param {OdooEvent} ev
      */
     _onWidgetsStopRequest: function (ev) {
-        // Divy: Need to update the data target to HTML
-        this._stopWidgets(ev.data.$target && ev.data.$target[0]);
+        const targetEl = ev.data.target ? ev.data.target : ev.target.el;
+        this._stopWidgets(targetEl);
     },
     /**
      * @todo review
@@ -276,7 +280,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
     _onWebsiteFormSubmit: function (ev) {
         const buttonEl = ev.currentTarget.querySelector("button[type='submit']");
         if (buttonEl) {
-            const icon = document.createElement('i');
+            const icon = document.createElement("i");
             icon.className = "fa fa-circle-o-notch fa-spin";
             buttonEl.prepend(icon);
             buttonEl.disabled = true;
