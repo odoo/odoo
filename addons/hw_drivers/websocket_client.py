@@ -47,7 +47,7 @@ def on_message(ws, messages):
     """
     messages = json.loads(messages)
     for document in messages:
-        if (document['message']['type'] == 'print'):
+        if (document['message']['type'] in ['print', 'iot_action']):
             payload = document['message']['payload']
             iot_mac = helpers.get_mac_address()
             if iot_mac in payload['iotDevice']['iotIdentifiers']:
