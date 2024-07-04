@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.CardWidth">
+    <WeRange title.translate="Card Width"
+        selectStyle="'0'"
+        cssProperty="'max-width'"
+        unit="'%'"
+        min="'8'"
+        max="'100'"
+        displayRangeValue="'true'"
+        displayRangeValueUnit="'%'"/>
+</t>
+
+<t t-name="website.CardImageOptions">
+    <WeRow title.translate="Cover Image">
+        <WeButton tooltip.translate="Add" addCoverImage="''" noPreview="'true'" class="'o_we_bg_success'" name="'add_cover_image_opt'">Add</WeButton>
+    </WeRow>
+
+    <WeRow title.translate="Cover Image">
+        <WeButtonGroup name="'cover_image_position_opt'">
+            <WeButton tooltip.translate="Top"
+                name="'card_img_top_opt'"
+                selectClass="'o_card_img_top'"
+                selectImageClass="'card-img-top'"
+                img="'/website/static/src/img/snippets_options/pos_top.svg'"/>
+            <WeButton tooltip.translate="Left"
+                selectClass="'o_card_img_horizontal flex-lg-row'"
+                selectImageClass="'rounded-start'"
+                img="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+            <WeButton tooltip.translate="Right"
+                selectClass="'o_card_img_horizontal flex-lg-row-reverse'"
+                selectImageClass="'rounded-end'"
+                img="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+        </WeButtonGroup>
+        <WeButton tooltip.translate="Remove Cover" removeCoverImage="''" noPreview="'true'" class="'fa fa-trash-o fa-fw o_we_bg_danger'" name="'remove_cover_image_opt'"/>
+    </WeRow>
+
+    <WeSelect title.translate="Ratio" applyTo="'.o_card_img_wrapper'" class="'o_we_sublevel_1'">
+        <WeButton selectClass="''">Image default</WeButton>
+        <WeButton selectClass="'ratio ratio-1x1'">Square</WeButton>
+        <WeButton selectClass="'ratio ratio-4x3'" dependencies="'card_img_top_opt'">Landscape - 4/3</WeButton>
+        <WeButton selectClass="'ratio ratio-16x9'" dependencies="'card_img_top_opt'">Wide - 16/9</WeButton>
+        <WeButton selectClass="'ratio ratio-21x9'" dependencies="'card_img_top_opt'">Ultrawide - 21/9</WeButton>
+        <WeButton selectClass="'ratio o_card_img_ratio_custom'" dependencies="'card_img_top_opt'" name="'image_ratio_custom_opt'">Custom</WeButton>
+    </WeSelect>
+
+    <!-- Calculate bootstrap default column size -->
+    <t t-set="colSize" t-value="8.33333333"/>
+    <WeRange class="'o_we_sublevel_1'"
+        title.translate="Width"
+        tooltip.translate="Adjust the image width"
+        name="'cover_image_width_opt'"
+        dependencies="'!card_img_top_opt'"
+        selectStyle="'0'"
+        cssProperty="'--card-img-size-h'"
+        unit="'%'"
+        min="`${colSize}`"
+        max="`${colSize * 11}`"
+        step="`${colSize}`"/>
+
+    <WeRange title.translate="Custom Ratio"
+        class="'o_we_sublevel_2'"
+        name="'cover_image_ratio_range_opt'"
+        dependencies="'image_ratio_custom_opt'"
+        selectStyle="'0'"
+        cssProperty="'--card-img-aspect-ratio'"
+        unit="'%'"
+        displayRangeValue="'true'"
+        displayRangeValueUnit="'%'"
+        min="'8'"
+        max="'132'"
+        step="'4'"/>
+
+    <WeRange title.translate="Alignment"
+        class="'o_we_sublevel_1'"
+        name="'cover_image_alignment_opt'"
+        selectStyle="'0'"
+        alignCoverImage="''"
+        cssProperty="'--card-img-ratio-align'"
+        unit="'%'"
+        min="'0'"
+        max="'100'"/>
+</t>
+</templates>

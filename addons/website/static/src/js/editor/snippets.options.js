@@ -41,6 +41,7 @@ import { Component, markup, onWillUnmount, useEffect, useRef, useState } from "@
 
 import {
     BackgroundToggler,
+    Box,
     LayoutColumn,
     Many2oneUserValue,
     registerBackgroundOptions,
@@ -50,6 +51,7 @@ import {
     SnippetOption,
     UserValue,
     UserValueComponent,
+    vAlignment,
     WeButton,
     WeInput,
     WeSelect,
@@ -3291,14 +3293,11 @@ options.registry.CoverProperties = options.Class.extend({
     },
 });
 
-options.registry.ScrollButton = options.Class.extend({
-    /**
-     * @override
-     */
-    start: async function () {
-        await this._super(...arguments);
-        this.$button = this.$('.o_scroll_button');
-    },
+class ScrollButton extends SnippetOption {
+    constructor() {
+        super(...arguments);
+        this.$button = this.$target.find('.o_scroll_button');
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -3317,11 +3316,11 @@ options.registry.ScrollButton = options.Class.extend({
                 this.$button.detach();
             }
         }
-    },
+    }
     /**
      * Toggles the scroll down button.
      */
-    toggleButton: function (previewMode, widgetValue, params) {
+    toggleButton(previewMode, widgetValue, params) {
         if (widgetValue) {
             if (!this.$button.length) {
                 const anchor = document.createElement('a');
@@ -3347,12 +3346,12 @@ options.registry.ScrollButton = options.Class.extend({
         } else {
             this.$button.detach();
         }
-    },
+    }
     /**
      * @override
      */
     async selectClass(previewMode, widgetValue, params) {
-        await this._super(...arguments);
+        await super.selectClass(...arguments);
         // If a "d-lg-block" class exists on the section (e.g., for mobile
         // visibility option), it should be replaced with a "d-lg-flex" class.
         // This ensures that the section has the "display: flex" property
@@ -3369,7 +3368,7 @@ options.registry.ScrollButton = options.Class.extend({
                 this.$target[0].classList.add(hasDisplayFlex ? "d-lg-flex" : "d-lg-block");
             }
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -3385,17 +3384,17 @@ options.registry.ScrollButton = options.Class.extend({
             const minHeightEl = uiFragment.querySelector('[data-name="minheight_auto_opt"]');
             minHeightEl.parentElement.setAttribute('string', _t("Min-Height"));
         }
-    },
+    }
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'toggleButton':
                 return !!this.$button.parent().length;
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -3403,9 +3402,16 @@ options.registry.ScrollButton = options.Class.extend({
         if (widgetName === 'fixed_height_opt') {
             return (this.$target[0].dataset.snippet === 's_image_gallery');
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
+}
+registerWebsiteOption("ScrollButton", {
+    Class: ScrollButton,
+    template: "website.scroll_button_option",
+    selector: "section",
+    exclude: "[data-snippet] :not(.oe_structure) > [data-snippet], .s_instagram_page",
 });
+
 
 options.registry.ConditionalVisibility = options.registry.DeviceVisibility.extend({
     /**
@@ -4401,6 +4407,31 @@ registerWebsiteOption("WebsiteLayoutColumns", {
     exclude: ".s_masonry_block, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline",
     tags: ["website"],
 }, { sequence: 15 });
+
+
+registerWebsiteOption("card_color_border_shadow", {
+    Class: Box,
+    template: "website.card_color_border_shadow",
+    selector: ".s_three_columns .row > div, .s_comparisons .row > div",
+    target: ".card",
+});
+
+registerWebsiteOption("card_color", {
+    template: "website.card_color",
+    selector: ".card:not(.s_card)",
+});
+
+registerWebsiteOption("horizontal_alignment", {
+    template: "website.horizontal_alignment_option",
+    selector: ".s_share, .s_text_highlight, .s_social_media",
+});
+
+registerWebsiteOption("vertical_alignment", {
+    class: vAlignment,
+    template: "website.vertical_alignment_option",
+    selector: ".s_text_image, .s_image_text, .s_three_columns, .s_numbers, .s_faq_collapse, .s_references",
+    target: ".row",
+});
 
 options.registry.SnippetMove.include({
     /**

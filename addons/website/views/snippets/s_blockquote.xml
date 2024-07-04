@@ -20,58 +20,6 @@
     </blockquote>
 </template>
 
-<template id="s_blockquote_options" inherit_id="website.snippet_options">
-    <xpath expr="." position="inside">
-        <!-- Color and images -->
-        <t t-call="website.snippet_options_background_options">
-            <t t-set="selector" t-value="'.s_blockquote'"/>
-            <t t-set="with_colors" t-value="True"/>
-            <t t-set="with_images" t-value="True"/>
-            <t t-set="with_shapes" t-value="True"/>
-            <t t-set="with_gradients" t-value="True"/>
-            <t t-set="with_color_combinations" t-value="True"/>
-        </t>
-
-        <!-- Layout -->
-        <div data-selector=".s_blockquote">
-            <we-range string="Edge Spacing" data-select-class="p-1|p-2|p-3|p-4|p-5"/>
-            <we-select string="Decoration">
-                <we-button data-select-class="s_blockquote_default">None</we-button>
-                <we-button data-select-class="s_blockquote_with_line" data-name="blockquote_with_line_opt">Left line</we-button>
-                <we-button data-select-class="s_blockquote_with_icon">Icon</we-button>
-            </we-select>
-        </div>
-
-        <div data-selector=".s_blockquote" data-target=".s_blockquote_line_elt">
-            <we-row string="Style" class="o_we_sublevel_1">
-                <we-input data-css-property="width" data-select-style="" data-unit="px" data-dependencies="blockquote_with_line_opt"/>
-                <we-colorpicker title="Color"
-                    data-name="bg_color_opt"
-                    data-select-style=""
-                    data-css-property="background-color"
-                    data-color-prefix="bg-"
-                    t-att-data-with-gradients="True"
-                    data-dependencies="blockquote_with_line_opt"
-                />
-            </we-row>
-        </div>
-
-        <div data-selector=".s_blockquote" data-target=".s_blockquote_infos">
-            <we-select string="Author Alignment">
-                <we-button data-select-class="flex-row align-items-start justify-content-start text-start">Left</we-button>
-                <we-button data-select-class="flex-column align-items-center text-center">Center</we-button>
-                <we-button data-select-class="flex-row-reverse align-items-start justify-content-start text-end">Right</we-button>
-            </we-select>
-        </div>
-
-        <!-- Border and Shadow -->
-        <div data-js="Box" data-selector=".s_blockquote">
-            <t t-call="website.snippet_options_border_widgets"/>
-            <t t-call="website.snippet_options_shadow_widgets"/>
-        </div>
-    </xpath>
-</template>
-
 <record id="website.s_blockquote_001_scss" model="ir.asset">
     <field name="name">Blockquote 001 SCSS</field>
     <field name="bundle">web.assets_frontend</field>

@@ -52,29 +52,6 @@
                 max="'-100'"
                 step="'10'"/>
     </WeRow>
-    <WeMulti cssProperty="'box-shadow'" variable="'menu-box-shadow'">
-        <WeRow class="o_we_sublevel_1">
-            <t t-set-slot="title">Color</t>
-            <WeColorpicker multiSequence="10" selectStyle="''" cssCompatible="''"/>
-        </WeRow>
-        <WeRow class="o_we_sublevel_1">
-            <t t-set-slot="title">Offset (X, Y)</t>
-            <WeInput multiSequence="20" unit="'px'" selectStyle="''"/>
-            <WeInput multiSequence="30" unit="'px'" selectStyle="''"/>
-        </WeRow>
-        <WeRow class="o_we_sublevel_1">
-            <t t-set-slot="title">Blur</t>
-            <WeInput multiSequence="40" unit="'px'" selectStyle="''"/>
-        </WeRow>
-        <WeRow class="o_we_sublevel_1">
-            <t t-set-slot="title">Spread</t>
-            <WeInput multiSequence="50" unit="'px'" selectStyle="''"/>
-        </WeRow>
-        <!-- Inset parameter always hidden (as controlled above) but needed -->
-        <!-- for the we-multi widget to work properly. -->
-        <!-- name="fake_inset_shadow_opt" -->
-        <WeCheckbox multiSequence="60" selectStyle="'inset'"/>
-    </WeMulti>
     <!-- Try with `hasDefault` = unique/multiple or not set,  with/out `addItemTitle`, `inputType` = number, with/out `defaultValue`,
         with/out `availableRecords`, with/out `unsortable`, `notEditable`, `allowEmpty`, `newElementsNotToggleable`, `renderOnInputBlur`
     -->

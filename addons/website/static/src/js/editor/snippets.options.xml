@@ -62,6 +62,169 @@
         <t t-set="indent" t-value="true"/>
     </t>
 </t>
+<t t-name="website.vertical_alignment_option">
+    <WeButtonGroup class="'o_we_sublevel_1'" title.translate="Vert. Alignment"
+                tooltip.translate="Vertical Alignment" dependencies="'normal_mode'">
+        <WeButton tooltip.translate="Align Top"
+            selectClass="'align-items-start'"
+            img="'/website/static/src/img/snippets_options/align_top.svg'"
+        />
+        <WeButton tooltip.translate="Align Middle"
+            selectClass="'align-items-center'"
+            img="'/website/static/src/img/snippets_options/align_middle.svg'"
+        />
+        <WeButton tooltip.translate="Align Bottom"
+            selectClass="'align-items-end'"
+            img="'/website/static/src/img/snippets_options/align_bottom.svg'"
+        />
+        <WeButton tooltip.translate="Stretch to Equal Height"
+            selectClass="'align-items-stretch'"
+            img="'/website/static/src/img/snippets_options/align_stretch.svg'"
+        />
+    </WeButtonGroup>
+</t>
+<!-- Scroll to next section button (only for full height) -->
+<t t-name="website.scroll_button_option">
+    <!-- Min height of section -->
+    <WeButtonGroup title.translate="Height" showScrollButton="''">
+        <WeButton name="'minheight_auto_opt'" selectClass="''" tooltip.translate="Fit content">Auto</WeButton>
+        <WeButton selectClass="'o_half_screen_height'" tooltip.translate="Half screen">50%</WeButton>
+        <WeButton selectClass="'o_full_screen_height'" tooltip.translate="Full screen" name="'full_height_opt'" showScrollButton="'true'">100%</WeButton>
+    </WeButtonGroup>
+    <WeInput title.translate="Height" class="'o_we_sublevel_1'" name="'fixed_height_opt'"
+        dependencies="'minheight_auto_opt'" selectStyle="''" unit="'px'"
+        cssProperty="'height'" forceStyle="''"/>
+        <!--    ↑ ↑ ↑
+            For this setting, we need to always force the style (= if the block
+            is naturally 800px tall and the user enters 800px for this setting,
+            we set 800px as inline style anyway). Indeed, this snippet's style
+            is based on the height that is forced but once the related public
+            widgets are started, the inner carousel items receive a min-height
+            which makes it so the snippet "natural" height is equal to the
+            initially forced height... so if the style is not forced, it would
+            ultimately be removed by mistake thinking it is not necessary.
+            Note: this is forced as not important as we still need the height to
+            be reset to 'auto' in mobile (generic css rules).
+        -->
+    <WeCheckbox title.translate="Scroll Down Button" name="'scroll_button_opt'"
+        dependencies="'full_height_opt'" toggleButton="'true'" noPreview="'true'"/>
+    <WeRow class="'o_we_sublevel_1'" title.translate="Colors">
+        <WeColorpicker dependencies="'scroll_button_opt'"
+            applyTo="'.o_scroll_button'"
+            selectStyle="'true'" cssProperty="'background-color'"
+            colorPrefix="'bg-'"
+        />
+        <WeColorpicker dependencies="'scroll_button_opt'"
+            applyTo="'.o_scroll_button'"
+            selectStyle="'true'" cssProperty="'color'"
+            colorPrefix="'text-'"
+        />
+    </WeRow>
+    <WeSelect class="'o_we_sublevel_1'" title.translate="Spacing"
+            applyTo="'.o_scroll_button'" dependencies="'scroll_button_opt'">
+        <WeButton selectClass="''">None</WeButton>
+        <WeButton selectClass="'mb-1'">Extra-Small</WeButton>
+        <WeButton selectClass="'mb-2'">Small</WeButton>
+        <WeButton selectClass="'mb-3'">Medium</WeButton>
+        <WeButton selectClass="'mb-4'">Large</WeButton>
+        <WeButton selectClass="'mb-5'">Extra-Large</WeButton>
+    </WeSelect>
+</t>
+<t t-name="website.snippet_options_border_line_widgets">
+    <WeRow class="classname || ''" title="label">
+        <WeInput name="'border_width_opt'"
+            applyTo="apply_to || ''"
+            selectStyle="'0'"
+            cssProperty="'border-' + (direction ? direction + '-' : '') + 'width'"
+            unit="'px'"
+            extraClass="with_bs_class ? 'border' : ''"
+            variable="width_variable || ''"
+        />
+        <WeSelect dependencies="'border_width_opt'"
+            cssProperty="'border-' + (direction ? direction + '-' : '') + 'style'"
+            applyTo="apply_to || ''"
+            variable="style_variable || ''">
+            <WeButton tooltip.translate="Solid" selectStyle="'solid'"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></WeButton>
+            <WeButton tooltip.translate="Dashed" selectStyle="'dashed'"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></WeButton>
+            <WeButton tooltip.translate="Dotted" selectStyle="'dotted'"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></WeButton>
+            <WeButton tooltip.translate="Double" selectStyle="'double'"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></WeButton>
+        </WeSelect>
+        <WeColorpicker dependencies="'border_width_opt'"
+            applyTo="apply_to || ''"
+            selectStyle="'true'"
+            cssProperty="'border-' + (direction ? direction + '-' : '') + 'color'"
+            colorPrefix="'border-'"
+            color="color_variable || ''"
+        />
+    </WeRow>
+</t>
+<t t-name="website.snippet_options_border_widgets">
+    <t t-call="website.snippet_options_border_line_widgets">
+        <t t-set="label">Border</t>
+        <t t-set="with_bs_class" t-value="true"/>
+    </t>
+    <WeRow title.translate="Round Corners">
+        <WeInput t-if="!no_border_radius"
+            dependencies="!so_rounded_no_dependencies and 'border_width_opt,bg_color_opt'"
+            applyTo="apply_to || ''"
+            selectStyle="'0'" cssProperty="'border-radius'"
+            unit="'px'" extraClass="'rounded'"
+            variable="radius_variable || ''"/>
+    </WeRow>
+</t>
+<t t-name="website.snippet_options_shadow_widgets">
+    <!-- Shadow -->
+    <!-- TODO: @owl-options what is the variable="shadow_variable" on the button group ? -->
+    <WeButtonGroup shadowClass="'shadow'" title.translate="Shadow">
+        <WeButton setShadow="''">None</WeButton>
+        <WeButton setShadow="'outset'" img="'/website/static/src/img/snippets_options/shadow_out.svg'" name="'shadow_active_opt'" tooltip.translate="Outset"/>
+        <WeButton setShadow="'inset'" img="'/website/static/src/img/snippets_options/shadow_in.svg'" name="'shadow_inset_opt'" tooltip.translate="Inset"/>
+    </WeButtonGroup>
+    <!-- TODO: @owl-options what is the variable="shadow_variable" on the multi ? -->
+    <WeMulti cssProperty="'box-shadow'" dependencies="'shadow_active_opt, shadow_inset_opt'">
+        <WeRow class="'o_we_sublevel_1'" title.translate="Color">
+            <WeColorpicker multiSequence="10" selectStyle="''" cssCompatible="''"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Offset (X, Y)">
+            <WeInput multiSequence="20" unit="'px'" selectStyle="''"/>
+            <WeInput multiSequence="30" unit="'px'" selectStyle="''"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Blur">
+            <WeInput multiSequence="40" unit="'px'" selectStyle="''"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Spread">
+            <WeInput multiSequence="50" unit="'px'" selectStyle="''"/>
+        </WeRow>
+        <!-- Inset parameter always hidden (as controlled above) but needed -->
+        <!-- for the we-multi widget to work properly. -->
+        <WeCheckbox multiSequence="60" name="'fake_inset_shadow_opt'" selectStyle="'inset'"/>
+    </WeMulti>
+</t>
+<t t-name="website.card_color_border_shadow">
+    <!-- COLOR, BORDER, SHADOW | .s_three_columns | .s_comparisons -->
+    <WeColorpicker title.translate="Colors"
+        selectStyle="'true'"
+        cssProperty="'background-color'"
+        colorPrefix="'bg-'"/>
+    <t t-call="website.snippet_options_border_widgets">
+        <t t-set="so_rounded_no_dependencies" t-value="True"/>
+    </t>
+    <t t-call="website.snippet_options_shadow_widgets"/>
+</t>
+<t t-name="website.card_color">
+    <!-- COLOR | .s_cards -->
+    <WeColorpicker title.translate="Color"
+        selectStyle="'true'"
+        cssProperty="'background-color'"
+        colorPrefix="'bg-'"/>
+</t>
+<t t-name="website.horizontal_alignment_option">
+    <WeButtonGroup title.translate="Alignment">
+        <WeButton class="'fa fa-fw fa-align-left'" tooltip.translate="Left" selectClass="'text-start'"/>
+        <WeButton class="'fa fa-fw fa-align-center'" tooltip.translate="Center" selectClass="'text-center'"/>
+        <WeButton class="'fa fa-fw fa-align-right'" tooltip.translate="Right" selectClass="'text-end'"/>
+    </WeButtonGroup>
+</t>
 <t t-name="website.s_google_map_option">
     <WeGpsPicker title.translate="Address"
         selectDataAttribute="''" attributeName="'mapGps'"

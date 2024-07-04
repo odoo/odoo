@@ -5674,7 +5674,7 @@ legacyRegistry['sizing_grid'] = legacyRegistry.sizing.extend({
 /**
  * Controls box properties.
  */
-legacyRegistry.Box = SnippetOptionWidget.extend({
+export class Box extends SnippetOption {
 
     //--------------------------------------------------------------------------
     // Options
@@ -5730,7 +5730,7 @@ legacyRegistry.Box = SnippetOptionWidget.extend({
             }
         }
         await this.selectStyle(previewMode, shadow, Object.assign({cssProperty: 'box-shadow'}, params));
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -5747,8 +5747,8 @@ legacyRegistry.Box = SnippetOptionWidget.extend({
             }
             return this.$target.css('box-shadow').includes('inset') ? 'inset' : 'outset';
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -5756,8 +5756,8 @@ legacyRegistry.Box = SnippetOptionWidget.extend({
         if (widgetName === 'fake_inset_shadow_opt') {
             return false;
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * @private
      * @param {string} type
@@ -5775,8 +5775,8 @@ legacyRegistry.Box = SnippetOptionWidget.extend({
         const shadow = `${$(el).css('box-shadow')}${type === 'inset' ? ' inset' : ''}`;
         el.remove();
         return shadow;
-    },
-});
+    }
+}
 
 
 
@@ -6215,7 +6215,7 @@ legacyRegistry.GridColumns = SnippetOptionWidget.extend({
     },
 });
 
-legacyRegistry.vAlignment = SnippetOptionWidget.extend({
+export class vAlignment extends SnippetOption {
     /**
      * @override
      */
@@ -6228,8 +6228,8 @@ legacyRegistry.vAlignment = SnippetOptionWidget.extend({
             return 'align-items-stretch';
         }
         return value;
-    },
-});
+    }
+}
 
 /**
  * Allows snippets to be moved before the preceding element or after the following.

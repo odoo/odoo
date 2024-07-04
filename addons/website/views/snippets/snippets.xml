@@ -495,37 +495,6 @@
 
     <xpath expr="." position="inside">
 
-    <!-- COLOR, BORDER, SHADOW | .s_three_columns | .s_comparisons -->
-    <div data-js="Box"
-         data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
-         data-target=".card">
-        <we-colorpicker string="Colors"
-            data-select-style="true"
-            data-css-property="background-color"
-            data-color-prefix="bg-"/>
-        <t t-call="website.snippet_options_border_widgets">
-            <t t-set="so_rounded_no_dependencies" t-value="True"/>
-        </t>
-        <t t-call="website.snippet_options_shadow_widgets"/>
-    </div>
-
-    <!-- COLOR | .s_cards -->
-    <div data-selector=".card:not(.s_card)">
-        <we-colorpicker string="Color"
-            data-select-style="true"
-            data-css-property="background-color"
-            data-color-prefix="bg-"/>
-    </div>
-
-    <!-- H-ALIGN -->
-    <div id="so_text_align" data-selector=".s_share, .s_text_highlight, .s_social_media">
-        <we-button-group string="Alignment">
-            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="text-start"/>
-            <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="text-center"/>
-            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="text-end"/>
-        </we-button-group>
-    </div>
-
     <div data-selector=".s_share, .s_social_media">
         <we-select string="Title Position" data-apply-to=".s_share_title, .s_social_media_title">
             <we-button data-select-class="d-block">Top</we-button>
@@ -654,24 +623,6 @@
     </div>
 
     <!-- Grid and columns -->
-
-    <!--  Vertical Alignment -->
-    <div data-js="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references" data-target=".row">
-        <we-button-group class="o_we_sublevel_1" string="Vert. Alignment" title="Vertical Alignment" data-dependencies="normal_mode">
-            <we-button title="Align Top"
-                       data-select-class="align-items-start"
-                       data-img="/website/static/src/img/snippets_options/align_top.svg"/>
-            <we-button title="Align Middle"
-                       data-select-class="align-items-center"
-                       data-img="/website/static/src/img/snippets_options/align_middle.svg"/>
-            <we-button title="Align Bottom"
-                       data-select-class="align-items-end"
-                       data-img="/website/static/src/img/snippets_options/align_bottom.svg"/>
-            <we-button title="Stretch to Equal Height"
-                       data-select-class="align-items-stretch"
-                       data-img="/website/static/src/img/snippets_options/align_stretch.svg"/>
-        </we-button-group>
-    </div>
 
     <!-- Move snippets around -->
     <div data-js="SnippetMove" data-selector="section, .s_accordion .accordion-item, .s_showcase .row:not(.s_col_no_resize) > div, .s_hr" data-no-scroll=".s_accordion .accordion-item">
@@ -1350,66 +1301,6 @@
             <we-button data-select-class="">Left</we-button>
             <we-button data-select-class="text-center">Centered</we-button>
             <we-button data-select-class="text-end">Right</we-button>
-        </we-select>
-    </div>
-
-    <!-- Scroll to next section button (only for full height) -->
-    <div data-js="ScrollButton" data-selector="section" data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet], .s_instagram_page">
-        <!-- Min height of section -->
-        <we-button-group string="Height" data-show-scroll-button="">
-            <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
-            <we-button data-select-class="o_half_screen_height" title="Half screen">50%</we-button>
-            <we-button data-select-class="o_full_screen_height" title="Full screen" data-name="full_height_opt" data-show-scroll-button="true">100%</we-button>
-        </we-button-group>
-
-        <we-input string="Height" class="o_we_sublevel_1"
-            data-name="fixed_height_opt"
-            data-dependencies="minheight_auto_opt"
-            data-select-style=""
-            data-unit="px"
-            data-css-property="height"
-            data-force-style=""/>
-            <!--    ↑ ↑ ↑
-            For this setting, we need to always force the style (= if the block
-            is naturally 800px tall and the user enters 800px for this setting,
-            we set 800px as inline style anyway). Indeed, this snippet's style
-            is based on the height that is forced but once the related public
-            widgets are started, the inner carousel items receive a min-height
-            which makes it so the snippet "natural" height is equal to the
-            initially forced height... so if the style is not forced, it would
-            ultimately be removed by mistake thinking it is not necessary.
-            Note: this is forced as not important as we still need the height to
-            be reset to 'auto' in mobile (generic css rules).
-            -->
-
-        <we-checkbox string="Scroll Down Button"
-                     data-toggle-button="true"
-                     data-no-preview="true"
-                     data-dependencies="full_height_opt"
-                     data-name="scroll_button_opt"/>
-        <we-row string="Colors" class="o_we_sublevel_1">
-            <we-colorpicker
-                data-select-style="true"
-                data-css-property="background-color"
-                data-color-prefix="bg-"
-                data-apply-to=".o_scroll_button"
-                data-dependencies="scroll_button_opt"/>
-            <we-colorpicker data-select-style="true"
-                data-css-property="color"
-                data-color-prefix="text-"
-                data-apply-to=".o_scroll_button"
-                data-dependencies="scroll_button_opt"/>
-        </we-row>
-        <we-select string="Spacing"
-                   class="o_we_sublevel_1"
-                   data-apply-to=".o_scroll_button"
-                   data-dependencies="scroll_button_opt">
-            <we-button data-select-class="">None</we-button>
-            <we-button data-select-class="mb-1">Extra-Small</we-button>
-            <we-button data-select-class="mb-2">Small</we-button>
-            <we-button data-select-class="mb-3">Medium</we-button>
-            <we-button data-select-class="mb-4">Large</we-button>
-            <we-button data-select-class="mb-5">Extra-Large</we-button>
         </we-select>
     </div>
 

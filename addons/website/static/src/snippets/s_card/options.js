@@ -1,10 +1,12 @@
 /** @odoo-module **/
 
 import { renderToElement } from "@web/core/utils/render";
-import options from "@web_editor/js/editor/snippets.options.legacy";
+import { Box, SnippetOption } from "@web_editor/js/editor/snippets.options";
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
+import { websiteRegisterBackgroundOptions } from "@website/js/editor/snippets.options";
 
 
-options.registry.CardWidth = options.Class.extend({
+class CardWidth extends SnippetOption {
     /**
      * @override
      */
@@ -17,11 +19,12 @@ options.registry.CardWidth = options.Class.extend({
                 }
             }
         }
-        return this._super(...arguments);
-    },
-});
+        return super._computeWidgetState(...arguments);
+    }
+}
 
-options.registry.CardImageOptions = options.Class.extend({
+class CardImageOptions extends SnippetOption {
+
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
@@ -33,7 +36,7 @@ options.registry.CardImageOptions = options.Class.extend({
         const imageWrapperEl = renderToElement("website.s_card.imageWrapper");
         this.$target[0].insertAdjacentElement("afterbegin", imageWrapperEl);
         this.$target[0].classList.add("o_card_img_top");
-    },
+    }
     /**
      * Changes the cover image position.
      *
@@ -73,7 +76,7 @@ options.registry.CardImageOptions = options.Class.extend({
                 delete this.previousRatio;
             }
         }
-    },
+    }
     /**
      * Removes the cover image.
      */
@@ -87,7 +90,7 @@ options.registry.CardImageOptions = options.Class.extend({
         this.$target[0].style.removeProperty("--card-img-size-h");
         this.$target[0].style.removeProperty("--card-img-ratio-align");
         this.$target[0].style.removeProperty("--card-img-aspect-ratio");
-    },
+    }
     /**
      * Aligns the image inside the cover.
      *
@@ -99,7 +102,7 @@ options.registry.CardImageOptions = options.Class.extend({
 
         imageWrapperEl.classList.toggle("o_card_img_adjust_v", ratio > 1);
         imageWrapperEl.classList.toggle("o_card_img_adjust_h", ratio < 1);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -122,8 +125,8 @@ options.registry.CardImageOptions = options.Class.extend({
         } else if (widgetName === "cover_image_alignment_opt") {
             return hasCoverImage && hasNonSquareRatio && useRatio && !hasShape;
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * Compares the aspect ratio of the card image to its wrapper.
      *
@@ -144,5 +147,37 @@ options.registry.CardImageOptions = options.Class.extend({
         const wrapperRatio = imageWrapperEl.offsetHeight / imageWrapperEl.offsetWidth;
 
         return imgRatio / wrapperRatio;
-    },
+    }
+}
+
+registerWebsiteOption("Card (border)", {
+    Class: Box,
+    template: "website.snippet_options_border_widgets",
+    selector: ".s_card",
 });
+registerWebsiteOption("Card (shadow)", {
+    Class: Box,
+    template: "website.snippet_options_shadow_widgets",
+    selector: ".s_card",
+});
+registerWebsiteOption("Card (Width)", {
+    Class: CardWidth,
+    template: "website.CardWidth",
+    selector: ".s_card",
+});
+registerWebsiteOption("Card (Image)", {
+    Class: CardImageOptions,
+    template: "website.CardImageOptions",
+    selector: ".s_card",
+})
+
+websiteRegisterBackgroundOptions("Card (Background)", {
+    selector: ".s_card",
+    withColors: true,
+    withImages: true,
+    withShapes: true,
+    withColorCombinations: true,
+    withGradients: true,
+});
+
+
