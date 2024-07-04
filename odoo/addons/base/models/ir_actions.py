@@ -15,6 +15,7 @@ import logging
 from operator import getitem
 import requests
 import json
+from markupsafe import Markup
 import re
 import contextlib
 
@@ -511,6 +512,7 @@ class IrActionsServer(models.Model):
 #  - _logger: _logger.info(message): logger to emit messages in server logs
 #  - UserError: exception class for raising user-facing warning messages
 #  - Command: x2many commands namespace
+#  - Markup: Format a string as html
 # To return an action, assign: action = {...}\n\n\n\n"""
 
     @api.model
@@ -924,6 +926,8 @@ class IrActionsServer(models.Model):
             # helpers
             'log': log,
             '_logger': LoggerProxy,
+            # markup
+            'Markup': Markup
         })
         return eval_context
 
