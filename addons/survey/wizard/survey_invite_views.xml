@@ -23,15 +23,25 @@
                                  invisible="survey_access_mode != 'public'"/>
                             <field string="Send by Email" name="send_email" widget="boolean_toggle" options="{'autosave': False}"
                                    invisible="survey_access_mode != 'public'"/>
-                            <field name="partner_ids"
-                                widget="many2many_tags_email"
-                                placeholder="Add existing contacts..." options="{'no_quick_create': True}"
-                                context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"
-                                required="True"
-                                invisible="not send_email"/>
-                            <field name="emails"
-                                invisible="survey_users_login_required or not send_email"
-                                placeholder="e.g.  'Rick Sanchez' &lt;rick_sanchez@example.com&gt;, hictor_vugo@example.com"/>
+                        </group>
+                        <group invisible="not send_email">
+                            <group>
+                                <field name="partner_ids"
+                                    widget="many2many_tags_email"
+                                    placeholder="Add existing contacts..." options="{'no_quick_create': True}"
+                                    context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"
+                                    required="True"/>
+                            </group>
+                            <group>
+                                <field name="deadline" string="Block Participant after" placeholder="Deadline"/>
+                            </group>
+                        </group>
+                        <group name="emails" invisible="survey_users_login_required or not send_email">
+                            <label for="emails" string="Additional emails"/>
+                            <div>
+                                <field name="emails" placeholder="e.g.  'Rick Sanchez' &lt;rick_sanchez@example.com&gt;, hictor_vugo@example.com"/>
+                                <span invisible="not error" class="text-danger">Some of the email addresses you have entered are incorrect</span>
+                            </div>
                         </group>
                         <field name="existing_partner_ids" invisible="1"/>
                         <field name="existing_emails" invisible="1"/>
@@ -47,23 +57,7 @@
                                 </div>
                             </group>
                         </div>
-                        <group col="2">
-                            <field name="subject" invisible="not send_email" placeholder="Subject..."/>
-                        </group>
-                        <field name="can_edit_body" invisible="1"/>
-                        <field name="body" class="oe-bordered-editor border border-1 m-3 p-0 flex-fill"
-                            options="{'style-inline': true, 'height': 380}"
-                            invisible="not send_email"
-                            readonly="not can_edit_body" force_save="1"/>
-                        <group invisible="not send_email">
-                            <group>
-                                <field name="attachment_ids" widget="many2many_binary"/>
-                            </group>
-                            <group>
-                                <field name="deadline"/>
-                                <field name="template_id" label="Use template"/>
-                            </group>
-                        </group>
+                        <field name="comment" invisible="not send_email" class="border m-3 p-0 flex-fill" placeholder="Extra comments"/>
                     </group>
                     <footer>
                         <button string="Send" invisible="not send_email" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>
