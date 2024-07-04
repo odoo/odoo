@@ -20,6 +20,12 @@ class UseSuggestion {
                     ) {
                         return; // ignore obsolete call
                     }
+                    if (
+                        this.lastFetchedSearch?.count === 0 &&
+                        (!this.search.delimiter || this.isSearchMoreSpecificThanLastFetch)
+                    ) {
+                        return; // no need to fetch since this is more specific than last and last had no result
+                    }
                     await this.suggestionService.fetchSuggestions(this.search, {
                         thread: this.thread,
                     });
@@ -27,6 +33,10 @@ class UseSuggestion {
                         return;
                     }
                     this.update();
+                    this.lastFetchedSearch = {
+                        ...this.search,
+                        count: this.state.items?.suggestions.length ?? 0,
+                    };
                     if (
                         this.search.delimiter === delimiter &&
                         this.search.position === position &&
@@ -64,6 +74,14 @@ class UseSuggestion {
         position: undefined,
         term: "",
     };
+    lastFetchedSearch;
+    get isSearchMoreSpecificThanLastFetch() {
+        return (
+            this.lastFetchedSearch.delimiter === this.search.delimiter &&
+            this.search.term.startsWith(this.lastFetchedSearch.term) &&
+            this.lastFetchedSearch.position >= this.search.position
+        );
+    }
     clearRawMentions() {
         this.composer.mentionedChannels.length = 0;
         this.composer.mentionedPartners.length = 0;
