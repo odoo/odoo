@@ -10,7 +10,7 @@ from collections import defaultdict
 from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import AccessError
 from odoo.osv import expression
-from odoo.tools import clean_context, groupby as tools_groupby, SQL
+from odoo.tools import clean_context, groupby, SQL
 from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
@@ -891,15 +891,35 @@ class Message(models.Model):
                 record_by_message[message] = self.env[message.model].browse(message.res_id).with_prefetch(record_ids_by_model_name[message.model])
         return record_by_message
 
-    def _message_format(self, format_reply=True, msg_vals=None, for_current_user=False):
-        """ Get the message values in the format for web client. Since message
-        values can be broadcasted, computed fields MUST NOT BE READ and
-        broadcasted.
+    def _message_format(
+        self,
+        /,
+        *,
+        format_reply=True,
+        msg_vals=None,
+        for_current_user=False,
+        add_followers=False,
+        followers=None,
+    ):
+        """Get the message values in the format for web client.
+
+        :param format_reply: if True, also get data about the parent message if it exists.
+            Only makes sense for discuss channel.
 
         :param msg_vals: dictionary of values used to create the message. If
           given it may be used to access values related to ``message`` without
           accessing it directly. It lessens query count in some optimized use
           cases by avoiding access message content in db;
+
+        :param for_current_user: if True, get extra fields only relevant to the current user.
+            When this param is set, the result should not be broadcasted to other users!
+
+        :param add_followers: if True, also add followers of the current user for each thread of
+            each message. Only applicable if ``for_current_user`` is also True.
+
+        :param followers: if given, use this pre-computed list of followers instead of fetching
+            them. It lessen query count in some optimized use cases.
+            Only applicable if ``add_followers`` is True.
 
         :returns list(dict).
              Example :
@@ -961,6 +981,33 @@ class Message(models.Model):
             for scheduler in schedulers:
                 scheduled_dt_by_msg_id[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
         record_by_message = self._record_by_message()
+        if add_followers:
+            if followers is None:
+                domain = expression.OR(
+                    [
+                        ("res_model", "=", model),
+                        ("res_id", "in", list({message.res_id for message in messages})),
+                    ]
+                    for model, messages in groupby(
+                        (
+                            message
+                            for message in self
+                            if message.res_id
+                            and message.model not in {None, False, "", "discuss.channel"}
+                        ),
+                        key=lambda message: message.model,
+                    )
+                )
+                domain = expression.AND([domain, [("partner_id", "=", self.env.user.partner_id.id)]])
+                # sudo: mail.followers - reading followers of current partner
+                followers = self.env["mail.followers"].sudo().search(domain)
+            follower_by_record_and_partner = {
+                (
+                    self.env[follower.res_model].browse(follower.res_id),
+                    follower.partner_id,
+                ): follower
+                for follower in followers
+            }
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
             author = False
@@ -1007,7 +1054,7 @@ class Message(models.Model):
                 "recipients": [{"id": p.id, "name": p.name, "type": "partner"} for p in message_sudo.partner_ids],
                 "scheduledDatetime": scheduled_dt_by_msg_id.get(message_sudo.id, False),
             })
-            if message_sudo.model and message_sudo.res_id:
+            if record:
                 thread = {"model": message_sudo.model, "id": message_sudo.res_id}
                 if message_sudo.model != "discuss.channel":
                     thread["name"] = record_name
@@ -1023,6 +1070,17 @@ class Message(models.Model):
                 vals["needaction"] = not self.env.user._is_public() and self.env.user.partner_id in notifications_partners
                 vals["starred"] = message_sudo.starred
                 vals["trackingValues"] = displayed_tracking_ids._tracking_value_format()
+                if record and add_followers:
+                    if follower := follower_by_record_and_partner.get(
+                        (record, self.env.user.partner_id)
+                    ):
+                        vals["thread"]["selfFollower"] = {
+                            "id": follower.id,
+                            "is_active": True,
+                            "partner": {"id": follower.partner_id.id, "type": "partner"},
+                        }
+                    else:
+                        vals["thread"]["selfFollower"] = False
         return vals_list
 
     def _message_format_extras(self, format_reply):
@@ -1056,77 +1114,6 @@ class Message(models.Model):
         if after:
             res["messages"] = res["messages"].sorted('id', reverse=True)
         return res
-
-    @api.model
-    def _message_format_personalized_prepare(self, messages_formatted, partner_ids=None):
-        """ Prepare message to be personalized by partner.
-
-        This method add partner information in batch to the messages so that the
-        messages could be personalized for each partner by using
-        _message_format_personalize with no or a limited number of queries.
-
-        For example, it gathers all followers of the record related to the messages
-        in one go (or limit it to the partner given in parameter), so that the method
-        _message_format_personalize could then personalize each message for each partner.
-
-        Note that followers for message related to discuss.channel are not fetched.
-
-        :param list messages_formatted: list of message formatted using the method
-            message_format
-        :param list partner_ids: (optional) limit value computation to the partners
-            of the given list; if not set, all partners are considered (all partners
-            following each record will be included in follower_id_by_partner_id).
-
-        :return: list of messages_formatted with added value:
-            'follower_id_by_partner_id': dict partner_id -> follower_id of the record
-        """
-        domain = expression.OR([
-            [('res_model', '=', model), ('res_id', 'in', list({value['res_id'] for value in values}))]
-            for model, values in tools_groupby(
-                (vals for vals in messages_formatted
-                 if vals.get("res_id") and vals.get("model") not in {None, False, '', 'discuss.channel'}),
-                key=lambda r: r["model"]
-            )
-        ])
-        if partner_ids:
-            domain = expression.AND([domain, [('partner_id', 'in', partner_ids)]])
-        records_followed = self.env['mail.followers'].sudo().search(domain)
-        followers_by_record_ref = (
-            {(res_model, res_id): {value['partner_id'][0]: value['id'] for value in values}
-             for (res_model, res_id), values in tools_groupby(
-                records_followed.read(['res_id', 'res_model', 'partner_id']),
-                key=lambda r: (r["res_model"], r['res_id'])
-            )})
-        for vals in messages_formatted:
-            vals['follower_id_by_partner_id'] = followers_by_record_ref.get((vals['model'], vals['res_id']), dict())
-        return messages_formatted
-
-    def _message_format_personalize(self, partner_id, messages_formatted=None, format_reply=True, msg_vals=None):
-        """ Personalize the messages for the partner.
-
-        :param integer partner_id: id of the partner to personalize the messages for
-        :param list messages_formatted: (optional) list of message formatted using
-            the method _message_format_personalized_prepare.
-            If not provided message_format is called on self with the 2 next parameters
-            to format the messages and then the messages are personalized.
-        :param bool format_reply: (optional) see method message_format
-        :param dict msg_vals: (optional) see method message_format
-        :return: list of messages_formatted personalized for the partner
-        """
-        if not messages_formatted:
-            messages_formatted = self._message_format(format_reply=format_reply, msg_vals=msg_vals, for_current_user=True)
-            self._message_format_personalized_prepare(messages_formatted, [partner_id])
-        for vals in messages_formatted:
-            # set value for user being a follower, fallback to False if not prepared
-            follower_id_by_pid = vals.pop('follower_id_by_partner_id', {})
-            follower_id = follower_id_by_pid.get(partner_id, False)
-            if follower_id:
-                vals['thread']['selfFollower'] = {
-                    'id': follower_id,
-                    'is_active': True,
-                    'partner': {'id': partner_id, 'type': "partner"},
-                }
-        return messages_formatted
 
     def _get_message_format_fields(self):
         return [

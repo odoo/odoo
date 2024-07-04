@@ -1328,7 +1328,6 @@ class TestMailFormattersPerformance(BaseMailPerformance):
             res = messages._message_format(for_current_user=True)
             self.assertEqual(len(res), 6)
 
-    @mute_logger("odoo.models.unlink")
     @warmup
     def test_message_format_multi_followers_inbox(self):
         """Test query count as well as bus notifcations from sending a message to multiple followers
@@ -1341,6 +1340,7 @@ class TestMailFormattersPerformance(BaseMailPerformance):
         follower_2 = record.message_follower_ids.filtered(
             lambda f: f.partner_id == self.user_test_inbox_2.partner_id
         )
+
         def get_bus_params():
             message = self.env["mail.message"].search([], order="id desc", limit=1)
             notif_1 = message.notification_ids.filtered(
@@ -1426,7 +1426,7 @@ class TestMailFormattersPerformance(BaseMailPerformance):
                                     },
                                 },
                             },
-                            "needaction": False,
+                            "needaction": True,
                             "starred": False,
                             "trackingValues": [],
                             "sms_ids": [],
@@ -1495,15 +1495,15 @@ class TestMailFormattersPerformance(BaseMailPerformance):
                                 "name": "Test",
                                 "module_icon": "/base/static/description/icon.png",
                                 "selfFollower": {
-                                    "id": follower_1.id,
+                                    "id": follower_2.id,
                                     "is_active": True,
                                     "partner": {
-                                        "id": self.user_test_inbox.partner_id.id,
+                                        "id": self.user_test_inbox_2.partner_id.id,
                                         "type": "partner",
                                     },
                                 },
                             },
-                            "needaction": False,
+                            "needaction": True,
                             "starred": False,
                             "trackingValues": [],
                             "sms_ids": [],
@@ -1515,7 +1515,7 @@ class TestMailFormattersPerformance(BaseMailPerformance):
         self._reset_bus()
         self.env.invalidate_all()
         with self.assertBus(get_params=get_bus_params):
-            with self.assertQueryCount(21):
+            with self.assertQueryCount(20):
                 record.message_post(
                     body=Markup("<p>Test Post Performances with multiple inbox ping!</p>"),
                     message_type="comment",
