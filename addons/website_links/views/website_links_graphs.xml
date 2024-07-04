@@ -7,21 +7,21 @@
                         <div class="mt8">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="/r">Link Tracker</a></li>
-                                <li class="breadcrumb-item active truncate_text"><t t-esc="title"/></li>
+                                <li class="breadcrumb-item active truncate_text"><t t-out="title"/></li>
                             </ol>
                         </div>
 
                         <input type="hidden" id="code" t-att-value="code" />
                         <input type="hidden" id="link_id" t-att-value="id" />
 
-                        <h1 class="o_page_header mt0 text-truncate"><t t-esc="title"/></h1>
+                        <h1 class="o_page_header mt0 text-truncate"><t t-out="title"/></h1>
 
                         <div class="row">
                             <div class="col-md-2">
                                 <p><strong>Original URL</strong></p>
                             </div>
                             <div class="col-md-10">
-                                <p class="truncate_text mw-100" t-att-title="url"><a t-att-href="url"><t t-esc="url"/></a></p>
+                                <p class="truncate_text mw-100" t-att-title="url"><a t-att-href="url"><t t-out="url"/></a></p>
                             </div>
                         </div>
 
@@ -31,7 +31,7 @@
                             </div>
                             <div class="col-md-10">
                                 <p>
-                                    <span class="o_website_links_short_url" id="short_url"><span id="short-url-host"><t t-esc="short_url_host"/></span><span id="o_website_links_code"><t t-esc="code"/></span></span>
+                                    <span class="o_website_links_short_url" id="short_url"><span id="short-url-host"><t t-out="short_url_host"/></span><span id="o_website_links_code"><t t-out="code"/></span></span>
                                     <span class="o_website_links_edit_tools">
                                         <a role="button" class="o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline" href="#">ok</a> or
                                         <a class="o_website_links_cancel_edit o_translate_inline" href="#">cancel</a>
@@ -49,7 +49,7 @@
                             </div>
                             <div class="col-md-10 d-flex flex-nowrap align-items-start gap-1">
                                 <p class="truncate_text" t-att-title="redirected_url">
-                                    <t t-esc="redirected_url"/>
+                                    <t t-out="redirected_url"/>
                                 </p>
                                 <a class="copy-to-clipboard btn btn-sm btn-primary" t-att-data-clipboard-text="redirected_url"><i class="fa fa-copy me-2"/>Copy</a>
                             </div>
@@ -59,7 +59,7 @@
                                 <p><strong>Campaign</strong></p>
                             </div>
                             <div class="col-md-10">
-                                <p><t t-esc="campaign_id[1]"/></p>
+                                <p><t t-out="campaign_id[1]"/></p>
                             </div>
                         </div>
                         <div t-if="medium_id" class="row">
@@ -67,7 +67,7 @@
                                 <p><strong>Medium</strong></p>
                             </div>
                             <div class="col-md-10">
-                                <p><t t-esc="medium_id[1]"/></p>
+                                <p><t t-out="medium_id[1]"/></p>
                             </div>
                         </div>
                         <div t-if="source_id" class="row">
@@ -75,7 +75,7 @@
                                 <p><strong>Source</strong></p>
                             </div>
                             <div class="col-md-10">
-                                <p><t t-esc="source_id[1]"/></p>
+                                <p><t t-out="source_id[1]"/></p>
                             </div>
                         </div>
                         <div t-if="label" class="row" >

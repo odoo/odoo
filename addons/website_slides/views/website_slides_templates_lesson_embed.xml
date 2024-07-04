@@ -8,7 +8,7 @@
         <template id="embed_slide" name="Embedded Slide Page">
             <html>
                 <head>
-                    <title><t t-esc="slide.name"/></title>
+                    <title><t t-out="slide.name"/></title>
                     <t t-call-assets="website_slides.slide_embed_assets"/>
                     <script type="module" src="/web/static/lib/pdfjs/build/pdf.js"/>
                     <script type="module" src="/web/static/lib/pdfjs/build/pdf.worker.js"/>
@@ -61,7 +61,7 @@
                                                 <div class="card-body">
                                                     <h6 class="card-title">
                                                         <a t-att-href="suggest_slide.website_absolute_url" target="_new">
-                                                            <t t-esc="suggest_slide.name"/>
+                                                            <t t-out="suggest_slide.name"/>
                                                         </a>
                                                     </h6>
                                                     <div class="oe_slides_suggestion_caption"/>

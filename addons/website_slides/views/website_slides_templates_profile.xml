@@ -57,7 +57,7 @@
 
                             <div class="overflow-hidden mb-1" style="height:24px">
                                 <t t-foreach="course.channel_id.tag_ids.filtered(lambda tag: tag.color)" t-as="tag">
-                                    <a t-att-href="'/slides/all/tag/%s' % slug(tag)" onclick="event.stopPropagation()" t-attf-class="badge o_wslides_channel_tag post_link #{'o_color_'+str(tag.color)}" t-esc="tag.name"/>
+                                    <a t-att-href="'/slides/all/tag/%s' % slug(tag)" onclick="event.stopPropagation()" t-attf-class="badge o_wslides_channel_tag post_link #{'o_color_'+str(tag.color)}" t-out="tag.name"/>
                                 </t>
                             </div>
 
@@ -65,7 +65,7 @@
                                 <div class="progress flex-grow-1" style="height:0.5em">
                                     <div class="progress-bar bg-primary" t-att-style="'width: '+ str(course.completion)+'%'"/>
                                 </div>
-                                <small class="fw-bold ps-2"><span t-esc="course.completion"/> %</small>
+                                <small class="fw-bold ps-2"><span t-out="course.completion"/> %</small>
                             </div>
                         </div>
                     </div>

@@ -214,7 +214,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                                                 <input type="checkbox" class="s_website_form_input form-check-input" name="list_ids"
                                                     t-attf-id="mailing_list_#{record.id}" t-att-value="record.id" required="1"/>
                                                 <label class="form-check-label s_website_form_check_label" t-attf-for="mailing_list_#{record.id}">
-                                                    <t t-esc="record.name"/>
+                                                    <t t-out="record.name"/>
                                                 </label>
                                             </div>
                                         </div>

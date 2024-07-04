@@ -19,34 +19,34 @@
                                         <div class="col-8">
                                             <h2>Badge</h2>
                                             <t t-foreach="bs_theme_colors" t-as="color">
-                                                <span t-attf-class="badge mb-1 text-bg-#{color[0]}"><t t-esc="color[1]"/></span>
+                                                <span t-attf-class="badge mb-1 text-bg-#{color[0]}"><t t-out="color[1]"/></span>
                                             </t>
                                             <h3 class="mt-2 h6">Link</h3>
                                             <t t-foreach="bs_theme_colors" t-as="color">
-                                                <a href="#" t-attf-class="badge mb-1 text-bg-#{color[0]}"><t t-esc="color[1]"/></a>
+                                                <a href="#" t-attf-class="badge mb-1 text-bg-#{color[0]}"><t t-out="color[1]"/></a>
                                             </t>
                                             <h3 class="mt-2 h6">Autosizing</h3>
                                             <div class="h3">
                                                 <t t-foreach="bs_theme_colors" t-as="color">
-                                                    <span t-attf-class="badge mb-1 text-bg-#{color[0]}"><t t-esc="color[1]"/></span>
+                                                    <span t-attf-class="badge mb-1 text-bg-#{color[0]}"><t t-out="color[1]"/></span>
                                                 </t>
                                             </div>
 
                                             <h2 class="mt-4">Button</h2>
                                             <t t-foreach="bs_theme_colors" t-as="color">
-                                                <button type="button" t-attf-class="btn mb-1 btn-#{color[0]}"><t t-esc="color[1]"/></button>
+                                                <button type="button" t-attf-class="btn mb-1 btn-#{color[0]}"><t t-out="color[1]"/></button>
                                             </t>
                                             <h6 class="mt-2">Outline</h6>
                                             <t t-foreach="bs_theme_colors" t-as="color">
-                                                <button type="button" t-attf-class="btn mb-1 btn-outline-#{color[0]}"><t t-esc="color[1]"/></button>
+                                                <button type="button" t-attf-class="btn mb-1 btn-outline-#{color[0]}"><t t-out="color[1]"/></button>
                                             </t>
                                             <h6 class="mt-2">Small</h6>
                                             <t t-foreach="bs_theme_colors" t-as="color">
-                                                <button type="button" t-attf-class="btn mb-1 btn-sm btn-#{color[0]}"><t t-esc="color[1]"/></button>
+                                                <button type="button" t-attf-class="btn mb-1 btn-sm btn-#{color[0]}"><t t-out="color[1]"/></button>
                                             </t>
                                             <h6 class="mt-2">Large</h6>
                                             <t t-foreach="bs_theme_colors" t-as="color">
-                                                <button type="button" t-attf-class="btn mb-1 btn-lg btn-#{color[0]}"><t t-esc="color[1]"/></button>
+                                                <button type="button" t-attf-class="btn mb-1 btn-lg btn-#{color[0]}"><t t-out="color[1]"/></button>
                                             </t>
                                             <h6 class="mt-2">Group</h6>
                                             <div class="btn-group" role="group" aria-label="Basic example">
@@ -314,7 +314,7 @@
                                             <div class="col-6">
                                                 <t t-foreach="bs_theme_colors" t-as="color">
                                                     <div t-attf-class="alert alert-#{color[0]}">
-                                                        This is a "<t t-esc="color[1]"/>" alert with a <a href="#" class="alert-link">link</a>.
+                                                        This is a "<t t-out="color[1]"/>" alert with a <a href="#" class="alert-link">link</a>.
                                                     </div>
                                                 </t>
                                             </div>
@@ -363,42 +363,42 @@
                                             <div class="row g-0">
                                                 <t t-foreach="odoo_theme_colors" t-as="color">
                                                     <div t-attf-class="col-auto bg-#{color[0]}">
-                                                        <div class="py-1 px-3"><t t-esc="color[1]"/></div>
+                                                        <div class="py-1 px-3"><t t-out="color[1]"/></div>
                                                     </div>
                                                 </t>
                                             </div>
                                             <div class="row g-0 mt-2">
                                                 <t t-foreach="bs_theme_colors" t-as="color">
                                                     <div t-attf-class="col-auto text-bg-#{color[0]}">
-                                                        <div class="py-1 px-3"><t t-esc="color[1]"/></div>
+                                                        <div class="py-1 px-3"><t t-out="color[1]"/></div>
                                                     </div>
                                                 </t>
                                             </div>
                                             <div class="row g-0 mt-2">
                                                 <t t-foreach="bs_gray_colors" t-as="color">
                                                     <div t-attf-class="col-auto bg-#{color[0]}">
-                                                        <div class="py-1 px-3"><t t-esc="color[1]"/></div>
+                                                        <div class="py-1 px-3"><t t-out="color[1]"/></div>
                                                     </div>
                                                 </t>
                                             </div>
                                             <div class="row g-0 mt-4">
                                                 <t t-foreach="odoo_theme_colors" t-as="color">
                                                     <div t-attf-class="col-auto text-#{color[0]}">
-                                                        <div class="py-1 px-3"><t t-esc="color[1]"/></div>
+                                                        <div class="py-1 px-3"><t t-out="color[1]"/></div>
                                                     </div>
                                                 </t>
                                             </div>
                                             <div class="row g-0 mt-2">
                                                 <t t-foreach="bs_theme_colors" t-as="color">
                                                     <div t-attf-class="col-auto text-#{color[0]}">
-                                                        <div class="py-1 px-3"><t t-esc="color[1]"/></div>
+                                                        <div class="py-1 px-3"><t t-out="color[1]"/></div>
                                                     </div>
                                                 </t>
                                             </div>
                                             <div class="row g-0 mt-2">
                                                 <t t-foreach="bs_gray_colors" t-as="color">
                                                     <div t-attf-class="col-auto text-#{color[0]}">
-                                                        <div class="py-1 px-3"><t t-esc="color[1]"/></div>
+                                                        <div class="py-1 px-3"><t t-out="color[1]"/></div>
                                                     </div>
                                                 </t>
                                             </div>
@@ -484,7 +484,7 @@
                                                             <div class="d-flex">
                                                                 <span t-attf-class="border p-3 me-1 bg-o-color-#{i}"></span>
                                                                 <div class="flex-grow-1 align-self-center">
-                                                                    <h5 class="m-0">o-color-<t t-esc="i"/></h5>
+                                                                    <h5 class="m-0">o-color-<t t-out="i"/></h5>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -495,7 +495,7 @@
                                                             <div class="d-flex">
                                                                 <span t-attf-class="border p-3 me-1 bg-#{i}"></span>
                                                                 <div class="flex-grow-1 align-self-center">
-                                                                    <h5 class="m-0" t-esc="i"></h5>
+                                                                    <h5 class="m-0" t-out="i"></h5>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -510,7 +510,7 @@
                                                 <div class="row">
                                                     <div class="col-7">
                                                         <h2>
-                                                            Preset <t t-esc="i"/>
+                                                            Preset <t t-out="i"/>
                                                         </h2>
                                                         <p>Paragraph text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. <i>Integer posuere erat a ante</i>. <a class="o_translate_inline" href="#">Link text</a></p>
                                                         <p class="text-muted">Text muted. Lorem <b>ipsum dolor sit amet</b>, consectetur.</p>
@@ -540,7 +540,7 @@
                                                                 <p class="card-text">Paragraph. <a class="o_translate_inline" href="#">text link</a></p>
 
                                                                 <t t-foreach="['primary','secondary', 'info', 'warning', 'danger', 'success']" t-as="btn">
-                                                                    <a href="#" t-attf-class="mb-2 btn-sm btn btn-#{btn}" t-esc="'btn-' + btn"/>
+                                                                    <a href="#" t-attf-class="mb-2 btn-sm btn btn-#{btn}" t-out="'btn-' + btn"/>
                                                                 </t>
                                                             </div>
                                                         </div>
@@ -569,8 +569,8 @@
                                                     </div>
                                                     <div class="col-5 border-start">
                                                         <div t-foreach="['info', 'warning', 'danger', 'success']" t-as="btn">
-                                                            <a href="#" t-attf-class="mb-2 btn-block btn btn-#{btn}" t-esc="'btn-' + btn"/>
-                                                            <a href="#" t-attf-class="mb-3 btn-block btn btn-outline-#{btn}" t-esc="'btn-outline-' + btn"/>
+                                                            <a href="#" t-attf-class="mb-2 btn-block btn btn-#{btn}" t-out="'btn-' + btn"/>
+                                                            <a href="#" t-attf-class="mb-3 btn-block btn btn-outline-#{btn}" t-out="'btn-outline-' + btn"/>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -24,7 +24,7 @@
                                 </h1>
                                 <div t-if="slide.channel_id.channel_type == 'documentation'" class="mb-3 small">
                                     <span class="fw-normal">Last update:</span>
-                                    <t t-esc="slide.date_published" t-options="{'widget': 'date'}"/>
+                                    <t t-out="slide.date_published" t-options="{'widget': 'date'}"/>
                                 </div>
                                 <div t-else="" t-attf-class="o_wslides_channel_completion_progressbar #{'d-none' if slide.channel_id.completed else 'd-flex'} align-items-center pb-3">
                                     <div class="progress w-50 bg-black-25" style="height: 10px;">
@@ -34,7 +34,7 @@
                                         </div>
                                     </div>
                                     <i class="fa fa-trophy m-0 ms-2 p-0 text-black-50"></i>
-                                    <small class="ms-2 text-white-50"><span class="o_wslides_progress_percentage" t-esc="slide.channel_id.completion"/> %</small>
+                                    <small class="ms-2 text-white-50"><span class="o_wslides_progress_percentage" t-out="slide.channel_id.completion"/> %</small>
                                 </div>
                             </div>
                             <div t-attf-class="o_wslides_channel_completion_completed col-12 col-sm-3 #{'d-none' if not slide.channel_id.completed else ''}">
@@ -101,9 +101,9 @@
     <a class="list-group-item list-group-item-action d-flex align-items-start px-2" t-att-href="'/slides/slide/%s' % (slug(aside_slide))">
         <div class="me-1 border o_wslides_background_image_aside_card" t-attf-style="background-image: url(#{website.image_url(aside_slide, 'image_256')});"/>
         <div class="overflow-hidden d-flex flex-column justify-content-start">
-            <h6 t-esc="aside_slide.name" class="o_wslides_desc_truncate_2 mb-1" style="line-height: 1.15"/>
+            <h6 t-out="aside_slide.name" class="o_wslides_desc_truncate_2 mb-1" style="line-height: 1.15"/>
             <small class="text-600">
-                <t t-esc="aside_slide.total_views"/> Views &#8226; <timeago class="timeago" t-att-datetime="aside_slide.create_date"></timeago>
+                <t t-out="aside_slide.total_views"/> Views &#8226; <timeago class="timeago" t-att-datetime="aside_slide.create_date"></timeago>
             </small>
         </div>
     </a>
@@ -165,10 +165,10 @@
                         <a t-att-href="'/slides/slide/%s' % (slug(aside_slide)) if can_access else '#'"
                             t-attf-class="d-flex text-decoration-none mw-100 overflow-hidden #{'text-muted' if not can_access else ''}">
                             <div class="o_wslides_lesson_link_name text-truncate" t-att-title="aside_slide.name">
-                                <span t-esc="aside_slide.name"/>
+                                <span t-out="aside_slide.name"/>
                                 <span class="align-items-end" t-if="aside_slide.question_ids">
                                     <span t-att-class="'badge rounded-pill %s' % ('text-bg-success' if channel_progress[aside_slide.id].get('completed') else 'text-bg-info')">
-                                        <t t-esc="channel_progress[aside_slide.id].get('quiz_karma_won') if channel_progress[aside_slide.id].get('completed') else channel_progress[aside_slide.id].get('quiz_karma_gain')"/> xp
+                                        <t t-out="channel_progress[aside_slide.id].get('quiz_karma_won') if channel_progress[aside_slide.id].get('completed') else channel_progress[aside_slide.id].get('quiz_karma_gain')"/> xp
                                     </span>
                                 </span>
                             </div>
@@ -230,12 +230,12 @@
                 <span t-if="slide_completed">
                     <i class="fa fa-check-circle"/>
                     <t t-if="quiz_karma_won">
-                        <t t-esc="quiz_karma_won" />
+                        <t t-out="quiz_karma_won" />
                         <span>XP</span>
                     </t>
                 </span>
                 <t t-else="">
-                    <span t-esc="quiz_karma_gain"/>
+                    <span t-out="quiz_karma_gain"/>
                     <span>XP</span>
                 </t>
             </span>
@@ -290,7 +290,7 @@
     </div>
     <div t-if="slide.tag_ids" class="pb-2">
         <t t-foreach="slide.tag_ids" t-as="tag">
-            <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge text-bg-info" t-esc="tag.name"/>
+            <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge text-bg-info" t-out="tag.name"/>
         </t>
     </div>
     <div class="oe_structure oe_empty" id="oe_structure_website_slides_lesson_top_1" data-editor-message.translate="BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS"/>
@@ -321,7 +321,7 @@
             </li>
             <li class="nav-item" role="presentation">
                 <a href="#discuss" aria-controls="discuss" t-att-class="'nav-link active' if comments else 'nav-link'" role="tab" data-bs-toggle="tab">
-                    <i class="fa fa-comments"></i> Comments (<span t-esc="slide.comments_count"/>)
+                    <i class="fa fa-comments"></i> Comments (<span t-out="slide.comments_count"/>)
                 </a>
             </li>
             <li class="nav-item" role="presentation" groups="base.group_user">
@@ -388,15 +388,15 @@
                                     <th colspan="2" class="border-top-0">Views</th>
                                 </tr>
                                 <tr class="border-top-0">
-                                    <th class="border-top-0"><span t-esc="slide.total_views"/></th>
+                                    <th class="border-top-0"><span t-out="slide.total_views"/></th>
                                     <td class="border-top-0 w-100">Total Views</td>
                                 </tr>
                                 <tr>
-                                    <th><span t-esc="slide.slide_views"/></th>
+                                    <th><span t-out="slide.slide_views"/></th>
                                     <td>Members Views</td>
                                 </tr>
                                 <tr>
-                                    <th><span t-esc="slide.public_views"/></th>
+                                    <th><span t-out="slide.public_views"/></th>
                                     <td>Public Views</td>
                                 </tr>
                             </tbody>
@@ -425,7 +425,7 @@
                     <span class="text-muted fw-bold col-4 col-md-3">External sources</span>
                     <div class="text-muted me-auto border-start ps-3 col-8 col-md-9">
                         <t t-foreach="links" t-as="link">
-                            <a t-att-href="link.link" t-esc="link.name"/><br />
+                            <a t-att-href="link.link" t-out="link.name"/><br />
                         </t>
                     </div>
                 </div>
@@ -436,7 +436,7 @@
                     </span>
                     <div class="text-muted me-auto border-start ps-3 col-8 col-md-9">
                         <t t-foreach="slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'file' and resource.data">
-                            <a t-att-href="resource.download_url" t-esc="resource.name"/><br />
+                            <a t-att-href="resource.download_url" t-out="resource.name"/><br />
                         </t>
                     </div>
                 </div>
@@ -499,10 +499,10 @@
             <div class="h4">
                 <small class="text-muted">
                     <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_sequence_handler fa fa-bars me-1 text-muted" t-if="slide.channel_id.can_upload and not slide_completed" />
-                    <t t-if="question_index != NoneType"><span class="o_wslides_quiz_question_sequence" t-esc="question_index+1"/>.</t>
-                    <t t-else=""><span class="o_wslides_quiz_question_sequence" t-esc="question['sequence']"/>.</t>
+                    <t t-if="question_index != NoneType"><span class="o_wslides_quiz_question_sequence" t-out="question_index+1"/>.</t>
+                    <t t-else=""><span class="o_wslides_quiz_question_sequence" t-out="question['sequence']"/>.</t>
                 </small>
-                <span t-esc="question['question']"/>
+                <span t-out="question['question']"/>
             </div>
             <div class="ms-auto o_wslides_js_quiz_edit_del" t-if="slide.channel_id.can_upload and not slide_completed" >
                 <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_edit_question fa fa-pencil-square-o p-1 text-muted"></i>
@@ -524,7 +524,7 @@
                         <i class="fa fa-times-circle text-danger d-none"></i>
                         <i t-att-class="'fa fa-check-circle text-success %s' % ('d-none' if not (slide_completed and answer['is_correct']) else '')"></i>
                     </label>
-                    <span t-esc="answer['text_value']"/>
+                    <span t-out="answer['text_value']"/>
                 </a>
                 <t t-if="slide_completed and answer['is_correct']" t-set="correct_answer_comment" t-value="answer['comment']"/>
             </t>

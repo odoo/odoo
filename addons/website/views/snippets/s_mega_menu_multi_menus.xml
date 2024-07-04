@@ -11,13 +11,13 @@
                 <t t-set="menu4_title">Last Menu</t>
                 <t t-foreach="[menu1_title, menu2_title, menu3_title, menu4_title]" t-as="menu_title">
                     <div class="col-12 col-lg-3 py-2 text-center">
-                        <h4 t-esc="menu_title"/>
+                        <h4 t-out="menu_title"/>
                         <nav class="nav flex-column">
                             <t t-foreach="3" t-as="i">
                                 <t t-set="text">Menu Item %s</t>
                                 <t t-set="text" t-value="text % (i + 1)"/>
                                 <a href="#" class="nav-link" data-name="Menu Item"
-                                   t-esc="text"/>
+                                   t-out="text"/>
                             </t>
                         </nav>
                     </div>

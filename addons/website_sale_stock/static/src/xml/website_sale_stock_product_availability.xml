@@ -55,7 +55,7 @@
                 t-attf-class="availability_message_#{product_template} badge text-bg-warning"
             >
                 <i class="fa fa-circle text-warning me-2" role="presentation"/>
-                <t t-esc="formatQuantity(free_qty)"/> <t t-esc="uom_name" /> in stock
+                <t t-out="formatQuantity(free_qty)"/> <t t-out="uom_name" /> in stock
                 <span
                     id="already_in_cart_message"
                     t-if="!allow_out_of_stock_order and show_availability and cart_qty"
@@ -65,7 +65,7 @@
                         You already added all the available product in your cart
                     </t>
                     <t t-else="">
-                        (<t t-esc="cart_qty" /> in your cart)
+                        (<t t-out="cart_qty" /> in your cart)
                     </t>
                 </span>
             </div>
