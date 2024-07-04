@@ -196,7 +196,7 @@ class AccountMove(models.Model):
 
     @api.depends('l10n_latam_available_document_type_ids', 'debit_origin_id')
     def _compute_l10n_latam_document_type(self):
-        for rec in self.filtered(lambda x: x.state == 'draft'):
+        for rec in self.filtered(lambda x: x.state == 'draft' and not x.posted_before):
             document_types = rec.l10n_latam_available_document_type_ids._origin
             invoice_type = rec.move_type
             if invoice_type in ['out_refund', 'in_refund']:
