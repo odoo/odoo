@@ -95,20 +95,20 @@ class Project(models.Model):
         return {
             **super()._get_profitability_labels(),
             'other_purchase_costs': _lt('Vendor Bills'),
-            'other_revenues': _lt('Other Revenues'),
-            'other_costs': _lt('Other Costs'),
+            'other_revenues_aal': _lt('Other Revenues'),
+            'other_costs_aal': _lt('Other Costs'),
         }
 
     def _get_profitability_sequence_per_invoice_type(self):
         return {
             **super()._get_profitability_sequence_per_invoice_type(),
             'other_purchase_costs': 11,
-            'other_revenues': 14,
-            'other_costs': 15,
+            'other_revenues_aal': 14,
+            'other_costs_aal': 15,
         }
 
     def action_profitability_items(self, section_name, domain=None, res_id=False):
-        if section_name in ['other_revenues', 'other_costs']:
+        if section_name in ['other_revenues_aal', 'other_costs_aal']:
             action = self.env["ir.actions.actions"]._for_xml_id("analytic.account_analytic_line_action_entries")
             action['domain'] = domain
             action['context'] = {
@@ -173,12 +173,12 @@ class Project(models.Model):
         # we dont know what part of the numbers has already been billed or not, so we have no choice but to put everything under the billed/invoiced columns.
         # The to bill/to invoice ones will simply remain 0
         profitability_sequence_per_invoice_type = self._get_profitability_sequence_per_invoice_type()
-        revenues = {'id': 'other_revenues', 'sequence': profitability_sequence_per_invoice_type['other_revenues'], 'invoiced': total_revenues, 'to_invoice': 0.0}
-        costs = {'id': 'other_costs', 'sequence': profitability_sequence_per_invoice_type['other_costs'], 'billed': total_costs, 'to_bill': 0.0}
+        revenues = {'id': 'other_revenues_aal', 'sequence': profitability_sequence_per_invoice_type['other_revenues_aal'], 'invoiced': total_revenues, 'to_invoice': 0.0}
+        costs = {'id': 'other_costs_aal', 'sequence': profitability_sequence_per_invoice_type['other_costs_aal'], 'billed': total_costs, 'to_bill': 0.0}
 
         if with_action and self.user_has_groups('account.group_account_readonly'):
-            costs['action'] = self._get_action_for_profitability_section(cost_ids, 'other_costs')
-            revenues['action'] = self._get_action_for_profitability_section(revenue_ids, 'other_revenues')
+            costs['action'] = self._get_action_for_profitability_section(cost_ids, 'other_costs_aal')
+            revenues['action'] = self._get_action_for_profitability_section(revenue_ids, 'other_revenues_aal')
 
         return {
             'revenues': {'data': [revenues], 'total': {'invoiced': total_revenues, 'to_invoice': 0.0}},

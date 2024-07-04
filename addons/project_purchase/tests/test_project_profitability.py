@@ -56,8 +56,8 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             self.project._get_profitability_items(False)['costs'],
             {
                 'data': [{
-                    'id': 'other_costs',
-                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                    'id': 'other_costs_aal',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs_aal'],
                     'to_bill': 0.0,
                     'billed': -150.0,
                 }, {
@@ -76,8 +76,8 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             self.project._get_profitability_items(False)['costs'],
             {
                 'data': [{
-                    'id': 'other_costs',
-                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                    'id': 'other_costs_aal',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs_aal'],
                     'to_bill': 0.0,
                     'billed': -150.0,
                 }, {
@@ -117,8 +117,8 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             self.project._get_profitability_items(False)['costs'],
             {
                 'data': [{
-                    'id': 'other_costs',
-                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                    'id': 'other_costs_aal',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs_aal'],
                     'to_bill': 0.0,
                     'billed': -150.0,
                 }, {
@@ -140,8 +140,8 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             self.project._get_profitability_items(False)['costs'],
             {
                 'data': [{
-                    'id': 'other_costs',
-                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                    'id': 'other_costs_aal',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs_aal'],
                     'to_bill': 0.0,
                     'billed': -150.0,
                 }, {
@@ -178,8 +178,8 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             self.project._get_profitability_items(False)['costs'],
             {
                 'data': [{
-                    'id': 'other_costs',
-                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                    'id': 'other_costs_aal',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs_aal'],
                     'to_bill': 0.0,
                     'billed': -150.0,
                 }, {
@@ -206,8 +206,8 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             self.project._get_profitability_items(False)['costs'],
             {
                 'data': [{
-                    'id': 'other_costs',
-                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                    'id': 'other_costs_aal',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs_aal'],
                     'to_bill': 0.0,
                     'billed': -150.0,
                 }, {
