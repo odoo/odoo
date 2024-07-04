@@ -1129,7 +1129,7 @@ export class PosStore extends Reactive {
             const mapped_included_taxes = [];
             let new_included_taxes = [];
             taxes.forEach((tax) => {
-                const line_taxes = this.get_taxes_after_fp([tax.id], order.fiscal_position);
+                const line_taxes = this.get_taxes_after_fp([tax], order.fiscal_position);
                 if (line_taxes.length && line_taxes[0].price_include) {
                     new_included_taxes = new_included_taxes.concat(line_taxes);
                 }
