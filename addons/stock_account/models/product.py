@@ -321,16 +321,23 @@ class ProductProduct(models.Model):
         if account_moves:
             account_moves._post()
 
+    def _get_fifo_candidates_domain(self, company):
+        return [
+            ("product_id", "=", self.id),
+            ("remaining_qty", ">", 0),
+            ("company_id", "=", company.id),
+        ]
+
+    def _get_fifo_candidates(self, company):
+        candidates_domain = self._get_fifo_candidates_domain(company)
+        return self.env["stock.valuation.layer"].sudo().search(candidates_domain)
+
     def _run_fifo(self, quantity, company):
         self.ensure_one()
 
         # Find back incoming stock valuation layers (called candidates here) to value `quantity`.
         qty_to_take_on_candidates = quantity
-        candidates = self.env['stock.valuation.layer'].sudo().search([
-            ('product_id', '=', self.id),
-            ('remaining_qty', '>', 0),
-            ('company_id', '=', company.id),
-        ])
+        candidates = self._get_fifo_candidates(company)
         new_standard_price = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
@@ -760,8 +767,13 @@ class ProductProduct(models.Model):
         candidates = stock_moves\
             .sudo()\
             .filtered(lambda m: is_returned == bool(m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
-            .mapped('stock_valuation_layer_ids')\
-            .sorted()
+            .mapped('stock_valuation_layer_ids')
+
+        if self.env.context.get('candidates_prefetch_ids'):
+            candidates = candidates.with_prefetch(self.env.context.get('candidates_prefetch_ids'))
+
+        if len(candidates) > 1:
+            candidates = candidates.sorted(lambda svl: (svl.create_date, svl.id))
 
         value_invoiced = self.env.context.get('value_invoiced', 0)
         if 'value_invoiced' in self.env.context:
