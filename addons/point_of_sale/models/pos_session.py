@@ -1038,11 +1038,11 @@ class PosSession(models.Model):
                         if move._is_in():
                             signed_product_qty *= -1
                         amount = signed_product_qty * move.product_id._compute_average_price(0, move.quantity, move)
-                        stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
+                        stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.create_date, force_company_currency=True)
                         if move._is_in():
-                            stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
+                            stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.create_date, force_company_currency=True)
                         else:
-                            stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
+                            stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.create_date, force_company_currency=True)
         MoveLine = self.env['account.move.line'].with_context(check_move_validity=False, skip_invoice_sync=True)
 
         data.update({
