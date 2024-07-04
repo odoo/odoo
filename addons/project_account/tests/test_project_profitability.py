@@ -50,9 +50,9 @@ class TestProjectAccountProfitability(TestProjectProfitabilityCommon):
         self.assertDictEqual(
             project._get_profitability_items(False),
             {
-                'revenues': {'data': [{'id': 'other_revenues', 'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_revenues'],
+                'revenues': {'data': [{'id': 'other_revenues_aal', 'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_revenues_aal'],
                     'invoiced': 30.0, 'to_invoice': 0.0}], 'total': {'invoiced': 30.0, 'to_invoice': 0.0}},
-                'costs': {'data': [{'id': 'other_costs', 'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                'costs': {'data': [{'id': 'other_costs_aal', 'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs_aal'],
                     'billed': -30.0, 'to_bill': 0.0}], 'total': {'billed': -30.0, 'to_bill': 0.0}}
             },
             'The profitability data of the project should return the total amount for the revenues and costs from tha AAL of the account of the project.'
@@ -78,9 +78,9 @@ class TestProjectAccountProfitability(TestProjectProfitabilityCommon):
         self.assertDictEqual(
             project._get_profitability_items(False),
             {
-                'revenues': {'data': [{'id': 'other_revenues', 'sequence': project._get_profitability_sequence_per_invoice_type()['other_revenues'],
+                'revenues': {'data': [{'id': 'other_revenues_aal', 'sequence': project._get_profitability_sequence_per_invoice_type()['other_revenues_aal'],
                     'invoiced': 180.0, 'to_invoice': 0.0}], 'total': {'invoiced': 180.0, 'to_invoice': 0.0}},
-                'costs': {'data': [{'id': 'other_costs', 'sequence': project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                'costs': {'data': [{'id': 'other_costs_aal', 'sequence': project._get_profitability_sequence_per_invoice_type()['other_costs_aal'],
                     'billed': -180.0, 'to_bill': 0.0}], 'total': {'billed': -180.0, 'to_bill': 0.0}}
             },
             'The profitability data of the project should return the total amount for the revenues and costs from tha AAL of the account of the project.'
