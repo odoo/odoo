@@ -2852,17 +2852,16 @@ class AccountMove(models.Model):
         If a user is a Billing Administrator/Accountant or if fidu mode is activated, we show a warning,
         but they can delete the moves even if it creates a sequence gap.
         """
-        for record in self:
-            if not (
-                record.env.user.has_group('account.group_account_manager')
-                or record.company_id.quick_edit_mode
-                or record._context.get('force_delete')
-                or record.check_move_sequence_chain()
-            ):
-                raise UserError(_(
-                    "You cannot delete this entry, as it has already consumed a sequence number and is not the last one in the chain. "
-                    "You should probably revert it instead."
-                ))
+        if not (
+            self.env.user.has_group('account.group_account_manager')
+            or any(self.company_id.mapped('quick_edit_mode'))
+            or self._context.get('force_delete')
+            or self.check_move_sequence_chain()
+        ):
+            raise UserError(_(
+                "You cannot delete this entry, as it has already consumed a sequence number and is not the last one in the chain. "
+                "You should probably revert it instead."
+            ))
 
     def unlink(self):
         self = self.with_context(skip_invoice_sync=True, dynamic_unlink=True)  # no need to sync to delete everything
