@@ -58,11 +58,18 @@ export class MailMessage extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _message_format(ids, for_current_user = false) {
+    _message_format(ids, for_current_user, add_followers) {
+        const kwargs = getKwArgs(arguments, "ids", "for_current_user", "add_followers");
+        ids = kwargs.ids;
+        for_current_user = kwargs.for_current_user ?? false;
+        add_followers = kwargs.add_followers ?? false;
+
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];
+        /** @type {import("mock_models").MailFollowers} */
+        const MailFollowers = this.env["mail.followers"];
         /** @type {import("mock_models").MailLinkPreview} */
         const MailLinkPreview = this.env["mail.link.preview"];
         /** @type {import("mock_models").MailMessageReaction} */
@@ -204,6 +211,22 @@ export class MailMessage extends models.ServerModel {
                 const formattedTrackingValues =
                     MailTrackingValue._tracking_value_format(trackingValues);
                 response["trackingValues"] = formattedTrackingValues;
+                if (message.model && message.res_id && add_followers) {
+                    const follower = MailFollowers._filter([
+                        ["res_model", "=", message.model],
+                        ["res_id", "=", message.res_id],
+                        ["partner_id", "=", this.env.user.partner_id],
+                    ]);
+                    if (follower.length !== 0) {
+                        response.thread.selfFollower = {
+                            id: follower[0].id,
+                            is_active: true,
+                            partner: { id: this.env.user.partner_id, type: "partner" },
+                        };
+                    } else {
+                        response.thread.selfFollower = false;
+                    }
+                }
             }
             return response;
         });
@@ -439,31 +462,6 @@ export class MailMessage extends models.ServerModel {
         messages.length = Math.min(messages.length, limit);
         res.messages = messages;
         return res;
-    }
-
-    /** @param {number[]} ids */
-    _message_format_personalize(ids) {
-        /** @type {import("mock_models").MailFollowers} */
-        const MailFollowers = this.env["mail.followers"];
-
-        const messages = this._message_format(ids, true);
-        messages.forEach((message) => {
-            if (message.model && message.res_id) {
-                const follower = MailFollowers._filter([
-                    ["res_model", "=", message.model],
-                    ["res_id", "=", message.res_id],
-                    ["partner_id", "=", this.env.user.partner_id],
-                ]);
-                if (follower.length !== 0) {
-                    message.thread.selfFollower = {
-                        id: follower[0].id,
-                        is_active: true,
-                        partner: { id: this.env.user.partner_id, type: "partner" },
-                    };
-                }
-            }
-        });
-        return messages;
     }
 
     /**

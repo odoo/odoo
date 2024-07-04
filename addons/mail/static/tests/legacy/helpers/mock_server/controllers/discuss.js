@@ -74,8 +74,7 @@ patch(MockServer.prototype, {
             return this._mockRouteMailMessageHistory(search_term, after, before, limit);
         }
         if (route === "/mail/inbox/messages") {
-            const { search_term, after, around, before, limit } = args;
-            return this._mockRouteMailMessageInbox(search_term, after, before, around, limit);
+            return { count: 0, messages: [] };
         }
         if (route === "/mail/link_preview") {
             return this._mockRouteMailLinkPreview(args.message_id);
@@ -363,35 +362,6 @@ patch(MockServer.prototype, {
             ...res,
             messages: this._mockMailMessageMessageFormat(
                 messagesWithNotification.map((message) => message.id)
-            ),
-        };
-    },
-    /**
-     * Simulates the `/mail/inbox/messages` route.
-     *
-     * @private
-     * @returns {Object}
-     */
-    _mockRouteMailMessageInbox(
-        search_term = false,
-        after = false,
-        before = false,
-        around = false,
-        limit = 30
-    ) {
-        const domain = [["needaction", "=", true]];
-        const res = this._mockMailMessage_MessageFetch(
-            domain,
-            search_term,
-            before,
-            after,
-            around,
-            limit
-        );
-        return {
-            ...res,
-            messages: this._mockMailMessageFormatPersonalize(
-                res.messages.map((message) => message.id)
             ),
         };
     },
