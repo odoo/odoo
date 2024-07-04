@@ -571,12 +571,9 @@ class MrpProduction(models.Model):
             else:
                 production.workorder_ids = [Command.delete(wo.id) for wo in production.workorder_ids.filtered(lambda wo: wo.operation_id)]
 
-    @api.depends('state', 'move_raw_ids.state')
+    @api.depends('move_raw_ids.state')
     def _compute_reservation_state(self):
         for production in self:
-            if production.state in ('draft', 'done', 'cancel'):
-                production.reservation_state = False
-                continue
             relevant_move_state = production.move_raw_ids._get_relevant_state_among_moves()
             # Compute reservation state according to its component's moves.
             if relevant_move_state == 'partially_available':

@@ -2318,7 +2318,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.do_unreserve()
 
         self.assertEqual(list(mo.workorder_ids.mapped("state")), ["waiting", "pending"])
-
+        import pudb; pudb.set_trace()
         mo.workorder_ids[0].unlink()
 
         self.assertEqual(list(mo.workorder_ids.mapped("state")), ["waiting"])
