@@ -22,5 +22,5 @@ test("out of office message on direct chat with out of office partner", async ()
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".alert", { text: "Out of office until Jan 1, 2023" });
+    await contains(".alert", { text: "Back on Jan 1, 2023" });
 });
