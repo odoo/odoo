@@ -3,6 +3,7 @@
 import { attachComponent } from "@web_editor/js/core/owl_utils";
 import { uniqueId } from "@web/core/utils/functions";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -3833,6 +3834,11 @@ export class SnippetOption {
     async willStart() {
         const context = await this._getRenderContext();
         this.renderContext = reactive({...context});
+        if (this.data.groups) {
+            for (const group of this.data.groups) {
+                this.isRestrictedGroup ||= !(await user.hasGroup(group));
+            }
+        }
     }
     destroy() {}
     /**

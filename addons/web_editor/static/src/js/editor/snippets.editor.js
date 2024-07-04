@@ -768,7 +768,7 @@ var SnippetEditor = Widget.extend({
      * @TODO owl-options Implement visibility.
      */
     getOptions() {
-        return this.snippetOptions;
+        return this.snippetOptions.filter((option) => !option.instance.isRestrictedGroup);
     },
     /**
      * @param {boolean} [show]
