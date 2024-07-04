@@ -136,12 +136,12 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             self.project_task_rate._get_profitability_items(False),
             {
                 'revenues': {
-                    'data': [{'id': 'other_revenues', 'sequence': sequence_per_invoice_type['other_revenues'], 'invoiced': 100.0, 'to_invoice': 0.0}],
+                    'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0}],
                     'total': {'invoiced': 100.0, 'to_invoice': 0.0},
                 },
                 'costs': {
                     'data': [
-                        {'id': 'other_costs', 'sequence': sequence_per_invoice_type['other_costs'], 'billed': -100.0, 'to_bill': 0.0},
+                        {'id': 'other_costs_aal', 'sequence': sequence_per_invoice_type['other_costs_aal'], 'billed': -100.0, 'to_bill': 0.0},
                         {
                             'id': 'billable_manual',
                             'sequence': sequence_per_invoice_type['billable_manual'],
@@ -177,12 +177,12 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             self.project_task_rate._get_profitability_items(False),
             {
                 'revenues': {
-                    'data': [{'id': 'other_revenues', 'sequence': sequence_per_invoice_type['other_revenues'], 'invoiced': 100.0, 'to_invoice': 0.0}],
+                    'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0}],
                     'total': {'invoiced': 100.0, 'to_invoice': 0.0},
                 },
                 'costs': {
                     'data': [
-                        {'id': 'other_costs', 'sequence': sequence_per_invoice_type['other_costs'], 'billed': -100.0, 'to_bill': 0.0},
+                        {'id': 'other_costs_aal', 'sequence': sequence_per_invoice_type['other_costs_aal'], 'billed': -100.0, 'to_bill': 0.0},
                         {
                             'id': 'billable_manual',
                             'sequence': sequence_per_invoice_type['billable_manual'],
@@ -215,12 +215,12 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             self.project_task_rate._get_profitability_items(False),
             {
                 'revenues': {
-                    'data': [{'id': 'other_revenues', 'sequence': sequence_per_invoice_type['other_revenues'], 'invoiced': 100.0, 'to_invoice': 0.0}],
+                    'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0}],
                     'total': {'invoiced': 100.0, 'to_invoice': 0.0},
                 },
                 'costs': {
                     'data': [
-                        {'id': 'other_costs', 'sequence': sequence_per_invoice_type['other_costs'], 'billed': -100.0, 'to_bill': 0.0},
+                        {'id': 'other_costs_aal', 'sequence': sequence_per_invoice_type['other_costs_aal'], 'billed': -100.0, 'to_bill': 0.0},
                         {
                             'id': 'billable_manual',
                             'sequence': sequence_per_invoice_type['billable_manual'],
@@ -260,12 +260,12 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             self.project_task_rate._get_profitability_items(False),
             {
                 'revenues': {
-                    'data': [{'id': 'other_revenues', 'sequence': sequence_per_invoice_type['other_revenues'], 'invoiced': 100.0, 'to_invoice': 0.0}],
+                    'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0}],
                     'total': {'invoiced': 100.0, 'to_invoice': 0.0},
                 },
                 'costs': {
                     'data': [
-                        {'id': 'other_costs', 'sequence': sequence_per_invoice_type['other_costs'], 'billed': -100.0, 'to_bill': 0.0},
+                        {'id': 'other_costs_aal', 'sequence': sequence_per_invoice_type['other_costs_aal'], 'billed': -100.0, 'to_bill': 0.0},
                         {
                             'id': 'billable_manual',
                             'sequence': sequence_per_invoice_type['billable_manual'],
@@ -306,7 +306,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             {
                 'revenues': {
                     'data': [
-                        {'id': 'other_revenues', 'sequence': sequence_per_invoice_type['other_revenues'], 'invoiced': 100.0, 'to_invoice': 0.0},
+                        {'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0},
                         {
                             'id': 'billable_time',
                             'sequence': sequence_per_invoice_type['billable_time'],
@@ -318,7 +318,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
                 },
                 'costs': {
                     'data': [
-                        {'id': 'other_costs', 'sequence': sequence_per_invoice_type['other_costs'], 'billed': -100.0, 'to_bill': 0.0},
+                        {'id': 'other_costs_aal', 'sequence': sequence_per_invoice_type['other_costs_aal'], 'billed': -100.0, 'to_bill': 0.0},
                         {
                             'id': 'billable_time',
                             'sequence': sequence_per_invoice_type['billable_time'],
@@ -364,7 +364,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             {
                 'revenues': {
                     'data': [
-                        {'id': 'other_revenues', 'sequence': sequence_per_invoice_type['other_revenues'],
+                        {'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'],
                          'invoiced': 100.0, 'to_invoice': 0.0},
                         {
                             'id': 'billable_time',
@@ -377,7 +377,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
                 },
                 'costs': {
                     'data': [
-                        {'id': 'other_costs', 'sequence': sequence_per_invoice_type['other_costs'], 'billed': -100.0,
+                        {'id': 'other_costs_aal', 'sequence': sequence_per_invoice_type['other_costs_aal'], 'billed': -100.0,
                          'to_bill': 0.0},
                         {
                             'id': 'billable_time',
