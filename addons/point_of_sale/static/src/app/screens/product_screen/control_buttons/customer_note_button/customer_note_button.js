@@ -48,7 +48,26 @@ export class OrderlineNoteButton extends Component {
             startingValue: this.props.getter(selectedOrderline),
         });
 
-        this.props.setter(selectedOrderline, payload);
+        var quantity_with_note = 0;
+        const changes = this.pos.getOrderChanges();
+        for (const key in changes.orderlines) {
+            if (changes.orderlines[key].uuid == selectedOrderline.uuid) {
+                quantity_with_note = changes.orderlines[key].quantity;
+                break;
+            }
+        }
+        const saved_quantity = selectedOrderline.qty - quantity_with_note;
+        if (saved_quantity > 0 && quantity_with_note > 0) {
+            await this.pos.addLineToCurrentOrder({
+                product_id: selectedOrderline.product_id,
+                qty: quantity_with_note,
+                note: payload,
+            });
+            selectedOrderline.qty = saved_quantity;
+        } else {
+            this.props.setter(selectedOrderline, payload);
+        }
+
         return { confirmed: typeof payload === "string", inputNote: payload, oldNote };
     }
 }
