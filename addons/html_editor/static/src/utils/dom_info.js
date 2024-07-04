@@ -358,6 +358,80 @@ export function isMediaElement(node) {
     );
 }
 
+// See https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
+const phrasingTagNames = new Set([
+    "ABBR",
+    "AUDIO",
+    "B",
+    "BDI",
+    "BDO",
+    "BR",
+    "BUTTON",
+    "CANVAS",
+    "CITE",
+    "CODE",
+    "DATA",
+    "DATALIST",
+    "DFN",
+    "EM",
+    "EMBED",
+    "I",
+    "IFRAME",
+    "IMG",
+    "INPUT",
+    "KBD",
+    "LABEL",
+    "MARK",
+    "MATH",
+    "METER",
+    "NOSCRIPT",
+    "OBJECT",
+    "OUTPUT",
+    "PICTURE",
+    "PROGRESS",
+    "Q",
+    "RUBY",
+    "S",
+    "SAMP",
+    "SCRIPT",
+    "SELECT",
+    "SLOT",
+    "SMALL",
+    "SPAN",
+    "STRONG",
+    "SUB",
+    "SUP",
+    "SVG",
+    "TEMPLATE",
+    "TEXTAREA",
+    "TIME",
+    "U",
+    "VAR",
+    "VIDEO",
+    "WBR",
+    "FONT", // TODO @phoenix: font is deprecated, replace usage
+    // The following elements are phrasing content under specific conditions,
+    // evaluate if those conditions are applicable when using this set.
+    "A",
+    "AREA",
+    "DEL",
+    "INS",
+    "LINK",
+    "MAP",
+    "META",
+]);
+
+export function isPhrasingContent(node) {
+    if (
+        node &&
+        (node.nodeType === Node.TEXT_NODE ||
+            (node.nodeType === Node.ELEMENT_NODE && phrasingTagNames.has(node.tagName)))
+    ) {
+        return true;
+    }
+    return false;
+}
+
 /**
  * A "protected" node will have its mutations filtered and not be registered
  * in an history step. Some editor features like selection handling, command

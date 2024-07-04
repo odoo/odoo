@@ -1,11 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
-import {
-    wrapInlinesInParagraphs,
-    removeClass,
-    setTagName,
-    toggleClass,
-} from "@html_editor/utils/dom";
+import { wrapInlinesInBlocks, removeClass, setTagName, toggleClass } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isEmptyBlock,
@@ -379,7 +374,7 @@ export class ListPlugin extends Plugin {
 
         if ([...element.children].some(isBlock)) {
             const cursors = this.shared.preserveSelection();
-            wrapInlinesInParagraphs(element, cursors);
+            wrapInlinesInBlocks(element, cursors);
             cursors.restore();
         }
 

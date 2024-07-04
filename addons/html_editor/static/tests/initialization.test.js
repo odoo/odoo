@@ -95,16 +95,13 @@ describe("No orphan inline elements compatibility mode", () => {
         });
     });
 
-    // This is what the editor currently does (.o_image has display: inline-block)
-    // But the resulting editable is NOT valid html (DIV inside P).
-    // @todo @phoenix: change behaviour/spec ?
-    test("should transform root div.o_image", async () => {
+    test("should wrap a div.o_image direct child of the editable into a block", async () => {
         await testEditor({
             contentBefore: '<p>abc</p><div class="o_image"></div><p>def</p>',
             contentBeforeEdit:
-                '<p>abc</p><p style="margin-bottom: 0px;"><div class="o_image" contenteditable="false"></div></p><p>def</p>',
+                '<p>abc</p><div style="margin-bottom: 0px;"><div class="o_image" contenteditable="false"></div></div><p>def</p>',
             contentAfter:
-                '<p>abc</p><p style="margin-bottom: 0px;"><div class="o_image"></div></p><p>def</p>',
+                '<p>abc</p><div style="margin-bottom: 0px;"><div class="o_image"></div></div><p>def</p>',
         });
     });
 });

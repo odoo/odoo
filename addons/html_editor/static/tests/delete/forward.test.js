@@ -207,13 +207,81 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test('should remove contenteditable="False"', async () => {
+        test("should wrap an inline sibling into a block", async () => {
             await testEditor({
-                contentBefore: `<div>[]<span contenteditable="False">abc</span>def</div>`,
+                contentBefore: `<div><p>abc[]</p><span contenteditable="false">xyz</span><p>def</p></div>`,
                 stepFunction: async (editor) => {
                     deleteForward(editor);
                 },
-                contentAfter: `<div>[]def</div>`,
+                contentAfter: `<div><p>abc[]<span contenteditable="false">xyz</span></p><p>def</p></div>`,
+            });
+        });
+
+        test("should not remove an inline contenteditable='false' in a following sibling", async () => {
+            await testEditor({
+                contentBefore: `<p>[]<br></p><p><span contenteditable="false">bc</span>a</p>`,
+                stepFunction: async (editor) => {
+                    deleteForward(editor);
+                },
+                contentAfter: `<p>[]<span contenteditable="false">bc</span>a</p>`,
+            });
+        });
+
+        test("should not remove a non editable sibling (inline)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <div contenteditable="false">
+                        <div contenteditable="true">
+                            <p>[]<br></p>
+                        </div>
+                        <span class="a">a</span>
+                    </div>
+                `),
+                stepFunction: async (editor) => {
+                    deleteForward(editor);
+                },
+                contentAfter: unformat(`
+                    <div contenteditable="false">
+                        <div contenteditable="true">
+                            <p>[]<br></p>
+                        </div>
+                        <span class="a">a</span>
+                    </div>
+                `),
+            });
+        });
+
+        test("should not remove a non editable sibling (block)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <div contenteditable="false">
+                        <div contenteditable="true">
+                            <p>[]<br></p>
+                        </div>
+                        <div class="a">a<span>a</span></div>
+                    </div>
+                `),
+                stepFunction: async (editor) => {
+                    deleteForward(editor);
+                },
+                contentAfter: unformat(`
+                    <div contenteditable="false">
+                        <div contenteditable="true">
+                            <p>[]<br></p>
+                        </div>
+                        <div class="a">a<span>a</span></div>
+                    </div>
+                `),
+            });
+        });
+
+        test("should remove a hr", async () => {
+            await testEditor({
+                contentBefore: `<div><p>abc[]</p><hr><p>def</p></div>`,
+                stepFunction: async (editor) => {
+                    deleteForward(editor);
+                },
+                contentAfter: `<div><p>abc[]</p><p>def</p></div>`,
             });
         });
 
@@ -299,9 +367,9 @@ describe("Selection collapsed", () => {
 
             test("should delete the space if the second <p> is display inline", async () => {
                 await testEditor({
-                    contentBefore: '<div>abc[] <p style="display: inline">def</p></div>',
+                    contentBefore: '<div>abc[] <p style="display: inline;">def</p></div>',
                     stepFunction: deleteForward,
-                    contentAfter: '<div>abc[]<p style="display: inline">def</p></div>',
+                    contentAfter: '<div>abc[]<p style="display: inline;">def</p></div>',
                 });
             });
 
@@ -342,9 +410,9 @@ describe("Selection collapsed", () => {
 
             test("should delete the space if the second <p> is display inline", async () => {
                 await testEditor({
-                    contentBefore: '<div>abc[]x <p style="display: inline">def</p></div>',
+                    contentBefore: '<div>abc[]x <p style="display: inline;">def</p></div>',
                     stepFunction: twoDeleteForward,
-                    contentAfter: '<div>abc[]<p style="display: inline">def</p></div>',
+                    contentAfter: '<div>abc[]<p style="display: inline;">def</p></div>',
                 });
             });
 

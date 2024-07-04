@@ -1,6 +1,7 @@
 import { isBlock } from "./blocks";
+import { isPhrasingContent } from "../utils/dom_info";
 
-// @todo @phoenix: consider using the wrapInlinesInParagraphs utils instead.
+// @todo @phoenix: consider using the wrapInlinesInBlocks utils instead.
 
 export function initElementForEdition(element, options = {}) {
     const document = element.ownerDocument;
@@ -17,24 +18,36 @@ export function initElementForEdition(element, options = {}) {
             blockMap.set(node, isBlock(node));
         }
         const newChildren = [];
-        let currentP = document.createElement("p");
-        currentP.style.marginBottom = "0";
+        let currentBlock = document.createElement("DIV");
+        let hasOnlyPhrasingContent = true;
+        currentBlock.style.marginBottom = "0";
         for (let i = 0; i < childNodes.length; i++) {
             const node = childNodes[i];
             const nodeIsBlock = blockMap.get(node);
             const nodeIsBR = node.nodeName === "BR";
             // Append to the P unless child is block or an unneeded BR.
-            if (!(nodeIsBlock || (nodeIsBR && currentP.childNodes.length))) {
-                currentP.append(node);
+            if (!(nodeIsBlock || (nodeIsBR && currentBlock.childNodes.length))) {
+                currentBlock.append(node);
+                if (!isPhrasingContent(node)) {
+                    hasOnlyPhrasingContent = false;
+                }
             }
             // Break paragraphs on blocks and BR.
             if (nodeIsBlock || nodeIsBR || childNodes.length === i + 1) {
+                if (hasOnlyPhrasingContent) {
+                    const block = document.createElement("P");
+                    block.style.marginBottom = "0";
+                    block.replaceChildren(...currentBlock.childNodes);
+                    currentBlock = block;
+                }
                 // Ensure we don't add an empty P or a P containing only
                 // formating spaces that should not be visible.
-                if (currentP.childNodes.length && currentP.innerHTML.trim() !== "") {
-                    newChildren.push(currentP);
+                if (currentBlock.childNodes.length && currentBlock.innerHTML.trim() !== "") {
+                    newChildren.push(currentBlock);
                 }
-                currentP = currentP.cloneNode();
+                currentBlock = document.createElement("DIV");
+                currentBlock.style.marginBottom = "0";
+                hasOnlyPhrasingContent = true;
                 // Append block children directly to the template.
                 if (nodeIsBlock) {
                     newChildren.push(node);

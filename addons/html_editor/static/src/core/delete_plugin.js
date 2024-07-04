@@ -60,10 +60,7 @@ export class DeletePlugin extends Plugin {
             { hotkey: "control+shift+backspace", command: "DELETE_BACKWARD_LINE" },
             { hotkey: "control+shift+delete", command: "DELETE_FORWARD_LINE" },
         ],
-        handle_delete_backward: [
-            { callback: p.deleteBackwardContentEditableFalse.bind(p) },
-            { callback: p.deleteBackwardUnmergeable.bind(p) },
-        ],
+        handle_delete_backward: [{ callback: p.deleteBackwardUnmergeable.bind(p) }],
         handle_delete_backward_word: { callback: p.deleteBackwardUnmergeable.bind(p) },
         handle_delete_backward_line: { callback: p.deleteBackwardUnmergeable.bind(p) },
         handle_delete_forward: { callback: p.deleteForwardUnmergeable.bind(p) },
@@ -610,17 +607,23 @@ export class DeletePlugin extends Plugin {
             // Nothing to join. Consider it joined already.
             return this.collapseRange(range);
         }
-        if (!this.canBeMerged(joinableLeft.node, joinableRight.node, commonAncestor)) {
+
+        this.canBeMerged(joinableLeft, joinableRight, commonAncestor);
+        if (
+            joinableLeft.isBlock &&
+            joinableRight.isBlock &&
+            !joinableLeft.isUnmergeable &&
+            !joinableRight.isUnmergeable
+        ) {
+            this.mergeBlocks(joinableLeft.node, joinableRight.node, commonAncestor);
+        } else if (joinableLeft.isBlock && !joinableRight.isBlock && !joinableLeft.isUnmergeable) {
+            this.joinInlineIntoBlock(joinableLeft.node, joinableRight.node);
+        } else if (joinableRight.isBlock && !joinableLeft.isBlock && !joinableRight.isUnmergeable) {
+            this.joinBlockIntoInline(joinableLeft.node, joinableRight.node, commonAncestor);
+        } else if (joinableRight.isUnmergeable || joinableLeft.isUnmergeable) {
+            // Both nodes are inline but at least one of them is unmergeable.
             // Cannot join. Keep range unchanged.
             return range;
-        }
-
-        if (joinableLeft.isBlock && joinableRight.isBlock) {
-            this.mergeBlocks(joinableLeft.node, joinableRight.node, commonAncestor);
-        } else if (joinableLeft.isBlock) {
-            this.joinInlineIntoBlock(joinableLeft.node, joinableRight.node);
-        } else if (joinableRight.isBlock) {
-            this.joinBlockIntoInline(joinableLeft.node, joinableRight.node, commonAncestor);
         }
         return this.collapseRange(range);
     }
@@ -687,16 +690,18 @@ export class DeletePlugin extends Plugin {
         return isUnbreakable(node);
     }
 
-    canBeMerged(left, right, commonAncestor) {
-        for (let node of [left, right]) {
+    canBeMerged(joinableLeft, joinableRight, commonAncestor) {
+        joinableLoop: for (const joinable of [joinableLeft, joinableRight]) {
+            let node = joinable.node;
             while (node !== commonAncestor) {
                 if (this.isUnmergeable(node)) {
-                    return false;
+                    joinable.isUnmergeable = true;
+                    continue joinableLoop;
                 }
                 node = node.parentElement;
             }
+            joinable.isUnmergeable = false;
         }
-        return true;
     }
 
     mergeBlocks(left, right, commonAncestor) {
@@ -1012,13 +1017,20 @@ export class DeletePlugin extends Plugin {
         }
 
         // If part of a contenteditable=false tree, expand selection to delete the root.
+        // If the non-editable is not a block and there was a block switch, reduce the
+        // selection to keep it instead, since the position moved from another block next
+        // to that inline root, there was a sufficient position change.
         let closestUneditable = closestElement(leaf, isNotEditableNode);
         if (closestUneditable) {
             // handle nested contenteditable=false elements
             while (!closestUneditable.parentNode.isContentEditable) {
                 closestUneditable = closestUneditable.parentNode;
             }
-            return leftPos(closestUneditable);
+            return blockSwitch &&
+                !isBlock(closestUneditable) &&
+                closestBlock(closestUneditable) !== endNodeClosestBlock
+                ? rightPos(closestUneditable)
+                : leftPos(closestUneditable);
         }
 
         if (leaf.nodeType === Node.ELEMENT_NODE) {
@@ -1064,13 +1076,20 @@ export class DeletePlugin extends Plugin {
         }
 
         // If part of a contenteditable=false tree, expand selection to delete the root.
+        // If the non-editable is not a block and there was a block switch, reduce the
+        // selection to keep it instead, since the position moved from another block to
+        // that inline root, there was a sufficient position change.
         let closestUneditable = closestElement(leaf, isNotEditableNode);
         if (closestUneditable) {
             // handle nested contenteditable=false elements
             while (!closestUneditable.parentNode.isContentEditable) {
                 closestUneditable = closestUneditable.parentNode;
             }
-            return rightPos(closestUneditable);
+            return blockSwitch &&
+                !isBlock(closestUneditable) &&
+                closestBlock(closestUneditable) !== startNodeClosestBlock
+                ? leftPos(closestUneditable)
+                : rightPos(closestUneditable);
         }
 
         if (leaf.nodeType === Node.ELEMENT_NODE) {
@@ -1201,27 +1220,6 @@ export class DeletePlugin extends Plugin {
     }
 
     // ======== AD-HOC STUFF ========
-
-    // @todo Check if this is still necessary
-    // This a satisfies a weird spec in which the cursor should not move after
-    // the deletion of contenteditable=false elements. This might not be
-    // necessary if the selection normalization is improved.
-    deleteBackwardContentEditableFalse(range) {
-        const { startContainer, startOffset } = range;
-        if (!(startContainer?.nodeType === Node.ELEMENT_NODE)) {
-            return false;
-        }
-        range = this.adjustRange(range, [this.includeEndOrStartBlock]);
-        const node = startContainer.childNodes[startOffset];
-        if (!node || node.nodeType !== Node.ELEMENT_NODE) {
-            return false;
-        }
-        if (isNotEditableNode(node)) {
-            this.deleteRange(range);
-            // The only difference: do not change the selection
-            return true;
-        }
-    }
 
     deleteBackwardUnmergeable(range) {
         const { startContainer, startOffset, endContainer, endOffset } = range;

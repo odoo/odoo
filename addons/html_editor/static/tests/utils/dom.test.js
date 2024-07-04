@@ -1,7 +1,9 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor } from "../_helpers/editor";
-import { cleanTextNode, wrapInlinesInParagraphs } from "@html_editor/utils/dom";
+import { cleanTextNode, wrapInlinesInBlocks } from "@html_editor/utils/dom";
 import { getContent } from "../_helpers/selection";
+import { parseHTML } from "@html_editor/utils/html";
+import { unformat } from "../_helpers/format";
 
 describe("splitAroundUntil", () => {
     test("should split a slice of text from its inline ancestry (1)", async () => {
@@ -110,73 +112,161 @@ describe("cleanTextNode", () => {
     });
 });
 
-describe("wrapInlinesInParagraphs", () => {
+describe("wrapInlinesInBlocks", () => {
     test("should wrap text node in P", async () => {
         const div = document.createElement("div");
         div.innerHTML = "text";
-        wrapInlinesInParagraphs(div);
+        wrapInlinesInBlocks(div);
         expect(div.innerHTML).toBe("<p>text</p>");
     });
     test("should wrap inline element in P", async () => {
         const div = document.createElement("div");
         div.innerHTML = "<strong>text</strong>";
-        wrapInlinesInParagraphs(div);
+        wrapInlinesInBlocks(div);
         expect(div.innerHTML).toBe("<p><strong>text</strong></p>");
     });
     test("should not do anything to block element", async () => {
         const div = document.createElement("div");
         div.innerHTML = "<p>text</p>";
-        wrapInlinesInParagraphs(div);
+        wrapInlinesInBlocks(div);
         expect(div.innerHTML).toBe("<p>text</p>");
     });
     test("should wrap inlines in P", async () => {
         const div = document.createElement("div");
         div.innerHTML = "textnode<strong>inline</strong><p>p</p>";
-        wrapInlinesInParagraphs(div);
+        wrapInlinesInBlocks(div);
         expect(div.innerHTML).toBe("<p>textnode<strong>inline</strong></p><p>p</p>");
     });
     test("should wrap inlines in P (2)", async () => {
         const div = document.createElement("div");
         div.innerHTML = "<strong>inline</strong><p>p</p>textnode";
-        wrapInlinesInParagraphs(div);
+        wrapInlinesInBlocks(div);
         expect(div.innerHTML).toBe("<p><strong>inline</strong></p><p>p</p><p>textnode</p>");
     });
     test("should turn a BR into a paragraph break", async () => {
         const div = document.createElement("div");
         div.innerHTML = "abc<br>def";
-        wrapInlinesInParagraphs(div);
+        wrapInlinesInBlocks(div);
         expect(div.innerHTML).toBe("<p>abc</p><p>def</p>");
     });
     test("should remove a BR that has no effect", async () => {
         const div = document.createElement("div");
         div.innerHTML = "abc<br>def<br>";
-        wrapInlinesInParagraphs(div);
+        wrapInlinesInBlocks(div);
         expect(div.innerHTML).toBe("<p>abc</p><p>def</p>");
     });
     test("empty lines should become empty paragraphs", async () => {
         const div = document.createElement("div");
         div.innerHTML = "abc<br><br>def";
-        wrapInlinesInParagraphs(div);
+        wrapInlinesInBlocks(div);
         expect(div.innerHTML).toBe("<p>abc</p><p><br></p><p>def</p>");
     });
     test("empty lines should become empty paragraphs (2)", async () => {
         const div = document.createElement("div");
         div.innerHTML = "<br>";
-        wrapInlinesInParagraphs(div);
+        wrapInlinesInBlocks(div);
         expect(div.innerHTML).toBe("<p><br></p>");
     });
     test("empty lines should become empty paragraphs (3)", async () => {
         const div = document.createElement("div");
         div.innerHTML = "<br>abc";
-        wrapInlinesInParagraphs(div);
+        wrapInlinesInBlocks(div);
         expect(div.innerHTML).toBe("<p><br></p><p>abc</p>");
     });
     test("mix: handle blocks, inlines and BRs", async () => {
         const div = document.createElement("div");
         div.innerHTML = "a<br><strong>b</strong><h1>c</h1><br>d<h2>e</h2><br>";
-        wrapInlinesInParagraphs(div);
+        wrapInlinesInBlocks(div);
         expect(div.innerHTML).toBe(
             "<p>a</p><p><strong>b</strong></p><h1>c</h1><p><br></p><p>d</p><h2>e</h2><p><br></p>"
+        );
+    });
+    test("wrap block with display style inline in div", async () => {
+        // Second part should be wrapped automatically during initElementForEdition
+        const { el, editor } = await setupEditor(
+            `<div><br></div><div contenteditable="false" style="display: inline;">inline</div>`
+        );
+        const div = el.querySelector("div");
+        editor.shared.setSelection({ anchorNode: div, anchorOffset: 0 });
+        editor.shared.domInsert(
+            parseHTML(
+                editor.document,
+                `<div contenteditable="false" style="display: inline;">inline</div>`
+            )
+        );
+        // First part (inserted content) is wrapped manually
+        wrapInlinesInBlocks(div);
+        expect(getContent(el)).toBe(
+            unformat(`
+                    <div>
+                        <div>
+                            <div contenteditable="false" style="display: inline;">inline</div>
+                        </div>[]
+                    </div>
+                    <div style="margin-bottom: 0px;">
+                        <div contenteditable="false" style="display: inline;">inline</div>
+                    </div>
+            `)
+        );
+    });
+    test("wrap a mix of inline elements in div", async () => {
+        // Second part should be wrapped automatically during initElementForEdition
+        const { el, editor } = await setupEditor(
+            `<div><br></div>text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>`
+        );
+        const div = el.querySelector("div");
+        editor.shared.setSelection({ anchorNode: div, anchorOffset: 0 });
+        editor.shared.domInsert(
+            parseHTML(
+                editor.document,
+                `text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>`
+            )
+        );
+        // First part (inserted content) is wrapped manually
+        wrapInlinesInBlocks(div);
+        expect(getContent(el)).toBe(
+            unformat(`
+                <div>
+                    <div>
+                        text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>
+                    </div>[]
+                </div>
+                <div style="margin-bottom: 0px;">
+                    text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>
+                </div>
+            `)
+        );
+    });
+    test("wrap a mix of inline elements in div with br", async () => {
+        // Second part should be wrapped automatically during initElementForEdition
+        const { el, editor } = await setupEditor(
+            `<div>[]<br></div>text<br><div contenteditable="false" style="display: inline;">inline</div><br><span class="a">span</span>`
+        );
+        const div = el.querySelector("div");
+        editor.shared.setSelection({ anchorNode: div, anchorOffset: 0 });
+        editor.shared.domInsert(
+            parseHTML(
+                editor.document,
+                `text<br><div contenteditable="false" style="display: inline;">inline</div><br><span class="a">span</span>`
+            )
+        );
+        // First part (inserted content) is wrapped manually
+        wrapInlinesInBlocks(div);
+        expect(getContent(el)).toBe(
+            unformat(`
+                <div>
+                    <p>text</p>
+                    <div>
+                        <div contenteditable="false" style="display: inline;">inline</div>
+                    </div>
+                    <p><span class="a">span</span></p>[]
+                </div>
+                <p style="margin-bottom: 0px;">text</p>
+                <div style="margin-bottom: 0px;">
+                    <div contenteditable="false" style="display: inline;">inline</div>
+                </div>
+                <p style="margin-bottom: 0px;"><span class="a">span</span></p>
+            `)
         );
     });
 });
