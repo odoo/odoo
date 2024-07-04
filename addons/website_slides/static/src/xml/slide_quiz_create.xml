@@ -6,7 +6,7 @@
             <form class="mb-3">
                 <div class="o_wslides_quiz_question row align-items-center me-0 mb-2">
                     <div class="input-group">
-                        <span class="input-group-text o_wslides_quiz_question_sequence"><t t-esc="widget.sequence"/></span>
+                        <span class="input-group-text o_wslides_quiz_question_sequence"><t t-out="widget.sequence"/></span>
                         <input type="text" name="question-name" class="form-control col-11" placeholder='e.g. "Which animal cannot fly?"'
                             t-att-value="widget.question.text"/>
                     </div>

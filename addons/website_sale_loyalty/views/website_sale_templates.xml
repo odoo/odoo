@@ -19,13 +19,13 @@
                         </t>
                         <t t-if="website_sale_order.get_promo_code_error(delete=False)">
                             <div class="alert alert-danger text-start small" role="alert">
-                                <t t-esc="website_sale_order.get_promo_code_error()"/>
+                                <t t-out="website_sale_order.get_promo_code_error()"/>
                             </div>
                         </t>
                         <t t-if="website_sale_order">
                             <t t-if="website_sale_order.get_promo_code_success_message(delete=False)">
                                 <div class="alert alert-success text-start small" role="alert">
-                                    You have successfully applied the following code: <strong t-esc="website_sale_order.get_promo_code_success_message()"/>
+                                    You have successfully applied the following code: <strong t-out="website_sale_order.get_promo_code_success_message()"/>
                                 </div>
                             </t>
                             <t t-foreach="website_sale_order._get_claimable_and_showable_rewards().items()" t-as="coupon_reward">
@@ -77,13 +77,13 @@
                                                         <div class="d-md-block small">
                                                             <span t-if="coupon and not coupon.program_id.is_nominative">
                                                                 Code:
-                                                                <t t-esc="coupon.code[-4:].rjust(14, '&#8902;')"/>
+                                                                <t t-out="coupon.code[-4:].rjust(14, '&#8902;')"/>
                                                             </span>
                                                             <t t-if="coupon.expiration_date">
                                                                 <br/>
                                                                 <span>
                                                                     Expired Date:
-                                                                    <t t-esc="coupon.expiration_date"/>
+                                                                    <t t-out="coupon.expiration_date"/>
                                                                 </span>
                                                             </t>
                                                         </div>

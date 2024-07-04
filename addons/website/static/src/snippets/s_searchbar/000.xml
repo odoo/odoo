@@ -6,7 +6,7 @@
     class="o_dropdown_menu show position-absolute w-100">
     <t t-if="fuzzySearch and results.length">
         <span class="dropdown-item-text">
-            <span class="text-muted">No results found for '<t t-esc="search"/>'. Showing results for '<a href="#" class="s_searchbar_fuzzy_submit" t-esc="fuzzySearch"/>'.</span>
+            <span class="text-muted">No results found for '<t t-out="search"/>'. Showing results for '<a href="#" class="s_searchbar_fuzzy_submit" t-out="fuzzySearch"/>'.</span>
         </span>
     </t>
     <t t-elif="!results.length">

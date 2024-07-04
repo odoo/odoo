@@ -37,8 +37,8 @@
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" t-attf-id="post_#{post.id}" t-att-value='post.id' checked='checked'/>
                         <label class="form-check-label" t-attf-for="post_#{post.id}">
-                            <b><t t-esc="post.name" /></b>
-                            <p class='text-muted'><t t-esc="post.content" /></p>
+                            <b><t t-out="post.name" /></b>
+                            <p class='text-muted'><t t-out="post.content" /></p>
                         </label>
                     </div>
                 </div>

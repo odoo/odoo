@@ -9,7 +9,7 @@
             <h1 class="display-3" style="text-align: center;">Your journey starts here</h1>
             <p class="lead" style="text-align: center;">Write one or two paragraphs describing your product, services or a specific feature.<br/> To be successful your content needs to be useful to your readers.</p>
             <p style="text-align: center;">
-                <a t-att-href="cta_btn_href" class="btn btn-secondary mb-2 o_translate_inline"><t t-esc="cta_btn_text">Discover more</t></a>
+                <a t-att-href="cta_btn_href" class="btn btn-secondary mb-2 o_translate_inline"><t t-out="cta_btn_text">Discover more</t></a>
                 <t t-set="contact_us_label">Contact us</t>
                 <a href="/contactus" class="btn btn-outline-secondary mb-2 o_translate_inline"><t t-out="contact_us_label"/></a>
             </p>

@@ -61,7 +61,7 @@ list of filtered posts (by date or tag).
         <section id="o_wblog_index_content" t-att-class="opt_blog_cards_design and 'o_wblog_page_cards_bg'">
             <div class="container py-4">
                 <div t-if="original_search and posts" class="alert alert-warning mt8">
-                    No results found for '<span t-esc="original_search"/>'. Showing results for '<span t-esc="search"/>'.
+                    No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="search"/>'.
                 </div>
                 <div t-attf-class="row #{opt_blog_sidebar_show and 'justify-content-between' or 'justify-content-center'}">
                     <div id="o_wblog_posts_loop_container" t-attf-class="col #{'o_container_small mx-0' if opt_blog_list_view else ''}">
@@ -247,7 +247,7 @@ list of filtered posts (by date or tag).
         <div t-if="len(blogs) > 1">in <a t-attf-href="#{blog_url(blog=blog_post.blog_id)}"><b t-field="blog.name"/></a></div>
         <div t-if="len(blog_post.tag_ids) > 0">#
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                <a t-attf-class="badge me-1 o_tag o_color_#{one_tag.color} post_link" t-attf-href="#{blog_url(tag=slug(one_tag), date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
+                <a t-attf-class="badge me-1 o_tag o_color_#{one_tag.color} post_link" t-attf-href="#{blog_url(tag=slug(one_tag), date_begin=False, date_end=False)}" t-out="one_tag.name"/>
             </t>
         </div>
     </div>
@@ -406,17 +406,17 @@ list of filtered posts (by date or tag).
 <!-- Atom Feed -->
 <template id="blog_feed">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 <feed t-att-xmlns="'http://www.w3.org/2005/Atom'">
-    <title t-esc="blog.name"/>
+    <title t-out="blog.name"/>
     <link t-att-href="'%s/blog/%s' % (base_url ,blog.id)"/>
-    <id t-esc="'%s/blog/%s' % (base_url, blog.id)"/>
-    <updated t-esc="str(posts[0].post_date).replace(' ', 'T') + 'Z' if posts else ''"/>
+    <id t-out="'%s/blog/%s' % (base_url, blog.id)"/>
+    <updated t-out="str(posts[0].post_date).replace(' ', 'T') + 'Z' if posts else ''"/>
     <entry t-foreach="posts" t-as="post">
-        <title t-esc="post.name"/>
+        <title t-out="post.name"/>
         <link t-att-href="'%s%s' % (base_url, post.website_url)"/>
-        <id t-esc="'%s%s' % (base_url, post.website_url)"/>
-        <author><name t-esc="post.sudo().author_id.name"/></author>
-        <summary t-esc="html2plaintext(post.teaser)"/>
-        <updated t-esc="str(post.post_date).replace(' ', 'T') + 'Z'"/>
+        <id t-out="'%s%s' % (base_url, post.website_url)"/>
+        <author><name t-out="post.sudo().author_id.name"/></author>
+        <summary t-out="html2plaintext(post.teaser)"/>
+        <updated t-out="str(post.post_date).replace(' ', 'T') + 'Z'"/>
     </entry>
 </feed>
 </template>
