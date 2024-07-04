@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_product_tree_hsn_l10n_in" model="ir.ui.view">
+        <field name="name">product.product.tree.l10n_in</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <tree sample="1" string="Products" editable="top" create="0" delete="0">
+                <field name="name" string="Product" readonly="1"/>
+                <field name="l10n_in_hsn_code"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

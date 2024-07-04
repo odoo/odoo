@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import json
 from odoo import fields, models, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, RedirectWarning
 
 
 class AccountMove(models.Model):
@@ -99,12 +100,36 @@ class AccountMove(models.Model):
             ))
         return super().button_cancel_posted_moves()
 
+    def _get_l10n_in_edi_ewaybill_invalid_hsn_product_line_ids(self):
+        edi_format = self.env.ref('l10n_in_edi_ewaybill.edi_in_ewaybill_json_1_03')
+        product_line_ids = []
+        for line in self.invoice_line_ids:
+            hsn_code = edi_format._l10n_in_edi_extract_digits(line.l10n_in_hsn_code)
+            if (
+                line.display_type == 'product' and
+                not edi_format._l10n_in_is_global_discount(line) and
+                not (hsn_code and re.match(r'^\d{4}$|^\d{6}$|^\d{8}$', hsn_code))
+            ):
+                product_line_ids.append(line.id)
+        return product_line_ids
+
     def l10n_in_edi_ewaybill_send(self):
         edi_format = self.env.ref('l10n_in_edi_ewaybill.edi_in_ewaybill_json_1_03')
         edi_document_vals_list = []
         for move in self:
             if move.state != 'posted':
                 raise UserError(_("You can only create E-waybill from posted invoice"))
+            invalid_hsn_product_line_ids = self._get_l10n_in_edi_ewaybill_invalid_hsn_product_line_ids()
+            if invalid_hsn_product_line_ids:
+                action_error = {
+                    'view_mode': 'tree',
+                    'name': _('Journal Items(s)'),
+                    'res_model': 'account.move.line',
+                    'type': 'ir.actions.act_window',
+                    'domain': [('id', 'in', invalid_hsn_product_line_ids)],
+                    'views': [(self.env.ref('l10n_in.view_move_line_tree_hsn_l10n_in').id, 'list')]
+                }
+                raise RedirectWarning(_("HSN/SAC code is missing/invalid on Invoice Line"), action_error, _('View Lines with Empty/Invalid HSN/SAC'))
             errors = edi_format._check_move_configuration(move)
             if errors:
                 raise UserError(_("Invalid invoice configuration:\n\n%s", '\n'.join(errors)))

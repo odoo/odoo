@@ -4,6 +4,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo import _
 from odoo.fields import Command
 from odoo.tests import tagged
+from odoo.exceptions import RedirectWarning
 
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
@@ -198,3 +199,11 @@ class TestStockEwaybill(AccountTestInvoicingCommon):
         }
         ewaybill._l10n_in_ewaybill_stock_handle_zero_distance_alert_if_present(response)
         self.assertEqual(ewaybill.distance, expected_distance)
+
+    def test_ewaybill_stock_test_4(self):
+        """Test with missing hsn code"""
+        delivery_picking = self._create_stock_picking()
+        delivery_picking.move_ids.product_id.l10n_in_hsn_code = False
+        delivery_picking.action_l10n_in_ewaybill_create()
+        with self.assertRaises(RedirectWarning):
+            delivery_picking.l10n_in_ewaybill_id.generate_ewaybill()

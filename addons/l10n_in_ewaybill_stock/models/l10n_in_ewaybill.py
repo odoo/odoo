@@ -10,7 +10,7 @@ from collections import defaultdict
 from psycopg2 import OperationalError
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, RedirectWarning
 from odoo.addons.l10n_in_ewaybill_stock.tools.ewaybill_api import EWayBillApi, EWayBillError
 
 
@@ -222,6 +222,17 @@ class Ewaybill(models.Model):
 
     def generate_ewaybill(self):
         for ewaybill in self:
+            invalid_hsn_product_ids = self._get_l10n_in_ewaybill_invalid_hsn_product_ids()
+            if invalid_hsn_product_ids:
+                action_error = {
+                    'view_mode': 'tree',
+                    'name': _('Products'),
+                    'res_model': 'product.product',
+                    'type': 'ir.actions.act_window',
+                    'domain': [('id', 'in', invalid_hsn_product_ids)],
+                    'views': [(self.env.ref('l10n_in_ewaybill_stock.view_product_tree_hsn_l10n_in').id, 'list')]
+                }
+                raise RedirectWarning('HSN/SAC code is missing/invalid on Product', action_error, _('View Products with Empty/Invalid HSN/SAC'))
             if errors := ewaybill._check_configuration():
                 raise UserError('\n'.join(errors))
             ewaybill._generate_ewaybill_direct()
@@ -257,7 +268,6 @@ class Ewaybill(models.Model):
         methods_to_check = [
             self._check_partners,
             self._check_document_number,
-            self._check_lines,
             self._check_gst_treatment,
             self._check_transporter,
         ]
@@ -305,18 +315,6 @@ class Ewaybill(models.Model):
         if not re.match("^.{1,16}$", self.document_number):
             return [_("Document number should be set and not more than 16 characters")]
         return []
-
-    def _check_lines(self):
-        error_message = []
-        AccountEDI = self.env['account.edi.format']
-        for line in self.move_ids:
-            if not (hsn_code := AccountEDI._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)):
-                error_message.append(_("HSN code is not set in product %s", line.product_id.name))
-            elif not re.match("^[0-9]+$", hsn_code):
-                error_message.append(_(
-                    "Invalid HSN Code (%s) in product %s", hsn_code, line.product_id.name
-                ))
-        return error_message
 
     def _check_gst_treatment(self):
         partner, gst_treatment = self._get_gst_treatment()
@@ -515,6 +513,15 @@ class Ewaybill(models.Model):
                     "cessNonadvol": AccountEDI._l10n_in_round_value(cess_non_advol)
                 })
         return line_details
+
+    def _get_l10n_in_ewaybill_invalid_hsn_product_ids(self):
+        AccountEDI = self.env['account.edi.format']
+        product_ids = []
+        for line in self.move_ids:
+            hsn_code = AccountEDI._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
+            if not (hsn_code and re.match(r'^\d{4}$|^\d{6}$|^\d{8}$', hsn_code)):
+                product_ids.append(line.product_id.id)
+        return product_ids
 
     def _prepare_ewaybill_base_json_payload(self):
 
