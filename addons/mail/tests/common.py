@@ -921,12 +921,18 @@ class MailCase(MockEmail):
             self.assertEqual(self._new_notifs, done_notifs, 'Mail: invalid notification creation (%s) / expected (%s)' % (len(self._new_notifs), len(done_notifs)))
 
     @contextmanager
-    def assertBus(self, channels, message_items=None):
-        """ Check content of bus notifications. """
+    def assertBus(self, channels=None, message_items=None, get_params=None):
+        """Check content of bus notifications.
+        Params might not be determined in advance (newly created id, create_date, ...), in this case
+        the `get_params` function can be given to return the expected values, called after the
+        execution of the tested code.
+        """
         try:
             with self.mock_bus():
                 yield
         finally:
+            if get_params:
+                channels, message_items = get_params()
             found_bus_notifs = self.assertBusNotifications(channels, message_items=message_items)
             self.assertEqual(
                 self._new_bus_notifs,
