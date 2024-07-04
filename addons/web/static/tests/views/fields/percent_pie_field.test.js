@@ -110,3 +110,41 @@ test("PercentPieField in form view with float value", async () => {
         { message: "pie should have a background computed for its value of 33.3333%" }
     );
 });
+
+test("hide the string when the PercentPieField widget is used in the view", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="int_field" widget="percentpie"/>
+                        </group>
+                    </sheet>
+                </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_percent_pie.o_field_widget .o_pie").toHaveCount(1);
+    expect(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_text").not.toBeVisible();
+});
+
+test.tags("desktop")("show the string when the PercentPieField widget is used in a button with the class oe_stat_button", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+               <form>
+                    <div name="button_box" class="oe_button_box">
+                        <button type="object" class="oe_stat_button">
+                            <field name="int_field" widget="percentpie"/>
+                        </button>
+                    </div>
+                </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_percent_pie.o_field_widget .o_pie").toHaveCount(1);
+    expect(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_text").toBeVisible();
+});
