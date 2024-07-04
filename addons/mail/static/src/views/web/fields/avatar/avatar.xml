@@ -6,6 +6,7 @@
             <img t-attf-class="rounded {{props.noSpacing ? '' : 'me-2'}}"
                 t-attf-src="/web/image/{{props.resModel}}/{{props.resId}}/avatar_128"
                 t-on-click.stop.prevent="onClickAvatar"
+                draggable="false"
             />
             <span t-if="props.displayName" class="text-truncate w-0 flex-grow-1" t-esc="props.displayName"/>
         </div>

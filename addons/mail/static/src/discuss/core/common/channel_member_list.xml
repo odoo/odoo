@@ -29,7 +29,7 @@
     <t t-name="discuss.channel_member">
         <div class="o-discuss-ChannelMember d-flex align-items-center p-2 bg-view" t-att-class="{ 'cursor-pointer': canOpenChatWith(member) }" t-on-click.stop="(ev) => this.onClickAvatar(ev, member)">
             <div class="bg-inherit o-discuss-ChannelMember-avatar position-relative d-flex ms-4 flex-shrink-0">
-                <img class="w-100 h-100 rounded o_object_fit_cover"
+                <img class="w-100 h-100 rounded o_object_fit_cover" draggable="false"
                      t-att-src="member.persona.avatarUrl"/>
                 <ImStatus persona="member.persona" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
             </div>

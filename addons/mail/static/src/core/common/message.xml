@@ -17,7 +17,7 @@
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
                     <div class="o-mail-Message-sidebar d-flex flex-shrink-0" t-att-class="{ 'justify-content-end': isAlignedRight, 'align-items-start justify-content-start': !isAlignedRight  }">
                         <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view" t-att-class="getAvatarContainerAttClass()">
-                            <img class="o-mail-Message-avatar w-100 h-100 rounded" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
+                            <img class="o-mail-Message-avatar w-100 h-100 rounded" draggable="false" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
                         </div>
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
                         <t t-elif="!message.is_transient">

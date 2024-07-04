@@ -26,6 +26,7 @@
                                 t-att-src="state.favorites.gifs[0].media_formats.tinygif.url"
                                 loading="lazy"
                                 alt="GIF Favorites"
+                                draggable="false"
                             />
                             <div class="position-absolute w-100 h-100 top-0 start-0 text-center o-text-white align-middle fs-2 o-bg-black bg-opacity-50">
                                 Favorites
@@ -45,7 +46,7 @@
                         <t t-foreach="state.categories" t-as="category" t-key="category.name">
                             <div class="col">
                                 <div class="position-relative ratio ratio-16x9 cursor-pointer rounded overflow-hidden" t-on-click="() => this.onClickCategory(category)" aria-label="list-item">
-                                    <img class="o-discuss-GifPickerCategory-img img-fluid" t-att-src="category.image" loading="lazy" alt="GIF Category"/>
+                                    <img class="o-discuss-GifPickerCategory-img img-fluid" draggable="false" t-att-src="category.image" loading="lazy" alt="GIF Category"/>
                                     <div class="position-absolute w-100 h-100 top-0 start-0 text-center o-text-white align-middle fs-2 o-bg-black bg-opacity-50">
                                         <t t-out="category.name"/>
                                     </div>
@@ -94,6 +95,7 @@
                 loading="lazy"
                 alt="GIF"
                 t-att-style="style"
+                draggable="false"
             />
         </div>
     </t>

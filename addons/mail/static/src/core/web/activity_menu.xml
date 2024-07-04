@@ -16,7 +16,7 @@
                     <t t-foreach="store.activityGroups" t-as="group" t-key="group_index" name="activityGroupLoop">
                         <div class="o-mail-ActivityGroup list-group-item list-group-item-action d-flex p-2 cursor-pointer"
                              t-att-data-model_name="group.model" t-on-click="() => this.openActivityGroup(group)">
-                            <img alt="Activity" t-att-src="group.icon"/>
+                            <img draggable="false" alt="Activity" t-att-src="group.icon"/>
                             <div class="flex-grow-1 overflow-hidden">
                                 <div class="d-flex px-2" name="activityTitle" t-out="group.name"/>
                                 <div t-if="group.type === 'activity'" class="d-flex">
