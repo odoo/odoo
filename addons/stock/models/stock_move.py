@@ -191,11 +191,12 @@ class StockMove(models.Model):
         for move in self:
             move.product_uom = move.product_id.uom_id.id
 
-    @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots')
+    @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'product_id')
     def _compute_display_assign_serial(self):
         for move in self:
             move.display_import_lot = (
                 move.has_tracking != 'none' and
+                move.product_id and
                 move.picking_type_id.use_create_lots and
                 not move.origin_returned_move_id.id and
                 move.state not in ('done', 'cancel')
@@ -883,6 +884,8 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     @api.model
     def action_generate_lot_line_vals(self, context, mode, first_lot, count, lot_text):
+        if not context.get('default_product_id'):
+            raise UserError(_("No product found to generate Serials/Lots for."))
         assert mode in ('serial', 'import')
         default_vals = {}
         # Get default values
