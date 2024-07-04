@@ -5,10 +5,14 @@ import { setupEditor } from "./_helpers/editor";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setContent } from "./_helpers/selection";
 
+const base64Img =
+    "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+
 test("image can be selected", async () => {
     const { editor } = await setupEditor(`
-        <img class="img-fluid" src="/web/static/img/logo.png">
+        <img src="${base64Img}">
     `);
+
     click("img");
     await waitFor(".o-we-toolbar");
     expect(".btn-group[name='image_shape']").toHaveCount(1);
@@ -18,7 +22,7 @@ test("image can be selected", async () => {
 
 test("can shape an image", async () => {
     await setupEditor(`
-        <img class="img-fluid" src="/web/static/img/logo.png">
+        <img src="${base64Img}">
     `);
     click("img");
     await waitFor(".o-we-toolbar");
@@ -51,7 +55,7 @@ test("can shape an image", async () => {
 
 test("can undo a shape", async () => {
     const { editor } = await setupEditor(`
-        <img class="img-fluid" src="/web/static/img/logo.png">
+        <img src="${base64Img}">
     `);
     click("img");
     await waitFor(".o-we-toolbar");
@@ -68,7 +72,7 @@ test("can undo a shape", async () => {
 
 test("can add an image description & tooltip", async () => {
     await setupEditor(`
-        <img class="img-fluid" src="/web/static/img/logo.png">
+        <img src="${base64Img}">
     `);
     click("img");
     await waitFor(".o-we-toolbar");
@@ -87,7 +91,7 @@ test("can add an image description & tooltip", async () => {
 
 test("can edit an image description & tooltip", async () => {
     await setupEditor(`
-        <img class="img-fluid test-image" src="/web/static/img/logo.png" alt="description" title="tooltip">
+        <img class="img-fluid test-image" src="${base64Img}" alt="description" title="tooltip">
     `);
     click("img.test-image");
     await waitFor(".o-we-toolbar");
@@ -108,7 +112,7 @@ test("can edit an image description & tooltip", async () => {
 
 test("Can change an image size", async () => {
     await setupEditor(`
-        <img class="img-fluid test-image" src="/web/static/img/logo.png">
+        <img class="img-fluid test-image" src="${base64Img}">
     `);
     click("img.test-image");
     await waitFor(".o-we-toolbar");
@@ -138,7 +142,7 @@ test("Can change an image size", async () => {
 
 test("Can undo the image sizing", async () => {
     const { editor } = await setupEditor(`
-        <img class="img-fluid test-image" src="/web/static/img/logo.png">
+        <img class="img-fluid test-image" src="${base64Img}">
     `);
     click("img.test-image");
     await waitFor(".o-we-toolbar");
@@ -154,7 +158,7 @@ test("Can undo the image sizing", async () => {
 
 test("Can change the padding of an image", async () => {
     await setupEditor(`
-        <img class="img-fluid test-image" src="/web/static/img/logo.png">
+        <img class="img-fluid test-image" src="${base64Img}">
     `);
     click("img.test-image");
     await waitFor(".o-we-toolbar");
@@ -195,7 +199,7 @@ test("Can change the padding of an image", async () => {
 
 test("Can undo the image padding", async () => {
     const { editor } = await setupEditor(`
-        <img class="img-fluid test-image" src="/web/static/img/logo.png">
+        <img class="img-fluid test-image" src="${base64Img}" alt="description" title="tooltip">
     `);
     click("img.test-image");
     await waitFor(".o-we-toolbar");
@@ -213,7 +217,7 @@ test("Can undo the image padding", async () => {
 
 test("Can preview an image", async () => {
     await setupEditor(`
-        <img class="img-fluid test-image" src="/web/static/img/logo.png">
+        <img class="img-fluid test-image" src="${base64Img}">
     `);
     click("img.test-image");
     await waitFor(".o-we-toolbar");
@@ -224,7 +228,7 @@ test("Can preview an image", async () => {
 
 test("Can transform an image", async () => {
     await setupEditor(`
-        <img class="img-fluid test-image" src="/web/static/img/logo.png">
+        <img class="img-fluid test-image" src="${base64Img}">
     `);
     click("img.test-image");
     await waitFor(".o-we-toolbar");
@@ -239,9 +243,8 @@ test("Can transform an image", async () => {
 });
 
 test("jquery transform overlay is rightly positioned in iframe", async () => {
-    const { el } = await setupEditor(
-        `
-        <img class="img-fluid test-image" src="/web/static/img/logo.png">
+    const { el } = await setupEditor(`
+        <img class="img-fluid test-image" src="${base64Img}">
     `,
         { props: { iframe: true } }
     );
@@ -255,7 +258,7 @@ test("jquery transform overlay is rightly positioned in iframe", async () => {
 
 test("Image transformation dissapear when selection change", async () => {
     const { el } = await setupEditor(`
-        <img class="img-fluid test-image" src="/web/static/img/logo.png">
+        <img class="img-fluid test-image" src="${base64Img}">
         <p> Hello world </p>
     `);
     click("img.test-image");
@@ -280,12 +283,14 @@ test("Image transformation dissapear when selection change", async () => {
 });
 
 test("Can delete an image", async () => {
-    await setupEditor(`<p> <img class="img-fluid" src="/web/static/img/logo.png"> </p>`);
-    expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
+    await setupEditor(`
+        <p> <img class="img-fluid test-image" src="${base64Img}"> </p>
+    `);
+    expect(".test-image").toHaveCount(1);
     click("img");
     await waitFor(".o-we-toolbar");
     expect("button[name='image_delete']").toHaveCount(1);
     click("button[name='image_delete']");
     await animationFrame();
-    expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
+    expect(".test-image").toHaveCount(0);
 });
