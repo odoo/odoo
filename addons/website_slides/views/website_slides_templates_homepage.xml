@@ -77,7 +77,7 @@
                                         <t t-set="img_class" t-value="'rounded-circle me-1'"/>
                                         <t t-set="img_style" t-value="'width: 22px; height: 22px;'"/>
                                     </t>
-                                    <h5 t-esc="user.name" class="d-flex flex-grow-1 mb-0"/>
+                                    <h5 t-out="user.name" class="d-flex flex-grow-1 mb-0"/>
                                     <a class="d-none d-lg-block" t-att-href="'/profile/user/%s' % user.id">View</a>
                                     <a class="d-lg-none btn btn-sm bg-white border" href="#" data-bs-toggle="collapse" data-bs-target="#o_wslides_home_aside_content">More info</a>
                                 </div>
@@ -102,7 +102,7 @@
                         </div>
                     </div>
                     <div t-att-class="'col-lg-9 pe-lg-5 order-lg-1' if has_side_column else 'col-lg pr-lg'">
-                        <div t-if="invite_error_msg" role="alert" class="o_not_editable alert alert-danger text-center" t-esc="invite_error_msg"/>
+                        <div t-if="invite_error_msg" role="alert" class="o_not_editable alert alert-danger text-center" t-out="invite_error_msg"/>
                         <div class="o_wslides_home_content_section mb-3"
                             t-if="not channels_popular">
                             <p class="h2">No Course created yet.</p>
@@ -234,12 +234,12 @@
                                         t-att-data-bs-target="'#navToogleTagGroup%s' % tag_group.id"
                                         role="button" data-bs-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false"
-                                        t-esc="tag_group.name"/>
+                                        t-out="tag_group.name"/>
                                     <div class="dropdown-menu" t-att-id="'navToogleTagGroup%s' % tag_group.id">
                                         <t t-foreach="group_frontend_tags" t-as="tag">
                                             <span t-att-class="'post_link cursor-pointer dropdown-item %s' % ('active' if tag in search_tags else '')"
                                                 t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
-                                                t-esc="tag.name"/>
+                                                t-out="tag.name"/>
                                         </t>
                                     </div>
                                 </li>
@@ -285,7 +285,7 @@
                 <t t-if="search_term">
                       <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
                       <i class="fa fa-tag me-2 text-muted"/>
-                      <t t-esc="search_term"/>
+                      <t t-out="search_term"/>
                       <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids), my=search_my, slide_category=search_slide_category, prevent_redirect=True)"
                          class="post_link cursor-pointer btn border-0 py-1">&#215;</span>
                     </span>
@@ -293,7 +293,7 @@
                 <t t-foreach="search_tags" t-as="tag">
                     <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
                         <i class="fa fa-tag me-2 text-muted"/>
-                        <t t-esc="tag.display_name"/>
+                        <t t-out="tag.display_name"/>
                         <span t-att-data-post='slide_query_url(tag=slugify_tags(search_tags.ids, tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)'
                             class="post_link cursor-pointer btn border-0 py-1">&#215;</span>
                     </span>
@@ -305,14 +305,14 @@
                     <p groups="website_slides.group_website_slides_officer">Click on "New" in the top-right corner to write your first course.</p>
                 </div>
                 <div t-elif="search_term and not channels" class="alert alert-info mb-5">
-                    No course was found matching your search <code><t t-esc="search_term"/></code>.
+                    No course was found matching your search <code><t t-out="search_term"/></code>.
                 </div>
                 <div t-elif="not channels" class="alert alert-info mb-5">
                     No course was found matching your search.
                 </div>
                 <t t-else="">
                     <div t-if="original_search" class="alert alert-warning mb-5">
-                        No results found for '<span t-esc="original_search"/>'. Showing results for '<span t-esc="search_term"/>'.
+                        No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="search_term"/>'.
                     </div>
                     <div class="row mx-n2">
                         <t t-foreach="channels" t-as="channel">
@@ -351,11 +351,11 @@
                     <t t-foreach="channel_frontend_tags" t-as="tag">
                         <t t-if="search_tags">
                             <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
-                                t-attf-class="post_link cursor-pointer badge o_badge_clickable #{'o_color_'+str(tag.color) if tag in search_tags else 'o_wslides_channel_tag o_color_0'}" t-esc="tag.name"/>
+                                t-attf-class="post_link cursor-pointer badge o_badge_clickable #{'o_color_'+str(tag.color) if tag in search_tags else 'o_wslides_channel_tag o_color_0'}" t-out="tag.name"/>
                         </t>
                         <t t-else="">
                             <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
-                                t-attf-class="post_link cursor-pointer badge o_badge_clickable o_wslides_channel_tag #{'o_color_'+str(tag.color)}" t-esc="tag.name"/>
+                                t-attf-class="post_link cursor-pointer badge o_badge_clickable o_wslides_channel_tag #{'o_color_'+str(tag.color)}" t-out="tag.name"/>
                         </t>
                     </t>
                 </div>
@@ -363,7 +363,7 @@
         </div>
         <div class="card-footer bg-white text-600 px-3">
             <div class="d-flex justify-content-between align-items-center">
-                <small t-if="channel.total_time" class="fw-bold" t-esc="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/>
+                <small t-if="channel.total_time" class="fw-bold" t-out="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/>
                 <div class="d-flex flex-grow-1 justify-content-end">
                     <t t-if="channel.is_member and channel.completed">
                         <span class="badge text-bg-success pull-right"><i class="fa fa-check"/> Completed</span>
@@ -371,7 +371,7 @@
                     <div t-elif="channel.is_member and channel.channel_type != 'documentation'" class="progress w-50" style="height: 6px">
                         <div class="progress-bar" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{channel.completion}%;" aria-label="Progress bar"/>
                     </div>
-                    <small t-else=""><b t-esc="channel.total_slides"/> steps</small>
+                    <small t-else=""><b t-out="channel.total_slides"/> steps</small>
                 </div>
             </div>
         </div>
@@ -421,7 +421,7 @@
             <t t-set="user" t-value="achievement.user_id"/>
         </t>
         <div style="line-height: 1.3">
-            <span class="fw-bold" t-esc="achievement.user_id.name"/> achieved <span class="fw-bold" t-esc="achievement.badge_id.name"/>
+            <span class="fw-bold" t-out="achievement.user_id.name"/> achieved <span class="fw-bold" t-out="achievement.badge_id.name"/>
         </div>
     </div>
 </template>
@@ -459,14 +459,14 @@
 
 <template id='user_quickkarma_card' name="User QuickKarma Card">
     <div class="d-flex mb-3 align-items-center">
-        <b class="me-2 text-muted" t-esc="counter"/>
+        <b class="me-2 text-muted" t-out="counter"/>
         <t t-call="website_slides.slides_misc_user_image"/>
         <div style="line-height:1.3">
-            <span class="fw-bold" t-esc="user.name"/>
+            <span class="fw-bold" t-out="user.name"/>
             <div class="d-flex align-items-center">
-                <t t-esc="user.rank_id.name"/>
+                <t t-out="user.rank_id.name"/>
                 <span class="text-500 mx-2">&#8226;</span>
-                <span class="badge text-bg-success"><t t-esc="user.karma"/> xp</span>
+                <span class="badge text-bg-success"><t t-out="user.karma"/> xp</span>
             </div>
         </div>
     </div>
@@ -506,8 +506,8 @@
                     t-options="{'widget': 'image', 'preview_image': 'image_128', 'class': 'me-2', 'style': 'max-height: 36px'}"/>
                 <img t-else="" t-attf-src="'/website_profile/static/src/img/badge_%s.svg' % (challenge.reward_id.level)" t-att-alt="challenge.reward_id.name" style="max-height: 36px" class="me-2"/>
                 <div class="flex-grow-1">
-                    <b class="text_small_caps" t-esc="challenge.reward_id.name"/><br/>
-                    <span class="text-muted" t-esc="challenge.reward_id.description"/>
+                    <b class="text_small_caps" t-out="challenge.reward_id.name"/><br/>
+                    <span class="text-muted" t-out="challenge.reward_id.description"/>
                 </div>
                 <i t-if="challenge_done" class="fa fa-check h5 text-success" aria-label="Done" title="Done" role="img"></i>
             </div>

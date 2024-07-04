@@ -10,7 +10,7 @@
                 </a>
             </div>
             <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; width: 100%;">
-                <p t-esc="product.name"/>
+                <p t-out="product.name"/>
                 <p t-if="product.product_template_attribute_value_ids"
                    style="margin-left: 0.5em;">
                     (<t
@@ -18,7 +18,7 @@
                     />)
                 </p>
             </div>
-            <p t-esc="product.description_sale"/>
+            <p t-out="product.description_sale"/>
             <div style="display: flex; justify-content: center; width: 100%;">
                 <a t-attf-href="#{product.website_url}" t-attf-style="background-color: {{product.website_id.get_current_website().company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{product.website_id.get_current_website().company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;">
                     Order Now

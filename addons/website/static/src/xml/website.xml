@@ -5,14 +5,14 @@
                 <div class="modal-dialog">
                 <div class="modal-content">
                     <header class="modal-header" t-if="window_title">
-                        <h3 class="modal-title"><t t-esc="window_title"/></h3>
+                        <h3 class="modal-title"><t t-out="window_title"/></h3>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </header>
                     <main class="modal-body">
                         <form role="form" t-att-id="id">
                             <div class="row mb0">
                                 <label for="page-name" class="col-md-3 col-form-label">
-                                    <t t-esc="field_name"/>
+                                    <t t-out="field_name"/>
                                 </label>
                                 <div class="col-md-9">
                                     <input t-if="field_type == 'input'" type="text" class="form-control" required="required"/>
@@ -23,8 +23,8 @@
                         </form>
                     </main>
                     <footer class="modal-footer">
-                        <button type="button" class="btn btn-primary btn-continue"><t t-esc="btn_primary_title"/></button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Cancel"><t t-esc="btn_secondary_title"/></button>
+                        <button type="button" class="btn btn-primary btn-continue"><t t-out="btn_primary_title"/></button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Cancel"><t t-out="btn_secondary_title"/></button>
                     </footer>
                 </div>
             </div>

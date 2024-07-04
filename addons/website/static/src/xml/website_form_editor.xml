@@ -51,12 +51,12 @@
     </t>
 
     <t t-name="website.form_label_content">
-        <span class="s_website_form_label_content" t-esc="field.string"/>
+        <span class="s_website_form_label_content" t-out="field.string"/>
         <t t-if="field.required or field.modelRequired">
-            <span class="s_website_form_mark" t-if="field.formatInfo.requiredMark" t-esc="' ' + field.formatInfo.mark"/>
+            <span class="s_website_form_mark" t-if="field.formatInfo.requiredMark" t-out="' ' + field.formatInfo.mark"/>
         </t>
         <t t-else="">
-            <span class="s_website_form_mark" t-if="field.formatInfo.optionalMark" t-esc="' ' + field.formatInfo.mark"/>
+            <span class="s_website_form_mark" t-if="field.formatInfo.optionalMark" t-out="' ' + field.formatInfo.mark"/>
         </t>
     </t>
 
@@ -74,7 +74,7 @@
             not make sense to try and change it over there anyway).
         -->
         <div t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true">
-            <t t-esc="default_description"/>
+            <t t-out="default_description"/>
         </div>
     </t>
 
@@ -132,7 +132,7 @@
                 t-att-placeholder="field.placeholder"
                 t-att-id="field.id"
                 t-att-rows="field.rows || 3"
-                t-esc="field.value"
+                t-out="field.value"
             />
         </t>
     </t>
@@ -267,7 +267,7 @@
                     t-att-required="field.required || field.modelRequired || None"
                 />
                 <label class="form-check-label s_website_form_check_label" t-att-for="recordId">
-                    <t t-esc="record.display_name"/>
+                    <t t-out="record.display_name"/>
                 </label>
             </div>
         </div>
@@ -284,7 +284,7 @@
             <t t-call="website.form_field">
                 <select class="form-select s_website_form_input" t-att-name="field.name" t-att-required="field.required || field.modelRequired || None" t-att-id="field.id">
                     <t t-foreach="field.records" t-as="record" t-key="record_index">
-                        <option t-esc="record.display_name" t-att-id="field.id + record_index" t-att-value="record.id" t-att="{selected: record.selected and 'selected' or None}"/>
+                        <option t-out="record.display_name" t-att-id="field.id + record_index" t-att-value="record.id" t-att="{selected: record.selected and 'selected' or None}"/>
                     </t>
                 </select>
             </t>
@@ -338,7 +338,7 @@
                     t-att-required="field.required || field.modelRequired || None"
                 />
                 <label class="form-check-label s_website_form_check_label" t-att-for="recordId">
-                    <t t-esc="record.display_name"/>
+                    <t t-out="record.display_name"/>
                 </label>
             </div>
         </div>
