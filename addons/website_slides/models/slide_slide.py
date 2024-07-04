@@ -821,6 +821,8 @@ class Slide(models.Model):
         The received duration is under a special format (e.g: PT1M21S15, meaning 1h 21m 15s). """
 
         key = self.env['website'].get_current_website().sudo().website_slide_google_app_key
+        if not key:
+            return {'error': _('Please enter a Google API key in your settings to have a preview. Settings > Website > Features > API Key')}
         fetch_res = self._fetch_data('https://www.googleapis.com/youtube/v3/videos', {'id': document_id, 'key': key, 'part': 'snippet,contentDetails', 'fields': 'items(id,snippet,contentDetails)'}, 'json')
         if fetch_res.get('error'):
             return {'error': self._extract_google_error_message(fetch_res.get('error'))}
