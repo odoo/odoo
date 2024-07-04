@@ -1009,13 +1009,25 @@ class Message(models.Model):
                 for follower in followers
             }
         for vals in vals_list:
-            message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
+            message = self.browse(vals["id"]).with_prefetch(self.ids)
             author = False
-            if message_sudo.author_guest_id:
-                author = message_sudo.author_guest_id._guest_format(fields={"id": True, "name": True}).get(message_sudo.author_guest_id)
-            elif message_sudo.author_id:
-                author = message_sudo.author_id.mail_partner_format({'id': True, 'name': True, 'is_company': True, 'user': {"id": True}, "write_date": True}).get(message_sudo.author_id)
-            record = record_by_message.get(message_sudo)
+            if message.author_guest_id:
+                # sudo: mail.message: access to author is allowed
+                author = message.sudo().author_guest_id._guest_format(
+                    fields={"id": True, "name": True}
+                ).get(message.author_guest_id)
+            elif message.author_id:
+                # sudo: mail.message: access to author is allowed
+                author = message.sudo().author_id.mail_partner_format(
+                    {
+                        "id": True,
+                        "name": True,
+                        "is_company": True,
+                        "user": {"id": True},
+                        "write_date": True,
+                    }
+                ).get(message.author_id)
+            record = record_by_message.get(message)
             if record:
                 # sudo: if mentionned in a non accessible thread, user should be able to see the name
                 record_name = record.sudo().display_name
@@ -1027,48 +1039,68 @@ class Message(models.Model):
                 record_name = False
                 default_subject = False
             reactions_per_content = defaultdict(self.env['mail.message.reaction'].sudo().browse)
-            for reaction in message_sudo.reaction_ids:
+            # sudo: mail.message - reading reactions on accessible message is allowed
+            for reaction in message.sudo().reaction_ids:
                 reactions_per_content[reaction.content] |= reaction
             reaction_groups = [{
                 'content': content,
                 'count': len(reactions),
                 'personas': [{'id': guest.id, 'name': guest.name, 'type': "guest"} for guest in reactions.guest_id] + [{'id': partner.id, 'name': partner.name, 'type': "partner"} for partner in reactions.partner_id],
-                'message': {'id': message_sudo.id},
+                "message": {"id": message.id},
             } for content, reactions in reactions_per_content.items()]
-            vals.update(message_sudo._message_format_extras(format_reply))
+            vals.update(message._message_format_extras(format_reply))
             vals.pop("starred_partner_ids", None)
             vals.update({
                 'author': author,
                 'default_subject': default_subject,
-                'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
-                'attachments': sorted(message_sudo.attachment_ids._attachment_format(), key=lambda a: a["id"]),
-                'linkPreviews': message_sudo.link_preview_ids.filtered(lambda preview: not preview.is_hidden)._link_preview_format(),
+                "notifications": message.notification_ids._filtered_for_web_client()._notification_format(),
+                "attachments": sorted(
+                    # sudo: mail.message - reading attachments on accessible message is allowed
+                    message.sudo().attachment_ids._attachment_format(), key=lambda a: a["id"]
+                ),
+                # sudo: mail.message - reading link preview on accessible message is allowed
+                "linkPreviews": message.sudo().link_preview_ids.filtered(
+                    lambda preview: not preview.is_hidden
+                )._link_preview_format(),
                 'reactions': reaction_groups,
-                'pinned_at': message_sudo.pinned_at,
+                "pinned_at": message.pinned_at,
                 'record_name': record_name,
-                'create_date': message_sudo.create_date,
-                'write_date': message_sudo.write_date,
-                "is_note": message_sudo.subtype_id.id == note_id,
-                "is_discussion": message_sudo.subtype_id.id == com_id,
-                "subtype_description": message_sudo.subtype_id.description,
-                "recipients": [{"id": p.id, "name": p.name, "type": "partner"} for p in message_sudo.partner_ids],
-                "scheduledDatetime": scheduled_dt_by_msg_id.get(message_sudo.id, False),
+                "create_date": message.create_date,
+                "write_date": message.write_date,
+                "is_note": message.subtype_id.id == note_id,
+                "is_discussion": message.subtype_id.id == com_id,
+                "subtype_description": message.subtype_id.description,
+                "recipients": [
+                    {"id": p.id, "name": p.name, "type": "partner"} for p in message.partner_ids
+                ],
+                "scheduledDatetime": scheduled_dt_by_msg_id.get(message.id, False),
             })
             if record:
-                thread = {"model": message_sudo.model, "id": message_sudo.res_id}
-                if message_sudo.model != "discuss.channel":
+                thread = {"model": message.model, "id": message.res_id}
+                if message.model != "discuss.channel":
                     thread["name"] = record_name
-                if self.env[message_sudo.model]._original_module:
-                    thread["module_icon"] = modules.module.get_module_icon(self.env[message_sudo.model]._original_module)
+                if self.env[message.model]._original_module:
+                    thread["module_icon"] = modules.module.get_module_icon(
+                        self.env[message.model]._original_module
+                    )
                 vals["thread"] = thread
             if for_current_user:
-                allowed_tracking_ids = message_sudo.tracking_value_ids._filter_has_field_access(self.env)
-                displayed_tracking_ids = allowed_tracking_ids
-                if record and hasattr(record, '_track_filter_for_display'):
-                    displayed_tracking_ids = record._track_filter_for_display(displayed_tracking_ids)
-                notifications_partners = message_sudo.notification_ids.filtered(lambda n: not n.is_read).res_partner_id
-                vals["needaction"] = not self.env.user._is_public() and self.env.user.partner_id in notifications_partners
-                vals["starred"] = message_sudo.starred
+                # sudo: mail.message - filtering allowed tracking values
+                displayed_tracking_ids = message.sudo().tracking_value_ids._filter_has_field_access(
+                    self.env
+                )
+                if record and hasattr(record, "_track_filter_for_display"):
+                    displayed_tracking_ids = record._track_filter_for_display(
+                        displayed_tracking_ids
+                    )
+                notifications_partners = message.notification_ids.filtered(
+                    lambda n: not n.is_read
+                ).res_partner_id
+                vals["needaction"] = (
+                    not self.env.user._is_public()
+                    and self.env.user.partner_id in notifications_partners
+                )
+                vals["starred"] = message.starred
                 vals["trackingValues"] = displayed_tracking_ids._tracking_value_format()
                 if record and add_followers:
                     if follower := follower_by_record_and_partner.get(
