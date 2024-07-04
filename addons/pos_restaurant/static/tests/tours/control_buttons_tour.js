@@ -33,7 +33,8 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
 
             ProductScreen.clickControlButton("Internal Note"),
             TextInputPopup.inputText("test note"),
-            Dialog.confirm(),
+            // pressing enter should confirm the text input popup
+            { trigger: "textarea", run: "press Enter", in_modal: true },
             Order.hasLine({
                 productName: "Water",
                 quantity: "5",

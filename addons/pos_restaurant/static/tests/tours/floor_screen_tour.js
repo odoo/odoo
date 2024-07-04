@@ -1,6 +1,5 @@
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
-import * as TextInputPopup from "@point_of_sale/../tests/tours/utils/text_input_popup_util";
 import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_util";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/utils/product_screen_util";
@@ -59,9 +58,9 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.selectedTableIs("1"),
             FloorScreen.clickEditButton("Rename"),
 
-            TextInputPopup.inputText("100"),
-            // pressing enter should confirm the text input popup
-            { trigger: "textarea", run: "press Enter", in_modal: true },
+            NumberPopup.enterValue("100"),
+            NumberPopup.isShown("100"),
+            Dialog.confirm(),
             FloorScreen.clickTable("100"),
             FloorScreen.selectedTableIs("100"),
 
@@ -71,7 +70,8 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.selectedTableIs("1"),
             FloorScreen.clickEditButton("Rename"),
 
-            TextInputPopup.inputText("1111"),
+            NumberPopup.enterValue("1111"),
+            NumberPopup.isShown("1111"),
             Dialog.confirm(),
             FloorScreen.clickTable("1111"),
             FloorScreen.selectedTableIs("1111"),
@@ -132,7 +132,7 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.clickEditButton("MakeRound"),
 
             // Opening product screen in main floor should go back to main floor
-            FloorScreen.clickEditButton("Close"),
+            FloorScreen.clickSaveEditButton(),
             FloorScreen.table({ name: "4", withoutClass: ".selected" }),
             FloorScreen.clickTable("4"),
             ProductScreen.isShown(),

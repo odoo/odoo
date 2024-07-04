@@ -175,7 +175,7 @@ class PosConfig(models.Model):
                         {
                             'identifier': table.identifier,
                             'id': table.id,
-                            'name': table.name,
+                            'name': table.table_number,
                             'url': self._get_self_order_url(table.id),
                         }
                         for table in floor.table_ids.filtered("active")

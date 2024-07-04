@@ -5,6 +5,15 @@ import { patch } from "@web/core/utils/patch";
 import { ListContainer } from "@point_of_sale/app/generic_components/list_container/list_container";
 import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 import { _t } from "@web/core/l10n/translation";
+import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
+import {
+    getButtons,
+    DECIMAL,
+    ZERO,
+    BACKSPACE,
+} from "@point_of_sale/app/generic_components/numpad/numpad";
 
 patch(Navbar, {
     components: { ...Navbar.components, ListContainer },
@@ -53,7 +62,7 @@ patch(Navbar.prototype, {
             : this.pos.selectedTable;
     },
     get showTableIcon() {
-        return this.getTable()?.name && this.pos.showBackButton();
+        return typeof this.getTable()?.table_number === "number" && this.pos.showBackButton();
     },
     onSwitchButtonClick() {
         const mode = this.pos.floorPlanStyle === "kanban" ? "default" : "kanban";
@@ -89,5 +98,41 @@ patch(Navbar.prototype, {
     },
     get showEditPlanButton() {
         return true;
+    },
+    async switchTable() {
+        const table_number = await makeAwaitable(this.dialog, NumberPopup, {
+            title: _t("Table Selector"),
+            placeholder: _t("Enter a table number"),
+            buttons: getButtons([{ ...DECIMAL, disabled: true }, ZERO, BACKSPACE]),
+            defaultPayload: { value: null },
+        });
+        if (!table_number) {
+            return;
+        }
+        const find_table = (t) => t.table_number === parseInt(table_number);
+        let table = this.pos.currentFloor?.table_ids.find(find_table);
+        if (!table) {
+            table = this.pos.models["restaurant.table"].find(find_table);
+        }
+        let floating_order;
+        if (!table) {
+            floating_order = this.getFloatingOrders().find(
+                (o) => o.getFloatingOrderName() === table_number
+            );
+        }
+        if (!table && !floating_order) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Error"),
+                body: _t("No table or floating order found with this number"),
+            });
+            return;
+        }
+        this.pos.selectedTable = null;
+        this.pos.searchProductWord = "";
+        if (table) {
+            await this.pos.setTableFromUi(table);
+        } else {
+            this.selectFloatingOrder(floating_order);
+        }
     },
 });

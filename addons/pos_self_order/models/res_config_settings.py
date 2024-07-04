@@ -111,7 +111,7 @@ class ResConfigSettings(models.TransientModel):
             for table in table_ids:
                 qr_images.append({
                     'image': self._generate_single_qr_code(url_unquote(self.pos_config_id._get_self_order_url(table.id))),
-                    'name': f"{table.floor_id.name} - {table.name}",
+                    'name': f"{table.floor_id.name} - {table.table_number}",
                 })
         else:
             qr_images.append({
@@ -158,7 +158,7 @@ class ResConfigSettings(models.TransientModel):
                 raise ValidationError(_("In Self-Order mode, you must have at least one table to generate QR codes"))
 
             url = url_unquote(self.pos_config_id._get_self_order_url(table_ids[0].id))
-            name = table_ids[0].name
+            name = table_ids[0].table_number
         else:
             url = url_unquote(self.pos_config_id._get_self_order_url())
             name = ""

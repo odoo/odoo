@@ -132,7 +132,7 @@ patch(PosStore.prototype, {
         const json = super.getReceiptHeaderData(...arguments);
         if (this.config.module_pos_restaurant && order) {
             if (order.getTable()) {
-                json.table = order.getTable().name;
+                json.table = order.getTable().table_number;
             }
             json.customer_count = order.getCustomerCount();
         }
@@ -251,7 +251,7 @@ patch(PosStore.prototype, {
         if (this.selectedTable && this.selectedTable.id) {
             return {
                 fieldName: "TABLE",
-                searchTerm: this.selectedTable.name,
+                searchTerm: this.selectedTable.getName(),
             };
         }
         return super.getDefaultSearchDetails();
@@ -281,6 +281,29 @@ patch(PosStore.prototype, {
                 } else {
                     this.add_new_order();
                 }
+            }
+        }
+    },
+    async setTableFromUi(table, orderUuid = null) {
+        try {
+            this.tableSyncing = true;
+            await this.setTable(table, orderUuid);
+        } catch (e) {
+            if (!(e instanceof ConnectionLostError)) {
+                throw e;
+            }
+            // Reject error in a separate stack to display the offline popup, but continue the flow
+            Promise.reject(e);
+        } finally {
+            this.tableSyncing = false;
+            const orders = this.getTableOrders(table.id);
+            if (orders.length > 0) {
+                this.set_order(orders[0]);
+                this.orderToTransferUuid = null;
+                this.showScreen(orders[0].get_screen_data().name);
+            } else {
+                this.add_new_order();
+                this.showScreen("ProductScreen");
             }
         }
     },
