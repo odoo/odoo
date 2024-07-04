@@ -131,7 +131,12 @@ class TestTimesheet(TestCommonTimesheet):
             'name': 'my first timesheet',
             'unit_amount': 4,
         })
-        self.assertEqual(timesheet1.account_id, self.project_customer.analytic_account_id, 'Analytic account should be the same as the project')
+        project_account = self.project_customer.analytic_account_id
+        self.assertEqual(
+            timesheet1[project_account.plan_id._column_name()],
+            project_account,
+            'Analytic account should be the same as the project'
+        )
         self.assertEqual(timesheet1.employee_id, self.empl_employee, 'Employee should be the one of the current user')
         self.assertEqual(timesheet1.partner_id, self.task1.partner_id, 'Customer of task should be the same of the one set on new timesheet')
         self.assertEqual(timesheet1.product_uom_id, timesheet_uom, "The UoM of the timesheet should be the one set on the company of the analytic account.")

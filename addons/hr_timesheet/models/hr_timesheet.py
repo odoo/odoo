@@ -150,8 +150,11 @@ class AccountAnalyticLine(models.Model):
         default_user_id = self._default_user()
         user_ids = []
         employee_ids = []
+        # 0/ preprocess and get account's corresponding dynamic field
+        self_requesting_columns = self.with_context(accounts_to_plan_columns={})
+        vals_list = self_requesting_columns._timesheet_preprocess(vals_list)
+        accounts_to_plan_columns = self_requesting_columns.env.context['accounts_to_plan_columns']
         # 1/ Collect the user_ids and employee_ids from each timesheet vals
-        vals_list = self._timesheet_preprocess(vals_list)
         for vals in vals_list:
             if not vals.get('project_id'):
                 continue
@@ -226,7 +229,12 @@ class AccountAnalyticLine(models.Model):
             else:  # ...and raise an error if they fail
                 raise ValidationError(error_msg)
 
-        # 5/ Finally, create the timesheets
+        # 5/ Determine magic column for the account_id
+        for vals in vals_list:
+            if 'account_id' in vals and (col := accounts_to_plan_columns.get(vals['account_id'], 'account_id')) != 'account_id':
+                vals[col], vals['account_id'] = vals['account_id'], False
+
+        # 6/ Finally, create the timesheets
         lines = super(AccountAnalyticLine, self).create(vals_list)
         lines._check_can_create()
         for line, values in zip(lines, vals_list):
@@ -372,12 +380,14 @@ class AccountAnalyticLine(models.Model):
             data = task_per_id[vals['task_id']] if vals.get('task_id') else project_per_id[vals['project_id']]
             if not vals.get('project_id'):
                 vals['project_id'] = data.project_id.id
+            account = data._get_task_analytic_account_id() if vals.get('task_id') else data.analytic_account_id
             if not vals.get('account_id'):
-                account = data._get_task_analytic_account_id() if vals.get('task_id') else data.analytic_account_id
                 if not account or not account.active:
                     raise ValidationError(_('Timesheets must be created on a project or a task with an active analytic account.'))
                 vals['account_id'] = account.id
                 vals['company_id'] = account.company_id.id or data.company_id.id
+            if 'accounts_to_plan_columns' in self.env.context:
+                self.env.context['accounts_to_plan_columns'][vals['account_id']] = account.plan_id._column_name()
             if not vals.get('product_uom_id'):
                 company = account_per_id[vals['account_id']].company_id or data.company_id
                 vals['product_uom_id'] = uom_id_per_company.get(company.id, company.project_time_mode_id.id) or self.env.company.project_time_mode_id.id
