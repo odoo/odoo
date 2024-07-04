@@ -8,9 +8,6 @@ export function table({ name, withClass = "", withoutClass, run = () => {}, numO
     if (name) {
         trigger += `:has(.label:contains("${name}"))`;
     }
-    if (numOfSeats) {
-        trigger += `:has(.table-seats:contains("${numOfSeats}"))`;
-    }
     return {
         content: `Check table with attributes: ${JSON.stringify(arguments[0])}`,
         trigger,
@@ -67,7 +64,7 @@ export function selectedFloorIs(name) {
 export function orderCountSyncedInTableIs(table, count) {
     return [
         {
-            trigger: `.floor-map .table .label:contains("${table}") ~ .order-count:contains("${count}")`,
+            trigger: `.floor-map .table:has(.label:contains("${table}")):has(.order-count:contains("${count}"))`,
         },
     ];
 }
