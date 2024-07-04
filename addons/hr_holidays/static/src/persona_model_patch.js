@@ -12,6 +12,6 @@ patch(Persona.prototype, {
         }
         const date = deserializeDateTime(this.out_of_office_date_end);
         const fdate = date.toLocaleString(DateTime.DATE_MED);
-        return _t("Out of office until %s", fdate);
+        return _t("Back on %s", fdate);
     },
 });
