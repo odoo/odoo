@@ -21,6 +21,7 @@ export class TourPointer extends Component {
                 content: { type: String, optional: true },
                 isOpen: { type: Boolean, optional: true },
                 isVisible: { type: Boolean, optional: true },
+                isZone: { type: Boolean, optional: true },
                 onClick: { type: [Function, { value: null }], optional: true },
                 onMouseEnter: { type: [Function, { value: null }], optional: true },
                 onMouseLeave: { type: [Function, { value: null }], optional: true },
@@ -98,10 +99,7 @@ export class TourPointer extends Component {
                     zone.style.minWidth = width + "px";
                     zone.style.minHeight = height + "px";
                     zone.style.left = left + "px";
-                    // Update the top only once. Like that it will not be above the header
-                    if (!lastAnchor) {
-                        zone.style.top = top + "px";
-                    }
+                    zone.style.top = top + "px";
                 }
 
                 // Content changed: we must re-measure the dimensions of the text.
