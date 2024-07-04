@@ -369,7 +369,7 @@ describe("deleteBackward", () => {
                     contentBeforeEdit:
                         '<p>ab<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i><span class="a">[]cd</span></p>',
                     stepFunction: deleteBackward,
-                    contentAfter: '<p>ab<span class="a">[]cd</span></p>',
+                    contentAfter: '<p>ab[]<span class="a">cd</span></p>',
                 });
             });
 

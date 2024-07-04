@@ -8,7 +8,7 @@ import {
 import { prepareUpdate } from "./dom_state";
 import { boundariesOut, leftPos, nodeSize, rightPos } from "./position";
 import { callbacksForCursorUpdate } from "./selection";
-import { isEmptyBlock } from "../utils/dom_info";
+import { isEmptyBlock, isPhrasingContent } from "../utils/dom_info";
 
 /** @typedef {import("@html_editor/core/selection_plugin").Cursors} Cursors */
 
@@ -38,32 +38,48 @@ export function makeContentsInline(node) {
 }
 
 /**
- * Wrap inline children nodes in Paragraphs, optionally updating cursors for
- * later selection restore.
+ * Wrap inline children nodes in Blocks, optionally updating cursors for
+ * later selection restore. A paragraph is used for phrasing node, and a div
+ * is used otherwise.
  *
  * @param {HTMLElement} element - block element
  * @param {Cursors} [cursors]
  */
-export function wrapInlinesInParagraphs(element, cursors = { update: () => {} }) {
+export function wrapInlinesInBlocks(element, cursors = { update: () => {} }) {
     // Helpers to manipulate preserving selection.
-    const wrapInP = (node, cursors) => {
-        const p = node.ownerDocument.createElement("P");
-        cursors.update(callbacksForCursorUpdate.before(node, p));
-        node.before(p);
-        cursors.update(callbacksForCursorUpdate.append(p, node));
-        p.append(node);
-        return p;
+    const wrapInBlock = (node, cursors) => {
+        const block = isPhrasingContent(node)
+            ? node.ownerDocument.createElement("P")
+            : node.ownerDocument.createElement("DIV");
+        cursors.update(callbacksForCursorUpdate.before(node, block));
+        node.before(block);
+        cursors.update(callbacksForCursorUpdate.append(block, node));
+        block.append(node);
+        return block;
     };
-    const appendToCurrentP = (currentP, node, cursors) => {
-        cursors.update(callbacksForCursorUpdate.append(currentP, node));
-        currentP.append(node);
+    const appendToCurrentBlock = (currentBlock, node, cursors) => {
+        if (currentBlock.tagName === "P" && !isPhrasingContent(node)) {
+            const block = document.createElement("DIV");
+            cursors.update(callbacksForCursorUpdate.before(currentBlock, block));
+            currentBlock.before(block);
+            for (const child of [...currentBlock.childNodes]) {
+                cursors.update(callbacksForCursorUpdate.append(block, child));
+                block.append(child);
+            }
+            cursors.update(callbacksForCursorUpdate.remove(currentBlock));
+            currentBlock.remove();
+            currentBlock = block;
+        }
+        cursors.update(callbacksForCursorUpdate.append(currentBlock, node));
+        currentBlock.append(node);
+        return currentBlock;
     };
     const removeNode = (node, cursors) => {
         cursors.update(callbacksForCursorUpdate.remove(node));
         node.remove();
     };
 
-    let currentP;
+    let currentBlock;
     let shouldBreakLine = true;
     for (const node of [...element.childNodes]) {
         if (isBlock(node)) {
@@ -72,18 +88,18 @@ export function wrapInlinesInParagraphs(element, cursors = { update: () => {} })
             removeNode(node, cursors);
         } else if (node.nodeName === "BR") {
             if (shouldBreakLine) {
-                wrapInP(node, cursors);
+                wrapInBlock(node, cursors);
             } else {
                 // BR preceded by inline content: discard it and make sure
-                // next inline goes in a new P
+                // next inline goes in a new Block
                 removeNode(node, cursors);
                 shouldBreakLine = true;
             }
         } else if (shouldBreakLine) {
-            currentP = wrapInP(node, cursors);
+            currentBlock = wrapInBlock(node, cursors);
             shouldBreakLine = false;
         } else {
-            appendToCurrentP(currentP, node, cursors);
+            currentBlock = appendToCurrentBlock(currentBlock, node, cursors);
         }
     }
 }

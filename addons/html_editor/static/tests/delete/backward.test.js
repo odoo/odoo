@@ -318,16 +318,6 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test('should remove contenteditable="False"', async () => {
-            await testEditor({
-                contentBefore: `<div><span contenteditable="False">abc</span>[]def</div>`,
-                stepFunction: async (editor) => {
-                    deleteBackward(editor);
-                },
-                contentAfter: `<div>[]def</div>`,
-            });
-        });
-
         test('should remove contenteditable="false" at the beggining of a P', async () => {
             await testEditor({
                 contentBefore: `<p>abc</p><div contenteditable="false">def</div><p>[]ghi</p>`,
@@ -340,7 +330,105 @@ describe("Selection collapsed", () => {
 
         test("should remove a fontawesome", async () => {
             await testEditor({
-                contentBefore: `<div><p>abc</p><span class="fa"></span><p>[]def</p></div>`,
+                contentBefore: `<div><p>abc<span class="fa"></span>[]def</p></div>`,
+                stepFunction: async (editor) => {
+                    deleteBackward(editor);
+                },
+                contentAfter: `<div><p>abc[]def</p></div>`,
+            });
+        });
+
+        test("should unwrap a block next to an inline sibling element", async () => {
+            await testEditor({
+                contentBefore: `<div><p>abc</p><span contenteditable="false">xyz</span><p>[]def</p></div>`,
+                stepFunction: async (editor) => {
+                    deleteBackward(editor);
+                },
+                contentAfter: `<div><p>abc</p><span contenteditable="false">xyz</span>[]def</div>`,
+            });
+        });
+
+        test("should unwrap a block next to an inline unbreakable element", async () => {
+            await testEditor({
+                contentBefore: `<div><p>abc</p><div class="o_image"></div><p>[]def</p></div>`,
+                stepFunction: async (editor) => {
+                    deleteBackward(editor);
+                },
+                contentAfter: `<div><p>abc</p><div class="o_image"></div>[]def</div>`,
+            });
+        });
+
+        test("should remove an inline unbreakable contenteditable='false' sibling element", async () => {
+            await testEditor({
+                contentBefore: `<div><p>abc</p><div class="o_image"></div>[]def</div>`,
+                stepFunction: async (editor) => {
+                    deleteBackward(editor);
+                },
+                contentAfter: `<div><p>abc[]def</p></div>`,
+            });
+        });
+
+        test("should not remove an inline contenteditable='false' in a previous sibling", async () => {
+            await testEditor({
+                contentBefore: `<p>a<span contenteditable="false">bc</span></p><p>[]<br></p>`,
+                stepFunction: async (editor) => {
+                    deleteBackward(editor);
+                },
+                contentAfter: `<p>a<span contenteditable="false">bc</span>[]</p>`,
+            });
+        });
+
+        test("should not remove a non editable sibling (inline)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <div contenteditable="false">
+                        <span class="a">a</span>
+                        <div contenteditable="true">
+                            <p>[]<br></p>
+                        </div>
+                    </div>
+                `),
+                stepFunction: async (editor) => {
+                    deleteBackward(editor);
+                },
+                contentAfter: unformat(`
+                    <div contenteditable="false">
+                        <span class="a">a</span>
+                        <div contenteditable="true">
+                            <p>[]<br></p>
+                        </div>
+                    </div>
+                `),
+            });
+        });
+
+        test("should not remove a non editable sibling (block)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <div contenteditable="false">
+                        <div class="a">a<span>a</span></div>
+                        <div contenteditable="true">
+                            <p>[]<br></p>
+                        </div>
+                    </div>
+                `),
+                stepFunction: async (editor) => {
+                    deleteBackward(editor);
+                },
+                contentAfter: unformat(`
+                    <div contenteditable="false">
+                        <div class="a">a<span>a</span></div>
+                        <div contenteditable="true">
+                            <p>[]<br></p>
+                        </div>
+                    </div>
+                `),
+            });
+        });
+
+        test("should remove a hr", async () => {
+            await testEditor({
+                contentBefore: `<div><p>abc</p><hr><p>[]def</p></div>`,
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
                 },
@@ -348,15 +436,6 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test("should remove a media element", async () => {
-            await testEditor({
-                contentBefore: `<div><p>abc</p><div class="o_image"></div><p>[]def</p></div>`,
-                stepFunction: async (editor) => {
-                    deleteBackward(editor);
-                },
-                contentAfter: `<div><p>abc</p><p>[]def</p></div>`,
-            });
-        });
         test("should remove a media element inside a p", async () => {
             await testEditor({
                 contentBefore: `<p>abc</p><p style="margin-bottom: 0px;"><o-image class="o_image" contenteditable="false"></o-image></p><p>[]def</p>`,
