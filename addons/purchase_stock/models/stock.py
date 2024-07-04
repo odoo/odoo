@@ -167,6 +167,7 @@ class Orderpoint(models.Model):
                         'url': f'#action={action.id}&id={order.id}&model=purchase.order',
                     }],
                     'sticky': False,
+                    'next': {'type': 'ir.actions.act_window_close'},
                 }
             }
         return super()._get_replenishment_order_notification()
