@@ -43,9 +43,9 @@ registry.category("web_tour.tours").add("task_create_sol_tour", {
         content: "Select the product in the autocomplete dropdown",
         run: "click",
     }, {
-        trigger: ".o_form_button_save",
+        trigger: ".modal .o_form_button_save",
         content: "Save Sales Order Item",
-        in_modal: true,
+        in_modal: false,
         run: "click",
     }, {
         trigger: ".o_form_button_save",

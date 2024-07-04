@@ -145,8 +145,8 @@ export function clickPartnerButton() {
         },
         {
             content: "partner screen is shown",
-            trigger: PartnerList.clickPartner().trigger,
-            in_modal: true,
+            trigger: `${PartnerList.clickPartner().trigger}`,
+            in_modal: false,
         },
     ];
 }
@@ -309,8 +309,8 @@ export function clickFiscalPosition(name, checkIsNeeded = false) {
 export function closeWithCashAmount(val) {
     return [
         {
-            trigger: ".close-pos-popup .cash-input input",
-            in_modal: true,
+            trigger: ".modal .close-pos-popup .cash-input input",
+            in_modal: false,
             run: `edit ${val}`,
         },
     ];

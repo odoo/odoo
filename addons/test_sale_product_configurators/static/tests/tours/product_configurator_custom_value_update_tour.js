@@ -37,7 +37,8 @@ registry.category("web_tour.tours").add('sale_product_configurator_custom_value_
 ...configuratorTourUtils.selectAndSetCustomAttribute("Customizable Desk (TEST)", "Legs", "Custom", "123"),
 configuratorTourUtils.assertProductNameContains("Customizable Desk (TEST) (Custom, White)"),
 {
-    trigger: 'button:contains(Confirm)',
+    trigger: ".modal button:contains(Confirm)",
+    in_modal: false,
     run: "click",
 }, {
     trigger: 'td.o_data_cell:contains("Legs: Custom: 123")',
@@ -59,7 +60,8 @@ configuratorTourUtils.assertProductNameContains("Customizable Desk (TEST) (Custo
 },
 configuratorTourUtils.setCustomAttribute("Customizable Desk (TEST)", "Legs", "123456"),
 {
-    trigger: 'button:contains(Confirm)',
+    trigger: ".modal button:contains(Confirm)",
+    in_modal: false,
     run: "click",
 }, {
     trigger: 'td.o_data_cell:contains("Legs: Custom: 123456")',

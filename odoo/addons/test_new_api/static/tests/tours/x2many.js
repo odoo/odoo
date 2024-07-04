@@ -38,15 +38,18 @@
     },
     {
         content: "insert a name into the modal form",
-        trigger: '.modal .o_field_widget[name=name] input',
+        trigger: ".modal .o_field_widget[name=name] input",
+        in_modal: false,
         run: `edit user_test_${(inc = new Date().getTime())}`,
     }, {
         content: "insert an email into the modal form",
-        trigger: '.o_field_widget[name=login] input',
+        trigger: ".modal .o_field_widget[name=login] input",
+        in_modal: false,
         run: `edit user_test_${inc}@test`,
     }, {
         content: "save the modal content and create the new moderator",
-        trigger: '.o_form_button_save',
+        trigger: ".modal .o_form_button_save",
+        in_modal: false,
         run: "click",
     }, {
         content: "check if the modal is saved",

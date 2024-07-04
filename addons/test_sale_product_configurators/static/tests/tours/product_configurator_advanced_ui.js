@@ -63,7 +63,8 @@ registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour
         }
     }
 }, {
-    trigger: 'button:contains(Confirm)',
+    trigger: '.modal button:contains(Confirm)',
+    in_modal: false,
     run: "click",
 }, {
     trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Custom, White, PAV9, PAV5, PAV1)"):not(:contains("PA9: Single PAV"))',
