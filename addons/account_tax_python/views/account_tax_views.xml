@@ -5,12 +5,8 @@
             <field name="model">account.tax</field>
             <field name="inherit_id" ref="account.view_tax_form" />
             <field name="arch" type="xml">
-                 <xpath expr="//field[@name='children_tax_ids']" position="before">
-                    <group invisible="amount_type != 'code'">
-                        <group>
-                            <field name="formula" required="amount_type == 'code'" />
-                        </group>
-                    </group>
+                 <xpath expr="//field[@name='amount_type']" position="after">
+                    <field name="formula" invisible="amount_type != 'code'" required="amount_type == 'code'" />
                 </xpath>
             </field>
         </record>
