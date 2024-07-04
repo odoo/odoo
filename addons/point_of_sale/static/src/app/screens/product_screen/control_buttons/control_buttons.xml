@@ -26,10 +26,6 @@
                     <i class="fa fa-undo me-1" role="img" aria-label="Refund" title="Refund" />
                     Refund
                 </button>
-                <button class="btn btn-secondary btn-lg py-5" t-on-click="onClickSave">
-                    <i class="fa fa-upload" role="img" aria-label="Save" title="Save" />
-                    Park Order
-                </button>
                 <button t-if="pos.models['account.fiscal.position'].length"
                     class="control-button o_fiscal_position_button"
                     t-att-class="buttonClass"
