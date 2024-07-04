@@ -76,6 +76,7 @@ class IrUiView(models.Model):
                     record.with_context(lang=self.get_default_lang_code()).write({field: value})
                 else:
                     record.write({field: value})
+                self.env['web_editor.edited']._track(Model._name, field, int(el.get('data-oe-id')))
 
                 if callable(Model._fields[field].translate):
                     self._copy_custom_snippet_translations(record, field)

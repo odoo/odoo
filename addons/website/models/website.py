@@ -1001,9 +1001,9 @@ class Website(models.Model):
 
         # Search the URL in every relevant field
         html_fields_attributes = self._get_html_fields_attributes() + [
-            ('website.menu', 'website_menu', 'url', False),
+            ('website.menu', 'website_menu', 'url', False, []),
         ]
-        for model, _table, column, _translate in html_fields_attributes:
+        for model, _table, column, _translate, base_domain in html_fields_attributes:
             Model = self.env[model]
             if not Model.check_access_rights('read', raise_exception=False):
                 continue
@@ -1012,6 +1012,7 @@ class Website(models.Model):
             domains = []
             for url, website_domain in search_criteria:
                 domains.append(AND([
+                    base_domain,
                     [(column, 'ilike', url)],
                     website_domain if hasattr(Model, 'website_id') else [],
                 ]))
@@ -1475,25 +1476,14 @@ class Website(models.Model):
         )
 
     def _get_html_fields_attributes(self):
-        html_fields = [('ir.ui.view', 'ir_ui_view', 'arch_db', True)]
+        field_specs = self.env['web_editor.edited']._get_edited_html_fields()
+        html_fields = []
         cr = self.env.cr
-        cr.execute("""
-            SELECT f.model,
-                   f.name,
-                   f.translate
-              FROM ir_model_fields f
-              JOIN ir_model m
-                ON m.id = f.model_id
-             WHERE f.ttype = 'html'
-               AND f.store = true
-               AND m.transient = false
-               AND f.model NOT LIKE 'ir.actions%%'
-               AND f.model NOT IN %s
-        """, ([self._get_html_fields_attributes_blacklist()]))
-        for model, name, translate in cr.fetchall():
+        for model, name, domain in field_specs:
             table = self.env[model]._table
+            translate = self.env[model]._fields[name].translate
             if tools.table_exists(cr, table) and tools.column_exists(cr, table, name):
-                html_fields.append((model, table, name, translate))
+                html_fields.append((model, table, name, translate, domain))
         return html_fields
 
     def _is_snippet_used(self, snippet_module, snippet_id, asset_version, asset_type, html_fields_attributes):
@@ -1510,13 +1500,22 @@ class Website(models.Model):
             return True
 
         # As well as every snippet dropped in html fields
+
+        def domain_where_clause(_model, domain):
+            if not domain:
+                return ''
+            query = self.env[_model]._where_calc(domain, active_test=False)
+            _, where_clause, query_params = query.get_sql()
+            return self.env.cr.mogrify(' WHERE ' + where_clause, query_params).decode()
+
         self.env.cr.execute(sql.SQL(" UNION ").join(
-            sql.SQL("SELECT regexp_matches({}{}, {}, 'g') FROM {}").format(
+            sql.SQL("SELECT regexp_matches({}{}, {}, 'g') FROM {}{}").format(
                 sql.Identifier(column),
                 sql.SQL("->>'en_US'" if translate else ''),
                 sql.Placeholder('snippet_regex'),
-                sql.Identifier(table)
-            ) for _model, table, column, translate in html_fields_attributes
+                sql.Identifier(table),
+                sql.SQL(domain_where_clause(_model, domain)),
+            ) for _model, table, column, translate, domain in html_fields_attributes
         ), {'snippet_regex': f'<([^>]*data-snippet="{snippet_id}"[^>]*)>'})
 
         snippet_occurences = [r[0][0] for r in self.env.cr.fetchall()]
