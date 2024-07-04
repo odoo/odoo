@@ -106,7 +106,6 @@ class TestImLivechatMessage(HttpCase):
             'record_name': "test1 Ernest Employee",
             'res_id': channel_livechat_1.id,
             'scheduledDatetime': False,
-            'sms_ids': [],
             'starred': False,
             'subject': False,
             'subtype_description': False,
