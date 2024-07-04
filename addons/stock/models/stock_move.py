@@ -907,8 +907,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 return text[len(prefix):]
             return text
         for key in context:
-            # Default company_id is set for the parent move, but we need to let the lot compute its own company.
-            if key.startswith('default_') and key != 'default_company_id':
+            if key.startswith('default_'):
                 default_vals[remove_prefix(key, 'default_')] = context[key]
 
         if default_vals['tracking'] == 'lot' and mode == 'generate':
