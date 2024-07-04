@@ -13764,3 +13764,48 @@ test("Correct values for progress bar with toggling filter and slow RPC", async 
     // abc: 1
     expect(getKanbanProgressBars(1).map((pb) => pb.style.width)).toEqual(["100%"]);
 });
+
+test.tags("desktop")("click on empty kanban must shake the NEW button", async () => {
+    onRpc("web_read_group", () => {
+        // override read_group to return empty groups, as this is
+        // the case for several models (e.g. project.task grouped
+        // by stage_id)
+        return {
+            groups: [
+                {
+                    __domain: [["product_id", "=", 3]],
+                    product_id_count: 0,
+                    product_id: [3, "xplone"],
+                },
+                {
+                    __domain: [["product_id", "=", 5]],
+                    product_id_count: 0,
+                    product_id: [5, "xplan"],
+                },
+            ],
+            length: 2,
+        };
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban on_create="quick_create">
+                <field name="product_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+
+    expect(".o_kanban_group").toHaveCount(2, { message: "there should be 2 columns" });
+    expect(".o_kanban_record").toHaveCount(0, { message: "both columns should be empty" });
+
+    await click(".o_kanban_renderer");
+
+    expect("[data-bounce-button]").toHaveClass("o_catch_attention");
+});
