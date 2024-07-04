@@ -39,7 +39,8 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
         [...document.querySelectorAll(".o_matrix_input")].forEach((el) => el.value = 1);
     }
 }, {
-    trigger: 'button:contains("Confirm")',
+    trigger: ".modal button:contains(Confirm)",
+    in_modal: false,
     run: 'click'
 }, {
     trigger: '.o_form_button_save',
@@ -64,7 +65,8 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
             .forEach((el) => (el.value = 4));
     } // set the qty to 4 for half of the matrix products.
 }, {
-    trigger: 'button:contains("Confirm")',
+    trigger: ".modal button:contains(Confirm)",
+    in_modal: false,
     run: 'click' // apply the matrix
 }, 
 {
@@ -96,7 +98,8 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
             .forEach((el) => (el.value = 8.2));
     }
 }, {
-    trigger: 'button:contains("Confirm")',
+    trigger: ".modal button:contains(Confirm)",
+    in_modal: false,
     run: 'click' // apply the matrix
 },
 {

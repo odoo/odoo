@@ -1,5 +1,4 @@
 /** @odoo-module **/
-    
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -30,12 +29,8 @@ registry.category('web_tour.tours').add('mailing_campaign', {
         },
         {
             content: 'Pick the basic theme',
-            trigger: 'iframe',
-            run(actions) {
-                // For some reason the selectors inside the iframe cannot be triggered.
-                const link = this.anchor.contentDocument.querySelector("#basic");
-                actions.click(link);
-            }
+            trigger: ":iframe #basic",
+            run: "click",
         },
         {
             content: 'Fill in Subject',
@@ -54,14 +49,17 @@ registry.category('web_tour.tours').add('mailing_campaign', {
         },
         {
             content: 'Save form',
-            trigger: '.o_form_button_save',
+            trigger: ".modal .o_form_button_save:contains(Save & Close)",
+            in_modal: false,
             run: "click",
+        },
+        {
+            trigger: "body:not(:has(.modal))",
         },
         {
             content: 'Check that newly created record is on the list',
             trigger: '[name="mailing_mail_ids"] td[name="subject"]:contains("TestFromTour")',
-            run: () => null,
         },
         ...stepUtils.saveForm(),
-    ]
+    ],
 });

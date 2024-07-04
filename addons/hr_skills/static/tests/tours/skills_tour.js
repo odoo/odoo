@@ -50,8 +50,8 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     },
     {
         content: "Save it",
-        trigger: ".o_form_button_save",
-        in_modal: true,
+        trigger: ".modal .o_form_button_save",
+        in_modal: false,
         run: "click",
     },
     {
@@ -71,8 +71,8 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     },
     {
         content: "Save experience change",
-        trigger: ".o_form_button_save",
-        in_modal: true,
+        trigger: ".modal .o_form_button_save",
+        in_modal: false,
         run: "click",
     },
     {
@@ -107,8 +107,8 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     },
     {
         content: "Save new skill",
-        trigger: ".o_form_button_save",
-        in_modal: true,
+        trigger: ".modal .o_form_button_save",
+        in_modal: false,
         run: "click",
     },
     {
@@ -142,8 +142,8 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     },
     {
         content: "Save new skill",
-        trigger: ".o_form_button_save",
-        in_modal: true,
+        trigger: ".modal .o_form_button_save",
+        in_modal: false,
         run: "click",
     },
     {

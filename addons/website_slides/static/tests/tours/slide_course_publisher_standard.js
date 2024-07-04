@@ -32,7 +32,6 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
 }, {
     content: 'eLearning: select Gardening tag',
     trigger: '.ui-autocomplete a:contains("Gardening")',
-    in_modal: false,
     run: "click",
 }, {
     content: 'eLearning: set description',
@@ -44,8 +43,12 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
     run: "click",
 }, {
     content: 'eLearning: seems cool, create it',
-    trigger: 'button:contains("Save")',
+    trigger: '.modal button:contains("Save")',
+    in_modal: false,
     run: "click",
+},
+{
+    trigger: "body:not(:has(.modal))",
 },
 ...wTourUtils.clickOnEditAndWaitEditMode(),
 {

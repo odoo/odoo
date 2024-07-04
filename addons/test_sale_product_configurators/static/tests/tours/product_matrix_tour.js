@@ -48,13 +48,15 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     trigger: 'ul.ui-autocomplete a:contains("Matrix")',
     run: "click",
 }, {
-    trigger: '.o_matrix_input_table',
+    trigger: ".modal .o_matrix_input_table",
+    in_modal: false,
     run: function () {
         // fill the whole matrix with 1's
         [...document.querySelectorAll(".o_matrix_input")].forEach((el) => (el.value = 1));
     }
 }, {
-    trigger: 'button:contains("Confirm")',
+    trigger: ".modal button:contains(Confirm)",
+    in_modal: false,
     run: "click",
 }, 
 {
@@ -75,7 +77,8 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
     run: "click",
 }, {
-    trigger: '.o_matrix_input_table',
+    trigger: ".modal .o_matrix_input_table",
+    in_modal: false,
     run: function () {
         // whitespace normalization: removes newlines around text from markup
         // content, then collapse & convert internal whitespace to regular
@@ -92,7 +95,8 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
         [...document.querySelectorAll(".o_matrix_input")].forEach((el) => (el.value = 3));
     }
 }, {
-    trigger: 'button:contains("Confirm")',  // apply the matrix
+    trigger: ".modal button:contains(Confirm)", // apply the matrix
+    in_modal: false,
     run: "click",
 }, 
 {
@@ -113,13 +117,15 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
     run: "click",
 }, {
-    trigger: '.o_matrix_input_table',
+    trigger: ".modal .o_matrix_input_table",
+    in_modal: false,
     run: function () {
         // reset all qties to 1
         [...document.querySelectorAll(".o_matrix_input")].forEach((el) => (el.value = 1));
     }
 }, {
-    trigger: 'button:contains("Confirm")',  // apply the matrix
+    trigger: ".modal button:contains(Confirm)", // apply the matrix
+    in_modal: false,
     run: "click",
 }, 
 {
@@ -145,7 +151,8 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
     run: "click",
 }, {
-    trigger: '.o_matrix_input_table',
+    trigger: ".modal .o_matrix_input_table",
+    in_modal: false,
     run: function () {
         // update some of the matrix values.
         [...document.querySelectorAll(".o_matrix_input")]
@@ -153,7 +160,8 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
             .forEach((el) => (el.value = 4));
     } // set the qty to 4 for half of the matrix products.
 }, {
-    trigger: 'button:contains("Confirm")',  // apply the matrix
+    trigger: ".modal button:contains(Confirm)", // apply the matrix
+    in_modal: false,
     run: "click",
 }, 
 {
@@ -185,7 +193,8 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
             .forEach((el) => (el.value = 8.2));
     }
 }, {
-    trigger: 'button:contains("Confirm")',  // apply the matrix
+    trigger: ".modal button:contains(Confirm)", // apply the matrix
+    in_modal: false,
     run: "click",
         },
         {

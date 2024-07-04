@@ -84,7 +84,8 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         run: "click",
     }, {
         content: "Verify that 4 revisions are displayed (default empty description after the creation of the task + 3 edits)",
-        trigger: ".html-history-dialog .revision-list .btn",
+        trigger: ".modal .html-history-dialog .revision-list .btn",
+        in_modal: false,
         run: function () {
             const items = document.querySelectorAll(".revision-list .btn");
             if (items.length !== 4) {
@@ -93,45 +94,49 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         },
     }, {
         content: "Verify that the active revision (revision 4) is related to the third edit",
-        trigger: `.history-container .tab-pane:contains("${baseDescriptionContent} 2")`,
+        trigger: `.modal .history-container .tab-pane:contains("${baseDescriptionContent} 2")`,
+        in_modal: false,
         run: "click",
     }, {
         content: "Go to the third revision related to the second edit",
-        trigger: '.html-history-dialog .revision-list .btn:nth-child(2)',
+        trigger: ".modal .html-history-dialog .revision-list .btn:nth-child(2)",
+        in_modal: false,
         run: "click",
     }, {
         content: "Verify that the active revision is the one clicked in the previous step",
-        trigger: `.history-container .tab-pane:contains("${baseDescriptionContent} 1")`,
+        trigger: `.modal .history-container .tab-pane:contains("${baseDescriptionContent} 1")`,
+        in_modal: false,
         run: "click",
     }, {
         content: "Go to comparison tab",
-        trigger: ".history-container .nav-item:contains(Comparison) a",
+        trigger: ".modal .history-container .nav-item:contains(Comparison) a",
+        in_modal: false,
         run: "click",
     }, {
         content: "Verify comparaison text",
-        trigger: ".history-container .tab-pane",
+        trigger: ".modal .history-container .tab-pane",
+        in_modal: false,
         run: function () {
             const comparaisonHtml = document.querySelector(".history-container .tab-pane").innerHTML;
             const correctHtml = `<p><removed>${baseDescriptionContent} 3</removed><added>${baseDescriptionContent} 1</added></p>`;
             if (comparaisonHtml !== correctHtml) {
                 throw new Error(`Expect comparison to be ${correctHtml}, got ${comparaisonHtml}`);
             }
-        }
+        },
     }, {
         content: "Click on Restore History btn to get back to the selected revision in the previous step",
-        trigger: '.modal-footer .btn-primary:contains("Restore")',
+        trigger: ".modal button.btn-primary:contains(/^Restore history$/)",
+        in_modal: false,
         run: "click",
     }, {
         content: "Verify the confirmation dialog is opened",
-        trigger: '.modal-footer .btn-primary:contains("Restore")',
-        run: "click",
-    }, {
-        content: "Restore",
-        trigger: 'button.btn-primary',
+        in_modal: false,
+        trigger: ".modal button.btn-primary:contains(/^Restore$/)",
         run: "click",
     }, {
         content: "Verify that the description contains the right text after the restore",
-        trigger: `${descriptionField}`,
+        trigger: descriptionField,
+        in_modal: false,
         run: function () {
             const p = this.anchor?.innerText;
             const expected = `${baseDescriptionContent} 1`;

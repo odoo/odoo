@@ -1,22 +1,22 @@
 import { negate } from "@point_of_sale/../tests/tours/utils/common";
 
 export function confirm(confirmationText, button = ".btn-primary") {
-    let trigger = `.modal-footer ${button}`;
+    let trigger = `.modal .modal-footer ${button}`;
     if (confirmationText) {
         trigger += `:contains("${confirmationText}")`;
     }
     return {
         content: "confirm dialog",
-        in_modal: true,
         trigger,
+        in_modal: false,
         run: "click",
     };
 }
 export function cancel() {
     return {
         content: "cancel dialog",
-        trigger: `.modal-header button[aria-label="Close"]`,
-        in_modal: true,
+        trigger: `.modal .modal-header button[aria-label="Close"]`,
+        in_modal: false,
         run: "click",
     };
 }
@@ -29,14 +29,14 @@ export function discard() {
     };
 }
 export function is({ title } = {}) {
-    let trigger = ".modal-content";
+    let trigger = ".modal .modal-content";
     if (title) {
         trigger += ` .modal-header:contains("${title}")`;
     }
     return {
         content: "dialog is open",
+        in_modal: false,
         trigger,
-        in_modal: true,
     };
 }
 export function isNot() {

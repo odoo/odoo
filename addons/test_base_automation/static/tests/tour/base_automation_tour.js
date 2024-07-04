@@ -80,40 +80,46 @@ registry.category("web_tour.tours").add("test_base_automation", {
         },
         {
             content: "Set new action to update the record",
-            trigger: ".modal-content .o_form_renderer [name='state'] span[value*='object_write']",
+            in_modal: false,
+            trigger:
+                ".modal .modal-content .o_form_renderer [name='state'] span[value*='object_write']",
             run: "click",
         },
         {
             content: "Focus on the 'update_path' field",
-            trigger: ".modal-content .o_form_renderer [name='update_path'] .o_model_field_selector",
+            in_modal: false,
+            trigger:
+                ".modal .modal-content .o_form_renderer [name='update_path'] .o_model_field_selector",
             run: "click",
         },
         {
             content: "Input field name",
-            trigger:
-                ".o_model_field_selector_popover .o_model_field_selector_popover_search  input",
-            run: "edit Job Position",
+            trigger: ".o_model_field_selector_popover .o_model_field_selector_popover_search input",
             in_modal: false,
+            run: "edit Job Position",
         },
         {
             content: "Select field",
-            in_modal: false,
             trigger:
                 '.o_model_field_selector_popover .o_model_field_selector_popover_page li[data-name="function"] button',
+            in_modal: false,
             run: "click",
         },
         {
             content: "Open update select",
-            trigger: '.modal-content .o_form_renderer div[name="value"] textarea',
+            trigger:
+                '.modal .modal-content .o_form_renderer div[name="value"] textarea',
+            in_modal: false,
             run: "edit Test",
         },
         {
             content: "Open update select",
-            trigger: ".modal-content .o_form_button_save",
+            trigger: ".modal .modal-content .o_form_button_save",
+            in_modal: false,
             run: "click",
         },
         {
-            trigger: "body:not(:has(.modal-content))",
+            trigger: "body:not(:has(.modal))",
         },
         ...stepUtils.saveForm(),
     ],
@@ -186,20 +192,24 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             run: "click",
         },
         {
-            trigger: " .modal-content .o_form_renderer [name='state'] span[value*='object_write']",
+            in_modal: false,
+            trigger:
+                ".modal .modal-content .o_form_renderer [name='state'] span[value*='object_write']",
             run: "click",
         },
         {
             content: "Focus on the 'update_path' field",
-            trigger: ".modal-content .o_form_renderer [name='update_path'] .o_model_field_selector",
+            in_modal: false,
+            trigger:
+                ".modal .modal-content .o_form_renderer [name='update_path'] .o_model_field_selector",
             run: "click",
         },
         {
             content: "Input field name",
+            in_modal: false,
             trigger:
                 ".o_model_field_selector_popover .o_model_field_selector_popover_search  input",
             run: "edit Name",
-            in_modal: false,
         },
         {
             content: "Select field",
@@ -209,42 +219,54 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             run: "click",
         },
         {
-            trigger: '.modal-content .o_form_renderer div[name="value"] textarea',
+            in_modal: false,
+            trigger:
+                '.modal .modal-content .o_form_renderer div[name="value"] textarea',
             run: "edit Test",
         },
         {
-            trigger: ".modal-content .o_form_button_save",
+            in_modal: false,
+            trigger: ".modal .modal-content .o_form_button_save",
             run: "click",
+        },
+        {
+            trigger: "body:not(:has(.modal))",
         },
         {
             trigger: '.o_form_renderer div[name="action_server_ids"] button',
             run: "click",
         },
         {
-            trigger: " .modal-content .o_form_renderer [name='state'] span[value*='object_write']",
+            in_modal: false,
+            trigger:
+                ".modal .modal-content .o_form_renderer [name='state'] span[value*='object_write']",
             run: "click",
         },
         {
+            in_modal: false,
             content: "Focus on the 'update_path' field",
-            trigger: ".modal-content .o_form_renderer [name='update_path'] .o_model_field_selector",
+            trigger:
+                ".modal .modal-content .o_form_renderer [name='update_path'] .o_model_field_selector",
             run: "click",
         },
         {
+            in_modal: false,
             content: "Input field name",
             trigger:
                 ".o_model_field_selector_popover .o_model_field_selector_popover_search  input",
             run: "edit Priority",
-            in_modal: false,
         },
         {
-            content: "Select field",
             in_modal: false,
+            content: "Select field",
             trigger:
                 '.o_model_field_selector_popover .o_model_field_selector_popover_page li[data-name="priority"] button',
             run: "click",
         },
         {
-            trigger: '.modal-content .o_form_renderer div[name="selection_value"] input',
+            in_modal: false,
+            trigger:
+                '.modal .modal-content .o_form_renderer div[name="selection_value"] input',
             run: "edit High",
         },
         {
@@ -252,7 +274,8 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             run: "click",
         },
         {
-            trigger: ".modal-content .o_form_button_save",
+            in_modal: false,
+            trigger: ".modal .modal-content .o_form_button_save",
             run: "click",
         },
         {

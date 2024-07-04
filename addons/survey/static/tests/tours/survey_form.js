@@ -26,52 +26,59 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         run: "click",
     }, {
         content: "Set the first question's title",
-        trigger: ".modal-content .o_field_widget[name=title] input",
+        trigger: ".modal .modal-content .o_field_widget[name=title] input",
         run: "edit Question 1",
     },
     ...addTwoAnswers(),
     ...saveAndNew(),
     {
         content: "Set the second question's title",
-        trigger: ".o_field_widget[name=title] input",
+        trigger: ".modal .o_field_widget[name=title] input",
+        in_modal: false,
         run: "edit Question 2",
-        in_modal: true,
     },
     ...addTwoAnswers(),
     ...changeTab("options"),
     {
         content: "Set a trigger for the first question",
-        trigger: ".o_field_widget[name=triggering_answer_ids] input",
+        trigger: ".modal .o_field_widget[name=triggering_answer_ids] input",
+        in_modal: false,
         run: "click",
-        in_modal: true,
     }, {
         content: "Set the first question's first answer as trigger",
-        trigger: 'ul.ui-autocomplete a:contains("Question 1 : Answer A")',
+        trigger: ".modal ul.ui-autocomplete a:contains(Question 1 : Answer A)",
+        in_modal: false,
         run: 'click',
-        in_modal: true,
     },
     ...changeTab("answers"),
     ...saveAndNew(),
     {
         content: "Set the third question's title",
-        trigger: ".o_field_widget[name=title] input",
+        trigger: ".modal .o_field_widget[name=title] input",
+        in_modal: false,
         run: "edit Question 3",
-        in_modal: true,
     },
     ...addTwoAnswers(),
     ...changeTab("options"),
     {
         content: "Set a trigger for the second question",
-        trigger: ".o_field_widget[name=triggering_answer_ids] input",
+        trigger: ".modal .o_field_widget[name=triggering_answer_ids] input",
+        in_modal: false,
         run: "click",
-        in_modal: true,
     }, {
         content: "Set the second question's second answer as trigger",
-        trigger: 'ul.ui-autocomplete a:contains("Question 2 : Answer B")',
+        trigger: ".modal ul.ui-autocomplete a:contains(Question 2 : Answer B)",
+        in_modal: false,
         run: 'click',
-        in_modal: true,
     },
-    ...stepUtils.saveForm(),
+    {
+        trigger: ".modal button:contains(save & close)",
+        in_modal: false,
+        run: "click",
+    },
+    {
+        trigger: "body:not(:has(.modal))",
+    },
     {
         content: "Check that Question 2 has 'normal' trigger icon",
         trigger: "tr:contains('Question 2') button i.fa-code-fork",
@@ -91,31 +98,38 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         run: "click",
     }, {
         content: "Check that an alert is shown",
-        trigger: ".o_form_sheet_bg div:first-child.alert-warning:contains('positioned before some or all of its triggers')",
-        in_modal: true,
-        run: "click",
+        trigger: ".modal .o_form_sheet_bg div:first-child.alert-warning:contains('positioned before some or all of its triggers')",
+        in_modal: false,
     },
     ...changeTab("options"),
     {
         content: "Remove invalid trigger",
-        trigger: ".o_field_widget[name=triggering_answer_ids] span:contains('Question 2') a.o_delete",
+        trigger: ".modal .o_field_widget[name=triggering_answer_ids] span:contains('Question 2') a.o_delete",
+        in_modal: false,
         run: "click",
-        in_modal: true,
     }, {
         content: "Check that the alert is gone",
-        trigger: `.o_form_sheet_bg div:first-child:not(.alert-warning).o_form_sheet`,
-        in_modal: true,
+        trigger: `.modal .o_form_sheet_bg div:first-child:not(.alert-warning).o_form_sheet`,
+        in_modal: false,
     }, {
         content: "Choose a new valid trigger",
-        trigger: ".o_field_widget[name=triggering_answer_ids] input",
+        trigger: ".modal .o_field_widget[name=triggering_answer_ids] input",
+        in_modal: false,
         run: "click",
-        in_modal: true,
     }, {
         content: "Set the first question's second answer as trigger, then",
         trigger: 'ul.ui-autocomplete a:contains("Question 1 : Answer B")',
         run: 'click',
     },
-    ...stepUtils.saveForm(),
+    {
+        content: "Save the question (1)",
+        trigger: ".modal button:contains(save)",
+        in_modal: false,
+        run: "click",
+    },
+    {
+        trigger: "body:not(:has(.modal))",
+    },
     {
         content: "Check that Question 3 has its 'normal' trigger icon back",
         trigger: "tr:contains('Question 3') button i.fa-code-fork",
@@ -131,15 +145,22 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     ...changeTab("options"),
     {
         content: "Add a second trigger to confirm we can now use Question 2 again",
-        trigger: ".modal-content .o_field_widget[name=triggering_answer_ids] input",
+        trigger: ".modal .modal-content .o_field_widget[name=triggering_answer_ids] input",
         run: "click",
-        in_modal: true,
     }, {
         content: "Add the second question's second answer as trigger, then",
         trigger: '.modal-content ul.ui-autocomplete a:contains("Question 2 : Answer B")',
         run: "click",
     },
-    ...stepUtils.saveForm(),
+    {
+        content: "Save the question (2)",
+        trigger: ".modal button:contains(save)",
+        in_modal: false,
+        run: "click",
+    },
+    {
+        trigger: "body:not(:has(.modal))",
+    },
     // Move question 1 below question 3,
     {
         content: "Move Question 1 back below Question 3",
@@ -154,22 +175,29 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         run: "click",
     }, {
         content: "Check that an alert is shown also when only one trigger is misplaced",
-        trigger: ".o_form_sheet_bg div:first-child.alert-warning:contains('positioned before some or all of its triggers')",
-        in_modal: true,
-        run: "click",
+        trigger: ".modal .o_form_sheet_bg div:first-child.alert-warning:contains('positioned before some or all of its triggers')",
+        in_modal: false,
     },
     ...changeTab("options"),
     {
         content: "Remove temporarily used trigger",
-        trigger: ".o_field_widget[name=triggering_answer_ids] span:contains('Question 1') a.o_delete",
+        trigger: ".modal .o_field_widget[name=triggering_answer_ids] span:contains('Question 1') a.o_delete",
+        in_modal: false,
         run: "click",
-        in_modal: true,
     }, {
         content: "Check that the alert is gone in this case too",
-        trigger: `.o_form_sheet_bg div:first-child:not(.alert-warning).o_form_sheet`,
-        in_modal: true,
+        trigger: `.modal .o_form_sheet_bg div:first-child:not(.alert-warning).o_form_sheet`,
+        in_modal: false,
     },
-    ...stepUtils.saveForm(),
+    {
+        content: "Save the question (3)",
+        trigger: ".modal button:contains(save)",
+        in_modal: false,
+        run: "click",
+    },
+    {
+        trigger: "body:not(:has(.modal))",
+    },
     {
         content: "Check that Question 3 has its 'normal' trigger icon back",
         trigger: "tr:contains('Question 3') button i.fa-code-fork",
@@ -188,7 +216,15 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         trigger: "div[name=suggested_answer_ids] tr:contains('Answer B') button[name=delete]",
         run: "click",
     },
-    ...stepUtils.saveForm(),
+    {
+        content: "Save the question (4)",
+        trigger: ".modal button:contains(save)",
+        in_modal: false,
+        run: "click",
+    },
+    {
+        trigger: "body:not(:has(.modal))",
+    },
     {
         content: "Check that Question 3 no longer has a trigger icon",
         trigger: "div[name=question_and_page_ids] tr:contains('Question 3') div.o_widget_survey_question_trigger:not(:has(button))",
@@ -218,23 +254,29 @@ function addTwoAnswers() {
     return [
         {
             content: "Add the first answer",
-            trigger: "div[name=suggested_answer_ids] .o_field_x2many_list_row_add a",
-            in_modal: true,
+            trigger:
+                ".modal div[name=suggested_answer_ids] .o_field_x2many_list_row_add a",
+            in_modal: false,
             run: "click",
-        }, {
-            trigger: 'tr.o_selected_row div[name=value] input',
+        },
+        {
+            trigger: ".modal tr.o_selected_row div[name=value] input",
+            in_modal: false,
             run: "edit Answer A",
-            in_modal: true,
-        }, {
+        },
+        {
             content: "Add the second answer",
-            trigger: "div[name=suggested_answer_ids] .o_field_x2many_list_row_add a",
-            in_modal: true,
+            trigger:
+                ".modal div[name=suggested_answer_ids] .o_field_x2many_list_row_add a",
+            in_modal: false,
             run: "click",
-        }, {
-            trigger: 'tr:nth-child(2).o_selected_row div[name=value] input',
+        },
+        {
+            trigger:
+                ".modal tr:nth-child(2).o_selected_row div[name=value] input",
+            in_modal: false,
             run: "edit Answer B",
-            in_modal: true,
-        }
+        },
     ];
 }
 
@@ -242,31 +284,31 @@ function saveAndNew() {
     return [
         {
             content: "Click Save & New",
-            trigger: "button.o_form_button_save_new",
-            in_modal: true,
+            trigger: ".modal button.o_form_button_save_new",
+            in_modal: false,
             run: "click",
-        }, {
+        },
+        {
             content: "Wait for the dialog to render new question form",
-            // suggested_answer_ids required even though in_modal is specified...
-            trigger: "div[name=suggested_answer_ids] .o_list_table tbody tr:first-child:not(.o_data_row)", // empty answers list
-            in_modal: true,
-        }
+            in_modal: false,
+            trigger:
+                ".modal div[name=suggested_answer_ids] .o_list_table tbody tr:first-child:not(.o_data_row)", // empty answers list
+        },
     ];
 }
 
-
 function changeTab(tabName) {
-    // Currently, .modal-content is required even though "in_modal"
     return [
         {
             content: `Go to ${tabName} tab`,
-            trigger: `.modal-content a[name=${tabName}].nav-link`,
-            in_modal: true,
+            trigger: `.modal .modal-content a[name=${tabName}].nav-link`,
+            in_modal: false,
             run: "click",
-        }, {
+        },
+        {
             content: `Wait for tab ${tabName} tab`,
-            trigger: `.modal-content a[name=${tabName}].nav-link.active`,
-            in_modal: true,
-        }
+            trigger: `.modal .modal-content a[name=${tabName}].nav-link.active`,
+            in_modal: false,
+        },
     ];
 }

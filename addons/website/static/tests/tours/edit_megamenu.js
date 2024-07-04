@@ -45,7 +45,8 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     },
     {
         content: "Confirm the mega menu label",
-        trigger: '.modal-footer .btn-primary',
+        trigger: ".modal .modal-footer button:contains(ok)",
+        in_modal: false,
         run: "click",
     },
     {
@@ -53,8 +54,12 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     },
     {
         content: "Save the website menu with a new mega menu",
-        trigger: '.modal-footer .btn-primary',
+        trigger: ".modal .modal-footer button:contains(save)",
+        in_modal: false,
         run: "click",
+    },
+    {
+        trigger: "body:not(:has(.modal))",
     },
     {
         trigger: '#oe_snippets.o_loaded',
@@ -149,7 +154,8 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     },
     {
         content: "Confirm the mega menu label",
-        trigger: '.modal-footer .btn-primary',
+        trigger: ".modal .modal-footer .btn-primary:contains(ok)",
+        in_modal: false,
         run: "click",
     },
     {

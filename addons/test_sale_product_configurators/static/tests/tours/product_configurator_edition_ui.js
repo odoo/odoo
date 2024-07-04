@@ -40,7 +40,8 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
 }, {
     trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk (TEST) (Aluminium, White)"))',
 }, {
-    trigger: 'button:contains(Confirm)',
+    trigger: ".modal button:contains(Confirm)",
+    in_modal: false,
     run: "click",
 }, 
 {
@@ -74,7 +75,8 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     // used to sync with server
     trigger: 'div[name="o_sale_product_configurator_name"]:contains("Customizable Desk (TEST) (Custom, Black)")',
 }, {
-    trigger: 'button:contains(Confirm)',
+    trigger: ".modal button:contains(Confirm)",
+    in_modal: false,
     run: "click",
 }, 
 {
@@ -99,7 +101,8 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
 },
     configuratorTourUtils.setCustomAttribute("Customizable Desk", "Legs", "another nice custom value"),
 {
-    trigger: 'button:contains(Confirm)',
+    trigger: ".modal button:contains(Confirm)",
+    in_modal: false,
     run: "click",
 }, 
 {
@@ -123,7 +126,8 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     // Mr Tajine Saucisse uses the pricelist that has a rule when 2 or more products. Price is 600
     configuratorTourUtils.assertPriceTotal("1,200.00"),
 {
-    trigger: 'button:contains(Confirm)',
+    trigger: ".modal button:contains(Confirm)",
+    in_modal: false,
     run: "click",
 }, {
     // check quantity

@@ -74,7 +74,8 @@ stepUtils.showAppsMenuItem(),
     configuratorTourUtils.assertPriceTotal("1,257.00"),
 {
     content: "add to SO",
-    trigger: 'button:contains(Confirm)',
+    trigger: ".modal button:contains(Confirm)",
+    in_modal: false,
     run: "click",
 }, {
     content: "verify SO final price excluded",

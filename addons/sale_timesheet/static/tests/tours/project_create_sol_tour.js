@@ -39,7 +39,8 @@ patch(registry.category("web_tour.tours").get("project_create_sol_tour"), {
             content: "Select the customer in the autocomplete dropdown",
             run: "click",
         }, {
-            trigger: ".o_form_button_save",
+            trigger: ".modal:not(.o_inactive_modal) button:contains(save & close)",
+            in_modal: false,
             content: "Save project",
             run: "click",
         });

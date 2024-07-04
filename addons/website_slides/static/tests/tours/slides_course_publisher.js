@@ -24,23 +24,23 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
     run: "click",
 }, {
     content: 'eLearning: set name',
-    trigger: 'div[name="name"] input',
+    trigger: "modal:not(.o_inactive_modal) div[name=name] input",
+    in_modal: false,
     run: "edit How to Déboulonnate",
-    in_modal: true,
 }, {
     content: 'eLearning: click on tags',
-    trigger: '.o_field_many2many_tags input',
+    trigger: ".modal .o_field_many2many_tags input",
+    in_modal: false,
     run: "edit Gard",
-    in_modal: true,
 }, {
     content: 'eLearning: select gardener tag',
-    trigger: '.ui-autocomplete a:contains("Gardener")',
-    in_modal: true,
+    trigger: ".modal .ui-autocomplete a:contains(Gardener)",
+    in_modal: false,
     run: "click",
 }, {
     content: 'eLearning: set description',
-    trigger: '.o_field_html[name="description"]',
-    in_modal: true,
+    trigger: '.modal .o_field_html[name="description"]',
+    in_modal: false,
     run: "editor Déboulonnate is very common at Fleurus",
 }, {
     content: 'eLearning: we want reviews',
@@ -48,7 +48,8 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
     run: "click",
 }, {
     content: 'eLearning: seems cool, create it',
-    trigger: 'button:contains("Save")',
+    trigger: ".modal button:contains(Save)",
+    in_modal: false,
     run: "click",
 },
 ...wTourUtils.clickOnEditAndWaitEditMode(),

@@ -130,7 +130,11 @@ registry.category("web_tour.tours").add('project_update_tour', {
 }, {
     trigger: ".modal-footer .o_form_button_save",
     run: "click",
-}, {
+}, 
+{
+    trigger: "body:not(:has(.modal))",
+},
+{
     trigger: ".o_add_milestone a",
     run: "click",
 }, {
@@ -142,7 +146,11 @@ registry.category("web_tour.tours").add('project_update_tour', {
 }, {
     trigger: ".modal-footer .o_form_button_save",
     run: "click",
-}, {
+}, 
+{
+    trigger: "body:not(:has(.modal))",
+},
+{
     trigger: ".o_rightpanel_milestone:eq(1) .o_milestone_detail",
     run: "click",
 }, {

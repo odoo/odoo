@@ -65,7 +65,8 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     run: "click",
 }, {
     content: "insert file name",
-    trigger: '.modal-dialog input[type="text"]',
+    trigger: '.modal .modal-dialog .modal-body input[type="text"]',
+    in_modal: false,
     run: "edit rte_translator.xml",
 },
 {
@@ -73,7 +74,8 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
 },
 {
     content: "create file",
-    trigger: '.modal-dialog button.btn-primary:contains(create)',
+    trigger: ".modal button.btn-primary:contains(create)",
+    in_modal: false,
     run: "click",
 }, {
     content: "click on the 'page manager' button",
@@ -97,7 +99,8 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     run: "click",
 }, {
     content: "insert page name",
-    trigger: '.modal-dialog input[type="text"]',
+    trigger: '.modal .modal-dialog .modal-body input[type="text"]',
+    in_modal: false,
     run: "edit rte_translator",
 },
 {
@@ -105,8 +108,12 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
 },
 {
     content: "create page",
-    trigger: '.modal-dialog button.btn-primary',
+    trigger: ".modal button.btn-primary:contains(create)",
+    in_modal: false,
     run: "click",
+},
+{
+    trigger: "body:not(:has(.modal))",
 },
 ...wTourUtils.dragNDrop({
     id: "s_cover",

@@ -40,22 +40,28 @@ registry.category("web_tour.tours").add('shop_mail', {
     },
     {
         content: "Open recipients dropdown",
-        trigger: '.o_field_many2many_tags_email[name=partner_ids] input',
+        trigger: ".modal .o_field_many2many_tags_email[name=partner_ids] input",
+        in_modal: false,
         run: 'click',
     },
     {
         content: "Select azure interior",
-        trigger: '.ui-menu-item a:contains(Interior24)',
+        trigger: ".modal .ui-menu-item a:contains(Interior24)",
         in_modal: false,
         run: "click",
     },
     {
-        trigger: '.o_badge_text:contains("Azure")',
+        trigger: '.modal .o_badge_text:contains("Azure")',
+        in_modal: false,
     },
     {
         content: "click Send email",
-        trigger: '.btn[name="action_send_mail"]',
+        trigger: '.modal .btn[name="action_send_mail"]',
+        in_modal: false,
         run: "click",
+    },
+    {
+        trigger: "body:not(:has(.modal))",
     },
     {
         content: "wait mail to be sent, and go see it",
