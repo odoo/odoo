@@ -81,7 +81,8 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     run: "click",
 },
 {
-    trigger: "div:contains(enter your password)",
+    trigger: ".modal div:contains(enter your password)",
+    in_modal: false,
 },
 {
     content: "Check that we have to enter enhanced security mode and input password",
@@ -93,10 +94,12 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     run: "click",
 }, {
     content: "Check the wizard has opened",
-    trigger: 'li:contains("When requested to do so")',
+    trigger: '.modal li:contains("When requested to do so")',
+    in_modal: false,
 }, {
     content: "Get secret from collapsed div",
-    trigger: 'a:contains("Cannot scan it?")',
+    trigger: `.modal a:contains("Cannot scan it?")`,
+    in_modal: false,
     async run(helpers) {
         const secret = this.anchor
             .closest("div")
@@ -109,10 +112,18 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
             secret: secret.textContent
         });
         helpers.edit(token, '[name=code] input');
-        helpers.click('button.btn-primary:contains(Activate)');
         document.querySelector("body").classList.add("got-token");
     }
-}, {
+}, 
+{
+    trigger: ".modal button.btn-primary:contains(Activate)",
+    in_modal: false,
+    run: "click",
+},
+{
+    trigger: "body:not(:has(.modal))",
+},
+{
     content: 'wait for rpc',
     trigger: 'body.got-token',
 },
@@ -241,7 +252,8 @@ registry.category("web_tour.tours").add('totp_login_device', {
     run: "click",
 },
 {
-    trigger: "div:contains(enter your password)",
+    trigger: ".modal div:contains(enter your password)",
+    in_modal: false,
 },
 {
     content: "Check that we have to enter enhanced security mode and input password",
@@ -330,17 +342,25 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     run: "click",
 },
 {
-    trigger: "div:contains(enter your password)",
+    trigger: ".modal div:contains(enter your password)",
+    in_modal: false,
 },
 { // enhanced security yo
     content: "Check that we have to enter enhanced security mode & input password",
-    trigger: '[name=password] input',
+    trigger: '.modal [name=password] input',
+    in_modal: false,
     run: "edit admin",
 }, {
     content: "Confirm",
-    trigger: "button:contains(Confirm Password)",
+    trigger: ".modal button:contains(Confirm Password)",
+    in_modal: false,
     run: "click",
-}, {
+}, 
+{
+    content: "Wait the modal is closed",
+    trigger: "body:not(:has(.modal))",
+},
+{
     content: "open the user's form",
     trigger: "td.o_data_cell:contains(demo)",
     run: "click",

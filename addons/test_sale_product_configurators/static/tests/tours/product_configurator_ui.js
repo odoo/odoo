@@ -66,7 +66,8 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
     configuratorTourUtils.addOptionalProduct("Conference Chair"),
     configuratorTourUtils.addOptionalProduct("Chair floor protection"),
 {
-    trigger: 'button:contains(Confirm)',
+    trigger: ".modal button:contains(Confirm)",
+    in_modal: false,
     id: 'quotation_product_selected',
     run: "click",
 },

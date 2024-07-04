@@ -30,7 +30,8 @@ registry.category("web_tour.tours").add('sale_product_configurator_single_custom
 },
     configuratorTourUtils.setCustomAttribute("Customizable Desk (TEST)", "product attribute", "great single custom value"),
 {
-    trigger: 'button:contains(Confirm)',
+    trigger: ".modal button:contains(Confirm)",
+    in_modal: false,
     run: "click",
 },
 {

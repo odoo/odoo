@@ -25,17 +25,20 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Trigger the link dialog (click 'Add Mega Menu Item')",
-        trigger: '.modal-body a:eq(1)',
+        trigger: '.modal:not(.o_inactive_modal) .modal-body a:eq(1)',
+        in_modal: false,
         run: "click",
     },
     {
         content: "Write a label for the new menu item",
-        trigger: '.modal-dialog .o_website_dialog input',
+        trigger: '.modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input',
+        in_modal: false,
         run: "edit Megaaaaa!",
     },
     {
         content: "Confirm the mega menu label",
-        trigger: '.modal-footer .btn-primary',
+        trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
+        in_modal: false,
         run: "click",
     },
     {
@@ -75,34 +78,41 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     {
-        trigger: ".modal-dialog .o_website_dialog input:eq(0)",
+        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(0)",
+        in_modal: false,
     },
     {
         content: "Confirm the new menu entry without a label",
-        trigger: '.modal-footer .btn-primary',
+        trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
+        in_modal: false,
         run: "click",
     },
     {
         content: "It didn't save without a label. Fill label input.",
-        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
+            trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(0)",
+        in_modal: false,
         run: "edit Random!",
     },
     {
         content: "Confirm the new menu entry without a url",
-        trigger: '.modal-footer .btn-primary',
+        trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
+        in_modal: false,
         run: "click",
     },
     {
-        trigger: ".modal-dialog .o_website_dialog input.is-invalid",
+        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input.is-invalid",
+        in_modal: false,
     },
     {
         content: "It didn't save without a url. Fill url input.",
-        trigger: '.modal-dialog .o_website_dialog input:eq(1)',
+        trigger: '.modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(1)',
+        in_modal: false,
         run: "edit #",
     },
     {
         content: "Confirm the new menu entry",
-        trigger: '.modal-footer .btn-primary',
+        trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
+        in_modal: false,
         run: "click",
     },
     {
@@ -110,8 +120,12 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Save the website menu with the new entry",
-        trigger: '.modal-footer .btn-primary',
+        trigger: '.modal:not(.o_inactive_modal) .modal-footer .btn-primary',
+        in_modal: false,
         run: "click",
+    },
+    {
+        trigger: "body:not(:has(.modal))",
     },
     {
         trigger: "#oe_snippets.o_loaded",
@@ -175,12 +189,14 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Change the label",
-        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
+        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(0)",
+        in_modal: false,
         run: "edit Modnar !!",
     },
     {
         content: "Confirm the new menu label",
-        trigger: '.modal-footer .btn-primary',
+        trigger: ".modal:not(.o_inactive_modal) .modal-footer button:contains(ok)",
+        in_modal: false,
         run: "click",
     },
     {
@@ -188,7 +204,8 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Save the website menu with the new menu label",
-        trigger: '.modal-footer .btn-primary',
+        trigger: ".modal:not(.o_inactive_modal) .modal-footer button:contains(save)",
+        in_modal: false,
         run: "click",
     },
     // Drag a block to be able to scroll later.

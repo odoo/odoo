@@ -209,10 +209,16 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Enter mega menu name",
-        trigger: ".modal-body input",
+        trigger: ".modal .modal-body input",
+        in_modal: false,
         run: "edit Mega",
     },
-    wTourUtils.clickOnElement("OK button", ".btn-primary"),
+    {
+        content: "Clicking on the OK button",
+        trigger: ".modal button:contains(ok)",
+        in_modal: false,
+        run: "click",
+    },
     {
         content: "Drag Mega at the top",
         trigger: '.oe_menu_editor li:contains("Mega") .fa-bars',
@@ -229,7 +235,12 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         content: "Wait for drop",
         trigger: '.oe_menu_editor:first-child:contains("Mega")',
     },
-    wTourUtils.clickOnElement("Save button", ".btn-primary:contains('Save')"),
+    {
+        content: "Clicking on the OK button",
+        trigger: ".modal button:contains(Save)",
+        in_modal: false,
+        run: "click",
+    },
     wTourUtils.clickOnElement("mega menu", ":iframe header .o_mega_menu_toggle"),
     wTourUtils.changeOption("MegaMenuLayout", "we-toggler"),
     wTourUtils.changeOption("MegaMenuLayout", '[data-select-label="Cards"]'),

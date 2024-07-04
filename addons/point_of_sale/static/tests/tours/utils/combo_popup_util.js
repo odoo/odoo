@@ -8,32 +8,32 @@ const confirmationButtonTrigger = `footer button.confirm`;
 export function select(productName) {
     return {
         content: `Select combo item ${productName}`,
-        trigger: productTrigger(productName),
-        in_modal: true,
+        trigger: `.modal ${productTrigger(productName)}`,
+        in_modal: false,
         run: "click",
     };
 }
 export function isSelected(productName) {
     return {
         content: `Check that ${productName} is selected`,
-        trigger: isComboSelectedTrigger(productName),
-        in_modal: true,
+        trigger: `.modal ${isComboSelectedTrigger(productName)}`,
+        in_modal: false,
         run: "click",
     };
 }
 export function isNotSelected(productName) {
     return {
         content: `Check that ${productName} is not selected`,
-        trigger: negate(isComboSelectedTrigger(productName), ".modal-body"),
-        in_modal: true,
+        trigger: `.modal ${negate(isComboSelectedTrigger(productName), ".modal-body")}`,
+        in_modal: false,
         run: "click",
     };
 }
 export function isConfirmationButtonDisabled() {
     return {
         content: "try to click `confirm` without having made all the selections",
-        trigger: `${confirmationButtonTrigger}[disabled]`,
+        trigger: `.modal ${confirmationButtonTrigger}[disabled]`,
+        in_modal: false,
         allowDisabled: true,
-        in_modal: true,
     };
 }

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { queryAll } from "@odoo/hoot-dom";
+import { queryAll, queryText } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
@@ -25,39 +25,50 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
     run: "click",
 }, {
     content: "Check that we have to enter enhanced security mode",
-    trigger: 'div:contains("enter your password")',
+    trigger: ".modal div:contains(enter your password)",
+    in_modal: false,
 }, {
     content: "Input password",
-    trigger: '[name=password] input',
-    run: "edit demo", // FIXME: better way to do this?
+    trigger: '.modal [name=password] input',
+    in_modal: false,
+    run: "edit demo",
 }, {
     content: "Confirm",
-    trigger: "button:contains(Confirm Password)",
+    trigger: ".modal button:contains(Confirm Password)",
+    in_modal: false,
     run: "click",
 }, {
     content: "Check that we're now on the key description dialog",
-    trigger: 'p:contains("Enter a description of and purpose for the key.")',
+    trigger: '.modal p:contains("Enter a description of and purpose for the key.")',
+    in_modal: false,
 }, {
     content: "Enter description",
-    trigger: '[name=name] input',
+    trigger: '.modal [name=name] input',
+    in_modal: false,
     run: "edit my key",
 }, {
     content: "Confirm key creation",
-    trigger: 'button:contains("Generate key")',
+    trigger: '.modal button:contains("Generate key")',
+    in_modal: false,
     run: "click",
 }, {
     content: "Check that we're on the last step & grab key",
-    trigger: 'p:contains("Here is your new API key")',
+    trigger: '.modal p:contains("Here is your new API key")',
+    in_modal: false,
     run: async () => {
-        const key = $('code [name=key] span').text();
+        const key = queryText("code [name=key] span");
         await rpc('/web/dataset/call_kw', {
             model: 'ir.logging', method: 'send_key',
             args: [key],
             kwargs: {},
         });
-        $('button:contains("Done")').click();
     }
-}, {
+}, 
+{
+    trigger: "button:contains(Done)",
+    run: "click",
+},
+{
     content: "check that our key is present (FIXME: requires HR to be installed)",
     trigger: '[name=api_key_ids] td:contains("my key")',
 }]});
@@ -83,13 +94,19 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     run: 'click',
 }, {
     content: "Input password for security mode again",
-    trigger: '[name=password] input',
-    run: "edit demo", // FIXME: better way to do this?
+    trigger: ".modal [name=password] input",
+    in_modal: false,
+    run: "edit demo",
 }, {
     content: "And confirm",
-    trigger: 'button:contains(Confirm Password)',
+    trigger: ".modal button:contains(Confirm Password)",
+    in_modal: false,
     run: "click",
-}, {
+},
+{
+    trigger: "body:not(:has(.modal))",
+},
+{
     content: 'Re-open preferences again',
     trigger: '.o_user_menu .dropdown-toggle',
     run: "click",
@@ -105,7 +122,7 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     trigger: '.o_notebook',
     run: function() {
         if (queryAll("[name=api_key_ids]:visible", { root: this.anchor }).length) {
-            throw new Error("Expected API keys to be hidden (because empty), but it's not");
+            console.error("Expected API keys to be hidden (because empty), but it's not");
         };
     }
 }]});
