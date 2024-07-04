@@ -492,6 +492,7 @@ class StockWarehouseOrderpoint(models.Model):
                         'url': f'/web#action={action.id}&id={move.picking_id.id}&model=stock.picking&view_type=form'
                     }],
                     'sticky': False,
+                    'next': {'type': 'ir.actions.act_window_close'},
                 }
             }
         return False
