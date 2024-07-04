@@ -115,27 +115,6 @@ export class ControlButtons extends Component {
             },
         });
     }
-    onClickSave() {
-        const orderline = this.pos.get_order().get_selected_orderline();
-        if (!orderline) {
-            this.notification.add(_t("You cannot save an empty order"));
-            return;
-        }
-        this._selectEmptyOrder();
-        this.pos.addPendingOrder([this.pos.get_order().id]);
-        this.pos.syncAllOrders();
-        this.notification.add(_t("Order saved for later"));
-    }
-    _selectEmptyOrder() {
-        const orders = this.pos.get_open_orders();
-        const emptyOrders = orders.filter((order) => order.is_empty());
-        if (emptyOrders.length > 0) {
-            this.pos.syncAllOrders();
-            this.pos.set_order(emptyOrders[0]);
-        } else {
-            this.pos.add_new_order();
-        }
-    }
     get internalNoteLabel() {
         return _t("Internal Note");
     }
