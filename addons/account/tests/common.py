@@ -79,6 +79,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         cls.product_a = cls.env['product.product'].create({
             'name': 'product_a',
             'uom_id': cls.env.ref('uom.product_uom_unit').id,
+            'uom_po_id': cls.env.ref('uom.product_uom_unit').id,
             'lst_price': 1000.0,
             'standard_price': 800.0,
             'property_account_income_id': cls.company_data['default_account_revenue'].id,
@@ -89,6 +90,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         cls.product_b = cls.env['product.product'].create({
             'name': 'product_b',
             'uom_id': cls.env.ref('uom.product_uom_dozen').id,
+            'uom_po_id': cls.env.ref('uom.product_uom_dozen').id,
             'lst_price': 200.0,
             'standard_price': 160.0,
             'property_account_income_id': cls.copy_account(cls.company_data['default_account_revenue']).id,
