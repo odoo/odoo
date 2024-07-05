@@ -1960,6 +1960,76 @@ class TestSinglePicking(TestStockCommon):
         receipt.button_validate()
         self.assertEqual(len(receipt.move_ids), 2, 'Moves were not merged')
 
+    def test_merge_moves_never_attributes(self):
+        """ Create 2 moves without initial_demand and already a
+        quantity done. Check that we still have only 2 moves after
+        validation.
+        """
+        product_attribute = self.env['product.attribute'].create({
+            'name': 'PA',
+            'create_variant': 'no_variant',
+        })
+
+        self.env['product.attribute.value'].create([{
+            'name': 'PAV' + str(i),
+            'attribute_id': product_attribute.id
+        } for i in range(2)])
+
+        tmpl_attr_lines = self.env['product.template.attribute.line'].create({
+            'attribute_id': product_attribute.id,
+            'product_tmpl_id': self.productA.product_tmpl_id.id,
+            'value_ids': [(6, 0, product_attribute.value_ids.ids)],
+        })
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in,
+            'state': 'draft',
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 3,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'never_product_template_attribute_value_ids': tmpl_attr_lines.product_template_value_ids[0],
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'never_product_template_attribute_value_ids': tmpl_attr_lines.product_template_value_ids[1],
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'never_product_template_attribute_value_ids': tmpl_attr_lines.product_template_value_ids[1],
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        receipt.action_confirm()
+        self.assertEqual(len(receipt.move_ids), 3, 'Moves were not merged')
+        self.assertEqual(receipt.move_ids.filtered(lambda m: m.product_id == self.productA
+            and m.never_product_template_attribute_value_ids == tmpl_attr_lines.product_template_value_ids[1]).product_uom_qty, 6, 'Merged quantity is not correct')
+
     def test_merge_chained_moves(self):
         """ Imagine multiple step reception. Two different receipt picking for the same product should only generate
         1 picking from input to QC and another from QC to stock. The link at the end should follow this scheme.

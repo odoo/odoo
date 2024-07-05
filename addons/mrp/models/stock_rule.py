@@ -141,6 +141,7 @@ class StockRule(models.Model):
             'origin': origin,
             'product_id': product_id.id,
             'product_description_variants': values.get('product_description_variants'),
+            'never_product_template_attribute_value_ids': values.get('never_product_template_attribute_value_ids'),
             'product_qty': product_uom._compute_quantity(product_qty, bom.product_uom_id) if bom else product_qty,
             'product_uom_id': bom.product_uom_id.id if bom else product_uom.id,
             'location_src_id': self.picking_type_id.default_location_src_id.id,
@@ -244,7 +245,7 @@ class ProcurementGroup(models.Model):
             if bom_kit:
                 order_qty = procurement.product_uom._compute_quantity(procurement.product_qty, bom_kit.product_uom_id, round=False)
                 qty_to_produce = (order_qty / bom_kit.product_qty)
-                boms, bom_sub_lines = bom_kit.explode(procurement.product_id, qty_to_produce)
+                _dummy, bom_sub_lines = bom_kit.explode(procurement.product_id, qty_to_produce, never_attribute_values=procurement.values.get("never_product_template_attribute_value_ids"))
                 for bom_line, bom_line_data in bom_sub_lines:
                     bom_line_uom = bom_line.product_uom_id
                     quant_uom = bom_line.product_id.uom_id
