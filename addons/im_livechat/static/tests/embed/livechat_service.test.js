@@ -72,6 +72,7 @@ test("previous operator prioritized", async () => {
 test("Only necessary requests are made when creating a new chat", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultEmbedConfig();
+    const operatorPartnerId = serverState.partnerId;
     onRpcBefore((route, args) => {
         if (!route.includes("assets")) {
             step(`${route} - ${JSON.stringify(args)}`);
@@ -100,7 +101,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
         `/im_livechat/get_session - ${JSON.stringify({
             channel_id: livechatChannelId,
             anonymous_name: "Visitor",
-            previous_operator_id: serverState.partnerId,
+            previous_operator_id: operatorPartnerId,
             temporary_id: -1,
             persisted: true,
         })}`,
