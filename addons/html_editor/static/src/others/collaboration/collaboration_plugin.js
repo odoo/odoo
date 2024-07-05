@@ -102,7 +102,7 @@ export class CollaborationPlugin extends Plugin {
     safeSetAttribute(node, attributeName, attributeValue) {
         const clone = this.document.createElement(node.tagName);
         clone.setAttribute(attributeName, attributeValue);
-        this.shared.sanitize(clone, { IN_PLACE: true });
+        this.shared.sanitize(clone);
         if (clone.hasAttribute(attributeName)) {
             node.setAttribute(attributeName, clone.getAttribute(attributeName));
         } else {
