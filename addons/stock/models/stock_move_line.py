@@ -919,9 +919,9 @@ class StockMoveLine(models.Model):
         }
 
     def action_put_in_pack(self):
-        for picking in self.picking_id:
-            picking.with_context(move_lines_to_pack_ids=self.ids).action_put_in_pack()
-        return True
+        if len(self.picking_id) > 1:
+            raise UserError(_("You cannot directly pack quantities from different transfers into the same package through this view. Try adding them to a batch picking and pack it there."))
+        return self.picking_id.with_context(move_lines_to_pack_ids=self.ids).action_put_in_pack()
 
     def _get_revert_inventory_move_values(self):
         self.ensure_one()
