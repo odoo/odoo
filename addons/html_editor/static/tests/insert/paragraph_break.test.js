@@ -1,6 +1,6 @@
 import { describe, test } from "@odoo/hoot";
 import { testEditor } from "../_helpers/editor";
-import { splitBlock } from "../_helpers/user_actions";
+import { insertText, splitBlock } from "../_helpers/user_actions";
 import { tick } from "@odoo/hoot-mock";
 
 describe("Selection collapsed", () => {
@@ -523,6 +523,16 @@ describe("Selection not collapsed", () => {
             contentBefore: "<p>]abcd[</p>",
             stepFunction: splitBlock,
             contentAfter: "<p><br></p><p>[]<br></p>",
+        });
+    });
+
+    test("should keep the selection at the start of the second text node after paragraph break", async () => {
+        await testEditor({
+            contentBefore: "<p>ab<br>[c]de</p>",
+            stepFunction: async (editor) => {
+                await insertText(editor, "f");
+            },
+            contentAfter: "<p>ab<br>f[]de</p>",
         });
     });
 });

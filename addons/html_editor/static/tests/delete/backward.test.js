@@ -443,6 +443,14 @@ describe("Selection collapsed", () => {
                 contentAfter: `<p>abc</p><p>[]def</p>`,
             });
         });
+
+        test.todo("should not delete in contenteditable=false", async () => {
+            await testEditor({
+                contentBefore: `<p contenteditable="false">ab[]cdef</p>`,
+                stepFunction: deleteBackward,
+                contentAfter: `<p contenteditable="false">ab[]cdef</p>`,
+            });
+        });
     });
 
     describe("Line breaks", () => {
@@ -1913,6 +1921,38 @@ describe("Selection not collapsed", () => {
                 },
                 contentAfter: unformat(`
                         <p>before[]after</p>`),
+            });
+        });
+
+        test.todo("should keep empty line and delete prefix of second line", async () => {
+            await testEditor({
+                contentBefore: "<p>ab</p><p>[<br></p><p>d]ef</p>",
+                stepFunction: deleteBackward,
+                contentAfter: "<p>ab</p><p>[]<br></p><p>ef</p>",
+            });
+        });
+
+        test.todo("should not delete in contenteditable=false 1", async () => {
+            await testEditor({
+                contentBefore: `<p contenteditable="false">ab[cd]ef</p>`,
+                stepFunction: deleteBackward,
+                contentAfter: `<p contenteditable="false">ab[cd]ef</p>`,
+            });
+        });
+
+        test.todo("should not delete in contenteditable=false 2", async () => {
+            await testEditor({
+                contentBefore: `<div contenteditable="false">
+                                    <p>a[b</p>
+                                    <p>cd</p>
+                                    <p>e]f</p>
+                                </div>`,
+                stepFunction: deleteBackward,
+                contentAfter: `<div contenteditable="false">
+                                    <p>a[b</p>
+                                    <p>cd</p>
+                                    <p>e]f</p>
+                                </div>`,
             });
         });
 
