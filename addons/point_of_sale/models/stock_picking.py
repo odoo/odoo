@@ -84,6 +84,7 @@ class StockPicking(models.Model):
             'location_id': self.location_id.id,
             'location_dest_id': self.location_dest_id.id,
             'company_id': self.company_id.id,
+            'never_product_template_attribute_value_ids': first_line.attribute_value_ids.filtered(lambda a: a.attribute_id.create_variant == 'no_variant'),
         }
 
     def _create_move_from_pos_order_lines(self, lines):
