@@ -14,7 +14,7 @@ from reportlab.lib.units import cm
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 from odoo.tools.parse_version import parse_version
-from odoo.tools.arabic_reshaper.arabic_reshaper import reshape
+from odoo.tools.arabic_reshaper import reshape
 
 try:
     # class were renamed in PyPDF2 > 2.0
