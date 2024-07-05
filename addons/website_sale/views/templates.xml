@@ -1137,7 +1137,11 @@
                                     </t>
                                 </table>
                             </div>
-                            <t t-set="product_documents" t-value="product.sudo().product_document_ids.filtered(lambda doc: doc.shown_on_product_page)"/>
+                            <t t-set="active_lang" t-value="frontend_languages[lang].code"/>
+                            <t t-set="product_documents"
+                               t-value="product.sudo().product_document_ids.filtered(
+                                    lambda doc: doc.shown_on_product_page
+                                        and (not doc.lang or doc.lang == active_lang))"/>
                             <div id="product_documents" class="my-2" t-if="product_documents">
                                 <h5>Documents</h5>
                                 <t t-foreach="product_documents" t-as="document_sudo">

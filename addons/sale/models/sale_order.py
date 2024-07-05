@@ -1945,10 +1945,13 @@ class SaleOrder(models.Model):
         return self._filter_product_documents(documents).sorted()
 
     def _filter_product_documents(self, documents):
+        customer_lang = self.partner_id.lang or self.partner_id.parent_id.lang
+
         return documents.filtered(
             lambda document:
-                document.attached_on_sale == 'quotation'
-                or (self.state == 'sale' and document.attached_on_sale == 'sale_order')
+                document.lang in (False, customer_lang) and
+                (document.attached_on_sale == 'quotation'
+                or (self.state == 'sale' and document.attached_on_sale == 'sale_order'))
         )
 
     def _update_order_line_info(self, product_id, quantity, **kwargs):
