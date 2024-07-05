@@ -14,7 +14,9 @@ class ThreadController(http.Controller):
     @http.route("/mail/thread/data", methods=["POST"], type="json", auth="user")
     def mail_thread_data(self, thread_model, thread_id, request_list):
         thread = request.env[thread_model].with_context(active_test=False).search([("id", "=", thread_id)])
-        return Store(thread, request_list=request_list).get_result()
+        store = Store()
+        thread._thread_to_store(store, request_list=request_list)
+        return store.get_result()
 
     @http.route("/mail/thread/messages", methods=["POST"], type="json", auth="user")
     def mail_thread_messages(self, thread_model, thread_id, search_term=None, before=None, after=None, around=None, limit=30):

@@ -4542,7 +4542,7 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
 
-    def _to_store(self, store: Store, request_list):
+    def _thread_to_store(self, store: Store, /, *, request_list):
         res = {'hasWriteAccess': False, 'hasReadAccess': True, "id": self.id, "model": self._name}
         if not self:
             res['hasReadAccess'] = False

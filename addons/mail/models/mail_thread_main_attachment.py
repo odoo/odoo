@@ -49,8 +49,8 @@ class MailMainAttachmentMixin(models.AbstractModel):
                     key=lambda r: (r.mimetype.endswith('pdf'), r.mimetype.startswith('image'))
                 ).id
 
-    def _to_store(self, store: Store, request_list):
-        super()._to_store(store, request_list)
+    def _thread_to_store(self, store: Store, request_list, **kwargs):
+        super()._thread_to_store(store, request_list=request_list, **kwargs)
         if 'attachments' in request_list:
             store.add(
                 "Thread",
