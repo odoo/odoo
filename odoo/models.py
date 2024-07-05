@@ -59,7 +59,7 @@ from .tools import (
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, format_list,
     frozendict, get_lang, lazy_classproperty, OrderedSet,
     ormcache, partition, populate, Query, split_every, unique,
-    SQL, pycompat,
+    SQL, pycompat, sql,
 )
 from .tools.lru import LRU
 from .tools.misc import CountingStream, LastOrderedSet, ReversedIterable
@@ -3191,7 +3191,7 @@ class BaseModel(metaclass=MetaModel):
                 _logger.debug("column %s is in the table %s but not in the corresponding object %s",
                               row['attname'], self._table, self._name)
             if row['attnotnull']:
-                tools.drop_not_null(cr, self._table, row['attname'])
+                sql.drop_not_null(cr, self._table, row['attname'])
 
     def _init_column(self, column_name):
         """ Initialize the value of the given column for existing rows. """
@@ -3251,7 +3251,7 @@ class BaseModel(metaclass=MetaModel):
 
         cr = self._cr
         update_custom_fields = self._context.get('update_custom_fields', False)
-        must_create_table = not tools.table_exists(cr, self._table)
+        must_create_table = not sql.table_exists(cr, self._table)
         parent_path_compute = False
 
         if self._auto:
@@ -3259,15 +3259,15 @@ class BaseModel(metaclass=MetaModel):
                 def make_type(field):
                     return field.column_type[1] + (" NOT NULL" if field.required else "")
 
-                tools.create_model_table(cr, self._table, self._description, [
+                sql.create_model_table(cr, self._table, self._description, [
                     (field.name, make_type(field), field.string)
                     for field in sorted(self._fields.values(), key=lambda f: f.column_order)
                     if field.name != 'id' and field.store and field.column_type
                 ])
 
             if self._parent_store:
-                if not tools.column_exists(cr, self._table, 'parent_path'):
-                    tools.create_column(self._cr, self._table, 'parent_path', 'VARCHAR')
+                if not sql.column_exists(cr, self._table, 'parent_path'):
+                    sql.create_column(self._cr, self._table, 'parent_path', 'VARCHAR')
                     parent_path_compute = True
                 self._check_parent_path()
 
@@ -3275,7 +3275,7 @@ class BaseModel(metaclass=MetaModel):
                 self._check_removed_columns(log=False)
 
             # update the database schema for fields
-            columns = tools.table_columns(cr, self._table)
+            columns = sql.table_columns(cr, self._table)
             fields_to_compute = []
 
             for field in sorted(self._fields.values(), key=lambda f: f.column_order):
@@ -3327,27 +3327,27 @@ class BaseModel(metaclass=MetaModel):
         for (key, definition, message) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
             if len(conname) > 63:
-                hashed_conname = tools.make_identifier(conname)
-                current_definition = tools.constraint_definition(cr, self._table, hashed_conname)
+                hashed_conname = sql.make_identifier(conname)
+                current_definition = sql.constraint_definition(cr, self._table, hashed_conname)
                 if not current_definition:
                     _logger.info("Constraint name %r has more than 63 characters, internal PG identifier is %r", conname, hashed_conname)
                 conname = hashed_conname
             else:
-                current_definition = tools.constraint_definition(cr, self._table, conname)
+                current_definition = sql.constraint_definition(cr, self._table, conname)
             if current_definition == definition:
                 continue
 
             if current_definition:
                 # constraint exists but its definition may have changed
-                tools.drop_constraint(cr, self._table, conname)
+                sql.drop_constraint(cr, self._table, conname)
 
             if not definition:
                 # virtual constraint (e.g. implemented by a custom index)
-                self.pool.post_init(tools.check_index_exist, cr, conname)
+                self.pool.post_init(sql.check_index_exist, cr, conname)
             elif foreign_key_re.match(definition):
-                self.pool.post_init(tools.add_constraint, cr, self._table, conname, definition)
+                self.pool.post_init(sql.add_constraint, cr, self._table, conname, definition)
             else:
-                self.pool.post_constraint(tools.add_constraint, cr, self._table, conname, definition)
+                self.pool.post_constraint(sql.add_constraint, cr, self._table, conname, definition)
 
     #
     # Update objects that use this one to update their _inherits fields

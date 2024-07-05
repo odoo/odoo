@@ -25,8 +25,8 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.modules.module import get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN
+from odoo.tools import pycompat, SQL, Query, sql as sqltools
 from odoo.tools.translate import _, xml_translate
-from odoo.tools import escape_psql, pycompat, SQL, Query
 
 logger = logging.getLogger(__name__)
 
@@ -1492,7 +1492,7 @@ class Website(models.Model):
         """, ([self._get_html_fields_attributes_blacklist()]))
         for model, name, translate in cr.fetchall():
             table = self.env[model]._table
-            if tools.table_exists(cr, table) and tools.column_exists(cr, table, name):
+            if sqltools.table_exists(cr, table) and sqltools.column_exists(cr, table, name):
                 html_fields.append((model, table, name, translate))
         return html_fields
 
@@ -1582,7 +1582,7 @@ class Website(models.Model):
             for search_term in search.split(' '):
                 subdomains = []
                 for field in fields:
-                    subdomains.append([(field, 'ilike', escape_psql(search_term))])
+                    subdomains.append([(field, 'ilike', sqltools.escape_psql(search_term))])
                 if extra:
                     subdomains.append(extra(self.env, search_term))
                 domains.append(OR(subdomains))
@@ -1872,7 +1872,7 @@ class Website(models.Model):
         :return: yields words
         """
         match_pattern = r'[\w./-]{%s,}' % min(4, len(search) - 3)
-        first = escape_psql(search[0])
+        first = sqltools.escape_psql(search[0])
         for search_detail in search_details:
             model_name, fields = search_detail['model'], search_detail['search_fields']
             model = self.env[model_name]

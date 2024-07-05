@@ -15,7 +15,7 @@ def is_initialized(cr):
     The database can be initialized with the 'initialize' function below.
 
     """
-    return odoo.tools.table_exists(cr, 'ir_module_module')
+    return odoo.tools.sql.table_exists(cr, 'ir_module_module')
 
 def initialize(cr):
     """ Initialize a database with for the ORM.

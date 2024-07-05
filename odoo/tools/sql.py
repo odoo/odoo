@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # pylint: disable=sql-injection
 from __future__ import annotations
-from typing import TYPE_CHECKING
 
 import enum
 import json
@@ -10,6 +9,7 @@ import logging
 import re
 from binascii import crc32
 from collections import defaultdict
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from odoo.fields import Field
@@ -18,6 +18,18 @@ if TYPE_CHECKING:
 import psycopg2
 
 from .misc import named_to_positional_printf
+
+__all__ = [
+    "SQL",
+    "create_index",
+    "create_unique_index",
+    "drop_view_if_exists",
+    "escape_psql",
+    "index_exists",
+    "make_identifier",
+    "make_index_name",
+    "reverse_order",
+]
 
 _schema = logging.getLogger('odoo.schema')
 
