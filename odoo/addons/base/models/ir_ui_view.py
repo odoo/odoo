@@ -4,14 +4,11 @@ import ast
 import collections
 import functools
 import inspect
-import json
 import logging
 import pprint
 import re
 import uuid
 import warnings
-
-from itertools import chain
 
 from lxml import etree
 from lxml.etree import LxmlError
@@ -20,15 +17,15 @@ from lxml.builder import E
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, AccessError, UserError
 from odoo.http import request
+from odoo.models import check_method_name
 from odoo.modules.module import get_resource_from_path
-from odoo.tools import config, pycompat, apply_inheritance_specs, locate_node
-from odoo.tools import lazy_property, frozendict, SQL
+from odoo.osv.expression import expression
+from odoo.tools import config, pycompat, lazy_property, frozendict, SQL
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.misc import file_path, get_diff, ConstantMapping
+from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 from odoo.tools.view_validation import valid_view, get_domain_value_names, get_expression_field_names, get_dict_asts
-from odoo.models import check_method_name
-from odoo.osv.expression import expression
 
 _logger = logging.getLogger(__name__)
 

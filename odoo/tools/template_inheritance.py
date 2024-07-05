@@ -1,14 +1,16 @@
-
-from lxml import etree
-from lxml.builder import E
 import copy
 import itertools
 import logging
 import re
 
+from lxml import etree
+from lxml.builder import E
+
 from odoo.tools.translate import _
 from odoo.tools import SKIPPED_ELEMENT_TYPES, html_escape
 from odoo.exceptions import ValidationError
+
+__all__ = []
 
 _logger = logging.getLogger(__name__)
 RSTRIP_REGEXP = re.compile(r'\n[ \t]*$')
