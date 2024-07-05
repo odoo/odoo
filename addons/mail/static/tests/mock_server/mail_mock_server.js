@@ -746,7 +746,7 @@ export async function mail_thread_data(request) {
     const { request_list, thread_model, thread_id } = await parseRequestParams(request);
     const records = this.env[thread_model].search([["id", "=", thread_id]]);
     const store = new mailDataHelpers.Store();
-    MailThread._to_store.call(this.env[thread_model], [...records], store, request_list);
+    MailThread._thread_to_store.call(this.env[thread_model], [...records], store, request_list);
     return store.get_result();
 }
 

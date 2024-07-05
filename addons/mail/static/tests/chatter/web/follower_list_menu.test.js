@@ -30,9 +30,9 @@ test("base rendering editable", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     patchWithCleanup(MailThread.prototype, {
-        _to_store(ids, store) {
+        _thread_to_store(ids, store) {
             // mimic user with write access
-            super._to_store(...arguments);
+            super._thread_to_store(...arguments);
             store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
@@ -61,9 +61,9 @@ test('click on "add followers" button', async () => {
         res_model: "res.partner",
     });
     patchWithCleanup(MailThread.prototype, {
-        _to_store(ids, store) {
+        _thread_to_store(ids, store) {
             // mimic user with write access
-            super._to_store(...arguments);
+            super._thread_to_store(...arguments);
             store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
@@ -119,9 +119,9 @@ test("click on remove follower", async () => {
         res_model: "res.partner",
     });
     patchWithCleanup(MailThread.prototype, {
-        _to_store(ids, store) {
+        _thread_to_store(ids, store) {
             // mimic user with write access
-            super._to_store(...arguments);
+            super._thread_to_store(...arguments);
             store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
@@ -160,9 +160,9 @@ test('Hide "Add follower" and subtypes edition/removal buttons except own user o
         },
     ]);
     patchWithCleanup(MailThread.prototype, {
-        _to_store(ids, store) {
+        _thread_to_store(ids, store) {
             // mimic user without write access
-            super._to_store(...arguments);
+            super._thread_to_store(...arguments);
             store.add("Thread", { hasWriteAccess: false, id: ids[0], model: this._name });
         },
     });
@@ -298,9 +298,9 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
         },
     ]);
     patchWithCleanup(MailThread.prototype, {
-        _to_store(ids, store) {
+        _thread_to_store(ids, store) {
             // mimic user with write access
-            super._to_store(...arguments);
+            super._thread_to_store(...arguments);
             store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
@@ -320,9 +320,9 @@ test('Show "No Followers" dropdown-item if there are no followers and user does 
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     patchWithCleanup(MailThread.prototype, {
-        _to_store(ids, store) {
+        _thread_to_store(ids, store) {
             // mimic user without write access
-            super._to_store(...arguments);
+            super._thread_to_store(...arguments);
             store.add("Thread", { hasWriteAccess: false, id: ids[0], model: this._name });
         },
     });
