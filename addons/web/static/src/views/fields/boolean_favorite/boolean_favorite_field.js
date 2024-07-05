@@ -40,7 +40,7 @@ export const booleanFavoriteField = {
     displayName: _t("Favorite"),
     supportedTypes: ["boolean"],
     isEmpty: () => false,
-    columnWidth: ({ hasLabel }) => (!hasLabel ? 33 : false),
+    listViewWidth: ({ hasLabel }) => (!hasLabel ? 20 : false),
     supportedOptions: [
         {
             label: _t("Autosave"),
