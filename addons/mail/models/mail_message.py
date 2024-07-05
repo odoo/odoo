@@ -1208,10 +1208,35 @@ class Message(models.Model):
     def _cleanup_side_records(self):
         """ Clean related data: notifications, stars, ... to avoid lingering
         notifications / unreachable counters with void messages notably. """
+        outdated_starred_partners = self.starred_partner_ids
         self.write({
             'starred_partner_ids': [(5, 0, 0)],
             'notification_ids': [(5, 0, 0)],
         })
+        if outdated_starred_partners:
+            # sudo: bus.bus: reading non-sensitive last id
+            bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
+            self.env.cr.execute("""
+                SELECT res_partner_id, count(*)
+                  FROM mail_message_res_partner_starred_rel
+                 WHERE res_partner_id IN %s
+              GROUP BY res_partner_id
+              ORDER BY res_partner_id
+            """, [tuple(outdated_starred_partners.ids)])
+            star_count_by_partner_id = dict(self.env.cr.fetchall())
+            notifications = []
+            for partner in outdated_starred_partners:
+                payload = {
+                    "Thread": {
+                        "id": "starred",
+                        "messages": [("DELETE", [{"id": msg.id} for msg in self])],
+                        "model": "mail.box",
+                        "counter": star_count_by_partner_id.get(partner.id, 0),
+                        "counter_bus_id": bus_last_id,
+                    }
+                }
+                notifications.append((partner, "mail.record/insert", payload))
+            self.env["bus.bus"]._sendmany(notifications)
 
     def _filter_empty(self):
         """ Return subset of "void" messages """
