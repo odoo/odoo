@@ -61,10 +61,6 @@
 
     <data noupdate="0">
 
-        <record id="stock.stock_warehouse_shop0" model="stock.warehouse">
-            <field name="buy_to_resupply" eval="True"/>
-        </record>
-
         <function model="stock.warehouse" name="write">
           <value model="stock.warehouse" search="[('partner_id', '=', ref('stock.res_partner_company_1'))]"/>
           <value eval="{'buy_to_resupply': True}"/>

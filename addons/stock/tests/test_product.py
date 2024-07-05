@@ -345,12 +345,8 @@ class TestVirtualAvailable(TestStockCommon):
         product = self.env['product.product'].create({'name': 'Product', 'is_storable': True})
         company_a = self.env['res.company'].create({'name': 'Company A'})
         company_b = self.env['res.company'].create({'name': 'Company B'})
-        warehouse_a = self.env['stock.warehouse'].create({
-            'code': 'WHA', 'company_id': company_a.id
-        })
-        warehouse_b = self.env['stock.warehouse'].create({
-            'code': 'WHB', 'company_id': company_b.id
-        })
+        warehouse_a = self.env['stock.warehouse'].search([('company_id', '=', company_a.id)])
+        warehouse_b = self.env['stock.warehouse'].search([('company_id', '=', company_b.id)])
         self.env['stock.quant'].create([
             {'product_id': product.id, 'location_id': warehouse_a.lot_stock_id.id, 'quantity': 1},
             {'product_id': product.id, 'location_id': warehouse_b.lot_stock_id.id, 'quantity': 2},

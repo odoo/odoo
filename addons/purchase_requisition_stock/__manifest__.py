@@ -7,9 +7,6 @@
     'category': 'Inventory/Purchase',
     'sequence': 70,
     'depends': ['purchase_requisition', 'purchase_stock'],
-    'demo': [
-        'data/purchase_requisition_stock_demo.xml'
-        ],
     'data': [
         'security/ir.model.access.csv',
         'data/purchase_requisition_stock_data.xml',

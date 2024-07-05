@@ -20,7 +20,7 @@ class TestWebsiteSaleStockProductWarehouse(TestSaleProductAttributeValueCommon):
         cls.website = cls.env['website'].create({'name': 'Website Company C'})
         cls.website.company_id = cls.company
 
-            # Set two warehouses (one was created on company creation)
+        # Set two warehouses (one was created on company creation)
         cls.warehouse_1 = cls.env['stock.warehouse'].search([('company_id', '=', cls.company.id)])
         cls.warehouse_2 = cls.env['stock.warehouse'].create({
             'name': 'Warehouse 2',

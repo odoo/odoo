@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import threading
 
 from odoo import _, api, fields, models
 
@@ -125,18 +126,16 @@ class Company(models.Model):
 
     @api.model
     def create_missing_warehouse(self):
-        """ This hook is used to add a warehouse on existing companies
-        when module stock is installed.
+        """ This hook is used to add a warehouse on the first company of the database
         """
-        company_ids  = self.env['res.company'].search([])
-        company_with_warehouse = self.env['stock.warehouse'].with_context(active_test=False).search([]).mapped('company_id')
-        company_without_warehouse = company_ids - company_with_warehouse
-        for company in company_without_warehouse:
+        existing_warehouses = self.env['stock.warehouse'].search([])
+        if len(existing_warehouses) == 0:
+            first_company = self.env['res.company'].search([], limit=1)
             self.env['stock.warehouse'].create({
-                'name': company.name,
-                'code': company.name[:5],
-                'company_id': company.id,
-                'partner_id': company.partner_id.id,
+                'name': first_company.name,
+                'code': first_company.name[:5],
+                'company_id': first_company.id,
+                'partner_id': first_company.partner_id.id,
             })
 
     @api.model
@@ -204,12 +203,9 @@ class Company(models.Model):
             company.sudo()._create_per_company_picking_types()
             company.sudo()._create_per_company_rules()
             company.sudo()._set_per_company_inter_company_locations(inter_company_location)
-        self.env['stock.warehouse'].sudo().create([{
-            'name': company.name,
-            'code': self.env.context.get('default_code') or company.name[:5],
-            'company_id': company.id,
-            'partner_id': company.partner_id.id
-        } for company in companies])
+        test_mode = getattr(threading.current_thread(), 'testing', False)
+        if test_mode:
+            self.env['stock.warehouse'].sudo().create([{'company_id': company.id} for company in companies])
         return companies
 
     def _set_per_company_inter_company_locations(self, inter_company_location):

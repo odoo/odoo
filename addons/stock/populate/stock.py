@@ -36,7 +36,7 @@ class Warehouse(models.Model):
         return super()._populate(size)
 
     def _populate_factories(self):
-        company_ids = self.env.registry.populated_models['res.company'][:COMPANY_NB_WITH_STOCK]
+        company_ids = self.env.registry.populated_models['res.company']
 
         def get_name(values, counter, random):
             return "WH-%d-%d" % (values['company_id'], counter)
@@ -216,8 +216,9 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _populate_factories(self):
 
-        warehouse_ids = self.env.registry.populated_models['stock.warehouse']
-        warehouses = self.env['stock.warehouse'].browse(warehouse_ids)
+        company_ids = self.env.registry.populated_models['res.company'][:COMPANY_NB_WITH_STOCK]
+        warehouses = self.env['stock.warehouse'].search([('company_id', 'in', company_ids)])
+        warehouse_ids = warehouses.ids
 
         location_by_warehouse = {
             warehouse.id: self.env['stock.location'].search([('id', 'child_of', warehouse.lot_stock_id.id)]).ids

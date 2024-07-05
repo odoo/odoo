@@ -176,7 +176,6 @@ class TestStockCommon(TestProductCommon):
         cls.existing_quants = cls.env['stock.quant'].search([])
         cls.env.ref('stock.route_warehouse0_mto').rule_ids.procure_method = "make_to_order"
 
-
     def url_extract_rec_id_and_model(self, url):
         # Extract model and record ID
         action_match = re.findall(r'action-([^/]+)', url)
