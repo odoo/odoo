@@ -13,7 +13,7 @@ import { useComponent, useEffect, useExternalListener } from "@odoo/owl";
 // For some field types, we harcode the column width because we know the required space to display
 // values for that type (e.g. a Date field always requires the same space). A width can also be
 // hardcoded in the arch (`width="60px"`). In those cases, the column has a fixed width that we
-// enforce.
+// enforce. Note that the column width will be the given width + the cell's left and right paddings.
 // Numeric fields don't technically have a fixed width, but rather a range: we always want enough
 // space s.t. `1 million` would fit, and we consider that we don't need more space than `1 billion`
 // would require to fit. Depending on the field type (integer, float, monetary), we determine the
@@ -46,25 +46,25 @@ import { useComponent, useEffect, useExternalListener } from "@odoo/owl";
 // start over.
 
 // Hardcoded widths
-const DEFAULT_MIN_COLUMN_WIDTH = 120;
-const SELECTOR_COLUMN_WIDTH = 40;
-const OPEN_FORM_VIEW_COLUMN_WIDTH = 64;
-const ACTIONS_COLUMN_WIDTH = 32;
-const FIELD_COLUMN_WIDTHS = {
-    boolean: [120, 146], // [minWidth, maxWidth]
-    char: [120], // only minWidth, no maxWidth
-    date: 92, // minWidth = maxWidth
-    datetime: 146,
-    float: [92, 146],
-    integer: [92, 146],
-    many2many: [120],
-    many2one_reference: [120],
-    many2one: [120],
-    monetary: [120, 146],
-    one2many: [120],
-    reference: [120],
-    selection: [120],
-    text: [120, 1200],
+const DEFAULT_MIN_WIDTH = 110;
+const SELECTOR_WIDTH = 20;
+const OPEN_FORM_VIEW_BUTTON_WIDTH = 54;
+const DELETE_BUTTON_WIDTH = 12;
+const FIELD_WIDTHS = {
+    boolean: [110, 136], // [minWidth, maxWidth]
+    char: [110], // only minWidth, no maxWidth
+    date: 82, // minWidth = maxWidth
+    datetime: 136,
+    float: [82, 136],
+    integer: [82, 136],
+    many2many: [110],
+    many2one_reference: [110],
+    many2one: [110],
+    monetary: [110, 136],
+    one2many: [110],
+    reference: [110],
+    selection: [110],
+    text: [110, 1200],
 };
 
 /**
@@ -104,14 +104,14 @@ function computeWidths(table, state, allowedWidth, startingWidths) {
 
     // Force columns to comply with their min and max widths
     if (state.hasSelectors) {
-        _columnWidths[0] = SELECTOR_COLUMN_WIDTH;
+        _columnWidths[0] = SELECTOR_WIDTH;
     }
     if (state.hasOpenFormViewColumn) {
         const index = _columnWidths.length - (state.hasActionsColumn ? 2 : 1);
-        _columnWidths[index] = OPEN_FORM_VIEW_COLUMN_WIDTH;
+        _columnWidths[index] = OPEN_FORM_VIEW_BUTTON_WIDTH;
     }
     if (state.hasActionsColumn) {
-        _columnWidths[_columnWidths.length - 1] = ACTIONS_COLUMN_WIDTH;
+        _columnWidths[_columnWidths.length - 1] = DELETE_BUTTON_WIDTH;
     }
     const columnWidthSpecs = getWidthSpecs(columns);
     const columnOffset = state.hasSelectors ? 1 : 0;
@@ -217,26 +217,37 @@ function getWidthSpecs(columns) {
         } else {
             let width;
             if (column.type === "field") {
-                if (column.field.columnWidth) {
-                    width = column.field.columnWidth;
+                if (column.field.listViewWidth) {
+                    width = column.field.listViewWidth;
                     if (typeof width === "function") {
                         width = width({ type: column.fieldType, hasLabel: column.hasLabel });
                     }
                 } else {
-                    width = FIELD_COLUMN_WIDTHS[column.widget || column.fieldType];
+                    width = FIELD_WIDTHS[column.widget || column.fieldType];
                 }
             } else if (column.type === "widget") {
-                width = column.widget.columnWidth;
+                width = column.widget.listViewWidth;
             }
             if (width) {
                 minWidth = Array.isArray(width) ? width[0] : width;
                 maxWidth = Array.isArray(width) ? width[1] : width;
             } else {
-                minWidth = DEFAULT_MIN_COLUMN_WIDTH;
+                minWidth = DEFAULT_MIN_WIDTH;
             }
         }
         return { minWidth, maxWidth, canShrink: column.type === "field" };
     });
+}
+
+/**
+ * Given an html element, returns the sum of its left and right padding.
+ *
+ * @param {HTMLElement} el
+ * @returns {Number}
+ */
+function getHorizontalPadding(el) {
+    const { paddingLeft, paddingRight } = getComputedStyle(el);
+    return parseFloat(paddingLeft) + parseFloat(paddingRight);
 }
 
 export function useMagicColumnWidths(tableRef, getState) {
@@ -279,15 +290,16 @@ export function useMagicColumnWidths(tableRef, getState) {
             }
         }
 
-        // When a vertical scrollbar appears/disappears, it may (depending on the browser/os) change
-        // the available width. When it does, we want to keep the current widths, but tweak them a
-        // little bit s.t. the table fits in the new available space.
-        const { paddingLeft, paddingRight } = getComputedStyle(table.parentNode);
-        const padding = parseFloat(paddingLeft) + parseFloat(paddingRight);
-        const nextAllowedWidth = table.parentNode.clientWidth - padding;
+        const parentPadding = getHorizontalPadding(table.parentNode);
+        const cellPaddings = headers.map((th) => getHorizontalPadding(th));
+        const totalCellPadding = cellPaddings.reduce((total, padding) => padding + total, 0);
+        const nextAllowedWidth = table.parentNode.clientWidth - parentPadding - totalCellPadding;
         const allowedWidthDiff = Math.abs(allowedWidth - nextAllowedWidth);
         allowedWidth = nextAllowedWidth;
 
+        // When a vertical scrollbar appears/disappears, it may (depending on the browser/os) change
+        // the available width. When it does, we want to keep the current widths, but tweak them a
+        // little bit s.t. the table fits in the new available space.
         if (!columnWidths || allowedWidthDiff > 0) {
             columnWidths = computeWidths(table, state, allowedWidth, columnWidths);
         }
@@ -295,7 +307,7 @@ export function useMagicColumnWidths(tableRef, getState) {
         // Set the computed widths in the DOM.
         table.style.tableLayout = "fixed";
         headers.forEach((th, index) => {
-            th.style.width = `${Math.floor(columnWidths[index])}px`;
+            th.style.width = `${Math.floor(columnWidths[index] + cellPaddings[index])}px`;
         });
     }
 
@@ -361,7 +373,9 @@ export function useMagicColumnWidths(tableRef, getState) {
 
             // Store current column widths to freeze them
             const headers = [...table.querySelectorAll("thead th")];
-            columnWidths = headers.map((th) => th.getBoundingClientRect().width);
+            columnWidths = headers.map((th) => {
+                return th.getBoundingClientRect().width - getHorizontalPadding(th);
+            });
 
             // Ignores the 'left mouse button down' event as it used to start resizing
             if (ev.type === "pointerdown" && ev.button === 0) {
