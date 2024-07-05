@@ -172,6 +172,8 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.warehouse_id = orderpoint.env['stock.warehouse'].search([
                     ('company_id', '=', orderpoint.company_id.id)
                 ], limit=1)
+            if not orderpoint.warehouse_id:
+                self.env['stock.warehouse']._warehouse_redirect_warning()
 
     @api.depends('warehouse_id', 'company_id')
     def _compute_location_id(self):

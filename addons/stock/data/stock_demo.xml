@@ -168,39 +168,6 @@
             <field name="name">My Company (San Francisco)</field>
         </record>
 
-        <!-- Create a ir data with the autocreated warehouse -->
-        <function model="ir.model.data" name="_update_xmlids">
-            <value model="base" eval="[{
-                'xml_id': 'stock.stock_warehouse_shop0',
-                'record': obj().env['stock.warehouse'].search([('company_id', '=', obj().env.ref('stock.res_company_1').id)]),
-                'noupdate': True,
-            }]"/>
-        </function>
-
-        <record id="stock.stock_warehouse_shop0" model="stock.warehouse">
-            <field name="name">Chicago 1</field>
-            <field name="code">CHIC1</field>
-            <field name="partner_id" ref="res_partner_address_41"/>
-        </record>
-
-        <!-- Inventory for Chicago Warehouse -->
-
-        <record id="stock_inventory_16" model="stock.quant">
-            <field name="product_id" ref="product.product_product_6"/>
-            <field name="inventory_quantity">200.0</field>
-            <field name="location_id" model="stock.location"
-                    eval="obj().env['stock.location'].search([
-                        ('company_id', '=', obj().env.ref('stock.res_company_1').id),
-                        ('location_id', '!=', False),
-                        ('child_ids', '=', False),
-                    ], limit=1)"
-            />
-        </record>
-
-        <function model="stock.quant" name="action_apply_inventory">
-            <function eval="[[('id', '=', (ref('stock_inventory_16')))]]" model="stock.quant" name="search"/>
-        </function>
-
         <!-- Activate Lots options as demo data depends on it -->
         <record id="base.group_user" model="res.groups">
             <field name="implied_ids" eval="[(4, ref('stock.group_production_lot'))]"/>

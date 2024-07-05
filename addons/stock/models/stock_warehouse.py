@@ -5,7 +5,7 @@ import logging
 from collections import namedtuple
 
 from odoo import _, _lt, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, RedirectWarning
 from odoo.tools import format_list
 
 _logger = logging.getLogger(__name__)
@@ -112,6 +112,14 @@ class Warehouse(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            if vals.get('company_id'):
+                company = self.env['res.company'].browse(vals['company_id'])
+                if 'name' not in vals:
+                    vals['name'] = company.name
+                if 'code' not in vals:
+                    vals['code'] = company.name[:5]
+                if 'partner_id' not in vals:
+                    vals['partner_id'] = company.partner_id.id
             # create view location for warehouse then create all locations
             loc_vals = {'name': vals.get('code'), 'usage': 'view',
                         'location_id': self.env.ref('stock.stock_location_locations').id}
@@ -154,6 +162,14 @@ class Warehouse(models.Model):
         self._check_multiwarehouse_group()
 
         return warehouses
+
+    @api.model
+    def _warehouse_redirect_warning(self):
+        warehouse_action = self.env.ref('stock.action_warehouse_form')
+        msg = _('Please create a warehouse for this company.')
+        if not self.env.user.has_group('stock.group_stock_manager'):
+            raise UserError('Please contact your administrator to configure your warehouse.')
+        raise RedirectWarning(msg, warehouse_action.id, _('Go to Warehouses'))
 
     def copy_data(self, default=None):
         default = dict(default or {})
