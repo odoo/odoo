@@ -465,14 +465,14 @@
                         <button class="oe_stat_button ps-2" name="project_update_all_action" type="object" groups="project.group_project_user">
                             <div class="w-100">
                                 <field name="last_update_color" invisible="1"/>
-                                <field name="last_update_status" readonly="1" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
+                                <field name="last_update_status" readonly="1" widget="status_with_color"/>
                             </div>
                         </button>
                         <!-- To Do: remove me in master -->
                         <button class="oe_stat_button o_project_not_clickable ps-2" disabled="disabled" groups="!project.group_project_manager" invisible="1">
                             <div class="w-100">
                                 <field name="last_update_color" invisible="1"/>
-                                <field name="last_update_status" readonly="1" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
+                                <field name="last_update_status" readonly="1" widget="status_with_color"/>
                             </div>
                         </button>
                         <button class="oe_stat_button" name="%(project.project_collaborator_action)d" type="action" icon="fa-users" groups="project.group_project_manager" attrs="{'invisible':[('privacy_visibility', '!=', 'portal')]}">
@@ -707,7 +707,7 @@
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
                     <field name="last_update_color" invisible="1"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
-                    <field name="last_update_status" string="Status" nolabel="1" optional="show" widget="status_with_color" options="{'color_field': 'last_update_color', 'hide_label': True}"/>
+                    <field name="last_update_status" string="Status" nolabel="1" optional="show" widget="status_with_color"/>
                     <field name="stage_id" options="{'no_open': True}" optional="show"/>
                 </tree>
             </field>
@@ -970,7 +970,7 @@
                     <field name="is_favorite" widget="boolean_favorite" nolabel="1" string="Favorite"/>
                     <field name="stage_id" groups="project.group_project_stages"/>
                     <field name="last_update_color" invisible="1"/>
-                    <field name="last_update_status" string="Status" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
+                    <field name="last_update_status" string="Status" widget="status_with_color"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" attrs="{'invisible': [('tag_ids', '=', [])]}"/>
                 </calendar>
             </field>
