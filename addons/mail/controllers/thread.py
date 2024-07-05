@@ -111,8 +111,6 @@ class ThreadController(http.Controller):
         message_data = thread.message_post(
             **{key: value for key, value in post_data.items() if key in self._get_allowed_message_post_params()}
         )._message_format(for_current_user=True)[0]
-        if "temporary_id" in request.context:
-            message_data["temporary_id"] = request.context["temporary_id"]
         return message_data
 
     @http.route("/mail/message/update_content", methods=["POST"], type="json", auth="public")

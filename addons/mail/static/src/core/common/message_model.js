@@ -154,8 +154,6 @@ export class Message extends Record {
     translationErrors;
     /** @type {string} */
     message_type;
-    /** @type {string} */
-    temporary_id = null;
     /** @type {string|undefined} */
     notificationType;
     /** @type {luxon.DateTime} */

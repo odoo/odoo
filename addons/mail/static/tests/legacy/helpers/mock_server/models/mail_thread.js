@@ -243,9 +243,7 @@ patch(MockServer.prototype, {
             });
         }
         this._mockMailThread_NotifyThread(model, ids, messageId, context?.temporary_id);
-        return Object.assign(this._mockMailMessageMessageFormat([messageId])[0], {
-            temporary_id: context?.temporary_id,
-        });
+        return Object.assign(this._mockMailMessageMessageFormat([messageId])[0]);
     },
     /**
      * Simulates `message_subscribe` on `mail.thread`.
