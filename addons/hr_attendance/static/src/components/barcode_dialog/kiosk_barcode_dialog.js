@@ -1,5 +1,5 @@
 import { useState, onWillStart } from "@odoo/owl";
-import { BarcodeDialog } from "@web/webclient/barcode/barcode_scanner";
+import { BarcodeDialog } from "@web/webclient/barcode/barcode_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";

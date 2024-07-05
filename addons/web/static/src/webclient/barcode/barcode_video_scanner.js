@@ -1,22 +1,31 @@
 /* global BarcodeDetector */
 
 import { browser } from "@web/core/browser/browser";
-import { Dialog } from "@web/core/dialog/dialog";
 import { delay } from "@web/core/utils/concurrency";
 import { loadJS } from "@web/core/assets";
 import { isVideoElementReady, buildZXingBarcodeDetector } from "./ZXingBarcodeDetector";
 import { CropOverlay } from "./crop_overlay";
-
 import { Component, onMounted, onWillStart, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
-export class BarcodeDialog extends Component {
-    static template = "web.BarcodeDialog";
+export class BarcodeVideoScanner extends Component {
+    static template = "web.BarcodeVideoScanner";
     static components = {
-        Dialog,
         CropOverlay,
     };
-    static props = ["facingMode", "close", "onResult", "onError"];
+    static props = {
+        cssClass: { type: String, optional: true },
+        facingMode: {
+            type: String,
+            validate: (fm) => ["environment", "left", "right", "user"].includes(fm),
+        },
+        close: { type: Function, optional: true },
+        onResult: Function,
+        onError: Function,
+    };
+    static defaultProps = {
+        cssClass: "w-100 h-100",
+    };
     /**
      * @override
      */
@@ -61,7 +70,7 @@ export class BarcodeDialog extends Component {
                 };
                 const errorMessage =
                     _t("Could not start scanning. ") + (errors[err.name] || err.message);
-                this.onError(new Error(errorMessage));
+                this.props.onError(new Error(errorMessage));
                 return;
             }
             this.videoPreviewRef.el.srcObject = this.stream;
@@ -115,26 +124,6 @@ export class BarcodeDialog extends Component {
     }
 
     /**
-     * Detection success handler
-     *
-     * @param {string} result found code
-     */
-    onResult(result) {
-        this.props.close();
-        this.props.onResult(result);
-    }
-
-    /**
-     * Detection error handler
-     *
-     * @param {Error} error
-     */
-    onError(error) {
-        this.props.close();
-        this.props.onError(error);
-    }
-
-    /**
      * Attempt to detect codes in the current camera preview's frame
      */
     async detectCode() {
@@ -152,11 +141,11 @@ export class BarcodeDialog extends Component {
                         continue;
                     }
                 }
-                this.onResult(code.rawValue);
+                this.props.onResult(code.rawValue);
                 break;
             }
         } catch (err) {
-            this.onError(err);
+            this.props.onError(err);
         }
     }
 
@@ -178,25 +167,5 @@ export class BarcodeDialog extends Component {
  * @returns {boolean}
  */
 export function isBarcodeScannerSupported() {
-    return browser.navigator.mediaDevices && browser.navigator.mediaDevices.getUserMedia;
-}
-
-/**
- * Opens the BarcodeScanning dialog and begins code detection using the device's camera.
- *
- * @returns {Promise<string>} resolves when a {qr,bar}code has been detected
- */
-export async function scanBarcode(env, facingMode = "environment") {
-    let res;
-    let rej;
-    const promise = new Promise((resolve, reject) => {
-        res = resolve;
-        rej = reject;
-    });
-    env.services.dialog.add(BarcodeDialog, {
-        facingMode,
-        onResult: (result) => res(result),
-        onError: (error) => rej(error),
-    });
-    return promise;
+    return Boolean(browser.navigator.mediaDevices && browser.navigator.mediaDevices.getUserMedia);
 }
