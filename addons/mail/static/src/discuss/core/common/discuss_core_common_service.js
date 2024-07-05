@@ -165,7 +165,7 @@ export class DiscussCoreCommon {
             return;
         }
         const temporaryId = messageData.temporary_id;
-        messageData.temporary_id = null;
+        delete messageData.temporary_id;
         const message = this.store.Message.insert(messageData, { html: true });
         if (message.notIn(channel.messages)) {
             if (!channel.loadNewer) {
