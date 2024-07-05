@@ -229,3 +229,18 @@ registry.category("web_tour.tours").add("PosOrderDoesNotRemainInList", {
             ProductScreen.checkOrdersListEmpty(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosSettleCustomPrice", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.selectedOrderlineHas("product_a", "1", "100"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner AAA"),
+            ProductScreen.selectedOrderlineHas("product_a", "1", "100"),
+        ].flat(),
+});
