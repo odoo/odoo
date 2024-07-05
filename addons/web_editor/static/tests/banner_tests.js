@@ -75,7 +75,7 @@ QUnit.module(
                 editable.innerHTML,
                 `<p>Test</p><div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" data-oe-protected="true" contenteditable="false">
                         <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                        <div class="w-100 ms-3" data-oe-protected="false" contenteditable="true">
+                        <div class="w-100 px-3" data-oe-protected="false" contenteditable="true">
                             <p placeholder=\"Type &quot;/&quot; for commands\" class=\"oe-hint oe-command-temporary-hint\"><br></p>
                         </div>
                     </div><p><br></p>`,
@@ -94,7 +94,7 @@ QUnit.module(
                 editable.innerHTML,
                 `<p>Test</p><div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" data-oe-protected="true" contenteditable="false">
                         <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                        <div class="w-100 ms-3" data-oe-protected="false" contenteditable="true">
+                        <div class="w-100 px-3" data-oe-protected="false" contenteditable="true">
                             <p placeholder=\"Type &quot;/&quot; for commands\" class=\"oe-hint oe-command-temporary-hint\"><br></p>
                         </div>
                     </div><p><br></p>`,
@@ -122,7 +122,7 @@ QUnit.module(
                 editable.innerHTML,
                 `<p>Test</p><div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" data-oe-protected="true" contenteditable="false">
                         <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                        <div class="w-100 ms-3" data-oe-protected="false" contenteditable="true">
+                        <div class="w-100 px-3" data-oe-protected="false" contenteditable="true">
                             <p placeholder=\"Type &quot;/&quot; for commands\" class=\"oe-hint oe-command-temporary-hint\"><br></p></div></div><p><br></p>`,
             );
         });
@@ -145,7 +145,7 @@ QUnit.module(
                 editable.innerHTML,
                 `<div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" data-oe-protected="true" contenteditable="false">
                         <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                        <div class="w-100 ms-3" data-oe-protected="false" contenteditable="true">
+                        <div class="w-100 px-3" data-oe-protected="false" contenteditable="true">
                             <p><br></p>
                         </div>
                     </div><p placeholder=\"Type &quot;/&quot; for commands\" class=\"oe-hint oe-command-temporary-hint\"><br></p>`,
