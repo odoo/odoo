@@ -243,7 +243,7 @@ export class ClipboardPlugin extends Plugin {
         const odooEditorHtml = clipboardData.getData("application/vnd.odoo.odoo-editor");
         if (odooEditorHtml) {
             const fragment = parseHTML(this.document, odooEditorHtml);
-            this.shared.sanitize(fragment, { IN_PLACE: true });
+            this.shared.sanitize(fragment);
             if (fragment.hasChildNodes()) {
                 this.shared.domInsert(fragment);
             }
@@ -337,7 +337,7 @@ export class ClipboardPlugin extends Plugin {
      */
     prepareClipboardData(clipboardData) {
         const fragment = parseHTML(this.document, clipboardData);
-        this.shared.sanitize(fragment, { IN_PLACE: true });
+        this.shared.sanitize(fragment);
         const container = this.document.createElement("fake-container");
         container.append(fragment);
 
