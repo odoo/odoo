@@ -19,6 +19,7 @@ const makeSession = ({
     timezone,
     userContext,
     userId,
+    view_info,
 }) => ({
     active_ids_limit: 20000,
     bundle_params: {
@@ -61,6 +62,7 @@ const makeSession = ({
     user_id: [userId],
     username: "admin",
     ["web.base.url"]: "http://localhost:8069",
+    view_info,
 });
 
 //-----------------------------------------------------------------------------

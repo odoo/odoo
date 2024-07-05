@@ -29,6 +29,7 @@ import {
 import { downloadReport, getReportUrl } from "./reports/utils";
 import { omit, pick, shallowEqual } from "@web/core/utils/objects";
 import { zip } from "@web/core/utils/arrays";
+import { session } from "@web/session";
 
 class BlankComponent extends Component {
     static props = ["onMounted", "withControlPanel", "*"];
@@ -48,7 +49,6 @@ class BlankComponent extends Component {
 
 const actionHandlersRegistry = registry.category("action_handlers");
 const actionRegistry = registry.category("actions");
-const viewRegistry = registry.category("views");
 
 /** @typedef {number|false} ActionId */
 /** @typedef {Object} ActionDescription */
@@ -618,7 +618,7 @@ export function makeActionManager(env, router = _router) {
             .map((v) => {
                 const viewSwitcherEntry = {
                     icon: v.icon,
-                    name: v.display_name.toString(),
+                    name: v.display_name,
                     type: v.type,
                     multiRecord: v.multiRecord,
                 };
@@ -1103,8 +1103,9 @@ export function makeActionManager(env, router = _router) {
     async function _executeActWindowAction(action, options) {
         const views = [];
         for (const [, type] of action.views) {
-            if (type !== "search" && viewRegistry.contains(type)) {
-                views.push(viewRegistry.get(type));
+            if (type !== "search" && session.view_info[type]) {
+                const { icon, display_name, multi_record: multiRecord } = session.view_info[type];
+                views.push({ icon, display_name, multiRecord, type });
             }
         }
         if (!views.length) {

@@ -7,9 +7,6 @@ import { registry } from "@web/core/registry";
 
 export const activityView = {
     type: "activity",
-    display_name: "Activity",
-    icon: "fa fa-clock-o",
-    multiRecord: true,
     searchMenuTypes: ["filter", "favorite"],
     Controller: ActivityController,
     Renderer: ActivityRenderer,

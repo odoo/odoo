@@ -8,10 +8,6 @@ import { KanbanRenderer } from "./kanban_renderer";
 export const kanbanView = {
     type: "kanban",
 
-    display_name: "Kanban",
-    icon: "oi oi-view-kanban",
-    multiRecord: true,
-
     ArchParser: KanbanArchParser,
     Controller: KanbanController,
     Model: RelationalModel,

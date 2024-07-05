@@ -7,9 +7,6 @@ import { CalendarController } from "./calendar_controller";
 export const calendarView = {
     type: "calendar",
 
-    display_name: "Calendar",
-    icon: "fa fa-calendar",
-    multiRecord: true,
     searchMenuTypes: ["filter", "favorite"],
 
     ArchParser: CalendarArchParser,

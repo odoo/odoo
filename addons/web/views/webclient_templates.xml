@@ -219,6 +219,10 @@
             <t t-set="head">
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
 
+                <script type="text/javascript">
+                    odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
+                </script>
+
                 <t t-call-assets="web.assets_unit_tests_setup" />
                 <t t-call-assets="web.assets_unit_tests" />
             </t>
@@ -230,6 +234,10 @@
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
             <t t-set="title">Web Tests</t>
             <t t-set="head">
+                <script type="text/javascript">
+                    odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
+                </script>
+
                 <t t-call="web.test_helpers"/>
 
                 <t t-call-assets="web.qunit_suite_tests" t-js="false"/>
@@ -246,6 +254,9 @@
             <t t-set="title">Web Mobile Tests</t>
             <t t-set="head">
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+                <script type="text/javascript">
+                    odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
+                </script>
 
                 <t t-call="web.test_helpers"/>
 

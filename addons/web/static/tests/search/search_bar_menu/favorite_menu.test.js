@@ -13,7 +13,9 @@ import {
     mountWithCleanup,
     mountWithSearch,
     onRpc,
+    patchWithCleanup,
     saveFavorite,
+    serverState,
     toggleMenuItem,
     toggleSaveFavorite,
     toggleSearchBarMenu,
@@ -92,9 +94,11 @@ test("delete an active favorite", async () => {
         }
     }
 
+    patchWithCleanup(serverState.view_info, {
+        toy: { multi_record: true, display_name: "Toy", icon: "fab fa-android" },
+    });
     viewsRegistry.add("toy", {
         type: "toy",
-        display_name: "Toy",
         Controller: ToyController,
     });
     after(() => viewsRegistry.remove("toy"));
