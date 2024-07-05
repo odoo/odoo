@@ -9,9 +9,12 @@ import { mount, whenReady } from "@odoo/owl";
 import { templates } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { Deferred } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
 import { makeEnv, startServices } from "@web/env";
 import { session } from "@web/session";
+
+odoo.livechatReady = new Deferred();
 
 (async function boot() {
     session.origin = serverUrl;
@@ -28,4 +31,5 @@ import { session } from "@web/session";
         translateFn: _t,
         dev: env.debug,
     });
+    odoo.livechatReady.resolve();
 })();

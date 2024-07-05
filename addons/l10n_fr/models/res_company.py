@@ -15,8 +15,14 @@ class ResCompany(models.Model):
     l10n_fr_rounding_difference_profit_account_id = fields.Many2one('account.account', check_company=True)
 
     @api.model
-    def _get_unalterable_country(self):
+    def _get_france_country_codes(self):
+        """Returns every country code that can be used to represent France
+        """
         return ['FR', 'MF', 'MQ', 'NC', 'PF', 'RE', 'GF', 'GP', 'TF'] # These codes correspond to France and DOM-TOM.
+
+    @api.model
+    def _get_unalterable_country(self):
+        return self._get_france_country_codes()
 
     def _is_accounting_unalterable(self):
         if not self.vat and not self.country_id:

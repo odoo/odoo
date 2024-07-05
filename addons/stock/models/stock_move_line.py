@@ -142,10 +142,17 @@ class StockMoveLine(models.Model):
         for record in self:
             if not record.quant_id or record.quantity:
                 continue
-            if float_compare(record.move_id.product_qty, record.quantity, precision_rounding=record.move_id.product_uom.rounding) > 0:
-                record.quantity = max(0, min(record.quant_id.available_quantity, record.move_id.product_qty - record.move_id.quantity))
+            product_uom = record.product_id.uom_id
+            sml_uom = record.product_uom_id
+
+            move_demand = record.move_id.product_uom._compute_quantity(record.move_id.product_uom_qty, sml_uom, rounding_method='HALF-UP')
+            move_quantity = record.move_id.product_uom._compute_quantity(record.move_id.quantity, sml_uom, rounding_method='HALF-UP')
+            quant_qty = product_uom._compute_quantity(record.quant_id.available_quantity, sml_uom, rounding_method='HALF-UP')
+
+            if float_compare(move_demand, move_quantity, precision_rounding=sml_uom.rounding) > 0:
+                record.quantity = max(0, min(quant_qty, move_demand - move_quantity))
             else:
-                record.quantity = max(0, record.quant_id.available_quantity)
+                record.quantity = max(0, quant_qty)
 
     @api.depends('quantity', 'product_uom_id')
     def _compute_quantity_product_uom(self):
@@ -330,6 +337,8 @@ class StockMoveLine(models.Model):
 
         move_to_recompute_state = self.env['stock.move']
         for move_line in mls:
+            if move_line.state == 'done':
+                continue
             location = move_line.location_id
             product = move_line.product_id
             move = move_line.move_id
@@ -913,8 +922,8 @@ class StockMoveLine(models.Model):
 
     def action_put_in_pack(self):
         for picking in self.picking_id:
-            picking.action_put_in_pack()
-        return self.picking_id.action_detailed_operations()
+            picking.with_context(move_lines_to_pack_ids=self.ids).action_put_in_pack()
+        return True
 
     def _get_revert_inventory_move_values(self):
         self.ensure_one()

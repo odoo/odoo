@@ -367,7 +367,7 @@ class MaintenanceRequest(models.Model):
                 date_deadline=date_dl,
                 new_user_id=request.user_id.id or request.owner_user_id.id or self.env.uid)
             if not updated:
-                note = self._get_activity_note()
+                note = request._get_activity_note()
                 request.activity_schedule(
                     'maintenance.mail_act_maintenance_request',
                     fields.Datetime.from_string(request.schedule_date).date(),

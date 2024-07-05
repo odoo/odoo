@@ -54,6 +54,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
             'mimetype': 'image/gif',
         })
 
+    def _disable_ocr(self, company):
+        if 'extract_in_invoice_digitalization_mode' in company._fields:
+            company.extract_in_invoice_digitalization_mode = 'no_send'
+            company.extract_out_invoice_digitalization_mode = 'no_send'
+
     @contextmanager
     def with_success_decoder(self, omit=None):
         decoded_files = set()
@@ -195,6 +200,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         self.assertEqual(following_partners, self.env.user.partner_id | self.internal_user.partner_id)
 
     def test_extend_with_attachments_multi_pdf(self):
+        self._disable_ocr(self.company_data['company'])
         pdf1 = self._create_dummy_pdf_attachment()
         pdf2 = self._create_dummy_pdf_attachment()
         gif1 = self._create_dummy_gif_attachment()

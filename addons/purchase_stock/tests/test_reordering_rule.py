@@ -5,7 +5,7 @@ from datetime import datetime as dt, time
 from datetime import timedelta as td
 from freezegun import freeze_time
 
-from odoo import SUPERUSER_ID
+from odoo import SUPERUSER_ID, Command
 from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
@@ -1100,3 +1100,37 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(orderpoint.supplier_id, product.seller_ids, 'The supplier should be set in the orderpoint')
         self.assertEqual(orderpoint.product_uom, product.uom_id, 'The orderpoint uom should be the same as the product uom')
         self.assertEqual(orderpoint.qty_to_order, 6000)
+
+    def test_tax_po_line_reordering_rule_with_branch_company(self):
+        """
+        Test that the parent company tax is correctly set in the purchase order line
+        when the scheduler is triggered and the branch company is used."
+        """
+        self.env.company.write({
+            'child_ids': [Command.create({
+                'name': 'Branch A',
+                'zip': '85120',
+            })],
+        })
+        self.cr.precommit.run()  # load the CoA
+        branch = self.env.company.child_ids
+        product = self.env['product.product'].with_company(branch).create({
+            'name': 'Storable Product',
+            'type': 'product',
+            'seller_ids': [Command.create({'partner_id': self.partner.id, 'min_qty': 1})],
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', branch.id)], limit=1)
+        product.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 10,
+            'product_max_qty': 0,
+        })
+        # run the scheduler
+        self.env['procurement.group'].run_scheduler()
+        # check that the PO line is created
+        po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertEqual(len(po_line), 1, 'There should be only one PO line')
+        self.assertEqual(po_line.product_qty, 10, 'The PO line quantity should be 10')
+        self.assertTrue(po_line.taxes_id)

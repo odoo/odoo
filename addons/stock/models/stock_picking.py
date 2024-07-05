@@ -1517,6 +1517,8 @@ class Picking(models.Model):
         move_line_ids = quantity_move_line_ids.filtered(lambda ml: ml.picked)
         if not move_line_ids:
             move_line_ids = quantity_move_line_ids
+        if self.env.context.get('move_lines_to_pack_ids', False):
+            move_line_ids = move_line_ids.filtered(lambda ml: ml.id in self.env.context['move_lines_to_pack_ids'])
         return move_line_ids
 
     def action_put_in_pack(self):

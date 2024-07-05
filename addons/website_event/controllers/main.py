@@ -149,8 +149,12 @@ class WebsiteEventController(http.Controller):
         if '.' not in page:
             page = 'website_event.%s' % page
 
+        view = request.env["website.event.menu"].sudo().search([
+            ("event_id", "=", event.id), ("view_id.key", "ilike", page)], limit=1).view_id
+
         try:
             # Every event page view should have its own SEO.
+            page = view.key if view else page
             values['seo_object'] = request.website.get_template(page)
             values['main_object'] = event
         except ValueError:

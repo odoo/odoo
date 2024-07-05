@@ -54,7 +54,7 @@ class PaymentTransaction(models.Model):
         """
         payload = {
             'name': self.partner_name,
-            'email': self.partner_email,
+            'email': self.partner_email or '',
             'contact': self.partner_phone and self._validate_phone_number(self.partner_phone) or '',
             'fail_existing': '0',  # Don't throw an error if the customer already exists.
         }
@@ -405,8 +405,12 @@ class PaymentTransaction(models.Model):
             if self.provider_id.capture_manually:
                 self._set_authorized()
         elif entity_status in const.PAYMENT_STATUS_MAPPING['done']:
-            if entity_data.get('token_id') and self.provider_id.allow_tokenization:
-                self._razorpay_tokenize_from_notification_data(notification_data)
+            if (
+                not self.token_id
+                and entity_data.get('token_id')
+                and self.provider_id.allow_tokenization
+            ):
+                self._razorpay_tokenize_from_notification_data(entity_data)
             self._set_done()
 
             # Immediately post-process the transaction if it is a refund, as the post-processing

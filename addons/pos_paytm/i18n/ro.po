@@ -6,6 +6,7 @@
 # Dorin Hongu <dhongu@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Betty Keresztesi, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2024\n"
+"Last-Translator: Betty Keresztesi, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__accept_payment
 msgid "Accept Payment"
-msgstr ""
+msgstr "Acceptare plată"
 
 #. module: pos_paytm
 #: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__allowed_payment_modes__all
@@ -34,12 +35,12 @@ msgstr "Tot"
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__allowed_payment_modes
 msgid "Allowed Payment Modes"
-msgstr ""
+msgstr "Modalități de plată permise"
 
 #. module: pos_paytm
 #: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__accept_payment__auto
 msgid "Automatically"
-msgstr ""
+msgstr "În mod automat"
 
 #. module: pos_paytm
 #: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__allowed_payment_modes__card
@@ -54,64 +55,64 @@ msgstr "Manual"
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__channel_id
 msgid "PayTM Channel ID"
-msgstr ""
+msgstr "ID canal PayTM"
 
 #. module: pos_paytm
 #. odoo-javascript
 #: code:addons/pos_paytm/static/src/js/payment_paytm.js:0
 #, python-format
 msgid "PayTM Error"
-msgstr ""
+msgstr "Eroare PayTM"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_merchant_key
 msgid "PayTM Merchant API Key"
-msgstr ""
+msgstr "Cheia API pentru comerciant PayTM"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_mid
 msgid "PayTM Merchant ID"
-msgstr ""
+msgstr "ID comerciant PayTM"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_tid
 msgid "PayTM Terminal ID"
-msgstr ""
+msgstr "ID terminal PayTM"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_test_mode
 msgid "PayTM Test Mode"
-msgstr ""
+msgstr "Mod de testare PayTM"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment__paytm_authcode
 msgid "Paytm APPR Code"
-msgstr ""
+msgstr "Cod APPR Paytm"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment__paytm_card_scheme
 msgid "Paytm Card Scheme"
-msgstr ""
+msgstr "Schema de card Paytm"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment__paytm_issuer_card_no
 msgid "Paytm Issue Mask Card No."
-msgstr ""
+msgstr "Paytm emitere card Mask nr."
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment__paytm_issuer_bank
 msgid "Paytm Issuer Bank"
-msgstr ""
+msgstr "Paytm Banca emitentă"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment__paytm_reference_no
 msgid "Paytm Merchant Reference No."
-msgstr ""
+msgstr "Nr. referință comerciant Paytm."
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment__paytm_payment_method
 msgid "Paytm Payment Method"
-msgstr ""
+msgstr "Metoda de plată Paytm"
 
 #. module: pos_paytm
 #: model:ir.model,name:pos_paytm.model_pos_order
@@ -131,14 +132,14 @@ msgstr "Plăți Punct de Vânzare"
 #. module: pos_paytm
 #: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__allowed_payment_modes__qr
 msgid "QR"
-msgstr ""
+msgstr "QR"
 
 #. module: pos_paytm
 #. odoo-javascript
 #: code:addons/pos_paytm/static/src/js/payment_paytm.js:0
 #, python-format
 msgid "Reference number mismatched"
-msgstr ""
+msgstr "Număr de referință necorespunzător"
 
 #. module: pos_paytm
 #. odoo-python
@@ -146,20 +147,22 @@ msgstr ""
 #, python-format
 msgid "Something went wrong with paytm request. Please try later."
 msgstr ""
+"Ceva nu a fost corect cu solicitarea paytm. Vă rugăm să încercați mai "
+"târziu."
 
 #. module: pos_paytm
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 #, python-format
 msgid "This Payment Terminal is only valid for INR Currency"
-msgstr ""
+msgstr "Acest terminal de plată este valabil numai pentru moneda INR"
 
 #. module: pos_paytm
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 #, python-format
 msgid "makePaymentRequest expected resultCode not found in the response"
-msgstr ""
+msgstr "makePaymentRequest codul rezultat așteptat nu a fost găsit în răspuns"
 
 #. module: pos_paytm
 #. odoo-python
@@ -167,17 +170,18 @@ msgstr ""
 #, python-format
 msgid "paymentFetchRequest expected resultCode not found in the response"
 msgstr ""
+"paymentFetchRequest codul rezultat așteptat nu a fost găsit în răspuns"
 
 #. module: pos_paytm
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 #, python-format
 msgid "paytm transaction failure"
-msgstr ""
+msgstr "eșec tranzacție paytm"
 
 #. module: pos_paytm
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 #, python-format
 msgid "paytm transaction request declined"
-msgstr ""
+msgstr "cerere de tranzacție paytm respinsă"

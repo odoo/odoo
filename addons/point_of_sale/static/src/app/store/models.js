@@ -1159,13 +1159,19 @@ export class Orderline extends PosModel {
         }
         return listOfAttributes;
     }
+    getPriceString() {
+        return this.get_discount_str() === "100"
+            ? // free if the discount is 100
+            _t("Free")
+            : (this.comboLines && this.comboLines.length > 0)
+            ? // empty string if it is a combo parent line
+            ""
+            : this.env.utils.formatCurrency(this.get_display_price(), this.currency);
+    }
     getDisplayData() {
         return {
             productName: this.get_full_product_name(),
-            price:
-                this.get_discount_str() === "100"
-                    ? "free"
-                    : this.env.utils.formatCurrency(this.get_display_price()),
+            price: this.getPriceString(),
             qty: this.get_quantity_str(),
             unit: this.get_unit().name,
             unitPrice: this.env.utils.formatCurrency(this.get_unit_display_price()),
@@ -1974,15 +1980,16 @@ export class Order extends PosModel {
      */
     calculate_base_amount(tax_ids_array, lines) {
         // Consider price_include taxes use case
-        const has_taxes_included_in_price = tax_ids_array.filter(
-            (tax_id) => this.pos.taxes_by_id[tax_id].price_include
+        const has_taxes_included_in_price = tax_ids_array.filter( (tax_id) =>
+            this.pos.taxes_by_id[tax_id].price_include ||
+            this.pos.taxes_by_id[tax_id].children_tax_ids.length > 0 &&
+            this.pos.taxes_by_id[tax_id].children_tax_ids.every(child_tax => child_tax.price_include)
         ).length;
 
         const base_amount = lines.reduce(
             (sum, line) =>
                 sum +
-                line.get_price_without_tax() +
-                (has_taxes_included_in_price ? line.get_total_taxes_included_in_price() : 0),
+                (has_taxes_included_in_price ? line.get_price_with_tax() : line.get_price_without_tax()),
             0
         );
         return base_amount;

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools.sql import column_exists, create_column
 
 
 class AccountMove(models.Model):
@@ -11,6 +12,14 @@ class AccountMove(models.Model):
         'website', compute='_compute_website_id', string='Website',
         help='Website through which this invoice was created for eCommerce orders.',
         store=True, readonly=True, tracking=True)
+
+    def _auto_init(self):
+        if not column_exists(self.env.cr, "account_move", "website_id"):
+            # Creating the column via `_auto_init` prevents a MemoryError in databases where many
+            # invoices exist when `website_sale` is installed, as it skips the computation of the
+            # `website_id` field.
+            create_column(self.env.cr, "account_move", "website_id", "int4")
+        super()._auto_init()
 
     def preview_invoice(self):
         action = super().preview_invoice()

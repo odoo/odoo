@@ -116,10 +116,10 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "Según la configuración del producto, se puede calcular automáticamente la cantidad enviada:\n"
-"  - Manual: la cantidad se establece de forma manual en la línea\n"
-"  - Analítica de gastos: la cantidad equivale a la suma de los gastos registrados\n"
+"  - Manual: la cantidad se establece manualmente en la línea\n"
+"  - Analítica de gastos: la cantidad equivale a la suma de los gastos publicados\n"
 "  - Hojas de asistencia: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
-"  - Movimientos de stock: la cantidad viene de las recolecciones confirmadas\n"
+"  - Movimientos del inventario: la cantidad viene de los albaranes confirmados\n"
 
 #. module: sale_project
 #. odoo-python
@@ -227,7 +227,7 @@ msgstr "Tarea generada"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr "Tiene pedido de venta para facturar"
+msgstr "Tiene pedido de venta a facturar"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_with_nothing_to_invoice
@@ -239,7 +239,7 @@ msgstr "Tiene un pedido de venta con un estado de nada a facturar"
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "In Progress"
-msgstr "En progreso"
+msgstr "En proceso"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__invoice_count
@@ -433,9 +433,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Establezca manualmente las cantidades en el pedido: la factura se basa en la cantidad ingresada manualmente, sin crear una cuenta analítica.\n"
+"Establezca manualmente las cantidades en el pedido: la factura se basa en la cantidad entregada manualmente, sin crear una cuenta analítica.\n"
 "Hojas de asistencia en el contrato: la factura se basa en las horas registradas en la hoja de tiempo relacionada.\n"
-"Cree una tarea y realice un seguimiento de las horas: cree una tarea en la validación del pedido de venta y realice un seguimiento de las horas de trabajo."
+"Cree una tarea y rastree las horas: cree una tarea en la validación en el pedido de venta y rastree de las horas de trabajo."
 
 #. module: sale_project
 #. odoo-python
@@ -685,7 +685,7 @@ msgid ""
 "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
 msgstr ""
 "Elemento del pedido de venta en el que agregará el tiempo dedicado para ser facturado al cliente.\n"
-"Por defecto, se seleccionará el elemento del pedido venta establecido en el proyecto. Si no hay uno establecido, se utilizará el último elemento del pedido de venta prepagado que tenga tiempo restante.\n"
+"Por defecto, se seleccionará el elemento del pedido de venta establecido en el proyecto. Si no hay uno establecido, se utilizará el último elemento del pedido de venta prepagado que tenga tiempo restante.\n"
 "Elimine el elemento del pedido de venta para hacer que esta tarea sea no facturable. También puede cambiar o eliminar individualmente el elemento del pedido de venta de cada entrada de hoja de asistencia."
 
 #. module: sale_project
@@ -716,8 +716,8 @@ msgid ""
 "Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
 "It can be modified on each task and timesheet entry individually if necessary."
 msgstr ""
-"Elemento del pedido de venta que se seleccionará por defecto en las tareas y partes de hora de este proyecto, excepto si el empleado establecido en los partes de hora está explícitamente vinculado a otro elemento del pedido de venta del proyecto.\n"
-"Se puede modificar en cada tarea y parte de horas si es necesario."
+"Elemento del pedido de venta que se seleccionará por defecto en las tareas y hojas de asistencia de este proyecto, excepto si el empleado establecido en las hojas de asistencia está explícitamente vinculado a otro elemento del pedido de venta del proyecto.\n"
+"Se puede modificar en cada tarea y entrada de hoja de asistencia si es necesario."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -881,7 +881,7 @@ msgstr "A facturar"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_type
 msgid "Track Service"
-msgstr "Seguimiento del Servicio"
+msgstr "Seguimiento del servicio"
 
 #. module: sale_project
 #. odoo-javascript

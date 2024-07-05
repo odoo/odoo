@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 
 class ResCompany(models.Model):
 
@@ -35,10 +35,10 @@ class ResCompany(models.Model):
         self.ensure_one()
         return self.account_fiscal_country_id.code == "AR" or super()._localization_use_documents()
 
-    @api.constrains('l10n_ar_afip_responsibility_type_id')
-    def _check_accounting_info(self):
-        """ Do not let to change the AFIP Responsibility of the company if there is already installed a chart of
-        account and if there has accounting entries """
-        if self._existing_accounting():
-            raise ValidationError(_(
-                'Could not change the AFIP Responsibility of this company because there are already accounting entries.'))
+    def write(self, vals):
+        if 'l10n_ar_afip_responsibility_type_id' in vals:
+            for company in self:
+                if vals['l10n_ar_afip_responsibility_type_id'] != company.l10n_ar_afip_responsibility_type_id.id and company.sudo()._existing_accounting():
+                    raise UserError(_('Could not change the AFIP Responsibility of this company because there are already accounting entries.'))
+
+        return super().write(vals)

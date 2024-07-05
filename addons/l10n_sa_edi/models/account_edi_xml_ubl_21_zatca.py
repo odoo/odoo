@@ -97,7 +97,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
     def _get_partner_contact_vals(self, partner):
         res = super()._get_partner_contact_vals(partner)
         if res.get('telephone'):
-            res['telephone'] = res['telephone'].replace(' ', '')
+            res['telephone'] = re.sub(r"[^+\d]", '', res['telephone'])
         return res
 
     def _get_partner_party_identification_vals_list(self, partner):

@@ -31,6 +31,33 @@ wTourUtils.registerWebsitePreviewTour('website_page_options', {
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     wTourUtils.clickOnSnippet({id: 'o_header_standard', name: 'Header'}),
+    wTourUtils.changeOption("topMenuColor", '[data-page-option-name="header_text_color"]'),
+    wTourUtils.changeOption("topMenuColor", 'button[style="background-color:#FF0000;"]', "text color", "bottom", true),
+    ...wTourUtils.clickOnSave(),
+    {
+        content: "Check that text color of the header is in red",
+        trigger: 'iframe header#top[style=" color: #FF0000;"]',
+        isCheck: true,
+    },
+    {
+        content: "Enable the mobile view",
+        trigger: ".o_mobile_preview > a",
+    },
+    {
+        content: "Check that text color of the navbar toggler icon is in red",
+        trigger: 'iframe header#top [data-bs-toggle="offcanvas"] .navbar-toggler-icon',
+        run: function () {
+            if (getComputedStyle(this.$anchor[0]).color !== "rgb(255, 0, 0)") {
+                console.error("The navbar toggler icon is not in red");
+            }
+        },
+    },
+    {
+        content: "Disable the mobile view",
+        trigger: ".o_mobile_preview > a",
+    },
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    wTourUtils.clickOnSnippet({id: "o_header_standard", name: "Header"}),
     wTourUtils.changeOption('TopMenuVisibility', 'we-select:has([data-visibility]) we-toggler'),
     wTourUtils.changeOption('TopMenuVisibility', 'we-button[data-visibility="hidden"]'),
     ...wTourUtils.clickOnSave(),

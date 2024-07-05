@@ -544,8 +544,12 @@ export class StaticList extends DataPoint {
                         const changes = {};
                         for (const fieldName in command[2]) {
                             if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
-                                const invisible = record.activeFields[fieldName].invisible;
-                                if (invisible === "True" || invisible === "1") {
+                                const invisible = record.activeFields[fieldName]?.invisible;
+                                if (
+                                    invisible === "True" ||
+                                    invisible === "1" ||
+                                    !(fieldName in record.activeFields) // this record hasn't been extended
+                                ) {
                                     if (!(command[1] in this._unknownRecordCommands)) {
                                         this._unknownRecordCommands[command[1]] = [];
                                     }

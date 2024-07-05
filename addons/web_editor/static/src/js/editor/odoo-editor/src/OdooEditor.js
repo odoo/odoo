@@ -3601,6 +3601,29 @@ export class OdooEditor extends EventTarget {
 
     _onBeforeInput(ev) {
         this._lastBeforeInputType = ev.inputType;
+        // For chrome when we have this structure
+        // <div contenteditable="true">
+        //     <ul>
+        //         <div contenteditable="false">
+        //             <div contenteditable="true">
+        //                 <p>
+        //                     text[]
+        //                 </p>
+        //             </div>
+        //         </div>
+        //     </ul>
+        // </div>
+        // clicking on `enter` doesn't works as expected and the `input` event is never
+        // triggered, to solve the problem we can use this hack where we stop the propagation
+        // and trigger manually the input event to simulate the correct flow.
+        if (ev.inputType ==="insertParagraph") {
+            const banner = closestElement(ev.target, ".o_editor_banner");
+            if (banner && closestElement(banner, "ul, ol")) {
+                ev.preventDefault();
+                this._onInput(ev);
+                return;
+            }
+        }
     }
 
     /**

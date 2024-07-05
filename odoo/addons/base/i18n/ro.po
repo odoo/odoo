@@ -15,8 +15,10 @@
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Martin Trigaux, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
-# Larisa_nexterp, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
+# Larisa_nexterp, 2024
+# Maria Muntean, 2024
+# Simonel Criste <info@erpsystems.solutions>, 2024
 # 
 msgid ""
 msgstr ""
@@ -24,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-26 12:42+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
+"Last-Translator: Simonel Criste <info@erpsystems.solutions>, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7983,6 +7985,12 @@ msgid ""
 "- Follow-up Address: Preferred address for follow-up reports. Selected by default when you send reminders about overdue invoices.\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- Contact: Folosiți-l pentru a organiza datele de contact ale angajaților unei anumite companii (de exemplu, CEO, CFO, ...).\n"
+"- Adresa facturii: adresa preferată pentru toate facturile. Selectat implicit atunci când facturați o comandă care aparține acestei companii.\n"
+"- Adresa de livrare: adresa preferată pentru toate livrările. Selectat implicit atunci când livrați o comandă care aparține acestei companii.\n"
+"- Privat: Adresele private sunt vizibile numai de utilizatorii autorizați și conțin date sensibile (adresele de domiciliu ale angajaților, ...).\n"
+"- Adresă de urmărire: adresă preferată pentru rapoartele de urmărire. Selectat implicit atunci când trimiteți mementouri despre facturile restante.\n"
+"- Altele: altă adresă a companiei (de exemplu, filială, ...)"
 
 #. module: base
 #. odoo-python
@@ -8998,14 +9006,14 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_res_users_apikeys_description
 msgid "API Key Description"
-msgstr ""
+msgstr "Descrierea cheii API"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "API Key Ready"
-msgstr ""
+msgstr "Cheie API pregătită"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users_keys_description
@@ -15327,7 +15335,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "Enter a description of and purpose for the key."
-msgstr ""
+msgstr "Introduceți o descriere a cheii și scopul acesteia."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_gantt
@@ -16660,6 +16668,11 @@ msgstr "Franța - Contabilitate"
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_reports
 msgid "France - Accounting Reports"
 msgstr "Franța - Rapoarte contabile"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_invoice_addr
+msgid "France - Adding Mandatory Invoice Mentions (Decree no. 2022-1299)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
@@ -19987,14 +20000,14 @@ msgstr "Jurnal"
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form_revokedevices
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Log out from all devices"
-msgstr ""
+msgstr "Deconectează-te de pe toate dispozitivele"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Log out from all devices?"
-msgstr ""
+msgstr "Deconectezi de pe toate dispozitivele?"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_logging_all_act
@@ -25844,7 +25857,7 @@ msgstr "Reîncarcarcă din atașament"
 #: model:ir.module.category,name:base.module_category_human_resources_remote_work
 #: model:ir.module.module,shortdesc:base.module_hr_homeworking
 msgid "Remote Work"
-msgstr ""
+msgstr "Lucru de la distanță"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__remove

@@ -2625,7 +2625,7 @@
                             result.catch(() => { }),
                             new Promise((resolve) => setTimeout(() => resolve(TIMEOUT), 3000)),
                         ]).then((res) => {
-                            if (res === TIMEOUT && node.fiber === fiber) {
+                            if (res === TIMEOUT && node.fiber === fiber && node.status <= 2) {
                                 console.warn(timeoutError);
                             }
                         });
@@ -3515,7 +3515,7 @@
         const localVars = new Set();
         const tokens = tokenize(expr);
         let i = 0;
-        let stack = []; // to track last opening [ or {
+        let stack = []; // to track last opening (, [ or {
         while (i < tokens.length) {
             let token = tokens[i];
             let prevToken = tokens[i - 1];
@@ -3524,10 +3524,12 @@
             switch (token.type) {
                 case "LEFT_BRACE":
                 case "LEFT_BRACKET":
+                case "LEFT_PAREN":
                     stack.push(token.type);
                     break;
                 case "RIGHT_BRACE":
                 case "RIGHT_BRACKET":
+                case "RIGHT_PAREN":
                     stack.pop();
             }
             let isVar = token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value);
@@ -3638,6 +3640,13 @@
                 return key === "disabled";
         }
         return false;
+    }
+    /**
+     * Returns a template literal that evaluates to str. You can add interpolation
+     * sigils into the string if required
+     */
+    function toStringExpression(str) {
+        return `\`${str.replace(/\\/g, "\\\\").replace(/`/g, "\\`").replace(/\$\{/, "\\${")}\``;
     }
     // -----------------------------------------------------------------------------
     // BlockDescription
@@ -3819,15 +3828,14 @@
                 mainCode.push(``);
                 for (let block of this.blocks) {
                     if (block.dom) {
-                        let xmlString = block.asXmlString();
-                        xmlString = xmlString.replace(/\\/g, "\\\\").replace(/`/g, "\\`");
+                        let xmlString = toStringExpression(block.asXmlString());
                         if (block.dynamicTagName) {
-                            xmlString = xmlString.replace(/^<\w+/, `<\${tag || '${block.dom.nodeName}'}`);
-                            xmlString = xmlString.replace(/\w+>$/, `\${tag || '${block.dom.nodeName}'}>`);
-                            mainCode.push(`let ${block.blockName} = tag => createBlock(\`${xmlString}\`);`);
+                            xmlString = xmlString.replace(/^`<\w+/, `\`<\${tag || '${block.dom.nodeName}'}`);
+                            xmlString = xmlString.replace(/\w+>`$/, `\${tag || '${block.dom.nodeName}'}>\``);
+                            mainCode.push(`let ${block.blockName} = tag => createBlock(${xmlString});`);
                         }
                         else {
-                            mainCode.push(`let ${block.blockName} = createBlock(\`${xmlString}\`);`);
+                            mainCode.push(`let ${block.blockName} = createBlock(${xmlString});`);
                         }
                     }
                 }
@@ -4005,7 +4013,7 @@
             const isNewBlock = !block || forceNewBlock;
             if (isNewBlock) {
                 block = this.createBlock(block, "comment", ctx);
-                this.insertBlock(`comment(\`${ast.value}\`)`, block, {
+                this.insertBlock(`comment(${toStringExpression(ast.value)})`, block, {
                     ...ctx,
                     forceNewBlock: forceNewBlock && !block,
                 });
@@ -4027,7 +4035,7 @@
             }
             if (!block || forceNewBlock) {
                 block = this.createBlock(block, "text", ctx);
-                this.insertBlock(`text(\`${value}\`)`, block, {
+                this.insertBlock(`text(${toStringExpression(value)})`, block, {
                     ...ctx,
                     forceNewBlock: forceNewBlock && !block,
                 });
@@ -4248,7 +4256,8 @@
                 expr = compileExpr(ast.expr);
                 if (ast.defaultValue) {
                     this.helpers.add("withDefault");
-                    expr = `withDefault(${expr}, \`${ast.defaultValue}\`)`;
+                    // FIXME: defaultValue is not translated
+                    expr = `withDefault(${expr}, ${toStringExpression(ast.defaultValue)})`;
                 }
             }
             if (!block || forceNewBlock) {
@@ -4501,7 +4510,7 @@
                     this.addLine(`${ctxVar}[zero] = ${bl};`);
                 }
             }
-            const key = `key + \`${this.generateComponentKey()}\``;
+            const key = this.generateComponentKey();
             if (isDynamic) {
                 const templateVar = generateId("template");
                 if (!this.staticDefs.find((d) => d.id === "call")) {
@@ -4553,12 +4562,12 @@
             else {
                 let value;
                 if (ast.defaultValue) {
-                    const defaultValue = ctx.translate ? this.translate(ast.defaultValue) : ast.defaultValue;
+                    const defaultValue = toStringExpression(ctx.translate ? this.translate(ast.defaultValue) : ast.defaultValue);
                     if (ast.value) {
-                        value = `withDefault(${expr}, \`${defaultValue}\`)`;
+                        value = `withDefault(${expr}, ${defaultValue})`;
                     }
                     else {
-                        value = `\`${defaultValue}\``;
+                        value = defaultValue;
                     }
                 }
                 else {
@@ -4569,12 +4578,12 @@
             }
             return null;
         }
-        generateComponentKey() {
+        generateComponentKey(currentKey = "key") {
             const parts = [generateId("__")];
             for (let i = 0; i < this.target.loopLevel; i++) {
                 parts.push(`\${key${i + 1}}`);
             }
-            return parts.join("__");
+            return `${currentKey} + \`${parts.join("__")}\``;
         }
         /**
          * Formats a prop name and value into a string suitable to be inserted in the
@@ -4665,7 +4674,6 @@
                 this.addLine(`${propVar}.slots = markRaw(Object.assign(${slotDef}, ${propVar}.slots))`);
             }
             // cmap key
-            const key = this.generateComponentKey();
             let expr;
             if (ast.isDynamic) {
                 expr = generateId("Comp");
@@ -4681,7 +4689,7 @@
                 // todo: check the forcenewblock condition
                 this.insertAnchor(block);
             }
-            let keyArg = `key + \`${key}\``;
+            let keyArg = this.generateComponentKey();
             if (ctx.tKeyExpr) {
                 keyArg = `${ctx.tKeyExpr} + ${keyArg}`;
             }
@@ -4754,7 +4762,7 @@
             }
             let key = this.target.loopLevel ? `key${this.target.loopLevel}` : "key";
             if (isMultiple) {
-                key = `${key} + \`${this.generateComponentKey()}\``;
+                key = this.generateComponentKey(key);
             }
             const props = ast.attrs ? this.formatPropObject(ast.attrs) : [];
             const scope = this.getPropString(props, dynProps);
@@ -4795,7 +4803,6 @@
             }
             let { block } = ctx;
             const name = this.compileInNewTarget("slot", ast.content, ctx);
-            const key = this.generateComponentKey();
             let ctxStr = "ctx";
             if (this.target.loopLevel || !this.hasSafeContext) {
                 ctxStr = generateId("ctx");
@@ -4808,7 +4815,8 @@
                 expr: `app.createComponent(null, false, true, false, false)`,
             });
             const target = compileExpr(ast.target);
-            const blockString = `${id}({target: ${target},slots: {'default': {__render: ${name}.bind(this), __ctx: ${ctxStr}}}}, key + \`${key}\`, node, ctx, Portal)`;
+            const key = this.generateComponentKey();
+            const blockString = `${id}({target: ${target},slots: {'default': {__render: ${name}.bind(this), __ctx: ${ctxStr}}}}, ${key}, node, ctx, Portal)`;
             if (block) {
                 this.insertAnchor(block);
             }
@@ -5541,7 +5549,7 @@
     }
 
     // do not modify manually. This file is generated by the release script.
-    const version = "2.2.9";
+    const version = "2.2.11";
 
     // -----------------------------------------------------------------------------
     //  Scheduler
@@ -5972,6 +5980,7 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     exports.EventBus = EventBus;
     exports.OwlError = OwlError;
     exports.__info__ = __info__;
+    exports.batched = batched;
     exports.blockDom = blockDom;
     exports.loadFile = loadFile;
     exports.markRaw = markRaw;
@@ -6006,8 +6015,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.date = '2024-01-12T14:43:56.804Z';
-    __info__.hash = '7b3e39b';
+    __info__.date = '2024-06-17T13:31:12.099Z';
+    __info__.hash = 'e7f405c';
     __info__.url = 'https://github.com/odoo/owl';
 
 

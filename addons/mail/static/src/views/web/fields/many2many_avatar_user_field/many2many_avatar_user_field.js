@@ -33,7 +33,7 @@ const WithUserChatter = (T) =>
             return {
                 ...super.getTagProps(...arguments),
                 onImageClicked: (ev) => {
-                    if (this.env.isSmall || this.relation !== "res.users") {
+                    if (this.relation !== "res.users") {
                         return;
                     }
                     const target = ev.currentTarget;

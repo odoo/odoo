@@ -2211,3 +2211,65 @@ class TestBoM(TestMrpCommon):
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_kit.id)
         line_values = report_values['lines']
         self.assertEqual(line_values['availability_state'], 'available')
+
+    def test_update_bom_in_routing_workcenter(self):
+        """
+        This test checks the behaviour of updating the BoM associated with a routing workcenter,
+        It verifies that the link between the BOM lines and the operation is correctly deleted.
+        """
+        p1, c1, c2, byproduct = self.make_prods(4)
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': p1.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({'product_id': c1.id, 'product_qty': 1.0}),
+                Command.create({'product_id': c2.id, 'product_qty': 1.0})
+                ],
+            'byproduct_ids': [
+                Command.create({
+                    'product_id': byproduct.id, 'product_uom_id': byproduct.uom_id.id, 'product_qty': 1.0,
+                })]
+        })
+        operation = self.env['mrp.routing.workcenter'].create({
+            'name': 'Operation',
+            'workcenter_id': self.env.ref('mrp.mrp_workcenter_1').id,
+            'bom_id': bom.id,
+        })
+        bom.bom_line_ids.operation_id = operation
+        bom.byproduct_ids.operation_id = operation
+        self.assertEqual(operation.bom_id, bom)
+        operation.bom_id = self.bom_1
+        self.assertEqual(operation.bom_id, self.bom_1)
+        operation_1, operation_2 = self.env['mrp.routing.workcenter'].create([
+            {
+                'name': 'Operation 1',
+                'workcenter_id': self.env.ref('mrp.mrp_workcenter_1').id,
+                'bom_id': bom.id,
+            },
+            {
+                'name': 'Operation 2',
+                'workcenter_id': self.env.ref('mrp.mrp_workcenter_1').id,
+                'bom_id': bom.id,
+            }
+        ])
+        bom.bom_line_ids.operation_id = operation_1
+        bom.byproduct_ids.operation_id = operation_1
+        operation_2.blocked_by_operation_ids = operation_1
+        self.assertEqual(operation_1.bom_id, bom)
+        operation_1.bom_id = self.bom_1
+        self.assertEqual(operation_1.bom_id, self.bom_1)
+        self.assertFalse(bom.bom_line_ids.operation_id)
+        self.assertFalse(bom.byproduct_ids.operation_id)
+        self.assertFalse(operation_2.blocked_by_operation_ids)
+
+    def test_compute_days_to_prepare_from_mo_if_unavailable(self):
+        """
+        Checks that a notification is sent when at least one component can not be resupplied.
+        """
+        bom = self.bom_1
+        product = bom.product_id
+        manufacturing_route_id = self.ref('mrp.route_warehouse0_manufacture')
+        product.route_ids = [Command.set([manufacturing_route_id])]
+        notification = bom.action_compute_bom_days()
+        self.assertEqual(bom.days_to_prepare_mo, 0.0)
+        self.assertEqual((notification['type'], notification['tag']), ('ir.actions.client', 'display_notification'))

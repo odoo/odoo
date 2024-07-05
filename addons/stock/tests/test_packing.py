@@ -772,6 +772,41 @@ class TestPacking(TestPackingCommon):
         pick_picking.move_line_ids.quantity = 3
         first_pack = pick_picking.action_put_in_pack()
 
+    def test_serial_partial_put_in_pack(self):
+        """ Create a simple delivery order with a serial tracked product. Then split the move lines into two
+         different packages. """
+        self.productA.tracking = 'serial'
+        self.warehouse.delivery_steps = 'ship_only'
+        serials = self.env['stock.lot'].create([{
+            'product_id': self.productA.id,
+            'name': f'SN{i}',
+            'company_id': self.warehouse.company_id.id
+        } for i in range(1, 6)])
+        for serial in serials:
+            self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1.0, lot_id=serial)
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+        })
+        picking_form = Form(picking)
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.productA
+            move.product_uom_qty = 5.0
+        picking = picking_form.save()
+
+        picking.action_confirm()
+        picking.action_assign()
+        move_lines = picking.move_line_ids
+        mls_part_1, mls_part_2 = move_lines[:3], move_lines[3:]
+        mls_part_1.action_put_in_pack()
+
+        self.assertEqual(len(mls_part_1.result_package_id), 1, 'First three move lines should be assigned a destination package')
+        self.assertEqual(len(mls_part_2.result_package_id), 0, 'Other move lines should not be affected')
+
+        mls_part_2.action_put_in_pack()
+        self.assertEqual(len(mls_part_2.result_package_id), 1, 'Other move lines should be assigned a package now')
+        self.assertNotEqual(mls_part_1.result_package_id, mls_part_2.result_package_id, 'There should be two different packages')
+
     def test_action_assign_package_level(self):
         """calling _action_assign on move does not erase lines' "result_package_id"
         At the end of the method ``StockMove._action_assign()``, the method

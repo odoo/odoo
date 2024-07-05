@@ -1022,6 +1022,19 @@ class MassMailing(models.Model):
         done_res_ids = {record['res_id'] for record in already_mailed}
         return [rid for rid in res_ids if rid not in done_res_ids]
 
+    def _get_unsubscribe_oneclick_url(self, email_to, res_id):
+        url = werkzeug.urls.url_join(
+            self.get_base_url(), 'mailing/%(mailing_id)s/unsubscribe_oneclick?%(params)s' % {
+                'mailing_id': self.id,
+                'params': werkzeug.urls.url_encode({
+                    'document_id': res_id,
+                    'email': email_to,
+                    'hash_token': self._generate_mailing_recipient_token(res_id, email_to),
+                }),
+            }
+        )
+        return url
+
     def _get_unsubscribe_url(self, email_to, res_id):
         url = werkzeug.urls.url_join(
             self.get_base_url(), 'mailing/%(mailing_id)s/unsubscribe?%(params)s' % {

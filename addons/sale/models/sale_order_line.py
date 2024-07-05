@@ -329,8 +329,8 @@ class SaleOrderLine(models.Model):
                     name = _("%(line_description)s (Canceled)", line_description=name)
                 else:
                     invoice = line._get_invoice_lines().filtered(
-                        lambda aml: aml.quantity >= 0  # Original downpayment invoice
-                    ).move_id
+                        lambda aml: aml.quantity >= 0
+                    ).move_id.filtered(lambda move: move.move_type == 'out_invoice')
                     if len(invoice) == 1 and invoice.payment_reference and invoice.invoice_date:
                         name = _(
                             "%(line_description)s (ref: %(reference)s on %(date)s)",

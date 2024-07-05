@@ -1158,7 +1158,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             The purpose is to test whether the timezone is
             taken into account when requesting a leave.
         """
-        self.user_employee.tz = 'Hongkong' # UTC +08:00
+        self.user_employee.tz = 'Asia/Hong_Kong'  # UTC +08:00
         context = {
             # `date_from/to` in UTC to simulate client values
             'default_date_from': '2024-03-27 23:00:00',

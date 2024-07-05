@@ -1746,6 +1746,8 @@ export class Wysiwyg extends Component {
             }
             this.odooEditor.unbreakableStepUnactive();
             this.odooEditor.historyStep();
+            // Refocus again to save updates when calling `_onWysiwygBlur`
+            params.node.ownerDocument.defaultView.focus();
         } else {
             return this.odooEditor.execCommand('insert', element);
         }
@@ -3546,6 +3548,8 @@ export class Wysiwyg extends Component {
             delete el.dataset.bgSrc;
         } else {
             el.setAttribute('src', newAttachmentSrc);
+            // Also update carousel thumbnail.
+            weUtils.forwardToThumbnail(el);
         }
     }
 
