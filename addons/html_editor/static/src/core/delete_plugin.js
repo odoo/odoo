@@ -18,6 +18,7 @@ import { getState, isFakeLineBreak, prepareUpdate } from "../utils/dom_state";
 import {
     childNodes,
     closestElement,
+    findUpTo,
     descendants,
     firstLeaf,
     getCommonAncestor,
@@ -674,9 +675,9 @@ export class DeletePlugin extends Plugin {
     }
 
     joinBlocks(left, right, commonAncestor) {
-        const canBeMerged = (block) =>
-            !this.getClosest(block, commonAncestor, (node) => this.isUnmergeable(node));
-        if (!canBeMerged(left) || !canBeMerged(right)) {
+        // Check if both blocks are mergeable.
+        const canMerge = (n) => !findUpTo(n, commonAncestor, this.isUnmergeable.bind(this));
+        if (!canMerge(left) || !canMerge(right)) {
             return false;
         }
 
@@ -693,7 +694,7 @@ export class DeletePlugin extends Plugin {
     }
 
     joinInlineIntoBlock(leftBlock, rightInline, commonAncestor) {
-        if (this.getClosest(leftBlock, commonAncestor, (node) => this.isUnmergeable(node))) {
+        if (findUpTo(leftBlock, commonAncestor, (node) => this.isUnmergeable(node))) {
             // Left block is unmergeable.
             return false;
         }
@@ -708,7 +709,7 @@ export class DeletePlugin extends Plugin {
     }
 
     joinBlockIntoInline(leftInline, rightBlock, commonAncestor) {
-        if (this.getClosest(rightBlock, commonAncestor, (node) => this.isUnmergeable(node))) {
+        if (findUpTo(rightBlock, commonAncestor, (node) => this.isUnmergeable(node))) {
             // Right block is unmergeable.
             return false;
         }
@@ -809,8 +810,8 @@ export class DeletePlugin extends Plugin {
      */
     includeEndOrStartBlock(range) {
         const { startContainer, endContainer, commonAncestorContainer } = range;
-        const startBlock = this.getClosest(startContainer, commonAncestorContainer, isBlock);
-        const endBlock = this.getClosest(endContainer, commonAncestorContainer, isBlock);
+        const startBlock = findUpTo(startContainer, commonAncestorContainer, isBlock);
+        const endBlock = findUpTo(endContainer, commonAncestorContainer, isBlock);
         if (!startBlock || !endBlock) {
             return range;
         }
@@ -839,7 +840,7 @@ export class DeletePlugin extends Plugin {
         const { startContainer, startOffset, endContainer, endOffset, commonAncestorContainer } =
             range;
         const [startLink, endLink] = [startContainer, endContainer].map((container) =>
-            this.getClosest(container, commonAncestorContainer, (node) => node.nodeName === "A")
+            findUpTo(container, commonAncestorContainer, (node) => node.nodeName === "A")
         );
         if (startLink && this.isCursorAtStartOfElement(startLink, startContainer, startOffset)) {
             range.setStartBefore(startLink);
@@ -1226,7 +1227,7 @@ export class DeletePlugin extends Plugin {
             return;
         }
         const commonAncestor = getCommonAncestor([sourceContainer, destContainer], this.editable);
-        const closestUnmergeable = this.getClosest(sourceContainer, commonAncestor, (node) =>
+        const closestUnmergeable = findUpTo(sourceContainer, commonAncestor, (node) =>
             this.isUnmergeable(node)
         );
         if (!closestUnmergeable) {
@@ -1254,16 +1255,6 @@ export class DeletePlugin extends Plugin {
             return true;
         }
         return element.innerHTML.trim() === "";
-    }
-
-    getClosest(node, limitAncestor, predicate) {
-        while (node !== limitAncestor) {
-            if (predicate(node)) {
-                return node;
-            }
-            node = node.parentElement;
-        }
-        return null;
     }
 
     isCursorAtStartOfElement(element, cursorNode, cursorOffset) {

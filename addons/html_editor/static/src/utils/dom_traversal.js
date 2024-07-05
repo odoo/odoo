@@ -27,6 +27,22 @@ export function findNode(domPath, findCallback = () => true, stopCallback = () =
 }
 
 /**
+ * @param {Node} node
+ * @param {HTMLElement} limitAncestor - non inclusive limit ancestor to search for
+ * @param {Function} predicate
+ * @returns {Node|null}
+ */
+export function findUpTo(node, limitAncestor, predicate) {
+    while (node !== limitAncestor) {
+        if (predicate(node)) {
+            return node;
+        }
+        node = node.parentElement;
+    }
+    return null;
+}
+
+/**
  * Returns the closest HTMLElement of the provided Node. If the predicate is a
  * string, returns the closest HTMLElement that match the predicate selector. If
  * the predicate is a function, returns the closest element that matches the
