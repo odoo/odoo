@@ -161,7 +161,7 @@ class Lang(models.Model):
         # create the language with locale information
         fail = True
         iso_lang = tools.get_iso_codes(lang)
-        for ln in tools.get_locales(lang):
+        for ln in tools.translate.get_locales(lang):
             try:
                 locale.setlocale(locale.LC_ALL, str(ln))
                 fail = False
@@ -212,7 +212,7 @@ class Lang(models.Model):
         try:
             return self.create(lang_info)
         finally:
-            tools.resetlocale()
+            tools.translate.resetlocale()
 
     @api.model
     def install_lang(self):
