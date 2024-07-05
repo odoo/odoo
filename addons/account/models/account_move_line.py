@@ -144,6 +144,7 @@ class AccountMoveLine(models.Model):
         compute='_compute_partner_id', inverse='_inverse_partner_id', store=True, readonly=False, precompute=True,
         ondelete='restrict',
     )
+    is_imported = fields.Boolean()  # Technical field indicating if the line was captured automatically by import/ocr etc
 
     # === Origin fields === #
     reconcile_model_id = fields.Many2one(
@@ -857,7 +858,7 @@ class AccountMoveLine(models.Model):
     @api.depends('product_id', 'product_uom_id')
     def _compute_price_unit(self):
         for line in self:
-            if not line.product_id or line.display_type in ('line_section', 'line_note'):
+            if not line.product_id or line.display_type in ('line_section', 'line_note') or line.is_imported:
                 continue
             if line.move_id.is_sale_document(include_receipts=True):
                 document_type = 'sale'
@@ -880,7 +881,7 @@ class AccountMoveLine(models.Model):
             if line.display_type in ('line_section', 'line_note', 'payment_term'):
                 continue
             # /!\ Don't remove existing taxes if there is no explicit taxes set on the account.
-            if line.product_id or line.account_id.tax_ids or not line.tax_ids:
+            if (line.product_id or line.account_id.tax_ids or not line.tax_ids) and not line.is_imported:
                 line.tax_ids = line._get_computed_taxes()
 
     def _get_computed_taxes(self):

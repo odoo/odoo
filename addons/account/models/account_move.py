@@ -3602,9 +3602,11 @@ class AccountMove(models.Model):
                 try:
                     with self.env.cr.savepoint():
                         with current_invoice._get_edi_creation() as invoice:
+                            existing_lines = invoice.invoice_line_ids
                             # pylint: disable=not-callable
                             success = decoder(invoice, file_data, new)
                         if success or file_data['type'] == 'pdf':
+                            (invoice.invoice_line_ids - existing_lines).is_imported = True
                             invoice._link_bill_origin_to_purchase_orders(timeout=4)
 
                             invoices |= invoice
