@@ -21,6 +21,9 @@ export class ToolbarPlugin extends Plugin {
             buttonsDisabledState: this.buttonGroups.flatMap((g) =>
                 g.buttons.map((b) => [b.id, false])
             ),
+            buttonsAvailableState: this.buttonGroups.flatMap((g) =>
+                g.buttons.map((b) => [b.id, true])
+            ),
             namespace: undefined,
         });
         this.updateSelection = null;
@@ -115,6 +118,8 @@ export class ToolbarPlugin extends Plugin {
                     );
                     this.state.buttonsDisabledState[button.id] =
                         button.hasFormat != null && !button.hasFormat?.(selection);
+                    this.state.buttonsAvailableState[button.id] =
+                        button.isAvailable === undefined || button.isAvailable(selection);
                 }
             }
         }

@@ -5,20 +5,22 @@
                 <span class="o-we-toolbar-vertical-seperator"></span>
                 <div class="btn-group" t-att-name="buttonGroup.id">
                     <t t-foreach="buttonGroup.buttons" t-as="button" t-key="button.id">
-                        <t t-if="button.Component">
-                            <t t-component="button.Component" t-props="button.props" dispatch.bind="props.toolbar.dispatch" getSelection.bind="props.toolbar.getSelection"/>
+                        <t t-if="state.buttonsAvailableState[button.id]">
+                            <t t-if="button.Component">
+                                <t t-component="button.Component" t-props="button.props" dispatch.bind="props.toolbar.dispatch" getSelection.bind="props.toolbar.getSelection"/>
+                            </t>
+                            <button t-else=""
+                                class="btn btn-light"
+                                t-attf-class="btn btn-light
+                                    {{button.icon ? 'fa fa-fw ps-1 pe-3 mx-1 ' + button.icon : 'px-1'}}
+                                    {{ state.buttonsActiveState[button.id] ? 'active': ''}}
+                                    {{ state.buttonsDisabledState[button.id] ? 'disabled': ''}}"
+                                t-att-title="button.name"
+                                t-att-name="button.id"
+                                t-on-click="() => button.action(this.props.toolbar.dispatch)">
+                                    <t t-esc="button.text"/>
+                                </button>
                         </t>
-                        <button t-else=""
-                            class="btn btn-light"
-                            t-attf-class="btn btn-light
-                                {{button.icon ? 'fa fa-fw ps-1 pe-3 mx-1 ' + button.icon : 'px-1'}}
-                                {{ state.buttonsActiveState[button.id] ? 'active': ''}}
-                                {{ state.buttonsDisabledState[button.id] ? 'disabled': ''}}"
-                            t-att-title="button.name"
-                            t-att-name="button.id"
-                            t-on-click="() => button.action(this.props.toolbar.dispatch)">
-                                <t t-esc="button.text"/>
-                            </button>
                     </t>
                 </div>
             </t>
