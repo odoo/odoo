@@ -10,9 +10,6 @@ const viewRegistry = registry.category("views");
 
 export const graphView = {
     type: "graph",
-    display_name: _t("Graph"),
-    icon: "fa fa-area-chart",
-    multiRecord: true,
     Controller: GraphController,
     Renderer: GraphRenderer,
     Model: GraphModel,

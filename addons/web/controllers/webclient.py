@@ -99,15 +99,15 @@ class WebClient(http.Controller):
 
     @http.route('/web/tests/next', type='http', auth='user', readonly=True)
     def unit_tests_suite(self, mod=None, **kwargs):
-        return request.render('web.unit_tests_suite')
+        return request.render('web.unit_tests_suite', {'session_info': {'view_info': request.env['ir.ui.view'].get_view_info()}})
 
     @http.route('/web/tests', type='http', auth='user', readonly=True)
     def test_suite(self, mod=None, **kwargs):
-        return request.render('web.qunit_suite')
+        return request.render('web.qunit_suite', {'session_info': {'view_info': request.env['ir.ui.view'].get_view_info()}})
 
     @http.route('/web/tests/mobile', type='http', auth="none")
     def test_mobile_suite(self, mod=None, **kwargs):
-        return request.render('web.qunit_mobile_suite')
+        return request.render('web.qunit_mobile_suite', {'session_info': {'view_info': request.env['ir.ui.view'].get_view_info()}})
 
     @http.route('/web/bundle/<string:bundle_name>', auth='public', methods=['GET'], readonly=True)
     def bundle(self, bundle_name, **bundle_params):

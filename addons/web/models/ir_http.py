@@ -120,6 +120,7 @@ class Http(models.AbstractModel):
                 'lang': request.session.context['lang'],
             },
             'test_mode': bool(config['test_enable'] or config['test_file']),
+            'view_info': self.env['ir.ui.view'].get_view_info(),
         }
         if request.session.debug:
             session_info['bundle_params']['debug'] = request.session.debug
