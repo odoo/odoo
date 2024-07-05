@@ -52,6 +52,7 @@ export class PosStore extends Reactive {
         "action",
         "alert",
         "mail.sound_effects",
+        "orm",
     ];
     constructor() {
         super();
@@ -72,6 +73,7 @@ export class PosStore extends Reactive {
             pos_data,
             action,
             alert,
+            orm,
         }
     ) {
         this.env = env;
@@ -85,6 +87,7 @@ export class PosStore extends Reactive {
         this.action = action;
         this.alert = alert;
         this.sound = env.services["mail.sound_effects"];
+        this.orm = orm;
         this.notification = notification;
         this.unwatched = markRaw({});
         this.pushOrderMutex = new Mutex();
@@ -949,12 +952,25 @@ export class PosStore extends Reactive {
             zero_pad(this.session.sequence_number, 4)
         );
     }
+    async sync_sequence_number() {
+        try {
+            await this.orm.call("pos.session", "sync_sequence_number_from_ui", [[]], {
+                session_id: this.session.id,
+                sequence_number: this.session.sequence_number,
+            });
+            return true;
+        } catch (error) {
+            console.warn(error);
+            return false;
+        }
+    }
     createNewOrder(data = {}) {
         const fiscalPosition = this.models["account.fiscal.position"].find((fp) => {
             return fp.id === this.config.default_fiscal_position_id?.id;
         });
 
         const uniqId = this.generate_unique_id();
+
         const order = this.models["pos.order"].create({
             session_id: this.session,
             company_id: this.company,
@@ -1548,8 +1564,9 @@ export class PosStore extends Reactive {
         }
 
         // If there are orders in the db left unsynced, we try to sync.
-        const syncSuccess = await this.push_orders_with_closing_popup();
-        if (syncSuccess) {
+        const syncSequenceNumberSuccess = await this.sync_sequence_number();
+        const syncOrdersSuccess = await this.push_orders_with_closing_popup();
+        if (syncSequenceNumberSuccess && syncOrdersSuccess) {
             this.redirectToBackend();
         }
     }

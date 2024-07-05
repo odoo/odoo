@@ -1481,6 +1481,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashRoundingPayment', login="accountman")
 
+    def test_sequence_number_1(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'SequenceNumberTour.1', login="pos_user")
+
+    def test_sequence_number_2(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'SequenceNumberTour.2', login="pos_user")
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

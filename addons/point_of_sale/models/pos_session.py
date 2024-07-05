@@ -95,6 +95,10 @@ class PosSession(models.Model):
 
     _sql_constraints = [('uniq_name', 'unique(name)', "The name of this POS Session must be unique!")]
 
+    def sync_sequence_number_from_ui(self, session_id, sequence_number):
+        session = self.browse(session_id)
+        session.sequence_number = sequence_number
+
     @api.model
     def _load_pos_data_relations(self, model, response):
         model_fields = self.env[model]._fields
