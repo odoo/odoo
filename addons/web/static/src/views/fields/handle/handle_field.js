@@ -16,7 +16,7 @@ export const handleField = {
     displayName: _t("Handle"),
     supportedTypes: ["integer"],
     isEmpty: () => false,
-    columnWidth: 33,
+    listViewWidth: 20,
 };
 
 registry.category("fields").add("handle", handleField);
