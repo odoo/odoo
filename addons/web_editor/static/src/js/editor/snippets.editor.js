@@ -5259,7 +5259,16 @@ class SnippetsMenu extends Component {
      * When a new option is mounted, update all existing editors to reflect the
      * potential new values being computed/asked.
      */
-    _onOptionMounted() {
+    async _onOptionMounted() {
+        // Delay the mutex until all post drop actions are done. It cannot be
+        // awaited inside the mutex because callPostSnippetDrop locks the mutex
+        // and it needs to be awaited because callPostSnippetDrop also creates
+        // editors, but it does so outside the mutex. However, calling 
+        // updateOptionsUI while editors are being created creates race 
+        // conditions
+        if (this.postSnippetDropPromise) {
+            await this.postSnippetDropPromise;
+        }
         this.execWithLoadingEffect(async () => {
             await Promise.all(this.snippetEditors.map(editor => editor.updateOptionsUI()));
             await Promise.all(this.snippetEditors.map(editor => editor.updateOptionsUIVisibility()));
