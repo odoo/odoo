@@ -4,12 +4,12 @@
         <xpath expr="//OrderlineNoteButton" position="after">
             <t t-if="pos.config.module_pos_restaurant">
                 <!-- All buttons always displayed -->
-                <button class="btn btn-light rounded-0 fw-bolder"
+                <button t-att-class="buttonClass"
                     t-att-disabled="!pos.get_order()?.get_orderlines()?.length"
                     t-on-click="clickPrintBill">
                     <i class="fa fa-print me-1"></i>Bill
                 </button>
-                <button class="btn btn-light rounded-0 fw-bolder" t-on-click="clickTableGuests">
+                <button t-att-class="buttonClass" t-on-click="clickTableGuests">
                     <span t-esc="currentOrder?.getCustomerCount() || 0" class="px-2 py-1 rounded-circle text-bg-dark fw-bolder small me-1"/>
                     <span>Guests</span>
                 </button>
@@ -18,12 +18,12 @@
         <xpath expr="//t[@t-if='props.showRemainingButtons']/OrderlineNoteButton" position="after">
             <!-- All these buttons will only be displayed in a dialog -->
             <t t-if="pos.config.module_pos_restaurant">
-                <button class="btn btn-light rounded-0 fw-bolder"
+                <button class="btn btn-secondary rounded fw-bolder"
                     t-att-disabled="pos.get_order()?.get_orderlines()?.reduce((sum, line) => sum + line.qty, 0) lt 2"
                     t-on-click="() => pos.showScreen('SplitBillScreen')">
                     <i class="fa fa-files-o me-1"/>Split
                 </button>
-                <button class="btn btn-light rounded-0 fw-bolder" t-on-click="clickTransferOrder">
+                <button class="btn btn-secondary rounded fw-bolder" t-on-click="clickTransferOrder">
                     <i class="oi oi-arrow-right me-1" />Transfer / Merge
                 </button>
             </t>

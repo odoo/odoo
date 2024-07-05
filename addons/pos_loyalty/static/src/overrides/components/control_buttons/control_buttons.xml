@@ -6,8 +6,9 @@
                 <t t-set="_orderTotal" t-value="pos.get_order().get_total_with_tax()" />
                 <t t-set="_eWalletPrograms" t-value="_getEWalletPrograms()" />
                 <t t-set="_eWalletRewards" t-value="_getEWalletRewards(pos.get_order())" />
-                <button class="btn btn-light rounded-0 fw-bolder" t-on-click="onClickWallet"
-                    t-att-class="{'highlight text-action': (_orderTotal lt 0 and _eWalletPrograms.length gte 1) or _eWalletRewards.length gte 1}">
+                <button t-att-class="buttonClass"
+                    t-on-click="onClickWallet"
+                    t-attf-class="{{(_orderTotal lt 0 and _eWalletPrograms.length gte 1) or _eWalletRewards.length gte 1 ? 'highlight text-action': ''}}">
                     <i class="fa fa-credit-card me-1" />
                     <t t-if="_orderTotal lt 0 and _eWalletPrograms.length">eWallet Refund</t>
                     <t t-elif="_eWalletRewards.length">eWallet Pay</t>
@@ -15,12 +16,14 @@
                 </button>
             </t>
             <t t-if="pos.models['loyalty.program'].some((p) => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type))">
-                <button class="btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickPromoCode()">
+                <button t-att-class="buttonClass"
+                    t-on-click="() => this.clickPromoCode()">
                     <i class="fa fa-barcode me-1"/>Enter Code
                 </button>
             </t>
             <t t-if="pos.models['loyalty.program'].length">
-                <button class="control-button btn btn-light rounded-0 fw-bolder"
+                <button class="control-button"
+                    t-att-class="buttonClass"
                     t-attf-class="{{getPotentialRewards().length ? 'highlight text-action' : 'disabled'}}"
                     t-on-click="() => this.clickRewards()">
                     <i class="fa fa-star me-1"/>Reward
@@ -29,7 +32,7 @@
         </xpath>
         <xpath expr="//t[@t-if='props.showRemainingButtons']/OrderlineNoteButton" position="after">
             <t t-if="pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type))">
-                <button class="btn btn-light rounded-0 fw-bolder" t-att-class="{'disabled': !pos.get_order().isProgramsResettable()}"
+                <button class="btn btn-secondary rounded fw-bolder" t-att-class="{'disabled': !pos.get_order().isProgramsResettable()}"
                     t-on-click="() => this.pos.resetPrograms()">
                     <i class="fa fa-star me-1"/>Reset Programs
                 </button>
