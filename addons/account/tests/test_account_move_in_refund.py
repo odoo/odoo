@@ -39,7 +39,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             'date_maturity': False,
         }
         cls.product_line_vals_2 = {
-            'name': '',
+            'name': 'product_b',
             'product_id': cls.product_b.id,
             'account_id': cls.product_b.property_account_expense_id.id,
             'partner_id': cls.partner_a.id,
@@ -150,7 +150,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
-                'name': '',
+                'name': 'product_b',
                 'product_id': self.product_b.id,
                 'product_uom_id': self.product_b.uom_id.id,
                 'account_id': self.product_b.property_account_expense_id.id,
