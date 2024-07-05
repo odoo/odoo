@@ -42,12 +42,13 @@ class Partners(models.Model):
         for partner in self:
             partner.user_livechat_username = next(iter(partner.user_ids.mapped('livechat_username')), False)
 
-    def mail_partner_format(self, fields=None):
-        partner_format = super().mail_partner_format(fields=fields)
+    def _to_store(self, store: Store, fields=None):
+        super()._to_store(store, fields=fields)
         if fields and fields.get("user_livechat_username"):
             for partner in self:
+                data = {"id": partner.id, "type": "partner"}
                 if partner.user_livechat_username:
-                    partner_format.get(partner)["user_livechat_username"] = partner.user_livechat_username
+                    data["user_livechat_username"] = partner.user_livechat_username
                 else:
-                    partner_format.get(partner)["name"] = partner.name
-        return partner_format
+                    data["name"] = partner.name
+                store.add("Persona", data)

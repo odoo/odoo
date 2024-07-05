@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
 from odoo import api, models
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ResPartner(models.Model):
@@ -24,19 +24,25 @@ class ResPartner(models.Model):
     def _get_on_leave_ids(self):
         return self.env['res.users']._get_on_leave_ids(partner=True)
 
-    def mail_partner_format(self, fields=None):
+    def _to_store(self, store: Store, fields=None):
         """Override to add the current leave status."""
-        partners_format = super().mail_partner_format(fields=fields)
+        super()._to_store(store, fields=fields)
         if not fields:
-            fields = {'out_of_office_date_end': True}
+            fields = {"out_of_office_date_end": True}
         for partner in self:
-            if 'out_of_office_date_end' in fields:
+            if "out_of_office_date_end" in fields:
                 # in the rare case of multi-user partner, return the earliest possible return date
-                dates = partner.mapped('user_ids.leave_date_to')
-                states = partner.mapped('user_ids.current_leave_state')
+                dates = partner.mapped("user_ids.leave_date_to")
+                states = partner.mapped("user_ids.current_leave_state")
                 date = sorted(dates)[0] if dates and all(dates) else False
                 state = sorted(states)[0] if states and all(states) else False
-                partners_format.get(partner).update({
-                    'out_of_office_date_end': odoo.fields.Date.to_string(date) if state == 'validate' and date else False,
-                })
-        return partners_format
+                store.add(
+                    "Persona",
+                    {
+                        "id": partner.id,
+                        "out_of_office_date_end": (
+                            odoo.fields.Date.to_string(date) if state == "validate" else False
+                        ),
+                        "type": "partner",
+                    },
+                )

@@ -590,7 +590,7 @@ class MailActivity(models.Model):
         activities = self.read()
         self.mail_template_ids.fetch(['name'])
         self.attachment_ids.fetch(['name'])
-        store.add("Persona", list(self.user_id.partner_id.mail_partner_format().values()))
+        store.add(self.user_id.partner_id)
         for record, activity in zip(self, activities):
             activity['mail_template_ids'] = [
                 {'id': mail_template.id, 'name': mail_template.name}

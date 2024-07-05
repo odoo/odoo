@@ -26,10 +26,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                     const [operator] = ResPartner._filter([
                         ["id", "=", channel.livechat_operator_id],
                     ]);
-                    store.add(
-                        "Persona",
-                        ResPartner.mail_partner_format([operator.id])[operator.id]
-                    );
+                    store.add(ResPartner.browse(operator.id));
                     // livechat_username ignored for simplicity
                     channelInfo.operator = { id: operator.id, type: "partner" };
                 }
