@@ -10,6 +10,7 @@ if not hasattr(urls, 'url_join'):
     from . import _monkeypatches_urls
 
 from . import appdirs
+from . import arabic_reshaper
 from . import cloc
 from . import constants
 from . import pdf
@@ -36,4 +37,3 @@ from . import osutil
 from .js_transpiler import transpile_javascript, is_odoo_module, URL_RE, ODOO_MODULE_RE
 from .sourcemap_generator import SourceMapGenerator
 from .set_expression import SetDefinitions
-from .arabic_reshaper import arabic_reshaper
