@@ -16,7 +16,6 @@ export class CollaborationPlugin extends Plugin {
     /** @type { (p: CollaborationPlugin) => Record<string, any> } */
     static resources = (p) => ({
         set_attribute: p.setAttribute.bind(p),
-        unserialize_node: p.unserializeNode.bind(p),
         process_history_step: p.processHistoryStep.bind(p),
         is_revertable_step: p.isRevertableStep.bind(p),
     });
@@ -315,16 +314,6 @@ export class CollaborationPlugin extends Plugin {
     onStepAdded(step) {
         step.peerId = this.peerId;
         this.dispatch("COLLABORATION_STEP_ADDED", step);
-    }
-    /**
-     * @param {Node} node
-     */
-    unserializeNode(node) {
-        const fakeNode = this.document.createElement("fake-el");
-        fakeNode.appendChild(node);
-        this.shared.sanitize(fakeNode, { IN_PLACE: true });
-        const sanitizedNode = fakeNode.childNodes[0];
-        return sanitizedNode;
     }
     /**
      * @param {import("../../core/history_plugin").HistoryStep} step

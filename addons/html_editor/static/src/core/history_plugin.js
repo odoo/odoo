@@ -79,7 +79,7 @@ import { descendants, getCommonAncestor } from "../utils/dom_traversal";
 
 export class HistoryPlugin extends Plugin {
     static name = "history";
-    static dependencies = ["dom", "selection"];
+    static dependencies = ["dom", "selection", "sanitize"];
     static shared = [
         "reset",
         "canUndo",
@@ -917,10 +917,10 @@ export class HistoryPlugin extends Plugin {
      */
     unserializeNode(node) {
         let [unserializedNode, nodeMap] = this._unserializeNode(node);
-
-        for (const cb of this.resources["unserialize_node"] || []) {
-            unserializedNode = cb(unserializedNode);
-        }
+        const fakeNode = this.document.createElement("fake-el");
+        fakeNode.appendChild(unserializedNode);
+        this.shared.sanitize(fakeNode, { IN_PLACE: true });
+        unserializedNode = fakeNode.childNodes[0];
 
         if (unserializedNode) {
             // Only assing id to the remaining nodes, otherwise the removed
