@@ -12,12 +12,7 @@ export class MailFollowers extends models.ServerModel {
         const followers = MailFollowers._filter([["id", "in", ids]]);
         // sorted from lowest ID to highest ID (i.e. from least to most recent)
         followers.sort((f1, f2) => (f1.id < f2.id ? -1 : 1));
-        store.add(
-            "Persona",
-            Object.values(
-                ResPartner.mail_partner_format(followers.map((follower) => follower.partner_id))
-            )
-        );
+        store.add(ResPartner.browse(followers.map((follower) => follower.partner_id)));
         for (const follower of followers) {
             store.add("Follower", {
                 display_name: follower.display_name,

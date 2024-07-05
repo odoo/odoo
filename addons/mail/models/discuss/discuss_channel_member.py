@@ -271,9 +271,7 @@ class ChannelMember(models.Model):
 
     def _partner_data_to_store(self, store: Store, fields=None):
         self.ensure_one()
-        store.add(
-            "Persona", self.partner_id.mail_partner_format(fields=fields).get(self.partner_id)
-        )
+        store.add(self.partner_id, fields=fields)
 
     def _channel_fold(self, state, state_count):
         """Update the fold_state of the given member. The change will be

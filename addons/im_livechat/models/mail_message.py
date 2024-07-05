@@ -80,16 +80,14 @@ class MailMessage(models.Model):
         super(MailMessage, self - messages_w_author_livechat)._author_to_store(store)
         for message in messages_w_author_livechat:
             store.add(
-                "Persona",
-                message.author_id.mail_partner_format(
-                    {
-                        "id": True,
-                        "is_company": True,
-                        "user_livechat_username": True,
-                        "user": {"id": True},
-                        "write_date": True,
-                    }
-                ).get(message.author_id),
+                message.author_id,
+                fields={
+                    "id": True,
+                    "is_company": True,
+                    "user_livechat_username": True,
+                    "user": {"id": True},
+                    "write_date": True,
+                },
             )
             store.add(
                 "Message",

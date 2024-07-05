@@ -1487,12 +1487,11 @@ export class Model extends Array {
      * @param {MaybeIterable<number>} idOrIds
      * @param {{ active_test?: boolean }} [options]
      */
-    browse(idOrIds, options) {
+    browse(idOrIds) {
         const ids = ensureArray(idOrIds);
-        const activeTest = (options?.active_test ?? true) && this._fields.active;
-        return this.filter(
-            (record) => ids.includes(record.id) && (!activeTest || record.active)
-        ).sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
+        return this.filter((record) => ids.includes(record.id)).sort(
+            (a, b) => ids.indexOf(a.id) - ids.indexOf(b.id)
+        );
     }
 
     /**

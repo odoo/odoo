@@ -48,20 +48,23 @@ export class ResPartner extends mailModels.ResPartner {
     }
     /**
      * @override
-     * @type {typeof mailModels.ResPartner["prototype"]["mail_partner_format"]}
+     * @type {typeof mailModels.ResPartner["prototype"]["_to_store"]}
      */
-    mail_partner_format(ids) {
+    _to_store(ids, store) {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const partnerFormats = super.mail_partner_format(...arguments);
+        super._to_store(...arguments);
         const partners = ResPartner._filter([["id", "in", ids]], {
             active_test: false,
         });
         for (const partner of partners) {
-            // Not a real field but ease the testing
-            partnerFormats[partner.id].user_livechat_username = partner.user_livechat_username;
+            store.add("Persona", {
+                id: partner.id,
+                type: "partner",
+                // Not a real field but ease the testing
+                user_livechat_username: partner.user_livechat_username,
+            });
         }
-        return partnerFormats;
     }
 }

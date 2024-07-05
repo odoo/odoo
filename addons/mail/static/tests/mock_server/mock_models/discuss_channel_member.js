@@ -184,10 +184,7 @@ export class DiscussChannelMember extends models.ServerModel {
         const ResPartner = this.env["res.partner"];
 
         const [member] = this._filter([["id", "in", ids]]);
-        store.add(
-            "Persona",
-            ResPartner.mail_partner_format([member.partner_id])[member.partner_id]
-        );
+        store.add(ResPartner.browse(member.partner_id));
     }
 
     /**

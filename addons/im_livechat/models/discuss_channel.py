@@ -70,12 +70,8 @@ class DiscussChannel(models.Model):
             } if channel.country_id else False
             if operator := channel.livechat_operator_id:
                 store.add(
-                    "Persona",
-                    list(
-                        operator.mail_partner_format(
-                            fields={"id": True, "user_livechat_username": True, "write_date": True}
-                        ).values()
-                    ),
+                    operator,
+                    fields={"id": True, "user_livechat_username": True, "write_date": True},
                 )
                 channel_info["operator"] = {"id": operator.id, "type": "partner"}
             if channel.channel_type == "livechat" and channel.livechat_channel_id and self.env.user._is_internal():

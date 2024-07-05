@@ -53,18 +53,16 @@ class TestPartner(TransactionCase):
             'holiday_status_id': cls.leave_type.id,
         }])
 
-    def test_res_partner_mail_partner_format(self):
+    def test_res_partner_to_store(self):
         self.leaves.write({'state': 'validate'})
-        store = Store("Persona", self.partner.mail_partner_format()[self.partner])
         self.assertEqual(
-            store.get_result()["Persona"][0]["out_of_office_date_end"],
+            Store(self.partner).get_result()["Persona"][0]["out_of_office_date_end"],
             fields.Date.to_string(self.today + relativedelta(days=2)),
             'Return date is the first return date of all users associated with a partner',
         )
         self.leaves[1].action_refuse()
-        store = Store("Persona", self.partner.mail_partner_format()[self.partner])
         self.assertEqual(
-            store.get_result()["Persona"][0]["out_of_office_date_end"],
+            Store(self.partner).get_result()["Persona"][0]["out_of_office_date_end"],
             False,
             'Partner is not considered out of office if one of their users is not on holiday',
         )

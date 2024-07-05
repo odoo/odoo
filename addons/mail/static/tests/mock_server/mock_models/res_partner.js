@@ -84,10 +84,7 @@ export class ResPartner extends webModels.ResPartner {
             extraMatchingPartnerIds = mentionSuggestionsFilter(partners, search, remainingLimit);
         }
         return new mailDataHelpers.Store(
-            "Persona",
-            Object.values(
-                this.mail_partner_format(mainMatchingPartnerIds.concat(extraMatchingPartnerIds))
-            )
+            this.browse(mainMatchingPartnerIds.concat(extraMatchingPartnerIds))
         ).get_result();
     }
 
@@ -162,7 +159,7 @@ export class ResPartner extends webModels.ResPartner {
         }
         const store = new mailDataHelpers.Store();
         for (const partner of mainMatchingPartners.concat(extraMatchingPartners)) {
-            store.add("Persona", this.mail_partner_format(partner.id)[partner.id]);
+            store.add(this.browse(partner.id));
             const [member] = DiscussChannelMember._filter([
                 ["channel_id", "=", channel_id],
                 ["partner_id", "=", partner.id],
@@ -215,50 +212,42 @@ export class ResPartner extends webModels.ResPartner {
             .map((user) => user.partner_id)
             .sort((a, b) => (a.name === b.name ? a.id - b.id : a.name > b.name ? 1 : -1));
         matchingPartnersIds.length = Math.min(matchingPartnersIds.length, limit);
-        return new mailDataHelpers.Store(
-            "Persona",
-            Object.values(this.mail_partner_format(matchingPartnersIds))
-        ).get_result();
+        return new mailDataHelpers.Store(this.browse(matchingPartnersIds)).get_result();
     }
 
     /**
      * @param {number[]} ids
      * @returns {Record<string, ModelRecord>}
      */
-    mail_partner_format(ids) {
+    _to_store(ids, store) {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
         const partners = this._filter([["id", "in", ids]], {
             active_test: false,
         });
-        return Object.fromEntries(
-            partners.map((partner) => {
-                const users = ResUsers._filter([["id", "in", partner.user_ids]]);
-                const internalUsers = users.filter((user) => !user.share);
-                let mainUser;
-                if (internalUsers.length > 0) {
-                    mainUser = internalUsers[0];
-                } else if (users.length > 0) {
-                    mainUser = users[0];
-                }
-                return [
-                    partner.id,
-                    {
-                        active: partner.active,
-                        email: partner.email,
-                        id: partner.id,
-                        im_status: partner.im_status,
-                        is_company: partner.is_company,
-                        name: partner.name,
-                        type: "partner",
-                        userId: mainUser ? mainUser.id : false,
-                        isInternalUser: mainUser ? !mainUser.share : false,
-                        write_date: partner.write_date,
-                    },
-                ];
-            })
-        );
+        for (const partner of partners) {
+            const users = ResUsers._filter([["id", "in", partner.user_ids]]);
+            const internalUsers = users.filter((user) => !user.share);
+            let mainUser;
+            if (internalUsers.length > 0) {
+                mainUser = internalUsers[0];
+            } else if (users.length > 0) {
+                mainUser = users[0];
+            }
+            store.add("Persona", {
+                active: partner.active,
+                email: partner.email,
+                id: partner.id,
+                im_status: partner.im_status,
+                is_company: partner.is_company,
+                name: partner.name,
+                type: "partner",
+                userId: mainUser ? mainUser.id : false,
+                isInternalUser: mainUser ? !mainUser.share : false,
+                write_date: partner.write_date,
+            });
+        }
     }
 
     /**
@@ -313,7 +302,7 @@ export class ResPartner extends webModels.ResPartner {
     }
 
     _search_for_channel_invite_to_store(ids, store, channel_id) {
-        store.add("Persona", Object.values(this.mail_partner_format(ids)));
+        store.add(this.browse(ids));
     }
 
     /**
