@@ -14,8 +14,15 @@
         <record id="test_tag_generic" model="test.tag">
             <field name="name">Test Tag</field>
         </record>
+        <record id="test_tag_2" model="test.tag">
+            <field name="name">Test Tag #2</field>
+        </record>
+        <record id="test_tag_3" model="test.tag">
+            <field name="name">Test Tag #3</field>
+        </record>
         <record id="test_model_generic" model="test.model">
             <field name="name">Test Model</field>
+            <field name="tag_id" ref="test_website.test_tag_generic"/>
         </record>
         <record id="test_submodel_generic" model="test.submodel">
             <field name="name">Test Submodel</field>

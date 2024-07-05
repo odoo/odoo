@@ -297,8 +297,15 @@
                     <we-button data-select-data-attribute="fileSet">Is set</we-button>
                     <we-button data-select-data-attribute="!fileSet">Is not set</we-button>
                 </we-select>
+                <we-select data-name="hidden_condition_record_opt" data-attribute-name="visibilityComparator" data-no-preview="true">
+                    <we-button data-select-data-attribute="selected">Is equal to</we-button>
+                    <we-button data-select-data-attribute="!selected">Is not equal to</we-button>
+                </we-select>
             </we-row>
             <we-select class="o_we_large" data-name="hidden_condition_no_text_opt" data-attribute-name="visibilityCondition" data-no-preview="true">
+                <!-- checkbox, select, radio possible values -->
+            </we-select>
+            <we-select class="o_we_large" data-name="hidden_condition_record_opt" data-attribute-name="visibilityCondition" data-no-preview="true">
                 <!-- checkbox, select, radio possible values -->
             </we-select>
             <we-input class="o_we_large" data-name="hidden_condition_additional_text" data-attribute-name="visibilityCondition" data-select-data-attribute=""/>
