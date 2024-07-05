@@ -3,9 +3,24 @@
     <t t-name="pos_restaurant.FloorScreen">
         <div class="floor-screen screen h-100 position-relative d-flex flex-column flex-nowrap m-0 bg-100 text-start overflow-hidden">
             <t t-set="editButtonClass" t-value="'text-center d-flex flex-column align-items-center btn btn-light text-uppercase'" />
-            <div t-if="pos.isEditMode" class="edit-buttons d-flex px-3 border-bottom bg-view overflow-x-auto w-100">
-                <button t-attf-class="ms-auto {{editButtonClass}}" t-on-click.stop="createTable">
-                    <i class="fa fa-plus" role="img" aria-label="Add" title="Add" />Table</button>
+            <div t-if="pos.orderToTransfer" class="d-flex align-items-center justify-content-between px-3 border-bottom bg-view overflow-x-auto w-100">
+                <button t-attf-class="ms-auto {{editButtonClass}}" t-att-class="{active: !pos.isTableToMerge}" t-on-click="() => this.pos.isTableToMerge = false">
+                    <i class="fa fa-arrow-right" role="img" aria-label="Transfer" title="Transfer" />Transfer</button>
+                <button t-attf-class="{{editButtonClass}}" t-att-class="{active: pos.isTableToMerge}" t-on-click="() => this.pos.isTableToMerge = true">
+                    <i class="fa fa-link" role="img" aria-label="Merge" title="Merge" />Merge</button>
+                <button t-attf-class="ms-auto {{editButtonClass}}" t-on-click.stop="stopOrderTransfer">
+                    <i class="fa fa-times" role="img" aria-label="Close" title="Close" />Discard</button>
+            </div>
+            <div t-if="pos.isEditMode" class="edit-buttons d-flex align-items-center justify-content-center px-3 border-bottom bg-view overflow-x-auto w-100">
+                <span role="button" t-attf-class="ms-auto {{editButtonClass}}" class="edit-button text-center d-flex flex-column btn btn-light text-uppercase" t-on-click.stop="doCreateTable.call" t-att-disabled="doCreateTable.status === 'loading'">
+                    <t t-if="doCreateTable.status === 'loading'">
+                        <i class="fa fa-spinner fa-spin icon-button" role="img" aria-label="Loading" title="Loading"></i>
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-plus icon-button" role="img" aria-label="Add" title="Add"></i>
+                    </t>
+                    <span class="text-button d-block">Table</span>
+                </span>
                 <button t-attf-class="{{editButtonClass}}" t-att-disabled="selectedTables.length == 0" t-on-click.stop="changeSeatsNum">
                     <i class="fa fa-user" role="img" aria-label="Seats" title="Seats" />Seats</button>
                 <button t-attf-class="{{editButtonClass}}" t-if="selectedTables.some((t) => t.shape === 'square')" t-att-disabled="selectedTables.length == 0" t-on-click.stop="() => this.changeShape('round')">

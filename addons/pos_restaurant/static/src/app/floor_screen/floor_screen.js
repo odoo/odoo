@@ -22,6 +22,7 @@ import {
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { pick } from "@web/core/utils/objects";
 import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
+import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
 export function constrain(num, min, max) {
     return Math.min(Math.max(num, min), max);
 }
@@ -72,6 +73,10 @@ export class FloorScreen extends Component {
             selectedTableIds: [],
             isColorPicker: false,
             potentialLink: null,
+        });
+
+        this.doCreateTable = useTrackedAsync(async () => {
+            await this.createTable();
         });
         this.floorMapRef = useRef("floor-map-ref");
         this.floorScrollBox = useRef("floor-map-scroll");
@@ -594,6 +599,7 @@ export class FloorScreen extends Component {
             },
         });
     }
+
     async createTable() {
         const newTable = await this._createTableHelper();
         if (newTable) {
