@@ -513,7 +513,7 @@ GROUP BY fol.id%s%s""" % (
         return new, update
 
     def _to_store(self, store: Store):
-        store.add("Persona", list(self.partner_id.mail_partner_format().values()))
+        store.add(self.partner_id)
         for follower in self:
             store.add(
                 "Follower",

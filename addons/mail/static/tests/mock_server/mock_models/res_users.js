@@ -23,10 +23,7 @@ export class ResUsers extends webModels.ResUsers {
         /** @type {import("mock_models").ResUsersSettings} */
         const ResUsersSettings = this.env["res.users.settings"];
 
-        store.add(
-            "Persona",
-            ResPartner.mail_partner_format([serverState.odoobotId])[serverState.odoobotId]
-        );
+        store.add(ResPartner.browse(serverState.odoobotId));
         store.add({
             action_discuss_id: DISCUSS_ACTION_ID,
             channel_types_with_seen_infos: DiscussChannel._types_allowing_seen_infos(),

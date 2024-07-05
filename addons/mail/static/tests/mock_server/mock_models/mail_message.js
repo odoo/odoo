@@ -1,4 +1,11 @@
-import { Command, fields, getKwArgs, models, serverState } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    fields,
+    getKwArgs,
+    makeKwArgs,
+    models,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 
 /** @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr */
 
@@ -96,15 +103,6 @@ export class MailMessage extends models.ServerModel {
         for (const message of messages) {
             const thread =
                 message.model && this.env[message.model]._filter([["id", "=", message.res_id]])[0];
-            let author;
-            if (message.author_id) {
-                const [partner] = ResPartner._filter([["id", "=", message.author_id]], {
-                    active_test: false,
-                });
-                author = ResPartner.mail_partner_format([partner.id])[partner.id];
-            } else {
-                author = false;
-            }
             const attachments = IrAttachment._filter([["id", "in", message.attachment_ids]]);
             const formattedAttachments = IrAttachment._attachment_format(
                 attachments.map((attachment) => attachment.id)
@@ -159,7 +157,6 @@ export class MailMessage extends models.ServerModel {
             const response = {
                 ...message,
                 attachments: formattedAttachments,
-                author,
                 default_subject:
                     message.model &&
                     message.res_id &&
@@ -181,12 +178,6 @@ export class MailMessage extends models.ServerModel {
                 const subtype = MailMessageSubtype._filter([["id", "=", message.subtype_id]])[0];
                 response.subtype_description = subtype.description;
             }
-            let guestAuthor;
-            if (message.author_guest_id) {
-                const [guest] = MailGuest.search_read([["id", "=", message.author_guest_id]]);
-                guestAuthor = { id: guest.id, name: guest.name, type: "guest" };
-            }
-            response.author = author || guestAuthor;
             if (response.model && response.res_id) {
                 const thread = {
                     model: response.model,
@@ -233,6 +224,49 @@ export class MailMessage extends models.ServerModel {
             if (message.parent_id) {
                 store.add(MailMessage.browse(message.parent_id));
             }
+        }
+        this._author_to_store(ids, store);
+    }
+    _author_to_store(ids, store) {
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        for (const message of MailMessage._filter([["id", "in", ids]]).sort(
+            (a, b) => ids.indexOf(a) - ids.indexOf(b)
+        )) {
+            const data = {
+                author: false,
+                email_from: message.email_from,
+                id: message.id,
+                type: "partner",
+            };
+            if (message.author_guest_id) {
+                const [guest] = MailGuest.search_read([["id", "=", message.author_guest_id]]);
+                store.add("Persona", { id: guest.id, name: guest.name, type: "guest" });
+                data.author = { id: guest.id, type: "guest" };
+            } else if (message.author_id) {
+                const [partner] = ResPartner._filter([["id", "=", message.author_id]], {
+                    active_test: false,
+                });
+                store.add(
+                    ResPartner.browse(partner.id),
+                    makeKwArgs({
+                        fields: {
+                            id: true,
+                            name: true,
+                            is_company: true,
+                            user: { id: true },
+                            write_date: true,
+                        },
+                    })
+                );
+                data.author = { id: partner.id, type: "partner" };
+            }
+            store.add("Message", data);
         }
     }
 

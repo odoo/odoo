@@ -68,10 +68,7 @@ async function get_session(request) {
         ]);
         const store = new mailDataHelpers.Store();
         ResUsers._init_store_data(store);
-        store.add(
-            "Persona",
-            ResPartner.mail_partner_format([operatorPartner.id])[operatorPartner.id]
-        );
+        store.add(ResPartner.browse(operatorPartner.id));
         store.add("Thread", {
             id: -1,
             model: "discuss.channel",

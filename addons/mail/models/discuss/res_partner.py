@@ -57,14 +57,14 @@ class ResPartner(models.Model):
         }
 
     def _search_for_channel_invite_to_store(self, store: Store, channel):
-        store.add("Persona", list(self.mail_partner_format().values()))
+        store.add(self)
 
     @api.model
     def get_mention_suggestions_from_channel(self, channel_id, search, limit=8):
         """Return 'limit'-first partners' such that the name or email matches a 'search' string.
         Prioritize partners that are also (internal) users, and then extend the research to all partners.
         Only members of the given channel are returned.
-        The return format is a list of partner data (as per returned by `mail_partner_format()`).
+        The return format is a list of partner data (as per returned by `_to_store()`).
         """
         channel = self.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
@@ -90,5 +90,5 @@ class ResPartner(models.Model):
                 "persona": {"partner": {"id": True}},
             },
         )
-        store.add("Persona", list(partners.mail_partner_format().values()))
+        store.add(partners)
         return store.get_result()

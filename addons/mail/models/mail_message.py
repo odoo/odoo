@@ -1077,42 +1077,32 @@ class Message(models.Model):
 
     def _author_to_store(self, store: Store):
         for message in self:
+            data = {
+                "author": False,
+                "email_from": message.email_from,
+                "id": message.id,
+            }
             # sudo: mail.message: access to author is allowed
             if guest_author := message.sudo().author_guest_id:
                 store.add(
                     "Persona",
                     guest_author._guest_format(fields={"id": True, "name": True}).get(guest_author),
                 )
-                store.add(
-                    "Message",
-                    {
-                        "id": message.id,
-                        "author": {"id": guest_author.id, "type": "guest"},
-                        "email_from": message.email_from,
-                    },
-                )
+                data["author"] = {"id": guest_author.id, "type": "guest"}
             # sudo: mail.message: access to author is allowed
             elif author := message.sudo().author_id:
                 store.add(
-                    "Persona",
-                    author.mail_partner_format(
-                        {
-                            "id": True,
-                            "name": True,
-                            "is_company": True,
-                            "user": {"id": True},
-                            "write_date": True,
-                        },
-                    ).get(author),
-                )
-                store.add(
-                    "Message",
-                    {
-                        "id": message.id,
-                        "author": {"id": author.id, "type": "partner"},
-                        "email_from": message.email_from,
+                    author,
+                    fields={
+                        "id": True,
+                        "name": True,
+                        "is_company": True,
+                        "user": {"id": True},
+                        "write_date": True,
                     },
                 )
+                data["author"] = {"id": author.id, "type": "partner"}
+            store.add("Message", data)
 
     def _extras_to_store(self, store: Store, format_reply):
         pass

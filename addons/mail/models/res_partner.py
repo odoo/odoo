@@ -211,8 +211,7 @@ class Partner(models.Model):
     # DISCUSS
     # ------------------------------------------------------------
 
-    def mail_partner_format(self, fields=None):
-        partners_format = dict()
+    def _to_store(self, store: Store, /, *, fields=None):
         if not fields:
             fields = {'id': True, 'name': True, 'email': True, 'active': True, 'im_status': True, 'is_company': True, 'user': {}, "write_date": True}
         for partner in self:
@@ -238,18 +237,17 @@ class Partner(models.Model):
             if not self.env.user._is_internal():
                 data.pop('email', None)
             data['type'] = "partner"
-            partners_format[partner] = data
-        return partners_format
+            store.add("Persona", data)
 
     @api.model
     def get_mention_suggestions(self, search, limit=8):
         """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
             Prioritize partners that are also (internal) users, and then extend the research to all partners.
-            The return format is a list of partner data (as per returned by `mail_partner_format()`).
+            The return format is a list of partner data (as per returned by `_to_store()`).
         """
         domain = self._get_mention_suggestions_domain(search)
         partners = self._search_mention_suggestions(domain, limit)
-        return Store("Persona", list(partners.mail_partner_format().values())).get_result()
+        return Store(partners).get_result()
 
     @api.model
     def _get_mention_suggestions_domain(self, search):
@@ -301,7 +299,7 @@ class Partner(models.Model):
             ('share', '=', False),
             ('partner_id', 'not in', excluded_ids)
         ], order='name, id', limit=limit)
-        return Store("Persona", list(users.partner_id.mail_partner_format().values())).get_result()
+        return Store(users.partner_id).get_result()
 
     @api.model
     def _get_current_persona(self):
