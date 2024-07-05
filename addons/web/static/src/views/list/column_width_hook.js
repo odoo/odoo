@@ -41,8 +41,9 @@ import { useComponent, useEffect, useExternalListener } from "@odoo/owl";
 // Once optimal widths have been computed, we want the table to be frozen s.t. columns don't resize
 // upon user interaction, like inline edition, adding or removing a record... The computed widths
 // are thus stored, and re-applied at each rendering. There're exceptions though. If the columns
-// change (e.g. optional column toggled), or if the window is resized, we forget the computed widths
-// and start over.
+// change (e.g. optional column toggled), if the window is resized, if we remove a filter or open
+// a group s.t. the list contains records for the first time, we forget the computed widths and
+// start over.
 
 // Hardcoded widths
 const DEFAULT_MIN_COLUMN_WIDTH = 120;
@@ -242,6 +243,7 @@ export function useMagicColumnWidths(tableRef, getState) {
     const renderer = useComponent();
     let columnWidths = null;
     let allowedWidth = 0;
+    let hasAlwaysBeenEmpty = true;
     let hash;
     let _resizing = false;
 
@@ -255,9 +257,9 @@ export function useMagicColumnWidths(tableRef, getState) {
     function forceColumnWidths() {
         const table = tableRef.el;
         const headers = [...table.querySelectorAll("thead th")];
+        const state = getState();
 
         // Generate a hash to be able to detect when the columns change
-        const state = getState();
         const columns = state.columns;
         // The last part of the hash is there to detect that static columns changed (typically, the
         // selector column, which isn't displayed on small screens)
@@ -265,6 +267,16 @@ export function useMagicColumnWidths(tableRef, getState) {
         if (nextHash !== hash) {
             hash = nextHash;
             resetWidths();
+        }
+        // If the table has always been empty until now, and it now contains records, we want to
+        // recompute the widths based on the records (typical case: we removed a filter).
+        // Exception: we were in an empty editable list, and we just added a first record.
+        if (hasAlwaysBeenEmpty && !state.isEmpty) {
+            hasAlwaysBeenEmpty = false;
+            const rows = table.querySelectorAll(".o_data_row");
+            if (rows.length !== 1 || !rows[0].classList.contains("o_selected_row")) {
+                resetWidths();
+            }
         }
 
         // When a vertical scrollbar appears/disappears, it may (depending on the browser/os) change

@@ -960,6 +960,62 @@ test(`freeze widths: toggle a filter`, async () => {
     expect(getColumnWidths()).toEqual(initialWidths);
 });
 
+test(`freeze widths: empty list, remove a filter s.t. records appear`, async () => {
+    Foo._records[0].foo = "Some very very long value for a char field";
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree>
+                <field name="bar"/>
+                <field name="foo"/>
+                <field name="text"/>
+            </tree>
+        `,
+        searchViewArch: `
+            <search>
+                <filter string="My Filter" name="my_filter" domain="[['id', '=', 0]]"/>
+            </search>
+        `,
+        context: {
+            search_default_my_filter: true,
+        },
+    });
+
+    expect(".o_data_row").toHaveCount(0);
+
+    const initialWidths = getColumnWidths();
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My Filter");
+    expect(".o_data_row").toHaveCount(4);
+    expect(getColumnWidths()).not.toEqual(initialWidths);
+});
+
+test(`freeze widths: grouped list, open a group`, async () => {
+    Foo._records[3].foo = "Some very very long value for a char field";
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree>
+                <field name="bar"/>
+                <field name="foo"/>
+                <field name="text"/>
+            </tree>
+        `,
+        groupBy: ["bar"],
+    });
+
+    expect(".o_data_row").toHaveCount(0);
+
+    const initialWidths = getColumnWidths();
+    await contains(".o_group_header").click();
+    expect(".o_data_row").toHaveCount(1);
+    expect(getColumnWidths()).not.toEqual(initialWidths);
+});
+
 test(`freeze widths: toggle a filter, vertical scrollbar appears`, async () => {
     resize({ height: 500 });
 
@@ -993,6 +1049,37 @@ test(`freeze widths: toggle a filter, vertical scrollbar appears`, async () => {
     expect(".o_data_row").toHaveCount(14);
     expect(renderer.scrollHeight).toBeGreaterThan(renderer.clientHeight); // there must be a vertical scrollbar
     expect(renderer.scrollWidth).toBe(renderer.clientWidth); // there must be no horizontal scrollbar
+});
+
+test(`freeze widths: add a record in empty list`, async () => {
+    Foo._records = [];
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree editable="bottom">
+                <field name="bar"/>
+                <field name="foo"/>
+                <field name="text"/>
+            </tree>
+        `,
+        noContentHelp: '<p class="hello">click to add a foo</p>',
+    });
+    expect(`.o_view_nocontent`).toHaveCount(1, { message: "should have no content help" });
+    const initialWidths = getColumnWidths();
+
+    // click on create button
+    await contains(`.o_list_button_add`).click();
+    expect(getColumnWidths()).toEqual(initialWidths);
+
+    // creating one record
+    await contains(`.o_selected_row [name='foo'] input`).edit(
+        "Some very very long value for a char field",
+        { confirm: false }
+    );
+    await contains(`.o_list_button_save`).click();
+    expect(getColumnWidths()).toEqual(initialWidths);
 });
 
 test(`freeze widths: add a record in empty list with handle widget`, async () => {
