@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons.mail.tools.discuss import Store
 
 
 class MailMessage(models.Model):
@@ -26,8 +26,8 @@ class MailMessage(models.Model):
         ])
         return [('id', 'in', ratings.mapped('message_id').ids)]
 
-    def _message_format(self, *args, **kwargs):
-        message_values = super()._message_format(*args, **kwargs)
+    def _to_store(self, store: Store, **kwargs):
+        super()._to_store(store, **kwargs)
         rating_mixin_messages = self.filtered(lambda message:
             message.model
             and message.res_id
@@ -35,13 +35,15 @@ class MailMessage(models.Model):
         )
         if rating_mixin_messages:
             ratings = self.env['rating.rating'].sudo().search([('message_id', 'in', rating_mixin_messages.ids), ('consumed', '=', True)])
-            rating_by_message_id = dict((r.message_id.id, r) for r in ratings)
-            for vals in message_values:
-                if vals['id'] in rating_by_message_id:
-                    rating = rating_by_message_id[vals['id']]
-                    vals['rating'] = {
-                        'id': rating.id,
-                        'ratingImageUrl': rating.rating_image_url,
-                        'ratingText': rating.rating_text,
-                    }
-        return message_values
+            for rating in ratings:
+                store.add(
+                    "Message",
+                    {
+                        "id": rating.message_id.id,
+                        "rating": {
+                            "id": rating.id,
+                            "ratingImageUrl": rating.rating_image_url,
+                            "ratingText": rating.rating_text,
+                        },
+                    },
+                )

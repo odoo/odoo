@@ -233,7 +233,7 @@ class DiscussChannel(models.Model):
 
     def _message_post_after_hook(self, message, msg_vals):
         """
-        This method is called just before _notify_thread() method which is calling the _message_format()
+        This method is called just before _notify_thread() method which is calling the _to_store()
         method. We need a 'chatbot.message' record before it happens to correctly display the message.
         It's created only if the mail channel is linked to a chatbot step.
         """

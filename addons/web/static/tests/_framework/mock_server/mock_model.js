@@ -1490,7 +1490,9 @@ export class Model extends Array {
     browse(idOrIds, options) {
         const ids = ensureArray(idOrIds);
         const activeTest = (options?.active_test ?? true) && this._fields.active;
-        return this.filter((record) => ids.includes(record.id) && (!activeTest || record.active));
+        return this.filter(
+            (record) => ids.includes(record.id) && (!activeTest || record.active)
+        ).sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
     }
 
     /**
