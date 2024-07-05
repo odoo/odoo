@@ -221,9 +221,7 @@ export class View extends Component {
     }
 
     async loadView(props) {
-        // determine view type
-        let descr = viewRegistry.get(props.type);
-        const type = descr.type;
+        const type = props.type;
 
         // determine views for which descriptions should be obtained
         let { viewId, searchViewId } = props;
@@ -320,6 +318,7 @@ export class View extends Component {
             ...(props.className || "").split(" "),
         ]);
 
+        let descr = viewRegistry.get(type);
         // determine ViewClass to instantiate (if not already done)
         if (subType) {
             if (viewRegistry.contains(subType)) {

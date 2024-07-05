@@ -61,7 +61,7 @@ QUnit.module("Project", {}, () => {
                 },
                 views: {
                     "burndown_chart,false,graph": `
-                        <graph type="line">
+                        <graph type="line" js_class="burndown_chart">
                             <field name="date" string="Date" interval="month"/>
                             <field name="stage_id"/>
                             <field name="is_closed"/>
@@ -76,7 +76,7 @@ QUnit.module("Project", {}, () => {
             makeViewParams = {
                 serverData,
                 resModel: "burndown_chart",
-                type: "burndown_chart",
+                type: "graph",
             };
             setupControlPanelServiceRegistry();
             const notificationMock = () => {
