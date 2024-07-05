@@ -430,11 +430,11 @@ This module provides the core of the Odoo Web Client.
         # ---------------------------------------------------------------------
 
         'web.assets_tests': [
-            # No tours are defined in web, but the bundle "assets_tests" is
-            # first called in web.
+            # the bundle "assets_tests" is first called in web.
             'web/static/tests/legacy/helpers/cleanup.js',
             'web/static/tests/legacy/helpers/utils.js',
             'web/static/tests/legacy/utils.js',
+            'web/static/tests/tours/**/*'
         ],
         'web.__assets_tests_call__': [
             'web/static/tests/legacy/ignore_missing_deps_start.js',
@@ -470,6 +470,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/**/*',
 
             ('remove', 'web/static/tests/_framework/mock_module_loader.js'),
+            ('remove', 'web/static/tests/tours/**/*'),
             ('remove', 'web/static/tests/legacy/**/*'), # to remove when all legacy tests are ported
         ],
         'web.tests_assets': [

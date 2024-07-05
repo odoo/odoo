@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
-from odoo.tests.common import get_db_name, HOST, HttpCase, new_test_user, Opener
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.tests.common import get_db_name, HOST, HttpCase, new_test_user, Opener, tagged
 
 
 class TestWebLoginCommon(HttpCase):
@@ -58,3 +59,9 @@ class TestWebLogin(TestWebLoginCommon):
 
         # log in using the above form, it should still be valid
         self.login('internal_user', 'internal_user', csrf_token)
+
+
+@tagged('post_install', '-at_install')
+class TestUserSwitch(HttpCaseWithUserDemo):
+    def test_user_switch(self):
+        self.start_tour('/web', 'test_user_switch', login='demo')
