@@ -1,0 +1,202 @@
+from flask import Flask, render_template, request, redirect, url_for
+import os
+
+app = Flask(__name__)
+UPLOAD_FOLDER = 'uploads/'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    if 'image' not in request.files:
+        return "No file part"
+    file = request.files['image']
+    if file.filename == '':
+        return "No selected file"
+    if file:
+        filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file.save(filename)
+        # Save description to database or a file
+        return "Imagen subida exitosamente"
+    return "Upload failed"
+
+if __name__ == '__main__':
+    app.run(debug=True)<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="feed">
+        <!-- Código para mostrar los posts creepy -->
+    </div>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="image">
+        <input type="text" name="description" placeholder="Descripción">
+        <input type="submit" value="Subir imagen">
+    </form>
+</body>
+</html>import java.util.ArrayList;
+import java.util.List;
+
+public class Creepysgram {
+    public static void main(String[] args) {
+        List<Post> posts = getPosts();
+        for (Post post : posts) {
+            System.out.println(post);
+        }
+    }
+
+    public static List<Post> getPosts() {
+        List<Post> posts = new ArrayList<>();
+        // Add dummy posts for example
+        posts.add(new Post("Creepy image 1", "Description 1"));
+        posts.add(new Post("Creepy image 2", "Description 2"));
+        return posts;
+    }
+
+    public static void uploadImage(String imagePath, String description) {
+        System.out.println("Imagen subida exitosamente");
+        // Here, add code to actually save the image and description
+    }
+}
+
+class Post {
+    String imagePath;
+    String description;
+
+    Post(String imagePath, String description) {
+        this.imagePath = imagePath;
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" + "imagePath='" + imagePath + '\'' + ", description='" + description + '\'' + '}';
+    }
+}const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const app = express();
+
+const upload = multer({ dest: 'uploads/' });
+
+app.use(express.static('public'));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.post('/upload', upload.single('image'), (req, res) => {
+    // Save the file path and description
+    res.send('Imagen subida exitosamente');
+});
+
+app.listen(3000, () => {
+    console.log('Servidor corriendo en el puerto 3000');
+});<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="feed">
+        <!-- Código para mostrar los posts creepy -->
+    </div>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="image">
+        <input type="text" name="description" placeholder="Descripción">
+        <input type="submit" value="Subir imagen">
+    </form>
+</body>
+</html>.feed {
+    /* Estilos para el feed de creepysgram */
+    width: 100%;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    margin-top: 20px;
+}
+
+input[type="file"],
+input[type="text"] {
+    display: block;
+    margin-bottom: 10px;
+    padding: 8px;
+    width: 100%;
+}
+
+input[type="submit"] {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}com.google.gson.JsonIOException: JSON document was not fully consumed.
+	at com.google.gson.Gson.assertFullConsumption(Gson.java:905)
+	at com.google.gson.Gson.fromJson(Gson.java:898)
+	at com.tyron.builder.model.ModuleSettings.parseFile(ModuleSettings.java:59)
+	at com.tyron.builder.model.ModuleSettings.edit(ModuleSettings.java:149)
+	at com.tyron.code.ui.main.MainFragment.saveAll(MainFragment.java:426)
+	at com.tyron.code.ui.main.MainFragment.saveAll(MainFragment.java:397)
+	at com.tyron.code.ui.main.MainFragment.compile(MainFragment.java:441)
+	at com.tyron.code.ui.main.MainFragment.$r8$lambda$WerRqssj0epMPxbQwy5w5Cv1Mjc(Unknown Source:0)
+	at com.tyron.code.ui.main.MainFragment$$ExternalSyntheticLambda10.compile(Unknown Source:2)
+	at com.tyron.code.ui.main.action.compile.CompileAabAction.actionPerformed(CompileAabAction.java:22)
+	at com.tyron.actions.impl.ActionManagerImpl.performAction(ActionManagerImpl.java:174)
+	at com.tyron.actions.impl.ActionManagerImpl.lambda$fillSubMenu$2$com-tyron-actions-impl-ActionManagerImpl(ActionManagerImpl.java:169)
+	at com.tyron.actions.impl.ActionManagerImpl$$ExternalSyntheticLambda3.onMenuItemClick(Unknown Source:6)
+	at androidx.appcompat.view.menu.MenuItemImpl.invoke(MenuItemImpl.java:154)
+	at androidx.appcompat.view.menu.MenuBuilder.performItemAction(MenuBuilder.java:985)
+	at androidx.appcompat.view.menu.MenuPopup.onItemClick(MenuPopup.java:128)
+	at android.widget.AdapterView.performItemClick(AdapterView.java:376)
+	at android.widget.AbsListView.performItemClick(AbsListView.java:1362)
+	at android.widget.AbsListView$PerformClick.run(AbsListView.java:3658)
+	at android.widget.AbsListView.onTouchUp(AbsListView.java:4861)
+	at android.widget.AbsListView.onTouchEvent(AbsListView.java:4556)
+	at android.widget.ListView.onTouchEvent(ListView.java:1717)
+	at androidx.appcompat.widget.DropDownListView.onTouchEvent(DropDownListView.java:218)
+	at androidx.appcompat.widget.MenuPopupWindow$MenuDropDownListView.onTouchEvent(MenuPopupWindow.java:138)
+	at android.view.View.dispatchTouchEvent(View.java:16212)
+	at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:3331)
+	at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:2991)
+	at android.widget.AbsListView.dispatchTouchEvent(AbsListView.java:11398)
+	at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:3337)
+	at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:3007)
+	at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:3337)
+	at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:3007)
+	at android.widget.PopupWindow$PopupDecorView.dispatchTouchEvent(PopupWindow.java:2862)
+	at android.view.View.dispatchPointerEvent(View.java:16476)
+	at android.view.ViewRootImpl$ViewPostImeInputStage.processPointerEvent(ViewRootImpl.java:8525)
+	at android.view.ViewRootImpl$ViewPostImeInputStage.onProcess(ViewRootImpl.java:8276)
+	at android.view.ViewRootImpl$InputStage.deliver(ViewRootImpl.java:7605)
+	at android.view.ViewRootImpl$InputStage.onDeliverToNext(ViewRootImpl.java:7662)
+	at android.view.ViewRootImpl$InputStage.forward(ViewRootImpl.java:7628)
+	at android.view.ViewRootImpl$AsyncInputStage.forward(ViewRootImpl.java:7831)
+	at android.view.ViewRootImpl$InputStage.apply(ViewRootImpl.java:7636)
+	at android.view.ViewRootImpl$AsyncInputStage.apply(ViewRootImpl.java:7888)
+	at android.view.ViewRootImpl$InputStage.deliver(ViewRootImpl.java:7609)
+	at android.view.ViewRootImpl$InputStage.onDeliverToNext(ViewRootImpl.java:7662)
+	at android.view.ViewRootImpl$InputStage.forward(ViewRootImpl.java:7628)
+	at android.view.ViewRootImpl$InputStage.apply(ViewRootImpl.java:7636)
+	at android.view.ViewRootImpl$InputStage.deliver(ViewRootImpl.java:7609)
+	at android.view.ViewRootImpl.deliverInputEvent(ViewRootImpl.java:11162)
+	at android.view.ViewRootImpl.doProcessInputEvents(ViewRootImpl.java:11044)
+	at android.view.ViewRootImpl.enqueueInputEvent(ViewRootImpl.java:11000)
+	at android.view.ViewRootImpl$WindowInputEventReceiver.onInputEvent(ViewRootImpl.java:11296)
+	at android.view.InputEventReceiver.dispatchInputEvent(InputEventReceiver.java:296)
+	at android.os.MessageQueue.nativePollOnce(Native Method)
+	at android.os.MessageQueue.next(MessageQueue.java:335)
+	at android.os.Looper.loopOnce(Looper.java:187)
+	at android.os.Looper.loop(Looper.java:319)
+	at android.app.ActivityThread.main(ActivityThread.java:8913)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:608)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1103)
