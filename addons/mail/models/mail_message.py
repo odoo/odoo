@@ -938,24 +938,17 @@ class Message(models.Model):
             for scheduler in schedulers:
                 scheduled_dt_by_msg_id[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
         record_by_message = self._record_by_message()
-        if add_followers:
+        records = record_by_message.values()
+        non_channel_records = filter(lambda record: record._name != "discuss.channel", records)
+        if for_current_user and add_followers and non_channel_records:
             if followers is None:
                 domain = expression.OR(
-                    [
-                        ("res_model", "=", model),
-                        ("res_id", "in", list({message.res_id for message in messages})),
-                    ]
-                    for model, messages in groupby(
-                        (
-                            message
-                            for message in self
-                            if message.res_id
-                            and message.model not in {None, False, "", "discuss.channel"}
-                        ),
-                        key=lambda message: message.model,
-                    )
+                    [("res_model", "=", model), ("res_id", "in", [r.id for r in records])]
+                    for model, records in groupby(non_channel_records, key=lambda r: r._name)
                 )
-                domain = expression.AND([domain, [("partner_id", "=", self.env.user.partner_id.id)]])
+                domain = expression.AND(
+                    [domain, [("partner_id", "=", self.env.user.partner_id.id)]]
+                )
                 # sudo: mail.followers - reading followers of current partner
                 followers = self.env["mail.followers"].sudo().search(domain)
             follower_by_record_and_partner = {
@@ -965,6 +958,34 @@ class Message(models.Model):
                 ): follower
                 for follower in followers
             }
+        for record in records:
+            thread_data = {
+                "id": record.id,
+                "model": record._name,
+            }
+            if record._name != "discuss.channel":
+                # sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
+                thread_data["name"] = record.sudo().display_name
+            if self.env[record._name]._original_module:
+                thread_data["module_icon"] = modules.module.get_module_icon(
+                    self.env[record._name]._original_module
+                )
+            if for_current_user and add_followers:
+                if follower := follower_by_record_and_partner.get(
+                    (record, self.env.user.partner_id)
+                ):
+                    store.add(
+                        "Follower",
+                        {
+                            "id": follower.id,
+                            "is_active": True,
+                            "partner": {"id": follower.partner_id.id, "type": "partner"},
+                        },
+                    )
+                    thread_data["selfFollower"] = {"id": follower.id}
+                else:
+                    thread_data["selfFollower"] = False
+            store.add("Thread", thread_data)
         for message in self:
             record = record_by_message.get(message)
             if record:
@@ -1005,8 +1026,8 @@ class Message(models.Model):
                 "date": message.date,
                 "id": message.id,
                 "message_type": message.message_type,
-                "model": message.model,
-                "res_id": message.res_id,
+                "model": message.model,  # keep for iOS app
+                "res_id": message.res_id,  # keep for iOS app
                 "subject": message.subject,
                 "default_subject": default_subject,
                 "notifications": message.notification_ids._filtered_for_web_client()._notification_format(),
@@ -1018,7 +1039,7 @@ class Message(models.Model):
                 "linkPreviews": link_previews._link_preview_format(),
                 "reactions": reaction_groups,
                 "pinned_at": message.pinned_at,
-                "record_name": record_name,
+                "record_name": record_name,  # keep for iOS app
                 "create_date": message.create_date,
                 "write_date": message.write_date,
                 "is_note": message.subtype_id.id == note_id,
@@ -1028,16 +1049,8 @@ class Message(models.Model):
                     {"id": p.id, "name": p.name, "type": "partner"} for p in message.partner_ids
                 ],
                 "scheduledDatetime": scheduled_dt_by_msg_id.get(message.id, False),
+                "thread": {"id": record.id, "model": record._name} if record else False
             }
-            if record:
-                thread = {"model": record._name, "id": record.id}
-                if record._name != "discuss.channel":
-                    thread["name"] = record_name
-                if self.env[record._name]._original_module:
-                    thread["module_icon"] = modules.module.get_module_icon(
-                        self.env[record._name]._original_module
-                    )
-                vals["thread"] = thread
             if for_current_user:
                 # sudo: mail.message - filtering allowed tracking values
                 displayed_tracking_ids = message.sudo().tracking_value_ids._filter_has_field_access(
@@ -1056,17 +1069,6 @@ class Message(models.Model):
                 )
                 vals["starred"] = message.starred
                 vals["trackingValues"] = displayed_tracking_ids._tracking_value_format()
-                if record and add_followers:
-                    if follower := follower_by_record_and_partner.get(
-                        (record, self.env.user.partner_id)
-                    ):
-                        vals["thread"]["selfFollower"] = {
-                            "id": follower.id,
-                            "is_active": True,
-                            "partner": {"id": follower.partner_id.id, "type": "partner"},
-                        }
-                    else:
-                        vals["thread"]["selfFollower"] = False
             store.add("Message", vals)
         # sudo: mail.message: access to author is allowed
         self.sudo()._author_to_store(store)

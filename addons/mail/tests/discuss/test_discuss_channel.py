@@ -114,11 +114,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "scheduledDatetime": False,
                                         "subject": False,
                                         "subtype_description": False,
-                                        "thread": {
-                                            "model": "discuss.channel",
-                                            "id": channel.id,
-                                            "module_icon": "/mail/static/description/icon.png",
-                                        },
+                                        "thread": {"id": channel.id, "model": "discuss.channel"},
                                         "write_date": fields.Datetime.to_string(message.write_date),
                                     },
                                 ],
@@ -131,6 +127,13 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "type": "partner",
                                         "userId": self.env.user.id,
                                         "write_date": emp_partner_write_date,
+                                    },
+                                ],
+                                "Thread": [
+                                    {
+                                        "id": channel.id,
+                                        "model": "discuss.channel",
+                                        "module_icon": "/mail/static/description/icon.png",
                                     },
                                 ],
                             },
