@@ -75,9 +75,11 @@ actions(Check in/Check out) performed by them.
             "web/static/src/views/fields/formatters.js",
 
             # Barcode reader utils
-            "web/static/src/webclient/barcode/barcode_scanner.js",
-            "web/static/src/webclient/barcode/barcode_scanner.xml",
-            "web/static/src/webclient/barcode/barcode_scanner.scss",
+            "web/static/src/webclient/barcode/barcode_dialog.js",
+            "web/static/src/webclient/barcode/barcode_dialog.xml",
+            "web/static/src/webclient/barcode/barcode_dialog.scss",
+            "web/static/src/webclient/barcode/barcode_video_scanner.js",
+            "web/static/src/webclient/barcode/barcode_video_scanner.xml",
             "web/static/src/webclient/barcode/crop_overlay.js",
             "web/static/src/webclient/webclient_layout.scss",
             "web/static/src/webclient/barcode/crop_overlay.xml",
