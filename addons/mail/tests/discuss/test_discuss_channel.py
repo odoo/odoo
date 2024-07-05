@@ -92,15 +92,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "Message": [
                                     {
                                         "attachments": [],
-                                        "author": {
-                                            "id": self.env.user.partner_id.id,
-                                            "name": "Ernest Employee",
-                                            "is_company": False,
-                                            "write_date": emp_partner_write_date,
-                                            "userId": self.env.user.id,
-                                            "isInternalUser": True,
-                                            "type": "partner",
-                                        },
+                                        "author": {"id": self.env.user.partner_id.id, "type": "partner"},
                                         "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{self.test_partner.id}">Test Partner</a> to the channel</div>',
                                         "create_date": fields.Datetime.to_string(message.create_date),
                                         "date": "2020-03-22 10:42:06",
@@ -113,6 +105,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "message_type": "notification",
                                         "model": "discuss.channel",
                                         "notifications": [],
+                                        "parentMessage": False,
                                         "pinned_at": False,
                                         "reactions": [],
                                         "recipients": [],
@@ -127,6 +120,17 @@ class TestChannelInternals(MailCommon, HttpCase):
                                             "module_icon": "/mail/static/description/icon.png",
                                         },
                                         "write_date": fields.Datetime.to_string(message.write_date),
+                                    },
+                                ],
+                                "Persona": [
+                                    {
+                                        "id": self.env.user.partner_id.id,
+                                        "isInternalUser": True,
+                                        "is_company": False,
+                                        "name": "Ernest Employee",
+                                        "type": "partner",
+                                        "userId": self.env.user.id,
+                                        "write_date": emp_partner_write_date,
                                     },
                                 ],
                             },
@@ -464,10 +468,10 @@ class TestChannelInternals(MailCommon, HttpCase):
     def test_channel_message_post_should_not_allow_adding_wrong_parent(self):
         channels = self.env['discuss.channel'].create([{'name': '1'}, {'name': '2'}])
         message = self._add_messages(channels[0], 'Body1')
-        message_format2 = channels[1].message_post(body='Body2', parent_id=message.id)
-        self.assertFalse(message_format2['parent_id'], "should not allow parent from wrong thread")
-        message_format3 = channels[1].message_post(body='Body3', parent_id=message.id + 100)
-        self.assertFalse(message_format3['parent_id'], "should not allow non-existing parent")
+        message_2 = channels[1].message_post(body='Body2', parent_id=message.id)
+        self.assertFalse(message_2.parent_id, "should not allow parent from wrong thread")
+        message_3 = channels[1].message_post(body='Body3', parent_id=message.id + 100)
+        self.assertFalse(message_3.parent_id, "should not allow non-existing parent")
 
     @mute_logger('odoo.models.unlink')
     def test_channel_unsubscribe_auto(self):

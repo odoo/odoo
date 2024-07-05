@@ -96,7 +96,7 @@ class TestMessageValues(MailCommon):
             record._message_update_content(tracking_message, '', [])
 
     @mute_logger('odoo.models.unlink')
-    def test_mail_message_format(self):
+    def test_mail_message_to_store(self):
         record1 = self.env['mail.test.simple'].create({'name': 'Test1'})
         record2 = self.env['mail.test.nothread'].create({'name': 'Test2'})
         messages = self.env['mail.message'].create([{
@@ -105,22 +105,17 @@ class TestMessageValues(MailCommon):
         } for record in [record1, record2]])
         for message, record in zip(messages, [record1, record2]):
             with self.subTest(record=record):
-                formatted = Store(
-                    "Message", message._message_format(for_current_user=True)
-                ).get_result()["Message"][0]
+                formatted = Store(message, for_current_user=True).get_result()["Message"][0]
                 self.assertEqual(formatted['record_name'], record.name)
                 record.write({'name': 'Just Test'})
-                formatted = Store(
-                    "Message",
-                    message._message_format(for_current_user=True)
-                ).get_result()["Message"][0]
+                formatted = Store(message, for_current_user=True).get_result()["Message"][0]
                 self.assertEqual(formatted['record_name'], 'Just Test')
 
     @mute_logger('odoo.models.unlink')
-    def test_mail_message_format_access(self):
+    def test_mail_message_to_store_access(self):
         """
         User that doesn't have access to a record should still be able to fetch
-        the record_name inside message_format.
+        the record_name inside message _to_store.
         """
         company_2 = self.env['res.company'].create({'name': 'Second Test Company'})
         record1 = self.env['mail.test.multi.company'].create({
@@ -130,12 +125,10 @@ class TestMessageValues(MailCommon):
         message = record1.message_post(body='', partner_ids=[self.user_employee.partner_id.id])
         # We need to flush and invalidate the ORM cache since the record_name
         # is already cached from the creation. Otherwise it will leak inside
-        # message_format.
+        # message _to_store.
         self.env.flush_all()
         self.env.invalidate_all()
-        res = Store(
-            "Message", message.with_user(self.user_employee)._message_format(for_current_user=True)
-        ).get_result()
+        res = Store(message.with_user(self.user_employee), for_current_user=True).get_result()
         self.assertEqual(res["Message"][0].get("record_name"), "Test1")
 
     def test_mail_message_values_body_base64_image(self):

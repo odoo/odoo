@@ -1076,11 +1076,8 @@ test("messaging menu should show new needaction messages from chatter", async ()
         partner,
         "mail.message/inbox",
         new mailDataHelpers.Store(
-            "Message",
-            pyEnv["mail.message"]._message_format(
-                messageId,
-                makeKwArgs({ for_current_user: true, add_followers: true })
-            )
+            pyEnv["mail.message"].browse(messageId),
+            makeKwArgs({ for_current_user: true, add_followers: true })
         ).get_result()
     );
     await contains(".o-mail-NotificationItem-text", { text: "Frodo Baggins: @Mitchel Admin" });
