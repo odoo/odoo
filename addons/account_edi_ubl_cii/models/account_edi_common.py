@@ -1,11 +1,12 @@
+from markupsafe import Markup
+
 from odoo import _, models, Command
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_repr, find_xml_value, format_list
+from odoo.tools import float_repr, format_list
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import formatLang, html_escape
-
-from markupsafe import Markup
+from odoo.tools.xml_utils import find_xml_value
 
 # -------------------------------------------------------------------------
 # UNIT OF MEASURE
