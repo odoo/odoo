@@ -19,6 +19,11 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
         cls.other_currency = cls.setup_other_currency('EUR')
 
+        # vendor bills used to rely on sale uom when past tests were written
+        # so purchase uom is set to sale uom to avoid making the tests fail
+        cls.product_a.uom_po_id = cls.product_a.uom_id
+        cls.product_b.uom_po_id = cls.product_b.uom_id
+
         cls.invoice = cls.init_invoice('in_invoice', products=cls.product_a+cls.product_b)
 
         cls.product_line_vals_1 = {
@@ -2656,3 +2661,33 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             {'product_id': product_no_branch_tax.id, 'tax_ids': (tax_a + tax_b).ids},
             {'product_id': product_no_tax.id, 'tax_ids': []},
         ])
+
+    def test_purchase_uom_on_vendor_bills(self):
+        def create_move_and_return_uom(move_type, product):
+            move = self.env['account.move'].create({
+                'move_type': move_type,
+                'partner_id': self.partner_a.id,
+                'invoice_date': fields.Date.from_string('2019-01-01'),
+                'currency_id': self.other_currency.id,
+                'invoice_payment_term_id': self.pay_terms_a.id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'product_id': product.id,
+                    }),
+                ],
+            })
+            return move.invoice_line_ids[0].product_uom_id
+
+        # product with different sale and purchase UOM
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'uom_id': self.uom_gram.id,
+            'uom_po_id': self.uom_kgm.id,
+            'standard_price': 110.0,
+        })
+        # customer invoice should have sale uom
+        invoice_uom = create_move_and_return_uom('out_invoice', product)
+        self.assertEqual(invoice_uom, self.uom_gram)
+        # vendor bill should have purchase uom
+        bill_uom = create_move_and_return_uom('in_invoice', product)
+        self.assertEqual(bill_uom, self.uom_kgm)

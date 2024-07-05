@@ -811,6 +811,9 @@ class AccountMoveLine(models.Model):
     def _compute_product_uom_id(self):
         for line in self:
             line.product_uom_id = line.product_id.uom_id
+            # vendor bills should have the product purchase UOM
+            if line.move_type == 'in_invoice' and line.product_id.uom_po_id:
+                line.product_uom_id = line.product_id.uom_po_id
 
     @api.depends('display_type')
     def _compute_quantity(self):
