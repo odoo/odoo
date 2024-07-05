@@ -1063,7 +1063,6 @@ export class Thread extends Record {
                     body: prettyContent,
                     isPending: true,
                     thread: this,
-                    temporary_id: tmpId,
                 },
                 { html: true }
             );
@@ -1077,9 +1076,6 @@ export class Thread extends Record {
         const data = await this.store.doMessagePost(params, tmpMsg);
         if (!data) {
             return;
-        }
-        if (data.id in this.store.Message.records) {
-            data.temporary_id = null;
         }
         const message = this.store.Message.insert(data, { html: true });
         this.addOrReplaceMessage(message, tmpMsg);
