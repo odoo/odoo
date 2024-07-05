@@ -2,17 +2,23 @@
 """Utilities for generating, parsing and checking XML/XSD files on top of the lxml.etree module."""
 
 import base64
+import contextlib
 import logging
 import re
-import requests
 import zipfile
 from io import BytesIO
+
+import requests
 from lxml import etree
-import contextlib
 
 from odoo.exceptions import UserError
 from odoo.tools.misc import file_open
 
+__all__ = [
+    "cleanup_xml_node",
+    "load_xsd_files_from_url",
+    "validate_xml_from_attachment",
+]
 
 _logger = logging.getLogger(__name__)
 
