@@ -43,6 +43,7 @@ import { Component, markup, onMounted, onWillUnmount, useEffect, useRef, useStat
 import {
     BackgroundToggler,
     Box,
+    CarouselHandler,
     LayoutColumn,
     Many2oneUserValue,
     registerBackgroundOptions,
@@ -1979,11 +1980,13 @@ options.registry.menu_data = options.Class.extend({
     },
 });
 
-options.registry.Carousel = options.registry.CarouselHandler.extend({
+class Carousel extends CarouselHandler {
     /**
      * @override
      */
-    start: function () {
+    constructor() {
+        super(...arguments);
+
         this.$bsTarget.carousel('pause');
         this.$indicators = this.$target.find('.carousel-indicators');
         this.$controls = this.$target.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators');
@@ -1996,7 +1999,7 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         let _slideTimestamp;
         this.$bsTarget.on('slide.bs.carousel.carousel_option', () => {
             _slideTimestamp = window.performance.now();
-            setTimeout(() => this.trigger_up('hide_overlay'));
+            setTimeout(() => this.env.hideOverlay());
         });
         this.$bsTarget.on('slid.bs.carousel.carousel_option', () => {
             // slid.bs.carousel is most of the time fired too soon by bootstrap
@@ -2005,52 +2008,48 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
             // should be enough...
             const _slideDuration = (window.performance.now() - _slideTimestamp);
             setTimeout(() => {
-                this.trigger_up('activate_snippet', {
-                    $snippet: this.$target.find('.carousel-item.active'),
-                    ifInactiveOptions: true,
-                });
+                this.env.activateSnippet(this.$target.find('.carousel-item.active'), false, true);
                 this.$bsTarget.trigger('active_slide_targeted');
             }, 0.2 * _slideDuration);
         });
-
-        return this._super.apply(this, arguments);
-    },
+    }
     /**
      * @override
      */
-    destroy: function () {
-        this._super.apply(this, arguments);
+    destroy() {
+        super.destroy(...arguments);
         this.$bsTarget.off('.carousel_option');
-    },
+    }
     /**
      * @override
      */
-    onBuilt: function () {
+    onBuilt() {
         this._assignUniqueID();
-    },
+    }
     /**
      * @override
      */
-    onClone: function () {
+    onClone() {
         this._assignUniqueID();
-    },
+    }
     /**
      * @override
      */
-    cleanForSave: function () {
+    // TODO: @owl-options check if this should be cleanUI() rather than cleanForSave()
+    cleanUI() {
         const $items = this.$target.find('.carousel-item');
         $items.removeClass('next prev left right active').first().addClass('active');
         this.$indicators.find('li').removeClass('active').empty().first().addClass('active');
-    },
+    }
     /**
      * @override
      */
-    notify: function (name, data) {
-        this._super(...arguments);
+    notify(name, data) {
+        super.notify(...arguments);
         if (name === 'add_slide') {
             this._addSlide();
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -2061,7 +2060,7 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
      */
     addSlide(previewMode, widgetValue, params) {
         this._addSlide();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -2073,7 +2072,7 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
      *
      * @private
      */
-    _assignUniqueID: function () {
+    _assignUniqueID() {
         const id = 'myCarousel' + Date.now();
         this.$target.attr('id', id);
         this.$target.find('[data-bs-target]').attr('data-bs-target', '#' + id);
@@ -2085,7 +2084,7 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
                 $el.attr('href', '#' + id);
             }
         });
-    },
+    }
     /**
      * Adds a slide.
      *
@@ -2105,13 +2104,13 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
             .removeClass('active')
             .insertAfter($active);
         this.$bsTarget.carousel('next');
-    },
+    }
     /**
      * @override
      */
     _getItemsGallery() {
         return Array.from(this.$target[0].querySelectorAll(".carousel-item"));
-    },
+    }
     /**
      * @override
      */
@@ -2124,36 +2123,36 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
             carouselInnerEl.append(itemsEl);
         }
         this._updateIndicatorAndActivateSnippet(newItemPosition);
-    },
-
+    }
+}
+registerWebsiteOption("Carousel", {
+    Class: Carousel,
+    template: "website.Carousel",
+    selector: "section",
+    target: "> .carousel",
 });
 
-options.registry.CarouselItem = options.Class.extend({
-    isTopOption: true,
-    forceNoDeleteButton: true,
+class CarouselItem extends SnippetOption {
+    static isTopOption = true;
+    static forceNoDeleteButton = true;
 
     /**
      * @override
      */
-    start: function () {
+    constructor() {
+        super(...arguments);
+
         this.$carousel = this.$bsTarget.closest('.carousel');
         this.$indicators = this.$carousel.find('.carousel-indicators');
         this.$controls = this.$carousel.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators');
-
-        var leftPanelEl = this.$overlay.data('$optionsSection')[0];
-        var titleTextEl = leftPanelEl.querySelector('we-title > span');
-        this.counterEl = document.createElement('span');
-        titleTextEl.appendChild(this.counterEl);
-
-        return this._super(...arguments);
-    },
+    }
     /**
      * @override
      */
-    destroy: function () {
-        this._super(...arguments);
+    destroy() {
+        super.destroy(...arguments);
         this.$carousel.off('.carousel_item_option');
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -2164,13 +2163,14 @@ options.registry.CarouselItem = options.Class.extend({
      *
      * @override
      */
-    updateUI: async function () {
-        await this._super(...arguments);
+    async updateUI() {
+        await super.updateUI(...arguments);
         const $items = this.$carousel.find('.carousel-item');
         const $activeSlide = $items.filter('.active');
-        const updatedText = ` (${$activeSlide.index() + 1}/${$items.length})`;
-        this.counterEl.textContent = updatedText;
-    },
+        // TODO: @owl-options: block the editor UI until the new options are
+        // created.
+        this.callbacks.updateExtraTitle(` (${$activeSlide.index() + 1}/${$items.length})`);
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -2180,17 +2180,17 @@ options.registry.CarouselItem = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addSlideItem(previewMode, widgetValue, params) {
-        this.trigger_up('option_update', {
+        this.callbacks.notifyOptions({
             optionName: 'Carousel',
             name: 'add_slide',
         });
-    },
+    }
     /**
      * Removes the current slide.
      *
      * @see this.selectClass for parameters.
      */
-    removeSlide: function (previewMode) {
+    removeSlide(previewMode) {
         const $items = this.$carousel.find('.carousel-item');
         const newLength = $items.length - 1;
         if (!this.removing && newLength > 0) {
@@ -2212,13 +2212,13 @@ options.registry.CarouselItem = options.Class.extend({
             this.removing = true;
             this.$carousel.carousel('prev');
         }
-    },
+    }
     /**
      * Goes to next slide or previous slide.
      *
      * @see this.selectClass for parameters
      */
-    switchToSlide: function (previewMode, widgetValue, params) {
+    switchToSlide(previewMode, widgetValue, params) {
         switch (widgetValue) {
             case 'left':
                 this.$controls.filter('.carousel-control-prev')[0].click();
@@ -2227,7 +2227,12 @@ options.registry.CarouselItem = options.Class.extend({
                 this.$controls.filter('.carousel-control-next')[0].click();
                 break;
         }
-    },
+    }
+}
+registerWebsiteOption("CarouselItem", {
+    Class: CarouselItem,
+    template: "website.CarouselItem",
+    selector: ".s_carousel .carousel-item, .s_quotes_carousel .carousel-item",
 });
 
 class Parallax extends SnippetOption {
@@ -4288,8 +4293,8 @@ options.registry.GridImage = options.Class.extend({
     },
 });
 
-options.registry.GalleryElement = options.Class.extend({
 
+class GalleryElement extends SnippetOption {
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
@@ -4303,7 +4308,7 @@ options.registry.GalleryElement = options.Class.extend({
         const optionName = this.$target[0].classList.contains("carousel-item") ? "Carousel"
             : "GalleryImageList";
         const itemEl = this.$target[0];
-        this.trigger_up("option_update", {
+        this.callbacks.notifyOptions({
             optionName: optionName,
             name: "reorder_items",
             data: {
@@ -4311,8 +4316,13 @@ options.registry.GalleryElement = options.Class.extend({
                 position: widgetValue,
             },
         });
-    },
-});
+    }
+}
+registerWebsiteOption("GalleryElement", {
+    Class: GalleryElement,
+    template: "website.GalleryElement",
+    selector: ".s_image_gallery img, .s_carousel .carousel-item",
+}, { sequence: 10 });
 
 options.registry.Button = options.Class.extend({
     /**

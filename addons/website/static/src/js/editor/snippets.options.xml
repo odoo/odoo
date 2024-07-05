@@ -502,4 +502,48 @@
     </WeRow>
 </t>
 
+<t t-name="website.Carousel">
+    <WeRow title.translate="Slide">
+        <WeButton addSlide="'true'" noPreview="'true'" class="'o_we_bg_brand_primary'">Add Slide</WeButton>
+    </WeRow>
+    <WeSelect title.translate="Style">
+        <WeButton selectClass="'s_carousel_default'">Default</WeButton>
+        <WeButton selectClass="'s_carousel_bordered'">Bordered</WeButton>
+        <WeButton selectClass="'s_carousel_boxed'">Boxed</WeButton>
+        <WeButton selectClass="'s_carousel_rounded'">Rounded</WeButton>
+    </WeSelect>
+    <WeSelect title.translate="Transition">
+        <WeButton selectClass="'slide'">Slide</WeButton>
+        <WeButton selectClass="'carousel-fade slide'">Fade</WeButton>
+        <we-divider/>
+        <WeButton selectClass="''">None</WeButton>
+    </WeSelect>
+    <WeInput title.translate="Speed" selectDataAttribute="'0s'" attributeName="'bsInterval'"
+             unit="'s'" saveUnit="'ms'" step="'0.1'"/>
+</t>
+
+<t t-name="website.CarouselItem">
+    <WeButton class="'fa fa-fw fa-angle-left'" switchToSlide="'left'" noPreview="'true'"
+            tooltip.translate="Move Backward"/>
+    <WeButton class="'fa fa-fw fa-angle-right me-2'" switchToSlide="'right'" noPreview="'true'"
+            tooltip.translate="Move Forward"/>
+    <WeButton class="'fa fa-fw fa-plus o_we_bg_success'" addSlideItem="'true'" noPreview="'true'"
+            tooltip.translate="Add Slide"/>
+    <WeButton class="'fa fa-fw fa-minus o_we_bg_danger'" removeSlide="'true'" noPreview="'true'"
+            tooltip.translate="Remove Slide"/>
+</t>
+
+<t t-name="website.GalleryElement">
+<WeRow title.translate="Re-order">
+    <WeButton class="'fa fa-fw fa-angle-double-left'" tooltip.translate="Move to first"
+            position="'first'" noPreview="'true'"/>
+    <WeButton class="'fa fa-fw fa-angle-left'" tooltip.translate="Move to previous"
+            position="'prev'" noPreview="'true'"/>
+    <WeButton class="'fa fa-fw fa-angle-right'" tooltip.translate="Move to next"
+            position="'next'" noPreview="'true'"/>
+    <WeButton class="'fa fa-fw fa-angle-double-right'" tooltip.translate="Move to last"
+            position="'last'" noPreview="'true'"/>
+</WeRow>
+</t>
+
 </templates>

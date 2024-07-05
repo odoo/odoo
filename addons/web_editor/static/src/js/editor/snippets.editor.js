@@ -982,6 +982,7 @@ var SnippetEditor = Widget.extend({
                         cover: this.cover.bind(this),
                         coverUpdate: (overlayVisible) => this.trigger_up("cover_update", { overlayVisible }),
                         notifyOptions: (data) => this.trigger_up("option_update", data),
+                        updateExtraTitle: (extra) => { this.extraTitle = extra },
                         updateSnippetOptionVisibility: (show) => this.trigger_up("snippet_option_visibility_update", { show }),
                     }
                 });

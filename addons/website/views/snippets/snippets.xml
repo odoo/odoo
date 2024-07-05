@@ -508,46 +508,7 @@
         <t t-set="css_compatible" t-value="True"/>
         <t t-set="with_gradients" t-value="True"/>
     </t>
-    <div data-js="Carousel"
-         data-selector="section"
-         data-target="> .carousel">
-        <we-row string="Slide">
-            <we-button data-add-slide="true" data-no-preview="true" class="o_we_bg_brand_primary">Add Slide</we-button>
-        </we-row>
-        <we-select string="Style">
-            <we-button data-select-class="s_carousel_default">Default</we-button>
-            <we-button data-select-class="s_carousel_bordered">Bordered</we-button>
-            <we-button data-select-class="s_carousel_boxed">Boxed</we-button>
-            <we-button data-select-class="s_carousel_rounded">Rounded</we-button>
-        </we-select>
-        <we-select string="Transition">
-            <we-button data-select-class="slide">Slide</we-button>
-            <we-button data-select-class="carousel-fade slide">Fade</we-button>
-            <we-divider/>
-            <we-button data-select-class="">None</we-button>
-        </we-select>
-        <we-input string="Speed"
-                  data-select-data-attribute="0s" data-attribute-name="bsInterval"
-                  data-unit="s" data-save-unit="ms" data-step="0.1"/>
-    </div>
 
-    <div data-js="CarouselItem"
-         data-selector=".s_carousel .carousel-item, .s_quotes_carousel .carousel-item">
-        <we-button class="fa fa-fw fa-angle-left" data-switch-to-slide="left" data-no-preview="true" title="Move Backward"/>
-        <we-button class="fa fa-fw fa-angle-right me-2" data-switch-to-slide="right" data-no-preview="true" title="Move Forward"/>
-        <we-button class="fa fa-fw fa-plus o_we_bg_success" data-add-slide-item="true" data-no-preview="true" title="Add Slide"/>
-        <we-button class="fa fa-fw fa-minus o_we_bg_danger" data-remove-slide="true" data-no-preview="true" title="Remove Slide"/>
-    </div>
-
-    <div data-js="GalleryElement"
-        data-selector=".s_image_gallery img, .s_carousel .carousel-item">
-        <we-row string="Re-order" data-no-preview="true">
-            <we-button class="fa fa-fw fa-angle-double-left" title="Move to first" data-position="first"/>
-            <we-button class="fa fa-fw fa-angle-left" title="Move to previous" data-position="prev"/>
-            <we-button class="fa fa-fw fa-angle-right" title="Move to next" data-position="next"/>
-            <we-button class="fa fa-fw fa-angle-double-right" title="Move to last" data-position="last"/>
-        </we-row>
-    </div>
     <!-- Accordion -->
     <div data-js="collapse"
          data-selector='.accordion > .accordion-item'
