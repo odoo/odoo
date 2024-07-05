@@ -14,6 +14,7 @@ export class ControlButtons extends Component {
     static props = {
         showRemainingButtons: { type: Boolean, optional: true },
         onClickMore: { type: Function, optional: true },
+        close: { type: Function, optional: true },
     };
     static defaultProps = {
         showRemainingButtons: false,
@@ -118,13 +119,19 @@ export class ControlButtons extends Component {
     get internalNoteLabel() {
         return _t("Internal Note");
     }
+
+    get buttonClass() {
+        return this.props.showRemainingButtons
+            ? "btn btn-secondary rounded fw-bolder"
+            : "btn btn-light rounded-0 fw-bolder";
+    }
 }
 
 export class ControlButtonsPopup extends Component {
     static components = { Dialog, ControlButtons };
     static template = xml`
-        <Dialog bodyClass="'d-flex flex-column'" footer="false" title="''" t-on-click="props.close">
-            <ControlButtons showRemainingButtons="true"/>
+        <Dialog bodyClass="'d-flex flex-column'" footer="false" header="false" t-on-click="props.close">
+            <ControlButtons showRemainingButtons="true" close="props.close"/>
         </Dialog>
     `;
     static props = {
