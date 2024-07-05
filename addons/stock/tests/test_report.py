@@ -1299,6 +1299,44 @@ class TestReports(TestReportsCommon):
         self.assertEqual(bool(lines[0]['move_out']), True)
         self.assertEqual(lines[0]['in_transit'], True)
 
+    def test_report_forecast_13_availability_from_sublocations(self):
+        """
+            Check that the forecast_availability is correctly computed for moves
+            whose source is a sublocation of the stock warehouse location
+        """
+        stock_location = self.env.ref('stock.warehouse0').lot_stock_id
+        sublocation = stock_location.child_ids[0]
+        self.env['stock.quant']._update_available_quantity(self.product, sublocation, 10.0)
+        delivery_form = Form(self.env['stock.picking'])
+        delivery_form.picking_type_id = self.picking_type_out
+        delivery_form.partner_id = self.partner
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = self.product
+            move.product_uom_qty = 3
+        delivery = delivery_form.save()
+        delivery.action_confirm()
+        delivery.do_unreserve()
+        self.assertRecordValues(delivery.move_ids, [
+            {
+                'product_uom_qty': 3.0,
+                'location_id': stock_location.id,
+                'quantity': 0.0,
+                'forecast_availability': 3.0,
+            }
+        ])
+        # Change the source of the picking to be the sublocation
+        # and check the forecast_availability stays unchanged
+        with Form(delivery) as delivery_form:
+            delivery_form.location_id = sublocation
+        self.assertRecordValues(delivery.move_ids, [
+            {
+                'product_uom_qty': 3.0,
+                'location_id': sublocation.id,
+                'quantity': 0.0,
+                'forecast_availability': 3.0,
+            }
+        ])
+
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
         can be reserved for the deliveries. Check that the reception report correctly
