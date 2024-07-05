@@ -29,6 +29,10 @@ function isLinkActive(selection) {
     return false;
 }
 
+function isSelectionHasLink(selection) {
+    return findInSelection(selection, "a") ? true : false;
+}
+
 /**
  * @param { HTMLAnchorElement } link
  * @param {number} offset
@@ -78,6 +82,7 @@ export class LinkPlugin extends Plugin {
                     icon: "fa-unlink",
                     name: "unlink",
                     label: _t("Remove Link"),
+                    isAvailable: isSelectionHasLink,
                 },
             ],
         },

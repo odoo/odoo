@@ -149,6 +149,27 @@ test("toolbar list buttons react to selection change", async () => {
     expect(".btn[name='checklist']").not.toHaveClass("active");
 });
 
+test("toolbar link buttons react to selection change", async () => {
+    const { el } = await setupEditor("<p>th[is is a] <a>link</a> test!</p>");
+
+    await waitFor(".o-we-toolbar");
+    expect(".btn[name='link']").toHaveCount(1);
+    expect(".btn[name='link']").not.toHaveClass("active");
+    expect(".btn[name='unlink']").toHaveCount(0);
+
+    setContent(el, "<p>th[is is a <a>li]nk</a> test!</p>");
+    await animationFrame();
+    expect(".btn[name='link']").toHaveCount(1);
+    expect(".btn[name='link']").toHaveClass("active");
+    expect(".btn[name='unlink']").toHaveCount(1);
+
+    setContent(el, "<p>th[is is a <a>link</a> tes]t!</p>");
+    await animationFrame();
+    expect(".btn[name='link']").toHaveCount(1);
+    expect(".btn[name='link']").not.toHaveClass("active");
+    expect(".btn[name='unlink']").toHaveCount(1);
+});
+
 test("toolbar works: can select font", async () => {
     const { el } = await setupEditor("<p>test</p>");
     expect(getContent(el)).toBe("<p>test</p>");
