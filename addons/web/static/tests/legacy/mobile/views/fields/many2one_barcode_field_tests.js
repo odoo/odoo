@@ -5,7 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { click, clickSave, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
-import * as BarcodeScanner from "@web/webclient/barcode/barcode_scanner";
+import * as BarcodeScanner from "@web/webclient/barcode/barcode_dialog";
 
 let serverData;
 let target;

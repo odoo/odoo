@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { isBarcodeScannerSupported, scanBarcode } from "@web/webclient/barcode/barcode_scanner";
+import { scanBarcode } from "@web/webclient/barcode/barcode_dialog";
+import { isBarcodeScannerSupported } from "@web/webclient/barcode/barcode_video_scanner";
 import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 

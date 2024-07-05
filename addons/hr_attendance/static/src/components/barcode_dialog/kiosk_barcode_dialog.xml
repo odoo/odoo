@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="hr_attendance.BarcodeDialog" t-inherit="web.BarcodeDialog">
-        <xpath expr="//CropOverlay" position="before">
+        <BarcodeVideoScanner position="before">
                 <div t-if="isFreshDb" class="alert alert-info" role="alert">
                     <div class="mb-2">
                         No Badge ID on your employee, do you want to set a barcode to test ?
@@ -14,6 +14,6 @@
                         </button>
                     </div>
                 </div>
-        </xpath>
+        </BarcodeVideoScanner>
     </t>
 </templates>
