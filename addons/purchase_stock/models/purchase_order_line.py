@@ -327,6 +327,7 @@ class PurchaseOrderLine(models.Model):
         res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id
         res['propagate_cancel'] = values.get('propagate_cancel')
         res['product_description_variants'] = values.get('product_description_variants')
+        res['product_no_variant_attribute_value_ids'] = values.get('never_product_template_attribute_value_ids')
         return res
 
     def _create_stock_moves(self, picking):

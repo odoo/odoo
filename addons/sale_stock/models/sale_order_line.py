@@ -270,6 +270,7 @@ class SaleOrderLine(models.Model):
             'company_id': self.order_id.company_id,
             'product_packaging_id': self.product_packaging_id,
             'sequence': self.sequence,
+            'never_product_template_attribute_value_ids': self.product_no_variant_attribute_value_ids,
         })
         return values
 

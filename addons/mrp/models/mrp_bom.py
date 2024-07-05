@@ -102,7 +102,7 @@ class MrpBom(models.Model):
     )
     def _compute_possible_product_template_attribute_value_ids(self):
         for bom in self:
-            bom.possible_product_template_attribute_value_ids = bom.product_tmpl_id.valid_product_template_attribute_line_ids._without_no_variant_attributes().product_template_value_ids._only_active()
+            bom.possible_product_template_attribute_value_ids = bom.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids._only_active()
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -363,7 +363,7 @@ class MrpBom(models.Model):
 
         return bom_by_product
 
-    def explode(self, product, quantity, picking_type=False):
+    def explode(self, product, quantity, picking_type=False, never_attribute_values=False):
         """
             Explodes the BoM and creates two lists with all the information you need: bom_done and line_done
             Quantity describes the number of times you need the BoM: so the quantity divided by the number created by the BoM
@@ -393,7 +393,7 @@ class MrpBom(models.Model):
             current_line, current_product, current_qty, parent_line = bom_lines[0]
             bom_lines = bom_lines[1:]
 
-            if current_line._skip_bom_line(current_product):
+            if current_line._skip_bom_line(current_product, never_attribute_values):
                 continue
 
             line_quantity = current_qty * current_line.product_qty
@@ -622,14 +622,43 @@ class MrpBomLine(models.Model):
                 values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
         return super(MrpBomLine, self).create(vals_list)
 
-    def _skip_bom_line(self, product):
-        """ Control if a BoM line should be produced, can be inherited to add
-        custom control.
+    def _skip_bom_line(self, product, never_attribute_values=False):
+        """ Control if a BoM line should be produced, can be inherited to add custom control.
+            cases:
+                - no_variant:
+                    1. attribute present on the line
+                        => need to be at least one attribute value matching between the one passed as args and the ones one the line
+                    2. attribute not present on the line
+                        => valid if the line has no attribute value selected for that attribute
+                - always and dynamic: match_all_variant_values()
         """
         self.ensure_one()
         if product._name == 'product.template':
             return False
-        return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
+
+        # attributes create_variant 'always' and 'dynamic'
+        other_attribute_valid = product._match_all_variant_values(self.bom_product_template_attribute_value_ids.filtered(lambda a: a.attribute_id.create_variant != 'no_variant'))
+
+        # if there are no never attribute values on the bom line => always and dynamic
+
+        if not self.bom_product_template_attribute_value_ids.filtered(lambda a: a.attribute_id.create_variant == 'no_variant'):
+            return not other_attribute_valid
+
+        # or if there are never attribute on the line values but no value is passed => impossible to match
+        if not never_attribute_values:
+            return True
+
+        bom_values_by_attribute = self.bom_product_template_attribute_value_ids.filtered(
+                lambda a: a.attribute_id.create_variant == 'no_variant'
+            ).grouped('attribute_id')
+
+        never_values_by_attribute = never_attribute_values.grouped('attribute_id')
+
+        for a_id, a_values in bom_values_by_attribute.items():
+            if any(a.id in never_values_by_attribute[a_id].ids for a in a_values):
+                continue
+            return True
+        return not other_attribute_valid
 
     def action_see_attachments(self):
         domain = [
