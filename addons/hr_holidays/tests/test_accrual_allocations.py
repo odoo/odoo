@@ -1,11 +1,13 @@
 import datetime
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
+from psycopg2 import IntegrityError
 
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
 from odoo.exceptions import ValidationError
+from odoo.tools import mute_logger
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -40,6 +42,16 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                        SET create_date = '%s'
                        WHERE id = %s
                        """ % (date, allocation_id))
+
+    def assert_allocation_and_balance(self, allocation, expected_allocation_value, expected_balance_value, msg):
+        unit = allocation.accrual_plan_id.added_value_type
+        allocation_value = allocation.number_of_hours_display if unit == 'hour' else allocation.number_of_days
+
+        leave_type_data = allocation.holiday_status_id.get_allocation_data(self.employee_emp)
+        remaining_leaves = leave_type_data[self.employee_emp][0][1]['remaining_leaves']
+
+        self.assertAlmostEqual(allocation_value, expected_allocation_value, places=1, msg=msg)
+        self.assertAlmostEqual(remaining_leaves, expected_balance_value, places=1, msg=msg)
 
     def test_consistency_between_cap_accrued_time_and_maximum_leave(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
@@ -1178,6 +1190,119 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time(datetime.date(2022, 6, 1)):
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 18 / self.hours_per_day, "Should accrue 8 additional hours")
+
+    @mute_logger('odoo.sql_db')
+    def test_yearly_cap_constraint(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'added_value_type': 'day',
+                'start_count': 0,
+                'start_type': 'day',
+                'added_value': 1,
+                'frequency': 'daily',
+                'week_day': 'mon',
+                'cap_accrued_time': True,
+                'maximum_leave': 5,
+            })],
+        })
+        with self.assertRaises(IntegrityError):
+            accrual_plan.level_ids[0].write({
+                'cap_accrued_time_yearly': True,
+                'maximum_leave_yearly': 0,
+            })
+        accrual_plan.level_ids[0].write({
+            'cap_accrued_time_yearly': True,
+            'maximum_leave_yearly': 1,
+        })
+
+    def test_yearly_cap(self):
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Hour Time Off',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'leave_validation_type': 'no_validation',
+            'request_unit': 'hour',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'added_value_type': 'hour',
+                'start_count': 0,
+                'start_type': 'day',
+                'added_value': 0.06,
+                'frequency': 'hourly',
+                'week_day': 'mon',
+                'cap_accrued_time': True,
+                'maximum_leave': 180,
+                'cap_accrued_time_yearly': True,
+                'maximum_leave_yearly': 120,
+            })],
+        })
+
+        with freeze_time('2024-01-01'):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'number_of_days': 0,
+            })
+
+        with freeze_time('2024-12-20'):
+            allocation._update_accrual()
+            self.assert_allocation_and_balance(allocation, 120, 120,
+                "The yearly cap should be reached.")
+            leave = self.env['hr.leave'].create({
+                'name': "Leave for employee",
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_unit_hours': True,
+                'request_date_from': datetime.date(2024, 12, 19),
+                'request_date_to': datetime.date(2024, 12, 19),
+                'request_hour_from': '10',
+                'request_hour_to': '12',
+            })
+            self.assertEqual(leave.number_of_hours, 2)
+            self.assert_allocation_and_balance(allocation, 120, 118,
+                "The 2 hours should be deduced from the balance")
+
+        with freeze_time('2024-12-31'):
+            allocation._update_accrual()
+            self.assert_allocation_and_balance(allocation, 120, 118,
+                "The amount shouldn't exceed the yearly amount as all days days have already been accrued.")
+
+        with freeze_time('2025-01-06'):
+            allocation._update_accrual()
+            self.assertAlmostEqual(allocation.number_of_hours_display, 121.44)
+
+        with freeze_time('2025-07-03'):
+            allocation._update_accrual()
+            self.assert_allocation_and_balance(allocation, 182, 180, "The global cap should be reached.")
+            leave = self.env['hr.leave'].create({
+                'name': "Leave for employee",
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': datetime.date(2025, 6, 2),
+                'request_date_to': datetime.date(2025, 6, 11),
+            })
+            self.assertEqual(leave.number_of_hours, 64)
+            self.assert_allocation_and_balance(allocation, 182, 116,
+                "The leave hours should be deduced from the balance.")
+
+        with freeze_time('2025-12-25'):
+            allocation._update_accrual()
+            self.assert_allocation_and_balance(allocation, 240, 174,
+                "The total yearly amount should be reached.")
+
+        with freeze_time('2025-12-31'):
+            allocation._update_accrual()
+            self.assert_allocation_and_balance(allocation, 240, 174,
+                "Nothing more should have been accrued since the yearly cap was already reached.")
 
     def test_accrual_period_start(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({

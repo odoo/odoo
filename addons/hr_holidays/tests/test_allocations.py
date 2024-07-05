@@ -181,7 +181,7 @@ class TestAllocations(TestHrHolidaysCommon):
             ('employee_id', '=', self.employee_emp.id),
         ])
 
-        self.assertAlmostEqual(employee_allocation.number_of_hours_display, 11.43, places=2)
+        self.assertAlmostEqual(employee_allocation.number_of_hours_display, 10, places=2)
         self.assertAlmostEqual(employee_emp_allocation.number_of_hours_display, 10.0, places=2)
 
     def change_allocation_type_hours(self):

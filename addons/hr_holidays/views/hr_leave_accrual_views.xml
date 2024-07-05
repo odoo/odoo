@@ -53,12 +53,15 @@
                         </div>
                     </group>
                     <group name="maximum_leave">
-                        <field name="cap_accrued_time" style="width: 9.35rem"/>
-                        <div style="width: 9.35rem"/>
-                        <div invisible="not cap_accrued_time">
-                            <field name="maximum_leave" style="width: 5rem" widget="FloatWithoutTrailingZeros"/>
-                            <field name="added_value_type" style="white-space: nowrap;width: 5rem"/>
-                        </div>
+                        <label for="cap_accrued_time"/>
+                        <span>
+                            <field name="cap_accrued_time" nolabel="1"/>
+                            <span class="position-absolute" invisible="not cap_accrued_time">
+                                <field name="maximum_leave" style="width: 5rem" widget="FloatWithoutTrailingZeros"
+                                    nolabel="1"/>
+                                <field name="added_value_type" readonly="1" style="white-space: nowrap;width: 5rem"/>
+                            </span>
+                        </span>
                     </group>
                     <group name="milestone">
                         <div class="o_td_label">
@@ -79,7 +82,19 @@
                                 <field name="added_value_type" nolabel="1" readonly="1" force_save="1" style="width: 5rem"/>
                             </div>
                         </div>
-                        <field name="postpone_max_days" class="w-25" invisible="action_with_unused_accruals != 'postponed'"/>
+                        <div invisible="action_with_unused_accruals == 'lost'">
+                            <label for="cap_accrued_time_yearly"/>
+                        </div>
+                        <div invisible="action_with_unused_accruals == 'lost'">
+                            <span>
+                                <field name="cap_accrued_time_yearly" nolabel="1"/>
+                                <span class="position-absolute" invisible="not cap_accrued_time_yearly">
+                                    <field name="maximum_leave_yearly" style="width: 5rem" widget="FloatWithoutTrailingZeros"
+                                        nolabel="1"/>
+                                    <field name="added_value_type" readonly="1" style="white-space: nowrap;width: 5rem"/>
+                                </span>
+                            </span>
+                        </div>
                     </group>
                 </sheet>
             </form>
@@ -172,7 +187,8 @@
                                             <div class="content container" style="width: 560px;">
                                                 <div class="row w-100">
                                                     <div class="pe-0 me-0" style="width: 6rem;">
-                                                        <field name="added_value" widget="FloatWithoutTrailingZeros"/> <field name="added_value_type"/>,
+                                                        <field name="added_value" invisible="1"/>
+                                                        <span t-out="record.added_value.raw_value"/> <field name="added_value_type"/>,
                                                     </div>
                                                     <div class="col-auto m-0 p-0">
                                                         <field name="frequency" class="ms-1"/>
@@ -223,7 +239,7 @@
                             </kanban>
                         </field>
                     </div>
-               </sheet>
+                </sheet>
             </form>
         </field>
     </record>
