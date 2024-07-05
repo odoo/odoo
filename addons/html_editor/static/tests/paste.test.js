@@ -1,12 +1,12 @@
 import { CLIPBOARD_WHITELISTS } from "@html_editor/core/clipboard_plugin";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent as dispatch, press } from "@odoo/hoot-dom";
+import { manuallyDispatchProgrammaticEvent as dispatch, press, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "./_helpers/editor";
+import { cleanLinkArtifacts } from "./_helpers/format";
 import { getContent, setSelection } from "./_helpers/selection";
 import { pasteHtml, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/user_actions";
-import { cleanLinkArtifacts } from "./_helpers/format";
 
 function isInline(node) {
     return ["I", "B", "U", "S", "EM", "STRONG", "IMG", "BR", "A", "FONT"].includes(node);
@@ -2965,7 +2965,7 @@ describe("onDrop", () => {
         const f = new File([blob], "image.png", { type: blob.type });
         dropData.items.add(f);
         dispatch(pElement, "drop", { dataTransfer: dropData });
-        await animationFrame();
+        await waitFor("img");
         expect(getContent(el)).toBe(
             `<p>abc<img class="img-fluid" data-file-name="image.png" src="${base64Image}">[]d</p>`
         );
