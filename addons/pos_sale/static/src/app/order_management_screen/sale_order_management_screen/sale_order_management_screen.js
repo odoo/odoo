@@ -211,6 +211,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         price: line.price_unit,
                         tax_ids: orderFiscalPos ? undefined : line.tax_id,
                         price_manually_set: false,
+                        price_type: "automatic",
                         sale_order_origin_id: clickedOrder,
                         sale_order_line_id: line,
                         customer_note: line.customer_note,

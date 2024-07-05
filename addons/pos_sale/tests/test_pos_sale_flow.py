@@ -561,6 +561,29 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosOrderDoesNotRemainInList', login="accountman")
 
+    def test_settle_order_change_customer(self):
+        """
+        When settling an order, the price set on the sol shouldn't reset to
+        the sale price of the product when changing customer.
+        """
+        self.product_a.lst_price = 150
+        self.product_a.taxes_id = None
+        self.product_a.available_in_pos = True
+        self.env['res.partner'].create({'name': 'Test Partner AAA'})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner BBB'}).id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'name': self.product_a.name,
+                'product_uom_qty': 1,
+                'price_unit': 100,
+            })],
+        })
+        sale_order.action_confirm()
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleCustomPrice', login="accountman")
+
     def test_downpayment_with_taxed_product(self):
         tax_1 = self.env['account.tax'].create({
             'name': '10',
