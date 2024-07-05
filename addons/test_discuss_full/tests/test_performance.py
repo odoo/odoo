@@ -338,21 +338,21 @@ class TestDiscussFullPerformance(HttpCase):
             ],
             "Thread": [
                 self._expected_result_for_channel(self.channel_general),
-                self._expected_result_for_channel(self.channel_channel_public_1),
-                self._expected_result_for_channel(self.channel_channel_public_2),
-                self._expected_result_for_channel(self.channel_channel_group_1),
-                self._expected_result_for_channel(self.channel_channel_group_2),
+                self._expected_result_for_channel(self.channel_channel_public_1, has_message=True),
+                self._expected_result_for_channel(self.channel_channel_public_2, has_message=True),
+                self._expected_result_for_channel(self.channel_channel_group_1, has_message=True),
+                self._expected_result_for_channel(self.channel_channel_group_2, has_message=True),
                 self._expected_result_for_channel(self.channel_group_1),
                 self._expected_result_for_channel(self.channel_chat_1),
                 self._expected_result_for_channel(self.channel_chat_2),
                 self._expected_result_for_channel(self.channel_chat_3),
                 self._expected_result_for_channel(self.channel_chat_4),
-                self._expected_result_for_channel(self.channel_livechat_1),
-                self._expected_result_for_channel(self.channel_livechat_2),
+                self._expected_result_for_channel(self.channel_livechat_1, has_message=True),
+                self._expected_result_for_channel(self.channel_livechat_2, has_message=True),
             ],
         }
 
-    def _expected_result_for_channel(self, channel):
+    def _expected_result_for_channel(self, channel, has_message=False):
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         members = channel.channel_member_ids
@@ -390,7 +390,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_public_1:
-            return {
+            res = {
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
@@ -419,8 +419,11 @@ class TestDiscussFullPerformance(HttpCase):
                 "state": "closed",
                 "uuid": channel.uuid,
             }
+            if has_message:
+                res["module_icon"] = "/mail/static/description/icon.png"
+            return res
         if channel == self.channel_channel_public_2:
-            return {
+            res = {
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
@@ -449,8 +452,11 @@ class TestDiscussFullPerformance(HttpCase):
                 "state": "closed",
                 "uuid": channel.uuid,
             }
+            if has_message:
+                res["module_icon"] = "/mail/static/description/icon.png"
+            return res
         if channel == self.channel_channel_group_1:
-            return {
+            res = {
                 "allow_public_upload": False,
                 "authorizedGroupFullName": self.group_user.full_name,
                 "anonymous_country": False,
@@ -482,8 +488,11 @@ class TestDiscussFullPerformance(HttpCase):
                 "state": "closed",
                 "uuid": channel.uuid,
             }
+            if has_message:
+                res["module_icon"] = "/mail/static/description/icon.png"
+            return res
         if channel == self.channel_channel_group_2:
-            return {
+            res = {
                 "allow_public_upload": False,
                 "authorizedGroupFullName": self.group_user.full_name,
                 "anonymous_country": False,
@@ -512,6 +521,9 @@ class TestDiscussFullPerformance(HttpCase):
                 "state": "closed",
                 "uuid": channel.uuid,
             }
+            if has_message:
+                res["module_icon"] = "/mail/static/description/icon.png"
+            return res
         if channel == self.channel_group_1:
             return {
                 "allow_public_upload": False,
@@ -663,7 +675,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "uuid": channel.uuid,
             }
         if channel == self.channel_livechat_1:
-            return {
+            res = {
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": {
@@ -698,8 +710,11 @@ class TestDiscussFullPerformance(HttpCase):
                 "state": "closed",
                 "uuid": channel.uuid,
             }
+            if has_message:
+                res["module_icon"] = "/mail/static/description/icon.png"
+            return res
         if channel == self.channel_livechat_2:
-            return {
+            res = {
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": {
@@ -734,6 +749,9 @@ class TestDiscussFullPerformance(HttpCase):
                 "state": "closed",
                 "uuid": channel.uuid,
             }
+            if has_message:
+                res["module_icon"] = "/mail/static/description/icon.png"
+            return res
         return {}
 
     def _expected_result_for_channel_member(self, channel, partner=None, guest=None):
@@ -1022,11 +1040,7 @@ class TestDiscussFullPerformance(HttpCase):
                         },
                     },
                 ],
-                "thread": {
-                    "id": channel.id,
-                    "model": "discuss.channel",
-                    "module_icon": "/mail/static/description/icon.png",
-                },
+                "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
                 "pinned_at": False,
                 "reactions": [],
@@ -1063,11 +1077,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "model": "discuss.channel",
                 "needaction": False,
                 "notifications": [],
-                "thread": {
-                    "id": channel.id,
-                    "model": "discuss.channel",
-                    "module_icon": "/mail/static/description/icon.png",
-                },
+                "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
                 "pinned_at": False,
                 "reactions": [],
@@ -1098,11 +1108,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "model": "discuss.channel",
                 "needaction": False,
                 "notifications": [],
-                "thread": {
-                    "id": channel.id,
-                    "model": "discuss.channel",
-                    "module_icon": "/mail/static/description/icon.png",
-                },
+                "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
                 "pinned_at": False,
                 "reactions": [],
@@ -1133,11 +1139,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "model": "discuss.channel",
                 "needaction": False,
                 "notifications": [],
-                "thread": {
-                    "id": channel.id,
-                    "model": "discuss.channel",
-                    "module_icon": "/mail/static/description/icon.png",
-                },
+                "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
                 "pinned_at": False,
                 "reactions": [],
@@ -1167,11 +1169,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "model": "discuss.channel",
                 "needaction": False,
                 "notifications": [],
-                "thread": {
-                    "id": channel.id,
-                    "model": "discuss.channel",
-                    "module_icon": "/mail/static/description/icon.png",
-                },
+                "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
                 "pinned_at": False,
                 "reactions": [],
@@ -1202,11 +1200,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "model": "discuss.channel",
                 "needaction": False,
                 "notifications": [],
-                "thread": {
-                    "id": channel.id,
-                    "model": "discuss.channel",
-                    "module_icon": "/mail/static/description/icon.png",
-                },
+                "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
                 "pinned_at": False,
                 "reactions": [],

@@ -95,11 +95,7 @@ class TestImLivechatMessage(HttpCase):
                         "model": "discuss.channel",
                         "needaction": False,
                         "notifications": [],
-                        "thread": {
-                            "id": channel_livechat_1.id,
-                            "model": "discuss.channel",
-                            "module_icon": "/mail/static/description/icon.png",
-                        },
+                        "thread": {"id": channel_livechat_1.id, "model": "discuss.channel"},
                         "parentMessage": False,
                         "pinned_at": False,
                         "rating": {
@@ -126,6 +122,13 @@ class TestImLivechatMessage(HttpCase):
                         "user_livechat_username": "chuck",
                         "userId": self.users[1].id,
                         "write_date": fields.Datetime.to_string(self.users[1].write_date),
+                    },
+                ],
+                "Thread": [
+                    {
+                        "id": channel_livechat_1.id,
+                        "model": "discuss.channel",
+                        "module_icon": "/mail/static/description/icon.png",
                     },
                 ],
             },
