@@ -2,11 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
+import copy
 import re
 from unittest.mock import patch
 from urllib.parse import urlparse, urlencode, parse_qsl
 
-from odoo import tools
+from odoo import fields, tools
 from odoo.addons.mail.models.mail_mail import _UNFOLLOW_REGEX
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
@@ -867,36 +868,109 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
         Note that the actual mechanism to unfollow a record from a message is
         tested in the client part.
         """
+        self.maxDiff = None
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
-        test_record.with_user(self.user_admin).message_post(
-            body='test message', subtype_id=self.env.ref('mail.mt_comment').id, partner_ids=self.partner_employee.ids)
-
+        message = test_record.with_user(self.user_admin).message_post(
+            body="test message",
+            subtype_id=self.env.ref("mail.mt_comment").id,
+            partner_ids=self.partner_employee.ids,
+        )
+        notif = message.notification_ids.filtered(
+            lambda n: n.res_partner_id == self.env.user.partner_id
+        )
         # The user doesn't follow the record
         self.authenticate(self.env.user.login, self.env.user.login)
         data = self.make_jsonrpc_request("/mail/inbox/messages")["data"]
-        messages = data["Message"]
-        self.assertEqual(len(messages), 1)
-        self.assertFalse(messages[0].get('thread').get('selfFollower'))
-        self.assertFalse('follower_id_by_partner_id' in messages[0])
+        expected = {
+            "Message": [
+                {
+                    "attachments": [],
+                    "author": {"id": self.user_admin.partner_id.id, "type": "partner"},
+                    "body": "<p>test message</p>",
+                    "create_date": fields.Datetime.to_string(message.create_date),
+                    "date": fields.Datetime.to_string(message.date),
+                    "default_subject": "Test",
+                    "email_from": '"Mitchell Admin" <test.admin@test.example.com>',
+                    "id": message.id,
+                    "is_discussion": True,
+                    "is_note": False,
+                    "linkPreviews": [],
+                    "message_type": "notification",
+                    "model": "mail.test.simple",
+                    "needaction": True,
+                    "notifications": [
+                        {
+                            "failure_type": False,
+                            "id": notif.id,
+                            "notification_status": "sent",
+                            "notification_type": "inbox",
+                            "persona": {
+                                "displayName": "Ernest Employee",
+                                "id": self.env.user.partner_id.id,
+                                "type": "partner",
+                            },
+                        },
+                    ],
+                    "pinned_at": False,
+                    "reactions": [],
+                    "recipients": [
+                        {"id": self.env.user.partner_id.id, "name": "Ernest Employee", "type": "partner"},
+                    ],
+                    "record_name": "Test",
+                    "res_id": test_record.id,
+                    "scheduledDatetime": False,
+                    "starred": False,
+                    "subject": False,
+                    "subtype_description": False,
+                    "thread": {"id": test_record.id, "model": "mail.test.simple"},
+                    "trackingValues": [],
+                    "write_date": fields.Datetime.to_string(message.write_date),
+                },
+            ],
+            "Persona": [
+                {
+                    "id": self.user_admin.partner_id.id,
+                    "isInternalUser": True,
+                    "is_company": False,
+                    "name": "Mitchell Admin",
+                    "type": "partner",
+                    "userId": self.user_admin.id,
+                    "write_date": fields.Datetime.to_string(self.user_admin.write_date),
+                },
+            ],
+            "Thread": [
+                {
+                    "id": test_record.id,
+                    "model": "mail.test.simple",
+                    "module_icon": "/base/static/description/icon.png",
+                    "name": "Test",
+                    "selfFollower": False,
+                },
+            ],
+        }
+        self.assertEqual(data, expected)
 
         # The user follows the record
-        test_record._message_subscribe(partner_ids=self.partner_employee.ids)
+        test_record._message_subscribe(partner_ids=self.env.user.partner_id.ids)
+        follower = test_record.message_follower_ids.filtered(
+            lambda follower: follower.partner_id == self.env.user.partner_id
+        )
         data = self.make_jsonrpc_request("/mail/inbox/messages")["data"]
-        messages = data["Message"]
-        self.assertEqual(len(messages), 1)
-        follower_id = messages[0]['thread']['selfFollower']['id']
-        self.assertTrue(follower_id)
-        self.assertFalse('follower_id_by_partner_id' in messages[0])
-        follower = self.env['mail.followers'].browse(follower_id)
-        self.assertEqual(follower.res_model, test_record._name)
-        self.assertEqual(follower.res_id, test_record.id)
-        self.assertEqual(follower.partner_id, self.partner_employee)
+        expected_with_follower = copy.deepcopy(expected)
+        expected_with_follower["Follower"] = [
+            {
+                "id": follower.id,
+                "is_active": True,
+                "partner": {"id": self.env.user.partner_id.id, "type": "partner"},
+            },
+        ]
+        expected_with_follower["Thread"][0]["selfFollower"] = {"id": follower.id}
+        self.assertEqual(data, expected_with_follower)
 
         # The user doesn't follow the record anymore
         test_record.message_unsubscribe(partner_ids=self.partner_employee.ids)
         data = self.make_jsonrpc_request("/mail/inbox/messages")["data"]
-        messages = data["Message"]
-        self.assertFalse(messages[0].get('thread').get('selfFollower'))
+        self.assertEqual(data, expected)
 
 
 @tagged('mail_followers', 'post_install', '-at_install')

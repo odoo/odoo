@@ -1358,6 +1358,16 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                     {
                         "type": "mail.message/inbox",
                         "payload": {
+                            "Follower": [
+                                {
+                                    "id": follower_1.id,
+                                    "is_active": True,
+                                    "partner": {
+                                        "id": self.user_test_inbox.partner_id.id,
+                                        "type": "partner",
+                                    },
+                                },
+                            ],
                             "Message": [
                                 {
                                     "attachments": [],
@@ -1410,20 +1420,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "starred": False,
                                     "subject": False,
                                     "subtype_description": False,
-                                    "thread": {
-                                        "model": "mail.test.simple",
-                                        "id": record.id,
-                                        "name": "Test",
-                                        "module_icon": "/base/static/description/icon.png",
-                                        "selfFollower": {
-                                            "id": follower_1.id,
-                                            "is_active": True,
-                                            "partner": {
-                                                "id": self.user_test_inbox.partner_id.id,
-                                                "type": "partner",
-                                            },
-                                        },
-                                    },
+                                    "thread": {"id": record.id, "model": "mail.test.simple"},
                                     "trackingValues": [],
                                     "write_date": fields.Datetime.to_string(message.write_date),
                                 },
@@ -1438,12 +1435,31 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "userId": self.env.user.id,
                                     "write_date": fields.Datetime.to_string(self.env.user.write_date),
                                 }
+                            ],
+                            "Thread": [
+                                {
+                                    "id": record.id,
+                                    "model": "mail.test.simple",
+                                    "module_icon": "/base/static/description/icon.png",
+                                    "name": "Test",
+                                    "selfFollower": {"id": follower_1.id},
+                                },
                             ],
                         },
                     },
                     {
                         "type": "mail.message/inbox",
                         "payload": {
+                            "Follower": [
+                                {
+                                    "id": follower_2.id,
+                                    "is_active": True,
+                                    "partner": {
+                                        "id": self.user_test_inbox_2.partner_id.id,
+                                        "type": "partner",
+                                    },
+                                },
+                            ],
                             "Message": [
                                 {
                                     "attachments": [],
@@ -1496,20 +1512,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "starred": False,
                                     "subject": False,
                                     "subtype_description": False,
-                                    "thread": {
-                                        "model": "mail.test.simple",
-                                        "id": record.id,
-                                        "name": "Test",
-                                        "module_icon": "/base/static/description/icon.png",
-                                        "selfFollower": {
-                                            "id": follower_2.id,
-                                            "is_active": True,
-                                            "partner": {
-                                                "id": self.user_test_inbox_2.partner_id.id,
-                                                "type": "partner",
-                                            },
-                                        },
-                                    },
+                                    "thread": {"id": record.id, "model": "mail.test.simple"},
                                     "trackingValues": [],
                                     "write_date": fields.Datetime.to_string(message.write_date),
                                 },
@@ -1524,6 +1527,15 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "userId": self.env.user.id,
                                     "write_date": fields.Datetime.to_string(self.env.user.write_date),
                                 }
+                            ],
+                            "Thread": [
+                                {
+                                    "id": record.id,
+                                    "model": "mail.test.simple",
+                                    "module_icon": "/base/static/description/icon.png",
+                                    "name": "Test",
+                                    "selfFollower": {"id": follower_2.id},
+                                },
                             ],
                         },
                     },
