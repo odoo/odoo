@@ -1,6 +1,5 @@
 /** @odoo-module alias=@web/../tests/legacy_tests/core/widget_tests default=false */
 
-import Dialog from "@web/legacy/js/core/dialog";
 import Widget from "@web/legacy/js/core/widget";
 import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
 import { renderToString } from "@web/core/utils/render";
@@ -452,24 +451,5 @@ QUnit.module('core', {}, function () {
 
         parent.destroy();
         assert.verifySteps(['destroy'], "child should have been detroyed only once");
-    });
-
-
-    QUnit.module('Widgets, Dialog');
-
-    QUnit.test("don't close dialog on backdrop click", async function (assert) {
-        assert.expect(3);
-
-        var dialog = new Dialog(null);
-        dialog.open();
-        await dialog.opened();
-
-        assert.strictEqual($('.modal.show').length, 1, "a dialog should have opened");
-        var $backdrop = $('.modal-backdrop');
-        assert.strictEqual($backdrop.length, 1, "the dialog should have a modal backdrop");
-        testUtils.dom.click('.modal.show'); // Click on backdrop is in fact a direct click on the .modal element
-        assert.strictEqual($('.modal.show').length, 1, "the dialog should still be opened");
-
-        dialog.close();
     });
 });
