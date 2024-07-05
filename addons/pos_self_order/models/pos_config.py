@@ -205,7 +205,7 @@ class PosConfig(models.Model):
         table_route = ""
 
         if self.self_ordering_mode == 'consultation':
-            return base_route
+            return f"{base_route}/products"
 
         if self.self_ordering_mode == 'mobile':
             table = self.env["restaurant.table"].search(
