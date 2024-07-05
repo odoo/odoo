@@ -2,6 +2,7 @@
 
 import { Component, useExternalListener, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
 
 export class EditBar extends Component {
     static template = "pos_restaurant.EditBar";
@@ -26,6 +27,7 @@ export class EditBar extends Component {
     setup() {
         this.ui = useState(useService("ui"));
         useExternalListener(window, "click", this.onOutsideClick);
+        this.doCreateTable = useTrackedAsync(this.props.createTable);
     }
 
     onOutsideClick() {
