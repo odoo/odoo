@@ -101,6 +101,7 @@ patch(PosStore.prototype, {
                 product_id: line.product_id,
                 qty: line.product_uom_qty,
                 price_unit: line.price_unit,
+                price_type: "automatic",
                 tax_ids:
                     orderFiscalPos || !line.tax_id
                         ? undefined
