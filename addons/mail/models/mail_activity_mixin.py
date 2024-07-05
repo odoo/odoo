@@ -211,6 +211,8 @@ class MailActivityMixin(models.AbstractModel):
 
     @api.model
     def _search_activity_user_id(self, operator, operand):
+        if isinstance(operand, bool) and ((operator == '=' and not operand) or (operator == '!=' and operand)):
+            return [('activity_ids', '=', False)]
         return [('activity_ids', 'any', [('active', 'in', [True, False]), ('user_id', operator, operand)])]
 
     @api.model
