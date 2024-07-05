@@ -463,11 +463,8 @@ test("receive new needaction messages", async () => {
         partner,
         "mail.message/inbox",
         new mailDataHelpers.Store(
-            "Message",
-            pyEnv["mail.message"]._message_format(
-                messageId_1,
-                makeKwArgs({ for_current_user: true, add_followers: true })
-            )
+            pyEnv["mail.message"].browse(messageId_1),
+            makeKwArgs({ for_current_user: true, add_followers: true })
         ).get_result()
     );
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
@@ -491,11 +488,8 @@ test("receive new needaction messages", async () => {
         partner,
         "mail.message/inbox",
         new mailDataHelpers.Store(
-            "Message",
-            pyEnv["mail.message"]._message_format(
-                messageId_2,
-                makeKwArgs({ for_current_user: true, add_followers: true })
-            )
+            pyEnv["mail.message"].browse(messageId_2),
+            makeKwArgs({ for_current_user: true, add_followers: true })
         ).get_result()
     );
     await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });

@@ -31,7 +31,7 @@ class ThreadController(http.Controller):
             messages.set_message_done()
         return {
             **res,
-            "data": Store("Message", messages._message_format(for_current_user=True)).get_result(),
+            "data": Store(messages, for_current_user=True).get_result(),
             "messages": [{"id": message.id} for message in messages],
         }
 
@@ -122,7 +122,7 @@ class ThreadController(http.Controller):
                 if key in self._get_allowed_message_post_params()
             }
         )
-        return Store("Message", message._message_format(for_current_user=True)).get_result()
+        return Store(message, for_current_user=True).get_result()
 
     @http.route("/mail/message/update_content", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
@@ -138,4 +138,4 @@ class ThreadController(http.Controller):
         guest.env[message_sudo.model].browse([message_sudo.res_id])._message_update_content(
             message_sudo, body, attachment_ids=attachment_ids, partner_ids=partner_ids
         )
-        return Store("Message", message_sudo._message_format(for_current_user=True)).get_result()
+        return Store(message_sudo, for_current_user=True).get_result()

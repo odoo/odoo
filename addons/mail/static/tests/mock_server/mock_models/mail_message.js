@@ -58,11 +58,12 @@ export class MailMessage extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _message_format(ids, for_current_user, add_followers) {
-        const kwargs = getKwArgs(arguments, "ids", "for_current_user", "add_followers");
+    _to_store(ids, store, for_current_user = false, add_followers = false) {
+        const kwargs = getKwArgs(arguments, "ids", "store", "for_current_user", "add_followers");
         ids = kwargs.ids;
-        for_current_user = kwargs.for_current_user ?? false;
-        add_followers = kwargs.add_followers ?? false;
+        store = kwargs.store;
+        for_current_user = kwargs.for_current_user;
+        add_followers = kwargs.add_followers;
 
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
@@ -72,6 +73,8 @@ export class MailMessage extends models.ServerModel {
         const MailFollowers = this.env["mail.followers"];
         /** @type {import("mock_models").MailLinkPreview} */
         const MailLinkPreview = this.env["mail.link.preview"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").MailMessageReaction} */
         const MailMessageReaction = this.env["mail.message.reaction"];
         /** @type {import("mock_models").MailMessageSubtype} */
@@ -87,10 +90,10 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const messages = this._filter([["id", "in", ids]]);
-        // sorted from highest ID to lowest ID (i.e. from most to least recent)
-        messages.sort((m1, m2) => (m1.id < m2.id ? 1 : -1));
-        return messages.map((message) => {
+        const messages = MailMessage._filter([["id", "in", ids]]).sort(
+            (a, b) => ids.indexOf(a) - ids.indexOf(b)
+        );
+        for (const message of messages) {
             const thread =
                 message.model && this.env[message.model]._filter([["id", "=", message.res_id]])[0];
             let author;
@@ -167,9 +170,7 @@ export class MailMessage extends models.ServerModel {
                 linkPreviews: linkPreviewsFormatted,
                 reactions: reactionGroups,
                 notifications,
-                parentMessage: message.parent_id
-                    ? this._message_format([message.parent_id])[0]
-                    : false,
+                parentMessage: message.parent_id ? { id: message.parent_id } : false,
                 recipients: partners.map((p) => ({ id: p.id, name: p.name, type: "partner" })),
                 record_name:
                     thread && (thread.name !== undefined ? thread.name : thread.display_name),
@@ -228,8 +229,11 @@ export class MailMessage extends models.ServerModel {
                     }
                 }
             }
-            return response;
-        });
+            store.add("Message", response);
+            if (message.parent_id) {
+                store.add(MailMessage.browse(message.parent_id));
+            }
+        }
     }
 
     /**
@@ -445,7 +449,10 @@ export class MailMessage extends models.ServerModel {
                 (m1, m2) => m1.id - m2.id
             );
             messagesAfter.length = Math.min(messagesAfter.length, limit / 2);
-            return { ...res, messages: messagesAfter.concat(messagesBefore.reverse()) };
+            const messages = messagesAfter
+                .concat(messagesBefore.reverse())
+                .sort((m1, m2) => m2.id - m1.id);
+            return { ...res, messages };
         }
         if (before) {
             domain.push(["id", "<", before]);
@@ -453,11 +460,7 @@ export class MailMessage extends models.ServerModel {
         if (after) {
             domain.push(["id", ">", after]);
         }
-        const messages = this._filter(domain);
-        // sorted from highest ID to lowest ID (i.e. from youngest to oldest)
-        messages.sort(function (m1, m2) {
-            return m1.id < m2.id ? 1 : -1;
-        });
+        const messages = this._filter(domain).sort((m1, m2) => m2.id - m1.id);
         // pick at most 'limit' messages
         messages.length = Math.min(messages.length, limit);
         res.messages = messages;

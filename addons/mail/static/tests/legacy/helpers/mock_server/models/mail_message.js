@@ -9,10 +9,6 @@ patch(MockServer.prototype, {
             const domain = args.args[0] || args.kwargs.domain;
             return this._mockMailMessageMarkAllAsRead(domain);
         }
-        if (args.model === "mail.message" && args.method === "message_format") {
-            const ids = args.args[0];
-            return this._mockMailMessageMessageFormat(ids);
-        }
         if (args.model === "mail.message" && args.method === "set_message_done") {
             const ids = args.args[0];
             return this._mockMailMessageSetMessageDone(ids);
@@ -188,7 +184,7 @@ patch(MockServer.prototype, {
         return res;
     },
     /**
-     * Simulates `message_format` on `mail.message`.
+     * Simulates `_message_format` on `mail.message`.
      *
      * @private
      * @returns {integer[]} ids

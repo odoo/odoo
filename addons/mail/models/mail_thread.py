@@ -3191,13 +3191,11 @@ class MailThread(models.AbstractModel):
                         user.partner_id,
                         "mail.message/inbox",
                         Store(
-                            "Message",
-                            message.with_user(user)._message_format(
-                                msg_vals=msg_vals,
-                                for_current_user=True,
-                                add_followers=True,
-                                followers=followers,
-                            )
+                            message.with_user(user),
+                            msg_vals=msg_vals,
+                            for_current_user=True,
+                            add_followers=True,
+                            followers=followers,
                         ).get_result(),
                     )
                 )

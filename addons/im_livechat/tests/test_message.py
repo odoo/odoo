@@ -23,8 +23,16 @@ class TestImLivechatMessage(HttpCase):
                 'odoobot_state': 'disabled',
                 'signature': '--\nErnest',
             },
-            {'name': 'test1', 'login': 'test1', 'password': self.password, 'email': 'test1@example.com', 'livechat_username': 'chuck'},
+            {
+                "email": "test1@example.com",
+                "login": "test1",
+                "name": "test1",
+                "password": self.password,
+            },
         ])
+        settings = self.env["res.users.settings"]._find_or_create_for_user(self.users[1])
+        settings.livechat_username = "chuck"
+        self.maxDiff = None
 
     def test_update_username(self):
         user = self.env['res.users'].create({
@@ -40,7 +48,7 @@ class TestImLivechatMessage(HttpCase):
         self.assertEqual(user.livechat_username, 'New username')
 
     @users('emp')
-    def test_message_format(self):
+    def test_message_to_store(self):
         im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
         self.env['bus.presence'].create({'user_id': self.users[0].id, 'status': 'online'})  # make available for livechat (ignore leave)
         self.authenticate(self.users[1].login, self.password)
@@ -67,26 +75,18 @@ class TestImLivechatMessage(HttpCase):
             rating_id=record_rating.id,
         )
         self.assertEqual(
-            Store("Message", message._message_format(for_current_user=True)).get_result(),
+            Store(message, for_current_user=True).get_result(),
             {
                 "Message": [
                     {
                         "attachments": [],
-                        "author": {
-                            "id": self.users[1].partner_id.id,
-                            "is_company": self.users[1].partner_id.is_company,
-                            "user_livechat_username": self.users[1].livechat_username,
-                            "type": "partner",
-                            "userId": self.users[1].id,
-                            "isInternalUser": self.users[1]._is_internal(),
-                            "write_date": fields.Datetime.to_string(self.users[1].write_date),
-                        },
+                        "author": {"id": self.users[1].partner_id.id, "type": "partner"},
                         "body": message.body,
                         "date": message.date,
                         "write_date": message.write_date,
                         "create_date": message.create_date,
                         "id": message.id,
-                        "default_subject": channel_livechat_1.name,
+                        "default_subject": "test1 Ernest Employee",
                         "is_discussion": False,
                         "is_note": True,
                         "linkPreviews": [],
@@ -100,11 +100,12 @@ class TestImLivechatMessage(HttpCase):
                             "model": "discuss.channel",
                             "module_icon": "/mail/static/description/icon.png",
                         },
+                        "parentMessage": False,
                         "pinned_at": False,
                         "rating": {
                             "id": record_rating.id,
                             "ratingImageUrl": record_rating.rating_image_url,
-                            "ratingText": record_rating.rating_text,
+                            "ratingText": "top",
                         },
                         "recipients": [],
                         "record_name": "test1 Ernest Employee",
@@ -114,6 +115,17 @@ class TestImLivechatMessage(HttpCase):
                         "subject": False,
                         "subtype_description": False,
                         "trackingValues": [],
+                    },
+                ],
+                "Persona": [
+                    {
+                        "id": self.users[1].partner_id.id,
+                        "is_company": False,
+                        "isInternalUser": True,
+                        "type": "partner",
+                        "user_livechat_username": "chuck",
+                        "userId": self.users[1].id,
+                        "write_date": fields.Datetime.to_string(self.users[1].write_date),
                     },
                 ],
             },

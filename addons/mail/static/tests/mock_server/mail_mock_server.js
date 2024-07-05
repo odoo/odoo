@@ -321,11 +321,8 @@ async function discuss_channel_messages(request) {
     return {
         ...res,
         data: new mailDataHelpers.Store(
-            "Message",
-            MailMessage._message_format(
-                messages.map((message) => message.id),
-                makeKwArgs({ for_current_user: true })
-            )
+            MailMessage.browse(messages.map((message) => message.id)),
+            makeKwArgs({ for_current_user: true })
         ).get_result(),
         messages: messages.map((message) => ({ id: message.id })),
     };
@@ -397,8 +394,8 @@ async function discuss_channel_pins(request) {
         ["pinned_at", "!=", false],
     ]);
     return new mailDataHelpers.Store(
-        "Message",
-        MailMessage._message_format(messageIds, makeKwArgs({ for_current_user: true }))
+        messageIds,
+        makeKwArgs({ for_current_user: true })
     ).get_result();
 }
 
@@ -465,11 +462,8 @@ async function discuss_history_messages(request) {
     return {
         ...res,
         data: new mailDataHelpers.Store(
-            "Message",
-            MailMessage._message_format(
-                messagesWithNotification.map((message) => message.id),
-                makeKwArgs({ for_current_user: true })
-            )
+            MailMessage.browse(messagesWithNotification.map((message) => message.id)),
+            makeKwArgs({ for_current_user: true })
         ).get_result(),
         messages: messages.map((message) => ({ id: message.id })),
     };
@@ -489,11 +483,8 @@ async function discuss_inbox_messages(request) {
     return {
         ...res,
         data: new mailDataHelpers.Store(
-            "Message",
-            MailMessage._message_format(
-                messages.map((message) => message.id),
-                makeKwArgs({ for_current_user: true, add_followers: true })
-            )
+            MailMessage.browse(messages.map((message) => message.id)),
+            makeKwArgs({ for_current_user: true, add_followers: true })
         ).get_result(),
         messages: messages.map((message) => ({ id: message.id })),
     };
@@ -622,8 +613,8 @@ export async function mail_message_post(request) {
         });
     }
     return new mailDataHelpers.Store(
-        "Message",
-        MailMessage._message_format([messageId], true)
+        MailMessage.browse(messageId),
+        makeKwArgs({ for_current_user: true })
     ).get_result();
 }
 
@@ -666,8 +657,8 @@ async function mail_message_update_content(request) {
         },
     });
     return new mailDataHelpers.Store(
-        "Message",
-        MailMessage._message_format([message_id], makeKwArgs({ for_current_user: true }))
+        MailMessage.browse(message_id),
+        makeKwArgs({ for_current_user: true })
     ).get_result();
 }
 
@@ -767,11 +758,8 @@ async function discuss_starred_messages(request) {
     return {
         ...res,
         data: new mailDataHelpers.Store(
-            "Message",
-            MailMessage._message_format(
-                messages.map((message) => message.id),
-                makeKwArgs({ for_current_user: true })
-            )
+            MailMessage.browse(messages.map((message) => message.id)),
+            makeKwArgs({ for_current_user: true })
         ).get_result(),
         messages: messages.map((message) => ({ id: message.id })),
     };
@@ -810,11 +798,8 @@ async function mail_thread_messages(request) {
     return {
         ...res,
         data: new mailDataHelpers.Store(
-            "Message",
-            MailMessage._message_format(
-                messages.map((message) => message.id),
-                makeKwArgs({ for_current_user: true })
-            )
+            MailMessage.browse(messages.map((message) => message.id)),
+            makeKwArgs({ for_current_user: true })
         ).get_result(),
         messages: messages.map((message) => ({ id: message.id })),
     };
@@ -909,24 +894,19 @@ async function processRequest(request) {
     if (args.channels_as_member) {
         const channels = DiscussChannel._get_channels_as_member();
         store.add(
-            "Message",
-            channels
-                .map((channel) => {
-                    const channelMessages = MailMessage._filter([
-                        ["model", "=", "discuss.channel"],
-                        ["res_id", "=", channel.id],
-                    ]);
-                    const lastMessage = channelMessages.reduce((lastMessage, message) => {
-                        if (message.id > lastMessage.id) {
-                            return message;
-                        }
-                        return lastMessage;
-                    }, channelMessages[0]);
-                    return lastMessage
-                        ? MailMessage._message_format([lastMessage.id], true)[0]
-                        : false;
-                })
-                .filter((lastMessage) => lastMessage)
+            MailMessage.browse(
+                channels
+                    .map(
+                        (channel) =>
+                            MailMessage._filter([
+                                ["model", "=", "discuss.channel"],
+                                ["res_id", "=", channel.id],
+                            ]).sort((a, b) => b.id - a.id)[0]
+                    )
+                    .filter((lastMessage) => lastMessage)
+                    .map((message) => message.id)
+            ),
+            makeKwArgs({ for_current_user: true })
         );
         store.add(channels.map((channel) => channel.id));
     }
@@ -972,14 +952,13 @@ class Store {
             if (values) {
                 throw new Error(`expected empty values with recordset ${data}: ${values}`);
             }
-            for (const id of data) {
-                if (typeof id !== "number") {
-                    // ServerModel might be a list of ids (from search), or a list of objects
-                    // (from _filter). Only ids are supported here.
-                    throw new Error(`expected number id for recordset ${data}`);
-                }
-            }
-            MockServer.env[data._name]._to_store(data, this, makeKwArgs(kwargs));
+            MockServer.env[data._name]._to_store(
+                data.map((idOrRecord) =>
+                    typeof idOrRecord === "number" ? idOrRecord : idOrRecord.id
+                ),
+                this,
+                makeKwArgs(kwargs)
+            );
             return this;
         } else if (typeof data === "object") {
             if (values) {

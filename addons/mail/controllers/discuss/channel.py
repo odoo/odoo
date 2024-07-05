@@ -21,7 +21,7 @@ class DiscussChannelWebclientController(WebclientController):
             # fetch channels data before messages to benefit from prefetching (channel info might
             # prefetch a lot of data that message format could use)
             store.add(channels)
-            store.add("Message", channels._get_last_messages()._message_format(for_current_user=True))
+            store.add(channels._get_last_messages(), for_current_user=True)
 
 
 class ChannelController(http.Controller):
@@ -67,10 +67,9 @@ class ChannelController(http.Controller):
             messages.set_message_done()
         return {
             **res,
-            "data": Store("Message", messages._message_format(for_current_user=True)).get_result(),
+            "data": Store(messages, for_current_user=True).get_result(),
             "messages": [{"id": message.id} for message in messages],
         }
-
 
     @http.route("/discuss/channel/pinned_messages", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
@@ -79,7 +78,7 @@ class ChannelController(http.Controller):
         if not channel:
             raise NotFound()
         messages = channel.pinned_message_ids.sorted(key="pinned_at", reverse=True)
-        return Store("Message", messages._message_format(for_current_user=True)).get_result()
+        return Store(messages, for_current_user=True).get_result()
 
     @http.route("/discuss/channel/mute", methods=["POST"], type="json", auth="user")
     def discuss_channel_mute(self, channel_id, minutes):
