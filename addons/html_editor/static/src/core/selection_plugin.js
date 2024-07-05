@@ -509,8 +509,34 @@ export class SelectionPlugin extends Plugin {
             !(selectedTableCells.length && node === selectedTableCells[0])
         );
 
-        const traversedNodes = new Set([node, ...descendants(node)]);
-        const edgeNodes = getUnselectedEdgeNodes(selection);
+        let edgeNodes = new Set();
+        if (!selection.isCollapsed) {
+            edgeNodes = getUnselectedEdgeNodes(selection);
+
+            if (
+                node.nodeType === Node.ELEMENT_NODE &&
+                selection.startOffset > 0 &&
+                node.childNodes[selection.startOffset - 1].nodeName === "BR"
+            ) {
+                // Handle the cases:
+                // <p>ab<br>[</p><p>cd</p>] => [p2, cd]
+                // <p>ab<br>[<br>cd</p><p>ef</p>] => [br2, cd, p2, ef]
+                const targetBr = node.childNodes[selection.startOffset - 1];
+                while (node !== targetBr) {
+                    node = iterator.nextNode();
+                }
+                node = iterator.nextNode();
+            }
+        }
+
+        let traversedNodes = new Set();
+        if (edgeNodes.has(node)) {
+            for (const edgeNode of descendants(node)) {
+                edgeNodes.add(edgeNode);
+            }
+        } else {
+            traversedNodes = new Set([node, ...descendants(node)]);
+        }
         while (node && node !== selection.endContainer) {
             node = iterator.nextNode();
             if (node) {
@@ -528,6 +554,20 @@ export class SelectionPlugin extends Plugin {
                         continue;
                     }
                     traversedNodes.add(node);
+                }
+            }
+        }
+        if (node === selection.endContainer) {
+            // Handle the cases:
+            // [<p>ab</p><p>cd<br>]</p> => [ab, p2, cd, br]
+            // [<p>ab</p><p>cd<br>]<br>ef</p> => [ab, p2, cd, br1]
+            for (const childNode of node.childNodes) {
+                if (childNodeIndex(childNode) >= selection.endOffset) {
+                    break;
+                }
+                traversedNodes.add(childNode);
+                for (const descendant of descendants(traversedNodes)) {
+                    traversedNodes.add(descendant);
                 }
             }
         }
