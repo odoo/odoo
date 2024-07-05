@@ -130,8 +130,6 @@ Odoo Web Editor widget.
         'web_editor.assets_wysiwyg': [
             # legacy stuff that are no longer in assets_backend
             'web/static/src/legacy/js/core/class.js',
-            'web/static/src/legacy/js/core/dialog.js',
-            'web/static/src/legacy/xml/dialog.xml',
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/mixins.js',
             'web/static/src/legacy/js/core/service_mixins.js',

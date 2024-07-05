@@ -139,7 +139,6 @@
             'website/static/src/components/autocomplete_with_pages/*',
             'website/static/src/js/tours/tour_utils.js',
             'website/static/src/js/content/website_root.js',
-            'website/static/src/js/widgets/dialog.js',
             'website/static/src/js/content/compatibility.js',
             'website/static/src/js/content/menu.js',
             'website/static/src/js/content/snippets.animation.js',
