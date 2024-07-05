@@ -12,12 +12,14 @@ export class OrderlineNoteButton extends Component {
         label: { type: String, optional: true },
         getter: { type: Function, optional: true },
         setter: { type: Function, optional: true },
+        class: { type: String, optional: true },
     };
     static defaultProps = {
         icon: "fa fa-sticky-note",
         label: _t("Customer Note"),
         getter: (orderline) => orderline.get_customer_note(),
         setter: (orderline, note) => orderline.set_customer_note(note),
+        class: "",
     };
 
     setup() {

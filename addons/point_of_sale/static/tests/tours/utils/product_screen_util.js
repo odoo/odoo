@@ -297,9 +297,11 @@ export function clickFiscalPosition(name, checkIsNeeded = false) {
                 trigger: `.control-buttons button.o_fiscal_position_button:contains("${name}")`,
             },
             {
-                ...Dialog.cancel(),
-                isActive: ["mobile"],
+                content: "cancel dialog",
+                trigger: ".modal .modal-body button[aria-label='Close']",
+                in_modal: false,
                 run: "click",
+                isActive: ["mobile"],
             }
         );
     }
