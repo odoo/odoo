@@ -7,18 +7,9 @@
             'ms-3': !(env.inChatWindow and env.alignedRight) and (props.message.is_discussion),
         }"
         t-attf-class="{{ props.message.is_discussion ? 'mt-n1' : 'mt-1' }}">
-        <button t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content" class="o-mail-MessageReaction btn d-flex p-0 border rounded-1 mb-1"
-            t-on-click="() => this.onClickReaction(reaction)"
-            t-on-contextmenu="onContextMenu"
-            t-att-class="{
-                'o-selfReacted border-primary text-primary fw-bolder': hasSelfReacted(reaction),
-                'bg-view': !hasSelfReacted(reaction),
-                'ms-1': env.inChatWindow and env.alignedRight,
-                'me-1': !(env.inChatWindow and env.alignedRight),
-         }" t-att-title="getReactionSummary(reaction)">
-            <span class="mx-1" t-esc="reaction.content"/>
-            <span class="mx-1" t-esc="reaction.count"/>
-        </button>
+        <t t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content">
+            <MessageReactionList message="this.props.message" openReactionMenu="this.props.openReactionMenu" reaction="reaction"/>
+        </t>
     </div>
 </t>
 </templates>

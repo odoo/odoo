@@ -13,9 +13,11 @@ import {
     startServer,
     step,
     triggerHotkey,
+    hover,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockDate, mockTimeZone, tick } from "@odoo/hoot-mock";
+import { leave } from "@odoo/hoot-dom";
 import { Command, mockService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
@@ -604,10 +606,10 @@ test("Reaction summary", async () => {
     await contains(".o-mail-Message", { text: "Hello world" });
     const partnerNames = ["Foo", "Bar", "FooBar", "Bob"];
     const expectedSummaries = [
-        "Foo has reacted with 😅",
-        "Foo and Bar have reacted with 😅",
-        "Foo, Bar, FooBar have reacted with 😅",
-        "Foo, Bar, FooBar and 1 other person have reacted with 😅",
+        "😅 reacted by Foo",
+        "😅 reacted by Foo and Bar",
+        "😅 reacted by Foo, Bar, and FooBar",
+        "😅 reacted by Foo, Bar, FooBar, and 1 other",
     ];
     for (const [idx, name] of partnerNames.entries()) {
         const partner_id = pyEnv["res.partner"].create({ name });
@@ -619,7 +621,11 @@ test("Reaction summary", async () => {
                 after: ["span", { textContent: "Smileys & Emotion" }],
                 text: "😅",
             });
-            await contains(`.o-mail-MessageReaction[title="${expectedSummaries[idx]}"]`);
+            await hover(".o-mail-MessageReaction");
+            await contains(".o-mail-MessageReactionList-preview", {
+                text: `${expectedSummaries[idx]}`,
+            });
+            await leave(".o-mail-MessageReaction");
         });
     }
 });
