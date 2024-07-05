@@ -8,7 +8,10 @@ describe.current.tags("headless");
 
 test("default state", () => {
     expect(odoo.debug).toBe("");
-    expect(serverState).toEqual({
+    const s = { ...serverState };
+    expect("view_info" in s).toBe(true);
+    delete s.view_info;
+    expect(s).toEqual({
         companies: [{ id: 1, name: "Hermit" }],
         currencies: [
             { id: 1, name: "USD", position: "before", symbol: "$" },

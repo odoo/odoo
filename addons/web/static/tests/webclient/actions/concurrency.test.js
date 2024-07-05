@@ -12,6 +12,8 @@ import {
     models,
     mountWithCleanup,
     onRpc,
+    patchWithCleanup,
+    serverState,
     stepAllNetworkCalls,
     switchView,
     toggleMenuItem,
@@ -674,6 +676,9 @@ test("dialog will only open once for two rapid actions with the target new", asy
 });
 
 test.tags("desktop")("local state, global state, and race conditions", async () => {
+    patchWithCleanup(serverState.view_info, {
+        toy: { multi_record: true, display_name: "Toy", icon: "fab fa-android" },
+    });
     Partner._views = {
         "toy,false": `<toy/>`,
         "list,false": `<list><field name="display_name"/></list>`,
@@ -704,9 +709,6 @@ test.tags("desktop")("local state, global state, and race conditions", async () 
 
     registry.category("views").add("toy", {
         type: "toy",
-        display_name: "Toy",
-        icon: "fab fa-android",
-        multiRecord: true,
         Controller: ToyController,
     });
 

@@ -2,6 +2,9 @@
 
 import { after, before, beforeEach, createJobScopedGetter } from "@odoo/hoot";
 
+const { view_info } = odoo.__session_info__ || {};
+delete odoo.__session_info__;
+
 const { Settings } = luxon;
 
 /**
@@ -65,6 +68,7 @@ const SERVER_STATE_VALUES = {
     timezone: "taht",
     userContext: {},
     userId: 7,
+    view_info,
 };
 
 const getServerStateValues = createJobScopedGetter(

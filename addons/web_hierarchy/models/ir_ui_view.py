@@ -52,3 +52,6 @@ class View(models.Model):
                 valid_attributes=format_list(self.env, HIERARCHY_VALID_ATTRIBUTES),
             )
             self._raise_view_error(msg, node)
+
+    def _get_view_info(self):
+        return {'hierarchy': {'icon': 'fa fa-share-alt o_hierarchy_icon'}} | super()._get_view_info()

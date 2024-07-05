@@ -7,8 +7,6 @@ import { FormCompiler } from "./form_compiler";
 
 export const formView = {
     type: "form",
-    display_name: "Form",
-    multiRecord: false,
     searchMenuTypes: [],
     Controller: FormController,
     Renderer: FormRenderer,
