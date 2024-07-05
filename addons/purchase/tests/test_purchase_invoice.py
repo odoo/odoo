@@ -814,7 +814,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
         self.assertEqual(len(invoice_lines), 2)
         for line in invoice_lines:
-            if (line.product_id.name != self.product_order.name):
+            if (line.product_id == self.product_order):
                 self.assertTrue(line.purchase_line_id in po.order_line)
             else:
                 self.assertFalse(line.purchase_line_id in po.order_line)

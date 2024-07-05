@@ -18,7 +18,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         cls.invoice = cls.init_invoice('out_refund', products=cls.product_a+cls.product_b)
 
         cls.product_line_vals_1 = {
-            'name': '',
+            'name': 'product_a',
             'product_id': cls.product_a.id,
             'account_id': cls.product_a.property_account_income_id.id,
             'partner_id': cls.partner_a.id,
@@ -37,7 +37,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
             'date_maturity': False,
         }
         cls.product_line_vals_2 = {
-            'name': '',
+            'name': 'product_b',
             'product_id': cls.product_b.id,
             'account_id': cls.product_b.property_account_income_id.id,
             'partner_id': cls.partner_a.id,
@@ -144,7 +144,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
-                'name': '',
+                'name': 'product_b',
                 'product_id': self.product_b.id,
                 'product_uom_id': self.product_b.uom_id.id,
                 'account_id': self.product_b.property_account_income_id.id,

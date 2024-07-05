@@ -142,7 +142,14 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
     }
 
     get label() {
-        return this.props.record.data.name;
+        let label = this.props.record.data.name;
+        if (label.includes(this.productName)) {
+            label = label.replace(this.productName, "");
+            if (label.includes("\n")) {
+                label = label.replace("\n", "");
+            }
+        }
+        return label;
     }
 
     get Many2XAutocompleteProps() {
@@ -187,7 +194,7 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
     }
 
     updateLabel(value) {
-        this.props.record.update({ name: value });
+        this.props.record.update({ name: this.productName ? `${this.productName}\n${value}` : value });
     }
 }
 
