@@ -515,9 +515,11 @@ class AccountMoveLine(models.Model):
 
             values = []
             if line.journal_id.type == 'sale':
+                values.append(product.display_name)
                 if product.description_sale:
                     values.append(product.description_sale)
             elif line.journal_id.type == 'purchase':
+                values.append(product.display_name)
                 if product.description_purchase:
                     values.append(product.description_purchase)
             line.name = '\n'.join(values)
