@@ -218,6 +218,6 @@ test("should not crash when changing attributes and removing a protecting anchor
     expect(lastStep.mutations[0].type).toBe("attributes");
     expect(lastStep.mutations[1].type).toBe("remove");
     expect(plugins.get("history").unserializeNode(lastStep.mutations[1].node).outerHTML).toBe(
-        `<div data-oe-protected="true" data-attr="other"><p>a</p></div>`
+        `<div data-attr="other" data-oe-protected="true"><p>a</p></div>`
     );
 });
