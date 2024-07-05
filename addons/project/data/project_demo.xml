@@ -1244,6 +1244,7 @@ Send it ASAP, its urgent.</field>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin')), Command.link(ref('base.user_demo'))]"/>
             <field name="project_id"/>
             <field name="name">Attend a project status meeting</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(hours=5)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="description">Join the scheduled project status meeting to provide updates, discuss progress, and align with team members.</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_15')])]"/>
         </record>
@@ -1251,6 +1252,7 @@ Send it ASAP, its urgent.</field>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="project_id"/>
             <field name="name">Review and reply to emails</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(hours=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="description">Spend time going through inbox, reviewing and replying to important emails to stay organized and maintain communication.</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_10')])]"/>
         </record>
@@ -1260,6 +1262,7 @@ Send it ASAP, its urgent.</field>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin')), Command.link(ref('base.user_demo'))]"/>
             <field name="project_id"/>
             <field name="name">Empty Trash Bins</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="description">Take a few minutes to empty and replace the trash bins in the office. Keeping living space clean and odor-free.</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_14')])]"/>
         </record>
@@ -1285,6 +1288,7 @@ Send it ASAP, its urgent.</field>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="project_id"/>
             <field name="name">Research Investment Options</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=60)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="description">Conduct thorough research on various investment options to make informed decisions about growing your financial portfolio.</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_11')])]"/>
         </record>
@@ -1301,6 +1305,7 @@ Send it ASAP, its urgent.</field>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="project_id"/>
             <field name="name">Attend a Local Event</field>
+            <field name="date_deadline" eval="(DateTime.today() - relativedelta(days=12)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="description">Participate in a local event to connect with the community</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_12')])]"/>
         </record>
