@@ -12,6 +12,9 @@ patch(Navbar, {
 patch(Navbar.prototype, {
     async onClickBackButton() {
         if (this.pos.mainScreen.component && this.pos.config.module_pos_restaurant) {
+            if (!this.pos.selectedTable) {
+                this.pos.add_new_order();
+            }
             if (
                 (this.pos.mainScreen.component === ProductScreen &&
                     this.pos.mobile_pane == "right") ||
@@ -48,7 +51,14 @@ patch(Navbar.prototype, {
         this.pos.showScreen("ProductScreen");
     },
     getFloatingOrders() {
-        return this.pos.get_open_orders().filter((order) => !order.table_id);
+        return this.pos
+            .get_open_orders()
+            .filter((order) => !order.table_id)
+            .sort((orderA, orderB) => {
+                const a = orderA.note ? orderA.note : orderA.tracking_number;
+                const b = orderB.note ? orderB.note : orderB.tracking_number;
+                return a > b ? 1 : -1;
+            });
     },
     selectFloatingOrder(order) {
         this.pos.set_order(order);
@@ -56,9 +66,9 @@ patch(Navbar.prototype, {
     },
     editOrderNote(order) {
         this.dialog.add(TextInputPopup, {
-            title: _t("Edit order note"),
-            placeholder: _t("Emma's Birthday Party"),
-            startingValue: order.note,
+            title: _t("Edit order name"),
+            placeholder: _t("18.45 John 4P"),
+            startingValue: order.note ? order.note : order.tracking_number,
             getPayload: async (newName) => {
                 if (typeof order.id == "number") {
                     this.pos.data.write("pos.order", [order.id], {
