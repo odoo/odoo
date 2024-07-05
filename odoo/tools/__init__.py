@@ -14,6 +14,7 @@ from . import cloc
 from . import constants
 from . import pdf
 from . import pycompat
+from . import template_inheritance
 from . import win32
 from .parse_version import parse_version
 from .barcode import check_barcode_encoding
@@ -28,7 +29,6 @@ from .mail import *
 from .misc import *
 from .query import Query
 from .sql import *
-from .template_inheritance import *
 from .translate import *
 from .xml_utils import *
 from .convert import *
