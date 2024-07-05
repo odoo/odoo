@@ -7,6 +7,7 @@ import contextlib
 import io
 
 from odoo import api, fields, models, tools, _
+from odoo.tools.translate import trans_export, trans_export_records
 
 NEW_LANG_KEY = '__new__'
 
@@ -42,10 +43,10 @@ class BaseLanguageExport(models.TransientModel):
         with contextlib.closing(io.BytesIO()) as buf:
             if this.export_type == 'model':
                 ids = self.env[this.model_name].search(ast.literal_eval(this.domain)).ids
-                tools.trans_export_records(lang, this.model_name, ids, buf, this.format, self._cr)
+                trans_export_records(lang, this.model_name, ids, buf, this.format, self._cr)
             else:
                 mods = sorted(this.mapped('modules.name')) or ['all']
-                tools.trans_export(lang, mods, buf, this.format, self._cr)
+                trans_export(lang, mods, buf, this.format, self._cr)
             out = base64.encodebytes(buf.getvalue())
 
         filename = 'new'

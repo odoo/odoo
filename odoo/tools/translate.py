@@ -15,7 +15,6 @@ import json
 import locale
 import logging
 import os
-from tokenize import generate_tokens, STRING, NEWLINE, INDENT, DEDENT
 import polib
 import re
 import tarfile
@@ -25,8 +24,9 @@ from collections import defaultdict, namedtuple
 from contextlib import suppress
 from datetime import datetime
 from os.path import join
-
 from pathlib import Path
+from tokenize import generate_tokens, STRING, NEWLINE, INDENT, DEDENT
+
 from babel.messages import extract
 from lxml import etree, html
 from markupsafe import escape, Markup
@@ -34,8 +34,16 @@ from psycopg2.extras import Json
 
 import odoo
 from odoo.exceptions import UserError
-from . import config, pycompat
+from . import pycompat
+from .config import config
 from .misc import file_open, file_path, get_iso_codes, OrderedSet, SKIPPED_ELEMENT_TYPES
+
+__all__ = [
+    "_",
+    "_lt",
+    "html_translate",
+    "xml_translate",
+]
 
 _logger = logging.getLogger(__name__)
 
@@ -978,7 +986,7 @@ def extract_formula_terms(formula):
     tokens = generate_tokens(io.StringIO(formula).readline)
     tokens = (token for token in tokens if token.type not in {NEWLINE, INDENT, DEDENT})
     for t1 in tokens:
-        if not t1.string == '_t':
+        if t1.string != '_t':
             continue
         t2 = next(tokens, None)
         if t2 and t2.string == '(':
