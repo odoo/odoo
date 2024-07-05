@@ -905,7 +905,16 @@ class Project(models.Model):
         return False
 
     @api.model
+<<<<<<< HEAD
     def _get_values_analytic_account_batch(self, project_vals):
+||||||| parent of dd214e926d38 (temp)
+    def _create_analytic_account_from_values(self, values):
+        company = self.env['res.company'].browse(values.get('company_id', False))
+        project_plan_id = int(self.env['ir.config_parameter'].sudo().get_param('analytic.analytic_plan_projects'))
+=======
+    def _create_analytic_account_from_values(self, values):
+        company = self.env['res.company'].browse(values.get('company_id', False))
+>>>>>>> dd214e926d38 (temp)
         project_plan_id = int(self.env['ir.config_parameter'].sudo().get_param('analytic.project_plan'))
 
         if not project_plan_id:
