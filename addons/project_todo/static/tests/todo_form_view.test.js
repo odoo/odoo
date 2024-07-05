@@ -1,7 +1,9 @@
 import { expect, test, beforeEach } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 
-import { mountView, contains, onRpc } from "@web/../tests/web_test_helpers";
+import { mountView, onRpc, mountWithCleanup, getService, contains } from "@web/../tests/web_test_helpers";
+import { WebClient } from "@web/webclient/webclient";
 
 import { defineTodoModels } from "./todo_test_helpers";
 import { ProjectTask } from "./mock_server/mock_models/project_task";
@@ -19,6 +21,7 @@ beforeEach(() => {
             <form string="To-do" class="o_todo_form_view" js_class="todo_form">
                 <field name="name"/>
                 <field name="priority" invisible="1"/>
+                <field name="date_deadline" widget="remaining_days"/>
             </form>`,
         search: `
             <search/>`,
@@ -57,5 +60,28 @@ test("Check that project_task_action_convert_todo_to_task does not appear in the
     expect(menuActions.includes("Convert to Task")).toBe(false, {
         message:
             "project_task_action_convert_todo_to_task action should appear in the menu actions",
+    });
+});
+
+test("Check that todo_form view contains the TodoDoneCheckmark and remaining_days widgets", async () => {
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "To-do",
+        res_model: "project.task",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "list"],
+            [false, "form"],
+        ],
+    });
+
+    expect(".o_field_todo_done_checkmark").toHaveCount(3, {
+        message: "The todo list view should contain 3 TodoDoneCheckmark widgets",
+    });
+
+    await contains(".o_data_cell").click();
+    await animationFrame();
+    expect(".o_field_remaining_days").toHaveCount(1, {
+        message: "The todo form view should have deadline field (o_field_remaining_days)",
     });
 });
