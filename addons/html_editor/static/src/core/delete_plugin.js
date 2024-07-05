@@ -16,6 +16,7 @@ import {
 } from "../utils/dom_info";
 import { getState, isFakeLineBreak, prepareUpdate } from "../utils/dom_state";
 import {
+    childNodes,
     closestElement,
     descendants,
     firstLeaf,
@@ -605,86 +606,63 @@ export class DeletePlugin extends Plugin {
     // If joined, the range is collapsed to start.
     // Returns the updated range.
     joinFragments(range) {
-        const { joinableLeft, joinableRight } = this.getJoinableFragments(range);
-        const { commonAncestorContainer: commonAncestor } = range;
+        const joinableLeft = this.getJoinableFragment(range, "start");
+        const joinableRight = this.getJoinableFragment(range, "end");
+        const join = this.getJoinOperation(joinableLeft.type, joinableRight.type);
 
-        if (!joinableLeft || !joinableRight) {
-            // Nothing to join. Consider it joined already.
-            return this.collapseRange(range);
-        }
+        const didJoin = join(joinableLeft.node, joinableRight.node, range.commonAncestorContainer);
 
-        this.canBeMerged(joinableLeft, joinableRight, commonAncestor);
-        if (
-            joinableLeft.isBlock &&
-            joinableRight.isBlock &&
-            !joinableLeft.isUnmergeable &&
-            !joinableRight.isUnmergeable
-        ) {
-            this.mergeBlocks(joinableLeft.node, joinableRight.node, commonAncestor);
-        } else if (joinableLeft.isBlock && !joinableRight.isBlock && !joinableLeft.isUnmergeable) {
-            this.joinInlineIntoBlock(joinableLeft.node, joinableRight.node);
-        } else if (joinableRight.isBlock && !joinableLeft.isBlock && !joinableRight.isUnmergeable) {
-            this.joinBlockIntoInline(joinableLeft.node, joinableRight.node, commonAncestor);
-        } else if (joinableRight.isUnmergeable || joinableLeft.isUnmergeable) {
-            // Both nodes are inline but at least one of them is unmergeable.
-            // Cannot join. Keep range unchanged.
-            return range;
-        }
-        return this.collapseRange(range);
+        return didJoin ? this.collapseRange(range) : range;
     }
 
-    getJoinableFragments(range) {
-        const { startContainer, startOffset, endContainer, endOffset, commonAncestorContainer } =
-            range;
-        // Starting from `element`, returns the closest block up to
-        // (not-inclusive) the common ancestor. If not found, returns the
+    /**
+     * Retrieves the joinable fragment based on the given range and side.
+     *
+     * @param {Object} range - range-like object.
+     * @param {"start"|"end"} side
+     * @returns {Object} - { node: Node|null, type: "block"|"inline"|"null" }
+     */
+    getJoinableFragment(range, side) {
+        const commonAncestor = range.commonAncestorContainer;
+        const container = side === "start" ? range.startContainer : range.endContainer;
+        const offset = side === "start" ? range.startOffset : range.endOffset;
+
+        if (container === range.commonAncestorContainer) {
+            // This means a direct child of the commonAncestor was removed.
+            // The joinable in this case is its sibling (previous for the start
+            // side, next for the end side), but only if inline.
+            const sibling = childNodes(commonAncestor)[side === "start" ? offset - 1 : offset];
+            if (sibling && !isBlock(sibling)) {
+                return { node: sibling, type: "inline" };
+            }
+            // No fragment to join.
+            return { node: null, type: "null" };
+        }
+        // Starting from `container`, find the closest block up to
+        // (not-inclusive) the common ancestor. If not found, keep the common
         // ancestor's child inline element.
-        const getJoinableElement = (element) => {
-            let last;
-            while (element !== commonAncestorContainer) {
-                if (isBlock(element)) {
-                    return { node: element, isBlock: true };
-                }
-                last = element;
-                element = element.parentElement;
+        let last;
+        let element = container;
+        while (element !== commonAncestor) {
+            if (isBlock(element)) {
+                return { node: element, type: "block" };
             }
-            return { node: last, isBlock: false };
-        };
-
-        // Get joinable left
-        let joinableLeft;
-        if (startContainer === commonAncestorContainer) {
-            // This means the element was removed from the ancestor's child list.
-            // The joinable in this case is its previous sibling, but only if it's not a block.
-            const previousSibling = startOffset
-                ? commonAncestorContainer.childNodes[startOffset - 1]
-                : null;
-            if (previousSibling && !isBlock(previousSibling)) {
-                // If it's a block, as it was not involved in the deleted range, its paragraph break
-                // was not affected, and it should not be joined with other elements.
-                joinableLeft = { node: previousSibling, isBlock: false };
-            }
-        } else {
-            joinableLeft = getJoinableElement(startContainer);
+            last = element;
+            element = element.parentElement;
         }
+        return { node: last, type: "inline" };
+    }
 
-        // Get joinable right
-        let joinableRight;
-        if (endContainer === commonAncestorContainer) {
-            // The same applies here. The joinable in this case is the sibling
-            // following the last removed node, but only if it's not a block.
-            const nextSibling =
-                endOffset < nodeSize(commonAncestorContainer)
-                    ? commonAncestorContainer.childNodes[endOffset]
-                    : null;
-            if (nextSibling && !isBlock(nextSibling)) {
-                joinableRight = { node: nextSibling, isBlock: false };
-            }
-        } else {
-            joinableRight = getJoinableElement(endContainer);
-        }
-
-        return { joinableLeft, joinableRight };
+    getJoinOperation(leftType, rightType) {
+        return (
+            {
+                "block + block": this.joinBlocks,
+                "block + inline": this.joinInlineIntoBlock,
+                "inline + block": this.joinBlockIntoInline,
+            }[leftType + " + " + rightType] || (() => true)
+        ).bind(this);
+        // "inline + inline": Nothing to do, consider it joined.
+        // Same any combination involving type "null" (no joinable element).
     }
 
     isUnmergeable(node) {
@@ -695,21 +673,13 @@ export class DeletePlugin extends Plugin {
         return isUnbreakable(node);
     }
 
-    canBeMerged(joinableLeft, joinableRight, commonAncestor) {
-        joinableLoop: for (const joinable of [joinableLeft, joinableRight]) {
-            let node = joinable.node;
-            while (node !== commonAncestor) {
-                if (this.isUnmergeable(node)) {
-                    joinable.isUnmergeable = true;
-                    continue joinableLoop;
-                }
-                node = node.parentElement;
-            }
-            joinable.isUnmergeable = false;
+    joinBlocks(left, right, commonAncestor) {
+        const canBeMerged = (block) =>
+            !this.getClosest(block, commonAncestor, (node) => this.isUnmergeable(node));
+        if (!canBeMerged(left) || !canBeMerged(right)) {
+            return false;
         }
-    }
 
-    mergeBlocks(left, right, commonAncestor) {
         left.append(...right.childNodes);
         let toRemove = right;
         let parent = right.parentElement;
@@ -719,19 +689,31 @@ export class DeletePlugin extends Plugin {
             parent = parent.parentElement;
         }
         toRemove.remove();
+        return true;
     }
 
-    joinInlineIntoBlock(leftBlock, rightInline) {
+    joinInlineIntoBlock(leftBlock, rightInline, commonAncestor) {
+        if (this.getClosest(leftBlock, commonAncestor, (node) => this.isUnmergeable(node))) {
+            // Left block is unmergeable.
+            return false;
+        }
+
         // @todo: avoid appending a BR as last child of the block
         while (rightInline && !isBlock(rightInline)) {
             const toAppend = rightInline;
             rightInline = rightInline.nextSibling;
             leftBlock.append(toAppend);
         }
+        return true;
     }
 
     joinBlockIntoInline(leftInline, rightBlock, commonAncestor) {
-        leftInline.after(...rightBlock.childNodes);
+        if (this.getClosest(rightBlock, commonAncestor, (node) => this.isUnmergeable(node))) {
+            // Right block is unmergeable.
+            return false;
+        }
+
+        leftInline.after(...childNodes(rightBlock));
         let toRemove = rightBlock;
         let parent = rightBlock.parentElement;
         // Propagate until commonAncestor, removing empty blocks
@@ -747,6 +729,7 @@ export class DeletePlugin extends Plugin {
             }
         }
         toRemove.remove();
+        return true;
     }
 
     // --------------------------------------------------------------------------
