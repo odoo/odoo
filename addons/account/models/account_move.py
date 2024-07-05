@@ -4273,6 +4273,8 @@ class AccountMove(models.Model):
             lock_dates = move._get_violated_lock_dates(move.date, affects_tax_report)
             if lock_dates:
                 move.date = move._get_accounting_date(move.invoice_date or move.date, affects_tax_report)
+            if not move.payment_reference and move.move_type in ('in_invoice', 'in_refund', 'in_receipt'):
+                move.payment_reference = move.ref
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
         to_post.line_ids._create_analytic_lines()
