@@ -145,7 +145,8 @@
             'barcodes_gs1_nomenclature/static/src/js/barcode_parser.js',
             'barcodes_gs1_nomenclature/static/src/js/barcode_service.js',
             'web/static/src/views/fields/parsers.js',
-            'web/static/src/webclient/barcode/barcode_scanner.*',
+            'web/static/src/webclient/barcode/barcode_dialog.*',
+            'web/static/src/webclient/barcode/barcode_video_scanner.*',
             'web/static/src/webclient/barcode/ZXingBarcodeDetector.js',
             'web/static/src/webclient/barcode/crop_overlay.*',
             # report download utils
