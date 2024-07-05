@@ -243,6 +243,9 @@ class PurchaseOrder(models.Model):
         picking_type = self.env['stock.picking.type'].search([('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)])
         if not picking_type:
             picking_type = self.env['stock.picking.type'].search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
+        company_warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1)
+        if not company_warehouse:
+            self.env['stock.warehouse']._warehouse_redirect_warning()
         return picking_type[:1]
 
     def _prepare_picking(self):

@@ -19,7 +19,10 @@ class PosConfig(models.Model):
     _check_company_auto = True
 
     def _default_warehouse_id(self):
-        return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).id
+        warehouse = self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).id
+        if not warehouse:
+            self.env['stock.warehouse']._warehouse_redirect_warning()
+        return warehouse
 
     def _default_picking_type_id(self):
         return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id

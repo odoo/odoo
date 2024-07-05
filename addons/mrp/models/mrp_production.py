@@ -293,6 +293,9 @@ class MrpProduction(models.Model):
             if mo.picking_type_id and mo.picking_type_id.company_id == mo.company_id:
                 continue
             mo.picking_type_id = picking_type_by_company.get(mo.company_id.id, False)
+            company_warehouse = self.env['stock.warehouse'].search([('company_id', '=', mo.company_id.id)], limit=1)
+            if not company_warehouse:
+                self.env['stock.warehouse']._warehouse_redirect_warning()
 
     @api.depends('bom_id', 'product_id')
     def _compute_uom_id(self):
