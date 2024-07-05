@@ -28,9 +28,9 @@ test("base rendering not editable", async () => {
         res_model: "res.partner",
     });
     patchWithCleanup(MailThread.prototype, {
-        _to_store(ids, store) {
+        _thread_to_store(ids, store) {
             // mimic user without write access
-            super._to_store(...arguments);
+            super._thread_to_store(...arguments);
             store.add("Thread", { hasWriteAccess: false, id: ids[0], model: this._name });
         },
     });
