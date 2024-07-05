@@ -223,13 +223,9 @@ registry.category("web_tour.tours").add('totp_login_device', {
     trigger: '.dropdown-item[data-menu=logout]',
     run: "click",
 }, {
-    content: "check that we're back on the login page or go to it",
-    trigger: 'input#login, a:contains(Log in)', 
-    run: "edit Test",
-}, {
-    content: "input login again",
-    trigger: 'input#login',
-    run: "edit demo",
+    content: "check that we're back on the quick login page",
+    trigger: ".o_user_switch .o_user_avatar",
+    run: "click",
 }, {
     content: 'input password again',
     trigger: 'input#password',

@@ -13,18 +13,12 @@
         </template>
 
         <template id="login" inherit_id="web.login" name="OAuth Login buttons">
-            <xpath expr="//form" position="before">
-                <t t-set="form_small" t-value="True" t-if="len(providers) &gt; 2"/>
-            </xpath>
             <xpath expr="//div[hasclass('o_login_auth')]" position="inside">
                 <t t-call="auth_oauth.providers"/>
             </xpath>
         </template>
 
         <template id="signup" inherit_id="auth_signup.signup" name="OAuth Signup buttons">
-            <xpath expr="//form" position="before">
-                <t t-set="form_small" t-value="True"/>
-            </xpath>
             <xpath expr="//div[hasclass('o_login_auth')]" position="inside">
                 <t t-call="auth_oauth.providers"/>
             </xpath>
