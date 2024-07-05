@@ -4053,9 +4053,10 @@ class AccountMoveLine(models.Model):
 
     def _get_computed_uom(self):
         self.ensure_one()
-        if self.product_id:
+        if self.move_id.is_purchase_document():
+            return self.product_id.uom_po_id
+        else:
             return self.product_id.uom_id
-        return False
 
     def _set_price_and_tax_after_fpos(self):
         self.ensure_one()
