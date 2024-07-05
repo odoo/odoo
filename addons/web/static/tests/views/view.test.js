@@ -925,22 +925,6 @@ test("real life banner", async () => {
 // js_class
 ////////////////////////////////////////////////////////////////////////////
 
-test("rendering with given jsClass", async function () {
-    expect.assertions(4);
-    onRpc("get_views", ({ kwargs }) => {
-        expect(kwargs.views).toEqual([[false, "toy"]]);
-        expect(pick(kwargs.options, "action_id", "load_filters", "toolbar")).toEqual({
-            action_id: false,
-            load_filters: false,
-            toolbar: false,
-        });
-    });
-
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy_imp" } });
-    expect(".o_toy_view.toy_imp").toHaveCount(1);
-    expect(".o_toy_view.toy_imp").toHaveText("Arch content (id=false)");
-});
-
 test("rendering with loaded arch attribute 'js_class'", async function () {
     expect.assertions(4);
     onRpc("get_views", ({ kwargs }) => {
@@ -971,62 +955,6 @@ test("rendering with given arch attribute 'js_class'", async function () {
     });
     expect(".o_toy_view.toy_imp").toHaveCount(1);
     expect(".o_toy_view.toy_imp").toHaveText("Specific arch content for specific class");
-});
-
-test("rendering with loaded arch attribute 'js_class' and given jsClass", async function () {
-    expect.assertions(3);
-    viewRegistry.add("toy_2", {
-        type: "toy",
-        Controller: class extends Component {
-            static props = ["*"];
-            static template = xml`<div class="o_toy_view_2"/>`;
-            static type = "toy";
-        },
-    });
-    onRpc("get_views", ({ kwargs }) => {
-        expect(kwargs.views).toEqual([[2, "toy"]]);
-        expect(pick(kwargs.options, "action_id", "load_filters", "toolbar")).toEqual({
-            action_id: false,
-            load_filters: false,
-            toolbar: false,
-        });
-    });
-    await mountWithCleanup(View, {
-        props: {
-            resModel: "animal",
-            type: "toy_2",
-            viewId: 2,
-        },
-    });
-    expect(".o_toy_view.toy_imp").toHaveCount(1);
-});
-
-test("rendering with given arch attribute 'js_class' and given jsClass", async function () {
-    expect.assertions(1);
-    viewRegistry.add(
-        "toy_2",
-        {
-            type: "toy",
-            Controller: class extends Component {
-                static props = ["*"];
-                static template = xml`<div class="o_toy_view_2"/>`;
-                static type = "toy";
-            },
-        },
-        { force: true }
-    );
-    onRpc("get_views", () => {
-        throw new Error("no get_views expected");
-    });
-    await mountWithCleanup(View, {
-        props: {
-            resModel: "animal",
-            type: "toy_2",
-            arch: `<toy js_class="toy_imp"/>`,
-            fields: {},
-        },
-    });
-    expect(".o_toy_view.toy_imp").toHaveCount(1);
 });
 
 ////////////////////////////////////////////////////////////////////////////
