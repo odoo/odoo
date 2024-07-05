@@ -109,7 +109,7 @@ def export_translation():
     with open(config["translate_out"], "wb") as buf:
         registry = odoo.modules.registry.Registry.new(dbname)
         with registry.cursor() as cr:
-            odoo.tools.trans_export(config["language"],
+            odoo.tools.translate.trans_export(config["language"],
                 config["translate_modules"] or ["all"], buf, fileformat, cr)
 
     _logger.info('translation file written successfully')

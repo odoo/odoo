@@ -29,7 +29,7 @@ from .mail import *
 from .misc import *
 from .query import Query
 from .sql import *
-from .translate import *
+from .translate import _, _lt, html_translate, xml_translate
 from .xml_utils import *
 from .convert import *
 from . import osutil

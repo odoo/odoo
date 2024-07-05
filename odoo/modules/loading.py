@@ -430,7 +430,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
 
         if load_lang:
             for lang in load_lang.split(','):
-                tools.load_language(cr, lang)
+                tools.translate.load_language(cr, lang)
 
         # STEP 2: Mark other modules to be loaded/updated
         if update_module:

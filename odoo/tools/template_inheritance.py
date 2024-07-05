@@ -7,8 +7,8 @@ from lxml import etree
 from lxml.builder import E
 
 from odoo.tools.translate import _
-from odoo.tools import SKIPPED_ELEMENT_TYPES, html_escape
 from odoo.exceptions import ValidationError
+from .misc import SKIPPED_ELEMENT_TYPES, html_escape
 
 __all__ = []
 
