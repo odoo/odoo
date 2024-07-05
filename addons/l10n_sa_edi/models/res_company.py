@@ -20,7 +20,7 @@ class ResCompany(models.Model):
 
             See https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ec/
         """
-        private_key = ec.generate_private_key(ec.SECP256K1, default_backend())
+        private_key = ec.generate_private_key(ec.SECP256K1(), default_backend())
         return private_key.private_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PrivateFormat.TraditionalOpenSSL,
