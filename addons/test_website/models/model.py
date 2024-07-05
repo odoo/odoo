@@ -29,6 +29,7 @@ class TestModel(models.Model):
         sanitize_attributes=False,
         sanitize_form=False,
     )
+    tag_id = fields.Many2one('test.tag')
 
     @api.model
     def _search_get_detail(self, website, order, options):
