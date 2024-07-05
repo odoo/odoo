@@ -12,8 +12,15 @@
                     <i class="fa fa-times" role="img" aria-label="Close" title="Close" />Discard</button>
             </div>
             <div t-if="pos.isEditMode" class="edit-buttons d-flex align-items-center justify-content-center px-3 border-bottom bg-view overflow-x-auto w-100">
-                <button t-attf-class="ms-auto {{editButtonClass}}" t-on-click.stop="createTable">
-                    <i class="fa fa-plus" role="img" aria-label="Add" title="Add" />Table</button>
+                <span role="button" t-attf-class="ms-auto {{editButtonClass}}" class="edit-button text-center d-flex flex-column btn btn-light text-uppercase" t-on-click.stop="doCreateTable.call" t-att-disabled="doCreateTable.status === 'loading'">
+                    <t t-if="doCreateTable.status === 'loading'">
+                        <i class="fa fa-spinner fa-spin icon-button" role="img" aria-label="Loading" title="Loading"></i>
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-plus icon-button" role="img" aria-label="Add" title="Add"></i>
+                    </t>
+                    <span class="text-button d-block">Table</span>
+                </span>
                 <button t-attf-class="{{editButtonClass}}" t-att-disabled="selectedTables.length == 0" t-on-click.stop="changeSeatsNum">
                     <i class="fa fa-user" role="img" aria-label="Seats" title="Seats" />Seats</button>
                 <button t-attf-class="{{editButtonClass}}" t-if="selectedTables.some((t) => t.shape === 'square')" t-att-disabled="selectedTables.length == 0" t-on-click.stop="() => this.changeShape('round')">

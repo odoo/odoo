@@ -18,6 +18,7 @@ import { unique } from "@web/core/utils/arrays";
 import { loadImage } from "@point_of_sale/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { hasTouch } from "@web/core/browser/feature_detection";
+import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
 
 export class FloorScreen extends Component {
     static components = { Table };
@@ -35,6 +36,10 @@ export class FloorScreen extends Component {
             floorWidth: "100%",
             selectedTableIds: this.getTablesSelectedByDefault(),
             isColorPicker: false,
+        });
+
+        this.doCreateTable = useTrackedAsync(async () => {
+            await this.createTable();
         });
         this.floorMapRef = useRef("floor-map-ref");
         this.floorScrollBox = useRef("floor-map-scroll");
@@ -398,6 +403,7 @@ export class FloorScreen extends Component {
             },
         });
     }
+
     async createTable() {
         const newTable = await this._createTableHelper();
         if (newTable) {
