@@ -122,10 +122,8 @@ import warnings
 
 import odoo.modules
 from odoo.models import check_property_field_value_name, READ_GROUP_NUMBER_GRANULARITY
-from odoo.tools import (
-    pycompat, pattern_to_translated_trigram_pattern, value_to_translated_trigram_pattern,
-    Query, SQL, get_lang,
-)
+from odoo.tools import pycompat, Query, SQL, get_lang
+from odoo.tools.sql import pattern_to_translated_trigram_pattern, value_to_translated_trigram_pattern
 
 # Domain operators.
 NOT_OPERATOR = '!'

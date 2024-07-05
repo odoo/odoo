@@ -25,7 +25,7 @@ from odoo.modules.db import FunctionStatus
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
 from odoo.tools import (
-    config, existing_tables, lazy_classproperty,
+    config, lazy_classproperty,
     lazy_property, sql, OrderedSet, SQL,
     remove_accents,
 )
@@ -726,7 +726,7 @@ class Registry(Mapping):
             for name, model in env.registry.items()
             if not model._abstract and model._table_query is None
         }
-        missing_tables = set(table2model).difference(existing_tables(cr, table2model))
+        missing_tables = set(table2model).difference(sql.existing_tables(cr, table2model))
 
         if missing_tables:
             missing = {table2model[table] for table in missing_tables}
@@ -737,7 +737,7 @@ class Registry(Mapping):
                 env[name].init()
             env.flush_all()
             # check again, and log errors if tables are still missing
-            missing_tables = set(table2model).difference(existing_tables(cr, table2model))
+            missing_tables = set(table2model).difference(sql.existing_tables(cr, table2model))
             for table in missing_tables:
                 _logger.error("Model %s has no table.", table2model[table])
 

@@ -17,7 +17,7 @@ from psycopg2.sql import Identifier, SQL, Placeholder
 from odoo import api, fields, models, tools, _, _lt, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_list, pycompat, unique, OrderedSet
+from odoo.tools import format_list, pycompat, unique, OrderedSet, sql as sqltools
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 
 _logger = logging.getLogger(__name__)
@@ -291,10 +291,10 @@ class IrModel(models.Model):
                     continue
 
                 table = current_model._table
-                kind = tools.table_kind(self._cr, table)
-                if kind == tools.TableKind.View:
+                kind = sqltools.table_kind(self._cr, table)
+                if kind == sqltools.TableKind.View:
                     self._cr.execute(sql.SQL('DROP VIEW {}').format(sql.Identifier(table)))
-                elif kind == tools.TableKind.Regular:
+                elif kind == sqltools.TableKind.Regular:
                     self._cr.execute(sql.SQL('DROP TABLE {} CASCADE').format(sql.Identifier(table)))
                 elif kind is not None:
                     _logger.warning(
@@ -469,8 +469,8 @@ class IrModel(models.Model):
         for model_data in cr.dictfetchall():
             model_class = self._instanciate(model_data)
             Model = model_class._build_model(self.pool, cr)
-            kind = tools.table_kind(cr, Model._table)
-            if kind not in (tools.TableKind.Regular, None):
+            kind = sqltools.table_kind(cr, Model._table)
+            if kind not in (sqltools.TableKind.Regular, None):
                 _logger.info(
                     "Model %r is backed by table %r which is not a regular table (%r), disabling automatic schema management",
                     Model._name, Model._table, kind,
@@ -834,8 +834,8 @@ class IrModelFields(models.Model):
             is_model = model is not None
             if field.store:
                 # TODO: Refactor this brol in master
-                if is_model and tools.column_exists(self._cr, model._table, field.name) and \
-                        tools.table_kind(self._cr, model._table) == tools.TableKind.Regular:
+                if is_model and sqltools.column_exists(self._cr, model._table, field.name) and \
+                        sqltools.table_kind(self._cr, model._table) == sqltools.TableKind.Regular:
                     self._cr.execute(sql.SQL('ALTER TABLE {} DROP COLUMN {} CASCADE').format(
                         sql.Identifier(model._table), sql.Identifier(field.name),
                     ))
@@ -1808,7 +1808,7 @@ class IrModelConstraint(models.Model):
                     _logger.info('Dropped FK CONSTRAINT %s@%s', name, data.model.model)
 
             if typ == 'u':
-                hname = tools.make_identifier(name)
+                hname = sqltools.make_identifier(name)
                 # test if constraint exists
                 # Since type='u' means any "other" constraint, to avoid issues we limit to
                 # 'c' -> check, 'u' -> unique, 'x' -> exclude constraints, effective leaving
@@ -1936,7 +1936,7 @@ class IrModelRelation(models.Model):
                 # as installed modules have defined this element we must not delete it!
                 continue
 
-            if tools.table_exists(self._cr, name):
+            if sqltools.table_exists(self._cr, name):
                 to_drop.add(name)
 
         self.unlink()
@@ -2188,9 +2188,9 @@ class IrModelData(models.Model):
 
     def _auto_init(self):
         res = super(IrModelData, self)._auto_init()
-        tools.create_unique_index(self._cr, 'ir_model_data_module_name_uniq_index',
+        sqltools.create_unique_index(self._cr, 'ir_model_data_module_name_uniq_index',
                                   self._table, ['module', 'name'])
-        tools.create_index(self._cr, 'ir_model_data_model_res_id_index',
+        sqltools.create_index(self._cr, 'ir_model_data_model_res_id_index',
                            self._table, ['model', 'res_id'])
         return res
 

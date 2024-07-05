@@ -30,15 +30,16 @@ from .models import check_property_field_value_name
 from .netsvc import ColoredFormatter, GREEN, RED, DEFAULT, COLOR_PATTERN
 from .tools import (
     float_repr, float_round, float_compare, float_is_zero, human_size,
-    pg_varchar, ustr, OrderedSet, pycompat, sql, SQL, date_utils, unique,
-    image_process, merge_sequences, SQL_ORDER_BY_TYPE, is_list_of,
+    ustr, OrderedSet, pycompat, sql, SQL, date_utils, unique,
+    image_process, merge_sequences, is_list_of,
     html_normalize, html_sanitize,
+    DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT,
+    DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT,
 )
-from .tools.misc import unquote, has_list_types
-from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
-from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
-from .tools.translate import html_translate, _
+from .tools.sql import pg_varchar
 from .tools.mimetypes import guess_mimetype
+from .tools.misc import unquote, has_list_types
+from .tools.translate import html_translate, _
 
 from odoo.exceptions import CacheMiss
 from odoo.osv import expression
@@ -1041,7 +1042,7 @@ class Field(MetaField('DummyField', (object,), {})):
     @property
     def column_order(self):
         """ Prescribed column order in table. """
-        return 0 if self.column_type is None else SQL_ORDER_BY_TYPE[self.column_type[0]]
+        return 0 if self.column_type is None else sql.SQL_ORDER_BY_TYPE[self.column_type[0]]
 
     def update_db(self, model, columns):
         """ Update the database schema to implement this field.
