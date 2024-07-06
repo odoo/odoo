@@ -70,7 +70,7 @@ class HolidaysAllocation(models.Model):
     notes = fields.Text('Reasons', readonly=False)
     # duration
     number_of_days = fields.Float(
-        'Number of Days', compute='_compute_from_holiday_status_id', store=True, readonly=False, tracking=True, default=1,
+        'Number of Days', compute='_compute_number_of_days', store=True, readonly=False, tracking=True, default=1,
         help='Duration in days. Reference field to use when necessary.')
     number_of_days_display = fields.Float(
         'Duration (days)', compute='_compute_number_of_days_display',
@@ -107,7 +107,7 @@ class HolidaysAllocation(models.Model):
     ], string="Allocation Type", default="regular", required=True, readonly=True)
     is_officer = fields.Boolean(compute='_compute_is_officer')
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan',
-        compute="_compute_from_holiday_status_id", store=True, readonly=False, tracking=True,
+        compute="_compute_accrual_plan_id", store=True, readonly=False, tracking=True,
         domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]")
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
@@ -155,12 +155,8 @@ class HolidaysAllocation(models.Model):
         elif self.name != self._get_title():
             self.is_name_custom = True
 
-    # Useless depends, so that name is computed on new, before saving the record
-    @api.depends_context('uid')
-    @api.depends('holiday_status_id')
+    @api.depends('holiday_status_id', 'number_of_days')
     def _compute_description(self):
-        self.check_access_rights('read')
-        self.check_access_rule('read')
         for allocation in self:
             if not allocation.is_name_custom:
                 allocation.name = allocation._get_title()
@@ -196,7 +192,7 @@ class HolidaysAllocation(models.Model):
         for allocation in self:
             allocation.number_of_days_display = allocation.number_of_days
 
-    @api.depends('number_of_days', 'holiday_status_id', 'employee_id')
+    @api.depends('number_of_days')
     def _compute_number_of_hours_display(self):
         for allocation in self:
             allocation.number_of_hours_display = allocation.number_of_days * HOURS_PER_DAY
@@ -210,7 +206,7 @@ class HolidaysAllocation(models.Model):
                 else float_round(allocation.number_of_days_display, precision_digits=2)),
                 _('hours') if allocation.type_request_unit == 'hour' else _('days'))
 
-    @api.depends('state', 'employee_id', 'department_id')
+    @api.depends('state')
     def _compute_can_approve(self):
         for allocation in self:
             try:
@@ -243,8 +239,20 @@ class HolidaysAllocation(models.Model):
                         default_holiday_status_id = self._default_holiday_status_id()
                     allocation.holiday_status_id = default_holiday_status_id
 
-    @api.depends('holiday_status_id', 'allocation_type', 'number_of_hours_display', 'number_of_days_display', 'date_to')
-    def _compute_from_holiday_status_id(self):
+    @api.depends('holiday_status_id', 'number_of_hours_display', 'number_of_days_display', 'type_request_unit')
+    def _compute_number_of_days(self):
+        for allocation in self:
+            allocation_unit = allocation.type_request_unit
+            if allocation_unit != 'hour':
+                allocation.number_of_days = allocation.number_of_days_display
+            else:
+                hours_per_day = allocation.employee_id.sudo().resource_calendar_id.hours_per_day\
+                    or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day\
+                    or HOURS_PER_DAY
+                allocation.number_of_days = allocation.number_of_hours_display / hours_per_day
+
+    @api.depends('holiday_status_id', 'allocation_type')
+    def _compute_accrual_plan_id(self):
         accrual_allocations = self.filtered(lambda alloc: alloc.allocation_type == 'accrual' and not alloc.accrual_plan_id and alloc.holiday_status_id)
         accruals_read_group = self.env['hr.leave.accrual.plan']._read_group(
             [('time_off_type_id', 'in', accrual_allocations.holiday_status_id.ids)],
@@ -253,14 +261,6 @@ class HolidaysAllocation(models.Model):
         )
         accruals_dict = {time_off_type.id: ids for time_off_type, ids in accruals_read_group}
         for allocation in self:
-            allocation_unit = allocation._get_request_unit()
-            if allocation_unit != 'hour':
-                allocation.number_of_days = allocation.number_of_days_display
-            else:
-                hours_per_day = allocation.employee_id.sudo().resource_calendar_id.hours_per_day\
-                    or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day\
-                    or HOURS_PER_DAY
-                allocation.number_of_days = allocation.number_of_hours_display / hours_per_day
             if allocation.accrual_plan_id.time_off_type_id.id not in (False, allocation.holiday_status_id.id):
                 allocation.accrual_plan_id = False
             if allocation.allocation_type == 'accrual' and not allocation.accrual_plan_id:
