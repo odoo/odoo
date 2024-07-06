@@ -1,0 +1,39 @@
+<odoo>
+    <record id="action_chatbot" model="ir.actions.act_window">
+        <field name="name">Chatbot Configuration</field>
+        <field name="res_model">chatbot.model</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_chatbot_tree"/>
+    </record>
+
+    <record id="view_chatbot_form" model="ir.ui.view">
+        <field name="name">chatbot.form</field>
+        <field name="model">chatbot.model</field>
+        <field name="arch" type="xml">
+            <form string="Chatbot Configuration">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="api_url"/>
+                        <field name="api_key"/>
+                        <field name="model_type"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_chatbot_tree" model="ir.ui.view">
+        <field name="name">chatbot.tree</field>
+        <field name="model">chatbot.model</field>
+        <field name="arch" type="xml">
+            <tree string="Chatbot Configuration">
+                <field name="name"/>
+                <field name="model_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <menuitem id="menu_chatbot_root" name="Chatbot" sequence="10"/>
+    <menuitem id="menu_chatbot" name="Chatbot Configuration" parent="menu_chatbot_root" action="action_chatbot"/>
+</odoo>
