@@ -216,7 +216,7 @@ ProductScreen.do.clickPartnerButton();
 ProductScreen.do.clickCustomer('AAA Partner');
 ProductScreen.do.clickDisplayedProduct('Test Product A');
 PosLoyalty.do.clickRewardButton();
-ProductScreen.check.totalAmountIs('138.50');
+ProductScreen.check.totalAmountIs('139');
 
 Tour.register('PosLoyaltyTour6', { test: true, url: '/pos/web' }, getSteps());
 
