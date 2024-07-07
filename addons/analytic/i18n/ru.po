@@ -1,20 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-#
+# 
 # Translators:
+# Андрей Гусев <gaussgss@gmail.com>, 2024
+# alenafairy, 2024
+# Alena Vlasova, 2024
+# Vasiliy Korobatov <korobatov@gmail.com>, 2024
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2024
+# Диляра Дельтаева <dilya.kz93@gmail.com>, 2024
+# ILMIR <karamov@it-projects.info>, 2024
+# Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Смородин Даниил, 2024
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-17 10:10+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2024-01-17 11:21+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: analytic
@@ -36,8 +48,12 @@ msgstr "<span class=\"o_stat_text\">Валовая маржа</span>"
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
-msgid "A 'Project' plan needs to exist and its id needs to be set as `analytic.project_plan` in the system variables"
-msgstr "План \"Проект\" должен существовать, и его идентификатор должен быть установлен как `analytic.project_plan` в системных переменных"
+msgid ""
+"A 'Project' plan needs to exist and its id needs to be set as "
+"`analytic.project_plan` in the system variables"
+msgstr ""
+"План \"Проект\" должен существовать, и его идентификатор должен быть "
+"установлен как `analytic.project_plan` в системных переменных"
 
 #. module: analytic
 #. odoo-javascript
@@ -341,8 +357,13 @@ msgstr "Параметры конфигурации"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
-msgstr "Пересчет между единицами измерения может произойти только в том случае, если они принадлежат к одной и той же категории. Пересчет будет осуществляться на основе коэффициентов."
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Пересчет между единицами измерения может произойти только в том случае, если"
+" они принадлежат к одной и той же категории. Пересчет будет осуществляться "
+"на основе коэффициентов."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -506,7 +527,8 @@ msgstr "ID"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Если флажок установлен, значит, новые сообщения требуют вашего внимания."
+msgstr ""
+"Если флажок установлен, значит, новые сообщения требуют вашего внимания."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
@@ -650,6 +672,7 @@ msgstr "Операционные расходы"
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_mixin.py:0
+#: code:addons/analytic/models/analytic_mixin.py:0
 msgid "Operation not supported"
 msgstr "Операция не поддерживается"
 
@@ -775,18 +798,39 @@ msgstr "Линии поисковой аналитики"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
-msgid "Select a company for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this company, it will automatically take this as an analytic account)"
-msgstr "Выберите компанию, для которой будет использоваться аналитическое распределение (например, при создании нового счета-фактуры или заказа на продажу, если мы выберем эту компанию, она автоматически примет ее за аналитический счет)"
+msgid ""
+"Select a company for which the analytic distribution will be used (e.g. "
+"create new customer invoice or Sales order if we select this company, it "
+"will automatically take this as an analytic account)"
+msgstr ""
+"Выберите компанию, для которой будет использоваться аналитическое "
+"распределение (например, при создании нового счета-фактуры или заказа на "
+"продажу, если мы выберем эту компанию, она автоматически примет ее за "
+"аналитический счет)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
-msgid "Select a partner category for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)"
-msgstr "Выберите категорию партнера, для которого будет использоваться аналитическое распределение (например, при создании нового счета клиента или заказа на продажу, если мы выберем этого партнера, он автоматически примет его в качестве аналитического счета)"
+msgid ""
+"Select a partner category for which the analytic distribution will be used "
+"(e.g. create new customer invoice or Sales order if we select this partner, "
+"it will automatically take this as an analytic account)"
+msgstr ""
+"Выберите категорию партнера, для которого будет использоваться аналитическое"
+" распределение (например, при создании нового счета клиента или заказа на "
+"продажу, если мы выберем этого партнера, он автоматически примет его в "
+"качестве аналитического счета)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
-msgid "Select a partner for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)"
-msgstr "Выберите партнера, для которого будет использоваться аналитическое распределение (например, при создании нового счета-фактуры или заказа на продажу, если мы выберем этого партнера, он автоматически примет его в качестве аналитического аккаунта)"
+msgid ""
+"Select a partner for which the analytic distribution will be used (e.g. "
+"create new customer invoice or Sales order if we select this partner, it "
+"will automatically take this as an analytic account)"
+msgstr ""
+"Выберите партнера, для которого будет использоваться аналитическое "
+"распределение (например, при создании нового счета-фактуры или заказа на "
+"продажу, если мы выберем этого партнера, он автоматически примет его в "
+"качестве аналитического аккаунта)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__sequence
@@ -842,14 +886,23 @@ msgstr "Просмотр"
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
-msgid "You can't set a different company on your analytic account since there are some analytic items linked to it."
-msgstr "Вы не можете установить другую компанию на свой аналитический аккаунт, поскольку с ним связаны некоторые аналитические элементы."
+msgid ""
+"You can't set a different company on your analytic account since there are "
+"some analytic items linked to it."
+msgstr ""
+"Вы не можете установить другую компанию на свой аналитический аккаунт, "
+"поскольку с ним связаны некоторые аналитические элементы."
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_distribution_model.py:0
-msgid "You defined a distribution with analytic account(s) belonging to a specific company but a model shared between companies or with a different company"
-msgstr "Вы определили распределение с аналитическими учетными записями, принадлежащими определенной компании, но модель разделяется между компаниями или с другой компанией"
+msgid ""
+"You defined a distribution with analytic account(s) belonging to a specific "
+"company but a model shared between companies or with a different company"
+msgstr ""
+"Вы определили распределение с аналитическими учетными записями, "
+"принадлежащими определенной компании, но модель разделяется между компаниями"
+" или с другой компанией"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

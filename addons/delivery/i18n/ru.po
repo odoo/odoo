@@ -1,20 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-#
+# 
 # Translators:
+# Vasiliy Korobatov <korobatov@gmail.com>, 2024
+# Смородин Даниил, 2024
+# valmasone, 2024
+# Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2024
+# Evgeniia Kotova, 2024
+# Denis Trepalin <zekarious@gmail.com>, 2024
+# Nadia Martynova, 2024
+# Martin Trigaux, 2024
+# Константин Коровин <korovin74@gmail.com>, 2024
+# Collex100, 2024
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-17 10:10+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2024-01-17 11:21+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: delivery
@@ -81,8 +94,14 @@ msgstr "<strong>Описание доставки:</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
-msgid "A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email.E.g. instructions for customers to follow."
-msgstr "Описание способа доставки, которое вы хотите сообщить своим клиентам в заказе на продажу и электронном письме с подтверждением продажи. Например, инструкции для клиентов, которым они должны следовать."
+msgid ""
+"A description of the delivery method that you want to communicate to your "
+"customers on the Sales Order and sales confirmation email.E.g. instructions "
+"for customers to follow."
+msgstr ""
+"Описание способа доставки, которое вы хотите сообщить своим клиентам в "
+"заказе на продажу и электронном письме с подтверждением продажи. Например, "
+"инструкции для клиентов, которым они должны следовать."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -123,8 +142,12 @@ msgstr "Сумма"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__amount
-msgid "Amount of the order to benefit from a free shipping, expressed in the company currency"
-msgstr "Сумма заказа, на которую распространяется бесплатная доставка, выраженная в валюте компании"
+msgid ""
+"Amount of the order to benefit from a free shipping, expressed in the "
+"company currency"
+msgstr ""
+"Сумма заказа, на которую распространяется бесплатная доставка, выраженная в "
+"валюте компании"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -351,17 +374,18 @@ msgstr "Окружающая среда"
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
+#: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Error: this delivery method is not available for this address."
 msgstr "Ошибка: данный способ доставки недоступен для этого адреса."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping."
 msgstr ""
-"Расчетная стоимость: клиенту будет выставлен счет на расчетную стоимость доставки.\n"
-"Реальная стоимость: покупателю будет выставлен счет на реальную стоимость доставки, стоимость доставки будет обновлена на СЦ после доставки."
+"Ориентировочная стоимость: клиенту будет выставлен счет на предполагаемую "
+"стоимость доставки."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -371,12 +395,18 @@ msgstr "Ориентировочная стоимость"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
-msgstr "Заполните это поле, если вы планируете выставлять счет за доставку на основе комплектации."
+msgstr ""
+"Заполните это поле, если вы планируете выставлять счет за доставку на основе"
+" комплектации."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Filling this form allows you to filter delivery carriers according to the delivery address of your customer."
-msgstr "Заполнение этой формы позволяет фильтровать носители доставки в соответствии с адресом доставки вашего клиента."
+msgid ""
+"Filling this form allows you to filter delivery carriers according to the "
+"delivery address of your customer."
+msgstr ""
+"Заполнение этой формы позволяет фильтровать носители доставки в соответствии"
+" с адресом доставки вашего клиента."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -430,8 +460,12 @@ msgstr "ID"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__free_over
-msgid "If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping"
-msgstr "Если сумма заказа больше (за исключением доставки) или равна этому значению, то доставка для покупателя является бесплатной"
+msgid ""
+"If the order total amount (shipping excluded) is above or equal to this "
+"value, the customer benefits from a free shipping"
+msgstr ""
+"Если сумма заказа больше (за исключением доставки) или равна этому значению,"
+" то доставка для покупателя является бесплатной"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -545,7 +579,8 @@ msgstr "Заказ"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Please select a country before choosing a state or a zip prefix."
-msgstr "Пожалуйста, выберите страну, прежде чем выбрать штат или почтовый индекс."
+msgstr ""
+"Пожалуйста, выберите страну, прежде чем выбрать штат или почтовый индекс."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
@@ -559,8 +594,17 @@ msgstr "Префикс уже существует!"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
-msgid "Prefixes of zip codes that this carrier applies to. Note that regular expressions can be used to support countries with varying zip code lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' will only match '100' and not '1000')"
-msgstr "Префиксы почтовых индексов, к которым относится данный перевозчик. Обратите внимание, что регулярные выражения могут быть использованы для поддержки стран с различной длиной почтовых индексов, т. е. в конце префикса можно добавить '$' для точного соответствия почтовому индексу (например, '100$' будет соответствовать только '100', но не '1000')"
+msgid ""
+"Prefixes of zip codes that this carrier applies to. Note that regular "
+"expressions can be used to support countries with varying zip code lengths, "
+"i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
+"will only match '100' and not '1000')"
+msgstr ""
+"Префиксы почтовых индексов, к которым относится данный перевозчик. Обратите "
+"внимание, что регулярные выражения могут быть использованы для поддержки "
+"стран с различной длиной почтовых индексов, т. е. в конце префикса можно "
+"добавить '$' для точного соответствия почтовому индексу (например, '100$' "
+"будет соответствовать только '100', но не '1000')"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -577,7 +621,7 @@ msgstr "Правила ценообразования"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
-msgstr "Ценообразование"
+msgstr "Стоимость"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
@@ -641,7 +685,9 @@ msgstr "Сервисный продукт"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
-msgstr "Установите значение Истина, если ваши учетные данные сертифицированы для производства."
+msgstr ""
+"Установите значение Истина, если ваши учетные данные сертифицированы для "
+"производства."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
@@ -664,13 +710,22 @@ msgstr "Вес с упаковкой"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
-msgid "Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit."
-msgstr "Страхование отправлений - это услуга, которая может возместить расходы отправителей, чьи посылки были потеряны, украдены и/или повреждены в пути."
+msgid ""
+"Shipping insurance is a service which may reimburse senders whose parcels "
+"are lost, stolen, and/or damaged in transit."
+msgstr ""
+"Страхование отправлений - это услуга, которая может возместить расходы "
+"отправителей, чьи посылки были потеряны, украдены и/или повреждены в пути."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Shipping method details to be included at bottom sales orders and their confirmation emails. E.g. Instructions for customers to follow."
-msgstr "Информация о способе доставки должна быть указана в нижней части заказов на продажу и в письмах с их подтверждением. Например, инструкции для покупателей."
+msgid ""
+"Shipping method details to be included at bottom sales orders and their "
+"confirmation emails. E.g. Instructions for customers to follow."
+msgstr ""
+"Информация о способе доставки должна быть указана в нижней части заказов на "
+"продажу и в письмах с их подтверждением. Например, инструкции для "
+"покупателей."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -696,8 +751,10 @@ msgstr "The Poste"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
-msgid "The return label can be downloaded by the customer from the customer portal."
-msgstr "Этикетка возврата может быть загружена клиентом с портала для клиентов."
+msgid ""
+"The return label can be downloaded by the customer from the customer portal."
+msgstr ""
+"Этикетка возврата может быть загружена клиентом с портала для клиентов."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
@@ -713,7 +770,8 @@ msgstr "Страхование доставки должно быть в про�
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "The shipping is free since the order amount exceeds %.2f."
-msgstr "Доставка осуществляется бесплатно, так как сумма заказа превышает %.2f."
+msgstr ""
+"Доставка осуществляется бесплатно, так как сумма заказа превышает %.2f."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -723,8 +781,8 @@ msgid ""
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "Эти методы позволяют автоматически рассчитать стоимость доставки\n"
-"            в соответствии с вашими настройками; в заказе на продажу (на основе\n"
-"            или в счете-фактуре (на основе заказов на поставку)."
+"            в соответствии с вашими настройками; на основе заказа на продажу \n"
+"            или на основе счет-фактуры (после заказа на поставку)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
@@ -799,6 +857,16 @@ msgstr ""
 "\n"
 "Следующие строки доставки (продукт, выставленное количество и цена) уже обработаны:\n"
 "\n"
+
+#. module: delivery
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
+"Вы не можете удалить категорию товаров для доставки, поскольку она "
+"используется в продуктах перевозчиков доставки."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

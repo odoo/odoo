@@ -1,20 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_delivery
-#
+# 
 # Translators:
+# ILMIR <karamov@it-projects.info>, 2024
+# Nadia Martynova, 2024
+# Константин Коровин <korovin74@gmail.com>, 2024
+# Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Viktor Pogrebniak <vp@aifil.ru>, 2024
+# Evgeniia Kotova, 2024
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
+# Collex100, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-17 10:11+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2024-01-17 11:21+0000\n"
+"Last-Translator: Collex100, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: stock_delivery
@@ -114,8 +124,11 @@ msgstr "Отменить"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
-msgid "Cancelling a delivery may not be undoable. Are you sure you want to continue?"
-msgstr "Отмена доставки может быть невозможна. Вы уверены, что хотите продолжить?"
+msgid ""
+"Cancelling a delivery may not be undoable. Are you sure you want to "
+"continue?"
+msgstr ""
+"Отмена доставки может быть невозможна. Вы уверены, что хотите продолжить?"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__carrier_id
@@ -221,7 +234,7 @@ msgstr "ID"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_route
 msgid "Inventory Routes"
-msgstr "Маршруты запасов"
+msgstr "Маршруты Склада"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__invoice_policy
@@ -367,8 +380,12 @@ msgstr "Отправить грузоотправителю"
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
-msgid "Shipment sent to carrier %(carrier_name)s for shipping with tracking number %(ref)s"
-msgstr "Груз отправлен перевозчику %(carrier_name)s для отправки с номером отслеживания %(ref)s"
+msgid ""
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
+"%(ref)s"
+msgstr ""
+"Груз отправлен перевозчику %(carrier_name)s для отправки с номером "
+"отслеживания %(ref)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -401,8 +418,13 @@ msgstr "Вес:"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_product_product__hs_code
 #: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
-msgid "Standardized code for international shipping and goods declaration. At the moment, only used for the FedEx shipping provider."
-msgstr "Стандартизированный код для международных перевозок и декларирования товаров. На данный момент используется только для поставщика услуг по доставке FedEx."
+msgid ""
+"Standardized code for international shipping and goods declaration. At the "
+"moment, only used for the FedEx shipping provider."
+msgstr ""
+"Стандартизированный код для международных перевозок и декларирования "
+"товаров. На данный момент используется только для поставщика услуг по "
+"доставке FedEx."
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move
@@ -422,7 +444,9 @@ msgstr "Техническое поле, указывающее количест
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
-msgstr "Техническое поле, указывающее, является ли весовая единица килограммом или нет (т.е. фунтом)"
+msgstr ""
+"Техническое поле, указывающее, является ли весовая единица килограммом или "
+"нет (т.е. фунтом)"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
@@ -437,20 +461,30 @@ msgstr ""
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/delivery_carrier.py:0
-msgid "The package cannot be created because the total weight of the products in the picking is 0.0 %s"
-msgstr "Пакет не может быть создан, потому что общий вес продуктов в комплектации составляет 0,0 %s"
+#: code:addons/stock_delivery/models/delivery_carrier.py:0
+msgid ""
+"The package cannot be created because the total weight of the products in "
+"the picking is 0.0 %s"
+msgstr ""
+"Пакет не может быть создан, потому что общий вес продуктов в комплектации "
+"составляет 0,0 %s"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/wizard/choose_delivery_carrier.py:0
 msgid "The shipping price will be set once the delivery is done."
-msgstr "Цена доставки будет установлена после того, как доставка будет осуществлена."
+msgstr ""
+"Цена доставки будет установлена после того, как доставка будет осуществлена."
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
-msgid "The weight of your package is higher than the maximum weight authorized for this package type. Please choose another package type."
-msgstr "Вес вашей посылки превышает максимальный вес, разрешенный для данного типа посылки. Пожалуйста, выберите другой тип посылки."
+msgid ""
+"The weight of your package is higher than the maximum weight authorized for "
+"this package type. Please choose another package type."
+msgstr ""
+"Вес вашей посылки превышает максимальный вес, разрешенный для данного типа "
+"посылки. Пожалуйста, выберите другой тип посылки."
 
 #. module: stock_delivery
 #. odoo-python
@@ -465,8 +499,14 @@ msgstr "Общий вес всех продуктов, содержащихся 
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__shipping_weight
-msgid "Total weight of packages and products not in a package. Packages with no shipping weight specified will default to their products' total weight. This is the weight used to compute the cost of the shipping."
-msgstr "Общий вес пакетов и товаров, не входящих в пакет. Для пакетов, в которых не указан вес доставки, по умолчанию будет указан общий вес товаров. Именно этот вес используется для расчета стоимости доставки."
+msgid ""
+"Total weight of packages and products not in a package. Packages with no "
+"shipping weight specified will default to their products' total weight. This"
+" is the weight used to compute the cost of the shipping."
+msgstr ""
+"Общий вес пакетов и товаров, не входящих в пакет. Для пакетов, в которых не "
+"указан вес доставки, по умолчанию будет указан общий вес товаров. Именно "
+"этот вес используется для расчета стоимости доставки."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight_bulk
@@ -550,6 +590,19 @@ msgid "Weight:"
 msgstr "Вес:"
 
 #. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
+msgstr ""
+"Нельзя упаковывать товары в одну посылку, если они имеют разных перевозчиков"
+" (т. е. проверьте, что для всех их переводов назначен перевозчик и "
+"используется один и тот же перевозчик)."
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
 msgstr "У вас есть несколько ссылок на трекеры, они доступны в чате."
@@ -557,8 +610,12 @@ msgstr "У вас есть несколько ссылок на трекеры, 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
-msgid "Your delivery method has no redirect on courier provider's website to track this order."
-msgstr "Ваш способ доставки не имеет перенаправления на сайте курьерской службы для отслеживания этого заказа."
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr ""
+"Ваш способ доставки не имеет перенаправления на сайте курьерской службы для "
+"отслеживания этого заказа."
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_delivery_zip_prefix

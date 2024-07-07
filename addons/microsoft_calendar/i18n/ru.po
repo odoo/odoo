@@ -1,20 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* microsoft_calendar
-#
+# 
 # Translators:
+# alenafairy, 2024
+# Смородин Даниил, 2024
+# ILMIR <karamov@it-projects.info>, 2024
+# Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-17 10:10+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2024-01-17 11:21+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: microsoft_calendar
@@ -57,14 +64,26 @@ msgstr "Активный"
 #. module: microsoft_calendar
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-msgid "An administrator needs to configure Outlook Synchronization before you can use it!"
-msgstr "Администратор должен настроить синхронизацию Outlook, прежде чем вы сможете ее использовать!"
+msgid ""
+"An administrator needs to configure Outlook Synchronization before you can "
+"use it!"
+msgstr ""
+"Администратор должен настроить синхронизацию Outlook, прежде чем вы сможете "
+"ее использовать!"
 
 #. module: microsoft_calendar
 #. odoo-python
 #: code:addons/microsoft_calendar/models/res_users.py:0
-msgid "An error occurred while generating the token. Your authorization code may be invalid or has already expired [%s]. You should check your Client ID and secret on the Microsoft Azure portal or try to stop and restart your calendar synchronisation."
-msgstr "При генерации токена произошла ошибка. Ваш код авторизации может быть недействительным или срок его действия уже истек [%s]. Необходимо проверить идентификатор и секрет клиента на портале Microsoft Azure или попытаться остановить и перезапустить синхронизацию календаря."
+msgid ""
+"An error occurred while generating the token. Your authorization code may be"
+" invalid or has already expired [%s]. You should check your Client ID and "
+"secret on the Microsoft Azure portal or try to stop and restart your "
+"calendar synchronisation."
+msgstr ""
+"При генерации токена произошла ошибка. Ваш код авторизации может быть "
+"недействительным или срок его действия уже истек [%s]. Необходимо проверить "
+"идентификатор и секрет клиента на портале Microsoft Azure или попытаться "
+"остановить и перезапустить синхронизацию календаря."
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_attendee
@@ -98,6 +117,8 @@ msgstr "Параметры конфигурации"
 
 #. module: microsoft_calendar
 #. odoo-javascript
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 msgid "Configuration"
 msgstr "Конфигурация"
@@ -155,8 +176,12 @@ msgstr "Отображаемое имя"
 #. module: microsoft_calendar
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
-msgid "Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar."
-msgstr "В связи с ограничением Outlook Calendar обновление повторов должно выполняться непосредственно в Outlook Calendar."
+msgid ""
+"Due to an Outlook Calendar limitation, recurrence updates must be done "
+"directly in Outlook Calendar."
+msgstr ""
+"В связи с ограничением Outlook Calendar обновление повторов должно "
+"выполняться непосредственно в Outlook Calendar."
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -171,8 +196,12 @@ msgstr ""
 #. module: microsoft_calendar
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
-msgid "Due to an Outlook Calendar limitation, recurrent events must be created directly in Outlook Calendar."
-msgstr "Из-за ограничения Outlook Calendar повторяющиеся события должны создаваться непосредственно в Outlook Calendar."
+msgid ""
+"Due to an Outlook Calendar limitation, recurrent events must be created "
+"directly in Outlook Calendar."
+msgstr ""
+"Из-за ограничения Outlook Calendar повторяющиеся события должны создаваться "
+"непосредственно в Outlook Calendar."
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_recurrence
@@ -194,8 +223,13 @@ msgstr ""
 #. module: microsoft_calendar
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
-msgid "For having a different organizer in your event, it is necessary that the organizer have its Odoo Calendar synced with Outlook Calendar."
-msgstr "Для того чтобы в вашем мероприятии участвовал другой организатор, необходимо, чтобы его календарь Odoo был синхронизирован с календарем Outlook."
+msgid ""
+"For having a different organizer in your event, it is necessary that the "
+"organizer have its Odoo Calendar synced with Outlook Calendar."
+msgstr ""
+"Для того чтобы в вашем мероприятии участвовал другой организатор, "
+"необходимо, чтобы его календарь Odoo был синхронизирован с календарем "
+"Outlook."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
@@ -205,19 +239,28 @@ msgstr "ID"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_calendar_event__active
-msgid "If the active field is set to false, it will allow you to hide the event alarm information without removing it."
-msgstr "Если для поля active установлено значение false, это позволит вам скрыть информацию о тревоге события, не удаляя ее."
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
+msgstr ""
+"Если для поля active установлено значение false, это позволит вам скрыть "
+"информацию о тревоге события, не удаляя ее."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_res_config_settings__cal_microsoft_sync_paused
 msgid "Indicates if synchronization with Outlook Calendar is paused or not."
-msgstr "Указывает, приостановлена ли синхронизация с Outlook Calendar или нет."
+msgstr ""
+"Указывает, приостановлена ли синхронизация с Outlook Calendar или нет."
 
 #. module: microsoft_calendar
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
-msgid "It is necessary adding the proposed organizer as attendee before saving the event."
-msgstr "Перед сохранением события необходимо добавить предполагаемого организатора в качестве участника."
+msgid ""
+"It is necessary adding the proposed organizer as attendee before saving the "
+"event."
+msgstr ""
+"Перед сохранением события необходимо добавить предполагаемого организатора в"
+" качестве участника."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__last_sync_date
@@ -328,6 +371,8 @@ msgstr "Идентификатор события организатора"
 #. module: microsoft_calendar
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
 msgid "Outlook"
 msgstr "Outlook"
 
@@ -345,8 +390,14 @@ msgstr "Синхронизация Outlook остановлена"
 #. module: microsoft_calendar
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
-msgid "Outlook limitation: in a recurrence, an event cannot be moved to or before the day of the previous event, and cannot be moved to or after the day of the following event."
-msgstr "Ограничение на выход: при повторении событие не может быть перенесено на день предыдущего события или раньше, а также не может быть перенесено на день следующего события или позже."
+msgid ""
+"Outlook limitation: in a recurrence, an event cannot be moved to or before "
+"the day of the previous event, and cannot be moved to or after the day of "
+"the following event."
+msgstr ""
+"Ограничение на выход: при повторении событие не может быть перенесено на "
+"день предыдущего события или раньше, а также не может быть перенесено на "
+"день следующего события или позже."
 
 #. module: microsoft_calendar
 #: model:ir.actions.server,name:microsoft_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -403,8 +454,12 @@ msgstr "Синхронизируйте только новые события"
 #. module: microsoft_calendar
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-msgid "The Outlook Synchronization needs to be configured before you can use it, do you want to do it now?"
-msgstr "Синхронизация Outlook должна быть настроена, прежде чем вы сможете использовать ее, хотите ли вы сделать это сейчас?"
+msgid ""
+"The Outlook Synchronization needs to be configured before you can use it, do"
+" you want to do it now?"
+msgstr ""
+"Синхронизация Outlook должна быть настроена, прежде чем вы сможете "
+"использовать ее, хотите ли вы сделать это сейчас?"
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -426,7 +481,8 @@ msgstr "У пользователя уже есть учетная запись 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
-msgstr "Это повлияет только на события, владельцем которых является пользователь"
+msgstr ""
+"Это повлияет только на события, владельцем которых является пользователь"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
@@ -460,8 +516,12 @@ msgstr "Существующие события пользователя"
 #. module: microsoft_calendar
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-msgid "You are about to stop the synchronization of your calendar with Outlook. Are you sure you want to continue?"
-msgstr "Вы собираетесь остановить синхронизацию вашего календаря с Outlook. Вы уверены, что хотите продолжить?"
+msgid ""
+"You are about to stop the synchronization of your calendar with Outlook. Are"
+" you sure you want to continue?"
+msgstr ""
+"Вы собираетесь остановить синхронизацию вашего календаря с Outlook. Вы "
+"уверены, что хотите продолжить?"
 
 #. module: microsoft_calendar
 #. odoo-javascript

@@ -1,20 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_loyalty
-#
+# 
 # Translators:
+# Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2024
+# Nadia Martynova, 2024
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-17 10:09+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2024-01-17 11:21+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: pos_loyalty
@@ -58,8 +64,12 @@ msgstr "Вознаграждение не удалось загрузить"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__promo_barcode
-msgid "A technical field used as an alternative to the promo code. This is automatically generated when the promo code is changed."
-msgstr "Техническое поле, используемое в качестве альтернативы промокоду. Оно автоматически генерируется при изменении промо-кода."
+msgid ""
+"A technical field used as an alternative to the promo code. This is "
+"automatically generated when the promo code is changed."
+msgstr ""
+"Техническое поле, используемое в качестве альтернативы промокоду. Оно "
+"автоматически генерируется при изменении промо-кода."
 
 #. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
@@ -235,19 +245,24 @@ msgstr "Сколько баллов стоит это вознаграждени
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 msgid "Invalid gift card program reward. Use 1 currency per point discount."
-msgstr "Недействительное вознаграждение по программе подарочных карт. Используйте 1 валюту за баллы скидки."
+msgstr ""
+"Недействительное вознаграждение по программе подарочных карт. Используйте 1 "
+"валюту за баллы скидки."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 msgid "Invalid gift card program rule. Use 1 point per currency spent."
-msgstr "Неверное правило программы подарочных карт. Используйте 1 балл за потраченную валюту."
+msgstr ""
+"Неверное правило программы подарочных карт. Используйте 1 балл за "
+"потраченную валюту."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 msgid "Invalid gift card program. More than one reward."
-msgstr "Недействительная программа подарочных карт. Более одного вознаграждения."
+msgstr ""
+"Недействительная программа подарочных карт. Более одного вознаграждения."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -423,8 +438,12 @@ msgstr "Возврат средств с помощью электронного
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/ticket_screen/ticket_screen.js:0
-msgid "Refunding a top up or reward product for an eWallet or gift card program is not allowed."
-msgstr "Возврат средств за пополнение счета или вознаграждение по программе электронного кошелька или подарочной карты не допускается."
+msgid ""
+"Refunding a top up or reward product for an eWallet or gift card program is "
+"not allowed."
+msgstr ""
+"Возврат средств за пополнение счета или вознаграждение по программе "
+"электронного кошелька или подарочной карты не допускается."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -468,8 +487,12 @@ msgstr "Простая ручка"
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
-msgid "Some coupons are invalid. The applied coupons have been updated. Please check the order."
-msgstr "Некоторые купоны недействительны. Примененные купоны были обновлены. Пожалуйста, проверьте заказ."
+msgid ""
+"Some coupons are invalid. The applied coupons have been updated. Please "
+"check the order."
+msgstr ""
+"Некоторые купоны недействительны. Примененные купоны были обновлены. "
+"Пожалуйста, проверьте заказ."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -497,6 +520,18 @@ msgstr "Эта программа промокодов уже активиров
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+msgid "That promo code program is expired."
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+msgid "That promo code program is not yet valid."
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 msgid "That promo code program requires a specific pricelist."
 msgstr "Эта программа промокодов требует определенного прейскуранта."
 
@@ -517,14 +552,22 @@ msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_mail__pos_report_print_id
-msgid "The report action to be executed when creating a coupon/gift card/loyalty card in the PoS."
-msgstr "Действие отчета, которое будет выполняться при создании купона/подарочной карты/карты лояльности в PoS."
+msgid ""
+"The report action to be executed when creating a coupon/gift card/loyalty "
+"card in the PoS."
+msgstr ""
+"Действие отчета, которое будет выполняться при создании купона/подарочной "
+"карты/карты лояльности в PoS."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
-msgid "The reward \"%s\" contain an error in its domain, your domain must be compatible with the PoS client"
-msgstr "Вознаграждение \"%s\" содержит ошибку в своем домене, ваш домен должен быть совместим с PoS-клиентом"
+msgid ""
+"The reward \"%s\" contain an error in its domain, your domain must be "
+"compatible with the PoS client"
+msgstr ""
+"Вознаграждение \"%s\" содержит ошибку в своем домене, ваш домен должен быть "
+"совместим с PoS-клиентом"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
@@ -558,14 +601,22 @@ msgstr "В корзине недостаточно товаров для пол�
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
-msgid "There is no email template on the gift card program and your pos is set to print them."
-msgstr "В программе подарочных карт нет шаблона электронной почты, и ваш pos настроен на их печать."
+msgid ""
+"There is no email template on the gift card program and your pos is set to "
+"print them."
+msgstr ""
+"В программе подарочных карт нет шаблона электронной почты, и ваш pos "
+"настроен на их печать."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
-msgid "There is no print report on the gift card program and your pos is set to print them."
-msgstr "В программе подарочных карт нет отчета о печати, а в вашем pos настроена их печать."
+msgid ""
+"There is no print report on the gift card program and your pos is set to "
+"print them."
+msgstr ""
+"В программе подарочных карт нет отчета о печати, а в вашем pos настроена их "
+"печать."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__valid_product_ids
@@ -605,8 +656,12 @@ msgstr "Эта подарочная карта уже продана"
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
-msgid "This gift card is not linked to any order. Do you really want to apply its reward?"
-msgstr "Эта подарочная карта не привязана ни к одному заказу. Вы действительно хотите применить ее вознаграждение?"
+msgid ""
+"This gift card is not linked to any order. Do you really want to apply its "
+"reward?"
+msgstr ""
+"Эта подарочная карта не привязана ни к одному заказу. Вы действительно "
+"хотите применить ее вознаграждение?"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_report_print_id
@@ -616,8 +671,11 @@ msgstr "Используется для печати сгенерированн�
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
-msgid "To continue, make the following reward products available in Point of Sale."
-msgstr "Чтобы продолжить, сделайте следующие продукты вознаграждения доступными в Точке продаж."
+msgid ""
+"To continue, make the following reward products available in Point of Sale."
+msgstr ""
+"Чтобы продолжить, сделайте следующие продукты вознаграждения доступными в "
+"Точке продаж."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type
@@ -668,7 +726,7 @@ msgstr "Независимо от того, является ли эта стр�
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
 msgid "Won:"
-msgstr "მოგება:"
+msgstr "Выиграно:"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -686,13 +744,18 @@ msgstr "Вы не можете продать подарочную карту, �
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/product_screen/order_summary/order_summary.js:0
 msgid "You cannot set negative quantity or price to gift card or ewallet."
-msgstr "Вы не можете задать отрицательное количество или цену для подарочной карты или электронного кошелька."
+msgstr ""
+"Вы не можете задать отрицательное количество или цену для подарочной карты "
+"или электронного кошелька."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/control_buttons/control_buttons.js:0
-msgid "You either have not created an eWallet or all your eWallets have expired."
-msgstr "Вы либо не создали электронный кошелек, либо срок действия всех ваших электронных кошельков истек."
+msgid ""
+"You either have not created an eWallet or all your eWallets have expired."
+msgstr ""
+"Вы либо не создали электронный кошелек, либо срок действия всех ваших "
+"электронных кошельков истек."
 
 #. module: pos_loyalty
 #. odoo-python
