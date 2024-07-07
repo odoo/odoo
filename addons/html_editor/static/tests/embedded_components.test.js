@@ -1,4 +1,10 @@
-import { Counter, embedding } from "@html_editor/../tests/_helpers/embedded_component";
+import {
+    Counter,
+    embedding,
+    EmbeddedWrapper,
+    EmbeddedWrapperMixin,
+} from "@html_editor/../tests/_helpers/embedded_component";
+import { getEditableDescendants } from "@html_editor/others/embedded_component_utils";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { parseHTML } from "@html_editor/utils/html";
 import { describe, expect, getFixture, test } from "@odoo/hoot";
@@ -8,6 +14,7 @@ import {
     App,
     Component,
     onMounted,
+    onPatched,
     onWillDestroy,
     onWillStart,
     onWillUnmount,
@@ -874,15 +881,13 @@ describe("In-editor manipulations", () => {
     });
 
     test("should ignore embedded elements children during serialization", async () => {
-        const { el, editor } = await setupEditor(
+        const { el, plugins } = await setupEditor(
             `<div><p>a</p></div><div data-embedded="counter"><p>a</p></div>`,
             {
                 config: getConfig([embedding("counter", Counter)]),
             }
         );
-        const historyPlugin = editor.plugins.find(
-            (plugin) => plugin.constructor.name === "history"
-        );
+        const historyPlugin = plugins.get("history");
         const node = historyPlugin.unserializeNode(historyPlugin.serializeNode(el));
         expect(getContent(node, { sortAttrs: true })).toBe(
             `<div><p>a</p></div><div contenteditable="false" data-embedded="counter" data-oe-protected="true"></div>`
@@ -906,5 +911,257 @@ describe("In-editor manipulations", () => {
         const historyPlugin = plugins.get("history");
         const node = historyPlugin.unserializeNode(historyPlugin.serializeNode(el));
         expect(getContent(node)).toBe(`<div data-embedded="unknown"><p>UNKNOWN</p></div>`);
+    });
+});
+
+describe("editable descendants", () => {
+    test("editable descendants are extracted and put back in place during mount", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <div data-embedded="wrapper">
+                    <div data-embedded-editable="shallow">
+                        <p>shallow</p>
+                    </div>
+                    <div data-embedded-editable="deep">
+                        <p>deep</p>
+                    </div>
+                </div>
+            `),
+            {
+                config: getConfig([
+                    embedding(
+                        "wrapper",
+                        EmbeddedWrapper,
+                        (host) => ({ host }),
+                        getEditableDescendants
+                    ),
+                ]),
+            }
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
+                    <div class="shallow">
+                        <div data-embedded-editable="shallow" data-oe-protected="false" contenteditable="true">
+                            <p>shallow</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="deep">
+                            <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
+                                <p>deep</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `)
+        );
+    });
+
+    test("editable descendants are extracted and put back in place when a patch is changing the template shape", async () => {
+        let wrapper;
+        patchWithCleanup(EmbeddedWrapper.prototype, {
+            setup() {
+                super.setup();
+                wrapper = this;
+                onPatched(() => {
+                    expect.step("patched");
+                });
+            },
+        });
+        const { editor, el, plugins } = await setupEditor(
+            unformat(`
+                <div data-embedded="wrapper">
+                    <div data-embedded-editable="shallow">
+                        <p>shallow</p>
+                    </div>
+                    <div data-embedded-editable="deep">
+                        <p>deep</p>
+                    </div>
+                </div>
+            `),
+            {
+                config: getConfig([
+                    embedding(
+                        "wrapper",
+                        EmbeddedWrapper,
+                        (host) => ({ host }),
+                        getEditableDescendants
+                    ),
+                ]),
+            }
+        );
+        wrapper.state.switch = true;
+        await animationFrame();
+        expect.verifySteps(["patched"]);
+        expect(getContent(el)).toBe(
+            unformat(`
+                <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
+                    <div class="shallow">
+                        <div data-embedded-editable="shallow" data-oe-protected="false" contenteditable="true">
+                            <p>shallow</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="switched">
+                            <div class="deep">
+                                <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
+                                    <p>deep</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `)
+        );
+        // No mutation should be added to the next step
+        editor.dispatch("ADD_STEP");
+        const historyPlugin = plugins.get("history");
+        const historySteps = editor.shared.getHistorySteps();
+        expect(historySteps.length).toBe(1);
+        expect(historyPlugin.currentStep.mutations).toEqual([]);
+    });
+
+    test("editable descendants are extracted and put back in place during cleanforsave", async () => {
+        const { el, editor } = await setupEditor(
+            unformat(`
+                <div data-embedded="wrapper">
+                    <div data-embedded-editable="shallow">
+                        <p>shallow</p>
+                    </div>
+                    <div data-embedded-editable="deep">
+                        <p>deep</p>
+                    </div>
+                </div>
+            `),
+            {
+                config: getConfig([
+                    embedding(
+                        "wrapper",
+                        EmbeddedWrapper,
+                        (host) => ({ host }),
+                        getEditableDescendants
+                    ),
+                ]),
+            }
+        );
+        const clone = el.cloneNode(true);
+        editor.dispatch("CLEAN_FOR_SAVE", { root: clone });
+        expect(getContent(clone)).toBe(
+            unformat(`
+                <div data-embedded="wrapper">
+                    <div data-embedded-editable="shallow">
+                        <p>shallow</p>
+                    </div>
+                    <div data-embedded-editable="deep">
+                        <p>deep</p>
+                    </div>
+                </div>
+            `)
+        );
+    });
+
+    test("editable descendants are extracted and put back in place during serialization", async () => {
+        const { el, plugins } = await setupEditor(
+            unformat(`
+                <div data-embedded="wrapper">
+                    <div data-embedded-editable="shallow">
+                        <p>shallow</p>
+                    </div>
+                    <div data-embedded-editable="deep">
+                        <p>deep</p>
+                    </div>
+                </div>
+            `),
+            {
+                config: getConfig([
+                    embedding(
+                        "wrapper",
+                        EmbeddedWrapper,
+                        (host) => ({ host }),
+                        getEditableDescendants
+                    ),
+                ]),
+            }
+        );
+        const historyPlugin = plugins.get("history");
+        const node = historyPlugin.unserializeNode(historyPlugin.serializeNode(el));
+        expect(getContent(node, { sortAttrs: true })).toBe(
+            unformat(`
+                <div contenteditable="false" data-embedded="wrapper" data-oe-protected="true">
+                    <div contenteditable="true" data-embedded-editable="shallow" data-oe-protected="false">
+                        <p>shallow</p>
+                    </div>
+                    <div contenteditable="true" data-embedded-editable="deep" data-oe-protected="false">
+                        <p>deep</p>
+                    </div>
+                </div>
+            `)
+        );
+    });
+
+    test("can discriminate own editable descendants from editable descendants of a descendant", async () => {
+        const SimpleEmbeddedWrapper = EmbeddedWrapperMixin("deep");
+        const { el } = await setupEditor(
+            unformat(`
+                <div data-embedded="wrapper">
+                    <div data-embedded-editable="shallow">
+                        <div data-embedded="simpleWrapper">
+                            <div data-embedded-editable="deep">
+                                <p>simple-deep</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-embedded-editable="deep">
+                        <p>wrapper-deep</p>
+                    </div>
+                </div>
+            `),
+            {
+                config: getConfig([
+                    embedding(
+                        "simpleWrapper",
+                        SimpleEmbeddedWrapper,
+                        (host) => ({ host }),
+                        getEditableDescendants
+                    ),
+                    embedding(
+                        "wrapper",
+                        EmbeddedWrapper,
+                        (host) => ({ host }),
+                        getEditableDescendants
+                    ),
+                ]),
+            }
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
+                    <div class="shallow">
+                        <div data-embedded-editable="shallow" data-oe-protected="false" contenteditable="true">
+                            <div data-embedded="simpleWrapper" data-oe-protected="true" contenteditable="false">
+                                <div class="deep">
+                                    <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
+                                        <p>simple-deep</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="deep">
+                            <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
+                                <p>wrapper-deep</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `)
+        );
+        const wrapper = el.querySelector(`[data-embedded="wrapper"]`);
+        const simple = el.querySelector(`[data-embedded="simpleWrapper"]`);
+        const editableDescendants = el.querySelectorAll(`[data-embedded-editable="deep"]`);
+        expect(getEditableDescendants(simple).deep).toBe(editableDescendants[0]);
+        expect(getEditableDescendants(wrapper).deep).toBe(editableDescendants[1]);
     });
 });

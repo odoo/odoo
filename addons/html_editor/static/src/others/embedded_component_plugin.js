@@ -60,7 +60,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         if (!embedding) {
             return;
         }
-        return [];
+        return Object.values(embedding.getEditableDescendants?.(elem) || {});
     }
 
     handleComponents(elem) {
@@ -93,7 +93,7 @@ export class EmbeddedComponentPlugin extends Plugin {
     }
 
     mountComponent(host, { Component, getProps }) {
-        const props = getProps ? getProps(host) : {};
+        const props = getProps?.(host) || {};
         const { dev, translateFn, getRawTemplate } = this.app;
         const app = new App(Component, {
             test: dev,
@@ -169,9 +169,12 @@ export class EmbeddedComponentPlugin extends Plugin {
      * removed components @see deepDestroyComponent
      */
     destroyComponent({ app, host }) {
+        const { getEditableDescendants } = this.getEmbedding(host);
+        const editableDescendants = getEditableDescendants?.(host) || {};
         app.destroy();
         this.components.delete(arguments[0]);
         this.nodeMap.delete(host);
+        host.append(...Object.values(editableDescendants));
     }
 
     destroy() {
@@ -184,16 +187,25 @@ export class EmbeddedComponentPlugin extends Plugin {
     }
 
     normalize(elem) {
-        this.forEachEmbeddedComponentHost(elem, (host) => {
+        this.forEachEmbeddedComponentHost(elem, (host, { getEditableDescendants }) => {
             this.shared.setProtectingNode(host, true);
+            const editableDescendants = getEditableDescendants?.(host) || {};
+            for (const editableDescendant of Object.values(editableDescendants)) {
+                this.shared.setProtectingNode(editableDescendant, false);
+            }
         });
     }
 
     cleanForSave(clone) {
-        this.forEachEmbeddedComponentHost(clone, (host) => {
+        this.forEachEmbeddedComponentHost(clone, (host, { getEditableDescendants }) => {
             // In this case, host is a cloned element, there is no
             // live app attached to it.
+            const editableDescendants = getEditableDescendants?.(host) || {};
             host.replaceChildren();
+            for (const editableDescendant of Object.values(editableDescendants)) {
+                delete editableDescendant.dataset.oeProtected;
+                host.append(editableDescendant);
+            }
             delete host.dataset.oeProtected;
         });
     }
