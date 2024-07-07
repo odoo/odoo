@@ -9,6 +9,7 @@
         'security/ir.model.access.csv',
         'data/categories.xml',
         'views/chatbot_views.xml',
+        'templates/chatbot_template.xml',
     ],
     'installable': True,
     'application': True,

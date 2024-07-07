@@ -1,0 +1,25 @@
+<odoo>
+    <template id="chatbot_template" name="Chatbot Page">
+        <t t-call="website.layout">
+            <div class="container">
+                <h1>Chatbot Interface</h1>
+                <div id="chatbot-interface">
+                    <input type="text" id="chat-input" placeholder="Type your message..."/>
+                    <button id="send-button">Send</button>
+                    <div id="chat-output"></div>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function () {
+                    $('#send-button').on('click', function () {
+                        var message = $('#chat-input').val();
+                        $.jsonRpc('/chatbot/send_message', 'call', {message: message})
+                            .then(function (response) {
+                                $('#chat-output').append('<p>' + response.result.response + '</p>');
+                            });
+                    });
+                });
+            </script>
+        </t>
+    </template>
+</odoo>

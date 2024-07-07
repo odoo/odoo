@@ -1,4 +1,5 @@
 <odoo>
+    <!-- Action to open the form and tree views -->
     <record id="action_chatbot" model="ir.actions.act_window">
         <field name="name">Chatbot Configuration</field>
         <field name="res_model">chatbot.model</field>
@@ -6,6 +7,7 @@
         <field name="view_id" ref="view_chatbot_tree"/>
     </record>
 
+    <!-- Form view definition -->
     <record id="view_chatbot_form" model="ir.ui.view">
         <field name="name">chatbot.form</field>
         <field name="model">chatbot.model</field>
@@ -23,6 +25,7 @@
         </field>
     </record>
 
+    <!-- Tree view definition -->
     <record id="view_chatbot_tree" model="ir.ui.view">
         <field name="name">chatbot.tree</field>
         <field name="model">chatbot.model</field>
@@ -34,6 +37,15 @@
         </field>
     </record>
 
+    <!-- Web action for chatbot interface -->
+    <record id="action_chatbot_interface" model="ir.actions.act_url">
+        <field name="name">Chatbot Interface</field>
+        <field name="url">/chatbot</field>
+        <field name="target">self</field>
+    </record>
+
+    <!-- Menu items -->
     <menuitem id="menu_chatbot_root" name="Chatbot" sequence="10"/>
     <menuitem id="menu_chatbot" name="Chatbot Configuration" parent="menu_chatbot_root" action="action_chatbot"/>
+    <menuitem id="menu_chatbot_interface" name="Chatbot Interface" parent="menu_chatbot_root" action="action_chatbot_interface"/>
 </odoo>
