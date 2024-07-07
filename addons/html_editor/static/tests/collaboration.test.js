@@ -1,4 +1,10 @@
-import { Counter, embedding } from "@html_editor/../tests/_helpers/embedded_component";
+import {
+    Counter,
+    embedding,
+    EmbeddedWrapper,
+    EmbeddedWrapperMixin,
+} from "@html_editor/../tests/_helpers/embedded_component";
+import { getEditableDescendants } from "@html_editor/others/embedded_component_utils";
 import { EmbeddedComponentPlugin } from "@html_editor/others/embedded_component_plugin";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -727,6 +733,7 @@ describe("Collaboration with embedded components", () => {
             `)
         );
     });
+
     test("components are mounted and destroyed during addExternalStep", async () => {
         let index = 1;
         patchWithCleanup(Counter.prototype, {
@@ -842,5 +849,316 @@ describe("Collaboration with embedded components", () => {
         e1.destroy();
         e2.destroy();
         expect.verifySteps(["1 destroyed", "4 destroyed"]);
+    });
+
+    test("editableDescendants for components are collaborative (during mount)", async () => {
+        const peerInfos = await setupMultiEditor({
+            peerIds: ["c1", "c2"],
+            contentBefore: `<p>[c1}{c1][c2}{c2]a</p>`,
+            Plugins: [EmbeddedComponentPlugin],
+            resources: {
+                embeddedComponents: [
+                    embedding(
+                        "wrapper",
+                        EmbeddedWrapper,
+                        (host) => ({ host }),
+                        getEditableDescendants
+                    ),
+                ],
+            },
+        });
+        const e1 = peerInfos.c1.editor;
+        const e2 = peerInfos.c2.editor;
+        e1.shared.domInsert(
+            parseHTML(
+                e1.document,
+                unformat(`
+                    <div data-embedded="wrapper">
+                        <div data-embedded-editable="deep">
+                            <p>deep</p>
+                        </div>
+                    </div>
+                `)
+            )
+        );
+        e1.dispatch("ADD_STEP");
+        const deep1 = e1.editable.querySelector("[data-embedded-editable='deep'] > p");
+        deep1.append(e1.document.createTextNode("1"));
+        e1.dispatch("ADD_STEP");
+        mergePeersSteps(peerInfos);
+        const deep2 = e2.editable.querySelector("[data-embedded-editable='deep'] > p");
+        deep2.append(e2.document.createTextNode("2"));
+        e2.dispatch("ADD_STEP");
+        mergePeersSteps(peerInfos);
+        // Before mount:
+        let editable = unformat(`
+            <div contenteditable="false" data-embedded="wrapper" data-oe-protected="true">
+                <div contenteditable="true" data-embedded-editable="deep" data-oe-protected="false">
+                    <p>deep12</p>
+                </div>
+            </div>
+            <p>[]a</p>
+        `);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
+        await animationFrame();
+        // After mount:
+        editable = unformat(`
+            <div contenteditable="false" data-embedded="wrapper" data-oe-protected="true">
+                <div>
+                    <div class="deep">
+                        <div contenteditable="true" data-embedded-editable="deep" data-oe-protected="false">
+                            <p>deep12</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p>[]a</p>
+        `);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
+        deep1.append(e1.document.createTextNode("3"));
+        e1.dispatch("ADD_STEP");
+        mergePeersSteps(peerInfos);
+        deep2.append(e2.document.createTextNode("4"));
+        e2.dispatch("ADD_STEP");
+        mergePeersSteps(peerInfos);
+        editable = unformat(`
+            <div contenteditable="false" data-embedded="wrapper" data-oe-protected="true">
+                <div>
+                    <div class="deep">
+                        <div contenteditable="true" data-embedded-editable="deep" data-oe-protected="false">
+                            <p>deep1234</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p>[]a</p>
+        `);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
+    });
+
+    test("editableDescendants for components are collaborative (with different template shapes)", async () => {
+        const wrappers = [];
+        patchWithCleanup(EmbeddedWrapper.prototype, {
+            setup() {
+                super.setup();
+                wrappers.push(this);
+            },
+        });
+        const peerInfos = await setupMultiEditor({
+            peerIds: ["c1", "c2"],
+            contentBefore: `<p>[c1}{c1][c2}{c2]a</p>`,
+            Plugins: [EmbeddedComponentPlugin],
+            resources: {
+                embeddedComponents: [
+                    embedding(
+                        "wrapper",
+                        EmbeddedWrapper,
+                        (host) => ({ host }),
+                        getEditableDescendants
+                    ),
+                ],
+            },
+        });
+        const e1 = peerInfos.c1.editor;
+        const e2 = peerInfos.c2.editor;
+        e1.shared.domInsert(
+            parseHTML(
+                e1.document,
+                unformat(`
+                    <div data-embedded="wrapper">
+                        <div data-embedded-editable="deep">
+                            <p>deep</p>
+                        </div>
+                    </div>
+                `)
+            )
+        );
+        e1.dispatch("ADD_STEP");
+        // ensure wrappers[0] is for c1
+        await animationFrame();
+        mergePeersSteps(peerInfos);
+        // ensure wrappers[1] is for c2
+        await animationFrame();
+        const deep1 = e1.editable.querySelector("[data-embedded-editable='deep'] > p");
+        const deep2 = e2.editable.querySelector("[data-embedded-editable='deep'] > p");
+        // change state for c1
+        wrappers[0].state.switch = true;
+        deep1.append(e1.document.createTextNode("1"));
+        e1.dispatch("ADD_STEP");
+        // wait for patch for c1
+        await animationFrame();
+        mergePeersSteps(peerInfos);
+        deep2.append(e2.document.createTextNode("2"));
+        e2.dispatch("ADD_STEP");
+        mergePeersSteps(peerInfos);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+            unformat(`
+                <div contenteditable="false" data-embedded="wrapper" data-oe-protected="true">
+                    <div>
+                        <div class="switched">
+                            <div class="deep">
+                                <div contenteditable="true" data-embedded-editable="deep" data-oe-protected="false">
+                                    <p>deep12</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p>[]a</p>
+            `)
+        );
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            unformat(`
+                <div contenteditable="false" data-embedded="wrapper" data-oe-protected="true">
+                    <div>
+                        <div class="deep">
+                            <div contenteditable="true" data-embedded-editable="deep" data-oe-protected="false">
+                                <p>deep12</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p>[]a</p>
+            `)
+        );
+    });
+
+    test("editableDescendants for components are collaborative (after delete + undo)", async () => {
+        const SimpleEmbeddedWrapper = EmbeddedWrapperMixin("deep");
+        const peerInfos = await setupMultiEditor({
+            peerIds: ["c1", "c2"],
+            contentBefore: `<p>[c1}{c1][c2}{c2]a</p>`,
+            Plugins: [EmbeddedComponentPlugin],
+            resources: {
+                embeddedComponents: [
+                    embedding(
+                        "wrapper",
+                        SimpleEmbeddedWrapper,
+                        (host) => ({ host }),
+                        getEditableDescendants
+                    ),
+                ],
+            },
+        });
+        const e1 = peerInfos.c1.editor;
+        const e2 = peerInfos.c2.editor;
+        e1.shared.domInsert(
+            parseHTML(
+                e1.document,
+                unformat(`
+                    <div data-embedded="wrapper">
+                        <div data-embedded-editable="deep">
+                            <p>deep</p>
+                        </div>
+                    </div>
+                `)
+            )
+        );
+        e1.dispatch("ADD_STEP");
+        mergePeersSteps(peerInfos);
+        await animationFrame();
+        deleteBackward(e1);
+        mergePeersSteps(peerInfos);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(`<p>[]a</p>`);
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(`<p>[]a</p>`);
+        undo(e1);
+        const deep1 = e1.editable.querySelector("[data-embedded-editable='deep'] > p");
+        deep1.append(e1.document.createTextNode("1"));
+        e1.dispatch("ADD_STEP");
+        mergePeersSteps(peerInfos);
+        await animationFrame();
+        const deep2 = e2.editable.querySelector("[data-embedded-editable='deep'] > p");
+        deep2.append(e2.document.createTextNode("2"));
+        e2.dispatch("ADD_STEP");
+        mergePeersSteps(peerInfos);
+        const editable = unformat(`
+            <div contenteditable="false" data-embedded="wrapper" data-oe-protected="true">
+                <div class="deep">
+                    <div contenteditable="true" data-embedded-editable="deep" data-oe-protected="false">
+                        <p>deep12</p>
+                    </div>
+                </div>
+            </div>
+            <p>[]a</p>
+        `);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
+    });
+
+    test("editableDescendants for components are collaborative (inside a nested component)", async () => {
+        const SimpleEmbeddedWrapper = EmbeddedWrapperMixin("deep");
+        const peerInfos = await setupMultiEditor({
+            peerIds: ["c1", "c2"],
+            contentBefore: `<p>[c1}{c1][c2}{c2]a</p>`,
+            Plugins: [EmbeddedComponentPlugin],
+            resources: {
+                embeddedComponents: [
+                    embedding(
+                        "wrapper",
+                        SimpleEmbeddedWrapper,
+                        (host) => ({ host }),
+                        getEditableDescendants
+                    ),
+                ],
+            },
+        });
+        const e1 = peerInfos.c1.editor;
+        const e2 = peerInfos.c2.editor;
+        e1.shared.domInsert(
+            parseHTML(
+                e1.document,
+                unformat(`
+                    <div data-embedded="wrapper">
+                        <div data-embedded-editable="deep">
+                            <p>shallow</p>
+                            <div data-embedded="wrapper">
+                                <div data-embedded-editable="deep">
+                                    <p>deep</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `)
+            )
+        );
+        e1.dispatch("ADD_STEP");
+        mergePeersSteps(peerInfos);
+        const shallow1 = e1.editable.querySelector("[data-embedded-editable='deep'] > p");
+        shallow1.append(e1.document.createTextNode("1"));
+        e1.dispatch("ADD_STEP");
+        const deep1 = e1.editable.querySelectorAll("[data-embedded-editable='deep'] > p")[1];
+        deep1.append(e1.document.createTextNode("9"));
+        e1.dispatch("ADD_STEP");
+        await animationFrame();
+        mergePeersSteps(peerInfos);
+        const shallow2 = e2.editable.querySelector("[data-embedded-editable='deep'] > p");
+        shallow2.append(e2.document.createTextNode("2"));
+        e2.dispatch("ADD_STEP");
+        const deep2 = e2.editable.querySelectorAll("[data-embedded-editable='deep'] > p")[1];
+        deep2.append(e2.document.createTextNode("8"));
+        e2.dispatch("ADD_STEP");
+        mergePeersSteps(peerInfos);
+        const editable = unformat(`
+            <div contenteditable="false" data-embedded="wrapper" data-oe-protected="true">
+                <div class="deep">
+                    <div contenteditable="true" data-embedded-editable="deep" data-oe-protected="false">
+                        <p>shallow12</p>
+                        <div contenteditable="false" data-embedded="wrapper" data-oe-protected="true">
+                            <div class="deep">
+                                <div contenteditable="true" data-embedded-editable="deep" data-oe-protected="false">
+                                    <p>deep98</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p>[]a</p>
+        `);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
     });
 });
