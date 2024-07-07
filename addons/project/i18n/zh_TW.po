@@ -203,7 +203,7 @@ msgstr "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
 #. odoo-javascript
 #: code:addons/project/static/src/views/widget/subtask_counter.js:0
 msgid "%(count1)s/%(count2)s"
-msgstr ""
+msgstr "%(count1)s/%(count2)s"
 
 #. module: project
 #. odoo-python
@@ -1157,7 +1157,7 @@ msgstr "附件數"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Attachments"
-msgstr ""
+msgstr "附件"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__user_id
@@ -2153,7 +2153,7 @@ msgstr "在看板中摺疊"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_container.xml:0
 msgid "Follow"
-msgstr ""
+msgstr "關注"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
@@ -2212,7 +2212,7 @@ msgstr "頻率"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Future"
-msgstr ""
+msgstr "將來"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -3226,6 +3226,13 @@ msgid "Once a Month"
 msgstr "一個月一次"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
+msgstr ""
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 msgid "Oops! Something went wrong. Try to reload the page and log in."
@@ -3289,7 +3296,7 @@ msgstr "其他"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Overdue"
-msgstr ""
+msgstr "過期"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -3939,7 +3946,7 @@ msgstr "相關的單據模型"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_chatter/project_follower_list.js:0
 msgid "Remove Collaborator"
-msgstr ""
+msgstr "移除協作者"
 
 #. module: project
 #. odoo-javascript
@@ -4048,6 +4055,20 @@ msgstr "悲傷的表情"
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to paste images in description"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to drag images in Description"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Schedule your activity once it is ready."
 msgstr "活動準備好後便安排排期。"
@@ -4137,7 +4158,7 @@ msgstr "發送電子郵件"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__send_invitation
 msgid "Send Invitation"
-msgstr ""
+msgstr "傳送邀請"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
@@ -5113,7 +5134,7 @@ msgstr "未分派"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_container.xml:0
 msgid "Unfollow"
-msgstr ""
+msgstr "取消關注"
 
 #. module: project
 #. odoo-python
@@ -5681,7 +5702,7 @@ msgstr "狀態，以將任務標記為完成。"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 msgid "state.message"
-msgstr ""
+msgstr "state.message"
 
 #. module: project
 #. odoo-javascript

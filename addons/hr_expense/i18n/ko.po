@@ -360,6 +360,11 @@ msgid "Attachments of expenses"
 msgstr "경비 첨부 파일"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_employee_base
+msgid "Basic Employee"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
 msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
@@ -930,6 +935,8 @@ msgstr "%(other_expense_name)s과 유사한 영수증이 있는 비용"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_base__filter_for_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__filter_for_expense
 msgid "Filter For Expense"
 msgstr "경비에 대한 필터"
 
@@ -1578,12 +1585,6 @@ msgstr "세부 품목"
 #: model:ir.model,name:hr_expense.model_hr_employee_public
 msgid "Public Employee"
 msgstr "일반 직원"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_product_product__purchase_ok
-#: model:ir.model.fields,field_description:hr_expense.field_product_template__purchase_ok
-msgid "Purchase"
-msgstr "구매"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__quantity
@@ -2288,6 +2289,12 @@ msgid ""
 msgstr ""
 "승인할 수 없습니다:\n"
 " %s"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid "You cannot cancel an expense sheet linked to a posted journal entry"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python

@@ -3,8 +3,8 @@
 # 	* website_sale
 # 
 # Translators:
-# Wil Odoo, 2024
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-03 08:43+0000\n"
 "PO-Revision-Date: 2024-06-03 14:47+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +58,7 @@ msgstr "&amp;nbsp;(<i>Se le solicitará su dirección de entrega después)</i>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "&amp;nbsp;item(s)&amp;nbsp;-&amp;nbsp;"
-msgstr "&amp;nbsp;item(s)&amp;nbsp;-&amp;nbsp;"
+msgstr "&amp;nbsp;producto(s)&amp;nbsp;-&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -378,8 +378,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based"
 " on variants</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= "
-"1\">Basado en las variantes</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Según"
+" variantes</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -534,7 +534,7 @@ msgstr ""
 "                        </a>\n"
 "                    </div>\n"
 "                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"></t>\n"
-"                    <div style=\"text-align: center;\"><strong>Gracias por comprar con <t t-out=\"company.name or ''\">MiEmpresa (San Francisco)</t>!</strong></div>\n"
+"                    <div style=\"text-align: center;\"><strong>Gracias por comprar con <t t-out=\"company.name or ''\">Mi Compañía (San Francisco)</t>!</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -814,7 +814,7 @@ msgstr "Número de cesta abandonadas"
 #. odoo-python
 #: code:addons/website_sale/controllers/delivery.py:0
 msgid "Anonymous express checkout partner for order %s"
-msgstr "Compra rápida anónima para el pedido %s"
+msgstr "Pago exprés anónimo para el pedido %s del contacto"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -1563,7 +1563,7 @@ msgstr "Lista de precios por defecto, si existe"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default Sort"
-msgstr "Clasificación predeterminada"
+msgstr "Ordenación por defecto"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_id
@@ -1960,7 +1960,7 @@ msgstr "Nombre de campo"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Fill"
-msgstr "Rellenar"
+msgstr "Completar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2064,7 +2064,7 @@ msgstr "Tamaño de archivo excesivo. Optimice o reduzca la imagen."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accept_terms_and_conditions
 msgid "I agree to the"
-msgstr "Estoy de acuerdo con la"
+msgstr "Estoy de acuerdo con los"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__id
@@ -2620,7 +2620,7 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "No shipping method is selected."
-msgstr ""
+msgstr "No se ha seleccionado ningún método de envío."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
@@ -2718,8 +2718,8 @@ msgid ""
 "Only the company's websites are allowed.\n"
 "Leave the Company field empty or select a website from that company."
 msgstr ""
-"Solo se permiten los sitios web de la empresa\n"
-"Deje el campo Empresa vacío o seleccione un sitio web de esa empresa."
+"Solo se permiten los sitios web de la compañía.\n"
+"Deje el campo \"Compañía\" vacío o seleccione un sitio web de esa compañía."
 
 #. module: website_sale
 #. odoo-python
@@ -3677,7 +3677,7 @@ msgstr "Tienda - Seleccionar método de pago"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_default_sort
 msgid "Shop Default Sort"
-msgstr "Clasificación predeterminada de tienda"
+msgstr "Ordenación por defecto para tienda"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3904,7 +3904,7 @@ msgstr "Gracias por su pedido."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
 msgid "The #1"
-msgstr "El #1"
+msgstr "El mejor"
 
 #. module: website_sale
 #. odoo-python
@@ -4126,8 +4126,8 @@ msgid ""
 "True only for product filters that require a product_id because they relate "
 "to cross selling"
 msgstr ""
-"Verdadero solo para los filtros de productos que requieren un product_id "
-"porque están relacionados con la venta cruzada"
+"True solo para los filtros de productos que requieren un product_id porque "
+"están relacionados con la venta cruzada"
 
 #. module: website_sale
 #: model:res.groups,name:website_sale.group_show_uom_price

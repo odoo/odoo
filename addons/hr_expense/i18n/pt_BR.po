@@ -366,6 +366,11 @@ msgid "Attachments of expenses"
 msgstr "Anexos de despesas"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_employee_base
+msgid "Basic Employee"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
 msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
@@ -948,6 +953,8 @@ msgstr "Despesas com um recibo semelhante a %(other_expense_name)s"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_base__filter_for_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__filter_for_expense
 msgid "Filter For Expense"
 msgstr "Filtro para despesas"
 
@@ -1606,12 +1613,6 @@ msgstr "Variantes de produto"
 #: model:ir.model,name:hr_expense.model_hr_employee_public
 msgid "Public Employee"
 msgstr "Empregado público"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_product_product__purchase_ok
-#: model:ir.model.fields,field_description:hr_expense.field_product_template__purchase_ok
-msgid "Purchase"
-msgstr "Compra"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__quantity
@@ -2330,6 +2331,12 @@ msgid ""
 msgstr ""
 "Você não pode aprovar\n"
 "%s"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid "You cannot cancel an expense sheet linked to a posted journal entry"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python

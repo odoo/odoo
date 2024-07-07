@@ -9009,6 +9009,27 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"\n"
+"Il s'agit du module de gestion du Plan comptable français.\n"
+"========================================================================\n"
+"\n"
+"Ce module est applicable aux sociétés domiciliées en France métropolitaine. Elle ne concerne pas\n"
+"les sociétés domiciliées dans les DOM-TOM (Guadeloupe, Martinique, Guyane, Réunion, Mayotte).\n"
+"\n"
+"Ce module gère la TVA de type \"toutes taxes comprises\" pour les achats\n"
+"(il est indispensable pour utiliser le module 'hr_expense'). Attention, ces\n"
+"'TVA \"toutes taxes comprises\" ne sont pas gérées par les positions fiscales prévues par ce\n"
+"module module (car il est complexe de gérer à la fois les scénarios HT et TTC \n"
+"dans les positions fiscales).\n"
+"\n"
+"Ce module de localisation ne gère pas correctement le scénario dans lequel un société métropolitaine\n"
+"vend des services à une société domiciliée dans les DOM. Nous pourrions gérer cela dans les\n"
+"positions fiscales, mais il faudrait faire la différence entre la TVA sur les produits\n"
+"et la TVA sur les services. Nous considérons qu'il est trop 'lourd' d'avoir ceci par défaut\n"
+"dans l10n_fr_account; les entreprises qui vendent des services à des entreprises domiciliées dans les DOM doivent mettre à jour manuellement la\n"
+"configuration de leurs taxes et positions fiscales.\n"
+"\n"
+"**Crédits:** Sistheo, Zeekom, CrysaLEAD, Akretion et Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mn
@@ -14174,6 +14195,7 @@ msgstr ""
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "All our contractual relations will be governed exclusively by  law."
 msgstr ""
+"Toutes nos relations contractuelles seront régies exclusivement par la loi."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__lang
@@ -16365,6 +16387,13 @@ msgid ""
 "and does not include any costs relating to the legislation of the country in"
 " which the client is located."
 msgstr ""
+"Certains pays appliquent une retenue à la source sur le montant des "
+"factures, conformément à leur législation. Toute retenue à la source sera "
+"versée par le client à l'administration fiscale. En aucun cas My Company ne "
+"peut être impliquée dans les frais liés à la législation d'un pays. Le "
+"montant de la facture sera donc dû à My Company  dans son intégralité et ne "
+"comprend pas les éventuels frais liés à la législation du pays dans lequel "
+"se trouve le client."
 
 #. module: base
 #: model:res.country,name:base.td
@@ -16681,7 +16710,7 @@ msgstr "CodaBox"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_codabox
 msgid "CodaBox integration to retrieve your CODA and SODA files."
-msgstr ""
+msgstr "Intégration CodaBox pour récupérer vos fichiers CODA et SODA."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -20865,11 +20894,6 @@ msgid "France - Accounting Reports"
 msgstr "France - Rapports comptables"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_fr_invoice_addr
-msgid "France - Adding Mandatory Invoice Mentions (Decree no. 2022-1299)"
-msgstr "France - Ajout des mentions obligatoires des factures (Décret n° 2022-1299)"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec_import
 msgid "France - FEC Import"
 msgstr "France - Import FEC"
@@ -20882,7 +20906,7 @@ msgstr "France - Intégration de Factur-X avec Chorus Pro"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr
 msgid "France - Localizations"
-msgstr ""
+msgstr "France - Localisations"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll_account
@@ -22275,6 +22299,10 @@ msgid ""
 "payment date, My Company reserves the right to call on the services of a "
 "debt recovery company. All legal expenses will be payable by the client."
 msgstr ""
+"Si un paiement est toujours dû plus de 60 jours après la date de paiement, "
+"My Company (Chicago) se réserve le droit de contacter une entreprise de "
+"recouvrement. Toutes les dépenses associées devront être payées par le "
+"client."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__group_expand
@@ -22682,6 +22710,9 @@ msgid ""
 "by means of a letter sent by recorded delivery to its registered office "
 "within 8 days of the delivery of the goods or the provision of the services."
 msgstr ""
+"Afin de pouvoir être admissible, My Company doit être notifié de toute "
+"plainte par recommandé postal dans les 8 jours de la livraison des biens ou "
+"services."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
@@ -23268,7 +23299,7 @@ msgstr "Clé invalide : La vue QWeb devrait avoir une clé"
 #. odoo-python
 #: code:addons/fields.py:0 code:addons/models.py:0
 msgid "Invalid language code: %s"
-msgstr ""
+msgstr "Code langue invalide : %s"
 
 #. module: base
 #. odoo-python
@@ -25464,6 +25495,74 @@ msgid ""
 "perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
 "como una guía con propósitos distintos del contable.\n"
 msgstr ""
+"Un minimum de comptes pour commencer à travailler au Pérou.\n"
+"=================================================\n"
+"\n"
+"L'utilisation de ce plan comptable doit faire référence à la documentation officielle du MEF.\n"
+"\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/VERSION_MODIFICADA_PCG_EMPRESARIAL.pdf\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/PCGE_2019.pdf\n"
+"\n"
+"Vous trouverez toutes les références légales ici :\n"
+"\n"
+"http://www.sunat.gob.pe/legislacion/general/index.html\n"
+"\n"
+"Considérations.\n"
+"===============\n"
+"\n"
+"Plan comptable :\n"
+"-----------------\n"
+"\n"
+"L'arborescence du plan comptable est faite en utilisant des groupes de comptes, tous les comptes avec mouvement\n"
+"sont disponibles en tant que groupes, mais seuls les plus communs sont disponibles en tant que comptes\n"
+"réels, si vous voulez en créer un nouveau, utilisez le groupe de comptes comme\n"
+"référence.\n"
+"\n"
+"# TODO: Image montrant ce dont je parle.\n"
+"\n"
+"Taxes :\n"
+"------\n"
+"\n"
+"'IGV': {'name': 'VAT', 'code': 'S'},\n"
+"'IVAP': {'name': 'VAT', 'code': ''},\n"
+"'ISC': {'name': 'EXC', 'code': 'S'},\n"
+"'ICBPER': {'name': 'OTH', 'code': ''},\n"
+"'EXP': {'name': 'FRE', 'code': 'G'},\n"
+"'GRA': {'name': 'FRE', 'code': 'Z'},\n"
+"'EXO': {'name': 'VAT', 'code': 'E'},\n"
+"'INA': {'name': 'FRE', 'code': 'O'},\n"
+"'OTHERS': {'name': 'OTH', 'code': 'S'},\n"
+"\n"
+"Nous avons ajouté à ce module les 3 notions de taxes (nécessaires pour la signature\n"
+"EDI)\n"
+"\n"
+"# TODO: Décrire les nouveaux champs.\n"
+"\n"
+"Produits :\n"
+"---------\n"
+"\n"
+"Les codes des produits à utiliser dans l'EDI sont disponibles ici, afin de décider\n"
+"quelle taxe utiliser grâce à quel code en suivant cette référence et le code python:\n"
+"\n"
+"https://docs.google.com/spreadsheets/d/1f1fxV8uGhA-Qz9-R1L1-dJirZ8xi3Wfg/edit#gid=662652969\n"
+"\n"
+"**Nota:**\n"
+"---------\n"
+"\n"
+"**RELACIÓN ENTRE EL PCGE Y LA LEGISLACIÓN TRIBUTARIA:**\n"
+"\n"
+"Este PCGE ha sido preparado como una herramienta de carácter contable, para acumular información que\n"
+"requiere ser expuesta en el cuerpo de los estados financieros o en las notas a dichos estados. Esa acumulación se\n"
+"efectúa en los libros o registros contables, cuya denominación y naturaleza depende de las actividades que se\n"
+"efectúen, y que permiten acciones de verificación, control y seguimiento. Las NIIF completas y la NIIF PYMES no\n"
+"contienen prescripciones sobre teneduría de libros, y consecuentemente, sobre los libros y otros registros\n"
+"de naturaleza contable. Por otro lado, si bien es cierto la contabilidad es también un insumo, dentro de otros, para\n"
+"labores de cumplimiento tributario, este PCGE no ha sido elaborado para satisfacer prescripciones tributarias ni su\n"
+"verificación. No obstante ello, donde no hubo oposición entre la contabilidad financiera prescrita por las NIIF y\n"
+"la legislación tributaria, este PCGE ha incluido subcuentas, divisionarias y sub divisionarias, para\n"
+"distinguir componentes con validez tributaria, dentro del conjunto de componentes que corresponden a una\n"
+"perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
+"como una guía con propósitos distintos del contable.\n"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
@@ -25941,6 +26040,12 @@ msgid ""
 "as a third party in the context of any claim for damages filed against the "
 "client by an end consumer."
 msgstr ""
+"My Company entreprend de faire de son mieux pour fournir des services "
+"performants dans les temps impartis. Toutefois, aucune de ses obligations ne"
+" peut être considérée comme une obligation d'atteindre des résultats. My "
+"Company ne peut en aucune circonstance, apparaitre comme tiers dans le "
+"contexte d'une plainte pour les dommages à charge du client par un "
+"consommateur final."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -29100,6 +29205,12 @@ msgid ""
 " will be authorized to suspend any provision of services without prior "
 "warning in the event of late payment."
 msgstr ""
+"Nos factures sont payables dans les 21 jours ouvrables, a mois qu'un autre "
+"délai soit précisé soit sur la facture, soit sur la commande. En cas de non-"
+"paiement dans les temps impartis, My Company se réserve le droit de requérir"
+" a un taux d'intérêt de 10% du montant non-perçu. My Company sera autorisée "
+"à suspendre toute fourniture de service sans préavis en cas de retard de "
+"paiement."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
@@ -36646,7 +36757,7 @@ msgstr "États-Unis"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us
 msgid "United States - Localizations"
-msgstr ""
+msgstr "États-Unis - Localisations"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_hr_payroll

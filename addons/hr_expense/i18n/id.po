@@ -365,6 +365,11 @@ msgid "Attachments of expenses"
 msgstr "Lampiran pengeluaran"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_employee_base
+msgid "Basic Employee"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
 msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
@@ -952,6 +957,8 @@ msgstr "Pengeluaran dengan tanda terima mirip dengan %(other_expense_name)s"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_base__filter_for_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__filter_for_expense
 msgid "Filter For Expense"
 msgstr "Filter Untuk Pengeluaran"
 
@@ -1612,12 +1619,6 @@ msgstr "Varian Produk"
 #: model:ir.model,name:hr_expense.model_hr_employee_public
 msgid "Public Employee"
 msgstr "Karyawan Publik"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_product_product__purchase_ok
-#: model:ir.model.fields,field_description:hr_expense.field_product_template__purchase_ok
-msgid "Purchase"
-msgstr "Pembelia"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__quantity
@@ -2337,6 +2338,12 @@ msgid ""
 msgstr ""
 "Anda tidak dapat menyetujui:\n"
 " %s"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid "You cannot cancel an expense sheet linked to a posted journal entry"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python

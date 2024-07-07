@@ -5418,6 +5418,12 @@ msgid "No operations found. Let's create a transfer!"
 msgstr "没有作业。让我们创建一个调拨！"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid "No product found to generate Serials/Lots for."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
 msgstr "现在还没有产品， 我们先创建一个!"
@@ -7183,6 +7189,8 @@ msgid ""
 "Reduce stockouts with alerts, barcode app, replenishment propositions,\n"
 "                        locations management traceability, quality control, etc."
 msgstr ""
+"通过警报、条形码应用程序、补货建议、\n"
+"                        位置管理可追溯性、品质控制等，减少缺货的情况。"
 
 #. module: stock
 #. odoo-javascript
@@ -7865,7 +7873,7 @@ msgstr "选择可以应用此路线的地方"
 msgid ""
 "Selected storage category does not exist in the 'store to' location or any "
 "of its sublocations"
-msgstr ""
+msgstr "选择的储存类别，在“储存至”位置或其任何子位置中，都不存在"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__picking_warn
@@ -8911,7 +8919,7 @@ msgstr "包含此位置的父位置。示例： '调度区域' 是 '1号门' 的
 msgid ""
 "The procurement quantity will be rounded up to a multiple of this field "
 "quantity. If it is 0, it is not rounded."
-msgstr ""
+msgstr "采购数量将四舍五入为该字段数量的倍数。如果为 0，则不四舍五入。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -8939,13 +8947,13 @@ msgid ""
 "The quantity done for the product \"%(product)s\" doesn't respect the "
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
-msgstr ""
+msgstr "产品“%(product)s”的完成数量不符合计量单位“%(unit)s”上定义的舍入精确度。请更改已完成的数量，或计量单位的舍入精确度。"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "The quantity per lot should always be a positive value."
-msgstr ""
+msgstr "每批次数量应始终为正值。"
 
 #. module: stock
 #. odoo-python
@@ -8960,7 +8968,7 @@ msgstr "请求的作业无法处理，因为一个程序错误，设置`product_
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
 "The search does not support the %(operator)s operator or %(value)s value."
-msgstr ""
+msgstr "搜索不支持%(operator)s操作员或%(value)s值。"
 
 #. module: stock
 #. odoo-python
@@ -10213,13 +10221,14 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br/> "
 "<b>%(operation)s</b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
+"产品到达<b>%(source_location)s</b>时，<br/>会自动建立<b>%(operation)s</b>操作，将产品运往<b>%(destination)s</b>。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
 msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
-msgstr ""
+msgstr "设置为 True（真）时，stock.move 的目标位置会依照规则。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -10234,7 +10243,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity specified for this field,"
 " Odoo generates a procurement to bring the forecasted quantity above of this"
 " Min Quantity."
-msgstr ""
+msgstr "当虚拟库存低于此字段指定的最小数量时，Odoo 会生成采购，使预测数量高于此最小数量。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -10242,7 +10251,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity, Odoo generates a "
 "procurement to bring the forecasted quantity up to (or near to) the Max "
 "Quantity specified for this field (or to Min Quantity, whichever is bigger)."
-msgstr ""
+msgstr "当虚拟库存低于最小数量时，Odoo 会生成采购，使预测数量达到（或接近）该字段指定的最大数量（或最小数量，以较大者为准）。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
@@ -10313,7 +10322,7 @@ msgstr "每行写一个批次/序列名称，然后是数量。"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Yesterday"
-msgstr ""
+msgstr "昨天"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -10399,7 +10408,7 @@ msgid ""
 "You can not change the inventory tracking of a product that is currently "
 "reserved on a stock move. If you need to change the inventory tracking, you "
 "should first unreserve the stock move."
-msgstr ""
+msgstr "您不能更改当前已在库存移动中保留的产品的库存追踪。如果需要更改库存追踪，应首先取消库存移动。"
 
 #. module: stock
 #. odoo-python
@@ -10407,7 +10416,7 @@ msgstr ""
 msgid ""
 "You can not change the inventory tracking of a product that was already "
 "used."
-msgstr ""
+msgstr "您不能更改已使用产品的库存追踪。"
 
 #. module: stock
 #. odoo-python
@@ -10477,7 +10486,7 @@ msgstr "您不能禁用位置 %s，因为它们仍然包含产品。"
 msgid ""
 "You cannot archive location %(location)s because it is used by warehouse "
 "%(warehouse)s"
-msgstr ""
+msgstr "您不可封存位置%(location)s，因为仓库%(warehouse)s正使用它"
 
 #. module: stock
 #. odoo-python
@@ -10512,7 +10521,7 @@ msgstr "您无法改变已标记为“完成”的库存调拨的状态。"
 msgid ""
 "You cannot change the company of a lot/serial number currently in a location"
 " belonging to another company."
-msgstr ""
+msgstr "您不能更改当前位置属于其他公司的批号/序列号的公司。"
 
 #. module: stock
 #. odoo-python
@@ -10557,7 +10566,7 @@ msgstr "您不能在同一调拨中多次调拨同一包裹内容，或将同一
 msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types."
-msgstr ""
+msgstr "如果产品来自不同的转移，且操作类型不同，则不能将产品装入同一包裹。"
 
 #. module: stock
 #. odoo-python
@@ -10565,7 +10574,7 @@ msgstr ""
 msgid ""
 "You cannot perform moves because their unit of measure has a different "
 "category from their product unit of measure."
-msgstr ""
+msgstr "您不可执行移动，因为其计量单位与产品计量单位的类别不同。"
 
 #. module: stock
 #. odoo-python
@@ -10573,7 +10582,7 @@ msgstr ""
 msgid ""
 "You cannot set a location as a scrap location when it is assigned as a "
 "destination location for a manufacturing type operation."
-msgstr ""
+msgstr "当某个位置已被指定为生产类型操作的目的地位置时，不能将该位置设置为报废位置。"
 
 #. module: stock
 #. odoo-python
@@ -10724,7 +10733,7 @@ msgstr "您应该更新此文档以反映您的T &amp; C。"
 msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
-msgstr ""
+msgstr "库存仍有%(operations)s类型的操作正在进行。相关仓库： %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -10804,7 +10813,7 @@ msgstr "]<br/>分钟:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "barcodelookup.com"
-msgstr ""
+msgstr "barcodelookup.com"
 
 #. module: stock
 #. odoo-javascript
@@ -10853,7 +10862,7 @@ msgstr "例如：中央仓库"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "e.g. LOT-PR-00012"
-msgstr ""
+msgstr "例：LOT-PR-00012"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -10863,7 +10872,7 @@ msgstr "例如：批次/0001/20121"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "e.g. Lumber Inc"
-msgstr ""
+msgstr "例：Lumber Inc"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -10903,7 +10912,7 @@ msgstr "例如：两步接收"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "e.g. d7vctmiv2rwgenebha8bxq7irooudn"
-msgstr ""
+msgstr "例：d7vctmiv2rwgenebha8bxq7irooudn"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo
@@ -10923,7 +10932,7 @@ msgstr "在"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "in barcode."
-msgstr ""
+msgstr "在条形码内。"
 
 #. module: stock
 #. odoo-javascript
@@ -11009,7 +11018,7 @@ msgstr "stock.putaway.rule"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "the barcode app"
-msgstr ""
+msgstr "条形码应用程序"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__warehouse_id

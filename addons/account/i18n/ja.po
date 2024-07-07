@@ -6615,7 +6615,7 @@ msgstr "為替差損"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
-msgstr "国外 税ID"
+msgstr "国外登録番号"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
@@ -11675,20 +11675,20 @@ msgstr "逆仕訳日付"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Reversal date must be posterior to date."
-msgstr "リバース日は後日でなければいけません。"
+msgstr "逆仕訳日は後日でなければいけません。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversed_entry_id
 #: model:ir.model.fields,field_description:account.field_account_move__reversed_entry_id
 #: model:ir.model.fields,field_description:account.field_account_payment__reversed_entry_id
 msgid "Reversal of"
-msgstr "以下のリバース:"
+msgstr "次の逆仕訳 :"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "Reversal of: %(move_name)s, %(reason)s"
-msgstr "以下のリバース:%(move_name)s、%(reason)s"
+msgstr "次の逆仕訳 :%(move_name)s、%(reason)s"
 
 #. module: account
 #. odoo-python
@@ -11703,7 +11703,7 @@ msgstr "次の逆仕訳: %s"
 #: model:ir.actions.act_window,name:account.action_view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse"
-msgstr "リバース"
+msgstr "逆仕訳"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -11724,7 +11724,7 @@ msgstr "逆仕訳を生成"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse and Create Invoice"
-msgstr "リバースし請求書を作成"
+msgstr "逆仕訳し請求書を作成"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
@@ -11733,7 +11733,7 @@ msgstr "リバースし請求書を作成"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
-msgstr "リバースされた"
+msgstr "逆仕訳済"
 
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_chart_of_accounts
@@ -12056,7 +12056,7 @@ msgstr "税を検索"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Search a name or Tax ID..."
-msgstr "名前または税IDを検索..."
+msgstr "名前または登録番号を検索..."
 
 #. module: account
 #. odoo-javascript
@@ -13083,7 +13083,7 @@ msgstr "税グループ"
 #: model:ir.model.fields,field_description:account.field_base_document_layout__vat
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax ID"
-msgstr "税ID"
+msgstr "登録番号"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__force_tax_included
@@ -13498,7 +13498,7 @@ msgid ""
 "The Tax Identification Number. Values here will be validated based on the "
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
-msgstr "税ID。ここの値は国の形式に基づいて検証されます。仕入先が課税対象でないことを示すには '/'を使用できます。"
+msgstr "登録番号。ここの値は国の形式に基づいて検証されます。仕入先が課税対象でないことを示すには '/'を使用できます。"
 
 #. module: account
 #. odoo-python
@@ -14313,7 +14313,7 @@ msgstr "余剰金合計の提案がこの金額・割合の下で計算書の明
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
-msgstr "この会計ポジションにマップされた地区での会社の税ID。"
+msgstr "この会計ポジションにマップされた地区での会社の登録番号。"
 
 #. module: account
 #. odoo-python
@@ -15445,7 +15445,7 @@ msgstr "仕訳項目はStorno会計の対象かどうかを設定するユーテ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
 msgid "VAT required"
-msgstr "要VAT番号"
+msgstr "要登録番号"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move

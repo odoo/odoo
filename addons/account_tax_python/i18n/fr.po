@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-03 08:44+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,16 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Groupe de taxes : la taxe est un ensemble de sous-taxes.\n"
+"    - Fixe : le montant de la taxe est fixe quel que soit le prix.\n"
+"    - Pourcentage : la taxe est proportionnelle au prix :\n"
+"        par ex. 100 * (1 + 10%) = 110 (prix exprimé HT)\n"
+"        par ex. 110 / (1 + 10%) = 100 (prix exprimé TTC)\n"
+"    - Pourcentage toutes taxes comprises : le montant de la taxe est une division du prix :\n"
+"        par ex. 180 / (1 - 10%) = 200 (prix exprimé HT)\n"
+"        par ex. 200 * (1 - 10%) = 180 (prix exprimé TTC)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
@@ -44,22 +55,28 @@ msgid ""
 ":param quantity: float\n"
 ":param product: A object representing the product\n"
 msgstr ""
+"Calculer le montant de la taxe.\n"
+"\n"
+":param base: nombre flottant, montant réel sur lequel la taxe est appliquée\n"
+":param price_unit: nombre flottant\n"
+":param quantity: nombre flottant\n"
+":param product: un objet représentant le produit\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 msgid "Custom Formula"
-msgstr ""
+msgstr "Formule presonnalisée"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
 msgid "Formula"
-msgstr ""
+msgstr "Formule"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/models/account_tax.py:0
 msgid "Malformed formula '%(formula)s' at position %(position)s"
-msgstr ""
+msgstr "Formule mal formée '%(formula)s' à la position %(position)s"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax

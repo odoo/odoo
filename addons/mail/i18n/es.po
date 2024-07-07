@@ -3,8 +3,8 @@
 # 	* mail
 # 
 # Translators:
-# Wil Odoo, 2024
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-03 08:43+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3604,7 +3604,7 @@ msgid ""
 "\n"
 "%(template_traceback)s)"
 msgstr ""
-"Error al renderizar la plantilla QWeb: %(template_src)s\n"
+"Error al visualizar la plantilla QWeb: %(template_src)s\n"
 "\n"
 "%(template_traceback)s)"
 
@@ -3612,13 +3612,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Failed to render inline_template template: %(template_txt)s)"
-msgstr "Error al renderizar la plantilla inline_template: %(template_txt)s)"
+msgstr "Error al visualizar la plantilla inline_template: %(template_txt)s)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Failed to render template: %(view_ref)s"
-msgstr "Error al renderizar la plantilla: %(view_ref)s"
+msgstr "Error al visualizar la plantilla: %(view_ref)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
@@ -3686,19 +3686,19 @@ msgstr "Campo"
 #. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 msgid "Field \"Mail Activity\" cannot be changed to \"False\"."
-msgstr "El campo \"Actividad de correo\" no se puede cambiar a \"Falso\"."
+msgstr "El campo \"Actividad de correo\" no se puede cambiar a \"False\"."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 msgid "Field \"Mail Blacklist\" cannot be changed to \"False\"."
-msgstr "El campo \"Lista negra de correo\" no se puede cambiar a \"Falso\"."
+msgstr "El campo \"Lista negra de correo\" no se puede cambiar a \"False\"."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 msgid "Field \"Mail Thread\" cannot be changed to \"False\"."
-msgstr "El campo \"Hilo de mensajes\" no puede cambiarse a \"Falso\"."
+msgstr "El campo \"Hilo de mensajes\" no puede cambiarse a \"False\"."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -4491,10 +4491,10 @@ msgid ""
 "Instead, it will check for the reply_to in tracking message-id and "
 "redirected accordingly. This has an impact on the generated message-id."
 msgstr ""
-"Si está marcado como verdadero, las respuestas no se mostrarán en el hilo de"
-" conversación del documento original. En su lugar, se comprobará el reply_to"
-" en el seguimiento del message-id y se redireccionará como corresponde. Esto"
-" tiene un impacto en el message-id generado."
+"Si está marcado como True, las respuestas no se mostrarán en el hilo de "
+"conversación del documento original. En su lugar, se comprobará el reply_to "
+"en el seguimiento del message-id y se redireccionará como corresponde. Esto "
+"tiene un impacto en el message-id generado."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain_id
@@ -6729,7 +6729,7 @@ msgstr "Operación no admitida"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_optout
 msgid "Opted Out"
-msgstr "Canceló"
+msgstr "Exclusión voluntaria"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_force_thread_id
@@ -6846,7 +6846,7 @@ msgstr "Servidor de correo de salida"
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__overdue
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Overdue"
-msgstr "Vencidas"
+msgstr "De retraso"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -6951,7 +6951,7 @@ msgstr "Contacto de sólo lectura "
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_partner
 msgid "Partner with additional information for mail resend"
-msgstr "Asóciese con información adicional para reenviar correo"
+msgstr "Contacto con información adicional para el reenvío del correo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_partner_ids
@@ -6988,7 +6988,7 @@ msgstr "Carga efectiva"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Permanently delete this template"
-msgstr "Eliminar esta plantilla de forma permanente"
+msgstr "Eliminar permanentemente esta plantilla"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
@@ -7305,7 +7305,7 @@ msgstr "Contrato de garantía del editor"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
 msgid "Publisher: Update Notification"
-msgstr "Editor: Actualizar la notificación"
+msgstr "Editor: actualizar la notificación"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_push_device
@@ -7414,7 +7414,7 @@ msgstr "Listo para enviar"
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__reason
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 msgid "Reason"
-msgstr "Motivo"
+msgstr "Razón"
 
 #. module: mail
 #: model:res.groups,name:mail.group_mail_notification_type_inbox
@@ -7627,7 +7627,7 @@ msgstr "Renombrar"
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__render_model
 #: model:ir.model.fields,field_description:mail.field_mail_template__render_model
 msgid "Rendering Model"
-msgstr "Modelo de renderización"
+msgstr "Modelo de visualización"
 
 #. module: mail
 #. odoo-python
@@ -8043,7 +8043,7 @@ msgstr "Buscar un usuario..."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
 msgid "Search in progress"
-msgstr "Búsqueda en progreso"
+msgstr "Búsqueda en proceso"
 
 #. module: mail
 #. odoo-javascript
@@ -8075,7 +8075,7 @@ msgstr "Actualización de seguridad: correo electrónico cambiado"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Security Update: Login Changed"
-msgstr "Actualización de seguridad: cambió el inicio de sesión"
+msgstr "Actualización de seguridad: nombre de usuario cambiado"
 
 #. module: mail
 #. odoo-python
@@ -8238,7 +8238,7 @@ msgstr "Secuencia"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Server & Login"
-msgstr "Servidor e Inicio de sesión"
+msgstr "Servidor e inicio de sesión"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
@@ -8299,7 +8299,7 @@ msgstr "Tipo de servidor POP."
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__active
 msgid "Set active to false to hide the channel without removing it."
-msgstr "Establezca activo en falso para ocultar el canal sin eliminarlo."
+msgstr "Establezca activo en False para ocultar el canal sin eliminarlo."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -8550,7 +8550,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Estado basado en actividades\n"
-"Vencida: la fecha límite ya ha pasado\n"
+"De retraso: la fecha límite ya ha pasado\n"
 "Hoy: la fecha límite es hoy\n"
 "Planificada: actividades futuras."
 
@@ -8619,7 +8619,7 @@ msgid ""
 "shift.ctrl.alt.key, e.g: truthy.1.true.b"
 msgstr ""
 "Cadena con formato que representa una tecla con modificadores que siguen "
-"este patrón: shift.ctrl.alt.key, por ejemplo: truthy.1.verdadero.b"
+"este patrón: shift.ctrl.alt.key, por ejemplo: truthy.1.True.b"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_translation__body
@@ -8815,8 +8815,8 @@ msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
 "or raw); received %(engine)s instead."
 msgstr ""
-"El renderizado de plantillas sólo admite inline_template, qweb o qweb_view "
-"(vista o bruto); %(engine)sen cambio, recibió"
+"La visualización de plantillas sólo admite inline_template, qweb o qweb_view"
+" (vista o bruto); en cambio, recibió %(engine)s."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -8874,7 +8874,7 @@ msgstr "Contenidos del texto"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The"
-msgstr "El"
+msgstr "El equipo de"
 
 #. module: mail
 #. odoo-python
@@ -9582,7 +9582,7 @@ msgstr "Eliminar de la lista negra"
 #. odoo-python
 #: code:addons/mail/wizard/mail_blacklist_remove.py:0
 msgid "Unblock Reason: %(reason)s"
-msgstr "Motivo de desbloqueo: %(reason)s"
+msgstr "Razón de desbloqueo: %(reason)s"
 
 #. module: mail
 #. odoo-javascript
@@ -9679,7 +9679,7 @@ msgstr "Archivos adjuntos sin restricción"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_actions.js:0
 msgid "Unstar all"
-msgstr "Desmarcar todos"
+msgstr "Quitar todos de favoritos"
 
 #. module: mail
 #. odoo-python
@@ -9861,7 +9861,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_tracking_value__currency_id
 msgid "Used to display the currency when tracking monetary values"
 msgstr ""
-"Se utiliza para mostrar la divisa cuando se hace un seguimiento de los "
+"Utilizado para mostrar la moneda cuando se hace un seguimiento de los "
 "valores monetarios"
 
 #. module: mail
@@ -9886,7 +9886,7 @@ msgstr "Campo de usuario"
 #. module: mail
 #: model:ir.model,name:mail.model_bus_presence
 msgid "User Presence"
-msgstr "Usuario conectado"
+msgstr "Conexión del usuario"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__user_setting_id
@@ -10002,7 +10002,7 @@ msgid ""
 "Value %(allowed_domains)s for `mail.catchall.domain.allowed` cannot be validated.\n"
 "It should be a comma separated list of domains e.g. example.com,example.org."
 msgstr ""
-"No se puede validar el valor %(allowed_domains)s de `mail.catchall.domain.allowed`.\n"
+"No se puede validar el valor %(allowed_domains)s para `mail.catchall.domain.allowed`.\n"
 "Debe ser una lista de dominios separados por comas, p. ej. ejemplo.com,ejemplo.org."
 
 #. module: mail
@@ -10150,7 +10150,7 @@ msgstr "Semanas"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Welcome to MyCompany!"
-msgstr "¡Bienvenido a MiEmpresa!"
+msgstr "¡Le damos la bienvenida a MiCompañía!"
 
 #. module: mail
 #. odoo-javascript
@@ -10736,8 +10736,8 @@ msgstr "p. ej. \"Correo de bienvenida\""
 #: model_terms:ir.ui.view,arch_db:mail.mail_compose_message_view_form_template_save
 msgid "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
-"por ejemplo:  \"Bienvenido a MiEmpresa\" o \"Gusto en conocerlo, {{ "
-"object.name }}\""
+"por ejemplo:  \"Le damos la bienvenida a MiCompañía\" o \"Gusto en "
+"conocerlo, {{ object.name }}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -10752,7 +10752,7 @@ msgstr "p. ej. \"catchall\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"mycompany.com\""
-msgstr "p. ej. \"miempresa.com\""
+msgstr "p. ej. \"micompañía.com\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -10818,7 +10818,7 @@ msgstr "p. ej. soporte"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form
 msgid "e.g. true.true..f"
-msgstr "p. ej. verdadero.verdadero..f"
+msgstr "p. ej. True.True..f"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -10828,7 +10828,7 @@ msgstr "p. ej. user_id"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g: \"info@mycompany.odoo.com\""
-msgstr "p. ej. \"info@miempresa.odoo.com\""
+msgstr "p. ej. \"info@micompañía.odoo.com\""
 
 #. module: mail
 #. odoo-javascript
@@ -10849,7 +10849,7 @@ msgstr "ha sido modificado de:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "has just assigned you the following activity:"
-msgstr "le acaba de asignar la siguiente actividad:"
+msgstr "acaba de asignar la siguiente actividad:"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_content_filter
@@ -10968,7 +10968,7 @@ msgstr "ahora"
 #: code:addons/mail/static/src/core/common/message.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "on"
-msgstr "de"
+msgstr "el"
 
 #. module: mail
 #. odoo-javascript
@@ -11012,7 +11012,7 @@ msgid ""
 "document creation"
 msgstr ""
 "responder al modelo %s que no acepta la actualización del documento, "
-"retroceda en la creación de documentos"
+"recurrir a la creación del documento"
 
 #. module: mail
 #. odoo-python
@@ -11058,7 +11058,7 @@ msgstr "modelo de destino no especificado"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "team."
-msgstr "equipo."
+msgstr "."
 
 #. module: mail
 #. odoo-python
@@ -11111,7 +11111,7 @@ msgstr "usuarios"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "view"
-msgstr "vista "
+msgstr "ver"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_websocket

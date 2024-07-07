@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Junko Augias, 2024
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-15 14:12+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1815,7 +1816,7 @@ msgid ""
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
 "\n"
-"取引先のVATフィールド機能を拡張し、ユーザーが会計税ID (VAT) だけでなく、国民ドキュメント、パスポート、外国人登録証など他のタイプの身分証明書で連絡先を識別(最終的には請求)するための\"識別タイプ\"という名前の新しいモデルを追加します。このモジュールをインストールすると、取引先フォームのビューに2つのフィールドが表示されます:\n"
+"取引先のVATフィールド機能を拡張し、ユーザーが会計登録番号 (VAT) だけでなく、国民ドキュメント、パスポート、外国人登録証など他のタイプの身分証明書で連絡先を識別(最終的には請求)するための\"識別タイプ\"という名前の新しいモデルを追加します。このモジュールをインストールすると、取引先フォームのビューに2つのフィールドが表示されます:\n"
 "\n"
 "* 識別タイプ\n"
 "* 識別番号\n"
@@ -14536,7 +14537,7 @@ msgstr "従業員を評価する"
 #. module: base
 #: model:ir.model,name:base.model_ir_asset
 msgid "Asset"
-msgstr "資産"
+msgstr "アセット"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_asset
@@ -14545,7 +14546,7 @@ msgstr "資産"
 #: model_terms:ir.ui.view,arch_db:base.asset_view_search
 #: model_terms:ir.ui.view,arch_db:base.asset_view_tree
 msgid "Assets"
-msgstr "資産"
+msgstr "アセット"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset
@@ -28879,7 +28880,7 @@ msgstr "同じ会社登記所と提携"
 #: model:ir.model.fields,field_description:base.field_res_partner__same_vat_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_vat_partner_id
 msgid "Partner with same Tax ID"
-msgstr "同じ税IDの取引先"
+msgstr "同じ登録番号の取引先"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__partner_id
@@ -33451,7 +33452,7 @@ msgstr "タスクログ"
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr "税ID"
+msgstr "登録番号"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
@@ -34363,7 +34364,7 @@ msgstr ""
 msgid ""
 "The registry number of the company. Use it if it is different from the Tax "
 "ID. It must be unique across all partners of a same country"
-msgstr "会社の登録番号です。税IDと異なる場合は、これを使用します。同じ国のすべてのパートナー間で一意である必要があります。"
+msgstr "会社の登録番号です。登録番号(税ID)と異なる場合は、これを使用します。同じ国の全ての取引先間で一意である必要があります。"
 
 #. module: base
 #. odoo-python
