@@ -5,6 +5,7 @@ import {
     getDeepestPosition,
     isEmptyBlock,
     isProtected,
+    isProtecting,
     isVisible,
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants, getAdjacents } from "@html_editor/utils/dom_traversal";
@@ -204,7 +205,7 @@ export class ListPlugin extends Plugin {
             root = closestNestedLI.parentElement;
         }
         applyToTree(root, (element) => {
-            if (isProtected(element)) {
+            if (isProtected(element) || isProtecting(element)) {
                 return element;
             }
             element = this.liWithoutParentToP(element);

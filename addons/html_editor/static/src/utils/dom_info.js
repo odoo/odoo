@@ -444,11 +444,13 @@ export function isPhrasingContent(node) {
  * @returns {boolean}
  */
 export function isProtected(node) {
-    const closestProtectingCandidate = closestElement(node, "[data-oe-protected]");
-    if (closestProtectingCandidate) {
-        return isProtecting(closestProtectingCandidate);
+    const candidate = node.parentElement
+        ? closestElement(node.parentElement, "[data-oe-protected]")
+        : null;
+    if (!candidate || candidate.dataset.oeProtected === "false") {
+        return false;
     }
-    return false;
+    return true;
 }
 
 /**
@@ -458,7 +460,11 @@ export function isProtected(node) {
  * @returns {boolean}
  */
 export function isProtecting(node) {
-    return node.nodeType === Node.ELEMENT_NODE && ["", "true"].includes(node.dataset.oeProtected);
+    return (
+        node.nodeType === Node.ELEMENT_NODE &&
+        node.dataset.oeProtected !== "false" &&
+        node.dataset.oeProtected !== undefined
+    );
 }
 
 // This is a list of "paragraph-related elements", defined as elements that

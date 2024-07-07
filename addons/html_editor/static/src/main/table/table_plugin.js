@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock } from "@html_editor/utils/blocks";
 import { removeClass } from "@html_editor/utils/dom";
-import { getDeepestPosition, isProtected } from "@html_editor/utils/dom_info";
+import { getDeepestPosition, isProtected, isProtecting } from "@html_editor/utils/dom_info";
 import { ancestors, closestElement, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, leftPos, rightPos } from "@html_editor/utils/position";
@@ -418,7 +418,7 @@ export class TablePlugin extends Plugin {
 
         const traversedNodes = this.shared.getTraversedNodes({ deep: true });
         if (startTd !== endTd && startTable === endTable) {
-            if (!isProtected(startTable)) {
+            if (!isProtected(startTable) && !isProtecting(startTable)) {
                 // The selection goes through at least two different cells ->
                 // select cells.
                 this.selectTableCells(selection);
@@ -427,7 +427,7 @@ export class TablePlugin extends Plugin {
             const traversedTables = new Set(
                 traversedNodes
                     .map((node) => closestElement(node, "table"))
-                    .filter((node) => node && !isProtected(node))
+                    .filter((node) => node && !isProtected(node) && !isProtecting(node))
             );
             for (const table of traversedTables) {
                 // Don't apply several nested levels of selection.

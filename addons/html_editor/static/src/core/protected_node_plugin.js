@@ -23,6 +23,10 @@ export class ProtectedNodePlugin extends Plugin {
                 this.cleanForSave(payload.root);
                 break;
             }
+            case "BEFORE_FILTERING_MUTATION_RECORDS": {
+                this.beforeFilteringMutationRecords(payload.records);
+                break;
+            }
         }
     }
 
@@ -43,12 +47,124 @@ export class ProtectedNodePlugin extends Plugin {
         }
     }
 
+    beforeFilteringMutationRecords(records) {
+        this.nodeToClone = new Map();
+        this.cloneTree = new DocumentFragment();
+        this.records = [...records];
+        this.recordIndex = 0;
+    }
+
+    /**
+     * Look ahead in mutation records to find where a node was removed from
+     * its parent. Returns its previous parent before removal. This is useful
+     * to retrace a removed hierarchy at the time of removal.
+     *
+     * @param {HTMLElement} target
+     * @param {Number} recordIndex
+     * @returns {HTMLElement|null} previous parent
+     */
+    findTargetParent(target, recordIndex) {
+        for (const record of this.records.slice(recordIndex + 1)) {
+            if (record.type === "childList") {
+                for (const removedNode of record.removedNodes) {
+                    if (removedNode === target) {
+                        return record.target;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Retrace the branch up to odoo-editor-editable for a removed node and
+     * store it in a cloned tree. This will be used to determine if a mutation
+     * was protected at the time it happened, depending on the older
+     * configuration of nodes.
+     *
+     * WARNINGS:
+     * 1) this function does not take attributes into account, once a node
+     * is given the `data-oe-protected` attribute, it is supposed to keep the
+     * same value for the entire edition session.
+     * 2) children are appended in the clone without considering order, since
+     * the protected feature does not care for ordering of children, therefore
+     * the cloned tree is inexact but sufficient.
+     *
+     * This function can be refactored to handle both warnings when necessary.
+     *
+     * @param {Number} recordIndex
+     */
+    updateCloneTree(recordIndex) {
+        const record = this.records[recordIndex];
+        if (record.type !== "childList" || !record.removedNodes.length) {
+            return;
+        }
+        let clone;
+        let children = [];
+        for (const removedNode of record.removedNodes) {
+            clone = this.nodeToClone.get(removedNode);
+            if (clone) {
+                clone.remove();
+            } else {
+                clone = removedNode.cloneNode();
+                this.nodeToClone.set(removedNode, clone);
+            }
+            children.push(clone);
+        }
+        let ancestor = record.target;
+        clone = this.nodeToClone.get(ancestor);
+        if (clone) {
+            clone.append(...children);
+        }
+        while (!clone) {
+            clone = ancestor.cloneNode();
+            this.nodeToClone.set(ancestor, clone);
+            clone.append(...children);
+            if (clone.classList.contains("odoo-editor-editable")) {
+                if (!this.cloneTree.childNodes.length) {
+                    this.cloneTree.append(clone);
+                }
+                break;
+            }
+            const current = ancestor;
+            ancestor = ancestor.parentElement;
+            if (!ancestor) {
+                ancestor = this.findTargetParent(current, recordIndex);
+                if (!ancestor) {
+                    // If ancestor can not be found, it means that the
+                    // record removing current from its ancestor is missing
+                    // from this.records. In that case, the entire branch
+                    // won't be added to the cloneTree. This will likely
+                    // never happen.
+                    break;
+                }
+            }
+            const ancestorClone = this.nodeToClone.get(ancestor);
+            if (ancestorClone) {
+                ancestorClone.append(clone);
+                break;
+            }
+            children = [clone];
+            clone = undefined;
+        }
+    }
+
     /**
      * @param {MutationRecord} record
      * @return {boolean}
      */
     isMutationRecordSavable(record) {
-        const closestProtectedCandidate = closestElement(record.target, "[data-oe-protected]");
+        const recordIndex = this.records.findIndex((item) => item === record);
+        while (this.recordIndex <= recordIndex) {
+            // Maintain the hierarchy for removed nodes, to evaluate if a mutation
+            // was protected when it happened in its old nodes configuration.
+            this.updateCloneTree(this.recordIndex);
+            this.recordIndex += 1;
+        }
+        // If a target exists in the cloneTree, use its clone instead to
+        // determine if a mutation is protected or not.
+        const target = this.nodeToClone.get(record.target) || record.target;
+        const closestProtectedCandidate = closestElement(target, "[data-oe-protected]");
         if (!closestProtectedCandidate) {
             return true;
         }
@@ -58,9 +174,8 @@ export class ProtectedNodePlugin extends Plugin {
             case "":
                 if (
                     record.type !== "attributes" ||
-                    record.target !== closestProtectedCandidate ||
-                    (closestProtectedCandidate.parentElement &&
-                        isProtected(closestProtectedCandidate.parentElement))
+                    target !== closestProtectedCandidate ||
+                    isProtected(closestProtectedCandidate)
                 ) {
                     return false;
                 }
@@ -68,9 +183,8 @@ export class ProtectedNodePlugin extends Plugin {
             case "false":
                 if (
                     record.type === "attributes" &&
-                    record.target === closestProtectedCandidate &&
-                    closestProtectedCandidate.parentElement &&
-                    isProtected(closestProtectedCandidate.parentElement) &&
+                    target === closestProtectedCandidate &&
+                    isProtected(closestProtectedCandidate) &&
                     record.attributeName !== "contenteditable"
                 ) {
                     return false;

@@ -3,6 +3,7 @@ import {
     getDeepestPosition,
     isMediaElement,
     isProtected,
+    isProtecting,
     paragraphRelatedElements,
     previousLeaf,
 } from "@html_editor/utils/dom_info";
@@ -182,7 +183,8 @@ export class SelectionPlugin extends Plugin {
             const range = selection.getRangeAt(0);
             inEditable =
                 this.editable.contains(range.commonAncestorContainer) &&
-                !isProtected(range.commonAncestorContainer);
+                !isProtected(range.commonAncestorContainer) &&
+                !isProtecting(range.commonAncestorContainer);
         }
         let newSelection;
         if (inEditable) {
