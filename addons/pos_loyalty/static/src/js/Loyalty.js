@@ -1379,7 +1379,10 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         }
         let maxDiscount = reward.discount_max_amount || Infinity;
         if (reward.discount_mode === 'per_point') {
-            maxDiscount = Math.min(maxDiscount, reward.discount * this._getRealCouponPoints(coupon_id));
+            let points = (["ewallet", "gift_card"].includes(reward.program_id.program_type)) ?
+                this._getRealCouponPoints(coupon_id) :
+                Math.floor(this._getRealCouponPoints(coupon_id) / reward.required_points) * reward.required_points;
+            maxDiscount = Math.min(maxDiscount, reward.discount * points);
         } else if (reward.discount_mode === 'per_order') {
             maxDiscount = Math.min(maxDiscount, reward.discount);
         } else if (reward.discount_mode === 'percent') {
