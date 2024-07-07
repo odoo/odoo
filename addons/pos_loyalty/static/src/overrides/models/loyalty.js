@@ -1312,7 +1312,9 @@ patch(Order.prototype, {
         let maxDiscount = reward.discount_max_amount || Infinity;
         if (reward.discount_mode === "per_point") {
             // Rewards cannot be partially offered to customers
-            const points = Math.floor(this._getRealCouponPoints(coupon_id) / reward.required_points) * reward.required_points;
+            const points = (["ewallet", "gift_card"].includes(reward.program_id.program_type)) ?
+                this._getRealCouponPoints(coupon_id) :
+                Math.floor(this._getRealCouponPoints(coupon_id) / reward.required_points) * reward.required_points;
             maxDiscount = Math.min(
                 maxDiscount,
                 reward.discount * points
