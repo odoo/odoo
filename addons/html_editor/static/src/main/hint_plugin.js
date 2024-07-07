@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { isEmpty, isProtected } from "@html_editor/utils/dom_info";
+import { isEmpty, isProtected, isProtecting } from "@html_editor/utils/dom_info";
 import { removeClass } from "@html_editor/utils/dom";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 
@@ -74,7 +74,7 @@ export class HintPlugin extends Plugin {
         for (const { selector, hint } of this.resources.emptyBlockHints) {
             for (const el of selectElements(root, selector)) {
                 // @todo: consider using isEmptyBlock instead.
-                if (isEmpty(el) && !isProtected(el)) {
+                if (isEmpty(el) && !isProtected(el) && !isProtecting(el)) {
                     this.makeHint(el, hint);
                 }
             }

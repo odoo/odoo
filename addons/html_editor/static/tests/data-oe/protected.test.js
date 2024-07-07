@@ -5,6 +5,8 @@ import { setSelection, setContent, getContent } from "../_helpers/selection";
 import { deleteBackward, insertText, undo } from "../_helpers/user_actions";
 import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { parseHTML } from "@html_editor/utils/html";
+import { Plugin } from "@html_editor/plugin";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 test("should ignore protected elements children mutations (true)", async () => {
     await testEditor({
@@ -385,4 +387,169 @@ test("normalize should set contenteditable attribute on protecting nodes and tha
             <p>a[]</p>
         `)
     );
+});
+
+test("removing a protected node and then removing its protected parent should be ignored", async () => {
+    const { editor, el, plugins } = await setupEditor(
+        unformat(`
+            <div data-oe-protected="true">
+                <div class="a">
+                    <div class="b"></div>
+                </div>
+            </div>
+        `)
+    );
+    const historyPlugin = plugins.get("history");
+    expect(editor.shared.getHistorySteps().length).toBe(1);
+    expect(historyPlugin.currentStep.mutations).toEqual([]);
+    const a = el.querySelector(".a");
+    const b = el.querySelector(".b");
+    b.remove();
+    a.remove();
+    editor.dispatch("ADD_STEP");
+    expect(editor.shared.getHistorySteps().length).toBe(1);
+    expect(historyPlugin.currentStep.mutations).toEqual([]);
+    expect(getContent(el)).toBe(`<div data-oe-protected="true" contenteditable="false"></div>`);
+});
+
+test("removing a protected ancestor, then a protected descendant, then its protected parent should be ignored", async () => {
+    const { editor, el, plugins } = await setupEditor(
+        unformat(`
+            <div data-oe-protected="true">
+                <div class="a">
+                    <div class="b">
+                        <div class="c"></div>
+                    </div>
+                </div>
+            </div>
+        `)
+    );
+    const historyPlugin = plugins.get("history");
+    expect(editor.shared.getHistorySteps().length).toBe(1);
+    expect(historyPlugin.currentStep.mutations).toEqual([]);
+    const a = el.querySelector(".a");
+    const b = el.querySelector(".b");
+    const c = el.querySelector(".c");
+    a.remove();
+    c.remove();
+    b.remove();
+    editor.dispatch("ADD_STEP");
+    expect(editor.shared.getHistorySteps().length).toBe(1);
+    expect(historyPlugin.currentStep.mutations).toEqual([]);
+    expect(getContent(el)).toBe(`<div data-oe-protected="true" contenteditable="false"></div>`);
+});
+
+test("moving a protected node at an unprotected location, only remove should be ignored", async () => {
+    const { editor, el, plugins } = await setupEditor(
+        unformat(`
+            <div data-oe-protected="true">
+                <div class="b" data-oe-protected="false"></div>
+            </div>
+            <div data-oe-protected="true">
+                <div class="a"></div>
+            </div>
+        `)
+    );
+    const historyPlugin = plugins.get("history");
+    expect(editor.shared.getHistorySteps().length).toBe(1);
+    expect(historyPlugin.currentStep.mutations).toEqual([]);
+    const a = el.querySelector(".a");
+    const b = el.querySelector(".b");
+    b.append(a);
+    editor.dispatch("ADD_STEP");
+    const historySteps = editor.shared.getHistorySteps();
+    expect(historySteps.length).toBe(2);
+    const lastStep = historySteps.at(-1);
+    expect(lastStep.mutations.length).toBe(1);
+    expect(lastStep.mutations[0].type).toBe("add");
+    expect(historyPlugin.idToNodeMap.get(lastStep.mutations[0].id)).toBe(a);
+    expect(getContent(el)).toBe(
+        unformat(`
+            <div data-oe-protected="true" contenteditable="false">
+                <div class="b" data-oe-protected="false" contenteditable="true">
+                    <div class="a"></div>
+                </div>
+            </div>
+            <div data-oe-protected="true" contenteditable="false"></div>
+        `)
+    );
+});
+
+test("moving an unprotected node at a protected location, only add should be ignored", async () => {
+    const { editor, el, plugins } = await setupEditor(
+        unformat(`
+            <div data-oe-protected="true">
+                <div data-oe-protected="false">
+                    <div class="a"></div>
+                </div>
+            </div>
+            <div class="b" data-oe-protected="true"></div>
+        `)
+    );
+    const historyPlugin = plugins.get("history");
+    expect(editor.shared.getHistorySteps().length).toBe(1);
+    expect(historyPlugin.currentStep.mutations).toEqual([]);
+    const a = el.querySelector(".a");
+    const b = el.querySelector(".b");
+    b.append(a);
+    editor.dispatch("ADD_STEP");
+    const historySteps = editor.shared.getHistorySteps();
+    expect(historySteps.length).toBe(2);
+    const lastStep = historySteps.at(-1);
+    expect(lastStep.mutations.length).toBe(1);
+    expect(lastStep.mutations[0].type).toBe("remove");
+    expect(historyPlugin.idToNodeMap.get(lastStep.mutations[0].id)).toBe(a);
+    expect(getContent(el)).toBe(
+        unformat(`
+            <div data-oe-protected="true" contenteditable="false">
+                <div data-oe-protected="false" contenteditable="true"></div>
+            </div>
+            <div class="b" data-oe-protected="true" contenteditable="false">
+                <div class="a"></div>
+            </div>
+        `)
+    );
+});
+
+test("protected plugin has access to all mutation records to compute the cloneTree", async () => {
+    class FilterPlugin extends Plugin {
+        static name = "filter_plugin";
+        static resources(p) {
+            return { is_mutation_record_savable: p.isMutationRecordSavable.bind(this) };
+        }
+        isMutationRecordSavable(record) {
+            if (
+                record.type === "childList" &&
+                record.removedNodes.length === 1 &&
+                [...record.removedNodes][0] === a
+            ) {
+                // Artificially hide the removal of `a` node
+                return false;
+            }
+            return true;
+        }
+    }
+    const { editor, el, plugins } = await setupEditor(
+        unformat(`
+            <div data-oe-protected="true">
+                <div class="a">
+                    <div class="b"></div>
+                </div>
+            </div>
+        `),
+        // Put FilterPlugin as the first plugin, so that its filter is applied before
+        // protected_node_plugin.
+        { config: { Plugins: [FilterPlugin, ...MAIN_PLUGINS] } }
+    );
+    const historyPlugin = plugins.get("history");
+    expect(editor.shared.getHistorySteps().length).toBe(1);
+    expect(historyPlugin.currentStep.mutations).toEqual([]);
+    const a = el.querySelector(".a");
+    const b = el.querySelector(".b");
+    a.remove();
+    b.remove();
+    editor.dispatch("ADD_STEP");
+    expect(editor.shared.getHistorySteps().length).toBe(1);
+    expect(historyPlugin.currentStep.mutations).toEqual([]);
+    expect(getContent(el)).toBe(`<div data-oe-protected="true" contenteditable="false"></div>`);
 });

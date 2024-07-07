@@ -114,12 +114,12 @@ export class HistoryPlugin extends Plugin {
         this.addDomListener(this.editable, "beforeinput", this.stageSelection);
         this.observer = new MutationObserver(this.handleNewRecords.bind(this));
         this._cleanups.push(() => this.observer.disconnect());
-        this.enableObserver();
         this.clean();
     }
     handleCommand(command, payload) {
         switch (command) {
             case "START_EDITION":
+                this.enableObserver();
                 this.reset(this.config.content);
                 break;
             case "HISTORY_UNDO":
@@ -278,6 +278,9 @@ export class HistoryPlugin extends Plugin {
      * @param { MutationRecord[] } records
      */
     filterMutationRecords(records) {
+        this.dispatch("BEFORE_FILTERING_MUTATION_RECORDS", {
+            records,
+        });
         for (const callback of this.resources["is_mutation_record_savable"]) {
             records = records.filter(callback);
         }
@@ -467,7 +470,7 @@ export class HistoryPlugin extends Plugin {
         if (!currentStep.mutations.length) {
             return false;
         }
-        const stepCommonAncestor = this.getMutationsRoot(currentStep.mutations);
+        const stepCommonAncestor = this.getMutationsRoot(currentStep.mutations) || this.editable;
         this.dispatch("NORMALIZE", { node: stepCommonAncestor });
         this.handleObserverRecords();
 

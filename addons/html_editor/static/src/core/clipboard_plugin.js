@@ -204,8 +204,8 @@ export class ClipboardPlugin extends Plugin {
         if (!selection.anchorNode.isConnected) {
             return;
         }
-        // @phoenix @todo: handle protected content
-        // if (sel.anchorNode && isProtected(sel.anchorNode)) {
+        // TODO ABD: TODO @phoenix: handle protected content
+        // if (sel.anchorNode && (isProtected(sel.anchorNode) || isProtecting(sel.anchorNode))) {
         //     return;
         // }
 

@@ -1,5 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
-import { ICON_SELECTOR, isIconElement, isProtected } from "@html_editor/utils/dom_info";
+import {
+    ICON_SELECTOR,
+    isIconElement,
+    isProtected,
+    isProtecting,
+} from "@html_editor/utils/dom_info";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -97,7 +102,7 @@ export class MediaPlugin extends Plugin {
             mediaElements.push(node);
         }
         for (const el of mediaElements) {
-            if (isProtected(el)) {
+            if (isProtected(el) || isProtecting(el)) {
                 continue;
             }
             el.setAttribute(

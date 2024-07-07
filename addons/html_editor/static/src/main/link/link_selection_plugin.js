@@ -3,7 +3,7 @@ import { closestElement, descendants, selectElements } from "@html_editor/utils/
 import { cleanTextNode, removeClass } from "@html_editor/utils/dom";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { leftPos } from "@html_editor/utils/position";
-import { isProtected, isZwnbsp } from "@html_editor/utils/dom_info";
+import { isProtected, isProtecting, isZwnbsp } from "@html_editor/utils/dom_info";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 function isLegitZwnbsp(textNode) {
@@ -108,7 +108,8 @@ export class LinkSelectionPlugin extends Plugin {
             node.nodeType === Node.TEXT_NODE &&
             node.textContent.includes("\uFEFF") &&
             node.parentElement.isContentEditable &&
-            !isProtected(node);
+            !isProtected(node) &&
+            !isProtecting(node);
 
         const combinedFilter = (node) => defaultFilter(node) && !exclude(node);
 
