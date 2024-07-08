@@ -1443,3 +1443,38 @@ class TestUpdateEvents(TestCommon):
         )
         self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
         mock_write_from_microsoft.assert_not_called()
+
+    @patch.object(MicrosoftCalendarService, 'insert')
+    @patch.object(MicrosoftCalendarService, 'patch')
+    def test_manually_sync_outlook_event_update_synchronized_event(self, mock_patch, mock_insert):
+        """
+        Update a synchronized event using the 'action_synchronize_microsoft_events' function.
+        The event changes must be applied in Microsoft Calendar after its execution, calling patch once.
+        """
+        # Start an active synchronization with Outlook Calendar.
+        self.organizer_user.with_user(self.organizer_user).sudo().restart_microsoft_synchronization()
+        self.assertTrue(self.env['calendar.event'].with_user(self.organizer_user)._check_microsoft_sync_status())
+
+        # Create an event in Odoo Calendar synchronized with Outlook.
+        simple_event_values_updated = self.simple_event_values
+        event = self.env["calendar.event"].with_user(self.organizer_user).create(simple_event_values_updated)
+        event_id = "123"
+        event_iCalUId = "456"
+        mock_insert.return_value = (event_id, event_iCalUId)
+        self.call_post_commit_hooks()
+        event.invalidate_recordset()
+        mock_insert.assert_called_once()
+
+        # Stop the synchronization and make an event update while offline.
+        self.organizer_user.with_user(self.organizer_user).sudo().stop_microsoft_synchronization()
+        event.write({'name': 'updated-name'})
+
+        # Restart the synchronization and call the synchronization action.
+        self.organizer_user.with_user(self.organizer_user).sudo().restart_microsoft_synchronization()
+        event.with_user(self.organizer_user).action_synchronize_microsoft_events()
+        self.call_post_commit_hooks()
+        event.invalidate_recordset()
+
+        # Ensure that the event got patched in Microsoft (through mock). Patch must be called only once.
+        mock_patch.assert_called_once()
+        self.assertEqual('updated-name', mock_patch.call_args_list[0][0][1]['subject'])

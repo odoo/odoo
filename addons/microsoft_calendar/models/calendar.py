@@ -7,11 +7,14 @@ import re
 from datetime import datetime, timedelta
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
+from requests import HTTPError
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import is_html_empty, email_normalize
 from odoo.osv import expression
+
+from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 
 ATTENDEE_CONVERTER_O2M = {
     'needsAction': 'notresponded',
@@ -267,6 +270,37 @@ class Meeting(models.Model):
             state_update = state_by_partner.get(attendee.partner_id.id)
             if state_update:
                 attendee.state = state_update
+
+    def action_synchronize_microsoft_events(self, microsoft_service=MicrosoftCalendarService):
+        """ Synchronize events with Outlook Calendar. """
+        # Check if user synchronization status is active and forbid synchronizing recurrent events (if any).
+        records_to_sync = self.filtered(lambda ev: ev.active)
+        user_synchronized = self.env['calendar.event']._check_microsoft_sync_status()
+        recurrence_in_batch = any(event.recurrence_id or event.recurrency for event in records_to_sync)
+        if not user_synchronized:
+            raise ValidationError(_('An active synchronization with Microsoft Calendar is needed for synchronizing events.'))
+        elif recurrence_in_batch:
+            self._forbid_recurrence_update()
+
+        try:
+            # Try synchronizing the events with Outlook Calendar.
+            records_to_sync.with_context(dont_notify=True).write({'need_sync_m': True})
+            records_to_sync._sync_odoo2microsoft()
+            return_type = 'success'
+            return_message = 'Success! The selected events are now synchronized with Outlook Calendar.'
+        except HTTPError as error:
+            # Catch possible request error during events synchronization.
+            return_type = 'warning'
+            return_message = 'Please try again later, an error occurred trying to synchronize the selected events: ' + str(error)
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'message': _(return_message),
+                'type': return_type,
+            }
+        }
 
     def action_mass_archive(self, recurrence_update_setting):
         # Do not allow archiving if recurrence is synced with Outlook. Suggest updating directly from Outlook.
