@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.addons.http_routing.models.ir_http import slug
 
 
 class MailGroup(models.Model):
@@ -14,5 +13,5 @@ class MailGroup(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': '/groups/%s' % slug(self),
+            'url': '/groups/%s' % self.env['ir.http']._slug(self),
         }

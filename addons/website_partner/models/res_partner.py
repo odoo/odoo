@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools.translate import html_translate
 
 
@@ -15,4 +14,4 @@ class WebsiteResPartner(models.Model):
     def _compute_website_url(self):
         super(WebsiteResPartner, self)._compute_website_url()
         for partner in self:
-            partner.website_url = "/partners/%s" % slug(partner)
+            partner.website_url = "/partners/%s" % self.env['ir.http']._slug(partner)

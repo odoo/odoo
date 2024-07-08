@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons.http_routing.models.ir_http import slug
 
 
 class Event(models.Model):
@@ -85,7 +84,7 @@ class Event(models.Model):
     def _get_website_menu_entries(self):
         self.ensure_one()
         return super(Event, self)._get_website_menu_entries() + [
-            (_('Talks'), '/event/%s/track' % slug(self), False, 10, 'track'),
-            (_('Agenda'), '/event/%s/agenda' % slug(self), False, 70, 'track'),
-            (_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 15, 'track_proposal')
+            (_('Talks'), '/event/%s/track' % self.env['ir.http']._slug(self), False, 10, 'track'),
+            (_('Agenda'), '/event/%s/agenda' % self.env['ir.http']._slug(self), False, 70, 'track'),
+            (_('Talk Proposals'), '/event/%s/track_proposal' % self.env['ir.http']._slug(self), False, 15, 'track_proposal')
         ]

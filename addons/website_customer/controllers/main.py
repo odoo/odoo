@@ -4,7 +4,6 @@
 import werkzeug.urls
 
 from odoo import http
-from odoo.addons.http_routing.models.ir_http import unslug, slug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.tools.translate import _
@@ -37,7 +36,7 @@ class WebsiteCustomer(GoogleMap):
         Industry = env['res.partner.industry']
         dom = sitemap_qs2dom(qs, '/customers/industry', Industry._rec_name)
         for industry in Industry.search(dom):
-            loc = '/customers/industry/%s' % slug(industry)
+            loc = '/customers/industry/%s' % env['ir.http']._slug(industry)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
@@ -45,7 +44,7 @@ class WebsiteCustomer(GoogleMap):
         dom += sitemap_qs2dom(qs, '/customers/country')
         countries = env['res.partner'].sudo()._read_group(dom, ['country_id'])
         for [country] in countries:
-            loc = '/customers/country/%s' % slug(country)
+            loc = '/customers/country/%s' % env['ir.http']._slug(country)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
@@ -75,7 +74,7 @@ class WebsiteCustomer(GoogleMap):
 
         tag_id = post.get('tag_id')
         if tag_id:
-            tag_id = unslug(tag_id)[1] or 0
+            tag_id = request.env['ir.http']._unslug(tag_id)[1] or 0
             domain += [('website_tag_ids', 'in', tag_id)]
 
         # group by industry, based on customers found with the search(domain)
@@ -161,12 +160,12 @@ class WebsiteCustomer(GoogleMap):
     @http.route(['/customers/<partner_id>'], type='http', auth="public", website=True)
     def customers_detail(self, partner_id, **post):
         current_slug = partner_id
-        _, partner_id = unslug(partner_id)
+        _, partner_id = request.env['ir.http']._unslug(partner_id)
         if partner_id:
             partner = request.env['res.partner'].sudo().browse(partner_id)
             if partner.exists() and partner.website_published:
-                if slug(partner) != current_slug:
-                    return request.redirect('/customers/%s' % slug(partner))
+                if request.env['ir.http']._slug(partner) != current_slug:
+                    return request.redirect('/customers/%s' % request.env['ir.http']._slug(partner))
                 values = {}
                 values['main_object'] = values['partner'] = partner
                 return request.render("website_customer.details", values)

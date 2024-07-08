@@ -5,8 +5,6 @@ from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.osv import expression
 
-from odoo.addons.http_routing.models.ir_http import url_for
-
 
 class Website(models.Model):
     _inherit = 'website'
@@ -526,7 +524,7 @@ class Website(models.Model):
 
     def get_suggested_controllers(self):
         suggested_controllers = super().get_suggested_controllers()
-        suggested_controllers.append((_('eCommerce'), url_for('/shop'), 'website_sale'))
+        suggested_controllers.append((_('eCommerce'), self.env['ir.http']._url_for('/shop'), 'website_sale'))
         return suggested_controllers
 
     def _search_get_details(self, search_type, order, options):

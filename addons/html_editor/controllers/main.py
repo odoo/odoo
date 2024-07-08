@@ -13,7 +13,6 @@ from odoo.addons.html_editor.tools import get_video_url_data
 from odoo.exceptions import UserError, MissingError, AccessError
 from odoo.http import request
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.tools.misc import file_open
 from odoo.addons.iap.tools import iap_tools
 
@@ -436,6 +435,7 @@ class HTML_Editor(http.Controller):
         if response.status_code != requests.codes.ok:
             raise Exception(_("ERROR: couldn't get download urls from media library."))
 
+        slug = request.env['ir.http']._slug
         for id, url in response.json().items():
             req = requests.get(url)
             name = '_'.join([media[id]['query'], url.split('/')[-1]])
@@ -467,6 +467,7 @@ class HTML_Editor(http.Controller):
         """
         svg = None
         if module == 'illustration':
+            unslug = request.env['ir.http']._unslug
             attachment = request.env['ir.attachment'].sudo().browse(unslug(filename)[1])
             if (not attachment.exists()
                     or attachment.type != 'binary'

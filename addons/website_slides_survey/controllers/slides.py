@@ -7,7 +7,6 @@ import werkzeug.exceptions
 
 from odoo import _
 from odoo import http
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.osv import expression
@@ -77,7 +76,8 @@ class WebsiteSlidesSurvey(WebsiteSlides):
 
         if post['slide_category'] == "certification":
             # Set the url to redirect the user to the survey
-            result['url'] = '/slides/slide/%s?fullscreen=1' % (slug(request.env['slide.slide'].browse(result['slide_id']))),
+            slide = request.env['slide.slide'].browse(result['slide_id'])
+            result['url'] = f'/slides/slide/{request.env["ir.http"]._slug(slide)}?fullscreen=1'
 
         return result
 

@@ -5,7 +5,6 @@ from datetime import datetime
 import random
 
 from odoo import api, models, fields, _
-from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.tools import text_from_html
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
@@ -161,7 +160,7 @@ class BlogPost(models.Model):
     def _compute_website_url(self):
         super(BlogPost, self)._compute_website_url()
         for blog_post in self:
-            blog_post.website_url = "/blog/%s/%s" % (slug(blog_post.blog_id), slug(blog_post))
+            blog_post.website_url = "/blog/%s/%s" % (self.env['ir.http']._slug(blog_post.blog_id), self.env['ir.http']._slug(blog_post))
 
     def _default_content(self):
         return '''
@@ -329,9 +328,9 @@ class BlogPost(models.Model):
         state = options.get('state')
         domain = [website.website_domain()]
         if blog:
-            domain.append([('blog_id', '=', unslug(blog)[1])])
+            domain.append([('blog_id', '=', self.env['ir.http']._unslug(blog)[1])])
         if tags:
-            active_tag_ids = [unslug(tag)[1] for tag in tags.split(',')] or []
+            active_tag_ids = [self.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')] or []
             if active_tag_ids:
                 domain.append([('tag_ids', 'in', active_tag_ids)])
         if date_begin and date_end:

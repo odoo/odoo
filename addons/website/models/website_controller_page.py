@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.http_routing.models.ir_http import slugify
 from odoo import api, fields, models
 
 
@@ -46,7 +45,7 @@ class WebsiteControllerPage(models.Model):
         for rec in self:
             if not rec.model_id or not rec.page_type:
                 continue
-            rec.name_slugified = slugify(rec.page_name or '')
+            rec.name_slugified = self.env['ir.http']._slugify(rec.page_name or '')
 
     def unlink(self):
         # When a website_controller_page is deleted, the ORM does not delete its

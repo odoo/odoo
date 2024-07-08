@@ -10,7 +10,6 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools, _
-from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
 from odoo.tools import is_html_empty
@@ -661,7 +660,7 @@ class Channel(models.Model):
         for channel in self:
             if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 base_url = channel.get_base_url()
-                channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
+                channel.website_url = '%s/slides/%s' % (base_url, self.env['ir.http']._slug(channel))
 
     @api.depends('can_publish', 'is_member', 'karma_review', 'karma_slide_comment', 'karma_slide_vote')
     @api.depends_context('uid')
@@ -1163,7 +1162,7 @@ class Channel(models.Model):
                 continue
             category_data.append({
                 'category': category, 'id': category.id,
-                'name': category.name, 'slug_name': slug(category),
+                'name': category.name, 'slug_name': self.env['ir.http']._slug(category),
                 'total_slides': len(category_slides),
                 'slides': category_slides[(offset or 0):(limit + offset or len(category_slides))],
             })
@@ -1231,7 +1230,7 @@ class Channel(models.Model):
         if search_tags:
             ChannelTag = self.env['slide.channel.tag']
             try:
-                tag_ids = list(filter(None, [unslug(tag)[1] for tag in search_tags.split(',')]))
+                tag_ids = list(filter(None, [self.env['ir.http']._unslug(tag)[1] for tag in search_tags.split(',')]))
                 tags = ChannelTag.search([('id', 'in', tag_ids)]) if tag_ids else ChannelTag
             except Exception:
                 tags = ChannelTag
@@ -1273,4 +1272,4 @@ class Channel(models.Model):
         """ Overridden to use a relative URL instead of an absolute when website_id is False. """
         if self.website_id:
             return super().open_website_url()
-        return self.env['website'].get_client_action(f'/slides/{slug(self)}')
+        return self.env['website'].get_client_action(f'/slides/{self.env["ir.http"]._slug(self)}')

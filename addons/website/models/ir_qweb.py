@@ -10,7 +10,6 @@ from odoo import models
 from odoo.http import request
 from odoo.tools import lazy
 from odoo.addons.base.models.assetsbundle import AssetsBundle
-from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.osv import expression
 from odoo.addons.website.models import ir_http
 from odoo.exceptions import AccessError
@@ -175,9 +174,9 @@ class IrQWeb(models.AbstractModel):
         name = self.URL_ATTRS.get(tagName)
         if request:
             if name and name in atts:
-                atts[name] = url_for(atts[name])
+                atts[name] = self.env['ir.http']._url_for(atts[name])
             # Adapt background-image URL in the same way as image src.
-            atts = self._adapt_style_background_image(atts, url_for)
+            atts = self._adapt_style_background_image(atts, self.env['ir.http']._url_for)
 
         if not website.cdn_activated:
             return atts

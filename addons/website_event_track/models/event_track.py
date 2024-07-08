@@ -6,7 +6,6 @@ from pytz import utc
 from random import randint
 
 from odoo import api, fields, models, tools
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.osv import expression
 from odoo.tools.mail import is_html_empty
 from odoo.tools.translate import _, html_translate
@@ -156,7 +155,7 @@ class Track(models.Model):
         super(Track, self)._compute_website_url()
         for track in self:
             if track.id:
-                track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
+                track.website_url = '/event/%s/track/%s' % (self.env['ir.http']._slug(track.event_id), self.env['ir.http']._slug(track))
 
     # STAGES
 

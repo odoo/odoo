@@ -11,7 +11,6 @@ import math
 import werkzeug
 
 from odoo import fields, http, tools, _
-from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
@@ -43,7 +42,7 @@ class WebsiteSlides(WebsiteProfile):
         dom = sitemap_qs2dom(qs=qs, route='/slides/', field=Channel._rec_name)
         dom += env['website'].get_current_website().website_domain()
         for channel in Channel.search(dom):
-            loc = '/slides/%s' % slug(channel)
+            loc = '/slides/%s' % env['ir.http']._slug(channel)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
@@ -288,7 +287,7 @@ class WebsiteSlides(WebsiteProfile):
             tag_ids.remove(toggle_tag_id)
         elif toggle_tag_id:
             tag_ids.append(toggle_tag_id)
-        return ','.join(slug(tag) for tag in request.env['slide.channel.tag'].browse(tag_ids))
+        return ','.join(request.env['ir.http']._slug(tag) for tag in request.env['slide.channel.tag'].browse(tag_ids))
 
     def _channel_search_tags_ids(self, search_tags):
         """ Input: %5B4%5D """
@@ -304,7 +303,7 @@ class WebsiteSlides(WebsiteProfile):
         """ Input: hotels-1,adventure-2 """
         ChannelTag = request.env['slide.channel.tag']
         try:
-            tag_ids = list(filter(None, [unslug(tag)[1] for tag in (search_tags or '').split(',')]))
+            tag_ids = list(filter(None, [request.env['ir.http']._unslug(tag)[1] for tag in (search_tags or '').split(',')]))
         except Exception:
             return ChannelTag
         # perform a search to filter on existing / valid tags implicitly
@@ -733,7 +732,7 @@ class WebsiteSlides(WebsiteProfile):
 
     @staticmethod
     def _redirect_to_channel(channel):
-        return request.redirect(f"/slides/{slug(channel)}")
+        return request.redirect(f"/slides/{request.env['ir.http']._slug(channel)}")
 
     def _slide_channel_prepare_review_values(self, channel):
         values = {
@@ -928,7 +927,7 @@ class WebsiteSlides(WebsiteProfile):
         tag = self._create_or_get_channel_tag(tag_id, group_id)
         tag.write({'channel_ids': [(4, channel.id, 0)]})
 
-        return {'url': "/slides/%s" % (slug(channel))}
+        return {'url': "/slides/%s" % (request.env['ir.http']._slug(channel))}
 
     @http.route(['/slides/channel/send_share_email'], type='json', auth='user', website=True)
     def slide_channel_send_share_email(self, channel_id, emails):
@@ -1061,7 +1060,7 @@ class WebsiteSlides(WebsiteProfile):
         next_slide = None
         if next_slide_id:
             next_slide = self._fetch_slide(next_slide_id).get('slide', None)
-        return request.redirect("/slides/slide/%s" % (slug(next_slide) if next_slide else slug(slide)))
+        return request.redirect("/slides/slide/%s" % (request.env['ir.http']._slug(next_slide) if next_slide else request.env['ir.http']._slug(slide)))
 
     @http.route('/slides/slide/set_completed', website=True, type="json", auth="public")
     def slide_set_completed(self, slide_id):
@@ -1081,7 +1080,7 @@ class WebsiteSlides(WebsiteProfile):
                 website=True, type='http', auth='user', handle_params_access_error=handle_wslide_error)
     def slide_set_uncompleted_and_redirect(self, slide):
         self._slide_mark_uncompleted(slide)
-        return request.redirect(f'/slides/slide/{slug(slide)}')
+        return request.redirect(f'/slides/slide/{request.env["ir.http"]._slug(slide)}')
 
     @http.route('/slides/slide/set_uncompleted', website=True, type='json', auth='public')
     def slide_set_uncompleted(self, slide_id):
@@ -1343,7 +1342,7 @@ class WebsiteSlides(WebsiteProfile):
 
         request.env['slide.slide'].create(self._get_new_slide_category_values(channel, name))
 
-        return request.redirect("/slides/%s" % (slug(channel)))
+        return request.redirect("/slides/%s" % (request.env['ir.http']._slug(channel)))
 
     # --------------------------------------------------
     # SLIDE.UPLOAD
@@ -1476,7 +1475,7 @@ class WebsiteSlides(WebsiteProfile):
         elif slide.slide_category == 'quiz':
             redirect_url += "?quiz_quick_create"
         elif channel.channel_type == "training":
-            redirect_url = "/slides/%s" % (slug(channel))
+            redirect_url = "/slides/%s" % (request.env['ir.http']._slug(channel))
         return {
             'url': redirect_url,
             'channel_type': channel.channel_type,

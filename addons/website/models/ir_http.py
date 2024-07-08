@@ -20,7 +20,7 @@ from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN
 from odoo.addons.http_routing.models import ir_http
-from odoo.addons.http_routing.models.ir_http import _guess_mimetype
+from odoo.addons.http_routing.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 
 logger = logging.getLogger(__name__)
@@ -67,6 +67,15 @@ class Http(models.AbstractModel):
         return super().routing_map(key=key)
 
     @classmethod
+    def _slug(cls, value: models.BaseModel | tuple[int, str]) -> str:
+        try:
+            if value.id and value.seo_name:
+                return super()._slug((value.id, value.seo_name))
+        except AttributeError:
+            pass
+        return super()._slug(value)
+
+    @classmethod
     def _slug_matching(cls, adapter, endpoint, **kw):
         for arg in kw:
             if isinstance(kw[arg], models.BaseModel):
@@ -74,8 +83,34 @@ class Http(models.AbstractModel):
         qs = request.httprequest.query_string.decode('utf-8')
         return adapter.build(endpoint, kw) + (qs and '?%s' % qs or '')
 
+    @classmethod
+    def _url_for(cls, url_from: str, lang_code: str | None = None) -> str:
+        ''' Return the url with the rewriting applied.
+            Nothing will be done for absolute URL, invalid URL, or short URL from 1 char.
+
+            :param url_from: The URL to convert.
+            :param lang_code: Must be the lang `code`. It could also be something
+                              else, such as `'[lang]'` (used for url_return).
+        '''
+        path, _, qs = (url_from or '').partition('?')
+        if (
+            path
+            # don't try to match route if we know that no rewrite has been loaded.
+            and request.env['ir.http']._rewrite_len(request.website_routing)
+            and (
+                len(path) > 1
+                and path.startswith('/')
+                and '/static/' not in path
+                and not path.startswith('/web/')
+            )
+        ):
+            url_from, _ = request.env['ir.http'].url_rewrite(path)
+            url_from = url_from if not qs else url_from + '?%s' % qs
+
+        return super()._url_for(url_from, lang_code)
+
     @tools.ormcache('website_id', cache='routing')
-    def _rewrite_len(self, website_id):
+    def _rewrite_len(self, website_id: int) -> int:
         rewrites = self._get_rewrites(website_id)
         return len(rewrites)
 
@@ -115,7 +150,7 @@ class Http(models.AbstractModel):
                 yield url, endpoint
 
     @classmethod
-    def _get_converters(cls):
+    def _get_converters(cls) -> dict[str, type]:
         """ Get the converters list for custom url pattern werkzeug need to
             match Rule. This override adds the website ones.
         """
@@ -301,7 +336,7 @@ class Http(models.AbstractModel):
             _, ext = os.path.splitext(req_page)
             response = request.render(page.view_id.id, {
                 'main_object': page,
-            }, mimetype=_guess_mimetype(ext))
+            }, mimetype=EXTENSION_TO_WEB_MIMETYPES.get(ext, 'text/html'))
             return response
         return False
 
@@ -433,7 +468,7 @@ class Http(models.AbstractModel):
 
 class ModelConverter(ir_http.ModelConverter):
 
-    def to_url(self, value):
+    def to_url(self, value: models.BaseModel) -> str:
         if value.env.context.get('slug_matching'):
             return value.env.context.get('_converter_value', str(value.id))
         return super().to_url(value)

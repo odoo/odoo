@@ -7,7 +7,6 @@ import re
 from werkzeug.urls import url_join
 
 from odoo import api, fields, models, _
-from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.addons.website.tools import text_from_html
 from odoo.http import request
 from odoo.osv import expression
@@ -56,7 +55,7 @@ class SeoMetadata(models.AbstractModel):
             'og:type': 'website',
             'og:title': title,
             'og:site_name': request.website.name,
-            'og:url': url_join(request.website.domain or request.httprequest.url_root, url_for(request.httprequest.path)),
+            'og:url': url_join(request.website.domain or request.httprequest.url_root, self.env['ir.http']._url_for(request.httprequest.path)),
             'og:image': request.website.image_url(request.website, img_field),
         }
         # Default meta for Twitter
@@ -91,8 +90,8 @@ class SeoMetadata(models.AbstractModel):
         if self.website_meta_description:
             opengraph_meta['og:description'] = self.website_meta_description
             twitter_meta['twitter:description'] = self.website_meta_description
-        opengraph_meta['og:image'] = url_join(root_url, url_for(self.website_meta_og_img or opengraph_meta['og:image']))
-        twitter_meta['twitter:image'] = url_join(root_url, url_for(self.website_meta_og_img or twitter_meta['twitter:image']))
+        opengraph_meta['og:image'] = url_join(root_url, self.env['ir.http']._url_for(self.website_meta_og_img or opengraph_meta['og:image']))
+        twitter_meta['twitter:image'] = url_join(root_url, self.env['ir.http']._url_for(self.website_meta_og_img or twitter_meta['twitter:image']))
         return {
             'opengraph_meta': opengraph_meta,
             'twitter_meta': twitter_meta,

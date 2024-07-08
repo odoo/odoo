@@ -3,7 +3,6 @@
 from werkzeug.urls import url_join
 
 from odoo import fields, models, api
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools import mute_logger
 from odoo.tools.translate import html_translate
 
@@ -73,7 +72,7 @@ class Job(models.Model):
     def _compute_website_url(self):
         super(Job, self)._compute_website_url()
         for job in self:
-            job.website_url = f'/jobs/{slug(job)}'
+            job.website_url = f'/jobs/{self.env["ir.http"]._slug(job)}'
 
     def set_open(self):
         self.write({'website_published': False})

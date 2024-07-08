@@ -7,7 +7,6 @@ import werkzeug.urls
 from werkzeug.urls import url_parse
 
 from odoo import api, fields, models, _
-from odoo.addons.http_routing.models.ir_http import unslug_url
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.http import request
@@ -210,6 +209,7 @@ class Menu(models.Model):
                 return False
 
             menu_url = url_parse(menu_url)
+            unslug_url = self.env['ir.http']._unslug_url
             if unslug_url(menu_url.path) == unslug_url(request_url.path):
                 if not (
                     set(menu_url.decode_query().items(multi=True))
