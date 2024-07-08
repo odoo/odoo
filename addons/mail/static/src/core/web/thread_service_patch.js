@@ -230,6 +230,7 @@ patch(ThreadService.prototype, {
         super.unpin(...arguments);
     },
     _openChatWindow(thread, replaceNewMessageChatWindow, { autofocus = true, openMessagingMenuOnClose } = {}) {
+        this.store.env.services["bus_service"].addChannel(thread.busChannel);
         const chatWindow = this.store.ChatWindow.insert(
             assignDefined(
                 {

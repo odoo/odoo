@@ -186,6 +186,9 @@ export class Store extends BaseStore {
         if (ev.target.closest(".o_channel_redirect") && model && id) {
             ev.preventDefault();
             const thread = this.Thread.insert({ model, id });
+            if (!thread.type) {
+                this.env.services["mail.thread"].fetchChannel(id);
+            }
             this.env.services["mail.thread"].open(thread);
             return true;
         } else if (ev.target.closest(".o_mail_redirect") && id) {
