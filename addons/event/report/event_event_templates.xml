@@ -131,45 +131,69 @@
     <div class="row page">
         <div t-attf-class="o_event_full_page_ticket_container page w-100 #{'o_event_full_page_ticket_responsive_html' if responsive_html else 'o_event_full_page_ticket'}">
             <div class="o_event_full_page_ticket_wrapper">
-                <div class="o_event_full_page_ticket_details d-flex">
-                    <div class="o_event_full_page_left_details ps-3 pt-4 pb-3 pe-2">
-                        <span t-field="event.date_begin"
-                            t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
-                            class="fw-bold"/>
-                        <span t-field="event.date_begin"
-                            class="fw-bold"
-                            t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
-                        <h2 class="o_event_full_page_ticket_event_name fw-bold pt-3 pb-2" t-field="event.name"/>
-                        <div t-if="event.address_id">
-                            <t t-set="use_map_marker" t-value="False"/>
-                            <t t-call="event.event_report_template_formatted_event_address"/>
-                        </div>
-                        <div t-if="not responsive_html" t-field="event.ticket_instructions" class="o_event_full_page_extra_instructions pt-3"></div>
-                        <div class="row pt-3 g-0">
-                            <h5 class="col-6" t-if="attendee" t-field="attendee.name"></h5>
-                            <h5 class="col-6" t-elif="not attendee"><span>John Doe</span></h5>
-                            <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
-                            <div class="col-6 text-end">
-                                <div t-if="attendee" class="o_event_full_page_ticket_font_faded o_event_full_page_ticket_type pe-4" t-field="attendee.event_ticket_id"/>
-                                <div t-elif="first_ticket" t-out="first_ticket.name" class="o_event_full_page_ticket_font_faded pe-4"/>
+                <div class="o_event_full_page_ticket_details">
+                    <div class="d-flex flex-column-reverse flex-sm-row">
+                        <div class="o_event_full_page_left_details ps-3 pt-3 pb-2 pe-2">
+                            <div class="o_event_full_page_left_details_top mb-3">
+                                <h2 class="o_event_full_page_ticket_event_name fw-bold pt-3" t-field="event.name"/>
+                                <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
+                                <h4 t-if="attendee" class="o_event_full_page_ticket_font_faded o_event_full_page_ticket_type" t-field="attendee.event_ticket_id"/>
+                                <h4 t-elif="first_ticket" t-out="first_ticket.name" class="o_event_full_page_ticket_font_faded pe-4"/>
+                                <h4 class="fw-bold mb-3 pb-2" t-if="attendee" t-field="attendee.name"/>
+                                <h4 class="fw-bold mb-3 pb-2" t-elif="not attendee"><span>John Doe</span></h4>
+                                <div t-if="attendee">
+                                    <div class="mb-3">
+                                        <span t-foreach="attendee.registration_answer_choice_ids" t-as="answer"
+                                            t-attf-class="#{'badge' if responsive_html else 'px-2 py-1 d-inline-block'} bg-200 text-black my-1 me-1 fw-semibold o_event_full_page_ticket_answer">
+                                            <t t-out="answer.display_name"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-attf-class="row gy-0 gx-2 #{'o_event_full_page_left_details_bottom_qr_only' if not event.use_barcode else ''}">
+                                <div t-if="event.address_id" class="col-md-6 col-12 mb-3 mb-md-0 o_event_full_page_ticket_column">
+                                    <div class="d-flex">
+                                        <i class="fa fa-map-marker fa-2x fa-fw me-2 mt-1"/>
+                                        <div t-call="event.event_report_template_formatted_event_address">
+                                            <t t-set="multi_line_address" t-value="True"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12 mb-3 o_event_full_page_ticket_column">
+                                    <div class="d-flex">
+                                        <i class="fa fa-calendar fa-2x fa-fw me-2 mt-1"/>
+                                        <div t-if="event.is_one_day">
+                                            <span t-field="event.date_begin"
+                                                t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'/><br/>
+                                            <span class="me-1">from</span><span t-field="event.date_begin"
+                                                t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz, "format": "short"}'/>
+                                            <span class="me-1">to</span><span t-field="event.date_end"
+                                                t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz, "format": "short"}'/>
+                                        </div>
+                                        <div t-else="">
+                                            <span t-field="event.date_begin"
+                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "short"}'/><br/>
+                                            <span class="me-1">to</span><span t-field="event.date_end"
+                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "short"}'/>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div t-if="not responsive_html" class="o_event_full_page_ticket_sponsors_container"></div>
-                    </div>
-                    <div class="o_event_full_page_ticket_barcode">
-                    
-                        <div class="o_event_full_page_ticket_barcode_container px-2">
-                            <t t-if="not attendee or (attendee and attendee.barcode)"> 
-                                <div class="pb-3">
-                                    <img t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee and attendee.barcode else '12345678901234567890'}}?&amp;width=116&amp;height=116&amp;quiet=0" alt="QR Code"/>
-                                </div>
-
-                                <t t-if="event.use_barcode">
-                                    <img class="o_event_barcode" t-attf-src="/report/barcode/?barcode_type=Code128&amp;value={{attendee.barcode if attendee and attendee.barcode else '12345678901234567890'}}&amp;width=168&amp;height=84&amp;humanreadable=1&amp;quiet=0" alt="Barcode"/>
+                        <div t-attf-class="o_event_full_page_ticket_barcode text-center text-sm-start #{'o_event_full_page_ticket_qr_only' if not event.use_barcode else ''}">
+                            <div class="o_event_full_page_ticket_barcode_container px-2">
+                                <t t-if="not attendee or (attendee and attendee.barcode)">
+                                    <div t-att-class="'pb-3' if event.use_barcode else ''">
+                                        <img t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee and attendee.barcode else '12345678901234567890'}}?&amp;width=152&amp;height=152&amp;quiet=0" alt="QR Code"/>
+                                    </div>
+                                    <t t-if="event.use_barcode">
+                                        <img class="o_event_barcode" t-attf-src="/report/barcode/?barcode_type=Code128&amp;value={{attendee.barcode if attendee and attendee.barcode else '12345678901234567890'}}&amp;width=168&amp;height=100&amp;humanreadable=1&amp;quiet=0" alt="Barcode"/>
+                                    </t>
                                 </t>
-                            </t>
+                            </div>
                         </div>
                     </div>
+                    <div t-if="not responsive_html" t-field="event.ticket_instructions" class="o_event_full_page_extra_instructions ps-3 pt-3 pb-2 pe-2"/>
                 </div>
             </div>
             <div class="page oe_structure"/>
@@ -302,7 +326,7 @@
         <t t-set="remaining_bits" t-value="address_bits[1:]"/>
         <t t-foreach="remaining_bits" t-as="address_bit">
             <t t-if="address_bit and address_bit.strip()">
-                <span class="text-muted" t-out="address_bit">Rue de la Paix 123</span>
+                <span class="text-muted" t-out="address_bit">Rue de la Paix 123</span><br t-if="multi_line_address"/>
             </t>
         </t>
     </t>

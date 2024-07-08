@@ -5,21 +5,29 @@
         max-width: 1000px;
         margin-left: auto;
         margin-right: auto;
+        @media (max-width: map-get($grid-breakpoints, "sm")) {
+            .o_event_full_page_left_details {
+                width: 100%;
+            }
+            .o_event_full_page_ticket_barcode {
+                width: 100%;
+            }
+        }
     }
     .o_event_full_page_left_details {
-        width: calc(100% - 132px);
+        width: calc(100% - 168px);
     }
     .o_event_full_page_ticket_barcode {
-        width: 132px;
+        width: 168px;
     }
     // Give details more space for small screens
     @media (max-width: map-get($grid-breakpoints, "md")) {
         .o_event_full_page_left_details {
-            width: calc(100% - 116px);
+            width: calc(100% - 152px);
             padding-left: 0.5rem !important;
         }
         .o_event_full_page_ticket_barcode {
-            width: 116px;
+            width: 152px;
             .o_event_full_page_ticket_barcode_container {
                 padding-left: 0px !important;
                 padding-right: 0px !important;
