@@ -286,7 +286,7 @@ class Applicant(models.Model):
             ['res_id'], ['__count'])
         attach_data = dict(read_group_res)
         for record in self:
-            record.attachment_number = attach_data.get(record.id, 0)
+            record.attachment_number = attach_data.get(record, 0)
 
     @api.model
     def _read_group_stage_ids(self, stages, domain):

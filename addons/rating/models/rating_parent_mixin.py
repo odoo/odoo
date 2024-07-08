@@ -64,7 +64,7 @@ class RatingParentMixin(models.AbstractModel):
             domain = expression.AND([domain, [('write_date', '>=', fields.Datetime.to_string(min_date))]])
         rating_read_group = self.env['rating.rating'].sudo()._read_group(domain, ['parent_res_id'], ['rating:avg'])
         parent_res_ids = [
-            parent_res_id
+            parent_res_id.id
             for parent_res_id, rating_avg in rating_read_group
             if rating_data.OPERATOR_MAPPING[operator](float_compare(rating_avg, value, 2), 0)
         ]

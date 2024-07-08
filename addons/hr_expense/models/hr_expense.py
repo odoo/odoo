@@ -507,7 +507,7 @@ class HrExpense(models.Model):
         )
         attachment = dict(attachment_data)
         for expense in self:
-            expense.nb_attachment = attachment.get(expense._origin.id, 0)
+            expense.nb_attachment = attachment.get(expense._origin, 0)
 
     @api.constrains('payment_mode')
     def _check_payment_mode(self):

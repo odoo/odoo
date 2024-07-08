@@ -24,7 +24,7 @@ class FleetVehicleAssignationLog(models.Model):
             ('res_id', 'in', self.ids)], ['res_id'], ['__count'])
         attachment = dict(attachment_data)
         for doc in self:
-            doc.attachment_number = attachment.get(doc.id, 0)
+            doc.attachment_number = attachment.get(doc, 0)
 
     def action_get_attachment_view(self):
         self.ensure_one()

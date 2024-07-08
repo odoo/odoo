@@ -71,7 +71,7 @@ class WebsiteMail(http.Controller):
                     ('partner_id', '=', partner.id)
                 ], ['res_id'])
                 # `_read_group` will filter out the ones not matching the domain
-                res[model].extend(res_id for [res_id] in mail_followers_ids)
+                res[model].extend(res_id.id for [res_id] in mail_followers_ids)
 
         return [{
             'is_user': user != public_user,

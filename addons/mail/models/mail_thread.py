@@ -241,7 +241,7 @@ class MailThread(models.AbstractModel):
 
         attachment_count_dict = dict(read_group_var)
         for record in self:
-            record.message_attachment_count = attachment_count_dict.get(record.id, 0)
+            record.message_attachment_count = attachment_count_dict.get(record, 0)
 
     # ------------------------------------------------------------
     # CRUD
