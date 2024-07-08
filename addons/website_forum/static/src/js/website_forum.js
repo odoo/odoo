@@ -28,7 +28,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .o_wforum_validation_queue a[href*="/validate"]': '_onValidationQueueClick',
         'click .o_wforum_validate_toggler:not(.karma_required)': '_onAcceptAnswerClick',
         'click .o_wforum_favourite_toggle': '_onFavoriteQuestionClick',
-        'click .comment_delete': '_onDeleteCommentClick',
+        'click .comment_delete:not(.karma_required)': '_onDeleteCommentClick',
         'click .js_close_intro': '_onCloseIntroClick',
         'click .answer_collapse': '_onExpandAnswerClick',
         'submit .js_wforum_submit_form:has(:not(.karma_required).o_wforum_submit_post)': '_onSubmitForm',
