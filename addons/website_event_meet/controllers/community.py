@@ -6,7 +6,6 @@ from werkzeug.exceptions import Forbidden, NotFound
 
 from odoo import exceptions, http
 from odoo.http import request
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website_event.controllers.community import EventCommunityController
 from odoo.osv import expression
 
@@ -101,7 +100,7 @@ class WebsiteEventMeetController(EventCommunityController):
         })
         _logger.info("New meeting room (%s) created by %s (uid %s)" % (name, request.httprequest.remote_addr, request.env.uid))
 
-        return request.redirect(f"/event/{slug(event)}/meeting_room/{slug(meeting_room)}")
+        return request.redirect(f"/event/{request.env['ir.http']._slug(event)}/meeting_room/{request.env['ir.http']._slug(meeting_room)}")
 
     @http.route(["/event/active_langs"], type="json", auth="public")
     def active_langs(self):

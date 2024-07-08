@@ -7,7 +7,6 @@ from odoo.osv import expression
 from odoo.tools import float_is_zero, is_html_empty
 from odoo.tools.translate import html_translate
 
-from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.models import ir_http
 
 _logger = logging.getLogger(__name__)
@@ -174,7 +173,7 @@ class ProductTemplate(models.Model):
         super()._compute_website_url()
         for product in self:
             if product.id:
-                product.website_url = "/shop/%s" % slug(product)
+                product.website_url = "/shop/%s" % self.env['ir.http']._slug(product)
 
     #=== CRUD METHODS ===#
 
@@ -740,7 +739,7 @@ class ProductTemplate(models.Model):
         max_price = options.get('max_price')
         attrib_values = options.get('attrib_values')
         if category:
-            domains.append([('public_categ_ids', 'child_of', unslug(category)[1])])
+            domains.append([('public_categ_ids', 'child_of', self.env['ir.http']._unslug(category)[1])])
         if tags:
             if isinstance(tags, str):
                 tags = tags.split(',')
@@ -803,7 +802,7 @@ class ProductTemplate(models.Model):
             if with_category and categ_ids:
                 data['category'] = self.env['ir.ui.view'].sudo()._render_template(
                     "website_sale.product_category_extra_link",
-                    {'categories': categ_ids, 'slug': slug}
+                    {'categories': categ_ids, 'slug': self.env['ir.http']._slug}
                 )
         return results_data
 

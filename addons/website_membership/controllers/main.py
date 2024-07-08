@@ -7,7 +7,6 @@ from odoo import fields
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.http_routing.models.ir_http import unslug, slug
 from odoo.tools.translate import _
 
 
@@ -164,12 +163,12 @@ class WebsiteMembership(http.Controller):
     @http.route(['/members/<partner_id>'], type='http', auth="public", website=True)
     def partners_detail(self, partner_id, **post):
         current_slug = partner_id
-        _, partner_id = unslug(partner_id)
+        _, partner_id = request.env['ir.http']._unslug(partner_id)
         if partner_id:
             partner = request.env['res.partner'].sudo().browse(partner_id)
             if partner.exists() and partner.website_published:  # TODO should be done with access rules
-                if slug(partner) != current_slug:
-                    return request.redirect('/members/%s' % slug(partner))
+                if request.env['ir.http']._slug(partner) != current_slug:
+                    return request.redirect('/members/%s' % request.env['ir.http']._slug(partner))
                 values = {}
                 values['main_object'] = values['partner'] = partner
                 return request.render("website_membership.partner", values)

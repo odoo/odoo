@@ -4,7 +4,6 @@
 from odoo import fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website_slides.tests import common
 from odoo.tests import tagged, users
 
@@ -311,14 +310,14 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
         self.authenticate("user_emp", "user_emp")
         res = self.url_open(invite_url_emp)
         self.assertEqual(res.status_code, 200)
-        self.assertTrue(f'slides/{slug(self.channel)}' in res.url, "Should redirect the logged attendee to the course page")
+        self.assertTrue(f'slides/{self.env["ir.http"]._slug(self.channel)}' in res.url, "Should redirect the logged attendee to the course page")
 
         # Logged user is not an attendee of the course, and has no rights to see it.
         self.channel_partner_emp.sudo().unlink()
         self.channel.visibility = 'members'
         res = self.url_open(invite_url_emp)
         self.assertEqual(res.status_code, 200)
-        self.assertFalse(f'slides/{slug(self.channel)}' in res.url, "Should not redirect the logged attendee to the course page")
+        self.assertFalse(f'slides/{self.env["ir.http"]._slug(self.channel)}' in res.url, "Should not redirect the logged attendee to the course page")
 
     def test_direct_invite_link_members_visibility_as_archived(self):
         ''' Check that archived attendees are not given access to the course with the link, whatever their status.'''

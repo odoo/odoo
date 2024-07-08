@@ -8,7 +8,6 @@ import babel.dates
 from collections import defaultdict
 
 from odoo import http, fields, tools, models
-from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
 from odoo.tools import html2plaintext
@@ -27,7 +26,7 @@ class WebsiteBlog(http.Controller):
         else:
             tag_ids.append(current_tag)
         tag_ids = request.env['blog.tag'].browse(tag_ids)
-        return ','.join(slug(tag) for tag in tag_ids)
+        return ','.join(request.env['ir.http']._slug(tag) for tag in tag_ids)
 
     def nav_list(self, blog=None):
         dom = blog and [('blog_id', '=', blog.id)] or []
@@ -79,11 +78,11 @@ class WebsiteBlog(http.Controller):
 
         if date_begin and date_end:
             domain += [("post_date", ">=", date_begin), ("post_date", "<=", date_end)]
-        active_tag_ids = tags and [unslug(tag)[1] for tag in tags.split(',')] or []
+        active_tag_ids = tags and [request.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')] or []
         active_tags = BlogTag
         if active_tag_ids:
             active_tags = BlogTag.browse(active_tag_ids).exists()
-            fixed_tag_slug = ",".join(slug(t) for t in active_tags)
+            fixed_tag_slug = ",".join(request.env['ir.http']._slug(t) for t in active_tags)
             if fixed_tag_slug != tags:
                 path = request.httprequest.full_path
                 new_url = path.replace("/tag/%s" % tags, fixed_tag_slug and "/tag/%s" % fixed_tag_slug or "", 1)
@@ -185,7 +184,7 @@ class WebsiteBlog(http.Controller):
         blogs = tools.lazy(lambda: Blog.search(request.website.website_domain(), order="create_date asc, id asc"))
 
         if not blog and len(blogs) == 1:
-            url = QueryURL('/blog/%s' % slug(blogs[0]), search=search, **opt)()
+            url = QueryURL('/blog/%s' % request.env['ir.http']._slug(blogs[0]), search=search, **opt)()
             return request.redirect(url, code=302)
 
         date_begin, date_end = opt.get('date_begin'), opt.get('date_end')
@@ -224,7 +223,7 @@ class WebsiteBlog(http.Controller):
     ], type='http', auth="public", website=True, sitemap=False)
     def old_blog_post(self, blog, blog_post, **post):
         # Compatibility pre-v14
-        return request.redirect("/blog/%s/%s" % (slug(blog), slug(blog_post)), code=301)
+        return request.redirect("/blog/%s/%s" % (request.env['ir.http']._slug(blog), request.env['ir.http']._slug(blog_post)), code=301)
 
     @http.route([
         '''/blog/<model("blog.blog"):blog>/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',
@@ -255,7 +254,7 @@ class WebsiteBlog(http.Controller):
         blog_url = QueryURL('', ['blog', 'tag'], blog=blog_post.blog_id, tag=tag, date_begin=date_begin, date_end=date_end)
 
         if not blog_post.blog_id.id == blog.id:
-            return request.redirect("/blog/%s/%s" % (slug(blog_post.blog_id), slug(blog_post)), code=301)
+            return request.redirect("/blog/%s/%s" % (request.env['ir.http']._slug(blog_post.blog_id), request.env['ir.http']._slug(blog_post)), code=301)
 
         tags = request.env['blog.tag'].search([])
 
@@ -267,7 +266,7 @@ class WebsiteBlog(http.Controller):
         all_post = BlogPost.search(blog_post_domain)
 
         if blog_post not in all_post:
-            return request.redirect("/blog/%s" % (slug(blog_post.blog_id)))
+            return request.redirect("/blog/%s" % (request.env['ir.http']._slug(blog_post.blog_id)))
 
         # should always return at least the current post
         all_post_ids = all_post.ids

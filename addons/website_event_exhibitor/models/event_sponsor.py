@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 from pytz import timezone, utc
 
 from odoo import api, fields, models, _
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.resource.models.utils import float_to_time
 from odoo.tools import is_html_empty
 from odoo.tools.translate import html_translate
@@ -192,7 +191,7 @@ class Sponsor(models.Model):
         for sponsor in self:
             if sponsor.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 base_url = sponsor.event_id.get_base_url()
-                sponsor.website_url = '%s/event/%s/exhibitor/%s' % (base_url, slug(sponsor.event_id), slug(sponsor))
+                sponsor.website_url = '%s/event/%s/exhibitor/%s' % (base_url, self.env["ir.http"]._slug(sponsor.event_id), self.env["ir.http"]._slug(sponsor))
 
     # ------------------------------------------------------------
     # CRUD
@@ -228,7 +227,7 @@ class Sponsor(models.Model):
         """ Overridden to use a relative URL instead of an absolute when website_id is False. """
         if self.event_id.website_id:
             return super().open_website_url()
-        return self.env['website'].get_client_action(f'/event/{slug(self.event_id)}/exhibitor/{slug(self)}')
+        return self.env['website'].get_client_action(f'/event/{self.env["ir.http"]._slug(self.event_id)}/exhibitor/{self.env["ir.http"]._slug(self)}')
 
     # ------------------------------------------------------------
     # MESSAGING

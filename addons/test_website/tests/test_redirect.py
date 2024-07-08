@@ -3,7 +3,6 @@
 import odoo
 from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
-from odoo.addons.http_routing.models.ir_http import slug
 
 from unittest.mock import patch
 from urllib.parse import urlparse
@@ -38,7 +37,7 @@ class TestRedirect(HttpCase):
                 - Correct & working redirect as logged in user
                 - Correct replace of url_for() URLs in DOM
         """
-        url = '/test_website/country/' + slug(country_ad)
+        url = '/test_website/country/' + self.env['ir.http']._slug(country_ad)
         redirect_url = url.replace('test_website', 'redirected')
 
         # [Public User] Open the original url and check redirect OK
@@ -180,7 +179,7 @@ class TestRedirect(HttpCase):
             'name': '301 test record',
             'is_published': True,
         })
-        url_rec1 = '/test_website/200/' + slug(rec1)
+        url_rec1 = '/test_website/200/' + self.env['ir.http']._slug(rec1)
         r = self.url_open(url_rec1)
         self.assertEqual(r.status_code, 200)
 
@@ -202,7 +201,7 @@ class TestRedirect(HttpCase):
         # 4. Accessing unpublished record with redirect to another published
         # record: expecting redirect to that record
         rec2 = rec1.copy({'is_published': True})
-        url_rec2 = '/test_website/200/' + slug(rec2)
+        url_rec2 = '/test_website/200/' + self.env['ir.http']._slug(rec2)
         redirect.url_to = url_rec2
         r = self.url_open(url_rec1)
         self.assertEqual(r.status_code, 200)
@@ -243,7 +242,7 @@ class TestRedirect(HttpCase):
             'name': '301 test record',
             'is_published': True,
         })
-        url_rec1 = f"/test_countries_308/{slug(rec1)}"
+        url_rec1 = f"/test_countries_308/{self.env['ir.http']._slug(rec1)}"
 
         resp = self.url_open("/test_countries_308", allow_redirects=False)
         self.assertEqual(resp.status_code, 308)

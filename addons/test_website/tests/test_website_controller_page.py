@@ -1,5 +1,4 @@
 from lxml import html
-from odoo.addons.http_routing.models.ir_http import slug
 
 from odoo.tools import mute_logger
 from odoo.exceptions import AccessError
@@ -115,6 +114,7 @@ class TestWebsiteControllerPage(HttpCase):
     def test_expose_model(self):
         self.authenticate(None, None)
 
+        slug = self.env['ir.http']._slug
         response = self.url_open(f"/model/{self.listing_controller_page.name_slugified}")
         tree = html.fromstring(response.content.decode())
         rec_nodes = tree.xpath("//a[@class='test_record_listing']")
@@ -143,6 +143,7 @@ class TestWebsiteControllerPage(HttpCase):
     def test_search_listing(self):
         self.authenticate(None, None)
 
+        slug = self.env['ir.http']._slug
         response = self.url_open(f"/model/{self.listing_controller_page.name_slugified}?search=1")
         tree = html.fromstring(response.content.decode())
         rec_nodes = tree.xpath("//a[@class='test_record_listing']")
