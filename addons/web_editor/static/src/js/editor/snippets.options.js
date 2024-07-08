@@ -6918,6 +6918,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         }
         const combined = backgroundImagePartsToCss(parts);
         this.$target.css('background-image', combined);
+        this.options.wysiwyg.odooEditor.editable.focus();
     },
 });
 
