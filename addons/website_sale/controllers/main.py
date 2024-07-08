@@ -16,7 +16,6 @@ from odoo.osv import expression
 from odoo.tools import clean_context, float_round, groupby, lazy, single_email_re, str2bool, SQL
 from odoo.tools.json import scriptsafe as json_scriptsafe
 
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.portal.controllers.portal import _build_url_w_params
@@ -152,7 +151,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         dom = sitemap_qs2dom(qs, '/shop/category', Category._rec_name)
         dom += env['website'].get_current_website().website_domain()
         for cat in Category.search(dom):
-            loc = '/shop/category/%s' % slug(cat)
+            loc = '/shop/category/%s' % env['ir.http']._slug(cat)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
@@ -350,7 +349,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         categs = lazy(lambda: Category.search(categs_domain))
 
         if category:
-            url = "/shop/category/%s" % slug(category)
+            url = "/shop/category/%s" % request.env['ir.http']._slug(category)
 
         pager = website.pager(url=url, total=product_count, page=page, step=ppg, scope=5, url_args=post)
         offset = pager['offset']
@@ -457,7 +456,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=False)
     def old_product(self, product, category='', search='', **kwargs):
         # Compatibility pre-v14
-        return request.redirect(_build_url_w_params("/shop/%s" % slug(product), request.params), code=301)
+        return request.redirect(_build_url_w_params("/shop/%s" % request.env['ir.http']._slug(product), request.params), code=301)
 
     @route(['/shop/product/extra-images'], type='json', auth='user', website=True)
     def add_product_images(self, images, product_product_id, product_template_id, combination_ids=None):

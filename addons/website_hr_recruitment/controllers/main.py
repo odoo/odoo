@@ -7,7 +7,6 @@ from operator import itemgetter
 from werkzeug.urls import url_encode
 
 from odoo import http, _
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.osv.expression import AND
 from odoo.http import request
@@ -220,11 +219,11 @@ class WebsiteHrRecruitment(WebsiteForm):
         job = request.env['hr.job'].with_context(rendering_bundle=True).create({
             'name': _('Job Title'),
         })
-        return f"/jobs/{slug(job)}"
+        return f"/jobs/{request.env['ir.http']._slug(job)}"
 
     @http.route('''/jobs/detail/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
     def jobs_detail(self, job, **kwargs):
-        redirect_url = f"/jobs/{slug(job)}"
+        redirect_url = f"/jobs/{request.env['ir.http']._slug(job)}"
         return request.redirect(redirect_url, code=301)
 
     @http.route('''/jobs/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)

@@ -16,7 +16,6 @@ from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
 from odoo import api, fields, models, tools, release, registry
-from odoo.addons.http_routing.models.ir_http import slugify, url_for, url_localized
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
 from odoo.addons.portal.controllers.portal import pager
@@ -924,9 +923,9 @@ class Website(models.Model):
             template_module = namespace
         else:
             template_module, _ = template.split('.')
-        page_url = '/' + slugify(name, max_length=1024, path=True)
+        page_url = '/' + self.env['ir.http']._slugify(name, max_length=1024, path=True)
         page_url = self.get_unique_path(page_url)
-        page_key = slugify(name)
+        page_key = self.env['ir.http']._slugify(name)
         result = {'url': page_url}
 
         if not name:
@@ -1439,7 +1438,7 @@ class Website(models.Model):
         return pages
 
     def search_pages(self, needle=None, limit=None):
-        name = slugify(needle, max_length=50, path=True)
+        name = self.env['ir.http']._slugify(needle, max_length=50, path=True)
         res = []
         for page in self._enumerate_pages(query_string=name, force=True):
             res.append(page)
@@ -1453,8 +1452,8 @@ class Website(models.Model):
             Where icon can be a module name, or a path
         """
         suggested_controllers = [
-            (_('Homepage'), url_for('/'), 'website'),
-            (_('Contact Us'), url_for('/contactus'), 'website_crm'),
+            (_('Homepage'), self.env['ir.http']._url_for('/'), 'website'),
+            (_('Contact Us'), self.env['ir.http']._url_for('/contactus'), 'website_crm'),
         ]
         return suggested_controllers
 
@@ -1509,7 +1508,7 @@ class Website(models.Model):
         if mode_edit:
             # If the user gets on a translated page (e.g /fr) the editor will
             # never start. Forcing the default language fixes this issue.
-            path = url_for(path, self.default_lang_id.url_code)
+            path = self.env['ir.http']._url_for(path, self.default_lang_id.url_code)
         return self.get_client_action(path, mode_edit)
 
     def _is_canonical_url(self):
@@ -1519,7 +1518,7 @@ class Website(models.Model):
         # the language in the path. It is important to also test the domain of
         # the current URL.
         current_url = request.httprequest.url_root[:-1] + request.httprequest.environ['REQUEST_URI']
-        canonical_url = url_localized(lang_code=request.lang.code, canonical_domain=self.get_base_url())
+        canonical_url = self.env['ir.http']._url_localized(lang_code=request.lang.code, canonical_domain=self.get_base_url())
         # A request path with quotable characters (such as ",") is never
         # canonical because request.httprequest.base_url is always unquoted,
         # and canonical url is always quoted, so it is never possible to tell

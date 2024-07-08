@@ -4,7 +4,6 @@
 import datetime
 
 from odoo import api, fields, models
-from odoo.addons.http_routing.models.ir_http import slug
 
 
 class EventMeetingRoom(models.Model):
@@ -34,7 +33,7 @@ class EventMeetingRoom(models.Model):
         for meeting_room in self:
             if meeting_room.id:
                 base_url = meeting_room.event_id.get_base_url()
-                meeting_room.website_url = '%s/event/%s/meeting_room/%s' % (base_url, slug(meeting_room.event_id), slug(meeting_room))
+                meeting_room.website_url = '%s/event/%s/meeting_room/%s' % (base_url, self.env["ir.http"]._slug(meeting_room.event_id), self.env["ir.http"]._slug(meeting_room))
 
     @api.model_create_multi
     def create(self, values_list):
@@ -57,4 +56,4 @@ class EventMeetingRoom(models.Model):
         """ Overridden to use a relative URL instead of an absolute when website_id is False. """
         if self.event_id.website_id:
             return super().open_website_url()
-        return self.env['website'].get_client_action(f'/event/{slug(self.event_id)}/meeting_room/{slug(self)}')
+        return self.env['website'].get_client_action(f'/event/{self.env["ir.http"]._slug(self.event_id)}/meeting_room/{self.env["ir.http"]._slug(self)}')

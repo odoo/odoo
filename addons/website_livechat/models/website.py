@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _, Command
-from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
@@ -71,5 +70,5 @@ class Website(models.Model):
 
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()
-        suggested_controllers.append((_('Live Support'), url_for('/livechat'), 'website_livechat'))
+        suggested_controllers.append((_('Live Support'), self.env['ir.http']._url_for('/livechat'), 'website_livechat'))
         return suggested_controllers

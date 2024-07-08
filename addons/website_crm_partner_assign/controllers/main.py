@@ -8,7 +8,6 @@ from werkzeug.exceptions import NotFound
 from odoo import fields
 from odoo import http
 from odoo.http import request
-from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_google_map.controllers.main import GoogleMap
@@ -209,6 +208,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
         if not qs or qs.lower() in '/partners':
             yield {'loc': '/partners'}
 
+        slug = env['ir.http']._slug
         Grade = env['res.partner.grade']
         dom = [('website_published', '=', True)]
         dom += sitemap_qs2dom(qs=qs, route='/partners/grade/', field=Grade._rec_name)
@@ -305,6 +305,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
             base_partner_domain += [('country_id', '=', country.id)]
 
         # format pager
+        slug = request.env['ir.http']._slug
         if grade and not country:
             url = '/partners/grade/' + slug(grade)
         elif country and not grade:
@@ -354,7 +355,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
     @http.route()
     def partners_detail(self, partner_id, **post):
         current_slug = partner_id
-        _, partner_id = unslug(partner_id)
+        _, partner_id = request.env['ir.http']._unslug(partner_id)
         current_grade, current_country = None, None
         grade_id = post.get('grade_id')
         country_id = post.get('country_id')
@@ -366,8 +367,9 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
             partner = request.env['res.partner'].sudo().browse(partner_id)
             is_website_restricted_editor = request.env.user.has_group('website.group_website_restricted_editor')
             if partner.exists() and (partner.website_published or is_website_restricted_editor):
-                if slug(partner) != current_slug:
-                    return request.redirect('/partners/%s' % slug(partner))
+                partner_slug = request.env['ir.http']._slug(partner)
+                if partner_slug != current_slug:
+                    return request.redirect('/partners/%s' % partner_slug)
                 values = {
                     'main_object': partner,
                     'partner': partner,

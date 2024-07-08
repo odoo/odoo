@@ -13,7 +13,6 @@ from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
 from odoo.addons.base.models.ir_qweb import QWebException
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.mail import is_html_empty, prepend_html_content
 from odoo.tools.rendering_tools import convert_inline_template_to_qweb, parse_inline_template, render_inline_template, template_env_globals
@@ -268,7 +267,7 @@ class MailRenderMixin(models.AbstractModel):
             'format_amount': lambda amount, currency, lang_code=False: tools.format_amount(self.env, amount, currency, lang_code),
             'format_duration': lambda value: tools.format_duration(value),
             'is_html_empty': is_html_empty,
-            'slug': slug,
+            'slug': self.env['ir.http']._slug,
             'user': self.env.user,
         }
         render_context.update(copy.copy(template_env_globals))

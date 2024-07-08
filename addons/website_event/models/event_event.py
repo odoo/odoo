@@ -9,7 +9,6 @@ import werkzeug.urls
 from pytz import utc, timezone
 
 from odoo import api, fields, models, _
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.misc import get_lang, format_date
@@ -233,7 +232,7 @@ class Event(models.Model):
         super(Event, self)._compute_website_url()
         for event in self:
             if event.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
-                event.website_url = '/event/%s' % slug(event)
+                event.website_url = '/event/%s' % self.env['ir.http']._slug(event)
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
@@ -345,8 +344,8 @@ class Event(models.Model):
         return [
             (_('Introduction'), False, 'website_event.template_intro', 1, 'introduction'),
             (_('Location'), False, 'website_event.template_location', 50, 'location'),
-            (_('Info'), '/event/%s/register' % slug(self), False, 100, 'register'),
-            (_('Community'), '/event/%s/community' % slug(self), False, 80, 'community'),
+            (_('Info'), '/event/%s/register' % self.env['ir.http']._slug(self), False, 100, 'register'),
+            (_('Community'), '/event/%s/community' % self.env['ir.http']._slug(self), False, 80, 'community'),
         ]
 
     def _update_website_menus(self, menus_update_by_field=None):
@@ -422,7 +421,7 @@ class Event(models.Model):
                 add_menu=False, ispage=False)
             view_id = page_result['view_id']
             view = self.env["ir.ui.view"].browse(view_id)
-            url = f"/event/{slug(self)}/page/{view.key.split('.')[-1]}"  # url contains starting "/"
+            url = f"/event/{self.env['ir.http']._slug(self)}/page/{view.key.split('.')[-1]}"  # url contains starting "/"
 
         website_menu = self.env['website.menu'].sudo().create({
             'name': name,

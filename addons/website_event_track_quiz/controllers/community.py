@@ -4,7 +4,6 @@
 import math
 
 from odoo import http
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website_event.controllers.community import EventCommunityController
 from odoo.http import request
 
@@ -39,7 +38,7 @@ class WebsiteEventTrackQuizCommunityController(EventCommunityController):
         user_count = len(values['visitors'])
         if user_count:
             page_count = math.ceil(user_count / self._visitors_per_page)
-            url = '/event/%s/community/leaderboard/results' % (slug(event))
+            url = '/event/%s/community/leaderboard/results' % (request.env['ir.http']._slug(event))
             if values.get('current_visitor_position') and not page:
                 values['scroll_to_position'] = True
                 page = math.ceil(values['current_visitor_position'] / self._visitors_per_page)

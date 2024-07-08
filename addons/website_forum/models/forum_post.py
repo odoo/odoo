@@ -7,7 +7,6 @@ import re
 from datetime import datetime
 
 from odoo import api, fields, models, tools, _
-from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools import sql, SQL
@@ -177,7 +176,7 @@ class Post(models.Model):
         self.website_url = False
         for post in self.filtered(lambda post: post.id):
             anchor = f'#answer_{post.id}' if post.parent_id else ''
-            post.website_url = f'/forum/{slug(post.forum_id)}/{slug(post)}{anchor}'
+            post.website_url = f'/forum/{self.env["ir.http"]._slug(post.forum_id)}/{self.env["ir.http"]._slug(post)}{anchor}'
 
     @api.depends('vote_count', 'forum_id.relevancy_post_vote', 'forum_id.relevancy_time_decay')
     def _compute_relevancy(self):
@@ -871,10 +870,10 @@ class Post(models.Model):
             domain = expression.AND([domain, [('parent_id', '=', False)]])
         forum = options.get('forum')
         if forum:
-            domain = expression.AND([domain, [('forum_id', '=', unslug(forum)[1])]])
+            domain = expression.AND([domain, [('forum_id', '=', self.env['ir.http']._unslug(forum)[1])]])
         tags = options.get('tag')
         if tags:
-            domain = expression.AND([domain, [('tag_ids', 'in', [unslug(tag)[1] for tag in tags.split(',')])]])
+            domain = expression.AND([domain, [('tag_ids', 'in', [self.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')])]])
         filters = options.get('filters')
         if filters == 'unanswered':
             domain = expression.AND([domain, [('child_ids', '=', False)]])

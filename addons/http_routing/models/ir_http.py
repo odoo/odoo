@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import contextlib
 import logging
 import os
 import re
 import traceback
-import threading
 import unicodedata
+import typing
 import werkzeug.exceptions
 import werkzeug.routing
 import werkzeug.urls
@@ -25,276 +24,27 @@ from odoo.addons.base.models.ir_http import RequestUID
 from odoo.addons.base.models.ir_qweb import keep_query, QWebException
 from odoo.addons.base.models.res_lang import LangData
 from odoo.exceptions import AccessError, MissingError
-from odoo.http import request, HTTPRequest, Response
+from odoo.http import request, Response
 from odoo.osv import expression
 from odoo.tools import ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 
-# ------------------------------------------------------------
-# Slug API
-# ------------------------------------------------------------
 
-def _guess_mimetype(ext=False, default='text/html'):
-    exts = {
-        '.css': 'text/css',
-        '.less': 'text/less',
-        '.scss': 'text/scss',
-        '.js': 'text/javascript',
-        '.xml': 'text/xml',
-        '.csv': 'text/csv',
-        '.html': 'text/html',
-    }
-    return ext is not False and exts.get(ext, default) or exts
-
-
-def slugify_one(s, max_length=0):
-    """ Transform a string to a slug that can be used in a url path.
-        This method will first try to do the job with python-slugify if present.
-        Otherwise it will process string by stripping leading and ending spaces,
-        converting unicode chars to ascii, lowering all chars and replacing spaces
-        and underscore with hyphen "-".
-        :param s: str
-        :param max_length: int
-        :rtype: str
-    """
-    s = ustr(s)
-    if slugify_lib:
-        # There are 2 different libraries only python-slugify is supported
-        try:
-            return slugify_lib.slugify(s, max_length=max_length)
-        except TypeError:
-            pass
-    uni = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii')
-    slug_str = re.sub(r'[\W_]', ' ', uni).strip().lower()
-    slug_str = re.sub(r'[-\s]+', '-', slug_str)
-    return slug_str[:max_length] if max_length > 0 else slug_str
-
-
-def slugify(s, max_length=0, path=False):
-    if not path:
-        return slugify_one(s, max_length=max_length)
-    else:
-        res = []
-        for u in s.split('/'):
-            if slugify_one(u, max_length=max_length) != '':
-                res.append(slugify_one(u, max_length=max_length))
-        # check if supported extension
-        path_no_ext, ext = os.path.splitext(s)
-        if ext and ext in _guess_mimetype():
-            res[-1] = slugify_one(path_no_ext) + ext
-        return '/'.join(res)
-
-
-def slug(value):
-    try:
-        if not value.id:
-            raise ValueError("Cannot slug non-existent record %s" % value)
-        identifier, name = value.id, getattr(value, 'seo_name', False) or value.display_name
-    except AttributeError:
-        # assume name_search result tuple
-        identifier, name = value
-    slugname = slugify(name or '').strip().strip('-')
-    if not slugname:
-        return str(identifier)
-    return f"{slugname}-{identifier}"
-
+# see also mimetypes module: https://docs.python.org/3/library/mimetypes.html and odoo.tools.mimetypes
+EXTENSION_TO_WEB_MIMETYPES = {
+    '.css': 'text/css',
+    '.less': 'text/less',
+    '.scss': 'text/scss',
+    '.js': 'text/javascript',
+    '.xml': 'text/xml',
+    '.csv': 'text/csv',
+    '.html': 'text/html',
+}
 
 # NOTE: the second pattern is used for the ModelConverter, do not use nor flags nor groups
 _UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|\/|#|\?)')
 _UNSLUG_ROUTE_PATTERN = r'(?:(?:\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(?:-?\d+)(?=$|\/|#|\?)'
-
-
-def unslug(s):
-    """ Extract slug and id from a string.
-        Always return a 2-tuple (str|None, int|None)
-    """
-    m = _UNSLUG_RE.match(s)
-    if not m:
-        return None, None
-    return m.group(1), int(m.group(2))
-
-
-def unslug_url(s):
-    """ From /blog/my-super-blog-1" to "blog/1" """
-    parts = s.split('/')
-    if parts:
-        unslug_val = unslug(parts[-1])
-        if unslug_val[1]:
-            parts[-1] = str(unslug_val[1])
-            return '/'.join(parts)
-    return s
-
-
-# ------------------------------------------------------------
-# Language tools
-# ------------------------------------------------------------
-
-
-def url_localized(url=None, lang_code=None, canonical_domain=None, prefetch_langs=False, force_default_lang=False):
-    """ Returns the given URL adapted for the given lang, meaning that:
-    1. It will have the lang suffixed to it
-    2. The model converter parts will be translated
-
-    If it is not possible to rebuild a path, use the current one instead.
-    `url_quote_plus` is applied on the returned path.
-
-    It will also force the canonical domain is requested.
-    Eg:
-    - `_get_url_localized(lang_fr, '/shop/my-phone-14')` will return
-        `/fr/shop/mon-telephone-14`
-    - `_get_url_localized(lang_fr, '/shop/my-phone-14', True)` will return
-        `<base_url>/fr/shop/mon-telephone-14`
-    """
-    if not lang_code:
-        lang = request.lang
-    else:
-        lang = request.env['res.lang']._get_data(code=lang_code)
-
-    if not url:
-        qs = keep_query()
-        url = request.httprequest.path + ('?%s' % qs if qs else '')
-
-    # '/shop/furn-0269-chaise-de-bureau-noire-17?' to
-    # '/shop/furn-0269-chaise-de-bureau-noire-17', otherwise -> 404
-    url, sep, qs = url.partition('?')
-
-    try:
-        # Re-match the controller where the request path routes.
-        rule, args = request.env['ir.http']._match(url)
-        for key, val in list(args.items()):
-            if isinstance(val, models.BaseModel):
-                if isinstance(val._uid, RequestUID):
-                    args[key] = val = val.with_user(request.uid)
-                if val.env.context.get('lang') != lang.code:
-                    args[key] = val = val.with_context(lang=lang.code)
-                if prefetch_langs:
-                    args[key] = val = val.with_context(prefetch_langs=True)
-        router = http.root.get_db_router(request.db).bind('')
-        path = router.build(rule.endpoint, args)
-    except (NotFound, AccessError, MissingError):
-        # The build method returns a quoted URL so convert in this case for consistency.
-        path = werkzeug.urls.url_quote_plus(url, safe='/')
-    if force_default_lang or lang != request.env['ir.http']._get_default_lang():
-        path = f'/{lang.url_code}{path if path != "/" else ""}'
-
-    if canonical_domain:
-        # canonical URLs should not have qs
-        return werkzeug.urls.url_join(canonical_domain, path)
-
-    return path + sep + qs
-
-
-def url_lang(path_or_uri, lang_code=None):
-    ''' Given a relative URL, make it absolute and add the required lang or
-        remove useless lang.
-        Nothing will be done for absolute or invalid URL.
-        If there is only one language installed, the lang will not be handled
-        unless forced with `lang` parameter.
-
-        :param lang_code: Must be the lang `code`. It could also be something
-                          else, such as `'[lang]'` (used for url_return).
-    '''
-    Lang = request.env['res.lang']
-    location = pycompat.to_text(path_or_uri).strip()
-    force_lang = lang_code is not None
-    try:
-        url = werkzeug.urls.url_parse(location)
-    except ValueError:
-        # e.g. Invalid IPv6 URL, `werkzeug.urls.url_parse('http://]')`
-        url = False
-    # relative URL with either a path or a force_lang
-    if url and not url.netloc and not url.scheme and (url.path or force_lang):
-        location = werkzeug.urls.url_join(request.httprequest.path, location)
-        lang_url_codes = [info.url_code for info in Lang._get_frontend().values()]
-        lang_code = pycompat.to_text(lang_code or request.context['lang'])
-        lang_url_code = Lang._get_data(code=lang_code).url_code
-        lang_url_code = lang_url_code if lang_url_code in lang_url_codes else lang_code
-        if (len(lang_url_codes) > 1 or force_lang) and is_multilang_url(location, lang_url_codes):
-            loc, sep, qs = location.partition('?')
-            ps = loc.split(u'/')
-            default_lg = request.env['ir.http']._get_default_lang()
-            if ps[1] in lang_url_codes:
-                # Replace the language only if we explicitly provide a language to url_for
-                if force_lang:
-                    ps[1] = lang_url_code
-                # Remove the default language unless it's explicitly provided
-                elif ps[1] == default_lg.url_code:
-                    ps.pop(1)
-            # Insert the context language or the provided language
-            elif lang_url_code != default_lg.url_code or force_lang:
-                ps.insert(1, lang_url_code)
-                # Remove the last empty string to avoid trailing / after joining
-                if ps[-1] == '':
-                    ps.pop(-1)
-
-            location = u'/'.join(ps) + sep + qs
-    return location
-
-
-def url_for(url_from, lang_code=None):
-    ''' Return the url with the rewriting applied.
-        Nothing will be done for absolute URL, invalid URL, or short URL from 1 char.
-
-        :param url_from: The URL to convert.
-        :param lang_code: Must be the lang `code`. It could also be something
-                          else, such as `'[lang]'` (used for url_return).
-    '''
-    path, _, qs = (url_from or '').partition('?')
-    routing = getattr(request, 'website_routing', None)  # not modular, but not overridable
-    if (
-        path
-        # don't try to match route if we know that no rewrite has been loaded.
-        and request.env['ir.http']._rewrite_len(routing)
-        and (
-            len(path) > 1
-            and path.startswith('/')
-            and '/static/' not in path
-            and not path.startswith('/web/')
-        )
-    ):
-        url_from, _ = request.env['ir.http'].url_rewrite(path)
-        url_from = url_from if not qs else url_from + '?%s' % qs
-
-    return url_lang(url_from, lang_code=lang_code)
-
-
-def is_multilang_url(local_url, lang_url_codes=None):
-    ''' Check if the given URL content is supposed to be translated.
-        To be considered as translatable, the URL should either:
-        1. Match a POST (non-GET actually) controller that is `website=True` and
-           either `multilang` specified to True or if not specified, with `type='http'`.
-        2. If not matching 1., everything not under /static/ or /web/ will be translatable
-    '''
-    if not lang_url_codes:
-        lang_url_codes = [lg.url_code for lg in request.env['res.lang']._get_frontend().values()]
-    spath = local_url.split('/')
-    # if a language is already in the path, remove it
-    if spath[1] in lang_url_codes:
-        spath.pop(1)
-        local_url = '/'.join(spath)
-
-    url = local_url.partition('#')[0].split('?')
-    path = url[0]
-
-    # Consider /static/ and /web/ files as non-multilang
-    if '/static/' in path or path.startswith('/web/'):
-        return False
-
-    query_string = url[1] if len(url) > 1 else None
-
-    # Try to match an endpoint in werkzeug's routing table
-    try:
-        _, func = request.env['ir.http'].url_rewrite(path, query_args=query_string)
-
-        # /page/xxx has no endpoint/func but is multilang
-        return (not func or (
-            func.routing.get('website', False)
-            and func.routing.get('multilang', func.routing['type'] == 'http')
-        ))
-    except Exception as exception:
-        _logger.warning(exception)
-        return False
 
 
 class ModelConverter(ir_http.ModelConverter):
@@ -304,20 +54,12 @@ class ModelConverter(ir_http.ModelConverter):
         self.domain = domain
         self.regex = _UNSLUG_ROUTE_PATTERN
 
-    def to_url(self, value):
-        return slug(value)
-
-    def to_python(self, value):
-        matching = _UNSLUG_RE.match(value)
-        _uid = RequestUID(value=value, match=matching, converter=self)
-        record_id = int(matching.group(2))
-        env = api.Environment(request.cr, _uid, request.context)
-
-        if record_id < 0:
+    def to_python(self, value) -> models.BaseModel:
+        record = super().to_python(value)
+        if record.id < 0 and not record.browse(record.id).exists():
             # limited support for negative IDs due to our slug pattern, assume abs() if not found
-            if not env[self.model].browse(record_id).exists():
-                record_id = abs(record_id)
-        return env[self.model].with_context(_converter_value=value).browse(record_id)
+            record = record.browse(abs(record.id))
+        return record.with_context(_converter_value=value)
 
 
 class IrHttp(models.AbstractModel):
@@ -325,8 +67,85 @@ class IrHttp(models.AbstractModel):
 
     rerouting_limit = 10
 
+    # ------------------------------------------------------------
+    # Slug tools
+    # ------------------------------------------------------------
+
     @classmethod
-    def _get_converters(cls):
+    def _slugify_one(cls, value: str, max_length: int = 0) -> str:
+        """ Transform a string to a slug that can be used in a url path.
+            This method will first try to do the job with python-slugify if present.
+            Otherwise it will process string by stripping leading and ending spaces,
+            converting unicode chars to ascii, lowering all chars and replacing spaces
+            and underscore with hyphen "-".
+            :param s: str
+            :param max_length: int
+            :rtype: str
+        """
+        value = ustr(value)
+        if slugify_lib:
+            # There are 2 different libraries only python-slugify is supported
+            try:
+                return slugify_lib.slugify(value, max_length=max_length)
+            except TypeError:
+                pass
+        uni = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+        slug_str = re.sub(r'[\W_]+', '-', uni).strip('-').lower()
+        return slug_str[:max_length] if max_length > 0 else slug_str
+
+    @classmethod
+    def _slugify(cls, value: str, max_length: int = 0, path: bool = False) -> str:
+        if not path:
+            return cls._slugify_one(value, max_length=max_length)
+        else:
+            res = []
+            for u in value.split('/'):
+                s = cls._slugify_one(u, max_length=max_length)
+                if s:
+                    res.append(s)
+            # check if supported extension
+            path_no_ext, ext = os.path.splitext(value)
+            if ext in EXTENSION_TO_WEB_MIMETYPES:
+                res[-1] = cls._slugify_one(path_no_ext) + ext
+            return '/'.join(res)
+
+    @classmethod
+    def _slug(cls, value: models.BaseModel | tuple[int, str]) -> str:
+        try:
+            identifier, name = value.id, value.display_name
+        except AttributeError:
+            # assume name_search result tuple
+            identifier, name = value
+        if not identifier:
+            raise ValueError("Cannot slug non-existent record %s" % value)
+        slugname = cls._slugify(name or '')
+        if not slugname:
+            return str(identifier)
+        return f"{slugname}-{identifier}"
+
+    @classmethod
+    def _unslug(cls, value: str) -> tuple[str | None, int] | tuple[None, None]:
+        """ Extract slug and id from a string.
+            Always return a 2-tuple (str|None, int|None)
+        """
+        m = _UNSLUG_RE.match(value)
+        if not m:
+            return None, None
+        return m.group(1), int(m.group(2))
+
+    @classmethod
+    def _unslug_url(cls, value: str) -> str:
+        """ From /blog/my-super-blog-1" to "blog/1" """
+        parts = value.split('/')
+        if parts:
+            unslug_val = cls._unslug(parts[-1])
+            if unslug_val[1]:
+                parts[-1] = str(unslug_val[1])
+                return '/'.join(parts)
+        return value
+
+    @classmethod
+    def _get_converters(cls) -> dict[str, type]:
         """ Get the converters list for custom url pattern werkzeug need to
             match Rule. This override adds the website ones.
         """
@@ -334,6 +153,164 @@ class IrHttp(models.AbstractModel):
             super(IrHttp, cls)._get_converters(),
             model=ModelConverter,
         )
+
+    # ------------------------------------------------------------
+    # Language tools
+    # ------------------------------------------------------------
+
+    @classmethod
+    def _url_localized(cls,
+            url: str | None = None,
+            lang_code: str | None = None,
+            canonical_domain: str | tuple[str, str, str, str, str] | None = None,
+            prefetch_langs: bool = False, force_default_lang: bool = False) -> str:
+        """ Returns the given URL adapted for the given lang, meaning that:
+        1. It will have the lang suffixed to it
+        2. The model converter parts will be translated
+
+        If it is not possible to rebuild a path, use the current one instead.
+        `url_quote_plus` is applied on the returned path.
+
+        It will also force the canonical domain is requested.
+        Eg:
+        - `_get_url_localized(lang_fr, '/shop/my-phone-14')` will return
+            `/fr/shop/mon-telephone-14`
+        - `_get_url_localized(lang_fr, '/shop/my-phone-14', True)` will return
+            `<base_url>/fr/shop/mon-telephone-14`
+        """
+        if not lang_code:
+            lang = request.lang
+        else:
+            lang = request.env['res.lang']._get_data(code=lang_code)
+
+        if not url:
+            qs = keep_query()
+            url = request.httprequest.path + ('?%s' % qs if qs else '')
+
+        # '/shop/furn-0269-chaise-de-bureau-noire-17?' to
+        # '/shop/furn-0269-chaise-de-bureau-noire-17', otherwise -> 404
+        url, sep, qs = url.partition('?')
+
+        try:
+            # Re-match the controller where the request path routes.
+            rule, args = request.env['ir.http']._match(url)
+            for key, val in list(args.items()):
+                if isinstance(val, models.BaseModel):
+                    if isinstance(val._uid, RequestUID):
+                        args[key] = val = val.with_user(request.uid)
+                    if val.env.context.get('lang') != lang.code:
+                        args[key] = val = val.with_context(lang=lang.code)
+                    if prefetch_langs:
+                        args[key] = val = val.with_context(prefetch_langs=True)
+            router = http.root.get_db_router(request.db).bind('')
+            path = router.build(rule.endpoint, args)
+        except (NotFound, AccessError, MissingError):
+            # The build method returns a quoted URL so convert in this case for consistency.
+            path = werkzeug.urls.url_quote_plus(url, safe='/')
+        if force_default_lang or lang != request.env['ir.http']._get_default_lang():
+            path = f'/{lang.url_code}{path if path != "/" else ""}'
+
+        if canonical_domain:
+            # canonical URLs should not have qs
+            return werkzeug.urls.url_join(canonical_domain, path)
+
+        return path + sep + qs
+
+    @classmethod
+    def _url_lang(cls, path_or_uri: str, lang_code: str | None = None) -> str:
+        ''' Given a relative URL, make it absolute and add the required lang or
+            remove useless lang.
+            Nothing will be done for absolute or invalid URL.
+            If there is only one language installed, the lang will not be handled
+            unless forced with `lang` parameter.
+
+            :param lang_code: Must be the lang `code`. It could also be something
+                              else, such as `'[lang]'` (used for url_return).
+        '''
+        Lang = request.env['res.lang']
+        location = pycompat.to_text(path_or_uri).strip()
+        force_lang = lang_code is not None
+        try:
+            url = werkzeug.urls.url_parse(location)
+        except ValueError:
+            # e.g. Invalid IPv6 URL, `werkzeug.urls.url_parse('http://]')`
+            url = False
+        # relative URL with either a path or a force_lang
+        if url and not url.netloc and not url.scheme and (url.path or force_lang):
+            location = werkzeug.urls.url_join(request.httprequest.path, location)
+            lang_url_codes = [info.url_code for info in Lang._get_frontend().values()]
+            lang_code = pycompat.to_text(lang_code or request.context['lang'])
+            lang_url_code = Lang._get_data(code=lang_code).url_code
+            lang_url_code = lang_url_code if lang_url_code in lang_url_codes else lang_code
+            if (len(lang_url_codes) > 1 or force_lang) and cls._is_multilang_url(location, lang_url_codes):
+                loc, sep, qs = location.partition('?')
+                ps = loc.split('/')
+                default_lg = request.env['ir.http']._get_default_lang()
+                if ps[1] in lang_url_codes:
+                    # Replace the language only if we explicitly provide a language to url_for
+                    if force_lang:
+                        ps[1] = lang_url_code
+                    # Remove the default language unless it's explicitly provided
+                    elif ps[1] == default_lg.url_code:
+                        ps.pop(1)
+                # Insert the context language or the provided language
+                elif lang_url_code != default_lg.url_code or force_lang:
+                    ps.insert(1, lang_url_code)
+                    # Remove the last empty string to avoid trailing / after joining
+                    if not ps[-1]:
+                        ps.pop(-1)
+
+                location = '/'.join(ps) + sep + qs
+        return location
+
+    @classmethod
+    def _url_for(cls, url_from: str, lang_code: str | None = None) -> str:
+        ''' Return the url with the rewriting applied.
+            Nothing will be done for absolute URL, invalid URL, or short URL from 1 char.
+
+            :param url_from: The URL to convert.
+            :param lang_code: Must be the lang `code`. It could also be something
+                              else, such as `'[lang]'` (used for url_return).
+        '''
+        return cls._url_lang(url_from, lang_code=lang_code)
+
+    @classmethod
+    def _is_multilang_url(cls, local_url: str, lang_url_codes: list[str] | None = None) -> bool:
+        ''' Check if the given URL content is supposed to be translated.
+            To be considered as translatable, the URL should either:
+            1. Match a POST (non-GET actually) controller that is `website=True` and
+            either `multilang` specified to True or if not specified, with `type='http'`.
+            2. If not matching 1., everything not under /static/ or /web/ will be translatable
+        '''
+        if not lang_url_codes:
+            lang_url_codes = [lg.url_code for lg in request.env['res.lang']._get_frontend().values()]
+        spath = local_url.split('/')
+        # if a language is already in the path, remove it
+        if spath[1] in lang_url_codes:
+            spath.pop(1)
+            local_url = '/'.join(spath)
+
+        url = local_url.partition('#')[0].split('?')
+        path = url[0]
+
+        # Consider /static/ and /web/ files as non-multilang
+        if '/static/' in path or path.startswith('/web/'):
+            return False
+
+        query_string = url[1] if len(url) > 1 else None
+
+        # Try to match an endpoint in werkzeug's routing table
+        try:
+            _, func = request.env['ir.http'].url_rewrite(path, query_args=query_string)
+
+            # /page/xxx has no endpoint/func but is multilang
+            return (not func or (
+                func.routing.get('website', False)
+                and func.routing.get('multilang', func.routing['type'] == 'http')
+            ))
+        except Exception as exception:  # noqa: BLE001
+            _logger.warning(exception)
+            return False
 
     @classmethod
     def _get_default_lang(cls) -> LangData:
@@ -343,7 +320,7 @@ class IrHttp(models.AbstractModel):
         return next(iter(request.env['res.lang']._get_active_by('code').values()))
 
     @api.model
-    def get_frontend_session_info(self):
+    def get_frontend_session_info(self) -> dict:
         session_info = super(IrHttp, self).get_frontend_session_info()
 
         IrHttpModel = request.env['ir.http'].sudo()
@@ -361,7 +338,7 @@ class IrHttp(models.AbstractModel):
         return session_info
 
     @api.model
-    def get_translation_frontend_modules(self):
+    def get_translation_frontend_modules(self) -> list[str]:
         Modules = request.env['ir.module.module'].sudo()
         extra_modules_domain = self._get_translation_frontend_modules_domain()
         extra_modules_name = self._get_translation_frontend_modules_name()
@@ -373,21 +350,21 @@ class IrHttp(models.AbstractModel):
         return extra_modules_name
 
     @classmethod
-    def _get_translation_frontend_modules_domain(cls):
+    def _get_translation_frontend_modules_domain(cls) -> list[tuple[str, str, typing.Any]]:
         """ Return a domain to list the domain adding web-translations and
             dynamic resources that may be used frontend views
         """
         return []
 
     @classmethod
-    def _get_translation_frontend_modules_name(cls):
+    def _get_translation_frontend_modules_name(cls) -> list[str]:
         """ Return a list of module name where web-translations and
             dynamic resources may be used in frontend views
         """
         return ['web']
 
     @api.model
-    def get_nearest_lang(self, lang_code):
+    def get_nearest_lang(self, lang_code: str) -> str:
         """ Try to find a similar lang. Eg: fr_BE and fr_FR
             :param lang_code: the lang `code` (en_US)
         """
@@ -400,6 +377,10 @@ class IrHttp(models.AbstractModel):
 
         short = lang_code.partition('_')[0]
         return next((code for code in frontend_langs if code.startswith(short)), None)
+
+    # ------------------------------------------------------------
+    # Routing and diplatch
+    # ------------------------------------------------------------
 
     @classmethod
     def _match(cls, path):
@@ -602,6 +583,10 @@ class IrHttp(models.AbstractModel):
         if request.httprequest.cookies.get('frontend_lang') != request.lang.code:
             request.future_response.set_cookie('frontend_lang', request.lang.code)
 
+    # ------------------------------------------------------------
+    # Exception
+    # ------------------------------------------------------------
+
     @classmethod
     def _get_exception_code_values(cls, exception):
         """ Return a tuple with the error code following by the values matching the exception"""
@@ -685,6 +670,10 @@ class IrHttp(models.AbstractModel):
         cls._post_dispatch(response)
         return response
 
+    # ------------------------------------------------------------
+    # Rewrite
+    # ------------------------------------------------------------
+
     @api.model
     @tools.ormcache('path', 'query_args', cache='routing.rewrites')
     def url_rewrite(self, path, query_args=None):
@@ -702,6 +691,3 @@ class IrHttp(models.AbstractModel):
         except werkzeug.exceptions.NotFound:
             new_url = path
         return new_url or path, endpoint and endpoint[0]
-
-    def _rewrite_len(self, website_id):
-        return 0

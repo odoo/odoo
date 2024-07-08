@@ -25,7 +25,7 @@ from odoo.http import request, SessionExpiredException
 from odoo.osv import expression
 from odoo.tools import OrderedSet, escape_psql, html_escape as escape
 from odoo.addons.base.models.ir_qweb import QWebException
-from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimetype
+from odoo.addons.http_routing.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.web.controllers.binary import Binary
@@ -50,6 +50,7 @@ class QueryURL:
         path = ''
         for key, value in self.args.items():
             kw.setdefault(key, value)
+        slug = request.env['ir.http']._slug
         path_args = OrderedSet(path_args or []) | self.path_args
         paths, fragments = {}, []
         for key, value in kw.items():
@@ -634,7 +635,7 @@ class Website(Home):
     def pagenew(self, path="", add_menu=False, template=False, redirect=False, **kwargs):
         # for supported mimetype, get correct default template
         _, ext = os.path.splitext(path)
-        ext_special_case = ext and ext in _guess_mimetype() and ext != '.html'
+        ext_special_case = ext != '.html' and ext in EXTENSION_TO_WEB_MIMETYPES
 
         if not template and ext_special_case:
             default_templ = 'website.default_%s' % ext.lstrip('.')
@@ -777,8 +778,8 @@ class Website(Home):
         res['has_social_default_image'] = request.website.has_social_default_image
 
         if res_model not in ('website.page', 'ir.ui.view') and 'seo_name' in record:  # allow custom slugify
-            res['seo_name_default'] = slugify(record.display_name)  # default slug, if seo_name become empty
-            res['seo_name'] = record.seo_name and slugify(record.seo_name) or ''
+            res['seo_name_default'] = request.env['ir.http']._slugify(record.display_name)  # default slug, if seo_name become empty
+            res['seo_name'] = record.seo_name and request.env['ir.http']._slugify(record.seo_name) or ''
 
         return res
 
