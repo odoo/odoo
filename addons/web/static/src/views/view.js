@@ -20,9 +20,12 @@ import {
     useSubEnv,
     reactive,
 } from "@odoo/owl";
+import { session } from "@web/session";
+
 const viewRegistry = registry.category("views");
 
 viewRegistry.addValidation({
+    type: { validate: (t) => t in session.view_info },
     Controller: { validate: (c) => c.prototype instanceof Component },
     "*": true,
 });

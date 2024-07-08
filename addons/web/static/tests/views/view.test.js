@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { before, expect, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, onWillStart, onWillUpdateProps, useState, xml } from "@odoo/owl";
@@ -12,6 +12,7 @@ import {
     mountWithCleanup,
     onRpc,
     patchWithCleanup,
+    serverState,
 } from "@web/../tests/web_test_helpers";
 
 import { registry } from "@web/core/registry";
@@ -44,8 +45,13 @@ class ToyControllerImp extends ToyController {
     }
 }
 
-viewRegistry.add("toy", toyView);
-viewRegistry.add("toy_imp", { ...toyView, Controller: ToyControllerImp });
+before(() => {
+    patchWithCleanup(serverState.view_info, {
+        toy: { multi_record: true, display_name: "Toy", icon: "fab fa-android" },
+    });
+    viewRegistry.add("toy", toyView);
+    viewRegistry.add("toy_imp", { ...toyView, Controller: ToyControllerImp });
+});
 
 class Animal extends models.Model {
     birthday = fields.Date();
