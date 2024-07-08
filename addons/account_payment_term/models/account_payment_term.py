@@ -24,7 +24,7 @@ class AccountPaymentTermLine(models.Model):
     @api.constrains('days_next_month')
     def _check_valid_char_value(self):
         for record in self:
-            if record.days_next_month.isnumeric():
+            if record.days_next_month and record.days_next_month.isnumeric():
                 if not (0 <= int(record.days_next_month) <= 31):
                     raise ValidationError(_('The days added must be between 0 and 31.'))
             else:
