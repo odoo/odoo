@@ -1,4 +1,3 @@
-/** @odoo-module **/
 // @ts-check
 
 import { _t } from "@web/core/l10n/translation";
@@ -52,14 +51,6 @@ for (const type in AGGREGATORS_BY_FIELD_TYPE) {
 //--------------------------------------------------------------------------
 // Public
 //--------------------------------------------------------------------------
-
-export const PERIODS = {
-    day: _t("Day"),
-    week: _t("Week"),
-    month: _t("Month"),
-    quarter: _t("Quarter"),
-    year: _t("Year"),
-};
 
 /**
  * @typedef {import("@spreadsheet").OdooField} OdooField

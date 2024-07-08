@@ -49,6 +49,15 @@ const { DateTime } = luxon;
  * The reason is PIVOT functions are currently generated without being aware of the spreadsheet locale.
  */
 
+const odooNumberDateAdapter = {
+    normalizeServerValue(groupBy, field, readGroupResult) {
+        return Number(readGroupResult[groupBy]);
+    },
+    increment(normalizedValue, step) {
+        return normalizedValue + step;
+    },
+};
+
 const odooDayAdapter = {
     normalizeServerValue(groupBy, field, readGroupResult) {
         const serverDayValue = getGroupStartingDay(field, groupBy, readGroupResult);
@@ -160,14 +169,6 @@ const odooQuarterAdapter = {
         return `${nextQuarter.quarter}/${nextQuarter.year}`;
     },
 };
-const odooYearAdapter = {
-    normalizeServerValue(groupBy, field, readGroupResult) {
-        return Number(readGroupResult[groupBy]);
-    },
-    increment(normalizedValue, step) {
-        return normalizedValue + step;
-    },
-};
 
 /**
  * Decorate adapter functions to handle the empty value "false"
@@ -229,7 +230,12 @@ pivotTimeAdapterRegistry.add("month", falseHandlerDecorator(odooMonthAdapter));
 pivotTimeAdapterRegistry.add("quarter", falseHandlerDecorator(odooQuarterAdapter));
 
 extendSpreadsheetAdapter("day", odooDayAdapter);
-extendSpreadsheetAdapter("year", odooYearAdapter);
+extendSpreadsheetAdapter("year", odooNumberDateAdapter);
+extendSpreadsheetAdapter("day_of_month", odooNumberDateAdapter);
+extendSpreadsheetAdapter("day", odooDayAdapter);
+extendSpreadsheetAdapter("iso_week_number", odooNumberDateAdapter);
+extendSpreadsheetAdapter("month_number", odooNumberDateAdapter);
+extendSpreadsheetAdapter("quarter_number", odooNumberDateAdapter);
 
 /**
  * When grouping by a time field, return
