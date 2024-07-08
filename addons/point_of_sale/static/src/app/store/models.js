@@ -465,11 +465,12 @@ export class Orderline extends PosModel {
      * @returns {string}
      */
     get_full_product_name_with_variant() {
-        return constructFullProductName(
-            this,
-            this.pos.models["product.template.attribute.value"].getAllBy("id"),
-            this.product.display_name
+        const attributeValueById = Object.fromEntries(
+            this.product.attribute_line_ids
+                .flatMap((line) => line.product_template_value_ids)
+                .map((value) => [value.id, value])
         );
+        return constructFullProductName(this, attributeValueById, this.product.display_name);
     }
     // selects or deselects this orderline
     set_selected(selected) {
@@ -858,8 +859,11 @@ export class Orderline extends PosModel {
         return Boolean(this.combo_parent_id || this.combo_line_ids?.length);
     }
     findAttribute(values, customAttributes) {
+        if (values.length === 0 && customAttributes.length === 0) {
+            return [];
+        }
         const listOfAttributes = [];
-        Object.values(this.pos.models['product.template.attribute.line'].getAll()).filter(
+        Object.values(this.product.attribute_line_ids).filter(
             (attribute) => {
                 const attFound = attribute.product_template_value_ids.filter((target) => {
                     return Object.values(values).includes(target.id);
@@ -2320,7 +2324,7 @@ export class Order extends PosModel {
 
         for (var id in details) {
             if (Object.hasOwnProperty.call(details, id)) {
-                const tax = this.pos.models["account.tax"].get(id);
+                const tax = this.pos.models["account.tax"].get(parseInt(id));
                 fulldetails.push({
                     amount: details[id].amount,
                     base: details[id].base,

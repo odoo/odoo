@@ -37,7 +37,7 @@ export class ComboConfiguratorPopup extends Component {
         return Object.values(this.state.combo)
             .filter((x) => x) // we only keep the non-zero values
             .map((x) => {
-                const combo_line_id = this.pos.models["pos.combo.line"].get(x);
+                const combo_line_id = this.pos.models["pos.combo.line"].get(parseInt(x));
                 return {
                     combo_line_id: combo_line_id,
                     configuration: this.state.configuration[combo_line_id.id],
