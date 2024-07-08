@@ -49,6 +49,12 @@
             <xpath expr="//field[@name='line_ids']/tree//field[@name='name']" position="after">
                 <field name="l10n_in_hsn_code" optional="hide" column_invisible="parent.country_code != 'IN'"/>
             </xpath>
+            <xpath expr="//div[hasclass('oe_title')]" position="inside">
+                <div class="fs-6 d-flex gap-2" invisible="country_code != 'IN' or not l10n_in_irn_number">
+                    <label class="fs-6" for="l10n_in_irn_number" string="IRN"/>
+                    <field name="l10n_in_irn_number" class="oe_inline"/>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>
