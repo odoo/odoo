@@ -97,6 +97,11 @@ patch(PosStore.prototype, {
                 }
                 continue;
             }
+
+            if (line.is_downpayment) {
+                line.product_id = this.config.down_payment_product_id;
+            }
+
             const newLineValues = {
                 product_id: line.product_id,
                 qty: line.product_uom_qty,
