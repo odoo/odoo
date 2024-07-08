@@ -175,15 +175,10 @@ export class EmbeddedComponentPlugin extends Plugin {
 
     destroy() {
         super.destroy();
-        // TODO @phoenix: is it reliable that the Set iterator is able to properly
-        // ignore deleted elements from the set without skipping items, across
-        // browsers ? Because deepDestroyComponent can remove multiple items at
-        // once from this.components.
-        const iterator = this.components[Symbol.iterator]();
-        let cur = iterator.next();
-        while (!cur.done) {
-            this.deepDestroyComponent(cur.value);
-            cur = iterator.next();
+        for (const info of [...this.components]) {
+            if (this.components.has(info)) {
+                this.deepDestroyComponent(info);
+            }
         }
     }
 
