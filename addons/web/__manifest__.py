@@ -500,6 +500,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/env_tests.js',
             'web/static/tests/core/**/*.js',
             'web/static/tests/fields/**/*.js',
+            'web/static/tests/l10n/**/*.js',
             'web/static/tests/search/**/*.js',
             ('remove', 'web/static/tests/search/helpers.js'),
             'web/static/tests/views/**/*.js',

@@ -20,8 +20,14 @@
  * @returns {string} The locale formatted for use on the JavaScript-side.
  */
 export function pyToJsLocale(locale) {
-    const regex = /^([a-z]+)(_[A-Z\d]+)?(@.+)?$/;
-    const [, language, territory, modifier] = locale.match(regex);
+    if (!locale) {
+        return "";
+    }
+    const match = locale.match(/^([a-z]+)(_[A-Z\d]+)?(@.+)?$/);
+    if (!match) {
+        return locale;
+    }
+    const [, language, territory, modifier] = match;
     const subtags = [language];
     if (modifier === "@latin") {
         subtags.push("Latn");
