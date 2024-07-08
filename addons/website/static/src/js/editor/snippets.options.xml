@@ -56,7 +56,9 @@
             <WeButton selectLayout="'grid'" name="'grid_mode'">Grid</WeButton>
             <WeButton selectLayout="'normal'" name="'normal_mode'">Cols</WeButton>
         </WeButtonGroup>
-        <t t-call="website.column_count_option"/>
+        <t t-call="website.column_count_option">
+            <t t-set="with_grid" t-value="true"/>
+        </t>
     </WeRow>
     <t t-call="website.grid_layout_options">
         <t t-set="indent" t-value="true"/>
