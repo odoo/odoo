@@ -384,7 +384,8 @@ export class Thread extends Record {
         }
         if (this.type === "group" && !this.name) {
             const listFormatter = new Intl.ListFormat(
-                pyToJsLocale(this._store.env.services["user"].lang),
+                this._store.env.services["user"].lang &&
+                    pyToJsLocale(this._store.env.services["user"].lang),
                 { type: "conjunction", style: "long" }
             );
             return listFormatter.format(
