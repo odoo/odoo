@@ -48,17 +48,6 @@ export class ActivityRenderer extends Component {
         this.setupStorageActiveColumns();
     }
 
-    /**
-     * Gets all activity resIds in the view.
-     *
-     * @returns filtered resIds first then the rest.
-     */
-    get activityResIds() {
-        return [...this.props.activityResIds].sort((a) =>
-            this.activeFilter.resIds.has(a) ? -1 : 0
-        );
-    }
-
     getGroupInfo(activityType) {
         const types = {
             done: {
