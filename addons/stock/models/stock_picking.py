@@ -664,6 +664,15 @@ class Picking(models.Model):
     is_locked = fields.Boolean(default=True, help='When the picking is not done this allows changing the '
                                'initial demand. When the picking is done this allows '
                                'changing the done quantities.')
+
+    weight_bulk = fields.Float(
+        'Bulk Weight', compute='_compute_bulk_weight', help="Total weight of products which are not in a package.")
+    shipping_weight = fields.Float(
+        "Weight for Shipping", compute='_compute_shipping_weight',
+        help="Total weight of packages and products not in a package. "
+        "Packages with no shipping weight specified will default to their products' total weight. "
+        "This is the weight used to compute the cost of the shipping.")
+
     # Used to search on pickings
     product_id = fields.Many2one('product.product', 'Product', related='move_ids.product_id', readonly=True)
     lot_id = fields.Many2one('stock.lot', 'Lot/Serial Number', related='move_line_ids.lot_id', readonly=True)
@@ -824,6 +833,32 @@ class Picking(models.Model):
                 picking.scheduled_date = min(moves_dates, default=picking.scheduled_date or fields.Datetime.now())
             else:
                 picking.scheduled_date = max(moves_dates, default=picking.scheduled_date or fields.Datetime.now())
+
+    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.quantity')
+    def _compute_bulk_weight(self):
+        picking_weights = defaultdict(float)
+        res_groups = self.env['stock.move.line']._read_group(
+            [('picking_id', 'in', self.ids), ('product_id', '!=', False), ('result_package_id', '=', False)],
+            ['picking_id', 'product_id', 'product_uom_id', 'quantity'],
+            ['__count'],
+        )
+        for picking, product, product_uom, quantity, count in res_groups:
+            picking_weights[picking.id] += (
+                count
+                * product_uom._compute_quantity(quantity, product.uom_id)
+                * product.weight
+            )
+        for picking in self:
+            picking.weight_bulk = picking_weights[picking.id]
+
+    @api.depends('move_line_ids.result_package_id', 'move_line_ids.result_package_id.shipping_weight', 'weight_bulk')
+    def _compute_shipping_weight(self):
+        for picking in self:
+            # if shipping weight is not assigned => default to calculated product weight
+            picking.shipping_weight = (
+                picking.weight_bulk +
+                sum(pack.shipping_weight or pack.weight for pack in picking.move_line_ids.result_package_id.sudo())
+            )
 
     @api.depends('move_ids.date_deadline', 'move_type')
     def _compute_date_deadline(self):

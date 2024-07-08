@@ -153,7 +153,7 @@ class DeliveryCarrier(models.Model):
             return packages
 
         # Create all packages.
-        for package in picking.package_ids:
+        for package in picking.move_line_ids.result_package_id:
             move_lines = picking.move_line_ids.filtered(lambda ml: ml.result_package_id == package)
             commodities = self._get_commodities_from_stock_move_lines(move_lines)
             package_total_cost = 0.0
