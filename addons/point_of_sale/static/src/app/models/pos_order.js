@@ -3,7 +3,13 @@ import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { omit } from "@web/core/utils/objects";
-import { qrCodeSrc, random5Chars, uuidv4 } from "@point_of_sale/utils";
+import {
+    getUTCString,
+    parseUTCString,
+    qrCodeSrc,
+    random5Chars,
+    uuidv4,
+} from "@point_of_sale/utils";
 import { renderToElement } from "@web/core/utils/render";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { computeComboLines } from "./utils/compute_combo_lines";
@@ -19,7 +25,7 @@ export class PosOrder extends Base {
         super.setup(vals);
 
         // Data present in python model
-        this.date_order = vals.date_order || luxon.DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
+        this.date_order = vals.date_order || getUTCString(luxon.DateTime.now());
         this.to_invoice = vals.to_invoice || false;
         this.shipping_date = vals.shipping_date || false;
         this.state = vals.state || "draft";
@@ -102,7 +108,7 @@ export class PosOrder extends Base {
             name: this.name,
             invoice_id: null, //TODO
             cashier: this.employee_id?.name || this.user_id?.name,
-            date: formatDateTime(luxon.DateTime.fromFormat(this.date_order, "yyyy-MM-dd HH:mm:ss")),
+            date: formatDateTime(parseUTCString(this.date_order)),
             pos_qr_code:
                 this.company.point_of_sale_use_ticket_qr_code &&
                 this.finalized &&

@@ -17,6 +17,7 @@ import { floatIsZero } from "@web/core/utils/numbers";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { handleRPCError } from "@point_of_sale/app/errors/error_handlers";
+import { getUTCString } from "@point_of_sale/utils";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -244,7 +245,7 @@ export class PaymentScreen extends Component {
             this.hardwareProxy.openCashbox();
         }
 
-        this.currentOrder.date_order = luxon.DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
+        this.currentOrder.date_order = getUTCString(luxon.DateTime.now());
         for (const line of this.paymentLines) {
             if (!line.amount === 0) {
                 this.currentOrder.remove_paymentline(line);

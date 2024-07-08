@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { roundDecimals } from "@web/core/utils/numbers";
-import { uuidv4 } from "@point_of_sale/utils";
+import { getUTCString, uuidv4 } from "@point_of_sale/utils";
 
 const { DateTime } = luxon;
 
@@ -10,7 +10,7 @@ export class PosPayment extends Base {
 
     setup(vals) {
         super.setup(...arguments);
-        this.payment_date = DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
+        this.payment_date = getUTCString(DateTime.now());
         this.uuid = vals.uuid ? vals.uuid : uuidv4();
         this.amount = vals.amount || 0;
         this.ticket = vals.ticket || "";
