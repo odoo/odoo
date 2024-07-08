@@ -144,19 +144,15 @@
                         <div class="d-none d-md-block h-100">
                             <div id="event_attendees_kanban_icons_desktop" class="h-100 float-end p-2 d-flex align-items-end flex-column gap-1">
                                 <t t-if="record.active.raw_value">
-                                    <a class="btn btn-md btn-secondary" string="Confirm Registration" name="action_confirm" type="object" invisible="state != 'draft'" role="button">
-                                        <i class="fa fa-check" role="img" aria-label="Confirm button" title="Confirm Registration"/>
+                                    <a class="btn btn-md btn-secondary" string="Confirm Attendance" name="action_set_done" type="object" invisible="state == 'done'"
+                                        role="button" aria-label="Confirm Attendance Button" title="Confirm Attendance">
+                                        <i class="fa fa-check" role="img"/>
                                     </a>
-                                    <a class="btn btn-md btn-primary" string="Confirm Attendance" name="action_set_done" type="object" invisible="state != 'open'" role="button">
-                                        <i class="fa fa-check" role="img" aria-label="Attended button" title="Confirm Attendance"/>
+                                    <a class="btn btn-md btn-success" string="Reset To Registered" name="action_confirm" type="object" invisible="state != 'done'"
+                                        role="button" aria-label="Reset To Registered Button" title="Reset To Registered">
+                                        <i class="fa fa-check" role="img"/>
                                     </a>
-                                    <span class="text-muted" invisible="state != 'done'">Attended</span>
-                                    <span class="text-muted" invisible="state != 'cancel'">Cancelled</span>
                                 </t>
-                                <a class="btn btn-md btn-secondary" string="Previous state" name="action_set_previous_state" type="object" role="button"
-                                    invisible="state in ('cancel', 'draft')">
-                                    <i class="fa fa-undo" role="img" aria-label="Previous state button" title="Previous state"/>
-                                </a>
                             </div>
                         </div>
                     </t>
@@ -164,24 +160,14 @@
                         <div id="event_attendees_kanban_icons_mobile" class="d-md-none d-flex align-items-end flex-column gap-1 h-100 ps-4">
                             <t t-if="record.active.raw_value">
                                 <a class="btn btn-secondary d-flex justify-content-center align-items-center h-100 w-100"
-                                    string="Confirm Registration" name="action_confirm" type="object" invisible="state != 'draft'" role="button">
-                                    <i class="fa fa-check fa-3x" role="img" aria-label="Confirm button" title="Confirm Registration"/>
+                                    string="Confirm Attendance" name="action_set_done" type="object" invisible="state == 'done'" role="button">
+                                    <i class="fa fa-check fa-3x" role="img" aria-label="Confirm Attendance Button" title="Confirm Attendance"/>
                                 </a>
-                                <a class="btn btn-primary d-flex justify-content-center align-items-center h-100 w-100"
-                                    string="Confirm Attendance" name="action_set_done" type="object" invisible="state != 'open'" role="button">
-                                    <i class="fa fa-check fa-3x" role="img" aria-label="Attended button" title="Confirm Attendance"/>
+                                <a class="btn btn-success d-flex justify-content-center align-items-center h-100 w-100"
+                                    string="Reset To Registered" name="action_confirm" type="object" invisible="state != 'done'" role="button">
+                                    <i class="fa fa-check fa-3x" role="img" aria-label="Reset To Registered Button" title="Reset To Registered"/>
                                 </a>
-                                <div class="d-flex justify-content-center align-items-center h-100 w-100"
-                                    invisible="state in ('open', 'draft')">
-                                    <span class="text-muted" invisible="state != 'done'">Attended</span>
-                                    <span class="text-muted" invisible="state != 'cancel'">Cancelled</span>
-                                </div>
                             </t>
-                            <a class="btn btn-secondary d-flex justify-content-center align-items-center h-100 w-100"
-                                string="Previous state" name="action_set_previous_state" type="object" role="button"
-                                invisible="state in ('cancel', 'draft')">
-                                <i class="fa fa-undo fa-3x" role="img" aria-label="Previous state button" title="Previous state"/>
-                            </a>
                         </div>
                     </t>
                     <t t-name="kanban-box">
@@ -194,13 +180,14 @@
                                     <div class="oe_kanban_content h-100">
                                         <div class="o_kanban_record_body h-100 d-flex flex-column">
                                             <b class="o_kanban_record_title"><field name="name"/></b>
-                                            <field class="o_text_overflow text-primary" name="event_id" invisible="context.get('default_event_id')" readonly="state != 'draft'"/>
+                                            <div class="o_kanban_event_registration_event_name">
+                                                <field class="o_text_overflow text-primary" name="event_id" invisible="context.get('default_event_id')"/>
+                                            </div>
                                             <span class="o_text_overflow" invisible="not company_name">
                                                 <i class="fa fa-building" title="Attendee Company"/> <field name="company_name"/>
                                             </span>
-                                            <span class="o_text_overflow" invisible="not partner_id">Booked by <field name="partner_id" /></span>
                                             <div id="event_ticket_id" class="o_field_many2many_tags o_field_widget d-flex mt-auto align-items-center">
-                                            <field name="registration_properties"/>
+                                                <field name="registration_properties"/>
                                                 <t t-if="record.event_ticket_id.raw_value">
                                                     <i class="fa fa-ticket" title="Ticket type"/>
                                                     <b><span class="o_badge_text o_text_overflow ms-1"><t t-out="record.event_ticket_id.value"/></span></b>
