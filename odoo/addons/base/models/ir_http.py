@@ -153,7 +153,10 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _authenticate(cls, endpoint):
         auth = 'none' if http.is_cors_preflight(request, endpoint) else endpoint.routing['auth']
+        cls._authenticate_explicit(auth)
 
+    @classmethod
+    def _authenticate_explicit(cls, auth):
         try:
             if request.session.uid is not None:
                 if not security.check_session(request.session, request.env):
