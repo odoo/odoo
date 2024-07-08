@@ -24,34 +24,52 @@
         color: #939393;
     }
 
+    .o_event_badge_font_small {
+        @include font-size(.8rem);
+    }
+
     .o_event_badge_logo {
-        max-height: 116px;
+        max-height: 84px;
         max-width: 174px;
     }
+}
+
+.o_event_badge_ticket_center_vertically {
+    top: 50%;
+    -moz-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
 }
 
 /* EVENT BADGE : A4 FOLDABLE (A4_french_fold) */
 
 .o_event_foldable_badge_container {
 
+    .o_event_foldable_badge_left_quarter {
+        border-right: .75mm dotted lightgray;
+    }
+
     .o_event_foldable_badge_bottom_row {
-        margin-top: 1mm;
-        .o_event_foldable_badge_bottom_quarter {
-            height: 148mm;
-            -moz-transform: rotate(180deg);
-            -webkit-transform: rotate(180deg);
-            -ms-transform: rotate(180deg);
-            transform: rotate(180deg);
+        border-top: .75mm dotted black;
+        margin-top: .25mm;
+        .o_event_foldable_badge_bottom_left {
+            .o_event_foldable_badge_answer {
+                border-radius: 6px;
+            }
         }
     }
 
-    .o_event_foldable_badge_back {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        -moz-transform: translate(-50%, -50%);
-        -webkit-transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
+    .o_event_foldable_badge_instructions {
+        background-color: white;
+        .o_event_foldable_badge_step {
+            position: absolute;
+            padding: 3px 5px;
+            margin-top: 5mm;
+            margin-left: 5mm;
+            border-radius: 50%;
+            background-color: black;
+            color: white;
+        }
     }
 }
