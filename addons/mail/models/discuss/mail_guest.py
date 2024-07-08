@@ -4,16 +4,16 @@ import pytz
 import uuid
 from datetime import datetime, timedelta
 from functools import wraps
-from inspect import Parameter, signature
 
 import odoo
-from odoo.tools import consteq, get_lang
+from odoo.tools import consteq
 from odoo import _, api, fields, models
 from odoo.http import request
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
 from odoo.addons.bus.models.bus_presence import AWAY_TIMER, DISCONNECTION_TIMER
 from odoo.addons.bus.websocket import wsrequest
+from odoo.addons.mail.tools.discuss import Store
 
 
 def add_guest_to_context(func):
@@ -127,10 +127,9 @@ class MailGuest(models.Model):
         """
         self.env.cr.execute(query, (timezone, self.id))
 
-    def _guest_format(self, fields=None):
+    def _to_store(self, store: Store, /, *, fields=None):
         if not fields:
             fields = {'id': True, 'name': True, 'im_status': True, "write_date": True}
-        guests_formatted_data = {}
         for guest in self:
             data = {}
             if 'id' in fields:
@@ -142,8 +141,7 @@ class MailGuest(models.Model):
             if "write_date" in fields:
                 data["write_date"] = odoo.fields.Datetime.to_string(guest.write_date)
             data['type'] = "guest"
-            guests_formatted_data[guest] = data
-        return guests_formatted_data
+            store.add("Persona", data)
 
     def _set_auth_cookie(self):
         """Add a cookie to the response to identify the guest. Every route

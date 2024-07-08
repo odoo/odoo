@@ -244,13 +244,8 @@ class ChannelMember(models.Model):
                     )
                     data["persona"] = {"id": member.partner_id.id, "type": "partner"}
                 if member.guest_id:
-                    # sudo: mail.guest - reading _guest_format related to a member is considered acceptable
-                    store.add(
-                        "Persona",
-                        member.guest_id.sudo()
-                        ._guest_format(fields=fields.get("persona", {}).get("guest"))
-                        .get(member.guest_id),
-                    )
+                    # sudo: mail.guest - reading guest related to a member is considered acceptable
+                    store.add(member.guest_id.sudo(), fields=fields.get("persona", {}).get("guest"))
                     data["persona"] = {"id": member.guest_id.id, "type": "guest"}
             if 'custom_notifications' in fields:
                 data['custom_notifications'] = member.custom_notifications

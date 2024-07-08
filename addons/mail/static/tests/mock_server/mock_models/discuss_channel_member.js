@@ -143,10 +143,7 @@ export class DiscussChannelMember extends models.ServerModel {
                     data.persona = { id: member.partner_id, type: "partner" };
                 }
                 if (member.guest_id) {
-                    store.add(
-                        "Persona",
-                        MailGuest._guest_format([member.guest_id])[member.guest_id]
-                    );
+                    store.add(MailGuest.browse(member.guest_id));
                     data.persona = { id: member.guest_id, type: "guest" };
                 }
             }
