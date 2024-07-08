@@ -22,7 +22,11 @@ import {
 } from "@spreadsheet/../tests/helpers/getters";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import { addGlobalFilter, setCellContent } from "@spreadsheet/../tests/helpers/commands";
+import {
+    addGlobalFilter,
+    setCellContent,
+    updatePivot,
+} from "@spreadsheet/../tests/helpers/commands";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 
 import { user } from "@web/core/user";
@@ -808,15 +812,19 @@ test("Can group by many2many field ", async () => {
 });
 
 test("PIVOT.HEADER grouped by date field without value", async function () {
-    for (const interval of ["day", "week", "month", "quarter", "year"]) {
-        const { model } = await createSpreadsheetWithPivot({
-            arch: /* xml */ `
-                    <pivot>
-                        <field name="date" interval="${interval}" type="col"/>
-                        <field name="foo" type="measure"/>
-                    </pivot>`,
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+                <pivot>
+                    <field name="date" interval="year" type="col"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+    });
+    for (const granularity of ["day", "week", "month", "quarter"]) {
+        updatePivot(model, pivotId, {
+            columns: [{ name: "date", granularity, order: "asc" }],
         });
-        setCellContent(model, "A1", `=PIVOT.HEADER(1, "date:${interval}", "false")`);
+        await animationFrame();
+        setCellContent(model, "A1", `=PIVOT.HEADER(1, "date:${granularity}", "false")`);
         expect(getCellValue(model, "A1")).toBe("None");
     }
 });
@@ -866,6 +874,24 @@ test("PIVOT formulas with monetary measure are correctly formatted at evaluation
     expect(getEvaluatedCell(model, "B3").format).toBe("#,##0.00[$€]");
 });
 
+test("PIVOT.HEADER day_of_month are correctly formatted at evaluation", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+                <pivot>
+                    <field name="date" interval="day" type="col"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+    });
+    updatePivot(model, pivotId, {
+        columns: [{ name: "date", granularity: "day_of_month", order: "asc" }],
+    });
+    await animationFrame();
+    setCellContent(model, "B1", `=PIVOT.HEADER(1, "date:day_of_month", 1)`);
+    expect(getEvaluatedCell(model, "B1").format).toBe("0");
+    expect(getEvaluatedCell(model, "B1").value).toBe(1);
+    expect(getEvaluatedCell(model, "B1").formattedValue).toBe("1");
+});
+
 test("PIVOT.HEADER day are correctly formatted at evaluation", async function () {
     const { model } = await createSpreadsheetWithPivot({
         arch: /* xml */ `
@@ -877,6 +903,24 @@ test("PIVOT.HEADER day are correctly formatted at evaluation", async function ()
     expect(getEvaluatedCell(model, "B1").format).toBe("m/d/yyyy");
     expect(getEvaluatedCell(model, "B1").value).toBe(42474);
     expect(getEvaluatedCell(model, "B1").formattedValue).toBe("4/14/2016");
+});
+
+test("PIVOT.HEADER iso_week_number are correctly formatted at evaluation", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+                <pivot>
+                    <field name="date" interval="day" type="col"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+    });
+    updatePivot(model, pivotId, {
+        columns: [{ name: "date", granularity: "iso_week_number", order: "asc" }],
+    });
+    await animationFrame();
+    setCellContent(model, "B1", `=PIVOT.HEADER(1, "date:iso_week_number", 1)`);
+    expect(getEvaluatedCell(model, "B1").format).toBe("0");
+    expect(getEvaluatedCell(model, "B1").value).toBe(1);
+    expect(getEvaluatedCell(model, "B1").formattedValue).toBe("1");
 });
 
 test("PIVOT.HEADER week are correctly formatted at evaluation", async function () {
@@ -892,6 +936,24 @@ test("PIVOT.HEADER week are correctly formatted at evaluation", async function (
     expect(getEvaluatedCell(model, "B1").formattedValue).toBe("W15 2016");
 });
 
+test("PIVOT.HEADER month_number are correctly formatted at evaluation", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+                <pivot>
+                    <field name="date" interval="day" type="col"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+    });
+    updatePivot(model, pivotId, {
+        columns: [{ name: "date", granularity: "month_number", order: "asc" }],
+    });
+    await animationFrame();
+    setCellContent(model, "B1", `=PIVOT.HEADER(1, "date:month_number", 1)`);
+    expect(getEvaluatedCell(model, "B1").format).toBe("0");
+    expect(getEvaluatedCell(model, "B1").value).toBe("January");
+    expect(getEvaluatedCell(model, "B1").formattedValue).toBe("January");
+});
+
 test("PIVOT.HEADER month are correctly formatted at evaluation", async function () {
     const { model } = await createSpreadsheetWithPivot({
         arch: /* xml */ `
@@ -903,6 +965,24 @@ test("PIVOT.HEADER month are correctly formatted at evaluation", async function 
     expect(getEvaluatedCell(model, "B1").format).toBe("mmmm yyyy");
     expect(getEvaluatedCell(model, "B1").value).toBe(42461);
     expect(getEvaluatedCell(model, "B1").formattedValue).toBe("April 2016");
+});
+
+test("PIVOT.HEADER quarter_number are correctly formatted at evaluation", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+                <pivot>
+                    <field name="date" interval="day" type="col"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+    });
+    updatePivot(model, pivotId, {
+        columns: [{ name: "date", granularity: "quarter_number", order: "asc" }],
+    });
+    await animationFrame();
+    setCellContent(model, "B1", `=PIVOT.HEADER(1, "date:quarter_number", 1)`);
+    expect(getEvaluatedCell(model, "B1").format).toBe("0");
+    expect(getEvaluatedCell(model, "B1").value).toBe("Q1");
+    expect(getEvaluatedCell(model, "B1").formattedValue).toBe("Q1");
 });
 
 test("PIVOT.HEADER quarter are correctly formatted at evaluation", async function () {

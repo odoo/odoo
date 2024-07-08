@@ -343,18 +343,12 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
         /** @type {SortedColumn} */
         this._sortedColumn = definition.sortedColumn;
         for (const dimension of this.columns.concat(this.rows)) {
-            /**
-             * month_number is currently not supported in Odoo, remove it
-             */
-            if (dimension.granularity === "month_number") {
-                dimension.granularity = undefined;
-                dimension.nameWithGranularity = dimension.name;
-            }
             if (
                 (dimension.type === "date" || dimension.type === "datetime") &&
                 !dimension.granularity
             ) {
                 dimension.granularity = "month";
+                dimension.nameWithGranularity = `${dimension.name}:month`;
             }
         }
     }
@@ -410,7 +404,17 @@ pivotRegistry.add("ODOO", {
     definition: OdooPivotRuntimeDefinition,
     externalData: true,
     onIterationEndEvaluation: () => {},
-    granularities: ["year", "quarter", "month", "week", "day"],
+    granularities: [
+        "year",
+        "quarter_number",
+        "quarter",
+        "month_number",
+        "month",
+        "iso_week_number",
+        "week",
+        "day_of_month",
+        "day",
+    ],
     isMeasureCandidate: (field) =>
         ((MEASURES_TYPES.includes(field.type) && field.aggregator) || field.type === "many2one") &&
         field.name !== "id" &&
