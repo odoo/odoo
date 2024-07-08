@@ -5,6 +5,7 @@ import pytz
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 from uuid import uuid4
+from requests import HTTPError
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
@@ -271,6 +272,34 @@ class Meeting(models.Model):
                     )
                 commands += [(0, 0, {'duration': duration, 'interval': interval, 'name': name, 'alarm_type': alarm_type})]
         return commands
+
+    def action_synchronize_google_events(self, google_service=GoogleCalendarService):
+        """ Synchronize events with Google Calendar. """
+        # Check if user synchronization status is active before trying to synchronize events.
+        records_to_sync = self.filtered(lambda ev: ev.active)
+        if not self.env.user.is_google_calendar_synced():
+            raise ValidationError(_('An active synchronization with Google Calendar is needed for synchronizing events.'))
+        elif not records_to_sync:
+            raise ValidationError(_('You need to select active Odoo events for synchronizing them with Google Calendar.'))
+
+        try:
+            # Try synchronizing the events with Google Calendar.
+            records_to_sync._sync_odoo2google(GoogleCalendarService(self.env['google.service']))
+            return_type = 'success'
+            return_message = 'Success! The selected events are now synchronized with Google Calendar.'
+        except HTTPError as error:
+            # Catch possible request error during events synchronization.
+            return_type = 'warning'
+            return_message = 'Please try again later, an error occurred trying to synchronize the selected events: ' + str(error)
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'message': _(return_message),
+                'type': return_type,
+            }
+        }
 
     def action_mass_archive(self, recurrence_update_setting):
         """ Delete recurrence in Odoo if in 'all_events' or in 'future_events' edge case, triggering one mail. """
