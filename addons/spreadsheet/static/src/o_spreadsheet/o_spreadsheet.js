@@ -8248,15 +8248,6 @@
         }
         const colors = new ChartColors();
         for (let [index, { label, data }] of dataSetsValues.entries()) {
-            if (["linear", "time"].includes(axisType)) {
-                // Replace empty string labels by undefined to make sure chartJS doesn't decide that "" is the same as 0
-                data = data.map((y, index) => ({ x: labels[index] || undefined, y }));
-            }
-            const color = colors.next();
-            let backgroundRGBA = colorToRGBA(color);
-            if (chart.stacked) {
-                backgroundRGBA.a = LINE_FILL_TRANSPARENCY;
-            }
             if (chart.cumulative) {
                 let accumulator = 0;
                 data = data.map((value) => {
@@ -8266,6 +8257,15 @@
                     }
                     return value;
                 });
+            }
+            if (["linear", "time"].includes(axisType)) {
+                // Replace empty string labels by undefined to make sure chartJS doesn't decide that "" is the same as 0
+                data = data.map((y, index) => ({ x: labels[index] || undefined, y }));
+            }
+            const color = colors.next();
+            let backgroundRGBA = colorToRGBA(color);
+            if (chart.stacked) {
+                backgroundRGBA.a = LINE_FILL_TRANSPARENCY;
             }
             const backgroundColor = rgbaToHex(backgroundRGBA);
             const dataset = {
@@ -11388,6 +11388,9 @@
         return result;
     }
     function operandToRegExp(operand) {
+        if (operand === "*") {
+            return /.+/;
+        }
         let exp = "";
         let predecessor = "";
         for (let char of operand) {
@@ -11411,9 +11414,9 @@
         }
         return new RegExp("^" + exp + "$", "i");
     }
-    function evaluatePredicate(value, criterion) {
+    function evaluatePredicate(value = "", criterion) {
         const { operator, operand } = criterion;
-        if (value === undefined || operand === undefined) {
+        if (operand === undefined) {
             return false;
         }
         if (typeof operand === "number" && operator === "=") {
@@ -18402,6 +18405,147 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         return null;
     }
 
+    var State;
+    (function (State) {
+        /**
+         * Initial state.
+         * Expecting any reference for the left part of a range
+         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
+         */
+        State[State["LeftRef"] = 0] = "LeftRef";
+        /**
+         * Expecting any reference for the right part of a range
+         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
+         */
+        State[State["RightRef"] = 1] = "RightRef";
+        /**
+         * Expecting the separator without any constraint on the right part
+         */
+        State[State["Separator"] = 2] = "Separator";
+        /**
+         * Expecting the separator for a full column range
+         */
+        State[State["FullColumnSeparator"] = 3] = "FullColumnSeparator";
+        /**
+         * Expecting the separator for a full row range
+         */
+        State[State["FullRowSeparator"] = 4] = "FullRowSeparator";
+        /**
+         * Expecting the right part of a full column range
+         * e.g. "1", "A1"
+         */
+        State[State["RightColumnRef"] = 5] = "RightColumnRef";
+        /**
+         * Expecting the right part of a full row range
+         * e.g. "A", "A1"
+         */
+        State[State["RightRowRef"] = 6] = "RightRowRef";
+        /**
+         * Final state. A range has been matched
+         */
+        State[State["Found"] = 7] = "Found";
+    })(State || (State = {}));
+    const goTo = (state, guard = () => true) => [
+        {
+            goTo: state,
+            guard,
+        },
+    ];
+    const goToMulti = (state, guard = () => true) => ({
+        goTo: state,
+        guard,
+    });
+    const machine = {
+        [State.LeftRef]: {
+            REFERENCE: goTo(State.Separator),
+            NUMBER: goTo(State.FullRowSeparator),
+            SYMBOL: [
+                goToMulti(State.FullColumnSeparator, (token) => isColReference(token.value)),
+                goToMulti(State.FullRowSeparator, (token) => isRowReference(token.value)),
+            ],
+        },
+        [State.FullColumnSeparator]: {
+            SPACE: goTo(State.FullColumnSeparator),
+            OPERATOR: goTo(State.RightColumnRef, (token) => token.value === ":"),
+        },
+        [State.FullRowSeparator]: {
+            SPACE: goTo(State.FullRowSeparator),
+            OPERATOR: goTo(State.RightRowRef, (token) => token.value === ":"),
+        },
+        [State.Separator]: {
+            SPACE: goTo(State.Separator),
+            OPERATOR: goTo(State.RightRef, (token) => token.value === ":"),
+        },
+        [State.RightRef]: {
+            SPACE: goTo(State.RightRef),
+            NUMBER: goTo(State.Found),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value) || isRowHeader(token.value)),
+        },
+        [State.RightColumnRef]: {
+            SPACE: goTo(State.RightColumnRef),
+            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+        },
+        [State.RightRowRef]: {
+            SPACE: goTo(State.RightRowRef),
+            NUMBER: goTo(State.Found),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+            SYMBOL: goTo(State.Found, (token) => isRowHeader(token.value)),
+        },
+        [State.Found]: {},
+    };
+    /**
+     * Check if the list of tokens starts with a sequence of tokens representing
+     * a range.
+     * If a range is found, the sequence is removed from the list and is returned
+     * as a single token.
+     */
+    function matchReference(tokens) {
+        var _a;
+        let head = 0;
+        let transitions = machine[State.LeftRef];
+        let matchedTokens = "";
+        while (transitions !== undefined) {
+            const token = tokens[head++];
+            if (!token) {
+                return null;
+            }
+            const transition = (_a = transitions[token.type]) === null || _a === void 0 ? void 0 : _a.find((transition) => transition.guard(token));
+            const nextState = transition ? transition.goTo : undefined;
+            switch (nextState) {
+                case undefined:
+                    return null;
+                case State.Found:
+                    matchedTokens += token.value;
+                    tokens.splice(0, head);
+                    return {
+                        type: "REFERENCE",
+                        value: matchedTokens,
+                    };
+                default:
+                    transitions = machine[nextState];
+                    matchedTokens += token.value;
+                    break;
+            }
+        }
+        return null;
+    }
+    /**
+     * Take the result of the tokenizer and transform it to be usable in the
+     * manipulations of range
+     *
+     * @param formula
+     */
+    function rangeTokenize(formula) {
+        const tokens = tokenize(formula);
+        const result = [];
+        while (tokens.length) {
+            result.push(matchReference(tokens) || tokens.shift());
+        }
+        return result;
+    }
+
     const functionRegex = /[a-zA-Z0-9\_]+(\.[a-zA-Z0-9\_]+)*/;
     const UNARY_OPERATORS_PREFIX = ["-", "+"];
     const UNARY_OPERATORS_POSTFIX = ["%"];
@@ -18568,7 +18712,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * Parse an expression (as a string) into an AST.
      */
     function parse(str) {
-        return parseTokens(tokenize(str));
+        return parseTokens(rangeTokenize(str));
     }
     function parseTokens(tokens) {
         tokens = tokens.filter((x) => x.type !== "SPACE");
@@ -18678,147 +18822,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             needParenthesis = true;
         }
         return needParenthesis ? `(${astToFormula(rightOperation)})` : astToFormula(rightOperation);
-    }
-
-    var State;
-    (function (State) {
-        /**
-         * Initial state.
-         * Expecting any reference for the left part of a range
-         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
-         */
-        State[State["LeftRef"] = 0] = "LeftRef";
-        /**
-         * Expecting any reference for the right part of a range
-         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
-         */
-        State[State["RightRef"] = 1] = "RightRef";
-        /**
-         * Expecting the separator without any constraint on the right part
-         */
-        State[State["Separator"] = 2] = "Separator";
-        /**
-         * Expecting the separator for a full column range
-         */
-        State[State["FullColumnSeparator"] = 3] = "FullColumnSeparator";
-        /**
-         * Expecting the separator for a full row range
-         */
-        State[State["FullRowSeparator"] = 4] = "FullRowSeparator";
-        /**
-         * Expecting the right part of a full column range
-         * e.g. "1", "A1"
-         */
-        State[State["RightColumnRef"] = 5] = "RightColumnRef";
-        /**
-         * Expecting the right part of a full row range
-         * e.g. "A", "A1"
-         */
-        State[State["RightRowRef"] = 6] = "RightRowRef";
-        /**
-         * Final state. A range has been matched
-         */
-        State[State["Found"] = 7] = "Found";
-    })(State || (State = {}));
-    const goTo = (state, guard = () => true) => [
-        {
-            goTo: state,
-            guard,
-        },
-    ];
-    const goToMulti = (state, guard = () => true) => ({
-        goTo: state,
-        guard,
-    });
-    const machine = {
-        [State.LeftRef]: {
-            REFERENCE: goTo(State.Separator),
-            NUMBER: goTo(State.FullRowSeparator),
-            SYMBOL: [
-                goToMulti(State.FullColumnSeparator, (token) => isColReference(token.value)),
-                goToMulti(State.FullRowSeparator, (token) => isRowReference(token.value)),
-            ],
-        },
-        [State.FullColumnSeparator]: {
-            SPACE: goTo(State.FullColumnSeparator),
-            OPERATOR: goTo(State.RightColumnRef, (token) => token.value === ":"),
-        },
-        [State.FullRowSeparator]: {
-            SPACE: goTo(State.FullRowSeparator),
-            OPERATOR: goTo(State.RightRowRef, (token) => token.value === ":"),
-        },
-        [State.Separator]: {
-            SPACE: goTo(State.Separator),
-            OPERATOR: goTo(State.RightRef, (token) => token.value === ":"),
-        },
-        [State.RightRef]: {
-            SPACE: goTo(State.RightRef),
-            NUMBER: goTo(State.Found),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value) || isRowHeader(token.value)),
-        },
-        [State.RightColumnRef]: {
-            SPACE: goTo(State.RightColumnRef),
-            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-        },
-        [State.RightRowRef]: {
-            SPACE: goTo(State.RightRowRef),
-            NUMBER: goTo(State.Found),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-            SYMBOL: goTo(State.Found, (token) => isRowHeader(token.value)),
-        },
-        [State.Found]: {},
-    };
-    /**
-     * Check if the list of tokens starts with a sequence of tokens representing
-     * a range.
-     * If a range is found, the sequence is removed from the list and is returned
-     * as a single token.
-     */
-    function matchReference(tokens) {
-        var _a;
-        let head = 0;
-        let transitions = machine[State.LeftRef];
-        let matchedTokens = "";
-        while (transitions !== undefined) {
-            const token = tokens[head++];
-            if (!token) {
-                return null;
-            }
-            const transition = (_a = transitions[token.type]) === null || _a === void 0 ? void 0 : _a.find((transition) => transition.guard(token));
-            const nextState = transition ? transition.goTo : undefined;
-            switch (nextState) {
-                case undefined:
-                    return null;
-                case State.Found:
-                    matchedTokens += token.value;
-                    tokens.splice(0, head);
-                    return {
-                        type: "REFERENCE",
-                        value: matchedTokens,
-                    };
-                default:
-                    transitions = machine[nextState];
-                    matchedTokens += token.value;
-                    break;
-            }
-        }
-        return null;
-    }
-    /**
-     * Take the result of the tokenizer and transform it to be usable in the
-     * manipulations of range
-     *
-     * @param formula
-     */
-    function rangeTokenize(formula) {
-        const tokens = tokenize(formula);
-        const result = [];
-        while (tokens.length) {
-            result.push(matchReference(tokens) || tokens.shift());
-        }
-        return result;
     }
 
     const functions$2 = functionRegistry.content;
@@ -27604,6 +27607,22 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return Object.keys(sheetBorders).map((index) => parseInt(index, 10));
         }
         /**
+         * Get all the rows which contains at least a border
+         */
+        getRowsWithBorders(sheetId) {
+            var _a;
+            const sheetBorders = (_a = this.borders[sheetId]) === null || _a === void 0 ? void 0 : _a.filter(isDefined$1);
+            if (!sheetBorders)
+                return [];
+            const rowsWithBorders = new Set();
+            for (const rowBorders of sheetBorders) {
+                for (const rowBorder in rowBorders) {
+                    rowsWithBorders.add(parseInt(rowBorder, 10));
+                }
+            }
+            return Array.from(rowsWithBorders);
+        }
+        /**
          * Get the range of all the rows in the sheet
          */
         getRowsRange(sheetId) {
@@ -27652,7 +27671,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     destructive: false,
                 });
             }
-            this.getRowsRange(sheetId)
+            this.getRowsWithBorders(sheetId)
                 .filter((row) => row >= start)
                 .sort((a, b) => (delta < 0 ? a - b : b - a)) // start by the end when moving up
                 .forEach((row) => {
@@ -43416,9 +43435,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.46';
-    __info__.date = '2024-07-02T10:41:22.758Z';
-    __info__.hash = 'd52d430';
+    __info__.version = '16.0.47';
+    __info__.date = '2024-07-08T05:55:12.647Z';
+    __info__.hash = 'f52ca6f';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
