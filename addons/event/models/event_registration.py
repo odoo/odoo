@@ -249,10 +249,6 @@ class EventRegistration(models.Model):
     # ACTIONS / BUSINESS
     # ------------------------------------------------------------
 
-    def action_set_previous_state(self):
-        self.filtered(lambda reg: reg.state == 'open').action_set_draft()
-        self.filtered(lambda reg: reg.state == 'done').action_confirm()
-
     def action_set_draft(self):
         self.write({'state': 'draft'})
 
