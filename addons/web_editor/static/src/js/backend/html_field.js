@@ -390,7 +390,7 @@ export class HtmlField extends Component {
                     // Avoid listening to changes made during the _toInline process.
                     toInlinePromise = this._toInline();
                 }
-                if (urgent) {
+                if (urgent && status(this) !== 'destroyed') {
                     await this.updateValue();
                 }
                 await savePendingImagesPromise;
