@@ -8306,6 +8306,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         this.selectStyle(false, combined, {
             cssProperty: 'background-image',
         });
+        this.options.wysiwyg.odooEditor.editable.focus();
     },
 });
 
