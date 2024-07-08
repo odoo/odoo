@@ -695,6 +695,28 @@ class TestApplyInheritanceMoveSpecs(ViewCase):
             )
         )
 
+    def test_move_with_tail(self):
+        moved_paragraph_xpath = E.xpath(expr="//p", position="move")
+        moved_paragraph_xpath.tail = "tail of paragraph"
+        spec = E.xpath(
+            E.p("Content2", {'class': 'new_p'}),
+            moved_paragraph_xpath,
+            expr="//div[@class='target']", position="after")
+
+        self.apply_spec(self.wrapped_arch, spec)
+
+        moved_paragraph = E.p("Content", {'class': 'some'})
+        moved_paragraph.tail = "tail of paragraph"
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.div({'class': 'target'}),
+                E.p("Content2", {'class': 'new_p'}),
+                moved_paragraph,
+            )
+        )
+
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_incorrect_move_1(self):
         # cannot move an inexisting element
