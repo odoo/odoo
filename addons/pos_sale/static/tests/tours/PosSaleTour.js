@@ -201,3 +201,16 @@ registry
             ProductScreen.controlButton("Save"),
         ].flat(),
     });
+
+registry
+    .category("web_tour.tours")
+    .add('PoSSaleOrderWithDownpayment', {
+        test: true,
+        steps: () => [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.selectedOrderlineHas('Down Payment (POS)', '1.00', '20.00'),
+            ProductScreen.totalAmountIs(980.0)
+        ].flat(),
+    });

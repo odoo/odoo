@@ -540,3 +540,32 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.env['pos.order'].create_from_ui([pos_order])
         self.assertEqual(sale_order.order_line[0].untaxed_amount_invoiced, 10, "Untaxed invoiced amount should be 10")
         self.assertEqual(sale_order.order_line[1].untaxed_amount_invoiced, 0, "Untaxed invoiced amount should be 0")
+
+    def test_so_with_downpayment(self):
+        self.product_a.available_in_pos = True
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 10.0,
+                    'product_uom': self.product_a.uom_id.id,
+                    'price_unit': 100,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+
+        down_payment = self.env['sale.advance.payment.inv'].create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 20,
+            'sale_order_ids': so.ids,
+        })
+        down_payment.create_invoices()
+        # Invoice the delivered part from the down payment
+        down_payment_invoices = so.invoice_ids
+        down_payment_invoices.action_post()
+        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSSaleOrderWithDownpayment', login="accountman")
