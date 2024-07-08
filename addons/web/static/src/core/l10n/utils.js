@@ -17,14 +17,18 @@
  *  language[_territory][.codeset][@modifier]
  *
  * @param {string} locale The locale formatted for use on the Python-side.
- * @returns {string} The locale formatted for use on the JavaScript-side.
+ * @returns {string} The locale formatted for use on the JavaScript-side. If the
+ * given locale can't be parsed, it simply returns it as is.
  */
 export function pyToJsLocale(locale) {
     if (!locale) {
         return "";
     }
-    const regex = /^([a-z]+)(_[A-Z\d]+)?(@.+)?$/;
-    const [, language, territory, modifier] = locale.match(regex);
+    const match = locale.match(/^([a-z]+)(_[A-Z\d]+)?(@.+)?$/);
+    if (!match) {
+        return locale;
+    }
+    const [, language, territory, modifier] = match;
     const subtags = [language];
     if (modifier === "@latin") {
         subtags.push("Latn");
