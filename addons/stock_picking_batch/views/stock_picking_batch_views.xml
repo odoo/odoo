@@ -100,12 +100,10 @@
                         <h1><field name="name" class="oe_inline"/></h1>
                     </div>
                     <group>
-                        <group>
+                        <group id="batch_delivery_data">
                             <field name="user_id" readonly="state not in ['draft', 'in_progress']"/>
                             <field name="picking_type_id" readonly="state != 'draft'"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="picking_ids" force_save="1"/>
-                        </group>
-                        <group>
                             <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
                         </group>
                     </group>
@@ -128,6 +126,7 @@
             </form>
         </field>
     </record>
+
     <record id="stock_picking_batch_tree" model="ir.ui.view">
         <field name="name">stock.picking.batch.tree</field>
         <field name="model">stock.picking.batch</field>
@@ -144,6 +143,7 @@
             </tree>
         </field>
     </record>
+
     <record id="stock_picking_batch_kanban" model="ir.ui.view">
         <field name="name">stock.picking.batch.kanban</field>
         <field name="model">stock.picking.batch</field>
@@ -176,6 +176,18 @@
             </kanban>
         </field>
     </record>
+
+    <record model="ir.ui.view" id="stock_picking_batch_calendar">
+        <field name="name">stock.picking.batch.calendar</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <calendar string="Calendar View" date_start="scheduled_date" event_limit="5" quick_create="0">
+                <field name="scheduled_date"/>
+            </calendar>
+        </field>
+    </record>
+
     <record id="stock_picking_batch_filter" model="ir.ui.view">
         <field name="name">stock.picking.batch.filter</field>
         <field name="model">stock.picking.batch</field>
@@ -205,6 +217,7 @@
            </search>
         </field>
     </record>
+
     <record id="stock_picking_batch_action" model="ir.actions.act_window">
         <field name="name">Batch Transfers</field>
         <field name="res_model">stock.picking.batch</field>

@@ -53,6 +53,7 @@ class ResConfigSettings(models.TransientModel):
     barcode_separator = fields.Char(
         "Separator", config_parameter='stock.barcode_separator',
         help="Character(s) used to separate data contained within an aggregate barcode (i.e. a barcode containing multiple barcode encodings)")
+    module_stock_fleet = fields.Boolean("Dispatch Management System")
 
     @api.onchange('group_stock_multi_locations')
     def _onchange_group_stock_multi_locations(self):
