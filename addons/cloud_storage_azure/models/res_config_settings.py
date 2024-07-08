@@ -81,9 +81,9 @@ class CloudStorageSettings(models.TransientModel):
         if download_response.status_code != 200:
             raise ValidationError(_('The connection string is not allowed to download blobs from the container.\n%s', str(download_response.text)))
 
-    def _check_cloud_storage_uninstallable(self, provider_name):
-        if provider_name != 'azure':
-            return super()._check_cloud_storage_uninstallable(provider_name)
+    def _check_cloud_storage_uninstallable(self):
+        if self.env['ir.config_parameter'].get_param('cloud_storage_provider') != 'azure':
+            return super()._check_cloud_storage_uninstallable()
         cr = self.env.cr
         cr.execute(
             """
