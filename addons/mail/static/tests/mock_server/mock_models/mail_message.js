@@ -501,4 +501,39 @@ export class MailMessage extends models.ServerModel {
             store.add("Message", message_data);
         }
     }
+
+    _cleanup_side_records([id]) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        const [message] = this._filter([["id", "=", id]]);
+        const outdatedStarredPartners = message.starred_partner_ids
+            ? ResPartner._filter([["id", "in", message.starred_partner_ids]])
+            : [];
+        this.write([id], { starred_partner_ids: [Command.clear()] });
+        if (outdatedStarredPartners.length === 0) {
+            return;
+        }
+        const notifications = [];
+        for (const partner of outdatedStarredPartners) {
+            notifications.push([
+                partner,
+                "mail.record/insert",
+                {
+                    Thread: {
+                        id: "starred",
+                        messages: [["DELETE", { id: message.id }]],
+                        model: "mail.box",
+                        counter: MailMessage._filter([["starred_partner_ids", "in", partner.id]])
+                            .length,
+                        counter_bus_id: this.env["bus.bus"].lastBusNotificationId,
+                    },
+                },
+            ]);
+        }
+        BusBus._sendmany(notifications);
+    }
 }
