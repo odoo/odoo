@@ -5465,6 +5465,14 @@ msgid "No operations found. Let's create a transfer!"
 msgstr "Keine Vorgänge gefunden. Erstellen Sie einen Transfer!"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid "No product found to generate Serials/Lots for."
+msgstr ""
+"Es wurde kein Produkt gefunden, für das eine Serien-/Losnummer generiert "
+"werden kann."
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
 msgstr "Kein Produkt gefunden. Erstellen Sie eins!"
@@ -9119,8 +9127,8 @@ msgid ""
 "There is nothing eligible to put in a pack. Either there are no quantities "
 "to put in a pack or all products are already in a pack."
 msgstr ""
-"Es gibt nichts, was verpacken können. Entweder gibt es keine Mengen, die "
-"verpackt werden können, oder alle Produkte sind bereits in einem Paket."
+"Es gibt nichts zu verpacken. Entweder gibt es keine Mengen, die verpackt "
+"werden können, oder alle Produkte sind bereits verpackt."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -10606,12 +10614,16 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You can not delete moves linked to another operation"
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
 msgstr ""
-"Sie können keine Buchungen löschen, die mit einem anderen Vorgang verknüpft "
-"sind"
+"Sie können keinen schlummernden Beschaffungspunkt erstellen, der nicht "
+"manuell ausgelöst wird."
 
 #. module: stock
 #. odoo-python
@@ -10667,6 +10679,18 @@ msgstr ""
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "Sie können nur 1,0 %s Produkte mit eindeutiger Seriennummer verarbeiten."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"Sie können nur manuelle Beschaffungspunkte schlummern lassen. Sie sollte "
+"Beschaffungspunkte mit „Automatischem Auslöser“ eher archivieren, wenn Sie "
+"nicht möchten, dass sie ausgelöst werden."
 
 #. module: stock
 #. odoo-python
@@ -10779,6 +10803,16 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a scrap which is done."
 msgstr "Sie können keinen Ausschuss löschen, der erledigt ist."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
 
 #. module: stock
 #. odoo-python

@@ -5418,6 +5418,12 @@ msgid "No operations found. Let's create a transfer!"
 msgstr "Не знайдено жодної операції. Давайте створимо переміщення!"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid "No product found to generate Serials/Lots for."
+msgstr "Не знайдено товару для створення серійних/партійних номерів."
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
 msgstr "Не знайдено жодного товару. Створіть його!"
@@ -10514,10 +10520,14 @@ msgstr "Ви не можете змінити тип товару, який вж
 
 #. module: stock
 #. odoo-python
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You can not delete moves linked to another operation"
-msgstr "Ви не можете видалити переміщення, пов'язане з іншою операцією"
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10573,6 +10583,15 @@ msgstr ""
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "Ви можете обробити лише 1.0 %s товарів з унікальним серійним номером."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10684,6 +10703,16 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a scrap which is done."
 msgstr "Ви не можете видалити брак, який є завершеним."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
 
 #. module: stock
 #. odoo-python

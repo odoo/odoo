@@ -5442,6 +5442,12 @@ msgid "No operations found. Let's create a transfer!"
 msgstr "Geen bewerkingen gevonden. Laten we een overdracht maken!"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid "No product found to generate Serials/Lots for."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
 msgstr "Geen product gevonden. Maak er één aan!"
@@ -10556,12 +10562,14 @@ msgstr "Je kunt het soort product dat al in gebruik is niet wijzigen."
 
 #. module: stock
 #. odoo-python
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You can not delete moves linked to another operation"
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
 msgstr ""
-"Je kan geen verplaatsingen verwijderen die gekoppeld zijn aan een andere "
-"bewerking"
 
 #. module: stock
 #. odoo-python
@@ -10617,6 +10625,15 @@ msgstr ""
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "Je kunt slechts 1.0 %s verwerken van producten met een unieke serienummer."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10731,6 +10748,16 @@ msgstr ""
 msgid "You cannot delete a scrap which is done."
 msgstr ""
 "Het is niet mogelijk een afkeuring te verwijderen welke al verwerkt is."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
 
 #. module: stock
 #. odoo-python
