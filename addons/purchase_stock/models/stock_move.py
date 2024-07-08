@@ -3,6 +3,7 @@
 from collections import deque
 
 from odoo import api, Command, fields, models, _
+from odoo.tools import str2bool
 from odoo.tools.float_utils import float_round, float_is_zero, float_compare
 from odoo.exceptions import UserError
 
@@ -26,7 +27,7 @@ class StockMove(models.Model):
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
         excluded_fields = super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_id']
-        if self.env['ir.config_parameter'].sudo().get_param('purchase_stock.merge_different_procurement'):
+        if str2bool(self.env['ir.config_parameter'].sudo().get_param('purchase_stock.merge_different_procurement')):
             excluded_fields += ['procure_method']
         return excluded_fields
 
