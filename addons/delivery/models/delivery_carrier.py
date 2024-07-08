@@ -115,12 +115,10 @@ class DeliveryCarrier(models.Model):
                 raise UserError(_("Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags.") % carrier.name)
 
     def _compute_weight_uom_name(self):
-        for carrier in self:
-            carrier.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+        self.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
 
     def _compute_volume_uom_name(self):
-        for carrier in self:
-            carrier.volume_uom_name = self.env['product.template']._get_volume_uom_name_from_ir_config_parameter()
+        self.volume_uom_name = self.env['product.template']._get_volume_uom_name_from_ir_config_parameter()
 
     @api.depends('delivery_type')
     def _compute_can_generate_return(self):

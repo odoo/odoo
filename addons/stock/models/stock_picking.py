@@ -672,6 +672,8 @@ class Picking(models.Model):
         help="Total weight of packages and products not in a package. "
         "Packages with no shipping weight specified will default to their products' total weight. "
         "This is the weight used to compute the cost of the shipping.")
+    shipping_volume = fields.Float(
+        "Volume for Shipping", compute="_compute_shipping_volume")
 
     # Used to search on pickings
     product_id = fields.Many2one('product.product', 'Product', related='move_ids.product_id', readonly=True)
@@ -859,6 +861,13 @@ class Picking(models.Model):
                 picking.weight_bulk +
                 sum(pack.shipping_weight or pack.weight for pack in picking.move_line_ids.result_package_id.sudo())
             )
+
+    def _compute_shipping_volume(self):
+        for picking in self:
+            volume = 0
+            for move in picking.move_ids:
+                volume += move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
+            picking.shipping_volume = volume
 
     @api.depends('move_ids.date_deadline', 'move_type')
     def _compute_date_deadline(self):
