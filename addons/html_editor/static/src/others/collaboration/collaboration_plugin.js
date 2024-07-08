@@ -17,7 +17,7 @@ export class CollaborationPlugin extends Plugin {
     static resources = (p) => ({
         set_attribute: p.setAttribute.bind(p),
         process_history_step: p.processHistoryStep.bind(p),
-        is_revertable_step: p.isRevertableStep.bind(p),
+        is_reversible_step: p.isReversibleStep.bind(p),
     });
     static shared = [
         //
@@ -69,7 +69,7 @@ export class CollaborationPlugin extends Plugin {
     /**
      * @param {number} index
      */
-    isRevertableStep(index) {
+    isReversibleStep(index) {
         const steps = this.shared.getHistorySteps();
         const step = steps[index];
         return step && step.peerId === this.peerId;

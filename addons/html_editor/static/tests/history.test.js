@@ -55,6 +55,18 @@ describe("undo", () => {
             contentAfter: "<p>ab []cd</p>",
         });
     });
+
+    test("should discard draft mutations", async () => {
+        const { el, editor } = await setupEditor(`<p>[]c</p>`);
+        const p = el.querySelector("p");
+        editor.shared.domInsert("a");
+        editor.dispatch("ADD_STEP");
+        p.prepend(document.createTextNode("b"));
+        undo(editor);
+        expect(getContent(el)).toBe(`<p>[]c</p>`);
+        redo(editor);
+        expect(getContent(el)).toBe(`<p>a[]c</p>`);
+    });
 });
 
 describe("redo", () => {
@@ -165,6 +177,20 @@ describe("redo", () => {
             },
             contentAfter: "<p>ad[]</p>",
         });
+    });
+
+    test("should discard draft mutations", async () => {
+        const { el, editor } = await setupEditor(`<p>[]c</p>`);
+        const p = el.querySelector("p");
+        editor.shared.domInsert("a");
+        editor.dispatch("ADD_STEP");
+        undo(editor);
+        expect(getContent(el)).toBe(`<p>[]c</p>`);
+        p.prepend(document.createTextNode("b"));
+        redo(editor);
+        expect(getContent(el)).toBe(`<p>a[]c</p>`);
+        undo(editor);
+        expect(getContent(el)).toBe(`<p>[]c</p>`);
     });
 });
 
@@ -296,7 +322,57 @@ describe("makeSavePoint", () => {
         restore();
         expect(getContent(el)).toBe(`<p>a[b<span style="color: tomato;">c</span>d]e</p>`);
     });
-    test("makeSavePoint should correctly revert mutations (2)", async () => {
+    test("makeSavePoint keeps old draft mutations, discards new ones, and does not add an unnecessary step", async () => {
+        const { el, editor } = await setupEditor(`<p>[]c</p>`);
+        expect(editor.shared.getHistorySteps().length).toBe(1);
+        const p = el.querySelector("p");
+        // draft to save
+        p.append(document.createTextNode("d"));
+        expect(getContent(el)).toBe(`<p>[]cd</p>`);
+        const savepoint = editor.shared.makeSavePoint();
+        // draft to discard
+        p.append(document.createTextNode("e"));
+        expect(getContent(el)).toBe(`<p>[]cde</p>`);
+        savepoint();
+        expect(getContent(el)).toBe(`<p>[]cd</p>`);
+        expect(editor.shared.getHistorySteps().length).toBe(1);
+    });
+    test("applying a makeSavePoint consumes ulterior reversible steps and adds a new consumed step, while handling draft mutations", async () => {
+        const { el, editor, plugins } = await setupEditor(`<p>[]c</p>`);
+        const historyPlugin = plugins.get("history");
+        expect(editor.shared.getHistorySteps().length).toBe(1);
+        const p = el.querySelector("p");
+        // draft to save
+        p.append(document.createTextNode("d"));
+        expect(getContent(el)).toBe(`<p>[]cd</p>`);
+        const savepoint = editor.shared.makeSavePoint();
+        // step to consume
+        editor.shared.domInsert("z");
+        editor.dispatch("ADD_STEP");
+        let steps = editor.shared.getHistorySteps();
+        expect(steps.length).toBe(2);
+        const zStep = steps.at(-1);
+        expect(historyPlugin.stepsStates.get(zStep.id)).toBe(undefined);
+        // draft to discard
+        p.append(document.createTextNode("e"));
+        expect(getContent(el)).toBe(`<p>z[]cde</p>`);
+        savepoint();
+        expect(getContent(el)).toBe(`<p>[]cd</p>`);
+        steps = editor.shared.getHistorySteps();
+        expect(steps.length).toBe(3);
+        expect(steps.at(-2)).toBe(zStep);
+        expect(historyPlugin.stepsStates.get(zStep.id)).toBe("consumed");
+        expect(historyPlugin.stepsStates.get(steps.at(-1).id)).toBe("consumed");
+        undo(editor);
+        expect(getContent(el)).toBe(`<p>[]c</p>`);
+        redo(editor);
+        // `d` was still a draft, redo can not reinsert `z` since it is consumed
+        expect(getContent(el)).toBe(`<p>[]c</p>`);
+    });
+    test.todo("makeSavePoint should correctly revert mutations (2)", async () => {
+        // TODO @phoenix: ensure that this spec also applies to complete steps (with undo/redo).
+        // In the meantime, avoid adding observed DOM nodes to disconnected nodes as this is not fully
+        // supported.
         // Before, the makeSavePoint method was reverting all the current mutations to finally re-apply
         // the old ones.
         // The current limitation of the editor is that newly created element that is not connected to
