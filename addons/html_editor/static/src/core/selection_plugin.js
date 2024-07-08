@@ -383,7 +383,14 @@ export class SelectionPlugin extends Plugin {
         [focusNode, focusOffset] = normalizeFakeBR(focusNode, focusOffset);
         const selection = this.document.getSelection();
         if (selection) {
-            selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+            if (
+                selection.anchorNode !== anchorNode ||
+                selection.focusNode !== focusNode ||
+                selection.anchorOffset !== anchorOffset ||
+                selection.focusOffset !== focusOffset
+            ) {
+                selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+            }
             this.activeSelection = this.makeSelection(selection, true);
         }
 

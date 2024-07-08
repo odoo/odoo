@@ -23,6 +23,7 @@ export class ToolbarPlugin extends Plugin {
             ),
             namespace: undefined,
         });
+        this.updateSelection = null;
     }
 
     handleCommand(command, payload) {
@@ -32,8 +33,9 @@ export class ToolbarPlugin extends Plugin {
                     const sel = this.shared.getEditableSelection();
                     if (sel.isCollapsed) {
                         this.overlay.close();
+                    } else {
+                        this.updateButtonsStates(this.shared.getEditableSelection());
                     }
-                    this.updateButtonsStates(this.shared.getEditableSelection());
                 }
                 break;
         }
@@ -91,17 +93,29 @@ export class ToolbarPlugin extends Plugin {
     }
 
     updateButtonsStates(selection) {
-        if (selection.inEditable) {
-            for (const buttonGroup of this.buttonGroups) {
-                if (buttonGroup.namespace === this.state.namespace) {
-                    for (const button of buttonGroup.buttons) {
-                        this.state.buttonsActiveState[button.id] =
-                            button.isFormatApplied?.(selection);
-                        this.state.buttonsDisabledState[button.id] =
-                            button.hasFormat != null && !button.hasFormat?.(selection);
-                    }
+        if (!this.updateSelection) {
+            queueMicrotask(() => this._updateButtonsStates());
+        }
+        this.updateSelection = selection;
+    }
+    _updateButtonsStates() {
+        const selection = this.updateSelection;
+        if (!selection) {
+            return;
+        }
+        const nodes = this.shared.getTraversedNodes();
+        for (const buttonGroup of this.buttonGroups) {
+            if (buttonGroup.namespace === this.state.namespace) {
+                for (const button of buttonGroup.buttons) {
+                    this.state.buttonsActiveState[button.id] = button.isFormatApplied?.(
+                        selection,
+                        nodes
+                    );
+                    this.state.buttonsDisabledState[button.id] =
+                        button.hasFormat != null && !button.hasFormat?.(selection);
                 }
             }
         }
+        this.updateSelection = null;
     }
 }
