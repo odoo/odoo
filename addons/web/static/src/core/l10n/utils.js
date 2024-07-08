@@ -23,8 +23,11 @@ export function pyToJsLocale(locale) {
     if (!locale) {
         return "";
     }
-    const regex = /^([a-z]+)(_[A-Z\d]+)?(@.+)?$/;
-    const [, language, territory, modifier] = locale.match(regex);
+    const match = locale.match(/^([a-z]+)(_[A-Z\d]+)?(@.+)?$/);
+    if (!match) {
+        return locale;
+    }
+    const [, language, territory, modifier] = match;
     const subtags = [language];
     if (modifier === "@latin") {
         subtags.push("Latn");
