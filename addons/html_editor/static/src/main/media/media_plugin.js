@@ -254,9 +254,11 @@ export class MediaPlugin extends Plugin {
             if (!attachment.public) {
                 let accessToken = attachment.access_token;
                 if (!accessToken) {
-                    [accessToken] = await this.orm.call("ir.attachment", "generate_access_token", [
-                        attachment.id,
-                    ]);
+                    [accessToken] = await this.services.orm.call(
+                        "ir.attachment",
+                        "generate_access_token",
+                        [attachment.id]
+                    );
                 }
                 src += `?access_token=${encodeURIComponent(accessToken)}`;
             }

@@ -1716,4 +1716,56 @@ describe("save image", () => {
         expect(".test_target_2").toHaveCount(1);
         expect.verifySteps(["add_data-start: partner 1", "add_data-end: partner 1", "web_save"]);
     });
+
+    test("Pasted/dropped images are converted to attachments without access_token on save", async () => {
+        Partner._records = [
+            {
+                id: 1,
+                txt: "<p class='test_target'><br></p>",
+            },
+        ];
+        onRpc("/web_editor/attachment/add_data", (request) => {
+            const { res_id, res_model } = request.json().params;
+            expect.step(`add_data: ${res_model} ${res_id}`);
+            return {
+                image_src: "/test_image_url.png",
+                id: 123,
+                public: false,
+            };
+        });
+
+        onRpc("ir.attachment", "generate_access_token", ({ args }) => {
+            expect.step(`generate_access_token: ${args}`);
+            return ["12345"];
+        });
+
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        setSelectionInHtmlField(".test_target");
+
+        // Paste image.
+        pasteFile(
+            htmlEditor,
+            createBase64ImageFile(
+                "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
+            )
+        );
+        await animationFrame();
+        const img = htmlEditor.editable.querySelector("img");
+        expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
+        expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
+
+        // Save changes.
+        await contains(".o_form_button_save").click();
+        expect(img.getAttribute("src")).toBe("/test_image_url.png?access_token=12345");
+        expect(img.classList.contains("o_b64_image_to_save")).not.toBe(true);
+        expect.verifySteps(["add_data: partner 1", "generate_access_token: 123"]);
+    });
 });
