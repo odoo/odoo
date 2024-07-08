@@ -26,6 +26,7 @@ import {
     useEffect,
     useRef,
     useState,
+    onPatched,
 } from "@odoo/owl";
 import { LinkTools } from '@web_editor/js/wysiwyg/widgets/link_tools';
 import { touching, closest, addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
@@ -1917,6 +1918,23 @@ class SnippetsMenu extends Component {
             this.props.mountedProm.resolve();
             this.el.classList.add("o_loaded");
             this.el.ownerDocument.body.classList.toggle('editor_has_snippets', !this.folded);
+        });
+
+        // TODO: remove in master and add t-on-blur and also update
+        // `t-att-class`es that has `snippet.rename` in snippet.xml
+        onPatched(() => {
+            const inputEl = this.snippetsAreaRef.el.querySelector("input.text-start");
+            if(inputEl){
+                inputEl.addEventListener("blur", async (ev) => {
+                    this._onConfirmRename(ev);
+                });
+                inputEl.select();
+                const customSnippet = this.snippetsAreaRef.el.querySelector(".oe_snippet_thumbnail.o_we_already_dragging");
+                if(customSnippet){
+                    customSnippet.classList.remove("o_we_already_dragging");
+                    customSnippet.parentNode.classList.add("o_we_draggable");
+                }
+            }
         });
 
         onWillUnmount(() => {
@@ -4244,8 +4262,8 @@ class SnippetsMenu extends Component {
         const input = ev.target.parentElement.querySelector("input");
         const snippetId = parseInt(ev.target.closest(".oe_snippet").dataset.oeSnippetId);
         const snippet = this.snippets.get(snippetId);
-        const newName = input.value;
-        if (newName !== snippet.displayName) {
+        const newName = input.value.trim();
+        if (newName !== snippet.displayName && newName) {
             this._execWithLoadingEffect(async () => {
                 await this.orm.call("ir.ui.view", "rename_snippet", [], {
                     'name': newName,
