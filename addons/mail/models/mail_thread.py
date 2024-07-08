@@ -4566,7 +4566,9 @@ class MailThread(models.AbstractModel):
             store.add(activities)
             res["activities"] = [{"id": activity.id} for activity in activities]
         if 'attachments' in request_list:
-            res['attachments'] = self._get_mail_thread_data_attachments()._attachment_format()
+            attachments = self._get_mail_thread_data_attachments()
+            store.add("Attachment", attachments._attachment_format())
+            res["attachments"] = [{"id": attachment.id} for attachment in attachments]
             res["areAttachmentsLoaded"] = True
             res["isLoadingAttachments"] = False
         if 'followers' in request_list:
