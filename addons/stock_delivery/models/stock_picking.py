@@ -1,81 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
 from markupsafe import Markup
 import json
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.sql import column_exists, create_column
 
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
-
-    def _auto_init(self):
-        if not column_exists(self.env.cr, "stock_picking", "weight"):
-            # In order to speed up module installation when dealing with hefty data
-            # We create the column weight manually, but the computation will be skipped
-            # Therefore we do the computation in a query by getting weight sum from stock moves
-            create_column(self.env.cr, "stock_picking", "weight", "numeric")
-            self.env.cr.execute("""
-                WITH computed_weight AS (
-                    SELECT SUM(weight) AS weight_sum, picking_id
-                    FROM stock_move
-                    WHERE picking_id IS NOT NULL
-                    GROUP BY picking_id
-                )
-                UPDATE stock_picking
-                SET weight = weight_sum
-                FROM computed_weight
-                WHERE stock_picking.id = computed_weight.picking_id;
-            """)
-        return super()._auto_init()
-
-    @api.depends('move_line_ids', 'move_line_ids.result_package_id')
-    def _compute_packages(self):
-        counts = dict(self.env['stock.move.line']._read_group(
-           domain=[
-              ('picking_id', 'in', self.ids),
-              ('result_package_id', '!=', False)],
-              groupby=['picking_id'],
-              aggregates=['__count'],
-        ))
-        self.fetch(['move_line_ids'])
-        self.move_line_ids.fetch(['result_package_id'])
-        for picking in self:
-            packs = set()
-            if counts.get(picking, 0):
-                for move_line in picking.move_line_ids:
-                    if move_line.result_package_id:
-                        packs.add(move_line.result_package_id.id)
-            picking.package_ids = list(packs)
-
-    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.quantity')
-    def _compute_bulk_weight(self):
-        picking_weights = defaultdict(float)
-        res_groups = self.env['stock.move.line']._read_group(
-            [('picking_id', 'in', self.ids), ('product_id', '!=', False), ('result_package_id', '=', False)],
-            ['picking_id', 'product_id', 'product_uom_id', 'quantity'],
-            ['__count'],
-        )
-        for picking, product, product_uom, quantity, count in res_groups:
-            picking_weights[picking.id] += (
-                count
-                * product_uom._compute_quantity(quantity, product.uom_id)
-                * product.weight
-            )
-        for picking in self:
-            picking.weight_bulk = picking_weights[picking.id]
-
-    @api.depends('move_line_ids.result_package_id', 'move_line_ids.result_package_id.shipping_weight', 'weight_bulk')
-    def _compute_shipping_weight(self):
-        for picking in self:
-            # if shipping weight is not assigned => default to calculated product weight
-            picking.shipping_weight = (
-                picking.weight_bulk +
-                sum(pack.shipping_weight or pack.weight for pack in picking.package_ids.sudo())
-            )
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -91,10 +24,6 @@ class StockPicking(models.Model):
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
-    package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
-    weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight', help="Total weight of products which are not in a package.")
-    shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight',
-        help="Total weight of packages and products not in a package. Packages with no shipping weight specified will default to their products' total weight. This is the weight used to compute the cost of the shipping.")
     is_return_picking = fields.Boolean(compute='_compute_return_picking')
     return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
     destination_country_code = fields.Char(related='partner_id.country_id.code', string="Destination Country")
