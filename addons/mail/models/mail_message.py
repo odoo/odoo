@@ -1030,7 +1030,10 @@ class Message(models.Model):
                 "res_id": message.res_id,  # keep for iOS app
                 "subject": message.subject,
                 "default_subject": default_subject,
-                "notifications": message.notification_ids._filtered_for_web_client()._notification_format(),
+                "notifications": [
+                    {"id": notif.id}
+                    for notif in message.notification_ids._filtered_for_web_client()
+                ],
                 "attachments": sorted(
                     # sudo: mail.message - reading attachments on accessible message is allowed
                     message.sudo().attachment_ids._attachment_format(),
@@ -1072,6 +1075,7 @@ class Message(models.Model):
             store.add("Message", vals)
         # sudo: mail.message: access to author is allowed
         self.sudo()._author_to_store(store)
+        store.add(self.notification_ids._filtered_for_web_client())
         # Add extras at the end to guarantee order in result. In particular, the parent message
         # needs to be after the current message (client code assuming the first received message is
         # the one just posted for example, and not the message being replied to).
@@ -1150,7 +1154,10 @@ class Message(models.Model):
                 "date": message.date,
                 "message_type": message.message_type,
                 "body": message.body,
-                "notifications": message.notification_ids._filtered_for_web_client()._notification_format(),
+                "notifications": [
+                    {"id": notif.id}
+                    for notif in message.notification_ids._filtered_for_web_client()
+                ],
                 "thread": False,
             }
             if message.res_id:
@@ -1164,6 +1171,7 @@ class Message(models.Model):
                     },
                 )
             store.add("Message", message_data)
+        store.add(self.notification_ids._filtered_for_web_client())
 
     def _notify_message_notification_update(self):
         """Send bus notifications to update status of notifications in the web

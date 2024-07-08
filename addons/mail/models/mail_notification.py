@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
@@ -6,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.exceptions import AccessError
 from odoo.tools.translate import _
+from odoo.addons.mail.tools.discuss import Store
 
 
 class MailNotification(models.Model):
@@ -127,13 +127,31 @@ class MailNotification(models.Model):
 
         return self.filtered(_filter_unimportant_notifications)
 
-    def _notification_format(self):
+    def _to_store(self, store: Store, /):
         """Returns the current notifications in the format expected by the web
         client."""
-        return [{
-            'id': notif.id,
-            'notification_type': notif.notification_type,
-            'notification_status': notif.notification_status,
-            'failure_type': notif.failure_type,
-            'persona': {'id': notif.res_partner_id.id, 'displayName': notif.res_partner_id.display_name, 'type': "partner"} if notif.res_partner_id else False,
-        } for notif in self]
+        for notif in self:
+            if notif.res_partner_id:
+                store.add(
+                    "Persona",
+                    {
+                        "displayName": notif.res_partner_id.display_name,
+                        "id": notif.res_partner_id.id,
+                        "type": "partner",
+                    },
+                )
+            store.add(
+                "Notification",
+                {
+                    "failure_type": notif.failure_type,
+                    "id": notif.id,
+                    "message": {"id": notif.mail_message_id.id},
+                    "notification_status": notif.notification_status,
+                    "notification_type": notif.notification_type,
+                    "persona": (
+                        {"id": notif.res_partner_id.id, "type": "partner"}
+                        if notif.res_partner_id
+                        else False
+                    ),
+                },
+            )

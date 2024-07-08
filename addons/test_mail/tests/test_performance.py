@@ -1387,30 +1387,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "message_type": "comment",
                                     "model": "mail.test.simple",
                                     "needaction": True,
-                                    "notifications": [
-                                        {
-                                            "id": notif_1.id,
-                                            "notification_type": "inbox",
-                                            "notification_status": "sent",
-                                            "failure_type": False,
-                                            "persona": {
-                                                "id": self.user_test_inbox.partner_id.id,
-                                                "displayName": "Paulette Testouille",
-                                                "type": "partner",
-                                            },
-                                        },
-                                        {
-                                            "id": notif_2.id,
-                                            "notification_type": "inbox",
-                                            "notification_status": "sent",
-                                            "failure_type": False,
-                                            "persona": {
-                                                "id": self.user_test_inbox_2.partner_id.id,
-                                                "displayName": "Jeannette Testouille",
-                                                "type": "partner",
-                                            },
-                                        },
-                                    ],
+                                    "notifications": [{"id": notif_1.id}, {"id": notif_2.id}],
                                     "pinned_at": False,
                                     "reactions": [],
                                     "recipients": [],
@@ -1425,6 +1402,30 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "write_date": fields.Datetime.to_string(message.write_date),
                                 },
                             ],
+                            "Notification": [
+                                {
+                                    "failure_type": False,
+                                    "id": notif_1.id,
+                                    "message": {"id": message.id},
+                                    "notification_status": "sent",
+                                    "notification_type": "inbox",
+                                    "persona": {
+                                        "id": self.user_test_inbox.partner_id.id,
+                                        "type": "partner",
+                                    },
+                                },
+                                {
+                                    "failure_type": False,
+                                    "id": notif_2.id,
+                                    "message": {"id": message.id},
+                                    "notification_status": "sent",
+                                    "notification_type": "inbox",
+                                    "persona": {
+                                        "id": self.user_test_inbox_2.partner_id.id,
+                                        "type": "partner",
+                                    },
+                                },
+                            ],
                             "Persona": [
                                 {
                                     "id": self.env.user.partner_id.id,
@@ -1434,7 +1435,17 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "type": "partner",
                                     "userId": self.env.user.id,
                                     "write_date": fields.Datetime.to_string(self.env.user.write_date),
-                                }
+                                },
+                                {
+                                    "displayName": "Paulette Testouille",
+                                    "id": self.user_test_inbox.partner_id.id,
+                                    "type": "partner",
+                                },
+                                {
+                                    "displayName": "Jeannette Testouille",
+                                    "id": self.user_test_inbox_2.partner_id.id,
+                                    "type": "partner",
+                                },
                             ],
                             "Thread": [
                                 {
@@ -1479,30 +1490,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "message_type": "comment",
                                     "model": "mail.test.simple",
                                     "needaction": True,
-                                    "notifications": [
-                                        {
-                                            "id": notif_1.id,
-                                            "notification_type": "inbox",
-                                            "notification_status": "sent",
-                                            "failure_type": False,
-                                            "persona": {
-                                                "id": self.user_test_inbox.partner_id.id,
-                                                "displayName": "Paulette Testouille",
-                                                "type": "partner",
-                                            },
-                                        },
-                                        {
-                                            "id": notif_2.id,
-                                            "notification_type": "inbox",
-                                            "notification_status": "sent",
-                                            "failure_type": False,
-                                            "persona": {
-                                                "id": self.user_test_inbox_2.partner_id.id,
-                                                "displayName": "Jeannette Testouille",
-                                                "type": "partner",
-                                            },
-                                        },
-                                    ],
+                                    "notifications": [{"id": notif_1.id}, {"id": notif_2.id}],
                                     "pinned_at": False,
                                     "reactions": [],
                                     "recipients": [],
@@ -1517,6 +1505,30 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "write_date": fields.Datetime.to_string(message.write_date),
                                 },
                             ],
+                            "Notification": [
+                                {
+                                    "failure_type": False,
+                                    "id": notif_1.id,
+                                    "message": {"id": message.id},
+                                    "notification_status": "sent",
+                                    "notification_type": "inbox",
+                                    "persona": {
+                                        "id": self.user_test_inbox.partner_id.id,
+                                        "type": "partner",
+                                    },
+                                },
+                                {
+                                    "failure_type": False,
+                                    "id": notif_2.id,
+                                    "message": {"id": message.id},
+                                    "notification_status": "sent",
+                                    "notification_type": "inbox",
+                                    "persona": {
+                                        "id": self.user_test_inbox_2.partner_id.id,
+                                        "type": "partner",
+                                    },
+                                },
+                            ],
                             "Persona": [
                                 {
                                     "id": self.env.user.partner_id.id,
@@ -1526,7 +1538,17 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "type": "partner",
                                     "userId": self.env.user.id,
                                     "write_date": fields.Datetime.to_string(self.env.user.write_date),
-                                }
+                                },
+                                {
+                                    "displayName": "Paulette Testouille",
+                                    "id": self.user_test_inbox.partner_id.id,
+                                    "type": "partner",
+                                },
+                                {
+                                    "displayName": "Jeannette Testouille",
+                                    "id": self.user_test_inbox_2.partner_id.id,
+                                    "type": "partner",
+                                },
                             ],
                             "Thread": [
                                 {
