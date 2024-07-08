@@ -2280,7 +2280,7 @@ class TestViews(ViewCase):
 
         self.assertInvalid(
             arch % ('', '<field name="inherit_id"/>', 'view_access', 'view_access'),
-            """Field “view_access” does not exist in model “ir.ui.view”.""",
+            """field “view_access” does not exist in model “ir.ui.view”.""",
         )
         self.assertInvalid(
             arch % ('', '<field name="inherit_id"/>', 'inherit_id', 'inherit_id'),
