@@ -1050,3 +1050,34 @@ class TestSalesTeam(SaleCommon):
         self.env.flush_all()
         self.assertEqual(so.amount_tax, 12.36)
         self.assertEqual(so.amount_total, 135.96)
+
+    def test_amount_total_update_rounding_method(self):
+        """Make sure the amount_total is updated when the tax_calculation_rounding_method is changed."""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.consumable_product.id,
+                    'product_uom_qty': 1.0,
+                }),
+                Command.create({
+                    'product_id': self.service_product.id,
+                    'product_uom_qty': 1.0,
+                }),
+            ]
+        })
+        sale_order.order_line[0].price_unit = 10.99
+        sale_order.order_line[1].price_unit = 10.5
+
+        tax7 = self.env['account.tax'].create({
+                'name': '7%',
+                'type_tax_use': 'purchase',
+                'amount': 7,
+        })
+        sale_order.order_line.tax_id = [(4, tax7.id)]
+
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        amount = sale_order.amount_total
+        self.env.company.tax_calculation_rounding_method = 'round_per_line'
+
+        self.assertNotEqual(amount, sale_order.amount_total)

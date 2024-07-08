@@ -453,7 +453,7 @@ class SaleOrder(models.Model):
                 )
             order.team_id = cached_teams[key]
 
-    @api.depends('order_line.price_subtotal', 'order_line.price_tax', 'order_line.price_total')
+    @api.depends('order_line.price_subtotal', 'order_line.price_tax', 'order_line.price_total', 'company_id.tax_calculation_rounding_method')
     def _compute_amounts(self):
         """Compute the total amounts of the SO."""
         for order in self:
