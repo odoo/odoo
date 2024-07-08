@@ -16,6 +16,7 @@ from itertools import chain
 from lxml import etree
 from lxml.etree import LxmlError
 from lxml.builder import E
+from markupsafe import Markup
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, AccessError, UserError
@@ -193,6 +194,8 @@ different model than this one), then this view's inheritance specs
 (<xpath/>) are applied, and the result is used as if it were this view's
 actual arch.
 """)
+
+    warning_info = fields.Html(string="Warning information", compute='_compute_warning_info')
 
     # The "active" field is not updated during updates if <template> is used
     # instead of <record> to define the view in XML, see _tag_template. For
@@ -456,6 +459,20 @@ actual arch.
             if not values['inherit_id'] or all(not view.inherit_id for view in self):
                 values.setdefault('mode', 'extension' if values['inherit_id'] else 'primary')
         return values
+
+    @api.depends('arch')
+    def _compute_warning_info(self):
+        for view in self:
+            view.warning_info = ''
+            try:
+                if view.inherit_id:
+                    view_arch = etree.fromstring(view.arch)
+                    view._valid_inheritance(view_arch)
+                combined_arch = view._get_combined_arch()
+                if view.type != 'qweb':
+                    view._postprocess_view(combined_arch, view.model, is_compute_warning_info=True)
+            except (etree.ParseError, ValueError) as e:
+                view.warning_info = str(e)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1079,6 +1096,8 @@ actual arch.
             'name_manager': name_manager,
         }
 
+        is_compute_warning_info = options.get('is_compute_warning_info')
+
         # use a stack to recursively traverse the tree
         stack = [(root, view_groups, editable)]
         while stack:
@@ -1089,8 +1108,9 @@ actual arch.
             had_parent = node.getparent() is not None
             node_info = dict(root_info, view_groups=view_groups, editable=editable and self._editable_node(node, name_manager))
 
-            if node.get('groups'):
-                node_info['view_groups'] &= group_definitions.parse(node.get('groups'), raise_if_not_found=False)
+            node_groups = node.get('groups')
+            if node_groups:
+                node_info['view_groups'] &= group_definitions.parse(node_groups, raise_if_not_found=False)
 
             # tag-specific postprocessing
             postprocessor = getattr(self, f"_postprocess_tag_{tag}", None)
@@ -1104,13 +1124,26 @@ actual arch.
             for child in reversed(node_info.get('children', node)):
                 stack.append((child, node_info['view_groups'], node_info['editable']))
 
-            if 'groups' in node.attrib or root_info['model_groups'] != node_info['model_groups']:
+            if node_groups or root_info['model_groups'] != node_info['model_groups']:
                 groups = node_info['model_groups'] & node_info['view_groups']
                 node.set('__groups_key__', groups.key)
 
             self._postprocess_attributes(node, name_manager, node_info)
 
-        self._add_missing_fields(root, name_manager)
+            if node_groups and is_compute_warning_info:
+                # reset the groups attributes to display in log
+                node.attrib['groups'] = node_groups
+
+        missing_fields = self._add_missing_fields(root, name_manager)
+
+        if is_compute_warning_info:
+            for name, (missing_groups, reasons) in missing_fields.items():
+                error_message = name_manager._error_message_group_inconsistency(name, missing_groups, reasons)[0]
+                if error_message:
+                    if self.warning_info:
+                        self.warning_info += Markup('<br/>\n<br/>\n')
+                    self.warning_info += error_message.replace('\n', Markup('<br/>\n'))
+
         name_manager.update_available_fields()
 
         root.set('model_access_rights', model._name)
@@ -1127,33 +1160,6 @@ actual arch.
         for name, (missing_groups, reasons) in missing_fields.items():
             if name not in name_manager.field_info:
                 continue
-
-            if missing_groups is False:
-                # This case can happen if the access rights are modified after
-                # the view has been validated.
-                field_groups = name_manager._get_field_groups(name)
-                error_msg = [_(
-                    "There is no combination of groups that can guarantee the "
-                    "visibility of the field %(name)r on model %(model)r.\n"
-                    "The field %(name)r (%(field_groups)s) is used by these "
-                    "following elements (and their groups):",
-                    name=name, model=name_manager.model._name,
-                    field_groups=_('Only superuser has access') if field_groups.is_empty() else field_groups,
-                )]
-
-                for item_groups, _use, node in reasons:
-                    clone = etree.Element(node.tag, node.attrib)
-                    clone.attrib.pop('__validate__', None)
-                    error_msg.append(_(
-                        "   %(node)s    (%(groups)s)",
-                        node=etree.tostring(clone, encoding='unicode'),
-                        groups=(
-                            _('Free access') if item_groups.is_universal() else
-                            _('Only super user has access') if item_groups.is_empty() else
-                            item_groups
-                        ),
-                    ))
-                self._log_view_warning('\n'.join(error_msg), root)
 
             # If the available fields have different groups then to avoid it being missing for
             # certain users, we virtually add a field with common groups.
@@ -1184,6 +1190,7 @@ actual arch.
             item = etree.Element('field', attrs)
             item.tail = '\n'
             root.append(item)
+        return missing_fields
 
     def _postprocess_on_change(self, arch, model):
         """ Add attribute on_change="1" on fields that are dependencies of
@@ -3063,41 +3070,76 @@ class NameManager:
                 view._raise_view_error(msg)
 
         for name, (missing_groups, reasons) in self.get_missing_fields().items():
-            error_msg = None
-            if name not in self.model._fields and name not in self.available_names:
-                error_msg = [_(
-                    "Field %(name)r does not exist in model %(model)r.\n"
-                    "The name is used by this following elements (and their groups):",
-                    name=name, model=self.model._name,
-                )]
-            elif missing_groups is False:
-                field_groups = self._get_field_groups(name)
-                error_msg = [_(
-                    "Field %(name)r is restricted by groups without matching "
-                    "with the common mandatory groups.\n"
-                    "There are therefore cases where a user does not have access to the "
-                    "mandatory field value even though it is used somewhere in the view. "
-                    "The mandatory groups take care of the groups in view, the "
-                    "description field groups and model read access.\n"
-                    "The field %(name)r (%(field_groups)s) is used by these "
-                    "following elements (and their groups):",
-                    name=name,
-                    field_groups=_('Only super user has access') if field_groups.is_empty() else field_groups,
-                )]
-            if error_msg:
-                for item_groups, _use, node in reasons:
-                    clone = etree.Element(node.tag, node.attrib)
-                    clone.attrib.pop('__validate__', None)
-                    error_msg.append(_(
-                        "   %(node)s    (%(groups)s)",
-                        node=etree.tostring(clone, encoding='unicode'),
-                        groups=(
-                            _('Free access') if item_groups.is_universal() else
-                            _('Only super user has access') if item_groups.is_empty() else
-                            item_groups
-                        ),
-                    ))
-                view._raise_view_error('\n'.join(error_msg))
+            message, error_type = self._error_message_group_inconsistency(name, missing_groups, reasons)
+            if error_type == 'does_not_exist':
+                view._raise_view_error(message)
+            elif error_type:
+                view._log_view_warning(message, None)
+
+    def _error_message_group_inconsistency(self, name, missing_groups, reasons):
+        does_not_exist = name not in self.model._fields and name not in self.available_names
+        if not (does_not_exist or missing_groups is False):
+            return None, None
+
+        elements = [
+            f'<field name="{node.get("name")}"/>' if node.tag == 'field' else f'<{node.tag}>'
+            for _item_groups, _use, node in reasons
+        ]
+
+        debug = []
+        if does_not_exist:
+            debug.append(_(
+                "- field `%(name)s` does not exist in model `%(model)s`.",
+                name=name,
+                model=self.model._name,
+            ))
+        else:
+            field_groups = self._get_field_groups(name)
+            debug.append(_(
+                "- field `%(name)s` is accessible for groups: %(field_groups)s",
+                name=name,
+                field_groups=_('Only super user has access') if field_groups.is_empty() else field_groups,
+            ))
+
+        for item_groups, _use, node in reasons:
+            clone = etree.Element(node.tag, node.attrib)
+            clone.attrib.pop('__validate__', None)
+            clone.attrib.pop('__groups_key__', None)
+            debug.append(_(
+                "- element `%(node)s` is shown in the view for groups: %(groups)s",
+                node=etree.tostring(clone, encoding='unicode'),
+                groups=(
+                    _('Free access') if item_groups.is_universal() else
+                    _('Accessible only for the super user') if item_groups.is_empty() else
+                    item_groups
+                ),
+            ))
+
+        message = Markup(
+            "<b>{header}</b><br/>{body}<br/>{footer}<br/>{debug}"
+        ).format(
+            header=_("Access Rights Inconsistency"),
+            body=_(
+                "This view may not work for all users: some users may have a "
+                "combination of groups where the elements %(elements)s are displayed, "
+                "but they depend on the field %(field)s that is not accessible. "
+                "You might fix this by modifying user groups to make sure that all users "
+                "who have access to those elements also have access to the field, "
+                "typically via group implications. Alternatively, you could "
+                "adjust the `%(groups)s` or `%(invisible)s` attributes for these fields, "
+                "to make sure they are always available together.",
+                elements=Markup(", ").join(
+                    Markup("<b><tt>%s</tt></b>") % element for element in elements
+                ),
+                field=Markup("<b><tt>%s</tt></b>") % name,
+                groups=Markup("<i>groups</i>"),
+                invisible=Markup("<i>invisible</i>"),
+            ),
+            footer=_("Debugging information:"),
+            debug=Markup("<br/>").join(debug),
+        )
+
+        return message, 'does_not_exist' if does_not_exist else 'inconsistency'
 
     def update_available_fields(self):
         for name, info in self.available_fields.items():

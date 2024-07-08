@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common, Form
+from odoo.addons.base.tests.test_views import ViewCase
 from odoo.exceptions import ValidationError
 from lxml import etree
 
@@ -24,7 +25,7 @@ class TestDefaultView(common.TransactionCase):
 
 
 @common.tagged('at_install', 'groups')
-class TestViewGroups(common.TransactionCase):
+class TestViewGroups(ViewCase):
     def test_attrs_groups(self):
         """ Checks that attrs/modifiers with groups work
         """
@@ -57,89 +58,71 @@ class TestViewGroups(common.TransactionCase):
             # field add automatically
             f.k = 3
 
-        with self.assertRaises(ValidationError) as catcher:
-            # create must fail because 'a' and the model has no 'base.group_portal'
+        # create must warn because 'a' and the model has no 'base.group_portal'
+        self.assertWarning("""
+                <form>
+                    <field name="a" readonly="j"/>
+                </form>
+            """,
+            expected_message="- field `j` is accessible for groups: Only super user has access<br/>"
+                """- element `&lt;field name=&#34;a&#34; readonly=&#34;j&#34;/&gt;` is shown in the view for groups: &#39;base.group_system&#39; | &#39;base.group_public&#39;""",
+            model='test_new_api.model.some_access')
+
+        # a: base.group_public,base.group_system > -
+        # d: base.group_public,base.group_system > base.group_erp_manager
+        self.assertWarning("""
+                <form>
+                    <field name="a" readonly="d"/>
+                </form>
+            """,
+            expected_message="- field `d` is accessible for groups: &#39;base.group_system&#39;<br/>"
+                """- element `&lt;field name=&#34;a&#34; readonly=&#34;d&#34;/&gt;` is shown in the view for groups: &#39;base.group_system&#39; | &#39;base.group_public&#39;""",
+            model='test_new_api.model.some_access')
+
+        # e: base.group_public,base.group_system > base.group_erp_manager,base.group_portal
+        # d: base.group_public,base.group_system > base.group_erp_manager
+        self.assertWarning("""
+                <form>
+                    <field name="d"/>
+                    <field name="e" readonly="d"/>
+                </form>
+            """,
+            expected_message="- field `d` is accessible for groups: &#39;base.group_system&#39;<br/>"
+                """- element `&lt;field name=&#34;e&#34; readonly=&#34;d&#34;/&gt;` is shown in the view for groups: &#39;base.group_system&#39; | (&#39;base.group_multi_company&#39; &amp; &#39;base.group_public&#39;)""",
+            model='test_new_api.model.some_access')
+
+        # i: base.group_public,base.group_system > !base.group_portal
+        # h: base.group_public,base.group_system > base.group_erp_manager,!base.group_portal
+        self.assertWarning("""
+                <form>
+                    <field name="i" readonly="h"/>
+                </form>
+            """,
+            model='test_new_api.model.some_access')
+
+        # i: base.group_public,base.group_system > !base.group_portal
+        # j: base.group_public,base.group_system > base.group_portal
+        self.assertWarning("""
+                <form>
+                    <field name="i" readonly="j"/>
+                </form>
+            """,
+            model='test_new_api.model.some_access')
+
+        # i: public,portal,user,system > !base.group_portal
+        # h: public,portal,user,system > base.group_portal
+        self.assertWarning("""
+                <form>
+                    <field name="ab" readonly="cd"/>
+                </form>
+            """,
+            model='test_new_api.model.all_access')
+
+        # must raise for does not exists error
+        with self.assertRaisesRegex(ValidationError, 'Field "ab" does not exist in model "test_new_api.model.some_access"'):
             self.env['ir.ui.view'].create({
                 'name': 'stuff',
                 'model': 'test_new_api.model.some_access',
-                'arch': """
-                    <form>
-                        <field name="a" readonly="j"/>
-                    </form>
-                """,
-            })
-        error_message = str(catcher.exception.args[0])
-        self.assertIn("Field 'j' is restricted by groups without matching with the common mandatory groups.", error_message)
-        self.assertIn("field 'j' (Only super user has access)", error_message)
-        self.assertIn("""<field name="a" readonly="j"/>    ('base.group_system' | 'base.group_public')""", error_message)
-
-        with self.assertRaises(ValidationError) as catcher:
-            # a: base.group_public,base.group_system > -
-            # d: base.group_public,base.group_system > base.group_erp_manager
-            self.env['ir.ui.view'].create({
-                'name': 'stuff',
-                'model': 'test_new_api.model.some_access',
-                'arch': """
-                    <form>
-                        <field name="a" readonly="d"/>
-                    </form>
-                """,
-            })
-        error_message = str(catcher.exception.args[0])
-        self.assertIn("Field 'd' is restricted by groups without matching with the common mandatory groups.", error_message)
-        self.assertIn("field 'd' ('base.group_system')", error_message)
-        self.assertIn("""<field name="a" readonly="d"/>    ('base.group_system' | 'base.group_public')""", error_message)
-
-        with self.assertRaises(ValidationError) as catcher:
-            # e: base.group_public,base.group_system > base.group_erp_manager,base.group_portal
-            # d: base.group_public,base.group_system > base.group_erp_manager
-            self.env['ir.ui.view'].create({
-                'name': 'stuff',
-                'model': 'test_new_api.model.some_access',
-                'arch': """
-                    <form>
-                        <field name="d"/>
-                        <field name="e" readonly="d"/>
-                    </form>
-                """,
-            })
-        error_message = str(catcher.exception.args[0])
-        self.assertIn("Field 'd' is restricted by groups without matching with the common mandatory groups.", error_message)
-        self.assertIn("field 'd' ('base.group_system')", error_message)
-        self.assertIn("""<field name="e" readonly="d"/>    ('base.group_system' | ('base.group_multi_company' & 'base.group_public'))""", error_message)
-
-        with self.assertRaises(ValidationError):
-            # i: base.group_public,base.group_system > !base.group_portal
-            # h: base.group_public,base.group_system > base.group_erp_manager,!base.group_portal
-            self.env['ir.ui.view'].create({
-                'name': 'stuff',
-                'model': 'test_new_api.model.some_access',
-                'arch': """
-                    <form>
-                        <field name="i" readonly="h"/>
-                    </form>
-                """,
-            })
-
-        with self.assertRaises(ValidationError):
-            # i: base.group_public,base.group_system > !base.group_portal
-            # j: base.group_public,base.group_system > base.group_portal
-            self.env['ir.ui.view'].create({
-                'name': 'stuff',
-                'model': 'test_new_api.model.some_access',
-                'arch': """
-                    <form>
-                        <field name="i" readonly="j"/>
-                    </form>
-                """,
-            })
-
-        with self.assertRaises(ValidationError):
-            # i: public,portal,user,system > !base.group_portal
-            # h: public,portal,user,system > base.group_portal
-            self.env['ir.ui.view'].create({
-                'name': 'stuff',
-                'model': 'test_new_api.model.all_access',
                 'arch': """
                     <form>
                         <field name="ab" readonly="cd"/>
@@ -175,16 +158,13 @@ class TestViewGroups(common.TransactionCase):
 
     def test_related_field_and_groups(self):
         # group from related
-        with self.assertRaisesRegex(ValidationError, "'base.group_erp_manager' & 'base.group_multi_company'"):
-            self.env['ir.ui.view'].create({
-                'name': 'stuff',
-                'model': 'test_new_api.model2.some_access',
-                'arch': """
-                    <form>
-                        <field name="g_id"/>
-                    </form>
-                """,
-            })
+        self.assertWarning("""
+                <form>
+                    <field name="g_id"/>
+                </form>
+            """,
+            expected_message="&#39;base.group_erp_manager&#39; &amp; &#39;base.group_multi_company&#39;",
+            model='test_new_api.model2.some_access')
 
         # should not fail, the domain is not applied on xxx_sub_id
         self.env['ir.ui.view'].create({
