@@ -34,7 +34,7 @@ export class ChatBubble extends Component {
         });
         this.preview = useDropdownState();
         this.rootRef = useRef("root");
-        this.state = useState({ bouncing: false, showClose: true });
+        this.state = useState({ bouncing: false, showClose: false });
         useEffect(
             () => {
                 this.state.bouncing = this.thread.importantCounter ? true : this.state.bouncing;

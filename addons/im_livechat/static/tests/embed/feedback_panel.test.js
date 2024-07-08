@@ -96,7 +96,7 @@ test("Closing folded chat window should open it with feedback", async () => {
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     await click("[title='Fold']");
     await waitNotifications([env, "discuss.Thread/fold_state"]);
-    await contains(".o-mail-ChatBubble");
+    await click(".o-mail-ChatBubble");
     await click("[title*='Close Chat Window']");
     await contains(".o-mail-ChatBubble", { count: 0 });
     await contains(".o-mail-ChatWindow p", { text: "Did we correctly answer your question?" });

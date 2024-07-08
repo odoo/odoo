@@ -231,6 +231,7 @@ test("chat bubbles are synced between tabs", async () => {
     await contains(".o-mail-ChatWindow", { target: tab2 }); // open sync
     await click(".o-mail-ChatWindow-command[title='Fold']", { target: tab2 });
     await contains(".o-mail-ChatWindow", { target: tab1, count: 0 }); // fold sync
+    await hover(".o-mail-ChatBubble[name='Marc']", { target: tab1 });
     await click(".o-mail-ChatBubble[name='Marc'] .o-mail-ChatBubble-close", { target: tab1 });
     await contains(".o-mail-ChatBubble[name='Marc']", { target: tab2, count: 0 }); // close sync
 });
