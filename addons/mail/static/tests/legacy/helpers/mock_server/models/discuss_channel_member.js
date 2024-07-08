@@ -49,10 +49,6 @@ patch(MockServer.prototype, {
             if (member.partner_id) {
                 persona = this._mockDiscussChannelMember_GetPartnerData([member.id]);
             }
-            if (member.guest_id) {
-                const [guest] = this.getRecords("mail.guest", [["id", "=", member.guest_id]]);
-                persona = this._mockMailGuestGuestFormat([guest.id]).get(guest.id);
-            }
             const data = {
                 create_date: member.create_date,
                 thread: { id: member.channel_id, model: "discuss.channel" },

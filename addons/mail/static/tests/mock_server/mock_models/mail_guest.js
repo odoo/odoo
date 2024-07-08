@@ -12,22 +12,16 @@ export class MailGuest extends models.ServerModel {
      * @param {Number[]} ids
      * @returns {Record<string, ModelRecord>}
      */
-    _guest_format(ids) {
-        const guests = this._filter([["id", "in", ids]], { active_test: false });
-        return Object.fromEntries(
-            guests.map((guest) => {
-                return [
-                    guest.id,
-                    {
-                        id: guest.id,
-                        im_status: guest.im_status,
-                        name: guest.name,
-                        type: "guest",
-                        write_date: guest.write_date,
-                    },
-                ];
-            })
-        );
+    _to_store(ids, store) {
+        for (const guest of this._filter([["id", "in", ids]], { active_test: false })) {
+            store.add("Persona", {
+                id: guest.id,
+                im_status: guest.im_status,
+                name: guest.name,
+                type: "guest",
+                write_date: guest.write_date,
+            });
+        }
     }
 
     _set_auth_cookie(guestId) {

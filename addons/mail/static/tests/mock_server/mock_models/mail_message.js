@@ -245,9 +245,9 @@ export class MailMessage extends models.ServerModel {
                 type: "partner",
             };
             if (message.author_guest_id) {
-                const [guest] = MailGuest.search_read([["id", "=", message.author_guest_id]]);
-                store.add("Persona", { id: guest.id, name: guest.name, type: "guest" });
-                data.author = { id: guest.id, type: "guest" };
+                const [guestId] = MailGuest.search([["id", "=", message.author_guest_id]]);
+                store.add(MailGuest.browse(guestId));
+                data.author = { id: guestId, type: "guest" };
             } else if (message.author_id) {
                 const [partner] = ResPartner._filter([["id", "=", message.author_id]], {
                     active_test: false,
