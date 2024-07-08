@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime
@@ -531,6 +530,30 @@ class TestCalendar(TestResourceCommon):
         start = datetime_tz(2020, 4, 3, 16, 0, 0, tzinfo=self.john.tz)
         calendar_dt = self.calendar_john._get_closest_work_time(dt, resource=self.john.resource_id)
         self.assertEqual(calendar_dt, start, "It should have found the attendance on the 3rd April")
+
+    def test_resource_calendar_update(self):
+        """ Ensure leave calendar gets set correctly when updating resource calendar. """
+        holiday = self.env['resource.calendar.leaves'].create({
+            'name': "May Day",
+            'calendar_id': self.calendar_jean.id,
+            'date_from': datetime_str(2024, 5, 1, 0, 0, 0, tzinfo=self.jean.tz),
+            'date_to': datetime_str(2024, 5, 1, 23, 59, 59, tzinfo=self.jean.tz),
+        })
+
+        # Jean takes a leave
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': "Jean is AFK",
+            'calendar_id': self.calendar_jean.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': datetime_str(2024, 5, 10, 8, 0, 0, tzinfo=self.jean.tz),
+            'date_to': datetime_str(2024, 5, 10, 16, 0, 0, tzinfo=self.jean.tz),
+        })
+
+        # Jean changes working schedule to Jules'
+        self.jean.resource_calendar_id = self.calendar_jules
+        self.assertEqual(leave.calendar_id, self.calendar_jules, "leave calendar should be updated")
+        self.assertEqual(holiday.calendar_id, self.calendar_jean, "global leave shouldn't change")
+
 
 class TestResMixin(TestResourceCommon):
 
