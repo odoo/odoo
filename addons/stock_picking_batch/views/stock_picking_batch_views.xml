@@ -120,7 +120,7 @@
                         <page string="Transfers" name="page_transfers">
                             <field name="allowed_picking_ids" invisible="1"/>
                             <field name="picking_ids" widget="many2many" mode="tree,kanban"
-                                context="{'form_view_ref': 'stock_picking_batch.view_picking_form_inherited'}" readonly="state not in ['draft', 'in_progress']"/>
+                                context="{'form_view_ref': 'stock_picking_batch.view_picking_form_inherited', 'tree_view_ref': 'stock_picking_batch.stock_picking_view_batch_tree_ref'}" readonly="state not in ['draft', 'in_progress']"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -225,23 +225,6 @@
     </record>
     <menuitem action="stock_picking_batch_action" id="stock_picking_batch_menu" parent="stock.menu_stock_transfers" sequence="30"/>
 
-    <record id="vpicktree_inherit_stock_picking_batch" model="ir.ui.view">
-        <field name="name">stock.picking.tree</field>
-        <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock.vpicktree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='picking_type_id']" position="after">
-                <field name="batch_id" optional="show"
-                    domain="[
-                        ('state', 'in', ['draft', 'in_progress']),
-                        '|',
-                            ('picking_type_id', '=', picking_type_id),
-                            ('picking_type_id', '=', False),
-                    ]"
-                    context="{'default_picking_type_id': picking_type_id}" readonly="state in ['cancel', 'done']"/>
-            </xpath>
-        </field>
-    </record>
     <record id="view_picking_internal_search_inherit_stock_picking_batch" model="ir.ui.view">
         <field name="name">stock.picking.search</field>
         <field name="model">stock.picking</field>
