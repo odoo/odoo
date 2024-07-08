@@ -43,6 +43,7 @@ class ProductTemplate(models.Model):
         if not self.sale_ok:
             self.available_in_pos = False
 
+<<<<<<< HEAD
     @api.onchange('available_in_pos')
     def _onchange_available_in_pos(self):
         if self.available_in_pos and not self.sale_ok:
@@ -55,6 +56,13 @@ class ProductTemplate(models.Model):
             self.taxes_id = False
             self.supplier_taxes_id = False
         return res
+||||||| parent of 6d76d112560d (temp)
+=======
+    @api.onchange('detailed_type')
+    def _onchange_detailed_type(self):
+        if self.detailed_type == 'combo':
+            self.taxes_id = None
+>>>>>>> 6d76d112560d (temp)
 
     @api.constrains('available_in_pos')
     def _check_combo_inclusions(self):
@@ -162,6 +170,11 @@ class ProductProduct(models.Model):
 
             if len(taxes_by_company) > 1 and len(product['taxes_id']) > 1:
                 product['taxes_id'] = filter_taxes_on_company(product['taxes_id'], taxes_by_company)
+
+    @api.onchange('detailed_type')
+    def _onchange_detailed_type(self):
+        if self.detailed_type == 'combo':
+            self.taxes_id = None
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
