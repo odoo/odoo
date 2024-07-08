@@ -33,3 +33,10 @@ class StockPickingToBatch(models.TransientModel):
         # you have to set some pickings to batch before confirm it.
         if self.mode == 'new' and not self.is_create_draft:
             batch.action_confirm()
+        return {
+            'name': _('Batch Transfer'),
+            'view_mode': 'form',
+            'res_model': 'stock.picking.batch',
+            'type': 'ir.actions.act_window',
+            'res_id': batch.id,
+        }
