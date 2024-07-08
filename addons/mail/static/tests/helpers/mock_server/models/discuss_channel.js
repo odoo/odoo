@@ -511,7 +511,8 @@ patch(MockServer.prototype, {
                 fold_state: foldState,
                 is_minimized: foldState !== "closed",
             };
-            this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], vals);
+            memberOfCurrentUser &&
+                this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], vals);
             this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "discuss.Thread/fold_state", {
                 foldStateCount: state_count,
                 id: channel.id,
