@@ -115,6 +115,8 @@ class TestPurchase(AccountTestInvoicingCommon):
         po_tz = pytz.timezone(po.user_id.tz)
         localized_date_planned = po.date_planned.astimezone(po_tz)
         self.assertEqual(localized_date_planned, po.get_localized_date_planned())
+        # Ensure that the function get_localized_date_planned can accept a date in string format
+        self.assertEqual(localized_date_planned, po.get_localized_date_planned(po.date_planned.strftime('%Y-%m-%d %H:%M:%S')))
 
         # check vendor is a message recipient
         self.assertTrue(po.partner_id in po.message_partner_ids)
