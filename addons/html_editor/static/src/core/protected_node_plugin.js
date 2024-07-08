@@ -121,7 +121,7 @@ export class ProtectedNodePlugin extends Plugin {
             this.nodeToClone.set(ancestor, clone);
             clone.append(...children);
             if (clone.classList.contains("odoo-editor-editable")) {
-                if (!this.cloneTree.childNodes.length) {
+                if (!this.cloneTree.hasChildNodes()) {
                     this.cloneTree.append(clone);
                 }
                 break;

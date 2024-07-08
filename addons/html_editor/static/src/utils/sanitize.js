@@ -26,7 +26,7 @@ export function initElementForEdition(element, options = {}) {
             const nodeIsBlock = blockMap.get(node);
             const nodeIsBR = node.nodeName === "BR";
             // Append to the P unless child is block or an unneeded BR.
-            if (!(nodeIsBlock || (nodeIsBR && currentBlock.childNodes.length))) {
+            if (!(nodeIsBlock || (nodeIsBR && currentBlock.hasChildNodes()))) {
                 currentBlock.append(node);
                 if (!isPhrasingContent(node)) {
                     hasOnlyPhrasingContent = false;
@@ -42,7 +42,7 @@ export function initElementForEdition(element, options = {}) {
                 }
                 // Ensure we don't add an empty P or a P containing only
                 // formating spaces that should not be visible.
-                if (currentBlock.childNodes.length && currentBlock.innerHTML.trim() !== "") {
+                if (currentBlock.hasChildNodes() && currentBlock.innerHTML.trim() !== "") {
                     newChildren.push(currentBlock);
                 }
                 currentBlock = document.createElement("DIV");

@@ -378,7 +378,7 @@ export class ClipboardPlugin extends Plugin {
         let p = this.document.createElement("p");
         for (const child of [...container.childNodes]) {
             if (isBlock(child)) {
-                if (p.childNodes.length > 0) {
+                if (p.hasChildNodes()) {
                     result.appendChild(p);
                     p = this.document.createElement("p");
                 }
@@ -387,7 +387,7 @@ export class ClipboardPlugin extends Plugin {
                 p.appendChild(child);
             }
 
-            if (p.childNodes.length > 0) {
+            if (p.hasChildNodes()) {
                 result.appendChild(p);
             }
 

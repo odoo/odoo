@@ -208,8 +208,8 @@ export function fillShrunkPhrasingParent(el) {
  */
 export function cleanTrailingBR(el) {
     let br;
-    if (!isEmptyBlock(el) && el.childNodes.length) {
-        const candidate = el.childNodes[nodeSize(el) - 1];
+    if (!isEmptyBlock(el) && el.hasChildNodes()) {
+        const candidate = el.lastChild;
         if (candidate.tagName === "BR" && candidate.previousSibling?.tagName !== "BR") {
             br = candidate;
             candidate.remove();
