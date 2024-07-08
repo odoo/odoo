@@ -106,10 +106,14 @@ export class MailMessage extends models.ServerModel {
         for (const message of messages) {
             const thread =
                 message.model && this.env[message.model]._filter([["id", "=", message.res_id]])[0];
-            const attachments = IrAttachment._filter([["id", "in", message.attachment_ids]]);
-            const formattedAttachments = IrAttachment._attachment_format(
-                attachments.map((attachment) => attachment.id)
-            ).sort((a1, a2) => (a1.id < a2.id ? -1 : 1)); // sort attachments from oldest to most recent
+            // sort attachments from oldest to most recent;
+            const attachments = IrAttachment._filter([["id", "in", message.attachment_ids]]).sort(
+                (a1, a2) => (a1.id < a2.id ? -1 : 1)
+            );
+            store.add(
+                "Attachment",
+                IrAttachment._attachment_format(attachments.map((attachment) => attachment.id))
+            );
             const partners = ResPartner._filter([["id", "in", message.partner_ids]]);
             const linkPreviews = MailLinkPreview._filter([["id", "in", message.link_preview_ids]]);
             const linkPreviewsFormatted = linkPreviews.map((linkPreview) =>
@@ -149,7 +153,7 @@ export class MailMessage extends models.ServerModel {
                 });
             }
             const response = {
-                attachments: formattedAttachments,
+                attachments: attachments.map((attachment) => ({ id: attachment.id })),
                 body: message.body,
                 create_date: message.create_date,
                 date: message.date,
