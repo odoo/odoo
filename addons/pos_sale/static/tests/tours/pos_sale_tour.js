@@ -203,3 +203,14 @@ registry.category("web_tour.tours").add("PosSettleCustomPrice", {
             ProductScreen.selectedOrderlineHas("Product A", "1", "100"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PoSSaleOrderWithDownpayment", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.selectedOrderlineHas("Down Payment (POS)", "1.00", "20.00"),
+            ProductScreen.totalAmountIs(980.0),
+        ].flat(),
+});
