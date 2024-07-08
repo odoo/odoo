@@ -59,6 +59,7 @@
     <!-- <WeList addItemTitle="'Add new item to list'" renderListItems="''" hasDefault="'multiple'" defaultValue="'Something'"> -->
         <t t-set-slot="title">A wonderful WeList</t>
     </WeList>
+    <!-- Disabled because creates errors in tours with restricted editor
     <WeMany2one title="'Menu'"
                 setPageTemplate="''"
                 model="'website.page'"
@@ -72,6 +73,7 @@
             createMethod="'createGroup'">
         <t t-set-slot="title">Menu groups</t>
     </WeMany2many>
+    -->
 </t>
 
 <t t-name="web_editor.container_width">
