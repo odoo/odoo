@@ -26,8 +26,10 @@
                 <div t-ref="products" class="overflow-y-auto flex-grow-1">
                     <t t-if="!ui.isSmall or getChildCategories(this.pos.selectedCategory).length === 0 or searchWord or pos.showResultMobile">
                         <div t-if="productsToDisplay.length != 0 and pos.posHasValidProduct()" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
+                            <t t-set="productToNotDisplay" t-value="this.getProductListToNotDisplay()"/>
                             <t  t-foreach="productsToDisplay" t-as="product" t-key="product.id">
                                 <ProductCard
+                                    t-if="!productToNotDisplay.has(product.id)"
                                     class="pos.productViewMode"
                                     name="product.display_name"
                                     productId="product.id"

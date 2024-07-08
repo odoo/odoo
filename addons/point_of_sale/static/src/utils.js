@@ -32,7 +32,6 @@ export function deduceUrl(url) {
 
 export function constructFullProductName(line, attribute_value_by_id, display_name) {
     let attributeString = "";
-
     if (line.attribute_value_ids && line.attribute_value_ids.length > 0) {
         for (const valId of line.attribute_value_ids) {
             const value = attribute_value_by_id[valId];

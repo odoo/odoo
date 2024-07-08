@@ -131,7 +131,11 @@ export class ProductScreen extends Component {
             { value: "7" },
             { value: "8" },
             { value: "9" },
-            { value: "price", text: _t("Price"), disabled: !this.pos.cashierHasPriceControlRights() },
+            {
+                value: "price",
+                text: _t("Price"),
+                disabled: !this.pos.cashierHasPriceControlRights(),
+            },
             { value: "-", text: "+/-" },
             { value: "0" },
             { value: this.env.services.localization.decimalPoint },
@@ -173,7 +177,10 @@ export class ProductScreen extends Component {
         let product = this.pos.models["product.product"].getBy("barcode", code.base_code);
 
         if (!product) {
-            const productPackaging = this.pos.models["product.packaging"].getBy("barcode", code.base_code);
+            const productPackaging = this.pos.models["product.packaging"].getBy(
+                "barcode",
+                code.base_code
+            );
             product = productPackaging && productPackaging.product_id;
         }
 
@@ -341,10 +348,7 @@ export class ProductScreen extends Component {
             list = this.pos.models["product.product"].getAll();
         }
 
-        list = list
-            .filter((product) => !this.getProductListToNotDisplay().includes(product.id))
-            .slice(0, 100);
-
+        list = list.slice(0, 100);
         return this.searchWord !== ""
             ? list
             : list.sort((a, b) => a.display_name.localeCompare(b.display_name));
@@ -354,7 +358,7 @@ export class ProductScreen extends Component {
         const products = this.pos.selectedCategoryId
             ? this.getProductsByCategory(this.pos.selectedCategoryId)
             : this.pos.models["product.product"].getAll();
-    
+
         const exactMatches = products.filter((product) => product.exactMatch(searchWord));
 
         if (exactMatches.length > 0 && searchWord.length > 2) {
@@ -381,7 +385,7 @@ export class ProductScreen extends Component {
     }
 
     getProductListToNotDisplay() {
-        return [this.pos.config.tip_product_id, ...this.pos.pos_special_products_ids];
+        return new Set([this.pos.config.tip_product_id, ...this.pos.pos_special_products_ids]);
     }
 
     async loadDemoDataProducts() {
@@ -469,17 +473,17 @@ export class ProductScreen extends Component {
             ["available_in_pos", "=", true],
             ["sale_ok", "=", true],
         ];
-    
+
         if (config.limit_categories && config.iface_available_categ_ids) {
             const categIds = config.iface_available_categ_ids.map((categ) => categ.id);
-            domain.push(['pos_categ_ids', 'in', categIds]);
+            domain.push(["pos_categ_ids", "in", categIds]);
         }
         const product = await this.pos.data.searchRead(
             "product.product",
             domain,
             this.pos.data.fields["product.product"],
             {
-                context: {display_default_code: false},
+                context: { display_default_code: false },
                 offset: this.state.currentOffset,
                 limit: 30,
             }
