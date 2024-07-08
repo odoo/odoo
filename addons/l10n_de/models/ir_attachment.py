@@ -19,7 +19,17 @@ class IrAttachment(models.Model):
                 'application/xml',
             )
         )
+<<<<<<< saas-17.4
         id2move = self.env['account.move'].browse(audit_trail_attachments.mapped('res_id')).exists().grouped('id')
+||||||| 2575c726a412148ba26145b656fe80778de754a7
+            ):
+                move = self.env['account.move'].browse(attachment.res_id)
+                if move.posted_before and move.country_code == 'DE':
+                    raise UserError(_("You cannot remove parts of the audit trail."))
+=======
+        moves = self.env['account.move'].browse(audit_trail_attachments.mapped('res_id')).exists()
+        id2move = {move.id: move for move in moves}
+>>>>>>> 3df719155882bde200a8582af93ff8f28985cf68
         for attachment in audit_trail_attachments:
             move = id2move.get(attachment.res_id)
             if move and move.posted_before and move.country_code == 'DE':
