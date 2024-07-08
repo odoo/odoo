@@ -100,6 +100,9 @@ export class MailMessage extends models.ServerModel {
         const messages = MailMessage._filter([["id", "in", ids]]).sort(
             (a, b) => ids.indexOf(a) - ids.indexOf(b)
         );
+        const notifications = MailNotification._filtered_for_web_client(
+            MailNotification._filter([["mail_message_id", "in", ids]]).map((n) => n.id)
+        );
         for (const message of messages) {
             const thread =
                 message.model && this.env[message.model]._filter([["id", "=", message.res_id]])[0];
@@ -107,15 +110,6 @@ export class MailMessage extends models.ServerModel {
             const formattedAttachments = IrAttachment._attachment_format(
                 attachments.map((attachment) => attachment.id)
             ).sort((a1, a2) => (a1.id < a2.id ? -1 : 1)); // sort attachments from oldest to most recent
-            const allNotifications = MailNotification._filter([
-                ["mail_message_id", "=", message.id],
-            ]);
-            let notifications = MailNotification._filtered_for_web_client(
-                allNotifications.map((notification) => notification.id)
-            );
-            notifications = MailNotification._notification_format(
-                notifications.map((notification) => notification.id)
-            );
             const partners = ResPartner._filter([["id", "in", message.partner_ids]]);
             const linkPreviews = MailLinkPreview._filter([["id", "in", message.link_preview_ids]]);
             const linkPreviewsFormatted = linkPreviews.map((linkPreview) =>
@@ -155,8 +149,10 @@ export class MailMessage extends models.ServerModel {
                 });
             }
             const response = {
-                ...message,
                 attachments: formattedAttachments,
+                body: message.body,
+                create_date: message.create_date,
+                date: message.date,
                 default_subject:
                     message.model &&
                     message.res_id &&
@@ -164,14 +160,26 @@ export class MailMessage extends models.ServerModel {
                         ? ResFake._message_compute_subject([message.res_id])
                         : MailThread._message_compute_subject([message.res_id])
                     ).get(message.res_id),
+                id: message.id,
+                is_discussion: message.is_discussion,
+                is_note: message.is_note,
                 linkPreviews: linkPreviewsFormatted,
-                reactions: reactionGroups,
-                notifications,
+                message_type: message.message_type,
+                model: message.model,
+                notifications: notifications
+                    .filter((notification) => notification.mail_message_id == message.id)
+                    .map((notification) => ({ id: notification.id })),
                 parentMessage: message.parent_id ? { id: message.parent_id } : false,
+                pinned_at: message.pinned_at,
+                reactions: reactionGroups,
                 recipients: partners.map((p) => ({ id: p.id, name: p.name, type: "partner" })),
                 record_name:
                     thread && (thread.name !== undefined ? thread.name : thread.display_name),
-                pinned_at: message.pinned_at,
+                res_id: message.res_id,
+                scheduledDatetime: false,
+                subject: message.subject,
+                subtype_description: message.subtype_description,
+                write_date: message.write_date,
             };
             delete response.author_id;
             if (message.subtype_id) {
@@ -190,10 +198,14 @@ export class MailMessage extends models.ServerModel {
                 Object.assign(response, { thread });
             }
             if (for_current_user) {
-                const notifications_partners = allNotifications
-                    .filter((notification) => !notification.is_read)
-                    .map((notification) => notification.res_partner_id);
-                response["needaction"] = notifications_partners.includes(this.env.user?.partner_id);
+                response["needaction"] = Boolean(
+                    this.env.user &&
+                        MailNotification.search([
+                            ["mail_message_id", "=", message.id],
+                            ["is_read", "=", false],
+                            ["res_partner_id", "=", this.env.user.partner_id],
+                        ]).length
+                );
                 response["starred"] = message.starred_partner_ids?.includes(
                     this.env.user?.partner_id
                 );
@@ -226,6 +238,7 @@ export class MailMessage extends models.ServerModel {
             }
         }
         this._author_to_store(ids, store);
+        store.add(notifications);
     }
     _author_to_store(ids, store) {
         /** @type {import("mock_models").MailGuest} */
@@ -510,21 +523,19 @@ export class MailMessage extends models.ServerModel {
         const MailNotification = this.env["mail.notification"];
 
         const messages = this._filter([["id", "in", ids]]);
+        const notifications = MailNotification._filtered_for_web_client(
+            MailNotification._filter([["mail_message_id", "in", ids]]).map((n) => n.id)
+        );
         for (const message of messages) {
-            let notifications = MailNotification._filter([["mail_message_id", "=", message.id]]);
-            notifications = MailNotification._filtered_for_web_client(
-                notifications.map((notification) => notification.id)
-            );
-            notifications = MailNotification._notification_format(
-                notifications.map((notification) => notification.id)
-            );
             const message_data = {
                 author: message.author_id ? { id: message.author_id, type: "partner" } : false,
                 body: message.body,
                 date: message.date,
                 id: message.id,
                 message_type: message.message_type,
-                notifications: notifications,
+                notifications: notifications
+                    .filter((notification) => notification.mail_message_id == message.id)
+                    .map((notification) => ({ id: notification.id })),
                 thread: false,
             };
             if (message.res_id) {
@@ -537,6 +548,7 @@ export class MailMessage extends models.ServerModel {
             }
             store.add("Message", message_data);
         }
+        store.add(notifications);
     }
 
     _cleanup_side_records([id]) {

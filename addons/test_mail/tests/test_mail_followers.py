@@ -898,19 +898,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "message_type": "notification",
                     "model": "mail.test.simple",
                     "needaction": True,
-                    "notifications": [
-                        {
-                            "failure_type": False,
-                            "id": notif.id,
-                            "notification_status": "sent",
-                            "notification_type": "inbox",
-                            "persona": {
-                                "displayName": "Ernest Employee",
-                                "id": self.env.user.partner_id.id,
-                                "type": "partner",
-                            },
-                        },
-                    ],
+                    "notifications": [{"id": notif.id}],
                     "pinned_at": False,
                     "reactions": [],
                     "recipients": [
@@ -927,6 +915,16 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "write_date": fields.Datetime.to_string(message.write_date),
                 },
             ],
+            "Notification": [
+                {
+                    "failure_type": False,
+                    "id": notif.id,
+                    "message": {"id": message.id},
+                    "notification_status": "sent",
+                    "notification_type": "inbox",
+                    "persona": {"id": self.env.user.partner_id.id, "type": "partner"},
+                },
+            ],
             "Persona": [
                 {
                     "id": self.user_admin.partner_id.id,
@@ -936,6 +934,11 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "type": "partner",
                     "userId": self.user_admin.id,
                     "write_date": fields.Datetime.to_string(self.user_admin.write_date),
+                },
+                {
+                    "displayName": "Ernest Employee",
+                    "id": self.env.user.partner_id.id,
+                    "type": "partner",
                 },
             ],
             "Thread": [

@@ -30,22 +30,28 @@ export class MailNotification extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _notification_format(ids) {
+    _to_store(ids, store) {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
         const notifications = this._filter([["id", "in", ids]]);
-        return notifications.map((notification) => {
+        for (const notification of notifications) {
             const partner = ResPartner._filter([["id", "=", notification.res_partner_id]])[0];
-            return {
-                id: notification.id,
-                notification_type: notification.notification_type,
-                notification_status: notification.notification_status,
+            if (partner) {
+                store.add("Persona", {
+                    displayName: partner.display_name,
+                    id: partner.id,
+                    type: "partner",
+                });
+            }
+            store.add("Notification", {
                 failure_type: notification.failure_type,
-                persona: partner
-                    ? { id: partner.id, displayName: partner.display_name, type: "partner" }
-                    : undefined,
-            };
-        });
+                id: notification.id,
+                message: { id: notification.mail_message_id },
+                notification_status: notification.notification_status,
+                notification_type: notification.notification_type,
+                persona: partner ? { id: partner.id, type: "partner" } : false,
+            });
+        }
     }
 }

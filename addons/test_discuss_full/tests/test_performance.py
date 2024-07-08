@@ -321,9 +321,16 @@ class TestDiscussFullPerformance(HttpCase):
                 self._expected_result_for_message(self.channel_livechat_1),
                 self._expected_result_for_message(self.channel_livechat_2),
             ],
+            "Notification": [
+                self._expected_result_for_notification(self.channel_channel_public_1),
+            ],
             "Persona": [
                 self._expected_result_for_persona(self.users[2]),
-                self._expected_result_for_persona(self.users[0], also_livechat=True),
+                self._expected_result_for_persona(
+                    self.users[0],
+                    also_livechat=True,
+                    also_notification=True,
+                ),
                 self._expected_result_for_persona(self.users[12]),
                 self._expected_result_for_persona(self.users[14]),
                 self._expected_result_for_persona(self.users[15]),
@@ -1025,19 +1032,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "message_type": "comment",
                 "model": "discuss.channel",
                 "needaction": True,
-                "notifications": [
-                    {
-                        "failure_type": False,
-                        "id": last_message.notification_ids.id,
-                        "notification_status": "sent",
-                        "notification_type": "inbox",
-                        "persona": {
-                            "displayName": "Ernest Employee",
-                            "id": self.users[0].partner_id.id,
-                            "type": "partner",
-                        },
-                    },
-                ],
+                "notifications": [{"id": last_message.notification_ids.id}],
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
                 "pinned_at": False,
@@ -1214,8 +1209,26 @@ class TestDiscussFullPerformance(HttpCase):
             }
         return {}
 
+    def _expected_result_for_notification(self, channel):
+        last_message = channel._get_last_messages()
+        if channel == self.channel_channel_public_1:
+            return {
+                "failure_type": False,
+                "id": last_message.notification_ids.id,
+                "message": {"id": last_message.id},
+                "notification_status": "sent",
+                "notification_type": "inbox",
+                "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
+            }
+        return {}
+
     def _expected_result_for_persona(
-        self, user=None, guest=None, only_inviting=False, also_livechat=False
+        self,
+        user=None,
+        guest=None,
+        only_inviting=False,
+        also_livechat=False,
+        also_notification=False,
     ):
         if user == self.users[0]:
             res = {
@@ -1239,6 +1252,8 @@ class TestDiscussFullPerformance(HttpCase):
                         "is_public": False,
                     }
                 )
+            if also_notification:
+                res["displayName"] = "Ernest Employee"
             return res
         if user == self.users[1]:
             return {
