@@ -1,6 +1,6 @@
 import { Plugin } from "../plugin";
 import { isProtected, isProtecting } from "../utils/dom_info";
-import { closestElement } from "../utils/dom_traversal";
+import { closestElement, childNodes } from "../utils/dom_traversal";
 
 export class ProtectedNodePlugin extends Plugin {
     static name = "protected_node";
@@ -40,7 +40,7 @@ export class ProtectedNodePlugin extends Plugin {
                 if (
                     candidate.closest(`[data-oe-protected="true"],[data-oe-protected=""]`) === elem
                 ) {
-                    descendantsToRemove.push(...candidate.childNodes);
+                    descendantsToRemove.push(...childNodes(candidate));
                 }
             }
             return descendantsToRemove;

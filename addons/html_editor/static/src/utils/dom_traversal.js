@@ -73,6 +73,40 @@ export function ancestors(node, editable) {
 }
 
 /**
+ * Get a static array of children, to avoid manipulating the live NodeList for
+ * better performances.
+ *
+ * @param {Element}} elem
+ * @returns {Array<Element>} children
+ */
+export function children(elem) {
+    const children = [];
+    let child = elem.firstElementChild;
+    while (child) {
+        children.push(child);
+        child = child.nextElementSibling;
+    }
+    return children;
+}
+
+/**
+ * Get a static array of childNodes, to avoid manipulating the live NodeList for
+ * better performances.
+ *
+ * @param {Node}} node
+ * @returns {Array<Node>} childNodes
+ */
+export function childNodes(node) {
+    const childNodes = [];
+    let child = node.firstChild;
+    while (child) {
+        childNodes.push(child);
+        child = child.nextSibling;
+    }
+    return childNodes;
+}
+
+/**
  * Take a node, return all of its descendants, in depth-first order.
  *
  * @param {Node} node
