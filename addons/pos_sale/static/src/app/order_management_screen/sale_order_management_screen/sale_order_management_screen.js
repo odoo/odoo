@@ -157,7 +157,7 @@ export class SaleOrderManagementScreen extends Component {
             // settle the order
             const lines = sale_order.order_line;
             const product_to_add_in_pos = lines
-                .filter((line) => !this.pos.models["product.product"].get(line.product_id))
+                .filter((line) => !this.pos.models["product.product"].get(line.product_id) && line.product_id)
                 .map((line) => line.product_id);
             if (product_to_add_in_pos.length) {
                 const confirmed = await ask(this.dialog, {
@@ -200,7 +200,7 @@ export class SaleOrderManagementScreen extends Component {
 
             for (var i = 0; i < lines.length; i++) {
                 const line = lines[i];
-                const productProduct = this.pos.models["product.product"].get(line.product_id);
+                const productProduct = line.is_downpayment ? this.pos.config.down_payment_product_id : this.pos.models["product.product"].get(line.product_id);
 
                 if (!productProduct) {
                     continue;
