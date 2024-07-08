@@ -531,11 +531,11 @@ test("lazy compute should re-compute while they are observed", async () => {
     expect.verifySteps(["computing", "render many"]);
     observe = false;
     channel.count = 6;
-    expect.verifySteps(["computing"]);
+    expect.verifySteps(["computing"]); // due to technical limitation: value hasn't changed so probably still observed
     channel.count = 7;
-    expect.verifySteps(["computing"]);
+    expect.verifySteps(["computing"]); // again
     channel.count = 1;
-    expect.verifySteps(["computing"]);
+    expect.verifySteps(["computing"]); // now value changed, so can detect re-observe
     channel.count = 0;
     expect.verifySteps([]);
     channel.count = 7;
@@ -883,4 +883,29 @@ test("setup() has precedence over instance class field definition", async () => 
     const store = await start();
     const test = store.Test2.insert();
     expect(test.x).toBe(true);
+});
+
+test("computed fields have precedence over explicit write", async () => {
+    // i.e. manually updating a computed fields to a different value should request a compute.
+    (class Message extends Record {
+        static id = "id";
+        id;
+        body = Record.attr("", {
+            compute() {
+                if (this.markdown) {
+                    return this.markdown;
+                }
+                return this.body;
+            },
+        });
+        markdown = "";
+    }).register(localRegistry);
+    const store = await start();
+    const message = store.Message.insert({ id: 1, markdown: "_** marked **_" });
+    expect(toRaw(message)._raw.body).toBe(""); // lazily computed, so not yet computed when unobserved
+    expect(message.body).toBe("_** marked **_"); // observed, thus computed
+    message.body = "bodied";
+    expect(message.body).toBe("_** marked **_");
+    message.update({ body: "bodied", markdown: false });
+    expect(message.body).toBe("bodied");
 });
