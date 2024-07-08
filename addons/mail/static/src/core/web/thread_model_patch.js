@@ -51,6 +51,9 @@ patch(Thread.prototype, {
         this.store.insert(data);
     },
     open(options) {
+        if (this.model === "discuss.channel") {
+            this.store.env.services["bus_service"].addChannel(this.busChannel);
+        }
         if (!this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
             this.openChatWindow(options);
             return;
