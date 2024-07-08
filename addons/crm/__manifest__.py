@@ -71,7 +71,11 @@
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'crm/static/src/**/*',
+            'crm/static/src/**',
+            ('remove', 'crm/static/src/views/forecast_graph/**'),
+        ],
+        'web.assets_backend_lazy': [
+            'crm/static/src/views/forecast_graph/**',
         ],
         'web.assets_tests': [
             'crm/static/tests/tours/**/*',
