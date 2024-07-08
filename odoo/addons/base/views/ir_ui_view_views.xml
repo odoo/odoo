@@ -25,6 +25,9 @@
                         Be aware that editing the architecture of a standard view is not advised, since the changes will be overwritten during future module updates.<br/>
                         We recommend applying modifications to standard views through inherited views or customization with Odoo Studio.
                     </div>
+                    <div class="alert alert-warning" role="alert" invisible="not warning_info">
+                        <field name="warning_info"/>
+                    </div>
                     <notebook>
                         <page string="Architecture" name="architecture">
                             <field name="arch_db" class="oe_edit_only oe_no_translation_content"/>
