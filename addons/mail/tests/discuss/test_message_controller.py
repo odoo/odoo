@@ -97,7 +97,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         self.assertEqual(res2.status_code, 200)
         data1 = res2.json()["result"]
         self.assertEqual(
-            data1["Message"][0]["attachments"],
+            data1["Attachment"],
             [
                     {
                     "checksum": False,
@@ -153,7 +153,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         self.assertEqual(res4.status_code, 200)
         data2 = res4.json()["result"]
         self.assertEqual(
-            data2["Message"][0]["attachments"],
+            data2["Attachment"],
             [
                 {
                     "checksum": False,
@@ -199,7 +199,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         self.assertEqual(res5.status_code, 200)
         data3 = res5.json()["result"]
         self.assertEqual(
-            data3["Message"][0]["attachments"],
+            data3["Attachment"],
             [
                 {
                     "checksum": False,

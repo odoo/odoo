@@ -1034,11 +1034,8 @@ class Message(models.Model):
                     {"id": notif.id}
                     for notif in message.notification_ids._filtered_for_web_client()
                 ],
-                "attachments": sorted(
-                    # sudo: mail.message - reading attachments on accessible message is allowed
-                    message.sudo().attachment_ids._attachment_format(),
-                    key=lambda a: a["id"],
-                ),
+                # sudo: mail.message - reading attachments on accessible message is allowed
+                "attachments": [{"id": a.id} for a in message.sudo().attachment_ids.sorted("id")],
                 "linkPreviews": link_previews._link_preview_format(),
                 "reactions": reaction_groups,
                 "pinned_at": message.pinned_at,
@@ -1076,6 +1073,8 @@ class Message(models.Model):
         # sudo: mail.message: access to author is allowed
         self.sudo()._author_to_store(store)
         store.add(self.notification_ids._filtered_for_web_client())
+        # sudo: mail.message - reading attachments on accessible message is allowed
+        store.add("Attachment", self.sudo().attachment_ids.sorted("id")._attachment_format())
         # Add extras at the end to guarantee order in result. In particular, the parent message
         # needs to be after the current message (client code assuming the first received message is
         # the one just posted for example, and not the message being replied to).
