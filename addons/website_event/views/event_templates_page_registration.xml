@@ -151,6 +151,9 @@
 <!-- cta_additional_classes {string} - classes applied to the main CTA   -->
 <template id="registration_template" name="Registration">
     <button t-if="event.event_registrations_open" type="button" data-bs-toggle="modal" data-bs-target="#modal_ticket_registration" t-attf-class="btn btn-primary {{cta_additional_classes}}">Register</button>
+    <div t-if="registration_error_code == 'insufficient_seats'" class="alert alert-danger my-3" role="alert">
+        Registration failed! These tickets are not available anymore.
+    </div>
     <t t-if="not event.event_registrations_open">
         <!-- Delayed registration time -->
         <div t-if="not event.event_registrations_started and not event.event_registrations_sold_out" class="alert alert-info mb-3 small" role="status">
