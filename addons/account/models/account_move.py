@@ -3768,8 +3768,8 @@ class AccountMove(models.Model):
             return
         to_reverse = self.env['account.move']
         to_unlink = self.env['account.move']
-        lock_date = self.company_id._get_user_fiscal_lock_date()
         for move in self:
+            lock_date = move.company_id._get_user_fiscal_lock_date()
             if move.inalterable_hash or move.date <= lock_date:
                 to_reverse += move
             else:
