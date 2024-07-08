@@ -20,4 +20,41 @@
             </xpath>
         </field>
     </record>
+
+    <record id="vpicktree" model="ir.ui.view">
+        <field name="name">stock.picking.tree.inherit.stock.picking.batch</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+
+            <field name="picking_type_id" position="after">
+                <field name="batch_id" optional="show"
+                    domain="[
+                        ('state', 'in', ['draft', 'in_progress']),
+                        '|',
+                            ('picking_type_id', '=', picking_type_id),
+                            ('picking_type_id', '=', False),
+                    ]"
+                    context="{'default_picking_type_id': picking_type_id}" readonly="state in ['cancel', 'done']"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="stock_picking_view_batch_tree_ref" model="ir.ui.view">
+        <field name="name">stock.picking.view.tree.inherit.stock.picking.batch</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="default_order">batch_sequence</attribute>
+            </xpath>
+            <field name="company_id" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="company_id" position="before">
+                <field name="batch_sequence" widget="handle"/>
+            </field>
+        </field>
+    </record>
 </odoo>
