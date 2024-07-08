@@ -8,6 +8,15 @@
             <xpath expr="//field[@name='currency_id']" position="after">
                 <field name="l10n_in_upi_id" invisible="country_code != 'IN'"/>
             </xpath>
+            <xpath expr="//field[@name='vat']" position="before">
+                <field name="l10n_in_pan" invisible="country_code != 'IN'"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="invisible">country_code != 'IN' or not l10n_in_gst</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="l10n_in_tan" invisible="country_code != 'IN' or not (module_l10n_in_tds or module_l10n_in_tcs)"/>
+            </xpath>
         </field>
     </record>
 </odoo>

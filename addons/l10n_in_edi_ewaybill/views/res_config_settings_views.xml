@@ -5,11 +5,14 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <div id="india_integration_section" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </div>
-            <xpath expr="//block[@id='india_localization']" position="inside">
-                <setting id="l10n_in_eway_iap" string="Setup Electronic Waybill" help="Check the documentation to get credentials." documentation="/applications/finance/fiscal_localizations/india.html" company_dependent="1" >
+            <xpath expr="//div[@id='l10n_in_gst_ewaybill']" position="inside">
+                <div id="l10n_in_eway_iap">
+                    <div class="mb-3 mt-2">
+                        <span class="o_form_label pe-2">Setup Electronic Waybill</span>
+                        <widget name="documentation_link" path="/applications/finance/fiscal_localizations/india.html" icon="fa-question-circle"/>
+                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                        <div class="text-muted">Check the documentation to get credentials.</div>
+                    </div>
                     <div class="content-group">
                         <div class="mt16 row">
                             <label for="l10n_in_edi_ewaybill_username" string="Username" class="col-3 col-lg-3 o_light_label"/>
@@ -27,10 +30,10 @@
                     <div class='mt8'>
                         <button name="l10n_in_edi_ewaybill_test" icon="oi-arrow-right" type="object" string="Verify Username and Password" class="btn-link"/>
                     </div>
-                    <div class='mt8'>
+                    <div class='mt8 mb-3'>
                         <button name="l10n_in_edi_buy_iap" title="Costs 1 credit per transaction. Free 200 credits will be available for the first time." icon="fa-arrow-right" type="object" string="Buy credits" class="btn-link"/>
                     </div>
-                </setting>
+                </div>
             </xpath>
         </field>
     </record>

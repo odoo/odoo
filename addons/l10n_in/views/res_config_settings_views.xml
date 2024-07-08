@@ -16,12 +16,6 @@
                     <field name="module_l10n_in_edi_ewaybill" class="oe_inline" widget="upgrade_boolean"/>
                 </setting>
             </block>
-            <xpath expr="//app[@name='account']" position="inside">
-                <div id="india_integration_section" invisible="1">
-                    <block title="Indian Integration" id="india_localization" invisible="country_code != 'IN'">
-                    </block>
-                </div>
-            </xpath>
             <app name="account" position="inside">
                 <block title="Product" name="l10n_in_product_setting_container" invisible="country_code != 'IN'">
                     <setting string="Enable HSN/SAC Validation" help="HSN/SAC Digit Validation for GST Compliance based on your Aggregate Annual Turnover (AATO).">
@@ -29,6 +23,41 @@
                     </setting>
                 </block>
             </app>
+            <xpath expr="//block[@name='fiscal_localization_setting_container']" position="after">
+                <block title="Indian Localization" invisible="country_code != 'IN'">
+                    <setting>
+                        <field name="module_l10n_in_tds" readonly="module_l10n_in_tds" force_save="1"/>
+                        <div invisible="not module_l10n_in_tds">
+                            <field name="module_accountant" widget="upgrade_boolean" force_save="1" readonly="module_accountant"/>
+                            <label class="ps-2" for="module_accountant" string="TDS Report"/>
+                        </div>
+                    </setting>
+                    <setting>
+                        <field name="module_l10n_in_tcs" readonly="module_l10n_in_tcs" force_save="1"/>
+                        <div invisible="not module_l10n_in_tcs">
+                            <field name="module_accountant" widget="upgrade_boolean" force_save="1" readonly="module_accountant"/>
+                            <label class="ps-2" for="module_accountant" string="TCS Report"/>
+                        </div>
+                    </setting>
+                    <setting class="col-lg-12">
+                        <field name="l10n_in_gst" readonly="l10n_in_gst" force_save="1"/>
+                        <div class="row" invisible="not l10n_in_gst">
+                            <div class="col-lg-6" id="l10n_in_gst_report">
+                                <field name="module_l10n_in_reports" widget="upgrade_boolean"  force_save="1" readonly="module_l10n_in_reports"/>
+                                <label class="ps-2" for="module_l10n_in_reports" string="GST Report"/>
+                            </div>
+                            <div class="col-lg-6" id="l10n_in_gst_edi">
+                                <field name="module_l10n_in_edi" widget="upgrade_boolean" force_save="1" readonly="module_l10n_in_edi"/>
+                                <label class="ps-2" for="module_l10n_in_edi" string="GST E-Invoice"/>
+                            </div>
+                            <div class="col-lg-6" id="l10n_in_gst_ewaybill">
+                                <field name="module_l10n_in_edi_ewaybill" widget="upgrade_boolean" force_save="1" readonly="module_l10n_in_edi_ewaybill"/>
+                                <label class="ps-2" for="module_l10n_in_edi_ewaybill" string="GST E-WayBill"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
         </field>
     </record>
 </odoo>

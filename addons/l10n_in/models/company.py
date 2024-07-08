@@ -16,6 +16,11 @@ class ResCompany(models.Model):
         store=True,
         readonly=False,
     )
+    l10n_in_pan = fields.Char(string="PAN")
+    module_l10n_in_tds = fields.Boolean(string="TDS")
+    module_l10n_in_tcs = fields.Boolean(string="TCS")
+    l10n_in_tan = fields.Char(string="TAN", help="Tax Deduction and Collection Account Number")
+    l10n_in_gst = fields.Boolean(string="GST")
 
     @api.depends('vat')
     def _compute_l10n_in_hsn_code_digit(self):
