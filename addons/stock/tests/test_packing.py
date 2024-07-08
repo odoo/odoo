@@ -1802,6 +1802,38 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(backorder.move_ids[0].product_uom_qty, 2)
         self.assertEqual(backorder.move_ids[1].product_uom_qty, 10)
 
+    def test_put_in_pack_partial_different_destinations(self):
+        """ Test putting some of the move lines of a pikcing with different destinations in a package """
+        self.productA.tracking = 'serial'
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+        })
+        picking_form = Form(picking)
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.productA
+            move.product_uom_qty = 5.0
+        picking = picking_form.save()
+        picking.action_confirm()
+
+        self.assertItemsEqual(picking.move_line_ids.mapped('quantity'), [1.0] * 5)
+
+        sub_location = self.env['stock.location'].create({
+            'name': 'Sub Location',
+            'location_id': self.stock_location.id,
+        })
+        picking.move_line_ids[0].location_dest_id = sub_location
+
+        destination_wizard_dict = picking.move_line_ids[0:2].action_put_in_pack()
+        destination_wizard = self.env[destination_wizard_dict['res_model']].with_context(destination_wizard_dict['context']).browse(destination_wizard_dict['res_id'])
+        self.assertEqual(len(destination_wizard.move_line_ids), 2)
+        destination_wizard.action_done()
+
+        self.assertEqual(len(picking.move_line_ids[0:2].result_package_id), 1)
+        self.assertEqual(picking.move_line_ids[0].result_package_id, picking.move_line_ids[1].result_package_id)
+        self.assertEqual(len(picking.move_line_ids[2:].result_package_id), 0)
+        self.assertEqual(picking.move_line_ids[0:2].location_dest_id, destination_wizard.location_dest_id)
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPackagePropagation(TestPackingCommon):
