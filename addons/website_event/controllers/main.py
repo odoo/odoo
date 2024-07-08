@@ -5,6 +5,7 @@ import re
 import werkzeug
 
 from ast import literal_eval
+from collections import Counter
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
@@ -357,9 +358,9 @@ class WebsiteEventController(http.Controller):
             If we don't, the user is instead redirected to page to register with a
             formatted error message. """
         registrations_data = self._process_attendees_form(event, post)
-        event_ticket_ids = {registration['event_ticket_id'] for registration in registrations_data}
-        event_tickets = request.env['event.event.ticket'].browse(event_ticket_ids)
-        if any(event_ticket.seats_limited and event_ticket.seats_available < len(registrations_data) for event_ticket in event_tickets):
+        registration_tickets = Counter(registration['event_ticket_id'] for registration in registrations_data)
+        event_tickets = request.env['event.event.ticket'].browse(list(registration_tickets.keys()))
+        if any(event_ticket.seats_limited and event_ticket.seats_available < registration_tickets.get(event_ticket.id) for event_ticket in event_tickets):
             return request.redirect('/event/%s/register?registration_error_code=insufficient_seats' % event.id)
         attendees_sudo = self._create_attendees_from_registration_post(event, registrations_data)
 
