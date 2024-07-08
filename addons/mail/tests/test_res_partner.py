@@ -451,14 +451,18 @@ class TestPartner(MailCommon):
             'login': 'michmich',
             'name': 'Micheline Employee',
         })
-        self.assertEqual(len(new_user.message_ids), 1, 'Should contain Contact created log message')
+        self.env.cr.precommit.run()
+        self.assertEqual(len(new_user.message_ids), 1, 'Should contain User created log message')
         new_msg = new_user.message_ids
-        self.assertNotIn('Portal Access Granted', new_msg.body)
-        self.assertIn('Contact created', new_msg.body)
+        self.assertFalse(new_msg.tracking_value_ids)
+        self.assertIn('User created', new_msg.body)
 
         new_user.write({'groups_id': [(4, group_portal.id), (3, group_user.id)]})
+        self.env.cr.precommit.run()
         new_msg = new_user.message_ids[0]
-        self.assertIn('Portal Access Granted', new_msg.body)
+        self.assertRecordValues(new_msg.tracking_value_ids, [
+            {'new_value_char': 'User types / Portal', 'old_value_char': ''},
+        ])
         self.assertEqual(new_msg.subtype_id, subtype_note)
 
         # check at create
@@ -468,9 +472,10 @@ class TestPartner(MailCommon):
             'login': 'michmich.2',
             'name': 'Micheline Portal',
         })
-        self.assertEqual(len(new_user.message_ids), 2, 'Should contain Contact created + Portal access log messages')
+        self.env.cr.precommit.run()
+        self.assertEqual(len(new_user.message_ids), 1, 'Should contain User created log message')
         new_msg = new_user.message_ids[0]
-        self.assertIn('Portal Access Granted', new_msg.body)
+        self.assertFalse(new_msg.tracking_value_ids)
         self.assertEqual(new_msg.subtype_id, subtype_note)
 
     @users('admin')
