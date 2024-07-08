@@ -88,6 +88,9 @@ patch(ThreadService.prototype, {
     },
     /** @override */
     open(thread, replaceNewMessageChatWindow, options) {
+        if (thread.model === "discuss.channel") {
+            this.store.env.services["bus_service"].addChannel(thread.busChannel);
+        }
         if (!this.store.discuss.isActive && !this.ui.isSmall) {
             this._openChatWindow(thread, replaceNewMessageChatWindow, options);
             return;
