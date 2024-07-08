@@ -703,13 +703,6 @@ msgid "Assign Serial Numbers"
 msgstr "分配序號"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/product.py:0
-#, python-format
-msgid "At least one component can not be resupplied."
-msgstr ""
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Manufacturing Order."
 msgstr "在建立製造訂單時."
@@ -1117,6 +1110,15 @@ msgstr "取消"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Cancelled"
 msgstr "已取消"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Cannot compute days to prepare due to missing route info for at least 1 "
+"component or for the final product."
+msgstr "由於缺漏至少一項組件或最終產品的途程資訊，因此未能計算預備天數。"
 
 #. module: mrp
 #. odoo-python
