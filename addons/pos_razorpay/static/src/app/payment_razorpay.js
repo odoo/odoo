@@ -1,8 +1,10 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { getUTCString } from "@point_of_sale/utils";
 
 const REQUEST_TIMEOUT = 10000;
+const { DateTime } = luxon;
 
 export class PaymentRazorpay extends PaymentInterface {
     setup() {
@@ -161,7 +163,9 @@ export class PaymentRazorpay extends PaymentInterface {
                 paymentLine.razorpay_reference_no = response?.externalRefNumber;
                 paymentLine.razorpay_reverse_ref_no = response?.reverseReferenceNumber;
                 paymentLine.transactionId = response?.txnId;
-                paymentLine.payment_date = response?.createdTime;
+                // `createdTime` is provided in milliseconds in local GMT+5.5 timezone.
+                // Thus, we need to subtract 19800000 to get the correct time in milliseconds.
+                paymentLine.payment_date = this._getPaymentDate(response?.createdTime - 19800000);
                 this._removePaymentHandler(["p2pRequestId", "referenceId"]);
                 return resolve(response);
             } else {
@@ -174,6 +178,13 @@ export class PaymentRazorpay extends PaymentInterface {
             }
         };
         return new Promise(razorpayFetchPaymentStatus);
+    }
+
+    _getPaymentDate(timeMillis) {
+        const utcDate = timeMillis
+            ? DateTime.fromMillis(timeMillis, { zone: "utc" })
+            : DateTime.now();
+        return getUTCString(utcDate);
     }
 
     _stop_pending_payment() {

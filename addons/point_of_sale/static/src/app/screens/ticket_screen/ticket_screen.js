@@ -22,6 +22,7 @@ import {
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { PosOrderLineRefund } from "@point_of_sale/app/models/pos_order_line_refund";
 import { fuzzyLookup } from "@web/core/utils/search";
+import { parseUTCString } from "@point_of_sale/utils";
 
 const { DateTime } = luxon;
 const NBR_BY_PAGE = 30;
@@ -408,9 +409,7 @@ export class TicketScreen extends Component {
         }
     }
     getDate(order) {
-        return DateTime.fromFormat(order.date_order, "yyyy-MM-dd HH:mm:ss").toFormat(
-            "MM/dd/yyyy HH:mm:ss"
-        );
+        return formatDateTime(parseUTCString(order.date_order));
     }
     getTotal(order) {
         return this.env.utils.formatCurrency(order.get_total_with_tax());
@@ -632,10 +631,7 @@ export class TicketScreen extends Component {
                 modelField: "pos_reference",
             },
             DATE: {
-                repr: (order) =>
-                    formatDateTime(
-                        luxon.DateTime.fromFormat(order.date_order, "yyyy-MM-dd HH:mm:ss")
-                    ),
+                repr: (order) => this.getDate(order),
                 displayName: _t("Date"),
                 modelField: "date_order",
             },
