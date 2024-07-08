@@ -42,7 +42,9 @@ def add_stripped_items_before(node, spec, extract):
 
     for child in spec:
         if child.get('position') == 'move':
+            tail = child.tail
             child = extract(child)
+            child.tail = tail
         node.addprevious(child)
 
 
