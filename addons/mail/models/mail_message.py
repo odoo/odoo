@@ -1086,10 +1086,7 @@ class Message(models.Model):
             }
             # sudo: mail.message: access to author is allowed
             if guest_author := message.sudo().author_guest_id:
-                store.add(
-                    "Persona",
-                    guest_author._guest_format(fields={"id": True, "name": True}).get(guest_author),
-                )
+                store.add(guest_author, fields={"id": True, "name": True})
                 data["author"] = {"id": guest_author.id, "type": "guest"}
             # sudo: mail.message: access to author is allowed
             elif author := message.sudo().author_id:
