@@ -3644,7 +3644,8 @@ class WeMany2many extends UserValueComponent {
 }
 registry.category("snippet_widgets").add("WeMany2many", WeMany2many);
 
-const userValueWidgetsRegistry = {
+// TODO: @owl-options properly remove this registry
+export const userValueWidgetsRegistry = {
     'we-button': ButtonUserValueWidget,
     'we-checkbox': CheckboxUserValueWidget,
     'we-select': SelectUserValueWidget,
