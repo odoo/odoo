@@ -649,14 +649,21 @@ async function mail_message_update_content(request) {
         MailMessage._cleanup_side_records([message_id]);
     }
     const [message] = MailMessage.search_read([["id", "=", message_id]]);
-    BusBus._sendone(MailMessage._bus_notification_target(message_id), "mail.record/insert", {
-        Message: {
-            id: message_id,
-            body,
-            attachments: IrAttachment._attachment_format(attachment_ids),
-            pinned_at: message.pinned_at,
-        },
+    const broadcast_store = new mailDataHelpers.Store(
+        "Attachment",
+        IrAttachment._attachment_format(attachment_ids)
+    );
+    broadcast_store.add("Message", {
+        id: message_id,
+        body,
+        attachments: attachment_ids.map((id) => ({ id })),
+        pinned_at: message.pinned_at,
     });
+    BusBus._sendone(
+        MailMessage._bus_notification_target(message_id),
+        "mail.record/insert",
+        broadcast_store.get_result()
+    );
     return new mailDataHelpers.Store(
         MailMessage.browse(message_id),
         makeKwArgs({ for_current_user: true })
