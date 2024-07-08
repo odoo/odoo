@@ -11,14 +11,20 @@ class IrAttachment(models.Model):
 
     @api.ondelete(at_uninstall=True)
     def _except_audit_trail(self):
-        for attachment in self:
-            if attachment.res_model == 'account.move' and attachment.res_id and guess_mimetype(attachment.raw) in (
+        audit_trail_attachments = self.filtered(lambda attachment:
+            attachment.res_model == 'account.move'
+            and attachment.res_id
+            and guess_mimetype(attachment.raw) in (
                 'application/pdf',
                 'application/xml',
-            ):
-                move = self.env['account.move'].browse(attachment.res_id)
-                if move.posted_before and move.country_code == 'DE':
-                    raise UserError(_("You cannot remove parts of the audit trail."))
+            )
+        )
+        moves = self.env['account.move'].browse(audit_trail_attachments.mapped('res_id')).exists()
+        id2move = {move.id: move for move in moves}
+        for attachment in audit_trail_attachments:
+            move = id2move.get(attachment.res_id)
+            if move and move.posted_before and move.country_code == 'DE':
+                raise UserError(_("You cannot remove parts of the audit trail."))
 
     def write(self, vals):
         if vals.keys() & {'res_id', 'res_model', 'raw', 'datas', 'store_fname', 'db_datas'}:
