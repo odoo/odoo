@@ -519,8 +519,14 @@ class AccountMoveSend(models.TransientModel):
 
         # Prevent duplicated attachments linked to the invoice.
         new_message.attachment_ids.invalidate_recordset(['res_id', 'res_model'], flush=False)
+<<<<<<< saas-17.4
         if new_message.attachment_ids.ids:
             self.env.cr.execute("UPDATE ir_attachment SET res_id = NULL WHERE id IN %s", [tuple(new_message.attachment_ids.ids)])
+||||||| dec14867e4230745933de1db42604a8ddc4946b2
+        self.env.cr.execute("UPDATE ir_attachment SET res_id = NULL WHERE id IN %s", [tuple(new_message.attachment_ids.ids)])
+=======
+        self.env.cr.execute("UPDATE ir_attachment SET res_id = NULL WHERE id IN %s", [tuple(new_message.attachment_ids.ids)])
+>>>>>>> aaf747b24ef3bf8f9821b2ee71992050fb10613c
         new_message.attachment_ids.write({
             'res_model': new_message._name,
             'res_id': new_message.id,
