@@ -1651,7 +1651,10 @@ class Picking(models.Model):
                 'views': [(view_id, 'form')],
                 'type': 'ir.actions.act_window',
                 'res_id': wiz.id,
-                'target': 'new'
+                'target': 'new',
+                'context': {
+                    'move_lines_to_pack_ids': move_line_ids.ids,
+                }
             }
         else:
             return {}
