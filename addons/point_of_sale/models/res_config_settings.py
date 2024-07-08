@@ -31,6 +31,7 @@ class ResConfigSettings(models.TransientModel):
 
     pos_config_id = fields.Many2one('pos.config', string="Point of Sale", default=lambda self: self._default_pos_config())
     sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id', readonly=False, check_company=True)
+    group_pos_email_printing = fields.Boolean(string="Email Printing", help="Send reports to printers via email.", implied_group="point_of_sale.group_pos_email_printing")
     module_pos_mercury = fields.Boolean(string="Vantiv Payment Terminal", help="The transactions are processed by Vantiv. Set your Vantiv credentials on the related payment method.")
     module_pos_adyen = fields.Boolean(string="Adyen Payment Terminal", help="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method.")
     module_pos_stripe = fields.Boolean(string="Stripe Payment Terminal", help="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method.")

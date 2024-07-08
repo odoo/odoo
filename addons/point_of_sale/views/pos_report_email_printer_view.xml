@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_report_email_printer_view_tree" model="ir.ui.view">
+        <field name="name">pos.report_email_printer.view.tree</field>
+        <field name="model">pos.report_email_printer</field>
+        <field name="arch" type="xml">
+            <tree string="Report Email Printers" editable="top">
+                <field name="report_id"/>
+                <field name="email_ids" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_pos_email_printer" model="ir.actions.act_window">
+        <field name="name">Report Email Printers</field>
+        <field name="res_model">pos.report_email_printer</field>
+        <field name="view_mode">tree</field>
+    </record>
+</odoo>

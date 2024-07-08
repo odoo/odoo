@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <record id="view_pos_email_print_wizard" model="ir.ui.view">
+        <field name="name">pos.email.print.wizard.form</field>
+        <field name="model">pos.email.print.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Sales Details">
+                <field name="report_printer_email_ids" invisible="1"/>
+                <field name="selected_email_ids" widget="many2many_checkboxes" domain="[('id', 'in', report_printer_email_ids)]" string="Printers"/>
+                <footer>
+                    <button name="send_emails" string="Print" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
