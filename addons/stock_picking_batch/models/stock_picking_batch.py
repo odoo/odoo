@@ -58,11 +58,25 @@ class StockPickingBatch(models.Model):
                 but this scheduled date will not be set for all transfers in batch.""")
     is_wave = fields.Boolean('This batch is a wave')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
+    estimated_shipping_weight = fields.Float(
+        "shipping_weight", compute='_compute_estimated_shipping_capacity', digits='Product Unit of Measure')
+    estimated_shipping_volume = fields.Float(
+        "shipping_volume", compute='_compute_estimated_shipping_capacity', digits='Product Unit of Measure')
 
     @api.depends('picking_type_id')
     def _compute_show_lots_text(self):
         for batch in self:
             batch.show_lots_text = batch.picking_ids and batch.picking_ids[0].show_lots_text
+
+    def _compute_estimated_shipping_capacity(self):
+        for batch in self:
+            estimated_shipping_weight = 0
+            estimated_shipping_volume = 0
+            for move in self.picking_ids.move_ids:
+                estimated_shipping_weight += move.product_id.weight * move.product_qty
+                estimated_shipping_volume += move.product_id.volume * move.product_qty
+            batch.estimated_shipping_weight = estimated_shipping_weight
+            batch.estimated_shipping_volume = estimated_shipping_volume
 
     @api.depends('company_id', 'picking_type_id', 'state')
     def _compute_allowed_picking_ids(self):
