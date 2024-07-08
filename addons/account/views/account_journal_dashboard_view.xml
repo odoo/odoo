@@ -308,28 +308,28 @@
                         </div>
                     </t>
                     <t t-name="JournalBodySalePurchase" id="account.JournalBodySalePurchase">
-                        <t t-if="journal_type == 'sale'">
-                            <div class="col mb-3 mb-sm-0 o_kanban_primary_left">
-                                <button type="object" name="action_create_new" class="btn btn-primary o_invoice_new" groups="account.group_account_invoice">
-                                    <span>New</span>
-                                </button>
-                            </div>
-                            <widget name="account_onboarding" t-if="journal_is_empty and dashboard['onboarding']"/>
-                        </t>
-                        <t t-if="journal_type == 'purchase'">
-                            <t t-if="!journal_is_empty">
-                                <div class="col mb-3 mb-sm-0 o_kanban_primary_left d-flex">
-                                    <widget name="account_file_uploader" btnClass="btn btn-primary oe_kanban_action_button"/>
-                                    <div class="ms-1">
-                                        <button type="object" name="action_create_new" class="o_invoice_new btn-secondary" groups="account.group_account_invoice">New</button>
+                        <div class="col mb-3 mb-sm-0 o_kanban_primary_left">
+                            <t t-if="journal_type == 'sale'">
+                                    <button type="object" name="action_create_new" class="btn btn-primary o_invoice_new" groups="account.group_account_invoice">
+                                        <span>New</span>
+                                    </button>
+                                <widget name="account_onboarding" t-if="journal_is_empty and dashboard['onboarding']"/>
+                            </t>
+                            <t t-if="journal_type == 'purchase'">
+                                <t t-if="!journal_is_empty">
+                                    <div class="d-flex">
+                                        <widget name="account_file_uploader" btnClass="btn btn-primary oe_kanban_action_button"/>
+                                        <div class="ms-1">
+                                            <button type="object" name="action_create_new" class="o_invoice_new btn-secondary" groups="account.group_account_invoice">New</button>
+                                        </div>
                                     </div>
+                                </t>
+                                <div t-else="">
+                                    <widget name="account_file_uploader" btnClass="btn btn-primary oe_kanban_action_button"/>
+                                    <widget name="bill_upload_guide"/>
                                 </div>
                             </t>
-                            <div t-else="">
-                                <widget name="account_file_uploader" btnClass="btn btn-primary oe_kanban_action_button"/>
-                                <widget name="bill_upload_guide"/>
-                            </div>
-                        </t>
+                        </div>
                         <div t-if="!journal_is_empty" class="col-auto o_kanban_primary_right">
                             <div class="row" t-if="dashboard.number_draft">
                                 <div class="col overflow-hidden text-start">
