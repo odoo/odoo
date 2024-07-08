@@ -452,12 +452,20 @@ export class DomPlugin extends Plugin {
     }
 
     mergeAdjacentNodes(node) {
+        let selection = null;
+        let beforeMove = () => {
+            selection = this.shared.getEditableSelection({ deep: true });
+            beforeMove = null;
+        };
         for (const el of [node, ...descendants(node)]) {
-            this.mergeAdjacentNode(el);
+            this.mergeAdjacentNode(el, beforeMove);
+        }
+        if (selection) {
+            this.shared.setSelection(selection);
         }
     }
 
-    mergeAdjacentNode(node) {
+    mergeAdjacentNode(node, beforeMove) {
         if (
             areSimilarElements(node, node.previousSibling) &&
             !isUnbreakable(node) &&
@@ -469,10 +477,10 @@ export class DomPlugin extends Plugin {
             ) &&
             !isProtecting(node)
         ) {
-            const selection = this.shared.getEditableSelection({ deep: true });
-            // Merge identical elements together.
+            if (beforeMove) {
+                beforeMove();
+            }
             moveNodes(...startPos(node), node.previousSibling);
-            this.shared.setSelection(selection);
         }
     }
 }
