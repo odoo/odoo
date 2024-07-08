@@ -51,7 +51,7 @@ class CloudStorageSettings(models.TransientModel):
         """
         return {}
 
-    def _check_cloud_storage_uninstallable(self, provider_name):
+    def _check_cloud_storage_uninstallable(self):
         """
         Check if the cloud storages provider is used by any attachments
         :raise UserError: when the cloud storage provider cannot be uninstalled
@@ -62,9 +62,9 @@ class CloudStorageSettings(models.TransientModel):
         ICP = self.env['ir.config_parameter']
         cloud_storage_configuration_before = self._get_cloud_storage_configuration()
         cloud_storage_provider_before = ICP.get_param('cloud_storage_provider')
+        if cloud_storage_provider_before and self.cloud_storage_provider != cloud_storage_provider_before:
+            self._check_cloud_storage_uninstallable()
         super().set_values()
-        if cloud_storage_provider_before and ICP.get_param('cloud_storage_provider') != cloud_storage_provider_before:
-            self._check_cloud_storage_uninstallable(cloud_storage_provider_before)
         cloud_storage_configuration = self._get_cloud_storage_configuration()
         if not cloud_storage_configuration and self.cloud_storage_provider:
             raise UserError(_('Please configure the Cloud Storage before enabling it'))

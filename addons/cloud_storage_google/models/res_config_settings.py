@@ -106,9 +106,9 @@ class CloudStorageSettings(models.TransientModel):
         }
         return configuration if all(configuration.values()) else {}
 
-    def _check_cloud_storage_uninstallable(self, provider_name):
-        if provider_name != 'google':
-            return super()._check_cloud_storage_uninstallable(provider_name)
+    def _check_cloud_storage_uninstallable(self):
+        if self.env['ir.config_parameter'].get_param('cloud_storage_provider') != 'google':
+            return super()._check_cloud_storage_uninstallable()
         cr = self.env.cr
         cr.execute(
             """
