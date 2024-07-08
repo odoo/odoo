@@ -8,12 +8,16 @@ import { FONT_SIZE_CLASSES, formatsSpecs } from "../utils/formatting";
 import { DIRECTIONS } from "../utils/position";
 
 function isFormatted(formatPlugin, format) {
-    return () => formatPlugin.isSelectionFormat(format);
+    return (sel, nodes) => formatPlugin.isSelectionFormat(format, nodes);
 }
 function hasFormat(formatPlugin) {
     return () => {
+        const traversedNodes = formatPlugin.shared.getTraversedNodes();
         for (const format of Object.keys(formatsSpecs)) {
-            if (formatsSpecs[format].removeStyle && formatPlugin.isSelectionFormat(format)) {
+            if (
+                formatsSpecs[format].removeStyle &&
+                formatPlugin.isSelectionFormat(format, traversedNodes)
+            ) {
                 return true;
             }
         }
@@ -159,10 +163,8 @@ export class FormatPlugin extends Plugin {
      * @param {String} format 'bold'|'italic'|'underline'|'strikeThrough'|'switchDirection'
      * @returns {boolean}
      */
-    isSelectionFormat(format) {
-        const selectedNodes = this.shared
-            .getTraversedNodes()
-            .filter((n) => n.nodeType === Node.TEXT_NODE);
+    isSelectionFormat(format, traversedNodes = this.shared.getTraversedNodes()) {
+        const selectedNodes = traversedNodes.filter((n) => n.nodeType === Node.TEXT_NODE);
         const isFormatted = formatsSpecs[format].isFormatted;
         return selectedNodes.length && selectedNodes.every((n) => isFormatted(n, this.editable));
     }

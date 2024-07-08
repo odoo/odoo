@@ -60,7 +60,7 @@ export class LinkSelectionPlugin extends Plugin {
     handleCommand(command, payload) {
         switch (command) {
             case "NORMALIZE":
-                this.normalize(payload.root || this.editable);
+                this.normalize(payload.node || this.editable);
                 break;
             case "CLEAN":
                 // TODO @phoenix: evaluate if this should be cleanforsave instead

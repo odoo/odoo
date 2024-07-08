@@ -79,9 +79,12 @@ export function ancestors(node, editable) {
  * @returns {Node[]}
  */
 export function descendants(node) {
-    const posterity = [];
-    for (const child of node.childNodes || []) {
-        posterity.push(child, ...descendants(child));
+    let posterity = [];
+    let child = node.firstChild;
+    while (child) {
+        posterity.push(child);
+        posterity = posterity.concat(descendants(child));
+        child = child.nextSibling;
     }
     return posterity;
 }

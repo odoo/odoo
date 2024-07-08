@@ -241,9 +241,10 @@ export class DomPlugin extends Plugin {
         }
 
         let nodeToInsert;
+        let doesCurrentNodeAllowsP = allowsParagraphRelatedElements(currentNode);
         const insertedNodes = [...container.childNodes];
-        while ((nodeToInsert = container.childNodes[0])) {
-            if (isBlock(nodeToInsert) && !allowsParagraphRelatedElements(currentNode)) {
+        while ((nodeToInsert = container.firstChild)) {
+            if (isBlock(nodeToInsert) && !doesCurrentNodeAllowsP) {
                 // Split blocks at the edges if inserting new blocks (preventing
                 // <p><p>text</p></p> or <li><li>text</li></li> scenarios).
                 while (
@@ -256,6 +257,7 @@ export class DomPlugin extends Plugin {
                         // we need to search for a more suitable spot to put the table in
                         if (nodeToInsert.nodeName === "TABLE") {
                             currentNode = currentNode.parentElement;
+                            doesCurrentNodeAllowsP = allowsParagraphRelatedElements(currentNode);
                             continue;
                         } else {
                             makeContentsInline(container);
@@ -289,6 +291,7 @@ export class DomPlugin extends Plugin {
                         }
                         currentNode = currentNode.parentElement;
                     }
+                    doesCurrentNodeAllowsP = allowsParagraphRelatedElements(currentNode);
                 }
             }
             if (insertBefore) {

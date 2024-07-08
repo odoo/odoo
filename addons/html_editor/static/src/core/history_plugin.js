@@ -441,8 +441,10 @@ export class HistoryPlugin extends Plugin {
             this.nodeToIdMap.set(node, id);
             this.idToNodeMap.set(id, node);
         }
-        for (const child of node.childNodes) {
-            this.setNodeId(child);
+        node = node.firstChild;
+        while (node) {
+            this.setNodeId(node);
+            node = node.nextSibling;
         }
         return id;
     }
