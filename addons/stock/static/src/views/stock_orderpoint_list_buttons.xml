@@ -3,6 +3,7 @@
 
     <t t-name="stock.StockOrderpoint.Buttons" t-inherit="web.ListView.Buttons">
         <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <button style="display: none"/>
             <button t-if="nbSelected" type="button" t-on-click="() => this.onClickOrder(false)"
                     class="o_button_order btn btn-primary me-1">
                 Order
