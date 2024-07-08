@@ -624,13 +624,15 @@ export class MailThread extends models.ServerModel {
             res["activities"] = activities.map((activity) => ({ id: activity }));
         }
         if (request_list.includes("attachments")) {
-            const attachments = IrAttachment.search_read([
+            const attachments = IrAttachment._filter([
                 ["res_id", "=", thread.id],
                 ["res_model", "=", this._name],
-            ]); // order not done for simplicity
-            res["attachments"] = IrAttachment._attachment_format(
-                attachments.map((attachment) => attachment.id)
+            ]).sort((a1, a2) => a1.id - a2.id);
+            store.add(
+                "Attachment",
+                IrAttachment._attachment_format(attachments.map((attachment) => attachment.id))
             );
+            res["attachments"] = attachments.map((attachment) => ({ id: attachment.id }));
             res["isLoadingAttachments"] = false;
             res["areAttachmentsLoaded"] = true;
             // Specific implementation of mail.thread.main.attachment
