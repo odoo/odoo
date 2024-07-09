@@ -15,15 +15,20 @@
     </t>
 
     <t t-name="hr_expense.KanbanButtons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary" owl="1">
+        <!-- Remove class 'align-items-baseline' to ensure consistency with list buttons when adding a third button
+         (Create Report) on mobile. Instead, align-items: baseline is added to parent div in css -->
+        <xpath expr="//div[@t-if='props.showButtons']" position="attributes">
+            <attribute name="class" remove="align-items-baseline" separator=" "/>
+        </xpath>
         <xpath expr="//t[@t-if='canCreate']" position="after">
+            <button type="button" class="d-inline d-md-none o_button_upload_expense btn btn-primary mx-1" t-on-click.prevent="uploadDocument">
+                Scan
+            </button>
             <button type="button" class="d-none d-md-inline o_button_upload_expense btn btn-primary mx-1" t-on-click.prevent="uploadDocument">
                 Upload
             </button>
-        </xpath>
-
-        <xpath expr="//t[@t-if='canCreate']" position="before">
-            <button type="button" class="d-inline d-md-none o_button_upload_expense btn btn-primary mx-1" t-on-click.prevent="uploadDocument">
-                Scan
+            <button t-if="displayCreateReport()" class="btn btn-secondary o_button_create_report" t-on-click="onCreateReportClick">
+                Create Report
             </button>
         </xpath>
 
