@@ -1394,6 +1394,7 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_customer_all_fields_displayed(self):
         """
         Verify that all the field of a partner can be displayed in the partner list.
+        Also verify that all these fields can be searched.
         """
         self.env["res.partner"].create({
             "name": "John Doe",
