@@ -131,12 +131,12 @@
                     </t>
                 </Charges>
                 <GrossAmount t-out="float_repr(refund_multiplier*line['GrossAmount'], file_currency.decimal_places)"/>
-                <TaxesOutputs>
-                    <t t-foreach="line['TaxesOutputs']" t-as="tax"><t t-call="l10n_es_edi_facturae.tax_type"/></t>
-                </TaxesOutputs>
                 <TaxesWithheld t-if="line.get('TaxesWithheld')">
                     <t t-foreach="line['TaxesWithheld']" t-as="tax"><t t-call="l10n_es_edi_facturae.tax_type"/></t>
                 </TaxesWithheld>
+                <TaxesOutputs>
+                    <t t-foreach="line['TaxesOutputs']" t-as="tax"><t t-call="l10n_es_edi_facturae.tax_type"/></t>
+                </TaxesOutputs>
                 <LineItemPeriod t-if="line.get('LineItemPeriod')">
                     <StartDate t-out="line['LineItemPeriod']['StartDate']"/>
                     <EndDate t-out="line['LineItemPeriod']['EndDate']"/>
