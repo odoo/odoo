@@ -120,11 +120,6 @@ class ResConfigSettings(models.TransientModel):
         if self.default_invoice_policy != 'order':
             self.env['ir.config_parameter'].set_param(key='sale.automatic_invoice', value=False)
 
-        if not self.group_discount_per_so_line:
-            self.env['product.pricelist'].search([
-                ('discount_policy', '=', 'without_discount')
-            ]).write({'discount_policy': 'with_discount'})
-
         send_invoice_cron = self.env.ref('sale.send_invoice_cron', raise_if_not_found=False)
         if send_invoice_cron and send_invoice_cron.active != self.automatic_invoice:
             send_invoice_cron.active = self.automatic_invoice

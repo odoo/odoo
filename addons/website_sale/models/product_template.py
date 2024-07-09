@@ -505,13 +505,34 @@ class ProductTemplate(models.Model):
         else:
             has_discounted_price = False
 
+        has_discounted_price = price_before_discount > pricelist_price
         combination_info = {
             'price_extra': price_extra,
             'price': pricelist_price,
-            'list_price': list_price,
             'has_discounted_price': has_discounted_price,
-            'compare_list_price': compare_list_price,
         }
+
+        comparison_price = None
+        if (
+            not has_discounted_price
+            and product_or_template.compare_list_price
+            and self.env.user.has_group('website_sale.group_product_price_comparison')
+        ):
+            comparison_price = product_or_template.currency_id._convert(
+                from_amount=product_or_template.compare_list_price,
+                to_currency=currency,
+                company=self.env.company,
+                date=date,
+                round=False)
+        combination_info['compare_list_price'] = comparison_price
+
+        combination_info['price_extra'] = product_or_template.currency_id._convert(
+            from_amount=product_or_template._get_attributes_extra_price(),
+            to_currency=currency,
+            company=self.env.company,
+            date=date,
+            round=False,
+        )
 
         # Apply taxes
         fiscal_position = website.fiscal_position_id.sudo()
@@ -547,11 +568,6 @@ class ProductTemplate(models.Model):
             'product_taxes': product_taxes,  # taxes before fpos mapping
             'taxes': taxes,  # taxes after fpos mapping
         })
-
-        if pricelist.discount_policy != 'without_discount':
-            # Leftover from before cleanup, different behavior between ecommerce & backend configurator
-            # probably to keep product sales price hidden from customers ?
-            combination_info['list_price'] = combination_info['price']
 
         return combination_info
 

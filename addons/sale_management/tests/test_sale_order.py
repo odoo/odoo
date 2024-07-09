@@ -70,6 +70,22 @@ class TestSaleOrder(SaleManagementCommon):
                 'fixed_price': cls.pl_option_price,
             }),
         ]
+        percentage_pricelist_rule_values = [
+            Command.create({
+                'name': 'Product 1 premium price',
+                'applied_on': '1_product',
+                'product_tmpl_id': cls.product_1.product_tmpl_id.id,
+                'compute_price': 'percentage',
+                'percent_price': cls.pl_discount,
+            }),
+            Command.create({
+                'name': 'Optional product premium price',
+                'applied_on': '1_product',
+                'product_tmpl_id': cls.optional_product.product_tmpl_id.id,
+                'compute_price': 'percentage',
+                'percent_price': cls.pl_option_discount,
+            }),
+        ]
 
         (
             cls.discount_included_price_list,
@@ -77,12 +93,10 @@ class TestSaleOrder(SaleManagementCommon):
         ) = cls.env['product.pricelist'].create([
             {
                 'name': 'Discount included Pricelist',
-                'discount_policy': 'with_discount',
                 'item_ids': pricelist_rule_values,
             }, {
                 'name': 'Discount excluded Pricelist',
-                'discount_policy': 'without_discount',
-                'item_ids': pricelist_rule_values,
+                'item_ids': percentage_pricelist_rule_values,
             }
         ])
 

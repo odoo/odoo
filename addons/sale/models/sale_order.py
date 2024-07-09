@@ -1187,7 +1187,7 @@ class SaleOrder(models.Model):
         lines_to_recompute._compute_price_unit()
         # Special case: we want to overwrite the existing discount on _recompute_prices call
         # i.e. to make sure the discount is correctly reset
-        # if pricelist discount_policy is different than when the price was first computed.
+        # if pricelist rule is different than when the price was first computed.
         lines_to_recompute.discount = 0.0
         lines_to_recompute._compute_discount()
         self.show_update_pricelist = False

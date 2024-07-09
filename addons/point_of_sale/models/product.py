@@ -342,7 +342,7 @@ class ProductPricelist(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'name', 'display_name', 'discount_policy', 'item_ids']
+        return ['id', 'name', 'display_name', 'item_ids']
 
 
 class ProductPricelistItem(models.Model):

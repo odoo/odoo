@@ -231,7 +231,11 @@ class PosOrder(models.Model):
             line = line_values['record']
             invoice_lines_values = self._get_invoice_lines_values(line_values, line)
             invoice_lines.append((0, None, invoice_lines_values))
-            if line.order_id.pricelist_id.discount_policy == 'without_discount' and float_compare(line.price_unit, line.product_id.lst_price, precision_rounding=self.currency_id.rounding) < 0:
+            is_percentage = self.pricelist_id and any(
+                self.pricelist_id.item_ids.filtered(
+                    lambda rule: rule.compute_price == "percentage")
+            )
+            if is_percentage and float_compare(line.price_unit, line.product_id.lst_price, precision_rounding=self.currency_id.rounding) < 0:
                 invoice_lines.append((0, None, {
                     'name': _('Price discount from %(original_price)s to %(discounted_price)s',
                               original_price=float_repr(line.product_id.lst_price, self.currency_id.decimal_places),
@@ -1204,8 +1208,7 @@ class PosOrderLine(models.Model):
     def _load_pos_data_fields(self, config_id):
         return [
             'qty', 'attribute_value_ids', 'custom_attribute_value_ids', 'price_unit', 'skip_change', 'uuid', 'price_subtotal', 'price_subtotal_incl', 'order_id', 'note', 'price_type',
-            'product_id', 'discount', 'tax_ids', 'combo_line_id', 'pack_lot_ids', 'customer_note', 'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id', 'combo_parent_id', 'combo_line_ids', 'combo_line_id', 'refund_orderline_ids'
-        ]
+            'product_id', 'discount', 'tax_ids', 'combo_line_id', 'pack_lot_ids', 'customer_note', 'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id', 'combo_parent_id', 'combo_line_ids', 'combo_line_id', 'refund_orderline_ids']
 
     @api.model
     def _is_field_accepted(self, field):
