@@ -121,9 +121,9 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         })
         new_invoice = self.env['account.move'].browse(refund_invoice_wiz.modify_moves()['res_id'])
         self.assertEqual(invoice.payment_state, 'reversed', "Invoice should be in 'reversed' state.")
-        self.assertEqual(invoice.reversal_move_id.payment_state, 'paid', "Refund should be in 'paid' state.")
+        self.assertEqual(invoice.reversal_move_ids.payment_state, 'paid', "Refund should be in 'paid' state.")
         self.assertEqual(new_invoice.state, 'draft', "New invoice should be in 'draft' state.")
-        self.check_reconciliation(invoice.reversal_move_id, return_pick, operation='sale')
+        self.check_reconciliation(invoice.reversal_move_ids, return_pick, operation='sale')
 
     def test_multiple_shipments_invoices(self):
         """ Tests the case into which we deliver part of the goods first, then 2 invoices at different rates, and finally the remaining quantities

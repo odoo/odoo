@@ -487,7 +487,7 @@ class AccountMove(models.Model):
         copy=False,
         check_company=True,
     )
-    reversal_move_id = fields.One2many('account.move', 'reversed_entry_id')
+    reversal_move_ids = fields.One2many('account.move', 'reversed_entry_id')
 
     # === Vendor bill fields === #
     invoice_vendor_bill_id = fields.Many2one(

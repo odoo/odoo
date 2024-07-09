@@ -258,7 +258,7 @@ class AccountMove(models.Model):
         """ Given base invoices, get all invoices in the chain. """
         chain_invoices = self
         next_invoices = self
-        while (next_invoices := next_invoices.reversal_move_id | next_invoices.debit_note_ids):
+        while (next_invoices := next_invoices.reversal_move_ids | next_invoices.debit_note_ids):
             chain_invoices |= next_invoices
         return chain_invoices
 

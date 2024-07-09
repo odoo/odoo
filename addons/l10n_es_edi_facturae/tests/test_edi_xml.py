@@ -258,7 +258,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
                 'l10n_es_edi_facturae_reason_code': '01'
             })
             reversal_wizard.modify_moves()
-            refund = invoice.reversal_move_id
+            refund = invoice.reversal_move_ids
             refund.ref = 'ABCD-2023-001'
             generated_file, errors = refund._l10n_es_edi_facturae_render_facturae()
             self.assertFalse(errors)
