@@ -997,10 +997,6 @@ class PosConfig(models.Model):
             return f"{ref_name}_{self.env.company.id}"
 
     @api.model
-    def hide_predefined_scenarios(self):
-        self.env.company.point_of_sale_show_predefined_scenarios = False
-
-    @api.model
     def get_pos_kanban_view_state(self):
         has_pos_config = bool(self.env['pos.config'].search_count(
             self._check_company_domain(self.env.company)
@@ -1011,7 +1007,6 @@ class PosConfig(models.Model):
             "has_pos_config": has_pos_config,
             "has_chart_template": has_chart_template,
             "is_restaurant_installed": bool(self.env['ir.module.module'].search_count([('name', '=', 'pos_restaurant'), ('state', '=', 'installed')])),
-            "show_predefined_scenarios": self.env.company.point_of_sale_show_predefined_scenarios,
             "is_main_company": main_company and self.env.company.id == main_company.id or False
         }
 
