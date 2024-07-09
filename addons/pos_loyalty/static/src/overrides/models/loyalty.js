@@ -326,7 +326,7 @@ patch(Order.prototype, {
         line.giftCardId = options.giftCardId;
         line.eWalletGiftCardProgram = options.eWalletGiftCardProgram;
     },
-    async _initializePrograms() {
+    _initializePrograms() {
         // When deleting a reward line, a popup will be displayed if the reward was automatic,
         //  if confirmed the reward is added to this list and will not be claimed automatically again.
         if (!this.disabledRewards) {

@@ -269,6 +269,7 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountCategoryTour"
     url: "/pos/web",
     steps: () =>
         [
+<<<<<<< HEAD
             Dialog.confirm("Open session"),
 
             ProductScreen.clickDisplayedProduct("Product A"),
@@ -293,6 +294,25 @@ registry.category("web_tour.tours").add("PosLoyaltyTour9", {
             ProductScreen.clickDisplayedProduct("Product B"),
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductScreen.totalAmountIs("210.00"),
+||||||| parent of 4640d5435e7d (temp)
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.confirmOpeningPopup(),
+
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer('AAA Partner'),
+            ProductScreen.clickDisplayedProduct('Product B'),
+            ProductScreen.clickDisplayedProduct('Product A'),
+            ProductScreen.totalAmountIs('210.00'),
+=======
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickDisplayedProduct('Product B'),
+            ProductScreen.clickDisplayedProduct('Product A'),
+            ProductScreen.totalAmountIs('210.00'),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer('AAA Partner'),
+            PosLoyalty.customerIs('AAA Partner'),
+>>>>>>> 4640d5435e7d (temp)
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("$ 5"),
             ProductScreen.totalAmountIs("205.00"),
@@ -307,13 +327,39 @@ registry.category("web_tour.tours").add("PosLoyaltyTour10", {
     url: "/pos/web",
     steps: () =>
         [
+<<<<<<< HEAD
             Dialog.confirm("Open session"),
             ProductScreen.clickPartnerButton(),
+<<<<<<< saas-17.2
             ProductScreen.clickCustomer("AAA Partner"),
             PosLoyalty.customerIs("AAA Partner"),
             ProductScreen.clickDisplayedProduct("Product Test"),
             ProductScreen.totalAmountIs("1.00"),
+||||||| 76b78ac8d27082aa0497ce31367b2b58dd1a058e
+            ProductScreen.clickCustomer('AAA Partner'),
+            PosLoyalty.customerIs('AAA Partner'),
+            ProductScreen.clickDisplayedProduct('Product Test'),
+            ProductScreen.totalAmountIs('1.00'),
+=======
+            ProductScreen.clickCustomer('AAA Partner'),
+            PosLoyalty.customerIs('AAA Partner'),
+||||||| parent of 4640d5435e7d (temp)
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer('AAA Partner'),
+            PosLoyalty.customerIs('AAA Partner'),
+=======
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.confirmOpeningPopup(),
+>>>>>>> 4640d5435e7d (temp)
+            ProductScreen.clickDisplayedProduct('Product Test'),
+            ProductScreen.totalAmountIs('1.00'),
+>>>>>>> 03dbd79dab2b5b5eaa3075821cde5f29f0bbd52f
             ProductScreen.selectedOrderlineHas("Product Test", "1.00"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer('AAA Partner'),
+            PosLoyalty.customerIs('AAA Partner'),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("Free Product B"),
             {
