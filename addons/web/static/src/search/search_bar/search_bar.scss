@@ -16,4 +16,15 @@
         // It was causing issues with the hotkey overlay
         z-index: 0;
     }
+
+    .o_facet_value {
+        max-width: $search-align-width;
+    }
+
+    @media (max-width: 768px) {
+        $search-align-width: 8rem;
+        .o_facet_value {
+            max-width: $search-align-width;
+        }
+    }
 }
