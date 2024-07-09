@@ -35,6 +35,12 @@
     .o_cp_bottom_left {
         display: block;
     }
+
+    @include media-only(print) {
+        .bg-100, .text-bg-100 {
+            --background-color: transparent;
+        }
+    }
 }
 
 // ------- Sample mode -------

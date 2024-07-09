@@ -280,8 +280,17 @@
 
             // Row containing "all day" events
             .fc-timegrid-divider.fc-cell-shaded {
+                position: relative;
                 padding: 0;
-                box-shadow: 0 3px 12px 3px rgba(0, 0, 0, 0.16);
+
+                @include media-only(screen) {
+                    &:after {
+                        @include o-position-absolute($border-width, 0, -15px, 0);
+                        background: linear-gradient(0deg, rgba($o-shadow-color, 0), rgba($o-shadow-color, 0.16));
+                        pointer-events: none;
+                        content: "";
+                    }
+                }
             }
 
             @include media-breakpoint-down(md) {

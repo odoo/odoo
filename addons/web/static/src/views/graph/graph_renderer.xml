@@ -31,7 +31,7 @@
 
     <t t-name="web.GraphRenderer">
         <div t-att-class="'o_graph_renderer o_renderer h-100 d-flex flex-column border-top ' + props.class" t-ref="root">
-            <div class="d-flex gap-1 flex-shrink-0 mt-2 mx-3 mb-3 overflow-x-auto">
+            <div class="d-flex d-print-none gap-1 flex-shrink-0 mt-2 mx-3 mb-3 overflow-x-auto">
                 <t t-call="{{ props.buttonTemplate }}"/>
             </div>
             <div t-if="model.hasData()" class="o_graph_canvas_container flex-grow-1 position-relative px-3 pb-3" t-ref="container">

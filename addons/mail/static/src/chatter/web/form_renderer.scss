@@ -28,7 +28,7 @@
 
 // Reduce horizontal spacing if the next sibling is an aside chatter
 .o_form_sheet_bg:has(+ .o-mail-Form-chatter.o-aside) {
-    @media (max-width: 1920px) {
+    @media screen and (max-width: 1920px) {
         --formView-sheetBg-padding-right: #{map-get($spacers, 2)};
     }
 }

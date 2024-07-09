@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CalendarMobileFilterPanel">
-        <div class="o_other_calendar_panel d-flex align-items-center" t-on-click="props.toggleSideBar">
+        <div class="o_other_calendar_panel d-flex align-items-center d-print-none" t-on-click="props.toggleSideBar">
             <div class="o_filter me-auto d-flex overflow-auto">
                 <t t-foreach="props.model.filterSections" t-as="section" t-key="section.fieldName">
                     <t t-if="section.filters.length gt 0">

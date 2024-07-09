@@ -322,6 +322,17 @@ This module provides the core of the Odoo Web Client.
         ],
 
         # ---------------------------------------------------------------------
+        # "DIRECT PRINT" BUNDLE
+        # ---------------------------------------------------------------------
+        "web.assets_web_print": [
+            'web/static/src/scss/functions.scss',
+            'web/static/src/scss/primary_variables_print.scss',
+
+            'web/static/src/**/*.print_variables.scss',
+            ('include', 'web.assets_backend'),
+        ],
+
+        # ---------------------------------------------------------------------
         # COLOR SCHEME BUNDLES
         # ---------------------------------------------------------------------
         "web.assets_web_dark": [

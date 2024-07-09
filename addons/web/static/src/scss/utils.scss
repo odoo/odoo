@@ -355,3 +355,23 @@
         }
     }
 }
+
+
+// ----------------------------------------------------------------------------
+// Media Type
+// ----------------------------------------------------------------------------
+
+// Conditionally includes SCSS  based on the current media context.
+// It serves two main purposes:
+// 1. Keep the base code clean by avoiding redundant `@media only screen {}`.
+// 2. Reduces CSS footprint by only compiling styles that match the current `$o-webclient-media`.
+
+@mixin media-only($-media) {
+    @if ($-media != null and type-of($-media) == 'string') {
+        @if $-media == $o-webclient-media {
+            @content;
+        }
+    } @else {
+        @warn "'media-only()' - missing argument"
+    }
+}
