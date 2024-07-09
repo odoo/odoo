@@ -243,7 +243,7 @@ class HrExpenseSheet(models.Model):
                     # when the sheet is paid by the company, the state/amount of the related account_move_ids are not relevant
                     # unless all moves have been reversed
                     sheet.amount_residual = 0.
-                    if sheet.account_move_ids - sheet.account_move_ids.filtered('reversal_move_id'):
+                    if sheet.account_move_ids - sheet.account_move_ids.filtered('reversal_move_ids'):
                         sheet.payment_state = 'paid'
                     else:
                         sheet.payment_state = 'reversed'

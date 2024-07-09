@@ -117,7 +117,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             'journal_id': invoice.journal_id.id,
         })
         new_invoice = self.env['account.move'].browse(refund_invoice_wiz.modify_moves()['res_id'])
-        refund_invoice = invoice.reversal_move_id
+        refund_invoice = invoice.reversal_move_ids
         # Check the result
         self.assertEqual(invoice.payment_state, 'reversed', "Invoice should be in 'reversed' state")
         self.assertEqual(refund_invoice.payment_state, 'paid', "Refund should be in 'paid' state")
