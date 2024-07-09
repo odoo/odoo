@@ -550,7 +550,7 @@
                 <t t-set="allow_post_comment" t-value="(object.parent_id and object.parent_id.state != 'close' and object.parent_id.active != False)
                                                         or (not object.parent_id and object.state != 'close' and object.active != False)"/>
                 <t t-set="unlink_comment_required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>
-                <t t-set="can_unlink_comment" t-value="user._is_admin() or user.karma >= unlink_comment_required_karma"/>
+                <t t-set="can_unlink_comment" t-value="user.karma >= unlink_comment_required_karma"/>
                 <div class="flex-grow-1 py-2 opacity-75">
                     <header>
                         <span t-call="website_forum.author_box">
