@@ -9,6 +9,7 @@ import { prepareUpdate } from "./dom_state";
 import { boundariesOut, leftPos, nodeSize, rightPos } from "./position";
 import { callbacksForCursorUpdate } from "./selection";
 import { isEmptyBlock, isPhrasingContent } from "../utils/dom_info";
+import { childNodes } from "./dom_traversal";
 
 /** @typedef {import("@html_editor/core/selection_plugin").Cursors} Cursors */
 
@@ -105,7 +106,7 @@ export function wrapInlinesInBlocks(element, cursors = { update: () => {} }) {
 }
 
 export function unwrapContents(node) {
-    const contents = [...node.childNodes];
+    const contents = childNodes(node);
     for (const child of contents) {
         node.parentNode.insertBefore(child, node);
     }
@@ -208,9 +209,9 @@ export function fillShrunkPhrasingParent(el) {
  */
 export function cleanTrailingBR(el) {
     let br;
-    if (!isEmptyBlock(el) && el.hasChildNodes()) {
-        const candidate = el.lastChild;
-        if (candidate.tagName === "BR" && candidate.previousSibling?.tagName !== "BR") {
+    const candidate = el.lastChild;
+    if (candidate && candidate.tagName === "BR" && !isEmptyBlock(el)) {
+        if (candidate.previousSibling?.tagName !== "BR") {
             br = candidate;
             candidate.remove();
         }
