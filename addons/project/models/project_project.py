@@ -1011,8 +1011,8 @@ class Project(models.Model):
         for partner, tasks in dict_tasks_per_partner.items():
             tasks.message_subscribe(dict_partner_ids_to_subscribe_per_partner[partner])
 
-    def _to_store(self, store: Store, request_list):
-        super()._to_store(store, request_list)
+    def _thread_to_store(self, store: Store, request_list, **kwargs):
+        super()._thread_to_store(store, request_list=request_list, **kwargs)
         if "followers" in request_list:
             store.add(
                 "Thread",
