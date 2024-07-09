@@ -142,7 +142,7 @@ class L10nHuEdiTestFlowsMocked(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
                 new_invoice = self.create_reversal(invoice, is_modify=True)
                 self.assertRecordValues(new_invoice, [{'debit_origin_id': invoice.id}])
                 new_invoice.action_post()
-                credit_note = invoice.reversal_move_id
+                credit_note = invoice.reversal_move_ids
 
                 send_and_print = self.create_send_and_print(credit_note, l10n_hu_edi_enable_nav_30=True)
                 send_and_print.action_send_and_print()

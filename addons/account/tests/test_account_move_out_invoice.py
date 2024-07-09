@@ -3784,7 +3784,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
                 line_receivable.remove_move_reconcile()
 
-                exchange_move_reversal = exchange_move.reversal_move_id
+                exchange_move_reversal = exchange_move.reversal_move_ids
 
                 # Date of the reversal of the exchange move should be the last day of the month/year of the payment depending on the sequence format
                 self.assertEqual(exchange_move_reversal.date, fields.Date.to_date(expected_date))
