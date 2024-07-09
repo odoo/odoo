@@ -354,6 +354,21 @@ describe("Link creation", () => {
             await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
             expect(cleanLinkArtifacts(getContent(el))).toBe('<p>aaa<a href="#">ab[]</a>cdef</p>');
         });
+        test("should remove link when click away without inputting url", async () => {
+            const { el } = await setupEditor("<p>H[el]lo</p>");
+            await waitFor(".o-we-toolbar");
+            click(".o-we-toolbar .fa-link");
+            await waitFor(".o-we-linkpopover");
+            const pNode = queryOne("p");
+            setSelection({
+                anchorNode: pNode,
+                anchorOffset: 0,
+                focusNode: pNode,
+                focusOffset: 0,
+            });
+            await tick();
+            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>[]Hello</p>");
+        });
         test("when selection includes partially a link and click the link icon in toolbar, the link should be extended", async () => {
             const { el } = await setupEditor('<p>a[b<a href="http://test.com/">c]d</a>ef</p>');
             await waitFor(".o-we-toolbar");

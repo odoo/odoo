@@ -349,6 +349,10 @@ export class LinkPlugin extends Plugin {
         if (this.linkElement && cleanZWChars(this.linkElement.innerText) === "") {
             this.linkElement.remove();
         }
+        if (this.linkElement && !this.linkElement.href) {
+            this.removeLink();
+            this.dispatch("ADD_STEP");
+        }
     }
 
     /**
@@ -362,6 +366,7 @@ export class LinkPlugin extends Plugin {
             unwrapContents(link);
         }
         cursors.restore();
+        this.linkElement = null;
     }
 
     removeLinkFromSelection() {
