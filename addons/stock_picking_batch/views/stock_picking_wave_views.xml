@@ -52,7 +52,7 @@
         <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='get_action_picking_tree_ready']" position="before">
-                <button t-if="record.count_picking_batch.raw_value > 0" class="btn btn-primary mr8 mb4 align-top" name="get_action_picking_tree_batch" type="object">
+                <button t-if="record.count_picking_batch.raw_value > 0" class="btn btn-primary mr8 mb4 align-top" name="action_batch" type="object">
                     <field name="count_picking_batch"/> Batches
                 </button>
             </xpath>
@@ -67,7 +67,7 @@
             <xpath expr="//div[@name='picking_type_backorder_count']" position="after">
                 <div t-if="record.count_picking_wave.raw_value > 0" class="row">
                     <div class="col-12">
-                        <a class="oe_kanban_stock_picking_type_list" name="get_action_picking_tree_wave" type="object">
+                        <a class="oe_kanban_stock_picking_type_list" name="%(stock_picking_batch.action_picking_tree_wave)d" type="action">
                             <field name="count_picking_wave"/>
                             Waves
                         </a>
