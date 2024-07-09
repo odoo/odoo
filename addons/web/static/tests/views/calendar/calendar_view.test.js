@@ -886,7 +886,7 @@ test(`week numbering`, async () => {
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
     });
-    expect(`.fc-timegrid-axis-cushion`).toHaveText("Week 50");
+    expect(`.fc-timegrid-axis-cushion:eq(0)`).toHaveText("Week 50");
 });
 
 test(`render popover`, async () => {
@@ -2504,7 +2504,7 @@ test(`set event as all day when field is date`, async () => {
     });
 
     await toggleFilter("attendee_ids", 1);
-    expect(`.fc-daygrid-day-events .fc-event`).toHaveCount(1);
+    expect(`.fc-daygrid-body .fc-event`).toHaveCount(1);
 
     await clickEvent(1);
     expect(`.o_cw_popover .list-group-item:eq(0)`).toHaveText("December 14, 2016");
@@ -2518,7 +2518,18 @@ test(`set event as all day when field is date (without all_day mapping)`, async 
         type: "calendar",
         arch: `<calendar date_start="start_date" mode="week"/>`,
     });
-    expect(`.fc-daygrid-day-events .fc-event`).toHaveCount(1);
+    expect(`.fc-daygrid-body .fc-event`).toHaveCount(1);
+});
+
+test(`set event as all day when field is datetime (without all_day mapping)`, async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
+    });
+    expect(`.fc-daygrid-body .fc-event`).toHaveCount(1, {
+        message: "should be one event in the all day row",
+    });
 });
 
 test(`quickcreate avoid double event creation`, async () => {
@@ -2950,11 +2961,12 @@ test(`Monday week start week mode`, async () => {
         arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
     });
     expect.verifySteps(["event.search_read"]);
+    expect(`.fc-timeGridWeek-view .fc-daygrid-body`).toHaveCount(1);
     expect(`.fc-col-header-cell .o_cw_day_name:eq(0)`).toHaveText("MON");
     expect(`.fc-col-header-cell .o_cw_day_number:eq(0)`).toHaveText("9");
     expect(`.fc-col-header-cell .o_cw_day_name:eq(-1)`).toHaveText("SUN");
     expect(`.fc-col-header-cell .o_cw_day_number:eq(-1)`).toHaveText("15");
-    expect(`.fc-timegrid-axis-cushion`).toHaveText("Week 37");
+    expect(`.fc-timegrid-axis-cushion:eq(0)`).toHaveText("Week 37");
 });
 
 test(`Saturday week start week mode`, async () => {
@@ -2975,11 +2987,12 @@ test(`Saturday week start week mode`, async () => {
         arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
     });
     expect.verifySteps(["event.search_read"]);
+    expect(`.fc-timeGridWeek-view .fc-daygrid-body`).toHaveCount(1);
     expect(`.fc-col-header-cell .o_cw_day_name:eq(0)`).toHaveText("SAT");
     expect(`.fc-col-header-cell .o_cw_day_number:eq(0)`).toHaveText("7");
     expect(`.fc-col-header-cell .o_cw_day_name:eq(-1)`).toHaveText("FRI");
     expect(`.fc-col-header-cell .o_cw_day_number:eq(-1)`).toHaveText("13");
-    expect(`.fc-timegrid-axis-cushion`).toHaveText("Week 37");
+    expect(`.fc-timegrid-axis-cushion:eq(0)`).toHaveText("Week 37");
 });
 
 test(`Monday week start year mode`, async () => {
@@ -3963,5 +3976,5 @@ test("save selected date during view switching", async () => {
     const weekNumber = await queryFirst(`th .fc-timegrid-axis-cushion`).textContent;
     await contains(`.o_cp_switch_buttons .o_list`).click();
     await getService("action").switchView("calendar");
-    expect(`th .fc-timegrid-axis-cushion`).toHaveText(weekNumber);
+    expect(`th .fc-timegrid-axis-cushion:eq(0)`).toHaveText(weekNumber);
 });
