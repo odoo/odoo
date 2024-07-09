@@ -66,10 +66,12 @@ export function closestElement(node, predicate = "*") {
  * @returns {HTMLElement[]}
  */
 export function ancestors(node, editable) {
-    if (!node || !node.parentElement || node === editable) {
-        return [];
+    const result = [];
+    while (node && node.parentElement && node !== editable) {
+        result.push(node.parentElement);
+        node = node.parentElement;
     }
-    return [node.parentElement, ...ancestors(node.parentElement, editable)];
+    return result;
 }
 
 /**
@@ -112,12 +114,11 @@ export function childNodes(node) {
  * @param {Node} node
  * @returns {Node[]}
  */
-export function descendants(node) {
-    let posterity = [];
+export function descendants(node, posterity = []) {
     let child = node.firstChild;
     while (child) {
         posterity.push(child);
-        posterity = posterity.concat(descendants(child));
+        descendants(child, posterity);
         child = child.nextSibling;
     }
     return posterity;
