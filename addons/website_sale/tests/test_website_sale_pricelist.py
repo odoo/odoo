@@ -336,7 +336,6 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         """
         self.env['res.config.settings'].create({                  # Set Settings:
             'show_line_subtotals_tax_selection': 'tax_included',  # Set "Tax Included" on the "Display Product Prices"
-            'product_pricelist_setting': 'advanced',              # advanced pricelist (discounts, etc.)
             'group_product_price_comparison': True,               # price comparison
         }).execute()
 

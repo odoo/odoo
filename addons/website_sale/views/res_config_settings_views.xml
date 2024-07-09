@@ -72,18 +72,18 @@
                     </setting>
                     <setting
                         id="pricelists_setting"
-                        title="With the first mode you can set several prices in the product config form (from Sales tab). With the second one, you set prices and computation rules from Pricelists."
                         help="Manage pricelists to apply specific prices per country, customer, products, etc"
                         documentation="/applications/sales/sales/products_prices/prices/pricing.html"
                     >
                         <field name="group_product_pricelist"/>
                         <div class="content-group mt16" invisible="not group_product_pricelist">
-                            <field name="group_sale_pricelist" invisible="1"/>
-                            <field name="group_product_pricelist" invisible="1"/>
-                            <field name="product_pricelist_setting" class="o_light_label w-75" widget="radio"/>
-                        </div>
-                        <div invisible="not group_product_pricelist">
-                            <button type="action" name="%(product.product_pricelist_action2)d" string="Pricelists" class="btn-link" icon="oi-arrow-right"/>
+                            <button
+                                name="%(product.product_pricelist_action2)d"
+                                icon="oi-arrow-right"
+                                type="action"
+                                string="Pricelists"
+                                groups="product.group_product_pricelist"
+                                class="btn-link"/>
                         </div>
                     </setting>
                     <setting help="Add a strikethrough price, as a comparison">
