@@ -69,7 +69,7 @@ export class CalendarCommonRenderer extends Component {
 
     get options() {
         return {
-            allDaySlot: this.props.model.hasAllDaySlot,
+            allDaySlot: true,
             allDayText: _t(""),
             columnHeaderFormat: this.env.isSmall
                 ? SHORT_SCALE_TO_HEADER_FORMAT[this.props.model.scale]
@@ -154,10 +154,9 @@ export class CalendarCommonRenderer extends Component {
             title: record.title,
             start: record.start.toISO(),
             end:
-                ["week", "month"].includes(this.props.model.scale) && allDay ||
-                (record.isAllDay ||
-                    (allDay && record.end.toMillis() !== record.end.startOf("day").toMillis())
-                )
+                (["week", "month"].includes(this.props.model.scale) && allDay) ||
+                record.isAllDay ||
+                (allDay && record.end.toMillis() !== record.end.startOf("day").toMillis())
                     ? record.end.plus({ days: 1 }).toISO()
                     : record.end.toISO(),
             allDay: allDay,
