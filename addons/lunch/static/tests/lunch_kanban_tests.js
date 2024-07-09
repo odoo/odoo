@@ -18,11 +18,9 @@ async function makeLunchView(extraArgs = {}) {
             arch: `
             <kanban js_class="lunch_kanban">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="name"/>
-                            <field name="price"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="name"/>
+                        <field name="price"/>
                     </t>
                 </templates>
             </kanban>`,

@@ -47,20 +47,10 @@
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_card oe_kanban_global_click">
-                            <div class="oe_kanban_content">
-                                <div class="o_kanban_record_top">
-                                    <div class="o_kanban_record_headings">
-                                        <strong class="o_kanban_record_title"><field name="name"/></strong>
-                                    </div>
-                                </div>
-                                <div class="o_kanban_record_body">
-                                    <field name="company_id" groups="base.group_multi_company"/><br/>
-                                    <field name="address"/>
-                                </div>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="name" class="fw-bold fs-5"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="address"/>
                     </t>
                 </templates>
             </kanban>

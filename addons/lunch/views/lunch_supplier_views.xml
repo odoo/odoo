@@ -116,23 +116,17 @@
         <field name="model">lunch.supplier</field>
         <field name="arch" type="xml">
             <kanban>
-                <field name="partner_id"/>
-                <field name="city"/>
-                <field name="country_id"/>
-                <field name="email"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban">
-                            <div class="oe_kanban_details">
-                                <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>
-                                <ul>
-                                    <li t-if="record.city.raw_value and !record.country_id.raw_value"><field name="city"/></li>
-                                    <li t-if="!record.city.raw_value and record.country_id.raw_value"><field name="country_id"/></li>
-                                    <li t-if="record.city.raw_value and record.country_id.raw_value"><field name="city"/>, <field name="country_id"/></li>
-                                    <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email"/></li>
-                                </ul>
+                    <t t-name="kanban-card">
+                        <main>
+                            <field name="display_name" class="fw-bold fs-5"/>
+                            <field t-if="record.city.raw_value and !record.country_id.raw_value" name="city"/>
+                            <field t-if="!record.city.raw_value and record.country_id.raw_value" name="country_id"/>
+                            <div t-if="record.city.raw_value and record.country_id.raw_value">
+                                <field name="city"/>, <field name="country_id"/>
                             </div>
-                        </div>
+                            <field t-if="record.email.raw_value" class="o_text_overflow" name="email"/>
+                        </main>
                     </t>
                 </templates>
             </kanban>

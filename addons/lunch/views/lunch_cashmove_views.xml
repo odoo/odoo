@@ -51,36 +51,23 @@
         <field name="model">lunch.cashmove</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
-                <field name="date"/>
-                <field name="user_id"/>
-                <field name="description"/>
-                <field name="amount"/>
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_global_click">
-                            <div class="row mb4">
-                                <div class="col-8">
-                                    <span>
-                                        <strong class="o_kanban_record_title"><t t-esc="record.description.value"/></strong>
-                                    </span>
-                                </div>
-                                <div class="col-4 text-end">
-                                    <span class="badge rounded-pill">
-                                        <strong><i class="fa fa-money" role="img" aria-label="Amount" title="Amount"/> <field name="amount" widget="monetary"/></strong>
-                                    </span>
-                                </div>
+                    <t t-name="kanban-card">
+                        <div class="row mb4">
+                            <div class="col-8 fw-bold fs-5">
+                                <field name="description" />
                             </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/>
-                                    <t t-esc="record.date.value"/>
-                                </div>
-                                <div class="col-6">
-                                    <div class="float-end">
-                                        <field name="user_id" widget="many2one_avatar_user"/>
-                                    </div>
-                                </div>
+                            <div class="col-4 text-end badge rounded-pill fw-bolder pe-3 pt-1">
+                                <i class="fa fa-money" role="img" aria-label="Amount" title="Amount"/> <field name="amount" widget="monetary"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <field name="date" />
+                            </div>
+                            <div class="col-6">
+                                <field name="user_id" widget="many2one_avatar_user" class="float-end"/>
                             </div>
                         </div>
                     </t>

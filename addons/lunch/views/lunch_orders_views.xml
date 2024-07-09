@@ -67,57 +67,43 @@
         <field name="model">lunch.order</field>
         <field name="arch" type="xml">
             <kanban create="false" edit="false">
-                <field name="product_id"/>
-                <field name="note"/>
-                <field name="state"/>
-                <field name="user_id"/>
-                <field name="date"/>
-                <field name="company_id"/>
                 <field name="currency_id"/>
                 <field name="notified"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
-                            <div class="o_kanban_record_top">
-                                <div class="o_kanban_record_headings">
-                                    <strong class="o_kanban_record_title"><field name="product_id"/></strong>
-                                </div>
-                                <field name="state" widget="label_selection" options="{'classes': {'new': 'default', 'confirmed': 'success', 'cancelled':'danger'}}"/>
+                    <t t-name="kanban-card">
+                        <div class="d-flex">
+                            <field name="product_id" class="fw-bold fs-5"/>
+                            <field name="state" widget="label_selection" options="{'classes': {'new': 'default', 'confirmed': 'success', 'cancelled':'danger'}}" class="ms-auto"/>
+                        </div>
+                        <field name="note"/>
+                        <div class="row">
+                            <div class="col-6">
+                                <i class="fa fa-money" role="img" aria-label="Money" title="Money"/> <field name="price"/>
                             </div>
-                            <div>
-                                <field name="note"/>
+                            <div class="col-6 text-end">
+                                <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <field name="date" readonly="state != 'new'"/>
                             </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <i class="fa fa-money" role="img" aria-label="Money" title="Money"/> <field name="price"/>
-                                </div>
-                                <div class="col-6 text-end">
-                                    <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <field name="date" readonly="state != 'new'"/>
-                                </div>
+                        </div>
+                        <div class="row mt4">
+                            <div class="col-6">
+                                <a class="btn btn-sm btn-success" role="button" name="action_order" string="Order" type="object" invisible="state in ['sent', 'ordered', 'confirmed']" groups="lunch.group_lunch_manager">
+                                    <i class="fa fa-phone" role="img" aria-label="Order button" title="Order button"/>
+                                </a>
+                                <a class="btn btn-sm btn-primary" role="button" name="action_send" string="Send" type="object" invisible="state != 'ordered'" groups="lunch.group_lunch_manager">
+                                    <i class="fa fa-paper-plane" role="img" aria-label="Send button" title="Send button"/>
+                                </a>
+                                <a class="btn btn-sm btn-info" role="button" name="action_confirm" string="Receive" type="object" invisible="state != 'sent'" groups="lunch.group_lunch_manager">
+                                    <i class="fa fa-check" role="img" aria-label="Receive button" title="Receive button"/>
+                                </a>
+                                <a class="btn btn-sm btn-danger" role="button" name="action_cancel" string="Cancel" type="object" invisible="state in ['cancelled', 'confirmed']" groups="lunch.group_lunch_manager">
+                                    <i class="fa fa-times" role="img" aria-label="Cancel button" title="Cancel button"/>
+                                </a>
+                                <a class="btn btn-sm btn-info" role="button" name="action_notify" string="Send Notification" type="object" invisible="state != 'confirmed' or notified" groups="lunch.group_lunch_manager">
+                                    <i class="fa fa-envelope" role="img" aria-label="Send notification" title="Send notification"/>
+                                </a>
                             </div>
-                            <div class="row mt4">
-                                <div class="col-6">
-                                    <a class="btn btn-sm btn-success" role="button" name="action_order" string="Order" type="object" invisible="state in ['sent', 'ordered', 'confirmed']" groups="lunch.group_lunch_manager">
-                                        <i class="fa fa-phone" role="img" aria-label="Order button" title="Order button"/>
-                                    </a>
-                                    <a class="btn btn-sm btn-primary" role="button" name="action_send" string="Send" type="object" invisible="state != 'ordered'" groups="lunch.group_lunch_manager">
-                                        <i class="fa fa-paper-plane" role="img" aria-label="Send button" title="Send button"/>
-                                    </a>
-                                    <a class="btn btn-sm btn-info" role="button" name="action_confirm" string="Receive" type="object" invisible="state != 'sent'" groups="lunch.group_lunch_manager">
-                                        <i class="fa fa-check" role="img" aria-label="Receive button" title="Receive button"/>
-                                    </a>
-                                    <a class="btn btn-sm btn-danger" role="button" name="action_cancel" string="Cancel" type="object" invisible="state in ['cancelled', 'confirmed']" groups="lunch.group_lunch_manager">
-                                        <i class="fa fa-times" role="img" aria-label="Cancel button" title="Cancel button"/>
-                                    </a>
-                                    <a class="btn btn-sm btn-info" role="button" name="action_notify" string="Send Notification" type="object" invisible="state != 'confirmed' or notified" groups="lunch.group_lunch_manager">
-                                        <i class="fa fa-envelope" role="img" aria-label="Send notification" title="Send notification"/>
-                                    </a>
-                                </div>
-                                <div class="col-6">
-                                    <span class="float-end">
-                                        <field name="user_id" widget="many2one_avatar_user" readonly="state != 'new'"/>
-                                    </span>
-                                </div>
+                            <div class="col-6">
+                                <field name="user_id" widget="many2one_avatar_user" readonly="state != 'new'" class="float-end"/>
                             </div>
                         </div>
                     </t>
