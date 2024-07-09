@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="web.Form.ButtonBox" >
-    <div class="o-form-buttonbox position-relative d-flex w-md-auto" t-attf-class="{{ isFull ? 'o_full w-100' : 'o_not_full'}} {{this.props.class}}">
+    <div class="o-form-buttonbox d-print-none position-relative d-flex w-md-auto" t-attf-class="{{ isFull ? 'o_full w-100' : 'o_not_full'}} {{this.props.class}}">
         <t t-slot="{{ button_value }}" t-foreach="visibleButtons" t-as="button" t-key="button_value"/>
         <div t-if="additionalButtons.length" class="oe_stat_button btn position-relative p-0 border-0">
             <Dropdown position="'bottom-end'" menuClass="'o-form-buttonbox o_dropdown_more p-0 border-0'">

@@ -12,13 +12,19 @@
     margin-right: var(--ListRenderer-margin-x, unset);
 
     // sticky header on desktop
-    @include media-breakpoint-up(md) {
-        height: 100%;
+    @include media-only(screen) {
+        @include media-breakpoint-up(md) {
+            height: 100%;
 
-        .o_list_table thead {
-            @include o-position-sticky(0);
-            z-index: var(--sticky-header-zindex);
+            .o_list_table thead {
+                @include o-position-sticky(0);
+                z-index: var(--sticky-header-zindex);
+            }
         }
+    }
+
+    @include media-only(print) {
+        width: 100% !important;
     }
 
     th, td {
@@ -29,6 +35,12 @@
     .o_list_view & {
         --ListRenderer-thead-padding-y: #{$table-cell-padding-y-sm};
         --ListRenderer-table-padding-x: #{$o-horizontal-padding};
+
+        @include media-only(print) {
+            --ListRenderer-table-padding-x: 0;
+
+            --Tag-font-size: #{$font-size-sm};
+        }
     }
 
     .o_list_table {
@@ -39,6 +51,22 @@
         // for sale order/invoice lines of type section.
         border-collapse: collapse;
         font-variant-numeric: tabular-nums;
+
+        @include media-only(print) {
+            width: 100% !important;
+            border-collapse: separate;
+            border-spacing: 0;
+
+            &.o_list_table_grouped .o_group_header {
+                --table-bg: #{$gray-200};
+                color: color-contrast($gray-200);
+            }
+
+            &.o_list_table_ungrouped {
+                --table-striped-bg: #{$gray-100};
+                --table-striped-color: #{color-contrast($gray-100)};
+            }
+        }
 
         > thead, > tbody, > tfoot {
             > tr > :first-child {
@@ -57,6 +85,10 @@
                 padding-top: var(--ListRenderer-thead-padding-y);
                 background-color: transparent;
                 color: $headings-color;
+
+                @include media-only(print) {
+                    font-weight: $font-weight-bold;
+                }
             }
 
             .o_list_number_th {
@@ -146,6 +178,12 @@
             }
         }
 
+        .o_handle_cell {
+            @include media-only(print) {
+                display: none;
+            }
+        }
+
         .o_column_sortable:not(.o_handle_cell) {
             user-select: none;  // Prevent unwanted selection while sorting
         }
@@ -153,6 +191,10 @@
         .o_list_record_selector {
             width: 40px;  // Don't force to keep o_group_name width dynamic
             vertical-align: middle;
+
+            @include media-only(print) {
+                width: 1.5rem !important;
+            }
         }
 
         .o_list_record_remove, .o_handle_cell, .o_list_record_open_form_view {
@@ -405,37 +447,51 @@
         }
     }
 
-    /**
-    Because of border-collapse, border top and border bottom are 'merged'.
+    @include media-only(screen) {
+        /**
+        Because of border-collapse, border top and border bottom are 'merged'.
 
-    * cell border overlaps row border
-    * when there is a border collapse the first cell (e.g. A1) take over the following cell (e.g. B1 or A2)
-    ┌──┬──┐
-    │A1│B1│
-    ├──┼──┤
-    │A2│B2│
-    └──┴──┘
+        * cell border overlaps row border
+        * when there is a border collapse the first cell (e.g. A1) take over the following cell (e.g. B1 or A2)
+        ┌──┬──┐
+        │A1│B1│
+        ├──┼──┤
+        │A2│B2│
+        └──┴──┘
 
-    So we apply some rules to have the style wanted:
-    */
-    // 1. we set the global separator (gray line) of the table on the row (bottom) and not on the cell (bottom)
-    .o_data_row {
-        border-bottom-width: 1px;
+        So we apply some rules to have the style wanted:
+        */
+        // 1. we set the global separator (gray line) of the table on the row (bottom) and not on the cell (bottom)
+        .o_data_row {
+            border-bottom-width: 1px;
 
-        &:not(.o_selected_row):not(.o_data_row_selected):focus-within > * {
-            $-focus-bg: rgba(var(--#{$variable-prefix}emphasis-color-rgb), #{$table-hover-bg-factor * 2});
+            &:not(.o_selected_row):not(.o_data_row_selected):focus-within > * {
+                $-focus-bg: rgba(var(--#{$variable-prefix}emphasis-color-rgb), #{$table-hover-bg-factor * 2});
 
-            --#{$variable-prefix}table-accent-bg: #{$-focus-bg};
+                --#{$variable-prefix}table-accent-bg: #{$-focus-bg};
+            }
+        }
+
+        // 2. we remove the bottom border (added by BS5) on all cells (this force to show the top border of selected cell)
+        .o_data_row > .o_data_cell {
+            border-bottom-width: 0;
+        }
+        // 3. we add only a bottom border to selected cells (this force to show the bottom border of the selected cell)
+        .o_data_row.o_data_row_selected > .o_data_cell {
+            border-bottom-width: 1px;
         }
     }
 
-    // 2. we remove the bottom border (added by BS5) on all cells (this force to show the top border of selected cell)
-    .o_data_row > .o_data_cell {
-        border-bottom-width: 0;
-    }
-    // 3. we add only a bottom border to selected cells (this force to show the bottom border of the selected cell)
-    .o_data_row.o_data_row_selected > .o_data_cell {
-        border-bottom-width: 1px;
+    @include media-only(print) {
+        .o_data_cell {
+            [type="action"] {
+                display: none;
+            }
+
+            &.w-print-0.p-print-0 {
+                visibility: hidden;
+            }
+        }
     }
 
     .o_data_row.o_dragged {

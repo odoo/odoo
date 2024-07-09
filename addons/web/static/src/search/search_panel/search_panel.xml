@@ -12,7 +12,7 @@
 </t>
 
 <t t-name="web.SearchPanel.Sidebar">
-    <div class="bg-view h-100 o_search_panel_sidebar cursor-pointer" t-on-click="toggleSidebar">
+    <div class="bg-view h-100 o_search_panel_sidebar cursor-pointer d-print-none" t-on-click="toggleSidebar">
         <t t-set="categories" t-value="getCategorySelection()" />
         <t t-set="filters" t-value="getFilterSelection()" />
         <div class="d-flex">

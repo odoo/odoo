@@ -130,7 +130,7 @@
     </t>
 
 <t t-name="mail.Message.actions">
-    <div t-if="props.hasActions and message.hasActions and !state.isEditing" class="o-mail-Message-actions"
+    <div t-if="props.hasActions and message.hasActions and !state.isEditing" class="o-mail-Message-actions d-print-none"
         t-att-class="{
             'start-0 ms-3': isAlignedRight,
             'end-0 me-3': (env.inChatWindow or ui.isSmall) and !isAlignedRight,

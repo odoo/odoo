@@ -109,3 +109,24 @@ $o-cw-filter-avatar-size: 20px;
         display: none;
     }
 }
+
+//  Print
+@include media-only(print) {
+    html:has(.o_action_manager .o_calendar_view.o_view_controller.o_action) {
+        @extend %o-html-layout-fill;
+
+        .o_calendar_renderer {
+            .fc-theme-standard .fc-scrollgrid {
+                border-top: 0;
+            }
+
+            .o_actionswiper, .o_actionswiper_overflow_container, .o_actionswiper_target_container, .o_calendar_widget, .fc .fc-daygrid-body, .fc-daygrid-body, .fc-scrollgrid-sync-table {
+                height: 100% !important;
+            }
+
+            .fc-col-header, .fc-daygrid-body, .fc-scrollgrid-sync-table {
+                width: 100% !important;
+            }
+        }
+    }
+}

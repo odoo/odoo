@@ -51,5 +51,9 @@
 
     + .popover-arrow {
         --#{$variable-prefix}popover-bg: #{$tooltip-bg};
+
+        @include media-only(print) {
+            display: none;
+        }
     }
 }

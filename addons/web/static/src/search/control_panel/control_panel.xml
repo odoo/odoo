@@ -39,7 +39,7 @@
                         </div>
                     </div>
                     <t t-if="env.config.noBreadcrumbs">
-                        <section class="o_control_panel_breadcrumbs_actions d-contents">
+                        <section class="o_control_panel_breadcrumbs_actions d-contents d-print-none">
                             <t t-slot="control-panel-additional-actions"/>
                             <t t-slot="control-panel-status-indicator" />
                         </section>
@@ -70,7 +70,7 @@
                         <i class="fa fa-sliders" />
                     </button>
                     <t t-if="env.config.viewSwitcherEntries?.length > 1">
-                        <div t-if="env.isSmall" class="o_cp_switch_buttons btn-group">
+                        <div t-if="env.isSmall" class="o_cp_switch_buttons btn-group d-print-none">
                             <Dropdown>
                                 <button class="btn btn-secondary o-dropdown-caret">
                                     <t t-set="activeView" t-value="env.config.viewSwitcherEntries.find((view) => view.active)"/>
@@ -153,7 +153,7 @@
         <div t-if="collapsedBreadcrumbs.length || visiblePathBreadcrumbs.length" class="o_breadcrumb d-flex flex-row flex-md-column align-self-stretch justify-content-between min-w-0">
             <t t-if="env.isSmall">
                 <t t-set="previousBreadcrumb" t-value="visiblePathBreadcrumbs.slice(-1)"/>
-                <button class="o_back_button btn btn-link px-1" t-on-click.prevent="() => this.onBreadcrumbClicked(previousBreadcrumb.jsId)">
+                <button class="o_back_button btn btn-link d-print-none px-1" t-on-click.prevent="() => this.onBreadcrumbClicked(previousBreadcrumb.jsId)">
                     <i class="oi oi-fw oi-arrow-left"/>
                 </button>
             </t>
@@ -199,7 +199,7 @@
     </t>
 
     <t t-name="web.Breadcrumb.Actions">
-        <div class="o_control_panel_breadcrumbs_actions d-inline-flex">
+        <div class="o_control_panel_breadcrumbs_actions d-inline-flex d-print-none">
             <t t-slot="control-panel-additional-actions"/>
         </div>
     </t>

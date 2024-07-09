@@ -63,7 +63,7 @@
 <t t-name="mail.Thread.jumpPresent">
     <span t-if="props.showJumpPresent and state.showJumpPresent" t-att-class="{
         'm-0 px-4 position-sticky top-0': env.inChatter,
-    }" class="o-mail-Thread-banner o-mail-Thread-bannerHover d-flex justify-content-between alert alert-primary border-0 rounded-0 mb-0 py-1 cursor-pointer shadow-sm small fw-bold" t-on-click="() => this.jumpToPresent()">
+    }" class="o-mail-Thread-banner o-mail-Thread-bannerHover d-flex d-print-none justify-content-between alert alert-primary border-0 rounded-0 mb-0 py-1 cursor-pointer shadow-sm small fw-bold" t-on-click="() => this.jumpToPresent()">
         <span>You're viewing older messages</span>
         <span>Jump to Present<i class="ms-2 fa" t-att-class="{ 'fa-caret-up': props.order !== 'asc', 'fa-caret-down': props.order === 'asc' }"/></span>
     </span>
