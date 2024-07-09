@@ -2998,6 +2998,7 @@ class BaseModel(metaclass=MetaModel):
 
         field = self._fields[fname]
         is_number_field = field.type in ('integer', 'float', 'monetary') and field.name != 'id'
+        is_char_field = field.type in ('char', 'text', 'html')
         sql_operator = expression.SQL_OPERATORS[operator]
 
         if operator in ('in', 'not in'):
@@ -3028,6 +3029,10 @@ class BaseModel(metaclass=MetaModel):
                     if check_null and 0 not in params:
                         params.append(0)
                     check_null = check_null or (0 in params)
+                elif is_char_field:
+                    if check_null and '' not in params:
+                        params.append('')
+                    check_null = check_null or ('' in params)
 
                 if params:
                     if fname != 'id':
@@ -3061,7 +3066,9 @@ class BaseModel(metaclass=MetaModel):
 
         if operator in ('=', '!=') and (value is False or value is None):
             if is_number_field:
-                value = 0  # generates something like (fname = 0 OR fname IS NULL)
+                value = 0  # generates (fname = 0 OR fname IS NULL)
+            elif is_char_field:
+                value = ''  # generates (fname = '' OR fname IS NULL)
             elif operator == '=':
                 return SQL("%s IS NULL", sql_field)
             elif operator == '!=':
@@ -3090,8 +3097,6 @@ class BaseModel(metaclass=MetaModel):
         sql = SQL("(%s %s %s)", sql_left, sql_operator, sql_value)
         if (
             bool(value) == (operator in expression.NEGATIVE_TERM_OPERATORS)
-            # exception: char is handled differently for now
-            and value != ''  # noqa: PLC1901
             # exception: don't add for inequalities
             and operator[:1] not in ('>', '<')
         ):
@@ -6274,24 +6279,21 @@ class BaseModel(metaclass=MetaModel):
                         stack.append(set(self.with_context(active_test=False).search([('id', 'in', self.ids), leaf], order='id')._ids))
                     continue
 
+                # determine the field with the final type for values
                 if key.endswith('.id'):
                     key = key[:-3]
-                if key == 'id':
-                    key = ''
-
-                # determine the field with the final type for values
-                field = None
-                if key:
-                    if '.' in key:
-                        fname, rest = key.split('.', 1)
-                        field = self._fields[fname]
-                        if field.relational:
-                            # for relational fields, evaluate as 'any'
-                            # so that negations are applied on the result of 'any' instead
-                            # of on the mapped value
-                            key, comparator, value = fname, 'any', [(rest, comparator, value)]
-                    else:
-                        field = self._fields[key]
+                if '.' in key:
+                    fname, rest = key.split('.', 1)
+                    field = self._fields[fname]
+                    if field.relational:
+                        # for relational fields, evaluate as 'any'
+                        # so that negations are applied on the result of 'any' instead
+                        # of on the mapped value
+                        key, comparator, value = fname, 'any', [(rest, comparator, value)]
+                else:
+                    field = self._fields[key]
+                    if key == 'id':
+                        key = ''
 
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                     if comparator.endswith('ilike'):
@@ -6305,14 +6307,21 @@ class BaseModel(metaclass=MetaModel):
                     value_esc = unaccent(value).replace('_', '?').replace('%', '*').replace('[', '?')
                     if not comparator.startswith('='):
                         value_esc = f'*{value_esc}*'
+                if comparator in ('=', '!=') and field.type in ('char', 'text', 'html') and not value:
+                    # use the comparator 'in' for falsy comparison of strings
+                    comparator = 'in' if comparator == '=' else 'not in'
+                    value = ['', False]
                 if comparator in ('in', 'not in'):
                     if isinstance(value, (list, tuple)):
                         value = set(value)
                     else:
-                        value = (value,)
-                    if field and field.type in ('date', 'datetime'):
+                        value = {value}
+                    if field.type in ('date', 'datetime'):
                         value = {Datetime.to_datetime(v) for v in value}
-                elif field and field.type in ('date', 'datetime'):
+                    elif field.type in ('char', 'text', 'html') and ({False, ""} & value):
+                        # compare string to both False and ""
+                        value |= {False, ""}
+                elif field.type in ('date', 'datetime'):
                     value = Datetime.to_datetime(value)
 
                 matching_ids = set()
@@ -6330,7 +6339,7 @@ class BaseModel(metaclass=MetaModel):
                                 data = ['']
                         else:
                             data = data and data.ids or [False]
-                    elif field and field.type in ('date', 'datetime'):
+                    elif field.type in ('date', 'datetime'):
                         data = [Datetime.to_datetime(d) for d in data]
 
                     if comparator == '=':

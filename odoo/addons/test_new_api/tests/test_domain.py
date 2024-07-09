@@ -75,7 +75,7 @@ class TestDomain(common.TransactionCase):
 
         # check ('number', 'in', subset) for every subset of {42, 0, False}
         values = [42, 0, False]
-        for length in range(4):
+        for length in range(len(values) + 1):
             for subset in combinations(values, length):
                 self.assertEqual(
                     self._search(EmptyInt, [('number', 'in', list(subset))]),
@@ -90,34 +90,54 @@ class TestDomain(common.TransactionCase):
 
     def test_empty_char(self):
         EmptyChar = self.env['test_new_api.empty_char']
-        EmptyChar.create([
+        records = EmptyChar.create([
             {'name': 'name'},
-            {'name': ''},
-            {'name': False},
+            {'name': ''},      # stored as ''
+            {'name': False},   # stored as null (explicitly asked)
+            {},                # stored as null
         ])
+        # check read
+        self.assertListEqual(records.mapped('name'), ['name', '', False, False])
 
-        self.assertListEqual(EmptyChar.search([('name', '=', 'name')]).mapped('name'), ['name'])
-        self.assertListEqual(EmptyChar.search([('name', '!=', 'name')]).mapped('name'), ['', False])
-        self.assertListEqual(EmptyChar.search([('name', 'ilike', 'name')]).mapped('name'), ['name'])
-        self.assertListEqual(EmptyChar.search([('name', 'not ilike', 'name')]).mapped('name'), ['', False])
+        # check database value
+        self.env.flush_all()
 
-        self.assertListEqual(EmptyChar.search([('name', '=', '')]).mapped('name'), [''])
-        self.assertListEqual(EmptyChar.search([('name', '!=', '')]).mapped('name'), ['name'])
-        self.assertListEqual(EmptyChar.search([('name', 'ilike', '')]).mapped('name'), ['name', '', False])
-        self.assertListEqual(EmptyChar.search([('name', 'not ilike', '')]).mapped('name'), [])
+        sql = SQL("SELECT name FROM test_new_api_empty_char WHERE id IN %s ORDER BY id", records._ids)
+        rows = self.env.execute_query(sql)
+        self.assertEqual([row[0] for row in rows], ['name', '', None, None])
 
-        self.assertListEqual(EmptyChar.search([('name', '=', False)]).mapped('name'), [False])
-        self.assertListEqual(EmptyChar.search([('name', '!=', False)]).mapped('name'), ['name', ''])
-        self.assertListEqual(EmptyChar.search([('name', 'ilike', False)]).mapped('name'), ['name', '', False])
-        self.assertListEqual(EmptyChar.search([('name', 'not ilike', False)]).mapped('name'), [])
+        self.assertListEqual(self._search(EmptyChar, [('name', '=', 'name')]).mapped('name'), ['name'])
+        self.assertListEqual(self._search(EmptyChar, [('name', '!=', 'name')]).mapped('name'), ['', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('name', 'ilike', 'name')]).mapped('name'), ['name'])
+        self.assertListEqual(self._search(EmptyChar, [('name', 'not ilike', 'name')]).mapped('name'), ['', False, False])
+
+        self.assertListEqual(self._search(EmptyChar, [('name', '=', '')]).mapped('name'), ['', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('name', '!=', '')]).mapped('name'), ['name'])
+        self.assertListEqual(self._search(EmptyChar, [('name', 'ilike', '')]).mapped('name'), ['name', '', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('name', 'not ilike', '')]).mapped('name'), [])
+
+        self.assertListEqual(self._search(EmptyChar, [('name', '=', False)]).mapped('name'), ['', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('name', '!=', False)]).mapped('name'), ['name'])
+        self.assertListEqual(self._search(EmptyChar, [('name', 'ilike', False)]).mapped('name'), ['name', '', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('name', 'not ilike', False)]).mapped('name'), [])
 
         values = ['name', '', False]
         for length in range(len(values) + 1):
             for subset in combinations(values, length):
-                sublist = list(subset)
-                self.assertListEqual(EmptyChar.search([('name', 'in', sublist)]).mapped('name'), sublist)
-                sublist_remained = [v for v in values if v not in subset]
-                self.assertListEqual(EmptyChar.search([('name', 'not in', sublist)]).mapped('name'), sublist_remained)
+                # check against a subset containg both values for empty strings
+                subset_check = set(subset)
+                if {False, ""} & subset_check:
+                    subset_check |= {False, ""}
+                self.assertEqual(
+                    self._search(EmptyChar, [('name', 'in', list(subset))]),
+                    records.filtered(lambda record: record.name in subset_check),
+                    f"Incorrect result for search([('name', 'in', {list(subset)})])",
+                )
+                self.assertEqual(
+                    self._search(EmptyChar, [('name', 'not in', list(subset))]),
+                    records.filtered(lambda record: record.name not in subset_check),
+                    f"Incorrect result for search([('name', 'not in', {list(subset)})])",
+                )
 
     def test_empty_translation(self):
         records_en = self.env['test_new_api.indexed_translation'].with_context(lang='en_US').create([
@@ -130,29 +150,41 @@ class TestDomain(common.TransactionCase):
         records_fr[0].name = 'name'
         records_fr[1].name = ''
         records_fr[2].name = False
+        self.assertListEqual(records_en.mapped('name'), ['English', 'English', False])
+        self.assertListEqual(records_fr.mapped('name'), ['name', '', False])
 
-        self.assertListEqual(records_fr.search([('name', '=', 'name')]).mapped('name'), ['name'])
-        self.assertListEqual(records_fr.search([('name', '!=', 'name')]).mapped('name'), ['', False])
-        self.assertListEqual(records_fr.search([('name', 'ilike', 'name')]).mapped('name'), ['name'])
-        self.assertListEqual(records_fr.search([('name', 'not ilike', 'name')]).mapped('name'), ['', False])
+        self.assertListEqual(self._search(records_fr, [('name', '=', 'name')]).mapped('name'), ['name'])
+        self.assertListEqual(self._search(records_fr, [('name', '!=', 'name')]).mapped('name'), ['', False])
+        self.assertListEqual(self._search(records_fr, [('name', 'ilike', 'name')]).mapped('name'), ['name'])
+        self.assertListEqual(self._search(records_fr, [('name', 'not ilike', 'name')]).mapped('name'), ['', False])
 
-        self.assertListEqual(records_fr.search([('name', '=', '')]).mapped('name'), [''])
-        self.assertListEqual(records_fr.search([('name', '!=', '')]).mapped('name'), ['name'])
-        self.assertListEqual(records_fr.search([('name', 'ilike', '')]).mapped('name'), ['name', '', False])
-        self.assertListEqual(records_fr.search([('name', 'not ilike', '')]).mapped('name'), [])
+        self.assertListEqual(self._search(records_fr, [('name', '=', '')]).mapped('name'), ['', False])
+        self.assertListEqual(self._search(records_fr, [('name', '!=', '')]).mapped('name'), ['name'])
+        self.assertListEqual(self._search(records_fr, [('name', 'ilike', '')]).mapped('name'), ['name', '', False])
+        self.assertListEqual(self._search(records_fr, [('name', 'not ilike', '')]).mapped('name'), [])
 
-        self.assertListEqual(records_fr.search([('name', '=', False)]).mapped('name'), [False])
-        self.assertListEqual(records_fr.search([('name', '!=', False)]).mapped('name'), ['name', ''])
-        self.assertListEqual(records_fr.search([('name', 'ilike', False)]).mapped('name'), ['name', '', False])
-        self.assertListEqual(records_fr.search([('name', 'not ilike', False)]).mapped('name'), [])
+        self.assertListEqual(self._search(records_fr, [('name', '=', False)]).mapped('name'), ['', False])
+        self.assertListEqual(self._search(records_fr, [('name', '!=', False)]).mapped('name'), ['name'])
+        self.assertListEqual(self._search(records_fr, [('name', 'ilike', False)]).mapped('name'), ['name', '', False])
+        self.assertListEqual(self._search(records_fr, [('name', 'not ilike', False)]).mapped('name'), [])
 
         values = ['name', '', False]
         for length in range(len(values) + 1):
             for subset in combinations(values, length):
-                sublist = list(subset)
-                self.assertListEqual(records_fr.search([('name', 'in', sublist)]).mapped('name'), sublist)
-                sublist_remained = [v for v in values if v not in subset]
-                self.assertListEqual(records_fr.search([('name', 'not in', sublist)]).mapped('name'), sublist_remained)
+                # check against a subset containg both values for empty strings
+                subset_check = set(subset)
+                if {False, ""} & subset_check:
+                    subset_check |= {False, ""}
+                self.assertEqual(
+                    self._search(records_fr, [('name', 'in', list(subset))]),
+                    records_fr.filtered(lambda record: record.name in subset_check),
+                    f"Incorrect result for search([('name', 'in', {list(subset)})])",
+                )
+                self.assertEqual(
+                    self._search(records_fr, [('name', 'not in', list(subset))]),
+                    records_fr.filtered(lambda record: record.name not in subset_check),
+                    f"Incorrect result for search([('name', 'not in', {list(subset)})])",
+                )
 
     def test_anys_many2one(self):
         Parent = self.env['test_new_api.any.parent']

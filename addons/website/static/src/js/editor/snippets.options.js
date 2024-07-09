@@ -883,7 +883,8 @@ options.Class.include({
      */
     async _customizeWebsiteData(value, params, isViewData) {
         const allDataKeys = this._getDataKeysFromPossibleValues(params.possibleValues);
-        const enableDataKeys = value.split(/\s*,\s*/);
+        const keysToEnable = value.split(/\s*,\s*/);
+        const enableDataKeys = allDataKeys.filter(value => keysToEnable.includes(value));
         const disableDataKeys = allDataKeys.filter(value => !enableDataKeys.includes(value));
         const resetViewArch = !!params.resetViewArch;
 
@@ -902,7 +903,8 @@ options.Class.include({
         for (const dataKeysStr of possibleValues) {
             allDataKeys.push(...dataKeysStr.split(/\s*,\s*/));
         }
-        return allDataKeys.filter((v, i, arr) => arr.indexOf(v) === i);
+        // return only unique non-empty strings
+        return allDataKeys.filter((v, i, arr) => v && arr.indexOf(v) === i);
     },
     /**
      * @private
