@@ -91,8 +91,8 @@ export function ancestors(node, editable) {
 }
 
 /**
- * Get a static array of children, to avoid manipulating the live NodeList for
- * better performances.
+ * Get a static array of children, to avoid manipulating the live HTMLCollection
+ * for better performances.
  *
  * @param {Element}} elem
  * @returns {Array<Element>} children
