@@ -9,4 +9,4 @@ class AccountAccount(models.Model):
         if 'code' in vals and 'DE' in self.company_id.account_fiscal_country_id.mapped('code'):
             if self.env['account.move.line'].search_count([('account_id', 'in', self.ids)], limit=1):
                 raise UserError(_("You can not change the code of an account."))
-        super().write(vals)
+        return super().write(vals)
