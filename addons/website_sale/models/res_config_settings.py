@@ -22,6 +22,8 @@ class ResConfigSettings(models.TransientModel):
         string="Comparison Price",
         implied_group="website_sale.group_product_price_comparison",
         group='base.group_portal,base.group_user,base.group_public',
+        help="Add a strikethrough price to your /shop and product pages for comparison purposes."
+             "It will not be displayed if pricelists apply."
     )
 
     # Modules

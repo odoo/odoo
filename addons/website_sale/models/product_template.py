@@ -128,7 +128,8 @@ class ProductTemplate(models.Model):
 
     compare_list_price = fields.Monetary(
         string="Compare to Price",
-        help="The amount will be displayed strikethroughed on the eCommerce product page",
+        help="Add a strikethrough price to your /shop and product pages for comparison purposes."
+             "It will not be displayed if pricelists apply.",
     )
 
     #=== COMPUTE METHODS ===#
@@ -258,64 +259,55 @@ class ProductTemplate(models.Model):
 
         return self._get_possible_variants(parent_combination).sorted(_sort_key_variant)
 
-    def _get_sales_prices(self, pricelist, fiscal_position):
+    def _get_sales_prices(self, website):
         if not self:
             return {}
 
-        pricelist and pricelist.ensure_one()
-        pricelist = pricelist or self.env['product.pricelist']
-        currency = pricelist.currency_id or self.env.company.currency_id
+        pricelist = website.pricelist_id
+        currency = website.currency_id
+        fiscal_position = website.fiscal_position_id.sudo()
         date = fields.Date.context_today(self)
 
-        sales_prices = pricelist._get_products_price(self, 1.0)
-        show_discount = pricelist and pricelist.discount_policy == 'without_discount'
-        show_strike_price = self.env.user.has_group('website_sale.group_product_price_comparison')
-        website = self.env['website'].get_current_website()
-
-        base_sales_prices = self._price_compute('list_price', currency=currency)
+        pricelist_prices = pricelist._compute_price_rule(self, 1.0)
+        comparison_prices_enabled = self.env.user.has_group('website_sale.group_product_price_comparison')
 
         res = {}
         for template in self:
-            price_reduce = sales_prices[template.id]
+            pricelist_price, pricelist_rule_id = pricelist_prices[template.id]
 
             product_taxes = template.sudo().taxes_id._filter_taxes_by_company(self.env.company)
             taxes = fiscal_position.map_tax(product_taxes)
 
             base_price = None
-            price_list_contains_template = currency.compare_amounts(price_reduce, base_sales_prices[template.id]) != 0
-
-            if template.compare_list_price and show_strike_price:
-                # The base_price becomes the compare list price and the price_reduce becomes the price
-                base_price = template.compare_list_price
-                if not price_list_contains_template:
-                    price_reduce = base_sales_prices[template.id]
-
-                if template.currency_id != currency:
-                    base_price = template.currency_id._convert(
-                        base_price,
-                        currency,
-                        self.env.company,
-                        date,
-                        round=False
+            template_price_vals = {
+                'price_reduce': self._apply_taxes_to_price(
+                    pricelist_price, currency, product_taxes, taxes, self, website=website,
+                ),
+            }
+            if pricelist_rule_id:  # If a rule was applied, there might be a discount
+                # For ecommerce flows, the base price is always the product sales price
+                # which can be computed by calling `_compute_base_price` without a pricelist rule
+                pricelist_base_price = template.env['product.pricelist.item']._compute_base_price(
+                    product=template,
+                    quantity=1.0,
+                    date=date,
+                    uom=template.uom_id,
+                    currency=currency,
+                )
+                if pricelist_base_price != pricelist_price:
+                    base_price = pricelist_base_price
+                    template_price_vals['base_price'] = self._apply_taxes_to_price(
+                        base_price, currency, product_taxes, taxes, self, website=website,
                     )
 
-            elif show_discount and price_list_contains_template:
-                base_price = base_sales_prices[template.id]
-
-                # Compare_list_price are never tax included
-                base_price = self._apply_taxes_to_price(
-                    base_price, currency, product_taxes, taxes, template, website=website,
+            if not base_price and comparison_prices_enabled and template.compare_list_price:
+                template_price_vals['base_price'] = template.currency_id._convert(
+                    template.compare_list_price,
+                    currency,
+                    self.env.company,
+                    date,
+                    round=False,
                 )
-
-            price_reduce = self._apply_taxes_to_price(
-                price_reduce, currency, product_taxes, taxes, template, website=website,
-            )
-
-            template_price_vals = {
-                'price_reduce': price_reduce,
-            }
-            if base_price:
-                template_price_vals['base_price'] = base_price
 
             res[template.id] = template_price_vals
 
@@ -468,46 +460,28 @@ class ProductTemplate(models.Model):
         pricelist = website.pricelist_id
         currency = website.currency_id
 
-        compare_list_price = product_or_template.compare_list_price if self.env.user.has_group(
-            'website_sale.group_product_price_comparison'
-        ) else None
-        list_price = product_or_template._price_compute('list_price')[product_or_template.id]
-        price_extra = product_or_template._get_attributes_extra_price()
-        if product_or_template.currency_id != currency:
-            price_extra = product_or_template.currency_id._convert(
-                from_amount=price_extra,
-                to_currency=currency,
-                company=self.env.company,
-                date=date,
-            )
-            list_price = product_or_template.currency_id._convert(
-                from_amount=list_price,
-                to_currency=currency,
-                company=self.env.company,
-                date=date,
-            )
-            compare_list_price = product_or_template.currency_id._convert(
-                from_amount=compare_list_price,
-                to_currency=currency,
-                company=self.env.company,
-                date=date,
-                round=False)
-
         # Pricelist price doesn't have to be converted
-        pricelist_price = pricelist._get_product_price(
+        pricelist_price, pricelist_rule_id = pricelist._get_product_price_rule(
             product=product_or_template,
             quantity=quantity,
             target_currency=currency,
         )
 
-        if pricelist.discount_policy == 'without_discount':
-            has_discounted_price = currency.compare_amounts(list_price, pricelist_price) == 1
-        else:
-            has_discounted_price = False
+        price_before_discount = pricelist_price
+        if pricelist_rule_id:  # If a rule was applied, there might be a discount
+            # For ecommerce flows, the base price is always the product sales price
+            # which can be computed by calling `_compute_base_price` without a pricelist rule
+            price_before_discount = self.env['product.pricelist.item']._compute_base_price(
+                product=product_or_template,
+                quantity=quantity or 1.0,
+                date=date,
+                uom=product_or_template.uom_id,
+                currency=currency,
+            )
 
         has_discounted_price = price_before_discount > pricelist_price
         combination_info = {
-            'price_extra': price_extra,
+            'list_price': max(pricelist_price, price_before_discount),
             'price': pricelist_price,
             'has_discounted_price': has_discounted_price,
         }
