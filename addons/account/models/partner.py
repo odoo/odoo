@@ -613,6 +613,21 @@ class ResPartner(models.Model):
         compute='_compute_duplicated_bank_account_partners_count',
     )
 
+    property_payment_method_id = fields.Many2one(
+        comodel_name='account.payment.method',
+        company_dependent=True,
+        domain="[('payment_type', '=', 'outbound'), ('is_used' ,'=', True)]",
+        help="Preferred payment method when paying this vendor. This is used to filter vendor bills"
+             " by preferred payment method to register payments in mass. Use cases: create bank"
+             " files for batch wires, check runs.",
+    )
+
+    property_inbound_payment_method_id = fields.Many2one(
+        comodel_name='account.payment.method',
+        company_dependent=True,
+        domain="[('payment_type', '=', 'inbound'), ('is_used' ,'=', True)]",
+    )
+
     def _compute_bank_count(self):
         bank_data = self.env['res.partner.bank']._read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['__count'])
         mapped_data = {partner.id: count for partner, count in bank_data}

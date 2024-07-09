@@ -496,17 +496,38 @@ class AccountPaymentRegister(models.TransientModel):
 
     @api.depends('payment_type', 'journal_id')
     def _compute_payment_method_line_id(self):
-        for wizard in self:
-            if wizard.journal_id:
-                available_payment_method_lines = wizard.journal_id._get_available_payment_method_lines(wizard.payment_type)
-            else:
-                available_payment_method_lines = False
+        payment_method_line = {}
+        # We can't have multiple id in partner_id, if we do a register payment on move with different partner,
+        # partner_id will be empty
+        inbound_payment_method_id = self.partner_id.property_inbound_payment_method_id
+        outbound_payment_method_id = self.partner_id.property_payment_method_id
+        if inbound_payment_method_id:
+            payment_method_line['inbound'] = self.env['account.payment.method.line'].search([
+                ('payment_method_id', '=', inbound_payment_method_id.id),
+                ('company_id', 'in', self.env.company.ids)
+            ], limit=1)
+        if outbound_payment_method_id:
+            payment_method_line['outbound'] = self.env['account.payment.method.line'].search([
+                ('payment_method_id', '=', outbound_payment_method_id.id),
+                ('company_id', 'in', self.env.company.ids),
+            ], limit=1)
 
-            # Select the first available one by default.
-            if available_payment_method_lines:
-                wizard.payment_method_line_id = available_payment_method_lines[0]._origin
+        for wizard in self:
+            if wizard.payment_type == 'inbound' and payment_method_line.get('inbound'):
+                wizard.payment_method_line_id = payment_method_line['inbound']
+            elif wizard.payment_type == 'outbound' and payment_method_line.get('outbound'):
+                wizard.payment_method_line_id = payment_method_line['outbound']
             else:
-                wizard.payment_method_line_id = False
+                if wizard.journal_id:
+                    available_payment_method_lines = wizard.journal_id._get_available_payment_method_lines(wizard.payment_type)
+                else:
+                    available_payment_method_lines = False
+
+                # Select the first available one by default.
+                if available_payment_method_lines:
+                    wizard.payment_method_line_id = available_payment_method_lines[0]._origin
+                else:
+                    wizard.payment_method_line_id = False
 
     @api.depends('payment_method_line_id')
     def _compute_show_require_partner_bank(self):
@@ -588,6 +609,16 @@ class AccountPaymentRegister(models.TransientModel):
     @api.onchange('payment_date')
     def _onchange_payment_date(self):
         self.wizard_change_mode = 'payment_date_change'
+
+    @api.onchange('payment_method_line_id')
+    def _onchange_payment_method_line_id(self):
+        """
+            This is needed cause it can happens that when the payment method is choosen by the compute, the journal
+            doesn't have this payment method and it will result in a user error.
+        """
+        for wizard in self:
+            if wizard.payment_method_line_id:
+                wizard.journal_id = wizard.payment_method_line_id.journal_id.id
 
     @api.depends('can_edit_wizard', 'source_amount', 'source_amount_currency', 'source_currency_id', 'company_id', 'currency_id', 'payment_date')
     def _compute_amount(self):

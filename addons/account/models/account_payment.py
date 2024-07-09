@@ -483,21 +483,40 @@ class AccountPayment(models.Model):
                                            and payment.partner_id == payment.journal_id.company_id.partner_id \
                                            and payment.destination_journal_id
 
-    @api.depends('available_payment_method_line_ids')
+    @api.depends('available_payment_method_line_ids', 'partner_id')
     def _compute_payment_method_line_id(self):
         ''' Compute the 'payment_method_line_id' field.
         This field is not computed in '_compute_payment_method_line_fields' because it's a stored editable one.
         '''
-        for pay in self:
-            available_payment_method_lines = pay.available_payment_method_line_ids
+        payment_method_line = {}
+        inbound_payment_method_id = self.partner_id.property_inbound_payment_method_id
+        outbound_payment_method_id = self.partner_id.property_payment_method_id
+        if inbound_payment_method_id:
+            payment_method_line['inbound'] = self.env['account.payment.method.line'].search([
+                ('payment_method_id', '=', inbound_payment_method_id.id),
+                ('company_id', 'in', self.env.company.ids)
+            ], limit=1)
+        if outbound_payment_method_id:
+            payment_method_line['outbound'] = self.env['account.payment.method.line'].search([
+                ('payment_method_id', '=', outbound_payment_method_id.id),
+                ('company_id', 'in', self.env.company.ids),
+            ], limit=1)
 
-            # Select the first available one by default.
-            if pay.payment_method_line_id in available_payment_method_lines:
-                pay.payment_method_line_id = pay.payment_method_line_id
-            elif available_payment_method_lines:
-                pay.payment_method_line_id = available_payment_method_lines[0]._origin
+        for pay in self:
+            if pay.payment_type == 'inbound' and payment_method_line.get('inbound'):
+                pay.payment_method_line_id = payment_method_line['inbound']
+            elif pay.payment_type == 'outbound' and payment_method_line.get('outbound'):
+                pay.payment_method_line_id = payment_method_line['outbound']
             else:
-                pay.payment_method_line_id = False
+                available_payment_method_lines = pay.available_payment_method_line_ids
+
+                # Select the first available one by default.
+                if pay.payment_method_line_id.id in available_payment_method_lines.ids:
+                    pay.payment_method_line_id = pay.payment_method_line_id
+                elif available_payment_method_lines:
+                    pay.payment_method_line_id = available_payment_method_lines[0]._origin
+                else:
+                    pay.payment_method_line_id = False
 
     @api.depends('payment_type', 'journal_id', 'currency_id')
     def _compute_payment_method_line_fields(self):
@@ -837,6 +856,15 @@ class AccountPayment(models.Model):
         # recomputed correctly if we change the journal or the date, leading to inconsitencies
         if not self.move_id:
             self.name = False
+
+    @api.onchange('payment_method_line_id')
+    def _onchange_journal(self):
+        """
+            This onchange function will change the journal when selecting a partner if the partner has some payment
+            method set to put the journal associated to the payment method line.
+        """
+        if self.payment_method_line_id.journal_id:
+            self.journal_id = self.payment_method_line_id.journal_id
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS

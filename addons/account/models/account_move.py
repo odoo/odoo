@@ -13,6 +13,7 @@ import re
 from textwrap import shorten
 
 from odoo import api, fields, models, _, Command
+from odoo.tools.sql import column_exists, create_column
 from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.osv import expression
@@ -391,6 +392,13 @@ class AccountMove(models.Model):
         exportable=False,
     )
 
+    preferred_payment_method_id = fields.Many2one(
+        string="Preferred Payment Method",
+        comodel_name='account.payment.method',
+        compute='_compute_preferred_payment_method_idd',
+        store=True,
+    )
+
     # === Currency fields === #
     company_currency_id = fields.Many2one(
         string='Company Currency',
@@ -641,6 +649,9 @@ class AccountMove(models.Model):
                                  ON account_move(name, journal_id)
                               WHERE (state = 'posted' AND name != '/')
             """)
+
+        if not column_exists(self.env.cr, "account_move", "preferred_payment_method_id"):
+            create_column(self.env.cr, "account_move", "preferred_payment_method_id", "int4")
 
     def init(self):
         super().init()
@@ -1221,6 +1232,16 @@ class AccountMove(models.Model):
 
             move.invoice_outstanding_credits_debits_widget = payments_widget_vals
             move.invoice_has_outstanding = True
+
+    @api.depends('partner_id')
+    def _compute_preferred_payment_method_idd(self):
+        for move in self:
+            partner = move.partner_id
+            # take the payment method corresponding to the move's company
+            if move.is_sale_document():
+                move.preferred_payment_method_id = partner.with_company(move.company_id).property_inbound_payment_method_id
+            else:
+                move.preferred_payment_method_id = partner.with_company(move.company_id).property_payment_method_id
 
     @api.depends('move_type', 'line_ids.amount_residual')
     def _compute_payments_widget_reconciled_info(self):

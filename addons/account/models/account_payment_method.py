@@ -12,6 +12,12 @@ class AccountPaymentMethod(models.Model):
     name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True)  # For internal identification
     payment_type = fields.Selection(selection=[('inbound', 'Inbound'), ('outbound', 'Outbound')], required=True)
+    is_used = fields.Boolean(compute='_compute_is_used', store=True)
+    payment_method_lines = fields.One2many(
+        'account.payment.method.line',
+        'payment_method_id',
+        string="Payment method lines",
+    )
 
     _sql_constraints = [
         ('name_code_unique', 'unique (code, payment_type)', 'The combination code/payment type already exists!'),
@@ -85,6 +91,12 @@ class AccountPaymentMethod(models.Model):
         This hook will be used to return the list of sdd payment method codes
         """
         return []
+
+    @api.depends("payment_method_lines")
+    def _compute_is_used(self):
+        """ This compute will check if the payment method is used at least once in a payment method line """
+        for record in self:
+            record.is_used = record.payment_method_lines
 
 
 class AccountPaymentMethodLine(models.Model):
