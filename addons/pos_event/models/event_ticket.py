@@ -19,7 +19,7 @@ class EventTicket(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         tickets = super().create(vals_list)
-        self.make_product_event_available_in_pos()
+        tickets.make_product_event_available_in_pos()
         return tickets
 
     def write(self, vals):
