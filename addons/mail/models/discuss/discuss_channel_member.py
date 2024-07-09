@@ -234,7 +234,7 @@ class ChannelMember(models.Model):
             if 'id' in fields:
                 data['id'] = member.id
             if 'channel' in fields:
-                data['thread'] = member.channel_id._channel_format(fields=fields.get('channel')).get(member.channel_id)
+                data["thread"] = {"id": member.channel_id.id, "model": "discuss.channel"}
             if 'create_date' in fields:
                 data['create_date'] = odoo.fields.Datetime.to_string(member.create_date)
             if 'last_seen_dt' in fields:
