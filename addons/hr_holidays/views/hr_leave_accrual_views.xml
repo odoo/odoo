@@ -144,29 +144,14 @@
                             >
                             <kanban default_order="sequence">
                                 <field name="sequence"/>
-                                <field name="start_count"/>
-                                <field name="start_type"/>
-                                <field name="added_value"/>
-                                <field name="added_value_type"/>
-                                <field name="frequency"/>
-                                <field name="week_day"/>
-                                <field name="first_day"/>
-                                <field name="second_day"/>
-                                <field name="first_month_day"/>
-                                <field name="first_month"/>
-                                <field name="second_month_day"/>
-                                <field name="second_month"/>
-                                <field name="yearly_day"/>
-                                <field name="yearly_month"/>
-                                <field name="maximum_leave"/>
                                 <field name="action_with_unused_accruals"/>
                                 <field name="cap_accrued_time"/>
                                 <templates>
-                                    <div t-name="kanban-box" class="border-0 bg-transparent">
-                                        <div class="o_hr_holidays_body oe_kanban_global_click">
+                                    <div t-name="kanban-card" class="bg-transparent border-0">
+                                        <div class="o_hr_holidays_body">
                                             <div class="o_hr_holidays_timeline text-center">
                                                 <t t-if="record.start_count.raw_value > 0">
-                                                    after <t t-esc="record.start_count.value"/> <t t-esc="record.start_type.value"/>
+                                                    after <field name="start_count"/> <field name="start_type"/>
                                                 </t>
                                                 <t t-else="">
                                                     initially
@@ -212,9 +197,9 @@
                                                     <div class="pe-0 me-0" style="width: 6rem;">
                                                         Cap:
                                                     </div>
-                                                    <div class="col-3 m-0 ps-1">
-                                                        <t t-if="record.cap_accrued_time.raw_value &amp;&amp; record.maximum_leave.raw_value > 0">
-                                                            <field name="maximum_leave" widget="FloatWithoutTrailingZeros"/> <field name="added_value_type"/>
+                                                    <div class="col-3 m-0 ps-1 d-flex">
+                                                        <t t-if="record.cap_accrued_time.raw_value and record.maximum_leave.raw_value > 0">
+                                                            <field name="maximum_leave" widget="FloatWithoutTrailingZeros"/> <field class="ms-1" name="added_value_type"/>
                                                         </t>
                                                         <t t-else="">
                                                             Unlimited
@@ -227,7 +212,7 @@
                                                     </div>
                                                     <div class="col-3 m-0 ps-1">
                                                         <t t-if="record.action_with_unused_accruals.raw_value === 'all'">all</t>
-                                                        <t t-elif="record.action_with_unused_accruals.raw_value == 'maximum'">up to <field name="postpone_max_days" /> <t t-esc="record.added_value_type.raw_value" /></t>
+                                                        <t t-elif="record.action_with_unused_accruals.raw_value == 'maximum'">up to <field name="postpone_max_days" /> <field name="added_value_type" /></t>
                                                         <t t-else="">no</t>
                                                     </div>
                                                 </div>

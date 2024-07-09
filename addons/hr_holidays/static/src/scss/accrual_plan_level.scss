@@ -32,12 +32,8 @@ $o-hr-holidays-border-color: map-get($grays, '300');
 
         .o_kanban_renderer.o_kanban_ungrouped .o_kanban_record {
             counter-increment: o-hr-holidays-accrual-plan-level-counter;
-            display: flex;
             flex: 0 0 100%;
-            border: 0px;
             padding: 0px 0px 0px 100px;
-            margin: 0px 0px 0px 0px;
-            background-color: transparent;
 
             // Timeline Border
             &:before {
@@ -55,8 +51,8 @@ $o-hr-holidays-border-color: map-get($grays, '300');
 
             // Whole record
             .o_hr_holidays_body {
-                margin-left: 8px;
-                padding-top: 20px;
+                margin-left: 16px;
+                padding-top: 28px;
 
                 // Left side 'Level'
                 .o_hr_holidays_timeline {
