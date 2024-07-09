@@ -125,7 +125,12 @@ async function mail_attachment_upload(request) {
     if (body.get("voice")) {
         DiscussVoiceMetadata.create({ attachment_id: attachmentId });
     }
-    return IrAttachment._attachment_format([attachmentId])[0];
+    return {
+        data: new mailDataHelpers.Store(
+            "Attachment",
+            IrAttachment._attachment_format([attachmentId])
+        ).get_result(),
+    };
 }
 
 registerRoute("/mail/attachment/delete", mail_attachment_delete);

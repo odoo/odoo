@@ -21,12 +21,12 @@ class CloudAttachmentController(AttachmentController):
         if not is_cloud_storage:
             return response
 
-        attachmentData = response.json
-        if attachmentData.get('error'):
+        data = response.json
+        if data.get("error"):
             return response
 
         # append upload url to the response to allow the client to directly
         # upload files to the cloud storage
-        attachment = request.env['ir.attachment'].browse(attachmentData['id']).sudo()
-        attachmentData['upload_info'] = attachment._generate_cloud_storage_upload_info()
-        return request.make_json_response(attachmentData)
+        attachment = request.env["ir.attachment"].browse(data["data"]["Attachment"][0]["id"]).sudo()
+        data["upload_info"] = attachment._generate_cloud_storage_upload_info()
+        return request.make_json_response(data)

@@ -26,7 +26,9 @@ patch(MockServer.prototype, {
             if (args.body.get("voice")) {
                 this.mockCreate("discuss.voice.metadata", { attachment_id: attachmentId });
             }
-            return this._mockIrAttachment_attachmentFormat([attachmentId])[0];
+            return {
+                data: { Attachment: this._mockIrAttachment_attachmentFormat([attachmentId]) },
+            };
         }
         return super.performRPC(...arguments);
     },
