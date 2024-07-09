@@ -12,6 +12,7 @@ from odoo.http import request, content_disposition
 
 from odoo.tools import consteq
 from ..models.discuss.mail_guest import add_guest_to_context
+from odoo.addons.mail.tools.discuss import Store
 
 logger = logging.getLogger(__name__)
 
@@ -74,12 +75,10 @@ class AttachmentController(http.Controller):
             # sudo: ir.attachment - posting a new attachment on an accessible thread
             attachment = request.env["ir.attachment"].sudo().create(vals)
             attachment._post_add_create(**kwargs)
-            attachmentData = attachment._attachment_format()[0]
-            if attachment.access_token:
-                attachmentData["accessToken"] = attachment.access_token
+            res = {"data": Store("Attachment", attachment._attachment_format(access_token=True)).get_result()}
         except AccessError:
-            attachmentData = {"error": _("You are not allowed to upload an attachment here.")}
-        return request.make_json_response(attachmentData)
+            res = {"error": _("You are not allowed to upload an attachment here.")}
+        return request.make_json_response(res)
 
     @http.route("/mail/attachment/delete", methods=["POST"], type="json", auth="public")
     @add_guest_to_context

@@ -66,11 +66,8 @@ export class AttachmentUploadService {
                     return;
                 }
                 const { thread, composer } = this.targetsByTmpId.get(tmpId);
-                const attachmentData = {
-                    ...(response?.result ?? response), // FIXME: this should be only response. HOOT tests returns wrong data {result, error}
-                    extension: upload.title.split(".").pop(),
-                    thread: composer ? undefined : thread,
-                };
+                // FIXME: this should be only response. HOOT tests returns wrong data {result, error}
+                const attachmentData = response?.result ?? response;
                 this._processLoaded(thread, composer, attachmentData, tmpId, def);
             }
         );
@@ -87,8 +84,9 @@ export class AttachmentUploadService {
         );
     }
 
-    _processLoaded(thread, composer, attachmentData, tmpId, def) {
-        const attachment = this.store.Attachment.insert(attachmentData);
+    _processLoaded(thread, composer, { data }, tmpId, def) {
+        const { Attachment } = this.store.insert(data);
+        const [attachment] = Attachment;
         if (composer) {
             const index = composer.attachments.findIndex(({ id }) => id === tmpId);
             if (index >= 0) {
@@ -117,11 +115,11 @@ export class AttachmentUploadService {
     async unlink(attachment) {
         if (this.uploadingAttachmentIds.has(attachment.id)) {
             const deferred = this.deferredByAttachmentId.get(attachment.id);
-            const abort = this.abortByAttachmentId.get(attachment.id)
+            const abort = this.abortByAttachmentId.get(attachment.id);
             this._cleanupUploading(attachment.id);
             deferred.resolve();
             abort();
-            return
+            return;
         }
         await attachment.remove();
     }
