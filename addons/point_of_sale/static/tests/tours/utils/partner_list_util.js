@@ -60,3 +60,24 @@ export function checkContactValues(name, address = "", phone = "", mobile = "", 
 
     return steps;
 }
+
+export function searchCustomerValue(val) {
+    return [
+        {
+            isActive: ["mobile"],
+            content: `Click search field`,
+            trigger: `.fa-search.undefined`,
+            run: `click`,
+        },
+        {
+            content: `Search customer with "${val}"`,
+            trigger: `.modal-dialog .input-group input`,
+            run: `edit ${val}`,
+        },
+        {
+            content: `Check "${val}" is shown`,
+            trigger: `.partner-list .partner-info:nth-child(1):contains("${val}")`,
+            run: () => {},
+        },
+    ];
+}

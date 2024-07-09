@@ -2,11 +2,12 @@ import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_scre
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_util";
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
+import * as ProductScreenPartnerList from "@point_of_sale/../tests/tours/utils/product_screen_partner_list_util";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
 import { registry } from "@web/core/registry";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
-import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
+import { back, inLeftSide, selectButton } from "@point_of_sale/../tests/tours/utils/common";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/utils/product_configurator_util";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
@@ -305,5 +306,21 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
                 "0987654321",
                 "john@doe.com"
             ),
+            selectButton("Discard"),
+            {
+                isActive: ["mobile"],
+                ...back(),
+            },
+
+            // Check searches
+            ProductScreenPartnerList.searchCustomerValueAndClear("John Doe"),
+            ProductScreenPartnerList.searchCustomerValueAndClear("1 street of astreet"),
+            ProductScreenPartnerList.searchCustomerValueAndClear("99999"),
+            ProductScreenPartnerList.searchCustomerValueAndClear("Acity"),
+            ProductScreenPartnerList.searchCustomerValueAndClear("United States"),
+            ProductScreenPartnerList.searchCustomerValueAndClear("1234567890"),
+            ProductScreenPartnerList.searchCustomerValueAndClear("0987654321"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.searchCustomerValue("john@doe.com"),
         ].flat(),
 });
