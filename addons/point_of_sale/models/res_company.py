@@ -26,7 +26,6 @@ class ResCompany(models.Model):
         string='Print',
         help="Choose how the URL to the portal will be print on the receipt.",
         required=True)
-    point_of_sale_show_predefined_scenarios = fields.Boolean("Show Predefined Scenarios", default=True)
 
     @api.model
     def _load_pos_data_domain(self, data):

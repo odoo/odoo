@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { kanbanView } from "@web/views/kanban/kanban_view";
-import { onWillStart, useState } from "@odoo/owl";
+import { onWillStart, useState, onWillRender } from "@odoo/owl";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { useService } from "@web/core/utils/hooks";
 import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
@@ -51,15 +51,15 @@ export class PosKanbanRenderer extends KanbanRenderer {
                     (isInstalledWithDemo && !this.posState.is_main_company)
                 ) {
                     await this.orm.call("pos.config", functionName);
-                    await this.orm.call("pos.config", "hide_predefined_scenarios");
                 }
             });
         });
-        this.hidePredefinedScenarios = useTrackedAsync(async () => {
-            return await this.callWithViewUpdate(async () =>
-                this.orm.call("pos.config", "hide_predefined_scenarios")
-            );
-        });
+
+        onWillRender(() => this.checkDisplayedResult());
+    }
+
+    checkDisplayedResult() {
+        this.posState.show_predefined_scenarios = this.props.list.count === 0;
     }
 
     async callWithViewUpdate(func) {
@@ -67,7 +67,7 @@ export class PosKanbanRenderer extends KanbanRenderer {
             await func();
             await updatePosKanbanViewState(this.orm, this.posState);
         } finally {
-            this.env.searchModel.dispatchEvent(new CustomEvent("update"));
+            this.env.searchModel.clearQuery();
         }
     }
 

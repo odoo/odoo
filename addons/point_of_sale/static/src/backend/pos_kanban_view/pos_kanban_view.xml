@@ -10,9 +10,6 @@
         <div class="d-flex flex-column">
             <t t-call="web.KanbanRenderer" />
             <div class="position-relative container" t-att-class="{ 'border-top mt-2': showTopBorder() }" t-if="this.posState.show_predefined_scenarios">
-                <button class="btn btn-link position-absolute top-0 end-0 py-2 px-3 h2" title="Close the scenario choices" t-on-click="() => this.hidePredefinedScenarios.call()">
-                    <i class="oi oi-close"></i>
-                </button>
                 <div class="flex-grow-1 text-center" t-att-class="{ 'disable-buttons': !posState.has_chart_template || loadScenario.status === 'loading' }">
                     <p class="h1 text-primary mt-4" t-if="!posState.has_pos_config">Want to try with sample products?</p>
                     <p t-if="!posState.has_chart_template" class="h2 m-3">
