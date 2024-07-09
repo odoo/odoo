@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import tourUtils from '@website_sale/js/tours/tour_utils';
+import wTourUtils from "@website/js/tours/tour_utils";
 
 /**
  * The purpose of this tour is to check the whole certification flow:
@@ -51,9 +52,10 @@ var buyCertificationSteps = [{
     tourUtils.goToCart(),
     tourUtils.goToCheckout(),
     ...tourUtils.payWithDemo(),
+    wTourUtils.clickOnExtraMenuItem({}),
 {
     content: 'eCommerce: go back to e-learning home page',
-    trigger: '.nav-link:contains("Courses")',
+    trigger: '.nav-item a:contains("Courses")',
     run: "click",
 }, {
     content: 'eLearning: go into bought course',
@@ -143,9 +145,11 @@ var certificationCompletionSteps = [{
     content: 'Survey: back to course home page',
     trigger: 'a:contains("Go back to course")',
     run: "click",
-}, {
+},
+    wTourUtils.clickOnExtraMenuItem({}),
+{
     content: 'eLearning: back to e-learning home page',
-    trigger: '.nav-link:contains("Courses")',
+    trigger: '.nav-item a:contains("Courses")',
     run: "click",
 }, {
     content: 'eLearning: course should be completed',
