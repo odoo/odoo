@@ -217,11 +217,20 @@ class SequenceMixin(models.AbstractModel):
             param['with_prefix'] = with_prefix
 
         query = f"""
-                SELECT {{field}} FROM {self._table}
+            WITH filtered_recs AS (
+                SELECT id AS _id, {{field}}, sequence_prefix, sequence_number
+                FROM {self._table}
                 {where_string}
-                AND sequence_prefix = (SELECT sequence_prefix FROM {self._table} {where_string} ORDER BY id DESC LIMIT 1)
-                ORDER BY sequence_number DESC
+            )
+            SELECT {{field}} FROM filtered_recs
+            WHERE sequence_prefix = (
+                SELECT sequence_prefix
+                FROM filtered_recs
+                ORDER BY _id DESC
                 LIMIT 1
+            )
+            ORDER BY sequence_number DESC
+            LIMIT 1
         """
         if lock:
             query = f"""
