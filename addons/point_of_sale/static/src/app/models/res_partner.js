@@ -6,7 +6,7 @@ export class ResPartner extends Base {
     static pythonModel = "res.partner";
 
     get searchString() {
-        const fields = ['name', 'barcode', 'phone', 'mobile', 'email', 'vat', 'parent_name'];
+        const fields = ['name', 'barcode', 'phone', 'mobile', 'email', 'vat', 'parent_name', 'contact_address'];
         return fields.map((field) => {
             if ((field === 'phone' || field === 'mobile') && this[field]) {
                 return this[field].split(" ").join("");
