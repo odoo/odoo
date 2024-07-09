@@ -30,26 +30,29 @@ export class IrAttachment extends webModels.IrAttachment {
     }
 
     /** @param {number} ids */
-    _attachment_format(ids) {
+    _to_store(ids, store) {
         /** @type {import("mock_models").DiscussVoiceMetadata} */
         const DiscussVoiceMetadata = this.env["discuss.voice.metadata"];
 
-        return this.read(ids).map((attachment) => {
+        for (const attachment of this.browse(ids)) {
             const res = {
-                create_date: attachment.create_date,
                 checksum: attachment.checksum,
+                create_date: attachment.create_date,
                 filename: attachment.name,
                 id: attachment.id,
                 mimetype: attachment.mimetype,
                 name: attachment.name,
                 size: attachment.file_size,
+                thread:
+                    attachment.res_id && attachment.model !== "mail.compose.message"
+                        ? { id: attachment.res_id, model: attachment.res_model }
+                        : false,
             };
-            res["thread"] = { id: attachment.res_id, model: attachment.res_model };
             const voice = DiscussVoiceMetadata._filter([["attachment_id", "=", attachment.id]])[0];
             if (voice) {
                 res.voice = true;
             }
-            return res;
-        });
+            store.add("Attachment", res);
+        }
     }
 }

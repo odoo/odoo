@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo.addons.mail.tools.discuss import Store
 
 
 class IrAttachment(models.Model):
@@ -17,12 +18,14 @@ class IrAttachment(models.Model):
             return guest
         return super()._bus_notification_target()
 
-    def _attachment_format(self, **kwargs):
-        attachment_format = super()._attachment_format(**kwargs)
-        for a in attachment_format:
-        # sudo: discuss.voice.metadata - checking the existence of voice metadata for accessible attachments is fine
-            a["voice"] = bool(self.browse(a["id"]).with_prefetch(self._prefetch_ids).sudo().voice_ids)
-        return attachment_format
+    def _to_store(self, store: Store, **kwargs):
+        super()._to_store(store, **kwargs)
+        for attachment in self:
+            store.add("Attachment", {
+                "id": attachment.id,
+                # sudo: discuss.voice.metadata - checking the existence of voice metadata for accessible attachments is fine
+                "voice": bool(attachment.sudo().voice_ids)
+            })
 
     def _post_add_create(self, **kwargs):
         super()._post_add_create()
