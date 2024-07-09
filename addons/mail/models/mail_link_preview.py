@@ -107,15 +107,12 @@ class LinkPreview(models.Model):
             ('source_url', '=', url),
             ('create_date', '>=', fields.Datetime.now() - timedelta(days=lifetime)),
         ], order='create_date DESC', limit=1)
-
         if not preview:
             preview_values = link_preview.get_link_preview_from_url(url)
             if not preview_values:
-                return
-
+                return self.env["mail.link.preview"]
             preview = self.env['mail.link.preview'].create(preview_values)
-
-        return preview._link_preview_format()[0]
+        return preview
 
     def _link_preview_format(self):
         return [{
