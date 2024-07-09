@@ -3,6 +3,7 @@
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
+import { formatFloat } from "../formatters";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -50,11 +51,11 @@ export class ProgressBarField extends Component {
     }
 
     getCurrentValue(p) {
-        return p.record.data[this.getCurrentValueField(p)] || 0;
+        return parseFloat(formatFloat(p.record.data[this.getCurrentValueField(p)], { digits: [false, 8] })) || 0;
     }
     getMaxValue(p) {
         if (p.maxValueField) {
-            return p.record.data[p.maxValueField] || 100;
+            return parseFloat(formatFloat(p.record.data[p.maxValueField], { digits: [false, 8] })) || 100;
         }
         return 100;
     }
