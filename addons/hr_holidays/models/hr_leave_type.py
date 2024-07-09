@@ -134,8 +134,8 @@ class HolidaysType(models.Model):
         WHERE
             alloc.employee_id = %s AND
             alloc.active = True AND alloc.state = 'validate' AND
-            (alloc.date_to >= %s OR alloc.date_to IS NULL) AND
-            alloc.date_from <= %s 
+            (CAST(alloc.date_to AS TIMESTAMP) >= %s OR alloc.date_to IS NULL) AND
+            CAST(alloc.date_from AS TIMESTAMP) <= %s
         '''
 
         self._cr.execute(query, (employee_id or None, date_to, date_from))
