@@ -10,7 +10,7 @@ import { registry } from "../../core/registry";
 import { InstallPWADialog } from "./install_pwa_dialog";
 
 function documentationItem(env) {
-    const documentationURL = "https://www.odoo.com/documentation/master";
+    const documentationURL = "https://www.odoo.com/documentation/saas-17.4";
     return {
         type: "item",
         id: "documentation",
