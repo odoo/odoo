@@ -71,3 +71,22 @@ export function checkContactValues(name, address = "", phone = "", mobile = "", 
 
     return steps;
 }
+
+export function searchCustomerValue(val) {
+    return [
+        {
+            content: `Click search field`,
+            trigger: `.fa-search.undefined`,
+        },
+        {
+            content: `Search customer with "${val}"`,
+            trigger: `.input-group input`,
+            run: `text ${val}`,
+        },
+        {
+            content: `Check "${val}" is shown`,
+            trigger: `.partner-list tr:nth-child(1):contains("${val}")`,
+            run: () => {},
+        },
+    ];
+}
