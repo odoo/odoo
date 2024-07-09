@@ -67,6 +67,7 @@ fieldRegistry.addValidation({
     },
     useSubView: { type: Boolean, optional: true },
     label: { type: [String, { value: false }], optional: true },
+    listViewWidth: { type: [Number, [Number, Number], Function], optional: true },
 });
 
 class DefaultField extends Component {

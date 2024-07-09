@@ -1,4 +1,11 @@
-import { queryAll, queryFirst, queryText, queryValue } from "@odoo/hoot-dom";
+import {
+    queryAll,
+    queryAllProperties,
+    queryFirst,
+    queryText,
+    queryValue,
+    resize,
+} from "@odoo/hoot-dom";
 import {
     clickSave,
     contains,
@@ -773,7 +780,7 @@ test("list daterange with start date and empty end date", async () => {
     expect(textSiblings).toEqual(["02/03/2017", "->"]);
 });
 
-test("list daterange with empty start date and end date", async (assert) => {
+test("list daterange with empty start date and end date", async () => {
     Partner._fields.date_end = fields.Date({ string: "Some Date" });
     const [firstRecord] = Partner._records;
     [firstRecord.date, firstRecord.date_end] = [firstRecord.date_end, firstRecord.date];
@@ -801,6 +808,53 @@ test("list daterange with empty start date and end date", async (assert) => {
         .filter(Boolean);
 
     expect(textSiblings).toEqual(["->", "02/03/2017"]);
+});
+
+test("list daterange: column widths", async () => {
+    resize({ width: 800 });
+
+    Partner._fields.char_field = fields.Char();
+    Partner._fields.date_end = fields.Date();
+    Partner._records[0].date_end = "2017-02-04";
+    Partner._records[0].datetime_end = "2017-02-09 17:00:00";
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */ `
+            <tree>
+                <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" />
+                <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}" />
+                <field name="char_field" />
+            </tree>`,
+    });
+
+    expect(".o_data_row").toHaveCount(1);
+    const columnWidths = queryAllProperties(".o_list_table thead th", "offsetWidth");
+    expect(columnWidths).toEqual([40, 189, 304, 267]);
+});
+
+test("list daterange: column widths (no record)", async () => {
+    resize({ width: 800 });
+
+    Partner._fields.char_field = fields.Char();
+    Partner._fields.date_end = fields.Date();
+    Partner._records = [];
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */ `
+            <tree>
+                <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" />
+                <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}" />
+                <field name="char_field" />
+            </tree>`,
+    });
+
+    expect(".o_data_row").toHaveCount(0);
+    const columnWidths = queryAllProperties(".o_list_table thead th", "offsetWidth");
+    expect(columnWidths).toEqual([40, 189, 304, 267]);
 });
 
 test("always range: related end date, both start date and end date empty", async () => {

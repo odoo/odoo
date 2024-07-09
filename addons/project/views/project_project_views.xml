@@ -234,7 +234,7 @@
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
                     <field name="last_update_color" column_invisible="True"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
-                    <field name="last_update_status" string="Status" nolabel="1" optional="show" widget="project_state_selection"/>
+                    <field name="last_update_status" string="Status" nolabel="1" width="20px" optional="show" widget="project_state_selection"/>
                     <field name="stage_id" options="{'no_open': True}" domain="[('company_id', 'in', (company_id, False))]" optional="show"/>
                     <button string="View Tasks" name="action_view_tasks" type="object"/>
                 </tree>
