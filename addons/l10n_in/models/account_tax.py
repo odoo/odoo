@@ -120,3 +120,12 @@ class AccountTax(models.Model):
             'display_uom': display_uom,
             'items': items,
         }
+
+
+class AccountTaxGroup(models.Model):
+    _inherit = 'account.tax.group'
+
+    l10n_in_tax_source_type = fields.Selection([
+            ('tds', 'TDS'),
+            ('tcs', 'TCS'),
+        ], string="Tax Source Type")

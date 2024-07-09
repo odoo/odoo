@@ -28,6 +28,7 @@ class ResPartner(models.Model):
     )
 
     display_pan_warning = fields.Boolean(string="Display pan warning", compute="_compute_display_pan_warning")
+    l10n_in_pan_entity_id = fields.Many2one('l10n_in.pan.entity', string="PAN Entity")
 
     @api.depends('l10n_in_pan')
     def _compute_display_pan_warning(self):
@@ -72,3 +73,13 @@ class ResPartner(models.Model):
         if vat == TEST_GST_NUMBER:
             return True
         return super().check_vat_in(vat)
+
+    @api.onchange('vat')
+    def create_pan_entity(self):
+        self.ensure_one()
+        if self.vat and self.check_vat_in(self.vat):
+            pan_number = self.vat[2:12]
+            pan_entity_rec = self.env['l10n_in.pan.entity'].search([('name', '=', pan_number)], limit=1)
+            if not pan_entity_rec:
+                pan_entity_rec = self.env['l10n_in.pan.entity'].create({'name': pan_number})
+            self.l10n_in_pan_entity_id = pan_entity_rec

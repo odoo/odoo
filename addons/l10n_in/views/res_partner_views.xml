@@ -15,6 +15,12 @@
             </xpath>
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="l10n_in_pan" placeholder="e.g. ABCTY1234D" invisible="'IN' not in fiscal_country_codes" readonly="parent_id"/>
+                <label for="l10n_in_pan_entity_id" invisible="'IN' not in fiscal_country_codes"/>
+                <div class="o_row">
+                    <field name="l10n_in_pan_entity_id" invisible="'IN' not in fiscal_country_codes"/>
+                    <button name="create_pan_entity" icon="fa-plus-square" string="Create from GSTIN"
+                    type="object" class="oe_edit_only btn-link" invisible="'IN' not in fiscal_country_codes or l10n_in_pan_entity_id"/>
+                </div>
             </xpath>
             <xpath expr="//sheet" position="before">
                 <field name="display_pan_warning" invisible="1"/>
