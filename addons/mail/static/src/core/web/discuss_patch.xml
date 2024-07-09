@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.Discuss" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='content']" position="before">
+            <div t-if="ui.isSmall and store.discuss.activeTab === 'main'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
+        </xpath>
         <xpath expr="//*[@t-ref='core']" position="before">
             <t t-if="ui.isSmall" t-call="mail.Discuss.loading"/>
             <DiscussSidebar t-else=""/>
@@ -37,6 +40,20 @@
     <t t-name="mail.Discuss.loading">
         <div t-if="store.channels.status === 'fetching'" class="d-flex flex-grow-1 align-items-center justify-content-center h-100 w-100 o-pointer-events-none">
             <h4 class="text-muted opacity-50 o-visible-short-delay"><b><i class="o-mail-Discuss-mobileLoading fa fa-circle-o-notch fa-spin"/></b></h4>
+        </div>
+    </t>
+
+    <t t-name="mail.Discuss.mobileTopbar">
+        <div class="btn-group d-flex w-100 p-1">
+            <t t-call="mail.MobileMailbox" >
+                <t t-set="mailbox" t-value="store.inbox"/>
+            </t>
+            <t t-call="mail.MobileMailbox">
+                <t t-set="mailbox" t-value="store.starred"/>
+            </t>
+            <t t-call="mail.MobileMailbox">
+                <t t-set="mailbox" t-value="store.history"/>
+            </t>
         </div>
     </t>
 </templates>

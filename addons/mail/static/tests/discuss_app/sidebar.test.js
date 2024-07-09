@@ -184,17 +184,17 @@ test("default thread rendering", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-Thread", {
-        text: "Your inbox is empty Change your preferences to receive new notifications in your inbox.",
+        text: "Your inbox is emptyChange your preferences to receive new notifications in your inbox.",
     });
     await click("button", { text: "Starred" });
     await contains("button.o-active", { text: "Starred" });
     await contains(".o-mail-Thread", {
-        text: "No starred messages  You can mark any message as 'starred', and it shows up in this mailbox.",
+        text: "No starred messages You can mark any message as 'starred', and it shows up in this mailbox.",
     });
     await click("button", { text: "History" });
     await contains("button.o-active", { text: "History" });
     await contains(".o-mail-Thread", {
-        text: "No history messages  Messages marked as read will appear in the history.",
+        text: "No history messages Messages marked as read will appear in the history.",
     });
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "General" });

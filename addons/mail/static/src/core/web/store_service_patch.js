@@ -100,9 +100,27 @@ const StorePatch = {
                 return b.localId > a.localId ? 1 : -1;
             },
         });
+        this.inbox = Record.one("Thread");
+        this.starred = Record.one("Thread");
+        this.history = Record.one("Thread");
     },
     onStarted() {
         super.onStarted(...arguments);
+        this.inbox = {
+            id: "inbox",
+            model: "mail.box",
+            name: _t("Inbox"),
+        };
+        this.starred = {
+            id: "starred",
+            model: "mail.box",
+            name: _t("Starred"),
+        };
+        this.history = {
+            id: "history",
+            model: "mail.box",
+            name: _t("History"),
+        };
         try {
             // useful for synchronizing activity data between multiple tabs
             this.activityBroadcastChannel = new browser.BroadcastChannel("mail.activity.channel");
@@ -175,6 +193,12 @@ const StorePatch = {
                 break;
             }
         }
+    },
+    async unstarAll() {
+        // apply the change immediately for faster feedback
+        this.store.starred.counter = 0;
+        this.store.starred.messages = [];
+        await this.env.services.orm.call("mail.message", "unstar_all");
     },
 };
 patch(Store.prototype, StorePatch);

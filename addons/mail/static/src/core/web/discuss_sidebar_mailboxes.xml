@@ -4,13 +4,13 @@
     <t t-name="mail.DiscussSidebarMailboxes">
         <div class="d-flex flex-column flex-grow-0">
             <t t-call="mail.Mailbox">
-                <t t-set="mailbox" t-value="store.discuss.inbox"/>
+                <t t-set="mailbox" t-value="store.inbox"/>
             </t>
             <t t-call="mail.Mailbox">
-                <t t-set="mailbox" t-value="store.discuss.starred"/>
+                <t t-set="mailbox" t-value="store.starred"/>
             </t>
             <t t-call="mail.Mailbox">
-                <t t-set="mailbox" t-value="store.discuss.history"/>
+                <t t-set="mailbox" t-value="store.history"/>
             </t>
         </div>
     </t>
