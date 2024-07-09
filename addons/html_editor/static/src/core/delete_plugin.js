@@ -28,7 +28,6 @@ import {
 } from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex, leftPos, nodeSize, rightPos } from "../utils/position";
 import { CTYPES } from "../utils/content_types";
-import { isMacOS } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {Object} RangeLike
@@ -55,6 +54,7 @@ export class DeletePlugin extends Plugin {
     static shared = ["deleteRange"];
     /** @type { (p: DeletePlugin) => Record<string, any> } */
     static resources = (p) => ({
+        onBeforeInput: p.onBeforeInput.bind(p),
         shortcuts: [
             { hotkey: "backspace", command: "DELETE_BACKWARD" },
             { hotkey: "delete", command: "DELETE_FORWARD" },
@@ -83,11 +83,6 @@ export class DeletePlugin extends Plugin {
             (element) => element.matches("[data-oe-type='monetary'] > span"),
         ],
     });
-
-    setup() {
-        this.addDomListener(this.editable, "beforeinput", this.onBeforeInput.bind(this));
-        this.addDomListener(this.editable, "keydown", this.onKeydown.bind(this));
-    }
 
     handleCommand(command, payload) {
         switch (command) {
@@ -1197,21 +1192,6 @@ export class DeletePlugin extends Plugin {
         if (command) {
             e.preventDefault();
             this.dispatch(command);
-        }
-    }
-    /**
-     * @param {KeyboardEvent} ev
-     */
-    onKeydown(ev) {
-        // If the pressed key has a printed representation, the returned value
-        // is a non-empty Unicode character string containing the printable
-        // representation of the key. In this case, call `deleteRange` before
-        // inserting the printed representation of the character.
-        if (/^.$/u.test(ev.key) && !ev.ctrlKey && !ev.metaKey && (isMacOS() || !ev.altKey)) {
-            const selection = this.shared.getEditableSelection();
-            if (selection && !selection.isCollapsed) {
-                this.deleteSelection(selection);
-            }
         }
     }
 
