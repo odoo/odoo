@@ -113,9 +113,7 @@ export class MailMessage extends models.ServerModel {
             store.add(IrAttachment.browse(attachments.map((attachment) => attachment.id)));
             const partners = ResPartner._filter([["id", "in", message.partner_ids]]);
             const linkPreviews = MailLinkPreview._filter([["id", "in", message.link_preview_ids]]);
-            const linkPreviewsFormatted = linkPreviews.map((linkPreview) =>
-                MailLinkPreview._link_preview_format(linkPreview)
-            );
+            store.add(linkPreviews);
             const reactionsPerContent = {};
             for (const reactionId of message.reaction_ids ?? []) {
                 const [reaction] = MailMessageReaction._filter([["id", "=", reactionId]]);
@@ -164,7 +162,7 @@ export class MailMessage extends models.ServerModel {
                 id: message.id,
                 is_discussion: message.is_discussion,
                 is_note: message.is_note,
-                linkPreviews: linkPreviewsFormatted,
+                linkPreviews: linkPreviews.map((linkPreview) => ({ id: linkPreview.id })),
                 message_type: message.message_type,
                 model: message.model,
                 notifications: notifications

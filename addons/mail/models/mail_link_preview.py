@@ -8,6 +8,7 @@ from lxml import html
 from odoo import api, models, fields, tools
 from odoo.tools.misc import OrderedSet
 from odoo.addons.mail.tools import link_preview
+from odoo.addons.mail.tools.discuss import Store
 
 
 class LinkPreview(models.Model):
@@ -52,13 +53,15 @@ class LinkPreview(models.Model):
             unused_preview._unlink_and_notify()
         if link_preview_values:
             link_previews += link_previews.create(link_preview_values)
-        if link_previews:
-            self.env['bus.bus']._sendone(message._bus_notification_target(), 'mail.record/insert', {
-                'Message': {
-                    'linkPreviews': link_previews.sorted(key=lambda preview: list(urls).index(preview.source_url))._link_preview_format(),
-                    'id': message.id,
-                },
-            })
+        if link_previews := link_previews.sorted(key=lambda p: list(urls).index(p.source_url)):
+            store = Store(
+                "Message",
+                {"id": message.id, "linkPreviews": [{"id": p.id} for p in link_previews]},
+            )
+            store.add(link_previews)
+            self.env["bus.bus"]._sendone(
+                message._bus_notification_target(), "mail.record/insert", store.get_result()
+            )
 
     def _hide_and_notify(self):
         if not self:
@@ -114,19 +117,23 @@ class LinkPreview(models.Model):
             preview = self.env['mail.link.preview'].create(preview_values)
         return preview
 
-    def _link_preview_format(self):
-        return [{
-            'id': preview.id,
-            'message': {'id': preview.message_id.id},
-            'image_mimetype': preview.image_mimetype,
-            'og_description': preview.og_description,
-            'og_image': preview.og_image,
-            'og_mimetype': preview.og_mimetype,
-            'og_title': preview.og_title,
-            'og_type': preview.og_type,
-            'og_site_name': preview.og_site_name,
-            'source_url': preview.source_url,
-        } for preview in self]
+    def _to_store(self, store: Store, /):
+        for preview in self:
+            store.add(
+                "LinkPreview",
+                {
+                    "id": preview.id,
+                    "image_mimetype": preview.image_mimetype,
+                    "message": {"id": preview.message_id.id} if preview.message_id else False,
+                    "og_description": preview.og_description,
+                    "og_image": preview.og_image,
+                    "og_mimetype": preview.og_mimetype,
+                    "og_site_name": preview.og_site_name,
+                    "og_title": preview.og_title,
+                    "og_type": preview.og_type,
+                    "source_url": preview.source_url,
+                },
+            )
 
     @api.autovacuum
     def _gc_mail_link_preview(self):
