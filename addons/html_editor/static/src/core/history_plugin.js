@@ -818,19 +818,8 @@ export class HistoryPlugin extends Plugin {
                 return;
             }
             applied = true;
-            this.handleObserverRecords();
-            if (this.steps.at(-1) === step) {
-                // If there is no new step, discard the current draft.
-                this.revertMutations(this.currentStep.mutations);
-                this.observer.takeRecords();
-                this.currentStep.mutations = [];
-            } else {
-                // Consume and revert reversible steps and ensure that
-                // irreversible steps are maintained. This will add a new
-                // consumed step.
-                const stepIndex = this.steps.findLastIndex((item) => item === step);
-                this.revertStepsUntil(stepIndex);
-            }
+            const stepIndex = this.steps.findLastIndex((item) => item === step);
+            this.revertStepsUntil(stepIndex);
             // Apply draft mutations to recover the same currentStep state
             // as before.
             this.applyMutations(draftMutations);
@@ -865,16 +854,23 @@ export class HistoryPlugin extends Plugin {
         };
     }
     /**
-     * Reverts the history steps until the specified step index.
+     * Discard the current draft, and, if necessary, consume and revert
+     * reversible steps until the specified step index, and ensure that
+     * irreversible steps are maintained. This will add a new consumed step.
+     *
      * @param {Number} stepIndex
      */
     revertStepsUntil(stepIndex) {
         // Discard current draft.
+        this.handleObserverRecords();
         this.revertMutations(this.currentStep.mutations);
         this.observer.takeRecords();
         this.currentStep.mutations = [];
         let lastRevertedStep = this.currentStep;
 
+        if (stepIndex === this.steps.length - 1) {
+            return;
+        }
         // Revert all mutations until stepIndex, and consume all reversible
         // steps in the process (typically current user steps).
         for (let i = this.steps.length - 1; i > stepIndex; i--) {
