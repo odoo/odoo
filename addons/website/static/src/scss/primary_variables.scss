@@ -2094,8 +2094,9 @@ $o-website-values-palettes: (
         // By default, the $o-base-website-values-palette for fonts are "null"
         // but will actually automatically be filled with the first font themes
         // define in $o-theme-font-configs (for the base one). For the default
-        // website, we want to specifically use the system fonts.
-        'font': 'SYSTEM_FONTS',
+        // website, we use a combination of Inter Tight for headings and Inter.
+        'headings-font': 'Inter Tight',
+        'font': 'Inter',
 
         'btn-padding-x': 1rem,
         'btn-padding-x-sm': .5rem,
@@ -2172,6 +2173,14 @@ $o-theme-font-configs: (
     'Arvo': (
         'family': ('Arvo', Times, serif),
         'url': 'Arvo:300,300i,400,400i,700,700i',
+    ),
+    'Inter Tight': (
+        'family': ('Inter Tight', sans-serif),
+        'url': 'Inter+Tight:300,300i,400,400i,500,500i,700,700i',
+    ),
+    'Inter': (
+        'family': ('Inter', sans-serif),
+        'url': 'Inter:300,300i,400,400i,700,700i',
     ),
 ) !default;
 
