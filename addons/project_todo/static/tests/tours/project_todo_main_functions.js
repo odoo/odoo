@@ -88,6 +88,11 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o_todo_form_view",
 },
 {
+    trigger: ".todo_toggle_chatter",
+    content: "Clicking on the chatter button should toggle open the chatter",
+    run: "click",
+},
+{
     trigger: ".o-mail-Chatter-topbar button.o-mail-Chatter-sendMessage",
     content: "A 'send message' button should be present in the chatter",
     run: "click",
@@ -124,12 +129,12 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
     run: "click",
 }, {
-    trigger: '.o_todo_breadcrumb_name_input input',
-    content: 'Edit the name of the personal task directly in the breadcrumb',
+    trigger: '.o_field_widget[name="name"] textarea',
+    content: 'Edit the name of the personal task',
     run: "edit New name for the personal task",
 }, {
-    trigger: '.o_breadcrumb .o_todo_done_button',
-    content: 'Mark the task as done directly from the breadcrumb',
+    trigger: '.o_todo_done_button',
+    content: 'Mark the task as done',
     run: "click",
 }, 
 {
