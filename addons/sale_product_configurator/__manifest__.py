@@ -26,6 +26,6 @@ It also enables the "optional products" feature.
             'sale_product_configurator/static/src/**/*',
         ],
     },
-    'auto_install': True,
+    'auto_install': False,
     'license': 'LGPL-3',
 }
