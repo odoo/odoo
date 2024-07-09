@@ -950,7 +950,7 @@ options.Class.include({
         return new Promise((resolve, reject) => {
             this.trigger_up('widgets_start_request', {
                 editableMode: true,
-                target: $el || this.$target[0],
+                $target: $el || this.$target[0],
                 onSuccess: resolve,
                 onFailure: reject,
             });
@@ -1094,7 +1094,7 @@ options.registry.BackgroundShape.include({
      */
     _removeShapeEl(shapeEl) {
         this.trigger_up('widgets_stop_request', {
-            target: shapeEl,
+            $target: $(shapeEl),
         });
         return this._super(...arguments);
     },

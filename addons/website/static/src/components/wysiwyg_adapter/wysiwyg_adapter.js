@@ -1238,7 +1238,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      */
     _onSnippetWillBeCloned(ev) {
         this._websiteRootEvent('widgets_stop_request', {
-            target: ev.data.target,
+            $target: ev.data.$target
         });
     }
     /**
@@ -1252,12 +1252,12 @@ export class WysiwygAdapterComponent extends Wysiwyg {
     _onSnippetCloned(ev) {
         this._websiteRootEvent('widgets_start_request', {
             editableMode: true,
-            target: ev.data.target,
+            $target: ev.data.$target,
         });
 
         this._websiteRootEvent('widgets_start_request', {
             editableMode: true,
-            target: ev.data.origin,
+            $target: ev.data.$origin,
         });
     }
     /***

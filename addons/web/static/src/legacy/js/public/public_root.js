@@ -176,19 +176,10 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      *        of its descendants
      */
     _stopWidgets: function (fromEl) {
-        // Normalize fromEl to always be an array
-        if (!(fromEl instanceof NodeList || Array.isArray(fromEl))) {
-            fromEl = fromEl && [fromEl];
-        } else {
-            fromEl = Array.from(fromEl);
-        }
         var removedWidgets = this.publicWidgets.map((widget) => {
-            // To test it el.contains breaks for adding products snippet
-            if (
-                !fromEl ||
-                fromEl.filter((el) => el === widget.el).length ||
-                fromEl.some((el) => el.contains(widget.el))
-            ) {
+            // Check if fromEl is not provided,
+            // or widget.el is a descendant of fromEl or matches fromEl directly
+            if (!fromEl || fromEl.contains(widget.el) || fromEl === widget.el) {
                 widget.destroy();
                 return widget;
             }
@@ -250,8 +241,8 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @param {OdooEvent} ev
      */
     _onWidgetsStartRequest: function (ev) {
-        const target = ev.data.target ? [ev.data.target] : [ev.target.el];
-        this._startWidgets(target, ev.data.options)
+        const targetEl = ev.data.target instanceof jQuery ? ev.data.target[0] : ev.target.el;
+        this._startWidgets(targetEl, ev.data.options)
             .then(ev.data.onSuccess)
             .catch((e) => {
                 if (ev.data.onFailure) {
@@ -270,7 +261,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @param {OdooEvent} ev
      */
     _onWidgetsStopRequest: function (ev) {
-        const targetEl = ev.data.target ? ev.data.target : ev.target.el;
+        const targetEl = ev.data.target instanceof jQuery ? ev.data.target[0] : ev.target.el;
         this._stopWidgets(targetEl);
     },
     /**

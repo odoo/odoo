@@ -1,23 +1,29 @@
 const delegateEvent = function (ev) {
     let target = ev.target;
-    const pseudoSelectorRegex = /:[\w-]+(\([^)]*\))?/g;
+    const updateObject = () => {
+        // Create a new event and set its currentTarget
+        Object.defineProperty(ev, "currentTarget", {
+            get: () => target,
+            configurable: true,
+        });
+    };
 
     if (typeof this.selector === "string") {
-        // Remove pseudo selectors from the selector
-        const cleanSelector = pseudoSelectorRegex.test(this.selector)
-            ? this.selector.replace(pseudoSelectorRegex, "")
-            : this.selector;
-
         // Attempt to find the matching target
-        while (target.parentElement && target !== this.element && !target?.matches(cleanSelector)) {
+        while (target && target !== this.element) {
+            try {
+                if (target.matches(this.selector)) {
+                    updateObject();
+                    this.handler.call(this.element, ev);
+                    return;
+                }
+            } catch {
+                /* empty */
+            }
             target = target.parentElement;
         }
-        if (target?.matches(cleanSelector)) {
-            // Create a new event and set its currentTarget
-            Object.defineProperty(ev, "currentTarget", {
-                get: () => target,
-                configurable: true,
-            });
+        if (target.matches(this.selector)) {
+            updateObject();
             this.handler.call(target, ev);
         }
     } else {

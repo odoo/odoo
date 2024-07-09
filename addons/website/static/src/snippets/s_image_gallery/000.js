@@ -79,7 +79,7 @@ const GalleryWidget = publicWidget.Widget.extend({
         this.$modal.one('shown.bs.modal', function () {
             self.trigger_up('widgets_start_request', {
                 editableMode: false,
-                target: self.$modal.find('.modal-body.o_slideshow')[0],
+                $target: self.$modal.find('.modal-body.o_slideshow'),
             });
             this.addEventListener("keydown", self.__onModalKeydown);
         });

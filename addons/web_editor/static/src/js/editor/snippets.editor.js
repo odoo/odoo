@@ -377,7 +377,7 @@ var SnippetEditor = Widget.extend({
      * @returns {boolean}
      */
     isTargetVisible: function () {
-        return (this.$target[0].dataset.invisible !== '1');
+        return (this.$target[0].style.visibility = "show");
     },
     /**
      * Removes the associated snippet from the DOM and destroys the associated
@@ -936,9 +936,9 @@ var SnippetEditor = Widget.extend({
             show = !this.isTargetVisible();
         }
         if (show) {
-            delete this.$target[0].dataset.invisible;
+            this.$target[0].style.visibility = "visible";
         } else {
-            this.$target[0].dataset.invisible = '1';
+            this.$target[0].style.visibility = "hidden";
         }
         return show;
     },
@@ -1780,7 +1780,7 @@ class SnippetsMenu extends Component {
         'get_snippet_versions': '_onGetSnippetVersions',
         'find_snippet_template': '_onFindSnippetTemplate',
         'is_element_selected': '_onIsElementSelected',
-        'remove_snippet': '_onRemoveSnippet',
+        'will_remove_snippet': '_onRemoveSnippet',
         'snippet_edition_request': '_onSnippetEditionRequest',
         'snippet_editor_destroyed': '_onSnippetEditorDestroyed',
         'snippet_removed': '_onSnippetRemoved',
@@ -3260,6 +3260,9 @@ class SnippetsMenu extends Component {
      * @returns {Promise<SnippetEditor>}
      */
     _createSnippetEditor($snippet, forceCreate = false) {
+        if (!$snippet) {
+            return;
+        }
         var self = this;
         var snippetEditor = $snippet.data('snippet-editor');
         if (snippetEditor) {
@@ -4385,7 +4388,7 @@ class SnippetsMenu extends Component {
     async _onRemoveSnippet(ev) {
         ev.stopPropagation();
         const editor = await this._createSnippetEditor(ev.data.$snippet);
-        await editor.removeSnippet(ev.data.shouldRecordUndo);
+        await editor?.removeSnippet(ev.data.shouldRecordUndo);
         if (ev.data.onSuccess) {
             ev.data.onSuccess();
         }

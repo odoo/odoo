@@ -229,7 +229,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @returns {Promise}
      */
     appendTo: function (targetEl) {
-        // TO- remove : backward compatibility targetEl can be a jQuery object
+        // TO-remove : backward compatibility targetEl can be a jQuery object
         targetEl = targetEl instanceof jQuery ? targetEl[0] : targetEl;
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
@@ -243,7 +243,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @returns {Promise}
      */
     attachTo: function (targetEl) {
-        // TO- remove : backward compatibility targetEl can be a jQuery object
+        // TO-remove : backward compatibility targetEl can be a jQuery object
         targetEl = targetEl instanceof jQuery ? targetEl[0] : targetEl;
         var self = this;
         this.setElement(targetEl.el || targetEl);

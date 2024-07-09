@@ -75,7 +75,7 @@ options.registry.SnippetPopup = options.Class.extend({
      * @override
      */
     onTargetShow: async function () {
-        this.$bsTarget.modal('show');
+        await this.$bsTarget.modal('show');
         $(this.$target[0].ownerDocument.body).children('.modal-backdrop:last').addClass('d-none');
     },
     /**
@@ -87,7 +87,7 @@ options.registry.SnippetPopup = options.Class.extend({
                 this.$bsTarget.off('hidden.bs.modal.popup_on_target_hide');
                 resolve();
             }, 500);
-            this.$bsTarget.one('hidden.bs.modal.popup_on_target_hide', () => {
+            this.$bsTarget.on('hidden.bs.modal.popup_on_target_hide', () => {
                 clearTimeout(timeoutID);
                 resolve();
             });
