@@ -175,6 +175,7 @@ class ProductTemplate(models.Model):
                 '&',
                 '|', ('product_tmpl_id', '=', template.id), ('product_id', 'in', template.product_variant_ids.ids),
                 ('pricelist_id.active', '=', True),
+                ('compute_price', '=', 'fixed'),
             ])
 
     def _compute_product_document_count(self):
@@ -592,7 +593,9 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         domain = ['|',
             ('product_tmpl_id', '=', self.id),
-            ('product_id', 'in', self.product_variant_ids.ids)]
+            ('product_id', 'in', self.product_variant_ids.ids),
+            ('compute_price', '=', 'fixed'),
+        ]
         return {
             'name': _('Price Rules'),
             'view_mode': 'tree,form',

@@ -310,6 +310,7 @@ class ProductProduct(models.Model):
                 '|',
                     '&', ('product_tmpl_id', '=', product.product_tmpl_id.id), ('applied_on', '=', '1_product'),
                     '&', ('product_id', '=', product.id), ('applied_on', '=', '0_product_variant'),
+                ('compute_price', '=', 'fixed'),
             ]
             product.pricelist_item_count = self.env['product.pricelist.item'].search_count(domain)
 
@@ -597,7 +598,9 @@ class ProductProduct(models.Model):
         self.ensure_one()
         domain = ['|',
             '&', ('product_tmpl_id', '=', self.product_tmpl_id.id), ('applied_on', '=', '1_product'),
-            '&', ('product_id', '=', self.id), ('applied_on', '=', '0_product_variant')]
+            '&', ('product_id', '=', self.id), ('applied_on', '=', '0_product_variant'),
+            ('compute_price', '=', 'fixed'),
+        ]
         return {
             'name': _('Price Rules'),
             'view_mode': 'tree,form',

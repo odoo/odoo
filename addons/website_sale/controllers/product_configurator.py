@@ -196,14 +196,16 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         )
 
         if request.is_frontend:
+            strikethrough_price = self._get_strikethrough_price(
+                product_or_template.with_context(
+                    **product_or_template._get_product_price_context(combination)
+                ), currency, date, basic_product_information['price']
+            )
             price = self._apply_taxes_to_price(
                 basic_product_information['price'], product_or_template, currency
             )
             has_zero_price = float_is_zero(
                 price, precision_rounding=currency.rounding
-            )
-            strikethrough_price = self._get_strikethrough_price(
-                product_or_template, pricelist, currency, date, price
             )
             basic_product_information.update({
                 'price': price,
@@ -235,7 +237,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             return self._apply_taxes_to_price(price_extra, product_or_template, currency)
         return price_extra
 
-    def _get_strikethrough_price(self, product_or_template, pricelist, currency, date, price):
+    def _get_strikethrough_price(self, product_or_template, currency, date, price):
         """ Return the strikethrough price of the product, if there is one.
 
         :param recordset product_or_template: The product for which to compute the strikethrough
@@ -249,39 +251,37 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         :rtype: float|None
         :return: The strikethrough price of the product, if there is one.
         """
-        # Don't apply taxes to `compare_list_price`, it should be displayed as is.
-        compare_list_price = product_or_template.currency_id._convert(
-            from_amount=product_or_template.compare_list_price,
-            to_currency=currency,
-            company=request.env.company,
-            date=date,
-            round=False,
+        sales_price = request.env['product.pricelist.item']._compute_base_price(
+            product_or_template,
+            1.0,
+            product_or_template.uom_id,
+            date,
+            currency,
         )
+        if currency.compare_amounts(sales_price, price) == 1:
+            # apply taxes
+            return self._apply_taxes_to_price(
+                sales_price,
+                product_or_template,
+                currency,
+            )
 
         # First, try to use `compare_list_price` as the strikethrough price.
         if (
             request.env.user.has_group('website_sale.group_product_price_comparison')
-            and compare_list_price
+            and product_or_template.compare_list_price
         ):
-            # If `compare_list_price` is lower than `price`, don't show it, but don't fall back on
-            # `list_price` either.
+            # Don't apply taxes to `compare_list_price`, it should be displayed as is.
+            compare_list_price = product_or_template.currency_id._convert(
+                from_amount=product_or_template.compare_list_price,
+                to_currency=currency,
+                company=request.env.company,
+                date=date,
+                round=False,
+            )
+            # If `compare_list_price` is lower than `price`, don't show it.
             if currency.compare_amounts(compare_list_price, price) == 1:
                 return compare_list_price
-        # Second, try to use `list_price` as the strikethrough price.
-        else:
-            list_price = self._apply_taxes_to_price(
-                product_or_template._price_compute('list_price', currency=currency)[
-                    product_or_template.id
-                ],
-                product_or_template,
-                currency,
-            )
-            if (
-                pricelist.discount_policy == 'without_discount'
-                and currency.compare_amounts(list_price, price) == 1
-            ):
-                return list_price
-
         return None
 
     def _should_show_product(self, product_template, parent_combination):
