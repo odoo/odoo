@@ -250,20 +250,18 @@ class TestDiscussFullPerformance(HttpCase):
                 self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
             ],
             "Store": {
-                "discuss": {
-                    "inbox": {
-                        "counter": 1,
-                        "counter_bus_id": bus_last_id,
-                        "id": "inbox",
-                        "model": "mail.box",
-                    },
-                    "starred":
-                    {
-                        "counter": 1,
-                        "counter_bus_id": bus_last_id,
-                        "id": "starred",
-                        "model": "mail.box",
-                    },
+                "inbox": {
+                    "counter": 1,
+                    "counter_bus_id": bus_last_id,
+                    "id": "inbox",
+                    "model": "mail.box",
+                },
+                "starred":
+                {
+                    "counter": 1,
+                    "counter_bus_id": bus_last_id,
+                    "id": "starred",
+                    "model": "mail.box",
                 },
                 "initChannelsUnreadCounter": 1,
                 "odoobotOnboarding": False,

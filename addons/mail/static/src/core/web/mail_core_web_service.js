@@ -23,17 +23,17 @@ export class MailCoreWeb {
             }
         });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
-            if (message.needaction && notifId > this.store.discuss.inbox.counter_bus_id) {
-                this.store.discuss.inbox.counter--;
+            if (message.needaction && notifId > this.store.inbox.counter_bus_id) {
+                this.store.inbox.counter--;
             }
-            if (message.starred && notifId > this.store.discuss.starred.counter_bus_id) {
-                this.store.discuss.starred.counter--;
+            if (message.starred && notifId > this.store.starred.counter_bus_id) {
+                this.store.starred.counter--;
             }
         });
         this.busService.subscribe("mail.message/inbox", (payload, { id: notifId }) => {
             const { Message: messages = [] } = this.store.insert(payload, { html: true });
             const [message] = messages;
-            const inbox = this.store.discuss.inbox;
+            const inbox = this.store.inbox;
             if (notifId > inbox.counter_bus_id) {
                 inbox.counter++;
             }
@@ -44,7 +44,7 @@ export class MailCoreWeb {
         });
         this.busService.subscribe("mail.message/mark_as_read", (payload, { id: notifId }) => {
             const { message_ids: messageIds, needaction_inbox_counter } = payload;
-            const inbox = this.store.discuss.inbox;
+            const inbox = this.store.inbox;
             for (const messageId of messageIds) {
                 // We need to ignore all not yet known messages because we don't want them
                 // to be shown partially as they would be linked directly to cache.
@@ -67,7 +67,7 @@ export class MailCoreWeb {
                 // move messages from Inbox to history
                 message.needaction = false;
                 inbox.messages.delete({ id: messageId });
-                const history = this.store.discuss.history;
+                const history = this.store.history;
                 history.messages.add(message);
             }
             if (notifId > inbox.counter_bus_id) {

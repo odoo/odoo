@@ -32,24 +32,9 @@ export class MailCoreCommon {
                 message.delete();
             }
         });
-        this.busService.subscribe("mail.message/toggle_star", (payload, { id: notifId }) => {
-            const { message_ids: messageIds, starred } = payload;
-            for (const messageId of messageIds) {
-                const message = this.store.Message.insert({ id: messageId, starred });
-                const starredBox = this.store.discuss.starred;
-                if (starred) {
-                    if (notifId > starredBox.counter_bus_id) {
-                        starredBox.counter++;
-                    }
-                    starredBox.messages.add(message);
-                } else {
-                    if (notifId > starredBox.counter_bus_id) {
-                        starredBox.counter--;
-                    }
-                    starredBox.messages.delete(message);
-                }
-            }
-        });
+        this.busService.subscribe("mail.message/toggle_star", (payload, metadata) =>
+            this._handleNotificationToggleStar(payload, metadata)
+        );
         this.busService.subscribe("res.users.settings", (payload) => {
             if (payload) {
                 this.store.settings.update(payload);
@@ -67,6 +52,11 @@ export class MailCoreCommon {
                 }
             }
         });
+    }
+
+    _handleNotificationToggleStar(payload, metadata) {
+        const { message_ids: messageIds, starred } = payload;
+        this.store.Message.insert(messageIds.map((id) => ({ id, starred })));
     }
 }
 

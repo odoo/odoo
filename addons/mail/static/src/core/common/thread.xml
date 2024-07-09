@@ -51,50 +51,13 @@
         </t>
         <t t-else="">
             <div class="o-mail-Thread-empty d-flex flex-column align-items-center justify-content-center text-muted fst-italic h-100" t-att-class="{'p-4': props.showEmptyMessage}">
-                <t t-if="props.thread.isLoaded">
-                    <t t-if="props.thread.isEmpty and props.thread.model === 'mail.box'">
-                    <t t-if="props.thread.id === 'inbox' and state.mountedAndLoaded">
-                        <div t-if="store.self.notification_preference !== 'inbox'" class="align-items-center text-center">
-                            <h4 class="mb-3 fw-bolder">
-                                Your inbox is empty
-                            </h4>
-                            <t t-call="mail.Thread.inboxHint"/>
-                        </div>
-                        <div t-else="" class="align-items-center text-center">
-                            <h4 class="mb-3 fw-bolder">
-                                Congratulations, your inbox is empty
-                            </h4>
-                            New messages appear here.
-                        </div>
-                    </t>
-                    <t t-if="props.thread.id === 'starred'">
-                        <h4 class="mb-3 fw-bolder">
-                            No starred messages
-                        </h4>
-                        You can mark any message as 'starred', and it shows up in this mailbox.
-                    </t>
-                    <t t-if="props.thread.id === 'history'">
-                        <img src="/web/static/img/neutral_face.svg" alt="History"/>
-                        <h4 class="mb-3 fw-bolder">
-                            No history messages
-                        </h4>
-                        Messages marked as read will appear in the history.
-                    </t>
-                    </t>
-                    <t t-elif="props.showEmptyMessage">
-                        There are no messages in this conversation.
-                    </t>
+                <t t-if="props.thread.isLoaded and props.showEmptyMessage">
+                    <span t-ref="empty-message">There are no messages in this conversation.</span>
                 </t>
             </div>
         </t>
     </div>
     <t t-if="!env.inChatter" t-call="mail.Thread.jumpPresent"/>
-</t>
-
-<t t-name="mail.Thread.inboxHint">
-    <t t-esc="preferenceButtonText.before"/>
-    <button class="btn btn-link m-0 p-0 align-baseline o-hover-text-underline" t-on-click="onClickPreferences" t-esc="preferenceButtonText.inside"/>
-    <t t-esc="preferenceButtonText.after"/>
 </t>
 
 <t t-name="mail.Thread.jumpPresent">

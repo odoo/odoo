@@ -53,10 +53,6 @@ export class DiscussApp extends Record {
     thread = Record.one("Thread");
     channels = Record.one("DiscussAppCategory");
     chats = Record.one("DiscussAppCategory");
-    // mailboxes in sidebar
-    inbox = Record.one("Thread");
-    starred = Record.one("Thread");
-    history = Record.one("Thread");
     hasRestoredThread = false;
 }
 

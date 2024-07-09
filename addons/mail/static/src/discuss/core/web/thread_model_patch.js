@@ -51,7 +51,7 @@ patch(Thread.prototype, {
                 const newThread =
                     this.store.discuss.channels.threads.find(
                         (thread) => thread.displayToSelf || thread.isLocallyPinned
-                    ) || this.store.discuss.inbox;
+                    ) || this.store.inbox;
                 newThread.setAsDiscussThread();
             } else {
                 this.store.discuss.thread = undefined;
