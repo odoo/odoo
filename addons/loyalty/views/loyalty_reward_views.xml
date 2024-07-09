@@ -75,97 +75,67 @@
         <field name="model">loyalty.reward</field>
         <field name="arch" type="xml">
             <kanban>
-                <field name="program_id" invisible="1"/>
-                <field name="company_id"/>
                 <field name="currency_id"/>
-                <field name="description"/>
                 <field name="reward_type"/>
-                <field name="discount"/>
-                <field name="discount_mode"/>
                 <field name="discount_applicability"/>
-                <field name="discount_product_domain"/>
-                <field name="discount_product_category_id"/>
-                <field name="discount_product_tag_id"/>
-                <field name="discount_max_amount"/>
-                <field name="discount_line_product_id"/>
-                <field name="reward_product_id"/>
-                <field name="reward_product_ids"/>
-                <field name="all_discount_product_ids"/>
-                <field name="reward_product_tag_id"/>
-                <field name="multi_product"/>
-                <field name="reward_product_qty"/>
-                <field name="reward_product_uom_id"/>
-                <field name="required_points"/>
-                <field name="point_name"/>
                 <field name="clear_wallet"/>
                 <field name="program_type"/>
                 <field name="user_has_debug"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click_edit mx-0 d-flex flex-row">
-                            <div class="o_loyalty_kanban_card_left mw-75 flex-grow-1" name="reward_info">
-                                <t t-if="record.reward_type.raw_value === 'discount'">
+                    <t t-name="kanban-card" class="flex-row">
+                        <div class="mw-75 flex-grow-1" name="reward_info">
+                            <t t-if="record.reward_type.raw_value === 'discount'">
 
-                                    <t t-if="record.discount">
-                                        <a><field name="discount"/><field name="discount_mode"/> discount <t t-if="record.discount_max_amount.raw_value > 0">( Max <field name="discount_max_amount"/> )</t></a>
-                                    </t>
-
-                                    <t t-if="record.discount_applicability.raw_value === 'specific'">
-                                        <br/>
-                                        <br/>
-
-                                        <span class="fw-bold text-decoration-underline">Applied to:</span>
-
-                                        <t t-if="record.discount_product_ids.raw_value.length > 0">
-                                            <div class="d-flex"><i class="fa fa-cube fa-fw" title="Products"/> <field name="discount_product_ids" widget="many2many_tags" class="d-inline"/></div>
-                                        </t>
-                                        <t t-if="record.discount_product_category_id.raw_value">
-                                            <div class="d-flex"><i class="fa fa-cubes fa-fw" title="Product Categories"/> <field name="discount_product_category_id" class="d-inline"/></div>
-                                        </t>
-                                        <t t-if="record.discount_product_tag_id.raw_value">
-                                            <div class="d-flex"><i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="discount_product_tag_id" class="d-inline"/></div>
-                                        </t>
-                                        <t t-if="record.discount_product_domain.raw_value &amp;&amp; record.discount_product_domain.raw_value !== '[]'" groups="base.group_no_one">
-                                            <div class="d-flex"><i class="fa fa-search fa-fw" title="Product Domain"/> <field name="discount_product_domain" class="d-inline"/></div>
-                                        </t>
-                                    </t>
-
-                                    <t t-elif="record.discount_applicability.raw_value === 'cheapest'">
-                                        on the cheapest product
-                                        <br/>
-                                    </t>
-
-                                    <t t-elif="record.discount_applicability.raw_value === 'order'">
-                                        on your order
-                                        <br/>
-                                    </t>
+                                <t t-if="record.discount">
+                                    <field name="discount"/><field name="discount_mode"/> discount <t t-if="record.discount_max_amount.raw_value > 0">( Max <field name="discount_max_amount"/> )</t>
                                 </t>
 
-                                <t t-elif="record.reward_type.raw_value === 'product'">
-                                    <a>Free product</a>
-                                    <br/>
-                                    <br/>
-                                    <t t-if="record.reward_product_id.raw_value">
-                                        <div class="d-flex"><i class="fa fa-cube fa-fw" title="Product Domain"/><field name="reward_product_id"/> <t t-if="record.reward_product_qty.raw_value > 1"><span> x </span><field name="reward_product_qty"/></t></div>
-                                    </t>
-                                    <t t-if="record.reward_product_tag_id.raw_value">
-                                        <div class="d-flex"><i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="reward_product_tag_id" class="d-inline"/></div>
-                                    </t>
-                                </t>
-                            </div>
+                                <t t-if="record.discount_applicability.raw_value === 'specific'">
 
-                            <div class="o_loyalty_kanban_card_right" invisible="not user_has_debug and program_type not in ('loyalty', 'buy_x_get_y')">
-                                <p class="text-muted">
-                                    <span class="fw-bold text-decoration-underline">In exchange of</span>
-                                    <br/>
-                                    <t t-if="record.clear_wallet.raw_value">
-                                        all <field name="point_name"/> (if at least <field name="required_points"/> <field name="point_name"/>)
-                                    </t>
-                                    <t t-else="">
-                                        <field name="required_points"/> <field name="point_name"/>
-                                    </t>
-                                </p>
-                            </div>
+                                    <div class="fw-bold text-decoration-underline mt-3">Applied to:</div>
+
+                                    <div t-if="record.discount_product_ids.raw_value.length > 0" class="d-flex">
+                                        <i class="fa fa-cube fa-fw" title="Products"/> <field name="discount_product_ids" widget="many2many_tags"/>
+                                    </div>
+                                    <div t-if="record.discount_product_category_id.raw_value" class="d-flex">
+                                        <i class="fa fa-cubes fa-fw" title="Product Categories"/> <field name="discount_product_category_id"/>
+                                    </div>
+                                    <div t-if="record.discount_product_tag_id.raw_value" class="d-flex">
+                                        <i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="discount_product_tag_id"/>
+                                    </div>
+                                    <div t-if="record.discount_product_domain.raw_value &amp;&amp; record.discount_product_domain.raw_value !== '[]'" groups="base.group_no_one" class="d-flex">
+                                        <i class="fa fa-search fa-fw" title="Product Domain"/> <field name="discount_product_domain"/>
+                                    </div>
+                                </t>
+
+                                <t t-elif="record.discount_applicability.raw_value === 'cheapest'">
+                                    on the cheapest product
+                                </t>
+
+                                <t t-elif="record.discount_applicability.raw_value === 'order'">
+                                    on your order
+                                </t>
+                            </t>
+
+                            <t t-elif="record.reward_type.raw_value === 'product'">
+                                <div class="mb-3">Free product</div>
+                                <div t-if="record.reward_product_id.raw_value" class="d-flex">
+                                    <i class="fa fa-cube fa-fw" title="Product Domain"/><field name="reward_product_id" class="me-1"/> <t t-if="record.reward_product_qty.raw_value > 1"> x <field name="reward_product_qty" class="ms-1"/></t>
+                                </div>
+                                <div t-if="record.reward_product_tag_id.raw_value" class="d-flex">
+                                    <i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="reward_product_tag_id"/>
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="o_loyalty_kanban_card_right float-end text-muted" invisible="not user_has_debug and program_type not in ('loyalty', 'buy_x_get_y')">
+                            <div class="fw-bold text-decoration-underline">In exchange of</div>
+                            <t t-if="record.clear_wallet.raw_value">
+                                all <field name="point_name"/> (if at least <field name="required_points"/> <field name="point_name"/>)
+                            </t>
+                            <t t-else="">
+                                <field name="required_points"/> <field name="point_name"/>
+                            </t>
                         </div>
                     </t>
                 </templates>
