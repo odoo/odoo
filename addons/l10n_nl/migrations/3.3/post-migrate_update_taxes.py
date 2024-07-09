@@ -61,47 +61,40 @@ def migrate(cr, version):
 
     for new_tax_tag_id, tax_ids, old_tax_tag_ids, repartition_line_ids in insert_query_params:
         insert_query_parts.append(
-            sql.SQL("""
-                SELECT tag_aml_rel.account_move_line_id, {new_tax_tag_id}
+            sql.SQL(cr.mogrify("""
+                SELECT tag_aml_rel.account_move_line_id, %s
                 FROM account_account_tag_account_move_line_rel tag_aml_rel
                 JOIN account_move_line_account_tax_rel aml_at_rel ON aml_at_rel.account_move_line_id = tag_aml_rel.account_move_line_id
-                WHERE aml_at_rel.account_tax_id = ANY({tax_ids})
-                AND tag_aml_rel.account_account_tag_id IN {old_tax_tag_ids}
-            """).format(
-                new_tax_tag_id=sql.Literal(new_tax_tag_id),
-                tax_ids=sql.Literal(tax_ids),
-                old_tax_tag_ids=sql.Literal(old_tax_tag_ids),
-            )
+                WHERE aml_at_rel.account_tax_id = ANY(%s)
+                AND tag_aml_rel.account_account_tag_id = ANY(%s)
+                """,
+                [new_tax_tag_id, tax_ids, old_tax_tag_ids]
+            ).decode())
         )
 
         if len(old_tax_tag_ids) > 1:
             cr.execute(
-                 sql.SQL("""
+                """
                     DELETE FROM account_account_tag_account_tax_repartition_line_rel tag_aml_rel
-                    WHERE tag_aml_rel.account_account_tag_id = {first_old_tax_tag_id}
+                    WHERE tag_aml_rel.account_account_tag_id = %s
                     AND (
                         SELECT COUNT(*)
                         FROM account_account_tag_account_tax_repartition_line_rel sub_tag_aml_rel
                         WHERE sub_tag_aml_rel.account_tax_repartition_line_id = tag_aml_rel.account_tax_repartition_line_id
-                        AND sub_tag_aml_rel.account_account_tag_id = {second_old_tax_tag_id}
+                        AND sub_tag_aml_rel.account_account_tag_id = %s
                     ) >= 1
-                """).format(
-                    first_old_tax_tag_id=sql.Literal(old_tax_tag_ids[0]),
-                    second_old_tax_tag_id=sql.Literal(old_tax_tag_ids[1]),
-                )
+                """,
+                [old_tax_tag_ids[0], old_tax_tag_ids[1]],
             )
 
         cr.execute(
-            sql.SQL("""
+            """
                 UPDATE account_account_tag_account_tax_repartition_line_rel
-                SET account_account_tag_id = {new_tax_tag_id}
-                WHERE account_tax_repartition_line_id = ANY({repartition_line_ids})
-                AND account_account_tag_id IN {old_tax_tag_ids}
-            """).format(
-                new_tax_tag_id=sql.Literal(new_tax_tag_id),
-                repartition_line_ids=sql.Literal(repartition_line_ids),
-                old_tax_tag_ids=sql.Literal(old_tax_tag_ids),
-            )
+                SET account_account_tag_id = %s
+                WHERE account_tax_repartition_line_id = ANY(%s)
+                AND account_account_tag_id = ANY(%s)
+            """,
+            [new_tax_tag_id, repartition_line_ids, old_tax_tag_ids]
         )
 
     cr.execute(
@@ -111,5 +104,5 @@ def migrate(cr, version):
             ON CONFLICT DO NOTHING
         """).format(
             select_statement=sql.SQL(" UNION ").join(insert_query_parts),
-        )
+        ).as_string(cr)
     )
