@@ -5,8 +5,16 @@
         <field name="model">rating.rating</field>
         <field name="inherit_id" ref="rating.rating_rating_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='rating_text']" position="after">
-                <field name="publisher_comment" string="Comment"/>
+            <xpath expr="//field[@name='rated_on']" position="after">
+                <label for="publisher_comment" string="Comment"/>
+                <div>
+                    <field name="publisher_comment"/>
+                    <br />
+                    <span class="oe_inline">by </span>
+                    <field name="publisher_id" class="oe_inline"/>
+                    <span class="oe_inline"> on </span>
+                    <field name="publisher_datetime" class="oe_inline"/>
+                </div>
             </xpath>
         </field>
     </record>

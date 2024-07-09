@@ -31,6 +31,7 @@
                                 <field name="rated_partner_id" widget="many2one_avatar"/>
                                 <field name="rating" invisible="1"/>
                                 <field name="is_internal"/>
+                                <field name="consumed" groups="base.group_no_one"/>
                             </group>
                             <group>
                                 <field name="partner_id"/>
@@ -40,7 +41,7 @@
                                         <strong><field name="rating_text"/></strong>
                                     </div>
                                 </div>
-                                <field name="create_date"/>
+                                <field name="rated_on"/>
                             </group>
                         </group>
                         <group class="mw-100" invisible="not feedback">
@@ -64,19 +65,6 @@
                         decoration-warning="rating_text == 'ok'"
                         decoration-success="rating_text == 'top'"
                         widget='badge'/>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="rating_rating_view_form_complete" model="ir.ui.view">
-            <field name="name">rating.rating.view.form.complete</field>
-            <field name="model">rating.rating</field>
-            <field name="inherit_id" ref="rating.rating_rating_view_form"/>
-            <field name="priority">48</field>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='is_internal']" position="after">
-                    <field name="consumed" groups="base.group_no_one"/>
                 </xpath>
             </field>
         </record>
@@ -106,7 +94,7 @@
                                     </a>
                                 </span>
                                 <div>
-                                    on <field name="create_date" />
+                                    on <field name="rated_on" />
                                 </div>
                                 <span class="text-truncate" t-att-title="record.feedback.raw_value">
                                     <field name="feedback"/>
@@ -153,7 +141,7 @@
                                     <a type="object" name="action_open_rated_object" t-att-title="record.res_name.raw_value">
                                         <field name="res_name" />
                                     </a>
-                                    <div><i class="fa fa-clock-o me-2" aria-label="Create date"/> <field name="create_date" /></div>
+                                    <div><i class="fa fa-clock-o me-2" aria-label="Create date"/> <field name="rated_on" /></div>
                                     <field name="feedback" class="mt-2"/>
                                 </div>
                             </main>
@@ -169,7 +157,7 @@
             <field name="arch" type="xml">
                 <pivot string="Ratings" display_quantity="1" sample="1">
                     <field name="rated_partner_id" type="row"/>
-                    <field name="create_date" type="col"/>
+                    <field name="rated_on" type="col"/>
                     <field name="rating" type="measure" string="Rating (/5)"/>
                     <field name="parent_res_id" invisible="1"/>
                     <field name="res_id" invisible="1"/>
@@ -182,7 +170,7 @@
            <field name="model">rating.rating</field>
            <field name="arch" type="xml">
                 <graph string="Ratings" sample="1">
-                    <field name="create_date"/>
+                    <field name="rated_on"/>
                     <field name="rating" type="measure" string="Rating (/5)"/>
                     <field name="parent_res_id" invisible="1"/>
                     <field name="res_id" invisible="1"/>
@@ -207,17 +195,17 @@
                     <filter string="Okay" name="rating_okay" domain="[('rating_text', '=', 'ok')]"/>
                     <filter string="Dissatisfied" name="rating_unhappy" domain="[('rating_text', '=', 'ko')]"/>
                     <separator/>
-                    <filter name="filter_create_date" date="create_date">
-                        <filter name="create_date_last_7_days" string="Last 7 Days" domain="[('create_date', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=7), datetime.time(23, 59, 59)).to_utc())]"/>
-                        <filter name="create_date_last_30_days" string="Last 30 Days" domain="[('create_date', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=30), datetime.time(23, 59, 59)).to_utc())]"/>
-                        <filter name="create_date_last_365_days" string="Last 365 Days" domain="[('create_date', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=365), datetime.time(23, 59, 59)).to_utc())]"/>
+                    <filter name="filter_rated_on" string="Rated On" date="rated_on">
+                        <filter name="rated_on_last_7_days" string="Last 7 Days" domain="[('rated_on', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=7), datetime.time(23, 59, 59)).to_utc())]"/>
+                        <filter name="rated_on_last_30_days" string="Last 30 Days" domain="[('rated_on', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=30), datetime.time(23, 59, 59)).to_utc())]"/>
+                        <filter name="rated_on_last_365_days" string="Last 365 Days" domain="[('rated_on', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=365), datetime.time(23, 59, 59)).to_utc())]"/>
                     </filter>
                     <group expand="0" string="Group By">
                         <filter string="Rated Operator" name="responsible" context="{'group_by':'rated_partner_id'}"/>
                         <filter string="Customer" name="customer" context="{'group_by':'partner_id'}"/>
                         <filter string="Rating" name="rating_text" context="{'group_by':'rating_text'}"/>
                         <filter string="Resource" name="resource" context="{'group_by':'res_name'}"/>
-                        <filter string="Submitted on" name="month" context="{'group_by': 'create_date:month'}"/>
+                        <filter string="Submitted on" name="month" context="{'group_by': 'rated_on:month'}"/>
                     </group>
                 </search>
             </field>
@@ -245,7 +233,7 @@
             <field name="act_window_id" ref="rating_rating_action"/>
             <field name="sequence">5</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="rating_rating_view_form_complete"/>
+            <field name="view_id" ref="rating_rating_view_form"/>
         </record>
 
         <!-- Add menu entry in Technical/Discuss -->
