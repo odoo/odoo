@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 
 // 60 seconds
-const HISTORY_SNAPSHOT_INTERVAL = 1000 * 60;
+export const HISTORY_SNAPSHOT_INTERVAL = 1000 * 60;
 // 10 seconds
 const HISTORY_SNAPSHOT_BUFFER_TIME = 1000 * 10;
 
@@ -57,6 +57,12 @@ export class CollaborationPlugin extends Plugin {
         this._snapshotInterval = setInterval(() => {
             this.makeSnapshot();
         }, HISTORY_SNAPSHOT_INTERVAL);
+    }
+
+    destroy() {
+        super.destroy();
+        clearInterval(this._snapshotInterval);
+        this._snapshotInterval = false;
     }
 
     onHistoryClean() {

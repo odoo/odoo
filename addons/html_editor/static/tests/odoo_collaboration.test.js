@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
+import { HISTORY_SNAPSHOT_INTERVAL } from "@html_editor/others/collaboration/collaboration_plugin";
 import { COLLABORATION_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
@@ -10,7 +11,7 @@ import { Mutex } from "@web/core/utils/concurrency";
 import { patch } from "@web/core/utils/patch";
 import { getContent, getSelection, setSelection } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, advanceTime } from "@odoo/hoot-mock";
 
 /**
  * @typedef PeerPool
@@ -1058,5 +1059,18 @@ describe("Disconnect & reconnect", () => {
         expect(peers.p2.getValue()).toBe(`<p>ac[]b</p><p>f</p><p>d</p>`, {
             message: "p2 should have the value merged with p1",
         });
+    });
+});
+
+describe("Destroy odoo collaboration plugin", () => {
+    test("should destroy snapshot interval", async () => {
+        const pool = await createPeers(["p1"]);
+        const peers = pool.peers;
+        const editor = peers.p1.editor;
+        await peers.p1.focus();
+        insertEditorText(peers.p1.editor, "b");
+        editor.destroy();
+        await advanceTime(2 * HISTORY_SNAPSHOT_INTERVAL);
+        expect(peers.p1.plugins.collaboration._snapshotInterval).toBe(false);
     });
 });
