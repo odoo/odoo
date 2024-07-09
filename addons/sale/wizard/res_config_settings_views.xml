@@ -40,17 +40,13 @@
                       <setting id="discount_sale_order_lines" title="Apply manual discounts on sales order lines or display discounts computed from pricelists (option to activate in the pricelist configuration)." help="Grant discounts on sales order lines">
                             <field name="group_discount_per_so_line"/>
                        </setting>
-                        <setting id="coupon_settings" title="Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products." string="Discounts, Loyalty &amp; Gift Card" help="Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet">
+                        <setting id="coupon_settings" title="Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products." string="Promotions, Loyalty &amp; Gift Card" help="Manage Promotions, Coupons, Loyalty cards, Gift cards &amp; eWallet">
                             <field name="module_loyalty"/>
                         </setting>
                         <setting id="pricelist_configuration" documentation="/applications/sales/sales/products_prices/prices/pricing.html" help="Set multiple prices per product, automated discounts, etc.">
                             <field name="group_product_pricelist"/>
                             <div class="content-group" invisible="not group_product_pricelist">
                                 <div class="mt16">
-                                    <field name="group_sale_pricelist" invisible="1"/>
-                                    <field name="product_pricelist_setting" widget="radio" class="o_light_label"/>
-                                </div>
-                                <div class="mt8">
                                     <button name="%(product.product_pricelist_action2)d" icon="oi-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
                                 </div>
                             </div>

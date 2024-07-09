@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from datetime import date, timedelta
 
 from odoo import models
 from odoo.tools import populate
-from datetime import timedelta, date
 
 
 class Pricelist(models.Model):
@@ -16,7 +16,6 @@ class Pricelist(models.Model):
         # Reflect the settings with data created
         self.env['res.config.settings'].create({
             'group_product_pricelist': True,  # Activate pricelist
-            'group_sale_pricelist': True,  # Activate advanced pricelist
         }).execute()
 
         return super()._populate(size)

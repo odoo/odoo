@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -10,7 +9,7 @@ class Pricelist(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Pricelist"
     _rec_names_search = ['name', 'currency_id']  # TODO check if should be removed
-    _order = "sequence asc, id asc"
+    _order = "sequence, id, name"
 
     def _default_currency_id(self):
         return self.env.company.currency_id.id
