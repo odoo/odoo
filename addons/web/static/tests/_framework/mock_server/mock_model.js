@@ -63,8 +63,6 @@ const { DateTime } = luxon;
  *
  * @typedef {{
  *  __domain: string;
- *  __count: number;
- *  __range: Record<string, any>;
  *  [key: string]: any;
  * }} ModelRecordGroup
  *

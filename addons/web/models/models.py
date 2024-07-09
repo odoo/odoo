@@ -224,7 +224,7 @@ class Base(models.AbstractModel):
 
     @api.model
     @api.readonly
-    def web_read_group(self, domain, groupby=(), aggregates=(), limit=None, offset=0, order='', fill_temporal=None):
+    def web_read_group(self, domain, groupby=(), aggregates=(), limit=None, offset=0, order=''):
         """
         Returns the result of a read_group and the total number of groups matching the search domain.
 
@@ -234,22 +234,12 @@ class Base(models.AbstractModel):
         :param limit: see ``limit`` param of ``_read_group``
         :param offset: see ``offset`` param of ``_read_group``
         :param order: forced order, see ``order`` param of ``_read_group``
-        :param fill_temporal: WIP
         :return: {
             'groups': array of read groups
             'length': total number of groups
         }
         """
-        # TODO: _order_clean in the JS side ?
-        groupby = tuple(groupby)
-        aggregates = tuple(aggregates)
-        order = self._order_clean(order, groupby, aggregates)
-        # Add the the group by as order too, to always have a complete order.
-        complete_order = ','.join((order,) if order else () + groupby)
-
-        groups = self._read_group(
-            domain, groupby, aggregates,
-            offset=offset, limit=limit, order=complete_order)
+        groups = self.base_read_group(domain, groupby, aggregates, limit, offset, order)
 
         if not groups:
             length = 0
@@ -262,15 +252,36 @@ class Base(models.AbstractModel):
         else:
             length = len(groups) + offset
 
+        return {
+            'groups': groups,
+            'length': length,
+        }
+
+    @api.model
+    @api.readonly
+    def base_read_group(self, domain, groupby=(), aggregates=(), limit=None, offset=0, order=''):
+        """ Same than web_read_group but without length calculus 
+        TODO: to rename into read_group """
+        groupby = tuple(groupby)
+        aggregates = tuple(aggregates)
+        # TODO: _order_clean in the JS side ?
+        order = self._order_clean(order, groupby, aggregates)
+        # Add the the group by as order too, to always have a complete order.
+        complete_order = ','.join((order,) if order else () + groupby)
+
+        groups = self._read_group(
+            domain, groupby, aggregates,
+            offset=offset, limit=limit, order=complete_order)
+
         # Note: group_expand is only done if the limit isn't reached and when the offset == 0
         # to avoid inconsistency in the web client pager. Anyway, in practice, this feature should
         # be used only when there are few groups (or without limit for the kanban view).
-        if len(groupby) == 1 and not offset and (not limit or length < limit):
+        if len(groupby) == 1 and not offset and (not limit or len(groups) < limit):
             expand_groups = self._web_read_group_expand(domain, groups, groupby[0], aggregates, order)
             if not limit or len(expand_groups) < limit:
                 groups = expand_groups
-                length = len(groups)
 
+        fill_temporal = self.env.context.get('fill_temporal')
         if groupby and (fill_temporal or isinstance(fill_temporal, dict)):
             if limit or offset:
                 raise ValueError('You cannot used fill_temporal with a limit or an offset')
@@ -278,13 +289,8 @@ class Base(models.AbstractModel):
                 fill_temporal = {}
             # TODO: doesn't respect the order
             groups = self._web_read_group_fill_temporal(groups, groupby, aggregates, **fill_temporal)
-            length = len(groups)
 
-        # TODO Should we have an alternative without length ?
-        return {
-            'groups': self._web_read_group_format(groupby, aggregates, groups),
-            'length': length,
-        }
+        return self._web_read_group_format(groupby, aggregates, groups)
 
     def _web_read_group_expand(self, domain, groups, groupby_spec, aggregates, order):
         field_name = groupby_spec.split('.')[0].split(':')[0]
@@ -527,7 +533,6 @@ class Base(models.AbstractModel):
         result = [{'domain_pieces': []} for __ in groups]
         column_values = zip(*groups)
 
-        #
         for groupby_spec, values in zip(groupby, column_values):
             for (value_label, additional_domain), dict_group in zip(
                 self._web_read_group_format_groupby(groupby_spec, values),
@@ -536,7 +541,7 @@ class Base(models.AbstractModel):
                 dict_group[groupby_spec] = value_label
                 dict_group['domain_pieces'].append(additional_domain)
 
-            # Add fold information
+            # Add fold information (TODO: params ?)
             if not (
                 len(groupby) == 1 and values and
                 (field := self._fields.get(groupby[0].split(':')[0])) and
@@ -742,18 +747,19 @@ class Base(models.AbstractModel):
                 progress bar field values to the related number of records
         """
         def adapt(value):
-            if isinstance(value, tuple):
-                value = value[0]
+            if isinstance(value, BaseModel):
+                return value.id
             return value
 
-        result = {}
-        for group in self.read_group(domain, ['__count'], [group_by, progress_bar['field']], lazy=False):
-            group_by_value = str(adapt(group[group_by]))
-            field_value = group[progress_bar['field']]
-            if group_by_value not in result:
-                result[group_by_value] = dict.fromkeys(progress_bar['colors'], 0)
-            if field_value in result[group_by_value]:
-                result[group_by_value][field_value] += group['__count']
+        result = defaultdict(lambda: dict.fromkeys(progress_bar['colors'], 0))
+        domain = AND([domain, [(progress_bar['field'], 'in', list(progress_bar['colors']))]])
+
+        for main_group, field_value, count in self._read_group(
+            domain, [group_by, progress_bar['field']], ['__count'],
+        ):
+            group_by_value = str(adapt(main_group))
+            result[group_by_value][field_value] += count
+
         return result
 
     @api.model

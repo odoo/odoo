@@ -1028,9 +1028,6 @@ export class MockServer {
     }
 
     mockReadGroup(modelName, kwargs) {
-        if (!("lazy" in kwargs)) {
-            kwargs.lazy = true;
-        }
         const fields = this.models[modelName].fields;
         const records = this.getRecords(modelName, kwargs.domain);
         let groupBy = [];
@@ -1390,9 +1387,8 @@ export class MockServer {
         const groups = this.mockReadGroup(modelName, kwargs);
         const allGroups = this.mockReadGroup(modelName, {
             domain: kwargs.domain,
-            fields: ["display_name"],
             groupby: kwargs.groupby,
-            lazy: kwargs.lazy,
+            aggregates: kwargs.aggregates,
         });
         return {
             groups: groups,
@@ -1407,7 +1403,7 @@ export class MockServer {
         // Find group by field
         const data = {};
         for (const group of groups) {
-            const records = this.getRecords(modelName, group.__domain || []);
+            const records = this.getRecords(modelName, group.__domain_part || []);
             let groupByValue = group[groupBy]; // always technical value here
             if (Array.isArray(groupByValue)) {
                 groupByValue = groupByValue[0];

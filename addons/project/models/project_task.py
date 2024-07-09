@@ -1956,17 +1956,17 @@ class Task(models.Model):
         }
 
     @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        # A read_group can not be performed if records are grouped by personal_stage_type_id as it is a computed field.
-        # personal_stage_type_ids behaves like a M2O from the point of view of the user, we therefore use this field instead.
-        if 'personal_stage_type_id' in groupby and (not lazy or groupby[0] == 'personal_stage_type_id'):
+    def base_read_group(self, domain, groupby=(), aggregates=(), limit=None, offset=0, order=''):
+        # A read_group can not be performed if records are grouped by personal_stage_type_id
+        # as it is a computed field. personal_stage_type_ids behaves like a M2O from the point
+        # of view of the user, we therefore use this field instead.
+        if 'personal_stage_type_id' in groupby:
             groupby = ["personal_stage_type_ids" if field == "personal_stage_type_id" else field for field in groupby] # limitation: problem when both personal_stage_type_id and personal_stage_type_ids appear in read_group, but this has no functional utility
-            result = super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+            result = super().base_read_group(domain, groupby, aggregates, limit, offset, order)
             for group in result:
                 group['personal_stage_type_id'] = group.pop('personal_stage_type_ids', False)
-                group['personal_stage_type_id_count'] = group.pop('personal_stage_type_ids_count', 0)
             return result
-        return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+        return super().base_read_group(domain, groupby, aggregates, limit, offset, order)
 
     # ---------------------------------------------------
     # Project Sharing

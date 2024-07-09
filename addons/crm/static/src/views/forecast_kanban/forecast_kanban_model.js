@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { CrmKanbanModel } from "@crm/views/crm_kanban/crm_kanban_model";
-import { deserializeDateTime } from "@web/core/l10n/dates";
 
 export class ForecastKanbanModel extends CrmKanbanModel {
     setup(params, { fillTemporalService }) {
@@ -40,7 +39,7 @@ export class ForecastKanbanModel extends CrmKanbanModel {
         if (this.isForecastGroupBy(config)) {
             const lastGroup = res.groups.filter((grp) => grp.value).slice(-1)[0];
             if (lastGroup) {
-                this.fillTemporalPeriod(config).setEnd(deserializeDateTime(lastGroup.range.to));
+                this.fillTemporalPeriod(config).setEnd(lastGroup.range.to);
             }
         }
         return res;

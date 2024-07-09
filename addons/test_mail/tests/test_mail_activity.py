@@ -988,7 +988,7 @@ class TestORM(TestActivityCommon):
         }
 
         # call read_group to compute group names
-        groups = MailTestActivityCtx.read_group(domain, fields=['date'], groupby=[groupby])
+        groups = MailTestActivityCtx.base_read_group(domain, groupby=[groupby])
         progressbars = MailTestActivityCtx.read_progress_bar(domain, group_by=groupby, progress_bar=progress_bar)
         self.assertEqual(len(groups), 3)
         self.assertEqual(len(progressbars), 3)
@@ -1001,6 +1001,6 @@ class TestORM(TestActivityCommon):
             for group_name, data in progressbars.items()
         }
 
-        self.assertEqual(groups[0][groupby], pg_groups["overdue"])
-        self.assertEqual(groups[1][groupby], pg_groups["today"])
-        self.assertEqual(groups[2][groupby], pg_groups["planned"])
+        self.assertEqual(groups[0][groupby][0], pg_groups["overdue"])
+        self.assertEqual(groups[1][groupby][0], pg_groups["today"])
+        self.assertEqual(groups[2][groupby][0], pg_groups["planned"])

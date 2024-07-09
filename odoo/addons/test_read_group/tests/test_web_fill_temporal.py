@@ -55,8 +55,8 @@ class TestFillTemporal(common.TransactionCase):
 
         self.assertEqual(groups, [group for group in expected if group['__count']])
 
-        groups = self.Model.web_read_group(
-            [], groupby=['date:month'], aggregates=['__count', 'value:sum'], fill_temporal=True
+        groups = self.Model.with_context(fill_temporal=True).web_read_group(
+            [], groupby=['date:month'], aggregates=['__count', 'value:sum'],
         )['groups']
 
         self.assertEqual(groups, expected)
@@ -148,8 +148,8 @@ class TestFillTemporal(common.TransactionCase):
                "Pacific/Kwajalein"]  # +12:00    +12:00
 
         for tz in tzs:
-            model = self.Model.with_context(tz=tz)
-            groups = model.web_read_group([], groupby=['date:month'], aggregates=['__count', 'value:sum'], fill_temporal=True)['groups']
+            model = self.Model.with_context(tz=tz, fill_temporal=True)
+            groups = model.web_read_group([], groupby=['date:month'], aggregates=['__count', 'value:sum'])['groups']
             self.assertEqual(groups, expected)
 
     def test_only_with_only_null_date(self):
@@ -163,10 +163,12 @@ class TestFillTemporal(common.TransactionCase):
                      'value:sum': 41,
                      'date:month': False}]
 
-        groups = self.Model.web_read_group([], groupby=['date:month'], aggregates=['__count', 'value:sum'])['groups']
+        groups = self.Model.web_read_group(
+            [], groupby=['date:month'], aggregates=['__count', 'value:sum'])['groups']
         self.assertEqual(groups, expected)
 
-        groups = self.Model.web_read_group([], groupby=['date:month'], aggregates=['__count', 'value:sum'], fill_temporal=True)['groups']
+        groups = self.Model.with_context(fill_temporal=True).web_read_group(
+            [], groupby=['date:month'], aggregates=['__count', 'value:sum'])['groups']
         self.assertEqual(groups, expected)
 
     def test_date_range_and_null_date(self):
@@ -200,12 +202,12 @@ class TestFillTemporal(common.TransactionCase):
             'value:sum': 24,
         }]
 
-        groups = self.Model.web_read_group([], groupby=['date:month'], aggregates=['__count', 'value:sum'])['groups']
-
+        groups = self.Model.web_read_group(
+            [], groupby=['date:month'], aggregates=['__count', 'value:sum'])['groups']
         self.assertEqual(groups, [group for group in expected if group['__count']])
 
-        groups = self.Model.web_read_group([], groupby=['date:month'], aggregates=['__count', 'value:sum'], fill_temporal=True)['groups']
-
+        groups = self.Model.with_context(fill_temporal=True).web_read_group(
+            [], groupby=['date:month'], aggregates=['__count', 'value:sum'])['groups']
         self.assertEqual(groups, expected)
 
     def test_date_range_groupby_week(self):
@@ -246,11 +248,13 @@ class TestFillTemporal(common.TransactionCase):
             'value:sum': 20,
         }]
 
-        groups = self.Model.web_read_group([], ['date:week'], ['__count', 'value:sum'])['groups']
+        groups = self.Model.web_read_group(
+            [], ['date:week'], ['__count', 'value:sum'])['groups']
 
         self.assertEqual(groups, [group for group in expected if group['__count']])
 
-        groups = self.Model.web_read_group([], ['date:week'], ['__count', 'value:sum'], fill_temporal=True)['groups']
+        groups = self.Model.with_context(fill_temporal=True).web_read_group(
+            [], ['date:week'], ['__count', 'value:sum'])['groups']
 
         self.assertEqual(groups, expected)
 
@@ -279,10 +283,12 @@ class TestFillTemporal(common.TransactionCase):
             'value:sum': 9,
         }]
 
-        groups = self.Model.web_read_group([], ['date:month'], ['__count', 'value:sum'])['groups']
+        groups = self.Model.web_read_group(
+            [], ['date:month'], ['__count', 'value:sum'])['groups']
         self.assertEqual(groups, [group for group in expected if group['__count']])
 
-        groups = self.Model.web_read_group([], ['date:month'], ['__count', 'value:sum'], fill_temporal=True)['groups']
+        groups = self.Model.with_context(fill_temporal=True).web_read_group(
+            [], ['date:month'], ['__count', 'value:sum'])['groups']
         self.assertEqual(groups, expected)
 
     def test_timestamp_without_timezone(self):
@@ -327,10 +333,12 @@ class TestFillTemporal(common.TransactionCase):
             'value:sum': 24,
         }]
 
-        groups = self.Model.web_read_group([], ['datetime:month'], ['__count', 'value:sum'])['groups']
+        groups = self.Model.web_read_group(
+            [], ['datetime:month'], ['__count', 'value:sum'])['groups']
         self.assertEqual(groups, [group for group in expected if group['__count']])
 
-        groups = self.Model.web_read_group([], ['datetime:month'], ['__count', 'value:sum'], fill_temporal=True)['groups']
+        groups = self.Model.with_context(fill_temporal=True).web_read_group(
+            [], ['datetime:month'], ['__count', 'value:sum'])['groups']
         self.assertEqual(groups, expected)
 
     def test_with_datetimes_and_groupby_per_hour(self):
@@ -508,7 +516,8 @@ class TestFillTemporal(common.TransactionCase):
             'value:sum': 7,
         }]
 
-        groups = self.Model.web_read_group([], ['datetime:hour'], ['__count', 'value:sum'], fill_temporal=True)['groups']
+        groups = self.Model.with_context(fill_temporal=True).web_read_group(
+            [], ['datetime:hour'], ['__count', 'value:sum'])['groups']
         self.assertEqual(groups, expected)
 
     def test_hour_with_timezones(self):
@@ -564,9 +573,8 @@ class TestFillTemporal(common.TransactionCase):
             'value:sum': 3,
         }]
 
-        model_fill = self.Model.with_context(tz='Asia/Hovd')
-        groups = model_fill.web_read_group([], ['datetime:hour'], ['__count', 'value:sum'], fill_temporal=True)['groups']
-
+        model_fill = self.Model.with_context(tz='Asia/Hovd', fill_temporal=True)
+        groups = model_fill.web_read_group([], ['datetime:hour'], ['__count', 'value:sum'])['groups']
         self.assertEqual(groups, expected)
 
     def test_quarter_with_timezones(self):
@@ -607,9 +615,8 @@ class TestFillTemporal(common.TransactionCase):
             'value:sum': 3,
         }]
 
-        model_fill = self.Model.with_context(tz='Asia/Hovd')
-        groups = model_fill.web_read_group([], ['datetime:quarter'], ['__count', 'value:sum'], fill_temporal=True)['groups']
-
+        model_fill = self.Model.with_context(tz='Asia/Hovd', fill_temporal=True)
+        groups = model_fill.web_read_group([], ['datetime:quarter'], ['__count', 'value:sum'])['groups']
         self.assertEqual(groups, expected)
 
     def test_edge_fx_tz(self):
@@ -636,9 +643,8 @@ class TestFillTemporal(common.TransactionCase):
             'value:sum': 42,
         }]
 
-        model_fill = self.Model.with_context(tz='Asia/Hovd')
-        groups = model_fill.web_read_group([], ['datetime:month'], ['__count', 'value:sum'], fill_temporal=True)['groups']
-
+        model_fill = self.Model.with_context(tz='Asia/Hovd', fill_temporal=True)
+        groups = model_fill.web_read_group([], ['datetime:month'], ['__count', 'value:sum'])['groups']
         self.assertEqual(groups, expected)
 
     def test_with_bounds(self):
@@ -687,10 +693,8 @@ class TestFillTemporal(common.TransactionCase):
             'value:sum': 3,
         }]
 
-        groups = self.Model.web_read_group(
-            [], ['date:month'], ['__count', 'value:sum'],
-            fill_temporal={"fill_from": '1916-05-15', "fill_to": '1916-08-15'},
-        )['groups']
+        groups = self.Model.with_context(fill_temporal={"fill_from": '1916-05-15', "fill_to": '1916-08-15'}).web_read_group(
+            [], ['date:month'], ['__count', 'value:sum'])['groups']
         self.assertEqual(groups, expected)
 
     def test_with_bounds_groupby_week(self):
@@ -741,9 +745,8 @@ class TestFillTemporal(common.TransactionCase):
             'value:sum': False,
         }]
 
-        groups = self.Model.web_read_group(
+        groups = self.Model.with_context(fill_temporal={"fill_from": '1916-08-10', "fill_to": '1916-09-20'}).web_read_group(
             [], ['date:week'], ['__count', 'value:sum'],
-            fill_temporal={"fill_from": '1916-08-10', "fill_to": '1916-09-20'},
         )['groups']
 
         self.assertEqual(groups, expected)
@@ -773,9 +776,8 @@ class TestFillTemporal(common.TransactionCase):
             'value:sum': False,
         }]
 
-        groups = self.Model.web_read_group(
+        groups = self.Model.with_context(fill_temporal={"fill_to": '1916-04-15'}).web_read_group(
             [], ['date:month'], ['__count', 'value:sum'],
-            fill_temporal={"fill_to": '1916-04-15'},
         )['groups']
         self.assertEqual(groups, expected)
 
@@ -804,9 +806,8 @@ class TestFillTemporal(common.TransactionCase):
             'value:sum': 1,
         }]
 
-        groups = self.Model.web_read_group(
+        groups = self.Model.with_context(fill_temporal={"fill_from": '1916-02-15'}).web_read_group(
             [], ['date:month'], ['__count', 'value:sum'],
-            fill_temporal={"fill_from": '1916-02-15'},
         )['groups']
 
         self.assertEqual(groups, expected)
@@ -836,9 +837,8 @@ class TestFillTemporal(common.TransactionCase):
             'value:sum': 2,
         }]
 
-        groups = self.Model.web_read_group(
-            [], groupby=['date:month'], aggregates=['__count', 'value:sum'], 
-            fill_temporal={},
+        groups = self.Model.with_context(fill_temporal={}).web_read_group(
+            [], groupby=['date:month'], aggregates=['__count', 'value:sum'],
         )['groups']
 
         self.assertEqual(groups, expected)
@@ -863,8 +863,8 @@ class TestFillTemporal(common.TransactionCase):
             'value:sum': False,
         }]
 
-        groups = self.Model.web_read_group(
-            [], ['date:month'], ['__count', 'value:sum'], fill_temporal={"min_groups": 2},
+        groups = self.Model.with_context(fill_temporal={"min_groups": 2}).web_read_group(
+            [], ['date:month'], ['__count', 'value:sum'],
         )['groups']
         self.assertEqual(groups, expected)
 
@@ -915,8 +915,7 @@ class TestFillTemporal(common.TransactionCase):
             'value:sum': 3,
         }]
 
-        groups = self.Model.web_read_group(
-            [], ['date:month'], ['__count', 'value:sum'], 
-            fill_temporal={"fill_from": '1916-05-15', "fill_to": '1916-07-15', "min_groups": 4}
+        groups = self.Model.with_context(fill_temporal={"fill_from": '1916-05-15', "fill_to": '1916-07-15', "min_groups": 4}).web_read_group(
+            [], ['date:month'], ['__count', 'value:sum'],
         )['groups']
         self.assertEqual(groups, expected)
