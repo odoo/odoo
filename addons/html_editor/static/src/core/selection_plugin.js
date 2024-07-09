@@ -290,6 +290,10 @@ export class SelectionPlugin extends Plugin {
         const range = new Range();
         range.setStart(selection.startContainer, selection.startOffset);
         range.setEnd(selection.endContainer, selection.endOffset);
+        this.setSelection({
+            anchorNode: selection.startContainer,
+            anchorOffset: selection.startOffset,
+        });
         return range.extractContents();
     }
 
