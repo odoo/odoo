@@ -1074,7 +1074,7 @@ class Message(models.Model):
         self.sudo()._author_to_store(store)
         store.add(self.notification_ids._filtered_for_web_client())
         # sudo: mail.message - reading attachments on accessible message is allowed
-        store.add("Attachment", self.sudo().attachment_ids.sorted("id")._attachment_format())
+        store.add(self.sudo().attachment_ids.sorted("id"))
         # Add extras at the end to guarantee order in result. In particular, the parent message
         # needs to be after the current message (client code assuming the first received message is
         # the one just posted for example, and not the message being replied to).

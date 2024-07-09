@@ -628,10 +628,7 @@ export class MailThread extends models.ServerModel {
                 ["res_id", "=", thread.id],
                 ["res_model", "=", this._name],
             ]).sort((a1, a2) => a1.id - a2.id);
-            store.add(
-                "Attachment",
-                IrAttachment._attachment_format(attachments.map((attachment) => attachment.id))
-            );
+            store.add(IrAttachment.browse(attachments.map((attachment) => attachment.id)));
             res["attachments"] = attachments.map((attachment) => ({ id: attachment.id }));
             res["isLoadingAttachments"] = false;
             res["areAttachmentsLoaded"] = true;

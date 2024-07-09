@@ -4521,7 +4521,7 @@ class MailThread(models.AbstractModel):
         empty_messages._cleanup_side_records()
         empty_messages.write({'pinned_at': None})
         attachments = message.attachment_ids.sorted("id")
-        broadcast_store = Store("Attachment", attachments._attachment_format())
+        broadcast_store = Store(attachments)
         res = {
             "attachments": {"id": attachment.id for attachment in attachments},
             "body": message.body,
@@ -4567,7 +4567,7 @@ class MailThread(models.AbstractModel):
             res["activities"] = [{"id": activity.id} for activity in activities]
         if 'attachments' in request_list:
             attachments = self._get_mail_thread_data_attachments()
-            store.add("Attachment", attachments._attachment_format())
+            store.add(attachments)
             res["attachments"] = [{"id": attachment.id} for attachment in attachments]
             res["areAttachmentsLoaded"] = True
             res["isLoadingAttachments"] = False
