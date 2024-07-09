@@ -76,25 +76,17 @@
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_card oe_kanban_global_click">
-                            <div class="oe_kanban_content">
-                                <div class="o_kanban_record_top">
-                                    <div class="o_kanban_record_headings">
-                                        <strong class="o_kanban_record_title"><field name="name"/></strong>
-                                        <span><br/><field name="mode"/></span>
-                                        <span invisible="mode != 'chat'">
-                                            to <field name="recipients"/>
-                                            on <field name="notification_time"/>
-                                            <field name="notification_moment"/>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="o_kanban_record_body">
-                                    <field name="location_ids" widget="many2many_tags"/>
-                                </div>
-                            </div>
+                    <t t-name="kanban-card">
+                        <field class="fw-bold fs-5" name="name"/>
+                        <div>
+                            <field name="mode"/>
+                            <span invisible="mode != 'chat'">
+                                to <field name="recipients"/>
+                                on <field name="notification_time"/>
+                                <field name="notification_moment"/>
+                            </span>
                         </div>
+                        <field name="location_ids" widget="many2many_tags"/>
                     </t>
                 </templates>
             </kanban>
