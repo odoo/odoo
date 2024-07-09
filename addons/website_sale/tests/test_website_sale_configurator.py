@@ -276,7 +276,6 @@ class TestWebsiteSaleProductConfigurator(TestProductConfiguratorCommon, HttpCase
             'optional_product_ids': [Command.set(optional_product.ids)],
         })
         self.env['website'].get_current_website().pricelist_id.write({
-            'discount_policy': 'without_discount',
             'item_ids': [
                 Command.create({
                     'applied_on': "1_product",

@@ -438,30 +438,45 @@ class PricelistItem(models.Model):
         return price
 
     def _compute_price_before_discount(self, *args, **kwargs):
-        """Compute the base price of the lowest pricelist rule whose pricelist discount_policy
-        is set to show the discount to the customer.
+        """Compute the base price of the lowest pricelist rule,
+        discount is shown by default if computation method is a percentage rule.
 
         :param product: recordset of product (product.product/product.template)
         :param float qty: quantity of products requested (in given uom)
         :param uom: unit of measure (uom.uom record)
         :param datetime date: date to use for price computation and currency conversions
         :param currency: currency in which the returned price must be expressed
+        :param show_discount: force show discount regardless of is_percentage
 
         :returns: base price, expressed in provided pricelist currency
         :rtype: float
         """
         pricelist_rule = self
-        if pricelist_rule and pricelist_rule.pricelist_id.discount_policy == 'without_discount':
+        show_discount = kwargs.pop('show_discount', False)
+        pricelist_show_discount = pricelist_rule._is_percentage() or show_discount
+        if pricelist_rule and pricelist_show_discount:
             pricelist_item = pricelist_rule
             # Find the lowest pricelist rule whose pricelist is configured to show the discount
             # to the customer.
-            while (
-                pricelist_item.base == 'pricelist'
-                and pricelist_item.base_pricelist_id.discount_policy == 'without_discount'
-            ):
+            while pricelist_item.base == 'pricelist':
                 rule_id = pricelist_item.base_pricelist_id._get_product_rule(*args, **kwargs)
-                pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
+                rule_pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
+                if rule_pricelist_item and rule_pricelist_item._is_percentage():
+                    pricelist_item = rule_pricelist_item
+                else:
+                    break
 
             pricelist_rule = pricelist_item
 
         return pricelist_rule._compute_base_price(*args, **kwargs)
+
+    def _is_percentage(self):
+        self and self.ensure_one()
+        return self.compute_price == 'percentage' or (
+            self.compute_price == 'formula'
+            and self.price_discount
+            and not self.price_surcharge
+            and not self.price_round
+            and not self.price_min_margin
+            and not self.price_max_margin
+        )

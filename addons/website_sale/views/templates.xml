@@ -1330,7 +1330,7 @@
                 />
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
                 <del t-if="combination_info['compare_list_price'] and (combination_info['compare_list_price'] &gt; combination_info['price'])"
-                    class="text-danger ms-1 h5">
+                    class="text-danger ms-1 h5 oe_compare_list_price">
                     <bdi dir="inherit">
                     <span t-esc="combination_info['compare_list_price']"
                           groups="website_sale.group_product_price_comparison"

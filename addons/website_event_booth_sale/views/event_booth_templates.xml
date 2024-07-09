@@ -4,7 +4,7 @@
     <template id="event_booth_registration" inherit_id="website_event_booth.event_booth_registration">
         <xpath expr="//label//span[hasclass('booth_category_price')]" position="replace">
             <t t-if="booth_category.price">
-                <t t-if="(booth_category.price - booth_category.price_reduce) &gt; 0 and website.pricelist_id.discount_policy == 'without_discount'">
+                <t t-if="(booth_category.price - booth_category.price_reduce) &gt; 0">
                     <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
                          class="text-danger me-1"
                          t-field="booth_category.price"

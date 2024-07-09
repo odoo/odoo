@@ -23,4 +23,3 @@ class TestProduct(ProductCommon):
             self.pricelist,
         )
         self.assertEqual(self.pricelist.currency_id.name, self.currency.name)
-        self.assertEqual(self.pricelist.discount_policy, 'with_discount')

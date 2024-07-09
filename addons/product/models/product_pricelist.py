@@ -45,16 +45,6 @@ class Pricelist(models.Model):
         tracking=10,
     )
 
-    discount_policy = fields.Selection(
-        selection=[
-            ('with_discount', "Discount included in the price"),
-            ('without_discount', "Show public price & discount to the customer"),
-        ],
-        default='with_discount',
-        required=True,
-        tracking=15,
-    )
-
     item_ids = fields.One2many(
         comodel_name='product.pricelist.item',
         inverse_name='pricelist_id',

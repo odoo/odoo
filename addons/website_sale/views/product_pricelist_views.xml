@@ -6,14 +6,16 @@
         <field name="inherit_id" ref="product.product_pricelist_view"/>
         <field name="model">product.pricelist</field>
         <field name="arch" type="xml">
-            <group name="pricelist_availability" position="after">
-                <group name="pricelist_website" string="Website">
-                    <field name="company_id" invisible="1"/>
-                    <field name="website_id" options="{'no_create': True}"/>
-                    <field name="selectable"/>
-                    <field name="code"/>
-                </group>
-            </group>
+            <notebook position="inside">
+                <page name="pricelist_config" string="Ecommerce">
+                    <group name="pricelist_website">
+                        <field name="company_id" invisible="1"/>
+                        <field name="website_id" options="{'no_create': True}"/>
+                        <field name="selectable"/>
+                        <field name="code"/>
+                    </group>
+                </page>
+            </notebook>
         </field>
     </record>
 
