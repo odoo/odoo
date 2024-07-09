@@ -272,7 +272,7 @@ patch(PosStore.prototype, {
                 }
             }
         } catch (error) {
-            if (!(error instanceof InvalidDomainError)) {
+            if (!(error instanceof InvalidDomainError || error instanceof TypeError)) {
                 throw error;
             }
             const index = this.models["loyalty.reward"].indexOf(reward);
