@@ -69,7 +69,7 @@ export class CalendarCommonRenderer extends Component {
 
     get options() {
         return {
-            allDaySlot: this.props.model.hasAllDaySlot,
+            allDaySlot: true,
             allDayContent: _t(""),
             dayHeaderFormat: this.env.isSmall
                 ? SHORT_SCALE_TO_HEADER_FORMAT[this.props.model.scale]
