@@ -126,20 +126,18 @@ export class ResUsers extends webModels.ResUsers {
         ]);
         const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
         store.add({
-            discuss: {
-                inbox: {
-                    counter: ResPartner._get_needaction_count(user.partner_id),
-                    counter_bus_id: bus_last_id,
-                    id: "inbox",
-                    model: "mail.box",
-                },
-                starred: {
-                    counter: MailMessage._filter([["starred_partner_ids", "in", user.partner_id]])
-                        .length,
-                    counter_bus_id: bus_last_id,
-                    id: "starred",
-                    model: "mail.box",
-                },
+            inbox: {
+                counter: ResPartner._get_needaction_count(user.partner_id),
+                counter_bus_id: bus_last_id,
+                id: "inbox",
+                model: "mail.box",
+            },
+            starred: {
+                counter: MailMessage._filter([["starred_partner_ids", "in", user.partner_id]])
+                    .length,
+                counter_bus_id: bus_last_id,
+                id: "starred",
+                model: "mail.box",
             },
             initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
                 .length,

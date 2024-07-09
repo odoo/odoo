@@ -39,11 +39,11 @@ export class MessagingMenu extends Component {
     beforeOpen() {
         this.store.isReady.then(() => {
             if (
-                !this.store.discuss.inbox.isLoaded &&
-                this.store.discuss.inbox.status !== "loading" &&
-                this.store.discuss.inbox.counter !== this.store.discuss.inbox.messages.length
+                !this.store.inbox.isLoaded &&
+                this.store.inbox.status !== "loading" &&
+                this.store.inbox.counter !== this.store.inbox.messages.length
             ) {
-                this.store.discuss.inbox.fetchNewMessages();
+                this.store.inbox.fetchNewMessages();
             }
         });
     }
@@ -215,7 +215,7 @@ export class MessagingMenu extends Component {
             this.env.inDiscussApp &&
             (!this.store.discuss.thread || this.store.discuss.thread.model !== "mail.box")
         ) {
-            this.store.discuss.inbox.setAsDiscussThread();
+            this.store.inbox.setAsDiscussThread();
         }
         if (this.store.discuss.activeTab !== "main") {
             this.store.discuss.thread = undefined;
@@ -224,7 +224,7 @@ export class MessagingMenu extends Component {
 
     get counter() {
         let value =
-            this.store.discuss.inbox.counter +
+            this.store.inbox.counter +
             this.store.failures.reduce((acc, f) => acc + parseInt(f.notifications.length), 0);
         if (this.canPromptToInstall) {
             value++;

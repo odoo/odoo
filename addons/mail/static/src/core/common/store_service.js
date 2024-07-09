@@ -293,25 +293,7 @@ export class Store extends BaseStore {
     }
 
     /** Provides an override point for when the store service has started. */
-    onStarted() {
-        this.discuss.inbox = {
-            id: "inbox",
-            model: "mail.box",
-            name: _t("Inbox"),
-        };
-        this.discuss.starred = {
-            id: "starred",
-            model: "mail.box",
-            name: _t("Starred"),
-            counter: 0,
-        };
-        this.discuss.history = {
-            id: "history",
-            model: "mail.box",
-            name: _t("History"),
-            counter: 0,
-        };
-    }
+    onStarted() {}
 
     /**
      * Search and fetch for a partner with a given user or partner id.
@@ -604,13 +586,6 @@ export class Store extends BaseStore {
             partners.push(...Persona);
         }
         return partners;
-    }
-
-    async unstarAll() {
-        // apply the change immediately for faster feedback
-        this.discuss.starred.counter = 0;
-        this.discuss.starred.messages = [];
-        await this.env.services.orm.call("mail.message", "unstar_all");
     }
 }
 Store.register();
