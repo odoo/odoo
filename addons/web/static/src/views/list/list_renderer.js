@@ -18,6 +18,7 @@ import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
 import { getFormattedValue } from "../utils";
 import { localization } from "@web/core/l10n/localization";
+import { useMagicColumnWidths } from "./column_width_hook";
 
 import {
     Component,
@@ -25,7 +26,6 @@ import {
     onPatched,
     onWillPatch,
     onWillRender,
-    useEffect,
     useExternalListener,
     useRef,
 } from "@odoo/owl";
@@ -42,16 +42,6 @@ const FIELD_CLASSES = {
     monetary: "o_list_number",
     text: "o_list_text",
     many2one: "o_list_many2one",
-};
-
-const FIXED_FIELD_COLUMN_WIDTHS = {
-    boolean: "70px",
-    date: "92px",
-    datetime: "146px",
-    float: "92px",
-    integer: "74px",
-    monetary: "104px",
-    handle: "33px",
 };
 
 /**
@@ -75,6 +65,7 @@ export class ListRenderer extends Component {
     static rowsTemplate = "web.ListRenderer.Rows";
     static recordRowTemplate = "web.ListRenderer.RecordRow";
     static groupRowTemplate = "web.ListRenderer.GroupRow";
+    static useMagicColumnWidths = true;
     static LONG_TOUCH_THRESHOLD = 400;
     static components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager, Widget };
     static defaultProps = { hasSelectors: false, cycleOnTab: true };
@@ -106,7 +97,7 @@ export class ListRenderer extends Component {
         this.touchStartMs = 0;
 
         /**
-         * When resizing, it's possible that the pointer is not above the resize
+         * When resizing columns, it's possible that the pointer is not above the resize
          * handle (by some few pixel difference). During this scenario, click event
          * will be triggered on the column title which will reorder the column.
          * Column resize that triggers a reorder is not a good UX and we prevent this
@@ -114,7 +105,6 @@ export class ListRenderer extends Component {
          * are set during the column's click (onClickSortColumn), pointerup
          * (onColumnTitleMouseUp) and onStartResize events.
          */
-        this.resizing = false;
         this.preventReorder = false;
 
         this.creates = this.props.archInfo.creates.length
@@ -180,23 +170,23 @@ export class ListRenderer extends Component {
         useBounceButton(this.rootRef, () => {
             return this.showNoContentHelper;
         });
-        useEffect(
-            (editedRecord) => {
-                if (editedRecord) {
-                    this.keepColumnWidths = true;
-                }
-            },
-            () => [this.props.list.editedRecord]
-        );
-        useEffect(
-            () => {
-                this.freezeColumnWidths();
-            },
-            () => [this.columns, this.isEmpty, this.props.list.offset, this.props.list.limit]
-        );
-        useExternalListener(window, "resize", () => {
-            this.columnWidths = null;
-            this.freezeColumnWidths();
+
+        let isSmall = this.uiService.isSmall;
+        useBus(this.uiService.bus, "resize", () => {
+            if (isSmall !== this.uiService.isSmall) {
+                isSmall = this.uiService.isSmall;
+                this.render();
+            }
+        });
+
+        this.columnWidths = useMagicColumnWidths(this.tableRef, () => {
+            return {
+                columns: this.columns,
+                isEmpty: !this.props.list.records.length || this.props.list.model.useSampleModel,
+                hasSelectors: this.hasSelectors,
+                hasOpenFormViewColumn: this.hasOpenFormViewColumn,
+                hasActionsColumn: this.hasActionsColumn,
+            };
         });
 
         useExternalListener(window, "keydown", (ev) => {
@@ -263,6 +253,14 @@ export class ListRenderer extends Component {
         return this.props.allowSelectors && !this.env.isSmall;
     }
 
+    get hasOpenFormViewColumn() {
+        return !!this.props.onOpenFormView;
+    }
+
+    get hasActionsColumn() {
+        return !!(this.displayOptionalFields || this.activeActions.onDelete);
+    }
+
     add(params) {
         if (this.canCreate) {
             this.props.onAdd(params);
@@ -314,124 +312,6 @@ export class ListRenderer extends Component {
         };
     }
 
-    // The following code manipulates the DOM directly to avoid having to wait for a
-    // render + patch which would occur on the next frame and cause flickering.
-    freezeColumnWidths() {
-        if (!this.keepColumnWidths) {
-            this.columnWidths = null;
-        }
-
-        const table = this.tableRef.el;
-        const headers = [...table.querySelectorAll("thead th:not(.o_list_actions_header)")];
-
-        if (!this.columnWidths || !this.columnWidths.length) {
-            // no column widths to restore
-            // Set table layout auto and remove inline style to make sure that css
-            // rules apply (e.g. fixed width of record selector)
-            table.style.tableLayout = "auto";
-            headers.forEach((th) => {
-                th.style.width = null;
-                th.style.maxWidth = null;
-            });
-
-            this.setDefaultColumnWidths();
-
-            // Squeeze the table by applying a max-width on largest columns to
-            // ensure that it doesn't overflow
-            this.columnWidths = this.computeColumnWidthsFromContent();
-            table.style.tableLayout = "fixed";
-        }
-        headers.forEach((th, index) => {
-            if (!th.style.width) {
-                th.style.width = `${Math.floor(this.columnWidths[index])}px`;
-            }
-        });
-    }
-
-    setDefaultColumnWidths() {
-        const widths = this.columns.map((col) => this.calculateColumnWidth(col));
-        const sumOfRelativeWidths = widths
-            .filter(({ type }) => type === "relative")
-            .reduce((sum, { value }) => sum + value, 0);
-
-        // 1 because nth-child selectors are 1-indexed, 2 when the first column contains
-        // the checkboxes to select records.
-        const columnOffset = this.hasSelectors ? 2 : 1;
-        widths.forEach(({ type, value }, i) => {
-            const headerEl = this.tableRef.el.querySelector(`th:nth-child(${i + columnOffset})`);
-            if (type === "absolute") {
-                if (this.isEmpty) {
-                    headerEl.style.width = value;
-                } else {
-                    headerEl.style.minWidth = value;
-                }
-            } else if (type === "relative" && this.isEmpty) {
-                headerEl.style.width = `${((value / sumOfRelativeWidths) * 100).toFixed(2)}%`;
-            }
-        });
-    }
-
-    computeColumnWidthsFromContent() {
-        const table = this.tableRef.el;
-
-        // Toggle a className used to remove style that could interfere with the ideal width
-        // computation algorithm (e.g. prevent text fields from being wrapped during the
-        // computation, to prevent them from being completely crushed)
-        table.classList.add("o_list_computing_widths");
-
-        const headers = [...table.querySelectorAll("thead th")];
-        const columnWidths = headers.map((th) => th.getBoundingClientRect().width);
-        const getWidth = (th) => columnWidths[headers.indexOf(th)] || 0;
-        const getTotalWidth = () => columnWidths.reduce((tot, width) => tot + width, 0);
-        const shrinkColumns = (thsToShrink, shrinkAmount) => {
-            let canKeepShrinking = true;
-            for (const th of thsToShrink) {
-                const index = headers.indexOf(th);
-                let maxWidth = columnWidths[index] - shrinkAmount;
-                // prevent the columns from shrinking under 92px (~ date field)
-                if (maxWidth < 92) {
-                    maxWidth = 92;
-                    canKeepShrinking = false;
-                }
-                th.style.maxWidth = `${Math.floor(maxWidth)}px`;
-                columnWidths[index] = maxWidth;
-            }
-            return canKeepShrinking;
-        };
-        // Sort columns, largest first
-        const sortedThs = [...table.querySelectorAll("thead th:not(.o_list_button)")].sort(
-            (a, b) => getWidth(b) - getWidth(a)
-        );
-        const allowedWidth = table.parentNode.getBoundingClientRect().width;
-
-        let totalWidth = getTotalWidth();
-        for (let index = 1; totalWidth > allowedWidth; index++) {
-            // Find the largest columns
-            const largestCols = sortedThs.slice(0, index);
-            const currentWidth = getWidth(largestCols[0]);
-            for (; currentWidth === getWidth(sortedThs[index]); index++) {
-                largestCols.push(sortedThs[index]);
-            }
-
-            // Compute the number of px to remove from the largest columns
-            const nextLargest = sortedThs[index];
-            const toRemove = Math.ceil((totalWidth - allowedWidth) / largestCols.length);
-            const shrinkAmount = Math.min(toRemove, currentWidth - getWidth(nextLargest));
-
-            // Shrink the largest columns
-            const canKeepShrinking = shrinkColumns(largestCols, shrinkAmount);
-            if (!canKeepShrinking) {
-                break;
-            }
-
-            totalWidth = getTotalWidth();
-        }
-
-        // We are no longer computing widths, so restore the normal style
-        table.classList.remove("o_list_computing_widths");
-        return columnWidths;
-    }
-
     get activeActions() {
         return this.props.activeActions || {};
     }
@@ -444,13 +324,6 @@ export class ListRenderer extends Component {
         return !orderBy.length || (orderBy.length && orderBy[0].name === handleField);
     }
 
-    /**
-     * No records, no groups.
-     */
-    get isEmpty() {
-        return !this.props.list.records.length;
-    }
-
     get fields() {
         return this.props.list.fields;
     }
@@ -460,10 +333,10 @@ export class ListRenderer extends Component {
         if (this.hasSelectors) {
             nbCols++;
         }
-        if (this.activeActions.onDelete || this.displayOptionalFields) {
+        if (this.hasActionsColumn) {
             nbCols++;
         }
-        if (this.props.onOpenFormView) {
+        if (this.hasOpenFormViewColumn) {
             nbCols++;
         }
         return nbCols;
@@ -924,19 +797,10 @@ export class ListRenderer extends Component {
     }
 
     getCellTitle(column, record) {
-        const fieldType = this.fields[column.name].type;
-        // Because we freeze the column sizes, it may happen that we have to shorten
-        // field values. In order for the user to have access to the complete value
-        // in those situations, we put the value as title of the cells.
-        // This is only necessary for some field types, as for the others, we hardcode
-        // a minimum column width that should be enough to display the entire value.
-        // Also, we don't set title for:
-        // - json fields, because it's not human readable anyway.
-        // - text fields, because they are always displayed in their entirety in a list view
-        if (
-            !(fieldType in FIXED_FIELD_COLUMN_WIDTHS) &&
-            !["json", "html", "text", "one2many", "many2many"].includes(fieldType)
-        ) {
+        // Because we freeze the column sizes, it may happen that we have to shorten field values.
+        // In order for the user to have access to the complete value in those situations, we put
+        // the value as title of the cells.
+        if (["many2one", "reference", "char"].includes(this.fields[column.name].type)) {
             return this.getFormattedValue(column, record);
         }
     }
@@ -1879,23 +1743,6 @@ export class ListRenderer extends Component {
         this.props.list.leaveEditMode();
     }
 
-    calculateColumnWidth(column) {
-        if (column.options && column.attrs.width) {
-            return { type: "absolute", value: column.attrs.width };
-        }
-
-        if (column.type !== "field") {
-            return { type: "relative", value: 1 };
-        }
-
-        const type = column.widget || this.fields[column.name].type;
-        if (type in FIXED_FIELD_COLUMN_WIDTHS) {
-            return { type: "absolute", value: FIXED_FIELD_COLUMN_WIDTHS[type] };
-        }
-
-        return { type: "relative", value: 1 };
-    }
-
     get isDebugMode() {
         return Boolean(odoo.debug);
     }
@@ -1910,94 +1757,8 @@ export class ListRenderer extends Component {
     }
 
     onColumnTitleMouseUp() {
-        if (this.resizing) {
+        if (this.columnWidths.resizing) {
             this.preventReorder = true;
-        }
-    }
-
-    /**
-     * Handles the resize feature on the column headers
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    onStartResize(ev) {
-        this.resizing = true;
-        const table = this.tableRef.el;
-        const th = ev.target.closest("th");
-        const handler = th.querySelector(".o_resize");
-        table.style.width = `${Math.floor(table.getBoundingClientRect().width)}px`;
-        const thPosition = [...th.parentNode.children].indexOf(th);
-        const resizingColumnElements = [...table.getElementsByTagName("tr")]
-            .filter((tr) => tr.children.length === th.parentNode.children.length)
-            .map((tr) => tr.children[thPosition]);
-        const initialX = ev.clientX;
-        const initialWidth = th.getBoundingClientRect().width;
-        const initialTableWidth = table.getBoundingClientRect().width;
-        const resizeStoppingEvents = ["keydown", "pointerdown", "pointerup"];
-
-        // fix the width so that if the resize overflows, it doesn't affect the layout of the parent
-        if (!this.rootRef.el.style.width) {
-            this.rootRef.el.style.width = `${Math.floor(
-                this.rootRef.el.getBoundingClientRect().width
-            )}px`;
-        }
-
-        // Apply classes to table and selected column
-        table.classList.add("o_resizing");
-        for (const el of resizingColumnElements) {
-            el.classList.add("o_column_resizing");
-            handler.classList.add("bg-primary", "opacity-100");
-            handler.classList.remove("bg-black-25", "opacity-50-hover");
-        }
-        // Mousemove event : resize header
-        const resizeHeader = (ev) => {
-            ev.preventDefault();
-            ev.stopPropagation();
-            const delta = ev.clientX - initialX;
-            const newWidth = Math.max(10, initialWidth + delta);
-            const tableDelta = newWidth - initialWidth;
-            th.style.width = `${Math.floor(newWidth)}px`;
-            th.style.maxWidth = `${Math.floor(newWidth)}px`;
-            table.style.width = `${Math.floor(initialTableWidth + tableDelta)}px`;
-        };
-        window.addEventListener("pointermove", resizeHeader);
-
-        // Mouse or keyboard events : stop resize
-        const stopResize = (ev) => {
-            this.resizing = false;
-            // freeze column size after resizing
-            this.keepColumnWidths = true;
-            // Ignores the 'left mouse button down' event as it used to start resizing
-            if (ev.type === "pointerdown" && ev.button === 0) {
-                return;
-            }
-            ev.preventDefault();
-            ev.stopPropagation();
-
-            table.classList.remove("o_resizing");
-            for (const el of resizingColumnElements) {
-                el.classList.remove("o_column_resizing");
-                handler.classList.remove("bg-primary", "opacity-100");
-                handler.classList.add("bg-black-25", "opacity-50-hover");
-            }
-
-            window.removeEventListener("pointermove", resizeHeader);
-            for (const eventType of resizeStoppingEvents) {
-                window.removeEventListener(eventType, stopResize);
-            }
-
-            // we remove the focus to make sure that the there is no focus inside
-            // the tr.  If that is the case, there is some css to darken the whole
-            // thead, and it looks quite weird with the small css hover effect.
-            document.activeElement.blur();
-        };
-        // We have to listen to several events to properly stop the resizing function. Those are:
-        // - pointerdown (e.g. pressing right click)
-        // - pointerup : logical flow of the resizing feature (drag & drop)
-        // - keydown : (e.g. pressing 'Alt' + 'Tab' or 'Windows' key)
-        for (const eventType of resizeStoppingEvents) {
-            window.addEventListener(eventType, stopResize);
         }
     }
 

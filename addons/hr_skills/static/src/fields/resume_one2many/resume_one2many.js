@@ -12,6 +12,7 @@ export class ResumeListRenderer extends CommonSkillsListRenderer {
     static template = "hr_skills.ResumeListRenderer";
     static rowsTemplate = "hr_skills.ResumeListRenderer.Rows";
     static recordRowTemplate = "hr_skills.ResumeListRenderer.RecordRow";
+    static useMagicColumnWidths = false;
     get groupBy() {
         return "line_type_id";
     }
@@ -26,8 +27,6 @@ export class ResumeListRenderer extends CommonSkillsListRenderer {
     formatDate(date) {
         return formatDate(date);
     }
-
-    setDefaultColumnWidths() {}
 }
 
 export class ResumeX2ManyField extends SkillsX2ManyField {

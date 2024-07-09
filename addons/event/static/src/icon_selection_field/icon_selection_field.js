@@ -27,6 +27,7 @@ export const iconSelectionField = {
     component: IconSelectionField,
     displayName: _t("Icon Selection"),
     supportedTypes: ["char", "text", "selection"],
+    listViewWidth: ({ hasLabel }) => (!hasLabel ? 20 : false),
     extractProps: ({ options }) => ({
         icons: options,
     }),

@@ -363,6 +363,7 @@ export const dateRangeField = {
         },
     ],
     supportedTypes: ["date", "datetime"],
+    listViewWidth: ({ type }) => (type === "datetime" ? 294 : 180),
 };
 
 registry
