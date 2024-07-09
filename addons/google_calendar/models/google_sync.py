@@ -164,7 +164,7 @@ class GoogleSync(models.AbstractModel):
         ]
         new_odoo = self.with_context(dont_notify=True)._create_from_google(new, odoo_values)
         cancelled = existing.cancelled()
-        cancelled_odoo = self.browse(cancelled.odoo_ids(self.env))
+        cancelled_odoo = self.browse(cancelled.odoo_ids(self.env)).exists()
 
         # Check if it is a recurring event that has been rescheduled.
         # We have to check if an event already exists in Odoo.
