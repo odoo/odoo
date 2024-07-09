@@ -252,6 +252,40 @@ describe("getTraversedNodes", () => {
             },
         });
     });
+    test("selection within table cells 1", async () => {
+        await testEditor({
+            contentBefore: "<table><tbody><tr><td>abcd[e</td><td>f]g</td></tr></tbody></table>",
+            stepFunction: (editor) => {
+                const editable = editor.editable;
+                const tr = editable.firstChild.firstChild.firstChild;
+                const td1 = tr.firstChild;
+                const abcde = td1.firstChild;
+                const td2 = td1.nextSibling;
+                const fg = td2.firstChild;
+                const result = editor.shared.getTraversedNodes(editable);
+                expect(result).toEqual([td1, abcde, td2, fg]);
+            },
+        });
+    });
+    test("selection within table cells 2", async () => {
+        await testEditor({
+            contentBefore:
+                "<table><tbody><tr><td>abcd<br>[<br>e</td><td>f]g</td></tr></tbody></table>",
+            stepFunction: (editor) => {
+                const editable = editor.editable;
+                const tr = editable.firstChild.firstChild.firstChild;
+                const td1 = tr.firstChild;
+                const abcd = td1.firstChild;
+                const br1 = abcd.nextSibling;
+                const br2 = br1.nextSibling;
+                const e = br2.nextSibling;
+                const td2 = td1.nextSibling;
+                const fg = td2.firstChild;
+                const result = editor.shared.getTraversedNodes(editable);
+                expect(result).toEqual([td1, abcd, br1, br2, e, td2, fg]);
+            },
+        });
+    });
 });
 
 describe("ensureFocus", () => {

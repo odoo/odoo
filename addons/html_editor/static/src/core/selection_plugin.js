@@ -521,6 +521,7 @@ export class SelectionPlugin extends Plugin {
             edgeNodes = getUnselectedEdgeNodes(selection);
 
             if (
+                !(selectedTableCells.length && node === selectedTableCells[0]) &&
                 node.nodeType === Node.ELEMENT_NODE &&
                 selection.startOffset > 0 &&
                 node.childNodes[selection.startOffset - 1].nodeName === "BR"
