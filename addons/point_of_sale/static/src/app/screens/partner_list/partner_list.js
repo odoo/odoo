@@ -148,12 +148,15 @@ export class PartnerList extends Component {
     }
     createPartner() {
         // initialize the edit screen with default details about country, state, and lang
+        this.editPartner(this.newPartnerDefaults());
+    }
+    newPartnerDefaults() {
         const { country_id, state_id } = this.pos.company;
-        this.editPartner({
+        return {
             country_id,
             state_id,
             lang: user.lang,
-        });
+        };
     }
     async saveChanges(processedChanges) {
         let partner;
