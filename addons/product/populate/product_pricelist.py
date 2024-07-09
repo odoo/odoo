@@ -29,7 +29,6 @@ class Pricelist(models.Model):
             ("name", populate.constant('product_pricelist_{counter}')),
             ("currency_id", populate.randomize(self.env["res.currency"].search([("active", "=", True)]).ids)),
             ("sequence", populate.randomize([False] + [i for i in range(1, 101)])),
-            ("discount_policy", populate.randomize(["with_discount", "without_discount"])),
             ("active", populate.randomize([True, False], [0.8, 0.2])),
         ]
 

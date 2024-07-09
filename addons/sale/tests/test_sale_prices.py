@@ -81,19 +81,7 @@ class TestSalePrices(SaleCommon):
         discounted_lines = self.empty_order.order_line.filtered('pricelist_item_id')
         self.assertEqual(discounted_lines, self.empty_order.order_line[1:5])
         self.assertEqual(discounted_lines.pricelist_item_id, pricelist_rule)
-        self.assertTrue(all(not line.discount for line in self.empty_order.order_line))
-        self.assertEqual(
-            discounted_lines.mapped('price_unit'),
-            [
-                product_price*discount,
-                product_price*discount,
-                product_dozen_price*discount,
-                product_dozen_price*discount
-            ]
-        )
-
-        self.pricelist.discount_policy = 'without_discount'
-        self.empty_order._recompute_prices()
+        self.assertTrue(all(not line.discount for line in self.empty_order.order_line - discounted_lines))
         self.assertEqual(
             discounted_lines.mapped('price_unit'),
             [product_price, product_price, product_dozen_price, product_dozen_price])
@@ -120,8 +108,8 @@ class TestSalePrices(SaleCommon):
             self.assertEqual(order_line.pricelist_item_id, pricelist_rule)
             self.assertEqual(
                 order_line.price_unit,
-                self.product.lst_price * (1 - self.discount / 100.0))
-            self.assertEqual(order_line.discount, 0.0)
+                self.product.lst_price)
+            self.assertEqual(order_line.discount, 10)
 
             # Create an order tomorrow, add line today, rule active today doesn't work
             self.empty_order.date_order = tomorrow
@@ -156,8 +144,8 @@ class TestSalePrices(SaleCommon):
             self.assertEqual(order_line.pricelist_item_id, pricelist_rule)
             self.assertEqual(
                 order_line.price_unit,
-                self.product.lst_price * (1 - self.discount / 100.0))
-            self.assertEqual(order_line.discount, 0.0)
+                self.product.lst_price)
+            self.assertEqual(order_line.discount, 10)
 
         self.assertEqual(
             self.empty_order.amount_untaxed,
@@ -257,7 +245,6 @@ class TestSalePrices(SaleCommon):
 
         # Even when the discount is supposed to be shown
         #   Surcharges shouldn't be shown to the user
-        self.pricelist.discount_policy = 'without_discount'
         order_line = self.env['sale.order.line'].create({
             'order_id': self.empty_order.id,
             'product_id': self.product.id,
@@ -271,7 +258,6 @@ class TestSalePrices(SaleCommon):
 
         base_pricelist = self.env['product.pricelist'].create({
             'name': 'First pricelist',
-            'discount_policy': 'without_discount',
             'item_ids': [Command.create({
                 'compute_price': 'percentage',
                 'base': 'list_price',
@@ -282,7 +268,6 @@ class TestSalePrices(SaleCommon):
         })
 
         self.pricelist.write({
-            'discount_policy': 'without_discount',
             'item_ids': [Command.create({
                 'compute_price': 'formula',
                 'base': 'pricelist',
@@ -304,7 +289,9 @@ class TestSalePrices(SaleCommon):
 
         self.assertEqual(order_line.pricelist_item_id, self.pricelist.item_ids)
         self.assertEqual(order_line.price_subtotal, 81, "Second pricelist rule not applied")
-        self.assertEqual(order_line.discount, 19, "Second discount not applied")
+        self.assertEqual(
+            order_line.discount, 19,
+            "Discount not computed correctly based on both pricelists")
 
     def test_pricelist_with_another_currency(self):
         """ Test prices are correctly applied with a pricelist with another currency"""
@@ -333,7 +320,6 @@ class TestSalePrices(SaleCommon):
         pricelist_eur = self.env['product.pricelist'].create({
             'name': 'First pricelist',
             'currency_id': currency_eur.id,
-            'discount_policy': 'with_discount',
             'item_ids': [Command.create({
                 'compute_price': 'percentage',
                 'base': 'list_price',
@@ -354,9 +340,9 @@ class TestSalePrices(SaleCommon):
         })
 
         # force compute uom and prices
-        self.assertEqual(order_line.price_unit, 180, "First pricelist rule not applied")
+        self.assertEqual(order_line.discount, 10, "First pricelist rule not applied")
         order_line.product_uom = new_uom
-        self.assertEqual(order_line.price_unit, 1800, "First pricelist rule not applied")
+        self.assertEqual(order_line.price_total, 1800, "First pricelist rule not applied")
 
     def test_multi_currency_discount(self):
         """Verify the currency used for pricelist price & discount computation."""
@@ -409,7 +395,6 @@ class TestSalePrices(SaleCommon):
         pricelist = self.env['product.pricelist'].create({
             'name': 'Test multi-currency',
             'company_id': False,
-            'discount_policy': 'without_discount',
             'currency_id': other_curr.id,
             'item_ids': [
                 Command.create({
@@ -501,22 +486,26 @@ class TestSalePrices(SaleCommon):
 
         pricelist = sale_order.pricelist_id
         pricelist.item_ids = [
-            fields.Command.create({
+            Command.create({
                 'percent_price': 5.0,
                 'compute_price': 'percentage'
             })
         ]
-        pricelist.discount_policy = "without_discount"
         sale_order._recompute_prices()
 
         self.assertTrue(all(line.discount == 5 for line in sale_order.order_line))
         self.assertEqual(sale_order.amount_undiscounted, so_amount)
         self.assertEqual(sale_order.amount_total, 0.95*so_amount)
 
-        pricelist.discount_policy = "with_discount"
+        pricelist.item_ids = [
+            Command.create({
+                'price_discount': 5,
+                'compute_price': 'formula',
+            })
+        ]
         sale_order._recompute_prices()
 
-        self.assertTrue(all(line.discount == 0 for line in sale_order.order_line))
+        self.assertTrue(all(line.discount == 5 for line in sale_order.order_line))
         self.assertEqual(sale_order.amount_undiscounted, so_amount)
         self.assertEqual(sale_order.amount_total, 0.95*so_amount)
 
@@ -570,7 +559,6 @@ class TestSalePrices(SaleCommon):
         })
 
         self.pricelist.write({
-            'discount_policy': 'without_discount',
             'item_ids': [Command.create({
                 'applied_on': '3_global',
                 'compute_price': 'percentage',

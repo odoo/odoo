@@ -66,20 +66,10 @@ registry.category("web_tour.tours").add("event_sale_pricelists_different_currenc
             trigger: "body:not(:has(.modal#modal_attendees_registration))",
         },
         ...getPriceListChecksSteps({
-            pricelistName: "EUR With Discount Included",
-            eventName: "Pycon",
-            price: "90.00",
-        }),
-        ...getPriceListChecksSteps({
             pricelistName: "EUR Without Discount Included",
             eventName: "Pycon",
             price: "90.00",
             priceBeforeDiscount: "100.00",
-        }),
-        ...getPriceListChecksSteps({
-            pricelistName: "EX With Discount Included",
-            eventName: "Pycon",
-            price: "900.00",
         }),
         ...getPriceListChecksSteps({
             pricelistName: "EX Without Discount Included",

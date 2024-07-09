@@ -112,18 +112,3 @@ class TestProductConfiguratorCommon(TransactionCase):
                 'compute_price': 'formula'
             })]
         })
-
-    @classmethod
-    def _create_pricelist(cls, pricelists):
-        for pricelist in pricelists:
-            if not pricelist.item_ids.filtered(lambda i: i.product_tmpl_id == cls.product_product_custo_desk and i.price_discount == 20):
-                cls.env['product.pricelist.item'].create({
-                    'base': 'list_price',
-                    'applied_on': '1_product',
-                    'pricelist_id': pricelist.id,
-                    'product_tmpl_id': cls.product_product_custo_desk.id,
-                    'price_discount': 20,
-                    'min_quantity': 2,
-                    'compute_price': 'formula',
-                })
-            pricelist.discount_policy = 'without_discount'

@@ -847,7 +847,6 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         pricelist = self.env['product.pricelist'].create({
             'name': 'Test Pricelist',
-            'discount_policy': 'without_discount',
         })
 
         self.main_pos_config.write({
@@ -957,28 +956,26 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         base_pricelist = self.env['product.pricelist'].create({
             'name': 'base_pricelist',
-            'discount_policy': 'without_discount',
         })
 
         self.env['product.pricelist.item'].create({
             'pricelist_id': base_pricelist.id,
             'product_tmpl_id': test_product.product_tmpl_id.id,
-            'compute_price': 'fixed',
+            'compute_price': 'percentage',
             'applied_on': '1_product',
-            'fixed_price': 7,
+            'percent_price': 30,
         })
 
         special_pricelist = self.env['product.pricelist'].create({
             'name': 'special_pricelist',
-            'discount_policy': 'without_discount',
         })
         self.env['product.pricelist.item'].create({
             'pricelist_id': special_pricelist.id,
             'base': 'pricelist',
             'base_pricelist_id': base_pricelist.id,
-            'compute_price': 'formula',
+            'compute_price': 'percentage',
             'applied_on': '3_global',
-            'price_discount': 10,
+            'percent_price': 10,
         })
 
         self.main_pos_config.write({

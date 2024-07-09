@@ -511,6 +511,7 @@ var VariantMixin = {
         var self = this;
         var $price = $parent.find(".oe_price:first .oe_currency_value");
         var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
+        var $compare_price = $parent.find(".oe_compare_list_price")
         $price.text(self._priceToStr(combination.price));
         $default_price.text(self._priceToStr(combination.list_price));
 
@@ -525,11 +526,13 @@ var VariantMixin = {
                 .closest('.oe_website_sale')
                 .addClass("discount");
             $default_price.parent().removeClass('d-none');
+            $compare_price.addClass("d-none");
         } else {
             $default_price
                 .closest('.oe_website_sale')
                 .removeClass("discount");
             $default_price.parent().addClass('d-none');
+            $compare_price.removeClass("d-none");
         }
 
         var rootComponentSelectors = [

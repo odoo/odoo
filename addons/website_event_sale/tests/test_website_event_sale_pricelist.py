@@ -20,9 +20,8 @@ class TestWebsiteEventPriceList(TestWebsiteEventSaleCommon):
         self.env['product.pricelist'].search([('id', '!=', self.pricelist.id)]).action_archive()
         self.pricelist.write({
             'currency_id': self.env.company.currency_id.id,
-            'discount_policy': 'with_discount',
             'item_ids': [Command.clear()],
-            'name': 'With Discount Included',
+            'name': 'No discount',
         })
         so_line = self.env['sale.order.line'].create({
             'event_id': self.event.id,
@@ -37,21 +36,12 @@ class TestWebsiteEventPriceList(TestWebsiteEventSaleCommon):
         # set pricelist to 10% - without discount
         pl2 = self.pricelist.copy({
             'currency_id': self.currency_test.id,
-            'discount_policy': 'without_discount',
             'item_ids': [(5, 0, 0), (0, 0, {
                 'applied_on': '3_global',
                 'compute_price': 'percentage',
                 'percent_price': 10,
             })],
-            'name': 'Without Discount Included',
+            'name': 'Percentage Discount',
         })
         self.so._cart_update_pricelist(pricelist_id=pl2.id)
-        self.assertEqual(so_line.price_reduce_taxexcl, 900, 'Incorrect amount based on the pricelist and its currency.')
-
-        # set pricelist to 10% - with discount
-        pl3 = pl2.copy({
-            'discount_policy': 'with_discount',
-            'name': 'With Discount Included',
-        })
-        self.so._cart_update_pricelist(pricelist_id=pl3.id)
         self.assertEqual(so_line.price_reduce_taxexcl, 900, 'Incorrect amount based on the pricelist and its currency.')

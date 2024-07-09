@@ -643,7 +643,6 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         pricelist = self.env["product.pricelist"].create({
             "name": "Test multi-currency",
-            "discount_policy": "without_discount",
             "currency_id": self.env.ref("base.USD").id,
             "item_ids": [
                 (0, 0, {
