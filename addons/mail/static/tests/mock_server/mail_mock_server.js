@@ -503,7 +503,6 @@ async function mail_link_preview(request) {
     const MailMessage = this.env["mail.message"];
 
     const { message_id } = await parseRequestParams(request);
-    const linkPreviews = [];
     const [message] = MailMessage.search_read([["id", "=", message_id]]);
     if (message.body.includes("https://make-link-preview.com")) {
         const linkPreviewId = MailLinkPreview.create({
@@ -513,11 +512,11 @@ async function mail_link_preview(request) {
             og_type: "article",
             source_url: "https://make-link-preview.com",
         });
-        const [linkPreview] = MailLinkPreview.search_read([["id", "=", linkPreviewId]]);
-        linkPreviews.push(MailLinkPreview._link_preview_format(linkPreview));
-        BusBus._sendone(MailMessage._bus_notification_target(message_id), "mail.record/insert", {
-            LinkPreview: linkPreviews,
-        });
+        BusBus._sendone(
+            MailMessage._bus_notification_target(message_id),
+            "mail.record/insert",
+            new mailDataHelpers.Store(MailLinkPreview.browse(linkPreviewId)).get_result()
+        );
     }
 }
 
@@ -1046,6 +1045,12 @@ class Store {
             }
         }
         return res;
+    }
+
+    toJSON() {
+        throw Error(
+            "Converting Store to JSON is not supported, you might want to call 'get_result()' instead."
+        );
     }
 }
 
