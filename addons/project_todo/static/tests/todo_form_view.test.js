@@ -1,15 +1,7 @@
 import { expect, test, beforeEach } from "@odoo/hoot";
-import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { queryAllTexts } from "@odoo/hoot-dom";
 
-import { WebClient } from "@web/webclient/webclient";
-import {
-    mountView,
-    contains,
-    onRpc,
-    mountWithCleanup,
-    getService,
-} from "@web/../tests/web_test_helpers";
+import { mountView, contains, onRpc } from "@web/../tests/web_test_helpers";
 
 import { defineTodoModels } from "./todo_test_helpers";
 import { ProjectTask } from "./mock_server/mock_models/project_task";
@@ -65,28 +57,5 @@ test("Check that project_task_action_convert_todo_to_task does not appear in the
     expect(menuActions.includes("Convert to Task")).toBe(false, {
         message:
             "project_task_action_convert_todo_to_task action should appear in the menu actions",
-    });
-});
-
-test.skip("Check that todo_form view contains the TodoDoneCheckmark and TodoEditableBreadcrumbName widgets", async () => {
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction({
-        name: "To-do",
-        res_model: "project.task",
-        type: "ir.actions.act_window",
-        views: [
-            [false, "list"],
-            [false, "form"],
-        ],
-    });
-
-    await contains(queryFirst(".o_data_cell")).click();
-    await animationFrame();
-    expect(".o_todo_breadcrumb_name_input").toHaveCount(1, {
-        message: "The todo should have the appropriate class for TodoEditableBreadcrumbName",
-    });
-
-    expect(".o_todo_done_button").toHaveCount(1, {
-        message: "The todo should have the appropriate class TodoDoneCheckmark",
     });
 });
