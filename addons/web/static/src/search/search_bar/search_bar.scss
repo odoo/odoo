@@ -16,4 +16,12 @@
         // It was causing issues with the hotkey overlay
         z-index: 0;
     }
+
+    .o_facet_value {
+        max-width: $o-search-bar-facet-value-width;
+
+        @include media-breakpoint-down(md) {
+            max-width: $o-search-bar-facet-value-width / 2;
+        }
+    }
 }
