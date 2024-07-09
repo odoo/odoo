@@ -2,7 +2,7 @@ import { isUnbreakable, paragraphRelatedElements } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import { unwrapContents } from "../utils/dom";
-import { ancestors, closestElement } from "../utils/dom_traversal";
+import { ancestors, childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
 
 /**
@@ -363,8 +363,7 @@ export class ClipboardPlugin extends Plugin {
                 }
             }
         }
-
-        for (const child of [...container.childNodes]) {
+        for (const child of childNodes(container)) {
             this.cleanForPaste(child);
         }
         // Force inline nodes at the root of the container into separate P
@@ -376,7 +375,7 @@ export class ClipboardPlugin extends Plugin {
         // instantly when editing a document that was created from Etherpad.
         const result = this.document.createDocumentFragment();
         let p = this.document.createElement("p");
-        for (const child of [...container.childNodes]) {
+        for (const child of childNodes(container)) {
             if (isBlock(child)) {
                 if (p.hasChildNodes()) {
                     result.appendChild(p);
