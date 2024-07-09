@@ -13,7 +13,7 @@
         'security/ir.model.access.csv',
         'data/ir_actions_server_data.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
     'assets': {},
     'license': 'LGPL-3',
 }
