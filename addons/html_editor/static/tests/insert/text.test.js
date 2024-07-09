@@ -1,6 +1,7 @@
-import { describe, test } from "@odoo/hoot";
-import { testEditor } from "../_helpers/editor";
+import { describe, expect, test } from "@odoo/hoot";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { deleteBackward, insertText } from "../_helpers/user_actions";
+import { getContent } from "../_helpers/selection";
 
 describe("collapsed selection", () => {
     test("should insert a char into an empty span without removing the zws", async () => {
@@ -71,5 +72,13 @@ describe("not collapsed selection", () => {
             },
             contentAfter: `<p><strong>ab</strong>&nbsp;x[]</p>`,
         });
+    });
+
+    test("should replace text and be a undoable step", async () => {
+        const { editor, el } = await setupEditor("<p>[abc]def</p>");
+        insertText(editor, "x");
+        expect(getContent(el)).toBe("<p>x[]def</p>");
+        editor.dispatch("HISTORY_UNDO");
+        expect(getContent(el)).toBe("<p>[abc]def</p>");
     });
 });

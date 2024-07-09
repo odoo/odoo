@@ -7,10 +7,11 @@ export class LineBreakPlugin extends Plugin {
     static dependencies = ["selection", "split"];
     static name = "line_break";
     static shared = ["insertLineBreakElement"];
+    /** @type { (p: LineBreakPlugin) => Record<string, any> } */
+    static resources = (p) => ({
+        onBeforeInput: p.onBeforeInput.bind(p),
+    });
 
-    setup() {
-        this.addDomListener(this.editable, "beforeinput", this.onBeforeInput.bind(this));
-    }
     handleCommand(command, payload) {
         switch (command) {
             case "INSERT_LINEBREAK":

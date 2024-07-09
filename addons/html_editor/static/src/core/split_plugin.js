@@ -17,14 +17,12 @@ export class SplitPlugin extends Plugin {
         "splitTextNode",
         "splitSelection",
     ];
-    static resources = () => ({
+    static resources = (p) => ({
         // @todo: get rules from separate plugins, get rid of isUnbreakable
         unsplittable: (block) => isUnbreakable(block),
+        onBeforeInput: p.onBeforeInput.bind(p),
     });
 
-    setup() {
-        this.addDomListener(this.editable, "beforeinput", this.onBeforeInput.bind(this));
-    }
     handleCommand(command, payload) {
         switch (command) {
             case "SPLIT_BLOCK":

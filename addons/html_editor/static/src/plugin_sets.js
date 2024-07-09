@@ -5,6 +5,8 @@ import { DeletePlugin } from "./core/delete_plugin";
 import { DomPlugin } from "./core/dom_plugin";
 import { FormatPlugin } from "./core/format_plugin";
 import { HistoryPlugin } from "./core/history_plugin";
+import { InputPlugin } from "./core/input_plugin";
+import { InsertTextPlugin } from "./core/insert_text_plugin";
 import { LineBreakPlugin } from "./core/line_break_plugin";
 import { OverlayPlugin } from "./core/overlay_plugin";
 import { ProtectedNodePlugin } from "./core/protected_node_plugin";
@@ -58,6 +60,8 @@ export const CORE_PLUGINS = [
     DomPlugin,
     FormatPlugin,
     HistoryPlugin,
+    InputPlugin,
+    InsertTextPlugin,
     LineBreakPlugin,
     OverlayPlugin,
     ProtectedNodePlugin,

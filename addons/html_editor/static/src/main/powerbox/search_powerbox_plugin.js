@@ -9,6 +9,10 @@ import { Plugin } from "../../plugin";
 export class SearchPowerboxPlugin extends Plugin {
     static name = "search_powerbox";
     static dependencies = ["powerbox", "selection", "history"];
+    static resources = (p) => ({
+        onBeforeInput: p.onBeforeInput.bind(p),
+        onInput: p.onInput.bind(p),
+    });
     setup() {
         const categoryIds = new Set();
         for (const category of this.resources.powerboxCategory) {
@@ -23,18 +27,6 @@ export class SearchPowerboxPlugin extends Plugin {
             categoryName: this.categories.find((category) => category.id === command.category).name,
         }));
 
-        this.addDomListener(this.editable, "beforeinput", (ev) => {
-            if (ev.data === "/") {
-                this.historySavePointRestore = this.shared.makeSavePoint();
-            }
-        });
-        this.addDomListener(this.editable, "input", (ev) => {
-            if (ev.data === "/") {
-                this.openPowerbox();
-            } else {
-                this.update();
-            }
-        });
         this.shouldUpdate = false;
     }
     handleCommand(command) {
@@ -45,6 +37,18 @@ export class SearchPowerboxPlugin extends Plugin {
             case "HISTORY_REDO":
                 this.update();
                 break;
+        }
+    }
+    onBeforeInput(ev) {
+        if (ev.data === "/") {
+            this.historySavePointRestore = this.shared.makeSavePoint();
+        }
+    }
+    onInput(ev) {
+        if (ev.data === "/") {
+            this.openPowerbox();
+        } else {
+            this.update();
         }
     }
     update() {
