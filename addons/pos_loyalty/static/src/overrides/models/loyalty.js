@@ -1015,6 +1015,9 @@ patch(Order.prototype, {
                 if (reward.reward_type === "product") {
                     if (!reward.multi_product) {
                         const product = this.pos.db.get_product_by_id(reward.reward_product_ids[0]);
+                        if (!product) {
+                            continue;
+                        }
                         unclaimedQty = this._computeUnclaimedFreeProductQty(
                             reward,
                             couponProgram.coupon_id,
@@ -1303,9 +1306,11 @@ patch(Order.prototype, {
         }
         let maxDiscount = reward.discount_max_amount || Infinity;
         if (reward.discount_mode === "per_point") {
+            // Rewards cannot be partially offered to customers
+            const points = Math.floor(this._getRealCouponPoints(coupon_id) / reward.required_points) * reward.required_points;
             maxDiscount = Math.min(
                 maxDiscount,
-                reward.discount * this._getRealCouponPoints(coupon_id)
+                reward.discount * points
             );
         } else if (reward.discount_mode === "per_order") {
             maxDiscount = Math.min(maxDiscount, reward.discount);

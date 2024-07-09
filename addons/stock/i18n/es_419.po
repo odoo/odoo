@@ -5,8 +5,8 @@
 # Translators:
 # Wil Odoo, 2024
 # Lucia Pacheco, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Martin Trigaux, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -734,7 +734,7 @@ msgstr "<strong>Cant. mín.:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On hand Quantity</strong>"
-msgstr "<strong>Cantidad disponible</strong>"
+msgstr "<strong>Cantidad a la mano</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -5380,7 +5380,7 @@ msgstr "Siguiente inventario esperado"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
 msgid "Next date the On Hand Quantity should be counted."
-msgstr "La próxima fecha en la que se contará la cantidad disponible."
+msgstr "La próxima fecha en la que se contará la cantidad a la mano."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -5452,6 +5452,12 @@ msgstr "No se realizó ninguna operación en este lote."
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a transfer!"
 msgstr "No se ha encontrado ninguna operación. Creemos un traslado."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid "No product found to generate Serials/Lots for."
+msgstr "No se encontraron productos para generar números de lote o serie."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -5667,7 +5673,7 @@ msgstr "Disponible"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "On Hand Quantity"
-msgstr "Cantidad disponible"
+msgstr "Cantidad a la mano"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__available_quantity
@@ -5675,7 +5681,7 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer, in the default "
 "unit of measure of the product"
 msgstr ""
-"Cantidad disponible que no se ha reservado en un traslado, en la unidad de "
+"Cantidad a la mano que no se ha reservado en un traslado, en la unidad de "
 "medida predeterminada del producto"
 
 #. module: stock
@@ -6986,7 +6992,7 @@ msgstr "Múltiplo de la cantidad"
 #: model:ir.model.fields,field_description:stock.field_product_template__qty_available
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Quantity On Hand"
-msgstr "Cantidad disponible"
+msgstr "Cantidad a la mano"
 
 #. module: stock
 #. odoo-python
@@ -10584,10 +10590,14 @@ msgstr "No puede cambiar el tipo de un producto que ya se utilizó."
 
 #. module: stock
 #. odoo-python
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You can not delete moves linked to another operation"
-msgstr "No se pueden eliminar movimientos vinculados a otra operación"
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10643,6 +10653,15 @@ msgstr ""
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "Solo puede procesar 1.0 %s para productos con un número de serie único."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10752,6 +10771,16 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a scrap which is done."
 msgstr "No se puede eliminar un desecho que está hecho."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
 
 #. module: stock
 #. odoo-python
