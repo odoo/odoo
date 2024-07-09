@@ -5,7 +5,7 @@ from datetime import datetime
 from uuid import uuid4
 import pytz
 
-from odoo import api, fields, models, _, Command
+from odoo import api, fields, models, _, Command, tools
 from odoo.http import request
 from odoo.osv.expression import OR, AND
 from odoo.exceptions import AccessError, ValidationError, UserError
@@ -617,6 +617,10 @@ class PosConfig(models.Model):
         :returns: dict
         """
         self.ensure_one()
+        # In case of test environment, don't create the pdf
+        if self.env.su and not tools.config['test_enable']:
+            raise UserError(_("You do not have permission to open a POS session. Please try opening a session with a different user"))
+
         if not self.current_session_id:
             self._check_before_creating_new_session()
         self._validate_fields(self._fields)
