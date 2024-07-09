@@ -30,6 +30,7 @@ from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationErro
 from odoo.http import request, DEFAULT_LANG
 from odoo.osv import expression
 from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property, SetDefinitions
+from odoo.tools.mail import email_escape_char
 
 _logger = logging.getLogger(__name__)
 
@@ -862,7 +863,7 @@ class Users(models.Model):
 
     @api.model
     def _get_email_domain(self, email):
-        return [('email', '=', email)]
+        return [('email', '=ilike', email_escape_char(email))]
 
     @api.model
     def _get_login_order(self):
