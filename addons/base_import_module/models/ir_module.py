@@ -7,7 +7,6 @@ import lxml
 import os
 import requests
 import sys
-import tempfile
 import zipfile
 from collections import defaultdict
 from io import BytesIO
@@ -194,6 +193,14 @@ class IrModule(models.Model):
             'res_id': asset.id,
         } for asset in created_assets])
 
+        self.env['ir.module.module']._load_module_terms(
+            [module],
+            [lang[0] for lang in self.env['res.lang'].get_installed()],
+            overwrite=True,
+            env=self.env,
+            imported_module=True,
+        )
+
         mod._update_from_terp(terp)
         _logger.info("Successfully imported module '%s'", module)
         return True
@@ -241,7 +248,8 @@ class IrModule(models.Model):
                     mod_name = filename.split('/')[0]
                     is_data_file = filename in module_data_files[mod_name]
                     is_static = filename.startswith('%s/static' % mod_name)
-                    if is_data_file or is_static:
+                    is_translation = filename.startswith('%s/i18n' % mod_name) and filename.endswith('.po')
+                    if is_data_file or is_static or is_translation:
                         z.extract(file, module_dir)
 
                 dirs = [d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))]

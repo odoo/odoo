@@ -72,8 +72,8 @@ class IrModule(models.Model):
             self.env.registry._auto_install_template = try_loading
         return res
 
-    def _load_module_terms(self, modules, langs, overwrite=False):
-        super()._load_module_terms(modules, langs, overwrite)
+    def _load_module_terms(self, modules, langs, **kwargs):
+        super()._load_module_terms(modules, langs, **kwargs)
         if 'account' in modules:
             def load_account_translations(env):
                 env['account.chart.template']._load_translations(langs=langs)

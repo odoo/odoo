@@ -340,7 +340,7 @@ class TestLanguageInstall(TransactionCase):
         # running the wizard calls _load_module_terms() to load PO files
         loaded = []
 
-        def _load_module_terms(self, modules, langs, overwrite=False):
+        def _load_module_terms(self, modules, langs, overwrite=False, **kwargs):
             loaded.append((modules, langs, overwrite))
 
         with patch('odoo.addons.base.models.ir_module.Module._load_module_terms', _load_module_terms):

@@ -482,9 +482,9 @@ class IrModuleModule(models.Model):
             self.pool.website_views_to_adapt.clear()
 
     @api.model
-    def _load_module_terms(self, modules, langs, overwrite=False):
+    def _load_module_terms(self, modules, langs, overwrite=False, **kwargs):
         """ Add missing website specific translation """
-        res = super()._load_module_terms(modules, langs, overwrite=overwrite)
+        res = super()._load_module_terms(modules, langs, overwrite=overwrite, **kwargs)
 
         if not langs or langs == ['en_US'] or not modules:
             return res

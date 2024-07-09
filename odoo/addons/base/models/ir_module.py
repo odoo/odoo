@@ -863,7 +863,7 @@ class Module(models.Model):
             for mod in update_mods
         }
         mod_names = topological_sort(mod_dict)
-        self.env['ir.module.module']._load_module_terms(mod_names, filter_lang, overwrite)
+        self.env['ir.module.module']._load_module_terms(mod_names, filter_lang, overwrite=overwrite)
 
     def _check(self):
         for module in self:
@@ -946,17 +946,17 @@ class Module(models.Model):
         return super(Module, self).search_panel_select_range(field_name, **kwargs)
 
     @api.model
-    def _load_module_terms(self, modules, langs, overwrite=False):
+    def _load_module_terms(self, modules, langs, overwrite=False, env=None, imported_module=False):
         """ Load PO files of the given modules for the given languages. """
         # load i18n files
         translation_importer = TranslationImporter(self.env.cr, verbose=False)
 
         for module_name in modules:
-            modpath = get_module_path(module_name)
+            modpath = get_module_path(module_name, downloaded=imported_module)
             if not modpath:
                 continue
             for lang in langs:
-                po_paths = get_po_paths(module_name, lang)
+                po_paths = get_po_paths(module_name, lang, env=env)
                 for po_path in po_paths:
                     _logger.info('module %s: loading translation file %s for language %s', module_name, po_path, lang)
                     translation_importer.load_file(po_path, lang)
