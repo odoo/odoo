@@ -977,18 +977,6 @@ class Channel(models.Model):
             ]
             store.add("Thread", info)
 
-    def _channel_format(self, fields=None):
-        if not fields:
-            fields = {'id': True}
-        channels_formatted_data = {}
-        for channel in self:
-            data = {}
-            if 'id' in fields:
-                data['id'] = channel.id
-                data['model'] = "discuss.channel"
-            channels_formatted_data[channel] = data
-        return channels_formatted_data
-
     # User methods
     @api.model
     @api.returns('self', lambda channels: Store(channels).get_result())
