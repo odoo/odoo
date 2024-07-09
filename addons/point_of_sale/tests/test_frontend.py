@@ -1391,6 +1391,25 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(response.status_code, 200)
         self.assertTrue('Shop.png' in response.headers['Content-Disposition'])
 
+    def test_customer_all_fields_displayed(self):
+        """
+        Verify that all the field of a partner can be displayed in the partner list.
+        """
+        self.env["res.partner"].create({
+            "name": "John Doe",
+            "street": "1 street of astreet",
+            "city": "Acity",
+            "state_id": self.env.ref("base.state_us_30").id,  # Ohio
+            "country_id": self.env.ref("base.us").id,
+            "zip": "99999",
+            "phone": "1234567890",
+            "mobile": "0987654321",
+            "email": "john@doe.com"
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosCustomerAllFieldsDisplayed', login="pos_user")
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'

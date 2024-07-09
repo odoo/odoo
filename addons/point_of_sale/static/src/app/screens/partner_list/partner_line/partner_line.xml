@@ -22,7 +22,7 @@
                         </t>
                     </Dropdown>
                 </div>
-                <div class="partner-line-adress p-1" t-if="props.partner.address" t-esc="props.partner.address" />
+                <div class="partner-line-adress p-1" t-if="props.partner.contact_address" t-esc="props.partner.contact_address" />
                 <div class="partner-line-email p-1">
                     <div class="mb-1" t-if="props.partner.phone">
                         <i class="fa fa-fw fa-phone me-2" /><t t-esc="props.partner.phone" />
@@ -54,7 +54,7 @@
                     </button>
                 </td>
                 <td>
-                    <div class="partner-line-adress" t-if="props.partner.address" t-esc="props.partner.address" />
+                    <div class="partner-line-adress" t-if="props.partner.contact_address" t-esc="props.partner.contact_address" />
                 </td>
                 <td class="partner-line-email ">
                     <div class="mb-2" t-if="props.partner.phone">
