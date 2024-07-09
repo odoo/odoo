@@ -1036,7 +1036,7 @@ class Message(models.Model):
                 ],
                 # sudo: mail.message - reading attachments on accessible message is allowed
                 "attachments": [{"id": a.id} for a in message.sudo().attachment_ids.sorted("id")],
-                "linkPreviews": link_previews._link_preview_format(),
+                "linkPreviews": [{"id": p.id} for p in link_previews],
                 "reactions": reaction_groups,
                 "pinned_at": message.pinned_at,
                 "record_name": record_name,  # keep for iOS app
@@ -1073,6 +1073,8 @@ class Message(models.Model):
         # sudo: mail.message: access to author is allowed
         self.sudo()._author_to_store(store)
         store.add(self.notification_ids._filtered_for_web_client())
+        # sudo: mail.message - reading link preview on accessible message is allowed
+        store.add(self.sudo().link_preview_ids.filtered(lambda l: not l.is_hidden))
         # sudo: mail.message - reading attachments on accessible message is allowed
         store.add(self.sudo().attachment_ids.sorted("id"))
         # Add extras at the end to guarantee order in result. In particular, the parent message

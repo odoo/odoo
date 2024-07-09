@@ -125,32 +125,45 @@ class TestLinkPreview(MailCommon):
                 body=Markup(f'<a href={self.source_url}>Nothing link</a>'),
             )
             self._reset_bus()
-            self.env['mail.link.preview']._create_from_message_and_notify(message)
-            link_preview_count = self.env['mail.link.preview'].search_count([('source_url', '=', self.source_url)])
-            self.assertEqual(link_preview_count, throttle + 1)
-            self.assertBusNotifications(
-                [(self.cr.dbname, 'res.partner', self.env.user.partner_id.id)],
-                message_items=[{
-                    'type': 'mail.record/insert',
-                    'payload': {
-                        "Message": {
-                            'linkPreviews': [{
-                                'id': message.link_preview_ids.id,
-                                'message': {'id': message.id},
-                                'image_mimetype': False,
-                                'og_description': self.og_description,
-                                'og_image': self.og_image,
-                                'og_mimetype': False,
-                                'og_title': self.og_title,
-                                'og_type': False,
-                                'og_site_name': False,
-                                'source_url': self.source_url,
-                            }],
-                            "id":message.id,
-                        },
-                    },
-                }]
+
+            def get_bus_params():
+                return (
+                    [(self.cr.dbname, "res.partner", self.env.user.partner_id.id)],
+                    [
+                        {
+                            "type": "mail.record/insert",
+                            "payload": {
+                                "LinkPreview": [
+                                    {
+                                        "id": message.link_preview_ids.id,
+                                        "image_mimetype": False,
+                                        "message": {"id": message.id},
+                                        "og_description": self.og_description,
+                                        "og_image": self.og_image,
+                                        "og_mimetype": False,
+                                        "og_site_name": False,
+                                        "og_title": self.og_title,
+                                        "og_type": False,
+                                        "source_url": self.source_url,
+                                    },
+                                ],
+                                "Message": [
+                                    {
+                                        "id": message.id,
+                                        "linkPreviews": [{"id": message.link_preview_ids.id}],
+                                    },
+                                ],
+                            },
+                        }
+                    ],
+                )
+
+            with self.assertBus(get_params=get_bus_params):
+                self.env["mail.link.preview"]._create_from_message_and_notify(message)
+            link_preview_count = self.env["mail.link.preview"].search_count(
+                [("source_url", "=", self.source_url)]
             )
+            self.assertEqual(link_preview_count, throttle + 1)
 
     def test_link_preview_no_content_type(self):
         with patch.object(requests.Session, 'request', self._patch_with_no_content_type):
