@@ -46,12 +46,12 @@ const threadPatch = {
         }
         this.isLoadingAttachments = true;
         try {
-            const rawAttachments = await rpc("/discuss/channel/attachments", {
+            const data = await rpc("/discuss/channel/attachments", {
                 before: Math.min(...this.attachments.map(({ id }) => id)),
                 channel_id: this.id,
                 limit,
             });
-            const attachments = this.store.Attachment.insert(rawAttachments);
+            const { Attachment: attachments = [] } = this.store.insert(data);
             if (attachments.length < limit) {
                 this.areAttachmentsLoaded = true;
             }

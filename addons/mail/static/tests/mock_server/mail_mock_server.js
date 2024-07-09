@@ -171,7 +171,10 @@ async function load_attachments(request) {
         .sort()
         .slice(0, limit)
         .map(({ id }) => id);
-    return IrAttachment._attachment_format(attachmentIds);
+    return new mailDataHelpers.Store(
+        "Attachment",
+        IrAttachment._attachment_format(attachmentIds)
+    ).get_result();
 }
 
 registerRoute("/mail/rtc/channel/join_call", channel_call_join);
