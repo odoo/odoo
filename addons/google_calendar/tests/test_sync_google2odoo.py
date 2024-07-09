@@ -2175,6 +2175,101 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(events[0].attendee_ids[0].state, 'accepted', 'after google sync, organizer should have accepted status still')
         self.assertGoogleAPINotCalled()
 
+    @patch.object(GoogleCalendarService, "get_events")
+    def test_recurring_event_moved_to_future(self, mock_get_events):
+        # There's a daily recurring event from 2024-07-01 to 2024-07-02
+        recurrence_id = "abcd1"
+        recurrence = self.generate_recurring_event(
+            mock_dt="2024-07-01",
+            google_id=recurrence_id,
+            rrule="FREQ=DAILY;INTERVAL=1;COUNT=2",
+            start=datetime(2024, 7, 1, 9),
+            stop=datetime(2024, 7, 1, 10),
+            partner_ids=[
+                Command.set(
+                    [
+                        self.organizer_user.partner_id.id,
+                        self.attendee_user.partner_id.id,
+                    ]
+                )
+            ],
+        )
+        self.assertRecordValues(
+            recurrence.calendar_event_ids.sorted("start"),
+            [
+                {
+                    "start": datetime(2024, 7, 1, 9),
+                    "stop": datetime(2024, 7, 1, 10),
+                    "google_id": f"{recurrence_id}_20240701T090000Z",
+                },
+                {
+                    "start": datetime(2024, 7, 2, 9),
+                    "stop": datetime(2024, 7, 2, 10),
+                    "google_id": f"{recurrence_id}_20240702T090000Z",
+                },
+            ],
+        )
+        # User moves batch to next week
+        common = {
+            "attendees": [
+                {
+                    "email": self.attendee_user.partner_id.email,
+                    "responseStatus": "needsAction",
+                },
+                {
+                    "email": self.organizer_user.partner_id.email,
+                    "responseStatus": "needsAction",
+                },
+            ],
+            "organizer": {"email": self.organizer_user.partner_id.email},
+            "reminders": {"useDefault": True},
+            "summary": "coucou",
+            "updated": "2024-07-02T08:00:00Z",
+        }
+        google_events = [
+            # Recurrence event
+            dict(
+                common,
+                id=recurrence_id,
+                start={"dateTime": "2024-07-08T09:00:00+00:00"},
+                end={"dateTime": "2024-07-08T10:00:00+00:00"},
+                recurrence=["RRULE:FREQ=DAILY;INTERVAL=1;COUNT=2"],
+            ),
+            # Cancelled instances
+            {"id": f"{recurrence_id}_20240701T090000Z", "status": "cancelled"},
+            {"id": f"{recurrence_id}_20240702T090000Z", "status": "cancelled"},
+            # New base event
+            dict(
+                common,
+                id=f"{recurrence_id}_20240708T090000Z",
+                start={"dateTime": "2024-07-08T09:00:00+00:00"},
+                end={"dateTime": "2024-07-08T10:00:00+00:00"},
+                recurringEventId=recurrence_id,
+            ),
+        ]
+        mock_get_events.return_value = (
+            GoogleEvent(google_events),
+            None,
+            [{"method": "popup", "minutes": 30}],
+        )
+        with self.mock_datetime_and_now("2024-04-03"):
+            self.organizer_user.sudo()._sync_google_calendar(self.google_service)
+            self.assertRecordValues(
+                recurrence.calendar_event_ids.sorted("start"),
+                [
+                    {
+                        "start": datetime(2024, 7, 8, 9),
+                        "stop": datetime(2024, 7, 8, 10),
+                        "google_id": f"{recurrence_id}_20240708T090000Z",
+                    },
+                    {
+                        "start": datetime(2024, 7, 9, 9),
+                        "stop": datetime(2024, 7, 9, 10),
+                        "google_id": f"{recurrence_id}_20240709T090000Z",
+                    },
+                ],
+            )
+
     @patch.object(GoogleCalendarService, 'get_events')
     def test_accepting_recurrent_event_with_this_event_option_synced_by_attendee(self, mock_get_events):
         """
