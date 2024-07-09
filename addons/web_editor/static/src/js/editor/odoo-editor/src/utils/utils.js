@@ -786,6 +786,7 @@ export function getTraversedNodes(editable, range = getDeepRange(editable)) {
     } while (node && node !== range.startContainer && !(selectedTableCells.length && node === selectedTableCells[0]));
     if (
         node &&
+        !(selectedTableCells.length && node === selectedTableCells[0]) &&
         !range.collapsed &&
         node.nodeType === Node.ELEMENT_NODE &&
         node.childNodes.length &&
