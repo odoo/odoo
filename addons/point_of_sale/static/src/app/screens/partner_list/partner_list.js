@@ -94,6 +94,43 @@ export class PartnerList extends Component {
         this.props.getPayload(partner);
         this.props.close();
     }
+<<<<<<< HEAD
+||||||| parent of 05e1dcccc9c6 (temp)
+    editPartner(partner) {
+        this.dialog.add(PartnerEditor, {
+            partner: partner || this.props.partner,
+            closePartnerList: () => this.props.close(),
+        });
+    }
+    createPartner() {
+        // initialize the edit screen with default details about country, state, and lang
+        const { country_id, state_id } = this.pos.company;
+        this.editPartner({
+            country_id,
+            state_id,
+            lang: user.lang,
+        });
+    }
+=======
+    editPartner(partner) {
+        this.dialog.add(PartnerEditor, {
+            partner: partner || this.props.partner,
+            closePartnerList: () => this.props.close(),
+        });
+    }
+    createPartner() {
+        // initialize the edit screen with default details about country, state, and lang
+        this.editPartner(this.newPartnerDefaults());
+    }
+    newPartnerDefaults() {
+        const { country_id, state_id } = this.pos.company;
+        return {
+            country_id,
+            state_id,
+            lang: user.lang,
+        };
+    }
+>>>>>>> 05e1dcccc9c6 (temp)
     async searchPartner() {
         if (this.state.previousQuery != this.state.query) {
             this.state.currentOffset = 0;
