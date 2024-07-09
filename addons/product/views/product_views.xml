@@ -27,14 +27,20 @@
                                groups="product.group_product_pricelist"
                                type="object">
                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value">
+                                    <span class="o_stat_value o_row">
                                         <field name="pricelist_item_count"/>
+                                        <span class="o_stat_text" invisible="pricelist_item_count == 1">
+                                            Rules
+                                        </span>
+                                        <span class="o_stat_text" invisible="pricelist_item_count != 1">
+                                            Rule
+                                        </span>
                                     </span>
                                     <span class="o_stat_text" invisible="pricelist_item_count == 1">
-                                        Extra Prices
+                                        Pricelists
                                     </span>
                                     <span class="o_stat_text" invisible="pricelist_item_count != 1">
-                                        Extra Price
+                                        Pricelist
                                     </span>
                                </div>
                         </button>
