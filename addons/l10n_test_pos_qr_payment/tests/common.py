@@ -43,6 +43,7 @@ class TestPosQrCommon(AccountTestInvoicingHttpCommon):
         cls.main_pos_config = cls.env['pos.config'].create({
             'name': 'Shop',
             'module_pos_restaurant': False,
+            'journal_id': cls.company_data['default_journal_sale'].id,
             # Make sure there is one extra payment method for the tour tests to work.
             # Because if the tour only use the qr payment method, the total amount won't be displayed,
             # causing the tour test to fail.
