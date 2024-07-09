@@ -335,6 +335,25 @@ describe("Link creation", () => {
             await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
             expect(cleanLinkArtifacts(getContent(el))).toBe('<p>H<a href="#">el[]</a>lo</p>');
         });
+        test("should be correctly unlink/link", async () => {
+            const { el } = await setupEditor('<p>aaaa[b<a href="http://test.com/">cd</a>e]f</p>');
+            await waitFor(".o-we-toolbar");
+
+            click(".o-we-toolbar .fa-unlink");
+            await tick();
+            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>aaaa[bcde]f</p>");
+            const pNode = queryOne("p");
+            setSelection({
+                anchorNode: pNode.childNodes[1],
+                anchorOffset: 1,
+                focusNode: pNode.childNodes[0],
+                focusOffset: 3,
+            });
+            await waitFor(".o-we-toolbar");
+            click(".o-we-toolbar .fa-link");
+            await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+            expect(cleanLinkArtifacts(getContent(el))).toBe('<p>aaa<a href="#">ab[]</a>cdef</p>');
+        });
         test("when selection includes partially a link and click the link icon in toolbar, the link should be extended", async () => {
             const { el } = await setupEditor('<p>a[b<a href="http://test.com/">c]d</a>ef</p>');
             await waitFor(".o-we-toolbar");
