@@ -381,3 +381,11 @@ class TestConfigManager(TransactionCase):
         self.assertEqual(len(capture.output), 1)
         full_output = "\n".join(capture.output)
         self.assertIn("longpolling-port is a deprecated alias", full_output)
+
+    def test_05_repeat_parse_config(self):
+        """Emulate multiple calls to parse_config()"""
+        config = configmanager()
+        config._parse_config()
+        config._warn_deprecated_options()
+        config._parse_config()
+        config._warn_deprecated_options()
