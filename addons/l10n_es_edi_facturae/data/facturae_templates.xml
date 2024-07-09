@@ -252,7 +252,7 @@
                     </Installment>
                 </PaymentDetails>
                 <LegalLiterals t-if="invoice.get('LegalLiterals')">
-                    <t t-foreach="invoice['LegalLiterals']" t-as="reference"><LegalReference t-out="reference"/></t>
+                    <t t-foreach="invoice['LegalLiterals']" t-as="reference"><LegalReference t-out="reference[:250]"/></t>
                 </LegalLiterals>
             </Invoice>
         </template>
