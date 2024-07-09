@@ -126,10 +126,7 @@ async function mail_attachment_upload(request) {
         DiscussVoiceMetadata.create({ attachment_id: attachmentId });
     }
     return {
-        data: new mailDataHelpers.Store(
-            "Attachment",
-            IrAttachment._attachment_format([attachmentId])
-        ).get_result(),
+        data: new mailDataHelpers.Store(IrAttachment.browse(attachmentId)).get_result(),
     };
 }
 
@@ -171,10 +168,7 @@ async function load_attachments(request) {
         .sort()
         .slice(0, limit)
         .map(({ id }) => id);
-    return new mailDataHelpers.Store(
-        "Attachment",
-        IrAttachment._attachment_format(attachmentIds)
-    ).get_result();
+    return new mailDataHelpers.Store(IrAttachment.browse(attachmentIds)).get_result();
 }
 
 registerRoute("/mail/rtc/channel/join_call", channel_call_join);
@@ -657,10 +651,7 @@ async function mail_message_update_content(request) {
         MailMessage._cleanup_side_records([message_id]);
     }
     const [message] = MailMessage.search_read([["id", "=", message_id]]);
-    const broadcast_store = new mailDataHelpers.Store(
-        "Attachment",
-        IrAttachment._attachment_format(attachment_ids)
-    );
+    const broadcast_store = new mailDataHelpers.Store(IrAttachment.browse(attachment_ids));
     broadcast_store.add("Message", {
         id: message_id,
         body,
