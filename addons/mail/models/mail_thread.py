@@ -915,7 +915,7 @@ class MailThread(models.AbstractModel):
         bounce_aliases = self.env['mail.alias.domain'].search([]).mapped('bounce_email')
         email_to_list = [
             email_normalize(e) or e
-            for e in (email_split(message_dict['to']) or [''])
+            for e in email_split(message_dict['to'])
         ]
         if bounce_aliases and any(email in bounce_aliases for email in email_to_list):
             return True
@@ -1034,7 +1034,7 @@ class MailThread(models.AbstractModel):
         else:
             catchall_aliases = self.env['mail.alias.domain'].search([]).mapped('catchall_email')
 
-        email_to_list = [email_normalize(e) or e for e in (email_split(msg_dict['to']) or [''])]
+        email_to_list = [email_normalize(e) or e for e in email_split(msg_dict['to'])]
         # check it does not directly contact catchall; either (legacy) strict aka
         # all TOs belong are catchall, either (optional) any catchall in all TOs
         if self.env.context.get("mail_catchall_write_any_to"):
@@ -1120,11 +1120,11 @@ class MailThread(models.AbstractModel):
 
         # author and recipients
         email_from = message_dict['email_from']
-        email_to_list = [e.lower() for e in (email_split(message_dict['to']) or [''])]
+        email_to_list = [e.lower() for e in email_split(message_dict['to'])]
         email_to_localparts = list(filter(None, (_filter_excluded_local_part(email_to) for email_to in email_to_list)))
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
-        rcpt_tos_list = [e.lower() for e in (email_split(message_dict['recipients']) or [''])]
+        rcpt_tos_list = [e.lower() for e in email_split(message_dict['recipients'])]
         rcpt_tos_localparts = list(filter(None, (_filter_excluded_local_part(email_to) for email_to in rcpt_tos_list)))
         rcpt_tos_valid_list = list(rcpt_tos_list)
 

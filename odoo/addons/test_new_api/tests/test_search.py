@@ -565,7 +565,7 @@ class TestSubqueries(TransactionCase):
                 ("test_new_api_related"."foo_id" IN (
                     SELECT "test_new_api_related_foo"."id"
                     FROM "test_new_api_related_foo"
-                    WHERE "test_new_api_related_foo"."name" IS NULL
+                    WHERE (("test_new_api_related_foo"."name" = %s) OR "test_new_api_related_foo"."name" IS NULL)
                 ))
                 OR "test_new_api_related"."foo_id" IS NULL
             )
@@ -579,7 +579,7 @@ class TestSubqueries(TransactionCase):
             WHERE ("test_new_api_related"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE "test_new_api_related_foo"."name" IS NOT NULL
+                WHERE ("test_new_api_related_foo"."name" != %s)
             ))
             ORDER BY "test_new_api_related"."id"
         """]):
@@ -659,7 +659,7 @@ class TestSubqueries(TransactionCase):
                         ("test_new_api_related_foo"."bar_id" IN (
                             SELECT "test_new_api_related_bar"."id"
                             FROM "test_new_api_related_bar"
-                            WHERE "test_new_api_related_bar"."name" IS NULL
+                            WHERE (("test_new_api_related_bar"."name" = %s) OR "test_new_api_related_bar"."name" IS NULL)
                         ))
                         OR "test_new_api_related_foo"."bar_id" IS NULL
                     )
@@ -679,7 +679,7 @@ class TestSubqueries(TransactionCase):
                 WHERE ("test_new_api_related_foo"."bar_id" IN (
                     SELECT "test_new_api_related_bar"."id"
                     FROM "test_new_api_related_bar"
-                    WHERE "test_new_api_related_bar"."name" IS NOT NULL
+                    WHERE ("test_new_api_related_bar"."name" != %s)
                 ))
             ))
             ORDER BY "test_new_api_related"."id"

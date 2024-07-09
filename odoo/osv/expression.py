@@ -1382,7 +1382,8 @@ class expression(object):
                     else:
                         push_result(model._condition_to_sql(alias, left, operator, right, self.query))
 
-                elif field.translate and isinstance(right, str) and left == field.name:
+                elif field.translate and (isinstance(right, str) or right is False) and left == field.name:
+                    right = right or ''
                     model_raw_trans = model.with_context(prefetch_langs=True)
                     sql_field = model_raw_trans._field_to_sql(alias, field.name, self.query)
                     sql_operator = SQL_OPERATORS[operator]
@@ -1397,7 +1398,11 @@ class expression(object):
                     if not need_wildcard:
                         right = field.convert_to_column(right, model, validate=False).adapted['en_US']
 
-                    if (need_wildcard and not right) or (right and operator in NEGATIVE_TERM_OPERATORS):
+                    if (
+                        (need_wildcard and not right)
+                        or (right and operator in NEGATIVE_TERM_OPERATORS)
+                        or (operator == '=' and right == '')  # noqa: PLC1901
+                    ):
                         sql_exprs.append(SQL("%s IS NULL OR", sql_field))
 
                     if self._has_trigram and field.index == 'trigram' and operator in ('=', 'like', 'ilike', '=like', '=ilike'):
@@ -1438,6 +1443,9 @@ class expression(object):
                     sql_operator = SQL_OPERATORS[operator]
                     params = [it for it in right if it is not False and it is not None]
                     check_null = len(params) < len(right)
+                    if check_null and '' not in params:
+                        params.append('')
+                    check_null = check_null or ('' in params)
                     if params:
                         params = [field.convert_to_column(p, model, validate=False).adapted['en_US'] for p in params]
                         langs = field.get_translation_fallback_langs(model.env)
