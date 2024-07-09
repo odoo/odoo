@@ -10,8 +10,8 @@
             <xpath expr="//filter[@name='rating_text']" position="after">
                 <filter string="Course" name="groupby_course" context="{'group_by': 'res_name'}"/>
             </xpath>
-            <filter name="filter_create_date" position="attributes">
-                <attribute name="default_period">custom_create_date_last_30_days</attribute>
+            <filter name="filter_rated_on" position="attributes">
+                <attribute name="default_period">custom_rated_on_last_30_days</attribute>
             </filter>
             <xpath expr="//filter[@name='my_ratings']" position="replace"/>
             <xpath expr="//filter[@name='responsible']" position="replace"/>
@@ -52,7 +52,7 @@
         <field name="priority">64</field>
         <field name="arch" type="xml">
             <list create="0">
-                <field name="create_date" string="Review Date"/>
+                <field name="rated_on" string="Review Date"/>
                 <field name="partner_id"/>
                 <field name="res_name" string="Course"/>
                 <field name="rating" string="Score"/>
@@ -88,7 +88,7 @@
                         <group>
                             <field name="partner_id"/>
                             <field name="resource_ref" string="Course"/>
-                            <field name="create_date"/>
+                            <field name="rated_on"/>
                         </group>
                         <group>
                             <field name="rating"/>
