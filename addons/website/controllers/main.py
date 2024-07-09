@@ -768,11 +768,10 @@ class Website(Home):
         res = {'can_edit_seo': True}
         record = request.env[res_model].browse(res_id)
         try:
-            record.check_access_rights('write')
-            record.check_access_rule('write')
+            request.website._check_user_can_modify(record)
         except AccessError:
-            record = record.sudo()
             res['can_edit_seo'] = False
+        record = record.sudo()
 
         res.update(record.read(fields)[0])
         res['has_social_default_image'] = request.website.has_social_default_image
