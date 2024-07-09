@@ -37,6 +37,14 @@ class StockPickingType(models.Model):
             record.count_picking_wave = count.get((record.id, True), 0)
             record.count_picking_batch = count.get((record.id, False), 0)
 
+    def action_batch(self):
+        action = self.env['ir.actions.act_window']._for_xml_id("stock_picking_batch.stock_picking_batch_action")
+        if self.env.context.get("view_mode"):
+            del action["mobile_view_mode"]
+            del action["views"]
+            action["view_mode"] = self.env.context["view_mode"]
+        return action
+
     @api.model
     def _get_batch_group_by_keys(self):
         return ['batch_group_by_partner', 'batch_group_by_destination', 'batch_group_by_src_loc', 'batch_group_by_dest_loc']
@@ -49,12 +57,6 @@ class StockPickingType(models.Model):
                 continue
             if not any(picking_type[key] for key in group_by_keys):
                 raise ValidationError(_("If the Automatic Batches feature is enabled, at least one 'Group by' option must be selected."))
-
-    def get_action_picking_tree_batch(self):
-        return self._get_action('stock_picking_batch.stock_picking_batch_action')
-
-    def get_action_picking_tree_wave(self):
-        return self._get_action('stock_picking_batch.action_picking_tree_wave')
 
 
 class StockPicking(models.Model):
