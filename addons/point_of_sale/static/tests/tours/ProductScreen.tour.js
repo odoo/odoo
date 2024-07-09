@@ -2,6 +2,7 @@
 
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
+import * as PartnerList from "@point_of_sale/../tests/tours/helpers/PartnerListTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
@@ -267,5 +268,22 @@ registry.category("web_tour.tours").add("FiscalPositionPriceIncluded", {
             ProductScreen.totalAmountIs("100.00"),
 
             Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.checkContactValues(
+                "John Doe",
+                "1 street of astreet",
+                "1234567890",
+                "0987654321",
+                "john@doe.com",
+            ),
         ].flat(),
 });
