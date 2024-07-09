@@ -5,6 +5,7 @@ import json
 import logging
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.tools import float_compare
 
 _logger = logging.getLogger(__name__)
@@ -24,7 +25,7 @@ class SaleOrder(models.Model):
         help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.")
     warehouse_id = fields.Many2one(
-        'stock.warehouse', string='Warehouse', required=True,
+        'stock.warehouse', string='Warehouse',
         compute='_compute_warehouse_id', store=True, readonly=False, precompute=True,
         check_company=True)
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Transfers')
@@ -97,6 +98,13 @@ class SaleOrder(models.Model):
         if self.picking_policy == "direct":
             return super()._select_expected_date(expected_dates)
         return max(expected_dates)
+
+    @api.constrains('warehouse_id', 'state', 'order_line')
+    def _check_warehouse(self):
+        """ Ensure that the warehouse is set in case of storable products """
+        orders_without_wh = self.filtered(lambda order: order.state not in ('draft', 'cancel') and not order.warehouse_id)
+        if any(l for l in orders_without_wh.order_line if l.product_id.type == 'consu'):
+            raise UserError(_('You must define a warehouse on a sale order with goods.'))
 
     def write(self, values):
         if values.get('order_line') and self.state == 'sale':
