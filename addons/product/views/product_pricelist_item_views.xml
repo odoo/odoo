@@ -129,7 +129,6 @@
                                     options="{'currency_field': 'currency_id'}"/>
                                 <span class="d-flex gap-2 p-0" invisible="not product_uom ">per<field
                                         name="product_uom"/></span>
-                                <span class="p-0" invisible="product_uom or display_applied_on != '1_product'">per Unit</span>
                             </div>
                             <label for="percent_price" string="Discount"
                                 invisible="compute_price != 'percentage'"/>
@@ -154,7 +153,7 @@
                                 invisible="base != 'pricelist'"
                                 readonly="base != 'pricelist'"
                                 required="compute_price == 'formula' and base == 'pricelist'"
-                                string="Base Price"/>
+                                string="Other Pricelist"/>
                             <label for="price_discount" string="Discount"
                                 invisible="base == 'standard_price'"/>
                             <div class="o_row" invisible="base == 'standard_price'" style="width: 40% !important;">

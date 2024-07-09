@@ -58,7 +58,8 @@ class Pricelist(models.Model):
     @api.depends('currency_id')
     def _compute_display_name(self):
         for pricelist in self:
-            pricelist.display_name = f'{pricelist.name} ({pricelist.currency_id.name})'
+            pricelist_name = pricelist.name and pricelist.name or _('New')
+            pricelist.display_name = f'{pricelist_name} ({pricelist.currency_id.name})'
 
     def write(self, values):
         res = super().write(values)

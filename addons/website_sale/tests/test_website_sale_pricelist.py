@@ -304,8 +304,9 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             'name': 'Product Template', 'list_price': 10.0, 'standard_price': 5.0
         })
         self.assertEqual(product_template.standard_price, 5)
-        price = product_template._get_sales_prices(
-            pricelist, self.env['account.fiscal.position'])[product_template.id]['price_reduce']
+        # Hack to enforce the use of this pricelist in the call to `_get_sales_price`
+        self.website.pricelist_id = pricelist
+        price = product_template._get_sales_prices(self.website)[product_template.id]['price_reduce']
         msg = "Template has no variants, the price should be computed based on the template's cost."
         self.assertEqual(price, 4.5, msg)
 
@@ -316,14 +317,14 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         self.assertEqual(product_template.standard_price, 0, msg)
         self.assertEqual(product_template.product_variant_ids[0].standard_price, 0)
 
-        price = product_template._get_sales_prices(
-            pricelist, self.env['account.fiscal.position'])[product_template.id]['price_reduce']
+        self.website.pricelist_id = pricelist
+        price = product_template._get_sales_prices(self.website)[product_template.id]['price_reduce']
         msg = "Template has variants, the price should be computed based on the 1st variant's cost."
         self.assertEqual(price, 0, msg)
 
         product_template.product_variant_ids[0].standard_price = 20
-        price = product_template._get_sales_prices(
-            pricelist, self.env['account.fiscal.position'])[product_template.id]['price_reduce']
+        self.website.pricelist_id = pricelist
+        price = product_template._get_sales_prices(self.website)[product_template.id]['price_reduce']
         self.assertEqual(price, 18, msg)
 
     def test_base_price_with_discount_on_pricelist_tax_included(self):
@@ -359,7 +360,9 @@ class TestWebsitePriceList(WebsiteSaleCommon):
                 'product_tmpl_id': product_tmpl.id,
             })],
         })
-        res = product_tmpl._get_sales_prices(self.pricelist, self.env['account.fiscal.position'])
+        # Hack to enforce the use of this pricelist in the call to `_get_sales_price`
+        self.website.pricelist_id = self.pricelist
+        res = product_tmpl._get_sales_prices(self.website)
         self.assertEqual(res[product_tmpl.id]['base_price'], 75)
 
 def simulate_frontend_context(self, website_id=1):
