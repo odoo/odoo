@@ -12,6 +12,7 @@ from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.osv import expression
 from odoo.addons.website.models import ir_http
+from odoo.exceptions import AccessError
 
 
 _logger = logging.getLogger(__name__)
@@ -45,6 +46,13 @@ class IrQWeb(models.AbstractModel):
         current_website = request.website
         editable = irQweb.env.user.has_group('website.group_website_designer')
         has_group_restricted_editor = irQweb.env.user.has_group('website.group_website_restricted_editor')
+        if not editable and has_group_restricted_editor and 'main_object' in values:
+            try:
+                main_object = values['main_object'].with_user(irQweb.env.user.id)
+                current_website._check_user_can_modify(main_object)
+                editable = True
+            except AccessError:
+                pass
         translatable = has_group_restricted_editor and irQweb.env.context.get('lang') != irQweb.env['ir.http']._get_default_lang().code
         editable = editable and not translatable
 
