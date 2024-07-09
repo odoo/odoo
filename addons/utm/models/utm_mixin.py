@@ -63,11 +63,13 @@ class UtmMixin(models.AbstractModel):
         """Based on the model name and on the name of the record, retrieve the corresponding record or create it."""
         Model = self.env[model_name]
 
-        record = Model.with_context(active_test=False).search([('name', '=', name)], limit=1)
+        cleaned_name = name.strip()
+        if cleaned_name:
+            record = Model.with_context(active_test=False).search([('name', '=ilike', cleaned_name)], limit=1)
 
         if not record:
             # No record found, create a new one
-            record_values = {'name': name}
+            record_values = {'name': cleaned_name}
             if 'is_auto_campaign' in record._fields:
                 record_values['is_auto_campaign'] = True
             record = Model.create(record_values)
