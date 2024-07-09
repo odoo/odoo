@@ -1,6 +1,7 @@
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import {
+    isAllowedContent,
     isEmpty,
     isInPre,
     isNotEditableNode,
@@ -681,7 +682,13 @@ export class DeletePlugin extends Plugin {
             return false;
         }
 
-        left.append(...right.childNodes);
+        // Check if left block allows right block's content.
+        const rightChildNodes = childNodes(right);
+        if (!isAllowedContent(left, rightChildNodes)) {
+            return false;
+        }
+
+        left.append(...rightChildNodes);
         let toRemove = right;
         let parent = right.parentElement;
         // Propagate until commonAncestor, removing empty blocks
