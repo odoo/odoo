@@ -318,17 +318,17 @@ export class View extends Component {
         const jsClass = archXmlDoc.hasAttribute("js_class")
             ? archXmlDoc.getAttribute("js_class")
             : type;
+        if (!viewRegistry.contains(jsClass)) {
+            await loadBundle(DEFAULT_LAZY_BUNDLE);
+        }
+        const descr = viewRegistry.get(jsClass);
+
         const bannerRoute = archXmlDoc.getAttribute("banner_route");
         const sample = archXmlDoc.getAttribute("sample");
         const className = computeViewClassName(type, archXmlDoc, [
             "o_view_controller",
             ...(props.className || "").split(" "),
         ]);
-
-        if (!viewRegistry.contains(jsClass)) {
-            await loadBundle(DEFAULT_LAZY_BUNDLE);
-        }
-        const descr = viewRegistry.get(jsClass);
 
         Object.assign(this.env.config, {
             rawArch: arch,
