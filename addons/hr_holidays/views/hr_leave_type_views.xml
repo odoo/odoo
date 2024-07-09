@@ -109,15 +109,11 @@
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_global_click">
-                            <div>
-                                <strong><field name="name"/></strong>
-                            </div>
-                            <div>
-                                <span>Max Time Off: <field name="max_leaves"/></span>
-                                <span class="float-end">Time Off Taken: <field name="leaves_taken"/></span>
-                            </div>
+                    <t t-name="kanban-card">
+                        <field class="fw-bold" name="name"/>
+                        <div>
+                            Max Time Off: <field name="max_leaves"/>
+                            <span class="float-end">Time Off Taken: <field name="leaves_taken"/></span>
                         </div>
                     </t>
                 </templates>
