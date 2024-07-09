@@ -193,9 +193,13 @@ export class MoveNodePlugin extends Plugin {
         }
     }
     getMovableElements() {
-        return [...new Set([...this.editable.querySelectorAll(ALLOWED_ELEMENTS)])].filter((node) =>
-            isNodeMovable(node)
-        );
+        const elems = [];
+        for (const el of this.editable.querySelectorAll(ALLOWED_ELEMENTS)) {
+            if (isNodeMovable(el)) {
+                elems.push(el);
+            }
+        }
+        return elems;
     }
     getDroppableElements(draggableNode) {
         return this.getMovableElements().filter(
