@@ -174,7 +174,7 @@ export class StoreInternal extends RecordInternal {
             shouldChange =
                 record[fieldName]?.toString() !== value?.toString() ||
                 !(record[fieldName] instanceof Markup);
-            newValue = typeof value === "string" ? markup(value) : value;
+            newValue = value && typeof value === "string" ? markup(value) : value;
         }
         if (shouldChange) {
             record._.updatingAttrs.set(fieldName, true);
