@@ -77,7 +77,7 @@ class TestLinkPreview(MailCommon):
         content = b""""""
         return self._patched_get_html(None, content)
 
-    def test_search_or_create_from_url(self):
+    def test_get_link_preview_from_url(self):
         test_cases = [
             (self._patch_with_og_properties, self.source_url),
             (self._patch_without_og_properties, self.source_url),
