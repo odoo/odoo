@@ -49,7 +49,13 @@ export class TableResizePlugin extends Plugin {
      *                                      false to remove the hints
      */
     setTableResizeCursor(direction) {
-        this.editable.classList.remove("o_col_resize", "o_row_resize");
+        const classList = this.editable.classList;
+        if (classList.contains("o_col_resize")) {
+            classList.remove("o_col_resize");
+        }
+        if (classList.contains("o_row_resize")) {
+            classList.remove("o_row_resize");
+        }
         if (direction === "col") {
             this.editable.classList.add("o_col_resize");
         } else if (direction === "row") {
