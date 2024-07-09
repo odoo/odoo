@@ -598,6 +598,9 @@ class PosConfig(models.Model):
         :returns: dict
         """
         self.ensure_one()
+        if self.env.su:
+            raise UserError(_("You do not have permission to open a POS session. Please try opening a session with a different user"))
+
         if not self.current_session_id:
             self._check_before_creating_new_session()
         self._validate_fields(self._fields)
