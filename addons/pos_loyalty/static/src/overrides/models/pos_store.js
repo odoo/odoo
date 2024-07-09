@@ -258,7 +258,7 @@ patch(PosStore.prototype, {
                 .filter((product) => domain.contains(product))
                 .forEach((product) => reward.all_discount_product_ids.add(product.id));
         } catch (error) {
-            if (!(error instanceof InvalidDomainError)) {
+            if (!(error instanceof InvalidDomainError || error instanceof TypeError)) {
                 throw error;
             }
             const index = this.rewards.indexOf(reward);
