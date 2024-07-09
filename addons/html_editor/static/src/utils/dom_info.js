@@ -492,6 +492,44 @@ export function allowsParagraphRelatedElements(node) {
     return isBlock(node) && !paragraphRelatedElements.includes(node.nodeName);
 }
 
+const phrasingContent = new Set(["#text", ...phrasingTagNames]);
+const flowContent = new Set([...phrasingContent, ...paragraphRelatedElements, "DIV", "HR"]);
+const listItem = new Set(["LI"]);
+
+const allowedContent = {
+    BLOCKQUOTE: phrasingContent, // HTML spec: flow content
+    DIV: flowContent,
+    H1: phrasingContent,
+    H2: phrasingContent,
+    H3: phrasingContent,
+    H4: phrasingContent,
+    H5: phrasingContent,
+    H6: phrasingContent,
+    HR: new Set(),
+    LI: flowContent,
+    OL: listItem,
+    UL: listItem,
+    P: phrasingContent,
+    PRE: phrasingContent,
+    TD: flowContent,
+    TR: new Set(["TD"]),
+};
+
+/**
+ * @param {Element} parentBlock
+ * @param {Node[]} nodes
+ * @returns {boolean}
+ */
+export function isAllowedContent(parentBlock, nodes) {
+    const allowedContentSet = allowedContent[parentBlock.nodeName];
+    if (!allowedContentSet) {
+        // Spec: a block not listed in allowedContent allows anything.
+        // See "custom-block" in tests.
+        return true;
+    }
+    return nodes.every((node) => allowedContentSet.has(node.nodeName));
+}
+
 /**
  * Checks whether or not the given block has any visible content, except for
  * a placeholder BR.

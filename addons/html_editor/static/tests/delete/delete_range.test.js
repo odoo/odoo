@@ -423,4 +423,53 @@ describe("DELETE_SELECTION command", () => {
             });
         });
     });
+    describe("Allowed content mismatch on blocks merge", () => {
+        test("should not add H1 (flow content) to P (allows phrasing content only)", async () => {
+            await testEditor({
+                contentBefore: unformat(
+                    `<p>a[bc</p>
+                    <ul>
+                        <li>
+                            <h1>def</h1>]
+                            <h1>ghi</h1>
+                        </li>
+                    </ul>`
+                ),
+                stepFunction: deleteSelection,
+                contentAfter: unformat(
+                    `<p>a[]</p>
+                    <ul>
+                        <li>
+                            <h1>ghi</h1>
+                        </li>
+                    </ul>`
+                ),
+            });
+        });
+        test("should add P (flow content) to LI (allows flow content) ", async () => {
+            await testEditor({
+                contentBefore: unformat(
+                    `<ul>
+                        <li>
+                            <h1>abc</h1>
+                            [<h1>def</h1>
+                        </li>
+                        <li>
+                            <p>ghi</p>]
+                            <p>jkl</p>
+                        </li>
+                    </ul>`
+                ),
+                stepFunction: deleteSelection,
+                contentAfter: unformat(
+                    `<ul>
+                        <li>
+                            <h1>abc</h1>
+                            <p>[]jkl</p>
+                        </li>
+                    </ul>`
+                ),
+            });
+        });
+    });
 });
