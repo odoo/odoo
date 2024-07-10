@@ -84,7 +84,7 @@ export class ChatGPTDialog extends Component {
             }
         };
         this.pendingRpcPromise = rpc(
-            "/web_editor/generate_text",
+            "/html_editor/generate_text",
             {
                 prompt,
                 conversation_history: this.state.conversationHistory,

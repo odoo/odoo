@@ -61,7 +61,7 @@ test("ChatGPT alternatives dialog generates alternatives for each button", async
         config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
     });
     let rpcIndex = 1;
-    onRpc("/web_editor/generate_text", () => `Alternative #${rpcIndex++}`);
+    onRpc("/html_editor/generate_text", () => `Alternative #${rpcIndex++}`);
 
     // Select ChatGPT in the toolbar.
     await openFromToolbar();
@@ -97,7 +97,7 @@ test("insert the response from ChatGPT prompt dialog", async () => {
         config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
     });
     onRpc(
-        "/web_editor/generate_text",
+        "/html_editor/generate_text",
         () => `
 Here you go!
 Enjoy :-)
@@ -125,7 +125,7 @@ test("insert the response from ChatGPT alternatives dialog", async () => {
         config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
     });
     let rpcIndex = 1;
-    onRpc("/web_editor/generate_text", () => `Alternative #${rpcIndex++}`);
+    onRpc("/html_editor/generate_text", () => `Alternative #${rpcIndex++}`);
 
     // Select ChatGPT in the Powerbox.
     await openFromToolbar();
@@ -147,7 +147,7 @@ test("ChatGPT prompt dialog properly formats an unordered list", async () => {
         config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
     });
     onRpc(
-        "/web_editor/generate_text",
+        "/html_editor/generate_text",
         () => `
         - First item
         - Second item
