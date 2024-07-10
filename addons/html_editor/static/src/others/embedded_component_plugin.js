@@ -9,6 +9,11 @@ import { memoize } from "@web/core/utils/functions";
 export class EmbeddedComponentPlugin extends Plugin {
     static name = "embedded_components";
     static dependencies = ["history", "protected_node"];
+    static resources(p) {
+        return {
+            filter_descendants_to_serialize: p.filterDescendantsToSerialize.bind(p),
+        };
+    }
 
     setup() {
         this.components = new Set();
@@ -47,11 +52,15 @@ export class EmbeddedComponentPlugin extends Plugin {
                 this.handleComponents(payload.stepCommonAncestor);
                 break;
             }
-            case "BEFORE_SERIALIZE_ELEMENT": {
-                this.beforeSerializeElement(payload);
-                break;
-            }
         }
+    }
+
+    filterDescendantsToSerialize(elem) {
+        const embedding = this.getEmbedding(elem);
+        if (!embedding) {
+            return;
+        }
+        return [];
     }
 
     handleComponents(elem) {
@@ -81,14 +90,6 @@ export class EmbeddedComponentPlugin extends Plugin {
 
     getEmbedding(host) {
         return this.embeddedComponents(this.resources.embeddedComponents)[host.dataset.embedded];
-    }
-
-    beforeSerializeElement({ element, childrenToSerialize }) {
-        const embedding = this.getEmbedding(element);
-        if (!embedding) {
-            return;
-        }
-        childrenToSerialize.splice(0, childrenToSerialize.length);
     }
 
     mountComponent(host, { Component, getProps }) {

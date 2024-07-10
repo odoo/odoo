@@ -1,5 +1,5 @@
 import { Plugin } from "../plugin";
-import { descendants, getCommonAncestor } from "../utils/dom_traversal";
+import { childNodes, descendants, getCommonAncestor } from "../utils/dom_traversal";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -199,7 +199,7 @@ export class HistoryPlugin extends Plugin {
                 focusNode: undefined,
                 focusOffset: undefined,
             },
-            mutations: Array.from(this.editable.childNodes).map((node) => ({
+            mutations: childNodes(this.editable).map((node) => ({
                 type: "add",
                 append: "root",
                 id: this.nodeToIdMap.get(node),
@@ -945,7 +945,7 @@ export class HistoryPlugin extends Plugin {
         const fakeNode = this.document.createElement("fake-el");
         fakeNode.appendChild(unserializedNode);
         this.shared.sanitize(fakeNode, { IN_PLACE: true });
-        unserializedNode = fakeNode.childNodes[0];
+        unserializedNode = fakeNode.firstChild;
 
         if (unserializedNode) {
             // Only assing id to the remaining nodes, otherwise the removed
@@ -978,11 +978,16 @@ export class HistoryPlugin extends Plugin {
         if (node.nodeType === Node.TEXT_NODE) {
             result.textValue = node.nodeValue;
         } else if (node.nodeType === Node.ELEMENT_NODE) {
-            const childrenToSerialize = [...node.childNodes];
-            this.dispatch("BEFORE_SERIALIZE_ELEMENT", {
-                element: node,
-                childrenToSerialize,
-            });
+            let childrenToSerialize;
+            for (const cb of this.resources["filter_descendants_to_serialize"] || []) {
+                childrenToSerialize = cb(node);
+                if (childrenToSerialize) {
+                    break;
+                }
+            }
+            if (!childrenToSerialize) {
+                childrenToSerialize = childNodes(node);
+            }
             result.tagName = node.tagName;
             result.children = [];
             result.attributes = {};
