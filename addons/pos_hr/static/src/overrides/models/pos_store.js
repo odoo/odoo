@@ -8,6 +8,10 @@ patch(PosStore.prototype, {
             this.showScreen("LoginScreen");
         }
     },
+    get employeeIsAdmin() {
+        const cashier = this.get_cashier();
+        return cashier._role === "manager" || cashier.user_id?.id === this.user.id;
+    },
     async processServerData() {
         await super.processServerData(...arguments);
         if (this.config.module_pos_hr) {

@@ -30,4 +30,7 @@ export class ProductInfoPopup extends Component {
             (p) => p.raw.product_tmpl_id === this.props.product.raw.product_tmpl_id
         );
     }
+    get allowProductEdition() {
+        return true; // Overrided in pos_hr
+    }
 }
