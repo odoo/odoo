@@ -15,14 +15,14 @@ class StockPickingType(models.Model):
                                 help="Automatically put pickings into batches as they are confirmed when possible.")
     batch_group_by_partner = fields.Boolean('Contact', help="Automatically group batches by contacts.")
     batch_group_by_destination = fields.Boolean('Destination Country', help="Automatically group batches by destination country.")
-    batch_group_by_src_loc = fields.Boolean('Source Location',
+    batch_group_by_src_loc = fields.Boolean('Group by Source Location',
                                             help="Automatically group batches by their source location.")
-    batch_group_by_dest_loc = fields.Boolean('Destination Location',
+    batch_group_by_dest_loc = fields.Boolean('Group by Destination Location',
                                              help="Automatically group batches by their destination location.")
-    batch_max_lines = fields.Integer("Maximum lines per batch",
+    batch_max_lines = fields.Integer("Maximum lines",
                                      help="A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
                                           "Leave this value as '0' if no line limit.")
-    batch_max_pickings = fields.Integer("Maximum transfers per batch",
+    batch_max_pickings = fields.Integer("Maximum transfers",
                                         help="A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
                                              "Leave this value as '0' if no transfer limit.")
     batch_auto_confirm = fields.Boolean("Auto-confirm", default=True)
