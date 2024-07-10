@@ -116,6 +116,9 @@
             <field name="user_ids" position="replace">
                 <field name="portal_user_names" string="Assignees"/>
             </field>
+            <xpath expr="//field[@name='milestone_id']" position="attributes">
+                <attribute name="column_invisible">not context.get('allow_milestones', True)</attribute>
+            </xpath>
         </field>
     </record>
 
