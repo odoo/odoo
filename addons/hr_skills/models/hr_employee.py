@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools import convert
 
 
 class Employee(models.Model):
@@ -40,3 +40,10 @@ class Employee(models.Model):
         if 'department_id' in vals:
             self.employee_skill_ids._create_logs()
         return res
+
+    def _load_scenario(self):
+        super()._load_scenario()
+        demo_tag = self.env.ref('hr_skills.employee_resume_line_emp_eg_1', raise_if_not_found=False)
+        if demo_tag:
+            return
+        convert.convert_file(self.env, 'hr_skills', 'data/scenarios/hr_skills_scenario.xml', None, mode='init', kind='data')

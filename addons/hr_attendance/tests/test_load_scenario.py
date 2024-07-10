@@ -3,6 +3,6 @@
 from odoo.tests.common import TransactionCase
 
 
-class TestHrAttendance(TransactionCase):
+class TestHrAttendanceScenario(TransactionCase):
     def test_load_scenario(self):
-        self.env['hr_attendance']._load_demo_data()
+        self.env['hr.attendance']._load_demo_data()
