@@ -14,7 +14,6 @@
                     string="Product"
                     readonly="state in ('purchase', 'to approve', 'done', 'cancel')"
                     required="not display_type"
-                    width="35%"
                     context="{'partner_id': parent.partner_id}"
                     widget="pol_product_many2one"/>
                 <field name="product_template_attribute_value_ids" column_invisible="1"/>
