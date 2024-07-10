@@ -34,8 +34,6 @@
                         <i class="fa fa-fw fa-paper-plane-o me-2" /><t t-esc="props.partner.email" />
                     </div>
                 </div>
-                <!-- FIXME: this should be in pos_settle_due, not here -->
-                <div class="partner-line-balance" t-if="props.isBalanceDisplayed"></div>
                 <div class="d-flex justify-content-between align-items-center p-1">
                     <button t-if="props.isSelected" t-on-click.stop="props.onClickUnselect" class="unselect-tag-mobile d-inline-block d-lg-none btn btn-light border ms-2">
                         <i class="fa fa-times me-1"></i>
