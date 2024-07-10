@@ -18,7 +18,7 @@
                     <Dropdown position="'left-start'" onStateChanged="isOpen => this.onActionsMenuStateChanged(isOpen)" menuClass="'d-flex flex-column py-0'">
                         <button
                             class="o-mail-ChatWindow-command btn rounded-0 d-flex align-items-center px-1 py-2 m-0 opacity-75 opacity-100-hover w-100"
-                            t-att-class="{ 'ps-2 pe-1': !ui.isSmall, 'o-active': state.actionsMenuOpened }"
+                            t-att-class="{ 'ps-2 pe-1 rounded-top-3': !ui.isSmall, 'o-active': state.actionsMenuOpened }"
                             t-att-disabled="state.editingName"
                             t-att-title="actionsMenuTitleText"
                         >
