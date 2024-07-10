@@ -13,7 +13,7 @@ export class ImageCropPlugin extends Plugin {
             toolbarGroup: [
                 {
                     id: "image_crop",
-                    namespace: "IMG",
+                    namespace: "image",
                     sequence: 27,
                     buttons: [
                         {

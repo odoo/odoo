@@ -18,12 +18,19 @@ export class ImagePlugin extends Plugin {
         return {
             handle_paste_url: p.handlePasteUrl.bind(p),
             onSelectionChange: p.onSelectionChange.bind(p),
-
+            toolbarNamespace: [
+                {
+                    id: "image",
+                    isApplied: (traversedNodes) => {
+                        return traversedNodes.at(-1)?.tagName === "IMG";
+                    },
+                },
+            ],
             toolbarGroup: [
                 {
                     id: "image_preview",
                     sequence: 23,
-                    namespace: "IMG",
+                    namespace: "image",
                     buttons: [
                         {
                             id: "image_preview",
@@ -38,7 +45,7 @@ export class ImagePlugin extends Plugin {
                 {
                     id: "image_description",
                     sequence: 24,
-                    namespace: "IMG",
+                    namespace: "image",
                     buttons: [
                         {
                             id: "image_description",
@@ -53,7 +60,7 @@ export class ImagePlugin extends Plugin {
                 {
                     id: "image_shape",
                     sequence: 25,
-                    namespace: "IMG",
+                    namespace: "image",
                     buttons: [
                         {
                             id: "shape_rounded",
@@ -96,7 +103,7 @@ export class ImagePlugin extends Plugin {
                 {
                     id: "image_padding",
                     sequence: 26,
-                    namespace: "IMG",
+                    namespace: "image",
                     buttons: [
                         {
                             id: "image_padding",
@@ -108,7 +115,7 @@ export class ImagePlugin extends Plugin {
                 {
                     id: "image_size",
                     sequence: 26,
-                    namespace: "IMG",
+                    namespace: "image",
                     buttons: [
                         {
                             id: "resize_default",
@@ -151,7 +158,7 @@ export class ImagePlugin extends Plugin {
                 {
                     id: "image_transform",
                     sequence: 26,
-                    namespace: "IMG",
+                    namespace: "image",
                     buttons: [
                         {
                             id: "image_transform",
@@ -167,7 +174,7 @@ export class ImagePlugin extends Plugin {
                 {
                     id: "image_delete",
                     sequence: 30,
-                    namespace: "IMG",
+                    namespace: "image",
                     buttons: [
                         {
                             id: "image_delete",
