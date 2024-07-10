@@ -855,7 +855,9 @@ class HrExpense(models.Model):
         if not payment_method_line:
             raise UserError(_("You need to add a manual payment method on the journal (%s)", journal.name))
         move_lines = []
-        tax_data = self.env['account.tax']._compute_taxes(
+        tax_data = self.env['account.tax'].with_context(
+            caba_no_transition_account=self.payment_mode == 'company_account',
+        )._compute_taxes(
             [self._convert_to_tax_base_line_dict(price_unit=self.total_amount_currency, currency=self.currency_id, account=self._get_base_account())],
             self.company_id,
         )
