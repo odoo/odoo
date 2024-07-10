@@ -28,6 +28,11 @@
         'wizard/sms_composer_views.xml',
         'wizard/mailing_sms_test_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'mass_mailing_sms/static/src/js/fields_sms_widget.js',
+        ],
+    },
     'demo': [
         'data/utm_demo.xml',
         'data/mailing_list_demo.xml',
