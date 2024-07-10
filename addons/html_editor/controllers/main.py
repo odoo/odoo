@@ -526,3 +526,23 @@ class HTML_Editor(http.Controller):
                 raise UserError(_("Sorry, we could not generate a response. Please try again later."))
         except AccessError:
             raise AccessError(_("Oops, it looks like our AI is unreachable!"))
+
+    @http.route(["/web_editor/get_ice_servers", "/html_editor/get_ice_servers"], type='json', auth="user")
+    def get_ice_servers(self):
+        return request.env['mail.ice.server']._get_ice_servers()
+
+    @http.route(["/web_editor/bus_broadcast", "/html_editor/bus_broadcast"], type="json", auth="user")
+    def bus_broadcast(self, model_name, field_name, res_id, bus_data):
+        document = request.env[model_name].browse([res_id])
+
+        document.check_access_rights('read')
+        document.check_field_access_rights('read', [field_name])
+        document.check_access_rule('read')
+        document.check_access_rights('write')
+        document.check_field_access_rights('write', [field_name])
+        document.check_access_rule('write')
+
+        channel = (request.db, 'editor_collaboration', model_name, field_name, int(res_id))
+        bus_data.update({'model_name': model_name, 'field_name': field_name, 'res_id': res_id})
+        request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
+

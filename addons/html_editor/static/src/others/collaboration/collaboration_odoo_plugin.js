@@ -208,7 +208,7 @@ export class CollaborationOdooPlugin extends Plugin {
 
         const loadPeerToPeer = async () => {
             if (!ICE_SERVERS) {
-                ICE_SERVERS = await rpc("/web_editor/get_ice_servers");
+                ICE_SERVERS = await rpc("/html_editor/get_ice_servers");
             }
 
             let iceServers = ICE_SERVERS;
@@ -243,7 +243,7 @@ export class CollaborationOdooPlugin extends Plugin {
             currentPeerId: this.config.collaboration.peerId,
             broadcastAll: (rpcData) => {
                 return rpcMutex.exec(async () => {
-                    return rpc("/web_editor/bus_broadcast", {
+                    return rpc("/html_editor/bus_broadcast", {
                         model_name: modelName,
                         field_name: fieldName,
                         res_id: resId,
