@@ -233,6 +233,120 @@ class AccountPayment(models.Model):
         """ Add is_internal_transfer as a trigger to re-compute """
         return super()._compute_payment_method_line_fields()
 
+<<<<<<< HEAD
+||||||| parent of b8a957989c68 (temp)
+    @api.depends('l10n_latam_check_operation_ids.state')
+    def _compute_l10n_latam_check_current_journal(self):
+        new_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
+        payments = self.env['account.payment'].search(
+            [('l10n_latam_check_id', 'in', new_checks.ids), ('state', '=', 'posted')], order="date desc, id desc")
+
+        # we store on a dict the first payment (last operation) for each check
+        checks_mapping = {}
+        for payment in payments:
+            if payment.l10n_latam_check_id not in checks_mapping:
+                checks_mapping[payment.l10n_latam_check_id] = payment
+
+        for rec in new_checks:
+            last_operation = checks_mapping.get(rec)
+            if not last_operation:
+                rec.l10n_latam_check_current_journal_id = rec.journal_id
+                continue
+            if last_operation.is_internal_transfer and last_operation.payment_type == 'outbound':
+                rec.l10n_latam_check_current_journal_id = last_operation.paired_internal_transfer_payment_id.journal_id
+            elif last_operation.payment_type == 'inbound':
+                rec.l10n_latam_check_current_journal_id = last_operation.journal_id
+            else:
+                rec.l10n_latam_check_current_journal_id = False
+
+    @api.depends('l10n_latam_manual_checks')
+    def _compute_show_check_number(self):
+        latam_checks = self.filtered(
+            lambda x: x.payment_method_line_id.code == 'new_third_party_checks' or
+            (x.payment_method_line_id.code == 'check_printing' and x.l10n_latam_manual_checks))
+        latam_checks.show_check_number = False
+        super(AccountPayment, self - latam_checks)._compute_show_check_number()
+
+    @api.constrains('check_number', 'journal_id')
+    def _constrains_check_number_unique(self):
+        """ Don't enforce uniqueness for third party checks"""
+        third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
+        return super(AccountPayment, self - third_party_checks)._constrains_check_number_unique()
+
+    @api.onchange('l10n_latam_check_id')
+    def _onchange_check(self):
+        for rec in self.filtered('l10n_latam_check_id'):
+            rec.amount = rec.l10n_latam_check_id.amount
+
+    @api.onchange('payment_method_line_id', 'is_internal_transfer', 'journal_id', 'destination_journal_id')
+    def _onchange_to_reset_check_ids(self):
+        # If any of these fields change, the domain of the selectable checks could change
+        self.l10n_latam_check_id = False
+
+    @api.onchange('l10n_latam_check_number')
+    def _onchange_check_number(self):
+        for rec in self.filtered(
+            lambda x: x.journal_id.company_id.country_id.code == "AR" and
+            x.l10n_latam_check_number and x.l10n_latam_check_number.isdecimal()):
+            rec.l10n_latam_check_number = '%08d' % int(rec.l10n_latam_check_number)
+
+=======
+    @api.depends('l10n_latam_check_operation_ids.state', 'payment_method_line_id.code')
+    def _compute_l10n_latam_check_current_journal(self):
+        new_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
+        payments = self.env['account.payment'].search(
+            [('l10n_latam_check_id', 'in', new_checks.ids), ('state', '=', 'posted')], order="date desc, id desc")
+
+        # we store on a dict the first payment (last operation) for each check
+        checks_mapping = {}
+        for payment in payments:
+            if payment.l10n_latam_check_id not in checks_mapping:
+                checks_mapping[payment.l10n_latam_check_id] = payment
+
+        for rec in new_checks:
+            last_operation = checks_mapping.get(rec)
+            if not last_operation:
+                rec.l10n_latam_check_current_journal_id = rec.journal_id
+                continue
+            if last_operation.is_internal_transfer and last_operation.payment_type == 'outbound':
+                rec.l10n_latam_check_current_journal_id = last_operation.paired_internal_transfer_payment_id.journal_id
+            elif last_operation.payment_type == 'inbound':
+                rec.l10n_latam_check_current_journal_id = last_operation.journal_id
+            else:
+                rec.l10n_latam_check_current_journal_id = False
+
+    @api.depends('l10n_latam_manual_checks')
+    def _compute_show_check_number(self):
+        latam_checks = self.filtered(
+            lambda x: x.payment_method_line_id.code == 'new_third_party_checks' or
+            (x.payment_method_line_id.code == 'check_printing' and x.l10n_latam_manual_checks))
+        latam_checks.show_check_number = False
+        super(AccountPayment, self - latam_checks)._compute_show_check_number()
+
+    @api.constrains('check_number', 'journal_id')
+    def _constrains_check_number_unique(self):
+        """ Don't enforce uniqueness for third party checks"""
+        third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
+        return super(AccountPayment, self - third_party_checks)._constrains_check_number_unique()
+
+    @api.onchange('l10n_latam_check_id')
+    def _onchange_check(self):
+        for rec in self.filtered('l10n_latam_check_id'):
+            rec.amount = rec.l10n_latam_check_id.amount
+
+    @api.onchange('payment_method_line_id', 'is_internal_transfer', 'journal_id', 'destination_journal_id')
+    def _onchange_to_reset_check_ids(self):
+        # If any of these fields change, the domain of the selectable checks could change
+        self.l10n_latam_check_id = False
+
+    @api.onchange('l10n_latam_check_number')
+    def _onchange_check_number(self):
+        for rec in self.filtered(
+            lambda x: x.journal_id.company_id.country_id.code == "AR" and
+            x.l10n_latam_check_number and x.l10n_latam_check_number.isdecimal()):
+            rec.l10n_latam_check_number = '%08d' % int(rec.l10n_latam_check_number)
+
+>>>>>>> b8a957989c68 (temp)
     def _get_payment_method_codes_to_exclude(self):
         res = super()._get_payment_method_codes_to_exclude()
         if self.is_internal_transfer:
