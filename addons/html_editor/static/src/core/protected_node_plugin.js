@@ -1,6 +1,9 @@
 import { Plugin } from "../plugin";
-import { isProtected, isProtecting } from "../utils/dom_info";
-import { closestElement, childNodes } from "../utils/dom_traversal";
+import { isProtecting } from "../utils/dom_info";
+import { childNodes } from "../utils/dom_traversal";
+
+const PROTECTED_SELECTOR = `[data-oe-protected="true"],[data-oe-protected=""]`;
+const UNPROTECTED_SELECTOR = `[data-oe-protected="false"]`;
 
 export class ProtectedNodePlugin extends Plugin {
     static name = "protected_node";
@@ -12,6 +15,11 @@ export class ProtectedNodePlugin extends Plugin {
         };
     }
     static shared = ["setProtectingNode"];
+
+    setup() {
+        super.setup();
+        this.protectedNodes = new WeakSet();
+    }
 
     handleCommand(command, payload) {
         switch (command) {
@@ -36,10 +44,8 @@ export class ProtectedNodePlugin extends Plugin {
         // elements should also be registered even though they are protected.
         if (isProtecting(elem)) {
             const descendantsToRemove = [];
-            for (const candidate of elem.querySelectorAll('[data-oe-protected="false"')) {
-                if (
-                    candidate.closest(`[data-oe-protected="true"],[data-oe-protected=""]`) === elem
-                ) {
+            for (const candidate of elem.querySelectorAll(UNPROTECTED_SELECTOR)) {
+                if (candidate.closest(PROTECTED_SELECTOR) === elem) {
                     descendantsToRemove.push(...childNodes(candidate));
                 }
             }
@@ -47,105 +53,62 @@ export class ProtectedNodePlugin extends Plugin {
         }
     }
 
-    beforeFilteringMutationRecords(records) {
-        this.nodeToClone = new Map();
-        this.cloneTree = new DocumentFragment();
-        this.records = [...records];
-        this.recordIndex = 0;
+    protectDescendants(node) {
+        let child = node.firstChild;
+        while (child) {
+            if (child.nodeType === Node.ELEMENT_NODE) {
+                if (child.matches(UNPROTECTED_SELECTOR)) {
+                    this.unProtectDescendants(child);
+                } else if (!this.protectedNodes.has(child)) {
+                    this.protectDescendants(child);
+                }
+                // stop recursion if the node is already protected, assume that
+                // its descendants are already handled.
+            }
+            this.protectedNodes.add(child);
+            child = child.nextSibling;
+        }
     }
 
-    /**
-     * Look ahead in mutation records to find where a node was removed from
-     * its parent. Returns its previous parent before removal. This is useful
-     * to retrace a removed hierarchy at the time of removal.
-     *
-     * @param {HTMLElement} target
-     * @param {Number} recordIndex
-     * @returns {HTMLElement|null} previous parent
-     */
-    findTargetParent(target, recordIndex) {
-        for (const record of this.records.slice(recordIndex + 1)) {
+    unProtectDescendants(node) {
+        let child = node.firstChild;
+        while (child) {
+            if (child.nodeType === Node.ELEMENT_NODE) {
+                if (child.matches(PROTECTED_SELECTOR)) {
+                    this.protectDescendants(child);
+                } else if (this.protectedNodes.has(child)) {
+                    this.unProtectDescendants(child);
+                }
+                // stop recursion if the node is already not protected, assume that
+                // its descendants are already handled.
+            }
+            this.protectedNodes.delete(child);
+            child = child.nextSibling;
+        }
+    }
+
+    beforeFilteringMutationRecords(records) {
+        for (const record of records) {
             if (record.type === "childList") {
-                for (const removedNode of record.removedNodes) {
-                    if (removedNode === target) {
-                        return record.target;
+                if (record.target.nodeType !== Node.ELEMENT_NODE) {
+                    return;
+                }
+                if (
+                    this.protectedNodes.has(record.target) ||
+                    record.target.matches(PROTECTED_SELECTOR)
+                ) {
+                    for (const addedNode of record.addedNodes) {
+                        this.protectDescendants(addedNode);
+                    }
+                } else if (
+                    !this.protectedNodes.has(record.target) ||
+                    record.target.matches(UNPROTECTED_SELECTOR)
+                ) {
+                    for (const addedNode of record.addedNodes) {
+                        this.unProtectDescendants(addedNode);
                     }
                 }
             }
-        }
-        return null;
-    }
-
-    /**
-     * Retrace the branch up to odoo-editor-editable for a removed node and
-     * store it in a cloned tree. This will be used to determine if a mutation
-     * was protected at the time it happened, depending on the older
-     * configuration of nodes.
-     *
-     * WARNINGS:
-     * 1) this function does not take attributes into account, once a node
-     * is given the `data-oe-protected` attribute, it is supposed to keep the
-     * same value for the entire edition session.
-     * 2) children are appended in the clone without considering order, since
-     * the protected feature does not care for ordering of children, therefore
-     * the cloned tree is inexact but sufficient.
-     *
-     * This function can be refactored to handle both warnings when necessary.
-     *
-     * @param {Number} recordIndex
-     */
-    updateCloneTree(recordIndex) {
-        const record = this.records[recordIndex];
-        if (record.type !== "childList" || !record.removedNodes.length) {
-            return;
-        }
-        let clone;
-        let children = [];
-        for (const removedNode of record.removedNodes) {
-            clone = this.nodeToClone.get(removedNode);
-            if (clone) {
-                clone.remove();
-            } else {
-                clone = removedNode.cloneNode();
-                this.nodeToClone.set(removedNode, clone);
-            }
-            children.push(clone);
-        }
-        let ancestor = record.target;
-        clone = this.nodeToClone.get(ancestor);
-        if (clone) {
-            clone.append(...children);
-        }
-        while (!clone) {
-            clone = ancestor.cloneNode();
-            this.nodeToClone.set(ancestor, clone);
-            clone.append(...children);
-            if (clone.classList.contains("odoo-editor-editable")) {
-                if (!this.cloneTree.hasChildNodes()) {
-                    this.cloneTree.append(clone);
-                }
-                break;
-            }
-            const current = ancestor;
-            ancestor = ancestor.parentElement;
-            if (!ancestor) {
-                ancestor = this.findTargetParent(current, recordIndex);
-                if (!ancestor) {
-                    // If ancestor can not be found, it means that the
-                    // record removing current from its ancestor is missing
-                    // from this.records. In that case, the entire branch
-                    // won't be added to the cloneTree. This will likely
-                    // never happen.
-                    break;
-                }
-            }
-            const ancestorClone = this.nodeToClone.get(ancestor);
-            if (ancestorClone) {
-                ancestorClone.append(clone);
-                break;
-            }
-            children = [clone];
-            clone = undefined;
         }
     }
 
@@ -154,51 +117,28 @@ export class ProtectedNodePlugin extends Plugin {
      * @return {boolean}
      */
     isMutationRecordSavable(record) {
-        const recordIndex = this.records.findIndex((item) => item === record);
-        while (this.recordIndex <= recordIndex) {
-            // Maintain the hierarchy for removed nodes, to evaluate if a mutation
-            // was protected when it happened in its old nodes configuration.
-            this.updateCloneTree(this.recordIndex);
-            this.recordIndex += 1;
+        if (record.type === "attributes") {
+            if (record.attributeName === "contenteditable") {
+                return (
+                    !this.protectedNodes.has(record.target) ||
+                    record.target.matches(UNPROTECTED_SELECTOR)
+                );
+            }
+        } else if (record.target.nodeType === Node.ELEMENT_NODE) {
+            return !(
+                (this.protectedNodes.has(record.target) &&
+                    !record.target.matches(UNPROTECTED_SELECTOR)) ||
+                record.target.matches(PROTECTED_SELECTOR)
+            );
         }
-        // If a target exists in the cloneTree, use its clone instead to
-        // determine if a mutation is protected or not.
-        const target = this.nodeToClone.get(record.target) || record.target;
-        const closestProtectedCandidate = closestElement(target, "[data-oe-protected]");
-        if (!closestProtectedCandidate) {
-            return true;
-        }
-        const protectedValue = closestProtectedCandidate.dataset.oeProtected;
-        switch (protectedValue) {
-            case "true":
-            case "":
-                if (
-                    record.type !== "attributes" ||
-                    target !== closestProtectedCandidate ||
-                    isProtected(closestProtectedCandidate)
-                ) {
-                    return false;
-                }
-                break;
-            case "false":
-                if (
-                    record.type === "attributes" &&
-                    target === closestProtectedCandidate &&
-                    isProtected(closestProtectedCandidate) &&
-                    record.attributeName !== "contenteditable"
-                ) {
-                    return false;
-                }
-                break;
-        }
-        return true;
+        return !this.protectedNodes.has(record.target);
     }
 
     forEachProtectingElem(elem, callback) {
         const selector = `[data-oe-protected]`;
-        const protectingNodes = [...elem.querySelectorAll(selector)];
+        const protectingNodes = [...elem.querySelectorAll(selector)].reverse();
         if (elem.matches(selector)) {
-            protectingNodes.unshift(elem);
+            protectingNodes.push(elem);
         }
         for (const protectingNode of protectingNodes) {
             if (protectingNode.dataset.oeProtected === "false") {
@@ -210,7 +150,7 @@ export class ProtectedNodePlugin extends Plugin {
     }
 
     normalize(elem) {
-        this.forEachProtectingElem(elem, this.setProtectingNode);
+        this.forEachProtectingElem(elem, this.setProtectingNode.bind(this));
     }
 
     setProtectingNode(elem, protecting) {
@@ -228,7 +168,13 @@ export class ProtectedNodePlugin extends Plugin {
         // 2) protected editable content: need a specification of which
         // functions of the editor are allowed to work (and how) in that
         // editable part (none?) => should be enforced.
-        elem.setAttribute("contenteditable", protecting ? "false" : "true");
+        if (protecting) {
+            elem.setAttribute("contenteditable", "false");
+            this.protectDescendants(elem);
+        } else {
+            elem.setAttribute("contenteditable", "true");
+            this.unProtectDescendants(elem);
+        }
     }
 
     cleanForSave(clone) {
