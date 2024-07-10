@@ -34,7 +34,7 @@ export class ProjectSharingWebClient extends Component {
     }
 
     async _showView() {
-        const { action_name, project_id, project_name, open_task_action } = session;
+        const { action_name, action_context, project_id, project_name, open_task_action } = session;
         const action = await this.actionService.loadAction(action_name, {
             active_id: project_id,
         });
@@ -45,6 +45,7 @@ export class ProjectSharingWebClient extends Component {
                 clearBreadcrumbs: true,
                 additionalContext: {
                     active_id: project_id,
+                    ...action_context,
                 }
             }
         );

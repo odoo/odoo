@@ -162,6 +162,9 @@ class ProjectCustomerPortal(CustomerPortal):
         session_info.update(
             cache_hashes=cache_hashes,
             action_name="project.project_sharing_project_task_action",
+            action_context={
+                'allow_milestones': project.allow_milestones,
+            },
             project_id=project.id,
             project_name=project.name,
             user_companies={
