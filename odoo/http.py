@@ -613,11 +613,6 @@ class Stream:
                     send_file_kwargs['use_x_sendfile'] = True
 
             res = _send_file(self.path, **send_file_kwargs)
-        res.headers['X-Content-Type-Options'] = 'nosniff'
-
-        if content_security_policy:  # see also Application.set_csp()
-            res.headers['Content-Security-Policy'] = content_security_policy
-
             if 'X-Sendfile' in res.headers:
                 res.headers['X-Accel-Redirect'] = x_accel_redirect
 
@@ -625,6 +620,11 @@ class Stream:
                 # yet werkzeug gives the length of the file. This makes
                 # NGINX wait for content that'll never arrive.
                 res.headers['Content-Length'] = '0'
+
+        res.headers['X-Content-Type-Options'] = 'nosniff'
+
+        if content_security_policy:  # see also Application.set_csp()
+            res.headers['Content-Security-Policy'] = content_security_policy
 
         if self.public:
             if (res.cache_control.max_age or 0) > 0:
