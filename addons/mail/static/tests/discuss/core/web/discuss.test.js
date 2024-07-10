@@ -322,3 +322,12 @@ test("can access portal partner profile from avatar popover", async () => {
     await contains(".o_form_view");
     await contains(".o_field_widget[name='name'] .o_input", { value: "Joel" });
 });
+
+test("Preserve letter case and accents when creating channel from sidebar", async () => {
+    await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussSidebar [title='Add or join a channel']");
+    await insertText(".o-discuss-ChannelSelector input", "Crème brûlée Fan Club");
+    await click(".o-discuss-ChannelSelector-suggestion");
+    await contains(".o-mail-Discuss-threadName", { value: "Crème brûlée Fan Club" });
+});
