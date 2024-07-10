@@ -31,13 +31,20 @@ export class CashOpeningPopup extends Component {
         });
         this.hardwareProxy = useService("hardware_proxy");
     }
-    confirm() {
+    async confirm() {
         this.pos.session.state = "opened";
-        this.pos.data.call("pos.session", "set_cashbox_pos", [
-            this.pos.session.id,
-            parseFloat(this.state.openingCash),
-            this.state.notes,
-        ]);
+        try {
+            await this.pos.data.call(
+                "pos.session",
+                "set_cashbox_pos",
+                [this.pos.session.id, parseFloat(this.state.openingCash), this.state.notes],
+                {},
+                true
+            );
+        } catch {
+            /* empty */
+        }
+
         this.props.close();
     }
     async openDetailsPopup() {

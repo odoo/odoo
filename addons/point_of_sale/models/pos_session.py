@@ -1596,6 +1596,7 @@ class PosSession(models.Model):
         difference = cashbox_value - self.cash_register_balance_start
         self._post_cash_details_message('Opening', self.cash_register_balance_start, difference, notes)
         self.cash_register_balance_start = cashbox_value
+        return True
 
     def _post_cash_details_message(self, state, expected, difference, notes):
         message = (state + " difference: " + self.currency_id.format(difference) + '\n' +
