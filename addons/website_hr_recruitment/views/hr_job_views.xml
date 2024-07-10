@@ -68,7 +68,7 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='message_needaction']" position="before">
                 <filter name="published" string="Published" domain="[('is_published', '=', True)]"/>
-                <separator/>
+                <separator name="published_separator"/>
             </xpath>
             <xpath expr="//group" position="inside">
                 <filter string="Published" name="groupby_published" domain="[]" context="{'group_by': 'is_published'}"/>
