@@ -559,9 +559,8 @@ class MrpWorkorder(models.Model):
         for wo in self:
             if any(not time.date_end for time in wo.time_ids.filtered(lambda t: t.user_id.id == self.env.user.id)):
                 continue
-            # As button_start is automatically called in the new view
             if wo.state in ('done', 'cancel'):
-                continue
+                raise UserError(_('You cannot start a work order that is already done or cancelled'))
 
             if wo.product_tracking == 'serial' and wo.qty_producing == 0:
                 wo.qty_producing = 1.0
