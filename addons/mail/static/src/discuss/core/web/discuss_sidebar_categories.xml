@@ -66,13 +66,13 @@
             <div class="flex-grow-1"/>
             <div class="o-mail-DiscussSidebarChannel-commands d-none ms-1 me-2">
                 <div class="btn-group btn-group-sm">
-                    <button t-if="thread.channel_type === 'channel'" class="btn btn-secondary" t-on-click="() => this.openSettings(thread)" title="Channel settings">
+                    <button t-if="thread.channel_type === 'channel'" class="btn btn-secondary" t-on-click.stop="() => this.openSettings(thread)" title="Channel settings">
                         <i t-attf-class="fa fa-cog" role="img"/>
                     </button>
-                    <button t-if="thread.canLeave" class="btn btn-secondary" t-on-click="() => this.leaveChannel(thread)" title="Leave this channel">
+                    <button t-if="thread.canLeave" class="btn btn-secondary" t-on-click.stop="() => this.leaveChannel(thread)" title="Leave this channel">
                         <i t-attf-class="fa fa-times" role="img"/>
                     </button>
-                    <button t-if="thread.canUnpin" class="btn btn-secondary" t-on-click="() => thread.unpin()" title="Unpin Conversation">
+                    <button t-if="thread.canUnpin" class="btn btn-secondary" t-on-click.stop="() => thread.unpin()" title="Unpin Conversation">
                         <i t-attf-class="fa fa-times" role="img"/>
                     </button>
                 </div>
