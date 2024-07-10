@@ -122,6 +122,8 @@
                 <field name="department_id"/>
                 <field name="work_entry_type_id"/>
                 <field name="name"/>
+                <filter name="work_entries_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="work_entries_validated" string="Validated" domain="[('state', '=', 'validated')]"/>
                 <filter name="work_entries_error" string="Conflicting" domain="[('state', '=', 'conflict')]"/>
                 <separator/>
                 <filter name="date_filter" string="Date" date="date_start"/>
