@@ -1,6 +1,7 @@
 import { after, expect, getFixture } from "@odoo/hoot";
-import { formatXml, waitFor } from "@odoo/hoot-dom";
-import { Component, useSubEnv, xml } from "@odoo/owl";
+import { formatXml } from "@odoo/hoot-dom";
+import { Deferred } from "@odoo/hoot-mock";
+import { Component, onMounted, useSubEnv, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { View, getDefaultConfig } from "@web/views/view";
@@ -84,6 +85,7 @@ class ViewDialog extends Component {
     static components = { Dialog, View };
 
     static props = {
+        onMounted: Function,
         viewEnv: Object,
         viewProps: Object,
         close: Function,
@@ -97,6 +99,7 @@ class ViewDialog extends Component {
 
     setup() {
         useSubEnv(this.props.viewEnv);
+        onMounted(() => this.props.onMounted());
     }
 }
 
@@ -185,13 +188,16 @@ export async function mountViewInDialog(params) {
         env: params.env || getMockEnv() || (await makeMockEnv()),
     });
 
+    const deferred = new Deferred();
     getService("dialog").add(ViewDialog, {
         viewEnv: { config },
         viewProps: parseViewProps(params),
+        onMounted() {
+            deferred.resolve();
+        },
     });
 
-    await waitFor(`.o_content`);
-
+    await deferred;
     return container;
 }
 
