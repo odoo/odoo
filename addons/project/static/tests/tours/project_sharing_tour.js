@@ -89,6 +89,12 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     trigger: 'iframe button.o_switch_view.o_list',
     content: 'Go to the list view',
 }, {
+    extra_trigger: 'iframe .o_list_view',
+    trigger: 'iframe .o_optional_columns_dropdown_toggle',
+}, {
+    trigger: 'iframe .o_optional_columns_dropdown .dropdown-item:contains("Milestone")',
+    isCheck: true,
+}, {
     trigger: 'iframe .o_list_view',
     content: 'Check the list view',
     isCheck: true,
@@ -110,4 +116,41 @@ registry.category("web_tour.tours").add("portal_project_sharing_tour", {
         const projectSharingStepIndex = projectSharingSteps.findIndex(s => s?.id === 'project_sharing_feature');
         return projectSharingSteps.slice(projectSharingStepIndex, projectSharingSteps.length);
     }
+});
+
+registry.category("web_tour.tours").add("portal_project_sharing_tour_with_disallowed_milestones", {
+    test: true,
+    url: "/my/projects",
+    steps: () => [
+        {
+            id: 'project_sharing_feature',
+            trigger: 'table > tbody > tr a:has(span:contains(Project Sharing))',
+            content: 'Select "Project Sharing" project to go to project sharing feature for this project.',
+        },
+        {
+            trigger: 'iframe .o_project_sharing',
+            content: 'Wait the project sharing feature be loaded',
+            isCheck: true,
+        },
+        {
+            trigger: 'iframe button.o_switch_view.o_list',
+            content: 'Go to the list view',
+        },
+        {
+            extra_trigger: 'iframe .o_list_view',
+            trigger: 'iframe .o_optional_columns_dropdown_toggle',
+        },
+        {
+            extra_trigger: 'iframe .o_optional_columns_dropdown .dropdown-item',
+            trigger: 'iframe .o_optional_columns_dropdown',
+            run: function() {
+                const optionalFields = Array.from(this.$anchor[0].ownerDocument.querySelectorAll(".dropdown-item"))
+                    .map(e => e.textContent);
+
+                if (optionalFields.includes("Milestone")) {
+                    throw new Error("the Milestone field should be absent as allow_milestones is set to False");
+                }
+            }
+        },
+    ]
 });
