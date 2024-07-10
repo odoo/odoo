@@ -236,7 +236,7 @@ export class MediaPlugin extends Plugin {
             el.classList.remove("o_b64_image_to_save");
             return;
         }
-        const attachment = await rpc("/web_editor/attachment/add_data", {
+        const attachment = await rpc("/html_editor/attachment/add_data", {
             name: el.dataset.fileName || "",
             data: imageData,
             is_image: true,
@@ -320,7 +320,7 @@ export class MediaPlugin extends Plugin {
             }
         }
         const newAttachmentSrc = await rpc(
-            `/web_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
+            `/html_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
             {
                 res_model: resModel,
                 res_id: parseInt(resId),
