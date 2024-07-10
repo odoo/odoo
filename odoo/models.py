@@ -2022,11 +2022,11 @@ class BaseModel(metaclass=MetaModel):
                            SQL | -----------------------
                     Monday  1  |  0     |  1    |  2
                     tuesday 2  |  1     |  2    |  3
-                    wed     3  |  3     |  4    |  4
+                    wed     3  |  2     |  3    |  4
                     thurs   4  |  3     |  4    |  5
                     friday  5  |  4     |  5    |  6
-                    sat     6  |  6     |  0    |  0
-                    sun     7  |  0     |  1    |  1
+                    sat     6  |  5     |  6    |  0
+                    sun     7  |  6     |  0    |  1
                     """
                     first_week_day = int(get_lang(self.env, self.env.context.get('tz')).week_start)
                     sql_expr = SQL("mod(7 - %s + date_part(%s, %s)::int, 7)", first_week_day, spec, sql_expr)
