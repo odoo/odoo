@@ -2069,6 +2069,30 @@ class PropertiesSearchCase(TestPropertiesMixin):
         with self.assertRaises(ValueError):
             self.env['test_new_api.message'].search([('attributes', '=', '"Test"')])
 
+    @mute_logger('odoo.fields')
+    def test_properties_field_search_read_false(self):
+        Model = self.env['test_new_api.message']
+
+        discussion = self.env['test_new_api.discussion'].create({
+            'name': 'Test Discussion',
+            'participants': [Command.link(self.user.id)],
+        })
+
+        message = self.env['test_new_api.message'].create({
+            'name': 'Test Message',
+            'discussion': discussion.id,
+            'author': self.user.id,
+        })
+
+        discussion.attributes_definition = [{
+            'name': 'discussion_test',
+            'string': 'Discussion Test',
+            'type': 'char',
+        }]
+
+        message_values = Model.search_read([('id', '=', message.id)])
+        self.assertEqual(message_values[0]['attributes'][0]['value'], False, 'Value should be set as False')
+
 
 class PropertiesGroupByCase(TestPropertiesMixin):
     @classmethod
