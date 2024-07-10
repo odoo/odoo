@@ -1646,8 +1646,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ], limit=1)
         address.update(country_id=country.id, state_id=state.id)
 
-    @route('/shop/cart/update_address', type='json', auth='public', website=True)
-    def update_cart_address(self, partner_id, address_type='billing', **kw):
+    @route('/shop/update_address', type='json', auth='public', website=True)
+    def shop_update_address(self, partner_id, address_type='billing', **kw):
         partner_id = int(partner_id)
 
         order_sudo = request.website.sale_get_order()
