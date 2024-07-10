@@ -99,6 +99,7 @@ export class ProtectedNodePlugin extends Plugin {
                 ) {
                     for (const addedNode of record.addedNodes) {
                         this.protectDescendants(addedNode);
+                        this.protectedNodes.add(addedNode);
                     }
                 } else if (
                     !this.protectedNodes.has(record.target) ||
@@ -106,6 +107,7 @@ export class ProtectedNodePlugin extends Plugin {
                 ) {
                     for (const addedNode of record.addedNodes) {
                         this.unProtectDescendants(addedNode);
+                        this.protectedNodes.delete(addedNode);
                     }
                 }
             }
