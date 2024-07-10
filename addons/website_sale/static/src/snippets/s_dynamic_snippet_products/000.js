@@ -8,7 +8,7 @@ const DynamicSnippetCarousel = require('website.s_dynamic_snippet_carousel');
 var wSaleUtils = require('website_sale.utils');
 
 const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
-    selector: '.s_dynamic_snippet_products',
+    selector: '.s_dynamic_snippet',
     read_events: {
         'click .js_add_cart': '_onAddToCart',
         'click .js_remove': '_onRemoveFromRecentlyViewed',
