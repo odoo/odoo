@@ -142,21 +142,34 @@
             'o-expanded': optionsDropdown.isOpen
         }"
     >
+        <t t-set="isReverse" t-value="env.inChatWindow and isAlignedRight"/>
         <div class="d-flex rounded-1 overflow-hidden" t-att-class="{
-                'flex-row-reverse': env.inChatWindow and isAlignedRight,
+                'flex-row-reverse': isReverse,
                 'bg-view shadow-sm': env.inChatWindow,
             }"
         >
             <t t-foreach="messageActions.actions.slice(0, quickActionCount)" t-as="action" t-key="action.id">
-                <t t-if="action.callComponent" t-component="action.callComponent" t-props="action.props"/>
-                <button t-else="" class="btn px-1 py-0 rounded-0" t-att-title="action.title" t-att-name="action.id" t-on-click.stop="action.onClick">
+                <t t-set="isStart" t-value="(!isReverse and action.isFirst) or (isReverse and action.isLast)"/>
+                <t t-set="isEnd" t-value="(!isReverse and action.isLast) or (isReverse and action.isFirst)"/>
+                <t t-if="action.callComponent" t-component="action.callComponent" t-props="action.props" classNames="{
+                    'rounded-start-1': isStart,
+                    'rounded-end-1': isEnd,
+                }"/>
+                <button t-else="" class="btn px-1 py-0 rounded-0" t-att-title="action.title" t-att-name="action.id" t-on-click.stop="action.onClick" t-att-class="{
+                    'rounded-start-1': isStart,
+                    'rounded-end-1': isEnd,
+                }">
                     <i class="fa fa-lg" t-att-class="action.icon"/>
                 </button>
             </t>
             <div t-if="messageActions.actions.length gt quickActionCount" class="d-flex rounded-0">
                 <Dropdown state="optionsDropdown" position="props.message.threadAsNewest  ? 'top-start' : 'bottom-start'" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" >
-                    <button t-att-class="`btn p-0 rounded-0 ${ optionsDropdown.isOpen ? 'bg-200' : '' }`" t-att-title="expandText">
-                        <i class="btn px-1 py-0 fa fa-lg fa-ellipsis-h rounded-0" t-att-class="{ 'order-1': props.isInChatWindow }" tabindex="1"/>
+                    <button class="btn px-1 py-0 rounded-0" t-att-title="expandText" t-att-class="{
+                        'bg-200': optionsDropdown.isOpen,
+                        'rounded-start-1': isReverse,
+                        'rounded-end-1': !isReverse,
+                    }">
+                        <i class="fa fa-lg fa-ellipsis-h" t-att-class="{ 'order-1': props.isInChatWindow }" tabindex="1"/>
                     </button>
                     <t t-set-slot="content">
                         <t t-foreach="messageActions.actions.slice(quickActionCount)" t-as="action" t-key="action.id">
