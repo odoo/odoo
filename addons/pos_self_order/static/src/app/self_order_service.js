@@ -92,7 +92,7 @@ export class SelfOrder extends Reactive {
             this.onNotified("PAYMENT_STATUS", ({ payment_result, data }) => {
                 if (payment_result === "Success") {
                     this.models.replaceDataByKey("uuid", data);
-                    this.router.navigate("payment_success");
+                    this.router.navigate("confirmation");
                 } else {
                     this.paymentError = true;
                 }
