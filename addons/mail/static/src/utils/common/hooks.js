@@ -86,7 +86,20 @@ export function useHover(refNames, callback = () => {}) {
             withDirectParent,
         });
     }
-    const state = useState({ isHover: false });
+    const state = useState({
+        set isHover(newIsHover) {
+            if (this._isHover !== newIsHover) {
+                this._isHover = newIsHover;
+                this._count++;
+            }
+        },
+        get isHover() {
+            void this._count;
+            return this._isHover;
+        },
+        _count: 0,
+        _isHover: false,
+    });
     function onHover(hovered) {
         state.isHover = hovered;
         callback(hovered);
