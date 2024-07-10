@@ -4762,8 +4762,11 @@ class AccountMove(models.Model):
             for invoice in invoices:
                 attachments_per_invoice[invoice] |= attachment
 
-        # Unlink the unused attachments
-        (attachments - attachments_in_invoices).unlink()
+        if len(attachments_per_invoice) == 1:
+            attachments_per_invoice = {self: attachments}
+        else:
+            # Unlink the unused attachments
+            (attachments - attachments_in_invoices).unlink()
 
         for invoice, attachments in attachments_per_invoice.items():
             if invoice == self:
