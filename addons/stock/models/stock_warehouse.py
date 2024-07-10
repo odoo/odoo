@@ -56,15 +56,15 @@ class Warehouse(models.Model):
         domain="[('warehouse_selectable', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help='Defaults routes through the warehouse', check_company=True, copy=False)
     reception_steps = fields.Selection([
-        ('one_step', 'Receive goods directly (1 step)'),
-        ('two_steps', 'Receive goods in input and then stock (2 steps)'),
-        ('three_steps', 'Receive goods in input, then quality and then stock (3 steps)')],
+        ('one_step', 'Receive & Store (1 step)'),
+        ('two_steps', 'Receive , then Store (2 steps)'),
+        ('three_steps', 'Receive , Quality, Store (3 steps)')],
         'Incoming Shipments', default='one_step', required=True,
         help="Default incoming route to follow")
     delivery_steps = fields.Selection([
-        ('ship_only', 'Deliver goods directly (1 step)'),
-        ('pick_ship', 'Send goods in output and then deliver (2 steps)'),
-        ('pick_pack_ship', 'Pack goods, send goods in output and then deliver (3 steps)')],
+        ('ship_only', 'Deliver (1 step)'),
+        ('pick_ship', 'Pick, then Deliver (2 steps)'),
+        ('pick_pack_ship', 'Pick, Pack, Deliver (3 steps)')],
         'Outgoing Shipments', default='ship_only', required=True,
         help="Default outgoing route to follow")
     wh_input_stock_loc_id = fields.Many2one('stock.location', 'Input Location', check_company=True)
