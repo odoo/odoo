@@ -554,7 +554,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
             action = mo.button_mark_done()
             backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
             backorder.save().action_backorder()
-            return mo.procurement_group_id.mrp_production_ids[-1]
+            return mo.procurement_group_id.mrp_production_ids.sorted('name')[-1]
 
         # Make some stock and reserve
         for product in self.bom_1.bom_line_ids.product_id:

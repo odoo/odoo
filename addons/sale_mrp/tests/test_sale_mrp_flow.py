@@ -431,7 +431,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         mo_form = Form(mnf_product_d)
         mo_form.qty_producing = 20
         mnf_product_d = mo_form.save()
-        mnf_product_d._post_inventory()
+        mnf_product_d.button_mark_done()
 
         # Check state of manufacturing order.
         self.assertEqual(mnf_product_d.state, 'done', 'Manufacturing order should still be in progress state.')
@@ -474,7 +474,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         mo_form = Form(mnf_product_a)
         mo_form.qty_producing = mo_form.product_qty
         mnf_product_a = mo_form.save()
-        mnf_product_a._post_inventory()
+        mnf_product_a.button_mark_done()
         # Check state of manufacturing order product A.
         self.assertEqual(mnf_product_a.state, 'done', 'Manufacturing order should still be in the progress state.')
         # Check product A avaialble quantity should be 120.
