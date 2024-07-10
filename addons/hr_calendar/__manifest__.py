@@ -7,7 +7,8 @@
     'depends': ['hr', 'calendar'],
     'auto_install': True,
     'data': [
-        'views/calendar_views_calendarApp.xml'
+        'views/calendar_views_calendarApp.xml',
+        'views/res_partner_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
