@@ -515,15 +515,12 @@ test("sequentially added nodes under a protecting parent are correctly protected
     const { editor, el, plugins } = await setupEditor(
         unformat(`
             <div data-oe-protected="true">
-                <div class="a">
-                    <div class="b"></div>
-                </div>
+                content
             </div>
         `)
     );
     const protectedPlugin = plugins.get("protected_node");
-    let steps = editor.shared.getHistorySteps();
-    expect(steps.length).toBe(1);
+    expect(editor.shared.getHistorySteps().length).toBe(1);
     const protecting = el.querySelector("[data-oe-protected='true']");
     const element = editor.document.createElement("div");
     const node = editor.document.createTextNode("a");
@@ -536,9 +533,7 @@ test("sequentially added nodes under a protecting parent are correctly protected
         unformat(`
             <div data-oe-protected="true" contenteditable="false">
                 <div>a</div>
-                <div class="a">
-                    <div class="b"></div>
-                </div>
+                content
             </div>
         `)
     );
@@ -548,14 +543,60 @@ test("sequentially added nodes under a protecting parent are correctly protected
         unformat(`
             <div data-oe-protected="true" contenteditable="false">
                 <div></div>
-                <div class="a">
-                    <div class="b"></div>
-                </div>
+                content
             </div>
         `)
     );
-    steps = editor.shared.getHistorySteps();
-    expect(steps.length).toBe(1);
+    expect(editor.shared.getHistorySteps().length).toBe(1);
+});
+
+test("don't protect a node under data-oe-protected='false' through delete and undo", async () => {
+    const { editor, el, plugins } = await setupEditor(
+        unformat(`
+            <div data-oe-protected="true">
+                <div data-oe-protected="false">
+                    <p>a</p>
+                </div>
+            </div>
+            <p>[]a</p>
+        `)
+    );
+    const protectedPlugin = plugins.get("protected_node");
+    expect(editor.shared.getHistorySteps().length).toBe(1);
+    const protecting = el.querySelector("[data-oe-protected='false']");
+    const paragraph = editor.document.createElement("p");
+    const node = editor.document.createTextNode("b");
+    protecting.prepend(paragraph);
+    paragraph.prepend(node);
+    editor.dispatch("ADD_STEP");
+    expect(editor.shared.getHistorySteps().length).toBe(2);
+    expect(protectedPlugin.protectedNodes.has(paragraph)).toBe(false);
+    expect(protectedPlugin.protectedNodes.has(node)).toBe(false);
+    expect(getContent(el)).toBe(
+        unformat(`
+            <div data-oe-protected="true" contenteditable="false">
+                <div data-oe-protected="false" contenteditable="true">
+                    <p>b</p>
+                    <p>a</p>
+                </div>
+            </div>
+            <p>[]a</p>
+        `)
+    );
+    deleteBackward(editor);
+    undo(editor);
+    expect(getContent(el)).toBe(
+        unformat(`
+            <div data-oe-protected="true" contenteditable="false">
+                <div data-oe-protected="false" contenteditable="true">
+                    <p>b</p>
+                    <p>a</p>
+                </div>
+            </div>
+            <p>[]a</p>
+        `)
+    );
+    expect(editor.shared.getHistorySteps().length).toBe(4);
 });
 
 test("protected plugin is robust against other plugins which can filter mutations", async () => {

@@ -17,7 +17,6 @@ export class ProtectedNodePlugin extends Plugin {
     static shared = ["setProtectingNode"];
 
     setup() {
-        super.setup();
         this.protectedNodes = new WeakSet();
     }
 
@@ -53,19 +52,36 @@ export class ProtectedNodePlugin extends Plugin {
         }
     }
 
+    protectNode(node) {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.matches(UNPROTECTED_SELECTOR)) {
+                this.unProtectDescendants(node);
+            } else if (!this.protectedNodes.has(node)) {
+                this.protectDescendants(node);
+            }
+            // assume that descendants are already handled if the node
+            // is already protected.
+        }
+        this.protectedNodes.add(node);
+    }
+
+    unProtectNode(node) {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.matches(PROTECTED_SELECTOR)) {
+                this.protectDescendants(node);
+            } else if (this.protectedNodes.has(node)) {
+                this.unProtectDescendants(node);
+            }
+            // assume that descendants are already handled if the node
+            // is already not protected.
+        }
+        this.protectedNodes.delete(node);
+    }
+
     protectDescendants(node) {
         let child = node.firstChild;
         while (child) {
-            if (child.nodeType === Node.ELEMENT_NODE) {
-                if (child.matches(UNPROTECTED_SELECTOR)) {
-                    this.unProtectDescendants(child);
-                } else if (!this.protectedNodes.has(child)) {
-                    this.protectDescendants(child);
-                }
-                // stop recursion if the node is already protected, assume that
-                // its descendants are already handled.
-            }
-            this.protectedNodes.add(child);
+            this.protectNode(child);
             child = child.nextSibling;
         }
     }
@@ -73,16 +89,7 @@ export class ProtectedNodePlugin extends Plugin {
     unProtectDescendants(node) {
         let child = node.firstChild;
         while (child) {
-            if (child.nodeType === Node.ELEMENT_NODE) {
-                if (child.matches(PROTECTED_SELECTOR)) {
-                    this.protectDescendants(child);
-                } else if (this.protectedNodes.has(child)) {
-                    this.unProtectDescendants(child);
-                }
-                // stop recursion if the node is already not protected, assume that
-                // its descendants are already handled.
-            }
-            this.protectedNodes.delete(child);
+            this.unProtectNode(child);
             child = child.nextSibling;
         }
     }
@@ -94,20 +101,19 @@ export class ProtectedNodePlugin extends Plugin {
                     return;
                 }
                 if (
-                    this.protectedNodes.has(record.target) ||
+                    (this.protectedNodes.has(record.target) &&
+                        !record.target.matches(UNPROTECTED_SELECTOR)) ||
                     record.target.matches(PROTECTED_SELECTOR)
                 ) {
                     for (const addedNode of record.addedNodes) {
-                        this.protectDescendants(addedNode);
-                        this.protectedNodes.add(addedNode);
+                        this.protectNode(addedNode);
                     }
                 } else if (
                     !this.protectedNodes.has(record.target) ||
                     record.target.matches(UNPROTECTED_SELECTOR)
                 ) {
                     for (const addedNode of record.addedNodes) {
-                        this.unProtectDescendants(addedNode);
-                        this.protectedNodes.delete(addedNode);
+                        this.unProtectNode(addedNode);
                     }
                 }
             }
