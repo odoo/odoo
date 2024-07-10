@@ -1,4 +1,4 @@
-import { Component, useExternalListener, xml } from "@odoo/owl";
+import { Component, useEffect, useExternalListener, useRef, xml } from "@odoo/owl";
 import { usePosition } from "@web/core/position/position_hook";
 
 export class EditorOverlay extends Component {
@@ -28,6 +28,21 @@ export class EditorOverlay extends Component {
             });
             getTarget = this.getCurrentRect.bind(this);
         }
+
+        const rootRef = useRef("root");
+        const resizeObserver = new ResizeObserver(() => {
+            position.unlock();
+        });
+        useEffect(
+            (root) => {
+                resizeObserver.observe(root);
+                return () => {
+                    resizeObserver.unobserve(root);
+                };
+            },
+            () => [rootRef.el]
+        );
+
         position = usePosition("root", getTarget, this.props.config);
     }
 
