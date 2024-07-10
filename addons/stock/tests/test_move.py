@@ -5666,6 +5666,7 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         move1.quantity = 1
         picking.action_put_in_pack()
+        picking.action_assign()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         self.assertEqual(len(picking.move_line_ids), 2)
@@ -6016,6 +6017,7 @@ class StockMove(TransactionCase):
         self.assertEqual(len(picking.move_line_ids), 1)
 
         picking.action_put_in_pack()  # Create a first package
+        picking.action_assign()
         self.assertEqual(len(picking.move_line_ids), 2)
 
         unpacked_ml = picking.move_line_ids.filtered(lambda ml: not ml.result_package_id)
