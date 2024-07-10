@@ -3109,7 +3109,7 @@ class AccountMove(models.Model):
                    - new: whether the invoice is newly created
                    returns True if was able to process the invoice
         """
-        if file_data['type'] in ('pdf', 'binary'):
+        if file_data['type'] in ('xml', 'pdf', 'binary'):
             return lambda *args: False
         return
 
@@ -3186,14 +3186,16 @@ class AccountMove(models.Model):
             if decoder:
                 try:
                     with self.env.cr.savepoint():
-                        invoice = current_invoice or self.create({})
-                        success = decoder(invoice, file_data, new)
-
-                        if success or file_data['type'] == 'pdf':
+                        with current_invoice._get_edi_creation() as invoice:
+                            # pylint: disable=not-callable
+                            success = decoder(invoice, file_data, new)
+                        if success:
                             invoice._link_bill_origin_to_purchase_orders(timeout=4)
-                            invoices |= invoice
-                            current_invoice = self.env['account.move']
-                            add_file_data_results(file_data, invoice)
+
+                        invoices |= invoice
+                        current_invoice = self.env['account.move']
+                        add_file_data_results(file_data, invoice)
+
                         if extend_with_existing_lines:
                             return attachments_by_invoice
 
