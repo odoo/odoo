@@ -115,6 +115,13 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     run: "click",
 }, {
     trigger: ':iframe .o_list_view',
+}, {
+    trigger: ':iframe .o_optional_columns_dropdown_toggle',
+    run: "click",
+}, {
+    trigger: ':iframe .dropdown-item:contains("Milestone")',
+}, {
+    trigger: ':iframe .o_list_view',
     content: 'Check the list view',
 }];
 
@@ -156,3 +163,51 @@ registry.category("web_tour.tours").add("project_sharing_with_blocked_task_tour"
         content: 'Check that the blocked task is not visible',
     },
 ]});
+
+registry.category("web_tour.tours").add("portal_project_sharing_tour_with_disallowed_milestones", {
+    test: true,
+    url: "/my/projects",
+    steps: () => [
+        {
+            id: "project_sharing_feature",
+            trigger: "table > tbody > tr a:has(span:contains(Project Sharing))",
+            content:
+                'Select "Project Sharing" project to go to project sharing feature for this project.',
+            run: "click",
+        },
+        {
+            trigger: ":iframe .o_project_sharing",
+            content: "Wait the project sharing feature be loaded",
+        },
+        {
+            trigger: ":iframe button.o_switch_view.o_list",
+            content: "Go to the list view",
+            run: "click",
+        },
+        {
+            trigger: ":iframe .o_list_view",
+        },
+        {
+            trigger: ":iframe .o_optional_columns_dropdown_toggle",
+            run: "click",
+        },
+        {
+            trigger: ":iframe .dropdown-item",
+        },
+        {
+            trigger: ":iframe .dropdown-menu",
+            run: function () {
+                const optionalFields = Array.from(
+                    this.anchor.ownerDocument.querySelectorAll(".dropdown-item")
+                ).map((e) => e.textContent);
+
+                if (optionalFields.includes("Milestone")) {
+                    throw new Error(
+                        "the Milestone field should be absent as allow_milestones is set to False"
+                    );
+                }
+            },
+        },
+    ],
+});
+
