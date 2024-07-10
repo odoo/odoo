@@ -5,7 +5,7 @@
         <Dialog bodyClass="'partner-list overflow-y-auto'" contentClass="'h-100'">
             <t t-set-slot="header">
                 <button t-if="!ui.isSmall" class="btn btn-primary" role="img" aria-label="Add a customer"
-                        t-on-click="() => this.pos.editPartner()"
+                        t-on-click="() => this.editPartner()"
                         title="Add a customer">
                 Create 
                 </button>
@@ -34,7 +34,7 @@
                                 partner="partner"
                                 isSelected="props.partner?.id === partner.id"
                                 isBalanceDisplayed="isBalanceDisplayed"
-                                onClickEdit.bind="(p) => this.pos.editPartner(p)"
+                                onClickEdit.bind="(p) => this.editPartner(p)"
                                 onClickUnselect.bind="() => this.clickPartner()"
                                 onClickOrders.bind="(p) => this.goToOrders(p)"
                                 onClickPartner.bind="clickPartner"/>
@@ -47,7 +47,7 @@
             <t t-set-slot="footer">
                 <div class="d-flex justify-content-start flex-wrap gap-2 w-100">
                     <button t-if="ui.isSmall" class="btn btn-primary" role="img" aria-label="Add a customer"
-                        t-on-click="createPartner"
+                        t-on-click="() => this.editPartner()"
                         title="Add a customer">
                     New 
                     </button>

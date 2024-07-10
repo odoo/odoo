@@ -18,6 +18,23 @@ export function makeAwaitable(dialog, comp, props, options) {
     });
 }
 
+export function makeActionAwaitable(action, config, additionalArgs) {
+    return new Promise((resolve) => {
+        action.doAction(config, {
+            ...additionalArgs,
+            props: {
+                ...additionalArgs?.props,
+                onSave: (record) => {
+                    action.doAction({
+                        type: "ir.actions.act_window_close",
+                    });
+                    resolve(record);
+                },
+            },
+        });
+    });
+}
+
 export function ask(dialog, props, options, comp = ConfirmationDialog) {
     return new Promise((resolve) => {
         dialog.add(
