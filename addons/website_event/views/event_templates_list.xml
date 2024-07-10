@@ -374,12 +374,7 @@
                             </small>
                         </div>
                         <!-- Location -->
-                        <t t-set="has_city_or_country" t-value="event.address_id.sudo().city or event.address_id.sudo().country_id"/>
-                        <div t-if="not event.address_id or has_city_or_country" class="d-flex align-items-center">
-                            <i class="fa fa-map-marker me-2" title="Location"/>
-                            <small t-if="event.address_id" class="o_not_editable fw-bold" itemprop="location" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
-                            <small t-else="" class="o_not_editable fw-bold" itemprop="location">Online event</small>
-                        </div>
+                        <small class="o_not_editable fw-bold" itemprop="location" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city', 'country_id'], 'null_text': 'Online event'}"/>
                     </main>
                     
                     <!-- Footer -->
