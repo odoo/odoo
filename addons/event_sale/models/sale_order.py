@@ -10,6 +10,18 @@ class SaleOrder(models.Model):
 
     attendee_count = fields.Integer('Attendee Count', compute='_compute_attendee_count')
 
+    def _compute_attendee_count(self):
+        sale_orders_data = self.env['event.registration']._read_group(
+            [('sale_order_id', 'in', self.ids),
+             ('state', '!=', 'cancel')],
+            ['sale_order_id'], ['__count'],
+        )
+        attendee_count_data = {
+            sale_order.id: count for sale_order, count in sale_orders_data
+        }
+        for sale_order in self:
+            sale_order.attendee_count = attendee_count_data.get(sale_order.id, 0)
+
     def write(self, vals):
         """ Synchronize partner from SO to registrations. This is done notably
         in website_sale controller shop/address that updates customer, but not
@@ -46,18 +58,6 @@ class SaleOrder(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("event.event_registration_action_tree")
         action['domain'] = [('sale_order_id', 'in', self.ids)]
         return action
-
-    def _compute_attendee_count(self):
-        sale_orders_data = self.env['event.registration']._read_group(
-            [('sale_order_id', 'in', self.ids),
-             ('state', '!=', 'cancel')],
-            ['sale_order_id'], ['__count'],
-        )
-        attendee_count_data = {
-            sale_order.id: count for sale_order, count in sale_orders_data
-        }
-        for sale_order in self:
-            sale_order.attendee_count = attendee_count_data.get(sale_order.id, 0)
 
     def _get_product_catalog_domain(self):
         """Override of `_get_product_catalog_domain` to extend the domain.
