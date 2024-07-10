@@ -678,7 +678,12 @@ class Web_Editor(http.Controller):
         ICP = request.env['ir.config_parameter'].sudo()
         endpoint = ICP.get_param('web_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
         params['dbuuid'] = ICP.get_param('database.uuid')
-        response = requests.post('%s/media-library/1/search' % endpoint, data=params)
+        try:
+            response = requests.post('%s/media-library/1/search' % endpoint, data=params)
+        except requests.exceptions.ConnectionError:
+            error_msg = _("Unable to reach endpoint at %s", endpoint)
+            logger.warning(error_msg)
+            return {'error': error_msg}
         if response.status_code == requests.codes.ok and response.headers['content-type'] == 'application/json':
             return response.json()
         else:
