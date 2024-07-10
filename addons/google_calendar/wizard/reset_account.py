@@ -38,8 +38,7 @@ class ResetGoogleAccount(models.TransientModel):
         if self.delete_policy in ('delete_odoo', 'delete_both'):
             events.google_id = False
             events.unlink()
-
-        if self.sync_policy == 'all':
+        elif self.sync_policy == 'all':
             events.write({
                 'google_id': False,
                 'need_sync': True,
