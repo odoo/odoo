@@ -962,6 +962,8 @@ var SnippetEditor = Widget.extend({
             var optionName = val.option;
             let option;
             if (val.isOwl) {
+                // TODO: @owl-options remove when legacy is completely converted.
+                this._hasOwlOptions = true;
                 option = Object.assign({}, registry.category("snippet_options").get(optionName));
                 option.instance = new (option.Class || SnippetOption)({
                     editor: this,
@@ -3135,11 +3137,15 @@ class SnippetsMenu extends Component {
                         || ifInactiveOptions && this.state.enabledEditorHierarchy.includes(editorToEnable)) {
                     return editorToEnable;
                 }
+                // TODO: @owl-options remove when legacy is completely converted.
+                let hasOwlOptions = false;
 
                 if (!previewMode) {
                     this.state.enabledEditorHierarchy = [];
                     let current = editorToEnable;
                     while (current && current.$target) {
+                        // TODO: @owl-options remove when legacy is completely converted.
+                        hasOwlOptions = current._hasOwlOptions;
                         // TODO: @owl-options, make sure changes to instances
                         // of SnippetEditor should not trigger re-renders.
                         this.state.enabledEditorHierarchy.push(markRaw(current));
@@ -3194,7 +3200,10 @@ class SnippetsMenu extends Component {
                     }
                     this._updateRightPanelContent({
                         content: customize$Elements || [],
-                        tab: customize$Elements ? this.tabs.OPTIONS : this.tabs.BLOCKS,
+                        // TODO: @owl-options, disable the change of tab,
+                        // here, instead let the onOptionMounted do it. To review
+                        // tab: customize$Elements ? this.tabs.OPTIONS : this.tabs.BLOCKS,
+                        tab: !hasOwlOptions && customize$Elements ? this.tabs.OPTIONS : this.tabs.BLOCKS,
                     });
                 }
 
@@ -5270,8 +5279,9 @@ class SnippetsMenu extends Component {
             await this.postSnippetDropPromise;
         }
         this.execWithLoadingEffect(async () => {
-            await Promise.all(this.snippetEditors.map(editor => editor.updateOptionsUI()));
-            await Promise.all(this.snippetEditors.map(editor => editor.updateOptionsUIVisibility()));
+            await Promise.all(this.state.enabledEditorHierarchy.map(editor => editor.updateOptionsUI()));
+            await Promise.all(this.state.enabledEditorHierarchy.map(editor => editor.updateOptionsUIVisibility()));
+            this.state.currentTab = this.tabs.OPTIONS;
         });
     }
 
