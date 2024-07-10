@@ -18,10 +18,10 @@
                         <group>
                             <label for="max_weight"/>
                             <div class="o_row">
-                                <field name="max_weight"/>
-                                <span><field name="weight_uom_name"/></span>
+                                <field name="max_weight" class="oe_inline"/>
+                                <field name="weight_uom_name" class="oe_inline"/>
                             </div>
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_id" groups="base.group_multi_company" placeholder="All Companies"/>
                         </group>
                     </group>
                     <notebook>
