@@ -20,7 +20,7 @@ import { scrollTo } from "@web/core/utils/scrolling";
 export class ImageCrop extends Component {
     static template = "html_editor.ImageCrop";
     static props = {
-        document: { type: Document },
+        document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
         media: { optional: true },
         mimetype: { type: String, optional: true },
         onClose: { type: Function, optional: true },
